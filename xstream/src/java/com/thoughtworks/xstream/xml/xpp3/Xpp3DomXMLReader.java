@@ -36,7 +36,7 @@ public class Xpp3DomXMLReader
             // do nothing.
         }
 
-        return text;
+        return text == null ? "" : text;
     }
 
     public String attribute(String attributeName) {

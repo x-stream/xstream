@@ -102,4 +102,12 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals(" hello world ", xmlReader.text());
     }
 
+    public void testReturnsEmptyStringForEmptyTags() throws Exception {
+        XMLReader xmlReader = createReader("<root></root>");
+
+        String text = xmlReader.text();
+        assertNotNull(text);
+        assertEquals("", text);
+    }
+
 }

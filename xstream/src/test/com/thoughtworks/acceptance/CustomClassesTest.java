@@ -2,17 +2,10 @@ package com.thoughtworks.acceptance;
 
 public class CustomClassesTest extends AbstractAcceptanceTest {
 
-    class SamplePerson {
+    class SamplePerson extends StandardObject {
         int anInt;
         String firstName;
         String lastName;
-
-        public boolean equals(Object obj) {
-            SamplePerson samplePerson = (SamplePerson) obj;
-            return anInt == samplePerson.anInt
-                    && firstName.equals(samplePerson.firstName)
-                    && lastName.equals(samplePerson.lastName);
-        }
     }
 
     public void testCustomObjectWithBasicFields() {
@@ -85,14 +78,43 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
         assertBothWays(obj, expected);
     }
 
-    public class WithSomeFields {
+    public void testEmptyStringsAreNotTreatedAsNulls() {
+        xstream.alias("cls", WithSomeFields.class);
+
+        WithSomeFields obj = new WithSomeFields();
+        obj.b = "";
+
+        String expected = "" +
+                "<cls>\n" +
+                "  <b></b>\n" +
+                "</cls>";
+
+        assertBothWays(obj, expected);
+    }
+
+    public class WithSomeFields extends StandardObject {
         Object a;
         String b;
+    }
 
-        public boolean equals(Object obj) {
-            WithSomeFields w = (WithSomeFields) obj;
-            return w.a == a && w.b == b;
-        }
+    public void testNullsAreDistinguishedFromEmptyStrings() {
+        LotsOfStrings in = new LotsOfStrings();
+        in.a = ".";
+        in.b = "";
+        in.c = null;
+
+        String xml = xstream.toXML(in);
+        LotsOfStrings out = (LotsOfStrings) xstream.fromXML(xml);
+
+        assertEquals(".", out.a);
+        assertEquals("", out.b);
+        assertNull(out.c);
+    }
+
+    public static class LotsOfStrings {
+        String a;
+        String b;
+        String c;
     }
 
 }
