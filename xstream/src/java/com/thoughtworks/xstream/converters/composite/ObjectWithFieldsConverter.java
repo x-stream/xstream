@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.converters.composite;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -40,7 +41,8 @@ public class ObjectWithFieldsConverter implements Converter {
                     writeFieldAsXML(context, field, newObj);
                 }
             } catch (IllegalAccessException e) {
-                throw new RuntimeException(e); // TODO... should it recover?
+                throw new ConversionException(
+                        "Cannot access field " + obj.getClass() + "." + field.getName(), e);
             }
         }
     }
@@ -96,7 +98,8 @@ public class ObjectWithFieldsConverter implements Converter {
                 field.setAccessible(true);
                 field.set(result, fieldValue);
             } catch (IllegalAccessException e) {
-                throw new RuntimeException(e); // TODO... should it recover?
+                throw new ConversionException(
+                        "Cannot access field " + type + "." + field.getName(), e);
             }
 
             context.xmlPop();
