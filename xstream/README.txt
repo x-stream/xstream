@@ -36,5 +36,5 @@ The complete source for XStream is bundled. This includes:
 
 -Joe Walnes
 
-http://xstream.codehaus.org/
+ http://xstream.codehaus.org/
 
