@@ -102,13 +102,6 @@ String xml = xstream.toXML(joe);</pre></div>
 &lt;/person&gt;</pre></div>
 
     <!-- ...................................................... -->
-    <h2>How do I serialize binary data in a byte array?</h2>
-    <p>You need to register a special a Converter:</p>
-    <div class="Source Java"><pre>xstream.registerConverter(new EncodedByteArrayConverter());</pre></div>
-    <p>This will store binary data in XML by BASE-64 encoding it.</p>
-    <p>It is not registered by default as the encoding classes are not part of the standard JDK.</p>
-
-    <!-- ...................................................... -->
     <h2>Do my classes have to implement Serializable if XStream is to serialize them?</h2>
     <p>No.</p>
 
@@ -116,7 +109,33 @@ String xml = xstream.toXML(joe);</pre></div>
     <h2>Can dynamic proxies be serialized?</h2>
     <p>Yes.</p>
     
-    <!--
+    <!-- ...................................................... -->
+    <h2>How does XStream deal with newer versions of classes?</h2>
+
+    <ul>
+        <li>If a new field is added to the class, deserializing an old version will leave the field uninitialized.</li>
+        <li>If a field is removed from the class, deserializing an old version that contains the field will cause an exception.
+        Leaving the field in place but declaring it as transient will avoid the exception, but XStream will not try to deserialize it.</li>
+        <li>If a class is renamed, aliases can be used to create an abstraction between the name used in XML and the real class name.</li>
+        <li>if a field is renamed, this should be treated as adding a field and removing a field.</li>
+    </ul>
+
+    <p>For more advanced class migrations, you may have to do custom pre-processing of the XML before sending it to XStream (for example, with XSLT or DOM manipulations).</p>
+
+    <p>Future versions of XStream will include features to make these type of migrations easier.</p>
+
+
+    <!-- ****************************************************** -->
+    <h1>Comparison to other procuts</h1>
+
+    <h2>How does XStream compare to java.beans.XMLEncoder?</h2>
+
+    <p>XStream is designed for serializing <i>objects</i> using internal fields, whereas
+    <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/beans/XMLEncoder.html">XMLEncoder</a> is designed for
+    serializing <i>JavaBeans</i> using public API methods (typically in the form
+    of <code>getXXX()</code>, <code>setXXX()</code>, <code>addXXX()</code> and <code>removeXXX()</code> methods.</p>
+
+        <!--
     <h1>Comparison to other products</h1>
 
     <h2>How does XStream compare to JAXB (Java API for XML Binding)?</h2>
@@ -140,8 +159,6 @@ String xml = xstream.toXML(joe);</pre></div>
     <h2>How does XStream compare to JIBX?</h2>
     <p>Todo...</p>
 
-    <h2>How does XStream compare to JavaBeans Long-Term Persistence?</h2>
-    <p>Todo...</p>
     -->
 
     <!-- ****************************************************** -->
@@ -153,6 +170,22 @@ String xml = xstream.toXML(joe);</pre></div>
     <p>Yes. Once the XStream instance
     has been created and configured, it may be shared across multiple threads
     allowing objects to be serialized/deserialized concurrently.</p>
+
+
+
+
+    <!-- ****************************************************** -->
+    <h1>Uses of XStream</h1>
+
+    <h2>Is XStream a data binding tool?</h2>
+
+    <p>No. It is a serialization tool.</p>
+
+    <!-- ...................................................... -->
+    <h2>Can XStream generate classes from XSD?</h2>
+
+    <p>No. For this kind of work a data binding tool such as <a href="http://xmlbeans.apache.org">XMLBeans</a> is appropriate.</p>
+
 
     <!--
     Why is there no SaxReader?
