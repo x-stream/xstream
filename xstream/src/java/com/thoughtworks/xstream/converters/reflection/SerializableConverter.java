@@ -11,18 +11,20 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.io.ObjectInputValidation;
 import java.io.InvalidObjectException;
-import java.io.NotActiveException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
+import java.io.ObjectInputStream;
+import java.io.ObjectInputValidation;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.lang.reflect.Field;
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
@@ -110,32 +112,39 @@ public class SerializableConverter implements Converter {
             public void defaultWriteObject() {
                 final boolean[] writtenDefaultFields = {false}; // only an array because it needs to be assigned to from anonymous inner
 
-                reflectionProvider.visitSerializableFields(replacedSource, new ReflectionProvider.Visitor() {
-                    public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
-                        if (definedIn == currentType[0] && newObj != null) {
-                            if (!writtenClassWrapper[0]) {
-                                writer.startNode(classMapper.lookupName(currentType[0]));
-                                writtenClassWrapper[0] = true;
-                            }
-                            if (!writtenDefaultFields[0]) {
-                                writer.startNode(ELEMENT_DEFAULT);
-                                writtenDefaultFields[0] = true;
-                            }
+                ObjectStreamClass objectStreamClass = ObjectStreamClass.lookup(currentType[0]);
 
-                            writer.startNode(classMapper.mapNameToXML(fieldName));
+                if (objectStreamClass == null) {
+                    return;
+                }
 
-                            Class actualType = newObj.getClass();
-                            Class defaultType = classMapper.defaultImplementationOf(fieldType);
-                            if (!actualType.equals(defaultType)) {
-                                writer.addAttribute(ATTRIBUTE_CLASS, classMapper.lookupName(actualType));
-                            }
-
-                            context.convertAnother(newObj);
-
-                            writer.endNode();
+                ObjectStreamField[] fields = objectStreamClass.getFields();
+                for (int i = 0; i < fields.length; i++) {
+                    ObjectStreamField field = fields[i];
+                    Object value = readField(field, currentType[0], replacedSource);
+                    if (value != null) {
+                        if (!writtenClassWrapper[0]) {
+                            writer.startNode(classMapper.lookupName(currentType[0]));
+                            writtenClassWrapper[0] = true;
                         }
+                        if (!writtenDefaultFields[0]) {
+                            writer.startNode(ELEMENT_DEFAULT);
+                            writtenDefaultFields[0] = true;
+                        }
+
+                        writer.startNode(classMapper.mapNameToXML(field.getName()));
+
+                        Class actualType = value.getClass();
+                        Class defaultType = classMapper.defaultImplementationOf(field.getType());
+                        if (!actualType.equals(defaultType)) {
+                            writer.addAttribute(ATTRIBUTE_CLASS, classMapper.lookupName(actualType));
+                        }
+
+                        context.convertAnother(value);
+
+                        writer.endNode();
                     }
-                });
+                }
                 if (writtenClassWrapper[0] && !writtenDefaultFields[0]) {
                     writer.startNode(ELEMENT_DEFAULT);
                     writer.endNode();
@@ -177,6 +186,22 @@ public class SerializableConverter implements Converter {
             }
         } catch (IOException e) {
             throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+        }
+    }
+
+    private Object readField(ObjectStreamField field, Class type, Object instance) {
+        try {
+            Field javaField = type.getDeclaredField(field.getName());
+            javaField.setAccessible(true);
+            return javaField.get(instance);
+        } catch (IllegalArgumentException e) {
+            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
+        } catch (IllegalAccessException e) {
+            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
+        } catch (NoSuchFieldException e) {
+            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
+        } catch (SecurityException e) {
+            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
         }
     }
 
