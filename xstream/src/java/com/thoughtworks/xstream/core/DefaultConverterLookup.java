@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
+import com.thoughtworks.xstream.converters.extended.GregorianCalendarConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
@@ -137,6 +138,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         alias("sql-date", java.sql.Date.class);
         alias("file", File.class);
         alias("locale", Locale.class);
+        alias("gregorian-calendar", Calendar.class, GregorianCalendar.class);
 
         if (JVM.is14()) {
             alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
@@ -180,6 +182,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         registerConverter(new FontConverter());
         registerConverter(new ColorConverter());
         registerConverter(new LocaleConverter());
+        registerConverter(new GregorianCalendarConverter());
 
         // EncodedByteArrayConverter
         // SqlTimeConverter
@@ -218,5 +221,5 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         this.classLoader = getClass().getClassLoader();
         return this;
     }
-    
+
 }

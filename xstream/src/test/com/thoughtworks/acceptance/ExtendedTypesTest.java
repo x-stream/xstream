@@ -1,5 +1,8 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +12,7 @@ import java.sql.Date;
 import java.util.TimeZone;
 import java.util.Locale;
 import java.util.Currency;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
@@ -80,5 +84,16 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
     public void testCurrency() {
         assertBothWays(Currency.getInstance("USD"), "<currency>USD</currency>");
+    }
+
+    public void testGregorianCalendar() {
+        Calendar in = Calendar.getInstance();
+        in.setTimeInMillis(44444);
+        String expected = "" +
+                "<gregorian-calendar>\n" +
+                "  <time>44444</time>\n" +
+                "</gregorian-calendar>";
+        Calendar out = (Calendar) assertBothWays(in, expected);
+        assertEquals(in.getTime(), out.getTime());
     }
 }
