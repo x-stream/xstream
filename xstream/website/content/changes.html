@@ -13,6 +13,36 @@
       <li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
     </ul>
 
+    <h1>Version 1.0 (release candidate 1)</h1>
+
+    <p>Released May 9, 2004. Focusses on finalizing the API for 1.0 release.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+        <li>JDK 1.3 compatability.</li>
+        <li>Informative error messages.</li>
+        <li>Defaults to using faster XPP based parser.</li>
+        <li>Serializes final field under JDK 1.4.</li>
+        <li>Fail fast when trying to serialize final field if not Sun 1.4 JRE.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+        <li>Misc performance improvements.</li>
+        <li>Converters for TreeMap and TreeSet that store the Comparator.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+      <li>Default constructor for XStream class uses XppDriver instead of DomDriver.
+      To use DomDriver, explicitly pass it in to the constructor.</li>
+      <li>Exception is thrown if trying to serialize an object that contains a
+      final field if not Sun 1.4 JRE.</li>
+    </ul>
+
     <p><a href="versioning.html">About XStream version numbers...</a></p>
 
     <h1>Version 0.6</h1>
