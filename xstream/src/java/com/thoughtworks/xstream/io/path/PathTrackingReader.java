@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.io.path;
 
+import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 public class PathTrackingReader implements HierarchicalStreamReader {
@@ -40,5 +41,10 @@ public class PathTrackingReader implements HierarchicalStreamReader {
 
     public Object peekUnderlyingNode() {
         return reader.peekUnderlyingNode();
+    }
+
+    public void appendErrors(ErrorWriter errorWriter) {
+        errorWriter.add("path", pathTracker.getCurrentPath());
+        reader.appendErrors(errorWriter);
     }
 }

@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 
@@ -81,5 +82,8 @@ public class XppDomReader
 
         pointer.v++;
 
+    }
+
+    public void appendErrors(ErrorWriter errorWriter) {
     }
 }

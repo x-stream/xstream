@@ -1,7 +1,8 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.core.util.StringStack;
+import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.core.util.IntQueue;
+import com.thoughtworks.xstream.core.util.StringStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
 import org.xmlpull.mxp1.MXParser;
@@ -34,11 +35,12 @@ public class XppReader implements HierarchicalStreamReader {
     }
 
     public boolean hasMoreChildren() {
-        while(true) {
-            switch(lookahead()) {
+        while (true) {
+            switch (lookahead()) {
                 case XmlPullParser.START_TAG:
                     return true;
-                case XmlPullParser.END_TAG: case XmlPullParser.END_DOCUMENT:
+                case XmlPullParser.END_TAG:
+                case XmlPullParser.END_DOCUMENT:
                     return false;
                 default:
                     continue;
@@ -74,7 +76,7 @@ public class XppReader implements HierarchicalStreamReader {
 
     public void moveDown() {
         int currentDepth = elementStack.size();
-        while(elementStack.size() <= currentDepth) {
+        while (elementStack.size() <= currentDepth) {
             read();
             if (elementStack.size() < currentDepth) {
                 throw new RuntimeException(); // sanity check
@@ -84,7 +86,7 @@ public class XppReader implements HierarchicalStreamReader {
 
     public void moveUp() {
         int currentDepth = elementStack.size();
-        while(elementStack.size() >= currentDepth) {
+        while (elementStack.size() >= currentDepth) {
             read();
         }
     }
@@ -115,14 +117,18 @@ public class XppReader implements HierarchicalStreamReader {
     }
 
     private void read() {
-        switch(next()) {
+        switch (next()) {
             case XmlPullParser.START_TAG:
                 elementStack.push(parser.getName());
                 break;
-            case XmlPullParser.END_TAG: case XmlPullParser.END_DOCUMENT:
+            case XmlPullParser.END_TAG:
+            case XmlPullParser.END_DOCUMENT:
                 elementStack.pop();
                 break;
         }
     }
 
+    public void appendErrors(ErrorWriter errorWriter) {
+        errorWriter.add("line number", String.valueOf(parser.getLineNumber()));
+    }
 }

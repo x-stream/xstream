@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -63,6 +64,10 @@ public class Dom4JReader implements HierarchicalStreamReader {
         currentElement = (Element) currentElement.elements().get(pointer.v);
 
         pointer.v++;
-
     }
+
+    public void appendErrors(ErrorWriter errorWriter) {
+        errorWriter.add("xpath", currentElement.getPath());
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import org.w3c.dom.*;
 
@@ -16,13 +17,13 @@ public class DomReader implements HierarchicalStreamReader {
     private List childElements;
 
     public DomReader(Element rootElement) {
-    	textBuffer = new StringBuffer(180);
+        textBuffer = new StringBuffer(180);
         pointers.addLast(new Pointer());
         setCurrent(rootElement);
     }
 
     public DomReader(Document document) {
-		textBuffer = new StringBuffer(180);
+        textBuffer = new StringBuffer(180);
         pointers.addLast(new Pointer());
         setCurrent(document.getDocumentElement());
     }
@@ -32,17 +33,17 @@ public class DomReader implements HierarchicalStreamReader {
     }
 
     public String getValue() {
-		NodeList childNodes = currentElement.getChildNodes();
-		textBuffer.setLength(0);
-		int length = childNodes.getLength();
-		for (int i = 0; i < length; i++) {
-			Node childNode = childNodes.item(i);
-			if (childNode instanceof Text) {
-				Text text = (Text) childNode;
-				textBuffer.append(text.getData());
-			}
-		}
-		return textBuffer.toString();
+        NodeList childNodes = currentElement.getChildNodes();
+        textBuffer.setLength(0);
+        int length = childNodes.getLength();
+        for (int i = 0; i < length; i++) {
+            Node childNode = childNodes.item(i);
+            if (childNode instanceof Text) {
+                Text text = (Text) childNode;
+                textBuffer.append(text.getData());
+            }
+        }
+        return textBuffer.toString();
     }
 
     public String getAttribute(String name) {
@@ -58,7 +59,7 @@ public class DomReader implements HierarchicalStreamReader {
         this.currentElement = (Element) currentElementObj;
         childNodes = currentElement.getChildNodes();
         childElements = new ArrayList();
-        for(int i = 0; i < childNodes.getLength(); i++) {
+        for (int i = 0; i < childNodes.getLength(); i++) {
             Node node = childNodes.item(i);
             if (node instanceof Element) {
                 childElements.add(node);
@@ -95,5 +96,6 @@ public class DomReader implements HierarchicalStreamReader {
 
     }
 
-
+    public void appendErrors(ErrorWriter errorWriter) {
+    }
 }
