@@ -41,6 +41,7 @@ public class JavaClassConverter extends AbstractBasicConverter {
                     str.equals("boolean") ? boolean.class :
                     str.equals("double") ? double.class :
                     str.equals("char") ? char.class :
+                    str.equals("short") ? short.class :
                     classLoader.loadClass(str);
         } catch (ClassNotFoundException e) {
             throw new ConversionException("Cannot load java class " + str, e);
