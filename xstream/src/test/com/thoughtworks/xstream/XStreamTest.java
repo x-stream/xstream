@@ -107,7 +107,7 @@ public class XStreamTest extends TestCase {
 
     }
 
-    public void testNonStaticPrivateInnerClassCanBeUsed() {
+    public void testCanHandleNonStaticPrivateInnerClass() {
         NonStaticInnerClass obj = new NonStaticInnerClass();
         obj.field = 3;
 
@@ -147,7 +147,7 @@ public class XStreamTest extends TestCase {
         int field;
     }
 
-    public void testObjectsCanBeConvertedMultipleTimesWithSameXStream() {
+    public void testCanBeBeUsedMultipleTimesWithSameInstance() {
         Y obj = new Y();
         obj.yField = "x";
 

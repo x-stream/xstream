@@ -12,13 +12,13 @@ public class ReflectionObjectGraphTest extends TestCase {
 
     private ObjectFactory objectFactory = new SunReflectionObjectFactory();
 
-    public void testGraphStartsOffEmpty() {
+    public void testStartsOffEmpty() {
         ObjectTree writer = new ReflectionObjectGraph(X.class, objectFactory);
         assertEquals(X.class, writer.type());
         assertNull(writer.get());
     }
 
-    public void testRootItemCanBeCreated() {
+    public void testCanCreateRootItem() {
         ObjectTree writer = new ReflectionObjectGraph(X.class, objectFactory);
         writer.create(X.class);
         assertEquals(X.class, writer.type());

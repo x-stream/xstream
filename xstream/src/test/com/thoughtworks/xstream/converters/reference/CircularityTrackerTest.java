@@ -20,7 +20,7 @@ public class CircularityTrackerTest extends TestCase {
         }
     }
 
-    public void testObjectsThatAreEqualButNotTheSameAreAllowed() {
+    public void testAllowsObjectsThatAreEqualButNotTheSame() {
         circularityTracker.track(new AlwaysEquals());
         circularityTracker.track(new AlwaysEquals());
     }

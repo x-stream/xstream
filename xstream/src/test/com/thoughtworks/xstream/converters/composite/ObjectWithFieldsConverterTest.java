@@ -24,7 +24,7 @@ public class ObjectWithFieldsConverterTest extends TestCase {
         String anString = new String("XStream programming!");
     }
 
-    public void testPrimitiveTypes() {
+    public void testSerializesAllPrimitiveFieldsInACustomObject() {
         World world = new World();
 
         XStream xstream = new XStream();
@@ -59,7 +59,7 @@ public class ObjectWithFieldsConverterTest extends TestCase {
         static String stat = "stat";
     }
 
-    public void testDontTryToWriteTransientStaticOrFinalFields() {
+    public void testDoesNotSerializeTransientOrStaticOrFinalFields() {
         TypesOfFields fields = new TypesOfFields();
         String expected = "" +
                 "<types>\n" +

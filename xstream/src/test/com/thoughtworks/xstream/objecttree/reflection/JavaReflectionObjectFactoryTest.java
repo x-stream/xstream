@@ -11,29 +11,30 @@ public class JavaReflectionObjectFactoryTest extends TestCase {
         objectFactory = new JavaReflectionObjectFactory();
     }
 
-    public void testOuterClassCanBeCreated() {
+    public void testConstructsStandardClass() {
         assertCanCreate(OuterClass.class);
     }
 
-    public void testStaticInnerClassCanBeCreated() {
+    public void testConstructsStaticInnerClass() {
         assertCanCreate(PublicStaticInnerClass.class);
     }
 
-    public void testNonPublicAndNonStaticInnerClassesCannotBeCreated() {
+    public void testNotCapableOfConstructingNonPublicAndNonStaticInnerClasses() {
         assertCannotCreate(PrivateStaticInnerClass.class);
         assertCannotCreate(PublicNonStaticInnerClass.class);
         assertCannotCreate(PrivateNonStaticInnerClass.class);
     }
 
-    public void testConstructorsAreUnfortunatelyExecutedOnObjectInstantiation() {
+    public void testUnfortunatelyExecutesCodeInsideConstructor() {
         try {
             objectFactory.create(WithConstructorThatDoesStuff.class);
             fail("Expected code in constructor to be executed and throw an exception");
-        } catch (UnsupportedOperationException goodException) {
+        } catch (UnsupportedOperationException expectedException) {
+            // good
         }
     }
 
-    public void testClassesWithoutDefaultConstructorCannotBeCreated() {
+    public void testIsNotCapableOfConstructingClassesWithoutDefault() {
         assertCannotCreate(WithoutDefaultConstructor.class);
     }
 
