@@ -46,15 +46,17 @@ public abstract class AbstractAcceptanceTest extends TestCase {
     protected void compareObjects(Object expected, Object actual) {
         if (expected == null) {
             assertNull(actual);
-        }
-        else {
+        } else {
             assertNotNull("Should not be null", actual);
             if (actual.getClass().isArray()) {
                 assertArrayEquals(expected, actual);
-            }
-            else {
+            } else {
                 assertEquals(expected.getClass(), actual.getClass());
-                assertEquals(expected, actual);
+                if (!expected.equals(actual)) {
+                    assertEquals("Object deserialization failed",
+                            "DESERIALIZED OBJECT\n" + xstream.toXML(expected),
+                            "DESERIALIZED OBJECT\n" + xstream.toXML(actual));
+                }
             }
         }
     }
@@ -74,15 +76,10 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         StringBuffer result = new StringBuffer();
         for (int i = 0; i < bytes.length; i++) {
             result.append(bytes[i]).append(' ');
-            if (bytes[i] < 100) {
-                result.append(' ');
-            }
-            if (bytes[i] < 10) {
-                result.append(' ');
-            }
-            if (i % 16 == 15) {
-                result.append('\n');
-            }
+            if (bytes[i] < 100) result.append(' ');
+            if (bytes[i] < 10) result.append(' ');
+            if (bytes[i] >= 0) result.append(' ');
+            if (i % 16 == 15) result.append('\n');
         }
         return result.toString();
     }
