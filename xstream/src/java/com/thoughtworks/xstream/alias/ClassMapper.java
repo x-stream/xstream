@@ -6,4 +6,6 @@ public interface ClassMapper {
     Class lookupType(String elementName);
 
     Class lookupDefaultType(Class baseType);
+
+    void alias(String elementName, Class type, Class defaultImplementation);
 }

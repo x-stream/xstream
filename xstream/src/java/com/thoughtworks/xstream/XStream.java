@@ -1,6 +1,9 @@
 package com.thoughtworks.xstream;
 
 import com.thoughtworks.xstream.alias.DefaultClassMapper;
+import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.DefaultElementMapper;
+import com.thoughtworks.xstream.alias.ElementMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
@@ -25,16 +28,17 @@ import java.util.*;
 
 public class XStream {
 
-    private DefaultClassMapper classMapper = new DefaultClassMapper();
     private ConverterLookup converterLookup = new DefaultConverterLookup();
     private XMLReaderDriver xmlReaderDriver = new DomXMLReaderDriver();
+    private ClassMapper classMapper;
     private ObjectFactory objectFactory;
 
     public XStream() {
-        this(new SunReflectionObjectFactory());
+        this(new SunReflectionObjectFactory(), new DefaultClassMapper(), new DefaultElementMapper());
     }
 
-    public XStream(ObjectFactory objectFactory) {
+    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, ElementMapper elementMapper) {
+        this.classMapper = classMapper;
         this.objectFactory = objectFactory;
 
         alias("int", Integer.class);
@@ -61,7 +65,7 @@ public class XStream {
         alias("tree-map", TreeMap.class);
         alias("tree-set", TreeSet.class);
 
-        registerConverter(new ObjectWithFieldsConverter(classMapper));
+        registerConverter(new ObjectWithFieldsConverter(classMapper,elementMapper));
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());
