@@ -36,10 +36,6 @@ public class Dom4JXMLReader implements XMLReader {
         currentElement = (Element) currentElement.elements().get(index);
     }
 
-    public void child(String elementName) {
-        currentElement = currentElement.element(elementName);
-    }
-
     public void pop() {
         currentElement = currentElement.getParent();
     }

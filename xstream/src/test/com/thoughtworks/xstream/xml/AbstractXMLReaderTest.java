@@ -49,52 +49,18 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.pop();
     }
 
-    public void testCanNavigateDownChildTagsByName() throws Exception {
-        XMLReader xmlReader = createReader("<a><hello/><world/></a>");
-
-        assertEquals(2, xmlReader.childCount());
-
-        xmlReader.child("hello");
-        assertEquals("hello", xmlReader.name());
-        xmlReader.pop();
-
-        xmlReader.child("world");
-        assertEquals("world", xmlReader.name());
-        xmlReader.pop();
-    }
-
     public void testChildTagsCanBeMixedWithOtherNodes() throws Exception {
         XMLReader xmlReader = createReader("<!-- xx --><a> <hello/> <!-- x --> text <world/></a>");
 
         assertEquals(2, xmlReader.childCount());
 
-        xmlReader.child("hello");
+        xmlReader.child(0);
         assertEquals("hello", xmlReader.name());
         xmlReader.pop();
 
-        xmlReader.child("world");
+        xmlReader.child(1);
         assertEquals("world", xmlReader.name());
         xmlReader.pop();
-    }
-
-    public void testFetchingChildTagByNameOnlyGetsDirectDescendant() throws Exception {
-        XMLReader xmlReader = createReader("" +
-                "<root>" +
-                "  <something>" +
-                "    <findme>" +
-                "      <BAD/>" +
-                "    </findme>" +
-                "  </something>" +
-                "  <findme>" +
-                "    <GOOD/>" +
-                "  </findme>" +
-                "</root>"
-        );
-
-        xmlReader.child("findme");
-        xmlReader.child(0);
-        assertEquals("GOOD", xmlReader.name());
-
     }
 
     public void testAttributesCanBeFetchedFromTags() throws Exception {

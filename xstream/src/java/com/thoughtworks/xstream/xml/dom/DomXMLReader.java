@@ -4,15 +4,12 @@ import com.thoughtworks.xstream.xml.XMLReader;
 import org.w3c.dom.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DomXMLReader implements XMLReader {
 
     private Element currentElement;
-    private List childElementsByIndex;
-    private Map childElementsByName;
+    private List childElements;
     private StringBuffer textBuffer;
 
     public DomXMLReader(Element rootElement) {
@@ -28,7 +25,6 @@ public class DomXMLReader implements XMLReader {
     }
 
     public String text() {
-        //return currentElement.getText();
         return textBuffer.toString();
     }
 
@@ -38,15 +34,11 @@ public class DomXMLReader implements XMLReader {
     }
 
     public int childCount() {
-        return childElementsByIndex.size();
+        return childElements.size();
     }
 
     public void child(int index) {
-        setCurrent(childElementsByIndex.get(index));
-    }
-
-    public void child(String elementName) {
-        setCurrent(childElementsByName.get(elementName));
+        setCurrent(childElements.get(index));
     }
 
     public void pop() {
@@ -55,8 +47,7 @@ public class DomXMLReader implements XMLReader {
 
     private void setCurrent(Object currentElementObj) {
         this.currentElement = (Element) currentElementObj;
-        childElementsByIndex = new ArrayList();
-        childElementsByName = new HashMap();
+        childElements = new ArrayList();
         textBuffer = new StringBuffer();
         NodeList childNodes = currentElement.getChildNodes();
         int length = childNodes.getLength();
@@ -64,8 +55,7 @@ public class DomXMLReader implements XMLReader {
             Node childNode = childNodes.item(i);
             if (childNode instanceof Element) {
                 Element element = (Element) childNode;
-                childElementsByIndex.add(element);
-                childElementsByName.put(element.getTagName(), element);
+                childElements.add(element);
             } else if (childNode instanceof Text) {
                 Text text = (Text) childNode;
                 textBuffer.append(text.getData());

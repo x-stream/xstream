@@ -7,6 +7,8 @@ import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ColorConverter implements Converter {
     public boolean canConvert(Class type) {
@@ -28,19 +30,19 @@ public class ColorConverter implements Converter {
     }
 
     public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
+        Map elements = new HashMap();
+        for (int i = 0; i < xmlReader.childCount(); i++) {
+            xmlReader.child(i);
+            elements.put(xmlReader.name(), Integer.valueOf(xmlReader.text()));
+            xmlReader.pop();
+        }
         Color color = new Color(
-                read("red", xmlReader),
-                read("green", xmlReader),
-                read("blue", xmlReader),
-                read("alpha", xmlReader)
+                ((Integer) elements.get("red")).intValue(),
+                ((Integer) elements.get("green")).intValue(),
+                ((Integer) elements.get("blue")).intValue(),
+                ((Integer) elements.get("alpha")).intValue()
         );
         objectGraph.set(color);
     }
 
-    private int read(String field, XMLReader reader) {
-        reader.child(field);
-        int result = Integer.parseInt(reader.text());
-        reader.pop();
-        return result;
-    }
 }

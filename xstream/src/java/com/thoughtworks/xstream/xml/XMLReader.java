@@ -14,8 +14,6 @@ public interface XMLReader {
 
     void child(int index);
 
-    void child(String elementName);
-
     void pop();
 
 }
