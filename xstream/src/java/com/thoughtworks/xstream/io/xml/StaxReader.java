@@ -146,6 +146,6 @@ public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants 
     }
 
     public void appendErrors(ErrorWriter errorWriter) {
-        errorWriter.add("line number", in.getLocation().toString());
+        errorWriter.add("line number", String.valueOf(in.getLocation().getLineNumber()));
     }
 }

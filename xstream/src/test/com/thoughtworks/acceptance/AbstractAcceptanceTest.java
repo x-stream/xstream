@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import junit.framework.TestCase;
 
@@ -8,7 +9,24 @@ import java.lang.reflect.Array;
 
 public abstract class AbstractAcceptanceTest extends TestCase {
 
-    protected XStream xstream = new XStream(new XppDriver());
+    protected XStream xstream = new XStream(createDriver());
+
+    protected HierarchicalStreamDriver createDriver() {
+        // if the system property is set, use it to load the driver
+        String driver = null;
+        try {
+            driver = System.getProperty("xstream.driver");
+            if (driver != null) {
+                System.out.println("Using driver: " + driver);
+                Class type = Class.forName(driver);
+                return (HierarchicalStreamDriver) type.newInstance();
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Could not load driver: " + driver);
+        }
+        return new XppDriver();
+    }
 
     protected Object assertBothWays(Object root, String xml) {
         String resultXml = xstream.toXML(root);
@@ -21,11 +39,13 @@ public abstract class AbstractAcceptanceTest extends TestCase {
     protected void compareObjects(Object expected, Object actual) {
         if (expected == null) {
             assertNull(actual);
-        } else {
+        }
+        else {
             assertNotNull("Should not be null", actual);
             if (actual.getClass().isArray()) {
                 assertArrayEquals(expected, actual);
-            } else {
+            }
+            else {
                 assertEquals(expected.getClass(), actual.getClass());
                 assertEquals(expected, actual);
             }
@@ -47,9 +67,15 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         StringBuffer result = new StringBuffer();
         for (int i = 0; i < bytes.length; i++) {
             result.append(bytes[i]).append(' ');
-            if (bytes[i] < 100) result.append(' ');
-            if (bytes[i] < 10) result.append(' ');
-            if (i % 16 == 15) result.append('\n');
+            if (bytes[i] < 100) {
+                result.append(' ');
+            }
+            if (bytes[i] < 10) {
+                result.append(' ');
+            }
+            if (i % 16 == 15) {
+                result.append('\n');
+            }
         }
         return result.toString();
     }
