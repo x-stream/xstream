@@ -1,6 +1,4 @@
-<project name="xstream-website" default="all">
-
-    <target name="all" depends="clean, website" description="Rebuild website"/>
+<project name="xstream-website" default="website">
 
     <target name="clean" description="Clean up all built files">
         <delete dir="build"/>
@@ -28,4 +26,11 @@
         </java>
     </target>
 
+	<target name="publish" depends="website" description="Publish website">
+		<fail unless="publish.path" message="Specify 'publish.path' property"/>
+		<copy todir="${publish.path}">
+			<fileset dir="build/website"/>
+		</copy>
+	</target>
+	
 </project>
