@@ -140,4 +140,12 @@ public class XStreamTest extends TestCase {
         int field;
     }
 
+    public void testObjectsCanBeConvertedMultipleTimesWithSameXStream() {
+        Y obj = new Y();
+        obj.yField = "x";
+
+        assertEquals(xstream.toXML(obj), xstream.toXML(obj));
+    }
+
+
 }
