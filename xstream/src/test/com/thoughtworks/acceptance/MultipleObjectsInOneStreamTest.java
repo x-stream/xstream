@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import com.thoughtworks.xstream.testutil.CallLog;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.acceptance.objects.Software;
 
 import java.io.StringReader;
@@ -15,6 +16,8 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.EOFException;
 import java.io.Reader;
+import java.util.List;
+import java.util.ArrayList;
 
 public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
@@ -22,6 +25,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
         private String firstName;
         private String lastName;
+        private Person secretary;
 
         public Person(String firstName, String lastName) {
             this.firstName = firstName;
@@ -164,5 +168,55 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
         // verify
         log.verify();
+    }
+
+    public void testByDefaultDoesNotPreserveReferencesAcrossDifferentObjectsInStream() throws Exception {
+        xstream.alias("person", Person.class);
+
+        // Setup initial data: two object, one referencing another...
+        Person alice = new Person("Alice", "Thing");
+        Person jane = new Person("Jane", "Blah");
+        jane.secretary = alice;
+
+        // Serialize the two individual objects.
+        StringWriter writer = new StringWriter();
+        ObjectOutputStream out = xstream.createObjectOutputStream(writer);
+        out.writeObject(alice);
+        out.writeObject(jane);
+        out.close();
+
+        // Deserialize the two objects.
+        ObjectInputStream in = xstream.createObjectInputStream(new StringReader(writer.toString()));
+        alice = (Person) in.readObject();
+        jane = (Person) in.readObject();
+        in.close();
+
+        assertNotSame(alice, jane.secretary); // NOT SAME
+    }
+
+    public void TODOtestSupportsOptionToPreserveReferencesAcrossDifferentObjectsInStream() throws Exception {
+        xstream.alias("person", Person.class);
+
+//        xstream.setObjectStreamMode(XStream.ID_REFERENCES);
+
+        // Setup initial data: two object, one referencing another...
+        Person alice = new Person("Alice", "Thing");
+        Person jane = new Person("Jane", "Blah");
+        jane.secretary = alice;
+
+        // Serialize the two individual objects.
+        StringWriter writer = new StringWriter();
+        ObjectOutputStream out = xstream.createObjectOutputStream(writer);
+        out.writeObject(alice);
+        out.writeObject(jane);
+        out.close();
+
+        // Deserialize the two objects.
+        ObjectInputStream in = xstream.createObjectInputStream(new StringReader(writer.toString()));
+        alice = (Person) in.readObject();
+        jane = (Person) in.readObject();
+        in.close();
+
+        assertSame(alice, jane.secretary); // NOT SAME
     }
 }
