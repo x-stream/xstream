@@ -13,7 +13,7 @@ public class QuickWriter {
 
     public QuickWriter(Writer writer) {
         this.writer = writer;
-        buffer = new char[32];
+        buffer = new char[1024];
     }
 
     public QuickWriter(Writer writer, int bufferSize) {

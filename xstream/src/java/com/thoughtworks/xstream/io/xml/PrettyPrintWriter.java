@@ -102,7 +102,9 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
             writer.write('>');
         }
         readyForNewLine = true;
-        writer.flush();
+        if (depth == 0 ) {
+            writer.flush();
+        }
     }
 
     private void finishTag() {

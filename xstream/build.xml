@@ -1,4 +1,4 @@
-<project name="xstream" default="library">
+    <project name="xstream" default="library">
 
     <property name="version" value="SNAPSHOT"/>
 
