@@ -142,4 +142,17 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
         assertBothWays(child, expectedXml);
     }
+
+    static class MyDate extends java.util.Date {
+        public MyDate(int time) {
+            super(time);
+        }
+    }
+
+    public void testSupportsSubclassesOfClassesThatAlreadyHaveConverters() {
+        MyDate in = new MyDate(1234567890);
+        String xml = xstream.toXML(in);
+        MyDate out = (MyDate) xstream.fromXML(xml);
+        assertEquals(in, out);
+    }
 }
