@@ -91,4 +91,38 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertBothWays(array, expected);
 
     }
+
+    public void TODO_testArrayInCustomObject() {
+        ObjWithArray objWithArray = new ObjWithArray();
+        objWithArray.ints = new int[]{1, 2};
+        xstream.alias("owa", ObjWithArray.class);
+        String expected = "" +
+                "<owa>\n" +
+                "  <ints class=\"int-array\">\n" +
+                "    <int>1</int>\n" +
+                "    <int>2</int>\n" +
+                "  </ints>\n" +
+                "</owa>";
+        assertBothWays(objWithArray, expected);
+    }
+
+    class ObjWithArray {
+        int[] ints;
+
+        public boolean equals(Object obj) {
+            if (obj instanceof ObjWithArray) {
+                ObjWithArray objWithArray = (ObjWithArray) obj;
+                if (ints.length != objWithArray.ints.length) {
+                    return false;
+                }
+                for (int i = 0; i < ints.length; i++) {
+                    if (ints[i] != objWithArray.ints[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+    }
 }
