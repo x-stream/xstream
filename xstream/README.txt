@@ -13,7 +13,8 @@ is all you need to include in your classpath to use XStream.
 
 All libraries in the 'lib' directory are used at build time,
 or are optional extras used for tighter integration with
-third party libraries.
+third party libraries. XPP3 is recommend for use as it will
+greatly improve the performance of XStream.
 
 --[ Documentation ]------------------------------------------
 

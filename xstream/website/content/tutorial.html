@@ -38,6 +38,13 @@ public class PhoneNumber {
 
 <div class="Source Java"><pre>XStream xstream = new XStream();</pre></div>
 
+    <p>You require <code>xstream-[version].jar</code> and <code>xpp3-[version].jar</code> in the classpath.
+    <a href="http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/index.html">XPP3</a>
+    is a very fast XML pull-parser implementation. If you do not want to include this
+    dependency, you can use a standard JAXP DOM parser instead:</p>
+
+<div class="Source Java"><pre>XStream xstream = new XStream(new DomDriver()); // does not require XPP3 library</pre></div>
+
     <p><b>Note:</b> This class is a simple facade designed for common operations. For more flexibility you
     may choose to create your own facade that behaves differently.</p>
 

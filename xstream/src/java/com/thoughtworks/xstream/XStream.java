@@ -9,8 +9,8 @@ import com.thoughtworks.xstream.core.*;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -29,7 +29,7 @@ public class XStream {
     public static final int XPATH_REFERENCES = 1003;
 
     public XStream() {
-        this(new Sun14ReflectionProvider(), new DefaultClassMapper(), new DomDriver());
+        this(new Sun14ReflectionProvider(), new DefaultClassMapper(), new XppDriver());
     }
 
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
@@ -37,7 +37,7 @@ public class XStream {
     }
 
     public XStream(ReflectionProvider reflectionProvider) {
-        this(reflectionProvider, new DefaultClassMapper(), new DomDriver());
+        this(reflectionProvider, new DefaultClassMapper(), new XppDriver());
     }
 
     public XStream(ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
