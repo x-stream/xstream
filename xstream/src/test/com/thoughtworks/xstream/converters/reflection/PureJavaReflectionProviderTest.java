@@ -108,5 +108,5 @@ public class PureJavaReflectionProviderTest extends AbstractReflectionProviderTe
     }
 
 
-`}
+}
 
