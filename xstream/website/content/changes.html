@@ -30,7 +30,11 @@
         the JVM to crash(!) when rendered.</li>
         <li>Converters for java.io.File, java.sql.Timestamp, java.awt.Color, java.awt.Font and dynamic proxies are now
         registered by default.</li>
+        <li>All caching is done in XStream instance instead of statics, allowing applications that use hot redeployment
+        of classes to use XStream in a parent classloader.</li>
+        <li>The &lt;entry&gt; element used in Maps can now be specified by creating an alias for java.util.Map.Entry.</li>
         <li>Bugfix: Fields with characters that generate invalid XML (such as $ signs) are now escaped.</li>
+        <li>Bugfix: Pre-instantiated objects can be unmarshalled through multiple levels.</li>
     </ul>
 
     <h2>API changes</h2>
