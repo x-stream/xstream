@@ -15,33 +15,10 @@
     </target>
 
     <target name="compile" description="Compile all Java">
-        <uptodate property="sablecc.uptodate"
-            srcfile="src/java/com/thoughtworks/xstream/io/squidgey/squidgey.grammar"
-            targetfile="build/src/.flagfile"/>
-        <antcall target="sablecc"/>
         <mkdir dir="build/classes"/>
-        <javac srcdir="src/java;build/src" destdir="build/classes">
+        <javac srcdir="src/java" destdir="build/classes">
             <classpath refid="classpath"/>
         </javac>
-        <copy todir="build/classes">
-            <fileset dir="build/src">
-                <include name="**/*.dat"/>
-            </fileset>
-        </copy>
-    </target>
-
-    <target name="sablecc" unless="sablecc.uptodate" description="Generate parser">
-        <taskdef name="sablecc" classname="org.sablecc.ant.taskdef.Sablecc">
-            <classpath>
-                <path path="lib/sablecc.jar"/>
-            </classpath>
-        </taskdef>
-        <delete dir="build/src"/>
-        <mkdir dir="build/src"/>
-        <sablecc src="src/java/com/thoughtworks/xstream/io/squidgey" outputdirectory="build/src">
-            <include name="*.grammar"/>
-        </sablecc>
-        <touch file="build/src/.flagfile"/>
     </target>
 
     <target name="test" depends="compile" description="Run all acceptance tests and unit tests">
