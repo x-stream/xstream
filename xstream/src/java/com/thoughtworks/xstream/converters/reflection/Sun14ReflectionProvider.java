@@ -19,9 +19,9 @@ import java.util.Map;
  */
 public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
-    private static final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-    private static final Map constructorCache = new HashMap();
-    private static Unsafe cachedUnsafe;
+    private final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
+    private Unsafe cachedUnsafe;
+    private final Map constructorCache = new HashMap();
 
     private Unsafe getUnsafe() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         if (cachedUnsafe != null) {

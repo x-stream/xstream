@@ -12,8 +12,8 @@ import java.util.TreeMap;
 
 public class FieldDictionary {
 
-    private static final Map keyedByFieldNameCache = new TreeMap();
-    private static final Map keyedByFieldKeyCache = new TreeMap();
+    private final Map keyedByFieldNameCache = new TreeMap();
+    private final Map keyedByFieldKeyCache = new TreeMap();
 
     public Iterator serializableFieldsFor(Class cls) {
         return buildMap(cls, true).values().iterator();

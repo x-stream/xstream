@@ -100,17 +100,18 @@ public class XStream {
     private MarshallingStrategy marshallingStrategy;
     private ClassMapper classMapper;
     private DefaultConverterLookup converterLookup;
+    private JVM jvm = new JVM();
 
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_REFERENCES = 1003;
 
     public XStream() {
-        this(JVM.bestReflectionProvider(), new DefaultClassMapper(), new XppDriver());
+        this(null, new DefaultClassMapper(), new XppDriver());
     }
 
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(JVM.bestReflectionProvider(), new DefaultClassMapper(), hierarchicalStreamDriver);
+        this(null, new DefaultClassMapper(), hierarchicalStreamDriver);
     }
 
     public XStream(ReflectionProvider reflectionProvider) {
@@ -126,10 +127,14 @@ public class XStream {
     }
 
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier) {
+        jvm = new JVM();
+        if (reflectionProvider == null) {
+            reflectionProvider = jvm.bestReflectionProvider();
+        }
         this.classMapper = classMapper;
         this.hierarchicalStreamDriver = driver;
         setMode(XPATH_REFERENCES);
-        converterLookup = new DefaultConverterLookup(reflectionProvider, classMapper, classAttributeIdentifier);
+        converterLookup = new DefaultConverterLookup(reflectionProvider, classMapper, classAttributeIdentifier, jvm);
         converterLookup.setupDefaults();
     }
 

@@ -20,6 +20,7 @@ public class ReflectionConverter implements Converter {
     private String definedInAttributeIdentifier = "defined-in";
     private ReflectionProvider reflectionProvider;
     private DefaultCollectionLookup defaultCollectionLookup;
+    private InstanceResolver instanceResolver;
 
     public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier, ReflectionProvider reflectionProvider, DefaultCollectionLookup defaultCollectionLookup) {
         this.classMapper = classMapper;
@@ -27,6 +28,7 @@ public class ReflectionConverter implements Converter {
         this.definedInAttributeIdentifier = definedInAttributeIdentifier;
         this.reflectionProvider = reflectionProvider;
         this.defaultCollectionLookup = defaultCollectionLookup;
+        instanceResolver = new InstanceResolver();
     }
 
     public boolean canConvert(Class type) {
@@ -103,7 +105,7 @@ public class ReflectionConverter implements Converter {
 
             reader.moveUp();
         }
-        return new InstanceResolver().resolve(result);
+        return instanceResolver.resolve(result);
     }
 
     private Collection getDefaultCollection(Object instance) {

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class JVM {
 
-    private static Map classCache = new HashMap();
+    private Map classCache = new HashMap();
     private static ReflectionProvider reflectionProvider;
 
     public static boolean is14() {
@@ -16,7 +16,7 @@ public class JVM {
         return majorJavaVersion >= 1.4f;
     }
 
-    public static Class loadClass(String name) {
+    public Class loadClass(String name) {
         if (classCache.containsKey(name)) {
             return (Class) classCache.get(name);
         } else {
@@ -30,7 +30,7 @@ public class JVM {
         }
     }
 
-    public static synchronized ReflectionProvider bestReflectionProvider() {
+    public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
             try {
                 if (loadClass("sun.misc.Unsafe") != null) {

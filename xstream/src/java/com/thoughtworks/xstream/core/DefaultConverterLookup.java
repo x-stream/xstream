@@ -40,10 +40,12 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
     private Converter defaultConverter;
     private Map defaultCollections = new HashMap();
     private ClassLoader classLoader = getClass().getClassLoader();
+    private JVM jvm;
 
     public DefaultConverterLookup(ReflectionProvider reflectionProvider,
                                   ClassMapper classMapper,
-                                  String classAttributeIdentifier) {
+                                  String classAttributeIdentifier, JVM jvm) {
+        this.jvm = jvm;
         this.defaultConverter = new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, this);
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
@@ -124,8 +126,8 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         alias("file", File.class);
 
         if (JVM.is14()) {
-            alias("linked-hash-map", JVM.loadClass("java.util.LinkedHashMap"));
-            alias("linked-hash-set", JVM.loadClass("java.util.LinkedHashSet"));
+            alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
+            alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
         }
 
         registerConverter(defaultConverter);

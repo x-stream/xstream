@@ -13,7 +13,7 @@ import java.util.Collections;
  */
 public class InstanceResolver {
 
-    private static Map cache = Collections.synchronizedMap(new HashMap());
+    private Map cache = Collections.synchronizedMap(new HashMap());
     private static final Object NO_METHOD = new Object();
 
     public Object resolve(Object result) {
