@@ -145,4 +145,25 @@ public class MapTest extends AbstractAcceptanceTest {
         assertEquals("C", keys[1]);
         assertEquals("X", keys[2]);
     }
+    
+    public void testAllowsEntryToBeAliasedToSomethingElse() {
+        Map map = new HashMap();
+        map.put("benny", "hill");
+        map.put("joe", "walnes");
+
+        String expected = "" +
+                "<map>\n" +
+                "  <thing>\n" +
+                "    <string>benny</string>\n" +
+                "    <string>hill</string>\n" +
+                "  </thing>\n" +
+                "  <thing>\n" +
+                "    <string>joe</string>\n" +
+                "    <string>walnes</string>\n" +
+                "  </thing>\n" +
+                "</map>";
+
+        xstream.alias("thing", Map.Entry.class);
+        assertBothWays(map, expected);
+    }
 }

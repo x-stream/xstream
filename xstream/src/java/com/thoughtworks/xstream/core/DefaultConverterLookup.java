@@ -110,6 +110,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         alias("bit-set", BitSet.class);
 
         alias("map", Map.class, HashMap.class);
+        alias("entry", Map.Entry.class);
         alias("properties", Properties.class);
         alias("list", List.class, ArrayList.class);
         alias("set", Set.class, HashSet.class);

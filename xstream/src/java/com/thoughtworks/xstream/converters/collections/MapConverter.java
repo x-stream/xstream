@@ -37,7 +37,7 @@ public class MapConverter extends AbstractCollectionConverter {
         Map map = (Map) source;
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            writer.startNode("entry");
+            writer.startNode(classMapper.lookupName(Map.Entry.class));
 
             writeItem(entry.getKey(), context, writer);
             writeItem(entry.getValue(), context, writer);
