@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Properties;
 
 import com.opensymphony.module.sitemesh.html.BasicRule;
+import com.opensymphony.module.sitemesh.html.BlockExtractingRule;
 import com.opensymphony.module.sitemesh.html.HTMLProcessor;
 import com.opensymphony.module.sitemesh.html.Tag;
 import com.opensymphony.module.sitemesh.html.util.CharArray;
@@ -72,6 +73,7 @@ public class Page {
         htmlProcessor.addRule(new TitleExtractingRule(pageBuilder));
         htmlProcessor.addRule(new MetaTagRule(pageBuilder));
         htmlProcessor.addRule(new LinkExtractingRule());
+        htmlProcessor.addRule(new JiraLinkRule());
 
         // go!
         htmlProcessor.process();
@@ -126,6 +128,24 @@ public class Page {
                 links.add(tag.getAttributeValue("href", false));
             }
             tag.writeTo(currentBuffer());
+        }
+    }
+
+    /**
+     * Rule for HTMLProcessor that turns <jira>XSTR-123</jira> tags into links.
+     */
+    private class JiraLinkRule extends BlockExtractingRule {
+
+        protected JiraLinkRule() {
+            super(false, "jira");            
+        }
+        
+        protected void end(Tag tag) {
+            CharArray buffer = currentBuffer();
+            String id = buffer.toString();
+            buffer.clear();
+            buffer.append("<a href=\"http://jira.codehaus.org/browse/" + id+ "\">" + id + "</a>");
+            context.mergeBuffer();
         }
     }
 }
