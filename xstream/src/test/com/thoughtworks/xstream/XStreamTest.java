@@ -225,13 +225,15 @@ public class XStreamTest extends TestCase {
 
         Dom4JXMLReaderDriver driver = new Dom4JXMLReaderDriver();
 
-        Component component = new Component();
+        Component component0 = new Component();
 
-        component = (Component) xstream.fromXML( driver.createReader( xml ), component );
+        Component component1 = (Component) xstream.fromXML( driver.createReader( xml ), component0 );
 
-        assertEquals( "host", component.host );
+        assertEquals( component0, component1 );
 
-        assertEquals( 8000, component.port );
+        assertEquals( "host", component0.host );
+
+        assertEquals( 8000, component0.port );
     }
 
     static class Component
