@@ -1,8 +1,8 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.alias.ImplicitCollectionDef;
+import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
 public class ReflectionConverter implements Converter {
 
@@ -55,7 +55,7 @@ public class ReflectionConverter implements Converter {
         final Object replacedSource = serializationMethodInvoker.callWriteReplace(source);
         final Set seenFields = new HashSet();
 
-        final boolean[] writtenToStream = { false };
+        final boolean[] writtenToStream = {false};
         final Class[] currentClass = new Class[1];
 
         CustomObjectOutputStream.StreamCallback callback = new CustomObjectOutputStream.StreamCallback() {
@@ -85,6 +85,9 @@ public class ReflectionConverter implements Converter {
                 }
                 reflectionProvider.visitSerializableFields(replacedSource, new ReflectionProvider.Visitor() {
                     public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
+                        if (!definedIn.equals(currentClass[0])) {
+                            return;
+                        }
                         if (newObj != null) {
                             ImplicitCollectionDef def = implicitCollectionMapper.getImplicitCollectionDefForFieldName(definedIn, fieldName);
                             if (def != null) {
@@ -125,8 +128,8 @@ public class ReflectionConverter implements Converter {
             }
         };
 
-        currentClass[0] = replacedSource.getClass();
-        //for(currentClass[0] = replacedSource.getClass(); currentClass[0] != null; currentClass[0] = currentClass[0].getSuperclass()) {
+//        currentClass[0] = replacedSource.getClass();
+        for (currentClass[0] = replacedSource.getClass(); currentClass[0] != null; currentClass[0] = currentClass[0].getSuperclass()) {
             if (serializationMethodInvoker.supportsWriteObject(currentClass[0])) {
                 ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
                 serializationMethodInvoker.callWriteObject(currentClass[0], replacedSource, objectOutputStream);
@@ -137,7 +140,7 @@ public class ReflectionConverter implements Converter {
             } else {
                 callback.defaultWriteObject();
             }
-        //}
+        }
 
     }
 
@@ -145,8 +148,9 @@ public class ReflectionConverter implements Converter {
         final Object result = instantiateNewInstance(context);
         final SeenFields seenFields = new SeenFields();
 
-        final boolean[] readFromStream = { false };
+        final boolean[] readFromStream = {false};
 
+        final Class[] currentClass = new Class[1];
         CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
 
             public Object deserialize() {
@@ -196,16 +200,20 @@ public class ReflectionConverter implements Converter {
 
         };
 
-        if (serializationMethodInvoker.supportsReadObject(result.getClass())) {
-            ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
-            serializationMethodInvoker.callReadObject(result, objectInputStream);
-            if (readFromStream[0]) {
-                reader.moveUp();
-                readFromStream[0] = false;
+
+//        for (currentClass[0] = result.getClass(); currentClass[0] != null; currentClass[0] = currentClass[0].getSuperclass()) {
+        currentClass[0] = result.getClass();
+            if (serializationMethodInvoker.supportsReadObject(currentClass[0])) {
+                ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
+                serializationMethodInvoker.callReadObject(currentClass[0], result, objectInputStream);
+                if (readFromStream[0]) {
+                    reader.moveUp();
+                    readFromStream[0] = false;
+                }
+            } else {
+                callback.defaultReadObject();
             }
-        } else {
-            callback.defaultReadObject();
-        }
+//        }
 
         return serializationMethodInvoker.callReadResolve(result);
     }
@@ -266,9 +274,9 @@ public class ReflectionConverter implements Converter {
         } else if (!validField) {
             Class itemType = implicitCollectionMapper.getItemTypeForItemFieldName(result.getClass(), fieldName);
             if (itemType != null) {
-            	return itemType;
+                return itemType;
             } else {
-            	return classMapper.lookupType(reader.getNodeName());
+                return classMapper.lookupType(reader.getNodeName());
             }
         } else {
             return classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName, definedInCls));

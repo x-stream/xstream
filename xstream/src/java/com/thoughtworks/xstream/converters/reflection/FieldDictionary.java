@@ -95,7 +95,7 @@ public class FieldDictionary {
         public String toString() {
             return "FieldKey{" +
                     "order=" + order +
-                    ", depth=" + depth +
+                    ", writer=" + depth +
                     ", declaringClass=" + declaringClass +
                     ", fieldName='" + fieldName + "'" +
                     "}";
