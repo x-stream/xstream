@@ -68,11 +68,6 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
     public void writeField(Object object, String fieldName, Object value) {
         Field field = findField(object.getClass(), fieldName);
-        if (!Modifier.isFinal(field.getModifiers())) {
-            super.writeField(object, fieldName, value);
-            return;
-        }
-
         try {
             Unsafe unsafe = getUnsafe();
             long offset = unsafe.objectFieldOffset(field);
