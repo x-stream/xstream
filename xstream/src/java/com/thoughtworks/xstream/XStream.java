@@ -14,9 +14,7 @@ import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
 import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
 import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.objecttree.reflection.ObjectFactory;
-import com.thoughtworks.xstream.objecttree.reflection.ReflectionObjectGraph;
 import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
 import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLReaderDriver;
@@ -116,10 +114,9 @@ public class XStream {
     }
 
     public void toXML(Object obj, XMLWriter xmlWriter) {
-        ObjectTree objectGraph = new ReflectionObjectGraph(obj, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
         xmlWriter.startElement(classMapper.lookupName(obj.getClass()));
-        MarshallingContextAdaptor context = new MarshallingContextAdaptor(objectGraph.get(), xmlWriter, converterLookup);
+        MarshallingContextAdaptor context = new MarshallingContextAdaptor(obj, xmlWriter, converterLookup);
         rootConverter.toXML(context);
         xmlWriter.endElement();
     }
