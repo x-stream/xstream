@@ -39,14 +39,12 @@ public class PathTracker {
         }
         pointer++;
         currentPath = null;
-        System.out.println(getCurrentPath());
     }
 
     public void popElement() {
         indexMapStack[pointer] = null;
         currentPath = null;
         pointer--;
-        System.out.println(getCurrentPath());
     }
 
     public String getCurrentPath() {
