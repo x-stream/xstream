@@ -18,6 +18,10 @@ public class JVM {
         return System.getProperty("java.vm.vendor").indexOf("Sun") != -1;
     }
 
+    public static boolean isApple() {
+        return System.getProperty("java.vm.vendor").indexOf("Apple") != -1;
+    }
+
     public Class loadClass(String name) {
         try {
             return Class.forName(name, false, getClass().getClassLoader());
@@ -29,7 +33,7 @@ public class JVM {
     public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
             try {
-                if (isSun() && is14() && loadClass("sun.misc.Unsafe") != null) {
+                if ( canUseSun14ReflectionProvider() ) {
                     String cls = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
                     reflectionProvider = (ReflectionProvider) loadClass(cls).newInstance();
                 } else {
@@ -47,4 +51,9 @@ public class JVM {
         return reflectionProvider;
     }
 
+	private boolean canUseSun14ReflectionProvider() {
+		return ( isSun() || isApple() ) && is14() && loadClass("sun.misc.Unsafe") != null;
+	}
+
+    
 }
