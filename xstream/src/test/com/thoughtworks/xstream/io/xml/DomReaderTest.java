@@ -8,7 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 
-public class DomReaderTest extends AbstractReaderTest {
+public class DomReaderTest extends AbstractXMLReaderTest {
 
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {

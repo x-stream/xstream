@@ -12,7 +12,7 @@ public class PathTrackerTest extends TestCase {
         pathTracker = new PathTracker(1);
     }
 
-    public void testExposesXpathLikeExpressionOfCurrentLocationInUnderlyingXmlWriter() {
+    public void testExposesXpathLikeExpressionOfLocationInWriter() {
 
         assertEquals("", pathTracker.getCurrentPath());
 

@@ -6,7 +6,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-public class Dom4JReaderTest extends AbstractReaderTest {
+public class Dom4JReaderTest extends AbstractXMLReaderTest {
 
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {

@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 import java.io.StringWriter;
 
-public class PathTrackingXMLWriterTest extends TestCase {
+public class PathTrackingWriterTest extends TestCase {
     private StringWriter out;
     private HierarchicalStreamWriter writer;
     private PathTracker pathTracker;
@@ -17,7 +17,7 @@ public class PathTrackingXMLWriterTest extends TestCase {
         out = new StringWriter();
         HierarchicalStreamWriter originalWriter = new CompactWriter(out);
 
-        writer = new PathTrackingXMLWriter(originalWriter, pathTracker);
+        writer = new PathTrackingWriter(originalWriter, pathTracker);
     }
 
     public void testDecoratesXmlWriterProxyingAllInvocations() {

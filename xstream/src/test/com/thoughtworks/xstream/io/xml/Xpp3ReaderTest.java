@@ -6,7 +6,7 @@ import com.thoughtworks.xstream.io.xml.xpp3.Xpp3DomBuilder;
 
 import java.io.StringReader;
 
-public class Xpp3ReaderTest extends AbstractReaderTest {
+public class Xpp3ReaderTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
         return new Xpp3Driver().createReader(xml);
     }

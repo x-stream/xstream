@@ -2,13 +2,13 @@ package com.thoughtworks.xstream.io.path;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-public class PathTrackingXMLWriter implements HierarchicalStreamWriter {
+public class PathTrackingWriter implements HierarchicalStreamWriter {
 
     private HierarchicalStreamWriter targetWriter;
     private PathTracker pathTracker;
 
-    public PathTrackingXMLWriter(HierarchicalStreamWriter xmlWriter, PathTracker pathTracker) {
-        this.targetWriter = xmlWriter;
+    public PathTrackingWriter(HierarchicalStreamWriter targetWriter, PathTracker pathTracker) {
+        this.targetWriter = targetWriter;
         this.pathTracker = pathTracker;
     }
 
