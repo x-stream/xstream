@@ -19,6 +19,7 @@ import java.io.Writer;
 public class XStream {
 
     private HierarchicalStreamDriver hierarchicalStreamDriver;
+    private MarshallingStrategy marshallingStrategy;
     private ClassMapper classMapper;
     private DefaultConverterLookup converterLookup;
 
@@ -42,12 +43,20 @@ public class XStream {
         this(reflectionProvider, classMapper, driver, "class");
     }
 
-    public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver,String classAttributeIdentifier) {
+    public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier) {
         this.classMapper = classMapper;
         this.hierarchicalStreamDriver = driver;
-
+        this.marshallingStrategy = new TreeMarshallingStrategy();
         converterLookup = new DefaultConverterLookup(reflectionProvider, classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
+    }
+
+    public MarshallingStrategy getMarshallingStrategy() {
+        return marshallingStrategy;
+    }
+
+    public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {
+        this.marshallingStrategy = marshallingStrategy;
     }
 
     public String toXML(Object obj) {
@@ -62,9 +71,7 @@ public class XStream {
     }
 
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
-        Marshaller context = new TreeMarshaller(
-                writer, converterLookup, classMapper);
-        context.start(obj);
+        marshallingStrategy.marshal(writer, obj, converterLookup, classMapper);
     }
 
     public Object fromXML(String xml) {
@@ -80,10 +87,7 @@ public class XStream {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, Object root) {
-        Unmarshaller context = new TreeUnmarshaller(
-                root, reader, converterLookup,
-                classMapper, converterLookup.getClassAttributeIdentifier());
-        return context.start();
+        return marshallingStrategy.unmarshal(root, reader, converterLookup, classMapper);
     }
 
     public void alias(String elementName, Class type, Class defaultImplementation) {

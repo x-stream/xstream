@@ -1,13 +1,12 @@
 package com.thoughtworks.xstream.core;
 
+import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.XStream;
 
-public class TreeMarshaller implements Marshaller, MarshallingContext {
+public class TreeMarshaller implements MarshallingContext {
 
     protected HierarchicalStreamWriter writer;
     protected ConverterLookup converterLookup;

@@ -1,31 +1,23 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.MarshallingStrategy;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.*;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import junit.framework.TestCase;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
-public class CircularReferenceTest extends TestCase {
-
-    private ClassMapper classMapper;
-    private DefaultConverterLookup converterLookup;
+public class CircularReferenceTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        classMapper = new DefaultClassMapper();
-        converterLookup = new DefaultConverterLookup(
-                        new Sun14ReflectionProvider(),
-                        classMapper, "class");
-        classMapper.alias("person", Person.class, Person.class);
-        converterLookup.setupDefaults();
+        xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+        xstream.alias("person", Person.class);
     }
 
     public void testCircularReference() {
@@ -43,10 +35,10 @@ public class CircularReferenceTest extends TestCase {
                 "  </likes>\n" +
                 "</person>";
 
-        String xml = toXML(bob);
+        String xml = xstream.toXML(bob);
         assertEquals(expected, xml);
 
-        Person bobOut = (Person) fromXML(xml);
+        Person bobOut = (Person) xstream.fromXML(xml);
         assertEquals("bob", bobOut.firstname);
         Person janeOut = bobOut.likes;
 
@@ -66,31 +58,12 @@ public class CircularReferenceTest extends TestCase {
                 "  <likes reference=\"1\"/>\n" +
                 "</person>";
 
-        String xml = toXML(bob);
+        String xml = xstream.toXML(bob);
         assertEquals(expected, xml);
 
-        Person bobOut = (Person) fromXML(xml);
+        Person bobOut = (Person) xstream.fromXML(xml);
         assertEquals("bob", bobOut.firstname);
         assertSame(bobOut, bobOut.likes);
-    }
-
-    private String toXML(Object obj) {
-        StringWriter buffer = new StringWriter();
-        HierarchicalStreamWriter writer = new PrettyPrintWriter(buffer);
-        Marshaller marshaller = new ReferenceByIdMarshaller(
-                        writer, converterLookup, classMapper);
-
-        marshaller.start(obj);
-        return buffer.toString();
-    }
-
-    private Object fromXML(String xml) {
-        XppReader reader = new XppReader(new StringReader(xml));
-
-        Unmarshaller unmarshaller = new ReferenceByIdUnmarshaller(
-                null, reader, converterLookup, classMapper, "class");
-
-        return unmarshaller.start();
     }
 
     class Person {

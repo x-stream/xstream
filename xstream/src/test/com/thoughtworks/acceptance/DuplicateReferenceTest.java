@@ -1,31 +1,16 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
-import com.thoughtworks.xstream.core.*;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.XppReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import junit.framework.TestCase;
+import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DuplicateReferenceTest extends TestCase {
-
-    private ClassMapper classMapper;
-    private DefaultConverterLookup converterLookup;
+public class DuplicateReferenceTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        classMapper = new DefaultClassMapper();
-        converterLookup = new DefaultConverterLookup(
-                        new Sun14ReflectionProvider(),
-                        classMapper, "class");
-        classMapper.alias("thing", Thing.class, Thing.class);
-        converterLookup.setupDefaults();
+        xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+        xstream.alias("thing", Thing.class);
     }
 
     public void testReferencesAreWrittenToXml() {
@@ -49,11 +34,11 @@ public class DuplicateReferenceTest extends TestCase {
                 "  </thing>\n" +
                 "</list>";
 
-        String xml = toXML(list);
+        String xml = xstream.toXML(list);
 
         assertEquals(expected, xml);
 
-        List result = (List) fromXML(xml);
+        List result = (List) xstream.fromXML(xml);
 
         assertEquals(list, result);
     }
@@ -68,8 +53,8 @@ public class DuplicateReferenceTest extends TestCase {
         list.add(sameThing);
         list.add(anotherThing);
 
-        String xml = toXML(list);
-        List result = (List)fromXML(xml);
+        String xml = xstream.toXML(list);
+        List result = (List)xstream.fromXML(xml);
 
         Thing t0 = (Thing) result.get(0);
         Thing t1 = (Thing) result.get(1);
@@ -83,25 +68,6 @@ public class DuplicateReferenceTest extends TestCase {
 
     }
 
-    private String toXML(Object obj) {
-        StringWriter buffer = new StringWriter();
-        HierarchicalStreamWriter writer = new PrettyPrintWriter(buffer);
-        Marshaller marshaller = new ReferenceByIdMarshaller(
-                        writer, converterLookup, classMapper);
-
-        marshaller.start(obj);
-        return buffer.toString();
-    }
-
-    private Object fromXML(String xml) {
-        XppReader reader = new XppReader(new StringReader(xml));
-
-        Unmarshaller unmarshaller = new ReferenceByIdUnmarshaller(
-                null, reader, converterLookup, classMapper, "class");
-
-        return unmarshaller.start();
-    }
-
     class Thing extends StandardObject {
         public String field;
 
@@ -109,6 +75,5 @@ public class DuplicateReferenceTest extends TestCase {
             this.field = field;
         }
     }
-
 
 }

@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.XStream;
 
-public class TreeUnmarshaller implements Unmarshaller, UnmarshallingContext {
+public class TreeUnmarshaller implements UnmarshallingContext {
 
     private Object root;
     protected HierarchicalStreamReader reader;
