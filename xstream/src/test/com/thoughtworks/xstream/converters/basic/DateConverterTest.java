@@ -7,14 +7,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class DateConverterTest extends TestCase {
 
     private DateConverter converter;
+    private TimeZone realTimeZone;
 
     protected void setUp() throws Exception {
         super.setUp();
         converter = new DateConverter();
+        // Ensure that this test always run as if it were in the EST timezone.
+        // This prevents failures when running the tests in different zones.
+        // Note: 'EST' has no relevance - it was just a randomly chosen zone.
+        realTimeZone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+    }
+
+    protected void tearDown() throws Exception {
+        TimeZone.setDefault(realTimeZone); // reset timezone to whatever it should be
+        super.tearDown();
     }
 
     public void testRetainsDetailDownToMillisecondLevel() {
@@ -31,18 +43,13 @@ public class DateConverterTest extends TestCase {
         assertEquals(in.getTime(), out.getTime());
     }
 
-    // Note: this test assumes that your are in the GMT timezone
-    // if not - simply set your computers' timezone to be in GMT
     public void testUnmarshallsOldXStreamDatesThatLackMillisecond() {
-        // setup
-        String oldStyleText = "2004-02-22 15:16:04PM";
+        Date expected = (Date) converter.fromString("2004-02-22 15:16:04.0 EST");
 
-        // execute
-        Date out = (Date) converter.fromString(oldStyleText);
-
-        // verify
-        //TODO make test zone independent
-        assertEquals("2004-02-22 15:16:04.0 GMT", converter.toString(out));
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 PM"));
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04PM"));
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04 EST"));
     }
 
     
@@ -58,7 +65,7 @@ public class DateConverterTest extends TestCase {
             public void run() {
                 for (int i = 0; i < numberOfCallsPerThread; i++) {
                     try {
-                        converter.fromString("2004-02-22 15:16:04.0 ART");
+                        converter.fromString("2004-02-22 15:16:04.0 EST");
                         results.add("PASS");
                     } catch (ConversionException e) {
                         results.add("FAIL");
