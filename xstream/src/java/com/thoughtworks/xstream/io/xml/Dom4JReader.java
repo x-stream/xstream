@@ -1,25 +1,19 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-import java.util.LinkedList;
-
-public class Dom4JReader implements HierarchicalStreamReader {
+public class Dom4JReader extends AbstractTreeReader {
 
     private Element currentElement;
-    private LinkedList pointers = new LinkedList();
 
     public Dom4JReader(Element rootElement) {
-        currentElement = rootElement;
-        pointers.addLast(new Pointer());
+        super(rootElement);
     }
 
     public Dom4JReader(Document document) {
-        currentElement = document.getRootElement();
-        pointers.addLast(new Pointer());
+        this(document.getRootElement());
     }
 
     public String getNodeName() {
@@ -34,36 +28,20 @@ public class Dom4JReader implements HierarchicalStreamReader {
         return currentElement.attributeValue(name);
     }
 
-    public Object peekUnderlyingNode() {
-        return currentElement;
+    protected Object getParent() {
+        return currentElement.getParent();
     }
 
-    private static class Pointer {
-        public int v;
+    protected Object getChild(int index) {
+        return currentElement.elements().get(index);
     }
 
-    public boolean hasMoreChildren() {
-        Pointer pointer = (Pointer) pointers.getLast();
-
-        if (pointer.v < currentElement.elements().size()) {
-            return true;
-        } else {
-            return false;
-        }
+    protected int getChildCount() {
+        return currentElement.elements().size();
     }
 
-    public void moveUp() {
-        currentElement = currentElement.getParent();
-        pointers.removeLast();
-    }
-
-    public void moveDown() {
-        Pointer pointer = (Pointer) pointers.getLast();
-        pointers.addLast(new Pointer());
-
-        currentElement = (Element) currentElement.elements().get(pointer.v);
-
-        pointer.v++;
+    protected void reassignCurrentElement(Object current) {
+        currentElement = (Element) current;
     }
 
     public void appendErrors(ErrorWriter errorWriter) {

@@ -1,36 +1,28 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.converters.ErrorWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
-
-import java.util.LinkedList;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @version $Id$
  */
-public class XppDomReader
-        implements HierarchicalStreamReader {
-    private Xpp3Dom current;
+public class XppDomReader extends AbstractTreeReader {
 
-    private LinkedList pointers = new LinkedList();
+    private Xpp3Dom currentElement;
 
     public XppDomReader(Xpp3Dom xpp3Dom) {
-        current = xpp3Dom;
-
-        pointers.addLast(new Pointer());
+        super(xpp3Dom);
     }
 
     public String getNodeName() {
-        return current.getName();
+        return currentElement.getName();
     }
 
     public String getValue() {
         String text = null;
 
         try {
-            text = current.getValue();
+            text = currentElement.getValue();
         } catch (Exception e) {
             // do nothing.
         }
@@ -39,51 +31,27 @@ public class XppDomReader
     }
 
     public String getAttribute(String attributeName) {
-        String text = null;
-
         try {
-            text = current.getAttribute(attributeName);
+            return currentElement.getAttribute(attributeName);
         } catch (Exception e) {
-            // do nothing.
-        }
-
-        return text;
-    }
-
-    public Object peekUnderlyingNode() {
-        return current;
-    }
-
-    private static class Pointer {
-        public int v;
-    }
-
-    public boolean hasMoreChildren() {
-        Pointer pointer = (Pointer) pointers.getLast();
-
-        if (pointer.v < current.getChildCount()) {
-            return true;
-        } else {
-            return false;
+            return null;
         }
     }
 
-    public void moveUp() {
-        current = current.getParent();
-
-        pointers.removeLast();
+    protected Object getParent() {
+        return currentElement.getParent();
     }
 
-    public void moveDown() {
-        Pointer pointer = (Pointer) pointers.getLast();
-        pointers.addLast(new Pointer());
-
-        current = current.getChild(pointer.v);
-
-        pointer.v++;
-
+    protected Object getChild(int index) {
+        return currentElement.getChild(index);
     }
 
-    public void appendErrors(ErrorWriter errorWriter) {
+    protected int getChildCount() {
+        return currentElement.getChildCount();
     }
+
+    protected void reassignCurrentElement(Object current) {
+        this.currentElement = (Xpp3Dom) current;
+    }
+
 }
