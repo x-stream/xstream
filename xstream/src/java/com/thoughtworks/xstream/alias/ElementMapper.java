@@ -1,8 +1,7 @@
 package com.thoughtworks.xstream.alias;
 
-public interface ElementMapper
-{
-    String fromXml( String elementName );
+public interface ElementMapper {
+    String fromXml(String elementName);
 
-    String toXml( String fieldName );
+    String toXml(String fieldName);
 }
