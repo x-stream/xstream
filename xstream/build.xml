@@ -83,7 +83,7 @@
         <mkdir dir="javadoc"/>
         <javadoc destdir="javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
             <classpath refid="classpath"/>
-            <packageset dir="$src/java" defaultexcludes="yes">
+            <packageset dir="src/java" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
                 <exclude name="com/thoughtworks/xstream/io/path/**"/>
                 <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>

@@ -14,3 +14,6 @@ xstream.fb
 work
 .project
 .classpath
+javadoc
+*.jar
+*.zip
