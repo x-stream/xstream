@@ -14,12 +14,16 @@ public class JVM {
         return majorJavaVersion >= 1.4f;
     }
 
-    public static boolean isSun() {
+    private static boolean isSun() {
         return System.getProperty("java.vm.vendor").indexOf("Sun") != -1;
     }
 
-    public static boolean isApple() {
+    private static boolean isApple() {
         return System.getProperty("java.vm.vendor").indexOf("Apple") != -1;
+    }
+
+    private static boolean isHPUX() {
+        return System.getProperty("java.vm.vendor").indexOf("Hewlett-Packard Company") != -1;
     }
 
     public Class loadClass(String name) {
@@ -52,8 +56,7 @@ public class JVM {
     }
 
 	private boolean canUseSun14ReflectionProvider() {
-		return ( isSun() || isApple() ) && is14() && loadClass("sun.misc.Unsafe") != null;
+		return (isSun() || isApple() || isHPUX()) && is14() && loadClass("sun.misc.Unsafe") != null;
 	}
 
-    
 }
