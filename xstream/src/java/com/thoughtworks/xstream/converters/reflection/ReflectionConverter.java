@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.DefaultCollectionLookup;
+import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 public class ReflectionConverter implements Converter {
 
@@ -20,16 +22,16 @@ public class ReflectionConverter implements Converter {
     private String classAttributeIdentifier;
     private String definedInAttributeIdentifier = "defined-in";
     private ReflectionProvider reflectionProvider;
-    private DefaultCollectionLookup defaultCollectionLookup;
+    private ImplicitCollectionMapper implicitCollectionMapper;
     private InstanceResolver instanceResolver;
 
     public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier,
-                               ReflectionProvider reflectionProvider, DefaultCollectionLookup defaultCollectionLookup) {
+                               ReflectionProvider reflectionProvider, ImplicitCollectionMapper implicitCollectionMapper) {
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
         this.definedInAttributeIdentifier = definedInAttributeIdentifier;
         this.reflectionProvider = reflectionProvider;
-        this.defaultCollectionLookup = defaultCollectionLookup;
+        this.implicitCollectionMapper = implicitCollectionMapper;
         instanceResolver = new InstanceResolver();
     }
 
@@ -39,11 +41,10 @@ public class ReflectionConverter implements Converter {
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Set seenFields = new HashSet();
-        final String defaultCollectionField = defaultCollectionLookup.getDefaultCollectionField(source.getClass());
         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                 if (newObj != null) {
-                    if (defaultCollectionField != null && defaultCollectionField.equals(fieldName)) {
+                    if (implicitCollectionMapper.isImplicitCollectionField(definedIn, fieldName)) {
                         context.convertAnother(newObj);
                     } else {
                         writer.startNode(classMapper.mapNameToXML(fieldName));
@@ -70,8 +71,8 @@ public class ReflectionConverter implements Converter {
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Object result = instantiateNewInstance(context);
-        Collection defaultCollection = getDefaultCollection(result);
         SeenFields seenFields = new SeenFields();
+        Map implicitCollectionsForCurrentObject = null;
 
         while (reader.hasMoreChildren()) {
             reader.moveDown();
@@ -86,13 +87,30 @@ public class ReflectionConverter implements Converter {
             if (fieldExistsInClass) {
                 reflectionProvider.writeField(result, fieldName, value, classDefiningField);
                 seenFields.add(classDefiningField, fieldName);
-            } else if (defaultCollection != null) {
-                defaultCollection.add(value);
+            } else {
+                implicitCollectionsForCurrentObject = writeValueToImplicitCollection(context, value, implicitCollectionsForCurrentObject, result);
             }
 
             reader.moveUp();
         }
         return instanceResolver.resolve(result);
+    }
+
+    private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result) {
+        String fieldName = implicitCollectionMapper.implicitCollectionFieldForType(context.getRequiredType(), value.getClass());
+        if (fieldName != null) {
+            if (implicitCollections == null) {
+                implicitCollections = new HashMap(); // lazy instantiation
+            }
+            Collection collection = (Collection) implicitCollections.get(fieldName);
+            if (collection == null) {
+                collection = new ArrayList();
+                reflectionProvider.writeField(result, fieldName, collection, null);
+                implicitCollections.put(fieldName, collection);
+            }
+            collection.add(value);
+        }
+        return implicitCollections;
     }
 
     private Class determineWhichClassDefinesField(HierarchicalStreamReader reader) {
@@ -134,17 +152,6 @@ public class ReflectionConverter implements Converter {
             return classMapper.lookupType(reader.getNodeName());
         } else {
             return classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName, definedInCls));
-        }
-    }
-
-    private Collection getDefaultCollection(Object instance) {
-        String defaultCollectionFieldName = defaultCollectionLookup.getDefaultCollectionField(instance.getClass());
-        if (defaultCollectionFieldName != null) {
-            Collection result = new ArrayList();
-            reflectionProvider.writeField(instance, defaultCollectionFieldName, result, null);
-            return result;
-        } else {
-            return null;
         }
     }
 

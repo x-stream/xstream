@@ -22,7 +22,7 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         if (expected == null) {
             assertNull(actual);
         } else {
-            assertNotNull(actual);
+            assertNotNull("Should not be null", actual);
             if (actual.getClass().isArray()) {
                 assertArrayEquals(expected, actual);
             } else {

@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.DefaultCollectionLookup;
+import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -38,7 +38,7 @@ import java.sql.Timestamp;
 import java.sql.Time;
 import java.io.File;
 
-public class DefaultConverterLookup implements ConverterLookup, DefaultCollectionLookup {
+public class DefaultConverterLookup implements ConverterLookup {
 
     private LinkedList converters = new LinkedList();
     private Converter nullConverter = new NullConverter();
@@ -46,16 +46,17 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
     private Converter defaultConverter;
-    private Map defaultCollections = new HashMap();
     private JVM jvm;
 
     private transient ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
     public DefaultConverterLookup(ReflectionProvider reflectionProvider,
                                   ClassMapper classMapper,
-                                  String classAttributeIdentifier, JVM jvm) {
+                                  String classAttributeIdentifier,
+                                  JVM jvm,
+                                  ImplicitCollectionMapper implicitCollectionMapper) {
         this.jvm = jvm;
-        this.defaultConverter = new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, this);
+        this.defaultConverter = new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, implicitCollectionMapper);
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
     }
@@ -187,9 +188,6 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         registerConverter(new LocaleConverter());
         registerConverter(new GregorianCalendarConverter());
 
-        // EncodedByteArrayConverter
-        // SqlTimeConverter
-
         if (JVM.is14()) {
             registerConverter(new ThrowableConverter(defaultConverter()));
             registerConverter(new StackTraceElementConverter());
@@ -211,14 +209,6 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
 
     public String getClassAttributeIdentifier() {
         return classAttributeIdentifier;
-    }
-
-    public String getDefaultCollectionField(Class type) {
-        return (String) defaultCollections.get(type);
-    }
-
-    public void addDefaultCollection(Class type, String fieldName) {
-        defaultCollections.put(type, fieldName);
     }
 
     private Object readResolve() {

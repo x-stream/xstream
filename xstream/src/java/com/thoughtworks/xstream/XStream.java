@@ -4,7 +4,13 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.core.*;
+import com.thoughtworks.xstream.core.AddableImplicitCollectionMapper;
+import com.thoughtworks.xstream.core.DefaultClassMapper;
+import com.thoughtworks.xstream.core.DefaultConverterLookup;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
+import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
+import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -101,6 +107,7 @@ public class XStream {
     private ClassMapper classMapper;
     private DefaultConverterLookup converterLookup;
     private JVM jvm = new JVM();
+    private AddableImplicitCollectionMapper implicitCollectionMapper = new AddableImplicitCollectionMapper();
 
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
@@ -134,7 +141,7 @@ public class XStream {
         this.classMapper = classMapper;
         this.hierarchicalStreamDriver = driver;
         setMode(XPATH_REFERENCES);
-        converterLookup = new DefaultConverterLookup(reflectionProvider, classMapper, classAttributeIdentifier, jvm);
+        converterLookup = new DefaultConverterLookup(reflectionProvider, classMapper, classAttributeIdentifier, jvm, implicitCollectionMapper);
         converterLookup.setupDefaults();
     }
 
@@ -254,7 +261,19 @@ public class XStream {
         }
     }
 
-    public void addDefaultCollection(Class type, String fieldName) {
-        converterLookup.addDefaultCollection(type, fieldName);
+    /**
+     * @deprecated Use addImplicitCollection() instead.
+     */
+    public void addDefaultCollection(Class ownerType, String fieldName) {
+        addImplicitCollection(ownerType, fieldName);
     }
+
+    public void addImplicitCollection(Class ownerType, String fieldName) {
+        implicitCollectionMapper.add(ownerType, fieldName, Object.class);
+    }
+
+    public void addImplicitCollection(Class ownerType, String fieldName, Class itemType) {
+        implicitCollectionMapper.add(ownerType, fieldName, itemType);
+    }
+
 }

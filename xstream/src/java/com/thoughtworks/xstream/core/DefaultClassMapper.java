@@ -2,21 +2,15 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.DefaultCollectionLookup;
 
-import java.lang.reflect.Proxy;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Date;
-import java.util.Currency;
-import java.util.Locale;
-import java.util.HashSet;
-import java.math.BigInteger;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.awt.*;
 import java.io.File;
+import java.lang.reflect.Proxy;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class DefaultClassMapper implements ClassMapper {
 
