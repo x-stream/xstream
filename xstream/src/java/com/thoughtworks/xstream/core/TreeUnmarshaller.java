@@ -24,7 +24,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
-    public Object convertAnother(Object current, Class type) {
+    public Object convertAnother(Object parent, Class type) {
         try {
             Converter converter = converterLookup.lookupConverterForType(type);
             types.push(type);
@@ -48,7 +48,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     }
 
     public Object currentObject() {
-        return root;
+        return types.size() == 1 ? root : null;
     }
 
     public Class getRequiredType() {

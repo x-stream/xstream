@@ -1,5 +1,11 @@
 package com.thoughtworks.acceptance;
 
+import org.dom4j.io.XPPReader;
+
+import java.io.StringReader;
+
+import com.thoughtworks.xstream.io.xml.XppReader;
+
 public class CustomClassesTest extends AbstractAcceptanceTest {
 
     public static class SamplePerson extends StandardObject {
@@ -65,6 +71,37 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
         assertBothWays(personHolder, expected);
 
+    }
+
+    public void testCustomObjectCanBeInstantiatedExternallyBeforeDeserialization() {
+        xstream.alias("friend", SamplePerson.class);
+        xstream.alias("personHolder", SamplePersonHolder.class);
+
+        String xml =
+                "<personHolder>\n" +
+                "  <aString>hello world</aString>\n" +
+                "  <brother>\n" +
+                "    <anInt>3</anInt>\n" +
+                "    <firstName>Joe</firstName>\n" +
+                "    <lastName>Walnes</lastName>\n" +
+                "  </brother>\n" +
+                "</personHolder>";
+
+        // execute
+        SamplePersonHolder alreadyInstantiated = new SamplePersonHolder();
+        xstream.unmarshal(new XppReader(new StringReader(xml)), alreadyInstantiated);
+
+        // verify
+        SamplePersonHolder expectedResult = new SamplePersonHolder();
+        expectedResult.aString = "hello world";
+
+        SamplePerson expectedPerson = new SamplePerson();
+        expectedPerson.anInt = 3;
+        expectedPerson.firstName = "Joe";
+        expectedPerson.lastName = "Walnes";
+        expectedResult.brother = expectedPerson;
+
+        assertEquals(expectedResult, alreadyInstantiated);
     }
 
     public void testNullObjectsDoNotHaveFieldsWritten() {
