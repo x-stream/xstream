@@ -314,6 +314,12 @@ ul, ol {
     padding: 2px;
 }
 
+.MenuGroup .currentLink {
+/*    background-color: #060;*/
+    background-color: #e0f0e0;
+    color: #000;
+}
+
 
 /*---------------------------------------------------------------------------
  *  News panel

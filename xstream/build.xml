@@ -113,8 +113,8 @@
     </target>
 
     <target name="javadoc" description="Build JavaDoc">
-        <mkdir dir="build/javadoc"/>
-        <javadoc destdir="build/javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
+        <mkdir dir="build/website/api"/>
+        <javadoc destdir="build/website/api" author="true" version="true" use="true" windowtitle="XStream ${version} API">
             <classpath refid="classpath"/>
             <packageset dir="${java.src.dir}" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
@@ -127,18 +127,22 @@
     </target>
 
     <target name="website" description="Build website">
-        <delete dir="website/output"/>
-        <mkdir dir="website/output"/>
-        <exec executable="ruby" dir="website">
-            <arg value="skinner.rb"/>
-        </exec>
-        <mkdir dir="build/website/api"/>
-        <copy todir="build/website">
-            <fileset dir="website/output"/>
-            <fileset dir="build">
-                <include name="javadoc/**"/>
-            </fileset>
-        </copy>
+        <mkdir dir="build/website-classes"/>
+        <javac srcdir="website/java" destdir="build/website-classes">
+            <classpath>
+                <fileset dir="website/lib"/>
+            </classpath>
+        </javac>
+        <mkdir dir="build/website"/>
+        <java classname="minimesh.Main">
+            <classpath>
+                <fileset dir="website/lib"/>
+                <pathelement path="build/website-classes"/>
+            </classpath>
+            <arg value="website/content/website.xml"/>
+            <arg value="website/templates/skin.html"/>
+            <arg value="build/website"/>
+        </java>
     </target>
 
     <target name="dist" depends="jar,website" description="Build distribution package">
