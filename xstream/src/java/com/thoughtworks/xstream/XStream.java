@@ -10,6 +10,7 @@ import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.converters.collections.PropertiesConverter;
 import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
@@ -59,6 +60,7 @@ public class XStream {
         alias("date", Date.class);
 
         alias("map", Map.class, HashMap.class);
+        alias("properties", Properties.class);
         alias("list", List.class, ArrayList.class);
         alias("set", Set.class, HashSet.class);
 
@@ -85,6 +87,7 @@ public class XStream {
         registerConverter(new ArrayConverter(classMapper));
         registerConverter(new CollectionConverter(classMapper));
         registerConverter(new MapConverter(classMapper));
+        registerConverter(new PropertiesConverter());
 
     }
 
