@@ -5,36 +5,36 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 
 public class DateConverter extends AbstractBasicConverter {
 
-    private DateFormat dateFormat;
+    private static final DateFormat[] formats = {
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S a"),
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ssa")
+    };
 
     public boolean canConvert(Class type) {
         return type.equals(Date.class);
     }
 
-    public DateConverter(DateFormat dateFormat) {
-        this.dateFormat = dateFormat;
-    }
-
-    public DateConverter() {
-        this(new SimpleDateFormat("yyyy-MM-dd HH:mm:ssa"));
-    }
-
     protected Object fromString(String str) {
-        try {
-            return dateFormat.parse(str);
-        } catch (ParseException e) {
-            throw new ConversionException("Cannot parse date " + str, e);
+        for (int i = 0; i < formats.length; i++) {
+            try {
+                return formats[i].parse(str);
+            } catch (ParseException e) {
+                // no worries, let's try the next format.
+            }
         }
+        // no formats left to try
+        throw new ConversionException("Cannot parse date " + str);
     }
 
     protected String toString(Object obj) {
         Date date = (Date) obj;
-        return dateFormat.format(date);
+        return formats[0].format(date);
     }
 
 }
