@@ -105,4 +105,27 @@ public class ArraysTest extends AbstractAcceptanceTest {
     class ObjWithArray extends StandardObject {
         String[] strings;
     }
+
+    public void testDeserializingObjectWhichContainsAPrimitiveLongArray() {
+        String xml =
+            "<owla>" +
+            "  <bits class=\"long-array\">" +
+            "    <long>0</long>" +
+            "    <long>1</long>" +
+            "    <long>2</long>" +
+            "  </bits>" +
+            "</owla>";
+
+        xstream.alias( "owla", ObjectWithLongArray.class );
+
+        ObjectWithLongArray o = (ObjectWithLongArray) xstream.fromXML( xml );
+
+        assertEquals( o.bits[0], 0 );
+        assertEquals( o.bits[1], 1 );
+        assertEquals( o.bits[2], 2 );
+    }
+
+    class ObjectWithLongArray {
+        long[] bits;
+    }
 }
