@@ -12,15 +12,13 @@ import java.io.ObjectOutputStream;
 
 /**
  * Convenience wrapper to invoke special serialization methods on objects (and perform reflection caching).
- * 
+ *
  * @author Joe Walnes
  */
 public class SerializationMethodInvoker {
 
     private Map cache = Collections.synchronizedMap(new HashMap());
     private static final Object NO_METHOD = new Object();
-
-    private Map writeObjectMethodCache = new HashMap(); // should be soft but Joe told me off - DN
 
     /**
      * Resolves an object as native serialization does by calling readResolve(), if available.
@@ -29,7 +27,7 @@ public class SerializationMethodInvoker {
         if (result == null) {
             return null;
         } else {
-            Method readResolveMethod = findReadResolveMethod(result.getClass());
+            Method readResolveMethod = getMethod(result.getClass(), "readResolve", null);
             if (readResolveMethod != null) {
                 try {
                     return readResolveMethod.invoke(result, null);
@@ -44,41 +42,8 @@ public class SerializationMethodInvoker {
         }
     }
 
-    public Method getMethod(Class cls, String name, Class[] parameterTypes) {
-        Method result = null;
-        String key = cls + "." + name;
-        if (writeObjectMethodCache.containsKey(key)) {
-            return (Method) writeObjectMethodCache.get(key);
-        } else {
-            try {
-                result = cls.getDeclaredMethod(name, parameterTypes);
-                result.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                result = null;
-            }
-            writeObjectMethodCache.put(key, result);
-        }
-        return result;
-    }
-
-
-    private Method findReadResolveMethod(Class type) {
-        if (cache.containsKey(type)) {
-            Object result = cache.get(type);
-            return (Method) (result == NO_METHOD ? null : result);
-        }
-        while (type != null) {
-            try {
-                Method result = type.getDeclaredMethod("readResolve", null);
-                result.setAccessible(true);
-                cache.put(type, result);
-                return result;
-            } catch (NoSuchMethodException e) {
-                type = type.getSuperclass();
-            }
-        }
-        cache.put(type, NO_METHOD);
-        return null;
+    public boolean supportsReadObject(Class type) {
+        return getMethod(type, "readObject", new Class[]{ObjectInputStream.class}) != null;
     }
 
     public void callReadObject(Object object, ObjectInputStream stream) {
@@ -90,10 +55,6 @@ public class SerializationMethodInvoker {
         } catch (InvocationTargetException e) {
             throw new ConversionException("Could not call " + object.getClass().getName() + ".readObject()", e);
         }
-    }
-
-    public boolean supportsReadObject(Class type) {
-        return getMethod(type, "readObject", new Class[]{ObjectInputStream.class}) != null;
     }
 
     public boolean supportsWriteObject(Class type) {
@@ -110,4 +71,25 @@ public class SerializationMethodInvoker {
             throw new ConversionException("Could not call " + object.getClass().getName() + ".readObject()", e);
         }
     }
+
+    private Method getMethod(Class type, String name, Class[] parameterTypes) {
+        Object key = type.getName() + "." + name;
+        if (cache.containsKey(key)) {
+            Object result = cache.get(key);
+            return (Method) (result == NO_METHOD ? null : result);
+        }
+        while (type != null) {
+            try {
+                Method result = type.getDeclaredMethod(name, parameterTypes);
+                result.setAccessible(true);
+                cache.put(key, result);
+                return result;
+            } catch (NoSuchMethodException e) {
+                type = type.getSuperclass();
+            }
+        }
+        cache.put(key, NO_METHOD);
+        return null;
+    }
+
 }
