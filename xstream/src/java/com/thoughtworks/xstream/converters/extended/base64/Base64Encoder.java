@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.converters.extended.base64;
 
+import java.io.IOException;
+
 /**
  * Encodes binary data to plain text as Base64.
  *
@@ -7,34 +9,29 @@ package com.thoughtworks.xstream.converters.extended.base64;
  */
 public class Base64Encoder {
 
-    private static final char[] sixtyFourChars
-            = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+    private static final char[] SIXTY_FOUR_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 
     public String encode(byte[] input) {
         StringBuffer result = new StringBuffer();
+        int outputCharCount = 0;
         for (int i = 0; i < input.length; i += 3) {
-            byte[] subset = new byte[Math.min(3, input.length - i)];
-            for (int s = 0; s < subset.length; s++) {
-                subset[s] = input[i + s];
-            }
-            result.append(tripleByteToQuadChar(subset));
+            int remaining = Math.min(3, input.length - i);
+            // input  |------||------||------| (3 values each with 8 bits)
+            //        101010101010101010101010
+            // output |----||----||----||----| (4 values each with 6 bits)
+            int oneBigNumber = (input[i] & 0xff) << 16 | (remaining <= 1 ? 0 : input[i + 1] & 0xff) << 8 | (remaining <= 2 ? 0 : input[i + 2] & 0xff);
+            for(int j = 0; j < 4; j++) result.append(remaining + 1 > j ? SIXTY_FOUR_CHARS[0x3f & oneBigNumber >> 6 * (3 - j)] : '=');
+            if((outputCharCount += 4) % 76 == 0) result.append('\n');
         }
         return result.toString();
     }
 
-    private char[] tripleByteToQuadChar(byte[] in) {
-        // input  |------||------||------| (3 values each with 8 bits)
-        //        101010101010101010101010
-        // output |----||----||----||----| (4 values each with 6 bits)
-        if (in.length > 3) {
-            throw new Error();
+    public byte[] decode(String input) {
+        // TODO: Remove dependency on sun.misc.BASE64Decoder!!!
+        try {
+            return new sun.misc.BASE64Decoder().decodeBuffer(input);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot decode Base64 data : " + e.getMessage());
         }
-        int oneBigNumber = (in[0] << 16) | ((in.length > 1 ? in[1] : 0) << 8) | ((in.length > 2 ? in[2] : 0));
-        char[] result = new char[4];
-        for (int i = 0; i < 4; i++) {
-            result[i] = in.length + 1 == i ? '=' : sixtyFourChars[63 & (oneBigNumber >> (6 * (3 - i)))];
-        }
-        return result;
     }
-
 }
