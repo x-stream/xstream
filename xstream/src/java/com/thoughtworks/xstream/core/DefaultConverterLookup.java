@@ -41,7 +41,7 @@ import java.io.File;
 
 public class DefaultConverterLookup implements ConverterLookup {
 
-    private LinkedList converters = new LinkedList();
+    private ArrayList converters = new ArrayList();
     private Converter nullConverter = new NullConverter();
     private HashMap typeToConverterMap = new HashMap();
     private ClassMapper classMapper;
@@ -81,8 +81,9 @@ public class DefaultConverterLookup implements ConverterLookup {
         Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
         type = classMapper.lookupDefaultType(type);
-        for (Iterator iterator = converters.iterator(); iterator.hasNext();) {
-            Converter converter = (Converter) iterator.next();
+        int size = converters.size();
+        for (int i = size - 1; i >= 0; i--) {
+            Converter converter = (Converter) converters.get(i);
             if (converter.canConvert(type)) {
                 typeToConverterMap.put(type, converter);
                 return converter;
@@ -92,7 +93,7 @@ public class DefaultConverterLookup implements ConverterLookup {
     }
 
     public void registerConverter(Converter converter) {
-        converters.addFirst(converter);
+        converters.add(converter);
     }
 
     public void setupDefaults() {
