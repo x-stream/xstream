@@ -66,9 +66,42 @@ public class CircularReferenceTest extends AbstractAcceptanceTest {
         assertSame(bobOut, bobOut.likes);
     }
 
+    public void testDeepCircularReferences() {
+        Person bob = new Person("bob");
+        Person jane = new Person("jane");
+        Person ann = new Person("ann");
+        Person poo = new Person("poo");
+
+        bob.likes = jane;
+        bob.loathes = ann;
+        ann.likes = jane;
+        ann.loathes = poo;
+        poo.likes = jane;
+        poo.loathes = ann;
+
+        String xml = xstream.toXML(bob);
+        Person bobOut = (Person) xstream.fromXML(xml);
+        Person janeOut = bobOut.likes;
+        Person annOut = bobOut.loathes;
+        Person pooOut = annOut.loathes;
+
+        assertEquals("bob", bobOut.firstname);
+        assertEquals("jane", janeOut.firstname);
+        assertEquals("ann", annOut.firstname);
+        assertEquals("poo", pooOut.firstname);
+
+        assertSame(janeOut, bobOut.likes);
+        assertSame(annOut, bobOut.loathes);
+        assertSame(janeOut, annOut.likes);
+        assertSame(pooOut, annOut.loathes);
+        assertSame(janeOut, pooOut.likes);
+        assertSame(annOut, pooOut.loathes);
+    }
+
     class Person {
         public String firstname;
         public Person likes;
+        public Person loathes;
 
         public Person(String name) {
             this.firstname = name;
