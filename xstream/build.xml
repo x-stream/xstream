@@ -1,9 +1,12 @@
-    <project name="xstream" default="library">
+<project name="xstream" default="library">
 
+	<property file="build.properties"/>
     <property name="version" value="SNAPSHOT"/>
 
     <path id="classpath">
         <fileset dir="lib"/>
+		<pathelement path="${java.build.dir}"/>
+		<pathelement path="${test.build.dir}"/>
     </path>
 
     <target name="library" depends="clean, compile, test, jar" description="Build and test library only"/>
@@ -15,34 +18,94 @@
     </target>
 
     <target name="compile" description="Compile all Java">
-        <mkdir dir="build/classes"/>
-        <javac srcdir="src/java" destdir="build/classes">
+        <mkdir dir="${java.build.dir}"/>
+        <javac srcdir="${java.src.dir}" destdir="${java.build.dir}">
             <classpath refid="classpath"/>
         </javac>
     </target>
 
-    <target name="test" depends="compile" description="Run all acceptance tests and unit tests">
-        <mkdir dir="build/test-classes"/>
-        <javac srcdir="src/test" destdir="build/test-classes" classpath="build/classes" classpathref="classpath"/>
-        <junit printsummary="no" haltonfailure="yes" fork="no">
-            <classpath refid="classpath"/>
-            <classpath>
-                <pathelement location="build/classes"/>
-                <pathelement location="build/test-classes"/>
-            </classpath>
-            <!--<formatter type="brief" usefile="no"/>-->
-            <batchtest>
-                <fileset dir="src/test">
-                    <include name="**/*Test*.java"/>
-                    <exclude name="**/Abstract*"/>
-                </fileset>
-            </batchtest>
-        </junit>
-    </target>
+    	<!-- 
+    		Default test target 
+    	-->		
+    	<target name="test" depends="test:reports">
+    	</target>
+    	    
+    	<!--
+    		Runs test reports
+    	-->
+    	<target name="test:reports" depends="test:all">
+    		<junitreport todir="${test.reports.dir}">
+    			<fileset dir="${test.reports.dir}">
+    				<include name="TEST-*.xml"/>
+    			</fileset>
+    			<report format="frames" todir="${test.reports.dir}/html"/>
+    		</junitreport>
+    	</target>
+    	
+    	<!--
+    	    Runs all tests 
+    -->
+    	<target name="test:all" depends="test:compile" description="Run all acceptance tests and unit tests">
+    		<mkdir dir="${test.reports.dir}"/>
+    		<junit printsummary="${junit.printsummary}" fork="${junit.fork}" 
+               haltonfailure="${junit.haltonfailure}">
+    			<classpath refid="classpath"/>
+    			<jvmarg line="${junit.jvmarg}"/>
+     	     <formatter type="xml"/>
+     		 <formatter type="${junit.formatter}" />
+    			 <batchtest fork="${junit.fork}" todir="${test.reports.dir}">
+    				<fileset dir="${test.src.dir}">
+    					<include name="${test.src.includes}" />
+    					<exclude name="${test.src.excludes}" />
+    				</fileset>
+    			</batchtest>
+    		</junit>
+    	</target>
 
+    	<!--
+      	Runs a single test specified by property 'testcase'
+    -->
+    	<target name="test:single" depends="test:compile" description="Run a single test">
+    		<echo message="testcase: ${testcase}"/>
+    		<mkdir dir="${test.reports.dir}"/>
+    		<junit printsummary="${junit.printsummary}" fork="${junit.fork}" 
+               haltonfailure="${junit.haltonfailure}">
+    			<classpath refid="classpath"/>
+    			<jvmarg line="${junit.jvmarg}"/>
+    			<formatter type="${junit.formatter}" />
+             <test name="${testcase}" todir="${test.reports.dir}"/>
+    		</junit>
+    	</target>
+
+    	<!--
+        Compiles test src
+     -->
+    	<target name="test:compile" depends="compile, test:resources" description="Compile test src">
+    		<mkdir dir="${test.build.dir}"/>
+    		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
+    			<classpath refid="classpath"/>
+    		</javac>
+    	</target>
+
+    	<!-- 
+    		Copies test resources
+    	-->	
+    	<target name="test:resources">
+    		<copy todir="${test.build.dir}" overwrite="yes">
+    			<fileset dir="${java.src.dir}">
+    				<include name="**/*"/>
+    				<exclude name="**/*.java"/>
+    			</fileset>
+    			<fileset dir="${test.src.dir}">
+    				<include name="**/*"/>
+    				<exclude name="**/*.java"/>
+    			</fileset>
+    		</copy>	
+    	</target>	
+    	    	
     <target name="jar" depends="compile" description="Build JARs">
         <jar jarfile="build/xstream-${version}.jar">
-            <fileset dir="build/classes"/>
+            <fileset dir="${java.build.dir}"/>
         </jar>
         <echo message="--- Created JAR ---"/>
         <echo message="build/xstream-${version}.jar"/>
@@ -53,7 +116,7 @@
         <mkdir dir="build/javadoc"/>
         <javadoc destdir="build/javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
             <classpath refid="classpath"/>
-            <packageset dir="src/java" defaultexcludes="yes">
+            <packageset dir="${java.src.dir}" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
                 <exclude name="com/thoughtworks/xstream/io/path/**"/>
                 <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
