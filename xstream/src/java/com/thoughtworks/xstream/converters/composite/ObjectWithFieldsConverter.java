@@ -56,8 +56,7 @@ public class ObjectWithFieldsConverter implements Converter {
 
     public void fromXML(final ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
         objectGraph.create(requiredType);
-        for (int i = 0; i < xmlReader.childCount(); i++) {
-            xmlReader.child(i);
+        while (xmlReader.nextChild()) {
             objectGraph.push(xmlReader.name());
 
             Class type = determineWhichImplementationToUse(xmlReader, objectGraph);

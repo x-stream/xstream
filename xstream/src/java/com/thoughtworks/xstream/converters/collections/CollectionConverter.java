@@ -29,10 +29,10 @@ public class CollectionConverter extends AbstractCollectionConverter {
 
     public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
         Collection collection = (Collection) createCollection(requiredType);
-        int childCount = xmlReader.childCount();
-        for (int i = 0; i < childCount; i++) {
-            Object item = readItem(xmlReader, i, objectGraph, converterLookup);
+        while (xmlReader.nextChild()) {
+            Object item = readItem(xmlReader, objectGraph, converterLookup);
             collection.add(item);
+            xmlReader.pop();
         }
         objectGraph.set(collection);
     }

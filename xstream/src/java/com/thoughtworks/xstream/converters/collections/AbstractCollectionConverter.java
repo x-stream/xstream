@@ -34,13 +34,11 @@ public abstract class AbstractCollectionConverter implements Converter {
         }
     }
 
-    protected Object readItem(XMLReader xmlReader, int childIndex, ObjectTree objectGraph, ConverterLookup converterLookup) {
-        xmlReader.child(childIndex);
+    protected Object readItem(XMLReader xmlReader, ObjectTree objectGraph, ConverterLookup converterLookup) {
         Class type = classMapper.lookupType(xmlReader.name());
         ObjectTree itemWriter = objectGraph.newStack(type);
         Converter converter = converterLookup.lookupConverterForType(type);
         converter.fromXML(itemWriter, xmlReader, converterLookup, type);
-        xmlReader.pop();
         return itemWriter.get();
     }
 

@@ -33,13 +33,17 @@ public class MapConverter extends AbstractCollectionConverter {
     }
 
     public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
-        int childCount = xmlReader.childCount();
         Map map = (Map) createCollection(requiredType);
-        for (int i = 0; i < childCount; i++) {
-            xmlReader.child(i);
+        while (xmlReader.nextChild()) {
 
-            Object key = readItem(xmlReader, 0, objectGraph, converterLookup);
-            Object value = readItem(xmlReader, 1, objectGraph, converterLookup);
+            xmlReader.nextChild();
+            Object key = readItem(xmlReader, objectGraph, converterLookup);
+            xmlReader.pop();
+
+            xmlReader.nextChild();
+            Object value = readItem(xmlReader, objectGraph, converterLookup);
+            xmlReader.pop();
+
             map.put(key, value);
 
             xmlReader.pop();

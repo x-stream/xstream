@@ -31,8 +31,7 @@ public class ColorConverter implements Converter {
 
     public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
         Map elements = new HashMap();
-        for (int i = 0; i < xmlReader.childCount(); i++) {
-            xmlReader.child(i);
+        while (xmlReader.nextChild()) {
             elements.put(xmlReader.name(), Integer.valueOf(xmlReader.text()));
             xmlReader.pop();
         }

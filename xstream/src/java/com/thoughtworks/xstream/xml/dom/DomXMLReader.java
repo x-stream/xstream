@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.xml.XMLReader;
 import org.w3c.dom.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class DomXMLReader implements XMLReader {
@@ -11,12 +12,15 @@ public class DomXMLReader implements XMLReader {
     private Element currentElement;
     private List childElements;
     private StringBuffer textBuffer;
+    private LinkedList pointers = new LinkedList();
 
     public DomXMLReader(Element rootElement) {
+        pointers.addLast(new Pointer());
         setCurrent(rootElement);
     }
 
     public DomXMLReader(Document document) {
+        pointers.addLast(new Pointer());
         setCurrent(document.getDocumentElement());
     }
 
@@ -33,16 +37,9 @@ public class DomXMLReader implements XMLReader {
         return attribute == null ? null : attribute.getValue();
     }
 
-    public int childCount() {
-        return childElements.size();
-    }
-
-    public void child(int index) {
-        setCurrent(childElements.get(index));
-    }
-
     public void pop() {
         setCurrent(currentElement.getParentNode());
+        pointers.removeLast();
     }
 
     private void setCurrent(Object currentElementObj) {
@@ -61,6 +58,22 @@ public class DomXMLReader implements XMLReader {
                 textBuffer.append(text.getData());
             }
         }
+    }
+
+    public boolean nextChild() {
+        Pointer pointer = (Pointer) pointers.getLast();
+        if (pointer.v < childElements.size()) {
+            pointers.addLast(new Pointer());
+            setCurrent(childElements.get(pointer.v));
+            pointer.v++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private class Pointer {
+        public int v;
     }
 
 }

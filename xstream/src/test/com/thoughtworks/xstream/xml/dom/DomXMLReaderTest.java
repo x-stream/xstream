@@ -37,7 +37,7 @@ public class DomXMLReaderTest extends AbstractXMLReaderTest {
 
         XMLReader xmlReader = new DomXMLReader(small);
         assertEquals("small", xmlReader.name());
-        xmlReader.child(0);
+        xmlReader.nextChild();
         assertEquals("tiny", xmlReader.name());
     }
 
