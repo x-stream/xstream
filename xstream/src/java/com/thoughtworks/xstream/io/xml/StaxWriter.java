@@ -14,9 +14,11 @@ import javax.xml.stream.XMLStreamWriter;
  * @version $Revision$
  */
 public class StaxWriter implements HierarchicalStreamWriter {
-    private QNameMap qnameMap;
-    private XMLStreamWriter out;
-    private boolean writeStartDocument;
+    private final QNameMap qnameMap;
+    private final XMLStreamWriter out;
+    private final boolean writeStartDocument;
+
+    private int tagDepth;
 
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out) throws XMLStreamException {
         this(qnameMap, out, true);
@@ -27,14 +29,14 @@ public class StaxWriter implements HierarchicalStreamWriter {
      *
      * @param qnameMap           is the mapper of Java class names to QNames
      * @param out                the stream to output to
-     * @param writeStartDocument a flag to indicate whether or not the start/end document events should be written
+     * @param writeEnclosingDocument a flag to indicate whether or not the start/end document events should be written
      * @throws XMLStreamException if the events could not be written to the output
      */
-    public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, boolean writeStartDocument) throws XMLStreamException {
+    public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument) throws XMLStreamException {
         this.qnameMap = qnameMap;
         this.out = out;
-        this.writeStartDocument = writeStartDocument;
-        if (writeStartDocument) {
+        this.writeStartDocument = writeEnclosingDocument;
+        if (writeEnclosingDocument) {
             out.writeStartDocument();
         }
     }
@@ -44,9 +46,6 @@ public class StaxWriter implements HierarchicalStreamWriter {
      */
     public void close() {
         try {
-            if (writeStartDocument) {
-                out.writeEndDocument();
-            }
             out.close();
         }
         catch (XMLStreamException e) {
@@ -66,6 +65,10 @@ public class StaxWriter implements HierarchicalStreamWriter {
     public void endNode() {
         try {
             out.writeEndElement();
+            tagDepth--;
+            if (tagDepth == 0 && writeStartDocument) {
+                out.writeEndElement();
+            }
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -93,6 +96,7 @@ public class StaxWriter implements HierarchicalStreamWriter {
                 out.setDefaultNamespace(uri);
             }
             out.writeStartElement(prefix, qname.getLocalPart(), uri);
+            tagDepth++;
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
