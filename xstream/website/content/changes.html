@@ -15,6 +15,32 @@
 
     <p><a href="versioning.html">About XStream version numbers...</a></p>
 
+    <h1>Version 0.6</h1>
+
+    <p>Released May 7, 2004. Focusses on providing full object graph support.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+        <li>None.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+        <li>Bugfix: Objects that had no children could not be derefenced properly (thanks to Brian Slesinsky and Nick Pomfret).</li>
+        <li>Bugfix: DateConverter is now thread safe.</li>
+        <li>Optimization: String instances are reused as much as possible.</li>
+        <li>Converters for BigInteger and BigDecimal.</li>
+        <li>IntConverter now recognises hexadecimal and octal notations (thanks to Konstantin Pribluda).</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+      <li>None.</li>
+    </ul>
+
     <h1>Version 0.6 (release candidate 1)</h1>
 
     <p>Released April 19, 2004. Focusses on providing full object graph support.</p>
