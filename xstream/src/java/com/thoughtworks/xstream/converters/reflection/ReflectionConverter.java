@@ -66,7 +66,7 @@ public class ReflectionConverter implements Converter {
                 type = classMapper.lookupType(classAttribute);
             }
 
-            Object fieldValue = context.convertAnother(type);
+            Object fieldValue = context.convertAnother(result, type);
 
             reflectionProvider.writeField(result, fieldName, fieldValue);
 

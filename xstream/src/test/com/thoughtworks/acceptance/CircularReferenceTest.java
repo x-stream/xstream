@@ -13,7 +13,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DuplicateReferenceTest extends TestCase {
+public class CircularReferenceTest extends TestCase {
 
     private ClassMapper classMapper;
     private DefaultConverterLookup converterLookup;
@@ -24,63 +24,54 @@ public class DuplicateReferenceTest extends TestCase {
         converterLookup = new DefaultConverterLookup(
                         new Sun14ReflectionProvider(),
                         classMapper, "class");
-        classMapper.alias("thing", Thing.class, Thing.class);
+        classMapper.alias("person", Person.class, Person.class);
         converterLookup.setupDefaults();
     }
 
-    public void testReferencesAreWrittenToXml() {
-
-        Thing sameThing = new Thing("hello");
-        Thing anotherThing = new Thing("hello");
-
-        List list = new ArrayList();
-        list.add(sameThing);
-        list.add(sameThing);
-        list.add(anotherThing);
+    public void testCircularReference() {
+        Person bob = new Person("bob");
+        Person jane = new Person("jane");
+        bob.likes = jane;
+        jane.likes = bob;
 
         String expected = "" +
-                "<list id=\"1\">\n" +
-                "  <thing id=\"2\">\n" +
-                "    <field>hello</field>\n" +
-                "  </thing>\n" +
-                "  <thing reference=\"2\"/>\n" +
-                "  <thing id=\"3\">\n" +
-                "    <field>hello</field>\n" +
-                "  </thing>\n" +
-                "</list>";
+                "<person id=\"1\">\n" +
+                "  <firstname>bob</firstname>\n" +
+                "  <likes id=\"2\">\n" +
+                "    <firstname>jane</firstname>\n" +
+                "    <likes reference=\"1\"/>\n" +
+                "  </likes>\n" +
+                "</person>";
 
-        String xml = toXML(list);
-
+        String xml = toXML(bob);
         assertEquals(expected, xml);
 
-        List result = (List) fromXML(xml);
+        Person bobOut = (Person) fromXML(xml);
+        assertEquals("bob", bobOut.firstname);
+        Person janeOut = bobOut.likes;
 
-        assertEquals(list, result);
+        assertEquals("jane", janeOut.firstname);
+
+        assertSame(bobOut.likes, janeOut);
+        assertSame(bobOut, janeOut.likes);
     }
 
-    public void testReferencesAreTheSameObjectWhenDeserialized() {
+    public void testCircularReferenceToSelf() {
+        Person bob = new Person("bob");
+        bob.likes = bob;
 
-        Thing sameThing = new Thing("hello");
-        Thing anotherThing = new Thing("hello");
+        String expected = "" +
+                "<person id=\"1\">\n" +
+                "  <firstname>bob</firstname>\n" +
+                "  <likes reference=\"1\"/>\n" +
+                "</person>";
 
-        List list = new ArrayList();
-        list.add(sameThing);
-        list.add(sameThing);
-        list.add(anotherThing);
+        String xml = toXML(bob);
+        assertEquals(expected, xml);
 
-        String xml = toXML(list);
-        List result = (List)fromXML(xml);
-
-        Thing t0 = (Thing) result.get(0);
-        Thing t1 = (Thing) result.get(1);
-        Thing t2 = (Thing) result.get(2);
-
-        t0.field = "bye";
-
-        assertEquals("bye", t0.field);
-        assertEquals("bye", t1.field);
-        assertEquals("hello", t2.field);
-
+        Person bobOut = (Person) fromXML(xml);
+        assertEquals("bob", bobOut.firstname);
+        assertSame(bobOut, bobOut.likes);
     }
 
     private String toXML(Object obj) {
@@ -102,13 +93,13 @@ public class DuplicateReferenceTest extends TestCase {
         return unmarshaller.start();
     }
 
-    class Thing extends StandardObject {
-        public String field;
+    class Person {
+        public String firstname;
+        public Person likes;
 
-        public Thing(String field) {
-            this.field = field;
+        public Person(String name) {
+            this.firstname = name;
         }
     }
-
 
 }

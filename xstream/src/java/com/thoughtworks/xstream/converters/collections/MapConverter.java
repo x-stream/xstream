@@ -38,11 +38,11 @@ public class MapConverter extends AbstractCollectionConverter {
             reader.moveDown();
 
             reader.moveDown();
-            Object key = readItem(reader, context);
+            Object key = readItem(reader, context, map);
             reader.moveUp();
 
             reader.moveDown();
-            Object value = readItem(reader, context);
+            Object value = readItem(reader, context, map);
             reader.moveUp();
 
             map.put(key, value);

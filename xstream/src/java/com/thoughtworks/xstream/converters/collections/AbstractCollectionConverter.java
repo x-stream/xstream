@@ -33,7 +33,7 @@ public abstract class AbstractCollectionConverter implements Converter {
         }
     }
 
-    protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context, Object current) {
         String classAttribute = reader.getAttribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
@@ -41,7 +41,7 @@ public abstract class AbstractCollectionConverter implements Converter {
         } else {
             type = classMapper.lookupType(classAttribute);
         }
-        return context.convertAnother(type);
+        return context.convertAnother(current, type);
     }
 
     protected Object createCollection(Class type) {

@@ -31,7 +31,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
         Collection collection = (Collection) createCollection(context.getRequiredType());
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            Object item = readItem(reader, context);
+            Object item = readItem(reader, context, collection);
             collection.add(item);
             reader.moveUp();
         }

@@ -6,8 +6,9 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.ClassStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.XStream;
 
-public class TreeUnmarshaller implements UnmarshallingContext {
+public class TreeUnmarshaller implements Unmarshaller, UnmarshallingContext {
 
     private Object root;
     protected HierarchicalStreamReader reader;
@@ -26,7 +27,12 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
+    /** @deprecated */
     public Object convertAnother(Class type) {
+        return convertAnother(null, type);
+    }
+
+    public Object convertAnother(Object current, Class type) {
         Converter converter = converterLookup.lookupConverterForType(type);
         types.push(type);
         Object result = converter.unmarshal(reader, this);
@@ -50,7 +56,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         } else {
             type = classMapper.lookupType(classAttribute);
         }
-        return convertAnother(type);
+        return convertAnother(root, type);
     }
 
 }

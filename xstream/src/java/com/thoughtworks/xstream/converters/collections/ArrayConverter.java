@@ -34,7 +34,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
         List items = new LinkedList();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            Object item = readItem(reader, context);
+            Object item = readItem(reader, context, null); // TODO: arg, what should replace null?
             items.add(item);
             reader.moveUp();
         }
