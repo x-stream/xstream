@@ -121,8 +121,11 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
 
-        alias("awt-color", Color.class);
-        alias("awt-font", Font.class);
+        // Instantiating these two classes starts the AWT system, which is undesirable. Calling loadClass ensures
+        // a reference to the class is found but they are not instantiated.
+        alias("awt-color", jvm.loadClass("java.awt.Color"));
+        alias("awt-font", jvm.loadClass("java.awt.Font"));
+
         alias("sql-timestamp", Timestamp.class);
         alias("file", File.class);
 

@@ -21,7 +21,7 @@ public class JVM {
             return (Class) classCache.get(name);
         } else {
             try {
-                Class cls = Class.forName(name);
+                Class cls = Class.forName(name, false, getClass().getClassLoader());
                 classCache.put(name, cls);
                 return cls;
             } catch (ClassNotFoundException e) {

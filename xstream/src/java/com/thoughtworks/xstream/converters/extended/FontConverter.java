@@ -12,7 +12,9 @@ import java.util.Map;
 public class FontConverter implements Converter {
 
     public boolean canConvert(Class type) {
-        return type.equals(Font.class);
+        // String comparison is used here because Font.class loads the class which in turns instantiates AWT,
+        // which is nasty if you don't want it.
+        return type.getName().equals("java.awt.Font");
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
