@@ -55,6 +55,7 @@ import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.ClassLoaderReference;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -212,7 +213,7 @@ public class XStream {
     private ReflectionProvider reflectionProvider;
     private HierarchicalStreamDriver hierarchicalStreamDriver;
     private MarshallingStrategy marshallingStrategy;
-    private ClassLoader classLoader; // TODO: Should be changeable
+    private ClassLoaderReference classLoaderReference; // TODO: Should be changeable
 
     private ClassMapper classMapper;
     private DefaultConverterLookup converterLookup;
@@ -262,7 +263,7 @@ public class XStream {
         }
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
-        this.classLoader = new CompositeClassLoader();
+        this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
         this.classMapper = classMapper == null ? buildMapper(classAttributeIdentifier) : classMapper;
         converterLookup = new DefaultConverterLookup(this.classMapper);
         setupAliases();
@@ -282,7 +283,7 @@ public class XStream {
     }
 
     private ClassMapper buildMapper(String classAttributeIdentifier) {
-        MapperWrapper mapper = new DefaultMapper(classLoader, classAttributeIdentifier);
+        MapperWrapper mapper = new DefaultMapper(classLoaderReference, classAttributeIdentifier);
         mapper = new XmlFriendlyMapper(mapper);
         mapper = new AliasingMapper(mapper);
         aliasingMapper = (AliasingMapper) mapper; // need a reference to that one
@@ -404,8 +405,8 @@ public class XStream {
         registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
         registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
         registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
-        registerConverter(new DynamicProxyConverter(classMapper, classLoader), PRIORITY_NORMAL);
-        registerConverter(new JavaClassConverter(classLoader), PRIORITY_NORMAL);
+        registerConverter(new DynamicProxyConverter(classMapper, classLoaderReference), PRIORITY_NORMAL);
+        registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(), PRIORITY_NORMAL);
         registerConverter(new FontConverter(), PRIORITY_NORMAL);
         registerConverter(new ColorConverter(), PRIORITY_NORMAL);
@@ -815,5 +816,23 @@ public class XStream {
                 reader.close();
             }
         });
+    }
+
+    /**
+     * Change the ClassLoader XStream uses to load classes.
+     *
+     * @since 1.1.1
+     */
+    public void setClassLoader(ClassLoader classLoader) {
+        classLoaderReference.setReference(classLoader);
+    }
+
+    /**
+     * Change the ClassLoader XStream uses to load classes.
+     *
+     * @since 1.1.1
+     */
+    public ClassLoader getClassLoader() {
+        return classLoaderReference.getReference();
     }
 }

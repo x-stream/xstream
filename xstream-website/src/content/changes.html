@@ -19,10 +19,12 @@
     <h2>Major changes</h2>
 
     <ul>
+		<li>Converters can be registered with a priority, allowing more <i>generic</i> filters to handle classes that don't have more specific converters.</li>
 		<li>Converters can now access underlying HierarchicalStreamReader/Writer implementations to make implementation specific calls.</li>
 		<li>Improved support for classes using ObjectInputFields to follow the serialization specification.</li>
-		<li><jira>XSTR-179</jira> Support for ObjectInputStream.registerValidation(ObjectInputValidation).</li>
-		<li><jira>XSTR-178</jira> Serialized inner class now maintains reference to outer class.</li>
+		<li>JIRA:XSTR-179 Support for ObjectInputStream.registerValidation(ObjectInputValidation).</li>
+		<li>JIRA:XSTR-178 Serialized inner class now maintains reference to outer class.</li>
+		<li>JIRA:XSTR-199 Default ClassLoader may be changed using XStream.setClassLoader().</li>
 	</ul>
 
 	<h2>Minor changes</h2>
