@@ -38,6 +38,10 @@ public class Dom4JXMLReader implements XMLReader {
         pointers.removeLast();
     }
 
+    public Object peek() {
+        return currentElement;
+    }
+    
     public boolean nextChild() {
         Pointer pointer = (Pointer) pointers.getLast();
         if (pointer.v < currentElement.elements().size()) {

@@ -42,6 +42,10 @@ public class DomXMLReader implements XMLReader {
         pointers.removeLast();
     }
 
+    public Object peek() {
+        return currentElement;
+    }
+    
     private void setCurrent(Object currentElementObj) {
         this.currentElement = (Element) currentElementObj;
         childElements = new ArrayList();

@@ -11,5 +11,6 @@ public interface XMLReader {
     boolean nextChild();
 
     void pop();
-
+    
+    Object peek();
 }
