@@ -3,18 +3,18 @@ package com.thoughtworks.xstream.converters.old;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.xml.XMLReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import java.util.LinkedList;
 
 public class UnmarshallingContextAdaptor implements UnmarshallingContext {
 
     private Object root;
-    private XMLReader xmlReader;
+    private HierarchicalStreamReader xmlReader;
     private ConverterLookup converterLookup;
     private LinkedList types = new LinkedList();
 
-    public UnmarshallingContextAdaptor(Object root, XMLReader xmlReader, ConverterLookup converterLookup) {
+    public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader xmlReader, ConverterLookup converterLookup) {
         this.root = root;
         this.xmlReader = xmlReader;
         this.converterLookup = converterLookup;

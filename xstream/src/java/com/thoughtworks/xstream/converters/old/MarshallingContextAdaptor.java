@@ -3,18 +3,18 @@ package com.thoughtworks.xstream.converters.old;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.LinkedList;
 
 public class MarshallingContextAdaptor implements MarshallingContext {
 
-    private XMLWriter xmlWriter;
+    private HierarchicalStreamWriter xmlWriter;
     private ConverterLookup converterLookup;
 
     private LinkedList stack = new LinkedList();
 
-    public MarshallingContextAdaptor(Object root, XMLWriter xmlWriter, ConverterLookup converterLookup) {
+    public MarshallingContextAdaptor(Object root, HierarchicalStreamWriter xmlWriter, ConverterLookup converterLookup) {
         stack.add(root);
         this.xmlWriter = xmlWriter;
         this.converterLookup = converterLookup;

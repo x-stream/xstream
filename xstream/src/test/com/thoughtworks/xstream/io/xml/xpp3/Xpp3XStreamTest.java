@@ -1,21 +1,27 @@
-package com.thoughtworks.xstream;
+package com.thoughtworks.xstream.io.xml.xpp3;
 
 import com.thoughtworks.acceptance.StandardObject;
-import com.thoughtworks.someobjects.*;
+import com.thoughtworks.someobjects.FunnyConstructor;
+import com.thoughtworks.someobjects.WithList;
+import com.thoughtworks.someobjects.X;
+import com.thoughtworks.someobjects.Y;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.alias.DefaultClassMapper;
+import com.thoughtworks.xstream.alias.DefaultNameMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.xml.Dom4JDriver;
+import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
 import junit.framework.TestCase;
-import org.dom4j.Element;
 
-public class XStreamTest extends TestCase {
-
+public class Xpp3XStreamTest extends TestCase {
     private XStream xstream;
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream = new XStream();
+
+        xstream = new XStream(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()),new Xpp3Driver());
         xstream.alias("x", X.class);
         xstream.alias("y", Y.class);
         xstream.alias("funny", FunnyConstructor.class);
@@ -102,7 +108,7 @@ public class XStreamTest extends TestCase {
 
     }
 
-    public void testCanHandleNonStaticPrivateInnerClass() {
+    public void testNonStaticPrivateInnerClassCanBeUsed() {
         NonStaticInnerClass obj = new NonStaticInnerClass();
         obj.field = 3;
 
@@ -128,13 +134,14 @@ public class XStreamTest extends TestCase {
         String xml = xstream.toXML(obj);
 
         String expected =
-                "<com.thoughtworks.xstream.XStreamTest-NonStaticInnerClass>\n" +
+                "<com.thoughtworks.xstream.io.xml.xpp3.Xpp3XStreamTest-NonStaticInnerClass>\n" +
                 "  <field>3</field>\n" +
-                "</com.thoughtworks.xstream.XStreamTest-NonStaticInnerClass>";
+                "</com.thoughtworks.xstream.io.xml.xpp3.Xpp3XStreamTest-NonStaticInnerClass>";
 
         assertEquals(expected, xml);
 
         NonStaticInnerClass result = (NonStaticInnerClass) xstream.fromXML(xml);
+
         assertEquals(obj, result);
     }
 
@@ -142,60 +149,58 @@ public class XStreamTest extends TestCase {
         int field;
     }
 
-    public void testCanBeBeUsedMultipleTimesWithSameInstance() {
+    public void testObjectsCanBeConvertedMultipleTimesWithSameXStream() {
         Y obj = new Y();
         obj.yField = "x";
 
         assertEquals(xstream.toXML(obj), xstream.toXML(obj));
     }
 
-    public void testXStreamWithPeekMethodWithUnderlyingDom4JImplementation()
-        throws Exception {
+    public void testXStreamWithPeekMethodWithUnderlyingXpp3Implementation()
+            throws Exception {
 
         String xml =
-            "<person>" +
-            "  <firstName>jason</firstName>" +
-            "  <lastName>van Zyl</lastName>" +
-            "  <element>" +
-            "    <foo>bar</foo>" +
-            "  </element>" +
-            "</person>";
+                "<person>" +
+                "  <firstName>jason</firstName>" +
+                "  <lastName>van Zyl</lastName>" +
+                "  <element>" +
+                "    <foo>bar</foo>" +
+                "  </element>" +
+                "</person>";
 
-        xstream.registerConverter( new ElementConverter() );
+        xstream.registerConverter(new ElementConverter());
 
-        xstream.alias( "person", Person.class );
+        xstream.alias("person", Person.class);
 
-        Dom4JDriver driver = new Dom4JDriver();
+        Xpp3Driver driver = new Xpp3Driver();
 
-        Person person = (Person) xstream.fromXML( driver.createReader( xml ) );
+        Person person = (Person) xstream.fromXML(driver.createReader(xml));
 
-        assertEquals( "jason", person.firstName );
+        assertEquals("jason", person.firstName);
 
-        assertEquals( "van Zyl", person.lastName );
+        assertEquals("van Zyl", person.lastName);
 
-        assertNotNull( person.element );
+        assertNotNull(person.element);
 
-        assertEquals( "bar", person.element.element( "foo" ).getText() );
+        assertEquals("bar", person.element.getChild("foo").getValue());
     }
 
     static class Person {
         String firstName;
         String lastName;
-        Element element;
+        Xpp3Dom element;
     }
 
     private class ElementConverter implements Converter {
-
-        public boolean canConvert( Class type ) {
-            return Element.class.isAssignableFrom( type );
+        public boolean canConvert(Class type) {
+            return Xpp3Dom.class.isAssignableFrom(type);
         }
 
         public void toXML(MarshallingContext context) {
         }
 
         public Object fromXML(UnmarshallingContext context) {
-
-            Element element = (Element) context.xmlPeek();
+            Xpp3Dom element = (Xpp3Dom) context.xmlPeek();
 
             while (context.xmlNextChild()) {
                 context.xmlPop();
@@ -206,55 +211,32 @@ public class XStreamTest extends TestCase {
     }
 
     public void testXStreamPopulatingAnObjectGraphStartingWithALiveRootObject()
-        throws Exception {
+            throws Exception {
 
         String xml =
-            "<component>" +
-            "  <host>host</host>" +
-            "  <port>8000</port>" +
-            "</component>";
+                "<component>" +
+                "  <host>host</host>" +
+                "  <port>8000</port>" +
+                "</component>";
 
-        xstream.alias( "component", Component.class );
+        xstream.alias("component", Component.class);
 
-        Dom4JDriver driver = new Dom4JDriver();
+        Xpp3Driver driver = new Xpp3Driver();
 
         Component component0 = new Component();
 
-        Component component1 = (Component) xstream.fromXML( driver.createReader( xml ), component0 );
+        Component component1 = (Component) xstream.fromXML(driver.createReader(xml), component0);
 
-        assertSame( component0, component1 );
+        assertSame(component0, component1);
 
-        assertEquals( "host", component0.host );
+        assertEquals("host", component0.host);
 
-        assertEquals( 8000, component0.port );
+        assertEquals(8000, component0.port);
     }
 
-    static class Component
-    {
+    static class Component {
         String host;
         int port;
     }
 
-    public void testUnmarshallingWhereAllImplementationsAreSpecifiedUsingAClassIdentifier()
-        throws Exception {
-
-        String xml =
-            "<handlerManager class='com.thoughtworks.someobjects.HandlerManager'>" +
-            "  <handlers>" +
-            "    <handler class='com.thoughtworks.someobjects.Handler'>" +
-            "      <protocol class='com.thoughtworks.someobjects.Protocol'>" +
-            "        <id>foo</id> " +
-            "      </protocol>  " +
-            "    </handler>" +
-            "  </handlers>" +
-            "</handlerManager>";
-
-        HandlerManager hm = (HandlerManager) xstream.fromXML( xml );
-
-        Handler h = (Handler) hm.getHandlers().get(0);
-
-        Protocol p = h.getProtocol();
-
-        assertEquals( "foo", p.getId() );
-    }
 }

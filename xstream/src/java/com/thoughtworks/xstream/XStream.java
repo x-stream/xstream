@@ -11,13 +11,13 @@ import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
 import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
 import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.objecttree.reflection.ObjectFactory;
 import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLReaderDriver;
-import com.thoughtworks.xstream.xml.XMLWriter;
-import com.thoughtworks.xstream.xml.dom.DomXMLReaderDriver;
-import com.thoughtworks.xstream.xml.text.PrettyPrintXMLWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
@@ -26,20 +26,20 @@ import java.util.*;
 public class XStream {
 
     protected ConverterLookup converterLookup = new DefaultConverterLookup();
-    protected XMLReaderDriver xmlReaderDriver;
+    protected HierarchicalStreamDriver xmlReaderDriver;
     protected ClassMapper classMapper;
     protected ObjectFactory objectFactory;
     protected String classAttributeIdentifier;
 
     public XStream() {
-        this(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()), new DomXMLReaderDriver());
+        this(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()), new DomDriver());
     }
 
-    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, XMLReaderDriver xmlReaderDriver) {
+    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver) {
         this(objectFactory, classMapper, xmlReaderDriver, "class");
     }
 
-    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, XMLReaderDriver xmlReaderDriver,String classAttributeIdentifier) {
+    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver,String classAttributeIdentifier) {
         this.classMapper = classMapper;
         this.objectFactory = objectFactory;
         this.xmlReaderDriver = xmlReaderDriver;
@@ -106,12 +106,12 @@ public class XStream {
 
     public String toXML(Object obj) {
         Writer stringWriter = new StringWriter();
-        XMLWriter xmlWriter = new PrettyPrintXMLWriter(stringWriter);
+        HierarchicalStreamWriter xmlWriter = new PrettyPrintWriter(stringWriter);
         toXML(obj, xmlWriter);
         return stringWriter.toString();
     }
 
-    public void toXML(Object obj, XMLWriter xmlWriter) {
+    public void toXML(Object obj, HierarchicalStreamWriter xmlWriter) {
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
         xmlWriter.startElement(classMapper.lookupName(obj.getClass()));
         MarshallingContextAdaptor context = new MarshallingContextAdaptor(obj, xmlWriter, converterLookup);
@@ -123,11 +123,11 @@ public class XStream {
         return fromXML(xmlReaderDriver.createReader(xml), null);
     }
 
-    public Object fromXML(XMLReader xmlReader) {
+    public Object fromXML(HierarchicalStreamReader xmlReader) {
         return fromXML(xmlReader, null);
     }
 
-    public Object fromXML(XMLReader xmlReader, Object root) {
+    public Object fromXML(HierarchicalStreamReader xmlReader, Object root) {
         String classAttribute = xmlReader.attribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
