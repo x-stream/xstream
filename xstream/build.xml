@@ -100,8 +100,8 @@
                 <include name="build.properties"/>
                 <include name="LICENSE.txt"/>
                 <include name="README.txt"/>
-                <include name="src/java"/>
-                <include name="src/test"/>
+                <include name="src/java/**"/>
+                <include name="src/test/**"/>
                 <include name="lib/**"/>
                 <include name="javadoc/**"/>
                 <include name="xstream-${version}*.jar"/>
