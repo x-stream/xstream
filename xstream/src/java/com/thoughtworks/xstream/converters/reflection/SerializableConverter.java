@@ -9,6 +9,7 @@ import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.path.PathTracker;
 
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -102,11 +103,16 @@ public class SerializableConverter implements Converter {
             }
 
             public void defaultWriteObject() {
-                writer.startNode(ELEMENT_DEFAULT);
+                final boolean[] doneSomething = {false}; // only an array because it needs to be assigned to from anonymous inner
 
                 reflectionProvider.visitSerializableFields(replacedSource, new ReflectionProvider.Visitor() {
                     public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                         if (definedIn == currentType[0] && newObj != null) {
+                            if (!doneSomething[0]) {
+                                writer.startNode(ELEMENT_DEFAULT);
+                                doneSomething[0] = true;
+                            }
+
                             writer.startNode(classMapper.mapNameToXML(fieldName));
 
                             Class actualType = newObj.getClass();
@@ -121,7 +127,9 @@ public class SerializableConverter implements Converter {
                         }
                     }
                 });
-                writer.endNode();
+                if (doneSomething[0]) {
+                    writer.endNode();
+                }
             }
 
             public void close() {
@@ -188,6 +196,9 @@ public class SerializableConverter implements Converter {
             }
 
             public void defaultReadObject() {
+                if (!reader.hasMoreChildren()) {
+                    return;
+                }
                 reader.moveDown();
                 if (!reader.getNodeName().equals(ELEMENT_DEFAULT)) {
                     throw new ConversionException("Expected <" + ELEMENT_DEFAULT + "/> element in readObject() stream");
