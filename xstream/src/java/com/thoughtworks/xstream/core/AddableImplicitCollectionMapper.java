@@ -3,13 +3,15 @@ package com.thoughtworks.xstream.core;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Collections;
 
 import com.thoughtworks.xstream.alias.ImplicitCollectionDef;
 import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
 
 public class AddableImplicitCollectionMapper implements ImplicitCollectionMapper {
 
-    private Map classNameToMapper = new HashMap(); // { definedIn (Class) -> (ImplicitCollectionMapperForClass) }
+    // { definedIn (Class) -> (ImplicitCollectionMapperForClass) }
+    private Map classNameToMapper = Collections.synchronizedMap(new HashMap()); 
 
     private ImplicitCollectionMapperForClass getMapper(Class definedIn) {
         return (ImplicitCollectionMapperForClass) classNameToMapper.get(definedIn);

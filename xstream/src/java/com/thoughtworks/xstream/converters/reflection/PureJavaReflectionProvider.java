@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
 import java.io.Serializable;
 import java.io.ObjectStreamConstants;
 import java.io.DataOutputStream;
@@ -28,7 +29,7 @@ import java.io.ObjectStreamClass;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private final Map serializedDataCache = new HashMap();
+    private final Map serializedDataCache = Collections.synchronizedMap(new HashMap());
 
     protected FieldDictionary fieldDictionary = new FieldDictionary();
 

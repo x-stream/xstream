@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class FieldDictionary {
 
-    private final Map keyedByFieldNameCache = new HashMap();
-    private final Map keyedByFieldKeyCache = new HashMap();
+    private final Map keyedByFieldNameCache = Collections.synchronizedMap(new HashMap());
+    private final Map keyedByFieldKeyCache = Collections.synchronizedMap(new HashMap());
 
     public Iterator serializableFieldsFor(Class cls) {
         return buildMap(cls, true).values().iterator();

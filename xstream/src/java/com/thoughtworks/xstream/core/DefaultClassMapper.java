@@ -11,13 +11,14 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Collections;
 
 public class DefaultClassMapper implements ClassMapper {
 
     protected Map typeToNameMap = new HashMap();
     protected Map nameToTypeMap = new HashMap();
     protected Map baseTypeToDefaultTypeMap = new HashMap();
-    private Map lookupTypeCache = new HashMap();
+    private Map lookupTypeCache = Collections.synchronizedMap(new HashMap());
     private HashSet immutableTypes = new HashSet();
 
     public DefaultClassMapper() {

@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * Instantiates a new object on the Sun JVM by bypassing the constructor (meaning code in the constructor
@@ -21,7 +22,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
     private final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
     private Unsafe cachedUnsafe;
-    private final Map constructorCache = new HashMap();
+    private final Map constructorCache = Collections.synchronizedMap(new HashMap());
 
     private Unsafe getUnsafe() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         if (cachedUnsafe != null) {
