@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.core.util.Fields;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -26,16 +27,7 @@ import java.lang.reflect.Field;
  */
 public class PropertiesConverter implements Converter {
 
-    private static Field defaultsField;
-
-    static {
-        try {
-            defaultsField = Properties.class.getDeclaredField("defaults");
-            defaultsField.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            defaultsField = null;
-        }
-    }
+    private final Field defaultsField = Fields.find(Properties.class, "defaults");
 
     public boolean canConvert(Class type) {
         return Properties.class == type;
@@ -50,7 +42,7 @@ public class PropertiesConverter implements Converter {
             writer.addAttribute("value", entry.getValue().toString());
             writer.endNode();
         }
-        Properties defaults = getDefaults(properties);
+        Properties defaults = (Properties) Fields.read(defaultsField, properties);
         if (defaults != null) {
             writer.startNode("defaults");
             marshal(defaults, writer, context);
@@ -64,7 +56,7 @@ public class PropertiesConverter implements Converter {
             reader.moveDown();
             if (reader.getNodeName().equals("defaults")) {
                 Properties defaults = (Properties) unmarshal(reader, context);
-                setDefaults(properties, defaults);
+                Fields.write(defaultsField, properties, defaults);
             } else {
                 String name = reader.getAttribute("name");
                 String value = reader.getAttribute("value");
@@ -73,28 +65,6 @@ public class PropertiesConverter implements Converter {
             reader.moveUp();
         }
         return properties;
-    }
-
-    private Properties getDefaults(Properties properties) {
-        if (defaultsField == null) {
-            throw new ConversionException("Could not access java.util.Properties.defaults field");
-        }
-        try {
-            return (Properties) defaultsField.get(properties);
-        } catch (IllegalAccessException e) {
-            throw new ConversionException("Could not read java.util.Properties.default field");
-        }
-    }
-
-    private void setDefaults(Properties properties, Properties defaults) {
-        if (defaultsField == null) {
-            throw new ConversionException("Could not access java.util.Properties.defaults field");
-        }
-        try {
-            defaultsField.set(properties, defaults);
-        } catch (IllegalAccessException e) {
-            throw new ConversionException("Could not write java.util.Properties.defaults field");
-        }
     }
 
 }

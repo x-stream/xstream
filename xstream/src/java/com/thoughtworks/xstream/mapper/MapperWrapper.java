@@ -54,6 +54,10 @@ public abstract class MapperWrapper implements ClassMapper {
         return wrapped.attributeForReadResolveField();
     }
 
+    public String attributeForEnumType() {
+        return wrapped.attributeForEnumType();
+    }
+
     public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {
         return wrapped.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
     }

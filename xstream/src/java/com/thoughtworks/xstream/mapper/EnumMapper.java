@@ -11,18 +11,30 @@ import com.thoughtworks.xstream.core.JVM;
  */
 public class EnumMapper extends MapperWrapper {
 
-    private static final Class enumClass = new JVM().loadClass("java.lang.Enum"); // dynamically try to load Enum class.
-    // If using pre an version of Java before 1.5, this will return null, causing this Mapper to have no behavior.
+    // Dynamically try to load Enum class. Pre JDK1.5 will silently fail.
+    private static JVM jvm = new JVM();
+    private static final Class enumClass = jvm.loadClass("java.lang.Enum");
+
+    private static final boolean active = enumClass != null;
+
+    private static final Class enumSetClass = active ? jvm.loadClass("java.util.EnumSet") : null;
 
     public EnumMapper(ClassMapper wrapped) {
         super(wrapped);
     }
 
     public String serializedClass(Class type) {
-        if (enumClass != null && enumClass.isAssignableFrom(type) && type.getSuperclass() != enumClass) {
-            type = type.getSuperclass();
+        if (!active) {
+            return super.serializedClass(type);
+        } else {
+            if (enumClass.isAssignableFrom(type) && type.getSuperclass() != enumClass) {
+                return super.serializedClass(type.getSuperclass());
+            } else if (enumSetClass.isAssignableFrom(type)) {
+                return super.serializedClass(enumSetClass);
+            } else {
+                return super.serializedClass(type);
+            }
         }
-        return super.serializedClass(type);
     }
 
 }

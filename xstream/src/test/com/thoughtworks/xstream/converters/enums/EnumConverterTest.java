@@ -13,25 +13,6 @@ import junit.framework.TestCase;
  */
 public class EnumConverterTest extends TestCase {
 
-    enum SimpleEnum {
-        RED, GREEN, BLUE;
-    }
-
-    enum PolymorphicEnum {
-        A() {
-            String fruit() {
-                return "apple";
-            }
-        },
-        B() {
-            String fruit() {
-                return "banana";
-            }
-        };
-
-        abstract String fruit();
-    }
-
     private XStream xstream;
 
     protected void setUp() throws Exception {

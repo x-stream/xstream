@@ -52,6 +52,10 @@ public class DefaultMapper extends MapperWrapper {
         return "resolves-to";
     }
 
+    public String attributeForEnumType() {
+        return "enum-type";
+    }
+
     public String attributeForImplementationClass() {
         return classAttributeIdentifier;
     }

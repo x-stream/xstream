@@ -38,6 +38,8 @@ public interface Mapper {
 
     String attributeForReadResolveField();
 
+    String attributeForEnumType();
+
     /**
      * Get the name of the field that acts as the default collection for an object, or return null if there is none.
      *

@@ -1,3 +1,7 @@
+// ***** READ THIS *****
+// This class will only compile with JDK 1.5.0 or above as it test Java enums.
+// If you are using an earlier version of Java, just don't try to build this class. XStream should work fine without it.
+
 package com.thoughtworks.xstream.converters.enums;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -5,10 +9,6 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-
-// ***** READ THIS *****
-// This class will only compile with JDK 1.5.0 or above as it test Java enums.
-// If you are using an earlier version of Java, just don't try to build this class. XStream should work fine without it.
 
 /**
  * Converter for JDK 1.5 enums. Combined with EnumMapper this also deals with polymorphic enums.
