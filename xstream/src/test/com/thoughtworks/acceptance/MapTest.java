@@ -41,8 +41,8 @@ public class MapTest extends AbstractAcceptanceTest {
                 "<map>\n" +
                 "  <entry>\n" +
                 "    <software>\n" +
-                "      <name>windows</name>\n" +
                 "      <vendor>microsoft</vendor>\n" +
+                "      <name>windows</name>\n" +
                 "    </software>\n" +
                 "    <hardware>\n" +
                 "      <arch>x86</arch>\n" +
