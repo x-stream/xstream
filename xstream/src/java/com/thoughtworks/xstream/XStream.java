@@ -2,13 +2,15 @@ package com.thoughtworks.xstream;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
-import com.thoughtworks.xstream.core.*;
+import com.thoughtworks.xstream.core.DefaultClassMapper;
+import com.thoughtworks.xstream.core.DefaultConverterLookup;
+import com.thoughtworks.xstream.core.MarshallingContextAdaptor;
+import com.thoughtworks.xstream.core.UnmarshallingContextAdaptor;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -23,26 +25,26 @@ import java.util.*;
 
 public class XStream {
 
-    protected ConverterLookup converterLookup = new DefaultConverterLookup();
+    protected DefaultConverterLookup converterLookup = new DefaultConverterLookup();
     protected HierarchicalStreamDriver hierarchicalStreamDriver;
     protected ClassMapper classMapper;
     protected ReflectionProvider reflectionProvider;
     protected String classAttributeIdentifier;
 
     public XStream() {
-        this(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()), new DomDriver());
+        this(new Sun14ReflectionProvider(), new DefaultClassMapper(), new DomDriver());
     }
 
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()), hierarchicalStreamDriver);
+        this(new Sun14ReflectionProvider(), new DefaultClassMapper(), hierarchicalStreamDriver);
     }
 
     public XStream(ReflectionProvider reflectionProvider) {
-        this(reflectionProvider, new DefaultClassMapper(new DefaultNameMapper()), new DomDriver());
+        this(reflectionProvider, new DefaultClassMapper(), new DomDriver());
     }
 
     public XStream(ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(reflectionProvider, new DefaultClassMapper(new DefaultNameMapper()), hierarchicalStreamDriver);
+        this(reflectionProvider, new DefaultClassMapper(), hierarchicalStreamDriver);
     }
 
     public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver driver) {

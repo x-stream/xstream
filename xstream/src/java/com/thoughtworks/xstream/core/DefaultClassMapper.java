@@ -12,12 +12,9 @@ public class DefaultClassMapper implements ClassMapper {
     protected Map typeToNameMap = new HashMap();
     protected Map nameToTypeMap = new HashMap();
     protected Map baseTypeToDefaultTypeMap = new HashMap();
-    private NameMapper nameMapper;
     private Map lookupTypeCache = new HashMap();
 
-    public DefaultClassMapper( NameMapper elementMapper ) {
-        this.nameMapper =  elementMapper;
-
+    public DefaultClassMapper() {
         // register primitive types
         baseTypeToDefaultTypeMap.put(boolean.class, Boolean.class);
         baseTypeToDefaultTypeMap.put(char.class, Character.class);
@@ -29,14 +26,12 @@ public class DefaultClassMapper implements ClassMapper {
         baseTypeToDefaultTypeMap.put(long.class, Long.class);
     }
 
-    public String mapNameToXML( String javaName )
-    {
-        return nameMapper.toXML( javaName );
+    public String mapNameToXML( String javaName ) {
+        return javaName;
     }
 
-    public String mapNameFromXML( String xmlName )
-    {
-        return nameMapper.fromXML( xmlName );
+    public String mapNameFromXML( String xmlName ) {
+        return xmlName;
     }
 
     public void alias(String elementName, Class type, Class defaultImplementation) {
@@ -102,7 +97,7 @@ public class DefaultClassMapper implements ClassMapper {
 
         // only look for a mappedName if no primitive array type has been found
         if (primvCls == null) {
-            mappedName = (String) nameToTypeMap.get(nameMapper.fromXML(elementName));
+            mappedName = (String) nameToTypeMap.get(mapNameFromXML(elementName));
         }    
         
         if (mappedName != null) {

@@ -7,7 +7,7 @@ public class DefaultClassMapperTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        mapper = new DefaultClassMapper(new DefaultNameMapper());
+        mapper = new DefaultClassMapper();
     }
 
     public void testAppendsArraySuffixOnArrays() {
