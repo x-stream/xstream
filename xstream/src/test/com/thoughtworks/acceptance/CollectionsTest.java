@@ -145,4 +145,23 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "  <list reference=\"../c\"/>\n" +
                 "</java.util.Collections-UnmodifiableRandomAccessList>");
     }
+
+    public void testLinkedHashSetRetainsOrdering() {
+        Set set = new LinkedHashSet();
+        set.add("Z");
+        set.add("C");
+        set.add("X");
+
+        LinkedHashSet result = (LinkedHashSet) assertBothWays(set,
+                "<linked-hash-set>\n" +
+                "  <string>Z</string>\n" +
+                "  <string>C</string>\n" +
+                "  <string>X</string>\n" +
+                "</linked-hash-set>");
+
+        Object[] values = result.toArray();
+        assertEquals("Z", values[0]);
+        assertEquals("C", values[1]);
+        assertEquals("X", values[2]);
+    }
 }

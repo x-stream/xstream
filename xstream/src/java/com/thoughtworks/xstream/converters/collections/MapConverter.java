@@ -17,7 +17,8 @@ public class MapConverter extends AbstractCollectionConverter {
     public boolean canConvert(Class type) {
         return type.equals(HashMap.class)
                 || type.equals(Hashtable.class)
-                || type.equals(TreeMap.class);
+                || type.equals(TreeMap.class)
+                || type.equals(LinkedHashMap.class);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

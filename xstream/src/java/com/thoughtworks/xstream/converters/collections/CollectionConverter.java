@@ -10,15 +10,16 @@ import java.util.*;
 
 public class CollectionConverter extends AbstractCollectionConverter {
 
-    public CollectionConverter(ClassMapper classMapper,String classAttributeIdentifier) {
-        super(classMapper,classAttributeIdentifier);
+    public CollectionConverter(ClassMapper classMapper, String classAttributeIdentifier) {
+        super(classMapper, classAttributeIdentifier);
     }
 
     public boolean canConvert(Class type) {
         return type.equals(ArrayList.class)
                 || type.equals(HashSet.class)
                 || type.equals(LinkedList.class)
-                || type.equals(Vector.class);
+                || type.equals(Vector.class)
+                || type.equals(LinkedHashSet.class);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

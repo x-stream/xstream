@@ -1,16 +1,16 @@
 package com.thoughtworks.xstream.core;
 
+import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.converters.basic.*;
-import com.thoughtworks.xstream.alias.ClassMapper;
 
-import java.util.*;
 import java.net.URL;
+import java.util.*;
 
 public class DefaultConverterLookup implements ConverterLookup {
 
@@ -79,10 +79,12 @@ public class DefaultConverterLookup implements ConverterLookup {
         alias("linked-list", LinkedList.class);
         alias("vector", Vector.class);
         alias("tree-map", TreeMap.class);
+        alias("linked-hash-map", LinkedHashMap.class);
+        alias("linked-hash-set", LinkedHashSet.class);
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
 
-        registerConverter(new ReflectionConverter(classMapper,classAttributeIdentifier, reflectionProvider));
+        registerConverter(new ReflectionConverter(classMapper, classAttributeIdentifier, reflectionProvider));
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());
@@ -100,10 +102,10 @@ public class DefaultConverterLookup implements ConverterLookup {
         registerConverter(new BitSetConverter());
         registerConverter(new URLConverter());
 
-        registerConverter(new ArrayConverter(classMapper,classAttributeIdentifier));
+        registerConverter(new ArrayConverter(classMapper, classAttributeIdentifier));
         registerConverter(new CharArrayConverter());
-        registerConverter(new CollectionConverter(classMapper,classAttributeIdentifier));
-        registerConverter(new MapConverter(classMapper,classAttributeIdentifier));
+        registerConverter(new CollectionConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new MapConverter(classMapper, classAttributeIdentifier));
         registerConverter(new PropertiesConverter());
     }
 

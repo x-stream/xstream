@@ -10,11 +10,12 @@ public abstract class AbstractAcceptanceTest extends TestCase {
 
     protected XStream xstream = new XStream(new XppDriver());
 
-    protected void assertBothWays(Object root, String xml) {
+    protected Object assertBothWays(Object root, String xml) {
         String resultXml = xstream.toXML(root);
         assertEquals(xml, resultXml);
         Object resultRoot = xstream.fromXML(resultXml);
         compareObjects(root, resultRoot);
+        return resultRoot;
     }
 
     protected void compareObjects(Object expected, Object actual) {

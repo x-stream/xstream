@@ -3,10 +3,7 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class MapTest extends AbstractAcceptanceTest {
 
@@ -120,5 +117,33 @@ public class MapTest extends AbstractAcceptanceTest {
 
         assertBothWays(thing, expected);
 
+    }
+
+    public void testLinkedHashMapRetainsOrdering() {
+        Map map = new LinkedHashMap();
+        map.put("Z", "a");
+        map.put("C", "c");
+        map.put("X", "b");
+
+        LinkedHashMap result = (LinkedHashMap) assertBothWays(map,
+                "<linked-hash-map>\n" +
+                "  <entry>\n" +
+                "    <string>Z</string>\n" +
+                "    <string>a</string>\n" +
+                "  </entry>\n" +
+                "  <entry>\n" +
+                "    <string>C</string>\n" +
+                "    <string>c</string>\n" +
+                "  </entry>\n" +
+                "  <entry>\n" +
+                "    <string>X</string>\n" +
+                "    <string>b</string>\n" +
+                "  </entry>\n" +
+                "</linked-hash-map>");
+
+        Object[] keys = result.keySet().toArray();
+        assertEquals("Z", keys[0]);
+        assertEquals("C", keys[1]);
+        assertEquals("X", keys[2]);
     }
 }
