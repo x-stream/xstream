@@ -8,6 +8,11 @@ public class TreeMarshallerTest extends AbstractAcceptanceTest {
         Thing thing;
     }
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        xstream.setMarshallingStrategy(new TreeMarshallingStrategy());
+    }
+
     public void testThrowsExceptionWhenDetectingCircularReferences() {
         Thing a = new Thing();
         Thing b = new Thing();
