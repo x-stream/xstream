@@ -31,19 +31,19 @@ public class DynamicProxyMapper extends MapperWrapper {
         this.alias = alias;
     }
 
-    public String lookupName(Class type) {
+    public String serializedClass(Class type) {
         if (Proxy.isProxyClass(type)) {
             return alias;
         } else {
-            return super.lookupName(type);
+            return super.serializedClass(type);
         }
     }
 
-    public Class lookupType(String elementName) {
+    public Class realClass(String elementName) {
         if (elementName.equals("dynamic-proxy")) {
             return DynamicProxy.class;
         } else {
-            return super.lookupType(elementName);
+            return super.realClass(elementName);
         }
     }
 

@@ -10,12 +10,20 @@ public abstract class MapperWrapper implements ClassMapper {
         this.wrapped = wrapped;
     }
 
-    public String lookupName(Class type) {
-        return wrapped.lookupName(type);
+    public String serializedClass(Class type) {
+        return wrapped.serializedClass(type);
     }
 
-    public Class lookupType(String elementName) {
-        return wrapped.lookupType(elementName);
+    public Class realClass(String elementName) {
+        return wrapped.realClass(elementName);
+    }
+
+    public String serializedMember(Class type, String memberName) {
+        return wrapped.serializedMember(type, memberName);
+    }
+
+    public String realMember(Class type, String serialized) {
+        return wrapped.realMember(type, serialized);
     }
 
     public String mapNameFromXML(String xmlName) {
@@ -46,11 +54,31 @@ public abstract class MapperWrapper implements ClassMapper {
         return wrapped.attributeForReadResolveField();
     }
 
+    public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {
+        return wrapped.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
+    }
+
+    public Class getItemTypeForItemFieldName(Class definedIn, String itemFieldName) {
+        return wrapped.getItemTypeForItemFieldName(definedIn, itemFieldName);
+    }
+
+    public ImplicitCollectionDef getImplicitCollectionDefForFieldName(Class definedIn, String fieldName) {
+        return wrapped.getImplicitCollectionDefForFieldName(definedIn, fieldName);
+    }
+
     /**
      * @deprecated As of 1.1.1, use {@link #defaultImplementationOf(Class)}
      */
     public Class lookupDefaultType(Class baseType) {
         return defaultImplementationOf(baseType);
+    }
+
+    public String lookupName(Class type) {
+        return serializedClass(type);
+    }
+
+    public Class lookupType(String elementName) {
+        return realClass(elementName);
     }
 
     /**

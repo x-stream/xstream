@@ -23,11 +23,11 @@ public class DefaultMapper implements ClassMapper {
         this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
     }
 
-    public String lookupName(Class type) {
+    public String serializedClass(Class type) {
         return type.getName();
     }
 
-    public Class lookupType(String elementName) {
+    public Class realClass(String elementName) {
         try {
             return classLoader.loadClass(elementName);
         } catch (ClassNotFoundException e) {
@@ -57,6 +57,34 @@ public class DefaultMapper implements ClassMapper {
 
     public boolean isImmutableValueType(Class type) {
         return false;
+    }
+
+    public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {
+        return null;
+    }
+
+    public Class getItemTypeForItemFieldName(Class definedIn, String itemFieldName) {
+        return null;
+    }
+
+    public ImplicitCollectionDef getImplicitCollectionDefForFieldName(Class definedIn, String fieldName) {
+        return null;
+    }
+
+    public String lookupName(Class type) {
+        return serializedClass(type);
+    }
+
+    public Class lookupType(String elementName) {
+        return realClass(elementName);
+    }
+
+    public String serializedMember(Class type, String memberName) {
+        return memberName;
+    }
+
+    public String realMember(Class type, String serialized) {
+        return serialized;
     }
 
     public String mapNameFromXML(String xmlName) {

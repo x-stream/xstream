@@ -39,10 +39,10 @@ public class TreeMarshaller implements MarshallingContext {
     public void start(Object item, DataHolder dataHolder) {
         this.dataHolder = dataHolder;
         if (item == null) {
-            writer.startNode(classMapper.lookupName(ClassMapper.Null.class));
+            writer.startNode(classMapper.serializedClass(ClassMapper.Null.class));
             writer.endNode();
         } else {
-            writer.startNode(classMapper.lookupName(item.getClass()));
+            writer.startNode(classMapper.serializedClass(item.getClass()));
             convertAnother(item);
             writer.endNode();
         }

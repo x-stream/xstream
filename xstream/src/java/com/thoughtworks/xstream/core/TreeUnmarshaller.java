@@ -92,9 +92,9 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         String classAttribute = reader.getAttribute(classMapper.attributeForImplementationClass());
         Class type;
         if (classAttribute == null) {
-            type = classMapper.lookupType(reader.getNodeName());
+            type = classMapper.realClass(reader.getNodeName());
         } else {
-            type = classMapper.lookupType(classAttribute);
+            type = classMapper.realClass(classAttribute);
         }
         Object result = convertAnother(root, type);
         Iterator validations = validationList.iterator();

@@ -15,13 +15,13 @@ public class ArrayMapper extends MapperWrapper {
         super(wrapped);
     }
 
-    public String lookupName(Class type) {
+    public String serializedClass(Class type) {
         StringBuffer arraySuffix = new StringBuffer();
         while (type.isArray()) {
             type = type.getComponentType();
             arraySuffix.append("-array");
         }
-        String name = super.lookupName(type);
+        String name = super.serializedClass(type);
         if (arraySuffix.length() > 0) {
             return name + arraySuffix;
         } else {
@@ -29,7 +29,7 @@ public class ArrayMapper extends MapperWrapper {
         }
     }
 
-    public Class lookupType(String elementName) {
+    public Class realClass(String elementName) {
         int dimensions = 0;
 
         // strip off "-array" suffix
@@ -41,7 +41,7 @@ public class ArrayMapper extends MapperWrapper {
         if (dimensions > 0) {
             Class componentType = primitiveClassNamed(elementName);
             if (componentType == null) {
-                componentType = super.lookupType(elementName);
+                componentType = super.realClass(elementName);
             }
             try {
                 return arrayType(dimensions, componentType);
@@ -49,7 +49,7 @@ public class ArrayMapper extends MapperWrapper {
                 throw new CannotResolveClassException(elementName + " : " + e.getMessage());
             }
         } else {
-            return super.lookupType(elementName);
+            return super.realClass(elementName);
         }
     }
 

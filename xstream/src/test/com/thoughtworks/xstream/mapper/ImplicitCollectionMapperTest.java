@@ -1,15 +1,14 @@
-package com.thoughtworks.xstream.core;
+package com.thoughtworks.xstream.mapper;
 
-import junit.framework.TestCase;
-import com.thoughtworks.acceptance.objects.SampleLists;
-import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
-import com.thoughtworks.xstream.alias.ImplicitCollectionDef;
+import com.thoughtworks.acceptance.objects.SampleLists;
+import com.thoughtworks.acceptance.objects.Software;
+import junit.framework.TestCase;
 
-public class AddableImplicitCollectionMapperTest extends TestCase {
+public class ImplicitCollectionMapperTest extends TestCase {
 
-    private AddableImplicitCollectionMapper implicitCollections = new AddableImplicitCollectionMapper();
+    private ImplicitCollectionMapper implicitCollections = new ImplicitCollectionMapper(new DefaultMapper(null));
 
     public void testAllowsFieldsToBeMarkedAsImplicitCollectionsToBeAdded() {
         implicitCollections.add(SampleLists.class, "good", Object.class);
@@ -40,13 +39,13 @@ public class AddableImplicitCollectionMapperTest extends TestCase {
     public void testAllowsFieldsToBeMarkedAsNamedImplicitCollectionsToBeAdded() {
         implicitCollections.add(SampleLists.class, "good", "good-item", Object.class);
         implicitCollections.add(SampleLists.class, "bad", Object.class);
-        ImplicitCollectionDef defGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
+        Mapper.ImplicitCollectionDef defGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
         assertNotNull(defGood);
         assertEquals("good-item", defGood.getItemFieldName());
         assertEquals(Object.class, defGood.getItemType());
         assertEquals("good", defGood.getFieldName());
 
-        ImplicitCollectionDef defBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
+        Mapper.ImplicitCollectionDef defBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
         assertNotNull(defBad);
         assertNull(defBad.getItemFieldName());
 
@@ -57,13 +56,13 @@ public class AddableImplicitCollectionMapperTest extends TestCase {
     public void testAllowsFieldsToBeMarkedBasedOnItemFieldName() {
         implicitCollections.add(SampleLists.class, "good", "good-item", Object.class);
         implicitCollections.add(SampleLists.class, "bad", "bad-item", Object.class);
-        ImplicitCollectionDef defGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
+        Mapper.ImplicitCollectionDef defGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
         assertNotNull(defGood);
         assertEquals("good-item", defGood.getItemFieldName());
         assertEquals(Object.class, defGood.getItemType());
         assertEquals("good", defGood.getFieldName());
 
-        ImplicitCollectionDef defBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
+        Mapper.ImplicitCollectionDef defBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
         assertNotNull(defBad);
         assertEquals("bad-item", defBad.getItemFieldName());
         assertEquals(Object.class, defBad.getItemType());

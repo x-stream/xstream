@@ -19,13 +19,13 @@ public class CachingMapper extends MapperWrapper {
         super(wrapped);
     }
 
-    public Class lookupType(String elementName) {
+    public Class realClass(String elementName) {
         final String key = elementName;
         Class cached = (Class) cache.get(key);
         if (cached != null) {
             return cached;
         } else {
-            Class result = super.lookupType(elementName);
+            Class result = super.realClass(elementName);
             cache.put(key, result);
             return result;
         }

@@ -1,14 +1,12 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.ImplicitCollectionDef;
-import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,15 +18,13 @@ import java.util.Set;
 
 public class ReflectionConverter implements Converter {
 
-    private ClassMapper classMapper;
-    private ReflectionProvider reflectionProvider;
-    private ImplicitCollectionMapper implicitCollectionMapper;
-    private SerializationMethodInvoker serializationMethodInvoker;
+    private final Mapper mapper;
+    private final ReflectionProvider reflectionProvider;
+    private final SerializationMethodInvoker serializationMethodInvoker;
 
-    public ReflectionConverter(ClassMapper classMapper, ReflectionProvider reflectionProvider, ImplicitCollectionMapper implicitCollectionMapper) {
-        this.classMapper = classMapper;
+    public ReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
+        this.mapper = mapper;
         this.reflectionProvider = reflectionProvider;
-        this.implicitCollectionMapper = implicitCollectionMapper;
         serializationMethodInvoker = new SerializationMethodInvoker();
     }
 
@@ -40,7 +36,7 @@ public class ReflectionConverter implements Converter {
         Object source = serializationMethodInvoker.callWriteReplace(original);
 
         if (source.getClass() != original.getClass()) {
-            writer.addAttribute(classMapper.attributeForReadResolveField(), classMapper.lookupName(source.getClass()));
+            writer.addAttribute(mapper.attributeForReadResolveField(), mapper.serializedClass(source.getClass()));
         }
 
         final Set seenFields = new HashSet();
@@ -48,7 +44,7 @@ public class ReflectionConverter implements Converter {
         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                 if (newObj != null) {
-                    ImplicitCollectionDef def = implicitCollectionMapper.getImplicitCollectionDefForFieldName(definedIn, fieldName);
+                    Mapper.ImplicitCollectionDef def = mapper.getImplicitCollectionDefForFieldName(definedIn, fieldName);
                     if (def != null) {
                         if (def.getItemFieldName() != null) {
                             ArrayList list = (ArrayList) newObj;
@@ -67,17 +63,17 @@ public class ReflectionConverter implements Converter {
             }
 
             private void writeField(String fieldName, Class fieldType, Class definedIn, Object newObj) {
-                writer.startNode(classMapper.mapNameToXML(fieldName));
+                writer.startNode(mapper.serializedMember(definedIn, fieldName));
 
                 Class actualType = newObj.getClass();
 
-                Class defaultType = classMapper.defaultImplementationOf(fieldType);
+                Class defaultType = mapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
-                    writer.addAttribute(classMapper.attributeForImplementationClass(), classMapper.lookupName(actualType));
+                    writer.addAttribute(mapper.attributeForImplementationClass(), mapper.serializedClass(actualType));
                 }
 
                 if (seenFields.contains(fieldName)) {
-                    writer.addAttribute(classMapper.attributeForClassDefiningField(), classMapper.lookupName(definedIn));
+                    writer.addAttribute(mapper.attributeForClassDefiningField(), mapper.serializedClass(definedIn));
                 }
                 context.convertAnother(newObj);
 
@@ -88,14 +84,14 @@ public class ReflectionConverter implements Converter {
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Object result = instantiateNewInstance(context, reader.getAttribute(classMapper.attributeForReadResolveField()));
+        final Object result = instantiateNewInstance(context, reader.getAttribute(mapper.attributeForReadResolveField()));
         final SeenFields seenFields = new SeenFields();
 
         Map implicitCollectionsForCurrentObject = null;
         while (reader.hasMoreChildren()) {
             reader.moveDown();
 
-            String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
+            String fieldName = mapper.realMember(result.getClass(), reader.getNodeName());
 
             Class classDefiningField = determineWhichClassDefinesField(reader);
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
@@ -118,7 +114,7 @@ public class ReflectionConverter implements Converter {
 
 
     private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result, String itemFieldName) {
-        String fieldName = implicitCollectionMapper.getFieldNameForItemTypeAndName(context.getRequiredType(), value.getClass(), itemFieldName);
+        String fieldName = mapper.getFieldNameForItemTypeAndName(context.getRequiredType(), value.getClass(), itemFieldName);
         if (fieldName != null) {
             if (implicitCollections == null) {
                 implicitCollections = new HashMap(); // lazy instantiation
@@ -135,8 +131,8 @@ public class ReflectionConverter implements Converter {
     }
 
     private Class determineWhichClassDefinesField(HierarchicalStreamReader reader) {
-        String definedIn = reader.getAttribute(classMapper.attributeForClassDefiningField());
-        return definedIn == null ? null : classMapper.lookupType(definedIn);
+        String definedIn = reader.getAttribute(mapper.attributeForClassDefiningField());
+        return definedIn == null ? null : mapper.realClass(definedIn);
     }
 
     private Object instantiateNewInstance(UnmarshallingContext context, String readResolveValue) {
@@ -144,7 +140,7 @@ public class ReflectionConverter implements Converter {
         if (currentObject != null) {
             return currentObject;
         } else if (readResolveValue != null) {
-            return reflectionProvider.newInstance(classMapper.lookupType(readResolveValue));
+            return reflectionProvider.newInstance(mapper.realClass(readResolveValue));
         } else {
             return reflectionProvider.newInstance(context.getRequiredType());
         }
@@ -169,18 +165,18 @@ public class ReflectionConverter implements Converter {
     }
 
     private Class determineType(HierarchicalStreamReader reader, boolean validField, Object result, String fieldName, Class definedInCls) {
-        String classAttribute = reader.getAttribute(classMapper.attributeForImplementationClass());
+        String classAttribute = reader.getAttribute(mapper.attributeForImplementationClass());
         if (classAttribute != null) {
-            return classMapper.lookupType(classAttribute);
+            return mapper.realClass(classAttribute);
         } else if (!validField) {
-            Class itemType = implicitCollectionMapper.getItemTypeForItemFieldName(result.getClass(), fieldName);
+            Class itemType = mapper.getItemTypeForItemFieldName(result.getClass(), fieldName);
             if (itemType != null) {
                 return itemType;
             } else {
-                return classMapper.lookupType(reader.getNodeName());
+                return mapper.realClass(reader.getNodeName());
             }
         } else {
-            return classMapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, definedInCls));
+            return mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, definedInCls));
         }
     }
 

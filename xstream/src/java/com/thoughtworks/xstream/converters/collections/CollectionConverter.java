@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.*;
 
@@ -20,8 +21,15 @@ import java.util.*;
  */
 public class CollectionConverter extends AbstractCollectionConverter {
 
+    /**
+     * @deprecated As of 1.1.1, use other constructor.
+     */
     public CollectionConverter(ClassMapper classMapper, String classAttributeIdentifier) {
         super(classMapper, classAttributeIdentifier);
+    }
+
+    public CollectionConverter(Mapper mapper) {
+        super(mapper);
     }
 
     public boolean canConvert(Class type) {

@@ -1,17 +1,20 @@
-package com.thoughtworks.xstream.core;
+package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ImplicitCollectionDef;
-import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
+import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class AddableImplicitCollectionMapper implements ImplicitCollectionMapper {
+public class ImplicitCollectionMapper extends MapperWrapper {
+
+    public ImplicitCollectionMapper(ClassMapper wrapped) {
+        super(wrapped);
+    }
 
     // { definedIn (Class) -> (ImplicitCollectionMapperForClass) }
-    private Map classNameToMapper = Collections.synchronizedMap(new HashMap()); 
+    private Map classNameToMapper = Collections.synchronizedMap(new HashMap());
 
     private ImplicitCollectionMapperForClass getMapper(Class definedIn) {
         return (ImplicitCollectionMapperForClass) classNameToMapper.get(definedIn);
@@ -25,11 +28,11 @@ public class AddableImplicitCollectionMapper implements ImplicitCollectionMapper
         }
         return mapper;
     }
-    
+
     public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {
         ImplicitCollectionMapperForClass mapper = getMapper(definedIn);
         if (mapper != null) {
-        	return mapper.getFieldNameForItemTypeAndName(itemType, itemFieldName);
+            return mapper.getFieldNameForItemTypeAndName(itemType, itemFieldName);
         } else {
             return null;
         }
@@ -55,7 +58,7 @@ public class AddableImplicitCollectionMapper implements ImplicitCollectionMapper
 
 
     public void add(Class definedIn, String fieldName, Class itemType) {
-    	add(definedIn, fieldName, null, itemType);
+        add(definedIn, fieldName, null, itemType);
     }
 
     public void add(Class definedIn, String fieldName, String itemFieldName, Class itemType) {
@@ -112,7 +115,7 @@ public class AddableImplicitCollectionMapper implements ImplicitCollectionMapper
         }
 
         public ImplicitCollectionDefImpl getImplicitCollectionDefByFieldName(String fieldName) {
-        	return (ImplicitCollectionDefImpl) fieldNameToDef.get(fieldName);
+            return (ImplicitCollectionDefImpl) fieldNameToDef.get(fieldName);
         }
 
         public ImplicitCollectionDef getImplicitCollectionDefForFieldName(String fieldName) {
@@ -128,4 +131,97 @@ public class AddableImplicitCollectionMapper implements ImplicitCollectionMapper
         }
 
     }
+
+    private static class ImplicitCollectionDefImpl implements ImplicitCollectionDef {
+        private String fieldName;
+        private String itemFieldName;
+        private Class itemType;
+
+        ImplicitCollectionDefImpl(String fieldName, Class itemType, String itemFieldName) {
+            this.fieldName = fieldName;
+            this.itemFieldName = itemFieldName;
+            this.itemType = itemType;
+        }
+
+
+        public boolean equals(Object obj) {
+            if (obj instanceof ImplicitCollectionDefImpl) {
+                ImplicitCollectionDefImpl b = (ImplicitCollectionDefImpl) obj;
+                return fieldName.equals(b.fieldName)
+                        && isEquals(itemFieldName, b.itemFieldName);
+            } else {
+                return false;
+            }
+        }
+
+        public NamedItemType createNamedItemType() {
+            return new NamedItemType(itemType, itemFieldName);
+        }
+
+        private static boolean isEquals(Object a, Object b) {
+            if (a == null) {
+                return b == null;
+            } else {
+                return a.equals(b);
+            }
+        }
+
+        public int hashCode() {
+            int hash = fieldName.hashCode();
+            if (itemFieldName != null) {
+                hash += itemFieldName.hashCode() << 7;
+            }
+            return hash;
+        }
+
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        public String getItemFieldName() {
+            return itemFieldName;
+        }
+
+        public Class getItemType() {
+            return itemType;
+        }
+    }
+
+    private static class NamedItemType {
+        Class itemType;
+        String itemFieldName;
+
+        NamedItemType(Class itemType, String itemFieldName) {
+            this.itemType = itemType;
+            this.itemFieldName = itemFieldName;
+        }
+
+
+        public boolean equals(Object obj) {
+            if (obj instanceof NamedItemType) {
+                NamedItemType b = (NamedItemType) obj;
+                return itemType.equals(b.itemType)
+                        && isEquals(itemFieldName, b.itemFieldName);
+            } else {
+                return false;
+            }
+        }
+
+        private static boolean isEquals(Object a, Object b) {
+            if (a == null) {
+                return b == null;
+            } else {
+                return a.equals(b);
+            }
+        }
+
+        public int hashCode() {
+            int hash = itemType.hashCode() << 7;
+            if (itemFieldName != null) {
+                hash += itemFieldName.hashCode();
+            }
+            return hash;
+        }
+    }
 }
+

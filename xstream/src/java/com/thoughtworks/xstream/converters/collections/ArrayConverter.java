@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -19,8 +20,15 @@ import java.util.List;
  */
 public class ArrayConverter extends AbstractCollectionConverter {
 
+    /**
+     * @deprecated As of 1.1.1, use other constructor.
+     */
     public ArrayConverter(ClassMapper classMapper, String classAttributeIdentifier) {
         super(classMapper, classAttributeIdentifier);
+    }
+
+    public ArrayConverter(Mapper mapper) {
+        super(mapper);
     }
 
     public boolean canConvert(Class type) {

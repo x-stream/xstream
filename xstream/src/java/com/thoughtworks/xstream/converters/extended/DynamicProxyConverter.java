@@ -1,7 +1,5 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -9,6 +7,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -24,15 +23,15 @@ import java.util.List;
 public class DynamicProxyConverter implements Converter {
 
     private ClassLoader classLoader;
-    private ClassMapper classMapper;
+    private Mapper mapper;
 
-    public DynamicProxyConverter(ClassMapper classMapper) {
-        this(classMapper, DynamicProxyConverter.class.getClassLoader());
+    public DynamicProxyConverter(Mapper mapper) {
+        this(mapper, DynamicProxyConverter.class.getClassLoader());
     }
 
-    public DynamicProxyConverter(ClassMapper classMapper, ClassLoader classLoader) {
+    public DynamicProxyConverter(Mapper mapper, ClassLoader classLoader) {
         this.classLoader = classLoader;
-        this.classMapper = classMapper;
+        this.mapper = mapper;
     }
 
     public boolean canConvert(Class type) {
@@ -43,7 +42,7 @@ public class DynamicProxyConverter implements Converter {
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(source);
         addInterfacesToXml(source, writer);
         writer.startNode("handler");
-        writer.addAttribute("class", classMapper.lookupName(invocationHandler.getClass()));
+        writer.addAttribute("class", mapper.serializedClass(invocationHandler.getClass()));
         context.convertAnother(invocationHandler);
         writer.endNode();
     }
@@ -53,7 +52,7 @@ public class DynamicProxyConverter implements Converter {
         for (int i = 0; i < interfaces.length; i++) {
             Class currentInterface = interfaces[i];
             writer.startNode("interface");
-            writer.setValue(classMapper.lookupName(currentInterface));
+            writer.setValue(mapper.serializedClass(currentInterface));
             writer.endNode();
         }
     }
@@ -65,9 +64,9 @@ public class DynamicProxyConverter implements Converter {
             reader.moveDown();
             String elementName = reader.getNodeName();
             if (elementName.equals("interface")) {
-                interfaces.add(classMapper.lookupType(reader.getValue()));
+                interfaces.add(mapper.realClass(reader.getValue()));
             } else if (elementName.equals("handler")) {
-                Class handlerType = classMapper.lookupType(reader.getAttribute("class"));
+                Class handlerType = mapper.realClass(reader.getAttribute("class"));
                 handler = (InvocationHandler) context.convertAnother(null, handlerType);
             }
             reader.moveUp();

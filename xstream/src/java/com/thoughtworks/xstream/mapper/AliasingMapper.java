@@ -25,8 +25,8 @@ public class AliasingMapper extends MapperWrapper {
         typeToNameMap.put(type.getName(), name);
     }
 
-    public String lookupName(Class type) {
-        String name = super.lookupName(type);
+    public String serializedClass(Class type) {
+        String name = super.serializedClass(type);
         String alias = (String) typeToNameMap.get(type.getName());
         if (alias != null) {
             return alias;
@@ -35,7 +35,7 @@ public class AliasingMapper extends MapperWrapper {
         }
     }
 
-    public Class lookupType(String elementName) {
+    public Class realClass(String elementName) {
         if (elementName.equals("null")) { // TODO: This is probably the wrong place for this.
             return null;
         }
@@ -46,7 +46,7 @@ public class AliasingMapper extends MapperWrapper {
             elementName = mappedName;
         }
 
-        return super.lookupType(elementName);
+        return super.realClass(elementName);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -9,6 +8,7 @@ import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -26,10 +26,10 @@ import java.util.Map;
  */
 public class ExternalizableConverter implements Converter {
 
-    private ClassMapper classMapper;
+    private Mapper mapper;
 
-    public ExternalizableConverter(ClassMapper classMapper) {
-        this.classMapper = classMapper;
+    public ExternalizableConverter(Mapper mapper) {
+        this.mapper = mapper;
     }
 
     public boolean canConvert(Class type) {
@@ -45,7 +45,7 @@ public class ExternalizableConverter implements Converter {
                         writer.startNode("null");
                         writer.endNode();
                     } else {
-                        writer.startNode(classMapper.lookupName(object.getClass()));
+                        writer.startNode(mapper.serializedClass(object.getClass()));
                         context.convertAnother(object);
                         writer.endNode();
                     }
@@ -71,13 +71,13 @@ public class ExternalizableConverter implements Converter {
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Class type = classMapper.lookupType(reader.getNodeName());
+        final Class type = mapper.realClass(reader.getNodeName());
         try {
             Externalizable externalizable = (Externalizable) type.newInstance();
             CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
                 public Object readFromStream() {
                     reader.moveDown();
-                    Object streamItem = context.convertAnother(type, classMapper.lookupType(reader.getNodeName()));
+                    Object streamItem = context.convertAnother(type, mapper.realClass(reader.getNodeName()));
                     reader.moveUp();
                     return streamItem;
                 }

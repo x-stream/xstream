@@ -46,7 +46,7 @@ import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
-import com.thoughtworks.xstream.core.AddableImplicitCollectionMapper;
+import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.MapBackedDataHolder;
@@ -70,6 +70,7 @@ import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
 import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
+import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
 
 import java.io.EOFException;
 import java.io.File;
@@ -206,6 +207,7 @@ public class XStream {
     private AliasingMapper aliasingMapper;
     private DefaultImplementationsMapper defaultImplementationsMapper;
     private ImmutableTypesMapper immutableTypesMapper;
+    private ImplicitCollectionMapper implicitCollectionMapper;
 
     private ReflectionProvider reflectionProvider;
     private HierarchicalStreamDriver hierarchicalStreamDriver;
@@ -215,7 +217,6 @@ public class XStream {
     private ClassMapper classMapper;
     private DefaultConverterLookup converterLookup;
     private JVM jvm = new JVM();
-    private AddableImplicitCollectionMapper implicitCollectionMapper = new AddableImplicitCollectionMapper();
 
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
@@ -285,12 +286,14 @@ public class XStream {
         mapper = new XmlFriendlyMapper(mapper);
         mapper = new AliasingMapper(mapper);
         aliasingMapper = (AliasingMapper) mapper; // need a reference to that one
-        mapper = new DynamicProxyMapper(aliasingMapper);
+        mapper = new ImplicitCollectionMapper(mapper);
+        implicitCollectionMapper = (ImplicitCollectionMapper)mapper; // need a reference to this one
+        mapper = new DynamicProxyMapper(mapper);
         mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
         defaultImplementationsMapper = (DefaultImplementationsMapper) mapper; // and that one
-        mapper = new ImmutableTypesMapper(defaultImplementationsMapper);
+        mapper = new ImmutableTypesMapper(mapper);
         immutableTypesMapper = (ImmutableTypesMapper)mapper; // that one too
         mapper = new CachingMapper(mapper);
         return mapper;
@@ -360,7 +363,7 @@ public class XStream {
     }
 
     protected void setupConverters() {
-        ReflectionConverter reflectionConverter = new ReflectionConverter(classMapper, reflectionProvider, implicitCollectionMapper);
+        ReflectionConverter reflectionConverter = new ReflectionConverter(classMapper, reflectionProvider);
         registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
         registerConverter(new SerializableConverter(classMapper, reflectionProvider), PRIORITY_LOW);
@@ -383,12 +386,12 @@ public class XStream {
         registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
         registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
 
-        registerConverter(new ArrayConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
+        registerConverter(new ArrayConverter(classMapper), PRIORITY_NORMAL);
         registerConverter(new CharArrayConverter(), PRIORITY_NORMAL);
-        registerConverter(new CollectionConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
-        registerConverter(new MapConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
-        registerConverter(new TreeMapConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
-        registerConverter(new TreeSetConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
+        registerConverter(new CollectionConverter(classMapper), PRIORITY_NORMAL);
+        registerConverter(new MapConverter(classMapper), PRIORITY_NORMAL);
+        registerConverter(new TreeMapConverter(classMapper), PRIORITY_NORMAL);
+        registerConverter(new TreeSetConverter(classMapper), PRIORITY_NORMAL);
         registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
         registerConverter(new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 

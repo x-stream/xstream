@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -23,8 +24,15 @@ import java.util.Map;
  */
 public class MapConverter extends AbstractCollectionConverter {
 
+    /**
+     * @deprecated As of 1.1.1, use other constructor.
+     */
     public MapConverter(ClassMapper classMapper, String classAttributeIdentifier) {
         super(classMapper, classAttributeIdentifier);
+    }
+
+    public MapConverter(Mapper mapper) {
+        super(mapper);
     }
 
     public boolean canConvert(Class type) {
@@ -37,7 +45,7 @@ public class MapConverter extends AbstractCollectionConverter {
         Map map = (Map) source;
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            writer.startNode(classMapper.lookupName(Map.Entry.class));
+            writer.startNode(mapper().serializedClass(Map.Entry.class));
 
             writeItem(entry.getKey(), context, writer);
             writeItem(entry.getValue(), context, writer);

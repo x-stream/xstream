@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.Comparator;
 import java.util.TreeMap;
@@ -18,8 +19,15 @@ import java.util.TreeMap;
  */
 public class TreeMapConverter extends MapConverter {
 
+    /**
+     * @deprecated As of 1.1.1, use other constructor.
+     */
     public TreeMapConverter(ClassMapper classMapper, String classAttributeIdentifier) {
         super(classMapper, classAttributeIdentifier);
+    }
+
+    public TreeMapConverter(Mapper mapper) {
+        super(mapper);
     }
 
     public boolean canConvert(Class type) {
@@ -34,7 +42,7 @@ public class TreeMapConverter extends MapConverter {
             writer.endNode();
         } else {
             writer.startNode("comparator");
-            writer.addAttribute("class", classMapper.lookupName(comparator.getClass()));
+            writer.addAttribute("class", mapper().serializedClass(comparator.getClass()));
             context.convertAnother(comparator);
             writer.endNode();
         }
@@ -46,7 +54,7 @@ public class TreeMapConverter extends MapConverter {
         TreeMap result;
         if (reader.getNodeName().equals("comparator")) {
             String comparatorClass = reader.getAttribute("class");
-            Comparator comparator = (Comparator) context.convertAnother(null, classMapper.lookupType(comparatorClass));
+            Comparator comparator = (Comparator) context.convertAnother(null, mapper().realClass(comparatorClass));
             result = new TreeMap(comparator);
         } else if (reader.getNodeName().equals("no-comparator")) {
             result = new TreeMap();

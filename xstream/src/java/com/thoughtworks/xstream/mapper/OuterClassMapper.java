@@ -20,13 +20,23 @@ public class OuterClassMapper extends MapperWrapper {
         this(wrapped, "outer-class");
     }
 
-    public String mapNameFromXML(String xmlName) {
-        if (xmlName.equals(alias)) {
-            return "this$0";
+    public String serializedMember(Class type, String memberName) {
+        if (memberName.equals("this$0")) {
+            return alias;
         } else {
-            return super.mapNameFromXML(xmlName);
+            return super.serializedMember(type, memberName);
         }
     }
+
+    public String realMember(Class type, String serialized) {
+        if (serialized.equals(alias)) {
+            return "this$0";
+        } else {
+            return super.realMember(type, serialized);
+        }
+    }
+
+    // --- Maintain backwards compatability
 
     public String mapNameToXML(String javaName) {
         if (javaName.equals("this$0")) {
@@ -35,4 +45,13 @@ public class OuterClassMapper extends MapperWrapper {
             return super.mapNameToXML(javaName);
         }
     }
+
+    public String mapNameFromXML(String xmlName) {
+        if (xmlName.equals(alias)) {
+            return "this$0";
+        } else {
+            return super.mapNameFromXML(xmlName);
+        }
+    }
+
 }

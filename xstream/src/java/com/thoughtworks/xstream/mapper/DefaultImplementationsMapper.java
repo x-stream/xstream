@@ -39,9 +39,9 @@ public class DefaultImplementationsMapper extends MapperWrapper {
         implToType.put(defaultImplementation, ofType);
     }
 
-    public String lookupName(Class type) {
+    public String serializedClass(Class type) {
         Class baseType = (Class) implToType.get(type);
-        return baseType == null ? super.lookupName(type) : super.lookupName(baseType);
+        return baseType == null ? super.serializedClass(type) : super.serializedClass(baseType);
     }
 
     public Class defaultImplementationOf(Class type) {

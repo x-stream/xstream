@@ -4,18 +4,30 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 public interface ClassMapper extends Mapper {
 
-    String lookupName(Class type);
-
-    Class lookupType(String elementName);
-
-    String mapNameFromXML( String xmlName );
-
-    String mapNameToXML( String javaName );
-
     /**
      * Place holder type used for null values.
      */
     class Null {}
+
+    /**
+     * @deprecated As of 1.1.1, use {@link #serializedClass(Class)}
+     */
+    String lookupName(Class type);
+
+    /**
+     * @deprecated As of 1.1.1, use {@link #realClass(String)}
+     */
+    Class lookupType(String elementName);
+
+    /**
+     * @deprecated As of 1.1.1, use {@link #serializedMember(Class, String)}
+     */
+    String mapNameFromXML( String xmlName );
+
+    /**
+     * @deprecated As of 1.1.1, use {@link #realMember(Class, String)}
+     */
+    String mapNameToXML( String javaName );
 
     /**
      * @deprecated As of 1.1.1, use {@link #defaultImplementationOf(Class)}
