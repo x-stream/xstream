@@ -17,8 +17,8 @@ public class PropertiesConverterTest extends TestCase {
 
         String expectedXML = "" +
                 "<properties>\n" +
-                "  <property getNodeName=\"hello\" value=\"world\"/>\n" +
-                "  <property getNodeName=\"foo\" value=\"cheese\"/>\n" +
+                "  <property name=\"hello\" value=\"world\"/>\n" +
+                "  <property name=\"foo\" value=\"cheese\"/>\n" +
                 "</properties>";
         String actualXML = xStream.toXML(in);
         assertEquals(expectedXML, actualXML);

@@ -21,7 +21,7 @@ public class PropertiesConverter implements Converter {
         for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             writer.startNode("property");
-            writer.addAttribute("getNodeName", entry.getKey().toString());
+            writer.addAttribute("name", entry.getKey().toString());
             writer.addAttribute("value", entry.getValue().toString());
             writer.endNode();
         }
@@ -31,8 +31,9 @@ public class PropertiesConverter implements Converter {
         Properties properties = new Properties();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            String name = reader.getAttribute("getNodeName");
-            String value = reader.getAttribute("value");;
+            String name = reader.getAttribute("name");
+            String value = reader.getAttribute("value");
+            ;
             properties.setProperty(name, value);
             reader.moveUp();
         }
