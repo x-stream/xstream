@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.basic;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public abstract class AbstractBasicConverter implements Converter {
@@ -19,8 +20,8 @@ public abstract class AbstractBasicConverter implements Converter {
         writer.writeText(toString(source));
     }
 
-    public Object fromXML(UnmarshallingContext context) {
-        return fromString(context.xmlText());
+    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        return fromString(reader.text());
     }
 
 }

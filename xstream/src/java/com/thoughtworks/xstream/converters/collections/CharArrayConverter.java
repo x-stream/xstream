@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class CharArrayConverter implements Converter {
@@ -16,7 +17,7 @@ public class CharArrayConverter implements Converter {
         writer.writeText(new String(chars));
     }
 
-    public Object fromXML(UnmarshallingContext context) {
-        return context.xmlText().toCharArray();
+    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        return reader.text().toCharArray();
     }
 }

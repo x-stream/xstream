@@ -5,6 +5,7 @@ import com.thoughtworks.acceptance.someobjects.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import junit.framework.TestCase;
@@ -194,12 +195,12 @@ public class XStreamTest extends TestCase {
         public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         }
 
-        public Object fromXML(UnmarshallingContext context) {
+        public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
 
-            Element element = (Element) context.xmlPeek();
+            Element element = (Element) reader.peek();
 
-            while (context.xmlNextChild()) {
-                context.xmlPop();
+            while (reader.nextChild()) {
+                reader.pop();
             }
 
             return element;

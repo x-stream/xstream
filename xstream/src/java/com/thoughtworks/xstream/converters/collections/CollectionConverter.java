@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.Collection;
@@ -26,12 +27,12 @@ public class CollectionConverter extends AbstractCollectionConverter {
         }
     }
 
-    public Object fromXML(UnmarshallingContext context) {
+    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Collection collection = (Collection) createCollection(context.getRequiredType());
-        while (context.xmlNextChild()) {
-            Object item = readItem(context);
+        while (reader.nextChild()) {
+            Object item = readItem(reader, context);
             collection.add(item);
-            context.xmlPop();
+            reader.pop();
         }
         return collection;
     }

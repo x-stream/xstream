@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public abstract class AbstractCollectionConverter implements Converter {
@@ -19,7 +20,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     public abstract void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context);
-    public abstract Object fromXML(UnmarshallingContext context);
+    public abstract Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context);
 
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         if (item == null) {
@@ -32,11 +33,11 @@ public abstract class AbstractCollectionConverter implements Converter {
         }
     }
 
-    protected Object readItem(UnmarshallingContext context) {
-        String classAttribute = context.xmlAttribute(classAttributeIdentifier);
+    protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        String classAttribute = reader.attribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
-            type = classMapper.lookupType(context.xmlElementName());
+            type = classMapper.lookupType(reader.name());
         } else {
             type = classMapper.lookupType(classAttribute);
         }

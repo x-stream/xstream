@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.converters;
 
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public interface Converter {
@@ -8,5 +9,6 @@ public interface Converter {
 
     void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context);
 
-    Object fromXML(UnmarshallingContext context);
+    Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context);
+
 }

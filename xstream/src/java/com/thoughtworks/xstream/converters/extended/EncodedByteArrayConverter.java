@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -50,9 +51,9 @@ public class EncodedByteArrayConverter implements Converter {
         writer.writeText(encoder.encode(data));
     }
 
-    public Object fromXML(UnmarshallingContext context) {
+    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         try {
-            return decoder.decodeBuffer(context.xmlText());
+            return decoder.decodeBuffer(reader.text());
         } catch (IOException e) {
             throw new ConversionException("Cannot decode binary data", e);
         }

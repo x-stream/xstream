@@ -10,44 +10,20 @@ import java.util.LinkedList;
 public class UnmarshallingContextAdaptor implements UnmarshallingContext {
 
     private Object root;
-    private HierarchicalStreamReader xmlReader;
+    private HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
     private LinkedList types = new LinkedList();
 
     public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader xmlReader, ConverterLookup converterLookup) {
         this.root = root;
-        this.xmlReader = xmlReader;
+        this.reader = xmlReader;
         this.converterLookup = converterLookup;
-    }
-
-    public String xmlText() {
-        return xmlReader.text();
-    }
-
-    public String xmlElementName() {
-        return xmlReader.name();
-    }
-
-    public void xmlPop() {
-        xmlReader.pop();
-    }
-
-    public boolean xmlNextChild() {
-        return xmlReader.nextChild();
-    }
-
-    public String xmlAttribute(String name) {
-        return xmlReader.attribute(name);
-    }
-
-    public Object xmlPeek() {
-        return xmlReader.peek();
     }
 
     public Object convertAnother(Class type) {
         Converter converter = converterLookup.lookupConverterForType(type);
         types.addLast(type);
-        Object result = converter.fromXML(this);
+        Object result = converter.fromXML(reader, this);
         types.removeLast();
         return result;
     }

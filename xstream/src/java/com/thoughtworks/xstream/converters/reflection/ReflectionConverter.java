@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.lang.reflect.Field;
@@ -61,15 +62,15 @@ public class ReflectionConverter implements Converter {
         writer.endElement();
     }
 
-    public Object fromXML(UnmarshallingContext context) {
+    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Object result = context.currentObject();
 
         if (result == null) {
             result = objectFactory.create(context.getRequiredType());
         }
 
-        while (context.xmlNextChild()) {
-            String fieldName = classMapper.mapNameFromXML(context.xmlElementName());
+        while (reader.nextChild()) {
+            String fieldName = classMapper.mapNameFromXML(reader.name());
             Iterator fields = getFields(result.getClass());
             Field field = null;
             while (fields.hasNext()) {
@@ -84,7 +85,7 @@ public class ReflectionConverter implements Converter {
             }
 
             Class type;
-            String classAttribute = context.xmlAttribute(classAttributeIdentifier);
+            String classAttribute = reader.attribute(classAttributeIdentifier);
             if (classAttribute == null) {
                 type = field.getType();
             } else {
@@ -101,7 +102,7 @@ public class ReflectionConverter implements Converter {
                         "Cannot access field " + type + "." + field.getName(), e);
             }
 
-            context.xmlPop();
+            reader.pop();
         }
         return result;
     }

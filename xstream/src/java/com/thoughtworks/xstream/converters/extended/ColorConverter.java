@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.extended;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.awt.*;
@@ -23,11 +24,11 @@ public class ColorConverter implements Converter {
         write("alpha", color.getAlpha(), writer);
     }
 
-    public Object fromXML(UnmarshallingContext context) {
+    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Map elements = new HashMap();
-        while (context.xmlNextChild()) {
-            elements.put(context.xmlElementName(), Integer.valueOf(context.xmlText()));
-            context.xmlPop();
+        while (reader.nextChild()) {
+            elements.put(reader.name(), Integer.valueOf(reader.text()));
+            reader.pop();
         }
         Color color = new Color(
                 ((Integer) elements.get("red")).intValue(),

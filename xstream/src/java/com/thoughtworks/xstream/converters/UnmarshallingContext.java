@@ -6,13 +6,4 @@ public interface UnmarshallingContext {
     Object currentObject();
     Class getRequiredType();
 
-    String xmlText();
-    String xmlElementName();
-    void xmlPop();
-    boolean xmlNextChild();
-    String xmlAttribute(String name);
-    Object xmlPeek();
-
-
-
 }

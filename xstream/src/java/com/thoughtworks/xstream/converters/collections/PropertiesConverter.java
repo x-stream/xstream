@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.Iterator;
@@ -26,14 +27,14 @@ public class PropertiesConverter implements Converter {
         }
     }
 
-    public Object fromXML(UnmarshallingContext context) {
+    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Properties properties = new Properties();
-        while (context.xmlNextChild()) {
-            context.xmlNextChild();
-            String name = context.xmlAttribute("name");
-            String value = context.xmlAttribute("value");;
+        while (reader.nextChild()) {
+            reader.nextChild();
+            String name = reader.attribute("name");
+            String value = reader.attribute("value");;
             properties.setProperty(name, value);
-            context.xmlPop();
+            reader.pop();
         }
         return properties;
     }

@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.lang.reflect.Array;
@@ -28,13 +29,13 @@ public class ArrayConverter extends AbstractCollectionConverter {
         }
     }
 
-    public Object fromXML(UnmarshallingContext context) {
+    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         // read the items from xml into a list
         List items = new LinkedList();
-        while (context.xmlNextChild()) {
-            Object item = readItem(context);
+        while (reader.nextChild()) {
+            Object item = readItem(reader, context);
             items.add(item);
-            context.xmlPop();
+            reader.pop();
         }
         // now convertAnother the list into an array
         // (this has to be done as a separate list as the array size is not
