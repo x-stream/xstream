@@ -26,7 +26,10 @@
     <h2>Minor changes</h2>
 
     <ul>
-        <li>None.</li>
+        <li>New converter for java.awt.Font that initializes the Font correctly - uninitialized Fonts caused
+        the JVM to crash(!) when rendered.</li>
+        <li>Converters for java.io.File, java.sql.Timestamp, java.awt.Color, java.awt.Font and dynamic proxies are now
+        registered by default.</li>
     </ul>
 
     <h2>API changes</h2>

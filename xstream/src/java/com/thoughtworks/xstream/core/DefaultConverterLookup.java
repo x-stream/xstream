@@ -11,6 +11,11 @@ import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.ThrowableConverter;
 import com.thoughtworks.xstream.converters.extended.StackTraceElementConverter;
+import com.thoughtworks.xstream.converters.extended.FontConverter;
+import com.thoughtworks.xstream.converters.extended.FileConverter;
+import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
+import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
+import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
@@ -20,6 +25,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
+import java.awt.*;
+import java.sql.Timestamp;
+import java.io.File;
 
 public class DefaultConverterLookup implements ConverterLookup, DefaultCollectionLookup {
 
@@ -30,6 +39,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
     private String classAttributeIdentifier;
     private Converter defaultConverter;
     private Map defaultCollections = new HashMap();
+    private ClassLoader classLoader = getClass().getClassLoader();
 
     public DefaultConverterLookup(ReflectionProvider reflectionProvider,
                                   ClassMapper classMapper,
@@ -108,6 +118,11 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
 
+        alias("awt-color", Color.class);
+        alias("awt-font", Font.class);
+        alias("sql-timestamp", Timestamp.class);
+        alias("file", File.class);
+
         if (JVM.is14()) {
             alias("linked-hash-map", JVM.loadClass("java.util.LinkedHashMap"));
             alias("linked-hash-set", JVM.loadClass("java.util.LinkedHashSet"));
@@ -127,8 +142,6 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         registerConverter(new StringConverter());
         registerConverter(new StringBufferConverter());
         registerConverter(new DateConverter());
-        registerConverter(new JavaClassConverter());
-        registerConverter(new JavaMethodConverter());
         registerConverter(new BitSetConverter());
         registerConverter(new URLConverter());
         registerConverter(new BigIntegerConverter());
@@ -141,6 +154,17 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         registerConverter(new TreeMapConverter(classMapper, classAttributeIdentifier));
         registerConverter(new TreeSetConverter(classMapper, classAttributeIdentifier));
         registerConverter(new PropertiesConverter());
+
+        registerConverter(new FileConverter());
+        registerConverter(new SqlTimestampConverter());
+        registerConverter(new DynamicProxyConverter(classMapper, classLoader));
+        registerConverter(new JavaClassConverter(classLoader));
+        registerConverter(new JavaMethodConverter());
+        registerConverter(new FontConverter());
+        registerConverter(new ColorConverter());
+
+        // EncodedByteArrayConverter
+        // SqlTimeConverter
 
         if (JVM.is14()) {
             registerConverter(new ThrowableConverter(defaultConverter()));

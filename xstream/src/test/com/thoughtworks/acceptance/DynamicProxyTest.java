@@ -6,8 +6,6 @@ import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
 public class DynamicProxyTest extends AbstractAcceptanceTest {
 
     public void testDynamicProxy() {
-        xstream.registerConverter(new DynamicProxyConverter(xstream.getClassMapper()));
-
         assertBothWays(SampleDynamicProxy.newInstance(),
                 "<dynamic-proxy>\n" +
                 "  <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy-InterfaceOne</interface>\n" +
