@@ -211,4 +211,33 @@ public class XStreamTest extends TestCase {
             objectGraph.set( element );
         }
     }
+
+    public void testXStreamPopulatingAnObjectGraphStartingWithALiveRootObject()
+        throws Exception {
+
+        String xml =
+            "<component>" +
+            "  <host>host</host>" +
+            "  <port>8000</port>" +
+            "</component>";
+
+        xstream.alias( "component", Component.class );
+
+        Dom4JXMLReaderDriver driver = new Dom4JXMLReaderDriver();
+
+        Component person = new Component();
+
+        person = (Component) xstream.fromXML( driver.createReader( xml ), person );
+
+        assertEquals( "host", person.host );
+
+        assertEquals( 8000, person.port );
+    }
+
+    static class Component
+    {
+        String host;
+        int port;
+    }
+
 }
