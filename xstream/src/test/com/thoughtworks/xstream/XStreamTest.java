@@ -239,10 +239,10 @@ public class XStreamTest extends TestCase {
         throws Exception {
 
         String xml =
-            "<handlerManager class='com.thoughtworks.someobjects.HandlerManager'>" +
+            "<handlerManager class='com.thoughtworks.acceptance.someobjects.HandlerManager'>" +
             "  <handlers>" +
-            "    <handler class='com.thoughtworks.someobjects.Handler'>" +
-            "      <protocol class='com.thoughtworks.someobjects.Protocol'>" +
+            "    <handler class='com.thoughtworks.acceptance.someobjects.Handler'>" +
+            "      <protocol class='com.thoughtworks.acceptance.someobjects.Protocol'>" +
             "        <id>foo</id> " +
             "      </protocol>  " +
             "    </handler>" +
