@@ -34,3 +34,4 @@ ALL /usr/local/despots/cvs/collect_diffs.rb --to scm@xstream.codehaus.org %{sVv}
 #xstream /home/services/dcontrol/ruby/bin/ruby /scm/xstream/CVSROOT/dctrigger.rb http://builds.codehaus.org:4712/private/xmlrpc/ xstream
 # Disabled by DamageControl on July 14, 2004
 #xstream /home/services/dcontrol/ruby/bin/ruby /scm/xstream/CVSROOT/dctrigger.rb http://builds.codehaus.org:4712/private/xmlrpc/ xstream
+xstream sh /home/services/dcontrol/damagecontrol/bin/requestbuild --url http://builds.codehaus.org:4712/private/xmlrpc --projectname xstream
