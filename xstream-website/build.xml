@@ -1,5 +1,7 @@
 <project name="xstream-website" default="website">
 
+	<property name="publish.path" value="/home/projects/xstream/public_html"/>
+	
     <target name="clean" description="Clean up all built files">
         <delete dir="build"/>
     </target>
@@ -27,7 +29,6 @@
     </target>
 
 	<target name="publish" depends="website" description="Publish website">
-		<fail unless="publish.path" message="Specify 'publish.path' property"/>
 		<copy todir="${publish.path}">
 			<fileset dir="build/website"/>
 		</copy>
