@@ -1,23 +1,22 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
+import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.path.PathTracker;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.ObjectInputStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
@@ -72,6 +71,7 @@ public class SerializableConverter implements Converter {
 
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
+        final boolean[] writtenClassWrapper = {false};
 
         CustomObjectOutputStream.StreamCallback callback = new CustomObjectOutputStream.StreamCallback() {
 
@@ -103,14 +103,18 @@ public class SerializableConverter implements Converter {
             }
 
             public void defaultWriteObject() {
-                final boolean[] doneSomething = {false}; // only an array because it needs to be assigned to from anonymous inner
+                final boolean[] writtenDefaultFields = {false}; // only an array because it needs to be assigned to from anonymous inner
 
                 reflectionProvider.visitSerializableFields(replacedSource, new ReflectionProvider.Visitor() {
                     public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                         if (definedIn == currentType[0] && newObj != null) {
-                            if (!doneSomething[0]) {
+                            if (!writtenClassWrapper[0]) {
+                                writer.startNode(classMapper.lookupName(currentType[0]));
+                                writtenClassWrapper[0] = true;
+                            }
+                            if (!writtenDefaultFields[0]) {
                                 writer.startNode(ELEMENT_DEFAULT);
-                                doneSomething[0] = true;
+                                writtenDefaultFields[0] = true;
                             }
 
                             writer.startNode(classMapper.mapNameToXML(fieldName));
@@ -127,7 +131,7 @@ public class SerializableConverter implements Converter {
                         }
                     }
                 });
-                if (doneSomething[0]) {
+                if (writtenDefaultFields[0]) {
                     writer.endNode();
                 }
             }
@@ -139,19 +143,24 @@ public class SerializableConverter implements Converter {
 
         currentType[0] = replacedSource.getClass();
         while (currentType[0] != null) {
-            writer.startNode(classMapper.lookupName(currentType[0]));
             if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
+                writtenClassWrapper[0] = true;
+                writer.startNode(classMapper.lookupName(currentType[0]));
                 ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
                 serializationMethodInvoker.callWriteObject(currentType[0], replacedSource, objectOutputStream);
+                writer.endNode();
             } else {
+                writtenClassWrapper[0] = false;
                 try {
                     callback.defaultWriteObject();
                 } catch (IOException e) {
                     throw new ObjectAccessException("Could not call defaultWriteObject()", e);
                 }
+                if (writtenClassWrapper[0]) {
+                    writer.endNode();
+                }
             }
             currentType[0] = currentType[0].getSuperclass();
-            writer.endNode();
         }
     }
 

@@ -62,8 +62,6 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "      <name>xs</name>\n"
                 + "    </software>\n"
                 + "  </custom>\n"
-                + "  <com.thoughtworks.acceptance.StandardObject/>\n"
-                + "  <object/>\n"
                 + "</custom>";
 
         assertBothWays(obj, expectedXml);
@@ -141,8 +139,6 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "    <int>3</int>\n"
                 + "  </parent>\n"
-                + "  <com.thoughtworks.acceptance.StandardObject/>\n"
-                + "  <object/>\n"
                 + "</child>";
 
         assertBothWays(child, expectedXml);
@@ -178,8 +174,6 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "    <int>3</int>\n"
                 + "  </parent>\n"
-                + "  <com.thoughtworks.acceptance.StandardObject/>\n"
-                + "  <object/>\n"
                 + "</child2>";
 
         assertBothWays(child, expectedXml);
@@ -273,8 +267,6 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "      <field name=\"the-number\" class=\"int\">99</field>\n"
                 + "    </fields>\n"
                 + "  </with-named-fields>\n"
-                + "  <com.thoughtworks.acceptance.StandardObject/>\n"
-                + "  <object/>\n"
                 + "</with-named-fields>";
 
         assertBothWays(obj, expectedXml);
@@ -331,8 +323,6 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "            <field name=\"the-number\" class=\"int\">0</field>\n"
                 + "          </fields>\n"
                 + "        </with-named-fields>\n"
-                + "        <com.thoughtworks.acceptance.StandardObject/>\n"
-                + "        <object/>\n"
                 + "      </field>\n"
                 + "      <field name=\"the-software\" class=\"software\">\n"
                 + "        <vendor>tw</vendor>\n"
@@ -342,8 +332,6 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "      <field name=\"the-number\" class=\"int\">0</field>\n"
                 + "    </fields>\n"
                 + "  </with-named-fields>\n"
-                + "  <com.thoughtworks.acceptance.StandardObject/>\n"
-                + "  <object/>\n"
                 + "</with-named-fields>";
 
         assertBothWays(outer, expectedXml);
