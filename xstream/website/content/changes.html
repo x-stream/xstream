@@ -13,9 +13,22 @@
       <li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
     </ul>
 
-    <h1>Version 1.0.2</h1>
+    <h1>Latest snapshot</h1>
 
-    <p>Release Aug 7, 2004. Focus on improving the converters bundled with XStream to support a wider range of types.</p>
+    <p>Not officially released yet.</p>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+        <li>Implicit collections can be specified for classes, allowing the element wrapping the collection to be skipped.</li> 
+        <li>Bugfix: Only <i>immutable</i> basic types will have references ignored in XML (for clarity).</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+        <li>XStream.addDefaultCollection() has been deprecated. Use XStream.addImplicitCollection() instead.</li>
+    </ul>
 
     <h2>Major changes</h2>
 
