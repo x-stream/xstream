@@ -92,7 +92,7 @@
         <echo message="*************************************************************"/>
     </target>
 
-    <target name="jar" depends="compile,jdk-check">
+    <target name="jar" depends="compile">
         <jar jarfile="xstream-${version}.jar">
             <fileset dir="${java.build.dir}"/>
         </jar>
