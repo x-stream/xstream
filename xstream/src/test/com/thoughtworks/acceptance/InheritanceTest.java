@@ -9,8 +9,8 @@ public class InheritanceTest extends AbstractAcceptanceTest {
         String xml =
                 "<oss>\n" +
                 "  <license>license</license>\n" +
-                "  <vendor>apache</vendor>\n" +
                 "  <name>geronimo</name>\n" +
+                "  <vendor>apache</vendor>\n" +
                 "</oss>";
 
         xstream.alias("oss", OpenSourceSoftware.class);

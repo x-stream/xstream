@@ -32,20 +32,20 @@ public class ReflectionConverterTest extends TestCase {
 
         String expected =
                 "<world>\n" +
-                "  <anInt>1</anInt>\n" +
-                "  <anInteger>2</anInteger>\n" +
-                "  <anChar>a</anChar>\n" +
-                "  <anCharacter>w</anCharacter>\n" +
-                "  <anBool>true</anBool>\n" +
-                "  <anBoolean>false</anBoolean>\n" +
                 "  <aByte>4</aByte>\n" +
                 "  <aByteClass>5</aByteClass>\n" +
-                "  <aShort>6</aShort>\n" +
-                "  <aShortClass>7</aShortClass>\n" +
                 "  <aFloat>8.0</aFloat>\n" +
                 "  <aFloatClass>9.0</aFloatClass>\n" +
                 "  <aLong>10</aLong>\n" +
                 "  <aLongClass>11</aLongClass>\n" +
+                "  <aShort>6</aShort>\n" +
+                "  <aShortClass>7</aShortClass>\n" +
+                "  <anBool>true</anBool>\n" +
+                "  <anBoolean>false</anBoolean>\n" +
+                "  <anChar>a</anChar>\n" +
+                "  <anCharacter>w</anCharacter>\n" +
+                "  <anInt>1</anInt>\n" +
+                "  <anInteger>2</anInteger>\n" +
                 "  <anString>XStream programming!</anString>\n" +
                 "</world>";
 

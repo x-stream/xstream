@@ -2,9 +2,10 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects
@@ -15,6 +16,9 @@ import java.util.List;
  * Note that any code in the constructor of a class will be executed when the ObjectFactory instantiates the object.
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
+
+    private Map cache = new HashMap();
+
     public Object newInstance(Class type) {
         try {
             return type.newInstance();
@@ -25,54 +29,16 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         }
     }
 
-    private Iterator listSerializableFields(Class type) {
-        List result = new LinkedList();
-
-        while (!Object.class.equals(type)) {
-            Field[] fields = type.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
-                int modifiers = field.getModifiers();
-                if (field.getName().startsWith("this$")) {
-                    continue;
-                }
-                if (Modifier.isFinal(modifiers) ||
-                        Modifier.isStatic(modifiers) ||
-                        Modifier.isTransient(modifiers)) {
-                    continue;
-                }
-                result.add(field);
-            }
-            type = type.getSuperclass();
-        }
-
-        return result.iterator();
-    }
-
     public void eachSerializableField(Class type, ReflectionProvider.Block visitor) {
-        while (!Object.class.equals(type)) {
-            Field[] fields = type.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
-                int modifiers = field.getModifiers();
-                if (field.getName().startsWith("this$")) {
-                    continue;
-                }
-                if (Modifier.isFinal(modifiers) ||
-                        Modifier.isStatic(modifiers) ||
-                        Modifier.isTransient(modifiers)) {
-                    continue;
-                }
-                visitor.visit(field.getName(), field.getType());
-            }
-            type = type.getSuperclass();
+        for (Iterator iterator = findAllSerializableFieldsForClass(type).entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            visitor.visit((String) entry.getKey(), ((Field)entry.getValue()).getType());
         }
     }
 
     public Object readField(Object object, String fieldName) {
         Field field = findField(object.getClass(), fieldName);
         try {
-            field.setAccessible(true);
             return field.get(object);
         } catch (IllegalArgumentException e) {
             throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
@@ -84,7 +50,6 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     public void writeField(Object object, String fieldName, Object value) {
         Field field = findField(object.getClass(), fieldName);
         try {
-            field.setAccessible(true);
             field.set(object, value);
         } catch (IllegalArgumentException e) {
             throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
@@ -94,29 +59,42 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     public Class getFieldType(Object object, String fieldName) {
-        Iterator fields = listSerializableFields(object.getClass());
-        while (fields.hasNext()) {
-            Field tmp = (Field) fields.next();
-            if (tmp.getName().equals(fieldName)) {
-                return tmp.getType();
-            }
-        }
-        throw new ObjectAccessException("No such field " + object.getClass() + "." + fieldName);
+        return findField(object.getClass(), fieldName).getType();
     }
 
-    private Field findField(Class type, String fieldName) {
-        // @todo: cache this!
-        while (!Object.class.equals(type)) {
-            Field[] fields = type.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
-                if (field.getName().equals(fieldName)) {
-                    return field;
+    private Field findField(Class cls, String fieldName) {
+        Map fields = findAllSerializableFieldsForClass(cls);
+        Field field = (Field) fields.get(fieldName);
+        if (field == null) {
+            throw new ObjectAccessException("No such field " + cls + "." + fieldName);
+        } else {
+            return field;
+        }
+    }
+
+    private Map findAllSerializableFieldsForClass(Class cls) {
+        if (!cache.containsKey(cls)) {
+            final Map result = new TreeMap();
+            while (!Object.class.equals(cls)) {
+                Field[] fields = cls.getDeclaredFields();
+                for (int i = 0; i < fields.length; i++) {
+                    Field field = fields[i];
+                    int modifiers = field.getModifiers();
+                    if (field.getName().startsWith("this$")) {
+                        continue;
+                    }
+                    if (Modifier.isFinal(modifiers) ||
+                            Modifier.isStatic(modifiers) ||
+                            Modifier.isTransient(modifiers)) {
+                        continue;
+                    }
+                    field.setAccessible(true);
+                    result.put(field.getName(), field);
                 }
+                cls = cls.getSuperclass();
             }
-            type = type.getSuperclass();
+            cache.put(cls, result);
         }
-        throw new ObjectAccessException("Could not get field " + type + "." + fieldName);
+        return (Map) cache.get(cls);
     }
-
 }
