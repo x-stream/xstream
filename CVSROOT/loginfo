@@ -26,3 +26,4 @@
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
 ALL /usr/local/despots/cvs/collect_diffs.rb --to scm@xstream.codehaus.org %{sVv}
+xstream cat $CVSROOT/CVSROOT/damagecontrol-xstream.conf | nc builds.codehaus.org 4711
