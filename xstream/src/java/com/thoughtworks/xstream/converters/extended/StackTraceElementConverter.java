@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 /**
  * Converter for StackTraceElement (the lines of a stack trace) - JDK 1.4+ only.
  *
+ * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
  * @author Joe Walnes
  */
 public class StackTraceElementConverter extends AbstractBasicConverter {

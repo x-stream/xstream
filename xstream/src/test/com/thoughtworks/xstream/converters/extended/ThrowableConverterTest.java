@@ -3,6 +3,8 @@ package com.thoughtworks.xstream.converters.extended;
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import junit.framework.AssertionFailedError;
 
+import java.math.BigDecimal;
+
 /**
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
  */
@@ -11,7 +13,7 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
     protected void setUp() throws Exception {
         super.setUp();
         xstream.registerConverter(new StackTraceElementConverter());
-        xstream.registerConverter(new ThrowableConverter());
+        xstream.registerConverter(new ThrowableConverter(xstream.getConverterLookup().defaultConverter()));
     }
 
     public void testDeserializesThrowable() {
@@ -48,6 +50,29 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
         try {
             throw new Exception();
         } catch (Exception exception) {
+            Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
+            assertThrowableEquals(exception, result);
+        }
+    }
+
+    public static class MyException extends Exception {
+        private BigDecimal number;
+
+        public MyException(String msg, BigDecimal number) {
+            super(msg);
+            this.number = number;
+        }
+
+        public boolean equals(Object o) {
+            return super.equals(o) && o instanceof MyException && number.equals(((MyException)o).number);
+        }
+
+    }
+
+    public void testSerializesExtraFields() {
+        try {
+            throw new MyException("A MESSAGE", new BigDecimal(1234));
+        } catch (MyException exception) {
             Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
             assertThrowableEquals(exception, result);
         }
