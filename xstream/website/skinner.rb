@@ -97,7 +97,7 @@ def skin_content_file( content_file, root_content_dir )
     config = {
         "content" => content_file,
         "isindex" => (content_file =~ /content\/index\.html$/) != nil,
-        "release" => "1.0.1",
+        "release" => "1.0.2",
         "history" => CVSWEB_ROOT + content_file[(root_content_dir.size+1)..-1]
     }
     
