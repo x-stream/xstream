@@ -46,7 +46,6 @@ public class ErrorTest extends AbstractAcceptanceTest {
                     "</thing>");
             fail("Error expected");
         } catch (ConversionException e) {
-            e.printStackTrace();
             assertEquals(StreamException.class.getName(),
                     e.get("exception"));
             assertContains("unexpected character in markup",
