@@ -14,10 +14,25 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class StaxWriter implements HierarchicalStreamWriter {
     private XMLStreamWriter out;
+    private boolean writeStartDocument;
 
     public StaxWriter(XMLStreamWriter out) throws XMLStreamException {
+        this(out, true);
+    }
+
+    /**
+     * Allows a StaxWriter to be created for partial XML output
+     *
+     * @param out the stream to output to
+     * @param writeStartDocument a flag to indicate whether or not the start/end document events should be written
+     * @throws XMLStreamException if the events could not be written to the output
+     */
+    public StaxWriter(XMLStreamWriter out, boolean writeStartDocument) throws XMLStreamException {
         this.out = out;
-        out.writeStartDocument();
+        this.writeStartDocument = writeStartDocument;
+        if (writeStartDocument) {
+            out.writeStartDocument();
+        }
     }
 
     /**
@@ -25,7 +40,9 @@ public class StaxWriter implements HierarchicalStreamWriter {
      */
     public void close() {
         try {
-            out.writeEndDocument();
+            if (writeStartDocument) {
+                out.writeEndDocument();
+            }
             out.close();
         }
         catch (XMLStreamException e) {
