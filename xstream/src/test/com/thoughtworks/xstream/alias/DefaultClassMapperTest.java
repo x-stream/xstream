@@ -21,8 +21,8 @@ public class DefaultClassMapperTest extends TestCase {
         assertEquals("int-array", mapper.lookupName(new int[0].getClass()));
     }
 
-    // TODO
-    public void XtestArrayClassesCanBeCreated() {
+    // @TODO
+    public void TODO_testArrayClassesCanBeCreated() {
         Class arrayType = mapper.lookupType("java.lang.String-array");
         assertTrue(arrayType.isArray());
         assertEquals(String.class, arrayType.getComponentType());

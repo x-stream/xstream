@@ -88,6 +88,7 @@ public class ArraysTest extends AbstractAcceptanceTest {
 
     }
 
+    // @TODO
     public void TODO_testArrayInCustomObject() {
         ObjWithArray objWithArray = new ObjWithArray();
         objWithArray.ints = new int[]{1, 2};
