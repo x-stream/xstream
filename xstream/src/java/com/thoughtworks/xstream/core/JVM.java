@@ -9,9 +9,18 @@ public class JVM {
 
     private ReflectionProvider reflectionProvider;
 
+    private static final float majorJavaVersion;
+
+    static {
+       majorJavaVersion = Float.parseFloat(System.getProperty("java.version").substring(0, 3));
+    }
+
     public static boolean is14() {
-        float majorJavaVersion = Float.parseFloat(System.getProperty("java.version").substring(0, 3));
         return majorJavaVersion >= 1.4f;
+    }
+
+    public static boolean is15() {
+        return majorJavaVersion >= 1.5f;
     }
 
     private static boolean isSun() {

@@ -65,7 +65,7 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
 
     public void testSerializesExtraFields() {
         try {
-            throw new MyException("A MESSAGE", new BigDecimal(1234));
+            throw new MyException("A MESSAGE", new BigDecimal(123.4));
         } catch (MyException exception) {
             Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
             assertThrowableEquals(exception, result);

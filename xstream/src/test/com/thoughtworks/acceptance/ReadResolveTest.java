@@ -1,7 +1,6 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.StatusEnum;
-import com.thoughtworks.acceptance.objects.ColorEnum;
 
 import java.io.*;
 
@@ -37,13 +36,5 @@ public class ReadResolveTest extends AbstractAcceptanceTest {
         StatusEnum rStatus = (StatusEnum) xstream.fromXML(xml);
 
         assertSame(status, rStatus);
-    }
-
-    public void testSupportCommonsLangEnum() {
-        Object resultOne = xstream.fromXML(xstream.toXML(ColorEnum.RED));
-        Object resultTwo = xstream.fromXML(xstream.toXML(ColorEnum.RED));
-        Object resultThree = xstream.fromXML(xstream.toXML(ColorEnum.BLUE));
-        assertSame(resultOne, resultTwo);
-        assertNotSame(resultOne, resultThree);
     }
 }

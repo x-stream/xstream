@@ -1,8 +1,5 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.objects.StatusEnum;
-import com.thoughtworks.acceptance.objects.ColorEnum;
-
 import java.io.*;
 
 public class WriteReplaceTest extends AbstractAcceptanceTest {
