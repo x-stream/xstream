@@ -6,44 +6,59 @@ import java.util.Map;
 import java.util.List;
 
 public class Xpp3Dom {
-    private String name;
+    protected String name;
 
-    private String value;
+    protected String value;
 
-    private Map attributes;
+    protected Map attributes;
 
-    private List childList;
+    protected List childList;
 
-    private Map childMap;
+    protected Map childMap;
 
-    private Xpp3Dom parent;
+    protected Xpp3Dom parent;
 
     public Xpp3Dom(String name) {
         this.name = name;
+        childList = new ArrayList();
+        childMap = new HashMap();
     }
+
+    // ----------------------------------------------------------------------
+    // Name handling
+    // ----------------------------------------------------------------------
 
     public String getName() {
         return name;
     }
 
+    // ----------------------------------------------------------------------
+    // Value handling
+    // ----------------------------------------------------------------------
+
     public String getValue() {
         return value;
     }
 
-    public String getAttribute(String name) {
-        return (null != attributes) ? (String) attributes.get(name) : null;
-    }
-
-    public Xpp3Dom getChild(int i) {
-        return (Xpp3Dom) childList.get(i);
-    }
-
-    public Xpp3Dom getChild(String name) {
-        return (Xpp3Dom) childMap.get(name);
-    }
-
     public void setValue(String value) {
         this.value = value;
+    }
+
+    // ----------------------------------------------------------------------
+    // Attribute handling
+    // ----------------------------------------------------------------------
+
+    public String[] getAttributeNames() {
+        if ( null == attributes ) {
+            return new String[0];
+        }
+        else {
+            return (String[]) attributes.keySet().toArray( new String[0] );
+        }
+    }
+
+    public String getAttribute(String name) {
+        return (null != attributes) ? (String) attributes.get(name) : null;
     }
 
     public void setAttribute(String name, String value) {
@@ -54,18 +69,50 @@ public class Xpp3Dom {
         attributes.put(name, value);
     }
 
+    // ----------------------------------------------------------------------
+    // Child handling
+    // ----------------------------------------------------------------------
+
+    public Xpp3Dom getChild(int i) {
+        return (Xpp3Dom) childList.get(i);
+    }
+
+    public Xpp3Dom getChild(String name) {
+        return (Xpp3Dom) childMap.get(name);
+    }
+
     public void addChild(Xpp3Dom xpp3Dom) {
-        if (null == childList) {
-            childList = new ArrayList();
-
-            childMap = new HashMap();
-        }
-
         xpp3Dom.setParent(this);
-
         childList.add(xpp3Dom);
-
         childMap.put(xpp3Dom.getName(), xpp3Dom);
+    }
+
+    public Xpp3Dom[] getChildren() {
+        if ( null == childList ) {
+            return new Xpp3Dom[0];
+        }
+        else {
+            return (Xpp3Dom[]) childList.toArray( new Xpp3Dom[0] );
+        }
+    }
+
+    public Xpp3Dom[] getChildren( String name ) {
+        if ( null == childList ) {
+            return new Xpp3Dom[0];
+        }
+        else {
+            ArrayList children = new ArrayList();
+            int size = this.childList.size();
+
+            for ( int i = 0; i < size; i++ ) {
+                Xpp3Dom configuration = (Xpp3Dom) this.childList.get( i );
+                if ( name.equals( configuration.getName() ) ) {
+                    children.add( configuration );
+                }
+            }
+
+            return (Xpp3Dom[]) children.toArray( new Xpp3Dom[0] );
+        }
     }
 
     public int getChildCount() {
@@ -75,6 +122,10 @@ public class Xpp3Dom {
 
         return childList.size();
     }
+
+    // ----------------------------------------------------------------------
+    // Parent handling
+    // ----------------------------------------------------------------------
 
     public Xpp3Dom getParent() {
         return parent;
