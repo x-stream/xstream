@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.path.PathTracker;
 import com.thoughtworks.xstream.io.path.PathTrackingReader;
+import com.thoughtworks.xstream.io.path.RelativePathCalculator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
     private Map values = new HashMap();
     private String lastPath;
     private PathTracker pathTracker = new PathTracker();
+    private RelativePathCalculator relativePathCalculator = new RelativePathCalculator();
 
     public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
                                         ConverterLookup converterLookup, ClassMapper classMapper,
@@ -30,11 +32,12 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
         if (lastPath != null) { // handles circular references
             values.put(lastPath, current);
         }
-        String reference = reader.getAttribute("reference");
-        if (reference != null) {
-            return values.get(reference);
+        String relativePathOfReference = reader.getAttribute("reference");
+        String currentPath = pathTracker.getCurrentPath();
+        if (relativePathOfReference != null) {
+            return values.get(relativePathCalculator.absolutePath(currentPath, relativePathOfReference));
         } else {
-            lastPath = pathTracker.getCurrentPath();
+            lastPath = currentPath;
             return super.convertAnother(current, type);
         }
     }

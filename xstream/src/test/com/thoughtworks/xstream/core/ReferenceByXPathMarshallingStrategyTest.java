@@ -40,7 +40,7 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
                 "  <thing>\n" +
                 "    <name>b</name>\n" +
                 "  </thing>\n" +
-                "  <thing reference=\"/list/thing[2]\"/>\n" + // xpath
+                "  <thing reference=\"../thing[2]\"/>\n" + // xpath
                 "</list>";
 
         assertBothWays(list, expected);

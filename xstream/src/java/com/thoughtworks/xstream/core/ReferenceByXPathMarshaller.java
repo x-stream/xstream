@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.path.PathTracker;
 import com.thoughtworks.xstream.io.path.PathTrackingWriter;
+import com.thoughtworks.xstream.io.path.RelativePathCalculator;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ public class ReferenceByXPathMarshaller extends TreeMarshaller {
 
     private PathTracker pathTracker = new PathTracker();
     private Map references = new IdentityHashMap();
+    private RelativePathCalculator relativePathCalculator = new RelativePathCalculator();
 
     public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, ClassMapper classMapper) {
         super(writer, converterLookup, classMapper);
@@ -28,11 +30,12 @@ public class ReferenceByXPathMarshaller extends TreeMarshaller {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {
+            String currentPath = pathTracker.getCurrentPath();
             String pathOfExistingReference = (String) references.get(item);
             if (pathOfExistingReference != null) {
-                writer.addAttribute("reference", pathOfExistingReference);
+                String absolutePath = relativePathCalculator.relativePath(currentPath, pathOfExistingReference);
+                writer.addAttribute("reference", absolutePath);
             } else {
-                String currentPath = pathTracker.getCurrentPath();
                 references.put(item, currentPath);
                 converter.marshal(item, writer, this);
             }
