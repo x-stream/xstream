@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Wrapper around java.text.SimpleDateFormat that can
@@ -91,7 +92,7 @@ public class ThreadSafeSimpleDateFormat {
     }
 
     private DateFormat createNew() {
-        return new SimpleDateFormat(formatString);
+        return new SimpleDateFormat(formatString, Locale.ENGLISH);
     }
 
 }
