@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.jdom.output.Format;
 
 import java.io.StringReader;
 import java.util.List;
@@ -64,9 +65,7 @@ public class JDomAcceptanceTest extends TestCase {
         assertEquals("Result list should contain exactly 1 element",
                                                         1, result.size());
 
-        XMLOutputter outputter = new XMLOutputter("  ", true);
-        outputter.setOmitDeclaration(true);
-        outputter.setLineSeparator("\n");
+        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
 
         assertEquals(expected, outputter.outputString(result));
     }

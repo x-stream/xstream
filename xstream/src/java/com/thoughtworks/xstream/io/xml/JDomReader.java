@@ -24,12 +24,15 @@ public class JDomReader extends AbstractTreeReader {
     }
 
     protected Object getParent() {
+        // JDOM 1.0:
+        return currentElement.getParentElement();
+
+        // JDOM b10:
+        // Parent parent = currentElement.getParent();
+        // return (parent instanceof Element) ? (Element)parent : null;
+
         // JDOM b9 and earlier:
         // return currentElement.getParent();
-
-        // JDOM b10 and later:
-        Parent parent = currentElement.getParent();
-        return (parent instanceof Element) ? (Element)parent : null;
     }
 
     protected Object getChild(int index) {
