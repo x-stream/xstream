@@ -14,6 +14,9 @@ public class JavaClassConverter extends AbstractBasicConverter {
 
     private ClassLoader classLoader;
 
+    /**
+     * @deprecated As of 1.1.1 - use other constructor and explicitly supply a ClassLoader.
+     */
     public JavaClassConverter() {
         this(Thread.currentThread().getContextClassLoader());
     }
