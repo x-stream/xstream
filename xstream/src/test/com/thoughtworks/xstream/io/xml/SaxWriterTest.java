@@ -167,15 +167,13 @@ public class SaxWriterTest extends TestCase {
             transformer.transform(traxSource, new StreamResult(buffer));
 
             fail("Empty source list not rejected");
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage().endsWith("shall not be an empty list")) {
+        } catch (Exception expectedException) {
+            if (expectedException.getMessage().endsWith("shall not be an empty list")) {
                 // Good!
             } else {
-                fail("Unexpected exception: " + e);
+                throw expectedException;
             }
-        } catch (Exception e) {
-            fail("Unexpected exception: " + e);
-        }
+        } 
     }
 
     private static class TrAXErrorListener implements ErrorListener {
