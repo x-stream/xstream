@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 import junit.framework.TestCase;
 
 public class ReflectionConverterTest extends TestCase {
@@ -27,7 +28,7 @@ public class ReflectionConverterTest extends TestCase {
     public void testSerializesAllPrimitiveFieldsInACustomObject() {
         World world = new World();
 
-        XStream xstream = new XStream();
+        XStream xstream = new XStream(new XppDriver());
         xstream.alias("world", World.class);
 
         String expected =
@@ -66,7 +67,7 @@ public class ReflectionConverterTest extends TestCase {
                 "  <normal>normal</normal>\n" +
                 "</types>";
 
-        XStream xstream = new XStream();
+        XStream xstream = new XStream(new XppDriver());
         xstream.alias("types", TypesOfFields.class);
 
         String xml = xstream.toXML(fields);

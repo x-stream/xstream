@@ -22,13 +22,25 @@ import java.util.*;
 public class XStream {
 
     protected ConverterLookup converterLookup = new DefaultConverterLookup();
-    protected HierarchicalStreamDriver xmlReaderDriver;
+    protected HierarchicalStreamDriver hierarchicalStreamDriver;
     protected ClassMapper classMapper;
-    protected ReflectionProvider objectFactory;
+    protected ReflectionProvider reflectionProvider;
     protected String classAttributeIdentifier;
 
     public XStream() {
         this(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()), new DomDriver());
+    }
+
+    public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
+        this(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()), hierarchicalStreamDriver);
+    }
+
+    public XStream(ReflectionProvider reflectionProvider) {
+        this(reflectionProvider, new DefaultClassMapper(new DefaultNameMapper()), new DomDriver());
+    }
+
+    public XStream(ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
+        this(reflectionProvider, new DefaultClassMapper(new DefaultNameMapper()), hierarchicalStreamDriver);
     }
 
     public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver) {
@@ -37,8 +49,8 @@ public class XStream {
 
     public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver,String classAttributeIdentifier) {
         this.classMapper = classMapper;
-        this.objectFactory = objectFactory;
-        this.xmlReaderDriver = xmlReaderDriver;
+        this.reflectionProvider = objectFactory;
+        this.hierarchicalStreamDriver = xmlReaderDriver;
         this.classAttributeIdentifier = classAttributeIdentifier;
 
         alias("int", Integer.class);
@@ -118,7 +130,7 @@ public class XStream {
     }
 
     public Object fromXML(String xml) {
-        return fromXML(xmlReaderDriver.createReader(xml), null);
+        return fromXML(hierarchicalStreamDriver.createReader(xml), null);
     }
 
     public Object fromXML(HierarchicalStreamReader xmlReader) {
