@@ -1,0 +1,137 @@
+<html>
+  <head>
+    <title>Change History</title>
+  </head>
+  <body>
+    <h1>Change History</h1>
+
+    <p>Changes are split into three categories:</p>
+
+    <ul>
+      <li><b>Major changes</b>: The major new features that all users should know about.</li>
+      <li><b>Minor changes</b>: Any smaller changes, including bugfixes.</li>
+      <li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
+    </ul>
+
+    <p><a href="versioning.html">About XStream version numbers...</a></p>
+
+    <h1>Current Snapshot</h1>
+
+    <p>Not officially released yet. Focusses on providing full object graph support.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+      <li>Full support for object graphs, including duplicate references of same object and
+      circular references.</li>
+      <li>References can be identified using XPath (default), unique-IDs or disabled.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+      <li>Release includes Ant build file.</li>
+      <li>Converters for non standard collections such as Collections.EMPTY_LIST, syncronizedList(), unmodifiableMap(), etc.</li>
+      <li>Converter for nulls.</li>
+      <li>Converter for dynamic proxies.</li>
+      <li>Converter for java.net.URL.</li>
+      <li>Converters for java.util.LinkedHashMap and java.util.LinkedHashSet.</li>
+      <li>Converters for java.lang.reflect.Method and java.lang.reflect.Constructor.</li>
+      <li>If duplicate reference support is disabled and a circular reference is encountered, an exception will be thrown.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+      <li>None.</li>
+    </ul>
+
+    <h1>Version 0.5</h1>
+
+    <p>Released March 8, 2004. Focussed on performance.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+      <li>Massive performance improvements. Up to 3 times faster for serialization and 22
+      times faster for deserialization!</li>
+      <li>Non-DOM building pull parser based reader. Results in much smaller memory footprint,
+      particularly when deserializing large object models.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+      <li>Misc performance improvements.</li>
+      <li>Misc bugfixes.</li>
+      <li>Alternate encodings can be used with DomDriver.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+      <li>Renamed XMLReader/Writer to HierarchicalStreamReader/Writer as XStream is not
+      actually coupled to serializing just to XML.</li>
+      <li>Cleaned up the public API.</li>
+      <li>Moved internal XStream implementation classes to core package.</li>
+      <li>Misc package/class renames to make more sense. Dumped lots of dead code.</li>
+    </ul>
+
+    <h1>Version 0.4</h1>
+
+    <p>This version was never publicly released. All changes were made available in 0.5. Focussed on making it easier to create custom converters.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+      <li>Overhaul of interface for Converters. Makes Converters much cleaner to write.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+      <li>Added custom converters for java.io.File, java.util.Properties, java.util.Vector, java.util.Hashtable, java.util.BitSet
+      byte[] (Base64 encoded), char[].</li>
+      <li>Misc bugfixes.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+      <li>New interface to be implemented by custom converters.</li>
+    </ul>
+
+    <h1>Version 0.3</h1>
+
+    <p>Released January 1, 2004.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+      <li>Added ElementMapper interface and default implementations to allow fine
+      grained control over element name to class mapper operations.</li>
+      <li>Added an XPP based reader and writer that uses a pull-parser to create a lightweight DOM tree.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+      <li>Added XStream.fromXML(XMLReader xmlReader,Object root) method to
+        allow the population of an object graph starting with a live object root.</li>
+      <li>Added XMLReader.peek() method to allow access to the underlying hierarchical
+        object being unmarshalled.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+      <li>Aligned the the methods in XStream to use the specified ObjectFactory in the constructor
+        instead of creating a SunReflectionObjectFactory.</li>
+    </ul>
+
+    <h1>Older versions</h1>
+
+    <p>Changes in XStream prior to version 0.3 were not logged.</p>
+
+  </body>
+</html>

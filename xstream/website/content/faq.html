@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Frequently Asked Questions</title>
+  </head>
+
+  <body>
+
+    <h1>Frequently Asked Questions</h1>
+
+    <h1>Compatability</h1>
+
+    <h2>Which JDK is required to use XStream?</h2>
+    <p>Currently 1.4 or later. However there are plans to get XStream working on 1.3 in the near future.</p>
+
+    <h1>Serialization</h1>
+
+    <h2>How do I specify that a field should not be serialized?</h2>
+    <p>Make it <code>transient</code>.</p>
+
+    <h2>How do I serialize binary data in a byte array?</h2>
+    <p>You need to register a special a Converter:</p>
+    <div class="Source Java"><pre>xstream.registerConverter(new EncodedByteArrayConverter());</pre></div>
+    <p>This will store binary data in XML by BASE-64 encoding it.</p>
+    <p>It is not registered by default as the encoding classes are not part of the standard JDK.</p>
+
+    <h2>Do my classes have to implement Serializable if XStream is to serialize them?</h2>
+    <p>No.</p>
+
+    <!--
+    <h1>Comparison to other products</h1>
+
+    <h2>How does XStream compare to JAXB (Java API for XML Binding)?</h2>
+    <p>Todo...</p>
+
+    <h2>How does XStream compare to JSX?</h2>
+    <p>Todo...</p>
+
+    <h2>How does XStream compare to Betwixt?</h2>
+    <p>Todo...</p>
+
+    <h2>How does XStream compare to Castor?</h2>
+    <p>Todo...</p>
+
+    <h2>How does XStream compare to Electric XML?</h2>
+    <p>Todo...</p>
+
+    <h2>How does XStream compare to JOX?</h2>
+    <p>Todo...</p>
+
+    <h2>How does XStream compare to JIBX?</h2>
+    <p>Todo...</p>
+
+    <h2>How does XStream compare to JavaBeans Long-Term Persistence?</h2>
+    <p>Todo...</p>
+    -->
+
+  </body>
+</html>
+

@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Version Numbering</title>
+  </head>
+  <body>
+    <h1>Version Numbering</h1>
+
+    <p>The XStream project follows strict rules that govern its use of version
+    numbers.  The version number of a release indicates how that release
+    is compatible with previous and future releases.</p>
+
+    <p>Version numbers have the form
+    <var>major</var>.<var>minor</var>.<var>patch</var>.
+    The major version number identifies the API version.  A release that
+    changes the API in a way that breaks backwards compatibility will
+    increment the major version number and reset the minor and patch versions
+    to zero.  The minor version number identifies the backwards compatible
+    revision of the API.  An API version that adds new elements to the API
+    will have the same major version, increment the minor version and set the
+    patch version to zero.  The patch version number identifies revisions
+    that do not  change the API.  A release that fixes bugs or refactors
+    implementation details without changing the API will have the same minor
+    and major versions as the previous release and increment the patch number.
+    </p>
+
+    <p>A hypothetical example:</p>
+    <table>
+      <tr><td>1.0.0</td><td>First release</td></tr>
+      <tr><td>1.0.1</td><td>Improves Javadoc comments</td></tr>
+      <tr><td>1.1.0</td><td>Adds new API elements</td></tr>
+      <tr><td>1.2.0</td><td>Adds new API elements, deprecates some API elements</td></tr>
+      <tr><td>1.2.1</td><td>Fixes bugs</td></tr>
+      <tr><td>2.0.0</td><td>Incompatible API changes, removes API elements deprecated by version 1.2.0.</td></tr>
+      <tr><td>2.1.0</td><td>Adds new API elements</td></tr>
+      <tr><td>etc.</td><td>etc.</td></tr>
+    </table>
+
+    <h2>Release Candidates</h2>
+
+    <p>Before a new major or minor release, XStream will make release
+    candidate (RC) packages available so that users can test them against
+    their own code.  There will be one or more release candidates given the
+    version <var>major</var>.<var>minor</var>.0 RC<var>n</var>, where the
+    major and minor version numbers identify the upcoming release and RC1
+    identifies the first candidate release, RC2 the second, and so on.</p>
+
+    <p>A release candidate does not guarantee backward compatability with
+    new API features introduced by any previous RC of the same upcoming
+    version.
+    A major version RC can change/remove API features introduced in a
+    previous RC for the same major version;  a minor version RC can change
+    API features introduced by any previous RC of the same upcoming minor
+    version    but guarantees backward compatability with the previous minor
+    version.</p>
+
+    <!--
+    <h2>Development Snapshots</h2>
+
+    <p>During development, the continuous integration process automatically
+    builds snapshot packages.  These are not guaranteed to be complete:
+    although the unit tests will all pass the snapshot will probably contain
+    failing acceptance tests that describe planned or requested features that
+    have not yet been implemented.  Snapshots are identified by the UTC time
+    at which the continuous integration process built the package.  The
+    timestamp has the form <var>YYYYMMDD-hhmmss</var>, where YYYY is the
+    (four-digit) year, MM the month, DD the day, hh the hour, mm the minute and
+    ss the second.  The snapshot version is not
+    included in the filename of the snapshot archive itself, but expanding
+    the archive will create a directory named after the snapshot version.
+    </p>
+    -->
+
+    <h2>Internal Classes</h2>
+
+    <p>Many classes are for internal use only and not designed to be used by
+    end users. These are exempt from the versioning rules above.</p>
+
+    <p>Such classes are clearly marked as internal in the source code
+    headers and are excluded from the published JavaDoc.</p>
+
+    <h2>Versioning and Deprecation</h2>
+
+    <p>A minor release might deprecate some API features.  Deprecated features
+    will not actually be removed until the next major release.
+    A release will never remove API features that have not been deprecated in
+    a previous release.
+    </p>
+
+  </body>
+</html>
