@@ -92,8 +92,8 @@
     </target>
 
     <target name="javadoc" description="Build JavaDoc">
-        <mkdir dir="build/website/api"/>
-        <javadoc destdir="build/website/api" author="true" version="true" use="true" windowtitle="XStream ${version} API">
+        <mkdir dir="build/website/javadoc"/>
+        <javadoc destdir="build/website/javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
             <classpath refid="classpath"/>
             <packageset dir="${java.src.dir}" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>

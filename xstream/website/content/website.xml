@@ -11,12 +11,13 @@
     <section>
         <name>Documentation</name>
         <page>tutorial.html</page>
-        <page>faq.html</page>
+        <page>architecture.html</page>
         <page>converters.html</page>
+        <page>faq.html</page>
         <link title="JavaDoc">javadoc/index.html</link>
     </section>
     <section>
-        <name>User Support</name>
+        <name>Support</name>
         <page>mailing-lists.html</page>
         <page>news.html</page>
         <link title="Reporting Issues">http://jira.codehaus.org/secure/BrowseProject.jspa?id=10230</link>

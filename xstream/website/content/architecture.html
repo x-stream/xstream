@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>Architecture Overview</title>
+    </head>
+    <body>
+
+        <p>The architecture of XStream consists of the four main components:</p>
+
+        <ul>
+            <li><b>Converters</b></li>
+            <li><b>IO (Writer and Reader)</b></li>
+            <li><b>Context</b></li>
+            <li><b>Facade</b></li>
+        </ul>
+
+        <!-- ************ -->
+
+        <h1>Converters</h1>
+
+        <p>Whenever XStream encounters an object that needs to be converted to/from XML, it delegates to a suitable
+        <a href="javadoc/com/thoughtworks/xstream/converters/Converter.html">Converter</a> implementation associated
+        with the class of that Object.</p>
+
+        <p>XStream comes <a href="converters.html">bundled with many converters</a> for common types, including primitives,
+        String, Collections, arrays, null, Date, etc.</p>
+
+        <p>XStream also has a <i>default Converter</i>, that is used when no other Converters match a type. This uses
+        reflection to automatically generate the XML for all the fields in an object.</p>
+
+        <p>If an object is composed of other objects, the Converter may delegate to other Converters.</p>
+
+        <p class="highlight">To customize the XML for particular object type a new Converter should be implemented.</p>
+
+
+        <!-- ************ -->
+
+        <h1>IO (Writer and Reader)</h1>
+
+        <p>XStream is abstracted from the underlying XML data using the
+        <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamWriter.html">HierarchicalStreamWriter</a>
+        and <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamReader.html">HierarchicalStreamReader</a>
+        interfaces for serializing and deserializing respectively.</p>
+
+        <p>This abstraction allows XStream to read XML from direct streams using an XML parser or directly manipulate
+        existing structures (such as DOM). This prevents the overhead of having to reparse if XStream is working from
+        XML that has been partially processed by other libraries (for instance a SOAP library). It also avoids tying XStream
+        to a particular library.</p>
+
+        <p>XStream comes bundled with
+        <a href="javadoc/com/thoughtworks/xstream/io/xml/package-summary.html">reader and writer implementations</a> for
+        most major XML libraries.</p>
+
+        <p class="highlight">Writer and Readers can be implemented allowing XStream to serialize to most XML APIs.
+        Writers and Readers can also be created around tree based non XML structures.</p>
+
+        <!--
+            note: one reader/writer per context
+            note: why not sax
+        -->
+
+        <!-- ************ -->
+
+        <h1>Context</h1>
+
+        <p>When XStream serializes or deserializes some objects, it creates a
+        <a href="javadoc/com/thoughtworks/xstream/converters/MarshallingContext.html">MarshallingContext</a> or
+        <a href="javadoc/com/thoughtworks/xstream/converters/UnmarshallingContext">UnmarshallingContext</a>,
+        which handle the traversing of the data and delegation to the necessary Converters.</p>
+
+        <p class="highlight">The MarshallingContext/UnmarshallingContext is made available to converters allowing them
+        to tell XStream to process objects contained within other objects.</p>
+
+        <p>XStream provides three pairs of context implementations that traverse the object graph with slightly
+        different behaviors. The default can be changed using
+        <a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream.setMode()</a>, passing in one of
+        the following parameters:</p>
+
+        <ul>
+            <li>
+                <b>XStream.XPATH_REFERENCES</b><br/>
+                <i>(Default)</i> Uses XPath references to signify duplicate references. This produces XML with the least
+                clutter.
+            </li>
+            <li>
+                <b>XStream.ID_REFERENCES</b><br/>
+                Uses ID references to signify duplicate references. In some scenarios, such as when using hand-written
+                XML, this is easier to work with.
+            </li>
+            <li>
+                <b>XStream.NO_REFERENCES</b><br/>
+                This disables object graph support and treats the object structure like a tree. Duplicate references are
+                treated as two seperate objects and circular references cause an exception. This is slightly faster and
+                uses less memory than the other two modes.
+            </li>
+        </ul>
+
+        <p class="highlight">A new context is created for each object graph that is serialized. Both the
+        <a href="javadoc/com/thoughtworks/xstream/converters/MarshallingContext.html">MarshallingContext</a> and
+        <a href="javadoc/com/thoughtworks/xstream/converters/UnmarshallingContext.html">UnmarshallingContext</a>
+        implement <a href="javadoc/com/thoughtworks/xstream/converters/DataHolder.html">DataHolder</a>,
+        a hashtable passed around whilst processing the object graph that can be used as the user sees fit (in a similar
+        way that the HttpServletRequest attributes are used in a web-application).</p>
+
+
+        <!-- ************ -->
+
+        <h1>XStream facade</h1>
+
+        <p>The main <a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream</a> class is typically used as the
+        entry point. This assembles the necessary components of XStream (as described above; Context, Converter,
+        Writer/Reader and ClassMapper) and provides a simple to use API for common operations.</p>
+
+        <p class="highlight">Remember, the XStream class is just a facade - it can always be bypassed for more advanced
+        operations.</p>
+
+
+    </body>
+</html>

@@ -227,12 +227,10 @@ ul, ol {
     line-spacing: 100%;
 }
 
-.DynaMock:before {
-    content: "DynaMock: ";
-}
-
-.JMock:before {
-    content: "jMock: ";
+.highlight {
+    background-color: #e0f0e0; 
+    border: 1px dotted #060;
+    padding: 5px;
 }
 
 /* The following are for images, but can also apply to div's containing images. */
