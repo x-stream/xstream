@@ -145,58 +145,6 @@ public class DefaultConverterLookup implements ConverterLookup {
     }
 
     public void setupDefaults() {
-        alias("null", ClassMapper.Null.class);
-        alias("int", Integer.class);
-        alias("float", Float.class);
-        alias("double", Double.class);
-        alias("long", Long.class);
-        alias("short", Short.class);
-        alias("char", Character.class);
-        alias("byte", Byte.class);
-        alias("boolean", Boolean.class);
-        alias("number", Number.class);
-        alias("object", Object.class);
-        alias("big-int", BigInteger.class);
-        alias("big-decimal", BigDecimal.class);
-
-        alias("string-buffer", StringBuffer.class);
-        alias("string", String.class);
-        alias("java-class", Class.class);
-        alias("method", Method.class);
-        alias("constructor", Constructor.class);
-        alias("date", Date.class);
-        alias("url", URL.class);
-        alias("bit-set", BitSet.class);
-
-        alias("map", Map.class, HashMap.class);
-        alias("entry", Map.Entry.class);
-        alias("properties", Properties.class);
-        alias("list", List.class, ArrayList.class);
-        alias("set", Set.class, HashSet.class);
-
-        alias("linked-list", LinkedList.class);
-        alias("vector", Vector.class);
-        alias("tree-map", TreeMap.class);
-        alias("tree-set", TreeSet.class);
-        alias("hashtable", Hashtable.class);
-
-        // Instantiating these two classes starts the AWT system, which is undesirable. Calling loadClass ensures
-        // a reference to the class is found but they are not instantiated.
-        alias("awt-color", jvm.loadClass("java.awt.Color"));
-        alias("awt-font", jvm.loadClass("java.awt.Font"));
-
-        alias("sql-timestamp", Timestamp.class);
-        alias("sql-time", Time.class);
-        alias("sql-date", java.sql.Date.class);
-        alias("file", File.class);
-        alias("locale", Locale.class);
-        alias("gregorian-calendar", Calendar.class, GregorianCalendar.class);
-
-        if (JVM.is14()) {
-            alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
-            alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
-        }
-
         registerConverter(defaultConverter);
         registerConverter(new SerializableConverter(classMapper, reflectionProvider));
         registerConverter(new ExternalizableConverter(classMapper));
@@ -242,20 +190,10 @@ public class DefaultConverterLookup implements ConverterLookup {
         if (JVM.is14()) {
             registerConverter(new ThrowableConverter(defaultConverter()));
             registerConverter(new StackTraceElementConverter());
-            alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
 
             registerConverter(new CurrencyConverter());
-            alias("currency", jvm.loadClass("java.util.Currency"));
             registerConverter(new RegexPatternConverter(defaultConverter()));
         }
-    }
-
-    public void alias(String elementName, Class type, Class defaultImplementation) {
-        classMapper.alias(elementName, type, defaultImplementation);
-    }
-
-    public void alias(String elementName, Class type) {
-        alias(elementName, type, type);
     }
 
     public String getClassAttributeIdentifier() {

@@ -1,25 +1,14 @@
 package com.thoughtworks.xstream;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
-import java.io.NotActiveException;
-import java.io.ObjectInputStream;
-import java.io.EOFException;
-import java.util.Map;
-
-import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.CachingMapper;
-import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
-import com.thoughtworks.xstream.alias.DefaultImplementationsMapper;
-import com.thoughtworks.xstream.alias.ArrayMapper;
-import com.thoughtworks.xstream.alias.DynamicProxyMapper;
 import com.thoughtworks.xstream.alias.AliasingMapper;
-import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
+import com.thoughtworks.xstream.alias.ArrayMapper;
+import com.thoughtworks.xstream.alias.CachingMapper;
+import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.alias.DefaultMapper;
+import com.thoughtworks.xstream.alias.DynamicProxyMapper;
+import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
+import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -32,15 +21,48 @@ import com.thoughtworks.xstream.core.MapBackedDataHolder;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
-import com.thoughtworks.xstream.alias.DefaultMapper;
-import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
+import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.NotActiveException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.io.File;
+import java.util.Map;
+import java.util.Date;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Vector;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.math.BigInteger;
+import java.math.BigDecimal;
+import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.sql.Time;
 
 /**
  * Simple facade to XStream library, a Java-XML serialization tool.
@@ -138,6 +160,9 @@ import com.thoughtworks.xstream.io.xml.XppDriver;
  */
 public class XStream {
 
+    private AliasingMapper aliasingMapper;
+    private DefaultImplementationsMapper defaultImplementationsMapper;
+
     private HierarchicalStreamDriver hierarchicalStreamDriver;
     private MarshallingStrategy marshallingStrategy;
     private ClassMapper classMapper;
@@ -150,15 +175,15 @@ public class XStream {
     public static final int XPATH_REFERENCES = 1003;
 
     public XStream() {
-        this(null, new DefaultClassMapper(), new XppDriver());
+        this(null, null, new XppDriver());
     }
 
     public XStream(Converter defaultConverter) {
-        this(null, new DefaultClassMapper(), new XppDriver(), "class", defaultConverter);
+        this(null, null, new XppDriver(), "class", defaultConverter);
     }
     
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(null, new DefaultClassMapper(), hierarchicalStreamDriver);
+        this(null, null, hierarchicalStreamDriver);
     }
 
     public XStream(ReflectionProvider reflectionProvider) {
@@ -183,6 +208,7 @@ public class XStream {
         setMode(XPATH_REFERENCES);
         converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, implicitCollectionMapper, this.classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
+        setupAliases();
     }
 
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier, Converter defaultConverter) {
@@ -195,18 +221,75 @@ public class XStream {
         setMode(XPATH_REFERENCES);
         converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, defaultConverter, this.classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
+        setupAliases();
     }
 
     protected ClassMapper setupMapper() {
         ClassMapper mapper = new DefaultMapper();
         mapper = new XmlFriendlyClassMapper(mapper);
-        mapper = new AliasingMapper(mapper);
-        mapper = new DynamicProxyMapper(mapper); // special handling of dynamic proxy instances
+        aliasingMapper = new AliasingMapper(mapper);
+        mapper = new DynamicProxyMapper(aliasingMapper); // special handling of dynamic proxy instances
         mapper = new ArrayMapper(mapper);
-        mapper = new DefaultImplementationsMapper(mapper);
-        mapper = new ImmutableTypesMapper(mapper);
+        defaultImplementationsMapper = new DefaultImplementationsMapper(mapper);
+        mapper = new ImmutableTypesMapper(defaultImplementationsMapper);
         mapper = new CachingMapper(mapper);
         return mapper;
+    }
+
+    protected void setupAliases() {
+        alias("null", ClassMapper.Null.class);
+        alias("int", Integer.class);
+        alias("float", Float.class);
+        alias("double", Double.class);
+        alias("long", Long.class);
+        alias("short", Short.class);
+        alias("char", Character.class);
+        alias("byte", Byte.class);
+        alias("boolean", Boolean.class);
+        alias("number", Number.class);
+        alias("object", Object.class);
+        alias("big-int", BigInteger.class);
+        alias("big-decimal", BigDecimal.class);
+
+        alias("string-buffer", StringBuffer.class);
+        alias("string", String.class);
+        alias("java-class", Class.class);
+        alias("method", Method.class);
+        alias("constructor", Constructor.class);
+        alias("date", Date.class);
+        alias("url", URL.class);
+        alias("bit-set", BitSet.class);
+
+        alias("map", Map.class, HashMap.class);
+        alias("entry", Map.Entry.class);
+        alias("properties", Properties.class);
+        alias("list", List.class, ArrayList.class);
+        alias("set", Set.class, HashSet.class);
+
+        alias("linked-list", LinkedList.class);
+        alias("vector", Vector.class);
+        alias("tree-map", TreeMap.class);
+        alias("tree-set", TreeSet.class);
+        alias("hashtable", Hashtable.class);
+
+        // Instantiating these two classes starts the AWT system, which is undesirable. Calling loadClass ensures
+        // a reference to the class is found but they are not instantiated.
+        alias("awt-color", jvm.loadClass("java.awt.Color"));
+        alias("awt-font", jvm.loadClass("java.awt.Font"));
+
+        alias("sql-timestamp", Timestamp.class);
+        alias("sql-time", Time.class);
+        alias("sql-date", java.sql.Date.class);
+        alias("file", File.class);
+        alias("locale", Locale.class);
+        alias("gregorian-calendar", Calendar.class, GregorianCalendar.class);
+
+        if (JVM.is14()) {
+            alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
+            alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
+            alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
+            alias("currency", jvm.loadClass("java.util.Currency"));
+        }
     }
 
     public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {
@@ -310,22 +393,23 @@ public class XStream {
     /**
      * Alias a Class to a shorter name to be used in XML elements.
      *
-     * @param elementName Short name
-     * @param type        Type to be aliased
+     * @param name Short name
+     * @param type  Type to be aliased
      */
-    public void alias(String elementName, Class type) {
-        converterLookup.alias(elementName, type, type);
+    public void alias(String name, Class type) {
+        aliasingMapper.addAlias(name, type);
     }
 
     /**
      * Alias a Class to a shorter name to be used in XML elements.
      *
-     * @param elementName           Short name
+     * @param name                  Short name
      * @param type                  Type to be aliased
      * @param defaultImplementation Default implementation of type to use if no other specified.
      */
-    public void alias(String elementName, Class type, Class defaultImplementation) {
-        converterLookup.alias(elementName, type, defaultImplementation);
+    public void alias(String name, Class type, Class defaultImplementation) {
+        aliasingMapper.addAlias(name, type);
+        defaultImplementationsMapper.addDefaultImplementation(type, defaultImplementation);
     }
 
     public void changeDefaultConverter(Converter defaultConverter) {
