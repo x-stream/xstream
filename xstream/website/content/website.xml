@@ -2,30 +2,31 @@
     <section>
         <name>Software</name>
         <page>index.html</page>
-        <page>download.html</page>
+        <page>news.html</page>
         <page>changes.html</page>
-        <page>license.html</page>
         <page>versioning.html</page>
-        <page>repository.html</page>
     </section>
     <section>
-        <name>Documentation</name>
+        <name>Evaluating XStream</name>
         <page>tutorial.html</page>
+        <page>license.html</page>
+        <page>download.html</page>
+    </section>
+    <section>
+        <name>Using XStream</name>
         <page>architecture.html</page>
         <page>converters.html</page>
         <page>objectstream.html</page>
         <page>faq.html</page>
+        <page>list-user.html</page>
         <link title="JavaDoc">javadoc/index.html</link>
-    </section>
-    <section>
-        <name>Support</name>
-        <page>mailing-lists.html</page>
-        <page>news.html</page>
         <link title="Reporting Issues">http://jira.codehaus.org/secure/BrowseProject.jspa?id=10230</link>
     </section>
     <section>
-        <name>Development</name>
+        <name>Developing XStream</name>
         <page>how-to-contribute.html</page>
+        <page>list-dev.html</page>
         <page>team.html</page>
+        <page>repository.html</page>
     </section>
 </sitemap>

@@ -83,6 +83,12 @@ a:active { color: red; }
 a:hover { color: red; }
 a:visited { color: black; }
 
+iframe {
+    width:100%;
+    height: 800px;
+    border: 0px;
+}
+
 img {
     border: 0px;
     padding: 0px;
@@ -168,6 +174,7 @@ ul, ol {
     margin: 0px;
     background-color: white;
     color: black;
+    height: 100%;
 }
 
 #content h1 {
