@@ -122,6 +122,14 @@ public class XStream {
         return objectGraph.get();
     }
 
+    public Object fromXML(XMLReader xmlReader, Object root) {
+        Class type = root.getClass();
+        ObjectTree objectGraph = new ReflectionObjectGraph(root, objectFactory);
+        Converter rootConverter = converterLookup.lookupConverterForType(type);
+        rootConverter.fromXML(objectGraph, xmlReader, converterLookup, type);
+        return objectGraph.get();
+    }
+
     public void registerConverter(Converter converter) {
         converterLookup.registerConverter(converter);
     }
