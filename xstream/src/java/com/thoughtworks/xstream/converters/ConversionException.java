@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Thrown by {@link Converter} implementations when they cannot convert an object
+ * to/from textual data.
+ *
+ * @author Joe Walnes
+ */
 public class ConversionException extends RuntimeException implements ErrorWriter {
 
     private Map stuff = new HashMap();
