@@ -65,7 +65,9 @@
 
     <target name="jar" depends="compile" description="Build JARs">
         <jar jarfile="build/xstream-${version}.jar">
-            <fileset dir="build/classes"/>
+            <fileset dir="build/classes">
+                <exclude name="**/squidgey/*"/>
+            </fileset>
         </jar>
         <echo message="--- Created JAR ---"/>
         <echo message="build/xstream-${version}.jar"/>
