@@ -33,13 +33,13 @@ public class DateConverterTest extends TestCase {
 
     public void testUnmarshallsOldXStreamDatesThatLackMillisecond() {
         // setup
-        String oldStyleText = "2004-02-22 15:16:04PM";
+        String oldStyleText = "2004-02-22 15:16:04 ART";
 
         // execute
         Date out = (Date) converter.fromString(oldStyleText);
 
         // verify
-        assertEquals("2004-02-22 15:16:04.0 PM", converter.toString(out));
+        assertEquals("2004-02-22 15:16:04.0 ART", converter.toString(out));
     }
 
     public void testIsThreadSafe() throws InterruptedException {
@@ -54,7 +54,7 @@ public class DateConverterTest extends TestCase {
             public void run() {
                 for (int i = 0; i < numberOfCallsPerThread; i++) {
                     try {
-                        converter.fromString("2004-02-22 15:16:04.0 PM");
+                        converter.fromString("2004-02-22 15:16:04.0 ART");
                         results.add("PASS");
                     } catch (ConversionException e) {
                         results.add("FAIL");
