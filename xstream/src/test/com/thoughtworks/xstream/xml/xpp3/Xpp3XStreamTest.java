@@ -16,46 +16,42 @@ import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
 import junit.framework.TestCase;
 
-public class Xpp3XStreamTest extends TestCase
-{
+public class Xpp3XStreamTest extends TestCase {
     private XStream xstream;
 
-    protected void setUp() throws Exception
-    {
+    protected void setUp() throws Exception {
         super.setUp();
 
-        xstream = new XStream( new SunReflectionObjectFactory(),
-                               new DefaultClassMapper(),
-                               new DefaultElementMapper(),
-                               new Xpp3DomXMLReaderDriver() );
+        xstream = new XStream(new SunReflectionObjectFactory(),
+                new DefaultClassMapper(),
+                new DefaultElementMapper(),
+                new Xpp3DomXMLReaderDriver());
 
-        xstream.alias( "x", X.class );
-        xstream.alias( "y", Y.class );
-        xstream.alias( "funny", FunnyConstructor.class );
-        xstream.alias( "with-list", WithList.class );
+        xstream.alias("x", X.class);
+        xstream.alias("y", Y.class);
+        xstream.alias("funny", FunnyConstructor.class);
+        xstream.alias("with-list", WithList.class);
     }
 
-    public void testUnmarshalsObjectFromXml()
-    {
+    public void testUnmarshalsObjectFromXml() {
 
         String xml =
-            "<x>" +
-            "  <aStr>joe</aStr>" +
-            "  <anInt>8</anInt>" +
-            "  <innerObj>" +
-            "    <yField>walnes</yField>" +
-            "  </innerObj>" +
-            "</x>";
+                "<x>" +
+                "  <aStr>joe</aStr>" +
+                "  <anInt>8</anInt>" +
+                "  <innerObj>" +
+                "    <yField>walnes</yField>" +
+                "  </innerObj>" +
+                "</x>";
 
-        X x = (X) xstream.fromXML( xml );
+        X x = (X) xstream.fromXML(xml);
 
-        assertEquals( "joe", x.aStr );
-        assertEquals( 8, x.anInt );
-        assertEquals( "walnes", x.innerObj.yField );
+        assertEquals("joe", x.aStr);
+        assertEquals(8, x.anInt);
+        assertEquals("walnes", x.innerObj.yField);
     }
 
-    public void testMarshalsObjectToXml()
-    {
+    public void testMarshalsObjectToXml() {
         X x = new X();
         x.anInt = 9;
         x.aStr = "zzz";
@@ -63,203 +59,188 @@ public class Xpp3XStreamTest extends TestCase
         x.innerObj.yField = "ooo";
 
         String expected =
-            "<x>\n" +
-            "  <aStr>zzz</aStr>\n" +
-            "  <anInt>9</anInt>\n" +
-            "  <innerObj>\n" +
-            "    <yField>ooo</yField>\n" +
-            "  </innerObj>\n" +
-            "</x>";
+                "<x>\n" +
+                "  <aStr>zzz</aStr>\n" +
+                "  <anInt>9</anInt>\n" +
+                "  <innerObj>\n" +
+                "    <yField>ooo</yField>\n" +
+                "  </innerObj>\n" +
+                "</x>";
 
-        assertEquals( expected, xstream.toXML( x ) );
+        assertEquals(expected, xstream.toXML(x));
     }
 
-    public void testUnmarshalsClassWithoutDefaultConstructor()
-    {
+    public void testUnmarshalsClassWithoutDefaultConstructor() {
         String xml =
-            "<funny>" +
-            "  <i>999</i>" +
-            "</funny>";
+                "<funny>" +
+                "  <i>999</i>" +
+                "</funny>";
 
-        FunnyConstructor funnyConstructor = (FunnyConstructor) xstream.fromXML( xml );
+        FunnyConstructor funnyConstructor = (FunnyConstructor) xstream.fromXML(xml);
 
-        assertEquals( 999, funnyConstructor.i );
+        assertEquals(999, funnyConstructor.i);
     }
 
-    public void testHandlesLists()
-    {
+    public void testHandlesLists() {
         WithList original = new WithList();
         Y y = new Y();
         y.yField = "a";
-        original.things.add( y );
-        original.things.add( new FunnyConstructor( 3 ) );
-        original.things.add( new FunnyConstructor( 1 ) );
+        original.things.add(y);
+        original.things.add(new FunnyConstructor(3));
+        original.things.add(new FunnyConstructor(1));
 
-        String xml = xstream.toXML( original );
+        String xml = xstream.toXML(original);
 
         String expected =
-            "<with-list>\n" +
-            "  <things>\n" +
-            "    <y>\n" +
-            "      <yField>a</yField>\n" +
-            "    </y>\n" +
-            "    <funny>\n" +
-            "      <i>3</i>\n" +
-            "    </funny>\n" +
-            "    <funny>\n" +
-            "      <i>1</i>\n" +
-            "    </funny>\n" +
-            "  </things>\n" +
-            "</with-list>";
+                "<with-list>\n" +
+                "  <things>\n" +
+                "    <y>\n" +
+                "      <yField>a</yField>\n" +
+                "    </y>\n" +
+                "    <funny>\n" +
+                "      <i>3</i>\n" +
+                "    </funny>\n" +
+                "    <funny>\n" +
+                "      <i>1</i>\n" +
+                "    </funny>\n" +
+                "  </things>\n" +
+                "</with-list>";
 
-        assertEquals( expected, xml );
+        assertEquals(expected, xml);
 
-        WithList result = (WithList) xstream.fromXML( xml );
-        assertEquals( original, result );
+        WithList result = (WithList) xstream.fromXML(xml);
+        assertEquals(original, result);
 
     }
 
-    public void testNonStaticPrivateInnerClassCanBeUsed()
-    {
+    public void testNonStaticPrivateInnerClassCanBeUsed() {
         NonStaticInnerClass obj = new NonStaticInnerClass();
         obj.field = 3;
 
-        xstream.alias( "inner", NonStaticInnerClass.class );
+        xstream.alias("inner", NonStaticInnerClass.class);
 
-        String xml = xstream.toXML( obj );
+        String xml = xstream.toXML(obj);
 
         String expected =
-            "<inner>\n" +
-            "  <field>3</field>\n" +
-            "</inner>";
+                "<inner>\n" +
+                "  <field>3</field>\n" +
+                "</inner>";
 
-        assertEquals( expected, xml );
+        assertEquals(expected, xml);
 
-        NonStaticInnerClass result = (NonStaticInnerClass) xstream.fromXML( xml );
-        assertEquals( obj.field, result.field );
+        NonStaticInnerClass result = (NonStaticInnerClass) xstream.fromXML(xml);
+        assertEquals(obj.field, result.field);
     }
 
-    public void testClassWithoutMappingUsesFullyQualifiedName()
-    {
+    public void testClassWithoutMappingUsesFullyQualifiedName() {
         NonStaticInnerClass obj = new NonStaticInnerClass();
         obj.field = 3;
 
-        String xml = xstream.toXML( obj );
+        String xml = xstream.toXML(obj);
 
         String expected =
-            "<com.thoughtworks.xstream.xml.xpp3.Xpp3XStreamTest-NonStaticInnerClass>\n" +
-            "  <field>3</field>\n" +
-            "</com.thoughtworks.xstream.xml.xpp3.Xpp3XStreamTest-NonStaticInnerClass>";
+                "<com.thoughtworks.xstream.xml.xpp3.Xpp3XStreamTest-NonStaticInnerClass>\n" +
+                "  <field>3</field>\n" +
+                "</com.thoughtworks.xstream.xml.xpp3.Xpp3XStreamTest-NonStaticInnerClass>";
 
-        assertEquals( expected, xml );
+        assertEquals(expected, xml);
 
-        NonStaticInnerClass result = (NonStaticInnerClass) xstream.fromXML( xml );
+        NonStaticInnerClass result = (NonStaticInnerClass) xstream.fromXML(xml);
 
-        assertEquals( obj, result );
+        assertEquals(obj, result);
     }
 
-    private class NonStaticInnerClass extends StandardObject
-    {
+    private class NonStaticInnerClass extends StandardObject {
         int field;
     }
 
-    public void testObjectsCanBeConvertedMultipleTimesWithSameXStream()
-    {
+    public void testObjectsCanBeConvertedMultipleTimesWithSameXStream() {
         Y obj = new Y();
         obj.yField = "x";
 
-        assertEquals( xstream.toXML( obj ), xstream.toXML( obj ) );
+        assertEquals(xstream.toXML(obj), xstream.toXML(obj));
     }
 
     public void testXStreamWithPeekMethodWithUnderlyingXpp3Implementation()
-        throws Exception
-    {
+            throws Exception {
 
         String xml =
-            "<person>" +
-            "  <firstName>jason</firstName>" +
-            "  <lastName>van Zyl</lastName>" +
-            "  <element>" +
-            "    <foo>bar</foo>" +
-            "  </element>" +
-            "</person>";
+                "<person>" +
+                "  <firstName>jason</firstName>" +
+                "  <lastName>van Zyl</lastName>" +
+                "  <element>" +
+                "    <foo>bar</foo>" +
+                "  </element>" +
+                "</person>";
 
-        xstream.registerConverter( new ElementConverter() );
+        xstream.registerConverter(new ElementConverter());
 
-        xstream.alias( "person", Person.class );
+        xstream.alias("person", Person.class);
 
         Xpp3DomXMLReaderDriver driver = new Xpp3DomXMLReaderDriver();
 
-        Person person = (Person) xstream.fromXML( driver.createReader( xml ) );
+        Person person = (Person) xstream.fromXML(driver.createReader(xml));
 
-        assertEquals( "jason", person.firstName );
+        assertEquals("jason", person.firstName);
 
-        assertEquals( "van Zyl", person.lastName );
+        assertEquals("van Zyl", person.lastName);
 
-        assertNotNull( person.element );
+        assertNotNull(person.element);
 
-        assertEquals( "bar", person.element.getChild( "foo" ).getValue() );
+        assertEquals("bar", person.element.getChild("foo").getValue());
     }
 
-    static class Person
-    {
+    static class Person {
         String firstName;
         String lastName;
         Xpp3Dom element;
     }
 
     private class ElementConverter
-        implements Converter
-    {
-        public boolean canConvert( Class type )
-        {
-            return Xpp3Dom.class.isAssignableFrom( type );
+            implements Converter {
+        public boolean canConvert(Class type) {
+            return Xpp3Dom.class.isAssignableFrom(type);
         }
 
-        public void toXML( ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup )
-        {
+        public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
         }
 
-        public void fromXML( ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType )
-        {
+        public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
             Xpp3Dom element = (Xpp3Dom) xmlReader.peek();
 
-            while ( xmlReader.nextChild() )
-            {
+            while (xmlReader.nextChild()) {
                 xmlReader.pop();
             }
 
-            objectGraph.set( element );
+            objectGraph.set(element);
         }
     }
 
     public void testXStreamPopulatingAnObjectGraphStartingWithALiveRootObject()
-        throws Exception
-    {
+            throws Exception {
 
         String xml =
-            "<component>" +
-            "  <host>host</host>" +
-            "  <port>8000</port>" +
-            "</component>";
+                "<component>" +
+                "  <host>host</host>" +
+                "  <port>8000</port>" +
+                "</component>";
 
-        xstream.alias( "component", Component.class );
+        xstream.alias("component", Component.class);
 
         Xpp3DomXMLReaderDriver driver = new Xpp3DomXMLReaderDriver();
 
         Component component0 = new Component();
 
-        Component component1 = (Component) xstream.fromXML( driver.createReader( xml ), component0 );
+        Component component1 = (Component) xstream.fromXML(driver.createReader(xml), component0);
 
-        assertEquals( component0, component1 );
+        assertEquals(component0, component1);
 
-        assertEquals( "host", component0.host );
+        assertEquals("host", component0.host);
 
-        assertEquals( 8000, component0.port );
+        assertEquals(8000, component0.port);
     }
 
-    static class Component
-    {
+    static class Component {
         String host;
         int port;
     }

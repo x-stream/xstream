@@ -12,90 +12,72 @@ import java.util.LinkedList;
  * @version $Id$
  */
 public class Xpp3DomXMLReader
-    implements XMLReader
-{
+        implements XMLReader {
     private Xpp3Dom current;
 
     private LinkedList pointers = new LinkedList();
 
-    public Xpp3DomXMLReader( Xpp3Dom xpp3Dom )
-    {
+    public Xpp3DomXMLReader(Xpp3Dom xpp3Dom) {
         current = xpp3Dom;
 
-        pointers.addLast( new Pointer() );
+        pointers.addLast(new Pointer());
     }
 
-    public String name()
-    {
+    public String name() {
         return current.getName();
     }
 
-    public String text()
-    {
+    public String text() {
         String text = null;
 
-        try
-        {
+        try {
             text = current.getValue();
-        }
-        catch ( Exception e )
-        {
+        } catch (Exception e) {
             // do nothing.
         }
 
         return text;
     }
 
-    public String attribute( String attributeName )
-    {
+    public String attribute(String attributeName) {
         String text = null;
 
-        try
-        {
-            text = current.getAttribute( attributeName );
-        }
-        catch ( Exception e )
-        {
+        try {
+            text = current.getAttribute(attributeName);
+        } catch (Exception e) {
             // do nothing.
         }
 
         return text;
     }
 
-    public boolean nextChild()
-    {
+    public boolean nextChild() {
         Pointer pointer = (Pointer) pointers.getLast();
 
-        if ( pointer.v < current.getChildCount() )
-        {
-            pointers.addLast( new Pointer() );
+        if (pointer.v < current.getChildCount()) {
+            pointers.addLast(new Pointer());
 
-            current = current.getChild( pointer.v );
+            current = current.getChild(pointer.v);
 
             pointer.v++;
 
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    public void pop()
-    {
+    public void pop() {
         current = current.getParent();
 
         pointers.removeLast();
     }
 
-    public Object peek()
-    {
+    public Object peek() {
         return current;
     }
 
-    private class Pointer
-    {
+    private class Pointer {
         public int v;
     }
 }

@@ -7,11 +7,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Xpp3DomBuilder
-{
-    public static Xpp3Dom build( Reader reader )
-        throws Exception
-    {
+public class Xpp3DomBuilder {
+    public static Xpp3Dom build(Reader reader)
+            throws Exception {
         List elements = new ArrayList();
 
         List values = new ArrayList();
@@ -22,76 +20,63 @@ public class Xpp3DomBuilder
 
         XmlPullParser parser = factory.newPullParser();
 
-        parser.setInput( reader );
+        parser.setInput(reader);
 
         int eventType = parser.getEventType();
 
-        while ( eventType != XmlPullParser.END_DOCUMENT )
-        {
-            if ( eventType == XmlPullParser.START_TAG )
-            {
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType == XmlPullParser.START_TAG) {
                 String rawName = parser.getName();
 
-                Xpp3Dom childConfiguration = createConfiguration( rawName );
+                Xpp3Dom childConfiguration = createConfiguration(rawName);
 
                 int depth = elements.size();
 
-                if ( depth > 0 )
-                {
-                    Xpp3Dom parent = (Xpp3Dom) elements.get( depth - 1 );
+                if (depth > 0) {
+                    Xpp3Dom parent = (Xpp3Dom) elements.get(depth - 1);
 
-                    parent.addChild( childConfiguration );
+                    parent.addChild(childConfiguration);
                 }
 
-                elements.add( childConfiguration );
+                elements.add(childConfiguration);
 
-                values.add( new StringBuffer() );
+                values.add(new StringBuffer());
 
                 int attributesSize = parser.getAttributeCount();
 
-                for ( int i = 0; i < attributesSize; i++ )
-                {
-                    String name = parser.getAttributeName( i );
+                for (int i = 0; i < attributesSize; i++) {
+                    String name = parser.getAttributeName(i);
 
-                    String value = parser.getAttributeValue( i );
+                    String value = parser.getAttributeValue(i);
 
-                    childConfiguration.setAttribute( name, value );
+                    childConfiguration.setAttribute(name, value);
                 }
-            }
-            else if ( eventType == XmlPullParser.TEXT )
-            {
+            } else if (eventType == XmlPullParser.TEXT) {
                 int depth = values.size() - 1;
 
-                StringBuffer valueBuffer = (StringBuffer) values.get( depth );
+                StringBuffer valueBuffer = (StringBuffer) values.get(depth);
 
-                valueBuffer.append( parser.getText() );
-            }
-            else if ( eventType == XmlPullParser.END_TAG )
-            {
+                valueBuffer.append(parser.getText());
+            } else if (eventType == XmlPullParser.END_TAG) {
                 int depth = elements.size() - 1;
 
-                Xpp3Dom finishedConfiguration = (Xpp3Dom) elements.remove( depth );
+                Xpp3Dom finishedConfiguration = (Xpp3Dom) elements.remove(depth);
 
-                String accumulatedValue = ( values.remove( depth ) ).toString();
+                String accumulatedValue = (values.remove(depth)).toString();
 
-                if ( finishedConfiguration.getChildCount() == 0 )
-                {
+                if (finishedConfiguration.getChildCount() == 0) {
                     String finishedValue;
 
-                    if ( 0 == accumulatedValue.length() )
-                    {
+                    if (0 == accumulatedValue.length()) {
                         finishedValue = null;
-                    }
-                    else
-                    {
+                    } else {
                         finishedValue = accumulatedValue.trim();
                     }
 
-                    finishedConfiguration.setValue( finishedValue );
+                    finishedConfiguration.setValue(finishedValue);
                 }
 
-                if ( 0 == depth )
-                {
+                if (0 == depth) {
                     configuration = finishedConfiguration;
                 }
             }
@@ -104,8 +89,7 @@ public class Xpp3DomBuilder
         return configuration;
     }
 
-    private static Xpp3Dom createConfiguration( String localName )
-    {
-        return new Xpp3Dom( localName );
+    private static Xpp3Dom createConfiguration(String localName) {
+        return new Xpp3Dom(localName);
     }
 }

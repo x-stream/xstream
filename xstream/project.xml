@@ -2,6 +2,7 @@
 
   <pomVersion>3</pomVersion>
   <groupId>xstream</groupId>
+  <id>xstream</id>xc
   <artifactId>xstream</artifactId>
   <name>XStream</name>
   <currentVersion>0.4-SNAPSHOT</currentVersion>
