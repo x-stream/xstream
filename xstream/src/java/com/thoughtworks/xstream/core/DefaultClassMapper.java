@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
 import com.thoughtworks.xstream.alias.DefaultImplementationsMapper;
+import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.lang.reflect.Proxy;
 public class DefaultClassMapper extends ClassMapperWrapper {
 
     public DefaultClassMapper() {
-        super(new ImmutableTypesMapper(new DefaultImplementationsMapper(new OldClassMapper())));
+        super(new ImmutableTypesMapper(new DefaultImplementationsMapper(new XmlFriendlyClassMapper(new OldClassMapper()))));
     }
 
     private static class OldClassMapper implements ClassMapper {
@@ -31,42 +32,6 @@ public class DefaultClassMapper extends ClassMapperWrapper {
 
         public OldClassMapper(ClassLoader classLoader) {
             this.classLoader = classLoader;
-        }
-
-        public String mapNameToXML(String javaName) {
-            StringBuffer result = new StringBuffer();
-            int length = javaName.length();
-            for(int i = 0; i < length; i++) {
-                char c = javaName.charAt(i);
-                if (c == '$') {
-                    result.append("_DOLLAR_");
-                } else if (c == '_') {
-                    result.append("__");
-                } else {
-                    result.append(c);
-                }
-            }
-            return result.toString();
-        }
-
-        public String mapNameFromXML(String xmlName) {
-            StringBuffer result = new StringBuffer();
-            int length = xmlName.length();
-            for(int i = 0; i < length; i++) {
-                char c = xmlName.charAt(i);
-                if (c == '_') {
-                    if (xmlName.charAt(i + 1)  == '_') {
-                        i++;
-                        result.append('_');
-                    } else if (xmlName.length() >= i + 8 && xmlName.substring(i + 1, i + 8).equals("DOLLAR_")) {
-                        i += 7;
-                        result.append('$');
-                    }
-                } else {
-                    result.append(c);
-                }
-            }
-            return result.toString();
         }
 
         public void alias(String elementName, Class type, Class defaultImplementation) {
@@ -208,6 +173,14 @@ public class DefaultClassMapper extends ClassMapperWrapper {
 
         public boolean isImmutableValueType(Class type) {
             return false;
+        }
+
+        public String mapNameFromXML(String xmlName) {
+            return xmlName;
+        }
+
+        public String mapNameToXML(String javaName) {
+            return javaName;
         }
     }
 
