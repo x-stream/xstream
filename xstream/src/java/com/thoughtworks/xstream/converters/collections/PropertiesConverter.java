@@ -23,7 +23,7 @@ import java.util.Properties;
 public class PropertiesConverter implements Converter {
 
     public boolean canConvert(Class type) {
-        return Properties.class.isAssignableFrom(type);
+        return Properties.class == type;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
