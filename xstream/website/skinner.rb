@@ -10,7 +10,7 @@ CONTENT_DIR = File.join(BASE_DIR,"content")
 SKIN_DIR = File.join(BASE_DIR,"templates")
 OUTPUT_DIR = File.join(BASE_DIR,"output")
 
-CVSWEB_ROOT = "http://cvs.jmock.codehaus.org/viewcvs.cgi/jmock/website/content/"
+CVSWEB_ROOT = "http://cvs.xstream.codehaus.org/viewcvs.cgi/xstream/website/content/"
 
 TEMPLATE = XEMPLATE::load_template( File.join(SKIN_DIR,"skin.html") )
 
