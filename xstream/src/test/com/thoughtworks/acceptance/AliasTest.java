@@ -1,6 +1,6 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.someobjects.X;
+import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
 
 /**

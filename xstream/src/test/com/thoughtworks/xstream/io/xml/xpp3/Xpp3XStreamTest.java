@@ -1,10 +1,10 @@
 package com.thoughtworks.xstream.io.xml.xpp3;
 
 import com.thoughtworks.acceptance.StandardObject;
-import com.thoughtworks.someobjects.FunnyConstructor;
-import com.thoughtworks.someobjects.WithList;
-import com.thoughtworks.someobjects.X;
-import com.thoughtworks.someobjects.Y;
+import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
+import com.thoughtworks.acceptance.someobjects.WithList;
+import com.thoughtworks.acceptance.someobjects.X;
+import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;

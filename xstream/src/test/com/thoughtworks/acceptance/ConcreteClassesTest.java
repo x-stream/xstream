@@ -1,6 +1,6 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.someobjects.WithList;
+import com.thoughtworks.acceptance.someobjects.WithList;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

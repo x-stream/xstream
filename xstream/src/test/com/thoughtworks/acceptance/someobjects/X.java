@@ -1,4 +1,4 @@
-package com.thoughtworks.someobjects;
+package com.thoughtworks.acceptance.someobjects;
 
 import com.thoughtworks.acceptance.StandardObject;
 

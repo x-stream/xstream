@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream;
 
 import com.thoughtworks.acceptance.StandardObject;
-import com.thoughtworks.someobjects.*;
+import com.thoughtworks.acceptance.someobjects.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
