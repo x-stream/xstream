@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.io.xml;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * @author Michael Kopp
@@ -40,6 +41,7 @@ public class DomWriter implements HierarchicalStreamWriter {
     }
 
     public void endNode() {
-        current = (Element) current.getParentNode();
+        Node parent = current.getParentNode();
+        current = parent instanceof Element ? (Element)parent : null;
     }
 }
