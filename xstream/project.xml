@@ -5,7 +5,7 @@
   <id>xstream</id>xc
   <artifactId>xstream</artifactId>
   <name>XStream</name>
-  <currentVersion>0.4-SNAPSHOT</currentVersion>
+  <currentVersion>0.4</currentVersion>
 
   <organization>
     <name>ThoughtWorks, Inc</name>
@@ -16,10 +16,6 @@
   <inceptionYear>2003</inceptionYear>
   <package>com.thoughtworks.xstream</package>
   
-  <!--
-  <logo>/images/xstream-templogo.gif</logo>
-  -->
-
   <description>Object to serialization to XML and back again</description>
   <shortDescription>Object to serialization to XML and back again</shortDescription>
   <description>
