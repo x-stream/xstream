@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.converters.composite;
+package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -13,13 +13,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ObjectWithFieldsConverter implements Converter {
+public class ReflectionConverter implements Converter {
 
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
     private ObjectFactory objectFactory;
 
-    public ObjectWithFieldsConverter(ClassMapper classMapper,String classAttributeIdentifier, ObjectFactory objectFactory) {
+    public ReflectionConverter(ClassMapper classMapper,String classAttributeIdentifier, ObjectFactory objectFactory) {
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
         this.objectFactory = objectFactory;

@@ -7,10 +7,10 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
-import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
 import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
 import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
+import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -72,7 +72,7 @@ public class XStream {
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
 
-        registerConverter(new ObjectWithFieldsConverter(classMapper,classAttributeIdentifier, objectFactory));
+        registerConverter(new ReflectionConverter(classMapper,classAttributeIdentifier, objectFactory));
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());

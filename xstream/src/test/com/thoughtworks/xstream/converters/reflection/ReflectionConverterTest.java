@@ -1,10 +1,10 @@
-package com.thoughtworks.xstream.converters.composite;
+package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import junit.framework.TestCase;
 
-public class ObjectWithFieldsConverterTest extends TestCase {
+public class ReflectionConverterTest extends TestCase {
 
     public class World extends StandardObject {
         int anInt = 1;
