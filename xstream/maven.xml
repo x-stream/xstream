@@ -1,0 +1,7 @@
+<project>
+
+    <goal name="deploy"
+        description="Deploy website, jar and distribution releases"
+        prereqs="clean, site:deploy, dist:deploy, jar:deploy"/>
+
+</project>

@@ -1,6 +1,7 @@
 Tasks:
  - Provide download
  - Link to CVSMonitor
+ - Fix license report
  - Comparison matrix
  - More detailed usage guide
  - Performance test harness

@@ -34,7 +34,8 @@
 	<issueTrackingUrl>http://jira.codehaus.org/secure/BrowseProject.jspa?id=10230</issueTrackingUrl>
 	<siteAddress>codehaus.org</siteAddress>
 	<siteDirectory>/www/xstream.codehaus.org</siteDirectory>
-	<distributionDirectory>/www/xstream.codehaus.org/builds/</distributionDirectory>
+    <distributionSite>codehaus.org</distributionSite>
+    <distributionDirectory>/www/dist.codehaus.org</distributionDirectory>
 	<repository>
 		<connection>scm:cvs:pserver:anonymous@cvs.codehaus.org:/scm/cvspublic:xstream</connection>
 		<url>http://cvs.codehaus.org/viewcvs.cgi/xstream/?root=codehaus</url>
@@ -109,12 +110,13 @@
 	</build>
 
 	<reports>
+        <report>maven-license-plugin</report>
 		<report>maven-junit-report-plugin</report>
-		<report>maven-clover-plugin</report>
+        <report>maven-clover-plugin</report>
 		<report>maven-pmd-plugin</report>
-		<report>maven-jdepend-plugin</report>
+		<report>maven-javadoc-plugin</report>
 		<report>maven-jxr-plugin</report>
-		<report>maven-simian-plugin</report>
+        <report>maven-simian-plugin</report>
 	</reports>
 
 </project>
