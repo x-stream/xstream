@@ -1,7 +1,9 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.XStream;
+import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;
@@ -10,6 +12,16 @@ import java.util.Map;
 public class FontConverterTest extends TestCase {
     private XStream xstream;
     private Font in;
+
+    public static Test suite() {
+        // Only try to run this test case if graphics environment is available
+        try {
+            new Font("Arial", Font.BOLD, 20);
+            return new TestSuite(FontConverterTest.class);
+        } catch (Throwable t) {
+            return new TestSuite();
+        } 
+    }
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -40,7 +52,6 @@ public class FontConverterTest extends TestCase {
         assertEquals(inAttributes, outAttributes);
     }
 
-    /* - Temporarily disabled because if cannot run on headless build server
     public void testCorrectlyInitializesFontToPreventJvmCrash() {
         // If a font has not been constructed in the correct way, the JVM crashes horribly through some internal
         // native code, whenever the font is rendered to screen.
@@ -52,5 +63,4 @@ public class FontConverterTest extends TestCase {
         // if the JVM hasn't crashed yet, we're good.
 
     }
-    */
 }
