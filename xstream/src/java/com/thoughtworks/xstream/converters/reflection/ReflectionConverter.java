@@ -9,6 +9,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 public class ReflectionConverter implements Converter {
 
@@ -83,7 +85,7 @@ public class ReflectionConverter implements Converter {
 
             reader.moveUp();
         }
-        return result;
+        return new InstanceResolver().resolve(result);
     }
 
 }
