@@ -5,7 +5,14 @@ import com.thoughtworks.someobjects.FunnyConstructor;
 import com.thoughtworks.someobjects.WithList;
 import com.thoughtworks.someobjects.X;
 import com.thoughtworks.someobjects.Y;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.objecttree.ObjectTree;
+import com.thoughtworks.xstream.xml.XMLReader;
+import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.xml.dom4j.Dom4JXMLReaderDriver;
 import junit.framework.TestCase;
+import org.dom4j.Element;
 
 public class XStreamTest extends TestCase {
 
@@ -148,4 +155,61 @@ public class XStreamTest extends TestCase {
     }
 
 
+    public void testXStreamWithPeekMethodWithUnderlyingDom4JImplementation()
+        throws Exception {
+
+        String xml =
+            "<person>" +
+            "  <firstName>jason</firstName>" +
+            "  <lastName>van Zyl</lastName>" +
+            "  <element>" +
+            "    <foo>bar</foo>" +
+            "  </element>" +
+            "</person>";
+
+        xstream.registerConverter( new ElementConverter() );
+
+        xstream.alias( "person", Person.class );
+
+        Dom4JXMLReaderDriver driver = new Dom4JXMLReaderDriver();
+
+        Person person = (Person) xstream.fromXML( driver.createReader( xml ) );
+
+        assertEquals( "jason", person.firstName );
+
+        assertEquals( "van Zyl", person.lastName );
+
+        assertNotNull( person.element );
+
+        assertEquals( "bar", person.element.element( "foo" ).getText() );
+    }
+
+    static class Person {
+        String firstName;
+        String lastName;
+        Element element;
+    }
+
+    private class ElementConverter
+        implements Converter {
+
+        public boolean canConvert( Class type ) {
+            return Element.class.isAssignableFrom( type );
+        }
+
+        public void toXML( ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup ) {
+        }
+
+        public void fromXML( ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType ) {
+
+            Element element = (Element) xmlReader.peek();
+
+            while ( xmlReader.nextChild() )
+            {
+                xmlReader.pop();
+            }
+
+            objectGraph.set( element );
+        }
+    }
 }
