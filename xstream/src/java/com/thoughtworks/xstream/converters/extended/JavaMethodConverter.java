@@ -74,7 +74,7 @@ public class JavaMethodConverter implements Converter {
 
             reader.moveDown();
             String declaringClassName = reader.getValue();
-            Class declaringClass = loadClass(declaringClassName);
+            Class declaringClass = classLoader.loadClass(declaringClassName);
             reader.moveUp();
 
             String methodName = null;
@@ -89,7 +89,7 @@ public class JavaMethodConverter implements Converter {
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
                 String parameterTypeName = reader.getValue();
-                parameterTypeList.add(loadClass(parameterTypeName));
+                parameterTypeList.add(classLoader.loadClass(parameterTypeName));
                 reader.moveUp();
             }
             Class[] parameterTypes = (Class[]) parameterTypeList.toArray(new Class[parameterTypeList.size()]);
@@ -107,7 +107,4 @@ public class JavaMethodConverter implements Converter {
         }
     }
 
-    private Class loadClass(String className) throws ClassNotFoundException {
-        return classLoader.loadClass(className);
-    }
 }

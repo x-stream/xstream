@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
 import java.io.File;
 import java.lang.reflect.Proxy;
@@ -16,13 +17,20 @@ import java.util.Set;
 
 public class DefaultClassMapper implements ClassMapper {
 
-    protected Map typeToNameMap = Collections.synchronizedMap(new HashMap());
-    protected Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
-    protected Map baseTypeToDefaultTypeMap = Collections.synchronizedMap(new HashMap());
-    private Map lookupTypeCache = Collections.synchronizedMap(new HashMap());
-    private Set immutableTypes = Collections.synchronizedSet(new HashSet());
+    private final ClassLoader classLoader;
+    protected final Map typeToNameMap = Collections.synchronizedMap(new HashMap());
+    protected final Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
+    protected final Map baseTypeToDefaultTypeMap = Collections.synchronizedMap(new HashMap());
+    private final Map lookupTypeCache = Collections.synchronizedMap(new HashMap());
+    private final Set immutableTypes = Collections.synchronizedSet(new HashSet());
 
     public DefaultClassMapper() {
+        this(new CompositeClassLoader());
+    }
+
+    public DefaultClassMapper(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+
         // register primitive types
         baseTypeToDefaultTypeMap.put(boolean.class, Boolean.class);
         baseTypeToDefaultTypeMap.put(char.class, Character.class);
@@ -198,7 +206,7 @@ public class DefaultClassMapper implements ClassMapper {
                         className.append('[');
                     }
                     className.append(charThatJavaUsesToRepresentPrimitiveType(primvCls));
-                    result = loadClass(className.toString());
+                    result = classLoader.loadClass(className.toString());
                     // otherwise look it up like normal
                 } else {
                     StringBuffer className = new StringBuffer();
@@ -206,25 +214,16 @@ public class DefaultClassMapper implements ClassMapper {
                         className.append('[');
                     }
                     className.append('L').append(elementName).append(';');
-                    result = loadClass(className.toString());
+                    result = classLoader.loadClass(className.toString());
                 }
             } else {
-                result = loadClass(elementName);
+                result = classLoader.loadClass(elementName);
             }
         } catch (ClassNotFoundException e) {
             throw new CannotResolveClassException(elementName + " : " + e.getMessage());
         }
         lookupTypeCache.put(key, result);
         return result;
-    }
-
-    private Class loadClass(String className) throws ClassNotFoundException {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            // Servlet engine friendly.
-            return Thread.currentThread().getContextClassLoader().loadClass(className);
-        }
     }
 
     private char charThatJavaUsesToRepresentPrimitiveType(Class primvCls) {
