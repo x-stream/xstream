@@ -20,6 +20,19 @@ public class StaxWriter implements HierarchicalStreamWriter {
         out.writeStartDocument();
     }
 
+    /**
+     * Call this method when you're finished with me
+     */
+    public void close() {
+        try {
+            out.writeEndDocument();
+            out.close();
+        }
+        catch (XMLStreamException e) {
+            throw new StreamException(e);
+        }
+    }
+
     public void addAttribute(String name, String value) {
         try {
             out.writeAttribute(name, value);
