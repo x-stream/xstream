@@ -3,6 +3,8 @@ package com.thoughtworks.xstream.core;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
+import java.security.AccessControlException;
+
 public class JVM {
 
     private ReflectionProvider reflectionProvider;
@@ -36,6 +38,9 @@ public class JVM {
             } catch (InstantiationException e) {
                 reflectionProvider = new PureJavaReflectionProvider();
             } catch (IllegalAccessException e) {
+                reflectionProvider = new PureJavaReflectionProvider();
+            } catch (AccessControlException e) {
+                // thrown when trying to access sun.misc package in Applet context.
                 reflectionProvider = new PureJavaReflectionProvider();
             }
         }
