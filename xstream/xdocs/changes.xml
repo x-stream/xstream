@@ -10,15 +10,34 @@
     <release version="0.5" date="...">
 
       <action dev="joe" type="add">
-        Added custom converters for java.io.File, java.util.Properties, java.util.Vector, java.util.Hashtable.
+          Renamed XMLReader/Writer to HierarchicalStreamReader/Writer as XStream is not
+          actually coupled to serializing just to XML.
+      </action>
+        
+      <action dev="joe" type="add">
+          Overhaul of interface for Converters. Makes Converters much cleaner to write.
       </action>
 
       <action dev="joe" type="add">
-        Performance improvements.
+        Added custom converters for
+        java.io.File, java.util.Properties, java.util.Vector, java.util.Hashtable,
+        byte[] (Base64 encoded), char[].
+      </action>
+
+      <action dev="joe" type="add">
+          Moved internal XStream implementation classes to core package.
+      </action>
+
+      <action dev="joe" type="add">
+        Misc performance improvements.
       </action>
 
       <action dev="joe" type="add">
         Misc bugfixes.
+      </action>
+
+      <action dev="joe" type="add">
+        Misc package/class renames to make more sense. Dumped lots of dead code.
       </action>
 
     </release>
