@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -17,16 +18,16 @@ public class MapConverter extends AbstractCollectionConverter {
         return Map.class.isAssignableFrom(type);
     }
 
-    public void toXML(MarshallingContext context) {
-        Map map = (Map) context.currentObject();
+    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        Map map = (Map) source;
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            context.xmlStartElement("entry");
+            writer.startElement("entry");
 
-            writeItem(entry.getKey(), context);
-            writeItem(entry.getValue(), context);
+            writeItem(entry.getKey(), context, writer);
+            writeItem(entry.getValue(), context, writer);
 
-            context.xmlEndElement();
+            writer.endElement();
         }
     }
 

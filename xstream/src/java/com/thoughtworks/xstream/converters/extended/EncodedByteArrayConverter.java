@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 import sun.misc.CharacterDecoder;
@@ -44,9 +45,9 @@ public class EncodedByteArrayConverter implements Converter {
         return type.isArray() && type.getComponentType().equals(byte.class);
     }
 
-    public void toXML(MarshallingContext context) {
-        byte[] data = (byte[]) context.currentObject();
-        context.xmlWriteText(encoder.encode(data));
+    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        byte[] data = (byte[]) source;
+        writer.writeText(encoder.encode(data));
     }
 
     public Object fromXML(UnmarshallingContext context) {

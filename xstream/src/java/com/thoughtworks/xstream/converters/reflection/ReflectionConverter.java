@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -28,37 +29,36 @@ public class ReflectionConverter implements Converter {
         return true;
     }
 
-    public void toXML(MarshallingContext context) {
-        Object obj = context.currentObject();
-        Iterator fields = getFields(obj.getClass());
+    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        Iterator fields = getFields(source.getClass());
         while (fields.hasNext()) {
             Field field = (Field) fields.next();
             field.setAccessible(true);
             try {
-                Object newObj = field.get(obj);
+                Object newObj = field.get(source);
                 if (newObj != null) {
-                    writeFieldAsXML(context, field, newObj);
+                    writeFieldAsXML(context, field, newObj, writer);
                 }
             } catch (IllegalAccessException e) {
                 throw new ConversionException(
-                        "Cannot access field " + obj.getClass() + "." + field.getName(), e);
+                        "Cannot access field " + source.getClass() + "." + field.getName(), e);
             }
         }
     }
 
-    private void writeFieldAsXML(MarshallingContext context, Field field, Object obj) {
-        context.xmlStartElement(classMapper.mapNameToXML(field.getName()));
+    private void writeFieldAsXML(MarshallingContext context, Field field, Object obj, HierarchicalStreamWriter writer) {
+        writer.startElement(classMapper.mapNameToXML(field.getName()));
 
         Class actualType = obj.getClass();
 
         Class defaultType = classMapper.lookupDefaultType(field.getType());
         if (!actualType.equals(defaultType)) {
-            context.xmlAddAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
+            writer.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
         }
 
-        context.convert(obj);
+        context.convertAnother(obj);
 
-        context.xmlEndElement();
+        writer.endElement();
     }
 
     public Object fromXML(UnmarshallingContext context) {

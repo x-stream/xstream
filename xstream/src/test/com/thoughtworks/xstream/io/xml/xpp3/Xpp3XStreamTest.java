@@ -12,6 +12,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.SunReflectionObjectFactory;
 import com.thoughtworks.xstream.core.DefaultClassMapper;
 import com.thoughtworks.xstream.core.DefaultNameMapper;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import junit.framework.TestCase;
 
@@ -196,7 +197,7 @@ public class Xpp3XStreamTest extends TestCase {
             return Xpp3Dom.class.isAssignableFrom(type);
         }
 
-        public void toXML(MarshallingContext context) {
+        public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         }
 
         public Object fromXML(UnmarshallingContext context) {

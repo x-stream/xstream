@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public abstract class AbstractCollectionConverter implements Converter {
     protected ClassMapper classMapper;
@@ -17,17 +18,17 @@ public abstract class AbstractCollectionConverter implements Converter {
         this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
-    public abstract void toXML(MarshallingContext context);
+    public abstract void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context);
     public abstract Object fromXML(UnmarshallingContext context);
 
-    protected void writeItem(Object item, MarshallingContext context) {
+    protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         if (item == null) {
-            context.xmlStartElement("null");
-            context.xmlEndElement();
+            writer.startElement("null");
+            writer.endElement();
         } else {
-            context.xmlStartElement(classMapper.lookupName(item.getClass()));
-            context.convert(item);
-            context.xmlEndElement();
+            writer.startElement(classMapper.lookupName(item.getClass()));
+            context.convertAnother(item);
+            writer.endElement();
         }
     }
 

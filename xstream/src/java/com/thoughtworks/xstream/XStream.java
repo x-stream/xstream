@@ -102,17 +102,17 @@ public class XStream {
 
     public String toXML(Object obj) {
         Writer stringWriter = new StringWriter();
-        HierarchicalStreamWriter xmlWriter = new PrettyPrintWriter(stringWriter);
-        toXML(obj, xmlWriter);
+        HierarchicalStreamWriter writer = new PrettyPrintWriter(stringWriter);
+        toXML(obj, writer);
         return stringWriter.toString();
     }
 
-    public void toXML(Object obj, HierarchicalStreamWriter xmlWriter) {
+    public void toXML(Object obj, HierarchicalStreamWriter writer) {
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
-        xmlWriter.startElement(classMapper.lookupName(obj.getClass()));
-        MarshallingContextAdaptor context = new MarshallingContextAdaptor(obj, xmlWriter, converterLookup);
-        rootConverter.toXML(context);
-        xmlWriter.endElement();
+        writer.startElement(classMapper.lookupName(obj.getClass()));
+        MarshallingContextAdaptor context = new MarshallingContextAdaptor(obj, writer, converterLookup);
+        rootConverter.toXML(obj, writer, context);
+        writer.endElement();
     }
 
     public Object fromXML(String xml) {

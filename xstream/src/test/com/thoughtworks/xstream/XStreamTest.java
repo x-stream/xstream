@@ -5,6 +5,7 @@ import com.thoughtworks.acceptance.someobjects.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import junit.framework.TestCase;
 import org.dom4j.Element;
@@ -190,7 +191,7 @@ public class XStreamTest extends TestCase {
             return Element.class.isAssignableFrom( type );
         }
 
-        public void toXML(MarshallingContext context) {
+        public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         }
 
         public Object fromXML(UnmarshallingContext context) {

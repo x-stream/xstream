@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -14,14 +15,14 @@ public class PropertiesConverter implements Converter {
         return Properties.class.isAssignableFrom(type);
     }
 
-    public void toXML(MarshallingContext context) {
-        Properties properties = (Properties) context.currentObject();
+    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        Properties properties = (Properties) source;
         for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            context.xmlStartElement("property");
-            context.xmlAddAttribute("name", entry.getKey().toString());
-            context.xmlAddAttribute("value", entry.getValue().toString());
-            context.xmlEndElement();
+            writer.startElement("property");
+            writer.addAttribute("name", entry.getKey().toString());
+            writer.addAttribute("value", entry.getValue().toString());
+            writer.endElement();
         }
     }
 

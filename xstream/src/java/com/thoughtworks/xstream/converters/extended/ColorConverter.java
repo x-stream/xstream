@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.extended;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -14,12 +15,12 @@ public class ColorConverter implements Converter {
         return type.equals(Color.class);
     }
 
-    public void toXML(MarshallingContext context) {
-        Color color = (Color) context.currentObject();
-        write("red", color.getRed(), context);
-        write("green", color.getGreen(), context);
-        write("blue", color.getBlue(), context);
-        write("alpha", color.getAlpha(), context);
+    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        Color color = (Color) source;
+        write("red", color.getRed(), writer);
+        write("green", color.getGreen(), writer);
+        write("blue", color.getBlue(), writer);
+        write("alpha", color.getAlpha(), writer);
     }
 
     public Object fromXML(UnmarshallingContext context) {
@@ -37,10 +38,10 @@ public class ColorConverter implements Converter {
         return color;
     }
 
-    private void write(String fieldName, int value, MarshallingContext context) {
-        context.xmlStartElement(fieldName);
-        context.xmlWriteText(String.valueOf(value));
-        context.xmlEndElement();
+    private void write(String fieldName, int value, HierarchicalStreamWriter writer) {
+        writer.startElement(fieldName);
+        writer.writeText(String.valueOf(value));
+        writer.endElement();
     }
 
 }

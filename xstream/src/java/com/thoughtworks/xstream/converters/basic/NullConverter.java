@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.basic;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class NullConverter implements Converter {
 
@@ -10,9 +11,9 @@ public class NullConverter implements Converter {
         return type == null;
     }
 
-    public void toXML(MarshallingContext context) {
-        context.xmlStartElement("null");
-        context.xmlEndElement();
+    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        writer.startElement("null");
+        writer.endElement();
     }
 
     public Object fromXML(UnmarshallingContext context) {
