@@ -4,15 +4,18 @@ Tasks:
  - Comparison matrix
  - More detailed usage guide
  - Performance test harness
+ - Null root objects
 
 Features:
- - Map to key/value properties.
+ - Map to key/value properties.g
  - Detect cyclical links.
 
 Improvements:
  - Clean up ObjectGraph impl and tests.
  - Change XMLReader to use pull-like API.
  - Ensure XStream works on non-Sun JVMs.
+ - XMLWriter should write empty tags like <blah/>
+ - Clean up usage of Class object. Encapsulate with something cleaner (better support for arrays and nulls)
 
 XML implementations:
  - XppReader
@@ -37,8 +40,8 @@ Marshallers:
 
  * Essential
    - Custom[]
-   - Exception
  * Basic
+   - Exception
    - byte[]
    - char[]
    - Calendar

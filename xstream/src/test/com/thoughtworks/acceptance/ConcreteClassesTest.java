@@ -16,8 +16,7 @@ public class ConcreteClassesTest extends AbstractAcceptanceTest {
 
         String expected =
                 "<with-list>\n" +
-                "  <things>\n" +
-                "  </things>\n" +
+                "  <things/>\n" +
                 "</with-list>";
 
         assertBothWays(withList, expected);
@@ -34,8 +33,7 @@ public class ConcreteClassesTest extends AbstractAcceptanceTest {
 
         String expected =
                 "<with-list>\n" +
-                "  <things class=\"linked-list\">\n" +
-                "  </things>\n" +
+                "  <things class=\"linked-list\"/>\n" +
                 "</with-list>";
 
         assertBothWays(withList, expected);

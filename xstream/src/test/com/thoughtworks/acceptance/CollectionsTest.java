@@ -63,8 +63,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "    <int>3</int>\n" +
                 "    <boolean>true</boolean>\n" +
                 "  </good>\n" +
-                "  <bad class=\"list\">\n" +
-                "  </bad>\n" +
+                "  <bad class=\"list\"/>\n" +
                 "</lists>";
 
         assertBothWays(lists, expected);

@@ -145,9 +145,7 @@ public class XStreamTest extends TestCase {
         xstream.alias("cls", WithSomeFields.class);
         String xml = xstream.toXML(obj);
 
-        String expected =
-                "<cls>\n" +
-                "</cls>";
+        String expected = "<cls/>";
 
         assertEquals(expected, xml);
     }

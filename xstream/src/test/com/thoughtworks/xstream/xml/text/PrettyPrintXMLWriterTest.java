@@ -25,6 +25,10 @@ public class PrettyPrintXMLWriterTest extends TestCase {
         xmlWriter.endElement();
 
         xmlWriter.endElement();
+
+        xmlWriter.startElement("empty");
+        xmlWriter.endElement();
+
         xmlWriter.endElement();
 
         String expected =
@@ -33,6 +37,7 @@ public class PrettyPrintXMLWriterTest extends TestCase {
                 "    <one>potato</one>\n" +
                 "    <two id=\"two\">potatae</two>\n" +
                 "  </world>\n" +
+                "  <empty/>\n" +
                 "</hello>";
 
         assertEquals(expected, stringWriter.toString());

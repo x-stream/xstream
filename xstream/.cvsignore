@@ -4,3 +4,5 @@ lib
 *.ipr
 *.iws
 build
+build.properties
+*.log

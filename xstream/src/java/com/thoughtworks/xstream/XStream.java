@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.alias.DefaultClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
+import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
@@ -37,6 +38,8 @@ public class XStream {
         alias("char", Character.class);
         alias("byte", Byte.class);
         alias("boolean", Boolean.class);
+        alias("number", Number.class);
+        alias("object", Object.class);
 
         alias("string-buffer", StringBuffer.class);
         alias("string", String.class);
@@ -67,6 +70,7 @@ public class XStream {
         registerConverter(new DateConverter());
         registerConverter(new JavaClassConverter());
 
+        registerConverter(new ArrayConverter(classMapper));
         registerConverter(new CollectionConverter(classMapper));
         registerConverter(new MapConverter(classMapper));
 

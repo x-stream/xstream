@@ -14,6 +14,7 @@ public class PrettyPrintXMLWriter implements XMLWriter {
     private int depth;
     private String lineIndenter;
     private boolean readyForNewLine;
+    private boolean tagIsEmpty;
 
     public PrettyPrintXMLWriter(PrintWriter writer, String lineIndenter) {
         this.writer = writer;
@@ -33,6 +34,7 @@ public class PrettyPrintXMLWriter implements XMLWriter {
     }
 
     public void startElement(String name) {
+        tagIsEmpty = false;
         finishTag();
         write("<");
         write(name);
@@ -40,10 +42,12 @@ public class PrettyPrintXMLWriter implements XMLWriter {
         tagInProgress = true;
         depth++;
         readyForNewLine = true;
+        tagIsEmpty = true;
     }
 
     public void writeText(String text) {
         readyForNewLine = false;
+        tagIsEmpty = false;
         finishTag();
         text = text.replaceAll("&", "&amp;");
         text = text.replaceAll("<", "&lt;");
@@ -61,8 +65,15 @@ public class PrettyPrintXMLWriter implements XMLWriter {
 
     public void endElement() {
         depth--;
-        finishTag();
-        write("</" + elementStack.removeLast() + ">");
+        if (tagIsEmpty) {
+            write("/");
+            readyForNewLine = false;
+            finishTag();
+            elementStack.removeLast();
+        } else {
+            finishTag();
+            write("</" + elementStack.removeLast() + ">");
+        }
         readyForNewLine = true;
     }
 
@@ -79,6 +90,7 @@ public class PrettyPrintXMLWriter implements XMLWriter {
             endOfLine();
         }
         readyForNewLine = false;
+        tagIsEmpty = false;
     }
 
     protected void endOfLine() {

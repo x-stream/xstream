@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
 
 public abstract class AbstractCollectionConverter implements Converter {
-    private ClassMapper classMapper;
+    protected ClassMapper classMapper;
 
     public abstract boolean canConvert(Class type);
 
@@ -22,11 +22,16 @@ public abstract class AbstractCollectionConverter implements Converter {
     public abstract void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType);
 
     protected void writeItem(Object item, XMLWriter xmlWriter, ConverterLookup converterLookup, ObjectTree objectGraph) {
-        Class type = item.getClass();
-        xmlWriter.startElement(classMapper.lookupName(type));
-        Converter converter = converterLookup.lookupConverterForType(type);
-        converter.toXML(objectGraph.newStack(item), xmlWriter, converterLookup);
-        xmlWriter.endElement();
+        if (item == null) {
+            xmlWriter.startElement("null");
+            xmlWriter.endElement();
+        } else {
+            Class type = item.getClass();
+            xmlWriter.startElement(classMapper.lookupName(type));
+            Converter converter = converterLookup.lookupConverterForType(type);
+            converter.toXML(objectGraph.newStack(item), xmlWriter, converterLookup);
+            xmlWriter.endElement();
+        }
     }
 
     protected Object readItem(XMLReader xmlReader, int childIndex, ObjectTree objectGraph, ConverterLookup converterLookup) {
