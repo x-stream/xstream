@@ -4,6 +4,8 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
+import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
@@ -11,6 +13,8 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
 import java.net.URL;
 import java.util.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 
 public class DefaultConverterLookup implements ConverterLookup {
 
@@ -67,6 +71,8 @@ public class DefaultConverterLookup implements ConverterLookup {
         alias("string-buffer", StringBuffer.class);
         alias("string", String.class);
         alias("java-class", Class.class);
+        alias("method", Method.class);
+        alias("constructor", Constructor.class);
         alias("date", Date.class);
         alias("url", URL.class);
         alias("bit-set", BitSet.class);
@@ -99,6 +105,7 @@ public class DefaultConverterLookup implements ConverterLookup {
         registerConverter(new StringBufferConverter());
         registerConverter(new DateConverter());
         registerConverter(new JavaClassConverter());
+        registerConverter(new JavaMethodConverter());
         registerConverter(new BitSetConverter());
         registerConverter(new URLConverter());
 
