@@ -41,4 +41,12 @@ public class ObjectIdDictionary {
         return (String) map.get(new IdWrapper(obj));
     }
 
+    public boolean containsId(Object item) {
+        return map.containsKey(new IdWrapper(item));
+    }
+
+    public void removeId(Object item) {
+        map.remove(new IdWrapper(item));
+    }
+
 }
