@@ -9,9 +9,14 @@ public interface ImplicitCollectionMapper {
 
     /**
      * Get the name of the field that acts as the default collection for an object, or return null if there is none.
+     * @param definedIn owning type
+     * @param itemType item type
+     * @param itemFieldName optional item element name
      */
-    String implicitCollectionFieldForType(Class definedIn, Class itemType);
+    String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName);
 
-    boolean isImplicitCollectionField(Class definedIn, String fieldName);
+    Class getItemTypeForItemFieldName(Class definedIn, String itemFieldName);
+    
+    ImplicitCollectionDef getImplicitCollectionDefForFieldName(Class definedIn, String fieldName);
 
 }

@@ -124,12 +124,20 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
         String expectedXml = ""
                 + "<child>\n"
-                + "  <stream.int>1</stream.int>\n"
+                + "  <object.stream defined-in=\"parent\">\n"
+                + "    <int>1</int>\n"
+                + "  </object.stream>\n"
                 + "  <parentB>2</parentB>\n"
-                + "  <stream.int>3</stream.int>\n"
-                + "  <stream.int defined-in=\"child\">10</stream.int>\n"
+                + "  <object.stream defined-in=\"parent\">\n"
+                + "    <int>3</int>\n"
+                + "  </object.stream>\n"
+                + "  <object.stream>\n"
+                + "    <int>10</int>\n"
+                + "  </object.stream>\n"
                 + "  <childB>20</childB>\n"
-                + "  <stream.int defined-in=\"child\">30</stream.int>\n"
+                + "  <object.stream>\n"
+                + "    <int>30</int>\n"
+                + "  </object.stream>\n"
                 + "</child>";
 
         assertBothWays(child, expectedXml);

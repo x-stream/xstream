@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
+import com.thoughtworks.xstream.alias.ImplicitCollectionDef;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
 
 public class ReflectionConverter implements Converter {
 
@@ -28,10 +30,9 @@ public class ReflectionConverter implements Converter {
     private ReflectionProvider reflectionProvider;
     private ImplicitCollectionMapper implicitCollectionMapper;
     private SerializationMethodInvoker serializationMethodInvoker;
-    private static final String STREAM_PREFIX = "stream.";
 
     // Todo:
-    //  - Ensure readObject()/writeObject() include the heirarchy (start at superclass0
+    //  - Ensure readObject()/writeObject() include the heirarchy (start at superclass)
     //  - putFields()/writeFields()/readFields()
     //  - ObjectStreamField[] serialPersistentFields
     //  - ObjectInputValidation
@@ -55,12 +56,16 @@ public class ReflectionConverter implements Converter {
         final Set seenFields = new HashSet();
 
         final boolean[] writtenToStream = { false };
+        final Class[] currentClass = new Class[1];
 
         CustomObjectOutputStream.StreamCallback callback = new CustomObjectOutputStream.StreamCallback() {
 
             public void writeToStream(Object object) {
                 if (!writtenToStream[0]) {
                     writer.startNode("object.stream");
+                    if (!currentClass[0].equals(replacedSource.getClass())) {
+                        writer.addAttribute("defined-in", classMapper.lookupName(currentClass[0]));
+                    }
                     writtenToStream[0] = true;
                 }
                 if (object == null) {
@@ -81,42 +86,58 @@ public class ReflectionConverter implements Converter {
                 reflectionProvider.visitSerializableFields(replacedSource, new ReflectionProvider.Visitor() {
                     public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                         if (newObj != null) {
-                            if (implicitCollectionMapper.isImplicitCollectionField(definedIn, fieldName)) {
-                                context.convertAnother(newObj);
+                            ImplicitCollectionDef def = implicitCollectionMapper.getImplicitCollectionDefForFieldName(definedIn, fieldName);
+                            if (def != null) {
+                                if (def.getItemFieldName() != null) {
+                                    ArrayList list = (ArrayList) newObj;
+                                    for (Iterator iter = list.iterator(); iter.hasNext();) {
+                                        Object obj = iter.next();
+                                        writeField(def.getItemFieldName(), def.getItemType(), definedIn, obj);
+                                    }
+                                } else {
+                                    context.convertAnother(newObj);
+                                }
                             } else {
-                                writer.startNode(classMapper.mapNameToXML(fieldName));
-
-                                Class actualType = newObj.getClass();
-
-                                Class defaultType = classMapper.lookupDefaultType(fieldType);
-                                if (!actualType.equals(defaultType)) {
-                                    writer.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
-                                }
-
-                                if (seenFields.contains(fieldName)) {
-                                    writer.addAttribute(definedInAttributeIdentifier, classMapper.lookupName(definedIn));
-                                }
-                                context.convertAnother(newObj);
-
-                                writer.endNode();
+                                writeField(fieldName, fieldType, definedIn, newObj);
                                 seenFields.add(fieldName);
                             }
                         }
+                    }
+
+                    private void writeField(String fieldName, Class fieldType, Class definedIn, Object newObj) {
+                        writer.startNode(classMapper.mapNameToXML(fieldName));
+
+                        Class actualType = newObj.getClass();
+
+                        Class defaultType = classMapper.lookupDefaultType(fieldType);
+                        if (!actualType.equals(defaultType)) {
+                            writer.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
+                        }
+
+                        if (seenFields.contains(fieldName)) {
+                            writer.addAttribute(definedInAttributeIdentifier, classMapper.lookupName(definedIn));
+                        }
+                        context.convertAnother(newObj);
+
+                        writer.endNode();
                     }
                 });
             }
         };
 
-        if (serializationMethodInvoker.supportsWriteObject(replacedSource.getClass())) {
-            ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
-            serializationMethodInvoker.callWriteObject(replacedSource, objectOutputStream);
-            if (writtenToStream[0]) {
-                writer.endNode();
-                writtenToStream[0] = false;
+        currentClass[0] = replacedSource.getClass();
+        //for(currentClass[0] = replacedSource.getClass(); currentClass[0] != null; currentClass[0] = currentClass[0].getSuperclass()) {
+            if (serializationMethodInvoker.supportsWriteObject(currentClass[0])) {
+                ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
+                serializationMethodInvoker.callWriteObject(currentClass[0], replacedSource, objectOutputStream);
+                if (writtenToStream[0]) {
+                    writer.endNode();
+                    writtenToStream[0] = false;
+                }
+            } else {
+                callback.defaultWriteObject();
             }
-        } else {
-            callback.defaultWriteObject();
-        }
+        //}
 
     }
 
@@ -154,7 +175,7 @@ public class ReflectionConverter implements Converter {
                         readFromStream[0] = true;
                         break;
                     }
-                    String fieldName = classMapper.mapNameFromXML(nodeName);
+                    String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
 
                     Class classDefiningField = determineWhichClassDefinesField(reader);
                     boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
@@ -166,7 +187,7 @@ public class ReflectionConverter implements Converter {
                         reflectionProvider.writeField(result, fieldName, value, classDefiningField);
                         seenFields.add(classDefiningField, fieldName);
                     } else {
-                        implicitCollectionsForCurrentObject = writeValueToImplicitCollection(context, value, implicitCollectionsForCurrentObject, result);
+                        implicitCollectionsForCurrentObject = writeValueToImplicitCollection(context, value, implicitCollectionsForCurrentObject, result, fieldName);
                     }
 
                     reader.moveUp();
@@ -190,8 +211,8 @@ public class ReflectionConverter implements Converter {
     }
 
 
-    private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result) {
-        String fieldName = implicitCollectionMapper.implicitCollectionFieldForType(context.getRequiredType(), value.getClass());
+    private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result, String itemFieldName) {
+        String fieldName = implicitCollectionMapper.getFieldNameForItemTypeAndName(context.getRequiredType(), value.getClass(), itemFieldName);
         if (fieldName != null) {
             if (implicitCollections == null) {
                 implicitCollections = new HashMap(); // lazy instantiation
@@ -243,7 +264,12 @@ public class ReflectionConverter implements Converter {
         if (classAttribute != null) {
             return classMapper.lookupType(classAttribute);
         } else if (!validField) {
-            return classMapper.lookupType(reader.getNodeName());
+            Class itemType = implicitCollectionMapper.getItemTypeForItemFieldName(result.getClass(), fieldName);
+            if (itemType != null) {
+            	return itemType;
+            } else {
+            	return classMapper.lookupType(reader.getNodeName());
+            }
         } else {
             return classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName, definedInCls));
         }

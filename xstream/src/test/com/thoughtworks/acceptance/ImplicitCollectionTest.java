@@ -105,9 +105,14 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
     public static class Person extends StandardObject {
         private String name;
+        private ArrayList emailAddresses = new ArrayList();
 
         public Person(String name) {
             this.name = name;
+        }
+
+        public void addEmailAddress(String email) {
+            emailAddresses.add(email);
         }
     }
 
@@ -115,8 +120,15 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         House house = new House();
         house.add(new Room("kitchen"));
         house.add(new Room("bathroom"));
-        house.add(new Person("joe"));
-        house.add(new Person("jaimie"));
+        Person joe = new Person("joe");
+        joe.addEmailAddress("joe@house.org");
+        joe.addEmailAddress("joe.farmer@house.org");
+        house.add(joe);
+        Person jaimie = new Person("jaimie");
+        jaimie.addEmailAddress("jaimie@house.org");
+        jaimie.addEmailAddress("jaimie.farmer@house.org");
+        jaimie.addEmailAddress("jaimie.ann.farmer@house.org");
+        house.add(jaimie);
 
         String expected = ""
                 + "<house>\n"
@@ -128,14 +140,20 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 + "  </room>\n"
                 + "  <person>\n"
                 + "    <name>joe</name>\n"
+                + "    <email>joe@house.org</email>\n"
+                + "    <email>joe.farmer@house.org</email>\n"
                 + "  </person>\n"
                 + "  <person>\n"
                 + "    <name>jaimie</name>\n"
+                + "    <email>jaimie@house.org</email>\n"
+                + "    <email>jaimie.farmer@house.org</email>\n"
+                + "    <email>jaimie.ann.farmer@house.org</email>\n"
                 + "  </person>\n"
                 + "</house>";
 
         xstream.addImplicitCollection(House.class, "rooms", Room.class);
         xstream.addImplicitCollection(House.class, "people", Person.class);
+        xstream.addImplicitCollection(Person.class, "emailAddresses", "email", String.class);
 
         assertBothWays(house, expected);
     }

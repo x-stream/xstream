@@ -80,14 +80,14 @@ public class SerializationMethodInvoker {
         return getMethod(type, "writeObject", new Class[]{ObjectOutputStream.class}) != null;
     }
 
-    public void callWriteObject(Object object, ObjectOutputStream stream) {
+    public void callWriteObject(Class type, Object instance, ObjectOutputStream stream) {
         try {
-            Method readObjectMethod = getMethod(object.getClass(), "writeObject", new Class[]{ObjectOutputStream.class});
-            readObjectMethod.invoke(object, new Object[]{stream});
+            Method readObjectMethod = getMethod(instance.getClass(), "writeObject", new Class[]{ObjectOutputStream.class});
+            readObjectMethod.invoke(instance, new Object[]{stream});
         } catch (IllegalAccessException e) {
-            throw new ConversionException("Could not call " + object.getClass().getName() + ".readObject()", e);
+            throw new ConversionException("Could not call " + instance.getClass().getName() + ".readObject()", e);
         } catch (InvocationTargetException e) {
-            throw new ConversionException("Could not call " + object.getClass().getName() + ".readObject()", e);
+            throw new ConversionException("Could not call " + instance.getClass().getName() + ".readObject()", e);
         }
     }
 
