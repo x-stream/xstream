@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.converters.basic;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class DateConverterTest extends TestCase {
                     try {
                         converter.fromString("2004-02-22 15:16:04.0 PM");
                         results.add("PASS");
-                    } catch (Throwable e) {
+                    } catch (ConversionException e) {
                         results.add("FAIL");
                     } finally {
                         synchronized (monitor) {
