@@ -105,8 +105,17 @@ public final class SaxWriter implements HierarchicalStreamWriter, XMLReader {
     /**
      * The SAX properties defined for this XMLReader.
      */
-    private Map properties = new HashMap();
+    private final Map properties = new HashMap();
 
+    private final boolean includeEnclosingDocument;
+
+    public SaxWriter(boolean includeEnclosingDocument) {
+        this.includeEnclosingDocument = includeEnclosingDocument;
+    }
+
+    public SaxWriter() {
+        this(true);
+    }
 
     //-------------------------------------------------------------------------
     // Configuration
@@ -554,7 +563,7 @@ public final class SaxWriter implements HierarchicalStreamWriter, XMLReader {
         try {
             if (this.depth != 0) {
                 this.flushStartTag();
-            } else {
+            } else if (includeEnclosingDocument) {
                 this.startDocument(false);
             }
             this.elementStack.add(0, name);
@@ -599,7 +608,7 @@ public final class SaxWriter implements HierarchicalStreamWriter, XMLReader {
             this.contentHandler.endElement("", tagName, tagName);
 
             this.depth--;
-            if (this.depth == 0) {
+            if (this.depth == 0 && includeEnclosingDocument) {
                 this.endDocument(false);
             }
         } catch (SAXException e) {

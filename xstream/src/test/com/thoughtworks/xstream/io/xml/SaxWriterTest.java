@@ -84,6 +84,26 @@ public class SaxWriterTest extends TestCase {
         assertEquals(expected, buffer.toString());
     }
 
+    public void testAllowsStartAndEndDocCallbacksToBeSkipped() {
+        String expected =
+                "<int>1</int>\n" +
+                "<int>2</int>\n" +
+                "<int>3</int>\n";
+
+        Writer buffer = new StringWriter();
+        SaxWriter writer = new SaxWriter(false);
+        DataWriter outputter = new DataWriter(writer, buffer);
+        outputter.setIndentStep(2);
+
+        writer.setContentHandler(outputter);
+
+        xstream.marshal(new Integer(1), writer);
+        xstream.marshal(new Integer(2), writer);
+        xstream.marshal(new Integer(3), writer);
+
+        assertEquals(expected, buffer.toString());
+    }
+
     public void testMarshalsObjectToTrAX() throws Exception {
         String expected =
                 "<x><aStr>zzz</aStr><anInt>9</anInt>" +
