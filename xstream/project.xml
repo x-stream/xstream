@@ -81,6 +81,12 @@
       <email>joe@thoughtworks.net</email>
       <organization>ThoughtWorks</organization>
     </developer>
+    <developer>
+      <name>Jason van Zyl</name>
+      <id>jvanzyl</id>
+      <email>jason@zenplex.com</email>
+      <organization>Zenplex</organization>
+    </developer>
   </developers>
 
   <contributors>
@@ -103,7 +109,10 @@
       <name>Brock Bulger</name>
     </contributor>
     <contributor>
-      <name>Jason van Zyl</name>
+      <name>Paul Hammant</name>
+    </contributor>
+    <contributor>
+      <name>Nicky Sandhu</name>
     </contributor>
   </contributors>
 
