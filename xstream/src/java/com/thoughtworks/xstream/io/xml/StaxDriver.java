@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
 import javax.xml.stream.XMLInputFactory;
@@ -9,6 +10,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.Reader;
+import java.io.Writer;
 
 /**
  * A driver using the StAX API
@@ -43,6 +45,14 @@ public class StaxDriver implements HierarchicalStreamDriver {
         }
     }
 
+    public HierarchicalStreamWriter createWriter(Writer out) {
+        try {
+            return new StaxWriter(getOutputFactory().createXMLStreamWriter(out));
+        }
+        catch (XMLStreamException e) {
+            throw new StreamException(e);
+        }
+    }
 
     // Properties
     //-------------------------------------------------------------------------
