@@ -10,7 +10,7 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
     private Object root;
     private HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
-    private Class[] types = new Class[10];
+    private Class[] types = new Class[10];  // TODO: grow!
     private int pointer;
 
     public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader xmlReader, ConverterLookup converterLookup) {

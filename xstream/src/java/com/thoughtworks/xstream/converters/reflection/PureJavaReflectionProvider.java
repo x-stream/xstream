@@ -17,7 +17,7 @@ import java.util.TreeMap;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private static Map cache = new HashMap();
+    private static final Map cache = new HashMap();
 
     public Object newInstance(Class type) {
         try {

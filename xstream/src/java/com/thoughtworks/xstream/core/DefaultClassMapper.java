@@ -13,6 +13,7 @@ public class DefaultClassMapper implements ClassMapper {
     protected Map nameToTypeMap = new HashMap();
     protected Map baseTypeToDefaultTypeMap = new HashMap();
     private NameMapper nameMapper;
+    private Map lookupTypeCache = new HashMap();
 
     public DefaultClassMapper( NameMapper elementMapper ) {
         this.nameMapper =  elementMapper;
@@ -79,9 +80,14 @@ public class DefaultClassMapper implements ClassMapper {
     }        
 
     public Class lookupType(String elementName) {
+        final String key = elementName;
         if (elementName.equals("null")) {
             return null;
         }
+        if (lookupTypeCache.containsKey(key)) {
+            return (Class) lookupTypeCache.get(key);
+        }
+
         boolean isArray = elementName.endsWith("-array");
         
         Class primvCls = null;
@@ -106,12 +112,15 @@ public class DefaultClassMapper implements ClassMapper {
         
         // the $ used in inner class names is illegal as an xml element getNodeName
         elementName = elementName.replaceAll("\\-", "\\$");
+
+        Class result;
+
         try {
             if (isArray) {
                 
                 // if a primitive array type exists, return its array   
                 if (primvCls != null) {
-                    return
+                    result =
                         (primvCls == boolean.class)  ?   boolean[].class :
                         (primvCls == byte.class)     ?      byte[].class :
                         (primvCls == char.class)     ?      char[].class :
@@ -124,14 +133,16 @@ public class DefaultClassMapper implements ClassMapper {
                         
                 // otherwise look it up like normal        
                 } else {
-                    return Class.forName("[L" + elementName + ";");
+                     result = Class.forName("[L" + elementName + ";");
                 } 
             } else {
-                return Class.forName(elementName);
+                result = Class.forName(elementName);
             }
         } catch (ClassNotFoundException e) {
             throw new CannotResolveClassException(elementName);
         }
+        lookupTypeCache.put(key, result);
+        return result;
     }
 
     public Class lookupDefaultType(Class baseType) {
