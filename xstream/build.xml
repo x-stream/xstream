@@ -19,7 +19,7 @@
 
     <target name="compile" description="Compile all Java">
         <mkdir dir="${java.build.dir}"/>
-        <javac srcdir="${java.src.dir}" destdir="${java.build.dir}">
+        <javac srcdir="${java.src.dir}" destdir="${java.build.dir}" debug="${java.compile.debug}">
             <classpath refid="classpath"/>
         </javac>
     </target>
