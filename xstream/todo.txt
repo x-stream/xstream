@@ -8,7 +8,6 @@ Tasks:
  - Null root objects
 
 Features:
- - ObjectFactory for default constructors that is pure Java.
  - Detect cyclical links.
  - Map to key/value properties.
  - Interface/impl separate XStream facade.
