@@ -34,11 +34,4 @@
 		</copy>
 	</target>
 
-	<target name="fake-test">
-		<!-- Create fake test results (to keep CI server happy) -->
-		<!-- TODO: A better way! -->
-		<mkdir dir="build/test-results"/>
-		<copy tofile="build/test-results/TEST-sample.xml" file="src/sample-test.xml"/>
-	</target>
-	
 </project>
