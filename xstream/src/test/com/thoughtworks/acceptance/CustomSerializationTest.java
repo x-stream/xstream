@@ -48,15 +48,25 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
 
         String expectedXml = ""
-                + "<custom>\n"
-                + "  <field.int defined-in=\"custom\">2</field.int>\n"
-                + "  <a>1</a>\n"
-                + "  <field.string defined-in=\"custom\">hello</field.string>\n"
-                + "  <field.null defined-in=\"custom\"/>\n"
-                + "  <field.software defined-in=\"custom\">\n"
-                + "    <vendor>tw</vendor>\n"
-                + "    <name>xs</name>\n"
-                + "  </field.software>\n"
+                + "<custom serialization=\"custom\">\n"
+                + "  <custom>\n"
+                + "    <int>2</int>\n"
+                + "    <default>\n"
+                + "      <a>1</a>\n"
+                + "    </default>\n"
+                + "    <string>hello</string>\n"
+                + "    <null/>\n"
+                + "    <software>\n"
+                + "      <vendor>tw</vendor>\n"
+                + "      <name>xs</name>\n"
+                + "    </software>\n"
+                + "  </custom>\n"
+                + "  <com.thoughtworks.acceptance.StandardObject>\n"
+                + "    <default/>\n"
+                + "  </com.thoughtworks.acceptance.StandardObject>\n"
+                + "  <object>\n"
+                + "    <default/>\n"
+                + "  </object>\n"
                 + "</custom>";
 
         assertBothWays(obj, expectedXml);
@@ -87,7 +97,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class Child extends Parent implements Serializable {
+    public static class Child extends Parent {
 
         private transient int childA;
         private int childB;
@@ -119,14 +129,69 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         xstream.alias("parent", Parent.class);
 
         String expectedXml = ""
-                + "<child>\n"
-                + "  <field.int defined-in=\"child\">10</field.int>\n"
-                + "  <childB>20</childB>\n"
-                + "  <field.int defined-in=\"child\">30</field.int>\n"
-                + "  <field.int defined-in=\"parent\">1</field.int>\n"
-                + "  <parentB>2</parentB>\n"
-                + "  <field.int defined-in=\"parent\">3</field.int>\n"
+                + "<child serialization=\"custom\">\n"
+                + "  <child>\n"
+                + "    <int>10</int>\n"
+                + "    <default>\n"
+                + "      <childB>20</childB>\n"
+                + "    </default>\n"
+                + "    <int>30</int>\n"
+                + "  </child>\n"
+                + "  <parent>\n"
+                + "    <int>1</int>\n"
+                + "    <default>\n"
+                + "      <parentB>2</parentB>\n"
+                + "    </default>\n"
+                + "    <int>3</int>\n"
+                + "  </parent>\n"
+                + "  <com.thoughtworks.acceptance.StandardObject>\n"
+                + "    <default/>\n"
+                + "  </com.thoughtworks.acceptance.StandardObject>\n"
+                + "  <object>\n"
+                + "    <default/>\n"
+                + "  </object>\n"
                 + "</child>";
+
+        assertBothWays(child, expectedXml);
+    }
+
+    public static class Child2 extends Parent {
+
+        private int childA;
+
+        public Child2(int parentA, int parentB, int parentC, int childA) {
+            super(parentA, parentB, parentC);
+            this.childA = childA;
+        }
+
+    }
+
+    public void testIncludesCompleteClassHeirarchy2() {
+        Child2 child = new Child2(1, 2, 3, 20);
+        xstream.alias("child2", Child2.class);
+        xstream.alias("parent", Parent.class);
+
+        String expectedXml = ""
+                + "<child2 serialization=\"custom\">\n"
+                + "  <child2>\n"
+                + "    <default>\n"
+                + "      <childA>20</childA>\n"
+                + "    </default>\n"
+                + "  </child2>\n"
+                + "  <parent>\n"
+                + "    <int>1</int>\n"
+                + "    <default>\n"
+                + "      <parentB>2</parentB>\n"
+                + "    </default>\n"
+                + "    <int>3</int>\n"
+                + "  </parent>\n"
+                + "  <com.thoughtworks.acceptance.StandardObject>\n"
+                + "    <default/>\n"
+                + "  </com.thoughtworks.acceptance.StandardObject>\n"
+                + "  <object>\n"
+                + "    <default/>\n"
+                + "  </object>\n"
+                + "</child2>";
 
         assertBothWays(child, expectedXml);
     }
@@ -152,14 +217,12 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
     public void testSupportsSubclassesOfClassesThatAlreadyHaveConverters() {
         MyDate in = new MyDate(1234567890);
         String xml = xstream.toXML(in);
-        MyDate out = (MyDate) xstream.fromXML(xml);
-        assertObjectsEqual(in, out);
+        assertObjectsEqual(in, xstream.fromXML(xml));
 
         MyHashtable in2 = new MyHashtable("hi");
         in2.put("cheese", "curry");
         in2.put("apple", new Integer(3));
         String xml2 = xstream.toXML(in2);
-        MyHashtable out2 = (MyHashtable) xstream.fromXML(xml2);
-        assertObjectsEqual(in2, out2);
+        assertObjectsEqual(in2, xstream.fromXML(xml2));
     }
 }

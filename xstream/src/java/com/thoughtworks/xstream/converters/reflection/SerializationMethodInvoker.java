@@ -27,7 +27,7 @@ public class SerializationMethodInvoker {
         if (result == null) {
             return null;
         } else {
-            Method readResolveMethod = getMethod(result.getClass(), "readResolve", null);
+            Method readResolveMethod = getMethod(result.getClass(), "readResolve", null, true);
             if (readResolveMethod != null) {
                 try {
                     return readResolveMethod.invoke(result, null);
@@ -46,7 +46,7 @@ public class SerializationMethodInvoker {
         if (object == null) {
             return null;
         } else {
-            Method writeReplaceMethod = getMethod(object.getClass(), "writeReplace", null);
+            Method writeReplaceMethod = getMethod(object.getClass(), "writeReplace", null, true);
             if (writeReplaceMethod != null) {
                 try {
                     return writeReplaceMethod.invoke(object, null);
@@ -61,13 +61,13 @@ public class SerializationMethodInvoker {
         }
     }
 
-    public boolean supportsReadObject(Class type) {
-        return getMethod(type, "readObject", new Class[]{ObjectInputStream.class}) != null;
+    public boolean supportsReadObject(Class type, boolean includeBaseClasses) {
+        return getMethod(type, "readObject", new Class[]{ObjectInputStream.class}, includeBaseClasses) != null;
     }
 
     public void callReadObject(Class type, Object object, ObjectInputStream stream) {
         try {
-            Method readObjectMethod = getMethod(type, "readObject", new Class[]{ObjectInputStream.class});
+            Method readObjectMethod = getMethod(type, "readObject", new Class[]{ObjectInputStream.class}, false);
             readObjectMethod.invoke(object, new Object[]{stream});
         } catch (IllegalAccessException e) {
             throw new ConversionException("Could not call " + object.getClass().getName() + ".readObject()", e);
@@ -76,39 +76,51 @@ public class SerializationMethodInvoker {
         }
     }
 
-    public boolean supportsWriteObject(Class type) {
-        return getMethod(type, "writeObject", new Class[]{ObjectOutputStream.class}) != null;
+    public boolean supportsWriteObject(Class type, boolean includeBaseClasses) {
+        return getMethod(type, "writeObject", new Class[]{ObjectOutputStream.class}, includeBaseClasses) != null;
     }
 
     public void callWriteObject(Class type, Object instance, ObjectOutputStream stream) {
         try {
-            Method readObjectMethod = getMethod(type, "writeObject", new Class[]{ObjectOutputStream.class});
+            Method readObjectMethod = getMethod(type, "writeObject", new Class[]{ObjectOutputStream.class}, false);
             readObjectMethod.invoke(instance, new Object[]{stream});
         } catch (IllegalAccessException e) {
-            throw new ConversionException("Could not call " + instance.getClass().getName() + ".readObject()", e);
+            throw new ConversionException("Could not call " + instance.getClass().getName() + ".writeObject()", e);
         } catch (InvocationTargetException e) {
-            throw new ConversionException("Could not call " + instance.getClass().getName() + ".readObject()", e);
+            throw new ConversionException("Could not call " + instance.getClass().getName() + ".writeObject()", e);
         }
     }
 
-    private Method getMethod(Class type, String name, Class[] parameterTypes) {
-        Object key = type.getName() + "." + name;
+    private Method getMethod(Class type, String name, Class[] parameterTypes, boolean includeBaseclasses) {
+        Object key = type.getName() + "." + name + "." + includeBaseclasses;
         if (cache.containsKey(key)) {
             Object result = cache.get(key);
             return (Method) (result == NO_METHOD ? null : result);
         }
-        while (type != null) {
+        if (includeBaseclasses) {
+            while (type != null) {
+                try {
+                    Method result = type.getDeclaredMethod(name, parameterTypes);
+                    result.setAccessible(true);
+                    cache.put(key, result);
+                    return result;
+                } catch (NoSuchMethodException e) {
+                    type = type.getSuperclass();
+                }
+            }
+            cache.put(key, NO_METHOD);
+            return null;
+        } else {
             try {
                 Method result = type.getDeclaredMethod(name, parameterTypes);
                 result.setAccessible(true);
                 cache.put(key, result);
                 return result;
             } catch (NoSuchMethodException e) {
-                type = type.getSuperclass();
+                cache.put(key, NO_METHOD);
+                return null;
             }
         }
-        cache.put(key, NO_METHOD);
-        return null;
     }
 
 }

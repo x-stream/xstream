@@ -175,7 +175,7 @@ public class XStream {
         this.classMapper = classMapper;
         this.hierarchicalStreamDriver = driver;
         setMode(XPATH_REFERENCES);
-        converterLookup = new DefaultConverterLookup(jvm, defaultConverter, classMapper, classAttributeIdentifier);
+        converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, defaultConverter, classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
     }
     

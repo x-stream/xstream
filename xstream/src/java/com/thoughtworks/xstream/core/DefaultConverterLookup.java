@@ -47,6 +47,7 @@ import com.thoughtworks.xstream.converters.extended.ThrowableConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -83,28 +84,33 @@ public class DefaultConverterLookup implements ConverterLookup {
     private String classAttributeIdentifier;
     private Converter defaultConverter;
     private JVM jvm;
+    
+    private ReflectionProvider reflectionProvider;
 
     private transient ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
     public DefaultConverterLookup(JVM jvm,
-    								ReflectionProvider reflectionProvider,
-    								ImplicitCollectionMapper implicitCollectionMapper,
+                                  ReflectionProvider reflectionProvider,
+                                  ImplicitCollectionMapper implicitCollectionMapper,
                                   ClassMapper classMapper,
                                   String classAttributeIdentifier) {
-        this(jvm, 
-        		new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, implicitCollectionMapper),
-        		classMapper, 
-			classAttributeIdentifier);
+        this(jvm,
+             reflectionProvider,
+             new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, implicitCollectionMapper),
+             classMapper,
+             classAttributeIdentifier);
     }
 
-    public DefaultConverterLookup(JVM jvm, 
-    								Converter defaultConverter,
-            						ClassMapper classMapper,
-								String classAttributeIdentifier){
-    		this.jvm = jvm;
-    		this.defaultConverter = defaultConverter;
-    		this.classMapper = classMapper;
-    		this.classAttributeIdentifier = classAttributeIdentifier;
+    public DefaultConverterLookup(JVM jvm,
+                                  ReflectionProvider reflectionProvider,
+                                  Converter defaultConverter,
+                                  ClassMapper classMapper,
+                                  String classAttributeIdentifier) {
+        this.jvm = jvm;
+        this.defaultConverter = defaultConverter;
+        this.classMapper = classMapper;
+        this.classAttributeIdentifier = classAttributeIdentifier;
+        this.reflectionProvider = reflectionProvider;
     }
 
     public Converter defaultConverter() {
@@ -193,6 +199,7 @@ public class DefaultConverterLookup implements ConverterLookup {
         }
 
         registerConverter(defaultConverter);
+        registerConverter(new SerializableConverter(classMapper, reflectionProvider));
         registerConverter(new ExternalizableConverter(classMapper));
 
         registerConverter(new IntConverter());
