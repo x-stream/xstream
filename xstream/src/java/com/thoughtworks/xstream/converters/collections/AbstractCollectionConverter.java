@@ -34,6 +34,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     public abstract Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context);
 
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
+        // PUBLISHED API METHOD! If changing signature, ensure backwards compatability.
         if (item == null) {
             // todo: this is duplicated in TreeMarshaller.start()
             writer.startNode(classMapper.lookupName(ClassMapper.Null.class));
@@ -46,6 +47,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context, Object current) {
+        // PUBLISHED API METHOD! If changing signature, ensure backwards compatability.
         String classAttribute = reader.getAttribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {

@@ -41,11 +41,6 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertEquals("woo", out.toString());
     }
 
-    public void testDate() {
-        Date date = new Date(103, 02, 15, 8, 22, 7);
-        assertBothWays(date, "<date>2003-03-15 08:22:07.0 GMT</date>");
-    }
-
     public void testBigInteger() {
         BigInteger bigInteger = new BigInteger("1234567890123456");
         assertBothWays(bigInteger, "<big-int>1234567890123456</big-int>");

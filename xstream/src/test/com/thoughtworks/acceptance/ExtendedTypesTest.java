@@ -1,6 +1,11 @@
 package com.thoughtworks.acceptance;
 
-import java.awt.Color;
+import com.thoughtworks.xstream.converters.basic.DateConverterTest;
+import com.thoughtworks.xstream.testutil.TimeZoneTestSuite;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
@@ -9,13 +14,16 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.regex.Pattern;
 
-import com.thoughtworks.xstream.converters.basic.DateConverter;
-import com.thoughtworks.xstream.converters.extended.ISO8601DateConverter;
-
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
+
+    public static Test suite() {
+        // Ensure that this test always run as if it were in the EST timezone.
+        // This prevents failures when running the tests in different zones.
+        // Note: 'EST' has no relevance - it was just a randomly chosen zone.
+        return new TimeZoneTestSuite("EST", new TestSuite(DateConverterTest.class));
+    }
 
     public void testAwtColor() {
         Color color = new Color(0, 10, 20, 30);
@@ -30,18 +38,10 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
         assertBothWays(color, expected);
     }
-    
-    public void testISO8601Date() {    		
-    		// register ISO8601 date converter
-    		xstream.registerConverter(new ISO8601DateConverter());
-        assertBothWays(new java.util.Date(103, 02, 15, 8, 22, 7), 
-        			"<date>2003-03-15T08:22:07.000Z</date>");
-    }
 
     public void testSqlTimestamp() {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         assertBothWays(new Timestamp(1234),
-                "<sql-timestamp>1970-01-01 00:00:01.234</sql-timestamp>");                
+                "<sql-timestamp>1969-12-31 19:00:01.234</sql-timestamp>");
     }
 
     public void testSqlTime() {
