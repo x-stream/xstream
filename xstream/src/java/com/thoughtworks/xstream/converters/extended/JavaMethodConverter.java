@@ -74,7 +74,7 @@ public class JavaMethodConverter implements Converter {
 
             reader.moveDown();
             String declaringClassName = reader.getValue();
-            Class declaringClass = classLoader.loadClass(declaringClassName);
+            Class declaringClass = loadClass(declaringClassName);
             reader.moveUp();
 
             String methodName = null;
@@ -89,7 +89,7 @@ public class JavaMethodConverter implements Converter {
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
                 String parameterTypeName = reader.getValue();
-                parameterTypeList.add(classLoader.loadClass(parameterTypeName));
+                parameterTypeList.add(loadClass(parameterTypeName));
                 reader.moveUp();
             }
             Class[] parameterTypes = (Class[]) parameterTypeList.toArray(new Class[parameterTypeList.size()]);
@@ -107,4 +107,27 @@ public class JavaMethodConverter implements Converter {
         }
     }
 
+    private Class loadClass(String className) throws ClassNotFoundException {
+        Class primitiveClass = primitiveClassForName(className);
+        if( primitiveClass != null ){
+            return primitiveClass;
+        }
+        return classLoader.loadClass(className);
+    }
+    
+    /**
+     * Lookup table for primitive types.
+     */
+    private Class primitiveClassForName(String name) {
+        return  name.equals("void") ? Void.TYPE :
+                name.equals("boolean") ? Boolean.TYPE :
+                name.equals("byte") ? Byte.TYPE :
+                name.equals("char") ? Character.TYPE :
+                name.equals("short") ? Short.TYPE :
+                name.equals("int") ? Integer.TYPE :
+                name.equals("long") ? Long.TYPE :
+                name.equals("float") ? Float.TYPE :
+                name.equals("double") ? Double.TYPE :
+                null;
+    }
 }
