@@ -2,7 +2,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.core.util.IntQueue;
-import com.thoughtworks.xstream.core.util.StringStack;
+import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
 import org.xmlpull.mxp1.MXParser;
@@ -16,7 +16,7 @@ import java.io.Reader;
 public class XppReader implements HierarchicalStreamReader {
 
     private final XmlPullParser parser;
-    private final StringStack elementStack = new StringStack(16);
+    private final FastStack elementStack = new FastStack(16);
     private final IntQueue lookaheadQueue = new IntQueue(4);
 
     public XppReader(Reader reader) {
@@ -93,7 +93,7 @@ public class XppReader implements HierarchicalStreamReader {
     }
 
     public String getNodeName() {
-        return elementStack.peek();
+        return (String)elementStack.peek();
     }
 
     public String getValue() {

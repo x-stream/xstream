@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.core.util.QuickWriter;
-import com.thoughtworks.xstream.core.util.StringStack;
+import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.io.PrintWriter;
@@ -10,7 +10,7 @@ import java.io.Writer;
 public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
     private final QuickWriter writer;
-    private final StringStack elementStack = new StringStack(16);
+    private final FastStack elementStack = new FastStack(16);
     private final char[] lineIndenter;
 
     private boolean tagInProgress;
@@ -98,7 +98,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         } else {
             finishTag();
             writer.write(CLOSE);
-            writer.write(elementStack.pop());
+            writer.write((String)elementStack.pop());
             writer.write('>');
         }
         readyForNewLine = true;

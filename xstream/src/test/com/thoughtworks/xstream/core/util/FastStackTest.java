@@ -2,10 +2,10 @@ package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
 
-public class StringStackTest extends TestCase {
+public class FastStackTest extends TestCase {
 
     public void test() {
-        StringStack stack = new StringStack(2);
+        FastStack stack = new FastStack(2);
 
         stack.push("a");
         stack.push("b");

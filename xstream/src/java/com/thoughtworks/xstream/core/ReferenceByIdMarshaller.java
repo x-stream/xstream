@@ -37,9 +37,9 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {
-            String idOfExistingReference = references.lookupId(item);
+            Object idOfExistingReference = references.lookupId(item);
             if (idOfExistingReference != null) {
-                writer.addAttribute("reference", idOfExistingReference);
+                writer.addAttribute("reference", idOfExistingReference.toString());
             } else {
                 String newId = idGenerator.next();
                 writer.addAttribute("id", newId);

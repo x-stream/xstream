@@ -47,21 +47,11 @@ public class PathTracker {
         pointer--;
     }
 
+    /**
+     * @deprecated Use {@link #getPath()} instead.
+     */
     public String getCurrentPath() {
-        if (currentPath == null) {
-            StringBuffer result = new StringBuffer();
-            for (int i = 0; i < pointer; i++) {
-                result.append('/');
-                result.append(pathStack[i]);
-                Integer integer = ((Integer) indexMapStack[i].get(pathStack[i]));
-                int index = integer.intValue();
-                if (index > 1) {
-                    result.append('[').append(index).append(']');
-                }
-            }
-            currentPath = result.toString();
-        }
-        return currentPath;
+        return getPath().toString();
     }
 
     private void resizeStacks(int newCapacity) {
@@ -75,4 +65,20 @@ public class PathTracker {
         capacity = newCapacity;
     }
 
+    public Path getPath() {
+        if (currentPath == null) {
+            StringBuffer result = new StringBuffer();
+            for (int i = 0; i < pointer; i++) {
+                result.append('/');
+                result.append(pathStack[i]);
+                Integer integer = ((Integer) indexMapStack[i].get(pathStack[i]));
+                int index = integer.intValue();
+                if (index > 1) {
+                    result.append('[').append(index).append(']');
+                }
+            }
+            currentPath = result.toString();
+        }
+        return new Path(currentPath);
+    }
 }

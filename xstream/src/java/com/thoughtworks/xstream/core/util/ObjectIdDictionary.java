@@ -33,12 +33,12 @@ public class ObjectIdDictionary {
         }
     }
 
-    public void associateId(Object obj, String id) {
+    public void associateId(Object obj, Object id) {
         map.put(new IdWrapper(obj), id);
     }
 
-    public String lookupId(Object obj) {
-        return (String) map.get(new IdWrapper(obj));
+    public Object lookupId(Object obj) {
+        return map.get(new IdWrapper(obj));
     }
 
     public boolean containsId(Object item) {

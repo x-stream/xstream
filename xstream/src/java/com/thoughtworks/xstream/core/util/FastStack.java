@@ -1,15 +1,15 @@
 package com.thoughtworks.xstream.core.util;
 
-public final class StringStack {
+public final class FastStack {
 
-    private String[] stack;
+    private Object[] stack;
     private int pointer;
 
-    public StringStack(int initialCapacity) {
-        stack = new String[initialCapacity];
+    public FastStack(int initialCapacity) {
+        stack = new Object[initialCapacity];
     }
 
-    public void push(String value) {
+    public void push(Object value) {
         if (pointer + 1 >= stack.length) {
             resizeStack(stack.length * 2);
         }
@@ -20,11 +20,11 @@ public final class StringStack {
         pointer--;
     }
 
-    public String pop() {
+    public Object pop() {
         return stack[--pointer];
     }
 
-    public String peek() {
+    public Object peek() {
         return pointer == 0 ? null : stack[pointer - 1];
     }
 
@@ -32,12 +32,12 @@ public final class StringStack {
         return pointer;
     }
 
-    public String get(int i) {
+    public Object get(int i) {
         return stack[i];
     }
 
     private void resizeStack(int newCapacity) {
-        String[] newStack = new String[newCapacity];
+        Object[] newStack = new Object[newCapacity];
         System.arraycopy(stack, 0, newStack, 0, Math.min(stack.length, newCapacity));
         stack = newStack;
     }

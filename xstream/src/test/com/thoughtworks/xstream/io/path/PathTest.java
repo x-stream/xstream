@@ -4,10 +4,10 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class RelativePathCalculatorTest {
+public class PathTest {
 
     public static Test suite() {
-        TestSuite result = new TestSuite("RelativePathCalculator");
+        TestSuite result = new TestSuite("PathTest");
 
         addTest(result,
                 "/a/b/c",
@@ -56,9 +56,8 @@ public class RelativePathCalculatorTest {
         String testName = from + " - " + to;
         suite.addTest(new TestCase(testName) {
             protected void runTest() throws Throwable {
-                RelativePathCalculator calculator = new RelativePathCalculator();
-                assertEquals(relative, calculator.relativePath(from, to));
-                assertEquals(to, calculator.absolutePath(from, relative));
+                assertEquals(new Path(relative), new Path(from).relativeTo(new Path(to)));
+                assertEquals(new Path(to), new Path(from).apply(new Path(relative)));
             }
         });
     }

@@ -2,7 +2,7 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.core.util.StringStack;
+import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Map;
 public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
 
     private Map values = new HashMap();
-    private StringStack parentIdStack = new StringStack(16);
+    private FastStack parentIdStack = new FastStack(16);
 
     public ReferenceByIdUnmarshaller(Object root, HierarchicalStreamReader reader,
                                      ConverterLookup converterLookup, ClassMapper classMapper,
