@@ -116,7 +116,6 @@ public class XStream {
 
     public Object fromXML(XMLReader xmlReader) {
         Class type = classMapper.lookupType(xmlReader.name());
-        ObjectFactory objectFactory = new SunReflectionObjectFactory();
         ObjectTree objectGraph = new ReflectionObjectGraph(type, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(type);
         rootConverter.fromXML(objectGraph, xmlReader, converterLookup, type);
