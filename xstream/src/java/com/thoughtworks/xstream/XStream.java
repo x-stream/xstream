@@ -132,6 +132,9 @@ public class XStream {
         this.marshallingStrategy = marshallingStrategy;
     }
 
+    /**
+     * Serialize an object to a pretty-printed XML String.
+     */
     public String toXML(Object obj) {
         Writer stringWriter = new StringWriter();
         HierarchicalStreamWriter writer = new PrettyPrintWriter(stringWriter);
@@ -139,36 +142,69 @@ public class XStream {
         return stringWriter.toString();
     }
 
+    /**
+     * Serialize an object to the given Writer as pretty-printed XML.
+     */
     public void toXML(Object obj, Writer writer) {
         marshal(obj, new PrettyPrintWriter(writer));
     }
 
+    /**
+     * Serialize and object to a hierarchical data structure (such as XML).
+     */
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
         marshallingStrategy.marshal(writer, obj, converterLookup, classMapper);
     }
 
+    /**
+     * Deserialize an object from an XML String.
+     */
     public Object fromXML(String xml) {
         return fromXML(new StringReader(xml));
     }
 
+    /**
+     * Deserialize an object from an XML Reader.
+     */
     public Object fromXML(Reader xml) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), null);
     }
 
+    /**
+     * Deserialize an object from a hierarchical data structure (such as XML).
+     */
     public Object unmarshal(HierarchicalStreamReader reader) {
         return unmarshal(reader, null);
     }
 
+    /**
+     * Deserialize an object from a hierarchical data structure (such as XML),
+     * populating the fields of the given root object instead of instantiating
+     * a new one.
+     */
     public Object unmarshal(HierarchicalStreamReader reader, Object root) {
         return marshallingStrategy.unmarshal(root, reader, converterLookup, classMapper);
     }
 
-    public void alias(String elementName, Class type, Class defaultImplementation) {
-        converterLookup.alias(elementName, type, defaultImplementation);
-    }
-
+    /**
+     * Alias a Class to a shorter name to be used in XML elements.
+     *
+     * @param elementName Short name
+     * @param type        Type to be aliased
+     */
     public void alias(String elementName, Class type) {
         converterLookup.alias(elementName, type, type);
+    }
+
+    /**
+     * Alias a Class to a shorter name to be used in XML elements.
+     *
+     * @param elementName           Short name
+     * @param type                  Type to be aliased
+     * @param defaultImplementation Default implementation of type to use if no other specified.
+     */
+    public void alias(String elementName, Class type, Class defaultImplementation) {
+        converterLookup.alias(elementName, type, defaultImplementation);
     }
 
     public void registerConverter(Converter converter) {
@@ -183,6 +219,15 @@ public class XStream {
         return converterLookup;
     }
 
+    /**
+     * Change mode for dealing with duplicate references.
+     * Valid valuse are <code>XStream.XPATH_REFERENCES</code>,
+     * <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>.
+     *
+     * @see #XPATH_REFERENCES
+     * @see #ID_REFERENCES
+     * @see #NO_REFERENCES
+     */
     public void setMode(int mode) {
         switch (mode) {
             case NO_REFERENCES:
