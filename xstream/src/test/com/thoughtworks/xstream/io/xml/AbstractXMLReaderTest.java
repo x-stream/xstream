@@ -116,4 +116,11 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals("", text);
     }
 
+    public void testReturnsLastResultForHasMoreChildrenIfCalledRepeatedlyWithoutMovingNode() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<row><cells></cells></row>");
+
+        assertEquals("row", xmlReader.getNodeName());
+        assertTrue(xmlReader.hasMoreChildren()); // this is OK
+        assertTrue(xmlReader.hasMoreChildren()); // this fails
+    }
 }

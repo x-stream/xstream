@@ -19,10 +19,13 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants {
 
-    private QNameMap qnameMap;
+    private final QNameMap qnameMap;
     private final XMLStreamReader in;
     private final FastStack elementStack = new FastStack(16);
     private final IntQueue lookaheadQueue = new IntQueue(4);
+
+    private boolean hasMoreChildrenCached;
+    private boolean hasMoreChildrenResult;
 
     public StaxReader(QNameMap qnameMap, XMLStreamReader in) {
         this.qnameMap = qnameMap;
@@ -31,12 +34,19 @@ public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants 
     }
 
     public boolean hasMoreChildren() {
+        if (hasMoreChildrenCached) {
+            return hasMoreChildrenResult;
+        }
         while (true) {
             switch (lookahead()) {
                 case START_ELEMENT:
+                    hasMoreChildrenCached = true;
+                    hasMoreChildrenResult = true;
                     return true;
                 case END_ELEMENT:
                 case END_DOCUMENT:
+                    hasMoreChildrenCached = true;
+                    hasMoreChildrenResult = false;
                     return false;
                 default:
                     continue;
@@ -70,6 +80,7 @@ public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants 
     }
 
     public void moveDown() {
+        hasMoreChildrenCached = false;
         int currentDepth = elementStack.size();
         while (elementStack.size() <= currentDepth) {
             read();
@@ -80,6 +91,7 @@ public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants 
     }
 
     public void moveUp() {
+        hasMoreChildrenCached = false;
         int currentDepth = elementStack.size();
         while (elementStack.size() >= currentDepth) {
             read();
