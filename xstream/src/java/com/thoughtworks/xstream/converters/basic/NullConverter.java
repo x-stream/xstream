@@ -15,7 +15,7 @@ public class NullConverter implements Converter {
         context.getXMLWriter().endElement();
     }
 
-    public void fromXML(UnmarshallingContext context) {
-        // no need to do anything
+    public Object fromXML(UnmarshallingContext context) {
+        return null;
     }
 }

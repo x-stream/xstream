@@ -24,12 +24,13 @@ public class OldConverterAdaptor implements Converter {
         );
     }
 
-    public void fromXML(UnmarshallingContext context) {
+    public Object fromXML(UnmarshallingContext context) {
        old.fromXML(
                context.getObjectTree(),
                context.getXMLReader(),
                context.getConverterLookup(),
                context.getRequiredType()
        );
+       return context.getObjectTree().get();
     }
 }

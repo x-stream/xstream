@@ -72,7 +72,8 @@ public class ObjectWithFieldsConverter implements OldConverter {
 
             Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
             Converter converter = converterLookup.lookupConverterForType(type);
-            converter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
+            Object obj = converter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
+            objectGraph.set(obj);
             objectGraph.pop();
 
             xmlReader.pop();

@@ -27,4 +27,20 @@ public class MarshallingContextAdaptor implements MarshallingContext {
     public ConverterLookup getConverterLookup() {
         return converterLookup;
     }
+
+    public void xmlWriteText(String text) {
+        xmlWriter.writeText(text);
+    }
+
+    public void xmlStartElement(String fieldName) {
+        xmlWriter.startElement(fieldName);
+    }
+
+    public void xmlEndElement() {
+        xmlWriter.endElement();
+    }
+
+    public Object currentObject() {
+        return objectTree.get();
+    }
 }

@@ -49,8 +49,7 @@ public abstract class AbstractCollectionConverter implements OldConverter {
         }
         ObjectTree itemWriter = objectGraph.newStack(type);
         Converter converter = converterLookup.lookupConverterForType(type);
-        converter.fromXML(new UnmarshallingContextAdaptor(itemWriter, xmlReader, converterLookup, type));
-        return itemWriter.get();
+        return converter.fromXML(new UnmarshallingContextAdaptor(itemWriter, xmlReader, converterLookup, type));
     }
 
     protected Object createCollection(Class type) {

@@ -1,39 +1,32 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.old.OldConverter;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ColorConverter implements OldConverter {
+public class ColorConverter implements Converter {
+
     public boolean canConvert(Class type) {
         return type.equals(Color.class);
     }
 
-    public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
-        Color color = (Color) objectGraph.get();
-        write("red", color.getRed(), xmlWriter);
-        write("green", color.getGreen(), xmlWriter);
-        write("blue", color.getBlue(), xmlWriter);
-        write("alpha", color.getAlpha(), xmlWriter);
+    public void toXML(MarshallingContext context) {
+        Color color = (Color) context.currentObject();
+        write("red", color.getRed(), context);
+        write("green", color.getGreen(), context);
+        write("blue", color.getBlue(), context);
+        write("alpha", color.getAlpha(), context);
     }
 
-    private void write(String fieldName, int value, XMLWriter xmlWriter) {
-        xmlWriter.startElement(fieldName);
-        xmlWriter.writeText(String.valueOf(value));
-        xmlWriter.endElement();
-    }
-
-    public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
+    public Object fromXML(UnmarshallingContext context) {
         Map elements = new HashMap();
-        while (xmlReader.nextChild()) {
-            elements.put(xmlReader.name(), Integer.valueOf(xmlReader.text()));
-            xmlReader.pop();
+        while (context.xmlNextChild()) {
+            elements.put(context.xmlElementName(), Integer.valueOf(context.xmlText()));
+            context.xmlPop();
         }
         Color color = new Color(
                 ((Integer) elements.get("red")).intValue(),
@@ -41,7 +34,13 @@ public class ColorConverter implements OldConverter {
                 ((Integer) elements.get("blue")).intValue(),
                 ((Integer) elements.get("alpha")).intValue()
         );
-        objectGraph.set(color);
+        return color;
+    }
+
+    private void write(String fieldName, int value, MarshallingContext context) {
+        context.xmlStartElement(fieldName);
+        context.xmlWriteText(String.valueOf(value));
+        context.xmlEndElement();
     }
 
 }

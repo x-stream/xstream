@@ -33,4 +33,20 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
     public Class getRequiredType() {
         return type;
     }
+
+    public String xmlText() {
+        return xmlReader.text();
+    }
+
+    public String xmlElementName() {
+        return xmlReader.name();
+    }
+
+    public void xmlPop() {
+        xmlReader.pop();
+    }
+
+    public boolean xmlNextChild() {
+        return xmlReader.nextChild();
+    }
 }

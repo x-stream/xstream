@@ -139,16 +139,14 @@ public class XStream {
         }
         ObjectTree objectGraph = new ReflectionObjectGraph(type, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(type);
-        rootConverter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
-        return objectGraph.get();
+        return rootConverter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
     }
 
     public Object fromXML(XMLReader xmlReader, Object root) {
         Class type = root.getClass();
         ObjectTree objectGraph = new ReflectionObjectGraph(root, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(type);
-        rootConverter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
-        return objectGraph.get();
+        return rootConverter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
     }
 
     public void registerConverter(Converter converter) {
