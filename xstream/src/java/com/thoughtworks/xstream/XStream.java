@@ -53,6 +53,7 @@ import com.thoughtworks.xstream.converters.basic.BigDecimalConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
+import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.core.AddableImplicitCollectionMapper;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
@@ -217,6 +218,7 @@ public class XStream {
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_REFERENCES = 1003;
+    private Converter defaultConverter;
 
     public XStream() {
         this(null, null, new XppDriver());
@@ -252,12 +254,12 @@ public class XStream {
         this.hierarchicalStreamDriver = driver;
         this.classLoader = new CompositeClassLoader();
         this.classMapper = classMapper == null ? setupMapper() : classMapper;
-        setMode(XPATH_REFERENCES);
-        converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, implicitCollectionMapper, this.classMapper, classAttributeIdentifier);
-        converterLookup.setupDefaults();
+        this.defaultConverter = new ReflectionConverter(this.classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, implicitCollectionMapper);
+        converterLookup = new DefaultConverterLookup(defaultConverter, this.classMapper, classAttributeIdentifier);
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
+        setMode(XPATH_REFERENCES);
     }
 
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier, Converter defaultConverter) {
@@ -270,12 +272,12 @@ public class XStream {
         this.hierarchicalStreamDriver = driver;
         this.classLoader = new CompositeClassLoader();
         this.classMapper = classMapper == null ? setupMapper() : classMapper;
-        setMode(XPATH_REFERENCES);
-        converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, defaultConverter, this.classMapper, classAttributeIdentifier);
-        converterLookup.setupDefaults();
+        this.defaultConverter = defaultConverter;
+        converterLookup = new DefaultConverterLookup(defaultConverter, this.classMapper, classAttributeIdentifier);
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
+        setMode(XPATH_REFERENCES);
     }
 
     protected ClassMapper setupMapper() {
@@ -354,6 +356,8 @@ public class XStream {
     }
 
     protected void setupConverters() {
+        registerConverter(defaultConverter);
+
         registerConverter(new SerializableConverter(classMapper, reflectionProvider));
         registerConverter(new ExternalizableConverter(classMapper));
 
@@ -537,7 +541,8 @@ public class XStream {
     }
 
     public void changeDefaultConverter(Converter defaultConverter) {
-        converterLookup.changeDefaultConverter(defaultConverter);
+        this.defaultConverter = defaultConverter;
+        setupConverters();
     }
     
     public void registerConverter(Converter converter) {

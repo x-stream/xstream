@@ -83,34 +83,13 @@ public class DefaultConverterLookup implements ConverterLookup {
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
     private Converter defaultConverter;
-    private JVM jvm;
-    
-    private ReflectionProvider reflectionProvider;
 
-    private transient ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-    public DefaultConverterLookup(JVM jvm,
-                                  ReflectionProvider reflectionProvider,
-                                  ImplicitCollectionMapper implicitCollectionMapper,
+    public DefaultConverterLookup(Converter defaultConverter,
                                   ClassMapper classMapper,
                                   String classAttributeIdentifier) {
-        this(jvm,
-             reflectionProvider,
-             new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, implicitCollectionMapper),
-             classMapper,
-             classAttributeIdentifier);
-    }
-
-    public DefaultConverterLookup(JVM jvm,
-                                  ReflectionProvider reflectionProvider,
-                                  Converter defaultConverter,
-                                  ClassMapper classMapper,
-                                  String classAttributeIdentifier) {
-        this.jvm = jvm;
         this.defaultConverter = defaultConverter;
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
-        this.reflectionProvider = reflectionProvider;
     }
 
     public Converter defaultConverter() {
@@ -119,7 +98,6 @@ public class DefaultConverterLookup implements ConverterLookup {
     
     public void changeDefaultConverter(Converter newDefaultConverter) {
         defaultConverter = newDefaultConverter;
-        setupDefaults();
     }
 
     public Converter lookupConverterForType(Class type) {
@@ -144,17 +122,8 @@ public class DefaultConverterLookup implements ConverterLookup {
         converters.add(converter);
     }
 
-    public void setupDefaults() {
-        registerConverter(defaultConverter);
-    }
-
     public String getClassAttributeIdentifier() {
         return classAttributeIdentifier;
-    }
-
-    private Object readResolve() {
-        this.classLoader = Thread.currentThread().getContextClassLoader();
-        return this;
     }
 
 }
