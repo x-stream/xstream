@@ -3,7 +3,7 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.Software;
-import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
+import com.thoughtworks.xstream.XStream;
 
 import java.util.*;
 
@@ -110,18 +110,18 @@ public class CollectionsTest extends AbstractAcceptanceTest {
 
     public void testSyncronizedWrapper() {
         // syncronized list has circular reference
-        xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+        xstream.setMode(XStream.XPATH_REFERENCES);
 
         List list = Collections.synchronizedList(new LinkedList());
         list.add("hi");
 
         assertBothWays(list,
-                "<java.util.Collections-SynchronizedList id=\"1\">\n" +
-                "  <c class=\"linked-list\" id=\"2\">\n" +
+                "<java.util.Collections-SynchronizedList>\n" +
+                "  <c class=\"linked-list\">\n" +
                 "    <string>hi</string>\n" +
                 "  </c>\n" +
-                "  <list class=\"linked-list\" reference=\"2\"/>\n" +
-                "  <mutex class=\"java.util.Collections-SynchronizedList\" reference=\"1\"/>\n" +
+                "  <list class=\"linked-list\" reference=\"../c\"/>\n" +
+                "  <mutex class=\"java.util.Collections-SynchronizedList\" reference=\"..\"/>\n" +
                 "</java.util.Collections-SynchronizedList>");
     }
 
@@ -131,18 +131,18 @@ public class CollectionsTest extends AbstractAcceptanceTest {
 
     public void testUnmodifiableList() {
         // unodifiable list has duplicate refs
-        xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+        xstream.setMode(XStream.XPATH_REFERENCES);
 
         List list = new ArrayList();
         list.add("hi");
         list = Collections.unmodifiableList(list);
 
         assertBothWays(list,
-                "<java.util.Collections-UnmodifiableRandomAccessList id=\"1\">\n" +
-                "  <c class=\"list\" id=\"2\">\n" +
+                "<java.util.Collections-UnmodifiableRandomAccessList>\n" +
+                "  <c class=\"list\">\n" +
                 "    <string>hi</string>\n" +
                 "  </c>\n" +
-                "  <list reference=\"2\"/>\n" +
+                "  <list reference=\"../c\"/>\n" +
                 "</java.util.Collections-UnmodifiableRandomAccessList>");
     }
 }

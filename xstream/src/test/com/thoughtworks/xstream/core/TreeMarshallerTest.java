@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
 
 public class TreeMarshallerTest extends AbstractAcceptanceTest {
 
@@ -10,7 +11,7 @@ public class TreeMarshallerTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMarshallingStrategy(new TreeMarshallingStrategy());
+        xstream.setMode(XStream.NO_REFERENCES);
     }
 
     public void testThrowsExceptionWhenDetectingCircularReferences() {

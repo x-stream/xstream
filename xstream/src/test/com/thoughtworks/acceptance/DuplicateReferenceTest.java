@@ -1,6 +1,6 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
+import com.thoughtworks.xstream.XStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ public class DuplicateReferenceTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+        xstream.setMode(XStream.ID_REFERENCES);
         xstream.alias("thing", Thing.class);
     }
 
@@ -54,7 +54,7 @@ public class DuplicateReferenceTest extends AbstractAcceptanceTest {
         list.add(anotherThing);
 
         String xml = xstream.toXML(list);
-        List result = (List)xstream.fromXML(xml);
+        List result = (List) xstream.fromXML(xml);
 
         Thing t0 = (Thing) result.get(0);
         Thing t1 = (Thing) result.get(1);

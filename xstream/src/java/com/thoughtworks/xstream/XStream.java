@@ -23,6 +23,10 @@ public class XStream {
     private ClassMapper classMapper;
     private DefaultConverterLookup converterLookup;
 
+    public static final int NO_REFERENCES = 1001;
+    public static final int ID_REFERENCES = 1002;
+    public static final int XPATH_REFERENCES = 1003;
+
     public XStream() {
         this(new Sun14ReflectionProvider(), new DefaultClassMapper(), new DomDriver());
     }
@@ -46,13 +50,9 @@ public class XStream {
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier) {
         this.classMapper = classMapper;
         this.hierarchicalStreamDriver = driver;
-        this.marshallingStrategy = new TreeMarshallingStrategy();
+        setMode(XPATH_REFERENCES);
         converterLookup = new DefaultConverterLookup(reflectionProvider, classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
-    }
-
-    public MarshallingStrategy getMarshallingStrategy() {
-        return marshallingStrategy;
     }
 
     public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {
@@ -104,5 +104,21 @@ public class XStream {
 
     public ClassMapper getClassMapper() {
         return classMapper;
+    }
+
+    public void setMode(int mode) {
+        switch (mode) {
+            case NO_REFERENCES:
+                setMarshallingStrategy(new TreeMarshallingStrategy());
+                break;
+            case ID_REFERENCES:
+                setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+                break;
+            case XPATH_REFERENCES:
+                setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy());
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown mode : " + mode);
+        }
     }
 }

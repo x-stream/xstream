@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.xstream.XStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy());
+        xstream.setMode(XStream.XPATH_REFERENCES);
         xstream.alias("thing", Thing.class);
     }
 

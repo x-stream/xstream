@@ -1,22 +1,12 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.MarshallingStrategy;
-import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
-import com.thoughtworks.xstream.core.*;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.XppReader;
-import junit.framework.TestCase;
-
-import java.io.StringReader;
-import java.io.StringWriter;
+import com.thoughtworks.xstream.XStream;
 
 public class CircularReferenceTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+        xstream.setMode(XStream.ID_REFERENCES);
         xstream.alias("person", Person.class);
     }
 
