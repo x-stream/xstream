@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.sql.Time;
 import java.util.TimeZone;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
@@ -26,6 +27,11 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         assertBothWays(new Timestamp(1234),
                 "<sql-timestamp>1970-01-01 00:00:01.234</sql-timestamp>");                
+    }
+
+    public void testSqlTime() {
+        assertBothWays(new Time(14, 7, 33),
+                "<sql-time>14:07:33</sql-time>");
     }
 
     public void testFile() throws IOException {
