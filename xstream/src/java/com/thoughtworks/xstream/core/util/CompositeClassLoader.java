@@ -39,7 +39,6 @@ public class CompositeClassLoader extends ClassLoader {
     public CompositeClassLoader() {
         add(Object.class.getClassLoader()); // bootstrap loader.
         add(getClass().getClassLoader()); // whichever classloader loaded this jar.
-        add(Thread.currentThread().getContextClassLoader()); // often used in J2EE containers.
     }
 
     /**
@@ -61,7 +60,15 @@ public class CompositeClassLoader extends ClassLoader {
                 // ok.. try another one
             }
         }
-        throw new ClassNotFoundException(name);
+        // One last try - the context class loader associated with the current thread. Often used in j2ee servers.
+        // Note: The contextClassLoader cannot be added to the classLoaders list up front as the thread that constructs
+        // XStream is potentially different to thread that uses it.
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        if (contextClassLoader != null) {
+            return contextClassLoader.loadClass(name);
+        } else {
+            throw new ClassNotFoundException(name);
+        }
     }
 
 }
