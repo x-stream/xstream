@@ -63,12 +63,7 @@ public class ArrayMapper extends MapperWrapper {
             return Class.forName(className.toString());
         } else {
             className.append('L').append(componentType.getName()).append(';');
-            ClassLoader classLoader = componentType.getClassLoader();
-            if (classLoader == null) {
-                return Class.forName(className.toString());
-            } else {
-                return classLoader.loadClass(className.toString());
-            }
+            return Class.forName(className.toString(), false, componentType.getClassLoader());
         }
     }
 

@@ -37,7 +37,7 @@
 		<li>Bugfix: FontConverter extended to support FontUIResource which does some awkward native calls.</li>
 		<li>Bugfix: Deserialization of very complicated graphs (such as Swing components) sometimes resulted in broken object references. Now fixed.</li>
 		<li>Bugfix: <jira>XSTR-188</jira> Classes that use readResolve()/writeReplace() can now return different types.</li>
-		<li>Bugfix: <jira>XSTR-185</jira> JavaClassConverter can now load array classes for classes that have not yet been loaded. (Thanks to Henri Tremblay)</li>
+		<li>Bugfix: <jira>XSTR-185</jira>, <jira>XSTR-195</jira> Support for loading of array classes for classes that have not yet been loaded. (Thanks to Henri Tremblay)</li>
 		<li>Bugfix: <jira>XSTR-190</jira> PrettyPrintWriter and CompactWriter escape characters in XML attributes.</li>
 		<li>Bugfix: <jira>XSTR-176</jira>, <jira>XSTR-196</jira> The XStream ObjectInputStream and ObjectOutputStream implementations now propegate the flush() and close() events to the underlying streams.</li>
 		<li>Bugfix: <jira>XSTR-192</jira> Implicit collection mappings are now supported in inheritance hierarchies.</li>

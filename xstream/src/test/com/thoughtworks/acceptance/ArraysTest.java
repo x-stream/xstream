@@ -210,4 +210,26 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertEquals(SpecialThing.class, result[1][1].getClass());
     }
 
+    public static class NoOneLikesMe extends StandardObject {
+        private int name;
+
+        public NoOneLikesMe(int name) {
+            this.name = name;
+        }
+    }
+
+    public void testHandlesArrayClassesThatHaveNotYetBeenLoaded() {
+        // Catch weirdness in classloader. 
+        // Resolved by using Class.forName(x, false, classLoader), instead of classLoader.loadClass(x);
+        String xml = ""
+                + "<com.thoughtworks.acceptance.ArraysTest-NoOneLikesMe-array>\n"
+                + "  <com.thoughtworks.acceptance.ArraysTest-NoOneLikesMe>\n"
+                + "    <name>99</name>\n"
+                + "  </com.thoughtworks.acceptance.ArraysTest-NoOneLikesMe>\n"
+                + "</com.thoughtworks.acceptance.ArraysTest-NoOneLikesMe-array>";
+        NoOneLikesMe[] result = (NoOneLikesMe[]) xstream.fromXML(xml);
+        assertEquals(1, result.length);
+        assertEquals(99, result[0].name);
+    }
+
 }
