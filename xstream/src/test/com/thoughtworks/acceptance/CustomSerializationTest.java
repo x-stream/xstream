@@ -254,18 +254,18 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         String expectedXml = ""
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
-                + "    <fields>\n"
-                + "      <field name=\"theName\" class=\"string\">Joe</field>\n"
-                + "      <field name=\"theNumber\" class=\"int\">99</field>\n"
-                + "      <field name=\"theSoftware\" class=\"software\">\n"
+                + "    <default>\n"
+                + "      <theName class=\"string\">Joe</theName>\n"
+                + "      <theNumber class=\"int\">99</theNumber>\n"
+                + "      <theSoftware class=\"software\">\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
-                + "      </field>\n"
-                + "      <field name=\"thePolymorphic\" class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
+                + "      </theSoftware>\n"
+                + "      <thePolymorphic class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
                 + "        <arch>small</arch>\n"
                 + "        <name>ipod</name>\n"
-                + "      </field>\n"
-                + "    </fields>\n"
+                + "      </thePolymorphic>\n"
+                + "    </default>\n"
                 + "  </with-named-fields>\n"
                 + "</with-named-fields>";
 
@@ -279,16 +279,16 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         String inputXml = ""
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
-                + "    <fields>\n"
-                + "      <field name=\"theSoftware\" class=\"software\">\n"
+                + "    <default>\n"
+                + "      <theSoftware class=\"software\">\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
-                + "      </field>\n"
-                + "      <field name=\"thePolymorphic\" class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
+                + "      </theSoftware>\n"
+                + "      <thePolymorphic class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
                 + "        <arch>small</arch>\n"
                 + "        <name>ipod</name>\n"
-                + "      </field>\n"
-                + "    </fields>\n"
+                + "      </thePolymorphic>\n"
+                + "    </default>\n"
                 + "  </with-named-fields>\n"
                 + "</with-named-fields>";
 
@@ -315,22 +315,22 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         String expectedXml = ""
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
-                + "    <fields>\n"
-                + "      <field name=\"theName\" class=\"string\">Joe</field>\n"
-                + "      <field name=\"theNumber\" class=\"int\">0</field>\n"
-                + "      <field name=\"theSoftware\" class=\"software\">\n"
+                + "    <default>\n"
+                + "      <theName class=\"string\">Joe</theName>\n"
+                + "      <theNumber class=\"int\">0</theNumber>\n"
+                + "      <theSoftware class=\"software\">\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
-                + "      </field>\n"
-                + "      <field name=\"thePolymorphic\" class=\"with-named-fields\" serialization=\"custom\">\n"
+                + "      </theSoftware>\n"
+                + "      <thePolymorphic class=\"with-named-fields\" serialization=\"custom\">\n"
                 + "        <with-named-fields>\n"
-                + "          <fields>\n"
-                + "            <field name=\"theName\" class=\"string\">Thing</field>\n"
-                + "            <field name=\"theNumber\" class=\"int\">0</field>\n"
-                + "          </fields>\n"
+                + "          <default>\n"
+                + "            <theName class=\"string\">Thing</theName>\n"
+                + "            <theNumber class=\"int\">0</theNumber>\n"
+                + "          </default>\n"
                 + "        </with-named-fields>\n"
-                + "      </field>\n"
-                + "    </fields>\n"
+                + "      </thePolymorphic>\n"
+                + "    </default>\n"
                 + "  </with-named-fields>\n"
                 + "</with-named-fields>";
 
@@ -355,6 +355,46 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
             out.writeInt(something);
         }
 
+    }
+
+    public void testMaintainsBackwardsCompatabilityWithXStream1_1_0FieldFormat() {
+        ObjectWithNamedFields outer = new ObjectWithNamedFields();
+        outer.name = "Joe";
+        outer.someSoftware = new Software("tw", "xs");
+        outer.nothing = null;
+
+        ObjectWithNamedFields inner = new ObjectWithNamedFields();
+        inner.name = "Thing";
+
+        outer.polymorphic = inner;
+
+        xstream.alias("with-named-fields", ObjectWithNamedFields.class);
+        xstream.alias("software", Software.class);
+
+        String oldFormatOfXml = ""
+                + "<with-named-fields serialization=\"custom\">\n"
+                + "  <with-named-fields>\n"
+                + "    <fields>\n"
+                + "      <field name=\"theName\" class=\"string\">Joe</field>\n"
+                + "      <field name=\"theNumber\" class=\"int\">0</field>\n"
+                + "      <field name=\"theSoftware\" class=\"software\">\n"
+                + "        <vendor>tw</vendor>\n"
+                + "        <name>xs</name>\n"
+                + "      </field>\n"
+                + "      <field name=\"thePolymorphic\" class=\"with-named-fields\" serialization=\"custom\">\n"
+                + "        <with-named-fields>\n"
+                + "          <fields>\n"
+                + "            <field name=\"theName\" class=\"string\">Thing</field>\n"
+                + "            <field name=\"theNumber\" class=\"int\">0</field>\n"
+                + "          </fields>\n"
+                + "        </with-named-fields>\n"
+                + "      </field>\n"
+                + "    </fields>\n"
+                + "  </with-named-fields>\n"
+                + "</with-named-fields>";
+
+
+        assertEquals(outer, xstream.fromXML(oldFormatOfXml));
     }
 
     public void testObjectWithCallToDefaultWriteButNoDefaultFields() {

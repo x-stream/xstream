@@ -93,13 +93,12 @@ public class SerializableConverter implements Converter {
             }
 
             public void writeFieldsToStream(Map fields) {
-                writer.startNode(ELEMENT_FIELDS);
+                writer.startNode(ELEMENT_DEFAULT);
                 for (Iterator iterator = fields.keySet().iterator(); iterator.hasNext();) {
                     String name = (String) iterator.next();
                     Object value = fields.get(name);
                     if (value != null) {
-                        writer.startNode(ELEMENT_FIELD);
-                        writer.addAttribute(ATTRIBUTE_NAME, name);
+                        writer.startNode(classMapper.mapNameToXML(name));
                         writer.addAttribute(ATTRIBUTE_CLASS, classMapper.lookupName(value.getClass()));
                         context.convertAnother(value);
                         writer.endNode();
@@ -216,19 +215,32 @@ public class SerializableConverter implements Converter {
             public Map readFieldsFromStream() {
                 Map result = new HashMap();
                 reader.moveDown();
-                if (!reader.getNodeName().equals(ELEMENT_FIELDS)) {
-                    throw new ConversionException("Expected <" + ELEMENT_FIELDS + "/> element when calling ObjectInputStream.readFields()");
-                }
-                while (reader.hasMoreChildren()) {
-                    reader.moveDown();
-                    if (!reader.getNodeName().equals(ELEMENT_FIELD)) {
-                        throw new ConversionException("Expected <" + ELEMENT_FIELD + "/> element inside <" + ELEMENT_FIELD + "/>");
+                if (reader.getNodeName().equals(ELEMENT_FIELDS)) {
+                    // Maintain compatability with XStream 1.1.0
+                    while (reader.hasMoreChildren()) {
+                        reader.moveDown();
+                        if (!reader.getNodeName().equals(ELEMENT_FIELD)) {
+                            throw new ConversionException("Expected <" + ELEMENT_FIELD + "/> element inside <" + ELEMENT_FIELD + "/>");
+                        }
+                        String name = reader.getAttribute(ATTRIBUTE_NAME);
+                        Class type = classMapper.lookupType(reader.getAttribute(ATTRIBUTE_CLASS));
+                        Object value = context.convertAnother(result, type);
+                        result.put(name, value);
+                        reader.moveUp();
                     }
-                    String name = reader.getAttribute(ATTRIBUTE_NAME);
-                    Class type = classMapper.lookupType(reader.getAttribute(ATTRIBUTE_CLASS));
-                    Object value = context.convertAnother(result, type);
-                    result.put(name, value);
-                    reader.moveUp();
+                } else if (reader.getNodeName().equals(ELEMENT_DEFAULT)) {
+                    // New format introduced in XStream 1.1.1
+                    while (reader.hasMoreChildren()) {
+                        reader.moveDown();
+                        String name = reader.getNodeName();
+                        Class type = classMapper.lookupType(reader.getAttribute(ATTRIBUTE_CLASS));
+                        Object value = context.convertAnother(result, type);
+                        result.put(name, value);
+                        reader.moveUp();
+                    }
+                } else {
+                    throw new ConversionException("Expected <" + ELEMENT_FIELDS + "/> or <" +
+                            ELEMENT_DEFAULT + "/> element when calling ObjectInputStream.readFields()");
                 }
                 reader.moveUp();
                 return result;
