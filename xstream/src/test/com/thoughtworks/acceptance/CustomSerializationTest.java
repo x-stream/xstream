@@ -59,7 +59,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "  </stream.software>\n"
                 + "</custom>";
 
-        assertEquals(expectedXml, xstream.toXML(obj));
+        assertBothWays(obj, expectedXml);
     }
 
 }
