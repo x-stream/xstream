@@ -49,18 +49,14 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
         String expectedXml = ""
                 + "<custom>\n"
-                + "  <object.stream>\n"
-                + "    <int>2</int>\n"
-                + "  </object.stream>\n"
+                + "  <field.int>2</field.int>\n"
                 + "  <a>1</a>\n"
-                + "  <object.stream>\n"
-                + "    <string>hello</string>\n"
-                + "    <null/>\n"
-                + "    <software>\n"
-                + "      <vendor>tw</vendor>\n"
-                + "      <name>xs</name>\n"
-                + "    </software>\n"
-                + "  </object.stream>\n"
+                + "  <field.string>hello</field.string>\n"
+                + "  <field.null/>\n"
+                + "  <field.software>\n"
+                + "    <vendor>tw</vendor>\n"
+                + "    <name>xs</name>\n"
+                + "  </field.software>\n"
                 + "</custom>";
 
         assertBothWays(obj, expectedXml);
@@ -124,20 +120,12 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
         String expectedXml = ""
                 + "<child>\n"
-                + "  <object.stream>\n"
-                + "    <int>10</int>\n"
-                + "  </object.stream>\n"
+                + "  <field.int>10</field.int>\n"
                 + "  <childB>20</childB>\n"
-                + "  <object.stream>\n"
-                + "    <int>30</int>\n"
-                + "  </object.stream>\n"
-                + "  <object.stream defined-in=\"parent\">\n"
-                + "    <int>1</int>\n"
-                + "  </object.stream>\n"
+                + "  <field.int>30</field.int>\n"
+                + "  <field.int defined-in=\"parent\">1</field.int>\n"
                 + "  <parentB>2</parentB>\n"
-                + "  <object.stream defined-in=\"parent\">\n"
-                + "    <int>3</int>\n"
-                + "  </object.stream>\n"
+                + "  <field.int defined-in=\"parent\">3</field.int>\n"
                 + "</child>";
 
         assertBothWays(child, expectedXml);

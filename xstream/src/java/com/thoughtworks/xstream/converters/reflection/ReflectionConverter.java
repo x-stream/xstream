@@ -30,6 +30,7 @@ public class ReflectionConverter implements Converter {
     private ReflectionProvider reflectionProvider;
     private ImplicitCollectionMapper implicitCollectionMapper;
     private SerializationMethodInvoker serializationMethodInvoker;
+    private static final String PREFIX = "field.";
 
     // Todo:
     //  - Ensure readObject()/writeObject() include the heirarchy (start at superclass)
@@ -55,34 +56,22 @@ public class ReflectionConverter implements Converter {
         final Object replacedSource = serializationMethodInvoker.callWriteReplace(source);
         final Set seenFields = new HashSet();
 
-        final boolean[] writtenToStream = {false};
         final Class[] currentClass = new Class[1];
 
         CustomObjectOutputStream.StreamCallback callback = new CustomObjectOutputStream.StreamCallback() {
 
             public void writeToStream(Object object) {
-                if (!writtenToStream[0]) {
-                    writer.startNode("object.stream");
-                    if (!currentClass[0].equals(replacedSource.getClass())) {
-                        writer.addAttribute("defined-in", classMapper.lookupName(currentClass[0]));
-                    }
-                    writtenToStream[0] = true;
-                }
                 if (object == null) {
-                    writer.startNode("null");
+                    writer.startNode(PREFIX + "null");
                     writer.endNode();
                 } else {
-                    writer.startNode(classMapper.lookupName(object.getClass()));
+                    writer.startNode(PREFIX + classMapper.lookupName(object.getClass()));
                     context.convertAnother(object);
                     writer.endNode();
                 }
             }
 
             public void defaultWriteObject() {
-                if (writtenToStream[0]) {
-                    writer.endNode();
-                    writtenToStream[0] = false;
-                }
                 reflectionProvider.visitSerializableFields(replacedSource, new ReflectionProvider.Visitor() {
                     public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                         if (!definedIn.equals(currentClass[0])) {
@@ -133,10 +122,6 @@ public class ReflectionConverter implements Converter {
             if (serializationMethodInvoker.supportsWriteObject(currentClass[0])) {
                 ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
                 serializationMethodInvoker.callWriteObject(currentClass[0], replacedSource, objectOutputStream);
-                if (writtenToStream[0]) {
-                    writer.endNode();
-                    writtenToStream[0] = false;
-                }
             } else {
                 callback.defaultWriteObject();
             }
@@ -148,35 +133,43 @@ public class ReflectionConverter implements Converter {
         final Object result = instantiateNewInstance(context);
         final SeenFields seenFields = new SeenFields();
 
-        final boolean[] readFromStream = {false};
-
         final Class[] currentClass = new Class[1];
         CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
 
+            private Object pushbackValue;
+
             public Object deserialize() {
-                if (!readFromStream[0]) {
+                if (pushbackValue != null) {
+                    Object result = pushbackValue;
+                    pushbackValue = null;
+                    return result;
+                } else {
                     reader.moveDown();
-                    readFromStream[0] = true;
+                    if (!reader.getNodeName().startsWith(PREFIX)) {
+                        throw new RuntimeException("dfds");
+                    }
+                    Object value = deserializePrefixedNode(reader, context, result);
+                    reader.moveUp();
+                    return value;
                 }
-                reader.moveDown();
-                Class type = classMapper.lookupType(reader.getNodeName());
+            }
+
+            private Object deserializePrefixedNode(final HierarchicalStreamReader reader, final UnmarshallingContext context, final Object result) {
+                String name = reader.getNodeName().substring(PREFIX.length());
+                Class type = classMapper.lookupType(name);
                 Object value = context.convertAnother(result, type);
-                reader.moveUp();
                 return value;
             }
 
             public void defaultReadObject() {
-                if (readFromStream[0]) {
-                    reader.moveUp();
-                    readFromStream[0] = false;
-                }
                 Map implicitCollectionsForCurrentObject = null;
                 while (reader.hasMoreChildren()) {
                     reader.moveDown();
 
                     String nodeName = reader.getNodeName();
-                    if (nodeName.equals("object.stream")) {
-                        readFromStream[0] = true;
+                    if (nodeName.startsWith(PREFIX)) {
+                        pushbackValue = deserializePrefixedNode(reader, context, result);
+                        reader.moveUp();
                         break;
                     }
                     String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
@@ -206,10 +199,6 @@ public class ReflectionConverter implements Converter {
             if (serializationMethodInvoker.supportsReadObject(currentClass[0])) {
                 ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
                 serializationMethodInvoker.callReadObject(currentClass[0], result, objectInputStream);
-                if (readFromStream[0]) {
-                    reader.moveUp();
-                    readFromStream[0] = false;
-                }
             } else {
                 callback.defaultReadObject();
             }
