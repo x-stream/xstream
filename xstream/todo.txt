@@ -1,64 +1,50 @@
 Tasks:
- - Provide download
  - Link to CVSMonitor
  - Fix license report
+ - Create FAQ.
  - Comparison matrix
  - More detailed usage guide
  - Performance test harness
  - Null root objects
 
 Features:
- - Map to key/value properties.g
+ - ObjectFactory for default constructors that is pure Java.
  - Detect cyclical links.
+ - Map to key/value properties.
+ - Interface/impl separate XStream facade.
+ - Make it easy to use XStream without the facade.
+ - Handle references.
+ - Compact text form (see compact-form.txt).
+ - Option to only serialize Serializable objects.
 
 Improvements:
- - Clean up ObjectGraph impl and tests.
  - Change XMLReader to use pull-like API.
- - Ensure XStream works on non-Sun JVMs.
- - XMLWriter should write empty tags like <blah/>
- - Clean up usage of Class object. Encapsulate with something cleaner (better support for arrays and nulls)
+ - Clean up ObjectGraph impl and tests.
+ - Clean up usage of Class object. Encapsulate with something cleaner (better support for arrays and nulls).
 
-XML implementations:
- - XppReader
- - TextXMLReader (custom implementation)
- - DomXMLWriter
- - ElectricXMLReader
- - ElectricXMLWriter
- - JDomXMLReader
- - JDomXMLWriter
- - XomXMLReader
- - XomXMLWriter
-
-Property implementations:
- - java.util.Map
- - Properties
- - JMS Message
- - Servlet Parameters reader
- - HTML Input boxes writer
- - URL params writer
-
-Marshallers:
-
- * Essential
-   - Custom[]
+Converters:
  * Basic
    - Exception
    - byte[]
    - char[]
    - Calendar
- * XML
-   - Element
-   - Text
-   - Attribute
- * SQL
-   - java.sql.Date
-   - java.sql.Time
- * Extra
-   - Commons Collections Bag
-   - Commons Collections MultiMap
    - BigInt
    - BigDecimal
    - Locale
    - java.lang.Currency
+   - java.sql.Date
+   - java.sql.Time
+ * Extra
+   - Nanning instance
+   - Commons Collections Bag
+   - Commons Collections MultiMap
    - Commons Lang Enums
+
+XML implementations:
+ - XppXMLReader
+ - DomXMLWriter
+ - ElectricXMLReader/Writer
+ - JDomXMLReader/Writer
+ - XomXMLReader/Writer
+
 
