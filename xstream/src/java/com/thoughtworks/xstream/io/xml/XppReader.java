@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.core.util.StringStack;
+import com.thoughtworks.xstream.core.util.IntQueue;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
 import org.xmlpull.mxp1.MXParser;
@@ -17,9 +18,7 @@ public class XppReader implements HierarchicalStreamReader {
 
     private int depth = 0;
 
-    private final int[] lookaheadQueue = new int[4];
-    private int lookaheadWritePointer = 0;
-    private int lookaheadReadPointer = 0;
+    private final IntQueue lookaheadQueue = new IntQueue(4);
 
     public XppReader(Reader reader) {
         try {
@@ -53,10 +52,7 @@ public class XppReader implements HierarchicalStreamReader {
     private int lookahead() {
         try {
             int event = parser.next();
-            lookaheadQueue[lookaheadWritePointer++] = event;
-            if (lookaheadWritePointer == lookaheadQueue.length) {
-                lookaheadWritePointer = 0;
-            }
+            lookaheadQueue.write(event);
             return event;
         } catch (XmlPullParserException e) {
             throw new StreamException(e);
@@ -66,12 +62,8 @@ public class XppReader implements HierarchicalStreamReader {
     }
 
     private int next() {
-        if (lookaheadReadPointer != lookaheadWritePointer) {
-            int result = lookaheadQueue[lookaheadReadPointer++];
-            if (lookaheadReadPointer == lookaheadQueue.length) {
-                lookaheadReadPointer = 0;
-            }
-            return result;
+        if (!lookaheadQueue.isEmpty()) {
+            return lookaheadQueue.read();
         } else {
             try {
                 return parser.next();
