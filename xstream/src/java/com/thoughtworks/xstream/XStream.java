@@ -242,4 +242,8 @@ public class XStream {
                 throw new IllegalArgumentException("Unknown mode : " + mode);
         }
     }
+
+    public void addDefaultCollection(Class type, String fieldName) {
+        converterLookup.addDefaultCollection(type, fieldName);
+    }
 }

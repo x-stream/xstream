@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.DefaultCollectionLookup;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -20,7 +21,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.util.*;
 
-public class DefaultConverterLookup implements ConverterLookup {
+public class DefaultConverterLookup implements ConverterLookup, DefaultCollectionLookup {
 
     private LinkedList converters = new LinkedList();
     private Converter nullConverter = new NullConverter();
@@ -28,11 +29,14 @@ public class DefaultConverterLookup implements ConverterLookup {
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
     private Converter defaultConverter;
+    private Map defaultCollections = new HashMap();
 
     public DefaultConverterLookup(ReflectionProvider reflectionProvider,
                                   ClassMapper classMapper,
                                   String classAttributeIdentifier) {
-        this(new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider), classMapper, classAttributeIdentifier);
+        this.defaultConverter = new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, this);
+        this.classMapper = classMapper;
+        this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
     public DefaultConverterLookup(Converter defaultConverter,
@@ -157,4 +161,11 @@ public class DefaultConverterLookup implements ConverterLookup {
         return classAttributeIdentifier;
     }
 
+    public String getDefaultCollectionField(Class type) {
+        return (String) defaultCollections.get(type);
+    }
+
+    public void addDefaultCollection(Class type, String fieldName) {
+        defaultCollections.put(type, fieldName);
+    }
 }

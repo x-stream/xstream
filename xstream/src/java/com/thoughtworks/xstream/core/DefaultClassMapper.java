@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.DefaultCollectionLookup;
 
 import java.lang.reflect.Proxy;
 import java.util.HashMap;

@@ -13,6 +13,8 @@ public interface ReflectionProvider {
 
     Class getFieldType(Object object, String fieldName, Class definedIn);
 
+    boolean fieldDefinedInClass(String fieldName, Class type);
+
     interface Visitor {
         void visit(String name, Class type, Class definedIn, Object value);
     }

@@ -62,6 +62,15 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return fieldDictionary.field(object.getClass(), fieldName, definedIn).getType();
     }
 
+    public boolean fieldDefinedInClass(String fieldName, Class type) {
+        try {
+            fieldDictionary.field(type, fieldName, null);
+            return true;
+        } catch (ObjectAccessException e) {
+            return false;
+        }
+    }
+
     protected boolean fieldModifiersSupported(Field field) {
         return !(Modifier.isStatic(field.getModifiers())
                 || Modifier.isTransient(field.getModifiers()));
