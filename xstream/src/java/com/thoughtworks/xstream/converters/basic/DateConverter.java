@@ -13,30 +13,43 @@ import java.util.Date;
  */
 public class DateConverter extends AbstractBasicConverter {
 
-    private ThreadSafeSimpleDateFormat[] formats = {
-        new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss.S a", 4, 20),
-        new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ssa", 2, 20)
-    };
+    private final ThreadSafeSimpleDateFormat defaultFormat;
+    private final ThreadSafeSimpleDateFormat[] acceptableFormats;
+
+    public DateConverter() {
+        this("yyyy-MM-dd HH:mm:ss.S a", new String[] { "yyyy-MM-dd HH:mm:ssa" });
+    }
+
+    public DateConverter(String defaultFormat, String[] acceptableFormats) {
+        this.defaultFormat = new ThreadSafeSimpleDateFormat(defaultFormat, 4, 20);
+        this.acceptableFormats = new ThreadSafeSimpleDateFormat[acceptableFormats.length];
+        for (int i = 0; i < acceptableFormats.length; i++) {
+            this.acceptableFormats[i] = new ThreadSafeSimpleDateFormat(acceptableFormats[i], 1, 20);
+        }
+    }
 
     public boolean canConvert(Class type) {
         return type.equals(Date.class);
     }
 
     protected Object fromString(String str) {
-        for (int i = 0; i < formats.length; i++) {
-            try {
-                return formats[i].parse(str);
-            } catch (ParseException e) {
-                // no worries, let's try the next format.
+        try {
+            return defaultFormat.parse(str);
+        } catch (ParseException e) {
+            for (int i = 0; i < acceptableFormats.length; i++) {
+                try {
+                    return acceptableFormats[i].parse(str);
+                } catch (ParseException e2) {
+                    // no worries, let's try the next format.
+                }
             }
+            // no dateFormats left to try
+            throw new ConversionException("Cannot parse date " + str);
         }
-        // no formats left to try
-        throw new ConversionException("Cannot parse date " + str);
     }
 
     protected String toString(Object obj) {
-        Date date = (Date) obj;
-        return formats[0].format(date);
+        return defaultFormat.format((Date) obj);
     }
 
 }
