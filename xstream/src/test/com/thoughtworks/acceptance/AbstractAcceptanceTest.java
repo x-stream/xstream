@@ -38,4 +38,20 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             assertEquals(Array.get(expected, i), Array.get(actual, i));
         }
     }
+
+    protected void assertByteArrayEquals(byte expected[], byte actual[]) {
+        assertEquals(dumpBytes(expected), dumpBytes(actual));
+    }
+
+    private String dumpBytes(byte bytes[]) {
+        StringBuffer result = new StringBuffer();
+        for (int i = 0; i < bytes.length; i++) {
+            result.append(bytes[i]).append(' ');
+            if (bytes[i] < 100) result.append(' ');
+            if (bytes[i] < 10) result.append(' ');
+            if (i % 16 == 15) result.append('\n');
+        }
+        return result.toString();
+    }
+
 }

@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
 import com.thoughtworks.xstream.converters.extended.GregorianCalendarConverter;
 import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
+import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
@@ -172,6 +173,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         registerConverter(new TreeMapConverter(classMapper, classAttributeIdentifier));
         registerConverter(new TreeSetConverter(classMapper, classAttributeIdentifier));
         registerConverter(new PropertiesConverter());
+        registerConverter(new EncodedByteArrayConverter());
 
         registerConverter(new FileConverter());
         registerConverter(new SqlTimestampConverter());

@@ -23,6 +23,9 @@
         <li>XML elements are written in order they are defined in class, rather than alphabetical.</li>
         <li>Converters for java.io.File, java.sql.Timestamp, java.awt.Color, and dynamic proxies are now
         registered by default.</li>
+        <li>EncodedByteArrayConverter is now registered by default and uses a single Base64 string to store the contents
+        of a byte[]. This now works on all JVMs as it no longer relies on Sun specific classes. This converter will also
+        unmarshal byte[] that have been serialized without it, for backwards compatability.</li>
         <li>New converters for java.sql.Time, java.sql.Date, java.util.Locale, java.util.Currency, java.util.Calendar
         and java.awt.Font.</li>
         <li>All caching is done in XStream instance instead of statics, allowing applications that use hot redeployment
