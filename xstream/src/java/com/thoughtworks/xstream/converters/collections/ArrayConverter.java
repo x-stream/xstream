@@ -13,8 +13,8 @@ import java.util.List;
 
 public class ArrayConverter extends AbstractCollectionConverter {
 
-    public ArrayConverter(ClassMapper classMapper) {
-        super(classMapper);
+    public ArrayConverter(ClassMapper classMapper,String classAttributeIdentifier) {
+        super(classMapper,classAttributeIdentifier);
     }
 
     public boolean canConvert(Class type) {
@@ -50,6 +50,4 @@ public class ArrayConverter extends AbstractCollectionConverter {
         }
         objectGraph.set(array);
     }
-
-
 }

@@ -53,15 +53,21 @@ public class XStream {
     protected XMLReaderDriver xmlReaderDriver;
     protected ClassMapper classMapper;
     protected ObjectFactory objectFactory;
+    protected String classAttributeIdentifier;
 
     public XStream() {
         this(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()), new DomXMLReaderDriver());
     }
 
     public XStream(ObjectFactory objectFactory, ClassMapper classMapper, XMLReaderDriver xmlReaderDriver) {
+        this(objectFactory, classMapper, xmlReaderDriver, "class");
+    }
+
+    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, XMLReaderDriver xmlReaderDriver,String classAttributeIdentifier) {
         this.classMapper = classMapper;
         this.objectFactory = objectFactory;
         this.xmlReaderDriver = xmlReaderDriver;
+        this.classAttributeIdentifier = classAttributeIdentifier;
 
         alias("int", Integer.class);
         alias("float", Float.class);
@@ -88,7 +94,7 @@ public class XStream {
         alias("tree-map", TreeMap.class);
         alias("tree-set", TreeSet.class);
 
-        registerConverter(new ObjectWithFieldsConverter(classMapper));
+        registerConverter(new ObjectWithFieldsConverter(classMapper,classAttributeIdentifier));
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());
@@ -104,9 +110,9 @@ public class XStream {
         registerConverter(new DateConverter());
         registerConverter(new JavaClassConverter());
 
-        registerConverter(new ArrayConverter(classMapper));
-        registerConverter(new CollectionConverter(classMapper));
-        registerConverter(new MapConverter(classMapper));
+        registerConverter(new ArrayConverter(classMapper,classAttributeIdentifier));
+        registerConverter(new CollectionConverter(classMapper,classAttributeIdentifier));
+        registerConverter(new MapConverter(classMapper,classAttributeIdentifier));
         registerConverter(new PropertiesConverter());
 
     }
@@ -139,7 +145,13 @@ public class XStream {
     }
 
     public Object fromXML(XMLReader xmlReader) {
-        Class type = classMapper.lookupType(xmlReader.name());
+        String classAttribute = xmlReader.attribute(classAttributeIdentifier);
+        Class type;
+        if (classAttribute == null) {
+            type = classMapper.lookupType(xmlReader.name());
+        } else {
+            type = classMapper.lookupType(classAttribute);
+        }
         ObjectTree objectGraph = new ReflectionObjectGraph(type, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(type);
         rootConverter.fromXML(objectGraph, xmlReader, converterLookup, type);

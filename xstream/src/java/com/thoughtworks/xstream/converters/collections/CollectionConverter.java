@@ -11,8 +11,8 @@ import java.util.Iterator;
 
 public class CollectionConverter extends AbstractCollectionConverter {
 
-    public CollectionConverter(ClassMapper classMapper) {
-        super(classMapper);
+    public CollectionConverter(ClassMapper classMapper,String classAttributeIdentifier) {
+        super(classMapper,classAttributeIdentifier);
     }
 
     public boolean canConvert(Class type) {

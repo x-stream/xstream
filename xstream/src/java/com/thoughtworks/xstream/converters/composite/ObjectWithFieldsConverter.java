@@ -10,10 +10,12 @@ import com.thoughtworks.xstream.xml.XMLWriter;
 public class ObjectWithFieldsConverter implements Converter {
 
     private ClassMapper classMapper;
+    private String classAttributeIdentifier;
 //    private CircularityTracker circularityTracker = new CircularityTracker();
 
-    public ObjectWithFieldsConverter(ClassMapper classMapper) {
+    public ObjectWithFieldsConverter(ClassMapper classMapper,String classAttributeIdentifier) {
         this.classMapper = classMapper;
+        this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
     public boolean canConvert(Class type) {
@@ -50,7 +52,7 @@ public class ObjectWithFieldsConverter implements Converter {
         Class actualType = objectGraph.get().getClass();
         Class defaultType = classMapper.lookupDefaultType(objectGraph.type());
         if (!actualType.equals(defaultType)) {
-            xmlWriter.addAttribute("class", classMapper.lookupName(actualType));
+            xmlWriter.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
         }
     }
 
@@ -75,7 +77,7 @@ public class ObjectWithFieldsConverter implements Converter {
     }
 
     private Class determineWhichImplementationToUse(XMLReader xmlReader, final ObjectTree objectGraph) {
-        String classAttribute = xmlReader.attribute("class");
+        String classAttribute = xmlReader.attribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
             type = objectGraph.type();

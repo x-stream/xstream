@@ -10,11 +10,13 @@ import com.thoughtworks.xstream.xml.XMLWriter;
 
 public abstract class AbstractCollectionConverter implements Converter {
     protected ClassMapper classMapper;
+    protected String classAttributeIdentifier;
 
     public abstract boolean canConvert(Class type);
 
-    public AbstractCollectionConverter(ClassMapper classMapper) {
+    public AbstractCollectionConverter(ClassMapper classMapper,String classAttributeIdentifier) {
         this.classMapper = classMapper;
+        this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
     public abstract void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup);
@@ -35,7 +37,13 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     protected Object readItem(XMLReader xmlReader, ObjectTree objectGraph, ConverterLookup converterLookup) {
-        Class type = classMapper.lookupType(xmlReader.name());
+        String classAttribute = xmlReader.attribute(classAttributeIdentifier);
+        Class type;
+        if (classAttribute == null) {
+            type = classMapper.lookupType(xmlReader.name());
+        } else {
+            type = classMapper.lookupType(classAttribute);
+        }
         ObjectTree itemWriter = objectGraph.newStack(type);
         Converter converter = converterLookup.lookupConverterForType(type);
         converter.fromXML(itemWriter, xmlReader, converterLookup, type);
