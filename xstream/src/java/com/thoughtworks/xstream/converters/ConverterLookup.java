@@ -17,7 +17,7 @@ public interface ConverterLookup {
     Converter lookupConverterForType(Class type);
 
     /**
-     * Lookup the default converter. This should be a catch all capable of serializng any object using reflection.
+     * @deprecated As of 1.1.1 you can register Converters with priorities, making the need for a default converter redundant.
      */
     Converter defaultConverter();
 

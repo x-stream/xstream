@@ -72,4 +72,13 @@ public class PrioritizedListTest extends TestCase {
         assertNextEquals("VERY VERY low", iterator);
         assertNoMore(iterator);
     }
+
+    public void testAllowsIteratorToStartAtSpecificPriority() {
+        PrioritizedList list = new PrioritizedList();
+        list.add("low one", -1);
+        list.add("low two", -1);
+        list.add("medium one", 0);
+
+        assertEquals("low two", list.firstOfLowestPriority());
+    }
 }

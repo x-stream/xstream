@@ -5,29 +5,30 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.NullConverter;
+import com.thoughtworks.xstream.core.util.PrioritizedList;
+import com.thoughtworks.xstream.XStream;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class DefaultConverterLookup implements ConverterLookup {
 
-    private ArrayList converters = new ArrayList();
-    private Converter nullConverter = new NullConverter();
-    private HashMap typeToConverterMap = new HashMap();
-    private ClassMapper classMapper;
-    private Converter defaultConverter;
+    private final PrioritizedList converters = new PrioritizedList();
+    private final Converter nullConverter = new NullConverter();
+    private final Map typeToConverterMap = Collections.synchronizedMap(new HashMap());
+    private final ClassMapper classMapper;
 
-    public DefaultConverterLookup(Converter defaultConverter, ClassMapper classMapper) {
-        this.defaultConverter = defaultConverter;
+    public DefaultConverterLookup(ClassMapper classMapper) {
         this.classMapper = classMapper;
     }
 
+    /**
+     * @deprecated As of 1.1.1 you can register Converters with priorities, making the need for a default converter redundant.
+     */
     public Converter defaultConverter() {
-        return defaultConverter;
-    }
-    
-    public void changeDefaultConverter(Converter newDefaultConverter) {
-        defaultConverter = newDefaultConverter;
+        return (Converter) converters.firstOfLowestPriority();
     }
 
     public Converter lookupConverterForType(Class type) {
@@ -37,9 +38,9 @@ public class DefaultConverterLookup implements ConverterLookup {
         Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
         type = classMapper.defaultImplementationOf(type);
-        int size = converters.size();
-        for (int i = size - 1; i >= 0; i--) {
-            Converter converter = (Converter) converters.get(i);
+        Iterator iterator = converters.iterator();
+        while (iterator.hasNext()) {
+            Converter converter = (Converter) iterator.next();
             if (converter.canConvert(type)) {
                 typeToConverterMap.put(type, converter);
                 return converter;
@@ -48,8 +49,8 @@ public class DefaultConverterLookup implements ConverterLookup {
         throw new ConversionException("No converter specified for " + type);
     }
 
-    public void registerConverter(Converter converter) {
-        converters.add(converter);
+    public void registerConverter(Converter converter, int priority) {
+        converters.add(converter, priority);
     }
 
 }

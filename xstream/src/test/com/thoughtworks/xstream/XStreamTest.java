@@ -283,7 +283,7 @@ public class XStreamTest extends TestCase {
         assertEquals("foo", p.getId());
     }
     
-    public void testUnmarshalsObjectFromXmlWithCustomDefaultConverter() {
+    public void testUnmarshalsObjectFromXmlWithCustomDefaultConverterXStream1_1_Style() {
     		
         xstream.changeDefaultConverter(new ZConverter());
         
@@ -292,6 +292,20 @@ public class XStreamTest extends TestCase {
                 "  <any-old-suff/>" +
                 "</z>";
         
+        Z z = (Z) xstream.fromXML(xml);
+
+        assertEquals("z", z.field);
+    }
+
+    public void testUnmarshalsObjectFromXmlWithCustomDefaultConverterXStream_1_1_1_Style() {
+
+        xstream.registerConverter(new ZConverter(), -20);
+
+        String xml =
+                "<z>" +
+                "  <any-old-suff/>" +
+                "</z>";
+
         Z z = (Z) xstream.fromXML(xml);
 
         assertEquals("z", z.field);

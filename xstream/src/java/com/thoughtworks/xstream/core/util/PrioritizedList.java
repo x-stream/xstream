@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.core.util;
 
+import com.thoughtworks.xstream.converters.Converter;
+
 import java.util.Iterator;
 
 /**
@@ -19,6 +21,8 @@ public class PrioritizedList {
      */
     private final LinkedItem pointerToFirst = new LinkedItem(null, 0, null);
 
+    private int lowestPriority = Integer.MAX_VALUE;
+
     /**
      * Add an item with a default priority of zero.
      */
@@ -35,10 +39,22 @@ public class PrioritizedList {
             current = current.next;
         }
         current.next = new LinkedItem(item, priority, current.next);
+        if (priority < lowestPriority) {
+            lowestPriority = priority;
+        }
     }
 
     public Iterator iterator() {
         return new LinkedItemIterator(pointerToFirst.next);
+    }
+
+    public Object firstOfLowestPriority() {
+        for(LinkedItem current = pointerToFirst.next; current != null; current = current.next) {
+            if (current.priority == lowestPriority) {
+                return current.value;
+            }
+        }
+        return null;
     }
 
     private static class LinkedItem {

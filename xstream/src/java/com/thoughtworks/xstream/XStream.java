@@ -68,21 +68,20 @@ import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
-import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
+import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
 
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.NotActiveException;
 import java.io.ObjectInputStream;
+import java.io.ObjectInputValidation;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.io.ObjectInputValidation;
-import java.io.InvalidObjectException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -221,14 +220,22 @@ public class XStream {
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_REFERENCES = 1003;
-    private Converter defaultConverter;
+
+    private static final int PRIORITY_NORMAL = 0;
+    private static final int PRIORITY_LOW = -10;
+    private static final int PRIORITY_VERY_LOW = -20;
 
     public XStream() {
         this(null, null, new XppDriver());
     }
 
+    /**
+     * @deprecated As of XStream 1.1.1, a default Converter is unnecessary as you can register a Converter with an
+     *             associated priority. Use an alternate constructor.
+     */
     public XStream(Converter defaultConverter) {
-        this(null, null, new XppDriver(), null, defaultConverter);
+        this(null, null, new XppDriver(), null);
+        registerConverter(defaultConverter, PRIORITY_VERY_LOW);
     }
     
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
@@ -256,8 +263,7 @@ public class XStream {
         this.hierarchicalStreamDriver = driver;
         this.classLoader = new CompositeClassLoader();
         this.classMapper = classMapper == null ? buildMapper(classAttributeIdentifier) : classMapper;
-        this.defaultConverter = new ReflectionConverter(this.classMapper, reflectionProvider, implicitCollectionMapper);
-        converterLookup = new DefaultConverterLookup(defaultConverter, this.classMapper);
+        converterLookup = new DefaultConverterLookup(this.classMapper);
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
@@ -265,22 +271,13 @@ public class XStream {
         setMode(XPATH_REFERENCES);
     }
 
+    /**
+     * @deprecated As of XStream 1.1.1, a default Converter is unnecessary as you can register a Converter with an
+     *             associated priority. Use an alternate constructor.
+     */
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier, Converter defaultConverter) {
-        jvm = new JVM();
-        if (reflectionProvider == null) {
-            reflectionProvider = jvm.bestReflectionProvider();
-        }
-        this.reflectionProvider = reflectionProvider;
-        this.hierarchicalStreamDriver = driver;
-        this.classLoader = new CompositeClassLoader();
-        this.classMapper = classMapper == null ? buildMapper(classAttributeIdentifier) : classMapper;
-        this.defaultConverter = defaultConverter;
-        converterLookup = new DefaultConverterLookup(defaultConverter, this.classMapper);
-        setupAliases();
-        setupDefaultImplementations();
-        setupConverters();
-        setupImmutableTypes();
-        setMode(XPATH_REFERENCES);
+        this(reflectionProvider, classMapper, driver, classAttributeIdentifier);
+        registerConverter(defaultConverter, PRIORITY_VERY_LOW);
     }
 
     private ClassMapper buildMapper(String classAttributeIdentifier) {
@@ -363,55 +360,56 @@ public class XStream {
     }
 
     protected void setupConverters() {
-        registerConverter(defaultConverter);
+        ReflectionConverter reflectionConverter = new ReflectionConverter(classMapper, reflectionProvider, implicitCollectionMapper);
+        registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
-        registerConverter(new SerializableConverter(classMapper, reflectionProvider));
-        registerConverter(new ExternalizableConverter(classMapper));
+        registerConverter(new SerializableConverter(classMapper, reflectionProvider), PRIORITY_LOW);
+        registerConverter(new ExternalizableConverter(classMapper), PRIORITY_LOW);
 
-        registerConverter(new IntConverter());
-        registerConverter(new FloatConverter());
-        registerConverter(new DoubleConverter());
-        registerConverter(new LongConverter());
-        registerConverter(new ShortConverter());
-        registerConverter(new CharConverter());
-        registerConverter(new BooleanConverter());
-        registerConverter(new ByteConverter());
+        registerConverter(new IntConverter(), PRIORITY_NORMAL);
+        registerConverter(new FloatConverter(), PRIORITY_NORMAL);
+        registerConverter(new DoubleConverter(), PRIORITY_NORMAL);
+        registerConverter(new LongConverter(), PRIORITY_NORMAL);
+        registerConverter(new ShortConverter(), PRIORITY_NORMAL);
+        registerConverter(new CharConverter(), PRIORITY_NORMAL);
+        registerConverter(new BooleanConverter(), PRIORITY_NORMAL);
+        registerConverter(new ByteConverter(), PRIORITY_NORMAL);
 
-        registerConverter(new StringConverter());
-        registerConverter(new StringBufferConverter());
-        registerConverter(new DateConverter());
-        registerConverter(new BitSetConverter());
-        registerConverter(new URLConverter());
-        registerConverter(new BigIntegerConverter());
-        registerConverter(new BigDecimalConverter());
+        registerConverter(new StringConverter(), PRIORITY_NORMAL);
+        registerConverter(new StringBufferConverter(), PRIORITY_NORMAL);
+        registerConverter(new DateConverter(), PRIORITY_NORMAL);
+        registerConverter(new BitSetConverter(), PRIORITY_NORMAL);
+        registerConverter(new URLConverter(), PRIORITY_NORMAL);
+        registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
+        registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
 
-        registerConverter(new ArrayConverter(classMapper, classMapper.attributeForImplementationClass()));
-        registerConverter(new CharArrayConverter());
-        registerConverter(new CollectionConverter(classMapper, classMapper.attributeForImplementationClass()));
-        registerConverter(new MapConverter(classMapper, classMapper.attributeForImplementationClass()));
-        registerConverter(new TreeMapConverter(classMapper, classMapper.attributeForImplementationClass()));
-        registerConverter(new TreeSetConverter(classMapper, classMapper.attributeForImplementationClass()));
-        registerConverter(new PropertiesConverter());
-        registerConverter(new EncodedByteArrayConverter());
+        registerConverter(new ArrayConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
+        registerConverter(new CharArrayConverter(), PRIORITY_NORMAL);
+        registerConverter(new CollectionConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
+        registerConverter(new MapConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
+        registerConverter(new TreeMapConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
+        registerConverter(new TreeSetConverter(classMapper, classMapper.attributeForImplementationClass()), PRIORITY_NORMAL);
+        registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
+        registerConverter(new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
-        registerConverter(new FileConverter());
-        registerConverter(new SqlTimestampConverter());
-        registerConverter(new SqlTimeConverter());
-        registerConverter(new SqlDateConverter());
-        registerConverter(new DynamicProxyConverter(classMapper, classLoader));
-        registerConverter(new JavaClassConverter(classLoader));
-        registerConverter(new JavaMethodConverter());
-        registerConverter(new FontConverter());
-        registerConverter(new ColorConverter());
-        registerConverter(new LocaleConverter());
-        registerConverter(new GregorianCalendarConverter());
+        registerConverter(new FileConverter(), PRIORITY_NORMAL);
+        registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
+        registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
+        registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
+        registerConverter(new DynamicProxyConverter(classMapper, classLoader), PRIORITY_NORMAL);
+        registerConverter(new JavaClassConverter(classLoader), PRIORITY_NORMAL);
+        registerConverter(new JavaMethodConverter(), PRIORITY_NORMAL);
+        registerConverter(new FontConverter(), PRIORITY_NORMAL);
+        registerConverter(new ColorConverter(), PRIORITY_NORMAL);
+        registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
+        registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
 
         if (JVM.is14()) {
-            registerConverter(new ThrowableConverter(converterLookup.defaultConverter()));
-            registerConverter(new StackTraceElementConverter());
+            registerConverter(new ThrowableConverter(reflectionConverter), PRIORITY_NORMAL);
+            registerConverter(new StackTraceElementConverter(), PRIORITY_NORMAL);
 
-            registerConverter(new CurrencyConverter());
-            registerConverter(new RegexPatternConverter(converterLookup.defaultConverter()));
+            registerConverter(new CurrencyConverter(), PRIORITY_NORMAL);
+            registerConverter(new RegexPatternConverter(reflectionConverter), PRIORITY_NORMAL);
         }
     }
 
@@ -580,13 +578,19 @@ public class XStream {
         immutableTypesMapper.addImmutableType(type);
     }
 
+    /**
+     * @deprecated As of 1.1.1 you should register a converter with the appropriate priority.
+     */
     public void changeDefaultConverter(Converter defaultConverter) {
-        this.defaultConverter = defaultConverter;
-        setupConverters();
+        registerConverter(defaultConverter, PRIORITY_VERY_LOW);
     }
-    
+
     public void registerConverter(Converter converter) {
-        converterLookup.registerConverter(converter);
+        registerConverter(converter, PRIORITY_NORMAL);
+    }
+
+    public void registerConverter(Converter converter, int priority) {
+        converterLookup.registerConverter(converter, PRIORITY_NORMAL);
     }
 
     public ClassMapper getClassMapper() {
@@ -743,6 +747,7 @@ public class XStream {
 
             public void close() {
                 writer.endNode();
+                // TODO: close underlying writer?
             }
         });
     }
@@ -795,7 +800,7 @@ public class XStream {
             }
 
             public void close() {
-                // TODO: close underlying writer?
+                // TODO: close underlying reader?
             }
         });
     }
