@@ -95,13 +95,22 @@ public class SerializableConverter implements Converter {
             }
 
             public void writeFieldsToStream(Map fields) {
+                ObjectStreamClass objectStreamClass = ObjectStreamClass.lookup(currentType[0]);
+
                 writer.startNode(ELEMENT_DEFAULT);
                 for (Iterator iterator = fields.keySet().iterator(); iterator.hasNext();) {
                     String name = (String) iterator.next();
+                    ObjectStreamField field = objectStreamClass.getField(name);
                     Object value = fields.get(name);
+                    if (field == null) {
+                        throw new ObjectAccessException("Class " + value.getClass().getName()
+                                + " may not write a field named '" + name + "'");
+                    }
                     if (value != null) {
                         writer.startNode(classMapper.mapNameToXML(name));
-                        writer.addAttribute(ATTRIBUTE_CLASS, classMapper.lookupName(value.getClass()));
+                        if (field.getType() != value.getClass() && !field.getType().isPrimitive()) {
+                            writer.addAttribute(ATTRIBUTE_CLASS, classMapper.lookupName(value.getClass()));
+                        }
                         context.convertAnother(value);
                         writer.endNode();
                     }
@@ -255,10 +264,22 @@ public class SerializableConverter implements Converter {
                     }
                 } else if (reader.getNodeName().equals(ELEMENT_DEFAULT)) {
                     // New format introduced in XStream 1.1.1
+                    ObjectStreamClass objectStreamClass = ObjectStreamClass.lookup(currentType[0]);
                     while (reader.hasMoreChildren()) {
                         reader.moveDown();
                         String name = reader.getNodeName();
-                        Class type = classMapper.lookupType(reader.getAttribute(ATTRIBUTE_CLASS));
+                        String typeName = reader.getAttribute(ATTRIBUTE_CLASS);
+                        Class type;
+                        if (typeName != null) {
+                            type = classMapper.lookupType(typeName);
+                        } else {
+                            ObjectStreamField field = objectStreamClass.getField(name);
+                            if (field == null) {
+                                throw new ObjectAccessException("Class " + currentType[0]
+                                        + " does not contain a field named '" + name + "'");
+                            }
+                            type = field.getType();
+                        }
                         Object value = context.convertAnother(result, type);
                         result.put(name, value);
                         reader.moveUp();

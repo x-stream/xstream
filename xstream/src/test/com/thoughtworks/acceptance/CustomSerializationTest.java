@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.ObjectStreamField;
+import java.util.Hashtable;
+import java.util.Vector;
 
 public class CustomSerializationTest extends AbstractAcceptanceTest {
 
@@ -217,6 +220,14 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         private Object polymorphic;
         private Object nothing;
 
+        private static final ObjectStreamField[] serialPersistentFields = {
+            new ObjectStreamField("theName", String.class),
+            new ObjectStreamField("theNumber", int.class),
+            new ObjectStreamField("theSoftware", Software.class),
+            new ObjectStreamField("thePolymorphic", Object.class),
+            new ObjectStreamField("theNothing", Object.class)
+        };
+
         private void writeObject(ObjectOutputStream out) throws IOException {
             // don't call defaultWriteObject()
             ObjectOutputStream.PutField fields = out.putFields();
@@ -255,9 +266,9 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
                 + "    <default>\n"
-                + "      <theName class=\"string\">Joe</theName>\n"
-                + "      <theNumber class=\"int\">99</theNumber>\n"
-                + "      <theSoftware class=\"software\">\n"
+                + "      <theName>Joe</theName>\n"
+                + "      <theNumber>99</theNumber>\n"
+                + "      <theSoftware>\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
                 + "      </theSoftware>\n"
@@ -280,7 +291,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
                 + "    <default>\n"
-                + "      <theSoftware class=\"software\">\n"
+                + "      <theSoftware>\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
                 + "      </theSoftware>\n"
@@ -316,17 +327,17 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
                 + "    <default>\n"
-                + "      <theName class=\"string\">Joe</theName>\n"
-                + "      <theNumber class=\"int\">0</theNumber>\n"
-                + "      <theSoftware class=\"software\">\n"
+                + "      <theName>Joe</theName>\n"
+                + "      <theNumber>0</theNumber>\n"
+                + "      <theSoftware>\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
                 + "      </theSoftware>\n"
                 + "      <thePolymorphic class=\"with-named-fields\" serialization=\"custom\">\n"
                 + "        <with-named-fields>\n"
                 + "          <default>\n"
-                + "            <theName class=\"string\">Thing</theName>\n"
-                + "            <theNumber class=\"int\">0</theNumber>\n"
+                + "            <theName>Thing</theName>\n"
+                + "            <theNumber>0</theNumber>\n"
                 + "          </default>\n"
                 + "        </with-named-fields>\n"
                 + "      </thePolymorphic>\n"
@@ -355,6 +366,19 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
             out.writeInt(something);
         }
 
+    }
+
+    public void testObjectWithCallToDefaultWriteButNoDefaultFields() {
+        xstream.alias("x", NoDefaultFields.class);
+
+        String expectedXml = ""
+                + "<x serialization=\"custom\">\n"
+                + "  <x>\n"
+                + "    <default/>\n"
+                + "    <int>77</int>\n"
+                + "  </x>\n"
+                + "</x>";
+        assertBothWays(new NoDefaultFields(77), expectedXml);
     }
 
     public void testMaintainsBackwardsCompatabilityWithXStream1_1_0FieldFormat() {
@@ -397,17 +421,80 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         assertEquals(outer, xstream.fromXML(oldFormatOfXml));
     }
 
-    public void testObjectWithCallToDefaultWriteButNoDefaultFields() {
-        xstream.alias("x", NoDefaultFields.class);
+    public static class ObjectWithNamedThatMatchRealFields extends StandardObject implements Serializable {
 
-        String expectedXml = ""
-                + "<x serialization=\"custom\">\n"
-                + "  <x>\n"
-                + "    <default/>\n"
-                + "    <int>77</int>\n"
-                + "  </x>\n"
-                + "</x>";
-        assertBothWays(new NoDefaultFields(77), expectedXml);
+        private String name;
+        private int number;
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            ObjectOutputStream.PutField fields = out.putFields();
+            fields.put("name", name.toUpperCase());
+            fields.put("number", number * 100);
+            out.writeFields();
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            ObjectInputStream.GetField fields = in.readFields();
+            name = ((String) fields.get("name", "unknown")).toLowerCase();
+            number = fields.get("number", 10000) / 100;
+        }
+
     }
 
+    public void testSupportsWritingFieldsForObjectsThatDoNotExplicitlyDefineThem() {
+        xstream.alias("an-object", ObjectWithNamedThatMatchRealFields.class);
+
+        ObjectWithNamedThatMatchRealFields input = new ObjectWithNamedThatMatchRealFields();
+        input.name = "a name";
+        input.number = 5;
+
+        String expectedXml = ""
+                + "<an-object serialization=\"custom\">\n"
+                + "  <an-object>\n"
+                + "    <default>\n"
+                + "      <name>A NAME</name>\n"
+                + "      <number>500</number>\n"
+                + "    </default>\n"
+                + "  </an-object>\n"
+                + "</an-object>";
+
+        assertBothWays(input, expectedXml);
+    }
+
+    public static class ObjectThatReadsCustomFieldsButDoesNotWriteThem extends StandardObject implements Serializable {
+
+        private String name;
+        private int number;
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            out.defaultWriteObject();
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            ObjectInputStream.GetField fields = in.readFields();
+            name = ((String) fields.get("name", "unknown"));
+            number = fields.get("number", 10000);
+        }
+
+    }
+
+    public void testSupportsGetFieldsWithoutPutFields() {
+        xstream.alias("an-object", ObjectThatReadsCustomFieldsButDoesNotWriteThem.class);
+
+        ObjectThatReadsCustomFieldsButDoesNotWriteThem input = new ObjectThatReadsCustomFieldsButDoesNotWriteThem();
+        input.name = "a name";
+        input.number = 5;
+
+        String expectedXml = ""
+                + "<an-object serialization=\"custom\">\n"
+                + "  <an-object>\n"
+                + "    <default>\n"
+                + "      <number>5</number>\n"
+                + "      <name>a name</name>\n"
+                + "    </default>\n"
+                + "  </an-object>\n"
+                + "</an-object>";
+
+        assertBothWays(input, expectedXml);
+    }
 }
