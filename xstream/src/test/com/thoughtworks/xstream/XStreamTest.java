@@ -14,6 +14,9 @@ import com.thoughtworks.xstream.xml.dom4j.Dom4JXMLReaderDriver;
 import junit.framework.TestCase;
 import org.dom4j.Element;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class XStreamTest extends TestCase {
 
     private XStream xstream;
@@ -242,4 +245,21 @@ public class XStreamTest extends TestCase {
         int port;
     }
 
+    public void xtestXStreamOutputWithEmptyCollections() {
+
+        String expected =
+            "<class-with-an-empty-collection>" +
+            "</class-with-an-empty-collection>";
+
+        xstream.alias( "class-with-an-empty-collection", ClassWithAnEmptyCollection.class );
+
+        String s = xstream.toXML( new ClassWithAnEmptyCollection() );
+
+        assertEquals( s, expected );
+    }
+
+    static class ClassWithAnEmptyCollection
+    {
+        List components = new ArrayList();
+    }
 }

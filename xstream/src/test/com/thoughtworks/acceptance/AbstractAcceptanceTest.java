@@ -1,20 +1,17 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.xml.dom.DomXMLReaderDriver;
-import com.thoughtworks.xstream.xml.xpp3.Xpp3DomXMLReaderDriver;
 import com.thoughtworks.xstream.alias.DefaultClassMapper;
-import com.thoughtworks.xstream.alias.DefaultElementMapper;
+import com.thoughtworks.xstream.alias.DefaultNameMapper;
 import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
+import com.thoughtworks.xstream.xml.xpp3.Xpp3DomXMLReaderDriver;
 import junit.framework.TestCase;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import java.lang.reflect.Array;
 
 public abstract class AbstractAcceptanceTest extends TestCase {
 
-    protected XStream xstream = new XStream(new SunReflectionObjectFactory(), new DefaultClassMapper(), new DefaultElementMapper(), new Xpp3DomXMLReaderDriver());
+    protected XStream xstream = new XStream(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()), new Xpp3DomXMLReaderDriver());
 
     protected void assertBothWays(Object root, String xml) {
         String resultXml = xstream.toXML(root);

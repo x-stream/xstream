@@ -1,7 +1,6 @@
 package com.thoughtworks.xstream.converters.composite;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.ElementMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
@@ -13,11 +12,8 @@ public class ObjectWithFieldsConverter implements Converter {
     private ClassMapper classMapper;
 //    private CircularityTracker circularityTracker = new CircularityTracker();
 
-    private ElementMapper elementMapper;
-
-    public ObjectWithFieldsConverter(ClassMapper classMapper,ElementMapper elementMapper) {
+    public ObjectWithFieldsConverter(ClassMapper classMapper) {
         this.classMapper = classMapper;
-        this.elementMapper = elementMapper;
     }
 
     public boolean canConvert(Class type) {
@@ -33,7 +29,7 @@ public class ObjectWithFieldsConverter implements Converter {
             objectGraph.push(fieldName);
 
             if (objectGraph.get() != null) {
-                writeFieldAsXML(xmlWriter, elementMapper.toXml(fieldName), objectGraph, converterLookup);
+                writeFieldAsXML(xmlWriter, classMapper.mapNameToXML(fieldName), objectGraph, converterLookup);
             }
 
             objectGraph.pop();
@@ -67,7 +63,7 @@ public class ObjectWithFieldsConverter implements Converter {
         }
 
         while (xmlReader.nextChild()) {
-            objectGraph.push(elementMapper.fromXml(xmlReader.name()));
+            objectGraph.push(classMapper.mapNameFromXML(xmlReader.name()));
 
             Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
             Converter converter = converterLookup.lookupConverterForType(type);

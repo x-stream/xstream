@@ -7,7 +7,7 @@ import com.thoughtworks.someobjects.X;
 import com.thoughtworks.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.alias.DefaultClassMapper;
-import com.thoughtworks.xstream.alias.DefaultElementMapper;
+import com.thoughtworks.xstream.alias.DefaultNameMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
@@ -22,11 +22,7 @@ public class Xpp3XStreamTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        xstream = new XStream(new SunReflectionObjectFactory(),
-                new DefaultClassMapper(),
-                new DefaultElementMapper(),
-                new Xpp3DomXMLReaderDriver());
-
+        xstream = new XStream(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()),new Xpp3DomXMLReaderDriver());
         xstream.alias("x", X.class);
         xstream.alias("y", Y.class);
         xstream.alias("funny", FunnyConstructor.class);
