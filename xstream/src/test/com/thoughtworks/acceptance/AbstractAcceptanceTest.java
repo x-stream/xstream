@@ -22,14 +22,14 @@ public abstract class AbstractAcceptanceTest extends TestCase {
 
     private void compareObjects(Object expected, Object actual) {
         if (actual.getClass().isArray()) {
-            compareArrays(expected, actual);
+            assertArrayEquals(expected, actual);
         } else {
             assertEquals(expected.getClass(), actual.getClass());
             assertEquals(expected, actual);
         }
     }
 
-    private void compareArrays(Object expected, Object actual) {
+    protected void assertArrayEquals(Object expected, Object actual) {
         assertEquals(Array.getLength(expected), Array.getLength(actual));
         for (int i = 0; i < Array.getLength(expected); i++) {
             assertEquals(Array.get(expected, i), Array.get(actual, i));

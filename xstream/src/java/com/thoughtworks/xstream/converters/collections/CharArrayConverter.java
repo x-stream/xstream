@@ -7,9 +7,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 public class CharArrayConverter implements Converter {
 
     public boolean canConvert(Class type) {
-        return type.isArray() && (
-                    type.getComponentType().equals(char.class)
-                || type.getComponentType().equals(Character.class));
+        return type.isArray() && type.getComponentType().equals(char.class);
     }
 
     public void toXML(MarshallingContext context) {
