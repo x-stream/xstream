@@ -337,5 +337,37 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         assertBothWays(outer, expectedXml);
     }
 
+    public static class NoDefaultFields extends StandardObject implements Serializable {
+
+        private transient int something;
+
+        public NoDefaultFields(int something) {
+            this.something = something;
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            in.defaultReadObject();
+            something = in.readInt();
+        }
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            out.defaultWriteObject();
+            out.writeInt(something);
+        }
+
+    }
+
+    public void testObjectWithCallToDefaultWriteButNoDefaultFields() {
+        xstream.alias("x", NoDefaultFields.class);
+
+        String expectedXml = ""
+                + "<x serialization=\"custom\">\n"
+                + "  <x>\n"
+                + "    <default/>\n"
+                + "    <int>77</int>\n"
+                + "  </x>\n"
+                + "</x>";
+        assertBothWays(new NoDefaultFields(77), expectedXml);
+    }
 
 }

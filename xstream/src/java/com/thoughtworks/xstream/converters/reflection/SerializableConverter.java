@@ -131,7 +131,10 @@ public class SerializableConverter implements Converter {
                         }
                     }
                 });
-                if (writtenDefaultFields[0]) {
+                if (writtenClassWrapper[0] && !writtenDefaultFields[0]) {
+                    writer.startNode(ELEMENT_DEFAULT);
+                    writer.endNode();
+                } else if (writtenDefaultFields[0]) {
                     writer.endNode();
                 }
             }
