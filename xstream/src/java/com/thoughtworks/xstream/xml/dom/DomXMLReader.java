@@ -3,23 +3,23 @@ package com.thoughtworks.xstream.xml.dom;
 import com.thoughtworks.xstream.xml.XMLReader;
 import org.w3c.dom.*;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class DomXMLReader implements XMLReader {
 
     private Element currentElement;
-    private List childElements;
     private StringBuffer textBuffer;
+    private NodeList childNodes;
     private LinkedList pointers = new LinkedList();
 
     public DomXMLReader(Element rootElement) {
+    	textBuffer = new StringBuffer(180);
         pointers.addLast(new Pointer());
         setCurrent(rootElement);
     }
 
     public DomXMLReader(Document document) {
+		textBuffer = new StringBuffer(180);
         pointers.addLast(new Pointer());
         setCurrent(document.getDocumentElement());
     }
@@ -29,7 +29,17 @@ public class DomXMLReader implements XMLReader {
     }
 
     public String text() {
-        return textBuffer.toString();
+		NodeList childNodes = currentElement.getChildNodes();
+		textBuffer.setLength(0);
+		int length = childNodes.getLength();
+		for (int i = 0; i < length; i++) {
+			Node childNode = childNodes.item(i);
+			if (childNode instanceof Text) {
+				Text text = (Text) childNode;
+				textBuffer.append(text.getData());
+			}
+		}
+		return textBuffer.toString();
     }
 
     public String attribute(String name) {
@@ -45,35 +55,24 @@ public class DomXMLReader implements XMLReader {
     public Object peek() {
         return currentElement;
     }
-    
+
     private void setCurrent(Object currentElementObj) {
         this.currentElement = (Element) currentElementObj;
-        childElements = new ArrayList();
-        textBuffer = new StringBuffer();
-        NodeList childNodes = currentElement.getChildNodes();
-        int length = childNodes.getLength();
-        for (int i = 0; i < length; i++) {
-            Node childNode = childNodes.item(i);
-            if (childNode instanceof Element) {
-                Element element = (Element) childNode;
-                childElements.add(element);
-            } else if (childNode instanceof Text) {
-                Text text = (Text) childNode;
-                textBuffer.append(text.getData());
-            }
-        }
+        childNodes = currentElement.getChildNodes();
     }
 
     public boolean nextChild() {
         Pointer pointer = (Pointer) pointers.getLast();
-        if (pointer.v < childElements.size()) {
-            pointers.addLast(new Pointer());
-            setCurrent(childElements.get(pointer.v));
-            pointer.v++;
-            return true;
-        } else {
-            return false;
+        int len = childNodes.getLength();
+        for(; pointer.v < len; pointer.v++){
+        	if (childNodes.item(pointer.v) instanceof Element){
+        		pointers.addLast(new Pointer());
+        		setCurrent((Element) childNodes.item(pointer.v));
+        		pointer.v++;
+        		return true;
+        	}
         }
+        return false;
     }
 
     private class Pointer {

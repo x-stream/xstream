@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.alias.DefaultClassMapper;
 import com.thoughtworks.xstream.alias.DefaultNameMapper;
 import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
 import com.thoughtworks.xstream.xml.xpp3.Xpp3DomXMLReaderDriver;
+import com.thoughtworks.xstream.xml.dom.DomXMLReaderDriver;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Array;
