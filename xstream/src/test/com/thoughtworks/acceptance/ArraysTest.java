@@ -27,12 +27,8 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertBothWays(array, expected);
     }
 
-    class X {
+    class X extends StandardObject {
         String s = "hi";
-
-        public boolean equals(Object obj) {
-            return obj instanceof X;
-        }
     }
 
     public void testCustomObjectArray() {
@@ -106,23 +102,7 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertBothWays(objWithArray, expected);
     }
 
-    class ObjWithArray {
+    class ObjWithArray extends StandardObject {
         int[] ints;
-
-        public boolean equals(Object obj) {
-            if (obj instanceof ObjWithArray) {
-                ObjWithArray objWithArray = (ObjWithArray) obj;
-                if (ints.length != objWithArray.ints.length) {
-                    return false;
-                }
-                for (int i = 0; i < ints.length; i++) {
-                    if (ints[i] != objWithArray.ints[i]) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
     }
 }

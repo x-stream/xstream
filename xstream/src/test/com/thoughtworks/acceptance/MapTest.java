@@ -52,16 +52,8 @@ public class MapTest extends AbstractAcceptanceTest {
         assertBothWays(map, expected);
     }
 
-    class ThingWithMap {
+    class ThingWithMap extends StandardObject {
         Map stuff = new HashMap();
-
-        public boolean equals(Object obj) {
-            if (obj instanceof ThingWithMap) {
-                ThingWithMap thingWithMap = (ThingWithMap) obj;
-                return stuff.equals(thingWithMap.stuff);
-            }
-            return false;
-        }
     }
 
     public void testObjectCanContainMapAsField() {

@@ -94,6 +94,10 @@
 			<id>dom4j</id>
 			<version>1.3</version>
 		</dependency>
+		<dependency>
+			<id>commons-lang</id>
+			<version>2.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,18 +1,12 @@
 package com.thoughtworks.xstream.converters.composite;
 
+import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import junit.framework.TestCase;
 
-/**
- * [Marcos Tarruella, tarruella@email.com] Joe, could you please send me the link to the code
- * so I may have a chance to have another look at it.
- * Cheers!
- *
- * P.S. I was about to use xmlUnit but... a bit dipsy and decided not to (perhaps next GeekNight :-)
- */
 public class ObjectWithFieldsConverterTest extends TestCase {
 
-    public class World {
+    public class World extends StandardObject {
         int anInt = 1;
         Integer anInteger = new Integer(2);
         char anChar = 'a';
@@ -58,7 +52,7 @@ public class ObjectWithFieldsConverterTest extends TestCase {
         assertEquals(expected, xstream.toXML(world));
     }
 
-    static class TypesOfFields {
+    static class TypesOfFields extends StandardObject {
         String normal = "normal";
         transient String trans = "transient";
         final String fin = "final";

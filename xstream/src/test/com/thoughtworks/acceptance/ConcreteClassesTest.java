@@ -43,15 +43,15 @@ public class ConcreteClassesTest extends AbstractAcceptanceTest {
     interface MyInterface {
     }
 
-    class MyImp1 implements MyInterface {
+    class MyImp1 extends StandardObject implements MyInterface {
         int x = 1;
     }
 
-    class MyImp2 implements MyInterface {
+    class MyImp2 extends StandardObject implements MyInterface {
         int y = 2;
     }
 
-    class MyHolder {
+    class MyHolder extends StandardObject {
         MyInterface field1;
         MyInterface field2;
     }

@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream;
 
+import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.someobjects.FunnyConstructor;
 import com.thoughtworks.someobjects.WithList;
 import com.thoughtworks.someobjects.X;
@@ -132,10 +133,10 @@ public class XStreamTest extends TestCase {
         assertEquals(expected, xml);
 
         NonStaticInnerClass result = (NonStaticInnerClass) xstream.fromXML(xml);
-        assertEquals(obj.field, result.field);
+        assertEquals(obj, result);
     }
 
-    private class NonStaticInnerClass {
+    private class NonStaticInnerClass extends StandardObject {
         int field;
     }
 

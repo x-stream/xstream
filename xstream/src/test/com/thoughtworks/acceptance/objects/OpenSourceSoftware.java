@@ -9,9 +9,4 @@ public class OpenSourceSoftware extends Software {
         this.license = license;
     }
 
-    public boolean equals(Object obj) {
-        return super.equals(obj) &&
-                (obj instanceof OpenSourceSoftware) &&
-                ((OpenSourceSoftware) obj).license.equals(this.license);
-    }
 }
