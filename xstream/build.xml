@@ -126,17 +126,17 @@
 
     <target name="dist" depends="jar,website" description="Build distribution package">
         <zip zipfile="build/xstream-${version}.zip">
-            <zipfileset dir=".">
+            <zipfileset dir="." prefix="xstream-${version}">
                 <include name="build.xml"/>
                 <include name="LICENSE.txt"/>
                 <include name="README.txt"/>
                 <include name="src/**"/>
                 <include name="lib/**"/>
             </zipfileset>
-            <zipfileset dir="build">
+            <zipfileset dir="build" prefix="xstream-${version}">
                 <include name="xstream-${version}*.jar"/>
             </zipfileset>
-            <zipfileset dir="build/website" prefix="docs"/>
+            <zipfileset dir="build/website" prefix="xstream-${version}/docs"/>
         </zip>
     </target>
 
