@@ -7,9 +7,15 @@ import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 public class DefaultMapper implements ClassMapper {
 
     private final ClassLoader classLoader;
+    private final String classAttributeIdentifier;
 
     public DefaultMapper(ClassLoader classLoader) {
+        this(classLoader, "class");
+    }
+
+    public DefaultMapper(ClassLoader classLoader, String classAttributeIdentifier) {
         this.classLoader = classLoader;
+        this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
     }
 
     public String lookupName(Class type) {
@@ -30,6 +36,14 @@ public class DefaultMapper implements ClassMapper {
 
     public Class defaultImplementationOf(Class type) {
         return type;
+    }
+
+    public String attributeForClassDefiningField() {
+        return "defined-in";
+    }
+
+    public String attributeForImplementationClass() {
+        return classAttributeIdentifier;
     }
 
     public boolean isImmutableValueType(Class type) {

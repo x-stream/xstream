@@ -11,7 +11,7 @@ public class TreeMarshallingStrategy implements MarshallingStrategy {
     public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder, DefaultConverterLookup converterLookup, ClassMapper classMapper) {
         return new TreeUnmarshaller(
                 root, reader, converterLookup,
-                classMapper, converterLookup.getClassAttributeIdentifier()).start(dataHolder);
+                classMapper).start(dataHolder);
     }
 
     public void marshal(HierarchicalStreamWriter writer, Object obj, DefaultConverterLookup converterLookup, ClassMapper classMapper, DataHolder dataHolder) {

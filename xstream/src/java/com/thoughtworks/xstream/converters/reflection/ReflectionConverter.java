@@ -21,17 +21,12 @@ import java.util.Set;
 public class ReflectionConverter implements Converter {
 
     private ClassMapper classMapper;
-    private String classAttributeIdentifier;
-    private String definedInAttributeIdentifier = "defined-in";
     private ReflectionProvider reflectionProvider;
     private ImplicitCollectionMapper implicitCollectionMapper;
     private SerializationMethodInvoker serializationMethodInvoker;
 
-    public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier,
-                               ReflectionProvider reflectionProvider, ImplicitCollectionMapper implicitCollectionMapper) {
+    public ReflectionConverter(ClassMapper classMapper, ReflectionProvider reflectionProvider, ImplicitCollectionMapper implicitCollectionMapper) {
         this.classMapper = classMapper;
-        this.classAttributeIdentifier = classAttributeIdentifier;
-        this.definedInAttributeIdentifier = definedInAttributeIdentifier;
         this.reflectionProvider = reflectionProvider;
         this.implicitCollectionMapper = implicitCollectionMapper;
         serializationMethodInvoker = new SerializationMethodInvoker();
@@ -74,11 +69,11 @@ public class ReflectionConverter implements Converter {
 
                 Class defaultType = classMapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
-                    writer.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
+                    writer.addAttribute(classMapper.attributeForImplementationClass(), classMapper.lookupName(actualType));
                 }
 
                 if (seenFields.contains(fieldName)) {
-                    writer.addAttribute(definedInAttributeIdentifier, classMapper.lookupName(definedIn));
+                    writer.addAttribute(classMapper.attributeForClassDefiningField(), classMapper.lookupName(definedIn));
                 }
                 context.convertAnother(newObj);
 
@@ -136,7 +131,7 @@ public class ReflectionConverter implements Converter {
     }
 
     private Class determineWhichClassDefinesField(HierarchicalStreamReader reader) {
-        String definedIn = reader.getAttribute(definedInAttributeIdentifier);
+        String definedIn = reader.getAttribute(classMapper.attributeForClassDefiningField());
         return definedIn == null ? null : classMapper.lookupType(definedIn);
     }
 
@@ -167,7 +162,7 @@ public class ReflectionConverter implements Converter {
     }
 
     private Class determineType(HierarchicalStreamReader reader, boolean validField, Object result, String fieldName, Class definedInCls) {
-        String classAttribute = reader.getAttribute(classAttributeIdentifier);
+        String classAttribute = reader.getAttribute(classMapper.attributeForImplementationClass());
         if (classAttribute != null) {
             return classMapper.lookupType(classAttribute);
         } else if (!validField) {

@@ -18,18 +18,15 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     protected HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
     private ClassMapper classMapper;
-    private String classAttributeIdentifier;
     private ClassStack types = new ClassStack(16);
     private DataHolder dataHolder;
 
     public TreeUnmarshaller(Object root, HierarchicalStreamReader reader,
-                            ConverterLookup converterLookup, ClassMapper classMapper,
-                            String classAttributeIdentifier) {
+                            ConverterLookup converterLookup, ClassMapper classMapper) {
         this.root = root;
         this.reader = reader;
         this.converterLookup = converterLookup;
         this.classMapper = classMapper;
-        this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
     public Object convertAnother(Object parent, Class type) {
@@ -86,7 +83,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
     public Object start(DataHolder dataHolder) {
         this.dataHolder = dataHolder;
-        String classAttribute = reader.getAttribute(classAttributeIdentifier);
+        String classAttribute = reader.getAttribute(classMapper.attributeForImplementationClass());
         Class type;
         if (classAttribute == null) {
             type = classMapper.lookupType(reader.getNodeName());

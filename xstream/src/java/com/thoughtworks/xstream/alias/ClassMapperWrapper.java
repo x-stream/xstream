@@ -32,6 +32,14 @@ public abstract class ClassMapperWrapper implements ClassMapper {
         return wrapped.defaultImplementationOf(type);
     }
 
+    public String attributeForClassDefiningField() {
+        return wrapped.attributeForClassDefiningField();
+    }
+
+    public String attributeForImplementationClass() {
+        return wrapped.attributeForImplementationClass();
+    }
+
     /**
      * @deprecated As of 1.1.1, use {@link #defaultImplementationOf(Class)}
      */

@@ -14,9 +14,8 @@ public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
     private FastStack parentIdStack = new FastStack(16);
 
     public ReferenceByIdUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                     ConverterLookup converterLookup, ClassMapper classMapper,
-                                     String classAttributeIdentifier) {
-        super(root, reader, converterLookup, classMapper, classAttributeIdentifier);
+                                     ConverterLookup converterLookup, ClassMapper classMapper) {
+        super(root, reader, converterLookup, classMapper);
     }
 
     public Object convertAnother(Object parent, Class type) {

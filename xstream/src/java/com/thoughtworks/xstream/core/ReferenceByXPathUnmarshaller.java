@@ -18,9 +18,8 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
     private PathTracker pathTracker = new PathTracker();
 
     public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                        ConverterLookup converterLookup, ClassMapper classMapper,
-                                        String classAttributeIdentifier) {
-        super(root, reader, converterLookup, classMapper, classAttributeIdentifier);
+                                        ConverterLookup converterLookup, ClassMapper classMapper) {
+        super(root, reader, converterLookup, classMapper);
         this.reader = new PathTrackingReader(reader, pathTracker);
     }
 

@@ -9,4 +9,7 @@ public interface Mapper {
 
     Class defaultImplementationOf(Class type);
 
+    String attributeForImplementationClass();
+    String attributeForClassDefiningField();
+
 }

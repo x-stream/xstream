@@ -210,7 +210,6 @@ public class XStream {
     private ClassLoader classLoader; // TODO: Should be changeable
 
     private ClassMapper classMapper;
-    private String classAttributeIdentifier;
     private DefaultConverterLookup converterLookup;
     private JVM jvm = new JVM();
     private AddableImplicitCollectionMapper implicitCollectionMapper = new AddableImplicitCollectionMapper();
@@ -225,7 +224,7 @@ public class XStream {
     }
 
     public XStream(Converter defaultConverter) {
-        this(null, null, new XppDriver(), "class", defaultConverter);
+        this(null, null, new XppDriver(), null, defaultConverter);
     }
     
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
@@ -241,7 +240,7 @@ public class XStream {
     }
 
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver) {
-        this(reflectionProvider, classMapper, driver, "class");
+        this(reflectionProvider, classMapper, driver, null);
     }
 
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier) {
@@ -249,13 +248,12 @@ public class XStream {
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
-        this.classAttributeIdentifier = classAttributeIdentifier;
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
         this.classLoader = new CompositeClassLoader();
-        this.classMapper = classMapper == null ? setupMapper() : classMapper;
-        this.defaultConverter = new ReflectionConverter(this.classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, implicitCollectionMapper);
-        converterLookup = new DefaultConverterLookup(defaultConverter, this.classMapper, classAttributeIdentifier);
+        this.classMapper = classMapper == null ? buildMapper(classAttributeIdentifier) : classMapper;
+        this.defaultConverter = new ReflectionConverter(this.classMapper, reflectionProvider, implicitCollectionMapper);
+        converterLookup = new DefaultConverterLookup(defaultConverter, this.classMapper);
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
@@ -267,21 +265,20 @@ public class XStream {
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
-        this.classAttributeIdentifier = classAttributeIdentifier;
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
         this.classLoader = new CompositeClassLoader();
-        this.classMapper = classMapper == null ? setupMapper() : classMapper;
+        this.classMapper = classMapper == null ? buildMapper(classAttributeIdentifier) : classMapper;
         this.defaultConverter = defaultConverter;
-        converterLookup = new DefaultConverterLookup(defaultConverter, this.classMapper, classAttributeIdentifier);
+        converterLookup = new DefaultConverterLookup(defaultConverter, this.classMapper);
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
         setMode(XPATH_REFERENCES);
     }
 
-    protected ClassMapper setupMapper() {
-        ClassMapper mapper = new DefaultMapper(classLoader);
+    private ClassMapper buildMapper(String classAttributeIdentifier) {
+        ClassMapper mapper = new DefaultMapper(classLoader, classAttributeIdentifier);
         mapper = new XmlFriendlyClassMapper(mapper);
         aliasingMapper = new AliasingMapper(mapper);
         mapper = new DynamicProxyMapper(aliasingMapper); // special handling of dynamic proxy instances
@@ -378,12 +375,12 @@ public class XStream {
         registerConverter(new BigIntegerConverter());
         registerConverter(new BigDecimalConverter());
 
-        registerConverter(new ArrayConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new ArrayConverter(classMapper, classMapper.attributeForImplementationClass()));
         registerConverter(new CharArrayConverter());
-        registerConverter(new CollectionConverter(classMapper, classAttributeIdentifier));
-        registerConverter(new MapConverter(classMapper, classAttributeIdentifier));
-        registerConverter(new TreeMapConverter(classMapper, classAttributeIdentifier));
-        registerConverter(new TreeSetConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new CollectionConverter(classMapper, classMapper.attributeForImplementationClass()));
+        registerConverter(new MapConverter(classMapper, classMapper.attributeForImplementationClass()));
+        registerConverter(new TreeMapConverter(classMapper, classMapper.attributeForImplementationClass()));
+        registerConverter(new TreeSetConverter(classMapper, classMapper.attributeForImplementationClass()));
         registerConverter(new PropertiesConverter());
         registerConverter(new EncodedByteArrayConverter());
 
