@@ -46,23 +46,69 @@ public class DefaultClassMapper implements ClassMapper {
         return result;
     }
 
+    /** Lookup table for primitive types. */
+    private static Class primitiveClassNamed(String name) {
+        return
+            name.equals("void")    ?      Void.TYPE :
+            name.equals("boolean") ?   Boolean.TYPE :
+            name.equals("byte")    ?      Byte.TYPE :
+            name.equals("char")    ? Character.TYPE :
+            name.equals("short")   ?     Short.TYPE :
+            name.equals("int")     ?   Integer.TYPE :
+            name.equals("long")    ?      Long.TYPE :
+            name.equals("float")   ?     Float.TYPE :
+            name.equals("double")  ?    Double.TYPE :
+            null;
+    }        
+
     public Class lookupType(String elementName) {
         if (elementName.equals("null")) {
             return null;
         }
         boolean isArray = elementName.endsWith("-array");
+        
+        Class primvCls = null;
         if (isArray) {
             elementName = elementName.substring(0, elementName.length() - 6); // cut off -array
+
+            // try to determine if the array type is a primitive
+            primvCls = primitiveClassNamed(elementName);
         }
-        String mappedName = (String) nameToTypeMap.get(elementName);
+        
+        String mappedName = null;
+
+        // only look for a mappedName if no primitive array type has been found
+        if (primvCls == null) {
+            mappedName = (String) nameToTypeMap.get(elementName);
+        }    
+        
         if (mappedName != null) {
             elementName = mappedName;
         }
+
+        
         // the $ used in inner class names is illegal as an xml element name
         elementName = elementName.replaceAll("\\-", "\\$");
         try {
             if (isArray) {
-                return Class.forName("[L" + elementName + ";");
+                
+                // if a primitive array type exists, return its array   
+                if (primvCls != null) {
+                    return
+                        (primvCls == boolean.class)  ?   boolean[].class :
+                        (primvCls == byte.class)     ?      byte[].class :
+                        (primvCls == char.class)     ?      char[].class :
+                        (primvCls == short.class)    ?     short[].class :
+                        (primvCls == int.class)      ?       int[].class :
+                        (primvCls == long.class)     ?      long[].class :
+                        (primvCls == float.class)    ?     float[].class :
+                        (primvCls == double.class)   ?    double[].class :
+                        null;
+                        
+                // otherwise look it up like normal        
+                } else {
+                    return Class.forName("[L" + elementName + ";");
+                } 
             } else {
                 return Class.forName(elementName);
             }
