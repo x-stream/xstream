@@ -5,7 +5,7 @@
   <id>xstream</id>xc
   <artifactId>xstream</artifactId>
   <name>XStream</name>
-  <currentVersion>1.0-SNAPSHOT</currentVersion>
+  <currentVersion>0.5</currentVersion>
 
   <organization>
     <name>ThoughtWorks, Inc</name>
@@ -20,23 +20,23 @@
   <shortDescription>Object to serialization to XML and back again</shortDescription>
   <description>
 
-        XStream is a simple library to serialize objects to XML and back again.
+    XStream is a simple library to serialize objects to XML and back again.
 
     XStream requires minimal (if any at all) configuration for custom objects.
 
     The XML produced is clean and concise and never duplicates any information that
     can be obtained via reflection.
 
-        XStream has a clean design, is simple to use, boasts impressive speed and is
-        not coupled to any particular XML library.
+    XStream has a clean design, is simple to use, boasts impressive speed and is
+    not coupled to any particular XML library.
 
   </description>
   <url>http://xstream.codehaus.org/</url>
   <issueTrackingUrl>http://jira.codehaus.org/secure/BrowseProject.jspa?id=10230</issueTrackingUrl>
   <siteAddress>codehaus.org</siteAddress>
   <siteDirectory>/www/xstream.codehaus.org</siteDirectory>
-    <distributionSite>codehaus.org</distributionSite>
-    <distributionDirectory>/www/dist.codehaus.org</distributionDirectory>
+  <distributionSite>codehaus.org</distributionSite>
+  <distributionDirectory>/www/dist.codehaus.org</distributionDirectory>
   <repository>
     <connection>scm:cvs:pserver:anonymous@cvs.codehaus.org:/scm/cvspublic:xstream</connection>
     <url>http://cvs.codehaus.org/viewcvs.cgi/xstream/?root=codehaus</url>
@@ -61,6 +61,16 @@
     <version>
       <id>0.4</id>
       <name>0.4</name>
+      <tag>XSTREAM_0_4</tag>
+    </version>
+    <version>
+      <id>0.5</id>
+      <name>0.5</name>
+      <tag>XSTREAM_0_5</tag>
+    </version>
+    <version>
+      <id>0.6</id>
+      <name>0.6</name>
       <tag>HEAD</tag>
     </version>
   </versions>
