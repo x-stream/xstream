@@ -91,19 +91,8 @@
     <template:when var="isindex">
       <div class="SidePanel" id="right">
         <div class="NewsGroup">
-          <h1>Latest Versions</h1>
-          <table>
-            <tr>
-              <td><a href="download.html#stable">Stable:</a></td>
-              <td><a href="download.html#stable"><template:text var="release"/></a></td>
-            </tr>
-            <tr>
-              <td><a href="download.html#prerelease">Prerelease:</a></td>
-              <td><a href="download.html#prerelease"><template:text var="prerelease"/></a></td>
-            </tr>
-          </table>
-
-          <p class="NewsMore"><a href="versioning.html">About XStream version numbers...</a></p>
+          <h1>Latest Version: <template:text var="release"/></h1>
+          <p class="NewsMore"><a href="download.html">Download page...</a></p>
         </div>
 
         <div class="NewsGroup">
