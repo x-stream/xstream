@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,10 +13,11 @@ import java.util.TreeMap;
  * Can newInstance: classes with public visibility, outer classes, static inner classes, classes with default constructors.
  * Cannot newInstance: classes without public visibility, non-static inner classes, classes without default constructors.
  * Note that any code in the constructor of a class will be executed when the ObjectFactory instantiates the object.
+ * </p>
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private static final Map cache = new HashMap();
+    private static final Map cache = new TreeMap();
 
     public Object newInstance(Class type) {
         try {
@@ -38,6 +38,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public Object readField(Object object, String fieldName) {
         Field field = findField(object.getClass(), fieldName);
+        validateFieldAccess(field);
         try {
             return field.get(object);
         } catch (IllegalArgumentException e) {
@@ -49,6 +50,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public void writeField(Object object, String fieldName, Object value) {
         Field field = findField(object.getClass(), fieldName);
+        validateFieldAccess(field);
         try {
             field.set(object, value);
         } catch (IllegalArgumentException e) {
@@ -84,7 +86,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                     if (field.getName().startsWith("this$")) {
                         continue;
                     }
-                    if (shouldFieldWithTheseModifiedBeExcluded(modifiers)) {
+                    if (!fieldModifiersSupported(modifiers)) {
                         continue;
                     }
                     field.setAccessible(true);
@@ -97,9 +99,17 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return (Map) cache.get(clsName);
     }
 
-    protected boolean shouldFieldWithTheseModifiedBeExcluded(int modifiers) {
-        return Modifier.isFinal(modifiers)
-                || Modifier.isStatic(modifiers)
-                || Modifier.isTransient(modifiers);
+    protected boolean fieldModifiersSupported(int modifiers) {
+        return !(Modifier.isStatic(modifiers)
+                || Modifier.isTransient(modifiers));
     }
+
+    protected void validateFieldAccess(Field field) {
+        if (Modifier.isFinal(field.getModifiers())) {
+            throw new ObjectAccessException("Invalid final field "
+                    + field.getDeclaringClass().getName() + "." + field.getName());
+        }
+        ;
+    }
+
 }

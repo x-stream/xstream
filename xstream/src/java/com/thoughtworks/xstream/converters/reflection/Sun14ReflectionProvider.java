@@ -6,7 +6,6 @@ import sun.reflect.ReflectionFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,9 +108,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         }
     }
 
-    protected boolean shouldFieldWithTheseModifiedBeExcluded(int modifiers) {
-        return Modifier.isStatic(modifiers)
-                || Modifier.isTransient(modifiers);
+    protected void validateFieldAccess(Field field) {
+        // (overriden) don't mind final fields.
     }
-
 }

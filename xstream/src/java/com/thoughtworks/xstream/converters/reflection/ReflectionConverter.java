@@ -13,7 +13,7 @@ public class ReflectionConverter implements Converter {
     private String classAttributeIdentifier;
     private ReflectionProvider reflectionProvider;
 
-    public ReflectionConverter(ClassMapper classMapper,String classAttributeIdentifier, ReflectionProvider reflectionProvider) {
+    public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, ReflectionProvider reflectionProvider) {
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
         this.reflectionProvider = reflectionProvider;
