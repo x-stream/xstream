@@ -35,17 +35,7 @@ import com.thoughtworks.xstream.xml.text.PrettyPrintXMLWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 public class XStream {
 
@@ -91,8 +81,10 @@ public class XStream {
         alias("set", Set.class, HashSet.class);
 
         alias("linked-list", LinkedList.class);
+        alias("vector", Vector.class);
         alias("tree-map", TreeMap.class);
         alias("tree-set", TreeSet.class);
+        alias("hashtable", Hashtable.class);
 
         registerConverter(new ObjectWithFieldsConverter(classMapper,classAttributeIdentifier));
 

@@ -3,10 +3,12 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.XStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Vector;
 
 public class CollectionsTest extends AbstractAcceptanceTest {
 
@@ -95,6 +97,18 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "</set>";
 
         assertBothWays(set, expected);
+    }
+
+    public void test() {
+        Vector vector = new Vector();
+        vector.addElement("a");
+        vector.addElement("b");
+
+        assertBothWays(vector,
+                "<vector>\n" +
+                "  <string>a</string>\n" +
+                "  <string>b</string>\n" +
+                "</vector>");
     }
 
 }

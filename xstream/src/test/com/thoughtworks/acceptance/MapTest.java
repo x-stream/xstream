@@ -2,9 +2,12 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.XStream;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Hashtable;
+import java.util.TreeMap;
 
 public class MapTest extends AbstractAcceptanceTest {
 
@@ -75,4 +78,48 @@ public class MapTest extends AbstractAcceptanceTest {
         assertBothWays(t, expected);
     }
 
+    public void testSupportsOldHashtables() {
+
+        Hashtable hashtable = new Hashtable();
+        hashtable.put("hello", "world");
+
+        String expected = "" +
+                "<hashtable>\n" +
+                "  <entry>\n" +
+                "    <string>hello</string>\n" +
+                "    <string>world</string>\n" +
+                "  </entry>\n" +
+                "</hashtable>";
+
+        assertBothWays(hashtable, expected);
+    }
+
+    class ThingWithDifferentTypesOfMaps extends StandardObject {
+        private Map m1 = new HashMap();
+        private Map m2 = new TreeMap();
+        private Map m3 = new Hashtable();
+        private HashMap m4 = new HashMap();
+        private TreeMap m5 = new TreeMap();
+        private Hashtable m6 = new Hashtable();
+    }
+
+    public void testObjectCanContainDifferentMapImplementations() {
+
+        xstream.alias("thing", ThingWithDifferentTypesOfMaps.class);
+
+        ThingWithDifferentTypesOfMaps thing = new ThingWithDifferentTypesOfMaps();
+
+        String expected = "" +
+                "<thing>\n" +
+                "  <m1/>\n" +
+                "  <m2 class=\"tree-map\"/>\n" +
+                "  <m3 class=\"hashtable\"/>\n" +
+                "  <m4 class=\"map\"/>\n" + // not ideal - class shouldn't be there.
+                "  <m5/>\n" +
+                "  <m6/>\n" +
+                "</thing>";
+
+        assertBothWays(thing, expected);
+
+    }
 }
