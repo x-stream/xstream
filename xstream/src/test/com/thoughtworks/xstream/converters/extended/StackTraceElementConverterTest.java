@@ -13,14 +13,7 @@ import com.thoughtworks.xstream.converters.extended.StackTraceElementConverter;
  */
 public class StackTraceElementConverterTest extends AbstractAcceptanceTest {
 
-    private StackTraceElementFactory factory;
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        xstream.registerConverter(new StackTraceElementConverter());
-        xstream.alias("trace", StackTraceElement.class);
-        factory = new StackTraceElementFactory();
-    }
+    private StackTraceElementFactory factory = new StackTraceElementFactory();
 
     public void testSerializesStackTraceElement() {
         StackTraceElement trace = factory.unknownSourceElement("com.blah.SomeClass", "someMethod");

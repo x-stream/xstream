@@ -8,6 +8,8 @@ import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
 import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
+import com.thoughtworks.xstream.converters.extended.ThrowableConverter;
+import com.thoughtworks.xstream.converters.extended.StackTraceElementConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
@@ -135,6 +137,12 @@ public class DefaultConverterLookup implements ConverterLookup {
         registerConverter(new TreeMapConverter(classMapper, classAttributeIdentifier));
         registerConverter(new TreeSetConverter(classMapper, classAttributeIdentifier));
         registerConverter(new PropertiesConverter());
+
+        if (JVM.is14()) {
+            registerConverter(new ThrowableConverter(defaultConverter()));
+            registerConverter(new StackTraceElementConverter());
+            alias("trace", StackTraceElement.class);
+        }
     }
 
     public void alias(String elementName, Class type, Class defaultImplementation) {

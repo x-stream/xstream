@@ -10,12 +10,6 @@ import java.math.BigDecimal;
  */
 public class ThrowableConverterTest extends AbstractAcceptanceTest {
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        xstream.registerConverter(new StackTraceElementConverter());
-        xstream.registerConverter(new ThrowableConverter(xstream.getConverterLookup().defaultConverter()));
-    }
-
     public void testDeserializesThrowable() {
         Throwable expected = new Throwable();
         Throwable result = (Throwable) xstream.fromXML(xstream.toXML(expected));
