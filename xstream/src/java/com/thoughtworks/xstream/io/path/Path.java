@@ -26,6 +26,11 @@ public class Path {
         this.s = s;
     }
 
+    public Path(String[] chunks, String s) {
+        this.chunks = chunks;
+        this.s = s;
+    }
+
     public String toString() {
         return s.toString();
     }
