@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public class FontConverter implements Converter {
     public boolean canConvert(Class type) {
         // String comparison is used here because Font.class loads the class which in turns instantiates AWT,
         // which is nasty if you don't want it.
-        return type.getName().equals("java.awt.Font");
+        return type.getName().equals("java.awt.Font") || type.getName().equals("javax.swing.plaf.FontUIResource");
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
@@ -29,6 +30,11 @@ public class FontConverter implements Converter {
         reader.moveDown(); // into <attributes>
         Map attributes = (Map) context.convertAnother(null, Map.class);
         reader.moveUp(); // out of </attributes>
-        return Font.getFont(attributes);
+        Font font = Font.getFont(attributes);
+        if (context.getRequiredType() == FontUIResource.class) {
+            return new FontUIResource(font);
+        } else {
+            return font;
+        }
     }
 }
