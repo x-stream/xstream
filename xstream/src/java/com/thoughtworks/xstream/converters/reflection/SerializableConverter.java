@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.ObjectInputValidation;
 import java.io.InvalidObjectException;
+import java.io.NotActiveException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -259,6 +260,18 @@ public class SerializableConverter implements Converter {
                     reader.moveUp();
                 }
                 reader.moveUp();
+            }
+
+            public void registerValidation(final ObjectInputValidation validation, int priority) {
+                context.addCompletionCallback(new Runnable() {
+                    public void run() {
+                        try {
+                            validation.validateObject();
+                        } catch (InvalidObjectException e) {
+                            throw new ObjectAccessException("Cannot validate object : " + e.getMessage(), e);
+                        }
+                    }
+                }, priority);
             }
 
             public void close() {

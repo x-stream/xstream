@@ -21,6 +21,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
         Object readFromStream() throws IOException;
         Map readFieldsFromStream() throws IOException;
         void defaultReadObject() throws IOException;
+        void registerValidation(ObjectInputValidation validation, int priority) throws NotActiveException, InvalidObjectException;
         void close() throws IOException;
     }
 
@@ -174,10 +175,8 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
     }
 
-    /****** Currently missing from implementation ******/
-
-    public void registerValidation(ObjectInputValidation obj, int prio) throws NotActiveException, InvalidObjectException {
-        super.registerValidation(obj, prio);
+    public void registerValidation(ObjectInputValidation validation, int priority) throws NotActiveException, InvalidObjectException {
+        callback.registerValidation(validation, priority);
     }
 
     /****** Unsupported methods ******/

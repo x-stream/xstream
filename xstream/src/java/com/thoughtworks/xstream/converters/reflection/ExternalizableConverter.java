@@ -1,19 +1,21 @@
 package com.thoughtworks.xstream.converters.reflection;
 
+import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
-import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.io.Externalizable;
 import java.io.IOException;
-import java.io.ObjectOutput;
+import java.io.NotActiveException;
 import java.io.ObjectInput;
+import java.io.ObjectInputValidation;
+import java.io.ObjectOutput;
 import java.util.Map;
 
 /**
@@ -86,6 +88,10 @@ public class ExternalizableConverter implements Converter {
 
                 public void defaultReadObject() {
                     throw new UnsupportedOperationException();
+                }
+
+                public void registerValidation(ObjectInputValidation validation, int priority) throws NotActiveException {
+                    throw new NotActiveException("stream inactive");
                 }
 
                 public void close() {

@@ -8,4 +8,6 @@ public interface UnmarshallingContext extends DataHolder {
 
     Class getRequiredType();
 
+    void addCompletionCallback(Runnable work, int priority);
+    
 }

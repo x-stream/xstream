@@ -253,8 +253,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
-    // TODO
-    public void TODOtestXStreamSerializationValidatesObjectIsCalledInPriorityOrder() throws IOException, ClassNotFoundException {
+    public void testXStreamSerializationValidatesObjectIsCalledInPriorityOrder() throws IOException, ClassNotFoundException {
         // expect
         log.expect("validateObject() high priority");
         log.expect("validateObject() medium priority 2");

@@ -81,6 +81,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.ObjectInputValidation;
+import java.io.InvalidObjectException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -786,6 +788,10 @@ public class XStream {
 
             public void defaultReadObject() throws NotActiveException {
                 throw new NotActiveException("not in call to readObject");
+            }
+
+            public void registerValidation(ObjectInputValidation validation, int priority) throws NotActiveException {
+                throw new NotActiveException("stream inactive");
             }
 
             public void close() {

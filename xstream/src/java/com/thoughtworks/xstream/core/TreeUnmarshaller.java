@@ -8,6 +8,7 @@ import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.ClassStack;
+import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import java.util.Iterator;
@@ -20,6 +21,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     private ClassMapper classMapper;
     private ClassStack types = new ClassStack(16);
     private DataHolder dataHolder;
+    private final PrioritizedList validationList = new PrioritizedList();
 
     public TreeUnmarshaller(Object root, HierarchicalStreamReader reader,
                             ConverterLookup converterLookup, ClassMapper classMapper) {
@@ -50,6 +52,10 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         errorWriter.add("class", type.getName());
         errorWriter.add("required-type", getRequiredType().getName());
         reader.appendErrors(errorWriter);
+    }
+
+    public void addCompletionCallback(Runnable work, int priority) {
+        validationList.add(work, priority);
     }
 
     public Object currentObject() {
@@ -90,7 +96,13 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         } else {
             type = classMapper.lookupType(classAttribute);
         }
-        return convertAnother(root, type);
+        Object result = convertAnother(root, type);
+        Iterator validations = validationList.iterator();
+        while (validations.hasNext()) {
+            Runnable runnable = (Runnable) validations.next();
+            runnable.run();
+        }
+        return result;
     }
 
 }

@@ -16,11 +16,16 @@
 
     <p>Not officially released yet. Critical bugfixes and minor feature enhancements.</p>
 
-    <h2>Minor changes</h2>
-
+    <h2>Major changes</h2>
 
     <ul>
+		<li><jira>XSTR-179</jira> Support for ObjectInputStream.registerValidation(ObjectInputValidation).</li>
 		<li><jira>XSTR-178</jira> Serialized inner class now maintains reference to outer class.</li>
+	</ul>
+	
+	<h2>Minor changes</h2>
+
+    <ul>
         <li>Bugfix: Thread context classloader is loaded by the correct thread. (Thanks to Padraic Renaghan for pointing this out).</li>
         <li>Bugfix: Default implementations of aliased classes were not being deserialized by SerializableConverter.</li>
         <li>Bugfix: <jira>XSTR-180</jira> Serializable objects support defaultReadObject() even when no default fields available.</li>
