@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import junit.framework.TestCase;
-import nu.xom.Document;
 import nu.xom.Element;
 
 public class XomWriterTest extends TestCase {
