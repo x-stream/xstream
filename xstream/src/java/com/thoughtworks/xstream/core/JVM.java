@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class JVM {
 
-    private Map classCache = new HashMap();
+    private transient Map classCache = new HashMap();
     private ReflectionProvider reflectionProvider;
 
     public static boolean is14() {
@@ -48,4 +48,8 @@ public class JVM {
         return reflectionProvider;
     }
 
+    private Object readResolve() {
+        classCache = new HashMap();
+        return this;
+    }
 }

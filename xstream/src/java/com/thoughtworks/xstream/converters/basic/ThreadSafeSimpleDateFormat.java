@@ -24,16 +24,16 @@ import java.util.Date;
 public class ThreadSafeSimpleDateFormat {
 
     private String formatString;
-    private DateFormat[] pool;
+    private final int initialPoolSize;
+    private final int maxPoolSize;
+    private transient DateFormat[] pool;
     private int nextAvailable = 0;
+    private Object mutex = new Object();
 
     public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize) {
         this.formatString = format;
-        nextAvailable = -1;
-        pool = new DateFormat[maxPoolSize];
-        for (int i = 0; i < initialPoolSize; i++) {
-            putInPool(createNew());
-        }
+        this.initialPoolSize = initialPoolSize;
+        this.maxPoolSize = maxPoolSize;
     }
 
     public String format(Date date) {
@@ -56,10 +56,17 @@ public class ThreadSafeSimpleDateFormat {
 
     private DateFormat fetchFromPool() {
         DateFormat result;
-        synchronized (pool) {
+        synchronized (mutex) {
+            if (pool == null) {
+                nextAvailable = -1;
+                pool = new DateFormat[maxPoolSize];
+                for (int i = 0; i < initialPoolSize; i++) {
+                    putInPool(createNew());
+                }
+            }
             while (nextAvailable < 0) {
                 try {
-                    pool.wait();
+                    mutex.wait();
                 } catch (InterruptedException e) {
                     throw new RuntimeException("Interrupted whilst waiting " +
                             "for a free item in the pool : " + e.getMessage());
@@ -76,10 +83,10 @@ public class ThreadSafeSimpleDateFormat {
     }
 
     private void putInPool(DateFormat format) {
-        synchronized (pool) {
+        synchronized (mutex) {
             nextAvailable++;
             pool[nextAvailable] = format;
-            pool.notify();
+            mutex.notify();
         }
     }
 

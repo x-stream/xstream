@@ -44,8 +44,9 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
     private String classAttributeIdentifier;
     private Converter defaultConverter;
     private Map defaultCollections = new HashMap();
-    private ClassLoader classLoader = getClass().getClassLoader();
     private JVM jvm;
+
+    private transient ClassLoader classLoader = getClass().getClassLoader();
 
     public DefaultConverterLookup(ReflectionProvider reflectionProvider,
                                   ClassMapper classMapper,
@@ -212,4 +213,10 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
     public void addDefaultCollection(Class type, String fieldName) {
         defaultCollections.put(type, fieldName);
     }
+
+    private Object readResolve() {
+        this.classLoader = getClass().getClassLoader();
+        return this;
+    }
+    
 }
