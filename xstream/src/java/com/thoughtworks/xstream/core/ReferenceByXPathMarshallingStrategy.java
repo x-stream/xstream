@@ -8,9 +8,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ReferenceByXPathMarshallingStrategy implements MarshallingStrategy {
 
-    public Object unmarshal(Object root, HierarchicalStreamReader reader, DefaultConverterLookup converterLookup, ClassMapper classMapper) {
+    public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder, DefaultConverterLookup converterLookup, ClassMapper classMapper) {
         return new ReferenceByXPathUnmarshaller(root, reader, converterLookup,
-                classMapper, converterLookup.getClassAttributeIdentifier()).start();
+                classMapper, converterLookup.getClassAttributeIdentifier()).start(dataHolder);
     }
 
     public void marshal(HierarchicalStreamWriter writer, Object obj, DefaultConverterLookup converterLookup, ClassMapper classMapper, DataHolder dataHolder) {

@@ -182,6 +182,9 @@ public class XStream {
 
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
+     *
+     * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If not present, XStream
+     *                   shall create one lazily as needed.
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer, DataHolder dataHolder) {
         marshallingStrategy.marshal(writer, obj, converterLookup, classMapper, dataHolder);
@@ -223,7 +226,7 @@ public class XStream {
      * Deserialize an object from a hierarchical data structure (such as XML).
      */
     public Object unmarshal(HierarchicalStreamReader reader) {
-        return unmarshal(reader, null);
+        return unmarshal(reader, null, null);
     }
 
     /**
@@ -232,7 +235,19 @@ public class XStream {
      * a new one.
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root) {
-        return marshallingStrategy.unmarshal(root, reader, converterLookup, classMapper);
+        return unmarshal(reader, root, null);
+    }
+
+    /**
+     * Deserialize an object from a hierarchical data structure (such as XML).
+     *
+     * @param root If present, the passed in object will have its fields populated, as opposed to XStream creating a
+     *             new instance.
+     * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If not present, XStream
+     *                   shall create one lazily as needed.
+     */
+    public Object unmarshal(HierarchicalStreamReader reader, Object root, DataHolder dataHolder) {
+        return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, classMapper);
     }
 
     /**

@@ -7,8 +7,10 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.XppReader;
 
 import java.io.StringWriter;
+import java.io.StringReader;
 
 public class DataHolderTest extends AbstractAcceptanceTest {
 
@@ -27,13 +29,13 @@ public class DataHolderTest extends AbstractAcceptanceTest {
         }
 
         public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-            assertEquals(context.get("prefix"), reader.getAttribute("prefix"));
-            return null;
+            context.put("saw-this", reader.getAttribute("can-you-see-me"));
+            return reader.getValue();
         }
 
     }
 
-    public void testCanBePassedInExternallyToXStream() {
+    public void testCanBePassedInToMarshallerExternally() {
         // setup
         xstream.registerConverter(new StringWithPrefixConverter());
         StringWriter writer = new StringWriter();
@@ -46,6 +48,20 @@ public class DataHolderTest extends AbstractAcceptanceTest {
         // verify
         String expected = "<string prefix=\"additional stuff\">something</string>";
         assertEquals(expected, writer.toString());
+    }
+
+    public void testCanBePassedInToUnmarshallerExternally() {
+        // setup
+        xstream.registerConverter(new StringWithPrefixConverter());
+        DataHolder dataHolder = xstream.newDataHolder();
+
+        // execute
+        String xml = "<string can-you-see-me=\"yes\">something</string>";
+        Object result = xstream.unmarshal(new XppReader(new StringReader(xml)), null, dataHolder);
+
+        // verify
+        assertEquals("something", result);
+        assertEquals("yes", dataHolder.get("saw-this"));
     }
 
 

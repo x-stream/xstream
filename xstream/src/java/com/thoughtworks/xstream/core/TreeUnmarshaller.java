@@ -4,15 +4,13 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.ClassStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public class TreeUnmarshaller implements UnmarshallingContext {
 
@@ -22,7 +20,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
     private ClassStack types = new ClassStack(16);
-    private Map data;
+    private DataHolder dataHolder;
 
     public TreeUnmarshaller(Object root, HierarchicalStreamReader reader,
                             ConverterLookup converterLookup, ClassMapper classMapper,
@@ -66,27 +64,28 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     }
 
     public Object get(Object key) {
-        initData();
-        return data.get(key);
+        lazilyCreateDataHolder();
+        return dataHolder.get(key);
     }
 
     public void put(Object key, Object value) {
-        initData();
-        data.put(key, value);
+        lazilyCreateDataHolder();
+        dataHolder.put(key, value);
     }
 
     public Iterator keys() {
-        initData();
-        return Collections.unmodifiableCollection(data.keySet()).iterator();
+        lazilyCreateDataHolder();
+        return dataHolder.keys();
     }
 
-    private void initData() {
-        if (data == null) {
-            data = new HashMap();
+    private void lazilyCreateDataHolder() {
+        if (dataHolder == null) {
+            dataHolder = new MapBackedDataHolder();
         }
     }
 
-    public Object start() {
+    public Object start(DataHolder dataHolder) {
+        this.dataHolder = dataHolder;
         String classAttribute = reader.getAttribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
