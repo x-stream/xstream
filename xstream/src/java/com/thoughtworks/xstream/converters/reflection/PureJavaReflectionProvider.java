@@ -10,7 +10,7 @@ import java.util.TreeMap;
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects
  * that can be constructed are limited.
- *
+ * <p/>
  * Can newInstance: classes with public visibility, outer classes, static inner classes, classes with default constructors.
  * Cannot newInstance: classes without public visibility, non-static inner classes, classes without default constructors.
  * Note that any code in the constructor of a class will be executed when the ObjectFactory instantiates the object.
@@ -32,7 +32,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     public void eachSerializableField(Class type, ReflectionProvider.Block visitor) {
         for (Iterator iterator = findAllSerializableFieldsForClass(type).entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            visitor.visit((String) entry.getKey(), ((Field)entry.getValue()).getType());
+            visitor.visit((String) entry.getKey(), ((Field) entry.getValue()).getType());
         }
     }
 
@@ -62,7 +62,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return findField(object.getClass(), fieldName).getType();
     }
 
-    private Field findField(Class cls, String fieldName) {
+    protected Field findField(Class cls, String fieldName) {
         Map fields = findAllSerializableFieldsForClass(cls);
         Field field = (Field) fields.get(fieldName);
         if (field == null) {
@@ -84,9 +84,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                     if (field.getName().startsWith("this$")) {
                         continue;
                     }
-                    if (Modifier.isFinal(modifiers) ||
-                            Modifier.isStatic(modifiers) ||
-                            Modifier.isTransient(modifiers)) {
+                    if (shouldFieldWithTheseModifiedBeExcluded(modifiers)) {
                         continue;
                     }
                     field.setAccessible(true);
@@ -97,5 +95,11 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             cache.put(clsName, result);
         }
         return (Map) cache.get(clsName);
+    }
+
+    protected boolean shouldFieldWithTheseModifiedBeExcluded(int modifiers) {
+        return Modifier.isFinal(modifiers)
+                || Modifier.isStatic(modifiers)
+                || Modifier.isTransient(modifiers);
     }
 }

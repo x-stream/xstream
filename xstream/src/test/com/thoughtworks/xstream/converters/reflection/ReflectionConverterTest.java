@@ -60,10 +60,11 @@ public class ReflectionConverterTest extends TestCase {
         static String stat = "stat";
     }
 
-    public void testDoesNotSerializeTransientOrStaticOrFinalFields() {
+    public void testDoesNotSerializeTransientOrStaticFields() {
         TypesOfFields fields = new TypesOfFields();
         String expected = "" +
                 "<types>\n" +
+                "  <fin>final</fin>\n" +
                 "  <normal>normal</normal>\n" +
                 "</types>";
 
