@@ -2,12 +2,11 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
 import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
-import com.thoughtworks.xstream.core.DefaultClassMapper;
 
 public class DynamicProxyTest extends AbstractAcceptanceTest {
 
     public void testDynamicProxy() {
-        xstream.registerConverter(new DynamicProxyConverter(new DefaultClassMapper()));
+        xstream.registerConverter(new DynamicProxyConverter(xstream.getClassMapper()));
 
         assertBothWays(SampleDynamicProxy.newInstance(),
                 "<dynamic-proxy>\n" +

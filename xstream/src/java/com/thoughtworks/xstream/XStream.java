@@ -102,4 +102,7 @@ public class XStream {
         converterLookup.registerConverter(converter);
     }
 
+    public ClassMapper getClassMapper() {
+        return classMapper;
+    }
 }
