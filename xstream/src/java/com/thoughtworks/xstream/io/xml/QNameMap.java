@@ -17,6 +17,8 @@ public class QNameMap {
     // lets make the mapping a no-op unless we specify some mapping
     private Map qnameToJava;
     private Map javaToQName;
+    private String defaultPrefix = "";
+    private String defaultNamespace = "";
 
     /**
      * Returns the Java class name that should be used for the given QName.
@@ -45,7 +47,7 @@ public class QNameMap {
                 return answer;
             }
         }
-        return new QName(javaClassName);
+        return new QName(defaultNamespace, javaClassName, defaultPrefix);
     }
 
     /**
@@ -69,4 +71,19 @@ public class QNameMap {
         registerMapping(qname, type.getName());
     }
 
+    public String getDefaultNamespace() {
+        return defaultNamespace;
+    }
+
+    public void setDefaultNamespace(String defaultNamespace) {
+        this.defaultNamespace = defaultNamespace;
+    }
+
+    public String getDefaultPrefix() {
+        return defaultPrefix;
+    }
+
+    public void setDefaultPrefix(String defaultPrefix) {
+        this.defaultPrefix = defaultPrefix;
+    }
 }
