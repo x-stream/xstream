@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.core;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.ClassStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 public class UnmarshallingContextAdaptor implements UnmarshallingContext {
@@ -10,8 +11,7 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
     private Object root;
     private HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
-    private Class[] types = new Class[10];  // TODO: grow!
-    private int pointer;
+    private ClassStack types = new ClassStack();
 
     public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader xmlReader, ConverterLookup converterLookup) {
         this.root = root;
@@ -21,9 +21,9 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
 
     public Object convertAnother(Class type) {
         Converter converter = converterLookup.lookupConverterForType(type);
-        types[++pointer] = type;
+        types.push(type);
         Object result = converter.fromXML(reader, this);
-        pointer--;
+        types.popSilently();
         return result;
     }
 
@@ -32,7 +32,7 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
     }
 
     public Class getRequiredType() {
-        return types[pointer];
+        return types.peek();
     }
 
 }

@@ -112,7 +112,7 @@ public class XStream {
     public void toXML(Object obj, HierarchicalStreamWriter writer) {
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
         writer.startNode(classMapper.lookupName(obj.getClass()));
-        MarshallingContextAdaptor context = new MarshallingContextAdaptor(obj, writer, converterLookup);
+        MarshallingContextAdaptor context = new MarshallingContextAdaptor(writer, converterLookup);
         rootConverter.toXML(obj, writer, context);
         writer.endNode();
     }

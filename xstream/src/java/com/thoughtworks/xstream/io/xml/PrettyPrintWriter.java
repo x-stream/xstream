@@ -1,20 +1,20 @@
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.core.util.QuickWriter;
+import com.thoughtworks.xstream.core.util.StringStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.LinkedList;
 
 public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
     private final QuickWriter writer;
-    private final LinkedList elementStack = new LinkedList();
+    private final StringStack elementStack = new StringStack();
+    private final char[] lineIndenter;
+
     private boolean tagInProgress;
     private int depth;
-    private final char[] lineIndenter;
     private boolean readyForNewLine;
     private boolean tagIsEmpty;
 
@@ -41,7 +41,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         finishTag();
         writer.write('<');
         writer.write(name);
-        elementStack.addLast(name);
+        elementStack.push(name);
         tagInProgress = true;
         depth++;
         readyForNewLine = true;
@@ -90,11 +90,11 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
             writer.write('/');
             readyForNewLine = false;
             finishTag();
-            elementStack.removeLast();
+            elementStack.popSilently();
         } else {
             finishTag();
             writer.write(CLOSE);
-            writer.write((String) elementStack.removeLast());
+            writer.write(elementStack.pop());
             writer.write('>');
         }
         readyForNewLine = true;
@@ -117,69 +117,6 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         writer.write('\n');
         for (int i = 0; i < depth; i++) {
             writer.write(lineIndenter);
-        }
-    }
-
-    class QuickWriter {
-
-        private final Writer writer;
-        private char[] buffer = new char[32];
-        private int pointer;
-
-        public QuickWriter(Writer writer) {
-            this.writer = writer;
-        }
-
-        private void write(String str) {
-            int len = str.length();
-            if (pointer + len >= buffer.length) {
-                flush();
-                if (len > buffer.length) {
-                    raw(str.toCharArray());
-                    return;
-                }
-            }
-            str.getChars(0, len, buffer, pointer);
-            pointer += len;
-        }
-
-        private void write(char c) {
-            if (pointer + 1 >= buffer.length) {
-                flush();
-            }
-            buffer[pointer++] = c;
-        }
-
-        private void write(char[] c) {
-            int len = c.length;
-            if (pointer + len >= buffer.length) {
-                flush();
-                if (len > buffer.length) {
-                    raw(c);
-                    return;
-                }
-            }
-            System.arraycopy(c, 0, buffer, pointer, len);
-            pointer += len;
-        }
-
-        public void flush() {
-            try {
-                writer.write(buffer, 0, pointer);
-                pointer = 0;
-                writer.flush();
-            } catch (IOException e) {
-                throw new StreamException(e);
-            }
-        }
-
-        private void raw(char[] c) {
-            try {
-                writer.write(c);
-                writer.flush();
-            } catch (IOException e) {
-                throw new StreamException(e);
-            }
         }
     }
 
