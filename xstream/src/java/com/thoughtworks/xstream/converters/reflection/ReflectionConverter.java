@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.alias.DefaultCollectionLookup;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -74,6 +75,7 @@ public class ReflectionConverter implements Converter {
         }
 
         Collection defaultCollection = getDefaultCollection(result);
+        Set seenFields = new HashSet();
 
         while (reader.hasMoreChildren()) {
             reader.moveDown();
@@ -99,6 +101,17 @@ public class ReflectionConverter implements Converter {
 
             if (validField) {
                 reflectionProvider.writeField(result, fieldName, fieldValue, definedInCls);
+
+                String uniqueKey = fieldName;
+                if (definedInCls != null) {
+                    uniqueKey += " [" + definedInCls.getName() + "]";
+                }
+                if (seenFields.contains(uniqueKey)) {
+                    throw new DuplicateFieldException(uniqueKey);
+                } else {
+                    seenFields.add(uniqueKey);
+                }
+
             } else if (defaultCollection != null) {
                 defaultCollection.add(fieldValue);
             }
@@ -119,4 +132,9 @@ public class ReflectionConverter implements Converter {
         }
     }
 
+    public static class DuplicateFieldException extends ConversionException {
+        public DuplicateFieldException(String msg) {
+            super(msg);
+        }
+    }
 }

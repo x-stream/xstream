@@ -5,6 +5,8 @@ import org.dom4j.io.XPPReader;
 import java.io.StringReader;
 
 import com.thoughtworks.xstream.io.xml.XppReader;
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 
 public class CustomClassesTest extends AbstractAcceptanceTest {
 
@@ -168,5 +170,23 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
     public static class FieldWithObjectType extends StandardObject {
         Double one = new Double(1.0);
         Object two = new Double(2.0);
+    }
+
+    public void testFailsFastIfFieldIsDefinedTwice() {
+        String input = "" +
+                "<thing>\n" +
+                "  <one>1.0</one>\n" +
+                "  <one>2.0</one>\n" +
+                "</thing>";
+        xstream.alias("thing", FieldWithObjectType.class);
+
+        try {
+
+            xstream.fromXML(input);
+            fail("Expected exception");
+
+        } catch (ReflectionConverter.DuplicateFieldException expected) {
+            assertEquals("one", expected.getShortMessage());
+        }
     }
 }

@@ -79,4 +79,8 @@ public class ConversionException extends RuntimeException implements ErrorWriter
     public Throwable getCause() {
         return cause;
     }
+
+    public String getShortMessage() {
+        return super.getMessage();
+    }
 }
