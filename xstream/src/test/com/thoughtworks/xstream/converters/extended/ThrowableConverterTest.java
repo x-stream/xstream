@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import junit.framework.AssertionFailedError;
 
 /**
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
@@ -61,21 +62,21 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
                 assertEquals(ta.getClass(), tb.getClass());
                 assertEquals(ta.getMessage(), tb.getMessage());
                 assertThrowableEquals(ta.getCause(), tb.getCause());
-                assertEquals(ta.getStackTrace(), tb.getStackTrace());
+                assertArrayEquals(ta.getStackTrace(), tb.getStackTrace());
             }
         });
     }
 
-    private static void assertEquals(final Object[] a, final Object[] b) {
-        assertBoth(a, b, new MoreAssertions() {
-            public void assertMoreSafely(Object a, Object b) {
-                Object[] aa = (Object[]) a, ab = (Object[]) b;
-                assertEquals(aa.length, ab.length);
-                for (int i = 0; i < aa.length; i++) {
-                    assertEquals(aa[i], ab[i]);
-                }
-            }
-        });
+    private static void assertArrayEquals(final Object[] expected, final Object[] actual) {
+        StringBuffer expectedJoined = new StringBuffer();
+        StringBuffer actualJoined = new StringBuffer();
+        for (int i = 0; i < expected.length; i++) {
+            expectedJoined.append(expected[i]).append('\n');
+        }
+        for (int i = 0; i < actual.length; i++) {
+            actualJoined.append(actual[i]).append('\n');
+        }
+        assertEquals(expectedJoined.toString(), actualJoined.toString());
     }
 
     private static void assertBoth(Object a, Object b, MoreAssertions moreAssertions) {

@@ -9,35 +9,47 @@ import com.thoughtworks.xstream.converters.extended.StackTraceElementConverter;
 
 /**
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
+ * @author Joe Walnes
  */
 public class StackTraceElementConverterTest extends AbstractAcceptanceTest {
+
+    private StackTraceElementFactory factory;
 
     protected void setUp() throws Exception {
         super.setUp();
         xstream.registerConverter(new StackTraceElementConverter());
+        xstream.alias("trace", StackTraceElement.class);
+        factory = new StackTraceElementFactory();
     }
 
     public void testSerializesStackTraceElement() {
-        StackTraceElement expected = createStackTraceElement(false);
-        assertEquals(expected, xstream.fromXML(xstream.toXML(expected)));
+        StackTraceElement trace = factory.unknownSourceElement("com.blah.SomeClass", "someMethod");
+        String expectedXml = "<trace>com.blah.SomeClass.someMethod(Unknown Source)</trace>";
+        assertBothWays(trace, expectedXml);
     }
 
     public void testIncludesDebugInformation() {
-        StackTraceElement expected = createStackTraceElement(true);
-        assertEquals(expected, xstream.fromXML(xstream.toXML(expected)));
+        StackTraceElement trace = factory.element("com.blah.SomeClass", "someMethod", "SomeClass.java", 22);
+        String expectedXml = "<trace>com.blah.SomeClass.someMethod(SomeClass.java:22)</trace>";
+        assertBothWays(trace, expectedXml);
     }
 
-    private StackTraceElement createStackTraceElement(boolean hasDebugInformation) {
-        StackTraceElement element = new Throwable().getStackTrace()[0];
-
-        if (!hasDebugInformation) {
-            try {
-                StackTraceElementConverter.setFileName(element, null);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        return element;
+    public void testIncludesPartialDebugInformation() {
+        StackTraceElement trace = factory.element("com.blah.SomeClass", "someMethod", "SomeClass.java");
+        String expectedXml = "<trace>com.blah.SomeClass.someMethod(SomeClass.java)</trace>";
+        assertBothWays(trace, expectedXml);
     }
+
+    public void testIncludesNativeMethods() {
+        StackTraceElement trace = factory.nativeMethodElement("com.blah.SomeClass", "someMethod");
+        String expectedXml = "<trace>com.blah.SomeClass.someMethod(Native Method)</trace>";
+        assertBothWays(trace, expectedXml);
+    }
+
+    public void testSupportsInnerClasses() {
+        StackTraceElement trace = factory.unknownSourceElement("com.blah.SomeClass$Inner$2", "someMethod");
+        String expectedXml = "<trace>com.blah.SomeClass$Inner$2.someMethod(Unknown Source)</trace>";
+        assertBothWays(trace, expectedXml);
+    }
+
 }
