@@ -110,7 +110,7 @@ public class SerializableConverter implements Converter {
             }
 
             public void defaultWriteObject() {
-                final boolean[] writtenDefaultFields = {false}; // only an array because it needs to be assigned to from anonymous inner
+                boolean writtenDefaultFields = false;
 
                 ObjectStreamClass objectStreamClass = ObjectStreamClass.lookup(currentType[0]);
 
@@ -127,9 +127,9 @@ public class SerializableConverter implements Converter {
                             writer.startNode(classMapper.lookupName(currentType[0]));
                             writtenClassWrapper[0] = true;
                         }
-                        if (!writtenDefaultFields[0]) {
+                        if (!writtenDefaultFields) {
                             writer.startNode(ELEMENT_DEFAULT);
-                            writtenDefaultFields[0] = true;
+                            writtenDefaultFields = true;
                         }
 
                         writer.startNode(classMapper.mapNameToXML(field.getName()));
@@ -145,10 +145,10 @@ public class SerializableConverter implements Converter {
                         writer.endNode();
                     }
                 }
-                if (writtenClassWrapper[0] && !writtenDefaultFields[0]) {
+                if (writtenClassWrapper[0] && !writtenDefaultFields) {
                     writer.startNode(ELEMENT_DEFAULT);
                     writer.endNode();
-                } else if (writtenDefaultFields[0]) {
+                } else if (writtenDefaultFields) {
                     writer.endNode();
                 }
             }
