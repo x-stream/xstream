@@ -25,6 +25,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     public abstract boolean canConvert(Class type);
 
     public AbstractCollectionConverter(ClassMapper classMapper, String classAttributeIdentifier) {
+        // TODO: this classAttributeIdentifer should be optional - most uses of XStream don't need it.
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
     }
