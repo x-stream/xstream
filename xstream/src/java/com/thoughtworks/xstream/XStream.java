@@ -128,11 +128,9 @@ public class XStream {
     }
 
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
-        Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
-        writer.startNode(classMapper.lookupName(obj.getClass()));
-        MarshallingContextAdaptor context = new MarshallingContextAdaptor(writer, converterLookup);
-        rootConverter.marshal(obj, writer, context);
-        writer.endNode();
+        MarshallingContextAdaptor context = new MarshallingContextAdaptor(
+                writer, converterLookup, classMapper);
+        context.start(obj);
     }
 
     public Object fromXML(String xml) {
@@ -148,15 +146,10 @@ public class XStream {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, Object root) {
-        String classAttribute = reader.getAttribute(classAttributeIdentifier);
-        Class type;
-        if (classAttribute == null) {
-            type = classMapper.lookupType(reader.getNodeName());
-        } else {
-            type = classMapper.lookupType(classAttribute);
-        }
-        UnmarshallingContextAdaptor context = new UnmarshallingContextAdaptor(root, reader, converterLookup);
-        return context.convertAnother(type);
+        UnmarshallingContextAdaptor context = new UnmarshallingContextAdaptor(
+                root, reader, converterLookup,
+                classMapper, classAttributeIdentifier);
+        return context.start();
     }
 
     public void registerConverter(Converter converter) {

@@ -5,18 +5,25 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.ClassStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.alias.ClassMapper;
 
 public class UnmarshallingContextAdaptor implements UnmarshallingContext {
 
     private Object root;
     private HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
+    private ClassMapper classMapper;
+    private String classAttributeIdentifier;
     private ClassStack types = new ClassStack(16);
 
-    public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader xmlReader, ConverterLookup converterLookup) {
+    public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader reader,
+                                       ConverterLookup converterLookup, ClassMapper classMapper,
+                                       String classAttributeIdentifier) {
         this.root = root;
-        this.reader = xmlReader;
+        this.reader = reader;
         this.converterLookup = converterLookup;
+        this.classMapper = classMapper;
+        this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
     public Object convertAnother(Class type) {
@@ -35,5 +42,15 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
         return types.peek();
     }
 
-}
+    public Object start() {
+        String classAttribute = reader.getAttribute(classAttributeIdentifier);
+        Class type;
+        if (classAttribute == null) {
+            type = classMapper.lookupType(reader.getNodeName());
+        } else {
+            type = classMapper.lookupType(classAttribute);
+        }
+        return convertAnother(type);
+    }
 
+}
