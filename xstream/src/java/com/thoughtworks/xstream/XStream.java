@@ -62,7 +62,7 @@ public class XStream {
     }
 
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
-        MarshallingContextAdaptor context = new MarshallingContextAdaptor(
+        TreeMarshaller context = new TreeMarshaller(
                 writer, converterLookup, classMapper);
         context.start(obj);
     }
@@ -80,7 +80,7 @@ public class XStream {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, Object root) {
-        UnmarshallingContextAdaptor context = new UnmarshallingContextAdaptor(
+        TreeUnmarshaller context = new TreeUnmarshaller(
                 root, reader, converterLookup,
                 classMapper, converterLookup.getClassAttributeIdentifier());
         return context.start();

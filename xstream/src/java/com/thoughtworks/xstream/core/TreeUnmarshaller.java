@@ -7,16 +7,16 @@ import com.thoughtworks.xstream.core.util.ClassStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-public class UnmarshallingContextAdaptor implements UnmarshallingContext {
+public class TreeUnmarshaller implements UnmarshallingContext {
 
     private Object root;
-    private HierarchicalStreamReader reader;
+    protected HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
     private ClassStack types = new ClassStack(16);
 
-    public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader reader,
+    public TreeUnmarshaller(Object root, HierarchicalStreamReader reader,
                                        ConverterLookup converterLookup, ClassMapper classMapper,
                                        String classAttributeIdentifier) {
         this.root = root;

@@ -6,13 +6,13 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-public class MarshallingContextAdaptor implements MarshallingContext {
+public class TreeMarshaller implements MarshallingContext {
 
-    private HierarchicalStreamWriter writer;
-    private ConverterLookup converterLookup;
-    private ClassMapper classMapper;
+    protected HierarchicalStreamWriter writer;
+    protected ConverterLookup converterLookup;
+    protected ClassMapper classMapper;
 
-    public MarshallingContextAdaptor(HierarchicalStreamWriter writer, ConverterLookup converterLookup,
+    public TreeMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup,
                                      ClassMapper classMapper) {
         this.writer = writer;
         this.converterLookup = converterLookup;
@@ -25,9 +25,8 @@ public class MarshallingContextAdaptor implements MarshallingContext {
     }
 
     public void start(Object item) {
-        Converter rootConverter = converterLookup.lookupConverterForType(item.getClass());
         writer.startNode(classMapper.lookupName(item.getClass()));
-        rootConverter.marshal(item, writer, this);
+        convertAnother(item);
         writer.endNode();
     }
 
