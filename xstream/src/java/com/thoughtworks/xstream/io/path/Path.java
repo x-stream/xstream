@@ -7,47 +7,66 @@ import java.util.ArrayList;
 
 public class Path {
 
-    private String[] chunks;
-    private String s;
+    private final String[] chunks;
+    private transient String pathAsString;
 
-    public Path(String s) {
+    public Path(String pathAsString) {
         // String.split() too slow. StringTokenizer too crappy.
         List result = new ArrayList();
         int currentIndex = 0;
         int nextSeperator;
-        while ((nextSeperator = s.indexOf('/', currentIndex)) != -1) {
-            result.add(s.substring(currentIndex, nextSeperator));
+        while ((nextSeperator = pathAsString.indexOf('/', currentIndex)) != -1) {
+            result.add(pathAsString.substring(currentIndex, nextSeperator));
             currentIndex = nextSeperator + 1;
         }
-        result.add(s.substring(currentIndex));
+        result.add(pathAsString.substring(currentIndex));
         String[] arr = new String[result.size()];
         result.toArray(arr);
         chunks = arr;
-        this.s = s;
+        this.pathAsString = pathAsString;
     }
 
-    public Path(String[] chunks, String s) {
+    public Path(String[] chunks) {
         this.chunks = chunks;
-        this.s = s;
+    }
+
+    public Path(String[] chunks, String pathAsString) {
+        this.chunks = chunks;
+        this.pathAsString = pathAsString;
     }
 
     public String toString() {
-        return s.toString();
+        if (pathAsString == null) {
+            StringBuffer buffer = new StringBuffer();
+            for (int i = 0; i < chunks.length; i++) {
+                buffer.append('/');
+                buffer.append(chunks[i]);
+            }
+            pathAsString = buffer.toString();
+        }
+        return pathAsString.toString();
     }
 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Path)) return false;
 
-        final Path path = (Path) o;
-
-        if (s != null ? !s.equals(path.s) : path.s != null) return false;
+        final Path other = (Path) o;
+        if (chunks.length != other.chunks.length) return false;
+        for (int i = 0; i < chunks.length; i++) {
+            if (!chunks[i].equals(other.chunks[i])) return false;
+        }
 
         return true;
     }
 
     public int hashCode() {
-        return (s != null ? s.hashCode() : 0);
+        // todo: more unique algorithm
+        int result = 543645643;
+        for (int i = 0; i < chunks.length; i++) {
+            result += chunks[i].hashCode() * i;
+        }
+        return result;
     }
 
     public Path relativeTo(Path that) {
