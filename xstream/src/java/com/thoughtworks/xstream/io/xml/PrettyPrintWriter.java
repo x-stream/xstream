@@ -18,18 +18,22 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     private boolean readyForNewLine;
     private boolean tagIsEmpty;
 
-    private static final char[] AMP = "&amp;".toCharArray();
-    private static final char[] LT = "&lt;".toCharArray();
-    private static final char[] GT = "&gt;".toCharArray();
-    private static final char[] CLOSE = "</".toCharArray();
+    private static final char[] AMP = {'&', 'a', 'm', 'p', ';'};
+    private static final char[] LT = {'&', 'l', 't', ';'};
+    private static final char[] GT = {'&', 'g', 't', ';'};
+    private static final char[] CLOSE = {'<', '/'};
+
+    public PrettyPrintWriter(Writer writer, char[] lineIndenter) {
+        this.writer = new QuickWriter(writer);
+        this.lineIndenter = lineIndenter;
+    }
 
     public PrettyPrintWriter(Writer writer, String lineIndenter) {
-        this.writer = new QuickWriter(writer);
-        this.lineIndenter = lineIndenter.toCharArray();
+        this(writer, lineIndenter.toCharArray());
     }
 
     public PrettyPrintWriter(PrintWriter writer) {
-        this(writer, "  ");
+        this(writer, new char[]{' ', ' '});
     }
 
     public PrettyPrintWriter(Writer writer) {
