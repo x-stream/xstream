@@ -186,7 +186,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         if (JVM.is14()) {
             registerConverter(new ThrowableConverter(defaultConverter()));
             registerConverter(new StackTraceElementConverter());
-            alias("trace", jvm.loadClass("java.util.StackTraceElement"));
+            alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
 
             registerConverter(new CurrencyConverter());
             alias("currency", jvm.loadClass("java.util.Currency"));
