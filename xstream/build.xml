@@ -1,6 +1,6 @@
 <project name="xstream" default="library">
 
-    <property name="version" value="1.0"/>
+    <property name="version" value="SNAPSHOT"/>
 
     <path id="classpath">
         <fileset dir="lib"/>
