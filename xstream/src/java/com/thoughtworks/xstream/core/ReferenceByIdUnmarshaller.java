@@ -19,10 +19,6 @@ public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
         super(root, reader, converterLookup, classMapper, classAttributeIdentifier);
     }
 
-    public Object convertAnother(Class type) {
-        throw new UnsupportedOperationException();
-    }
-
     public Object convertAnother(Object parent, Class type) {
         if (parentIdStack.size() > 0) { // handles circular references
             values.put(parentIdStack.peek(), parent);

@@ -25,10 +25,6 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
         this.reader = new PathTrackingReader(reader, pathTracker);
     }
 
-    public Object convertAnother(Class type) {
-        throw new UnsupportedOperationException();
-    }
-
     public Object convertAnother(Object parent, Class type) {
         if (parentPathStack.size() > 0) { // handles circular references
             values.put(parentPathStack.peek(), parent);

@@ -24,13 +24,6 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
-    /**
-     * @deprecated
-     */
-    public Object convertAnother(Class type) {
-        return convertAnother(null, type);
-    }
-
     public Object convertAnother(Object current, Class type) {
         try {
             Converter converter = converterLookup.lookupConverterForType(type);
