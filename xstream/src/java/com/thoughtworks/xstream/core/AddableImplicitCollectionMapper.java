@@ -1,12 +1,12 @@
 package com.thoughtworks.xstream.core;
 
+import com.thoughtworks.xstream.alias.ImplicitCollectionDef;
+import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Collections;
-
-import com.thoughtworks.xstream.alias.ImplicitCollectionDef;
-import com.thoughtworks.xstream.alias.ImplicitCollectionMapper;
 
 public class AddableImplicitCollectionMapper implements ImplicitCollectionMapper {
 

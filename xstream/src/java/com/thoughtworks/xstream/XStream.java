@@ -3,6 +3,7 @@ package com.thoughtworks.xstream;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.AddableImplicitCollectionMapper;
 import com.thoughtworks.xstream.core.DefaultClassMapper;
@@ -11,6 +12,7 @@ import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
+import com.thoughtworks.xstream.core.MapBackedDataHolder;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -175,7 +177,14 @@ public class XStream {
      * Serialize and object to a hierarchical data structure (such as XML).
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
-        marshallingStrategy.marshal(writer, obj, converterLookup, classMapper);
+        marshal(obj, writer, null);
+    }
+
+    /**
+     * Serialize and object to a hierarchical data structure (such as XML).
+     */
+    public void marshal(Object obj, HierarchicalStreamWriter writer, DataHolder dataHolder) {
+        marshallingStrategy.marshal(writer, obj, converterLookup, classMapper, dataHolder);
     }
 
     /**
@@ -324,4 +333,7 @@ public class XStream {
         implicitCollectionMapper.add(ownerType, fieldName, itemFieldName, itemType);
     }
 
+    public DataHolder newDataHolder() {
+        return new MapBackedDataHolder();
+    }
 }

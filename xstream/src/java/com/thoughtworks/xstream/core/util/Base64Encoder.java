@@ -1,9 +1,9 @@
 package com.thoughtworks.xstream.core.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.IOException;
 
 /**
  * Encodes binary data to plain text as Base64.

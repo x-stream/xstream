@@ -3,9 +3,6 @@ package com.thoughtworks.xstream.core;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class JVM {
 
     private ReflectionProvider reflectionProvider;

@@ -1,14 +1,18 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.*;
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.ErrorWriter;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.ClassStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class TreeUnmarshaller implements UnmarshallingContext {
 

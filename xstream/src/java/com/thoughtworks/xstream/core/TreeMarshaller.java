@@ -3,16 +3,12 @@ package com.thoughtworks.xstream.core;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
-import java.util.Collections;
 
 public class TreeMarshaller implements MarshallingContext {
 
@@ -20,10 +16,11 @@ public class TreeMarshaller implements MarshallingContext {
     protected ConverterLookup converterLookup;
     protected ClassMapper classMapper;
     private ObjectIdDictionary parentObjects = new ObjectIdDictionary();
-    private Map data;
+    private DataHolder dataHolder;
 
-    public TreeMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup,
-                                     ClassMapper classMapper) {
+    public TreeMarshaller(HierarchicalStreamWriter writer,
+                          ConverterLookup converterLookup,
+                          ClassMapper classMapper) {
         this.writer = writer;
         this.converterLookup = converterLookup;
         this.classMapper = classMapper;
@@ -39,7 +36,8 @@ public class TreeMarshaller implements MarshallingContext {
         parentObjects.removeId(item);
     }
 
-    public void start(Object item) {
+    public void start(Object item, DataHolder dataHolder) {
+        this.dataHolder = dataHolder;
         if (item == null) {
             writer.startNode(classMapper.lookupName(ClassMapper.Null.class));
             writer.endNode();
@@ -51,23 +49,23 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     public Object get(Object key) {
-        initData();
-        return data.get(key);
+        lazilyCreateDataHolder();
+        return dataHolder.get(key);
     }
 
     public void put(Object key, Object value) {
-        initData();
-        data.put(key, value);
+        lazilyCreateDataHolder();
+        dataHolder.put(key, value);
     }
 
     public Iterator keys() {
-        initData();
-        return Collections.unmodifiableCollection(data.keySet()).iterator();
+        lazilyCreateDataHolder();
+        return dataHolder.keys();
     }
 
-    private void initData() {
-        if (data == null) {
-            data = new HashMap();
+    private void lazilyCreateDataHolder() {
+        if (dataHolder == null) {
+            dataHolder = new MapBackedDataHolder();
         }
     }
 
