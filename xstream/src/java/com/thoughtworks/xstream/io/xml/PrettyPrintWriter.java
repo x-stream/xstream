@@ -58,10 +58,9 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         finishTag();
 
         // Profiler said this was a bottleneck
-        final char[] chars = text.toCharArray();
-        final int length = chars.length;
+        int length = text.length();
         for (int i = 0; i < length; i++) {
-            final char c = chars[i];
+            char c = text.charAt(i);
             switch (c) {
                 case '&':
                     writer.write(AMP);
