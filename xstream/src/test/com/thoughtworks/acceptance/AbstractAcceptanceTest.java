@@ -32,7 +32,7 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         String resultXml = toXML(root);
         assertEquals(xml, resultXml);
         Object resultRoot = xstream.fromXML(resultXml);
-        compareObjects(root, resultRoot);
+        assertObjectsEqual(root, resultRoot);
         return resultRoot;
     }
 
@@ -43,7 +43,10 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         return xstream.toXML(root);
     }
 
-    protected void compareObjects(Object expected, Object actual) {
+    /**
+     * More descriptive version of assertEquals
+     */ 
+    protected void assertObjectsEqual(Object expected, Object actual) {
         if (expected == null) {
             assertNull(actual);
         } else {

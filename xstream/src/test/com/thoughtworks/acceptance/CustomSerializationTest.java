@@ -49,11 +49,11 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
         String expectedXml = ""
                 + "<custom>\n"
-                + "  <field.int>2</field.int>\n"
+                + "  <field.int defined-in=\"custom\">2</field.int>\n"
                 + "  <a>1</a>\n"
-                + "  <field.string>hello</field.string>\n"
-                + "  <field.null/>\n"
-                + "  <field.software>\n"
+                + "  <field.string defined-in=\"custom\">hello</field.string>\n"
+                + "  <field.null defined-in=\"custom\"/>\n"
+                + "  <field.software defined-in=\"custom\">\n"
                 + "    <vendor>tw</vendor>\n"
                 + "    <name>xs</name>\n"
                 + "  </field.software>\n"
@@ -113,16 +113,16 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void xtestIncludesCompleteClassHeirarchy() {
+    public void testIncludesCompleteClassHeirarchy() {
         Child child = new Child(1, 2, 3, 10, 20, 30);
         xstream.alias("child", Child.class);
         xstream.alias("parent", Parent.class);
 
         String expectedXml = ""
                 + "<child>\n"
-                + "  <field.int>10</field.int>\n"
+                + "  <field.int defined-in=\"child\">10</field.int>\n"
                 + "  <childB>20</childB>\n"
-                + "  <field.int>30</field.int>\n"
+                + "  <field.int defined-in=\"child\">30</field.int>\n"
                 + "  <field.int defined-in=\"parent\">1</field.int>\n"
                 + "  <parentB>2</parentB>\n"
                 + "  <field.int defined-in=\"parent\">3</field.int>\n"
@@ -137,10 +137,29 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         }
     }
 
+    static class MyHashtable extends java.util.Hashtable {
+        private String name;
+
+        public MyHashtable(String name) {
+            this.name = name;
+        }
+
+        public synchronized boolean equals(Object o) {
+            return super.equals(o) && ((MyHashtable)o).name.equals(name);
+        }
+    }
+
     public void testSupportsSubclassesOfClassesThatAlreadyHaveConverters() {
         MyDate in = new MyDate(1234567890);
         String xml = xstream.toXML(in);
         MyDate out = (MyDate) xstream.fromXML(xml);
-        assertEquals(in, out);
+        assertObjectsEqual(in, out);
+
+        MyHashtable in2 = new MyHashtable("hi");
+        in2.put("cheese", "curry");
+        in2.put("apple", new Integer(3));
+        String xml2 = xstream.toXML(in2);
+        MyHashtable out2 = (MyHashtable) xstream.fromXML(xml2);
+        assertObjectsEqual(in2, out2);
     }
 }

@@ -63,9 +63,11 @@ public class ReflectionConverter implements Converter {
             public void writeToStream(Object object) {
                 if (object == null) {
                     writer.startNode(PREFIX + "null");
+                    writer.addAttribute(definedInAttributeIdentifier, classMapper.lookupName(currentClass[0]));
                     writer.endNode();
                 } else {
                     writer.startNode(PREFIX + classMapper.lookupName(object.getClass()));
+                    writer.addAttribute(definedInAttributeIdentifier, classMapper.lookupName(currentClass[0]));
                     context.convertAnother(object);
                     writer.endNode();
                 }
@@ -117,7 +119,6 @@ public class ReflectionConverter implements Converter {
             }
         };
 
-//        currentClass[0] = replacedSource.getClass();
         for (currentClass[0] = replacedSource.getClass(); currentClass[0] != null; currentClass[0] = currentClass[0].getSuperclass()) {
             if (serializationMethodInvoker.supportsWriteObject(currentClass[0])) {
                 ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
@@ -194,15 +195,15 @@ public class ReflectionConverter implements Converter {
         };
 
 
-//        for (currentClass[0] = result.getClass(); currentClass[0] != null; currentClass[0] = currentClass[0].getSuperclass()) {
-        currentClass[0] = result.getClass();
+        for (currentClass[0] = result.getClass(); currentClass[0] != null; currentClass[0] = currentClass[0].getSuperclass()) {
+//        currentClass[0] = result.getClass();
             if (serializationMethodInvoker.supportsReadObject(currentClass[0])) {
                 ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
                 serializationMethodInvoker.callReadObject(currentClass[0], result, objectInputStream);
             } else {
                 callback.defaultReadObject();
             }
-//        }
+        }
 
         return serializationMethodInvoker.callReadResolve(result);
     }
