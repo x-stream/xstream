@@ -17,7 +17,7 @@ import java.util.TreeMap;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private Map cache = new HashMap();
+    private static Map cache = new HashMap();
 
     public Object newInstance(Class type) {
         try {
@@ -73,7 +73,8 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     private Map findAllSerializableFieldsForClass(Class cls) {
-        if (!cache.containsKey(cls)) {
+        final String clsName = cls.getName();
+        if (!cache.containsKey(clsName)) {
             final Map result = new TreeMap();
             while (!Object.class.equals(cls)) {
                 Field[] fields = cls.getDeclaredFields();
@@ -93,8 +94,8 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                 }
                 cls = cls.getSuperclass();
             }
-            cache.put(cls, result);
+            cache.put(clsName, result);
         }
-        return (Map) cache.get(cls);
+        return (Map) cache.get(clsName);
     }
 }

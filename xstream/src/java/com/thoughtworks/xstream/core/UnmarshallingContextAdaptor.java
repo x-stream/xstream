@@ -5,14 +5,13 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-import java.util.LinkedList;
-
 public class UnmarshallingContextAdaptor implements UnmarshallingContext {
 
     private Object root;
     private HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
-    private LinkedList types = new LinkedList();
+    private Class[] types = new Class[10];
+    private int pointer;
 
     public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader xmlReader, ConverterLookup converterLookup) {
         this.root = root;
@@ -22,9 +21,9 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
 
     public Object convertAnother(Class type) {
         Converter converter = converterLookup.lookupConverterForType(type);
-        types.addLast(type);
+        types[++pointer] = type;
         Object result = converter.fromXML(reader, this);
-        types.removeLast();
+        pointer--;
         return result;
     }
 
@@ -33,7 +32,7 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
     }
 
     public Class getRequiredType() {
-        return (Class) types.getLast();
+        return types[pointer];
     }
 
 }
