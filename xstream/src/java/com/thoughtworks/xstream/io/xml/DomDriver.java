@@ -15,11 +15,21 @@ import java.io.IOException;
 
 public class DomDriver implements HierarchicalStreamDriver {
 
+    private String encoding;
+
+    public DomDriver() {
+        encoding = "UTF-8";
+    }
+
+    public DomDriver(String encoding) {
+        this.encoding = encoding;
+    }
+
     public HierarchicalStreamReader createReader(String xml) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes(encoding));
             Document document = documentBuilder.parse(inputStream);
             return new DomReader(document);
         } catch (FactoryConfigurationError e) {
