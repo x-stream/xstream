@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.io.xml.xpp3;
+package com.thoughtworks.xstream.io.xml.xppdom;
 
 import java.util.ArrayList;
 import java.util.HashMap;

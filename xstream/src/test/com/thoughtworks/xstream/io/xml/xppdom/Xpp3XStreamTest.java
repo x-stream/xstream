@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.io.xml.xpp3;
+package com.thoughtworks.xstream.io.xml.xppdom;
 
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
@@ -14,7 +14,7 @@ import com.thoughtworks.xstream.core.DefaultClassMapper;
 import com.thoughtworks.xstream.core.DefaultNameMapper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.io.xml.XppDomDriver;
 import junit.framework.TestCase;
 
 public class Xpp3XStreamTest extends TestCase {
@@ -23,7 +23,7 @@ public class Xpp3XStreamTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        xstream = new XStream(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()),new Xpp3Driver());
+        xstream = new XStream(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()),new XppDomDriver());
         xstream.alias("x", X.class);
         xstream.alias("y", Y.class);
         xstream.alias("funny", FunnyConstructor.class);
@@ -136,9 +136,9 @@ public class Xpp3XStreamTest extends TestCase {
         String xml = xstream.toXML(obj);
 
         String expected =
-                "<com.thoughtworks.xstream.io.xml.xpp3.Xpp3XStreamTest-NonStaticInnerClass>\n" +
+                "<com.thoughtworks.xstream.io.xml.xppdom.Xpp3XStreamTest-NonStaticInnerClass>\n" +
                 "  <field>3</field>\n" +
-                "</com.thoughtworks.xstream.io.xml.xpp3.Xpp3XStreamTest-NonStaticInnerClass>";
+                "</com.thoughtworks.xstream.io.xml.xppdom.Xpp3XStreamTest-NonStaticInnerClass>";
 
         assertEquals(expected, xml);
 
@@ -174,7 +174,7 @@ public class Xpp3XStreamTest extends TestCase {
 
         xstream.alias("person", Person.class);
 
-        Xpp3Driver driver = new Xpp3Driver();
+        XppDomDriver driver = new XppDomDriver();
 
         Person person = (Person) xstream.fromXML(driver.createReader(xml));
 
@@ -224,7 +224,7 @@ public class Xpp3XStreamTest extends TestCase {
 
         xstream.alias("component", Component.class);
 
-        Xpp3Driver driver = new Xpp3Driver();
+        XppDomDriver driver = new XppDomDriver();
 
         Component component0 = new Component();
 

@@ -1,14 +1,14 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.xml.xpp3.Xpp3Dom;
-import com.thoughtworks.xstream.io.xml.xpp3.Xpp3DomBuilder;
+import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
+import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
 
 import java.io.StringReader;
 
-public class Xpp3ReaderTest extends AbstractXMLReaderTest {
+public class XppDomReaderTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        return new Xpp3Driver().createReader(xml);
+        return new XppDomDriver().createReader(xml);
     }
 
     public void testCanReadFromElementOfLargerDocument()
@@ -26,7 +26,7 @@ public class Xpp3ReaderTest extends AbstractXMLReaderTest {
 
         Xpp3Dom small = document.getChild("small");
 
-        HierarchicalStreamReader xmlReader = new Xpp3Reader(small);
+        HierarchicalStreamReader xmlReader = new XppDomReader(small);
 
         assertEquals("small", xmlReader.getNodeName());
 

@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.io.xml.xpp3;
+package com.thoughtworks.xstream.io.xml.xppdom;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;

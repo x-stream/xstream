@@ -4,14 +4,14 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.DefaultClassMapper;
 import com.thoughtworks.xstream.core.DefaultNameMapper;
-import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.io.xml.XppDomDriver;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Array;
 
 public abstract class AbstractAcceptanceTest extends TestCase {
 
-    protected XStream xstream = new XStream(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()), new Xpp3Driver());
+    protected XStream xstream = new XStream(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()), new XppDomDriver());
 
     protected void assertBothWays(Object root, String xml) {
         String resultXml = xstream.toXML(root);

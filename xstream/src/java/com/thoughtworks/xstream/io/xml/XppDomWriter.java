@@ -1,17 +1,17 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.xpp3.Xpp3Dom;
+import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 
 import java.util.LinkedList;
 
-public class Xpp3Writer
+public class XppDomWriter
         implements HierarchicalStreamWriter {
     private LinkedList elementStack = new LinkedList();
 
     private Xpp3Dom configuration;
 
-    public Xpp3Writer() {
+    public XppDomWriter() {
     }
 
     public Xpp3Dom getConfiguration() {

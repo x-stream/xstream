@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.xml.xpp3.Xpp3Dom;
+import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 
 import java.util.LinkedList;
 
@@ -9,13 +9,13 @@ import java.util.LinkedList;
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @version $Id$
  */
-public class Xpp3Reader
+public class XppDomReader
         implements HierarchicalStreamReader {
     private Xpp3Dom current;
 
     private LinkedList pointers = new LinkedList();
 
-    public Xpp3Reader(Xpp3Dom xpp3Dom) {
+    public XppDomReader(Xpp3Dom xpp3Dom) {
         current = xpp3Dom;
 
         pointers.addLast(new Pointer());
