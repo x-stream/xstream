@@ -21,6 +21,7 @@
 
     <ul>
         <li>Support for multidimensional arrays.</li>
+        <li>Object with readResolve() method will be treated the same way native serialization treats them.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -29,6 +30,8 @@
         <li>New converters for Throwable and StackTraceElement that retain stack trace (JDK 1.4 only)</li>
         <li>Bugfix: System.identityHashCode() is not guaranteed to be unique. Ensure reference checking is used as well.</li>
         <li>Bugfix: Allows user classes to be defined in WEB-INF/classes in Servlet environments. Tries to use context classloader if available.</li>
+        <li>Support for java.util.Currency (through readResolve()).</li>
+        <li>Instances of Jakarta Commons Lang Enum are now reused (through readResolve()).</li>
     </ul>
 
     <h2>API changes</h2>

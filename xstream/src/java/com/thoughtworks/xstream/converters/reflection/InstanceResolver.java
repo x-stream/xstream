@@ -40,15 +40,18 @@ public class InstanceResolver {
             Object result = cache.get(type);
             return (Method) (result == NO_METHOD ? null : result);
         }
-        try {
-            Method result = type.getDeclaredMethod("readResolve", null);
-            result.setAccessible(true);
-            cache.put(type, result);
-            return result;
-        } catch (NoSuchMethodException e) {
-            cache.put(type, NO_METHOD);
-            return null;
+        while (type != null) {
+            try {
+                Method result = type.getDeclaredMethod("readResolve", null);
+                result.setAccessible(true);
+                cache.put(type, result);
+                return result;
+            } catch (NoSuchMethodException e) {
+                type = type.getSuperclass();
+            }
         }
+        cache.put(type, NO_METHOD);
+        return null;
     }
 
 }
