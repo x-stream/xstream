@@ -14,7 +14,7 @@ public class NullConverter implements Converter {
 
     public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         writer.startNode("null");
-        writer.startNode();
+        writer.endNode();
     }
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {

@@ -25,8 +25,8 @@ public class PathTrackingWriter implements HierarchicalStreamWriter {
         targetWriter.setValue(text);
     }
 
-    public void startNode() {
-        targetWriter.startNode();
+    public void endNode() {
+        targetWriter.endNode();
         pathTracker.popElement();
     }
 

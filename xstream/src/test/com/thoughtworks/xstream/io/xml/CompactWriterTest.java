@@ -21,14 +21,14 @@ public class CompactWriterTest extends TestCase {
 
         xmlWriter.startNode("one");
         xmlWriter.setValue("potato");
-        xmlWriter.startNode();
+        xmlWriter.endNode();
 
         xmlWriter.startNode("two");
         xmlWriter.setValue("potatae");
-        xmlWriter.startNode();
+        xmlWriter.endNode();
 
-        xmlWriter.startNode();
-        xmlWriter.startNode();
+        xmlWriter.endNode();
+        xmlWriter.endNode();
 
         String expected = "<hello><world><one>potato</one><two>potatae</two></world></hello>";
 
@@ -38,7 +38,7 @@ public class CompactWriterTest extends TestCase {
     public void testEncodesFunnyXmlChars() {
         xmlWriter.startNode("tag");
         xmlWriter.setValue("hello & this isn't \"really\" <good>");
-        xmlWriter.startNode();
+        xmlWriter.endNode();
 
         String expected = "<tag>hello &amp; this isn't \"really\" &lt;good&gt;</tag>";
 
@@ -52,8 +52,8 @@ public class CompactWriterTest extends TestCase {
         xmlWriter.addAttribute("foo", "bar");
         xmlWriter.addAttribute("poo", "par");
         xmlWriter.setValue("hi");
-        xmlWriter.startNode();
-        xmlWriter.startNode();
+        xmlWriter.endNode();
+        xmlWriter.endNode();
 
         String expected = "" +
                 "<tag hello=\"world\">" +

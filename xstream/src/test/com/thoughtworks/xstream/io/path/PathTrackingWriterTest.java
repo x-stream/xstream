@@ -25,7 +25,7 @@ public class PathTrackingWriterTest extends TestCase {
         writer.startNode("foo");
         writer.addAttribute("att", "something");
         writer.setValue("getValue");
-        writer.startNode();
+        writer.endNode();
 
         assertEquals("<foo att=\"something\">getValue</foo>", out.toString());
     }
@@ -40,10 +40,10 @@ public class PathTrackingWriterTest extends TestCase {
         writer.startNode("do");
         assertEquals("/foo/do", pathTracker.getCurrentPath());
 
-        writer.startNode();
+        writer.endNode();
         assertEquals("/foo", pathTracker.getCurrentPath());
 
-        writer.startNode();
+        writer.endNode();
         assertEquals("", pathTracker.getCurrentPath());
 
     }

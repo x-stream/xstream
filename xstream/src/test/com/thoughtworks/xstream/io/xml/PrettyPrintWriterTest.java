@@ -17,19 +17,19 @@ public class PrettyPrintWriterTest extends TestCase {
 
         xmlWriter.startNode("one");
         xmlWriter.setValue("potato");
-        xmlWriter.startNode();
+        xmlWriter.endNode();
 
         xmlWriter.startNode("two");
         xmlWriter.addAttribute("id", "two");
         xmlWriter.setValue("potatae");
-        xmlWriter.startNode();
+        xmlWriter.endNode();
 
-        xmlWriter.startNode();
+        xmlWriter.endNode();
 
         xmlWriter.startNode("empty");
-        xmlWriter.startNode();
+        xmlWriter.endNode();
 
-        xmlWriter.startNode();
+        xmlWriter.endNode();
 
         String expected =
                 "<hello>\n" +

@@ -25,11 +25,11 @@ public abstract class AbstractCollectionConverter implements Converter {
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         if (item == null) {
             writer.startNode("null");
-            writer.startNode();
+            writer.endNode();
         } else {
             writer.startNode(classMapper.lookupName(item.getClass()));
             context.convertAnother(item);
-            writer.startNode();
+            writer.endNode();
         }
     }
 

@@ -114,7 +114,7 @@ public class XStream {
         writer.startNode(classMapper.lookupName(obj.getClass()));
         MarshallingContextAdaptor context = new MarshallingContextAdaptor(obj, writer, converterLookup);
         rootConverter.toXML(obj, writer, context);
-        writer.startNode();
+        writer.endNode();
     }
 
     public Object fromXML(String xml) {

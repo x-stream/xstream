@@ -28,7 +28,7 @@ public class MapConverter extends AbstractCollectionConverter {
             writeItem(entry.getKey(), context, writer);
             writeItem(entry.getValue(), context, writer);
 
-            writer.startNode();
+            writer.endNode();
         }
     }
 

@@ -42,7 +42,7 @@ public class ColorConverter implements Converter {
     private void write(String fieldName, int value, HierarchicalStreamWriter writer) {
         writer.startNode(fieldName);
         writer.setValue(String.valueOf(value));
-        writer.startNode();
+        writer.endNode();
     }
 
 }

@@ -38,7 +38,7 @@ public class Xpp3Writer
         top().setAttribute(key, value);
     }
 
-    public void startNode() {
+    public void endNode() {
         elementStack.removeLast();
     }
 

@@ -39,7 +39,7 @@ public class ReflectionConverter implements Converter {
 
                     context.convertAnother(newObj);
 
-                    writer.startNode();
+                    writer.endNode();
                 }
             }
         });

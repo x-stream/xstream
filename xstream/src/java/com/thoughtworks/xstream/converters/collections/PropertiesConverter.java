@@ -23,7 +23,7 @@ public class PropertiesConverter implements Converter {
             writer.startNode("property");
             writer.addAttribute("getNodeName", entry.getKey().toString());
             writer.addAttribute("value", entry.getValue().toString());
-            writer.startNode();
+            writer.endNode();
         }
     }
 

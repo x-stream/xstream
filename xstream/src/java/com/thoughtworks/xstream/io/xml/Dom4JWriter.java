@@ -30,7 +30,7 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
         ((Element) top()).addAttribute(key, value);
     }
 
-    public void startNode() {
+    public void endNode() {
         elementStack.removeLast();
     }
 

@@ -1,28 +1,31 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.LinkedList;
 
 public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
-    private PrintWriter writer;
-    private LinkedList elementStack = new LinkedList();
+    private final QuickWriter writer;
+    private final LinkedList elementStack = new LinkedList();
     private boolean tagInProgress;
     private int depth;
-    private String lineIndenter;
+    private final char[] lineIndenter;
     private boolean readyForNewLine;
     private boolean tagIsEmpty;
 
-    public PrettyPrintWriter(PrintWriter writer, String lineIndenter) {
-        this.writer = writer;
-        this.lineIndenter = lineIndenter;
-    }
+    private static final char[] AMP = "&amp;".toCharArray();
+    private static final char[] LT = "&lt;".toCharArray();
+    private static final char[] GT = "&gt;".toCharArray();
+    private static final char[] CLOSE = "</".toCharArray();
 
     public PrettyPrintWriter(Writer writer, String lineIndenter) {
-        this(new PrintWriter(writer), lineIndenter);
+        this.writer = new QuickWriter(writer);
+        this.lineIndenter = lineIndenter.toCharArray();
     }
 
     public PrettyPrintWriter(PrintWriter writer) {
@@ -36,8 +39,8 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     public void startNode(String name) {
         tagIsEmpty = false;
         finishTag();
-        write("<");
-        write(name);
+        writer.write('<');
+        writer.write(name);
         elementStack.addLast(name);
         tagInProgress = true;
         depth++;
@@ -51,59 +54,56 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         finishTag();
 
         // Profiler said this was a bottleneck
-        final StringBuffer clean = new StringBuffer();
         final char[] chars = text.toCharArray();
         final int length = chars.length;
         for (int i = 0; i < length; i++) {
             final char c = chars[i];
             switch (c) {
                 case '&':
-                    clean.append("&amp;");
+                    writer.write(AMP);
                     break;
                 case '<':
-                    clean.append("&lt;");
+                    writer.write(LT);
                     break;
                 case '>':
-                    clean.append("&gt;");
+                    writer.write(GT);
                     break;
                 default:
-                    clean.append(c);
+                    writer.write(c);
             }
         }
         // end bottleneck
-        
-        write(clean.toString());
     }
 
     public void addAttribute(String key, String value) {
-        write(" ");
-        write(key);
-        write("=\"");
-        write(value);
-        write("\"");
+        writer.write(' ');
+        writer.write(key);
+        writer.write('=');
+        writer.write('\"');
+        writer.write(value);
+        writer.write('\"');
     }
 
-    public void startNode() {
+    public void endNode() {
         depth--;
         if (tagIsEmpty) {
-            write("/");
+            writer.write('/');
             readyForNewLine = false;
             finishTag();
             elementStack.removeLast();
         } else {
             finishTag();
-            write("</" + elementStack.removeLast() + ">");
+            writer.write(CLOSE);
+            writer.write((String) elementStack.removeLast());
+            writer.write('>');
         }
         readyForNewLine = true;
-    }
-
-    private void write(String str) {
-        writer.write(str);
+        writer.flush();
     }
 
     private void finishTag() {
         if (tagInProgress) {
-            write(">");
+            writer.write('>');
         }
         tagInProgress = false;
         if (readyForNewLine) {
@@ -114,9 +114,73 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     }
 
     protected void endOfLine() {
-        write("\n");
+        writer.write('\n');
         for (int i = 0; i < depth; i++) {
-            write(lineIndenter);
+            writer.write(lineIndenter);
         }
     }
+
+    class QuickWriter {
+
+        private final Writer writer;
+        private char[] buffer = new char[32];
+        private int pointer;
+
+        public QuickWriter(Writer writer) {
+            this.writer = writer;
+        }
+
+        private void write(String str) {
+            int len = str.length();
+            if (pointer + len >= buffer.length) {
+                flush();
+                if (len > buffer.length) {
+                    raw(str.toCharArray());
+                    return;
+                }
+            }
+            str.getChars(0, len, buffer, pointer);
+            pointer += len;
+        }
+
+        private void write(char c) {
+            if (pointer + 1 >= buffer.length) {
+                flush();
+            }
+            buffer[pointer++] = c;
+        }
+
+        private void write(char[] c) {
+            int len = c.length;
+            if (pointer + len >= buffer.length) {
+                flush();
+                if (len > buffer.length) {
+                    raw(c);
+                    return;
+                }
+            }
+            System.arraycopy(c, 0, buffer, pointer, len);
+            pointer += len;
+        }
+
+        public void flush() {
+            try {
+                writer.write(buffer, 0, pointer);
+                pointer = 0;
+                writer.flush();
+            } catch (IOException e) {
+                throw new StreamException(e);
+            }
+        }
+
+        private void raw(char[] c) {
+            try {
+                writer.write(c);
+                writer.flush();
+            } catch (IOException e) {
+                throw new StreamException(e);
+            }
+        }
+    }
+
 }

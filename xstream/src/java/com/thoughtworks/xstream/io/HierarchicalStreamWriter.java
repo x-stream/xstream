@@ -8,6 +8,6 @@ public interface HierarchicalStreamWriter {
 
     void setValue(String text);
 
-    void startNode();
+    void endNode();
 
 }
