@@ -239,7 +239,7 @@ public class SerializableConverter implements Converter {
 
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            currentType[0] = classMapper.lookupType(reader.getNodeName());
+            currentType[0] = classMapper.lookupDefaultType(classMapper.lookupType(reader.getNodeName()));
             if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
                 ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
                 serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);

@@ -2,6 +2,7 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.XStream;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -165,5 +166,18 @@ public class MapTest extends AbstractAcceptanceTest {
 
         xstream.alias("thing", Map.Entry.class);
         assertBothWays(map, expected);
+    }
+
+    public static class MyMap extends HashMap {
+
+    }
+
+    public void testCanExportSubclassesOfMap() {
+        MyMap myMap = new MyMap();
+        myMap.put("hehe", "hoho");
+        String xml = xstream.toXML(myMap);
+        System.out.println(xml);
+        MyMap myOtherMap = (MyMap) xstream.fromXML(xml);
+        assertEquals(myMap, myOtherMap);
     }
 }
