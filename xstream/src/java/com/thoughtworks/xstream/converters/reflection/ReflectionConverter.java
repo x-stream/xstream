@@ -1,15 +1,11 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-
-import java.lang.reflect.Field;
-import java.util.Iterator;
 
 public class ReflectionConverter implements Converter {
 
@@ -28,7 +24,7 @@ public class ReflectionConverter implements Converter {
     }
 
     public void toXML(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        reflectionProvider.eachSerializableFields(source.getClass(), new ReflectionProvider.Block() {
+        reflectionProvider.eachSerializableField(source.getClass(), new ReflectionProvider.Block() {
             public void visit(String fieldName, Class fieldType) {
                 Object newObj = reflectionProvider.readField(source, fieldName);
                 if (newObj != null) {
@@ -58,41 +54,22 @@ public class ReflectionConverter implements Converter {
 
         while (reader.getNextChildNode()) {
             String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
-            Iterator fields = reflectionProvider.listSerializableFields(result.getClass());
-            Field field = null;
-            while (fields.hasNext()) {
-                Field tmp = (Field) fields.next();
-                if (tmp.getName().equals(fieldName)) {
-                    field = tmp;
-                    break;
-                }
-            }
-            if (field == null) {
-                throw new ConversionException("No such field " + result.getClass() + "." + fieldName);
-            }
 
             Class type;
             String classAttribute = reader.getAttribute(classAttributeIdentifier);
             if (classAttribute == null) {
-                type = field.getType();
+                type = reflectionProvider.getFieldType(result, fieldName);
             } else {
                 type = classMapper.lookupType(classAttribute);
             }
 
             Object fieldValue = context.convertAnother(type);
 
-            try {
-                field.setAccessible(true);
-                field.set(result, fieldValue);
-            } catch (IllegalAccessException e) {
-                throw new ConversionException(
-                        "Cannot access field " + type + "." + field.getName(), e);
-            }
+            reflectionProvider.writeField(result, fieldName, fieldValue);
 
             reader.getParentNode();
         }
         return result;
     }
-
 
 }

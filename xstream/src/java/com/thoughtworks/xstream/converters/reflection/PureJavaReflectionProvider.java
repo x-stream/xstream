@@ -25,7 +25,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         }
     }
 
-    public Iterator listSerializableFields(Class type) {
+    private Iterator listSerializableFields(Class type) {
         List result = new LinkedList();
 
         while (!Object.class.equals(type)) {
@@ -49,7 +49,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return result.iterator();
     }
 
-    public void eachSerializableFields(Class type, ReflectionProvider.Block visitor) {
+    public void eachSerializableField(Class type, ReflectionProvider.Block visitor) {
         while (!Object.class.equals(type)) {
             Field[] fields = type.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
@@ -74,9 +74,34 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         try {
             field.setAccessible(true);
             return field.get(object);
+        } catch (IllegalArgumentException e) {
+            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
         } catch (IllegalAccessException e) {
             throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
         }
+    }
+
+    public void writeField(Object object, String fieldName, Object value) {
+        Field field = findField(object.getClass(), fieldName);
+        try {
+            field.setAccessible(true);
+            field.set(object, value);
+        } catch (IllegalArgumentException e) {
+            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
+        } catch (IllegalAccessException e) {
+            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
+        }
+    }
+
+    public Class getFieldType(Object object, String fieldName) {
+        Iterator fields = listSerializableFields(object.getClass());
+        while (fields.hasNext()) {
+            Field tmp = (Field) fields.next();
+            if (tmp.getName().equals(fieldName)) {
+                return tmp.getType();
+            }
+        }
+        throw new ObjectAccessException("No such field " + object.getClass() + "." + fieldName);
     }
 
     private Field findField(Class type, String fieldName) {
