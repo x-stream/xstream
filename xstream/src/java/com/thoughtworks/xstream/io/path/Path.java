@@ -110,15 +110,11 @@ public class Path {
             }
         }
 
-        StringBuffer result = new StringBuffer();
-        int size = absoluteStack.size();
-        for (int i = 0; i < size; i++) {
-            if (i > 0) {
-                result.append('/');
-            }
-            result.append(absoluteStack.get(i));
+        String[] result = new String[absoluteStack.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (String) absoluteStack.get(i);
         }
 
-        return new Path(result.toString());
+        return new Path(result);
     }
 }
