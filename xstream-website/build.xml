@@ -1,0 +1,31 @@
+<project name="xstream-website" default="all">
+
+    <target name="all" depends="clean, website" description="Rebuild website"/>
+
+    <target name="clean" description="Clean up all built files">
+        <delete dir="build"/>
+    </target>
+
+    <target name="supporting-java">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src/java" destdir="build/classes">
+            <classpath>
+                <fileset dir="lib"/>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="website" depends="supporting-java" description="Build website">
+        <mkdir dir="build/website"/>
+        <java classname="minimesh.Main" failonerror="true">
+            <classpath>
+                <fileset dir="lib"/>
+                <pathelement path="build/classes"/>
+            </classpath>
+            <arg value="src/content/website.xml"/>
+            <arg value="src/templates/skin.html"/>
+            <arg value="build/website"/>
+        </java>
+    </target>
+
+</project>

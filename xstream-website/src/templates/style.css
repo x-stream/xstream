@@ -1,0 +1,393 @@
+/*---------------------------------------------------------------------------
+ *  Two- and three-column layout
+ */
+
+#banner {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 116px;
+}
+
+#left {
+    position: absolute;
+    z-index: 2;
+    left: 8px;
+    width: 184px;
+    top: 125px;
+    bottom: 8px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#right {
+    position: absolute;
+    z-index: 1;
+    right: 8px;
+    width: 184px;
+    top: 125px;
+    bottom: 8px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.Content3Column {
+    position: absolute;
+    top: 125px;
+    bottom: 8px;
+    left: 208px;
+    right: 216px;
+}
+
+.Content2Column {
+    position: absolute;
+    top: 125px;
+    bottom: 8px;
+    left: 208px;
+    right: 16px;
+}
+
+#center {
+    z-index: 3;
+    margin: 0px;
+    border: none;
+    padding-bottom: 8px;
+}
+
+
+/*---------------------------------------------------------------------------
+ *  Default element styles
+ */
+
+body {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+
+    font-family: helvetica, arial, sans-serif;
+    font-size: 12px;
+
+    background-color: white;
+    color: black;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+    font-weight: normal;
+}
+
+a:link { color: #0a0; }
+a:active { color: red; }
+a:hover { color: red; }
+a:visited { color: black; }
+
+iframe {
+    width:100%;
+    height: 800px;
+    border: 0px;
+}
+
+img {
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+}
+
+p {
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+blockquote {
+    margin-bottom: 10px;
+}
+
+td {
+    font-size: 12px;
+    padding: 2px;
+}
+
+th {
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    padding: 2px;
+}
+
+th.Row {
+    text-align: left;
+    vertical-align: top;
+}
+
+ul, ol {
+    border: 0px;
+    padding: 0px;
+    margin-top: 0px;
+    margin-bottom: 12px;
+    margin-left: 20px;
+}
+
+
+/*---------------------------------------------------------------------------
+ *  Page banner
+ */
+
+#banner {
+    margin: 0px;
+    border: 0px;
+    border-bottom: 1px solid #afa;
+    padding: 0px;
+    background-color: #e0f0e0;
+    color: #060;
+    vertical-align: bottom;
+}
+
+#banner a { text-decoration: none; }
+#banner a:visited { color: #0a0; }
+#banner a:hover { color: red; }
+#banner a:active { color: red; }
+
+#logo {
+    position: absolute;
+    top: 5px;
+    left: 8px;
+}
+
+#versions {
+    position: absolute;
+    width: auto;
+    right: 0px;
+    top: 0px;
+    margin: 8px;
+    font-weight: normal;
+}
+
+/*---------------------------------------------------------------------------
+ *  Page content
+ */
+
+#content {
+    margin: 0px;
+    background-color: white;
+    color: black;
+    height: 100%;
+}
+
+#content h1 {
+    width: 100%;
+    font-size: 18px;
+    background-color: #060;
+    color: white;
+    padding: 2px;
+    padding-left: 6px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+#content .FirstChild {  /* IE doesn't understand first-child pseudoelement */
+    margin-top: 0px;
+}
+
+#content a { text-decoration: underline; }
+#content a:link { color: #060; }
+#content a:visited { color: #060; }
+#content a:active { color: red; }
+#content a:hover { color: red; }
+
+#content h2 {
+    margin-top: 24px;
+    border-top: 1px solid #060;
+    margin-bottom: 16px;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #e0f0e0;
+    padding: 2px;
+}
+
+#content li {
+    margin-bottom: 6px;
+}
+
+#content th {
+    background-color: #afa;
+}
+
+#content td {
+    background-color: #dfd;
+}
+
+.Source pre {
+    padding: 4px;
+    font-family: courier new, monospace;
+    font-size: 11px;
+    border: 1px solid #080;
+    background-color: #cfc;
+    color: black;
+}
+
+.Source:before {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    font-size: inherit;
+    line-spacing: 100%;
+}
+
+.highlight {
+    background-color: #e0f0e0;
+    border: 1px dotted #060;
+    padding: 5px;
+}
+
+/* The following are for images, but can also apply to div's containing images. */
+
+#content .Float {
+    float: right;
+    margin-left: 8px;
+    margin-right: 0px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+#content .Diagram {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+
+#content .Inline {
+    display: inline;
+}
+
+.RuleOfThumb {
+    font-weight: bold;
+}
+
+/*---------------------------------------------------------------------------
+ *  Side panels
+ */
+
+.SidePanel {
+    background-color: white;
+    padding: 0px;
+    font-size: 11px;
+}
+
+.SidePanel h1 {
+    margin: 0px;
+    border: 0px;
+    padding: 4px;
+
+    color: #060;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+.SidePanel a { text-decoration: none; }
+.SidePanel a:link { color: #060; }
+.SidePanel a:visited { color: #060; }
+.SidePanel a:active { color: red; }
+.SidePanel a:hover { color: red; }
+
+/*---------------------------------------------------------------------------
+ *  Menus
+ */
+
+.MenuGroup {
+    border-left: 1px solid #afa;
+    border-top: 1px solid #afa;
+    border-bottom: 1px solid white; /* IE work-around */
+
+    margin-bottom: 8px;
+    background-color: white;
+    color: #060;
+}
+
+.MenuGroup ul {
+    margin: 0px;
+    padding-left: 4px;
+    list-style-type: none;
+}
+
+.MenuGroup li {
+    padding: 2px;
+}
+
+.MenuGroup .currentLink {
+/*    background-color: #060;*/
+    background-color: #e0f0e0;
+    color: #000;
+}
+
+
+/*---------------------------------------------------------------------------
+ *  News panel
+ */
+
+.NewsGroup {
+    border-left: 1px solid #afa;
+    border-top: 1px solid #afa;
+    border-bottom: 1px solid white; /* IE workaround */
+    margin-bottom: 8px;
+
+    color: #060;
+}
+
+.NewsItem {
+    margin: 4px;
+}
+
+.NewsDate {
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+}
+
+.NewsText {
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 8px;
+}
+
+.NewsText a { text-decoration: underline; }
+.NewsText a:link { color: #060; }
+.NewsText a:visited { color: #060; }
+.NewsText a:active { color: red; }
+.NewsText a:hover { color: red; }
+
+.NewsMore {
+    font-size: smaller;
+    margin: 4px;
+    margin-top: 8px;
+    text-align: left;
+}
+
+.NewsGroup td {
+    font-size: 12px;
+}
+
+/*---------------------------------------------------------------------------
+ *  Document meta-information
+ */
+
+.Meta {
+    margin-top: 64px;
+    font-size: smaller;
+    color: #C0C0C0;
+    text-align: right;
+}
+
+.Meta a { text-decoration: underline; }
+.Meta a:link { color: #C0C0C0; }
+.Meta a:visited { color: #C0C0C0; }
+.Meta a:active { color: red; }
+.Meta a:hover { color: red; }

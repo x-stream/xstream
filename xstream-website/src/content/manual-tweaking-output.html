@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <title>Tweaking the Output</title>
+    </head>
+    <body>
+
+        <h1>Tweaking the Output</h1>
+
+        <p>Out of the box, XStream is able to serialize most objects without the need for custom mappings to be setup.
+        The XML produced is clean, however sometimes it's desirable to make tweaks to it. The most common use for this is
+        when using XStream to read configuration files and some more human-friendly XML is needed.</p>
+
+        <!-- ************ -->
+
+        <h1>Aliases</h1>
+
+        <p>The simplest and most commonly used tweak in XStream is to alias a fully qualified class to a shorter name.</p>
+
+        <h3>Example</h3>
+
+        <p>Given the following class:</p>
+
+<div class="Source Java"><pre>package com.something.animals;
+
+public class Cat {
+
+  public Cat(int age, String name) {
+    this.age = age;
+    this.name = name;
+  }
+
+  int age;
+  String name;
+}</pre></div>
+
+        <p>XStream can be used to serialize and deserialize an instance of this to XML:</p>
+
+<div class="Source Java"><pre>
+XStream xstream = new XStream();
+
+String xml = xstream.toXml(new Cat(4, "Garfield")); // serialize
+Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
+
+        <p>The XML representation, looks like this:</p>
+
+<div class="Source XML"><pre>&lt;<b>com.something.animals.Cat</b>&gt;
+  &lt;age&gt;4&lt;/age&gt;
+  &lt;name&gt;Garfield&lt;/name&gt;
+&lt;/<b>com.something.animals.Cat</b>&gt;</pre></div>
+
+        <p>To shorten the fully qualified class name in the XML, an alias can be defined:</p>
+
+<div class="Source Java"><pre>
+XStream xstream = new XStream();
+<b>xstream.alias("cat", Cat.class);</b>
+
+String xml = xstream.toXml(new Cat(4, "Garfield")); // serialize
+Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
+
+        <p>The result:</p>
+
+<div class="Source XML"><pre>&lt;<b>cat</b>&gt;
+  &lt;age&gt;4&lt;/age&gt;
+  &lt;name&gt;Garfield&lt;/name&gt;
+&lt;/<b>cat</b>&gt;</pre></div>
+
+
+        <!-- ************ -->
+
+        <h1>Implicit collections</h1>
+
+        <!-- ************ -->
+
+
+        <h1>Custom converters</h1>
+
+        <h1>XML transformations</h1>
+
+    </body>
+</html>

@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>Two Minute Tutorial</title>
+  </head>
+  <body>
+
+    <p>This is a very quick introduction to XStream.
+    Skim read it to get an idea of how simple it is to convert objects to XML and back again.
+    I'm sure you'll have questions afterwards.</p>
+
+    <h1>Create classes to be serialized</h1>
+
+    <p>Here's a couple of simple classes. XStream can convert instances of these to XML and back again.</p>
+
+<div class="Source Java"><pre>public class Person {
+  private String firstname;
+  private String lastname;
+  private PhoneNumber phone;
+  private PhoneNumber fax;
+  // ... constructors and methods
+}
+
+public class PhoneNumber {
+  private int code;
+  private String number;
+  // ... constructors and methods
+}</pre></div>
+
+    <p><b>Note:</b> Notice that the fields are private. XStream doesn't care about the
+    visibility of the fields. No getters or setters are needed. Also, XStream
+    does not limit you to having a default constructor.</p>
+
+    <h1>Initializing XStream</h1>
+
+    <p>To use XStream, simply instantiate the <code>XStream</code> class:</p>
+
+<div class="Source Java"><pre>XStream xstream = new XStream();</pre></div>
+
+    <p>You require <code>xstream-[version].jar</code> and <code>xpp3-[version].jar</code> in the classpath.
+    <a href="http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/index.html">XPP3</a>
+    is a very fast XML pull-parser implementation. If you do not want to include this
+    dependency, you can use a standard JAXP DOM parser instead:</p>
+
+<div class="Source Java"><pre>XStream xstream = new XStream(new DomDriver()); // does not require XPP3 library</pre></div>
+
+    <p><b>Note:</b> This class is a simple facade designed for common operations. For more flexibility you
+    may choose to create your own facade that behaves differently.</p>
+
+    <p>Now, to make the XML outputted by XStream more concise, you can create aliases for your custom class names
+    to XML element names. This is the <b>only</b> type of mapping required to use XStream and even this is optional.</p>
+
+<div class="Source Java"><pre>xstream.alias("person", Person.class);
+xstream.alias("phonenumber", PhoneNumber.class);</pre></div>
+
+    <p><b>Note:</b> This is an optional step. Without it XStream would work fine, but the XML element names would contain the
+    fully qualified name of each class (including package) which would bulk up the XML a bit.</p>
+
+    <h1>Serializing an object to XML</h1>
+
+    <p>Let's create an instance of Person and populate its fields:</p>
+
+<div class="Source Java"><pre>Person joe = new Person("Joe", "Walnes");
+joe.setPhone(new PhoneNumber(123, "1234-456");
+joe.setFax(new PhoneNumber(123, "9999-999");</pre></div>
+
+    <p>Now, to convert it to XML, all you have to do is make a simple call to XStream:</p>
+
+<div class="Source Java"><pre>String xml = xstream.toXML(joe);</pre></div>
+
+    <p>The resulting XML looks like this:</p>
+
+<div class="Source XML"><pre>&lt;person&gt;
+  &lt;firstname&gt;Joe&lt;/firstname&gt;
+  &lt;lastname&gt;Walnes&lt;/lastname&gt;
+  &lt;phone&gt;
+    &lt;code&gt;123&lt;/code&gt;
+    &lt;number&gt;1234-456&lt;/number&gt;
+  &lt;/phone&gt;
+  &lt;fax&gt;
+    &lt;code&gt;123&lt;/code&gt;
+    &lt;number&gt;9999-999&lt;/number&gt;
+  &lt;/fax&gt;
+&lt;/person&gt;</pre></div>
+
+    <p>It's that simple. Look at how clean the XML is.</p>
+
+    <h1>Deserializing an object back from XML</h1>
+
+    <p>To reconstruct an object, purely from the XML:</p>
+
+<div class="Source Java"><pre>Person newJoe = (Person)xstream.fromXML(xml);</pre></div>
+
+    <p>And that's how simple XStream is!</p>
+
+    <h1>Summary</h1>
+
+    <p>To recap:</p>
+
+    <ul>
+        <li>Create element name to class name aliases for any custom classes using <nobr><code>xstream.alias(String elementName, Class cls);</code></nobr></li>
+        <li>Convert an object to XML using <nobr><code>xstream.toXML(Object obj);</code></nobr></li>
+        <li>Convert XML back to an object using <nobr><code>xstream.fromXML(String xml);</code></nobr></li>
+    </ul>
+
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>XStream - ${title}</title>
+        <link rel="stylesheet" type="text/css" href="style.css"/>
+        ${head}
+    </head>
+    <body>
+
+        <div id="banner">
+            <a href="index.html"><img id="logo" src="logo.gif" alt="XStream"/></a>
+        </div>
+
+        <div id="center" class="Content2Column">  <!-- Content3Column for index -->
+            <div id="content">
+                <h1 class="FirstChild">${title}</h1>
+
+                ${body}
+
+                <br><br>
+                
+            </div>
+        </div>
+
+        <div class="SidePanel" id="left">
+            <#list sitemap.sections as section>
+                <div class="MenuGroup">
+                    <h1>${section.name}</h1>
+                    <ul>
+                        <#list section.pages as otherPage>
+                            <#if otherPage = page>
+                                <li class="currentLink">${otherPage.title}</li>
+                            <#else>
+                                <li><a href="${otherPage.href}">${otherPage.title}</a></li>
+                            </#if>
+                        </#list>
+                    </ul>
+                </div>
+            </#list>
+        </div>
+
+<!--
+    <template:when var="isindex">
+      <div class="SidePanel" id="right">
+        <div class="NewsGroup">
+          <h1>Latest Version: 1.0.2</h1>
+          <p class="NewsMore"><a href="download.html">Download page...</a></p>
+        </div>
+
+        <div class="NewsGroup">
+          <h1><a href="news.html">News...</a></h1>
+          <template:include src="../content/news.html"
+                        elements="/html/body/*[@class='NewsItem' and position()<=5]"/>
+        </div>
+      </div>
+    </template:when>
+-->
+  </body>
+</html>

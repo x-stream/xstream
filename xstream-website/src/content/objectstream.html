@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <title>Object Streams</title>
+        <style>.highlight {}</style>
+    </head>
+    <body>
+
+        <p>XStream provides alternative implementations of <code>java.io.ObjectInputStream</code> and
+        <code>java.io.ObjectOutputStream</code>,
+        allowing streams of objects to be serialized or deserialized from XML.</p>
+        <p>This is useful when processing large sets of objects, as only one needs to be in memory
+        at a time.</p>
+
+        <!-- ************ -->
+
+        <h1>Using the Object Streams</h1>
+
+        <p>The interface to the object streaming capabilities of XStream is through the standard
+        <code>java.io.ObjectOutputStream</code> and <code>java.io.ObjectInputStream</code> objects.</p>
+
+        <h2>Example</h2>
+
+        <p>To serialize a stream of objects to XML:</p>
+
+<div class="Source Java"><pre>ObjectOutputStream out = xstream.createObjectOutputStream(someWriter);
+
+out.writeObject(new Person("Joe", "Walnes"));
+out.writeObject(new Person("Someone", "Else"));
+out.writeObject("hello");
+out.writeInt(12345);
+
+out.close();</pre></div>
+
+        <p>The resulting XML:</p>
+
+<div class="Source XML"><pre>&lt;object-stream&gt;
+  &lt;com.blah.Person&gt;
+    &lt;firstname&gt;Joe&lt;/firstname&gt;
+    &lt;lastname&gt;Walnes&lt;/lastname&gt;
+  &lt;/com.blah.Person&gt;
+  &lt;com.blah.Person&gt;
+    &lt;firstname&gt;Someone&lt;/firstname&gt;
+    &lt;lastname&gt;Else&lt;/lastname&gt;
+  &lt;/com.blah.Person&gt;
+  &lt;string&gt;hello&lt;/string&gt;
+  &lt;int&gt;123&lt;/int&gt;
+&lt;/object-stream&gt;</pre></div>
+
+        <p>To deserialze the stream of objects from the XML:</p>
+
+<div class="Source Java"><pre>ObjectInputStream in = xstream.createObjectInputStream(someReader);
+
+Person a = (Person)in.readObject();
+Person b = (Person)in.readObject();
+String c = (String)in.readObject();
+int    d = in.readInt();</pre></div>
+
+        <!-- ************ -->
+
+        <h1>Considerations</h1>
+
+        <h2>Root node</h2>
+
+        <p>Because an XML document can only have a single root node, all the serialized elements must be wrapped in an
+        additional root node. This root node defaults to <code>&lt;object-stream&gt;</code>, as shown in the example above.</p>
+
+        <p>This can be changed by using the overloaded method:
+        <code>xstream.createObjectOutputStream(Writer writer, String rootNodeName);</code></p>
+
+        <h2>Close the ObjectOutputStream</h2>
+
+        <p>Remember to call <code>ObjectOutputStream.close()</code>, otherwise the stream will contain incomplete XML.</p>
+
+        <h2>Detecting the end of the ObjectInputStream</h2>
+
+        <p>When there are no more objects left to read in the stream, <code>ObjectInputStream.readObject()</code> (or primitive
+        equivalent) will throw <code>java.io.EOFException</code>.</p>
+        
+    </body>
+</html>
