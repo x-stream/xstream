@@ -73,7 +73,7 @@ public class DateConverterTest extends TestCase {
         // wait for all results
         while (results.size() < numberOfThreads * numberOfCallsPerThread) {
             synchronized (monitor) {
-                monitor.wait();
+                monitor.wait(100);
             }
         }
 
