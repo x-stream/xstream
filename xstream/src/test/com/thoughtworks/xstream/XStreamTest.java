@@ -5,6 +5,9 @@ import com.thoughtworks.someobjects.FunnyConstructor;
 import com.thoughtworks.someobjects.WithList;
 import com.thoughtworks.someobjects.X;
 import com.thoughtworks.someobjects.Y;
+import com.thoughtworks.someobjects.HandlerManager;
+import com.thoughtworks.someobjects.Handler;
+import com.thoughtworks.someobjects.Protocol;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
@@ -15,7 +18,6 @@ import junit.framework.TestCase;
 import org.dom4j.Element;
 
 import java.util.List;
-import java.util.ArrayList;
 
 public class XStreamTest extends TestCase {
 
@@ -245,21 +247,26 @@ public class XStreamTest extends TestCase {
         int port;
     }
 
-    public void xtestXStreamOutputWithEmptyCollections() {
+    public void testUnmarshallingWhereAllImplementationsAreSpecifiedUsingAClassIdentifier()
+        throws Exception {
 
-        String expected =
-            "<class-with-an-empty-collection>" +
-            "</class-with-an-empty-collection>";
+        String xml =
+            "<handlerManager class='com.thoughtworks.someobjects.HandlerManager'>" +
+            "  <handlers>" +
+            "    <handler class='com.thoughtworks.someobjects.Handler'>" +
+            "      <protocol class='com.thoughtworks.someobjects.Protocol'>" +
+            "        <id>foo</id> " +
+            "      </protocol>  " +
+            "    </handler>" +
+            "  </handlers>" +
+            "</handlerManager>";
 
-        xstream.alias( "class-with-an-empty-collection", ClassWithAnEmptyCollection.class );
+        HandlerManager hm = (HandlerManager) xstream.fromXML( xml );
 
-        String s = xstream.toXML( new ClassWithAnEmptyCollection() );
+        Handler h = (Handler) hm.getHandlers().get(0);
 
-        assertEquals( s, expected );
-    }
+        Protocol p = h.getProtocol();
 
-    static class ClassWithAnEmptyCollection
-    {
-        List components = new ArrayList();
+        assertEquals( "foo", p.getId() );
     }
 }
