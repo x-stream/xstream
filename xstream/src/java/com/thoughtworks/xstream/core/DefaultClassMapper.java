@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.alias.ClassMapperWrapper;
 import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
+import com.thoughtworks.xstream.alias.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.lang.reflect.Proxy;
 public class DefaultClassMapper extends ClassMapperWrapper {
 
     public DefaultClassMapper() {
-        super(new ImmutableTypesMapper(new OldClassMapper()));
+        super(new ImmutableTypesMapper(new DefaultImplementationsMapper(new OldClassMapper())));
     }
 
     private static class OldClassMapper implements ClassMapper {
@@ -22,7 +23,6 @@ public class DefaultClassMapper extends ClassMapperWrapper {
         private final ClassLoader classLoader;
         protected final Map typeToNameMap = Collections.synchronizedMap(new HashMap());
         protected final Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
-        protected final Map baseTypeToDefaultTypeMap = Collections.synchronizedMap(new HashMap());
         private final Map lookupTypeCache = Collections.synchronizedMap(new HashMap());
 
         public OldClassMapper() {
@@ -31,17 +31,6 @@ public class DefaultClassMapper extends ClassMapperWrapper {
 
         public OldClassMapper(ClassLoader classLoader) {
             this.classLoader = classLoader;
-
-            // register primitive types
-            baseTypeToDefaultTypeMap.put(boolean.class, Boolean.class);
-            baseTypeToDefaultTypeMap.put(char.class, Character.class);
-            baseTypeToDefaultTypeMap.put(int.class, Integer.class);
-            baseTypeToDefaultTypeMap.put(float.class, Float.class);
-            baseTypeToDefaultTypeMap.put(double.class, Double.class);
-            baseTypeToDefaultTypeMap.put(short.class, Short.class);
-            baseTypeToDefaultTypeMap.put(byte.class, Byte.class);
-            baseTypeToDefaultTypeMap.put(long.class, Long.class);
-
         }
 
         public String mapNameToXML(String javaName) {
@@ -86,7 +75,6 @@ public class DefaultClassMapper extends ClassMapperWrapper {
             if (!type.equals(defaultImplementation)) {
                 typeToNameMap.put(defaultImplementation, elementName);
             }
-            baseTypeToDefaultTypeMap.put(type, defaultImplementation);
         }
 
         public String lookupName(Class type) {
@@ -215,8 +203,7 @@ public class DefaultClassMapper extends ClassMapperWrapper {
         }
 
         public Class lookupDefaultType(Class baseType) {
-            Class result = (Class) baseTypeToDefaultTypeMap.get(baseType);
-            return result == null ? baseType : result;
+            return baseType;
         }
 
         public boolean isImmutableValueType(Class type) {
