@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.core.util;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.DataHolder;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -12,12 +13,37 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
     private StreamCallback callback;
 
-    public static CustomObjectInputStream create(StreamCallback callback) {
+    private static final String DATA_HOLDER_KEY = CustomObjectInputStream.class.getName();
+
+    public static interface StreamCallback {
+        Object deserialize();
+        void defaultReadObject();
+    }
+
+    public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback) {
         try {
-            return new CustomObjectInputStream(callback);
+            CustomObjectInputStream result = (CustomObjectInputStream) whereFrom.get(DATA_HOLDER_KEY);
+            if (result == null) {
+                result = new CustomObjectInputStream(callback);
+                whereFrom.put(DATA_HOLDER_KEY, result);
+            } else {
+                result.setCallback(callback);
+            }
+            return result;
         } catch (IOException e) {
-            throw new ConversionException("Cannot create CustomObjectStream: " + e.getMessage());
+            throw new ConversionException("Cannot create CustomObjectStream", e);
         }
+    }
+
+    /**
+     * Warning, this object is expensive to create (due to functionality inherited from superclass).
+     * Use the static fetch() method instead, wherever possible.
+     *
+     * @see #getInstance(com.thoughtworks.xstream.converters.DataHolder, com.thoughtworks.xstream.core.util.CustomObjectInputStream.StreamCallback)
+     */
+    public CustomObjectInputStream(StreamCallback callback) throws IOException, SecurityException {
+        super();
+        this.callback = callback;
     }
 
     /**
@@ -25,16 +51,6 @@ public class CustomObjectInputStream extends ObjectInputStream {
      */
     public void setCallback(StreamCallback callback) {
         this.callback = callback;
-    }
-
-    public CustomObjectInputStream(StreamCallback callback) throws IOException, SecurityException {
-        super();
-        this.callback = callback;
-    }
-
-    public static interface StreamCallback {
-        Object deserialize();
-        void defaultReadObject();
     }
 
     public void defaultReadObject() throws IOException, ClassNotFoundException {

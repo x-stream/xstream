@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.core.util;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.DataHolder;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -9,19 +10,21 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     private StreamCallback callback;
 
-    public static CustomObjectOutputStream create(StreamCallback callback) {
-        try {
-            return new CustomObjectOutputStream(callback);
-        } catch (IOException e) {
-            throw new ConversionException("Cannot create CustomObjectStream: " + e.getMessage());
-        }
-    }
+    private static final String DATA_HOLDER_KEY = CustomObjectOutputStream.class.getName();
 
-    /**
-     * Allows the CustomObjectOutputStream (which is expensive to create) to be reused.
-     */
-    public void setCallback(StreamCallback callback) {
-        this.callback = callback;
+    public static synchronized CustomObjectOutputStream getInstance(DataHolder whereFrom, StreamCallback callback) {
+        try {
+            CustomObjectOutputStream result = (CustomObjectOutputStream) whereFrom.get(DATA_HOLDER_KEY);
+            if (result == null) {
+                result = new CustomObjectOutputStream(callback);
+                whereFrom.put(DATA_HOLDER_KEY, result);
+            } else {
+                result.setCallback(callback);
+            }
+            return result;
+        } catch (IOException e) {
+            throw new ConversionException("Cannot create CustomObjectStream", e);
+        }
     }
 
     public static interface StreamCallback {
@@ -29,7 +32,20 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
         void defaultWriteObject();
     }
 
-    protected CustomObjectOutputStream(StreamCallback callback) throws IOException, SecurityException {
+    /**
+     * Warning, this object is expensive to create (due to functionality inherited from superclass).
+     * Use the static fetch() method instead, wherever possible.
+     *
+     * @see #getInstance(com.thoughtworks.xstream.converters.DataHolder, com.thoughtworks.xstream.core.util.CustomObjectOutputStream.StreamCallback)
+     */
+    public CustomObjectOutputStream(StreamCallback callback) throws IOException, SecurityException {
+        this.callback = callback;
+    }
+
+    /**
+     * Allows the CustomObjectOutputStream (which is expensive to create) to be reused.
+     */
+    public void setCallback(StreamCallback callback) {
         this.callback = callback;
     }
 

@@ -42,6 +42,25 @@ public class SerializationMethodInvoker {
         }
     }
 
+    public Object callWriteReplace(Object object) {
+        if (object == null) {
+            return null;
+        } else {
+            Method writeReplaceMethod = getMethod(object.getClass(), "writeReplace", null);
+            if (writeReplaceMethod != null) {
+                try {
+                    return writeReplaceMethod.invoke(object, null);
+                } catch (IllegalAccessException e) {
+                    throw new ObjectAccessException("Could not call " + object.getClass().getName() + ".writeReplace()", e);
+                } catch (InvocationTargetException e) {
+                    throw new ObjectAccessException("Could not call " + object.getClass().getName() + ".writeReplace()", e);
+                }
+            } else {
+                return object;
+            }
+        }
+    }
+
     public boolean supportsReadObject(Class type) {
         return getMethod(type, "readObject", new Class[]{ObjectInputStream.class}) != null;
     }
