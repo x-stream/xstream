@@ -39,9 +39,6 @@ public class FieldDictionary {
                         Field[] fields = cls.getDeclaredFields();
                         for (int i = 0; i < fields.length; i++) {
                             Field field = fields[i];
-                            if (field.getName().startsWith("this$")) {
-                                continue;
-                            }
                             field.setAccessible(true);
                             if (!keyedByFieldName.containsKey(field.getName())) {
                                 keyedByFieldName.put(field.getName(), field);

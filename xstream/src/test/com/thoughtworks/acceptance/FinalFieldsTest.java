@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 
 public class FinalFieldsTest extends AbstractAcceptanceTest {
 
-    class ThingWithFinalField extends StandardObject {
+    static class ThingWithFinalField extends StandardObject {
         final int number = 9;
     }
 

@@ -55,7 +55,7 @@ public class MapTest extends AbstractAcceptanceTest {
         assertBothWays(map, expected);
     }
 
-    class ThingWithMap extends StandardObject {
+    static class ThingWithMap extends StandardObject {
         Map stuff = new HashMap();
     }
 
@@ -94,7 +94,7 @@ public class MapTest extends AbstractAcceptanceTest {
         assertBothWays(hashtable, expected);
     }
 
-    class ThingWithDifferentTypesOfMaps extends StandardObject {
+    static class ThingWithDifferentTypesOfMaps extends StandardObject {
         private Map m1 = new HashMap();
         private Map m2 = new Hashtable();
         private HashMap m3 = new HashMap();

@@ -14,7 +14,7 @@ public class FieldDictionaryTest extends TestCase {
         fieldDictionary = new FieldDictionary();
     }
 
-    class SomeClass {
+    static class SomeClass {
         private String a;
         private String c;
         private String b;
@@ -28,7 +28,7 @@ public class FieldDictionaryTest extends TestCase {
         assertFalse("No more fields should be present", fields.hasNext());
     }
 
-    class SpecialClass extends SomeClass {
+    static class SpecialClass extends SomeClass {
         private String brilliant;
     }
 
@@ -38,6 +38,19 @@ public class FieldDictionaryTest extends TestCase {
         assertEquals("a", ((Field)fields.next()).getName());
         assertEquals("c", ((Field)fields.next()).getName());
         assertEquals("b", ((Field)fields.next()).getName());
+        assertFalse("No more fields should be present", fields.hasNext());
+    }
+
+    class InnerClass { // note: no static makes this an inner class, not nested class.
+        private String someThing;
+    }
+
+    public void testIncludesOuterClassReferenceForInnerClass() {
+        Iterator fields = fieldDictionary.serializableFieldsFor(InnerClass.class);
+        assertEquals("someThing", ((Field)fields.next()).getName());
+        Field innerField = ((Field)fields.next());
+        assertEquals("this$0", innerField.getName());
+        assertEquals(FieldDictionaryTest.class, innerField.getType());
         assertFalse("No more fields should be present", fields.hasNext());
     }
 }

@@ -9,7 +9,7 @@ import java.lang.reflect.Array;
 
 public abstract class AbstractAcceptanceTest extends TestCase {
 
-    protected XStream xstream = new XStream(createDriver());
+    protected transient XStream xstream = new XStream(createDriver());
 
     protected HierarchicalStreamDriver createDriver() {
         // if the system property is set, use it to load the driver

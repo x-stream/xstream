@@ -69,6 +69,7 @@ import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
+import com.thoughtworks.xstream.mapper.OuterClassMapper;
 
 import java.io.EOFException;
 import java.io.File;
@@ -286,6 +287,7 @@ public class XStream {
         mapper = new AliasingMapper(mapper);
         aliasingMapper = (AliasingMapper) mapper; // need a reference to that one
         mapper = new DynamicProxyMapper(aliasingMapper);
+        mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
         defaultImplementationsMapper = (DefaultImplementationsMapper) mapper; // and that one

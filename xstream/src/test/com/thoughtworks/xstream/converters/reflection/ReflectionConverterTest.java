@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 public class ReflectionConverterTest extends TestCase {
 
-    public class World extends StandardObject {
+    public static class World extends StandardObject {
         int anInt = 1;
         Integer anInteger = new Integer(2);
         char anChar = 'a';

@@ -2,7 +2,15 @@ package com.thoughtworks.xstream;
 
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.acceptance.objects.Software;
-import com.thoughtworks.acceptance.someobjects.*;
+import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
+import com.thoughtworks.acceptance.someobjects.Handler;
+import com.thoughtworks.acceptance.someobjects.HandlerManager;
+import com.thoughtworks.acceptance.someobjects.Protocol;
+import com.thoughtworks.acceptance.someobjects.WithList;
+import com.thoughtworks.acceptance.someobjects.X;
+import com.thoughtworks.acceptance.someobjects.Y;
+import com.thoughtworks.acceptance.someobjects.Z;
+import com.thoughtworks.acceptance.someobjects.ZConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -13,19 +21,18 @@ import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import junit.framework.TestCase;
 import org.dom4j.Element;
 
-import java.io.StringReader;
-import java.io.ObjectOutputStream;
-import java.io.Writer;
-import java.io.StringWriter;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.EOFException;
-import java.io.FileWriter;
-import java.io.FileReader;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 
 public class XStreamTest extends TestCase {
 
-    private XStream xstream;
+    private transient XStream xstream;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -129,10 +136,13 @@ public class XStreamTest extends TestCase {
 
         String xml = xstream.toXML(obj);
 
-        String expected =
-                "<inner>\n" +
-                "  <field>3</field>\n" +
-                "</inner>";
+        String expected = ""
+                + "<inner>\n"
+                + "  <field>3</field>\n"
+                + "  <outer-class>\n"
+                + "    <fName>testCanHandleNonStaticPrivateInnerClass</fName>\n"
+                + "  </outer-class>\n"
+                + "</inner>";
 
         assertEquals(expected, xml);
 
