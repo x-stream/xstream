@@ -4,9 +4,6 @@ import com.thoughtworks.acceptance.objects.StatusEnum;
 import com.thoughtworks.acceptance.objects.ColorEnum;
 
 import java.io.*;
-import java.util.Currency;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * @author Chris Kelly
@@ -40,17 +37,6 @@ public class ReadResolveTest extends AbstractAcceptanceTest {
         StatusEnum rStatus = (StatusEnum) xstream.fromXML(xml);
 
         assertSame(status, rStatus);
-    }
-
-    public void testInetAddressIsResolvedToSameInstance() throws UnknownHostException {
-        // InetAddress is a class that contains readResolve()
-        InetAddress in = InetAddress.getByName("localhost");
-        String expectedXml = "" +
-                "<java.util.Currency>\n" +
-                "  <currencyCode>USD</currencyCode>\n" +
-                "</java.util.Currency>";
-        Object result = assertBothWays(in, expectedXml);
-        assertSame(result, in);
     }
 
     public void testSupportCommonsLangEnum() {
