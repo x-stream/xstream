@@ -6,11 +6,15 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 public class TreeMarshaller implements MarshallingContext {
 
     protected HierarchicalStreamWriter writer;
     protected ConverterLookup converterLookup;
     protected ClassMapper classMapper;
+    private Collection parentObjects = new HashSet();
 
     public TreeMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup,
                                      ClassMapper classMapper) {
@@ -20,8 +24,14 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     public void convertAnother(Object item) {
+        Integer id = new Integer(System.identityHashCode(item));
+        if (parentObjects.contains(id)) {
+            throw new CircularReferenceException();
+        }
+        parentObjects.add(id);
         Converter converter = converterLookup.lookupConverterForType(item.getClass());
         converter.marshal(item, writer, this);
+        parentObjects.remove(id);
     }
 
     public void start(Object item) {
@@ -33,6 +43,9 @@ public class TreeMarshaller implements MarshallingContext {
             convertAnother(item);
             writer.endNode();
         }
+    }
+
+    public class CircularReferenceException extends RuntimeException {
     }
 
 }
