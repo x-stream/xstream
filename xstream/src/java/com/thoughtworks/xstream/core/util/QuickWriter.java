@@ -64,6 +64,16 @@ public class QuickWriter {
         }
     }
 
+    public void close() {
+        try {
+            writer.write(buffer, 0, pointer);
+            pointer = 0;
+            writer.close();
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
+    }
+
     private void raw(char[] c) {
         try {
             writer.write(c);

@@ -44,4 +44,16 @@ public class DomWriter implements HierarchicalStreamWriter {
         Node parent = current.getParentNode();
         current = parent instanceof Element ? (Element)parent : null;
     }
+
+    public void flush() {
+        // don't need to do anything
+    }
+
+    public void close() {
+        // don't need to do anything
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
+    }
 }

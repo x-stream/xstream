@@ -4,9 +4,17 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppReader;
+import com.thoughtworks.xstream.testutil.CallLog;
+import com.thoughtworks.acceptance.objects.Software;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.EOFException;
+import java.io.Reader;
 
 public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
@@ -22,12 +30,8 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        xstream.alias("person", Person.class);
-    }
-
     public void testReadAndWriteMultipleObjectsInOneStream() {
+        xstream.alias("person", Person.class);
         StringWriter buffer = new StringWriter();
 
         // serialize
@@ -74,5 +78,91 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         reader.moveUp();
 
         assertFalse("should be no more objects", reader.hasMoreChildren());
+    }
+
+    public void testDrivenThroughObjectStream() throws IOException, ClassNotFoundException {
+        Writer writer = new StringWriter();
+        xstream.alias("software", Software.class);
+
+        ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
+        oos.writeInt(123);
+        oos.writeObject("hello");
+        oos.writeObject(new Software("tw", "xs"));
+        oos.close();
+
+        String expectedXml = ""
+                + "<object-stream>\n"
+                + "  <int>123</int>\n"
+                + "  <string>hello</string>\n"
+                + "  <software>\n"
+                + "    <vendor>tw</vendor>\n"
+                + "    <name>xs</name>\n"
+                + "  </software>\n"
+                + "</object-stream>";
+
+        assertEquals(expectedXml, writer.toString());
+
+        ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(writer.toString()));
+        assertEquals(123, ois.readInt());
+        assertEquals("hello", ois.readObject());
+        assertEquals(new Software("tw", "xs"), ois.readObject());
+
+        try {
+            ois.readObject(); // As far as I can see this is the only clue the ObjectInputStream gives that it's done.
+            fail("Expected EOFException");
+        } catch (EOFException expectedException) {
+            // good
+        }
+    }
+
+    public void testObjectOutputStreamPropegatesCloseAndFlushEvents() throws IOException {
+        // setup
+        final CallLog log = new CallLog();
+        Writer loggingWriter = new Writer() {
+            public void close() throws IOException {
+                log.actual("close");
+            }
+
+            public void flush() throws IOException {
+                log.actual("flush");
+            }
+
+            public void write(char cbuf[], int off, int len) {
+                // don't care about this
+            }
+        };
+
+        // expectations
+        log.expect("flush"); // TWO flushes are currently caused. Only one is needed, but this is no big deal.
+        log.expect("flush");
+        log.expect("close");
+
+        // execute
+        ObjectOutputStream objectOutputStream = xstream.createObjectOutputStream(loggingWriter);
+        objectOutputStream.flush();
+        objectOutputStream.close();
+
+        // verify
+        log.verify();
+    }
+
+    public void testObjectInputStreamPropegatesCloseEvent() throws IOException {
+        // setup
+        final CallLog log = new CallLog();
+        Reader loggingReader = new StringReader("<int>1</int>") {
+            public void close() {
+                log.actual("close");
+            }
+        };
+
+        // expectations
+        log.expect("close");
+
+        // execute
+        ObjectInputStream objectInputStream = xstream.createObjectInputStream(loggingReader);
+        objectInputStream.close();
+
+        // verify
+        log.verify();
     }
 }

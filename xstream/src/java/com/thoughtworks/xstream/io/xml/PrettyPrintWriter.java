@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.core.util.FastStack;
+import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.io.PrintWriter;
@@ -60,6 +60,19 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         tagIsEmpty = false;
         finishTag();
 
+        writeEscapedString(text);
+    }
+
+    public void addAttribute(String key, String value) {
+        writer.write(' ');
+        writer.write(key);
+        writer.write('=');
+        writer.write('\"');
+        writeEscapedString(value);
+        writer.write('\"');
+    }
+
+    private void writeEscapedString(String text) {
         // Profiler said this was a bottleneck
         int length = text.length();
         for (int i = 0; i < length; i++) {
@@ -87,16 +100,6 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
                     writer.write(c);
             }
         }
-        // end bottleneck
-    }
-
-    public void addAttribute(String key, String value) {
-        writer.write(' ');
-        writer.write(key);
-        writer.write('=');
-        writer.write('\"');
-        writer.write(value);
-        writer.write('\"');
     }
 
     public void endNode() {
@@ -137,4 +140,15 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         }
     }
 
+    public void flush() {
+        writer.flush();
+    }
+
+    public void close() {
+        writer.close();
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
+    }
 }

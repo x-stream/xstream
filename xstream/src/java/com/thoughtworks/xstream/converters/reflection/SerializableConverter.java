@@ -166,6 +166,10 @@ public class SerializableConverter implements Converter {
                 }
             }
 
+            public void flush() {
+                writer.flush();
+            }
+
             public void close() {
                 throw new UnsupportedOperationException("Objects are not allowed to call ObjectOutputStream.close() from writeObject()");
             }

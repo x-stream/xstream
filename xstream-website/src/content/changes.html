@@ -19,11 +19,12 @@
     <h2>Major changes</h2>
 
     <ul>
+		<li>Converters can now access underlying HierarchicalStreamReader/Writer implementations to make implementation specific calls.</li>
 		<li>Improved support for classes using ObjectInputFields to follow the serialization specification.</li>
 		<li><jira>XSTR-179</jira> Support for ObjectInputStream.registerValidation(ObjectInputValidation).</li>
 		<li><jira>XSTR-178</jira> Serialized inner class now maintains reference to outer class.</li>
 	</ul>
-	
+
 	<h2>Minor changes</h2>
 
     <ul>
@@ -37,6 +38,15 @@
 		<li>Bugfix: Deserialization of very complicated graphs (such as Swing components) sometimes resulted in broken object references. Now fixed.</li>
 		<li>Bugfix: <jira>XSTR-188</jira> Classes that use readResolve()/writeReplace() can now return different types.</li>
 		<li>Bugfix: <jira>XSTR-185</jira> JavaClassConverter can now load array classes for classes that have not yet been loaded. (Thanks to Henri Tremblay)</li>
+		<li>Bugfix: <jira>XSTR-190</jira> PrettyPrintWriter and CompactWriter escape characters in XML attributes.</li>
+		<li>Bugfix: <jira>XSTR-176</jira> The XStream ObjectInputStream and ObjectOutputStream implementations now propegate the flush() and close() events to the underlying streams.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+        <li>HierarchicalStreamWriter implementations must now implement close(), flush() and underlyingWriter().</li>
+        <li>HierarchicalStreamReader implementations must now implement close() and underlyingReader().</li>
     </ul>
 
     <h1>Version 1.1</h1>

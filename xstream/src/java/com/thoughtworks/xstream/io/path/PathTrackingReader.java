@@ -47,4 +47,12 @@ public class PathTrackingReader implements HierarchicalStreamReader {
         errorWriter.add("path", pathTracker.getCurrentPath());
         reader.appendErrors(errorWriter);
     }
+
+    public void close() {
+        reader.close();
+    }
+
+    public HierarchicalStreamReader underlyingReader() {
+        return reader.underlyingReader();
+    }
 }

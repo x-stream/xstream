@@ -311,39 +311,4 @@ public class XStreamTest extends TestCase {
         assertEquals("z", z.field);
     }
 
-    public void testAllowsStreamDrivenFromObjectOutputStream() throws IOException, ClassNotFoundException {
-        Writer writer = new StringWriter();
-        xstream.alias("software", Software.class);
-
-        ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
-        oos.writeInt(123);
-        oos.writeObject("hello");
-        oos.writeObject(new Software("tw", "xs"));
-        oos.close();
-
-        String expectedXml = ""
-                + "<object-stream>\n"
-                + "  <int>123</int>\n"
-                + "  <string>hello</string>\n"
-                + "  <software>\n"
-                + "    <vendor>tw</vendor>\n"
-                + "    <name>xs</name>\n"
-                + "  </software>\n"
-                + "</object-stream>";
-
-        assertEquals(expectedXml, writer.toString());
-
-        ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(writer.toString()));
-        assertEquals(123, ois.readInt());
-        assertEquals("hello", ois.readObject());
-        assertEquals(new Software("tw", "xs"), ois.readObject());
-
-        try {
-            ois.readObject(); // As far as I can see this is the only clue the ObjectInputStream gives that it's done.
-            fail("Expected EOFException");
-        } catch (EOFException expectedException) {
-            // good
-        }
-    }
-
 }

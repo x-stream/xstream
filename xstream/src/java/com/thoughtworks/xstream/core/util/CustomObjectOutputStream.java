@@ -35,6 +35,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
         void writeToStream(Object object) throws IOException;
         void writeFieldsToStream(Map fields) throws IOException;
         void defaultWriteObject() throws IOException;
+        void flush() throws IOException;
         void close() throws IOException;
     }
 
@@ -122,6 +123,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
     }
 
     public void flush() throws IOException {
+        callback.flush();
     }
 
     public void close() throws IOException {

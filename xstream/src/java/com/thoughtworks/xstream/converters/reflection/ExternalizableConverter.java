@@ -59,6 +59,10 @@ public class ExternalizableConverter implements Converter {
                     throw new UnsupportedOperationException();
                 }
 
+                public void flush() {
+                    writer.flush();
+                }
+
                 public void close() {
                     throw new UnsupportedOperationException("Objects are not allowed to call ObjecOutput.close() from writeExternal()");
                 }

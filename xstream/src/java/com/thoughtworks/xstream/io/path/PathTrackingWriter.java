@@ -30,4 +30,15 @@ public class PathTrackingWriter implements HierarchicalStreamWriter {
         pathTracker.popElement();
     }
 
+    public void flush() {
+        targetWriter.flush();
+    }
+
+    public void close() {
+        targetWriter.close();
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return targetWriter.underlyingWriter();
+    }
 }

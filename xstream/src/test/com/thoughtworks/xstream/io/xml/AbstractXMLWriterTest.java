@@ -58,10 +58,11 @@ public abstract class AbstractXMLWriterTest extends TestCase {
 
     public void testEscapesXmlUnfriendlyCharacters() {
         writer.startNode("evil");
+        writer.addAttribute("attr", "w0000 $ <x\"x> &!;");
         writer.setValue("w0000 $ <xx> &!;");
         writer.endNode();
 
-        assertXmlProducedIs("<evil>w0000 $ &lt;xx&gt; &amp;!;</evil>");
+        assertXmlProducedIs("<evil attr=\"w0000 $ &lt;x&quot;x&gt; &amp;!;\">w0000 $ &lt;xx&gt; &amp;!;</evil>");
     }
 
     public void testEscapesWhitespaceCharacters() {

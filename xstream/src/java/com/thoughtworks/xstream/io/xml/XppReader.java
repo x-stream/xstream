@@ -18,6 +18,7 @@ public class XppReader implements HierarchicalStreamReader {
     private final XmlPullParser parser;
     private final FastStack elementStack = new FastStack(16);
     private final IntQueue lookaheadQueue = new IntQueue(4);
+    private final BufferedReader reader;
 
     private boolean hasMoreChildrenCached;
     private boolean hasMoreChildrenResult;
@@ -25,7 +26,8 @@ public class XppReader implements HierarchicalStreamReader {
     public XppReader(Reader reader) {
         try {
             parser = createParser();
-            parser.setInput(new BufferedReader(reader));
+            this.reader = new BufferedReader(reader);
+            parser.setInput(this.reader);
             moveDown();
         } catch (XmlPullParserException e) {
             throw new StreamException(e);
@@ -144,4 +146,17 @@ public class XppReader implements HierarchicalStreamReader {
     public void appendErrors(ErrorWriter errorWriter) {
         errorWriter.add("line number", String.valueOf(parser.getLineNumber()));
     }
+
+    public void close() {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    public HierarchicalStreamReader underlyingReader() {
+        return this;
+    }
+
 }

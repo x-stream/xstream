@@ -5,8 +5,7 @@ import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 
 import java.util.LinkedList;
 
-public class XppDomWriter
-        implements HierarchicalStreamWriter {
+public class XppDomWriter implements HierarchicalStreamWriter {
     private LinkedList elementStack = new LinkedList();
 
     private Xpp3Dom configuration;
@@ -45,4 +44,17 @@ public class XppDomWriter
     private Xpp3Dom top() {
         return (Xpp3Dom) elementStack.getLast();
     }
+
+    public void flush() {
+        // don't need to do anything
+    }
+
+    public void close() {
+        // don't need to do anything
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
+    }
+    
 }

@@ -38,4 +38,15 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
         return (Branch) elementStack.getLast();
     }
 
+    public void flush() {
+        // don't need to do anything
+    }
+
+    public void close() {
+        // don't need to do anything
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
+    }
 }

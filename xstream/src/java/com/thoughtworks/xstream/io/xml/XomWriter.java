@@ -29,4 +29,16 @@ public class XomWriter implements HierarchicalStreamWriter {
     public void endNode() {
         node = (Element) node.getParent();
     }
+
+    public void flush() {
+        // don't need to do anything
+    }
+
+    public void close() {
+        // don't need to do anything
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
+    }
 }

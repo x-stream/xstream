@@ -74,4 +74,16 @@ public class JDomWriter implements HierarchicalStreamWriter {
     public List getResult() {
         return this.result;
     }
+
+    public void flush() {
+        // don't need to do anything
+    }
+
+    public void close() {
+        // don't need to do anything
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
+    }
 }

@@ -670,5 +670,17 @@ public final class SaxWriter implements HierarchicalStreamWriter, XMLReader {
             this.startTagInProgress = false;
         }
     }
+
+    public void flush() {
+        // don't need to do anything
+    }
+
+    public void close() {
+        // don't need to do anything
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
+    }
 }
 

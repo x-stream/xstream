@@ -56,4 +56,12 @@ public abstract class AbstractTreeReader implements HierarchicalStreamReader {
     public Object peekUnderlyingNode() {
         return current;
     }
+
+    public void close() {
+        // don't need to do anything
+    }
+
+    public HierarchicalStreamReader underlyingReader() {
+        return this;
+    }
 }

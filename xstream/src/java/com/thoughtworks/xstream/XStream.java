@@ -748,9 +748,13 @@ public class XStream {
                 throw new NotActiveException("not in call to writeObject");
             }
 
+            public void flush() {
+                writer.flush();
+            }
+
             public void close() {
                 writer.endNode();
-                // TODO: close underlying writer?
+                writer.close();
             }
         });
     }
@@ -803,7 +807,7 @@ public class XStream {
             }
 
             public void close() {
-                // TODO: close underlying reader?
+                reader.close();
             }
         });
     }

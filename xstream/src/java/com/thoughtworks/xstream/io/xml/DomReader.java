@@ -10,6 +10,8 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+
 public class DomReader extends AbstractTreeReader {
 
     private Element currentElement;

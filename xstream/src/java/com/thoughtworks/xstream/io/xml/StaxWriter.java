@@ -41,6 +41,15 @@ public class StaxWriter implements HierarchicalStreamWriter {
         }
     }
 
+    public void flush() {
+        try {
+            out.close();
+        }
+        catch (XMLStreamException e) {
+            throw new StreamException(e);
+        }
+    }
+
     /**
      * Call this method when you're finished with me
      */
@@ -101,5 +110,9 @@ public class StaxWriter implements HierarchicalStreamWriter {
         catch (XMLStreamException e) {
             throw new StreamException(e);
         }
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
     }
 }
