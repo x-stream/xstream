@@ -16,10 +16,6 @@ public abstract class ClassMapperWrapper implements ClassMapper {
         return wrapped.lookupType(elementName);
     }
 
-    public void alias(String elementName, Class type, Class defaultImplementation) {
-        wrapped.alias(elementName, type, defaultImplementation);
-    }
-
     public String mapNameFromXML(String xmlName) {
         return wrapped.mapNameFromXML(xmlName);
     }
@@ -43,4 +39,37 @@ public abstract class ClassMapperWrapper implements ClassMapper {
         return defaultImplementationOf(baseType);
     }
 
+    /**
+     * @deprecated As of 1.1.1, use {@link AliasingMapper#alias(String, Class, Class)}
+     */
+    public void alias(String elementName, Class type, Class defaultImplementation) {
+        AliasingMapper aliasingMapper = (AliasingMapper) findWrapped(AliasingMapper.class);
+        if (aliasingMapper == null) {
+            throw new UnsupportedOperationException("ClassMapper.alias() longer supported. Use AliasingMapper.alias() instead.");
+        } else {
+            aliasingMapper.addAlias(elementName, type);
+        }
+        if (defaultImplementation != null && defaultImplementation != type) {
+            DefaultImplementationsMapper defaultImplementationsMapper = (DefaultImplementationsMapper) findWrapped(DefaultImplementationsMapper.class);
+            if (defaultImplementationsMapper == null) {
+                throw new UnsupportedOperationException("ClassMapper.alias() longer supported. Use DefaultImplementatoinsMapper.add() instead.");
+            } else {
+                defaultImplementationsMapper.addDefaultImplementation(type, defaultImplementation);
+            }
+        }
+    }
+
+    private ClassMapper findWrapped(Class typeOfMapper) {
+        ClassMapper current = this;
+        while (true) {
+            if (current.getClass().isAssignableFrom(typeOfMapper)) {
+                return current;
+            } else if (current instanceof ClassMapperWrapper) {
+                ClassMapperWrapper wrapper = (ClassMapperWrapper) current;
+                current = wrapper.wrapped;
+            } else {
+                return null;
+            }
+        }
+    }
 }

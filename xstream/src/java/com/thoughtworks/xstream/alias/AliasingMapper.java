@@ -13,13 +13,9 @@ public class AliasingMapper extends ClassMapperWrapper {
         super(wrapped);
     }
 
-    public void alias(String elementName, Class type, Class defaultImplementation) {
-        nameToTypeMap.put(elementName, type.getName());
-        typeToNameMap.put(type.getName(), elementName);
-        if (!type.equals(defaultImplementation)) {
-            typeToNameMap.put(defaultImplementation.getName(), elementName);
-        }
-        super.alias(elementName, type, defaultImplementation);
+    public void addAlias(String name, Class type) {
+        nameToTypeMap.put(name, type.getName());
+        typeToNameMap.put(type.getName(), name);
     }
 
     public String lookupName(Class type) {
