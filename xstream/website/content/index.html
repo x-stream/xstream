@@ -9,11 +9,37 @@
 
  .  <p>XStream is a simple library to serialize objects to XML and back again.</p>
 
-    <p>XStream requires minimal (if any at all) configuration for custom objects.</p>
+    <h1>Features</h1>
 
-    <p>The XML produced is clean and concise and never duplicates any information that can be obtained via reflection.</p>
+    <ul>
+        <li><b>Ease of use.</b> A high level facade is supplied that simplifies common use cases.</li>
+        <li><b>No mappings required.</b> Custom objects can be serialized without need for specifying mappings.</li>
+        <li><b>Performance.</b> Speed and low memory footprint are a crucial part of the design, making it suitable for
+        large object graphs or systems with high message throughput.</li>
+        <li><b>Clean XML.</b> No information is duplicated that can be obtained via reflection. This results
+        in XML that is easier to read for humans and more compact than native Java serialization.</li>
+        <li><b>Requires no modifications to objects.</b> Serializes internal fields, including private and
+        final. Supports non-public and inner classes. Classes are not required to have default constructor.</li>
+        <li><b>Full object graph support.</b> Duplicate references encountered in the object-model will
+        be maintained. Supports circular references.</li>
+        <li><b>Integrates with other XML APIs.</b> By implementing an interface, XStream can serialize
+        directly to/from any tree structure (not just XML).</li>
+        <li><b>Customizable conversion stategies.</b> Strategies can be registered allowing customization of how
+        particular types are represented as XML.</li>
+        <li><b>Error messages.</b> When an exception occurs due to malformed XML, detailed diagnostics are provided
+        to help isolate and fix the problem.</li>
+    </ul>
 
-    <p>XStream has a clean design, is simple to use, boasts impressive speed and is not coupled to any particular XML library.</p>
+    <h1>Typical Uses</h1>
+
+    <ul>
+        <li><b>Persistence</b></li>
+        <li><b>Transport</b></li>
+        <li><b>Configuration</b></li>
+    </ul>
+<!--
+    <h1>Example</h1>
+-->
 
     <h1>Getting Started</h1>
 
