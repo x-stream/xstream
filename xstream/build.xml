@@ -20,7 +20,7 @@
             targetfile="build/src/.flagfile"/>
         <antcall target="sablecc"/>
         <mkdir dir="build/classes"/>
-        <javac srcdir="src/java" destdir="build/classes">
+        <javac srcdir="src/java;build/src" destdir="build/classes">
             <classpath refid="classpath"/>
         </javac>
     </target>
@@ -75,6 +75,7 @@
                 <exclude name="com/thoughtworks/xstream/core/**"/>
                 <exclude name="com/thoughtworks/xstream/io/path/**"/>
                 <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
+                <exclude name="com/thoughtworks/xstream/io/squidgey/**"/>
             </packageset>
             <doctitle><![CDATA[<h1>XStream ${version} API</h1>]]></doctitle>
             <bottom><![CDATA[<i>Joe Walnes, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]></bottom>
