@@ -2,12 +2,12 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import junit.framework.TestCase;
 
-public class JavaReflectionObjectFactoryTest extends TestCase {
-    private ObjectFactory objectFactory;
+public class PureJavaReflectionProviderTest extends TestCase {
+    private ReflectionProvider objectFactory;
 
     protected void setUp() throws Exception {
         super.setUp();
-        objectFactory = new JavaReflectionObjectFactory();
+        objectFactory = new PureJavaReflectionProvider();
     }
 
     public void testConstructsStandardClass() {
@@ -26,7 +26,7 @@ public class JavaReflectionObjectFactoryTest extends TestCase {
 
     public void testUnfortunatelyExecutesCodeInsideConstructor() {
         try {
-            objectFactory.create(WithConstructorThatDoesStuff.class);
+            objectFactory.newInstance(WithConstructorThatDoesStuff.class);
             fail("Expected code in constructor to be executed and throw an exception");
         } catch (UnsupportedOperationException expectedException) {
             // good
@@ -38,14 +38,14 @@ public class JavaReflectionObjectFactoryTest extends TestCase {
     }
 
     private void assertCanCreate(Class type) {
-        Object result = objectFactory.create(type);
+        Object result = objectFactory.newInstance(type);
         assertEquals(type, result.getClass());
     }
 
     private void assertCannotCreate(Class type) {
         try {
-            objectFactory.create(type);
-            fail("Should not have been able to create " + type);
+            objectFactory.newInstance(type);
+            fail("Should not have been able to newInstance " + type);
         } catch (ObjectAccessException goodException) {
         }
     }

@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.reflection.SunReflectionObjectFactory;
+import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.DefaultClassMapper;
 import com.thoughtworks.xstream.core.DefaultNameMapper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -23,7 +23,7 @@ public class Xpp3XStreamTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        xstream = new XStream(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()),new Xpp3Driver());
+        xstream = new XStream(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()),new Xpp3Driver());
         xstream.alias("x", X.class);
         xstream.alias("y", Y.class);
         xstream.alias("funny", FunnyConstructor.class);

@@ -10,11 +10,11 @@ import java.lang.reflect.InvocationTargetException;
  * will never be executed and parameters do not have to be known). This is the same method used by the internals of
  * standard Java serialization, but relies on internal Sun code that may not be present on all JVMs.
  */
-public class SunReflectionObjectFactory implements ObjectFactory {
+public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
-    private ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
+    private static final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
 
-    public Object create(Class type) {
+    public Object newInstance(Class type) {
         try {
             Constructor javaLangObjectConstructor = Object.class.getDeclaredConstructor(new Class[0]);
             Constructor customConstructor = reflectionFactory.newConstructorForSerialization(type, javaLangObjectConstructor);

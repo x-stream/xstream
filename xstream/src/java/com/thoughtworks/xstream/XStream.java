@@ -5,9 +5,9 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
-import com.thoughtworks.xstream.converters.reflection.ObjectFactory;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
-import com.thoughtworks.xstream.converters.reflection.SunReflectionObjectFactory;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.*;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -24,18 +24,18 @@ public class XStream {
     protected ConverterLookup converterLookup = new DefaultConverterLookup();
     protected HierarchicalStreamDriver xmlReaderDriver;
     protected ClassMapper classMapper;
-    protected ObjectFactory objectFactory;
+    protected ReflectionProvider objectFactory;
     protected String classAttributeIdentifier;
 
     public XStream() {
-        this(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()), new DomDriver());
+        this(new Sun14ReflectionProvider(), new DefaultClassMapper(new DefaultNameMapper()), new DomDriver());
     }
 
-    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver) {
+    public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver) {
         this(objectFactory, classMapper, xmlReaderDriver, "class");
     }
 
-    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver,String classAttributeIdentifier) {
+    public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver,String classAttributeIdentifier) {
         this.classMapper = classMapper;
         this.objectFactory = objectFactory;
         this.xmlReaderDriver = xmlReaderDriver;

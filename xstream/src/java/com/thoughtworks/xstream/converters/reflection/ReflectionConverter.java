@@ -9,69 +9,56 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ReflectionConverter implements Converter {
 
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
-    private ObjectFactory objectFactory;
+    private ReflectionProvider reflectionProvider;
 
-    public ReflectionConverter(ClassMapper classMapper,String classAttributeIdentifier, ObjectFactory objectFactory) {
+    public ReflectionConverter(ClassMapper classMapper,String classAttributeIdentifier, ReflectionProvider reflectionProvider) {
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
-        this.objectFactory = objectFactory;
+        this.reflectionProvider = reflectionProvider;
     }
 
     public boolean canConvert(Class type) {
         return true;
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        Iterator fields = getFields(source.getClass());
-        while (fields.hasNext()) {
-            Field field = (Field) fields.next();
-            field.setAccessible(true);
-            try {
-                Object newObj = field.get(source);
+    public void toXML(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+        reflectionProvider.eachSerializableFields(source.getClass(), new ReflectionProvider.Block() {
+            public void visit(String fieldName, Class fieldType) {
+                Object newObj = reflectionProvider.readField(source, fieldName);
                 if (newObj != null) {
-                    writeFieldAsXML(context, field, newObj, writer);
+                    writer.startNode(classMapper.mapNameToXML(fieldName));
+
+                    Class actualType = newObj.getClass();
+
+                    Class defaultType = classMapper.lookupDefaultType(fieldType);
+                    if (!actualType.equals(defaultType)) {
+                        writer.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
+                    }
+
+                    context.convertAnother(newObj);
+
+                    writer.startNode();
                 }
-            } catch (IllegalAccessException e) {
-                throw new ConversionException(
-                        "Cannot access field " + source.getClass() + "." + field.getName(), e);
             }
-        }
-    }
-
-    private void writeFieldAsXML(MarshallingContext context, Field field, Object obj, HierarchicalStreamWriter writer) {
-        writer.startNode(classMapper.mapNameToXML(field.getName()));
-
-        Class actualType = obj.getClass();
-
-        Class defaultType = classMapper.lookupDefaultType(field.getType());
-        if (!actualType.equals(defaultType)) {
-            writer.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
-        }
-
-        context.convertAnother(obj);
-
-        writer.startNode();
+        });
     }
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Object result = context.currentObject();
 
         if (result == null) {
-            result = objectFactory.create(context.getRequiredType());
+            result = reflectionProvider.newInstance(context.getRequiredType());
         }
 
         while (reader.getNextChildNode()) {
             String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
-            Iterator fields = getFields(result.getClass());
+            Iterator fields = reflectionProvider.listSerializableFields(result.getClass());
             Field field = null;
             while (fields.hasNext()) {
                 Field tmp = (Field) fields.next();
@@ -107,28 +94,5 @@ public class ReflectionConverter implements Converter {
         return result;
     }
 
-    private Iterator getFields(Class cls) {
-        List result = new LinkedList();
-
-        while (!Object.class.equals(cls)) {
-            Field[] fields = cls.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
-                int modifiers = field.getModifiers();
-                if (field.getName().startsWith("this$")) {
-                    continue;
-                }
-                if (Modifier.isFinal(modifiers) ||
-                        Modifier.isStatic(modifiers) ||
-                        Modifier.isTransient(modifiers)) {
-                    continue;
-                }
-                result.add(field);
-            }
-            cls = cls.getSuperclass();
-        }
-
-        return result.iterator();
-    }
 
 }
