@@ -34,6 +34,11 @@
         ANY class that implements java.io.Serializable.</li>
         <li>DOM, DOM4J, JDOM, XOM, Electric-XML, SAX, STAX</li>
         <li>Specific ClassLoaders can be passed into XStream, to allow for greater compatability in J2EE containers.</li>
+        <li>Ability to change the default converter</li>
+        <li>Added ISO8601DateConverter for full ISO8601 date format support. 
+        	   The converter is not registered by default as it requires the joda-time dependency (http://joda-time.sf.net). 
+        	   To use, ensure joda-time is in classpath and register explicitly.
+        </li>
     </ul>
 
     <h2>Minor changes</h2>
