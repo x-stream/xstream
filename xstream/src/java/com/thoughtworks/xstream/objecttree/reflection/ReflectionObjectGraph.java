@@ -1,4 +1,3 @@
-//020 8330 0577 bob
 package com.thoughtworks.xstream.objecttree.reflection;
 
 import com.thoughtworks.xstream.objecttree.ObjectAccessException;

@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.composite;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.reference.CircularityTracker;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
@@ -10,6 +11,7 @@ import com.thoughtworks.xstream.xml.XMLWriter;
 public class ObjectWithFieldsConverter implements Converter {
 
     private ClassMapper classMapper;
+    private CircularityTracker circularityTracker = new CircularityTracker();
 
     public ObjectWithFieldsConverter(ClassMapper classMapper) {
         this.classMapper = classMapper;
@@ -21,6 +23,7 @@ public class ObjectWithFieldsConverter implements Converter {
 
     public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
         String[] fieldNames = objectGraph.fieldNames();
+        circularityTracker.track(objectGraph.get());
         for (int i = 0; i < fieldNames.length; i++) {
             String fieldName = fieldNames[i];
 
