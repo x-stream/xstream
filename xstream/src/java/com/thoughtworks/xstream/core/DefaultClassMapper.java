@@ -135,7 +135,7 @@ public class DefaultClassMapper implements ClassMapper {
                         className.append('[');
                     }
                     className.append(charThatJavaUsesToRepresentPrimitiveType(primvCls));
-                    result = Class.forName(className.toString());
+                    result = loadClass(className.toString());
                     // otherwise look it up like normal
                 } else {
                     StringBuffer className = new StringBuffer();
@@ -143,16 +143,25 @@ public class DefaultClassMapper implements ClassMapper {
                         className.append('[');
                     }
                     className.append('L').append(elementName).append(';');
-                    result = Class.forName(className.toString());
+                    result = loadClass(className.toString());
                 }
             } else {
-                result = Class.forName(elementName);
+                result = loadClass(elementName);
             }
         } catch (ClassNotFoundException e) {
             throw new CannotResolveClassException(elementName + " : " + e.getMessage());
         }
         lookupTypeCache.put(key, result);
         return result;
+    }
+
+    private Class loadClass(String className) throws ClassNotFoundException {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            // Servlet engine friendly.
+            return Thread.currentThread().getContextClassLoader().loadClass(className);
+        }
     }
 
     private char charThatJavaUsesToRepresentPrimitiveType(Class primvCls) {
