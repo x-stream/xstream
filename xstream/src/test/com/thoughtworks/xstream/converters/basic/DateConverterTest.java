@@ -31,17 +31,20 @@ public class DateConverterTest extends TestCase {
         assertEquals(in.getTime(), out.getTime());
     }
 
+
     public void testUnmarshallsOldXStreamDatesThatLackMillisecond() {
         // setup
-        String oldStyleText = "2004-02-22 15:16:04 ART";
+        String oldStyleText = "2004-02-22 15:16:04PM";
 
         // execute
         Date out = (Date) converter.fromString(oldStyleText);
 
         // verify
+        //TODO make test zone independent
         assertEquals("2004-02-22 15:16:04.0 ART", converter.toString(out));
     }
 
+    
     public void testIsThreadSafe() throws InterruptedException {
         final List results = Collections.synchronizedList(new ArrayList());
         final DateConverter converter = new DateConverter();

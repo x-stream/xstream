@@ -17,7 +17,7 @@ public class DateConverter extends AbstractBasicConverter {
     private final ThreadSafeSimpleDateFormat[] acceptableFormats;
 
     public DateConverter() {
-        this("yyyy-MM-dd HH:mm:ss.S z", new String[] { "yyyy-MM-dd HH:mm:ssz" });
+        this("yyyy-MM-dd HH:mm:ss.S z", new String[] { "yyyy-MM-dd HH:mm:ssz", "yyyy-MM-dd HH:mm:ssa" });
 	}
 
     public DateConverter(String defaultFormat, String[] acceptableFormats) {
