@@ -1,22 +1,23 @@
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.alias.ClassMapperWrapper;
-import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
-import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.ArrayMapper;
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
+import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.ClassMapperWrapper;
 import com.thoughtworks.xstream.alias.DefaultImplementationsMapper;
+import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
 import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
-import java.util.Map;
+import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.HashMap;
-import java.lang.reflect.Proxy;
+import java.util.Map;
 
 public class DefaultClassMapper extends ClassMapperWrapper {
 
     public DefaultClassMapper() {
-        super(new ImmutableTypesMapper(new DefaultImplementationsMapper(new XmlFriendlyClassMapper(new OldClassMapper()))));
+        super(new ImmutableTypesMapper(new DefaultImplementationsMapper(new XmlFriendlyClassMapper(new ArrayMapper(new OldClassMapper())))));
     }
 
     private static class OldClassMapper implements ClassMapper {
@@ -43,11 +44,6 @@ public class DefaultClassMapper extends ClassMapperWrapper {
         }
 
         public String lookupName(Class type) {
-            StringBuffer arraySuffix = new StringBuffer();
-            while (type.isArray()) {
-                type = type.getComponentType();
-                arraySuffix.append("-array");
-            }
             String result = (String) typeToNameMap.get(type);
             if (result == null && Proxy.isProxyClass(type)) {
                 result = (String) typeToNameMap.get(DynamicProxy.class);
@@ -60,27 +56,7 @@ public class DefaultClassMapper extends ClassMapperWrapper {
                     result = "default" + result;
                 }
             }
-            if (arraySuffix.length() > 0) {
-                result += arraySuffix.toString();
-            }
             return result;
-        }
-
-        /**
-         * Lookup table for primitive types.
-         */
-        private Class primitiveClassNamed(String name) {
-            return
-                    name.equals("void") ? Void.TYPE :
-                    name.equals("boolean") ? Boolean.TYPE :
-                    name.equals("byte") ? Byte.TYPE :
-                    name.equals("char") ? Character.TYPE :
-                    name.equals("short") ? Short.TYPE :
-                    name.equals("int") ? Integer.TYPE :
-                    name.equals("long") ? Long.TYPE :
-                    name.equals("float") ? Float.TYPE :
-                    name.equals("double") ? Double.TYPE :
-                    null;
         }
 
         public Class lookupType(String elementName) {
@@ -92,29 +68,11 @@ public class DefaultClassMapper extends ClassMapperWrapper {
                 return (Class) lookupTypeCache.get(key);
             }
 
-            int arrayDepth = 0;
-            while (elementName.endsWith("-array")) {
-                elementName = elementName.substring(0, elementName.length() - 6); // cut off -array
-                arrayDepth++;
-            }
-
-            Class primvCls = null;
-            if (arrayDepth > 0) {
-                // try to determine if the array type is a primitive
-                primvCls = primitiveClassNamed(elementName);
-            }
-
-            String mappedName = null;
-
-            // only look for a mappedName if no primitive array type has been found
-            if (primvCls == null) {
-                mappedName = (String) nameToTypeMap.get(mapNameFromXML(elementName));
-            }
+            String mappedName = (String) nameToTypeMap.get(mapNameFromXML(elementName));
 
             if (mappedName != null) {
                 elementName = mappedName;
             }
-
 
             // the $ used in inner class names is illegal as an xml element getNodeName
             elementName = elementName.replace('-', '$');
@@ -126,45 +84,12 @@ public class DefaultClassMapper extends ClassMapperWrapper {
             Class result;
 
             try {
-                if (arrayDepth > 0) {
-                    // if a primitive array type exists, return its array
-                    if (primvCls != null) {
-                        StringBuffer className = new StringBuffer();
-                        for (int i = 0; i < arrayDepth; i++) {
-                            className.append('[');
-                        }
-                        className.append(charThatJavaUsesToRepresentPrimitiveType(primvCls));
-                        result = classLoader.loadClass(className.toString());
-                        // otherwise look it up like normal
-                    } else {
-                        StringBuffer className = new StringBuffer();
-                        for (int i = 0; i < arrayDepth; i++) {
-                            className.append('[');
-                        }
-                        className.append('L').append(elementName).append(';');
-                        result = classLoader.loadClass(className.toString());
-                    }
-                } else {
-                    result = classLoader.loadClass(elementName);
-                }
+                result = classLoader.loadClass(elementName);
             } catch (ClassNotFoundException e) {
                 throw new CannotResolveClassException(elementName + " : " + e.getMessage());
             }
             lookupTypeCache.put(key, result);
             return result;
-        }
-
-        private char charThatJavaUsesToRepresentPrimitiveType(Class primvCls) {
-            return
-                    (primvCls == boolean.class) ? 'Z' :
-                    (primvCls == byte.class) ? 'B' :
-                    (primvCls == char.class) ? 'C' :
-                    (primvCls == short.class) ? 'S' :
-                    (primvCls == int.class) ? 'I' :
-                    (primvCls == long.class) ? 'J' :
-                    (primvCls == float.class) ? 'F' :
-                    (primvCls == double.class) ? 'D' :
-                    0;
         }
 
         public Class lookupDefaultType(Class baseType) {
