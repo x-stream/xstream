@@ -9,10 +9,6 @@ public final class ClassStack {
         stack = new Class[initialCapacity];
     }
 
-    public ClassStack() {
-        this(16);
-    }
-
     public void push(Class value) {
         if (pointer + 1 >= stack.length) {
             resizeStack(stack.length * 2);

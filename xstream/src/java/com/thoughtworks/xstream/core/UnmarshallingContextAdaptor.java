@@ -11,7 +11,7 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
     private Object root;
     private HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
-    private ClassStack types = new ClassStack();
+    private ClassStack types = new ClassStack(16);
 
     public UnmarshallingContextAdaptor(Object root, HierarchicalStreamReader xmlReader, ConverterLookup converterLookup) {
         this.root = root;
