@@ -1,0 +1,35 @@
+Package com.thoughtworks.xstream.io.squidgey;
+
+States
+    structure, cdata;
+
+Tokens
+    {structure}                 word           = (['a' .. 'z'] | ['A' .. 'Z'] | ['0' .. '9'] | '-' | '.' | ':')+;
+    {structure}                 open_squiggly  = '{';
+    {structure}                 close_squiggly = '}';
+    {structure}                 open_round     = '(';
+    {structure}                 close_round    = ')';
+    {structure}                 equals         = '=';
+    {structure}                 comma          = ',';
+    {structure->cdata}          open_square    = '[';
+    {cdata}                     cdata          = ([[0 .. 0xffff] - ']']*);
+    {cdata->structure}          close_square   = ']';
+
+Productions
+
+    node =         word attributes node_body;
+
+    attributes =
+          {none}
+        | {list}   open_round node_list close_round;
+
+    node_body =
+          {empty}
+        | {parent} open_squiggly node_list close_squiggly
+        | {text}   text;
+
+    node_list =
+          {single} node
+        | {list}   node comma node_list;
+
+    text      =    open_square cdata close_square;
