@@ -14,6 +14,11 @@ public interface ClassMapper {
     String mapNameToXML( String javaName );
 
     /**
+     * Whether this type is a simple immutable value (int, boolean, String, URL, etc.
+     */ 
+    boolean isImmutableValueType(Class type);
+
+    /**
      * Place holder type used for null values.
      */
     class Null {}

@@ -24,7 +24,7 @@ public class ReferenceByXPathMarshaller extends TreeMarshaller {
     public void convertAnother(Object item) {
         Converter converter = converterLookup.lookupConverterForType(item.getClass());
 
-        if (isImmutableBasicType(converter)) {
+        if (classMapper.isImmutableValueType(item.getClass())) {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {
@@ -40,7 +40,4 @@ public class ReferenceByXPathMarshaller extends TreeMarshaller {
         }
     }
 
-    private boolean isImmutableBasicType(Converter converter) {
-        return converter instanceof AbstractBasicConverter;
-    }
 }

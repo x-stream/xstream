@@ -5,8 +5,18 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.alias.DefaultCollectionLookup;
 
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
+import java.util.Currency;
+import java.util.Locale;
+import java.util.HashSet;
+import java.math.BigInteger;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.awt.*;
+import java.io.File;
 
 public class DefaultClassMapper implements ClassMapper {
 
@@ -14,6 +24,7 @@ public class DefaultClassMapper implements ClassMapper {
     protected Map nameToTypeMap = new HashMap();
     protected Map baseTypeToDefaultTypeMap = new HashMap();
     private Map lookupTypeCache = new HashMap();
+    private HashSet immutableTypes = new HashSet();
 
     public DefaultClassMapper() {
         // register primitive types
@@ -25,6 +36,33 @@ public class DefaultClassMapper implements ClassMapper {
         baseTypeToDefaultTypeMap.put(short.class, Short.class);
         baseTypeToDefaultTypeMap.put(byte.class, Byte.class);
         baseTypeToDefaultTypeMap.put(long.class, Long.class);
+
+        // register immutable primitives
+        immutableTypes.add(boolean.class);
+        immutableTypes.add(Boolean.class);
+        immutableTypes.add(byte.class);
+        immutableTypes.add(Byte.class);
+        immutableTypes.add(char.class);
+        immutableTypes.add(Character.class);
+        immutableTypes.add(double.class);
+        immutableTypes.add(Double.class);
+        immutableTypes.add(float.class);
+        immutableTypes.add(Float.class);
+        immutableTypes.add(int.class);
+        immutableTypes.add(Integer.class);
+        immutableTypes.add(long.class);
+        immutableTypes.add(Long.class);
+        immutableTypes.add(short.class);
+        immutableTypes.add(Short.class);
+
+        // register other immutable types
+        immutableTypes.add(ClassMapper.Null.class);
+        immutableTypes.add(BigDecimal.class);
+        immutableTypes.add(BigInteger.class);
+        immutableTypes.add(String.class);
+        immutableTypes.add(URL.class);
+        immutableTypes.add(File.class);
+        immutableTypes.add(Class.class);
     }
 
     public String mapNameToXML(String javaName) {
@@ -209,6 +247,14 @@ public class DefaultClassMapper implements ClassMapper {
     public Class lookupDefaultType(Class baseType) {
         Class result = (Class) baseTypeToDefaultTypeMap.get(baseType);
         return result == null ? baseType : result;
+    }
+
+    public boolean isImmutableValueType(Class type) {
+        return immutableTypes.contains(type);
+    }
+
+    public void addImmutableType(Class type) {
+        immutableTypes.add(type);
     }
 
 }

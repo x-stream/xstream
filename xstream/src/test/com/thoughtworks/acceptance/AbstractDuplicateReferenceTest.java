@@ -77,5 +77,31 @@ public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceT
         assertSame(out.s1, out.s2);
     }
 
+    public void testReferencesNotUsedForSimpleImmutableValueTypes() {
+        MultRef in = new MultRef();
+        in.s1 = new Integer(4);
+        in.s2 = in.s1;
+
+        String xml = xstream.toXML(in);
+        MultRef out = (MultRef) xstream.fromXML(xml);
+
+        assertEquals(out.s1, out.s2);
+        assertNotSame(out.s1, out.s2);
+    }
+
+    public void testReferencesUsedForSimpleMutableValueTypes() {
+        MultRef in = new MultRef();
+        in.s1 = new StringBuffer("hi");
+        in.s2 = in.s1;
+
+        String xml = xstream.toXML(in);
+        MultRef out = (MultRef) xstream.fromXML(xml);
+
+        StringBuffer buffer = (StringBuffer) out.s2;
+        buffer.append("bye");
+
+        assertEquals("hibye", out.s1.toString());
+        assertSame(out.s1, out.s2);
+    }
 
 }
