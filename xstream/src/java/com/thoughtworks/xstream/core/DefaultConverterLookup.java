@@ -23,16 +23,26 @@ public class DefaultConverterLookup implements ConverterLookup {
     private LinkedList converters = new LinkedList();
     private Converter nullConverter = new NullConverter();
     private HashMap typeToConverterMap = new HashMap();
-    private ReflectionProvider reflectionProvider;
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
+    private Converter defaultConverter;
 
     public DefaultConverterLookup(ReflectionProvider reflectionProvider,
                                   ClassMapper classMapper,
                                   String classAttributeIdentifier) {
-        this.reflectionProvider = reflectionProvider;
+        this(new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider), classMapper, classAttributeIdentifier);
+    }
+
+    public DefaultConverterLookup(Converter defaultConverter,
+                                  ClassMapper classMapper,
+                                  String classAttributeIdentifier) {
+        this.defaultConverter = defaultConverter;
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
+    }
+
+    public Converter defaultConverter() {
+        return defaultConverter;
     }
 
     public Converter lookupConverterForType(Class type) {
@@ -97,7 +107,7 @@ public class DefaultConverterLookup implements ConverterLookup {
             alias("linked-hash-set", JVM.loadClass("java.util.LinkedHashSet"));
         }
 
-        registerConverter(new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider));
+        registerConverter(defaultConverter);
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());

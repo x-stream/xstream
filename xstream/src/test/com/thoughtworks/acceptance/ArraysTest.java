@@ -128,4 +128,86 @@ public class ArraysTest extends AbstractAcceptanceTest {
     class ObjectWithLongArray {
         long[] bits;
     }
+
+    public void testMultidimensionalArray() {
+        int[][] array = new int[3][2];
+        array[0][0] = 2;
+        array[0][1] = 4;
+        array[1][0] = 8;
+        array[1][1] = 16;
+        array[2] = new int[3];
+        array[2][0] = 33;
+        array[2][1] = 66;
+        array[2][2] = 99;
+
+        String expectedXml = "" +
+                "<int-array-array>\n" +
+                "  <int-array>\n" +
+                "    <int>2</int>\n" +
+                "    <int>4</int>\n" +
+                "  </int-array>\n" +
+                "  <int-array>\n" +
+                "    <int>8</int>\n" +
+                "    <int>16</int>\n" +
+                "  </int-array>\n" +
+                "  <int-array>\n" +
+                "    <int>33</int>\n" +
+                "    <int>66</int>\n" +
+                "    <int>99</int>\n" +
+                "  </int-array>\n" +
+                "</int-array-array>";
+
+        String actualXml = xstream.toXML(array);
+        assertEquals(expectedXml, actualXml);
+
+        int[][] result = (int[][]) xstream.fromXML(actualXml);
+        assertEquals(2, result[0][0]);
+        assertEquals(4, result[0][1]);
+        assertEquals(8, result[1][0]);
+        assertEquals(16, result[1][1]);
+        assertEquals(99, result[2][2]);
+        assertEquals(3, result.length);
+        assertEquals(2, result[0].length);
+        assertEquals(2, result[1].length);
+        assertEquals(3, result[2].length);
+    }
+
+    public static class Thing {
+    }
+
+    public static class SpecialThing extends Thing {
+    }
+
+    public void testMultidimensionalArrayOfMixedTypes() {
+        xstream.alias("thing", Thing.class);
+        xstream.alias("special-thing", SpecialThing.class);
+
+        Object[][] array = new Object[2][2];
+        array[0][0] = new Object();
+        array[0][1] = "a string";
+        array[1] = new Thing[2];
+        array[1][0] = new Thing();
+        array[1][1] = new SpecialThing();
+        String expectedXml = "" +
+                "<object-array-array>\n" +
+                "  <object-array>\n" +
+                "    <object/>\n" +
+                "    <string>a string</string>\n" +
+                "  </object-array>\n" +
+                "  <thing-array>\n" +
+                "    <thing/>\n" +
+                "    <special-thing/>\n" +
+                "  </thing-array>\n" +
+                "</object-array-array>";
+
+        String actualXml = xstream.toXML(array);
+        assertEquals(expectedXml, actualXml);
+
+        Object[][] result = (Object[][]) xstream.fromXML(actualXml);
+        assertEquals(Object.class, result[0][0].getClass());
+        assertEquals("a string", result[0][1]);
+        assertEquals(Thing.class, result[1][0].getClass());
+        assertEquals(SpecialThing.class, result[1][1].getClass());
+    }
+
 }

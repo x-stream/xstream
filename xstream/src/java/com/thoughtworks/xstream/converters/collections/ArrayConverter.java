@@ -7,8 +7,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,7 +37,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         // read the items from xml into a list
-        List items = new LinkedList();
+        List items = new ArrayList();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             Object item = readItem(reader, context, null); // TODO: arg, what should replace null?
