@@ -34,19 +34,20 @@ public class MapConverter extends AbstractCollectionConverter {
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Map map = (Map) createCollection(context.getRequiredType());
-        while (reader.getNextChildNode()) {
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
 
-            reader.getNextChildNode();
+            reader.moveDown();
             Object key = readItem(reader, context);
-            reader.getParentNode();
+            reader.moveUp();
 
-            reader.getNextChildNode();
+            reader.moveDown();
             Object value = readItem(reader, context);
-            reader.getParentNode();
+            reader.moveUp();
 
             map.put(key, value);
 
-            reader.getParentNode();
+            reader.moveUp();
         }
         return map;
     }

@@ -33,29 +33,36 @@ public class Dom4Reader implements HierarchicalStreamReader {
         return currentElement.attributeValue(name);
     }
 
-    public void getParentNode() {
-        currentElement = currentElement.getParent();
-        pointers.removeLast();
-    }
-
     public Object peekUnderlyingNode() {
         return currentElement;
-    }
-    
-    public boolean getNextChildNode() {
-        Pointer pointer = (Pointer) pointers.getLast();
-        if (pointer.v < currentElement.elements().size()) {
-            pointers.addLast(new Pointer());
-            currentElement = (Element) currentElement.elements().get(pointer.v);
-            pointer.v++;
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private class Pointer {
         public int v;
     }
 
+    public boolean hasMoreChildren() {
+        Pointer pointer = (Pointer) pointers.getLast();
+
+        if (pointer.v < currentElement.elements().size()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void moveUp() {
+        currentElement = currentElement.getParent();
+        pointers.removeLast();
+    }
+
+    public void moveDown() {
+        Pointer pointer = (Pointer) pointers.getLast();
+        pointers.addLast(new Pointer());
+
+        currentElement = (Element) currentElement.elements().get(pointer.v);
+
+        pointer.v++;
+
+    }
 }

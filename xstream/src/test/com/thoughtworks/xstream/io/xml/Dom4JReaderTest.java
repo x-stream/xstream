@@ -26,7 +26,7 @@ public class Dom4JReaderTest extends AbstractXMLReaderTest {
 
         HierarchicalStreamReader xmlReader = new Dom4Reader(small);
         assertEquals("small", xmlReader.getNodeName());
-        xmlReader.getNextChildNode();
+        xmlReader.moveDown();
         assertEquals("tiny", xmlReader.getNodeName());
     }
 

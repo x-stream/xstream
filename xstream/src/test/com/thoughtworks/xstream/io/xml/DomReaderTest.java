@@ -36,7 +36,7 @@ public class DomReaderTest extends AbstractXMLReaderTest {
 
         HierarchicalStreamReader xmlReader = new DomReader(small);
         assertEquals("small", xmlReader.getNodeName());
-        xmlReader.getNextChildNode();
+        xmlReader.moveDown();
         assertEquals("tiny", xmlReader.getNodeName());
     }
 

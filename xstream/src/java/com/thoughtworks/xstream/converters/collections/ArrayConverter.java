@@ -32,10 +32,11 @@ public class ArrayConverter extends AbstractCollectionConverter {
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         // read the items from xml into a list
         List items = new LinkedList();
-        while (reader.getNextChildNode()) {
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
             Object item = readItem(reader, context);
             items.add(item);
-            reader.getParentNode();
+            reader.moveUp();
         }
         // now convertAnother the list into an array
         // (this has to be done as a separate list as the array size is not

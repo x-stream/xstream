@@ -199,8 +199,9 @@ public class XStreamTest extends TestCase {
 
             Element element = (Element) reader.peekUnderlyingNode();
 
-            while (reader.getNextChildNode()) {
-                reader.getParentNode();
+            while (reader.hasMoreChildren()) {
+                reader.moveDown();
+                reader.moveUp();
             }
 
             return element;

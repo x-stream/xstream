@@ -29,12 +29,12 @@ public class PropertiesConverter implements Converter {
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Properties properties = new Properties();
-        while (reader.getNextChildNode()) {
-            reader.getNextChildNode();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
             String name = reader.getAttribute("getNodeName");
             String value = reader.getAttribute("value");;
             properties.setProperty(name, value);
-            reader.getParentNode();
+            reader.moveUp();
         }
         return properties;
     }

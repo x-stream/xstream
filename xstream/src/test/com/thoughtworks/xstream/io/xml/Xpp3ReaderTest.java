@@ -30,7 +30,7 @@ public class Xpp3ReaderTest extends AbstractXMLReaderTest {
 
         assertEquals("small", xmlReader.getNodeName());
 
-        xmlReader.getNextChildNode();
+        xmlReader.moveDown();
 
         assertEquals("tiny", xmlReader.getNodeName());
     }

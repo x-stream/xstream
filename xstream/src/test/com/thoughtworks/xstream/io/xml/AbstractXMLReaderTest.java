@@ -18,67 +18,72 @@ public abstract class AbstractXMLReaderTest extends TestCase {
 
         assertEquals("a", xmlReader.getNodeName());
 
-        assertTrue(xmlReader.getNextChildNode());
-        {
-            assertEquals("b", xmlReader.getNodeName());
+        assertTrue(xmlReader.hasMoreChildren());
 
-            assertTrue(xmlReader.getNextChildNode());
-            {
-                assertEquals("ooh", xmlReader.getNodeName());
-                assertFalse(xmlReader.getNextChildNode());
-            }
-            xmlReader.getParentNode();
+        xmlReader.moveDown(); // /a/b
 
-            assertFalse(xmlReader.getNextChildNode());
+        assertEquals("b", xmlReader.getNodeName());
 
+        assertTrue(xmlReader.hasMoreChildren());
 
-        }
-        xmlReader.getParentNode();
+        xmlReader.moveDown(); // a/b/ooh
+        assertEquals("ooh", xmlReader.getNodeName());
+        assertFalse(xmlReader.hasMoreChildren());
+        xmlReader.moveUp(); // a/b
 
-        assertTrue(xmlReader.getNextChildNode());
-        {
-            assertEquals("b", xmlReader.getNodeName());
+        assertFalse(xmlReader.hasMoreChildren());
 
-            assertTrue(xmlReader.getNextChildNode());
-            {
-                assertEquals("aah", xmlReader.getNodeName());
-                assertFalse(xmlReader.getNextChildNode());
-            }
-            xmlReader.getParentNode();
+        xmlReader.moveUp(); // /a
 
-            assertFalse(xmlReader.getNextChildNode());
+        assertTrue(xmlReader.hasMoreChildren());
 
-        }
-        xmlReader.getParentNode();
+        xmlReader.moveDown(); // /a/b[2]
 
-        assertFalse(xmlReader.getNextChildNode());
+        assertEquals("b", xmlReader.getNodeName());
+
+        assertTrue(xmlReader.hasMoreChildren());
+
+        xmlReader.moveDown(); // a/b[2]/aah
+
+        assertEquals("aah", xmlReader.getNodeName());
+        assertFalse(xmlReader.hasMoreChildren());
+
+        xmlReader.moveUp(); // a/b[2]
+
+        assertFalse(xmlReader.hasMoreChildren());
+
+        xmlReader.moveUp(); // a
+
+        assertFalse(xmlReader.hasMoreChildren());
     }
 
     public void testChildTagsCanBeMixedWithOtherNodes() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<!-- xx --><a> <hello/> <!-- x --> getValue <world/></a>");
 
-        assertTrue(xmlReader.getNextChildNode());
+        assertTrue(xmlReader.hasMoreChildren());
+        xmlReader.moveDown();
         assertEquals("hello", xmlReader.getNodeName());
-        xmlReader.getParentNode();
+        xmlReader.moveUp();
 
-        assertTrue(xmlReader.getNextChildNode());
+        assertTrue(xmlReader.hasMoreChildren());
+        xmlReader.moveDown();
         assertEquals("world", xmlReader.getNodeName());
-        xmlReader.getParentNode();
+        xmlReader.moveUp();
 
-        assertFalse(xmlReader.getNextChildNode());
+        assertFalse(xmlReader.hasMoreChildren());
     }
 
     public void testAttributesCanBeFetchedFromTags() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("" +
                 "<hello one=\"1\" two=\"2\">" +
                 "  <child three=\"3\"/>" +
-                "</hello>");
+                "</hello>"); // /hello
 
         assertEquals("1", xmlReader.getAttribute("one"));
         assertEquals("2", xmlReader.getAttribute("two"));
         assertNull(xmlReader.getAttribute("three"));
 
-        xmlReader.getNextChildNode();
+        xmlReader.moveDown(); // /hello/child
         assertNull(xmlReader.getAttribute("one"));
         assertNull(xmlReader.getAttribute("two"));
         assertEquals("3", xmlReader.getAttribute("three"));
@@ -88,13 +93,13 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     public void testTextCanBeExtractedFromTag() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<root><a>some<!-- ignore me --> getValue!</a><b>more</b></root>");
 
-        xmlReader.getNextChildNode();
+        xmlReader.moveDown();
         assertEquals("some getValue!", xmlReader.getValue());
-        xmlReader.getParentNode();
+        xmlReader.moveUp();
 
-        xmlReader.getNextChildNode();
+        xmlReader.moveDown();
         assertEquals("more", xmlReader.getValue());
-        xmlReader.getParentNode();
+        xmlReader.moveUp();
     }
 
     public void testDoesNotIgnoreWhitespaceAroundText() throws Exception {

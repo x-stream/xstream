@@ -29,10 +29,11 @@ public class CollectionConverter extends AbstractCollectionConverter {
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Collection collection = (Collection) createCollection(context.getRequiredType());
-        while (reader.getNextChildNode()) {
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
             Object item = readItem(reader, context);
             collection.add(item);
-            reader.getParentNode();
+            reader.moveUp();
         }
         return collection;
     }

@@ -6,10 +6,7 @@ import com.thoughtworks.xstream.io.xml.xpp3.Xpp3Dom;
 import java.util.LinkedList;
 
 /**
- *
- *
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- *
  * @version $Id$
  */
 public class Xpp3Reader
@@ -52,33 +49,37 @@ public class Xpp3Reader
         return text;
     }
 
-    public boolean getNextChildNode() {
-        Pointer pointer = (Pointer) pointers.getLast();
-
-        if (pointer.v < current.getChildCount()) {
-            pointers.addLast(new Pointer());
-
-            current = current.getChild(pointer.v);
-
-            pointer.v++;
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void getParentNode() {
-        current = current.getParent();
-
-        pointers.removeLast();
-    }
-
     public Object peekUnderlyingNode() {
         return current;
     }
 
     private class Pointer {
         public int v;
+    }
+
+    public boolean hasMoreChildren() {
+        Pointer pointer = (Pointer) pointers.getLast();
+
+        if (pointer.v < current.getChildCount()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void moveUp() {
+        current = current.getParent();
+
+        pointers.removeLast();
+    }
+
+    public void moveDown() {
+        Pointer pointer = (Pointer) pointers.getLast();
+        pointers.addLast(new Pointer());
+
+        current = current.getChild(pointer.v);
+
+        pointer.v++;
+
     }
 }

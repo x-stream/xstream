@@ -52,7 +52,10 @@ public class ReflectionConverter implements Converter {
             result = reflectionProvider.newInstance(context.getRequiredType());
         }
 
-        while (reader.getNextChildNode()) {
+        while (reader.hasMoreChildren()) {
+
+            reader.moveDown();
+
             String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
 
             Class type;
@@ -67,7 +70,8 @@ public class ReflectionConverter implements Converter {
 
             reflectionProvider.writeField(result, fieldName, fieldValue);
 
-            reader.getParentNode();
+            reader.moveUp();
+
         }
         return result;
     }

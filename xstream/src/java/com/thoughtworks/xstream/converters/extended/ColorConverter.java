@@ -26,9 +26,10 @@ public class ColorConverter implements Converter {
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Map elements = new HashMap();
-        while (reader.getNextChildNode()) {
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
             elements.put(reader.getNodeName(), Integer.valueOf(reader.getValue()));
-            reader.getParentNode();
+            reader.moveUp();
         }
         Color color = new Color(
                 ((Integer) elements.get("red")).intValue(),
