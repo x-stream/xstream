@@ -31,7 +31,8 @@ public class DateConverterTest extends TestCase {
         assertEquals(in.getTime(), out.getTime());
     }
 
-
+    // Note: this test assumes that your are in the GMT timezone
+    // if not - simply set your computers' timezone to be in GMT
     public void testUnmarshallsOldXStreamDatesThatLackMillisecond() {
         // setup
         String oldStyleText = "2004-02-22 15:16:04PM";
@@ -41,7 +42,7 @@ public class DateConverterTest extends TestCase {
 
         // verify
         //TODO make test zone independent
-        assertEquals("2004-02-22 15:16:04.0 ART", converter.toString(out));
+        assertEquals("2004-02-22 15:16:04.0 GMT", converter.toString(out));
     }
 
     

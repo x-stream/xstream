@@ -32,14 +32,15 @@ public class ISO8601DateConverterTest extends TestCase {
         assertEquals(in.getTime(), out.getTime());
     }
 
-    // TODO: make the output zone independent for testing?
+    // Note: this test assumes that your are in the GMT timezone
+    // if not - simply set your computers' timezone to be in GMT
     public void testUnmarshallsISOFormat() {
         // setup
         String isoFormat = "1993-02-14T13:10:30";
         // execute
         Date out = (Date) converter.fromString(isoFormat);
         // verify
-        assertEquals("1993-02-14T13:10:30.000-02:00", converter.toString(out));
+        assertEquals("1993-02-14T13:10:30.000Z", converter.toString(out));
     }
 
     public void testIsThreadSafe() throws InterruptedException {
