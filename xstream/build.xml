@@ -1,4 +1,4 @@
-<project name="xstream" default="all">
+<project name="xstream" default="library">
 
     <property name="version" value="0.6-rc1"/>
 
@@ -6,7 +6,9 @@
         <fileset dir="lib"/>
     </path>
 
-    <target name="all" depends="clean, compile, test, jar, javadoc, website, dist" description="Rebuild everything"/>
+    <target name="library" depends="clean, compile, test, jar" description="Build and test library only"/>
+
+    <target name="all" depends="library, javadoc, website, dist" description="Rebuild everything"/>
 
     <target name="clean" description="Clean up all built files">
         <delete dir="build"/>
@@ -50,6 +52,7 @@
     <target name="javadoc" description="Build JavaDoc">
         <mkdir dir="build/javadoc"/>
         <javadoc destdir="build/javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
+            <classpath refid="classpath"/>
             <packageset dir="src/java" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
                 <exclude name="com/thoughtworks/xstream/io/path/**"/>
@@ -78,9 +81,7 @@
         <delete file="build/xstream-website.tar"/>
     </target>
 
-    <!-- assemble offline docs -->
-
-    <target name="dist" depends="jar" description="Build distribution package">
+    <target name="dist" depends="jar,website" description="Build distribution package">
         <zip zipfile="build/xstream-${version}.zip">
             <zipfileset dir=".">
                 <include name="build.xml"/>
@@ -92,6 +93,7 @@
             <zipfileset dir="build">
                 <include name="xstream-${version}*.jar"/>
             </zipfileset>
+            <zipfileset dir="build/website" prefix="docs"/>
         </zip>
     </target>
 
