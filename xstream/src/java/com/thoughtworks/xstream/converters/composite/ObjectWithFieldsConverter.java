@@ -81,7 +81,7 @@ public class ObjectWithFieldsConverter implements Converter {
                 }
             }
             if (field == null) {
-                throw new RuntimeException("No such field " + result.getClass() + "." + fieldName);
+                throw new ConversionException("No such field " + result.getClass() + "." + fieldName);
             }
 
             Class type;
