@@ -8,6 +8,7 @@ import java.sql.Time;
 import java.sql.Date;
 import java.util.TimeZone;
 import java.util.Locale;
+import java.util.Currency;
 import java.util.regex.Pattern;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
@@ -77,4 +78,7 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         assertBothWays(new Locale("zh", "", "cc"), "<locale>zh__cc</locale>");
     }
 
+    public void testCurrency() {
+        assertBothWays(Currency.getInstance("USD"), "<currency>USD</currency>");
+    }
 }

@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
+import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
@@ -186,6 +187,9 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
             registerConverter(new ThrowableConverter(defaultConverter()));
             registerConverter(new StackTraceElementConverter());
             alias("trace", StackTraceElement.class);
+
+            registerConverter(new CurrencyConverter());
+            alias("currency", Currency.class);
         }
     }
 
