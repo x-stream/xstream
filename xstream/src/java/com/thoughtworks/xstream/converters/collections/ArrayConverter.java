@@ -21,7 +21,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
         return type.isArray();
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         int length = Array.getLength(source);
         for (int i = 0; i < length; i++) {
             Object item = Array.get(source, i);
@@ -29,7 +29,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
         }
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         // read the items from xml into a list
         List items = new LinkedList();
         while (reader.hasMoreChildren()) {

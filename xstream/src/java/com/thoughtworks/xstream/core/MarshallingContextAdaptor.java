@@ -17,7 +17,7 @@ public class MarshallingContextAdaptor implements MarshallingContext {
 
     public void convertAnother(Object item) {
         Converter converter = converterLookup.lookupConverterForType(item.getClass());
-        converter.toXML(item, writer, this);
+        converter.marshal(item, writer, this);
     }
 
 }

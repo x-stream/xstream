@@ -16,7 +16,7 @@ public class PropertiesConverter implements Converter {
         return Properties.class.isAssignableFrom(type);
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         Properties properties = (Properties) source;
         for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
@@ -27,7 +27,7 @@ public class PropertiesConverter implements Converter {
         }
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Properties properties = new Properties();
         while (reader.hasMoreChildren()) {
             reader.moveDown();

@@ -169,7 +169,7 @@ public class XStreamTest extends TestCase {
 
         Dom4JDriver driver = new Dom4JDriver();
 
-        Person person = (Person) xstream.fromXML( driver.createReader( xml ) );
+        Person person = (Person) xstream.unmarshal( driver.createReader( xml ) );
 
         assertEquals( "jason", person.firstName );
 
@@ -192,10 +192,10 @@ public class XStreamTest extends TestCase {
             return Element.class.isAssignableFrom( type );
         }
 
-        public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         }
 
-        public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 
             Element element = (Element) reader.peekUnderlyingNode();
 
@@ -223,7 +223,7 @@ public class XStreamTest extends TestCase {
 
         Component component0 = new Component();
 
-        Component component1 = (Component) xstream.fromXML( driver.createReader( xml ), component0 );
+        Component component1 = (Component) xstream.unmarshal( driver.createReader( xml ), component0 );
 
         assertSame( component0, component1 );
 

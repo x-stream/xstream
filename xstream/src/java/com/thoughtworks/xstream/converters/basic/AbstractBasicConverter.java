@@ -16,11 +16,11 @@ public abstract class AbstractBasicConverter implements Converter {
         return obj.toString();
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         writer.setValue(toString(source));
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         return fromString(reader.getValue());
     }
 

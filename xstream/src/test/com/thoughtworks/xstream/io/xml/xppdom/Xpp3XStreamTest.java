@@ -173,7 +173,7 @@ public class Xpp3XStreamTest extends TestCase {
 
         XppDomDriver driver = new XppDomDriver();
 
-        Person person = (Person) xstream.fromXML(driver.createReader(xml));
+        Person person = (Person) xstream.unmarshal(driver.createReader(xml));
 
         assertEquals("jason", person.firstName);
 
@@ -195,10 +195,10 @@ public class Xpp3XStreamTest extends TestCase {
             return Xpp3Dom.class.isAssignableFrom(type);
         }
 
-        public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         }
 
-        public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
             Xpp3Dom element = (Xpp3Dom) reader.peekUnderlyingNode();
 
             while (reader.hasMoreChildren()) {
@@ -225,7 +225,7 @@ public class Xpp3XStreamTest extends TestCase {
 
         Component component0 = new Component();
 
-        Component component1 = (Component) xstream.fromXML(driver.createReader(xml), component0);
+        Component component1 = (Component) xstream.unmarshal(driver.createReader(xml), component0);
 
         assertSame(component0, component1);
 

@@ -19,7 +19,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
         return Collection.class.isAssignableFrom(type);
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         Collection collection = (Collection) source;
         for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
             Object item = iterator.next();
@@ -27,7 +27,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
         }
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Collection collection = (Collection) createCollection(context.getRequiredType());
         while (reader.hasMoreChildren()) {
             reader.moveDown();

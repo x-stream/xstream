@@ -12,12 +12,12 @@ public class NullConverter implements Converter {
         return type == null;
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         writer.startNode("null");
         writer.endNode();
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         return null;
     }
 }

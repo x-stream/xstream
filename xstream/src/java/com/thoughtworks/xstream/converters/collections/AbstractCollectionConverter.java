@@ -19,8 +19,8 @@ public abstract class AbstractCollectionConverter implements Converter {
         this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
-    public abstract void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context);
-    public abstract Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context);
+    public abstract void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context);
+    public abstract Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context);
 
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         if (item == null) {

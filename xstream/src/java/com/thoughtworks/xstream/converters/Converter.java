@@ -7,8 +7,8 @@ public interface Converter {
 
     boolean canConvert(Class type);
 
-    void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context);
+    void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context);
 
-    Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context);
+    Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context);
 
 }

@@ -23,7 +23,7 @@ public class ReflectionConverter implements Converter {
         return true;
     }
 
-    public void toXML(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+    public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         reflectionProvider.eachSerializableField(source.getClass(), new ReflectionProvider.Block() {
             public void visit(String fieldName, Class fieldType) {
                 Object newObj = reflectionProvider.readField(source, fieldName);
@@ -45,7 +45,7 @@ public class ReflectionConverter implements Converter {
         });
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Object result = context.currentObject();
 
         if (result == null) {

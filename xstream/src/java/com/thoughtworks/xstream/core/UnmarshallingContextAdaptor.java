@@ -22,7 +22,7 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
     public Object convertAnother(Class type) {
         Converter converter = converterLookup.lookupConverterForType(type);
         types.push(type);
-        Object result = converter.fromXML(reader, this);
+        Object result = converter.unmarshal(reader, this);
         types.popSilently();
         return result;
     }

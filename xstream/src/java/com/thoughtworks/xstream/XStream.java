@@ -43,14 +43,14 @@ public class XStream {
         this(reflectionProvider, new DefaultClassMapper(new DefaultNameMapper()), hierarchicalStreamDriver);
     }
 
-    public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver) {
-        this(objectFactory, classMapper, xmlReaderDriver, "class");
+    public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver driver) {
+        this(objectFactory, classMapper, driver, "class");
     }
 
-    public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver xmlReaderDriver,String classAttributeIdentifier) {
+    public XStream(ReflectionProvider objectFactory, ClassMapper classMapper, HierarchicalStreamDriver driver,String classAttributeIdentifier) {
         this.classMapper = classMapper;
         this.reflectionProvider = objectFactory;
-        this.hierarchicalStreamDriver = xmlReaderDriver;
+        this.hierarchicalStreamDriver = driver;
         this.classAttributeIdentifier = classAttributeIdentifier;
 
         alias("int", Integer.class);
@@ -117,35 +117,35 @@ public class XStream {
     public String toXML(Object obj) {
         Writer stringWriter = new StringWriter();
         HierarchicalStreamWriter writer = new PrettyPrintWriter(stringWriter);
-        toXML(obj, writer);
+        marshal(obj, writer);
         return stringWriter.toString();
     }
 
-    public void toXML(Object obj, HierarchicalStreamWriter writer) {
+    public void marshal(Object obj, HierarchicalStreamWriter writer) {
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
         writer.startNode(classMapper.lookupName(obj.getClass()));
         MarshallingContextAdaptor context = new MarshallingContextAdaptor(writer, converterLookup);
-        rootConverter.toXML(obj, writer, context);
+        rootConverter.marshal(obj, writer, context);
         writer.endNode();
     }
 
     public Object fromXML(String xml) {
-        return fromXML(hierarchicalStreamDriver.createReader(xml), null);
+        return unmarshal(hierarchicalStreamDriver.createReader(xml), null);
     }
 
-    public Object fromXML(HierarchicalStreamReader xmlReader) {
-        return fromXML(xmlReader, null);
+    public Object unmarshal(HierarchicalStreamReader reader) {
+        return unmarshal(reader, null);
     }
 
-    public Object fromXML(HierarchicalStreamReader xmlReader, Object root) {
-        String classAttribute = xmlReader.getAttribute(classAttributeIdentifier);
+    public Object unmarshal(HierarchicalStreamReader reader, Object root) {
+        String classAttribute = reader.getAttribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
-            type = classMapper.lookupType(xmlReader.getNodeName());
+            type = classMapper.lookupType(reader.getNodeName());
         } else {
             type = classMapper.lookupType(classAttribute);
         }
-        UnmarshallingContextAdaptor context = new UnmarshallingContextAdaptor(root, xmlReader, converterLookup);
+        UnmarshallingContextAdaptor context = new UnmarshallingContextAdaptor(root, reader, converterLookup);
         return context.convertAnother(type);
     }
 

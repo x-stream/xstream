@@ -15,7 +15,7 @@ public class BitSetConverter implements Converter {
         return type.equals(BitSet.class);
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         BitSet bitSet = (BitSet) source;
         StringBuffer buffer = new StringBuffer();
         boolean seenFirst = false;
@@ -32,7 +32,7 @@ public class BitSetConverter implements Converter {
         writer.setValue(buffer.toString());
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         BitSet result = new BitSet();
         StringTokenizer tokenizer = new StringTokenizer(reader.getValue(), ",", false);
         while(tokenizer.hasMoreTokens()) {

@@ -46,12 +46,12 @@ public class EncodedByteArrayConverter implements Converter {
         return type.isArray() && type.getComponentType().equals(byte.class);
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         byte[] data = (byte[]) source;
         writer.setValue(encoder.encode(data));
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         try {
             return decoder.decodeBuffer(reader.getValue());
         } catch (IOException e) {

@@ -19,7 +19,7 @@ public class MapConverter extends AbstractCollectionConverter {
         return Map.class.isAssignableFrom(type);
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         Map map = (Map) source;
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
@@ -32,7 +32,7 @@ public class MapConverter extends AbstractCollectionConverter {
         }
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Map map = (Map) createCollection(context.getRequiredType());
         while (reader.hasMoreChildren()) {
             reader.moveDown();

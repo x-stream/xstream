@@ -16,7 +16,7 @@ public class ColorConverter implements Converter {
         return type.equals(Color.class);
     }
 
-    public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         Color color = (Color) source;
         write("red", color.getRed(), writer);
         write("green", color.getGreen(), writer);
@@ -24,7 +24,7 @@ public class ColorConverter implements Converter {
         write("alpha", color.getAlpha(), writer);
     }
 
-    public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Map elements = new HashMap();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
