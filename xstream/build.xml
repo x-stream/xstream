@@ -3,7 +3,7 @@
     <!-- Give user a chance to override specific properties -->
     <property file="build.properties"/>
     
-    <property name="version" value="SNAPSHOT"/>
+    <property name="version" value="1.1.1"/>
 
     <property name="java.build.dir" value="build/java"/>
     <property name="test.build.dir" value="build/test"/>
@@ -14,7 +14,9 @@
     <property name="junit.haltonfailure" value="false"/>
 
     <path id="classpath">
-        <fileset dir="lib"/>
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
         <pathelement path="${java.build.dir}"/>
         <pathelement path="${test.build.dir}"/>
     </path>
