@@ -15,9 +15,6 @@ public class XppReader implements HierarchicalStreamReader {
 
     private final XmlPullParser parser;
     private final StringStack elementStack = new StringStack();
-
-    private int depth = 0;
-
     private final IntQueue lookaheadQueue = new IntQueue(4);
 
     public XppReader(Reader reader) {
@@ -76,18 +73,18 @@ public class XppReader implements HierarchicalStreamReader {
     }
 
     public void moveDown() {
-        int currentDepth = depth;
-        while(depth <= currentDepth) {
+        int currentDepth = elementStack.size();
+        while(elementStack.size() <= currentDepth) {
             read();
-            if (depth < currentDepth) {
+            if (elementStack.size() < currentDepth) {
                 throw new RuntimeException(); // sanity check
             }
         }
     }
 
     public void moveUp() {
-        int currentDepth = depth;
-        while(depth >= currentDepth) {
+        int currentDepth = elementStack.size();
+        while(elementStack.size() >= currentDepth) {
             read();
         }
     }
@@ -120,12 +117,10 @@ public class XppReader implements HierarchicalStreamReader {
     private void read() {
         switch(next()) {
             case XmlPullParser.START_TAG:
-                depth++;
                 elementStack.push(parser.getName());
                 break;
             case XmlPullParser.END_TAG: case XmlPullParser.END_DOCUMENT:
                 elementStack.pop();
-                depth--;
                 break;
         }
     }
