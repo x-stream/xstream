@@ -1,9 +1,6 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.converters.basic.DateConverterTest;
-import com.thoughtworks.xstream.testutil.TimeZoneTestSuite;
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import java.awt.*;
 import java.io.File;
@@ -18,11 +15,18 @@ import java.util.regex.Pattern;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
-    public static Test suite() {
+    protected void setUp() throws Exception {
+        super.setUp();
+
         // Ensure that this test always run as if it were in the EST timezone.
         // This prevents failures when running the tests in different zones.
         // Note: 'EST' has no relevance - it was just a randomly chosen zone.
-        return new TimeZoneTestSuite("EST", new TestSuite(DateConverterTest.class));
+        TimeZoneChanger.change("EST");
+    }
+
+    protected void tearDown() throws Exception {
+        TimeZoneChanger.reset();
+        super.tearDown();
     }
 
     public void testAwtColor() {

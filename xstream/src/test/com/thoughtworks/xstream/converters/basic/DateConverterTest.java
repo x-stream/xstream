@@ -1,27 +1,32 @@
 package com.thoughtworks.xstream.converters.basic;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.testutil.TimeZoneTestSuite;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 import junit.framework.TestCase;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class DateConverterTest extends TestCase {
 
     private DateConverter converter = new DateConverter();
 
-    public static Test suite() {
+    protected void setUp() throws Exception {
+        super.setUp();
+
         // Ensure that this test always run as if it were in the EST timezone.
         // This prevents failures when running the tests in different zones.
         // Note: 'EST' has no relevance - it was just a randomly chosen zone.
-        return new TimeZoneTestSuite("EST", new TestSuite(DateConverterTest.class));
+        TimeZoneChanger.change("EST");
     }
+
+    protected void tearDown() throws Exception {
+        TimeZoneChanger.reset();
+        super.tearDown();
+    }
+
 
     public void testRetainsDetailDownToMillisecondLevel() {
         // setup
