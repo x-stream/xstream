@@ -8,7 +8,7 @@ import java.io.StringReader;
 
 public class XppDomReaderTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        return new XppDomDriver().createReader(xml);
+        return new XppDomDriver().createReader(new StringReader(xml));
     }
 
     public void testCanReadFromElementOfLargerDocument()

@@ -11,6 +11,8 @@ import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import junit.framework.TestCase;
 import org.dom4j.Element;
 
+import java.io.StringReader;
+
 public class XStreamTest extends TestCase {
 
     private XStream xstream;
@@ -169,7 +171,7 @@ public class XStreamTest extends TestCase {
 
         Dom4JDriver driver = new Dom4JDriver();
 
-        Person person = (Person) xstream.unmarshal( driver.createReader( xml ) );
+        Person person = (Person) xstream.unmarshal( driver.createReader( new StringReader(xml) ) );
 
         assertEquals( "jason", person.firstName );
 
@@ -223,7 +225,7 @@ public class XStreamTest extends TestCase {
 
         Component component0 = new Component();
 
-        Component component1 = (Component) xstream.unmarshal( driver.createReader( xml ), component0 );
+        Component component1 = (Component) xstream.unmarshal( driver.createReader( new StringReader( xml ) ), component0 );
 
         assertSame( component0, component1 );
 

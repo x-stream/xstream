@@ -14,6 +14,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.XppDomDriver;
 import junit.framework.TestCase;
 
+import java.io.StringReader;
+
 public class Xpp3XStreamTest extends TestCase {
     private XStream xstream;
 
@@ -173,7 +175,7 @@ public class Xpp3XStreamTest extends TestCase {
 
         XppDomDriver driver = new XppDomDriver();
 
-        Person person = (Person) xstream.unmarshal(driver.createReader(xml));
+        Person person = (Person) xstream.unmarshal(driver.createReader(new StringReader(xml)));
 
         assertEquals("jason", person.firstName);
 
@@ -225,7 +227,7 @@ public class Xpp3XStreamTest extends TestCase {
 
         Component component0 = new Component();
 
-        Component component1 = (Component) xstream.unmarshal(driver.createReader(xml), component0);
+        Component component1 = (Component) xstream.unmarshal(driver.createReader(new StringReader(xml)), component0);
 
         assertSame(component0, component1);
 

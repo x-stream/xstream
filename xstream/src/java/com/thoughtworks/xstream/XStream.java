@@ -15,6 +15,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
@@ -121,6 +123,10 @@ public class XStream {
         return stringWriter.toString();
     }
 
+    public void toXML(Object obj, Writer writer) {
+        marshal(obj, new PrettyPrintWriter(writer));
+    }
+
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
         writer.startNode(classMapper.lookupName(obj.getClass()));
@@ -130,6 +136,10 @@ public class XStream {
     }
 
     public Object fromXML(String xml) {
+        return fromXML(new StringReader(xml));
+    }
+
+    public Object fromXML(Reader xml) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), null);
     }
 
