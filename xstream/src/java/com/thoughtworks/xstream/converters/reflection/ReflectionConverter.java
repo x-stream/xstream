@@ -71,7 +71,7 @@ public class ReflectionConverter implements Converter {
             Class type;
             String classAttribute = reader.getAttribute(classAttributeIdentifier);
             if (classAttribute == null) {
-                type = classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName));
+                type = classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName, definedInCls));
             } else {
                 type = classMapper.lookupType(classAttribute);
             }

@@ -58,8 +58,8 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         }
     }
 
-    public Class getFieldType(Object object, String fieldName) {
-        return fieldDictionary.field(object.getClass(), fieldName, null).getType();
+    public Class getFieldType(Object object, String fieldName, Class definedIn) {
+        return fieldDictionary.field(object.getClass(), fieldName, definedIn).getType();
     }
 
     protected boolean fieldModifiersSupported(Field field) {

@@ -11,7 +11,7 @@ public interface ReflectionProvider {
 
     void writeField(Object object, String fieldName, Object value, Class definedIn);
 
-    Class getFieldType(Object object, String fieldName);
+    Class getFieldType(Object object, String fieldName, Class definedIn);
 
     interface Visitor {
         void visit(String name, Class type, Class definedIn, Object value);
