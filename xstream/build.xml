@@ -42,9 +42,7 @@
 
     <target name="jar" depends="compile" description="Build JARs">
         <jar jarfile="build/xstream-${version}.jar">
-            <fileset dir="build/classes">
-                <exclude name="**/squidgey/**/*"/>
-            </fileset>
+            <fileset dir="build/classes"/>
         </jar>
         <echo message="--- Created JAR ---"/>
         <echo message="build/xstream-${version}.jar"/>
@@ -59,14 +57,13 @@
                 <exclude name="com/thoughtworks/xstream/core/**"/>
                 <exclude name="com/thoughtworks/xstream/io/path/**"/>
                 <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
-                <exclude name="com/thoughtworks/xstream/io/squidgey/**"/>
             </packageset>
             <doctitle><![CDATA[<h1>XStream ${version} API</h1>]]></doctitle>
             <bottom><![CDATA[<i>Joe Walnes, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]></bottom>
         </javadoc>
     </target>
 
-    <target name="website" depends="javadoc" description="Build website">
+    <target name="website" description="Build website">
         <delete dir="website/output"/>
         <mkdir dir="website/output"/>
         <exec executable="ruby" dir="website">
