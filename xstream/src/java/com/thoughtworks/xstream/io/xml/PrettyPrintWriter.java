@@ -10,7 +10,7 @@ import java.io.Writer;
 public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
     private final QuickWriter writer;
-    private final StringStack elementStack = new StringStack();
+    private final StringStack elementStack = new StringStack(16);
     private final char[] lineIndenter;
 
     private boolean tagInProgress;

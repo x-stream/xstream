@@ -14,7 +14,7 @@ import java.io.Reader;
 public class XppReader implements HierarchicalStreamReader {
 
     private final XmlPullParser parser;
-    private final StringStack elementStack = new StringStack();
+    private final StringStack elementStack = new StringStack(16);
     private final IntQueue lookaheadQueue = new IntQueue(4);
 
     public XppReader(Reader reader) {

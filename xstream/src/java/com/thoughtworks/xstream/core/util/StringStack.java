@@ -9,10 +9,6 @@ public final class StringStack {
         stack = new String[initialCapacity];
     }
 
-    public StringStack() {
-        this(16);
-    }
-
     public void push(String value) {
         if (pointer + 1 >= stack.length) {
             resizeStack(stack.length * 2);
