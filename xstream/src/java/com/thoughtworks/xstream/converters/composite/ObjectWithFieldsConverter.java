@@ -59,7 +59,13 @@ public class ObjectWithFieldsConverter implements Converter {
     }
 
     public void fromXML(final ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
-        objectGraph.create(requiredType);
+
+        // Only create the root if one has not been provided.
+
+        if ( objectGraph.get() == null ) {
+            objectGraph.create(requiredType);
+        }
+
         while (xmlReader.nextChild()) {
             objectGraph.push(elementMapper.fromXml(xmlReader.name()));
 
