@@ -94,9 +94,6 @@
                 <include name="javadoc/**"/>
             </fileset>
         </copy>
-        <tar tarfile="build/xstream-website.tar" basedir="build/website"/>
-        <gzip zipfile="build/xstream-website.tgz" src="build/xstream-website.tar"/>
-        <delete file="build/xstream-website.tar"/>
     </target>
 
     <target name="dist" depends="jar,website" description="Build distribution package">
