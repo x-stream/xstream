@@ -1,8 +1,8 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.alias.DefaultClassMapper;
-import com.thoughtworks.xstream.alias.DefaultNameMapper;
+import com.thoughtworks.xstream.core.DefaultClassMapper;
+import com.thoughtworks.xstream.core.DefaultNameMapper;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
 import junit.framework.TestCase;

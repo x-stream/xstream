@@ -1,16 +1,12 @@
 package com.thoughtworks.xstream;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.DefaultClassMapper;
-import com.thoughtworks.xstream.alias.DefaultNameMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
-import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
-import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
-import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
+import com.thoughtworks.xstream.core.*;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;

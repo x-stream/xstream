@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.core;
 
 import junit.framework.TestCase;
 

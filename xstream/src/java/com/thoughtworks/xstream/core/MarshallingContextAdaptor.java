@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.converters.old;
+package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;

@@ -1,4 +1,6 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.core;
+
+import com.thoughtworks.xstream.alias.NameMapper;
 
 public class DefaultNameMapper
     implements NameMapper {

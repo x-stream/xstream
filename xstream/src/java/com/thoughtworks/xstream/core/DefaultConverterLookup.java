@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.converters.lookup;
+package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
