@@ -20,7 +20,10 @@ public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
 
     public Object convertAnother(Object parent, Class type) {
         if (parentIdStack.size() > 0) { // handles circular references
-            values.put(parentIdStack.peek(), parent);
+            Object parentId = parentIdStack.peek();
+            if (!values.containsKey(parentId)) {
+                values.put(parentId, parent);
+            }
         }
         String reference = reader.getAttribute("reference");
         if (reference != null) {

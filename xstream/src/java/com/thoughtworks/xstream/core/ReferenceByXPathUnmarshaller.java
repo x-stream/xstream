@@ -25,7 +25,10 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
 
     public Object convertAnother(Object parent, Class type) {
         if (parentPathStack.size() > 0) { // handles circular references
-            values.put(parentPathStack.peek(), parent);
+            Object parentPath = parentPathStack.peek();
+            if (!values.containsKey(parentPath)) {
+                values.put(parentPath, parent);
+            }
         }
         String relativePathOfReference = reader.getAttribute("reference");
         Path currentPath = pathTracker.getPath();
