@@ -16,19 +16,19 @@ public class DefaultImplementationsMapper extends ClassMapperWrapper {
 
     protected void addDefaults() {
         // register primitive types
-        addDefaultImplementation(boolean.class, Boolean.class);
-        addDefaultImplementation(char.class, Character.class);
-        addDefaultImplementation(int.class, Integer.class);
-        addDefaultImplementation(float.class, Float.class);
-        addDefaultImplementation(double.class, Double.class);
-        addDefaultImplementation(short.class, Short.class);
-        addDefaultImplementation(byte.class, Byte.class);
-        addDefaultImplementation(long.class, Long.class);
+        addDefaultImplementation(Boolean.class, boolean.class);
+        addDefaultImplementation(Character.class, char.class);
+        addDefaultImplementation(Integer.class, int.class);
+        addDefaultImplementation(Float.class, float.class);
+        addDefaultImplementation(Double.class, double.class);
+        addDefaultImplementation(Short.class, short.class);
+        addDefaultImplementation(Byte.class, byte.class);
+        addDefaultImplementation(Long.class, long.class);
     }
 
-    public void addDefaultImplementation(Class type, Class defaultImplementation) {
-        typeToImpl.put(type, defaultImplementation);
-        implToType.put(defaultImplementation, type);
+    public void addDefaultImplementation(Class defaultImplementation, Class ofType) {
+        typeToImpl.put(ofType, defaultImplementation);
+        implToType.put(defaultImplementation, ofType);
     }
 
     public String lookupName(Class type) {

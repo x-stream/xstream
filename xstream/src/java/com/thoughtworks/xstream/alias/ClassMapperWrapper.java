@@ -56,7 +56,7 @@ public abstract class ClassMapperWrapper implements ClassMapper {
             if (defaultImplementationsMapper == null) {
                 throw new UnsupportedOperationException("ClassMapper.alias() longer supported. Use DefaultImplementatoinsMapper.add() instead.");
             } else {
-                defaultImplementationsMapper.addDefaultImplementation(type, defaultImplementation);
+                defaultImplementationsMapper.addDefaultImplementation(defaultImplementation, type);
             }
         }
     }

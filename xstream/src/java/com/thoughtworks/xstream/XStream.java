@@ -14,7 +14,6 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.AddableImplicitCollectionMapper;
-import com.thoughtworks.xstream.core.DefaultClassMapper;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.MapBackedDataHolder;
@@ -30,6 +29,7 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.io.NotActiveException;
 import java.io.ObjectInputStream;
@@ -38,31 +38,30 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.io.File;
-import java.util.Map;
-import java.util.Date;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.List;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.BitSet;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.math.BigInteger;
-import java.math.BigDecimal;
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.sql.Timestamp;
-import java.sql.Time;
+import java.util.Vector;
 
 /**
  * Simple facade to XStream library, a Java-XML serialization tool.
@@ -209,6 +208,7 @@ public class XStream {
         converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, implicitCollectionMapper, this.classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
         setupAliases();
+        setupDefaultImplementations();
     }
 
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier, Converter defaultConverter) {
@@ -222,6 +222,7 @@ public class XStream {
         converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, defaultConverter, this.classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
         setupAliases();
+        setupDefaultImplementations();
     }
 
     protected ClassMapper setupMapper() {
@@ -260,11 +261,11 @@ public class XStream {
         alias("url", URL.class);
         alias("bit-set", BitSet.class);
 
-        alias("map", Map.class, HashMap.class);
+        alias("map", Map.class);
         alias("entry", Map.Entry.class);
         alias("properties", Properties.class);
-        alias("list", List.class, ArrayList.class);
-        alias("set", Set.class, HashSet.class);
+        alias("list", List.class);
+        alias("set", Set.class);
 
         alias("linked-list", LinkedList.class);
         alias("vector", Vector.class);
@@ -282,7 +283,7 @@ public class XStream {
         alias("sql-date", java.sql.Date.class);
         alias("file", File.class);
         alias("locale", Locale.class);
-        alias("gregorian-calendar", Calendar.class, GregorianCalendar.class);
+        alias("gregorian-calendar", Calendar.class);
 
         if (JVM.is14()) {
             alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
@@ -290,6 +291,13 @@ public class XStream {
             alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
             alias("currency", jvm.loadClass("java.util.Currency"));
         }
+    }
+
+    private void setupDefaultImplementations() {
+        addDefaultImplementation(HashMap.class, Map.class);
+        addDefaultImplementation(ArrayList.class, List.class);
+        addDefaultImplementation(HashSet.class, Set.class);
+        addDefaultImplementation(GregorianCalendar.class, Calendar.class);
     }
 
     public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {
@@ -408,8 +416,20 @@ public class XStream {
      * @param defaultImplementation Default implementation of type to use if no other specified.
      */
     public void alias(String name, Class type, Class defaultImplementation) {
-        aliasingMapper.addAlias(name, type);
-        defaultImplementationsMapper.addDefaultImplementation(type, defaultImplementation);
+        alias(name, type);
+        addDefaultImplementation(defaultImplementation, type);
+    }
+
+    /**
+     * Associate a default implementation of a class with an object. Whenever XStream encounters an instance of this
+     * type, it will use the default implementation instead.
+     *
+     * For example, java.util.ArrayList is the default implementation of java.util.List.
+     * @param defaultImplementation
+     * @param ofType
+     */
+    public void addDefaultImplementation(Class defaultImplementation, Class ofType) {
+        defaultImplementationsMapper.addDefaultImplementation(defaultImplementation, ofType);
     }
 
     public void changeDefaultConverter(Converter defaultConverter) {
@@ -621,7 +641,7 @@ public class XStream {
                 throw new NotActiveException("not in call to readObject");
             }
 
-            public void close() throws IOException {
+            public void close() {
                 // TODO: close underlying writer?
             }
         });
