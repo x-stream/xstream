@@ -10,12 +10,87 @@
     <h1>Compatability</h1>
 
     <h2>Which JDK is required to use XStream?</h2>
-    <p>Currently 1.4 or later. However there are plans to get XStream working on 1.3 in the near future.</p>
+    <p>1.3 or later.</p>
 
+    <h2>Does XStream behave differently across different JVMs?</h2>
+    
+    <p>XStream has two modes of operation: <b>Pure Java</b> and <b>Enhanced</b>. In pure Java mode,
+    XStream behaves in the same way across different JVMs, however it's features are limited to what
+    reflection allows, meaning it cannot serialize certain classes or fields. In <b>enhanced</b> mode, 
+    XStream does not have these limitations, however this mode of operation is not available to all JVMs.</p>
+    
+    <h2>Which JVMs allow XStream to operate in enhanced mode?</h2>
+    
+    <p>Currently on Sun's 1.4 JVM and onwards. For all other JVMs, XStream should be used in pure Java mode.</p>
+    
+    <h2>What are the advantages of using enhanced mode over pure Java mode?</h2>
+    
+    <table>
+      <tr><th>Feature</th><th>Pure Java</th><th>Enhanced (Sun 1.4 only)</th></tr>
+      <tr><td>Public classes</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Non public classes</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Static inner classes</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Non-static inner classes</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Anonymous inner classes</td><td>No</td><td>Yes</td></tr>
+      <tr><td>With default constructor</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Without default constructor</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Private fields</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Final fields</td><td>No</td><td>Yes</td></tr>
+    </table>
+    
+    <h2>Are there plans to provide enhanced mode support to other JVMs?</h2>
+    <p>Yes. <a href="mailing-lists.html">Let us know</a> which JVM you would like supported.</p>
+    
     <h1>Serialization</h1>
 
     <h2>How do I specify that a field should not be serialized?</h2>
     <p>Make it <code>transient</code>.</p>
+
+    <h2>What do serialized collections look like?</h2>
+    
+    <p>Example:</p>
+    
+<div class="Source Java"><pre>class Person {
+  private String name;
+  private List toys;
+  // ...
+}
+
+class Computer {
+  String type;
+}
+
+class Car {
+  String color;
+}
+
+xstream.alias("person", Person.class);
+xstream.alias("computer", Computer.class);
+xstream.alias("car", Car.class);
+
+Person joe = new Person("Joe");
+person.addToy(new Computer("apple"));
+person.addToy(new Computer("spectrum"));
+person.addToy(new Car("blue"));
+
+String xml = xstream.toXML(joe);</pre></div>
+    
+    <p>Results in:</p>
+    
+<div class="Source Java"><pre>&lt;blockquote&gt;&lt;person&gt;
+  &lt;name&gt;Joe&lt;/name&gt;
+  &lt;toys&gt;
+    &lt;computer&gt;
+      &lt;type&gt;apple&lt;/type&gt;
+    &lt;/computer&gt;
+    &lt;computer&gt;
+      &lt;type&gt;spectrum&lt;/type&gt;
+    &lt;/computer&gt;
+    &lt;car&gt;
+      &lt;type&gt;blue&lt;/type&gt;
+    &lt;/car&gt;
+  &lt;/toys&gt;
+&lt;/person&gt;</pre></div>
 
     <h2>How do I serialize binary data in a byte array?</h2>
     <p>You need to register a special a Converter:</p>
@@ -26,6 +101,9 @@
     <h2>Do my classes have to implement Serializable if XStream is to serialize them?</h2>
     <p>No.</p>
 
+    <h2>Can dynamic proxies be serialized?</h2>
+    <p>Yes.</p>
+    
     <!--
     <h1>Comparison to other products</h1>
 
