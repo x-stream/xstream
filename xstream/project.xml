@@ -15,7 +15,7 @@
 
   <inceptionYear>2003</inceptionYear>
   <package>com.thoughtworks.xstream</package>
-  
+                                                                   
   <description>Object to serialization to XML and back again</description>
   <shortDescription>Object to serialization to XML and back again</shortDescription>
   <description>

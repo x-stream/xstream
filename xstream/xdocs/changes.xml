@@ -7,7 +7,23 @@
 
   <!-- action types are add/update/fix/remove -->
   <body>
-    <release version="1.0" date="In CVS">
+    <release version="0.5" date="...">
+
+      <action dev="joe" type="add">
+        Added custom converters for java.io.File, java.util.Properties, java.util.Vector, java.util.Hashtable.
+      </action>
+
+      <action dev="joe" type="add">
+        Performance improvements.
+      </action>
+
+      <action dev="joe" type="add">
+        Misc bugfixes.
+      </action>
+
+    </release>
+
+    <release version="0.3" date="...">
 
       <action dev="jvanzyl" type="add">
         Added ElementMapper interface and default implementations to allow fine
@@ -25,7 +41,7 @@
       </action>
 
       <action dev="jvanzyl" type="fix">
-        Aligned the the methods in XStream to use the specified ObjectFactory in the constructor 
+        Aligned the the methods in XStream to use the specified ObjectFactory in the constructor
         instead of creating a SunReflectionObjectFactory.
       </action>
 
