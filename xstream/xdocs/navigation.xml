@@ -1,0 +1,22 @@
+<project name="xstream" repository="xstream" href="http://xstream.codehaus.org">
+
+	<title>XStream</title>
+
+	<body>
+		<links>
+			<item name="XStream" href="http://xstream.codehaus.org/"/>
+			<item name="Download" href="/download.html"/>
+			<item name="The Codehaus" href="http://www.codehaus.org/"/>
+			<item name="ThoughtWorks" href="http://www.thoughtworks.com/"/>
+			<item name="Joe" href="http://joe.truemesh.com/"/>
+		</links>
+		<menu name="XStream">
+			<item name="Overview" href="/index.html"/>
+			<item name="Two Minute Tutorial" href="/tutorial.html"/>
+			<item name="License" href="/license.html"/>
+			<item name="Download" href="/download.html"/>
+		</menu>
+	</body>
+
+</project>
+

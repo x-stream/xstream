@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<document>
+
+	<properties>
+		<title>Download</title>
+		<author email="joe@thoughtworks.net">Joe Walnes</author>
+	</properties>
+
+	<body>
+		<section name="Download XStream">
+			<p>Not available yet, see <a href="cvs-usage.html">CVS</a>.</p>
+		</section>
+	</body>
+
+</document>
+

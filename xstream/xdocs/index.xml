@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<document>
+
+	<properties>
+		<title>XStream</title>
+		<author email="joe@thoughtworks.net">Joe Walnes</author>
+	</properties>
+
+	<body>
+		<section name="XStream">
+			<p>XStream is a simple library to serialize objects to XML and back again.</p>
+			<p>XStream requires minimal (if any at all) configuration for custom objects.</p>
+			<p>The XML produced is clean and concise and never duplicates any information that
+			can be obtained via reflection.</p>
+			<p>XStream has a clean design, is simple to use, boasts impressive speed and is
+			not coupled to any particular XML library.</p>
+		</section>
+		<section name="Getting Started">
+			<ol>
+				<li><a href="download.html">Download</a> XStream.</li>
+				<li>Read the two minute <a href="tutorial.html">tutorial</a>.</li>
+			</ol>
+		</section>
+	</body>
+
+</document>
+

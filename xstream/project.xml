@@ -1,0 +1,120 @@
+<project>
+
+	<pomVersion>3</pomVersion>
+	<id>xstream</id>
+	<name>XStream</name>
+	<currentVersion>0.1</currentVersion>
+
+	<organization>
+		<name>ThoughtWorks, Inc</name>
+		<url>http://www.thoughtworks.com/</url>
+	</organization>
+
+	<inceptionYear>2003</inceptionYear>
+	<package>com.thoughtworks.xstream</package>
+
+	<logo>/images/xstream-templogo.gif</logo>
+
+	<description>Object to serialization to XML and back again</description>
+	<shortDescription>Object to serialization to XML and back again</shortDescription>
+	<description>
+
+        XStream is a simple library to serialize objects to XML and back again.
+
+		XStream requires minimal (if any at all) configuration for custom objects.
+
+		The XML produced is clean and concise and never duplicates any information that
+		can be obtained via reflection.
+
+        XStream has a clean design, is simple to use, boasts impressive speed and is
+        not coupled to any particular XML library.
+
+	</description>
+	<url>http://xstream.codehaus.org/</url>
+	<issueTrackingUrl>http://jira.codehaus.org/secure/BrowseProject.jspa?id=10230</issueTrackingUrl>
+	<siteAddress>codehaus.org</siteAddress>
+	<siteDirectory>/www/xstream.codehaus.org</siteDirectory>
+	<distributionDirectory>/www/xstream.codehaus.org/builds/</distributionDirectory>
+	<repository>
+		<connection>scm:cvs:pserver:anonymous@cvs.codehaus.org:/scm/cvspublic:xstream</connection>
+		<url>http://cvs.codehaus.org/viewcvs.cgi/xstream/?root=codehaus</url>
+	</repository>
+
+	<versions>
+		<version>
+			<id>0.1</id>
+			<name>0.1</name>
+			<tag>HEAD</tag>
+		</version>
+	</versions>
+
+	<mailingLists>
+		<mailingList>
+			<name>XStream Developers</name>
+			<subscribe>http://lists.codehaus.org/mailman/listinfo/xstream-dev</subscribe>
+			<unsubscribe>http://lists.codehaus.org/mailman/listinfo/xstream-dev</unsubscribe>
+			<archive>http://lists.codehaus.org/pipermail/xstream-dev/</archive>
+		</mailingList>
+	</mailingLists>
+
+	<developers>
+		<developer>
+			<name>Joe Walnes</name>
+			<id>joe</id>
+			<email>joe@thoughtworks.net</email>
+			<organization>ThoughtWorks</organization>
+		</developer>
+	</developers>
+
+	<contributors>
+		<contributor>
+			<name>Tim Mackinnon</name>
+		</contributor>
+		<contributor>
+			<name>James Strachan</name>
+		</contributor>
+		<contributor>
+			<name>Jon Tirsen</name>
+		</contributor>
+		<contributor>
+			<name>Marcos Tarruella</name>
+		</contributor>
+		<contributor>
+			<name>Khurram Chaudhary</name>
+		</contributor>
+	</contributors>
+
+	<dependencies>
+		<dependency>
+			<id>junit</id>
+			<version>3.8.1</version>
+		</dependency>
+		<dependency>
+			<id>dom4j</id>
+			<version>1.3</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<sourceDirectory>${basedir}/src/java</sourceDirectory>
+		<unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
+		<unitTest>
+			<includes>
+				<include>**/*Test.java</include>
+			</includes>
+			<excludes>
+				<exclude>**/Abstract*</exclude>
+			</excludes>
+		</unitTest>
+	</build>
+
+	<reports>
+		<report>maven-junit-report-plugin</report>
+		<report>maven-clover-plugin</report>
+		<report>maven-pmd-plugin</report>
+		<report>maven-jdepend-plugin</report>
+		<report>maven-jxr-plugin</report>
+		<report>maven-simian-plugin</report>
+	</reports>
+
+</project>

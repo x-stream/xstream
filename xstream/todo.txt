@@ -1,0 +1,55 @@
+Features:
+ - Map to key/value properties.
+
+Improvements:
+ - Clean up ObjectGraph impl and tests.
+ - Change XMLReader to use pull-like API.
+ - Converters to specify which classes they can handle.
+ - Ensure XStream works on non-Sun JVMs.
+
+XML implementations:
+ - XppReader
+ - TextXMLReader (custom implementation)
+ - DomXMLReader
+ - DomXMLWriter
+ - ElectricXMLReader
+ - ElectricXMLWriter
+ - JDomXMLReader
+ - JDomXMLWriter
+ - XomXMLReader
+ - XomXMLWriter
+
+Property implementations:
+ - java.util.Map
+ - Properties
+ - JMS Message
+ - Servlet Parameters reader
+ - HTML Input boxes writer
+ - URL params writer
+
+Marshallers:
+ * Basic
+   - byte[]
+   - Calendar
+   - java.lang.Class
+ * Collections
+   - Set
+   - Array
+ * XML
+   - Element
+   - Text
+   - Attribute
+ * SQL
+   - java.sql.Date
+   - java.sql.Time
+   - java.sql.Timestamp
+ * Extra
+   - Commons Collections Bag
+   - Commons Collections MultiMap
+   - BigInt
+   - BigDecimal
+   - Locale
+   - java.lang.Currency
+   - java.awt.Color
+   - Commons Lang Enums
+
