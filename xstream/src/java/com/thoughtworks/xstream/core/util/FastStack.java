@@ -42,4 +42,15 @@ public final class FastStack {
         stack = newStack;
     }
 
+    public String toString() {
+        StringBuffer result = new StringBuffer("[");
+        for (int i = 0; i < pointer; i++) {
+            if (i > 0) {
+                result.append(", ");
+            }
+            result.append(stack[i]);
+        }
+        result.append(']');
+        return result.toString();
+    }
 }
