@@ -3,7 +3,7 @@
   <pomVersion>3</pomVersion>
   <id>xstream</id>
   <name>XStream</name>
-  <currentVersion>0.3-SNAPSHOT</currentVersion>
+  <currentVersion>0.3</currentVersion>
 
   <organization>
     <name>ThoughtWorks, Inc</name>
