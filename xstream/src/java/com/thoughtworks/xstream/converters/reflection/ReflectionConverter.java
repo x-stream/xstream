@@ -32,12 +32,6 @@ public class ReflectionConverter implements Converter {
     private SerializationMethodInvoker serializationMethodInvoker;
     private static final String PREFIX = "field.";
 
-    // Todo:
-    //  - Ensure readObject()/writeObject() include the heirarchy (start at superclass)
-    //  - putFields()/writeFields()/readFields()
-    //  - ObjectStreamField[] serialPersistentFields
-    //  - ObjectInputValidation
-
     public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier,
                                ReflectionProvider reflectionProvider, ImplicitCollectionMapper implicitCollectionMapper) {
         this.classMapper = classMapper;

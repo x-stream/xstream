@@ -19,6 +19,20 @@ import java.util.Map;
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
  * implement a custom readObject()/writeObject() method.
  *
+ * <h3>Supported features of serialization</h3>
+ * <ul>
+ *   <li>readObject(), writeObject()</li>
+ *   <li>class inheritance</li>
+ *   <li>readResolve(), writeReplace()</li>
+ * </ul>
+ *
+ * <h3>Currently unsupported features</h3>
+ * <ul>
+ *   <li>putFields(), writeFields(), readFields()</li>
+ *   <li>ObjectStreamField[] serialPersistentFields</li>
+ *   <li>ObjectInputValidation</li>
+ * </ul>
+ *
  * @author Joe Walnes
  */
 public class SerializableConverter implements Converter {
