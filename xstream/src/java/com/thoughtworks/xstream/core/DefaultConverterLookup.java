@@ -25,6 +25,7 @@ import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
 import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -149,6 +150,7 @@ public class DefaultConverterLookup implements ConverterLookup {
         }
 
         registerConverter(defaultConverter);
+        registerConverter(new ExternalizableConverter(classMapper));
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());
