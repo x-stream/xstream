@@ -8,6 +8,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
  * 
  * @author Aslak Helles&oslash;y
  * @author Joe Walnes
+ * @author Matthew Sandoz
  */
 public class JavaClassConverter extends AbstractBasicConverter {
 
@@ -31,7 +32,15 @@ public class JavaClassConverter extends AbstractBasicConverter {
 
     protected Object fromString(String str) {
         try {
-            return classLoader.loadClass(str);
+            return
+                    str.equals("byte") ? byte.class :
+                    str.equals("int") ? int.class :
+                    str.equals("long") ? long.class :
+                    str.equals("float") ? float.class :
+                    str.equals("boolean") ? boolean.class :
+                    str.equals("double") ? double.class :
+                    str.equals("char") ? char.class :
+                    classLoader.loadClass(str);
         } catch (ClassNotFoundException e) {
             throw new ConversionException("Cannot load java class " + str, e);
         }

@@ -44,4 +44,8 @@ public class ReflectionClassesTest extends AbstractAcceptanceTest {
         assertBothWays(constructor, expected);
     }
 
+    public void testSupportsPrimitiveTypes() {
+        assertBothWays(int.class, "<java-class>int</java-class>");
+    }
+
 }

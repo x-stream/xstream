@@ -6,6 +6,10 @@ import com.thoughtworks.acceptance.objects.ColorEnum;
 import java.io.*;
 import java.util.Currency;
 
+/**
+ * @author Chris Kelly
+ * @author Joe Walnes
+ */ 
 public class ReadResolveTest extends AbstractAcceptanceTest {
 
     public void testReadResolveWithDefaultSerialization() throws IOException, ClassNotFoundException {
