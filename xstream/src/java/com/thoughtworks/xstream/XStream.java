@@ -28,8 +28,15 @@ public class XStream {
     private DefaultClassMapper classMapper = new DefaultClassMapper();
     private ConverterLookup converterLookup = new DefaultConverterLookup();
     private XMLReaderDriver xmlReaderDriver = new DomXMLReaderDriver();
+    private ObjectFactory objectFactory;
 
     public XStream() {
+        this(new SunReflectionObjectFactory());
+    }
+
+    public XStream(ObjectFactory objectFactory) {
+        this.objectFactory = objectFactory;
+
         alias("int", Integer.class);
         alias("float", Float.class);
         alias("double", Double.class);
@@ -92,7 +99,6 @@ public class XStream {
     }
 
     public void toXML(Object obj, XMLWriter xmlWriter) {
-        ObjectFactory objectFactory = new SunReflectionObjectFactory();
         ObjectTree objectGraph = new ReflectionObjectGraph(obj, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
         xmlWriter.startElement(classMapper.lookupName(obj.getClass()));
