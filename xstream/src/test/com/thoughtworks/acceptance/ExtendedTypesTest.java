@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.sql.Time;
 import java.sql.Date;
 import java.util.TimeZone;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
@@ -67,4 +69,12 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         assertEquals(f.getAbsolutePath(), ((File)resultObj).getAbsolutePath());
         assertEquals(f.isAbsolute(), ((File)resultObj).isAbsolute()); // needed because File's equals method only compares the path getAttribute, at least in the win32 implementation
     }
+
+    public void testLocale() {
+        assertBothWays(new Locale("zh", "", ""), "<locale>zh</locale>");
+        assertBothWays(new Locale("zh", "CN", ""), "<locale>zh_CN</locale>");
+        assertBothWays(new Locale("zh", "CN", "cc"), "<locale>zh_CN_cc</locale>");
+        assertBothWays(new Locale("zh", "", "cc"), "<locale>zh__cc</locale>");
+    }
+
 }

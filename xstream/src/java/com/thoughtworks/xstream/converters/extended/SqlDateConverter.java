@@ -8,7 +8,7 @@ import java.sql.Time;
 /**
  * Converts a java.sql.Date to text.
  *
- * @author Jose A. Illescas
+ * @author Jose A. Illescas 
  */
 public class SqlDateConverter extends AbstractBasicConverter {
 
