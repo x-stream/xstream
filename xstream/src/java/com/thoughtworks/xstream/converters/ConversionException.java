@@ -8,20 +8,26 @@ public class ConversionException extends RuntimeException implements ErrorWriter
 
     private Map stuff = new HashMap();
 
+    /**
+     * Plays nice with JDK1.3 and JDK1.4
+     */
+    protected Exception cause;
+
     public ConversionException(String msg, Exception cause) {
-        super(msg, cause);
+        super(msg);
         if (cause != null) {
             add("exception", cause.getClass().getName());
             add("message", cause.getMessage());
+            this.cause = cause;
         }
     }
 
     public ConversionException(String msg) {
-        super(msg, null);
+        super(msg);
     }
 
     public ConversionException(Exception cause) {
-        this(null, cause);
+        this(cause.getMessage(), cause);
     }
 
     public String get(String errorKey) {
@@ -56,4 +62,7 @@ public class ConversionException extends RuntimeException implements ErrorWriter
         return result.toString();
     }
 
+    public Throwable getCause() {
+        return cause;
+    }
 }

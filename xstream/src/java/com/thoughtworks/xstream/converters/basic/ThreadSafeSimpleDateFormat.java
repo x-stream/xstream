@@ -45,7 +45,8 @@ public class ThreadSafeSimpleDateFormat {
                 try {
                     pool.wait();
                 } catch (InterruptedException e) {
-                    throw new Error(e);
+                    throw new RuntimeException("Interrupted whilst waiting " +
+                            "for a free item in the pool : " + e.getMessage());
                 }
             }
             result = pool[nextAvailable];

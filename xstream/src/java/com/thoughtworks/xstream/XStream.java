@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.*;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -101,11 +100,11 @@ public class XStream {
     public static final int XPATH_REFERENCES = 1003;
 
     public XStream() {
-        this(new Sun14ReflectionProvider(), new DefaultClassMapper(), new XppDriver());
+        this(JVM.bestReflectionProvider(), new DefaultClassMapper(), new XppDriver());
     }
 
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(new Sun14ReflectionProvider(), new DefaultClassMapper(), hierarchicalStreamDriver);
+        this(JVM.bestReflectionProvider(), new DefaultClassMapper(), hierarchicalStreamDriver);
     }
 
     public XStream(ReflectionProvider reflectionProvider) {

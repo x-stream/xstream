@@ -3,10 +3,14 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MapConverter extends AbstractCollectionConverter {
 
@@ -17,7 +21,7 @@ public class MapConverter extends AbstractCollectionConverter {
     public boolean canConvert(Class type) {
         return type.equals(HashMap.class)
                 || type.equals(Hashtable.class)
-                || type.equals(LinkedHashMap.class);
+                || (JVM.is14() && type.getName().equals("java.util.LinkedHashMap"));
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

@@ -1,12 +1,8 @@
 package com.thoughtworks.acceptance.objects;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
-import com.thoughtworks.acceptance.DynamicProxyTest;
 
 public class SampleDynamicProxy implements InvocationHandler {
 
@@ -21,15 +17,14 @@ public class SampleDynamicProxy implements InvocationHandler {
     }
 
     public static Object newInstance() {
-        return Proxy.newProxyInstance(
-            InterfaceOne.class.getClassLoader(),
-            new Class[] {InterfaceOne.class, InterfaceTwo.class},
-            new SampleDynamicProxy());
+        return Proxy.newProxyInstance(InterfaceOne.class.getClassLoader(),
+                new Class[]{InterfaceOne.class, InterfaceTwo.class},
+                new SampleDynamicProxy());
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (method.getName().equals("equals")) {
-            return Boolean.valueOf(equals(args[0]));
+            return equals(args[0]) ? Boolean.TRUE : Boolean.FALSE;
         } else {
             return aField;
         }

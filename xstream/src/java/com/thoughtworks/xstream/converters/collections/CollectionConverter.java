@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -19,7 +20,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
                 || type.equals(HashSet.class)
                 || type.equals(LinkedList.class)
                 || type.equals(Vector.class)
-                || type.equals(LinkedHashSet.class);
+                || (JVM.is14() && type.getName().equals("java.util.LinkedSet"));
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

@@ -1,23 +1,21 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-
-import java.util.IdentityHashMap;
-import java.util.Map;
 
 public class ReferenceByIdMarshaller extends TreeMarshaller {
 
-    private Map references = new IdentityHashMap();
+    private ObjectIdDictionary references = new ObjectIdDictionary();
     private IDGenerator idGenerator;
 
     public static interface IDGenerator {
         String next();
     }
-    
+
     public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
                                    ConverterLookup converterLookup,
                                    ClassMapper classMapper,
@@ -39,13 +37,13 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {
-            String idOfExistingReference = (String)references.get(item);
+            String idOfExistingReference = references.lookupId(item);
             if (idOfExistingReference != null) {
                 writer.addAttribute("reference", idOfExistingReference);
             } else {
                 String newId = idGenerator.next();
                 writer.addAttribute("id", newId);
-                references.put(item, newId);
+                references.associateId(item, newId);
                 converter.marshal(item, writer, this);
             }
         }

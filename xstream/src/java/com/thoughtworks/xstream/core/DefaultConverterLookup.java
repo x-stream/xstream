@@ -89,10 +89,13 @@ public class DefaultConverterLookup implements ConverterLookup {
         alias("linked-list", LinkedList.class);
         alias("vector", Vector.class);
         alias("tree-map", TreeMap.class);
-        alias("linked-hash-map", LinkedHashMap.class);
-        alias("linked-hash-set", LinkedHashSet.class);
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
+
+        if (JVM.is14()) {
+            alias("linked-hash-map", JVM.loadClass("java.util.LinkedHashMap"));
+            alias("linked-hash-set", JVM.loadClass("java.util.LinkedHashSet"));
+        }
 
         registerConverter(new ReflectionConverter(classMapper, classAttributeIdentifier, reflectionProvider));
 

@@ -4,18 +4,16 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.path.PathTracker;
 import com.thoughtworks.xstream.io.path.PathTrackingWriter;
 import com.thoughtworks.xstream.io.path.RelativePathCalculator;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-
 public class ReferenceByXPathMarshaller extends TreeMarshaller {
 
     private PathTracker pathTracker = new PathTracker();
-    private Map references = new IdentityHashMap();
+    private ObjectIdDictionary references = new ObjectIdDictionary();
     private RelativePathCalculator relativePathCalculator = new RelativePathCalculator();
 
     public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, ClassMapper classMapper) {
@@ -31,12 +29,12 @@ public class ReferenceByXPathMarshaller extends TreeMarshaller {
             converter.marshal(item, writer, this);
         } else {
             String currentPath = pathTracker.getCurrentPath();
-            String pathOfExistingReference = (String) references.get(item);
+            String pathOfExistingReference = references.lookupId(item);
             if (pathOfExistingReference != null) {
                 String absolutePath = relativePathCalculator.relativePath(currentPath, pathOfExistingReference);
                 writer.addAttribute("reference", absolutePath);
             } else {
-                references.put(item, currentPath);
+                references.associateId(item, currentPath);
                 converter.marshal(item, writer, this);
             }
         }
