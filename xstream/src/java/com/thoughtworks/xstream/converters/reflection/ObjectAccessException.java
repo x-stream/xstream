@@ -1,11 +1,13 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-public class ObjectAccessException extends RuntimeException {
+import com.thoughtworks.xstream.core.BaseException;
+
+public class ObjectAccessException extends BaseException {
     public ObjectAccessException(String message) {
         super(message);
     }
 
     public ObjectAccessException(String message, Throwable cause) {
-        super(message + ": " + cause.getMessage());
+        super(message, cause);
     }
 }

@@ -1,7 +1,9 @@
 package com.thoughtworks.xstream.io;
 
-public class StreamException extends RuntimeException {
+import com.thoughtworks.xstream.core.BaseException;
+
+public class StreamException extends BaseException {
     public StreamException(Throwable e) {
-        super(e.getMessage());
+        super(e);
     }
 }

@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.converters;
 
+import com.thoughtworks.xstream.core.BaseException;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,7 +17,7 @@ import java.util.Map;
  *
  * @see ErrorWriter
  */
-public class ConversionException extends RuntimeException implements ErrorWriter {
+public class ConversionException extends BaseException implements ErrorWriter {
 
     private Map stuff = new HashMap();
 
