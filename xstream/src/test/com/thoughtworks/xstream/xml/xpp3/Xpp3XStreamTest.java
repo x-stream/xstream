@@ -8,8 +8,8 @@ import com.thoughtworks.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.alias.DefaultClassMapper;
 import com.thoughtworks.xstream.alias.DefaultNameMapper;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.old.OldConverter;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
 import com.thoughtworks.xstream.xml.XMLReader;
@@ -193,7 +193,7 @@ public class Xpp3XStreamTest extends TestCase {
     }
 
     private class ElementConverter
-            implements Converter {
+            implements OldConverter {
         public boolean canConvert(Class type) {
             return Xpp3Dom.class.isAssignableFrom(type);
         }

@@ -3,11 +3,14 @@ package com.thoughtworks.xstream.converters.composite;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
+import com.thoughtworks.xstream.converters.old.OldConverter;
+import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
 
-public class ObjectWithFieldsConverter implements Converter {
+public class ObjectWithFieldsConverter implements OldConverter {
 
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
@@ -43,7 +46,7 @@ public class ObjectWithFieldsConverter implements Converter {
 
         writeClassAttributeInXMLIfNotDefaultImplementation(objectGraph, xmlWriter);
         Converter converter = converterLookup.lookupConverterForType(objectGraph.type());
-        converter.toXML(objectGraph, xmlWriter, converterLookup);
+        converter.toXML(new MarshallingContextAdaptor(objectGraph, xmlWriter, converterLookup));
 
         xmlWriter.endElement();
     }
@@ -69,7 +72,7 @@ public class ObjectWithFieldsConverter implements Converter {
 
             Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
             Converter converter = converterLookup.lookupConverterForType(type);
-            converter.fromXML(objectGraph, xmlReader, converterLookup, type);
+            converter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
             objectGraph.pop();
 
             xmlReader.pop();

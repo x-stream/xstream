@@ -1,17 +1,16 @@
 package com.thoughtworks.xstream.converters.collections;
 
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.old.OldConverter;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
-import com.thoughtworks.xstream.xml.XMLWriter;
 import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.xml.XMLWriter;
 
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
-public class PropertiesConverter implements Converter {
+public class PropertiesConverter implements OldConverter {
 
     public boolean canConvert(Class type) {
         return Properties.class.isAssignableFrom(type);

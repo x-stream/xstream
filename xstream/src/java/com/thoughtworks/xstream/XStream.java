@@ -5,24 +5,17 @@ import com.thoughtworks.xstream.alias.DefaultClassMapper;
 import com.thoughtworks.xstream.alias.DefaultNameMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.basic.BooleanConverter;
-import com.thoughtworks.xstream.converters.basic.ByteConverter;
-import com.thoughtworks.xstream.converters.basic.CharConverter;
-import com.thoughtworks.xstream.converters.basic.DateConverter;
-import com.thoughtworks.xstream.converters.basic.DoubleConverter;
-import com.thoughtworks.xstream.converters.basic.FloatConverter;
-import com.thoughtworks.xstream.converters.basic.IntConverter;
-import com.thoughtworks.xstream.converters.basic.JavaClassConverter;
-import com.thoughtworks.xstream.converters.basic.LongConverter;
-import com.thoughtworks.xstream.converters.basic.ShortConverter;
-import com.thoughtworks.xstream.converters.basic.StringBufferConverter;
-import com.thoughtworks.xstream.converters.basic.StringConverter;
+import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.collections.PropertiesConverter;
 import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
+import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
+import com.thoughtworks.xstream.converters.old.OldConverter;
+import com.thoughtworks.xstream.converters.old.OldConverterAdaptor;
+import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.objecttree.reflection.ObjectFactory;
 import com.thoughtworks.xstream.objecttree.reflection.ReflectionObjectGraph;
@@ -128,7 +121,7 @@ public class XStream {
         ObjectTree objectGraph = new ReflectionObjectGraph(obj, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
         xmlWriter.startElement(classMapper.lookupName(obj.getClass()));
-        rootConverter.toXML(objectGraph, xmlWriter, converterLookup);
+        rootConverter.toXML(new MarshallingContextAdaptor(objectGraph, xmlWriter, converterLookup));
         xmlWriter.endElement();
     }
 
@@ -146,7 +139,7 @@ public class XStream {
         }
         ObjectTree objectGraph = new ReflectionObjectGraph(type, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(type);
-        rootConverter.fromXML(objectGraph, xmlReader, converterLookup, type);
+        rootConverter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
         return objectGraph.get();
     }
 
@@ -154,11 +147,15 @@ public class XStream {
         Class type = root.getClass();
         ObjectTree objectGraph = new ReflectionObjectGraph(root, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(type);
-        rootConverter.fromXML(objectGraph, xmlReader, converterLookup, type);
+        rootConverter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
         return objectGraph.get();
     }
 
     public void registerConverter(Converter converter) {
         converterLookup.registerConverter(converter);
+    }
+
+    public void registerConverter(OldConverter converter) {
+        converterLookup.registerConverter(new OldConverterAdaptor(converter));
     }
 }

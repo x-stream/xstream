@@ -4,11 +4,14 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
+import com.thoughtworks.xstream.converters.old.OldConverter;
+import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
 
-public abstract class AbstractCollectionConverter implements Converter {
+public abstract class AbstractCollectionConverter implements OldConverter {
     protected ClassMapper classMapper;
     protected String classAttributeIdentifier;
 
@@ -31,7 +34,7 @@ public abstract class AbstractCollectionConverter implements Converter {
             Class type = item.getClass();
             xmlWriter.startElement(classMapper.lookupName(type));
             Converter converter = converterLookup.lookupConverterForType(type);
-            converter.toXML(objectGraph.newStack(item), xmlWriter, converterLookup);
+            converter.toXML(new MarshallingContextAdaptor(objectGraph.newStack(item), xmlWriter, converterLookup));
             xmlWriter.endElement();
         }
     }
@@ -46,7 +49,7 @@ public abstract class AbstractCollectionConverter implements Converter {
         }
         ObjectTree itemWriter = objectGraph.newStack(type);
         Converter converter = converterLookup.lookupConverterForType(type);
-        converter.fromXML(itemWriter, xmlReader, converterLookup, type);
+        converter.fromXML(new UnmarshallingContextAdaptor(itemWriter, xmlReader, converterLookup, type));
         return itemWriter.get();
     }
 

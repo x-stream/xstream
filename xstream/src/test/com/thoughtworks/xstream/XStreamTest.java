@@ -1,23 +1,15 @@
 package com.thoughtworks.xstream;
 
 import com.thoughtworks.acceptance.StandardObject;
-import com.thoughtworks.someobjects.FunnyConstructor;
-import com.thoughtworks.someobjects.WithList;
-import com.thoughtworks.someobjects.X;
-import com.thoughtworks.someobjects.Y;
-import com.thoughtworks.someobjects.HandlerManager;
-import com.thoughtworks.someobjects.Handler;
-import com.thoughtworks.someobjects.Protocol;
-import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.someobjects.*;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.old.OldConverter;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
 import com.thoughtworks.xstream.xml.dom4j.Dom4JXMLReaderDriver;
 import junit.framework.TestCase;
 import org.dom4j.Element;
-
-import java.util.List;
 
 public class XStreamTest extends TestCase {
 
@@ -195,7 +187,7 @@ public class XStreamTest extends TestCase {
     }
 
     private class ElementConverter
-        implements Converter {
+        implements OldConverter {
 
         public boolean canConvert( Class type ) {
             return Element.class.isAssignableFrom( type );

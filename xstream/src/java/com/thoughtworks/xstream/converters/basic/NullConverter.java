@@ -1,10 +1,8 @@
 package com.thoughtworks.xstream.converters.basic;
 
 import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 
 public class NullConverter implements Converter {
 
@@ -12,12 +10,12 @@ public class NullConverter implements Converter {
         return type == null;
     }
 
-    public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
-        xmlWriter.startElement("null");
-        xmlWriter.endElement();
+    public void toXML(MarshallingContext context) {
+        context.getXMLWriter().startElement("null");
+        context.getXMLWriter().endElement();
     }
 
-    public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
+    public void fromXML(UnmarshallingContext context) {
         // no need to do anything
     }
 }

@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.old.OldConverter;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ColorConverter implements Converter {
+public class ColorConverter implements OldConverter {
     public boolean canConvert(Class type) {
         return type.equals(Color.class);
     }

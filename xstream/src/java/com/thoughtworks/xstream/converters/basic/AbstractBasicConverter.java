@@ -1,12 +1,12 @@
 package com.thoughtworks.xstream.converters.basic;
 
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.old.OldConverter;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.xml.XMLReader;
 import com.thoughtworks.xstream.xml.XMLWriter;
 
-public abstract class AbstractBasicConverter implements Converter {
+public abstract class AbstractBasicConverter implements OldConverter {
 
     protected abstract Object fromString(String str);
 
