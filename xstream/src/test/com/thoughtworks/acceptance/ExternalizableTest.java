@@ -1,9 +1,15 @@
 package com.thoughtworks.acceptance;
 
+import org.jgroups.stack.IpAddress;
+
 import java.io.Externalizable;
 import java.io.ObjectOutput;
 import java.io.IOException;
 import java.io.ObjectInput;
+import java.net.UnknownHostException;
+import java.net.InetAddress;
+
+import com.thoughtworks.xstream.XStream;
 
 public class ExternalizableTest extends AbstractAcceptanceTest {
 
@@ -46,4 +52,27 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
 
         assertBothWays(in, expected);
     }
+
+    static class Owner extends StandardObject {
+        SomethingExternalizable target;
+    }
+
+    public void testExternalizableAsFieldOfAnotherObject() {
+        xstream.alias("something", SomethingExternalizable.class);
+        xstream.alias("owner", Owner.class);
+
+        Owner in = new Owner();
+        in.target = new SomethingExternalizable("Joe", "Walnes");
+
+        String expected = ""
+                + "<owner>\n"
+                + "  <target>\n"
+                + "    <int>3</int>\n"
+                + "    <string>JoeWalnes</string>\n"
+                + "  </target>\n"
+                + "</owner>";
+
+        assertBothWays(in, expected);
+    }
+
 }

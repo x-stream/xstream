@@ -75,7 +75,7 @@ public class ExternalizableConverter implements Converter {
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Class type = mapper.realClass(reader.getNodeName());
+        final Class type = context.getRequiredType();
         try {
             Externalizable externalizable = (Externalizable) type.newInstance();
             CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
