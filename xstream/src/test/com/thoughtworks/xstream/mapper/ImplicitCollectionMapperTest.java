@@ -39,15 +39,15 @@ public class ImplicitCollectionMapperTest extends TestCase {
     public void testAllowsFieldsToBeMarkedAsNamedImplicitCollectionsToBeAdded() {
         implicitCollections.add(SampleLists.class, "good", "good-item", Object.class);
         implicitCollections.add(SampleLists.class, "bad", Object.class);
-        Mapper.ImplicitCollectionDef defGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
-        assertNotNull(defGood);
-        assertEquals("good-item", defGood.getItemFieldName());
-        assertEquals(Object.class, defGood.getItemType());
-        assertEquals("good", defGood.getFieldName());
+        Mapper.ImplicitCollectionMapping mappingGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
+        assertNotNull(mappingGood);
+        assertEquals("good-item", mappingGood.getItemFieldName());
+        assertEquals(Object.class, mappingGood.getItemType());
+        assertEquals("good", mappingGood.getFieldName());
 
-        Mapper.ImplicitCollectionDef defBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
-        assertNotNull(defBad);
-        assertNull(defBad.getItemFieldName());
+        Mapper.ImplicitCollectionMapping mappingBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
+        assertNotNull(mappingBad);
+        assertNull(mappingBad.getItemFieldName());
 
         assertEquals("good", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, "good-item"));
         assertEquals("bad", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, null));
@@ -56,17 +56,17 @@ public class ImplicitCollectionMapperTest extends TestCase {
     public void testAllowsFieldsToBeMarkedBasedOnItemFieldName() {
         implicitCollections.add(SampleLists.class, "good", "good-item", Object.class);
         implicitCollections.add(SampleLists.class, "bad", "bad-item", Object.class);
-        Mapper.ImplicitCollectionDef defGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
-        assertNotNull(defGood);
-        assertEquals("good-item", defGood.getItemFieldName());
-        assertEquals(Object.class, defGood.getItemType());
-        assertEquals("good", defGood.getFieldName());
+        Mapper.ImplicitCollectionMapping mappingGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
+        assertNotNull(mappingGood);
+        assertEquals("good-item", mappingGood.getItemFieldName());
+        assertEquals(Object.class, mappingGood.getItemType());
+        assertEquals("good", mappingGood.getFieldName());
 
-        Mapper.ImplicitCollectionDef defBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
-        assertNotNull(defBad);
-        assertEquals("bad-item", defBad.getItemFieldName());
-        assertEquals(Object.class, defBad.getItemType());
-        assertEquals("bad", defBad.getFieldName());
+        Mapper.ImplicitCollectionMapping mappingBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
+        assertNotNull(mappingBad);
+        assertEquals("bad-item", mappingBad.getItemFieldName());
+        assertEquals(Object.class, mappingBad.getItemType());
+        assertEquals("bad", mappingBad.getFieldName());
 
         assertEquals("good", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, "good-item"));
         assertEquals("bad", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, "bad-item"));

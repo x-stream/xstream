@@ -67,7 +67,7 @@ public class DefaultMapper implements ClassMapper {
         return null;
     }
 
-    public ImplicitCollectionDef getImplicitCollectionDefForFieldName(Class definedIn, String fieldName) {
+    public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(Class itemType, String fieldName) {
         return null;
     }
 

@@ -49,9 +49,9 @@ public interface Mapper {
 
     Class getItemTypeForItemFieldName(Class definedIn, String itemFieldName);
 
-    ImplicitCollectionDef getImplicitCollectionDefForFieldName(Class definedIn, String fieldName);
+    ImplicitCollectionMapping getImplicitCollectionDefForFieldName(Class itemType, String fieldName);
 
-    interface ImplicitCollectionDef {
+    interface ImplicitCollectionMapping {
         String getFieldName();
         String getItemFieldName();
         Class getItemType();

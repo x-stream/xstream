@@ -1,9 +1,6 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.SampleLists;
-import com.thoughtworks.acceptance.objects.Software;
-import com.thoughtworks.acceptance.objects.Hardware;
-import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +76,56 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 "</farm>";
 
         xstream.addImplicitCollection(Farm.class, "animals");
+        assertBothWays(farm, expected);
+    }
+
+    public static class MegaFarm extends Farm {
+        public MegaFarm(int size) {
+            super(size);
+        }
+    }
+
+    public void testIneritsImplicitCollectionFromSuperclass() {
+        xstream.alias("MEGA-farm", MegaFarm.class);
+
+        Farm farm = new MegaFarm(100); // subclass
+        farm.add(new Animal("Cow"));
+        farm.add(new Animal("Sheep"));
+
+        String expected = "" +
+                "<MEGA-farm>\n" +
+                "  <size>100</size>\n" +
+                "  <animal>\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "</MEGA-farm>";
+
+        xstream.addImplicitCollection(Farm.class, "animals");
+        assertBothWays(farm, expected);
+    }
+
+    public void testAllowsSubclassToOverrideImplicitCollectionInSuperclass() {
+        xstream.alias("MEGA-farm", MegaFarm.class);
+
+        Farm farm = new MegaFarm(100); // subclass
+        farm.add(new Animal("Cow"));
+        farm.add(new Animal("Sheep"));
+
+        String expected = "" +
+                "<MEGA-farm>\n" +
+                "  <size>100</size>\n" +
+                "  <animal>\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "</MEGA-farm>";
+
+        xstream.addImplicitCollection(MegaFarm.class, "animals");
         assertBothWays(farm, expected);
     }
 

@@ -62,8 +62,8 @@ public abstract class MapperWrapper implements ClassMapper {
         return wrapped.getItemTypeForItemFieldName(definedIn, itemFieldName);
     }
 
-    public ImplicitCollectionDef getImplicitCollectionDefForFieldName(Class definedIn, String fieldName) {
-        return wrapped.getImplicitCollectionDefForFieldName(definedIn, fieldName);
+    public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(Class itemType, String fieldName) {
+        return wrapped.getImplicitCollectionDefForFieldName(itemType, fieldName);
     }
 
     /**

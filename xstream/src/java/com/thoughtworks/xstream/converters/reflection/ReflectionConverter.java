@@ -33,7 +33,7 @@ public class ReflectionConverter implements Converter {
     }
 
     public void marshal(Object original, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        Object source = serializationMethodInvoker.callWriteReplace(original);
+        final Object source = serializationMethodInvoker.callWriteReplace(original);
 
         if (source.getClass() != original.getClass()) {
             writer.addAttribute(mapper.attributeForReadResolveField(), mapper.serializedClass(source.getClass()));
@@ -44,13 +44,13 @@ public class ReflectionConverter implements Converter {
         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                 if (newObj != null) {
-                    Mapper.ImplicitCollectionDef def = mapper.getImplicitCollectionDefForFieldName(definedIn, fieldName);
-                    if (def != null) {
-                        if (def.getItemFieldName() != null) {
+                    Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(source.getClass(), fieldName);
+                    if (mapping != null) {
+                        if (mapping.getItemFieldName() != null) {
                             ArrayList list = (ArrayList) newObj;
                             for (Iterator iter = list.iterator(); iter.hasNext();) {
                                 Object obj = iter.next();
-                                writeField(def.getItemFieldName(), def.getItemType(), definedIn, obj);
+                                writeField(mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
                             }
                         } else {
                             context.convertAnother(newObj);
