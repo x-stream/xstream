@@ -45,10 +45,10 @@ public class ReflectionConverter implements Converter {
     }
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        if (hasWriteObjectMethod(source)) {
+        if (getMethod(source.getClass(), "writeObject", new Class[]{ObjectOutputStream.class}) != null) {
             try {
 
-                Method writeObjectMethod = getWriteObjectMethod(source);
+                Method writeObjectMethod = getMethod(source.getClass(), "writeObject", new Class[]{ObjectOutputStream.class});
 
                 CustomObjectOutputStream.StreamCallback callback = new CustomObjectOutputStream.StreamCallback() {
                     public void writeToStream(Object object) {
@@ -85,20 +85,14 @@ public class ReflectionConverter implements Converter {
 
     }
 
-    private boolean hasWriteObjectMethod(Object source) {
-        return getWriteObjectMethod(source) != null;
-    }
-
-    private Method getWriteObjectMethod(Object source) {
-        Object key = source.getClass();
+    private Method getMethod(Class cls, String name, Class[] parameterTypes) {
         Method result = null;
-
+        String key = cls + "." + name;
         if (writeObjectMethodCache.containsKey(key)) {
             return (Method) writeObjectMethodCache.get(key);
-        }
-        else {
+        } else {
             try {
-                result = source.getClass().getDeclaredMethod("writeObject", new Class[]{ObjectOutputStream.class});
+                result = cls.getDeclaredMethod(name, parameterTypes);
             } catch (NoSuchMethodException e) {
                 result = null;
             }
@@ -151,9 +145,13 @@ public class ReflectionConverter implements Converter {
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Object result = instantiateNewInstance(context);
+        deserializeEachField(reader, result, context);
+        return instanceResolver.resolve(result);
+    }
+
+    private void deserializeEachField(HierarchicalStreamReader reader, Object result, UnmarshallingContext context) {
         SeenFields seenFields = new SeenFields();
         Map implicitCollectionsForCurrentObject = null;
-
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
@@ -173,7 +171,6 @@ public class ReflectionConverter implements Converter {
 
             reader.moveUp();
         }
-        return instanceResolver.resolve(result);
     }
 
     private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result) {
