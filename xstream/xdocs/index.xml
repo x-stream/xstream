@@ -17,7 +17,7 @@
 		</section>
 		<section name="Getting Started">
 			<ol>
-				<li><a href="download.html">Download</a> XStream.</li>
+				<li><a href="http://dist.codehaus.org/xstream/">Download</a> XStream.</li>
 				<li>Read the two minute <a href="tutorial.html">tutorial</a>.</li>
 			</ol>
 		</section>

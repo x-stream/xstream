@@ -6,3 +6,4 @@ lib
 build
 build.properties
 *.log
+distributions.tar.gz
