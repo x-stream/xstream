@@ -25,3 +25,4 @@
 #DEFAULT (echo ""; id; echo %s; date; cat) >> $CVSROOT/CVSROOT/commitlog
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
+ALL /usr/local/despots/cvs/collect_diffs.rb --to scm@xstream.codehaus.org %{sVv}
