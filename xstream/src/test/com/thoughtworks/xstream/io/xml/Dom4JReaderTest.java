@@ -10,7 +10,7 @@ public class Dom4JReaderTest extends AbstractXMLReaderTest {
 
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        return new Dom4Reader(DocumentHelper.parseText(xml));
+        return new Dom4JReader(DocumentHelper.parseText(xml));
     }
 
     public void testCanReadFromElementOfLargerDocument() throws DocumentException {
@@ -24,7 +24,7 @@ public class Dom4JReaderTest extends AbstractXMLReaderTest {
                 "</big>");
         Element small = document.getRootElement().element("small");
 
-        HierarchicalStreamReader xmlReader = new Dom4Reader(small);
+        HierarchicalStreamReader xmlReader = new Dom4JReader(small);
         assertEquals("small", xmlReader.getNodeName());
         xmlReader.moveDown();
         assertEquals("tiny", xmlReader.getNodeName());

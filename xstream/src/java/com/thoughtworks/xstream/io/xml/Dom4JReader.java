@@ -6,17 +6,17 @@ import org.dom4j.Element;
 
 import java.util.LinkedList;
 
-public class Dom4Reader implements HierarchicalStreamReader {
+public class Dom4JReader implements HierarchicalStreamReader {
 
     private Element currentElement;
     private LinkedList pointers = new LinkedList();
 
-    public Dom4Reader(Element rootElement) {
+    public Dom4JReader(Element rootElement) {
         currentElement = rootElement;
         pointers.addLast(new Pointer());
     }
 
-    public Dom4Reader(Document document) {
+    public Dom4JReader(Document document) {
         currentElement = document.getRootElement();
         pointers.addLast(new Pointer());
     }

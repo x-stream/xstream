@@ -9,7 +9,7 @@ import org.dom4j.DocumentHelper;
 public class Dom4JDriver implements HierarchicalStreamDriver {
     public HierarchicalStreamReader createReader(String xml) {
         try {
-            return new Dom4Reader(DocumentHelper.parseText(xml));
+            return new Dom4JReader(DocumentHelper.parseText(xml));
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
