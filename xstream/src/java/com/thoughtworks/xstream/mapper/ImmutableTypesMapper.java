@@ -2,10 +2,6 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,36 +18,6 @@ public class ImmutableTypesMapper extends MapperWrapper {
 
     public ImmutableTypesMapper(ClassMapper wrapped) {
         super(wrapped);
-        addDefaults();
-    }
-
-    protected void addDefaults() {
-        // register immutable primitives
-        addImmutableType(boolean.class);
-        addImmutableType(Boolean.class);
-        addImmutableType(byte.class);
-        addImmutableType(Byte.class);
-        addImmutableType(char.class);
-        addImmutableType(Character.class);
-        addImmutableType(double.class);
-        addImmutableType(Double.class);
-        addImmutableType(float.class);
-        addImmutableType(Float.class);
-        addImmutableType(int.class);
-        addImmutableType(Integer.class);
-        addImmutableType(long.class);
-        addImmutableType(Long.class);
-        addImmutableType(short.class);
-        addImmutableType(Short.class);
-
-        // register other immutable types
-        addImmutableType(Null.class);
-        addImmutableType(BigDecimal.class);
-        addImmutableType(BigInteger.class);
-        addImmutableType(String.class);
-        addImmutableType(URL.class);
-        addImmutableType(File.class);
-        addImmutableType(Class.class);
     }
 
     public void addImmutableType(Class type) {

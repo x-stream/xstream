@@ -6,12 +6,12 @@ import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import junit.framework.TestCase;
 
-public class DefaultMapperTest extends TestCase {
+public class DefaultClassMapperTest extends TestCase {
     private ClassMapper mapper;
 
     protected void setUp() throws Exception {
         super.setUp();
-        mapper = new DefaultMapper();
+        mapper = new DefaultClassMapper();
     }
 
     public void testAppendsArraySuffixOnArrays() {
