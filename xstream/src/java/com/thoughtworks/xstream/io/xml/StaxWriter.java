@@ -16,7 +16,7 @@ import javax.xml.stream.XMLStreamWriter;
 public class StaxWriter implements HierarchicalStreamWriter {
     private final QNameMap qnameMap;
     private final XMLStreamWriter out;
-    private final boolean writeStartDocument;
+    private final boolean writeEnclosingDocument;
 
     private int tagDepth;
 
@@ -35,7 +35,7 @@ public class StaxWriter implements HierarchicalStreamWriter {
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument) throws XMLStreamException {
         this.qnameMap = qnameMap;
         this.out = out;
-        this.writeStartDocument = writeEnclosingDocument;
+        this.writeEnclosingDocument = writeEnclosingDocument;
         if (writeEnclosingDocument) {
             out.writeStartDocument();
         }
@@ -64,10 +64,10 @@ public class StaxWriter implements HierarchicalStreamWriter {
 
     public void endNode() {
         try {
-            out.writeEndElement();
             tagDepth--;
-            if (tagDepth == 0 && writeStartDocument) {
-                out.writeEndElement();
+            out.writeEndElement();
+            if (tagDepth == 0 && writeEnclosingDocument) {
+                out.writeEndDocument();
             }
         }
         catch (XMLStreamException e) {
