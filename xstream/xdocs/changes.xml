@@ -29,6 +29,10 @@
         instead of creating a SunReflectionObjectFactory.
       </action>
 
+      <action dev="jvanzyl" type="add">
+        Added an xpp3-based reader and writer.
+      </action>
+
     </release>
 
   </body>
