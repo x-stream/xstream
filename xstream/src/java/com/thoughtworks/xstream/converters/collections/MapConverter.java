@@ -6,17 +6,18 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class MapConverter extends AbstractCollectionConverter {
 
-    public MapConverter(ClassMapper classMapper,String classAttributeIdentifier) {
-        super(classMapper,classAttributeIdentifier);
+    public MapConverter(ClassMapper classMapper, String classAttributeIdentifier) {
+        super(classMapper, classAttributeIdentifier);
     }
 
     public boolean canConvert(Class type) {
-        return Map.class.isAssignableFrom(type);
+        return type.equals(HashMap.class)
+                || type.equals(Hashtable.class)
+                || type.equals(TreeMap.class);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

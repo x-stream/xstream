@@ -140,7 +140,8 @@ public class DefaultClassMapper implements ClassMapper {
     }
 
     public Class lookupDefaultType(Class baseType) {
-        return (Class) baseTypeToDefaultTypeMap.get(baseType);
+        Class result = (Class) baseTypeToDefaultTypeMap.get(baseType);
+        return result == null ? baseType : result;
     }
 
 }

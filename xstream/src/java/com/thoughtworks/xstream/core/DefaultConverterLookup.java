@@ -10,6 +10,7 @@ import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.util.*;
+import java.net.URL;
 
 public class DefaultConverterLookup implements ConverterLookup {
 
@@ -34,6 +35,7 @@ public class DefaultConverterLookup implements ConverterLookup {
         }
         Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
+        type = classMapper.lookupDefaultType(type);
         for (Iterator iterator = converters.iterator(); iterator.hasNext();) {
             Converter converter = (Converter) iterator.next();
             if (converter.canConvert(type)) {
@@ -65,6 +67,7 @@ public class DefaultConverterLookup implements ConverterLookup {
         alias("string", String.class);
         alias("java-class", Class.class);
         alias("date", Date.class);
+        alias("url", URL.class);
         alias("bit-set", BitSet.class);
 
         alias("map", Map.class, HashMap.class);
@@ -94,6 +97,7 @@ public class DefaultConverterLookup implements ConverterLookup {
         registerConverter(new DateConverter());
         registerConverter(new JavaClassConverter());
         registerConverter(new BitSetConverter());
+        registerConverter(new URLConverter());
 
         registerConverter(new ArrayConverter(classMapper,classAttributeIdentifier));
         registerConverter(new CharArrayConverter());

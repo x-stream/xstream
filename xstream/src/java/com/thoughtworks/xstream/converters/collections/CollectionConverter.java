@@ -6,8 +6,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 public class CollectionConverter extends AbstractCollectionConverter {
 
@@ -16,7 +15,10 @@ public class CollectionConverter extends AbstractCollectionConverter {
     }
 
     public boolean canConvert(Class type) {
-        return Collection.class.isAssignableFrom(type);
+        return type.equals(ArrayList.class)
+                || type.equals(HashSet.class)
+                || type.equals(LinkedList.class)
+                || type.equals(Vector.class);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

@@ -113,7 +113,7 @@ public class MapTest extends AbstractAcceptanceTest {
                 "  <m1/>\n" +
                 "  <m2 class=\"tree-map\"/>\n" +
                 "  <m3 class=\"hashtable\"/>\n" +
-                "  <m4 class=\"map\"/>\n" + // not ideal - class shouldn't be there.
+                "  <m4/>\n" +
                 "  <m5/>\n" +
                 "  <m6/>\n" +
                 "</thing>";

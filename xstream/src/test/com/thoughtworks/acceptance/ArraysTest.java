@@ -94,7 +94,7 @@ public class ArraysTest extends AbstractAcceptanceTest {
         xstream.alias("owa", ObjWithArray.class);
         String expected = "" +
                 "<owa>\n" +
-                "  <strings class=\"string-array\">\n" +
+                "  <strings>\n" +
                 "    <string>hi</string>\n" +
                 "    <string>bye</string>\n" +
                 "  </strings>\n" +
