@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.NameMapper;
 
 import java.util.HashMap;
 import java.util.Map;

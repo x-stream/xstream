@@ -49,6 +49,7 @@ public class DefaultConverterLookup implements ConverterLookup {
     }
 
     public void setupDefaults() {
+        alias("null", ClassMapper.Null.class);
         alias("int", Integer.class);
         alias("float", Float.class);
         alias("double", Double.class);

@@ -24,7 +24,8 @@ public abstract class AbstractCollectionConverter implements Converter {
 
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         if (item == null) {
-            writer.startNode("null");
+            // todo: this is duplicated in TreeMarshaller.start()
+            writer.startNode(classMapper.lookupName(ClassMapper.Null.class));
             writer.endNode();
         } else {
             writer.startNode(classMapper.lookupName(item.getClass()));

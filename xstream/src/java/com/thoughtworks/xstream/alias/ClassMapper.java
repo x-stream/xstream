@@ -12,4 +12,9 @@ public interface ClassMapper {
     String mapNameFromXML( String xmlName );
 
     String mapNameToXML( String javaName );
+
+    /**
+     * Place holder type used for null values.
+     */
+    class Null {}
 }

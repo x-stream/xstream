@@ -17,12 +17,17 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         compareObjects(root, resultRoot);
     }
 
-    private void compareObjects(Object expected, Object actual) {
-        if (actual.getClass().isArray()) {
-            assertArrayEquals(expected, actual);
+    protected void compareObjects(Object expected, Object actual) {
+        if (expected == null) {
+            assertNull(actual);
         } else {
-            assertEquals(expected.getClass(), actual.getClass());
-            assertEquals(expected, actual);
+            assertNotNull(actual);
+            if (actual.getClass().isArray()) {
+                assertArrayEquals(expected, actual);
+            } else {
+                assertEquals(expected.getClass(), actual.getClass());
+                assertEquals(expected, actual);
+            }
         }
     }
 

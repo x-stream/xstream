@@ -25,9 +25,14 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     public void start(Object item) {
-        writer.startNode(classMapper.lookupName(item.getClass()));
-        convertAnother(item);
-        writer.endNode();
+        if (item == null) {
+            writer.startNode(classMapper.lookupName(ClassMapper.Null.class));
+            writer.endNode();
+        } else {
+            writer.startNode(classMapper.lookupName(item.getClass()));
+            convertAnother(item);
+            writer.endNode();
+        }
     }
 
 }
