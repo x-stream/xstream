@@ -58,7 +58,7 @@ public class ExternalizableConverter implements Converter {
                 }
 
                 public void close() {
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException("Objects are not allowed to call ObjecOutput.close() from writeExternal()");
                 }
             };
             ObjectOutput objectOutput = CustomObjectOutputStream.getInstance(context, callback);
@@ -86,6 +86,10 @@ public class ExternalizableConverter implements Converter {
 
                 public void defaultReadObject() {
                     throw new UnsupportedOperationException();
+                }
+
+                public void close() {
+                    throw new UnsupportedOperationException("Objects are not allowed to call ObjectInput.close() from readExternal()");
                 }
             };
             ObjectInput objectInput = CustomObjectInputStream.getInstance(context, callback);

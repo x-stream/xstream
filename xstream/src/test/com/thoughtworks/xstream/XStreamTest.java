@@ -20,6 +20,8 @@ import java.io.StringWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.EOFException;
+import java.io.FileWriter;
+import java.io.FileReader;
 
 public class XStreamTest extends TestCase {
 
@@ -289,21 +291,21 @@ public class XStreamTest extends TestCase {
         Writer writer = new StringWriter();
         xstream.alias("software", Software.class);
 
-        ObjectOutputStream oos = xstream.createObjectOutputStream(writer, "some-objects");
+        ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
         oos.writeInt(123);
         oos.writeObject("hello");
         oos.writeObject(new Software("tw", "xs"));
         oos.close();
 
         String expectedXml = ""
-                + "<some-objects>\n"
+                + "<object-stream>\n"
                 + "  <int>123</int>\n"
                 + "  <string>hello</string>\n"
                 + "  <software>\n"
                 + "    <vendor>tw</vendor>\n"
                 + "    <name>xs</name>\n"
                 + "  </software>\n"
-                + "</some-objects>";
+                + "</object-stream>";
 
         assertEquals(expectedXml, writer.toString());
 

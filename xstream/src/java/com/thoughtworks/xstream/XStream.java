@@ -395,6 +395,34 @@ public class XStream {
     /**
      * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
      *
+     * <p>To change the name of the root element (from &lt;object-stream&gt;), use
+     * {@link #createObjectOutputStream(java.io.Writer, String)}.</p>
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since 1.0.3
+     */
+    public ObjectOutputStream createObjectOutputStream(Writer writer) throws IOException {
+        return createObjectOutputStream(new PrettyPrintWriter(writer), "object-stream");
+    }
+
+    /**
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
+     *
+     * <p>To change the name of the root element (from &lt;object-stream&gt;), use
+     * {@link #createObjectOutputStream(java.io.Writer, String)}.</p>
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since 1.0.3
+     */
+    public ObjectOutputStream createObjectOutputStream(HierarchicalStreamWriter writer) throws IOException {
+        return createObjectOutputStream(writer, "object-stream");
+    }
+
+    /**
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
+     *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
@@ -486,6 +514,10 @@ public class XStream {
 
             public void defaultReadObject() throws NotActiveException {
                 throw new NotActiveException("not in call to readObject");
+            }
+
+            public void close() throws IOException {
+                // TODO: close underlying writer?
             }
         });
     }

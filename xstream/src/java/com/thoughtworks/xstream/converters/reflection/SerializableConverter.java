@@ -125,7 +125,7 @@ public class SerializableConverter implements Converter {
             }
 
             public void close() {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("Objects are not allowed to call ObjectOutputStream.close() from writeObject()");
             }
         };
 
@@ -210,6 +210,10 @@ public class SerializableConverter implements Converter {
                     reader.moveUp();
                 }
                 reader.moveUp();
+            }
+
+            public void close() {
+                throw new UnsupportedOperationException("Objects are not allowed to call ObjectInputStream.close() from readObject()");
             }
         };
 

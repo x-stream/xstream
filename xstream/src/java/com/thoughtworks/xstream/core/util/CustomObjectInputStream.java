@@ -21,6 +21,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
         Object readFromStream() throws IOException;
         Map readFieldsFromStream() throws IOException;
         void defaultReadObject() throws IOException;
+        void close() throws IOException;
     }
 
     public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback) {
@@ -186,7 +187,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     public void close() throws IOException {
-        throw new UnsupportedOperationException();
+        callback.close();
     }
 
     public int readUnsignedByte() throws IOException {
