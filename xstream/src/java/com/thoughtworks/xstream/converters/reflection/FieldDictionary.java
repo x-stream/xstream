@@ -1,10 +1,14 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.LinkedHashMap;
 
 public class FieldDictionary {
 
@@ -29,7 +33,7 @@ public class FieldDictionary {
         final String clsName = cls.getName();
         if (!keyedByFieldNameCache.containsKey(clsName)) {
             final Map keyedByFieldName = new TreeMap();
-            final Map keyedByFieldKey = new LinkedHashMap();
+            final Map keyedByFieldKey = new OrderRetainingMap();
             while (!Object.class.equals(cls)) {
                 Field[] fields = cls.getDeclaredFields();
                 for (int i = 0; i < fields.length; i++) {
@@ -101,4 +105,17 @@ public class FieldDictionary {
 
     }
 
+    private static class OrderRetainingMap extends HashMap {
+
+        private List valueOrder = new ArrayList();
+
+        public Object put(Object key, Object value) {
+            valueOrder.add(value);
+            return super.put(key, value);
+        }
+
+        public Collection values() {
+            return Collections.unmodifiableList(valueOrder);
+        }
+    }
 }
