@@ -8,3 +8,4 @@ build.properties
 *.log
 distributions.tar.gz
 old
+classes-1.3

@@ -7,4 +7,10 @@ public class X extends StandardObject {
     public int anInt;
     public Y innerObj;
 
+    public X() {
+    }
+
+    public X(int anInt) {
+        this.anInt = anInt;
+    }
 }
