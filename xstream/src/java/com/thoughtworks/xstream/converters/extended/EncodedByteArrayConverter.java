@@ -4,7 +4,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.basic.ByteConverter;
-import com.thoughtworks.xstream.converters.extended.base64.Base64Encoder;
+import com.thoughtworks.xstream.core.util.Base64Encoder;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -31,7 +31,7 @@ public class EncodedByteArrayConverter implements Converter {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        String data = reader.getValue(); // needs to be called before hasMoreChildren. 
+        String data = reader.getValue(); // needs to be called before hasMoreChildren.
         if (!reader.hasMoreChildren()) {
             return base64.decode(data);
         } else {

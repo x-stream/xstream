@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.converters.extended.base64;
+package com.thoughtworks.xstream.core.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Reader;

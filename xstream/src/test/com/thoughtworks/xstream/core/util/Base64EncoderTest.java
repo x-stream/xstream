@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.converters.extended.base64;
+package com.thoughtworks.xstream.core.util;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
