@@ -1,12 +1,22 @@
 package com.thoughtworks.xstream;
 
-import com.thoughtworks.xstream.alias.DefaultClassMapper;
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.DefaultElementMapper;
-import com.thoughtworks.xstream.alias.ElementMapper;
+import com.thoughtworks.xstream.alias.DefaultClassMapper;
+import com.thoughtworks.xstream.alias.DefaultNameMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.basic.*;
+import com.thoughtworks.xstream.converters.basic.BooleanConverter;
+import com.thoughtworks.xstream.converters.basic.ByteConverter;
+import com.thoughtworks.xstream.converters.basic.CharConverter;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
+import com.thoughtworks.xstream.converters.basic.DoubleConverter;
+import com.thoughtworks.xstream.converters.basic.FloatConverter;
+import com.thoughtworks.xstream.converters.basic.IntConverter;
+import com.thoughtworks.xstream.converters.basic.JavaClassConverter;
+import com.thoughtworks.xstream.converters.basic.LongConverter;
+import com.thoughtworks.xstream.converters.basic.ShortConverter;
+import com.thoughtworks.xstream.converters.basic.StringBufferConverter;
+import com.thoughtworks.xstream.converters.basic.StringConverter;
 import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
@@ -25,20 +35,30 @@ import com.thoughtworks.xstream.xml.text.PrettyPrintXMLWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class XStream {
 
-    private ConverterLookup converterLookup = new DefaultConverterLookup();
-    private XMLReaderDriver xmlReaderDriver;
-    private ClassMapper classMapper;
-    private ObjectFactory objectFactory;
+    protected ConverterLookup converterLookup = new DefaultConverterLookup();
+    protected XMLReaderDriver xmlReaderDriver;
+    protected ClassMapper classMapper;
+    protected ObjectFactory objectFactory;
 
     public XStream() {
-        this(new SunReflectionObjectFactory(), new DefaultClassMapper(), new DefaultElementMapper(), new DomXMLReaderDriver());
+        this(new SunReflectionObjectFactory(), new DefaultClassMapper(new DefaultNameMapper()), new DomXMLReaderDriver());
     }
 
-    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, ElementMapper elementMapper, XMLReaderDriver xmlReaderDriver) {
+    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, XMLReaderDriver xmlReaderDriver) {
         this.classMapper = classMapper;
         this.objectFactory = objectFactory;
         this.xmlReaderDriver = xmlReaderDriver;
@@ -68,7 +88,7 @@ public class XStream {
         alias("tree-map", TreeMap.class);
         alias("tree-set", TreeSet.class);
 
-        registerConverter(new ObjectWithFieldsConverter(classMapper,elementMapper));
+        registerConverter(new ObjectWithFieldsConverter(classMapper));
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());
@@ -137,5 +157,4 @@ public class XStream {
     public void registerConverter(Converter converter) {
         converterLookup.registerConverter(converter);
     }
-
 }
