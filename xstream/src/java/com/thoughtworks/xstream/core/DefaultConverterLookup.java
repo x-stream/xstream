@@ -86,27 +86,34 @@ public class DefaultConverterLookup implements ConverterLookup {
 
     private transient ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-    public DefaultConverterLookup(ReflectionProvider reflectionProvider,
-                                  ClassMapper classMapper,
-                                  String classAttributeIdentifier,
-                                  JVM jvm,
-                                  ImplicitCollectionMapper implicitCollectionMapper) {
-        this.jvm = jvm;
-        this.defaultConverter = new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, implicitCollectionMapper);
-        this.classMapper = classMapper;
-        this.classAttributeIdentifier = classAttributeIdentifier;
-    }
-
-    public DefaultConverterLookup(Converter defaultConverter,
+    public DefaultConverterLookup(JVM jvm,
+    								ReflectionProvider reflectionProvider,
+    								ImplicitCollectionMapper implicitCollectionMapper,
                                   ClassMapper classMapper,
                                   String classAttributeIdentifier) {
-        this.defaultConverter = defaultConverter;
-        this.classMapper = classMapper;
-        this.classAttributeIdentifier = classAttributeIdentifier;
+        this(jvm, 
+        		new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider, implicitCollectionMapper),
+        		classMapper, 
+			classAttributeIdentifier);
+    }
+
+    public DefaultConverterLookup(JVM jvm, 
+    								Converter defaultConverter,
+            						ClassMapper classMapper,
+								String classAttributeIdentifier){
+    		this.jvm = jvm;
+    		this.defaultConverter = defaultConverter;
+    		this.classMapper = classMapper;
+    		this.classAttributeIdentifier = classAttributeIdentifier;
     }
 
     public Converter defaultConverter() {
         return defaultConverter;
+    }
+    
+    public void changeDefaultConverter(Converter newDefaultConverter) {
+        defaultConverter = newDefaultConverter;
+        setupDefaults();
     }
 
     public Converter lookupConverterForType(Class type) {

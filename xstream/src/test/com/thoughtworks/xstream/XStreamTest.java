@@ -23,6 +23,7 @@ public class XStreamTest extends TestCase {
         xstream = new XStream();
         xstream.alias("x", X.class);
         xstream.alias("y", Y.class);
+        xstream.alias("z", Z.class);
         xstream.alias("funny", FunnyConstructor.class);
         xstream.alias("with-list", WithList.class);
     }
@@ -262,4 +263,19 @@ public class XStreamTest extends TestCase {
 
         assertEquals("foo", p.getId());
     }
+    
+    public void testUnmarshalsObjectFromXmlWithCustomDefaultConverter() {
+    		
+        xstream.changeDefaultConverter(new ZConverter());
+        
+        String xml =
+                "<z>" +
+                "  <any-old-suff/>" +
+                "</z>";
+        
+        Z z = (Z) xstream.fromXML(xml);
+
+        assertEquals("z", z.field);
+    }
+
 }

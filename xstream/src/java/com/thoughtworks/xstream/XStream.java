@@ -1,5 +1,10 @@
 package com.thoughtworks.xstream;
 
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -9,21 +14,15 @@ import com.thoughtworks.xstream.core.AddableImplicitCollectionMapper;
 import com.thoughtworks.xstream.core.DefaultClassMapper;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.MapBackedDataHolder;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
-import com.thoughtworks.xstream.core.MapBackedDataHolder;
-import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 
 /**
  * Simple facade to XStream library, a Java-XML serialization tool.
@@ -63,6 +62,16 @@ import java.io.Writer;
  * <p><hr><b>Example</b><blockquote><pre>
  * xstream.registerConverter(new SqlTimestampConverter());
  * xstream.registerConverter(new DynamicProxyConverter());
+ * </pre></blockquote><hr>
+ * <p>The default converter, ie the converter which will be used if no other registered 
+ * converter is suitable, can be configured by either one of the constructors
+ * or can be changed using the <code>changeDefaultConverter()</code> method.
+ * If not set, XStream uses {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter}
+ * as the initial default converter.
+ * </p>
+ * <p/>
+ * <p><hr><b>Example</b><blockquote><pre>
+ * xstream.changeDefaultConverter(new ACustomDefaultConverter());
  * </pre></blockquote><hr>
  * <p/>
  * <h3>Object graphs</h3>
@@ -107,6 +116,7 @@ import java.io.Writer;
  * <code>addImplicitCollection</code> methods.</p>
  * 
  * @author Joe Walnes
+ * @author Mauro Talevi
  */
 public class XStream {
 
@@ -125,6 +135,10 @@ public class XStream {
         this(null, new DefaultClassMapper(), new XppDriver());
     }
 
+    public XStream(Converter defaultConverter) {
+        this(null, new DefaultClassMapper(), new XppDriver(), "class", defaultConverter);
+    }
+    
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(null, new DefaultClassMapper(), hierarchicalStreamDriver);
     }
@@ -149,10 +163,22 @@ public class XStream {
         this.classMapper = classMapper;
         this.hierarchicalStreamDriver = driver;
         setMode(XPATH_REFERENCES);
-        converterLookup = new DefaultConverterLookup(reflectionProvider, classMapper, classAttributeIdentifier, jvm, implicitCollectionMapper);
+        converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, implicitCollectionMapper, classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
     }
 
+    public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier, Converter defaultConverter) {
+        jvm = new JVM();
+        if (reflectionProvider == null) {
+            reflectionProvider = jvm.bestReflectionProvider();
+        }
+        this.classMapper = classMapper;
+        this.hierarchicalStreamDriver = driver;
+        setMode(XPATH_REFERENCES);
+        converterLookup = new DefaultConverterLookup(jvm, defaultConverter, classMapper, classAttributeIdentifier);
+        converterLookup.setupDefaults();
+    }
+    
     public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {
         this.marshallingStrategy = marshallingStrategy;
     }
@@ -272,6 +298,10 @@ public class XStream {
         converterLookup.alias(elementName, type, defaultImplementation);
     }
 
+    public void changeDefaultConverter(Converter defaultConverter) {
+        converterLookup.changeDefaultConverter(defaultConverter);
+    }
+    
     public void registerConverter(Converter converter) {
         converterLookup.registerConverter(converter);
     }
