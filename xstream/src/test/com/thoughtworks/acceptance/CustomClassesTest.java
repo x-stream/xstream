@@ -117,4 +117,19 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
         String c;
     }
 
+    public void testFieldWithObjectType() {
+        String expected = "" +
+                "<thing>\n" +
+                "  <one>1.0</one>\n" +
+                "  <two class=\"double\">2.0</two>\n" +
+                "</thing>";
+        xstream.alias("thing", FieldWithObjectType.class);
+
+        assertBothWays(new FieldWithObjectType(), expected);
+    }
+
+    class FieldWithObjectType extends StandardObject {
+        Double one = new Double(1.0);
+        Object two = new Double(2.0);
+    }
 }
