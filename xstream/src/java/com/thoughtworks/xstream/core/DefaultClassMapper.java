@@ -84,7 +84,7 @@ public class DefaultClassMapper implements ClassMapper {
                 if (xmlName.charAt(i + 1)  == '_') {
                     i++;
                     result.append('_');
-                } else if (xmlName.substring(i + 1, i + 8).equals("DOLLAR_")) {
+                } else if (xmlName.length() >= i + 8 && xmlName.substring(i + 1, i + 8).equals("DOLLAR_")) {
                     i += 7;
                     result.append('$');
                 }

@@ -54,4 +54,19 @@ public class AwkwardCharactersTest extends AbstractAcceptanceTest {
         assertBothWays(in, expected);
     }
 
+    public static class A_B extends StandardObject {
+        private int x;
+
+        public A_B(int x) {
+            this.x = x;
+        }
+
+    }
+
+    public void testSupportsUnderscoreInShortClassName() {
+        assertBothWays(new A_B(3), ""
+                + "<com.thoughtworks.acceptance.AwkwardCharactersTest-A_B>\n"
+                + "  <x>3</x>\n"
+                + "</com.thoughtworks.acceptance.AwkwardCharactersTest-A_B>");
+    }
 }
