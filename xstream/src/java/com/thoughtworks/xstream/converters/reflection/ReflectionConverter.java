@@ -2,17 +2,17 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.alias.DefaultCollectionLookup;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Collection;
-import java.util.ArrayList;
 
 public class ReflectionConverter implements Converter {
 
@@ -23,7 +23,8 @@ public class ReflectionConverter implements Converter {
     private DefaultCollectionLookup defaultCollectionLookup;
     private InstanceResolver instanceResolver;
 
-    public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier, ReflectionProvider reflectionProvider, DefaultCollectionLookup defaultCollectionLookup) {
+    public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier,
+                               ReflectionProvider reflectionProvider, DefaultCollectionLookup defaultCollectionLookup) {
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
         this.definedInAttributeIdentifier = definedInAttributeIdentifier;
@@ -68,57 +69,72 @@ public class ReflectionConverter implements Converter {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        Object result = context.currentObject();
-
-        if (result == null) {
-            result = reflectionProvider.newInstance(context.getRequiredType());
-        }
-
+        Object result = instantiateNewInstance(context);
         Collection defaultCollection = getDefaultCollection(result);
-        Set seenFields = new HashSet();
+        SeenFields seenFields = new SeenFields();
 
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-
             String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
 
-            String definedIn = reader.getAttribute(definedInAttributeIdentifier);
-            Class definedInCls = definedIn == null ? null : classMapper.lookupType(definedIn);
+            Class classDefiningField = determineWhichClassDefinesField(reader);
+            boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
 
-            boolean validField = reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
+            Class type = determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField);
+            Object value = context.convertAnother(result, type);
 
-            Class type;
-            String classAttribute = reader.getAttribute(classAttributeIdentifier);
-            if (classAttribute != null) {
-                type = classMapper.lookupType(classAttribute);
-            } else if (!validField) {
-                type = classMapper.lookupType(reader.getNodeName());
-            } else {
-                type = classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName, definedInCls));
-            }
-
-            Object fieldValue = context.convertAnother(result, type);
-
-            if (validField) {
-                reflectionProvider.writeField(result, fieldName, fieldValue, definedInCls);
-
-                String uniqueKey = fieldName;
-                if (definedInCls != null) {
-                    uniqueKey += " [" + definedInCls.getName() + "]";
-                }
-                if (seenFields.contains(uniqueKey)) {
-                    throw new DuplicateFieldException(uniqueKey);
-                } else {
-                    seenFields.add(uniqueKey);
-                }
-
+            if (fieldExistsInClass) {
+                reflectionProvider.writeField(result, fieldName, value, classDefiningField);
+                seenFields.add(classDefiningField, fieldName);
             } else if (defaultCollection != null) {
-                defaultCollection.add(fieldValue);
+                defaultCollection.add(value);
             }
 
             reader.moveUp();
         }
         return instanceResolver.resolve(result);
+    }
+
+    private Class determineWhichClassDefinesField(HierarchicalStreamReader reader) {
+        String definedIn = reader.getAttribute(definedInAttributeIdentifier);
+        return definedIn == null ? null : classMapper.lookupType(definedIn);
+    }
+
+    private Object instantiateNewInstance(UnmarshallingContext context) {
+        Object result = context.currentObject();
+        if (result == null) {
+            result = reflectionProvider.newInstance(context.getRequiredType());
+        }
+        return result;
+    }
+
+    private static class SeenFields {
+
+        private Set seen = new HashSet();
+
+        public void add(Class definedInCls, String fieldName) {
+            String uniqueKey = fieldName;
+            if (definedInCls != null) {
+                uniqueKey += " [" + definedInCls.getName() + "]";
+            }
+            if (seen.contains(uniqueKey)) {
+                throw new DuplicateFieldException(uniqueKey);
+            } else {
+                seen.add(uniqueKey);
+            }
+        }
+
+    }
+
+    private Class determineType(HierarchicalStreamReader reader, boolean validField, Object result, String fieldName, Class definedInCls) {
+        String classAttribute = reader.getAttribute(classAttributeIdentifier);
+        if (classAttribute != null) {
+            return classMapper.lookupType(classAttribute);
+        } else if (!validField) {
+            return classMapper.lookupType(reader.getNodeName());
+        } else {
+            return classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName, definedInCls));
+        }
     }
 
     private Collection getDefaultCollection(Object instance) {
