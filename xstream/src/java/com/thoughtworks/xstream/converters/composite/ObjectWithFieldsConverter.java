@@ -2,93 +2,130 @@ package com.thoughtworks.xstream.converters.composite;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
-import com.thoughtworks.xstream.converters.old.OldConverter;
-import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.objecttree.reflection.ObjectFactory;
 
-public class ObjectWithFieldsConverter implements OldConverter {
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+public class ObjectWithFieldsConverter implements Converter {
 
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
-//    private CircularityTracker circularityTracker = new CircularityTracker();
+    private ObjectFactory objectFactory;
 
-    public ObjectWithFieldsConverter(ClassMapper classMapper,String classAttributeIdentifier) {
+    public ObjectWithFieldsConverter(ClassMapper classMapper,String classAttributeIdentifier, ObjectFactory objectFactory) {
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
+        this.objectFactory = objectFactory;
     }
 
     public boolean canConvert(Class type) {
         return true;
     }
 
-    public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
-        String[] fieldNames = objectGraph.fieldNames();
-//        circularityTracker.track(objectGraph.get());
-        for (int i = 0; i < fieldNames.length; i++) {
-            String fieldName = fieldNames[i];
+    public void toXML(MarshallingContext context) {
+        Object obj = context.currentObject();
+        Iterator fields = getFields(obj.getClass());
+        while (fields.hasNext()) {
+            Field field = (Field) fields.next();
+            field.setAccessible(true);
+            try {
+                Object newObj = field.get(obj);
+                if (newObj != null) {
+                    writeFieldAsXML(context, field, newObj);
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e); // TODO... should it recover?
+            }
+        }
+    }
 
-            objectGraph.push(fieldName);
+    private void writeFieldAsXML(MarshallingContext context, Field field, Object obj) {
+        context.xmlStartElement(classMapper.mapNameToXML(field.getName()));
 
-            if (objectGraph.get() != null) {
-                writeFieldAsXML(xmlWriter, classMapper.mapNameToXML(fieldName), objectGraph, converterLookup);
+        Class actualType = obj.getClass();
+
+        Class defaultType = classMapper.lookupDefaultType(field.getType());
+        if (!actualType.equals(defaultType)) {
+            context.xmlAddAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
+        }
+
+        context.convert(obj);
+
+        context.xmlEndElement();
+    }
+
+    public Object fromXML(UnmarshallingContext context) {
+        Object result = context.currentObject();
+
+        if (result == null) {
+            result = objectFactory.create(context.getRequiredType());
+        }
+
+        while (context.xmlNextChild()) {
+            String fieldName = classMapper.mapNameFromXML(context.xmlElementName());
+            Iterator fields = getFields(result.getClass());
+            Field field = null;
+            while (fields.hasNext()) {
+                Field tmp = (Field) fields.next();
+                if (tmp.getName().equals(fieldName)) {
+                    field = tmp;
+                    break;
+                }
+            }
+            if (field == null) {
+                throw new RuntimeException("No such field " + result.getClass() + "." + fieldName);
             }
 
-            objectGraph.pop();
+            Class type;
+            String classAttribute = context.xmlAttribute(classAttributeIdentifier);
+            if (classAttribute == null) {
+                type = field.getType();
+            } else {
+                type = classMapper.lookupType(classAttribute);
+            }
+
+            Object fieldValue = context.convertAnother(type);
+
+            try {
+                field.setAccessible(true);
+                field.set(result, fieldValue);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e); // TODO... should it recover?
+            }
+
+            context.xmlPop();
         }
+        return result;
     }
 
-    private void writeFieldAsXML(XMLWriter xmlWriter, String fieldName, ObjectTree objectGraph, ConverterLookup converterLookup) {
-        xmlWriter.startElement(fieldName);
+    private Iterator getFields(Class cls) {
+        List result = new LinkedList();
 
-        writeClassAttributeInXMLIfNotDefaultImplementation(objectGraph, xmlWriter);
-        Converter converter = converterLookup.lookupConverterForType(objectGraph.type());
-        converter.toXML(new MarshallingContextAdaptor(objectGraph, xmlWriter, converterLookup));
-
-        xmlWriter.endElement();
-    }
-
-    protected void writeClassAttributeInXMLIfNotDefaultImplementation(ObjectTree objectGraph, XMLWriter xmlWriter) {
-        Class actualType = objectGraph.get().getClass();
-        Class defaultType = classMapper.lookupDefaultType(objectGraph.type());
-        if (!actualType.equals(defaultType)) {
-            xmlWriter.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
-        }
-    }
-
-    public void fromXML(final ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
-
-        // Only create the root if one has not been provided.
-
-        if ( objectGraph.get() == null ) {
-            objectGraph.create(requiredType);
+        while (!Object.class.equals(cls)) {
+            Field[] fields = cls.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++) {
+                Field field = fields[i];
+                int modifiers = field.getModifiers();
+                if (field.getName().startsWith("this$")) {
+                    continue;
+                }
+                if (Modifier.isFinal(modifiers) ||
+                        Modifier.isStatic(modifiers) ||
+                        Modifier.isTransient(modifiers)) {
+                    continue;
+                }
+                result.add(field);
+            }
+            cls = cls.getSuperclass();
         }
 
-        while (xmlReader.nextChild()) {
-            objectGraph.push(classMapper.mapNameFromXML(xmlReader.name()));
-
-            Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
-            Converter converter = converterLookup.lookupConverterForType(type);
-            Object obj = converter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
-            objectGraph.set(obj);
-            objectGraph.pop();
-
-            xmlReader.pop();
-        }
-    }
-
-    private Class determineWhichImplementationToUse(XMLReader xmlReader, final ObjectTree objectGraph) {
-        String classAttribute = xmlReader.attribute(classAttributeIdentifier);
-        Class type;
-        if (classAttribute == null) {
-            type = objectGraph.type();
-        } else {
-            type = classMapper.lookupType(classAttribute);
-        }
-        return type;
+        return result.iterator();
     }
 
 }

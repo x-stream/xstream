@@ -1,37 +1,23 @@
 package com.thoughtworks.xstream.converters.old;
 
+import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.xml.XMLReader;
 
+import java.util.LinkedList;
+
 public class UnmarshallingContextAdaptor implements UnmarshallingContext {
-    private ObjectTree objectTree;
+
+    private Object root;
     private XMLReader xmlReader;
     private ConverterLookup converterLookup;
-    private Class type;
+    private LinkedList types = new LinkedList();
 
-    public UnmarshallingContextAdaptor(ObjectTree objectTree, XMLReader xmlReader, ConverterLookup converterLookup, Class type) {
-        this.objectTree = objectTree;
+    public UnmarshallingContextAdaptor(Object root, XMLReader xmlReader, ConverterLookup converterLookup) {
+        this.root = root;
         this.xmlReader = xmlReader;
         this.converterLookup = converterLookup;
-        this.type = type;
-    }
-
-    public ObjectTree getObjectTree() {
-        return objectTree;
-    }
-
-    public XMLReader getXMLReader() {
-        return xmlReader;
-    }
-
-    public ConverterLookup getConverterLookup() {
-        return converterLookup;
-    }
-
-    public Class getRequiredType() {
-        return type;
     }
 
     public String xmlText() {
@@ -49,4 +35,30 @@ public class UnmarshallingContextAdaptor implements UnmarshallingContext {
     public boolean xmlNextChild() {
         return xmlReader.nextChild();
     }
+
+    public String xmlAttribute(String name) {
+        return xmlReader.attribute(name);
+    }
+
+    public Object xmlPeek() {
+        return xmlReader.peek();
+    }
+
+    public Object convertAnother(Class type) {
+        Converter converter = converterLookup.lookupConverterForType(type);
+        types.addLast(type);
+        Object result = converter.fromXML(this);
+        types.removeLast();
+        return result;
+    }
+
+    public Object currentObject() {
+        return root;
+    }
+
+    public Class getRequiredType() {
+        return (Class) types.getLast();
+    }
+
 }
+

@@ -1,10 +1,8 @@
 package com.thoughtworks.xstream.converters.collections;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,22 +17,22 @@ public class CollectionConverter extends AbstractCollectionConverter {
         return Collection.class.isAssignableFrom(type);
     }
 
-    public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
-        Collection collection = (Collection) objectGraph.get();
+    public void toXML(MarshallingContext context) {
+        Collection collection = (Collection) context.currentObject();
         for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
             Object item = iterator.next();
-            writeItem(item, xmlWriter, converterLookup, objectGraph);
+            writeItem(item, context);
         }
     }
 
-    public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
-        Collection collection = (Collection) createCollection(requiredType);
-        while (xmlReader.nextChild()) {
-            Object item = readItem(xmlReader, objectGraph, converterLookup);
+    public Object fromXML(UnmarshallingContext context) {
+        Collection collection = (Collection) createCollection(context.getRequiredType());
+        while (context.xmlNextChild()) {
+            Object item = readItem(context);
             collection.add(item);
-            xmlReader.pop();
+            context.xmlPop();
         }
-        objectGraph.set(collection);
+        return collection;
     }
 
 }

@@ -8,12 +8,10 @@ import com.thoughtworks.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.alias.DefaultClassMapper;
 import com.thoughtworks.xstream.alias.DefaultNameMapper;
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.old.OldConverter;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLWriter;
 import junit.framework.TestCase;
 
 public class Xpp3XStreamTest extends TestCase {
@@ -192,23 +190,22 @@ public class Xpp3XStreamTest extends TestCase {
         Xpp3Dom element;
     }
 
-    private class ElementConverter
-            implements OldConverter {
+    private class ElementConverter implements Converter {
         public boolean canConvert(Class type) {
             return Xpp3Dom.class.isAssignableFrom(type);
         }
 
-        public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
+        public void toXML(MarshallingContext context) {
         }
 
-        public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
-            Xpp3Dom element = (Xpp3Dom) xmlReader.peek();
+        public Object fromXML(UnmarshallingContext context) {
+            Xpp3Dom element = (Xpp3Dom) context.xmlPeek();
 
-            while (xmlReader.nextChild()) {
-                xmlReader.pop();
+            while (context.xmlNextChild()) {
+                context.xmlPop();
             }
 
-            objectGraph.set(element);
+            return element;
         }
     }
 
@@ -229,7 +226,7 @@ public class Xpp3XStreamTest extends TestCase {
 
         Component component1 = (Component) xstream.fromXML(driver.createReader(xml), component0);
 
-        assertEquals(component0, component1);
+        assertSame(component0, component1);
 
         assertEquals("host", component0.host);
 

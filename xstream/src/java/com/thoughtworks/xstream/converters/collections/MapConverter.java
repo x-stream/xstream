@@ -1,10 +1,8 @@
 package com.thoughtworks.xstream.converters.collections;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -19,36 +17,36 @@ public class MapConverter extends AbstractCollectionConverter {
         return Map.class.isAssignableFrom(type);
     }
 
-    public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
-        Map map = (Map) objectGraph.get();
+    public void toXML(MarshallingContext context) {
+        Map map = (Map) context.currentObject();
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            xmlWriter.startElement("entry");
+            context.xmlStartElement("entry");
 
-            writeItem(entry.getKey(), xmlWriter, converterLookup, objectGraph);
-            writeItem(entry.getValue(), xmlWriter, converterLookup, objectGraph);
+            writeItem(entry.getKey(), context);
+            writeItem(entry.getValue(), context);
 
-            xmlWriter.endElement();
+            context.xmlEndElement();
         }
     }
 
-    public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
-        Map map = (Map) createCollection(requiredType);
-        while (xmlReader.nextChild()) {
+    public Object fromXML(UnmarshallingContext context) {
+        Map map = (Map) createCollection(context.getRequiredType());
+        while (context.xmlNextChild()) {
 
-            xmlReader.nextChild();
-            Object key = readItem(xmlReader, objectGraph, converterLookup);
-            xmlReader.pop();
+            context.xmlNextChild();
+            Object key = readItem(context);
+            context.xmlPop();
 
-            xmlReader.nextChild();
-            Object value = readItem(xmlReader, objectGraph, converterLookup);
-            xmlReader.pop();
+            context.xmlNextChild();
+            Object value = readItem(context);
+            context.xmlPop();
 
             map.put(key, value);
 
-            xmlReader.pop();
+            context.xmlPop();
         }
-        objectGraph.set(map);
+        return map;
     }
 
 }

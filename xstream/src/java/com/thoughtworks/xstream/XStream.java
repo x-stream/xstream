@@ -13,8 +13,6 @@ import com.thoughtworks.xstream.converters.collections.PropertiesConverter;
 import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
 import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
-import com.thoughtworks.xstream.converters.old.OldConverter;
-import com.thoughtworks.xstream.converters.old.OldConverterAdaptor;
 import com.thoughtworks.xstream.converters.old.UnmarshallingContextAdaptor;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.objecttree.reflection.ObjectFactory;
@@ -79,7 +77,7 @@ public class XStream {
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
 
-        registerConverter(new ObjectWithFieldsConverter(classMapper,classAttributeIdentifier));
+        registerConverter(new ObjectWithFieldsConverter(classMapper,classAttributeIdentifier, objectFactory));
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());
@@ -121,15 +119,20 @@ public class XStream {
         ObjectTree objectGraph = new ReflectionObjectGraph(obj, objectFactory);
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
         xmlWriter.startElement(classMapper.lookupName(obj.getClass()));
-        rootConverter.toXML(new MarshallingContextAdaptor(objectGraph, xmlWriter, converterLookup));
+        MarshallingContextAdaptor context = new MarshallingContextAdaptor(objectGraph.get(), xmlWriter, converterLookup);
+        rootConverter.toXML(context);
         xmlWriter.endElement();
     }
 
     public Object fromXML(String xml) {
-        return fromXML(xmlReaderDriver.createReader(xml));
+        return fromXML(xmlReaderDriver.createReader(xml), null);
     }
 
     public Object fromXML(XMLReader xmlReader) {
+        return fromXML(xmlReader, null);
+    }
+
+    public Object fromXML(XMLReader xmlReader, Object root) {
         String classAttribute = xmlReader.attribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
@@ -137,23 +140,12 @@ public class XStream {
         } else {
             type = classMapper.lookupType(classAttribute);
         }
-        ObjectTree objectGraph = new ReflectionObjectGraph(type, objectFactory);
-        Converter rootConverter = converterLookup.lookupConverterForType(type);
-        return rootConverter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
-    }
-
-    public Object fromXML(XMLReader xmlReader, Object root) {
-        Class type = root.getClass();
-        ObjectTree objectGraph = new ReflectionObjectGraph(root, objectFactory);
-        Converter rootConverter = converterLookup.lookupConverterForType(type);
-        return rootConverter.fromXML(new UnmarshallingContextAdaptor(objectGraph, xmlReader, converterLookup, type));
+        UnmarshallingContextAdaptor context = new UnmarshallingContextAdaptor(root, xmlReader, converterLookup);
+        return context.convertAnother(type);
     }
 
     public void registerConverter(Converter converter) {
         converterLookup.registerConverter(converter);
     }
 
-    public void registerConverter(OldConverter converter) {
-        converterLookup.registerConverter(new OldConverterAdaptor(converter));
-    }
 }

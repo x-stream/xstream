@@ -2,11 +2,9 @@ package com.thoughtworks.xstream;
 
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.someobjects.*;
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.old.OldConverter;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.xml.dom4j.Dom4JXMLReaderDriver;
 import junit.framework.TestCase;
 import org.dom4j.Element;
@@ -186,26 +184,24 @@ public class XStreamTest extends TestCase {
         Element element;
     }
 
-    private class ElementConverter
-        implements OldConverter {
+    private class ElementConverter implements Converter {
 
         public boolean canConvert( Class type ) {
             return Element.class.isAssignableFrom( type );
         }
 
-        public void toXML( ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup ) {
+        public void toXML(MarshallingContext context) {
         }
 
-        public void fromXML( ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType ) {
+        public Object fromXML(UnmarshallingContext context) {
 
-            Element element = (Element) xmlReader.peek();
+            Element element = (Element) context.xmlPeek();
 
-            while ( xmlReader.nextChild() )
-            {
-                xmlReader.pop();
+            while (context.xmlNextChild()) {
+                context.xmlPop();
             }
 
-            objectGraph.set( element );
+            return element;
         }
     }
 
@@ -226,7 +222,7 @@ public class XStreamTest extends TestCase {
 
         Component component1 = (Component) xstream.fromXML( driver.createReader( xml ), component0 );
 
-        assertEquals( component0, component1 );
+        assertSame( component0, component1 );
 
         assertEquals( "host", component0.host );
 

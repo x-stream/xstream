@@ -1,41 +1,39 @@
 package com.thoughtworks.xstream.converters.collections;
 
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.old.OldConverter;
-import com.thoughtworks.xstream.objecttree.ObjectTree;
-import com.thoughtworks.xstream.xml.XMLReader;
-import com.thoughtworks.xstream.xml.XMLWriter;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-public class PropertiesConverter implements OldConverter {
+public class PropertiesConverter implements Converter {
 
     public boolean canConvert(Class type) {
         return Properties.class.isAssignableFrom(type);
     }
 
-    public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
-        Map map = (Map) objectGraph.get();
-        for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
+    public void toXML(MarshallingContext context) {
+        Properties properties = (Properties) context.currentObject();
+        for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            xmlWriter.startElement("property");
-            xmlWriter.addAttribute("name", entry.getKey().toString());
-            xmlWriter.addAttribute("value", entry.getValue().toString());
-            xmlWriter.endElement();
+            context.xmlStartElement("property");
+            context.xmlAddAttribute("name", entry.getKey().toString());
+            context.xmlAddAttribute("value", entry.getValue().toString());
+            context.xmlEndElement();
         }
     }
 
-    public void fromXML(ObjectTree objectTree, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
+    public Object fromXML(UnmarshallingContext context) {
         Properties properties = new Properties();
-        while (xmlReader.nextChild()) {
-            xmlReader.nextChild();
-            String name = xmlReader.attribute("name");
-            String value = xmlReader.attribute("value");
+        while (context.xmlNextChild()) {
+            context.xmlNextChild();
+            String name = context.xmlAttribute("name");
+            String value = context.xmlAttribute("value");;
             properties.setProperty(name, value);
-            xmlReader.pop();
+            context.xmlPop();
         }
-        objectTree.set(properties);
+        return properties;
     }
 }
