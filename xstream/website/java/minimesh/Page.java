@@ -128,6 +128,7 @@ public class Page {
             if (tag.hasAttribute("href", false)) {
                 links.add(tag.getAttributeValue("href", false));
             }
+            tag.writeTo(currentBuffer());
         }
     }
 }
