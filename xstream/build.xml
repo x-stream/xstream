@@ -114,7 +114,7 @@
             </classpath>
         </javac>
         <mkdir dir="build/website"/>
-        <java classname="minimesh.Main">
+        <java classname="minimesh.Main" failonerror="true">
             <classpath>
                 <fileset dir="website/lib"/>
                 <pathelement path="build/website-classes"/>

@@ -39,6 +39,17 @@ public class Main {
         FileSystem fileSystem = new FileSystem();
         fileSystem.copyAllFiles(websitefile.getParentFile(), outputDirectory, "html,xml");
         fileSystem.copyAllFiles(skinFile.getParentFile(), outputDirectory, "html,xml");
+
+        // Verify links
+        LinkChecker linkChecker = new LinkChecker(siteMap, new LinkChecker.Reporter() {
+            public void badLink(Page page, String link) {
+                System.err.println("Invalid link on page " + page.getFilename() + " : " + link);
+            }
+        });
+        if (!linkChecker.verify()) {
+            System.err.println("INVALID LINKS FOUND");
+            System.exit(-1);
+        }
     }
 
 }

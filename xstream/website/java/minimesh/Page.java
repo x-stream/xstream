@@ -1,6 +1,8 @@
 package minimesh;
 
 import com.opensymphony.module.sitemesh.html.HTMLProcessor;
+import com.opensymphony.module.sitemesh.html.BasicRule;
+import com.opensymphony.module.sitemesh.html.Tag;
 import com.opensymphony.module.sitemesh.html.util.CharArray;
 import com.opensymphony.module.sitemesh.parser.PageBuilder;
 import com.opensymphony.module.sitemesh.parser.rules.BodyTagRule;
@@ -11,6 +13,12 @@ import com.opensymphony.module.sitemesh.parser.rules.MetaTagRule;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A single page in a website, including title, filename and content.
@@ -25,6 +33,7 @@ public class Page {
     private String filename;
     private String head;
     private String body;
+    private Collection links = new HashSet();
 
     public Page(File htmlFile) {
         try {
@@ -65,6 +74,7 @@ public class Page {
         htmlProcessor.addRule(new HeadExtractingRule(head));
         htmlProcessor.addRule(new TitleExtractingRule(pageBuilder));
         htmlProcessor.addRule(new MetaTagRule(pageBuilder));
+        htmlProcessor.addRule(new LinkExtractingRule());
 
         // go!
         htmlProcessor.process();
@@ -96,9 +106,28 @@ public class Page {
         return getFilename();
     }
 
+    public Collection getLinks() {
+        return Collections.unmodifiableCollection(links);
+    }
+
     public static class CannotParsePageException extends RuntimeException {
         public CannotParsePageException(Throwable cause) {
             super(cause);
+        }
+    }
+
+    /**
+     * Rule for HTMLProcessor that records all <a href=""> links.
+     */
+    private class LinkExtractingRule extends BasicRule {
+        public boolean shouldProcess(String tag) {
+            return tag.equalsIgnoreCase("a");
+        }
+
+        public void process(Tag tag) {
+            if (tag.hasAttribute("href", false)) {
+                links.add(tag.getAttributeValue("href", false));
+            }
         }
     }
 }
