@@ -30,6 +30,14 @@ public class ReflectionConverter implements Converter {
     private SerializationMethodInvoker serializationMethodInvoker;
     private static final String STREAM_PREFIX = "stream.";
 
+    // Todo:
+    //  - ObjectStreamField[] serialPersistentFields
+    //  - putFields()/writeFields()/readFields()
+    //  - writeReplace()
+    //  - Externalizable
+    //  - ObjectInputValidation
+    //  - Ensure readObject()/writeObject() include the heirarchy.
+
     public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier,
                                ReflectionProvider reflectionProvider, ImplicitCollectionMapper implicitCollectionMapper) {
         this.classMapper = classMapper;
