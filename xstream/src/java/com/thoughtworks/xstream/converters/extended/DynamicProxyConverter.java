@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.DynamicProxyMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -34,7 +35,7 @@ public class DynamicProxyConverter implements Converter {
     }
 
     public boolean canConvert(Class type) {
-        return type.equals(ClassMapper.DynamicProxy.class) || Proxy.isProxyClass(type);
+        return type.equals(DynamicProxyMapper.DynamicProxy.class) || Proxy.isProxyClass(type);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

@@ -23,8 +23,4 @@ public interface ClassMapper {
      */
     class Null {}
 
-    /**
-     * Place holder type used for dynamic proxies.
-     */
-    class DynamicProxy {}
 }

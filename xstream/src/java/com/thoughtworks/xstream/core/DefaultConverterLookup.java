@@ -156,7 +156,6 @@ public class DefaultConverterLookup implements ConverterLookup {
         alias("boolean", Boolean.class);
         alias("number", Number.class);
         alias("object", Object.class);
-        alias("dynamic-proxy", ClassMapper.DynamicProxy.class);
         alias("big-int", BigInteger.class);
         alias("big-decimal", BigDecimal.class);
 
