@@ -2,6 +2,7 @@ package com.thoughtworks.xstream;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.*;
@@ -104,6 +105,10 @@ public class XStream {
 
     public ClassMapper getClassMapper() {
         return classMapper;
+    }
+
+    public ConverterLookup getConverterLookup() {
+        return converterLookup;
     }
 
     public void setMode(int mode) {
