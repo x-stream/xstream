@@ -1,15 +1,9 @@
 package com.thoughtworks.acceptance;
 
-import org.jgroups.stack.IpAddress;
-
 import java.io.Externalizable;
-import java.io.ObjectOutput;
 import java.io.IOException;
 import java.io.ObjectInput;
-import java.net.UnknownHostException;
-import java.net.InetAddress;
-
-import com.thoughtworks.xstream.XStream;
+import java.io.ObjectOutput;
 
 public class ExternalizableTest extends AbstractAcceptanceTest {
 
