@@ -31,6 +31,7 @@
         <li>Bugfix: <jira>XSTR-180</jira> Serializable objects support defaultReadObject() even when no default fields available.</li>
 		<li>Bugfix: For serialized objects class hierarchy is serialized starting with superclass (as per Java Object Serialization).</li>
 		<li>Bugfix: readObject() is now called for classes containing only transient fields.</li>
+		<li>Bugfix: Order of fields are maintained when calling ObjectOutputStream.putFields().</li>
     </ul>
 
     <h1>Version 1.1</h1>

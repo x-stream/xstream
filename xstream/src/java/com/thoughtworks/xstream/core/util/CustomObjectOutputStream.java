@@ -141,7 +141,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     private class CustomPutField extends PutField {
 
-        private final Map fields = new HashMap();
+        private final Map fields = new OrderRetainingMap();
 
         public Map asMap() {
             return fields;

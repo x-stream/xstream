@@ -220,22 +220,22 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         private void writeObject(ObjectOutputStream out) throws IOException {
             // don't call defaultWriteObject()
             ObjectOutputStream.PutField fields = out.putFields();
-            fields.put("the-name", name);
-            fields.put("the-number", number);
-            fields.put("the-software", someSoftware);
-            fields.put("the-polymorphic", polymorphic);
-            fields.put("the-nothing", nothing);
+            fields.put("theName", name);
+            fields.put("theNumber", number);
+            fields.put("theSoftware", someSoftware);
+            fields.put("thePolymorphic", polymorphic);
+            fields.put("theNothing", nothing);
             out.writeFields();
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             // don't call defaultReadObject()
             ObjectInputStream.GetField fields = in.readFields();
-            name = (String) fields.get("the-name", "unknown");
-            number = fields.get("the-number", -1);
-            someSoftware = (Software) fields.get("the-software", null);
-            polymorphic = fields.get("the-polymorphic", null);
-            nothing = fields.get("the-nothing", null);
+            name = (String) fields.get("theName", "unknown");
+            number = fields.get("theNumber", -1);
+            someSoftware = (Software) fields.get("theSoftware", null);
+            polymorphic = fields.get("thePolymorphic", null);
+            nothing = fields.get("theNothing", null);
         }
 
     }
@@ -255,16 +255,16 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
                 + "    <fields>\n"
-                + "      <field name=\"the-polymorphic\" class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
-                + "        <arch>small</arch>\n"
-                + "        <name>ipod</name>\n"
-                + "      </field>\n"
-                + "      <field name=\"the-software\" class=\"software\">\n"
+                + "      <field name=\"theName\" class=\"string\">Joe</field>\n"
+                + "      <field name=\"theNumber\" class=\"int\">99</field>\n"
+                + "      <field name=\"theSoftware\" class=\"software\">\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
                 + "      </field>\n"
-                + "      <field name=\"the-name\" class=\"string\">Joe</field>\n"
-                + "      <field name=\"the-number\" class=\"int\">99</field>\n"
+                + "      <field name=\"thePolymorphic\" class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
+                + "        <arch>small</arch>\n"
+                + "        <name>ipod</name>\n"
+                + "      </field>\n"
                 + "    </fields>\n"
                 + "  </with-named-fields>\n"
                 + "</with-named-fields>";
@@ -280,13 +280,13 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
                 + "    <fields>\n"
-                + "      <field name=\"the-polymorphic\" class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
-                + "        <arch>small</arch>\n"
-                + "        <name>ipod</name>\n"
-                + "      </field>\n"
-                + "      <field name=\"the-software\" class=\"software\">\n"
+                + "      <field name=\"theSoftware\" class=\"software\">\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
+                + "      </field>\n"
+                + "      <field name=\"thePolymorphic\" class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
+                + "        <arch>small</arch>\n"
+                + "        <name>ipod</name>\n"
                 + "      </field>\n"
                 + "    </fields>\n"
                 + "  </with-named-fields>\n"
@@ -316,20 +316,20 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
                 + "    <fields>\n"
-                + "      <field name=\"the-polymorphic\" class=\"with-named-fields\" serialization=\"custom\">\n"
-                + "        <with-named-fields>\n"
-                + "          <fields>\n"
-                + "            <field name=\"the-name\" class=\"string\">Thing</field>\n"
-                + "            <field name=\"the-number\" class=\"int\">0</field>\n"
-                + "          </fields>\n"
-                + "        </with-named-fields>\n"
-                + "      </field>\n"
-                + "      <field name=\"the-software\" class=\"software\">\n"
+                + "      <field name=\"theName\" class=\"string\">Joe</field>\n"
+                + "      <field name=\"theNumber\" class=\"int\">0</field>\n"
+                + "      <field name=\"theSoftware\" class=\"software\">\n"
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
                 + "      </field>\n"
-                + "      <field name=\"the-name\" class=\"string\">Joe</field>\n"
-                + "      <field name=\"the-number\" class=\"int\">0</field>\n"
+                + "      <field name=\"thePolymorphic\" class=\"with-named-fields\" serialization=\"custom\">\n"
+                + "        <with-named-fields>\n"
+                + "          <fields>\n"
+                + "            <field name=\"theName\" class=\"string\">Thing</field>\n"
+                + "            <field name=\"theNumber\" class=\"int\">0</field>\n"
+                + "          </fields>\n"
+                + "        </with-named-fields>\n"
+                + "      </field>\n"
                 + "    </fields>\n"
                 + "  </with-named-fields>\n"
                 + "</with-named-fields>";

@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.converters.reflection;
 
+import com.thoughtworks.xstream.core.util.OrderRetainingMap;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -105,17 +107,4 @@ public class FieldDictionary {
 
     }
 
-    private static class OrderRetainingMap extends HashMap {
-
-        private List valueOrder = new ArrayList();
-
-        public Object put(Object key, Object value) {
-            valueOrder.add(value);
-            return super.put(key, value);
-        }
-
-        public Collection values() {
-            return Collections.unmodifiableList(valueOrder);
-        }
-    }
 }
