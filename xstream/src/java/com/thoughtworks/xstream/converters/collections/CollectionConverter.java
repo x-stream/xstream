@@ -32,13 +32,17 @@ public class CollectionConverter extends AbstractCollectionConverter {
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Collection collection = (Collection) createCollection(context.getRequiredType());
+        populateCollection(reader, context, collection);
+        return collection;
+    }
+
+    protected void populateCollection(HierarchicalStreamReader reader, UnmarshallingContext context, Collection collection) {
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             Object item = readItem(reader, context, collection);
             collection.add(item);
             reader.moveUp();
         }
-        return collection;
     }
 
 }

@@ -17,7 +17,6 @@ public class MapConverter extends AbstractCollectionConverter {
     public boolean canConvert(Class type) {
         return type.equals(HashMap.class)
                 || type.equals(Hashtable.class)
-                || type.equals(TreeMap.class)
                 || type.equals(LinkedHashMap.class);
     }
 
@@ -36,6 +35,11 @@ public class MapConverter extends AbstractCollectionConverter {
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Map map = (Map) createCollection(context.getRequiredType());
+        populateMap(reader, context, map);
+        return map;
+    }
+
+    protected void populateMap(HierarchicalStreamReader reader, UnmarshallingContext context, Map map) {
         while (reader.hasMoreChildren()) {
             reader.moveDown();
 
@@ -51,7 +55,6 @@ public class MapConverter extends AbstractCollectionConverter {
 
             reader.moveUp();
         }
-        return map;
     }
 
 }

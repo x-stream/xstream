@@ -119,6 +119,8 @@ public class DefaultConverterLookup implements ConverterLookup {
         registerConverter(new CharArrayConverter());
         registerConverter(new CollectionConverter(classMapper, classAttributeIdentifier));
         registerConverter(new MapConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new TreeMapConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new TreeSetConverter(classMapper, classAttributeIdentifier));
         registerConverter(new PropertiesConverter());
     }
 

@@ -3,7 +3,10 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MapTest extends AbstractAcceptanceTest {
 
@@ -92,11 +95,9 @@ public class MapTest extends AbstractAcceptanceTest {
 
     class ThingWithDifferentTypesOfMaps extends StandardObject {
         private Map m1 = new HashMap();
-        private Map m2 = new TreeMap();
-        private Map m3 = new Hashtable();
-        private HashMap m4 = new HashMap();
-        private TreeMap m5 = new TreeMap();
-        private Hashtable m6 = new Hashtable();
+        private Map m2 = new Hashtable();
+        private HashMap m3 = new HashMap();
+        private Hashtable m4 = new Hashtable();
     }
 
     public void testObjectCanContainDifferentMapImplementations() {
@@ -108,11 +109,9 @@ public class MapTest extends AbstractAcceptanceTest {
         String expected = "" +
                 "<thing>\n" +
                 "  <m1/>\n" +
-                "  <m2 class=\"tree-map\"/>\n" +
-                "  <m3 class=\"hashtable\"/>\n" +
+                "  <m2 class=\"hashtable\"/>\n" +
+                "  <m3/>\n" +
                 "  <m4/>\n" +
-                "  <m5/>\n" +
-                "  <m6/>\n" +
                 "</thing>";
 
         assertBothWays(thing, expected);
