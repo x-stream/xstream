@@ -9,7 +9,7 @@ import java.util.Map;
 public class JVM {
 
     private Map classCache = new HashMap();
-    private static ReflectionProvider reflectionProvider;
+    private ReflectionProvider reflectionProvider;
 
     public static boolean is14() {
         float majorJavaVersion = Float.parseFloat(System.getProperty("java.version").substring(0, 3));
