@@ -8,8 +8,11 @@ public class PureJavaReflectionProviderTest extends AbstractReflectionProviderTe
         return new PureJavaReflectionProvider();
     }
 
-    public void testNotCapableOfConstructingNonPublicAndNonStaticInnerClasses() {
-        assertCannotCreate(PrivateStaticInnerClass.class);
+    public void testCanCreatePrivateStaticInnerClasses() {
+        assertCanCreate(PrivateStaticInnerClass.class);
+    }
+
+    public void testIsNotCapableOfConstructingNonStaticInnerClasses() {
         assertCannotCreate(PublicNonStaticInnerClass.class);
         assertCannotCreate(PrivateNonStaticInnerClass.class);
     }
@@ -23,8 +26,12 @@ public class PureJavaReflectionProviderTest extends AbstractReflectionProviderTe
         }
     }
 
-    public void testIsNotCapableOfConstructingClassesWithoutDefault() {
+    public void testIsNotCapableOfConstructingClassesWithoutDefaultConstructor() {
         assertCannotCreate(WithoutDefaultConstructor.class);
+    }
+
+    public void testUsesPrivateConstructorIfNecessary() {
+        assertCanCreate(WithPrivateDefaultConstructor.class);
     }
 
     private static class PrivateStaticInnerClass {
@@ -47,5 +54,13 @@ public class PureJavaReflectionProviderTest extends AbstractReflectionProviderTe
         }
     }
 
+    public static class WithPrivateDefaultConstructor {
+        private WithPrivateDefaultConstructor(String thing) {
+            throw new UnsupportedOperationException("wrong constructor called");
+        }
+
+        private WithPrivateDefaultConstructor() {
+        }
+    }
 }
 

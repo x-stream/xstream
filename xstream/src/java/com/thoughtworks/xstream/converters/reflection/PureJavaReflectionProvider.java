@@ -2,6 +2,8 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 /**
@@ -19,11 +21,29 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public Object newInstance(Class type) {
         try {
-            return type.newInstance();
+            Constructor[] constructors = type.getDeclaredConstructors();
+            for (int i = 0; i < constructors.length; i++) {
+                if (constructors[i].getParameterTypes().length == 0) {
+                    if (!Modifier.isPublic(constructors[i].getModifiers())) {
+                        constructors[i].setAccessible(true);
+                    }
+                    return constructors[i].newInstance(new Object[0]);
+                }
+            }
+            throw new ObjectAccessException("Cannot construct " + type.getName()
+                    + " as it does not have a no-args constructor");
         } catch (InstantiationException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (IllegalAccessException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof RuntimeException) {
+                throw (RuntimeException)e.getTargetException();
+            } else if (e.getTargetException() instanceof Error) {
+                throw (Error)e.getTargetException();
+            } else {
+                throw new ObjectAccessException("Constructor for " + type.getName() + " threw an exception", e);
+            }
         }
     }
 

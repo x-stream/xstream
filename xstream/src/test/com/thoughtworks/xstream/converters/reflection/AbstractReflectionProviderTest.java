@@ -116,7 +116,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
         assertEquals(20, o.getParentB());
     }
 
-    private void assertCanCreate(Class type) {
+    protected void assertCanCreate(Class type) {
         Object result = reflectionProvider.newInstance(type);
         assertEquals(type, result.getClass());
     }
