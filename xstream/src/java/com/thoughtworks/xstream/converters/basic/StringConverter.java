@@ -7,7 +7,7 @@ public class StringConverter extends AbstractBasicConverter {
     }
 
     protected Object fromString(String str) {
-        return str;
+        return str.intern();
     }
 
 }
