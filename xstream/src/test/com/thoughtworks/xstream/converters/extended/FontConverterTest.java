@@ -40,6 +40,7 @@ public class FontConverterTest extends TestCase {
         assertEquals(inAttributes, outAttributes);
     }
 
+    /* - Temporarily disabled because if cannot run on headless build server
     public void testCorrectlyInitializesFontToPreventJvmCrash() {
         // If a font has not been constructed in the correct way, the JVM crashes horribly through some internal
         // native code, whenever the font is rendered to screen.
@@ -51,5 +52,5 @@ public class FontConverterTest extends TestCase {
         // if the JVM hasn't crashed yet, we're good.
 
     }
-
+    */
 }
