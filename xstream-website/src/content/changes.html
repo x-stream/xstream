@@ -34,6 +34,7 @@
 		<li>Bugfix: readObject() is now called for classes containing only transient fields.</li>
 		<li>Bugfix: Order of fields are maintained when calling ObjectOutputStream.putFields().</li>
 		<li>Bugfix: FontConverter extended to support FontUIResource which does some awkward native calls.</li>
+		<li>Bugfix: Deserialization of very complicated graphs (such as Swing components) sometimes resulted in broken object references. Now fixed.</li>
     </ul>
 
     <h1>Version 1.1</h1>
