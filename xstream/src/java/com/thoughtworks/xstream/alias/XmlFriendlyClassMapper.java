@@ -6,6 +6,33 @@ public class XmlFriendlyClassMapper extends ClassMapperWrapper {
         super(wrapped);
     }
 
+    public String lookupName(Class type) {
+        String name = super.lookupName(type);
+
+        // the $ used in inner class names is illegal as an xml element getNodeName
+        name = name.replace('$', '-');
+
+        // special case for classes named $Blah with no package; <-Blah> is illegal XML
+        if (name.charAt(0) == '-') {
+            name = "default" + name;
+        }
+
+        return name;
+    }
+
+    public Class lookupType(String elementName) {
+
+        // special case for classes named $Blah with no package; <-Blah> is illegal XML
+        if (elementName.startsWith("default-")) {
+            elementName = elementName.substring(7);
+        }
+
+        // the $ used in inner class names is illegal as an xml element getNodeName
+        elementName = elementName.replace('-', '$');
+
+        return super.lookupType(elementName);
+    }
+
     public String mapNameToXML(String javaName) {
         StringBuffer result = new StringBuffer();
         int length = javaName.length();
