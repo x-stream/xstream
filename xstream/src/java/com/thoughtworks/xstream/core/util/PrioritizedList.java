@@ -14,8 +14,10 @@ public class PrioritizedList {
 
     /**
      * Start of forward only linked list. Each item contains a value, priority and pointer to next item.
+     * The first item does not contain a value, rather just a pointer to the next real item. This makes
+     * the add() algorithm easier as there is no special case for adding to the beginning of the list.
      */
-    private LinkedItem first;
+    private final LinkedItem pointerToFirst = new LinkedItem(null, 0, null);
 
     /**
      * Add an item with a default priority of zero.
@@ -25,23 +27,18 @@ public class PrioritizedList {
     }
 
     public void add(Object item, int priority) {
-        if (first == null || priority >= first.priority) {
-            first = new LinkedItem(item, priority, first);
-        } else {
-            // Note: this is quite efficient if the client tends to add low priority items before high priority items
-            // as it will not have to iterate over much of the list. However for the other way round, maybe some
-            // optimizations can be made? -joe
-            for (LinkedItem current = first; current != null; current = current.next) {
-                if (current.next == null || priority >= current.next.priority) {
-                    current.next = new LinkedItem(item, priority, current.next);
-                    return;
-                }
-            }
+        // Note: this is quite efficient if the client tends to add low priority items before high priority items
+        // as it will not have to iterate over much of the list. However for the other way round, maybe some
+        // optimizations can be made? -joe
+        LinkedItem current = pointerToFirst;
+        while(current.next != null && priority < current.next.priority) {
+            current = current.next;
         }
+        current.next = new LinkedItem(item, priority, current.next);
     }
 
     public Iterator iterator() {
-        return new LinkedItemIterator(first);
+        return new LinkedItemIterator(pointerToFirst.next);
     }
 
     private static class LinkedItem {
