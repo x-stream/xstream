@@ -1,11 +1,10 @@
 package com.thoughtworks.xstream.alias;
 
-public interface ClassMapper {
+public interface ClassMapper extends Mapper {
+
     String lookupName(Class type);
 
     Class lookupType(String elementName);
-
-    Class lookupDefaultType(Class baseType);
 
     void alias(String elementName, Class type, Class defaultImplementation);
 
@@ -14,13 +13,14 @@ public interface ClassMapper {
     String mapNameToXML( String javaName );
 
     /**
-     * Whether this type is a simple immutable value (int, boolean, String, URL, etc.
-     */
-    boolean isImmutableValueType(Class type);
-
-    /**
      * Place holder type used for null values.
      */
     class Null {}
+
+
+    /**
+     * @deprecated As of 1.1.1, use {@link #defaultImplementationOf(Class)}
+     */
+    Class lookupDefaultType(Class baseType);
 
 }

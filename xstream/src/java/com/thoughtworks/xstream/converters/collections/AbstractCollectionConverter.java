@@ -60,7 +60,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     protected Object createCollection(Class type) {
-        Class defaultType = classMapper.lookupDefaultType(type);
+        Class defaultType = classMapper.defaultImplementationOf(type);
         try {
             return defaultType.newInstance();
         } catch (InstantiationException e) {

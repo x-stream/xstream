@@ -30,9 +30,13 @@ public class DefaultImplementationsMapper extends ClassMapperWrapper {
         baseTypeToDefaultTypeMap.put(type, defaultImplementation);
     }
 
+    public Class defaultImplementationOf(Class type) {
+        Class result = (Class) baseTypeToDefaultTypeMap.get(type);
+        return result == null ? super.defaultImplementationOf(type) : result;
+    }
+
     public Class lookupDefaultType(Class baseType) {
-        Class result = (Class) baseTypeToDefaultTypeMap.get(baseType);
-        return result == null ? super.lookupDefaultType(baseType) : result;
+        return defaultImplementationOf(baseType);
     }
 
 }

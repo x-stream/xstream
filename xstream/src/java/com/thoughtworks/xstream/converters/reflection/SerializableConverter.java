@@ -120,7 +120,7 @@ public class SerializableConverter implements Converter {
                             writer.startNode(classMapper.mapNameToXML(fieldName));
 
                             Class actualType = newObj.getClass();
-                            Class defaultType = classMapper.lookupDefaultType(fieldType);
+                            Class defaultType = classMapper.defaultImplementationOf(fieldType);
                             if (!actualType.equals(defaultType)) {
                                 writer.addAttribute(ATTRIBUTE_CLASS, classMapper.lookupName(actualType));
                             }
@@ -221,7 +221,7 @@ public class SerializableConverter implements Converter {
                     if (classAttribute != null) {
                         type = classMapper.lookupType(classAttribute);
                     } else {
-                        type = classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName, currentType[0]));
+                        type = classMapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, currentType[0]));
                     }
 
                     Object value = context.convertAnother(result, type);
@@ -239,7 +239,7 @@ public class SerializableConverter implements Converter {
 
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            currentType[0] = classMapper.lookupDefaultType(classMapper.lookupType(reader.getNodeName()));
+            currentType[0] = classMapper.defaultImplementationOf(classMapper.lookupType(reader.getNodeName()));
             if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
                 ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
                 serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);

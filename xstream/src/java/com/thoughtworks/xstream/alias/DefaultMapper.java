@@ -32,6 +32,10 @@ public class DefaultMapper implements ClassMapper {
         return baseType;
     }
 
+    public Class defaultImplementationOf(Class type) {
+        return type;
+    }
+
     public boolean isImmutableValueType(Class type) {
         return false;
     }

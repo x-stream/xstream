@@ -16,10 +16,6 @@ public abstract class ClassMapperWrapper implements ClassMapper {
         return wrapped.lookupType(elementName);
     }
 
-    public Class lookupDefaultType(Class baseType) {
-        return wrapped.lookupDefaultType(baseType);
-    }
-
     public void alias(String elementName, Class type, Class defaultImplementation) {
         wrapped.alias(elementName, type, defaultImplementation);
     }
@@ -34,6 +30,17 @@ public abstract class ClassMapperWrapper implements ClassMapper {
 
     public boolean isImmutableValueType(Class type) {
         return wrapped.isImmutableValueType(type);
+    }
+
+    public Class defaultImplementationOf(Class type) {
+        return wrapped.defaultImplementationOf(type);
+    }
+
+    /**
+     * @deprecated As of 1.1.1, use {@link #defaultImplementationOf(Class)}
+     */
+    public Class lookupDefaultType(Class baseType) {
+        return defaultImplementationOf(baseType);
     }
 
 }

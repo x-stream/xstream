@@ -128,7 +128,7 @@ public class DefaultConverterLookup implements ConverterLookup {
         }
         Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
-        type = classMapper.lookupDefaultType(type);
+        type = classMapper.defaultImplementationOf(type);
         int size = converters.size();
         for (int i = size - 1; i >= 0; i--) {
             Converter converter = (Converter) converters.get(i);

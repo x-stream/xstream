@@ -72,7 +72,7 @@ public class ReflectionConverter implements Converter {
 
                 Class actualType = newObj.getClass();
 
-                Class defaultType = classMapper.lookupDefaultType(fieldType);
+                Class defaultType = classMapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
                     writer.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
                 }
@@ -178,7 +178,7 @@ public class ReflectionConverter implements Converter {
                 return classMapper.lookupType(reader.getNodeName());
             }
         } else {
-            return classMapper.lookupDefaultType(reflectionProvider.getFieldType(result, fieldName, definedInCls));
+            return classMapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, definedInCls));
         }
     }
 
