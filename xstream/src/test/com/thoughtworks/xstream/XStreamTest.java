@@ -154,7 +154,6 @@ public class XStreamTest extends TestCase {
         assertEquals(xstream.toXML(obj), xstream.toXML(obj));
     }
 
-
     public void testXStreamWithPeekMethodWithUnderlyingDom4JImplementation()
         throws Exception {
 
