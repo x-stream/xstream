@@ -10,13 +10,11 @@ import com.thoughtworks.xstream.xml.XMLWriter;
 
 public abstract class AbstractCollectionConverter implements Converter {
     private ClassMapper classMapper;
-    private Class defaultImplementation;
 
     public abstract boolean canConvert(Class type);
 
-    public AbstractCollectionConverter(ClassMapper classMapper, Class defaultImplementation) {
+    public AbstractCollectionConverter(ClassMapper classMapper) {
         this.classMapper = classMapper;
-        this.defaultImplementation = defaultImplementation;
     }
 
     public abstract void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup);
@@ -42,13 +40,13 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     protected Object createCollection(Class type) {
+        Class defaultType = classMapper.lookupDefaultType(type);
         try {
-            Class defaultType = classMapper.lookupDefaultType(type);
             return defaultType.newInstance();
         } catch (InstantiationException e) {
-            throw new ConversionException("Cannot instantiate " + defaultImplementation.getName(), e);
+            throw new ConversionException("Cannot instantiate " + defaultType.getName(), e);
         } catch (IllegalAccessException e) {
-            throw new ConversionException("Cannot instantiate " + defaultImplementation.getName(), e);
+            throw new ConversionException("Cannot instantiate " + defaultType.getName(), e);
         }
     }
 }

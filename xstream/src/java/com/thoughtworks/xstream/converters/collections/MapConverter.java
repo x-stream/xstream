@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class MapConverter extends AbstractCollectionConverter {
 
-    public MapConverter(ClassMapper classMapper, Class defaultImplementation) {
-        super(classMapper, defaultImplementation);
+    public MapConverter(ClassMapper classMapper) {
+        super(classMapper);
     }
 
     public boolean canConvert(Class type) {

@@ -39,4 +39,8 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertBothWays(date, "<date>2003-03-15 08:22:07AM</date>");
     }
 
+    public void testClass() {
+        assertBothWays(StringBuffer.class, "<java-class>java.lang.StringBuffer</java-class>");
+    }
+
 }

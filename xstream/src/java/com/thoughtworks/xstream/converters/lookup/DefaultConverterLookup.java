@@ -5,12 +5,10 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
-import com.thoughtworks.xstream.converters.collections.ListConverter;
+import com.thoughtworks.xstream.converters.collections.CollectionConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -34,9 +32,10 @@ public class DefaultConverterLookup implements ConverterLookup {
         registerConverter(new StringConverter());
         registerConverter(new StringBufferConverter());
         registerConverter(new DateConverter());
+        registerConverter(new JavaClassConverter());
 
-        registerConverter(new ListConverter(classMapper, ArrayList.class));
-        registerConverter(new MapConverter(classMapper, HashMap.class));
+        registerConverter(new CollectionConverter(classMapper));
+        registerConverter(new MapConverter(classMapper));
     }
 
     public Converter lookup(Class type) {

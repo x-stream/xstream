@@ -74,5 +74,4 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
     }
 
-
 }

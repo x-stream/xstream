@@ -1,11 +1,12 @@
 package com.thoughtworks.acceptance.objects;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class SampleLists {
     public List good = new ArrayList();
-    public List bad = new ArrayList();
+    public Collection bad = new ArrayList();
 
     public boolean equals(Object obj) {
         if (obj instanceof SampleLists) {

@@ -2,7 +2,6 @@ package com.thoughtworks.xstream;
 
 import com.thoughtworks.xstream.alias.DefaultClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 import com.thoughtworks.xstream.objecttree.reflection.ObjectFactory;
@@ -21,7 +20,7 @@ import java.util.*;
 public class XStream {
 
     private DefaultClassMapper classMapper = new DefaultClassMapper();
-    private ConverterLookup converterLookup = new DefaultConverterLookup(classMapper);
+    private DefaultConverterLookup converterLookup = new DefaultConverterLookup(classMapper);
     private XMLReaderDriver xmlReaderDriver = new DomXMLReaderDriver();
 
     public XStream() {
@@ -36,13 +35,16 @@ public class XStream {
 
         alias("string-buffer", StringBuffer.class);
         alias("string", String.class);
+        alias("java-class", Class.class);
         alias("date", Date.class);
 
         alias("map", Map.class, HashMap.class);
         alias("list", List.class, ArrayList.class);
+        alias("set", Set.class, HashSet.class);
 
         alias("linked-list", LinkedList.class);
         alias("tree-map", TreeMap.class);
+        alias("tree-set", TreeSet.class);
     }
 
     public void alias(String elementName, Class type, Class defaultImplementation) {
@@ -80,6 +82,10 @@ public class XStream {
         Converter rootConverter = converterLookup.lookup(type);
         rootConverter.fromXML(objectGraph, xmlReader, converterLookup, type);
         return objectGraph.get();
+    }
+
+    public void registerConverter(Converter converter) {
+        converterLookup.registerConverter(converter);
     }
 
 }
