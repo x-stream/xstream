@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class JVM {
 
-    private transient Map classCache = new HashMap();
     private ReflectionProvider reflectionProvider;
 
     public static boolean is14() {
@@ -17,16 +16,10 @@ public class JVM {
     }
 
     public Class loadClass(String name) {
-        if (classCache.containsKey(name)) {
-            return (Class) classCache.get(name);
-        } else {
-            try {
-                Class cls = Class.forName(name, false, getClass().getClassLoader());
-                classCache.put(name, cls);
-                return cls;
-            } catch (ClassNotFoundException e) {
-                return null;
-            }
+        try {
+            return Class.forName(name, false, getClass().getClassLoader());
+        } catch (ClassNotFoundException e) {
+            return null;
         }
     }
 
@@ -48,8 +41,4 @@ public class JVM {
         return reflectionProvider;
     }
 
-    private Object readResolve() {
-        classCache = new HashMap();
-        return this;
-    }
 }
