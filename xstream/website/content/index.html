@@ -13,7 +13,7 @@
 
     <ul>
         <li><b>Ease of use.</b> A high level facade is supplied that simplifies common use cases.</li>
-        <li><b>No mappings required.</b> Custom objects can be serialized without need for specifying mappings.</li>
+        <li><b>No mappings required.</b> Most objects can be serialized without need for specifying mappings.</li>
         <li><b>Performance.</b> Speed and low memory footprint are a crucial part of the design, making it suitable for
         large object graphs or systems with high message throughput.</li>
         <li><b>Clean XML.</b> No information is duplicated that can be obtained via reflection. This results
@@ -40,6 +40,18 @@
 <!--
     <h1>Example</h1>
 -->
+
+    <h1>Known Limitations</h1>
+
+    <p>While every effort is being made to improve XStream to make it a 100% transparent drop-in replacement for
+    native Java serialization, there are still some limitations. These are currently being worked on.</p>
+
+    <p>XStream cannot automatically serialize classes that override the default serialization mechanism of Java.
+    Specifically, those are classes that define <code>readObject()</code>, <code>writeObject()</code> or
+    <code>writeReplace()</code> methods, or classes that implement <code>java.io.Externalizable</code>.</p>
+
+    <p>If using the Sun 1.4 JVM, XStream can recreate classes that do not have a default constructor. However,
+    if using a different JVM, a default constructor is required.</p>
 
     <h1>Getting Started</h1>
 
