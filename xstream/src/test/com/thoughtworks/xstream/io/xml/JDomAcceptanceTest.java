@@ -66,7 +66,6 @@ public class JDomAcceptanceTest extends TestCase {
 
         XMLOutputter outputter = new XMLOutputter("  ", true);
         outputter.setOmitDeclaration(true);
-        outputter.setOmitDeclaration(true);
         outputter.setLineSeparator("\n");
 
         assertEquals(expected, outputter.outputString(result));
