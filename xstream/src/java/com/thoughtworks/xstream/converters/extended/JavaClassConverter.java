@@ -1,6 +1,7 @@
-package com.thoughtworks.xstream.converters.basic;
+package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 
 public class JavaClassConverter extends AbstractBasicConverter {
 
