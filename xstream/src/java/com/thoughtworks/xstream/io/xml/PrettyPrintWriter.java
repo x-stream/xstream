@@ -49,10 +49,30 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         readyForNewLine = false;
         tagIsEmpty = false;
         finishTag();
-        text = text.replaceAll("&", "&amp;");
-        text = text.replaceAll("<", "&lt;");
-        text = text.replaceAll(">", "&gt;");
-        write(text);
+
+        // Profiler said this was a bottleneck
+        final StringBuffer clean = new StringBuffer();
+        final char[] chars = text.toCharArray();
+        final int length = chars.length;
+        for (int i = 0; i < length; i++) {
+            final char c = chars[i];
+            switch (c) {
+                case '&':
+                    clean.append("&amp;");
+                    break;
+                case '<':
+                    clean.append("&lt;");
+                    break;
+                case '>':
+                    clean.append("&gt;");
+                    break;
+                default:
+                    clean.append(c);
+            }
+        }
+        // end bottleneck
+        
+        write(clean.toString());
     }
 
     public void addAttribute(String key, String value) {
