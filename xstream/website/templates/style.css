@@ -193,9 +193,12 @@ ul, ol {
 
 #content h2 {
     margin-top: 24px;
+    border-top: 1px solid #060;
     margin-bottom: 16px;
     font-size: 15px;
     font-weight: bold;
+    background-color: #e0f0e0;
+    padding: 2px;
 }
 
 #content li {
@@ -228,7 +231,7 @@ ul, ol {
 }
 
 .highlight {
-    background-color: #e0f0e0; 
+    background-color: #e0f0e0;
     border: 1px dotted #060;
     padding: 5px;
 }

@@ -13,6 +13,7 @@
         <page>tutorial.html</page>
         <page>architecture.html</page>
         <page>converters.html</page>
+        <page>objectstream.html</page>
         <page>faq.html</page>
         <link title="JavaDoc">javadoc/index.html</link>
     </section>
