@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-//import sun.misc.Unsafe;
-//import sun.reflect.ReflectionFactory;
+import sun.misc.Unsafe;
+import sun.reflect.ReflectionFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
