@@ -55,6 +55,7 @@
         <mkdir dir="${test.reports.dir}"/>
         <junit printsummary="${junit.printsummary}" fork="${junit.fork}"
             haltonfailure="${junit.haltonfailure}">
+            <classpath refid="classpath"/>
             <jvmarg line="${junit.jvmarg}"/>
             <formatter type="${junit.formatter}"/>
             <test name="${testcase}" todir="${test.reports.dir}"/>
