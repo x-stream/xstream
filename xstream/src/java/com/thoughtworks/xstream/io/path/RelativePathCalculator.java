@@ -2,11 +2,14 @@ package com.thoughtworks.xstream.io.path;
 
 import com.thoughtworks.xstream.core.util.StringStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RelativePathCalculator {
 
     public String relativePath(String from, String to) {
-        String[] fromBits = from.split("/");
-        String[] toBits = to.split("/");
+        String[] fromBits = split(from);
+        String[] toBits = split(to);
         StringBuffer result = new StringBuffer();
         boolean nothingWrittenYet = true;
 
@@ -37,6 +40,21 @@ public class RelativePathCalculator {
         }
     }
 
+    private String[] split(String str) {
+        // String.split() too slow. StringTokenizer too crappy.
+        List result = new ArrayList();
+        int currentIndex = 0;
+        int nextSeperator;
+        while ((nextSeperator = str.indexOf('/', currentIndex)) != -1) {
+            result.add(str.substring(currentIndex, nextSeperator));
+            currentIndex = nextSeperator + 1;
+        }
+        result.add(str.substring(currentIndex));
+        String[] arr = new String[result.size()];
+        result.toArray(arr);
+        return arr;
+    }
+
     private int depthOfPathDivergence(String[] path1, String[] path2) {
         int minLength = Math.min(path1.length, path2.length);
         for (int i = 0; i < minLength; i++) {
@@ -50,12 +68,12 @@ public class RelativePathCalculator {
     public String absolutePath(String currentPath, String relativePathOfReference) {
         StringStack absoluteStack = new StringStack(16);
 
-        String[] currentPathChunks = currentPath.split("/");
+        String[] currentPathChunks = split(currentPath);
         for (int i = 0; i < currentPathChunks.length; i++) {
             absoluteStack.push(currentPathChunks[i]);
         }
 
-        String[] relativeChunks = relativePathOfReference.split("/");
+        String[] relativeChunks = split(relativePathOfReference);
         for (int i = 0; i < relativeChunks.length; i++) {
             String relativeChunk = relativeChunks[i];
             if (relativeChunk.equals("..")) {
