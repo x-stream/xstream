@@ -1,19 +1,19 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
-
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.sql.Time;
 import java.sql.Date;
-import java.util.TimeZone;
-import java.util.Locale;
-import java.util.Currency;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Currency;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
+
+import com.thoughtworks.xstream.converters.basic.DateConverter;
+import com.thoughtworks.xstream.converters.extended.ISO8601DateConverter;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
@@ -29,6 +29,13 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
                 "</awt-color>";
 
         assertBothWays(color, expected);
+    }
+    
+    public void testISO8601Date() {    		
+    		// register ISO8601 date converter
+    		xstream.registerConverter(new ISO8601DateConverter());
+        assertBothWays(new java.util.Date(103, 02, 15, 8, 22, 7), 
+        			"<date>2003-03-15T08:22:07.000Z</date>");
     }
 
     public void testSqlTimestamp() {
