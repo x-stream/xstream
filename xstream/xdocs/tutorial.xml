@@ -17,8 +17,8 @@
 		<section name="Create classes to be serialized">
 			<p>Here's a couple of simple classes. 
             XStream can convert instances of these to XML and back again.</p>
-			<pre>
-public class Person {
+
+<source>public class Person {
   private String firstname;
   private String lastname;
   private PhoneNumber phone;
@@ -30,7 +30,7 @@ public class PhoneNumber {
   private int code;
   private String number;
   // ... constructors and methods
-}</pre>
+}</source>
 			<p><b>Note:</b> Notice that the fields are private. XStream doesn't care about the
 			visibility of the fields. No getters or setters are needed. Also, XStream
 			does not limit you to having a default constructor.</p>
@@ -39,8 +39,7 @@ public class PhoneNumber {
 		<section name="Initializing XStream">
 
 			<p>To use XStream, simply instantiate an XStream class:</p>
-			<pre>
-XStream xstream = new XStream();</pre>
+			<source>XStream xstream = new XStream();</source>
 
 			<p><b>Note:</b> This class is a simple facade designed for common operations. For more flexibility you
             may choose to create your own facade that behaves differently.</p>
@@ -48,9 +47,8 @@ XStream xstream = new XStream();</pre>
 			<p>Now, to make the XML outputted by XStream more concise, you can create aliases for your custom class names
             to XML element names. This is the <b>only</b> type of mapping required to use XStream and even this is optional.</p>
 
-			<pre>
-xstream.alias("person", Person.class);
-xstream.alias("phonenumber", PhoneNumber.class);</pre>
+<source>xstream.alias("person", Person.class);
+xstream.alias("phonenumber", PhoneNumber.class);</source>
 
 			<p><b>Note:</b> This is an optional step. Without it XStream would work fine, but the XML element names would contain the
             fully qualified name of each class (including package) which would bulk up the XML a bit.</p>
@@ -60,18 +58,17 @@ xstream.alias("phonenumber", PhoneNumber.class);</pre>
 		<section name="Serializing an object to XML">
 
 			<p>Let's create an instance of Person and populate its fields:</p>
-			<pre>
-Person joe = new Person("Joe", "Walnes");
+			
+<source>Person joe = new Person("Joe", "Walnes");
 joe.setPhone(new PhoneNumber(123, "1234-456");
-joe.setFax(new PhoneNumber(123, "9999-999");</pre>
+joe.setFax(new PhoneNumber(123, "9999-999");</source>
 
 			<p>Now, to convert it to XML, all you have to do is make a simple call to XStream:</p>
-			<pre>
-String xml = xstream.toXML(joe);</pre>
+<source>String xml = xstream.toXML(joe);</source>
 
 			<p>The resulting XML looks like this:</p>
-			<pre>
-&lt;person&gt;
+			
+<source>&lt;person&gt;
   &lt;firstname&gt;Joe&lt;/firstname&gt;
   &lt;lastname&gt;Walnes&lt;/lastname&gt;
   &lt;phone&gt;
@@ -82,13 +79,13 @@ String xml = xstream.toXML(joe);</pre>
     &lt;code&gt;123&lt;/code&gt;
     &lt;number&gt;9999-999&lt;/number&gt;
   &lt;/fax&gt;
-&lt;/person></pre>
+&lt;/person></source>
 			<p>It's that simple. Look at how clean the XML is too.</p>
 		</section>
 		<section name="Deserializing an object back from XML">
 			<p>To reconstruct an object, purely from the XML:</p>
-			<pre>
-Person newJoe = (Person)xstream.fromXML(xml);</pre>
+			
+<source>Person newJoe = (Person)xstream.fromXML(xml);</source>
 			<p>And that's how simple XStream is!</p>
 		</section>
 
@@ -103,4 +100,3 @@ Person newJoe = (Person)xstream.fromXML(xml);</pre>
 	</body>
 
 </document>
-

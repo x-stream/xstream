@@ -15,6 +15,51 @@
 			<p>XStream has a clean design, is simple to use, boasts impressive speed and is
 			not coupled to any particular XML library.</p>
 		</section>
+		<section name="Features">
+			<table>
+				<tr>
+					<td><b>Clean XML</b></td>
+					<td>The XML produced is clean, human readable and fluff free. The XML 
+					does not duplicate any information that can be obtained from the Java class
+					definition. The XML is so clean that some users are using it in hand written
+					configuration files.</td>
+				</tr>
+				<tr>
+					<td><b>Simple API</b></td>
+					<td>In its simplest usage, you can serialize an object to XML and back
+					again in three lines of code.</td>
+				</tr>
+				<tr>
+					<td><b>Speed</b></td>
+					<td>Through optimized internals, a 
+					<a href="http://www.extreme.indiana.edu/xgws/xsoap/xpp/">pull-based XML parser</a> and effective
+					caching, XStream boasts impressive speed, rivalling native serialization.</td>
+				</tr>
+				<tr>
+					<td><b>POJOs</b></td>
+					<td>Plain old Java objects can be persisted without modification. 
+					No need to add getters/setters or create a default constructor. 
+					The objects don't even need to implement java.io.Serializable.</td>
+				</tr>
+				<tr>
+					<td><b>No mappings required</b></td>
+					<td>Objects can be serialized and deserialized with no configuration.
+					XStream has converters for common Java types/structures and uses 
+					cached-reflection to automatically determine the rest.</td>
+				</tr>
+				<tr>
+					<td><b>Custom converters</b></td>
+					<td>Converters can be created for custom types if you need more control of
+					how they are represented as XML.</td>
+				</tr>
+				<tr>
+					<td><b>Not just XML</b></td>
+					<td>In fact, objects can be serialized to/from any hierarchical structure by provinding
+					your own implementations of reader/writer. This includes existing DOM-trees 
+					(such as W3C-DOM or DOM4J), LDAP entries or even a properties file.</td>
+				</tr>
+			</table>
+		</section>
 		<section name="Getting Started">
 			<ol>
 				<li><a href="http://dist.codehaus.org/xstream/">Download</a> XStream.</li>
