@@ -96,4 +96,10 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.pop();
     }
 
+    public void testDoesNotIgnoreWhitespaceAroundText() throws Exception {
+        XMLReader xmlReader = createReader("<root> hello world </root>");
+
+        assertEquals(" hello world ", xmlReader.text());
+    }
+
 }

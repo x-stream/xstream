@@ -70,7 +70,7 @@ public class Xpp3DomBuilder {
                     if (0 == accumulatedValue.length()) {
                         finishedValue = null;
                     } else {
-                        finishedValue = accumulatedValue.trim();
+                        finishedValue = accumulatedValue;
                     }
 
                     finishedConfiguration.setValue(finishedValue);
