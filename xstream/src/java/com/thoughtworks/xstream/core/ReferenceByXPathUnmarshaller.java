@@ -26,7 +26,7 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
     public Object convertAnother(Object parent, Class type) {
         if (parentPathStack.size() > 0) { // handles circular references
             Object parentPath = parentPathStack.peek();
-            if (!values.containsKey(parentPath)) {
+            if (!values.containsKey(parentPath)) { // see AbstractCircularReferenceTest.testWeirdCircularReference()
                 values.put(parentPath, parent);
             }
         }
