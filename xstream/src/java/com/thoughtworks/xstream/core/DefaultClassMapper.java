@@ -8,6 +8,7 @@ import com.thoughtworks.xstream.alias.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.alias.DynamicProxyMapper;
 import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
 import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
+import com.thoughtworks.xstream.alias.AliasingMapper;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
 import java.util.Collections;
@@ -17,14 +18,12 @@ import java.util.Map;
 public class DefaultClassMapper extends ClassMapperWrapper {
 
     public DefaultClassMapper() {
-        super(new ImmutableTypesMapper(new DefaultImplementationsMapper(new XmlFriendlyClassMapper(new ArrayMapper(new DynamicProxyMapper(new OldClassMapper()))))));
+        super(new ImmutableTypesMapper(new DefaultImplementationsMapper(new XmlFriendlyClassMapper(new ArrayMapper(new DynamicProxyMapper(new AliasingMapper(new OldClassMapper())))))));
     }
 
     public static class OldClassMapper implements ClassMapper {
 
         private final ClassLoader classLoader;
-        protected final Map typeToNameMap = Collections.synchronizedMap(new HashMap());
-        protected final Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
         private final Map lookupTypeCache = Collections.synchronizedMap(new HashMap());
 
         public OldClassMapper() {
@@ -35,40 +34,20 @@ public class DefaultClassMapper extends ClassMapperWrapper {
             this.classLoader = classLoader;
         }
 
-        public void alias(String elementName, Class type, Class defaultImplementation) {
-            nameToTypeMap.put(elementName, type.getName());
-            typeToNameMap.put(type, elementName);
-            if (!type.equals(defaultImplementation)) {
-                typeToNameMap.put(defaultImplementation, elementName);
-            }
-        }
-
         public String lookupName(Class type) {
-            String result = (String) typeToNameMap.get(type);
-            if (result == null) {
-                // the $ used in inner class names is illegal as an xml element getNodeName
-                result = type.getName().replace('$', '-');
-                if (result.charAt(0) == '-') {
-                    // special case for classes named $Blah with no package; <-Blah> is illegal XML
-                    result = "default" + result;
-                }
+            // the $ used in inner class names is illegal as an xml element getNodeName
+            String result = type.getName().replace('$', '-');
+            if (result.charAt(0) == '-') {
+                // special case for classes named $Blah with no package; <-Blah> is illegal XML
+                result = "default" + result;
             }
             return result;
         }
 
         public Class lookupType(String elementName) {
             final String key = elementName;
-            if (elementName.equals("null")) {
-                return null;
-            }
             if (lookupTypeCache.containsKey(key)) {
                 return (Class) lookupTypeCache.get(key);
-            }
-
-            String mappedName = (String) nameToTypeMap.get(mapNameFromXML(elementName));
-
-            if (mappedName != null) {
-                elementName = mappedName;
             }
 
             // the $ used in inner class names is illegal as an xml element getNodeName
@@ -104,6 +83,10 @@ public class DefaultClassMapper extends ClassMapperWrapper {
         public String mapNameToXML(String javaName) {
             return javaName;
         }
+
+        public void alias(String elementName, Class type, Class defaultImplementation) {
+        }
+
     }
 
 }
