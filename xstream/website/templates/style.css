@@ -63,10 +63,10 @@ body {
     padding: 0px;
     margin: 0px;
     border: 0px;
-    
+
     font-family: helvetica, arial, sans-serif;
     font-size: 12px;
-    
+
     background-color: white;
     color: black;
 }
@@ -165,7 +165,7 @@ ul, ol {
  */
 
 #content {
-    margin: 0px;    
+    margin: 0px;
     background-color: white;
     color: black;
 }
@@ -193,7 +193,7 @@ ul, ol {
 
 #content h2 {
     margin-top: 24px;
-    margin-bottom: 16px;    
+    margin-bottom: 16px;
     font-size: 15px;
     font-weight: bold;
 }
@@ -276,9 +276,9 @@ ul, ol {
     margin: 0px;
     border: 0px;
     padding: 4px;
-    
+
     color: #060;
-    
+
     font-size: 12px;
     font-weight: bold;
 }
@@ -298,7 +298,7 @@ ul, ol {
     border-left: 1px solid #afa;
     border-top: 1px solid #afa;
     border-bottom: 1px solid white; /* IE work-around */
-    
+
     margin-bottom: 8px;
     background-color: white;
     color: #060;
@@ -324,7 +324,7 @@ ul, ol {
     border-top: 1px solid #afa;
     border-bottom: 1px solid white; /* IE workaround */
     margin-bottom: 8px;
-    
+
     color: #060;
 }
 
