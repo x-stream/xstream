@@ -1,16 +1,23 @@
+Tasks:
+ - Provide download
+ - Fix CVS links on website
+ - Link to CVSMonitor
+ - Comparison matrix
+ - More detailed usage guide
+ - Performance test harness
+
 Features:
  - Map to key/value properties.
+ - Detect cyclical links.
 
 Improvements:
  - Clean up ObjectGraph impl and tests.
  - Change XMLReader to use pull-like API.
- - Converters to specify which classes they can handle.
  - Ensure XStream works on non-Sun JVMs.
 
 XML implementations:
  - XppReader
  - TextXMLReader (custom implementation)
- - DomXMLReader
  - DomXMLWriter
  - ElectricXMLReader
  - ElectricXMLWriter
@@ -28,13 +35,19 @@ Property implementations:
  - URL params writer
 
 Marshallers:
+
+ * Essential
+   - java.lang.Class
+   - java.sql.Timestamp
+   - java.awt.Color
+   - Set
+   - Exception
+   - Custom[]
+   - SynchronizedList
  * Basic
    - byte[]
+   - char[]
    - Calendar
-   - java.lang.Class
- * Collections
-   - Set
-   - Array
  * XML
    - Element
    - Text
@@ -42,7 +55,6 @@ Marshallers:
  * SQL
    - java.sql.Date
    - java.sql.Time
-   - java.sql.Timestamp
  * Extra
    - Commons Collections Bag
    - Commons Collections MultiMap
@@ -50,6 +62,5 @@ Marshallers:
    - BigDecimal
    - Locale
    - java.lang.Currency
-   - java.awt.Color
    - Commons Lang Enums
 

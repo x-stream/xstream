@@ -4,4 +4,8 @@ public class ConversionException extends RuntimeException {
     public ConversionException(String msg, Exception cause) {
         super(msg, cause);
     }
+
+    public ConversionException(String msg) {
+        super(msg);
+    }
 }

@@ -16,19 +16,19 @@ public class CompactXMLWriterTest extends TestCase {
     }
 
     public void testXmlIsIndented() {
-        xmlWriter.pushElement("hello");
-        xmlWriter.pushElement("world");
+        xmlWriter.startElement("hello");
+        xmlWriter.startElement("world");
 
-        xmlWriter.pushElement("one");
-        xmlWriter.text("potato");
-        xmlWriter.pop();
+        xmlWriter.startElement("one");
+        xmlWriter.writeText("potato");
+        xmlWriter.endElement();
 
-        xmlWriter.pushElement("two");
-        xmlWriter.text("potatae");
-        xmlWriter.pop();
+        xmlWriter.startElement("two");
+        xmlWriter.writeText("potatae");
+        xmlWriter.endElement();
 
-        xmlWriter.pop();
-        xmlWriter.pop();
+        xmlWriter.endElement();
+        xmlWriter.endElement();
 
         String expected = "<hello><world><one>potato</one><two>potatae</two></world></hello>";
 
@@ -36,9 +36,9 @@ public class CompactXMLWriterTest extends TestCase {
     }
 
     public void testEncodesFunnyXmlChars() {
-        xmlWriter.pushElement("tag");
-        xmlWriter.text("hello & this isn't \"really\" <good>");
-        xmlWriter.pop();
+        xmlWriter.startElement("tag");
+        xmlWriter.writeText("hello & this isn't \"really\" <good>");
+        xmlWriter.endElement();
 
         String expected = "<tag>hello &amp; this isn't \"really\" &lt;good&gt;</tag>";
 
@@ -46,14 +46,14 @@ public class CompactXMLWriterTest extends TestCase {
     }
 
     public void testAttributesCanBeWritten() {
-        xmlWriter.pushElement("tag");
-        xmlWriter.attribute("hello", "world");
-        xmlWriter.pushElement("inner");
-        xmlWriter.attribute("foo", "bar");
-        xmlWriter.attribute("poo", "par");
-        xmlWriter.text("hi");
-        xmlWriter.pop();
-        xmlWriter.pop();
+        xmlWriter.startElement("tag");
+        xmlWriter.addAttribute("hello", "world");
+        xmlWriter.startElement("inner");
+        xmlWriter.addAttribute("foo", "bar");
+        xmlWriter.addAttribute("poo", "par");
+        xmlWriter.writeText("hi");
+        xmlWriter.endElement();
+        xmlWriter.endElement();
 
         String expected = "" +
                 "<tag hello=\"world\">" +

@@ -57,4 +57,27 @@ public class ObjectWithFieldsConverterTest extends TestCase {
 
         assertEquals(expected, xstream.toXML(world));
     }
+
+    static class TypesOfFields {
+        String normal = "normal";
+        transient String trans = "transient";
+        final String fin = "final";
+        static String stat = "stat";
+    }
+
+    public void testDontTryToWriteTransientStaticOrFinalFields() {
+        TypesOfFields fields = new TypesOfFields();
+        String expected = "" +
+                "<types>\n" +
+                "  <normal>normal</normal>\n" +
+                "</types>";
+
+        XStream xstream = new XStream();
+        xstream.alias("types", TypesOfFields.class);
+
+        String xml = xstream.toXML(fields);
+        assertEquals(expected, xml);
+
+    }
+
 }

@@ -2,12 +2,12 @@ package com.thoughtworks.xstream.xml;
 
 public interface XMLWriter {
 
-    void attribute(String key, String value);
+    void startElement(String name);
 
-    void text(String text);
+    void addAttribute(String key, String value);
 
-    void pushElement(String name);
+    void writeText(String text);
 
-    void pop();
+    void endElement();
 
 }

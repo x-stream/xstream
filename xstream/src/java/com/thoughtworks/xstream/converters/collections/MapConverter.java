@@ -15,16 +15,20 @@ public class MapConverter extends AbstractCollectionConverter {
         super(classMapper, defaultImplementation);
     }
 
+    public boolean canConvert(Class type) {
+        return Map.class.isAssignableFrom(type);
+    }
+
     public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
         Map map = (Map) objectGraph.get();
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            xmlWriter.pushElement("entry");
+            xmlWriter.startElement("entry");
 
             writeItem(entry.getKey(), xmlWriter, converterLookup, objectGraph);
             writeItem(entry.getValue(), xmlWriter, converterLookup, objectGraph);
 
-            xmlWriter.pop();
+            xmlWriter.endElement();
         }
     }
 

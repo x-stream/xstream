@@ -32,7 +32,7 @@ public class PrettyPrintXMLWriter implements XMLWriter {
         this(new PrintWriter(writer));
     }
 
-    public void pushElement(String name) {
+    public void startElement(String name) {
         finishTag();
         write("<");
         write(name);
@@ -42,7 +42,7 @@ public class PrettyPrintXMLWriter implements XMLWriter {
         readyForNewLine = true;
     }
 
-    public void text(String text) {
+    public void writeText(String text) {
         readyForNewLine = false;
         finishTag();
         text = text.replaceAll("&", "&amp;");
@@ -51,7 +51,7 @@ public class PrettyPrintXMLWriter implements XMLWriter {
         write(text);
     }
 
-    public void attribute(String key, String value) {
+    public void addAttribute(String key, String value) {
         write(" ");
         write(key);
         write("=\"");
@@ -59,7 +59,7 @@ public class PrettyPrintXMLWriter implements XMLWriter {
         write("\"");
     }
 
-    public void pop() {
+    public void endElement() {
         depth--;
         finishTag();
         write("</" + elementStack.removeLast() + ">");

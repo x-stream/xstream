@@ -25,6 +25,15 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertBothWays("hello world", "<string>hello world</string>");
     }
 
+    public void testStringBuffer() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("woo");
+        String xml = xstream.toXML(buffer);
+        assertEquals(xml, "<string-buffer>woo</string-buffer>");
+        StringBuffer out = (StringBuffer) xstream.fromXML(xml);
+        assertEquals("woo", out.toString());
+    }
+
     public void testDate() {
         Date date = new Date(103, 02, 15, 8, 22, 7);
         assertBothWays(date, "<date>2003-03-15 08:22:07AM</date>");

@@ -2,8 +2,6 @@ package com.thoughtworks.xstream.xml.dom4j;
 
 import com.thoughtworks.xstream.xml.XMLReader;
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 public class Dom4JXMLReader implements XMLReader {
@@ -16,10 +14,6 @@ public class Dom4JXMLReader implements XMLReader {
 
     public Dom4JXMLReader(Document document) {
         currentElement = document.getRootElement();
-    }
-
-    public Dom4JXMLReader(String xml) throws DocumentException {
-        currentElement = DocumentHelper.parseText(xml).getRootElement();
     }
 
     public String name() {

@@ -11,21 +11,21 @@ public class PrettyPrintXMLWriterTest extends TestCase {
         StringWriter stringWriter = new StringWriter();
         XMLWriter xmlWriter = new PrettyPrintXMLWriter(stringWriter, "  ");
 
-        xmlWriter.pushElement("hello");
-        xmlWriter.pushElement("world");
-        xmlWriter.attribute("id", "one");
+        xmlWriter.startElement("hello");
+        xmlWriter.startElement("world");
+        xmlWriter.addAttribute("id", "one");
 
-        xmlWriter.pushElement("one");
-        xmlWriter.text("potato");
-        xmlWriter.pop();
+        xmlWriter.startElement("one");
+        xmlWriter.writeText("potato");
+        xmlWriter.endElement();
 
-        xmlWriter.pushElement("two");
-        xmlWriter.attribute("id", "two");
-        xmlWriter.text("potatae");
-        xmlWriter.pop();
+        xmlWriter.startElement("two");
+        xmlWriter.addAttribute("id", "two");
+        xmlWriter.writeText("potatae");
+        xmlWriter.endElement();
 
-        xmlWriter.pop();
-        xmlWriter.pop();
+        xmlWriter.endElement();
+        xmlWriter.endElement();
 
         String expected =
                 "<hello>\n" +

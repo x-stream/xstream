@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.objecttree.ObjectAccessException;
 import com.thoughtworks.xstream.objecttree.ObjectTree;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -125,9 +126,16 @@ public class ReflectionObjectGraph implements ObjectTree {
         Field[] fields = theClass.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
-            if (!field.getName().startsWith("this$")) {
-                fieldNames.add(field.getName());
+            int modifiers = field.getModifiers();
+            if (field.getName().startsWith("this$")) {
+                continue;
             }
+            if (Modifier.isFinal(modifiers) ||
+                    Modifier.isStatic(modifiers) ||
+                    Modifier.isTransient(modifiers)) {
+                continue;
+            }
+            fieldNames.add(field.getName());
         }
     }
 

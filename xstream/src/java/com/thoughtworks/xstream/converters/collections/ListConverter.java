@@ -15,6 +15,10 @@ public class ListConverter extends AbstractCollectionConverter {
         super(classMapper, defaultImplementation);
     }
 
+    public boolean canConvert(Class type) {
+        return List.class.isAssignableFrom(type);
+    }
+
     public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
         List list = (List) objectGraph.get();
         for (Iterator iterator = list.iterator(); iterator.hasNext();) {

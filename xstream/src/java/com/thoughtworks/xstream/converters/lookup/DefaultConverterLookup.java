@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.converters.lookup;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
@@ -8,56 +9,48 @@ import com.thoughtworks.xstream.converters.collections.ListConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class DefaultConverterLookup implements ConverterLookup {
 
-    private Converter defaultConverter;
-    private Map map = new HashMap();
+    private LinkedList converters = new LinkedList();
 
     public DefaultConverterLookup(ClassMapper classMapper) {
-        this.defaultConverter = new ObjectWithFieldsConverter(classMapper);
 
-        registerConverterForClass(new IntConverter(), int.class);
-        registerConverterForClass(new IntConverter(), Integer.class);
-        registerConverterForClass(new FloatConverter(), float.class);
-        registerConverterForClass(new FloatConverter(), Float.class);
-        registerConverterForClass(new DoubleConverter(), double.class);
-        registerConverterForClass(new DoubleConverter(), Double.class);
-        registerConverterForClass(new LongConverter(), long.class);
-        registerConverterForClass(new LongConverter(), Long.class);
-        registerConverterForClass(new ShortConverter(), short.class);
-        registerConverterForClass(new ShortConverter(), Short.class);
-        registerConverterForClass(new CharConverter(), char.class);
-        registerConverterForClass(new CharConverter(), Character.class);
-        registerConverterForClass(new BooleanConverter(), boolean.class);
-        registerConverterForClass(new BooleanConverter(), Boolean.class);
-        registerConverterForClass(new ByteConverter(), byte.class);
-        registerConverterForClass(new ByteConverter(), Byte.class);
+        registerConverter(new ObjectWithFieldsConverter(classMapper));
 
-        registerConverterForClass(new StringConverter(), String.class);
-        registerConverterForClass(new DateConverter(), Date.class);
+        registerConverter(new IntConverter());
+        registerConverter(new FloatConverter());
+        registerConverter(new DoubleConverter());
+        registerConverter(new LongConverter());
+        registerConverter(new ShortConverter());
+        registerConverter(new CharConverter());
+        registerConverter(new BooleanConverter());
+        registerConverter(new ByteConverter());
 
-        registerConverterForClass(new ListConverter(classMapper, ArrayList.class), List.class);
-        registerConverterForClass(new MapConverter(classMapper, HashMap.class), Map.class);
+        registerConverter(new StringConverter());
+        registerConverter(new StringBufferConverter());
+        registerConverter(new DateConverter());
 
-        // @TODO: find a more elegant way of doing this
-        registerConverterForClass(new ListConverter(classMapper, ArrayList.class), ArrayList.class);
-        registerConverterForClass(new ListConverter(classMapper, LinkedList.class), LinkedList.class);
-        registerConverterForClass(new MapConverter(classMapper, HashMap.class), HashMap.class);
-        registerConverterForClass(new MapConverter(classMapper, TreeMap.class), TreeMap.class);
+        registerConverter(new ListConverter(classMapper, ArrayList.class));
+        registerConverter(new MapConverter(classMapper, HashMap.class));
     }
 
-    public Converter lookup(Class fieldType) {
-        Converter result = (Converter) map.get(fieldType);
-        if (result == null) {
-            result = defaultConverter;
+    public Converter lookup(Class type) {
+        for (Iterator iterator = converters.iterator(); iterator.hasNext();) {
+            Converter converter = (Converter) iterator.next();
+            if (converter.canConvert(type)) {
+                return converter;
+            }
         }
-        return result;
+        throw new ConversionException("No converter specified for " + type);
     }
 
-    public void registerConverterForClass(Converter converter, Class type) {
-        map.put(type, converter);
+    public void registerConverter(Converter converter) {
+        converters.addFirst(converter);
     }
 
 }

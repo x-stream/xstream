@@ -16,21 +16,21 @@ public class Dom4JXMLWriter implements XMLWriter {
         elementStack.addLast(container);
     }
 
-    public void pushElement(String name) {
+    public void startElement(String name) {
         Element element = documentFactory.createElement(name);
         top().add(element);
         elementStack.addLast(element);
     }
 
-    public void text(String text) {
+    public void writeText(String text) {
         top().setText(text);
     }
 
-    public void attribute(String key, String value) {
+    public void addAttribute(String key, String value) {
         ((Element) top()).addAttribute(key, value);
     }
 
-    public void pop() {
+    public void endElement() {
         elementStack.removeLast();
     }
 

@@ -15,6 +15,10 @@ public class ObjectWithFieldsConverter implements Converter {
         this.classMapper = classMapper;
     }
 
+    public boolean canConvert(Class type) {
+        return true;
+    }
+
     public void toXML(ObjectTree objectGraph, XMLWriter xmlWriter, ConverterLookup converterLookup) {
         String[] fieldNames = objectGraph.fieldNames();
         for (int i = 0; i < fieldNames.length; i++) {
@@ -31,20 +35,20 @@ public class ObjectWithFieldsConverter implements Converter {
     }
 
     private void writeFieldAsXML(XMLWriter xmlWriter, String fieldName, ObjectTree objectGraph, ConverterLookup converterLookup) {
-        xmlWriter.pushElement(fieldName);
+        xmlWriter.startElement(fieldName);
 
         writeClassAttributeInXMLIfNotDefaultImplementation(objectGraph, xmlWriter);
         Converter converter = converterLookup.lookup(objectGraph.type());
         converter.toXML(objectGraph, xmlWriter, converterLookup);
 
-        xmlWriter.pop();
+        xmlWriter.endElement();
     }
 
     protected void writeClassAttributeInXMLIfNotDefaultImplementation(ObjectTree objectGraph, XMLWriter xmlWriter) {
         Class actualType = objectGraph.get().getClass();
         Class defaultType = classMapper.lookupDefaultType(objectGraph.type());
         if (!actualType.equals(defaultType)) {
-            xmlWriter.attribute("class", classMapper.lookupName(actualType));
+            xmlWriter.addAttribute("class", classMapper.lookupName(actualType));
         }
     }
 

@@ -12,6 +12,8 @@ public abstract class AbstractCollectionConverter implements Converter {
     private ClassMapper classMapper;
     private Class defaultImplementation;
 
+    public abstract boolean canConvert(Class type);
+
     public AbstractCollectionConverter(ClassMapper classMapper, Class defaultImplementation) {
         this.classMapper = classMapper;
         this.defaultImplementation = defaultImplementation;
@@ -23,10 +25,10 @@ public abstract class AbstractCollectionConverter implements Converter {
 
     protected void writeItem(Object item, XMLWriter xmlWriter, ConverterLookup converterLookup, ObjectTree objectGraph) {
         Class type = item.getClass();
-        xmlWriter.pushElement(classMapper.lookupName(type));
+        xmlWriter.startElement(classMapper.lookupName(type));
         Converter converter = converterLookup.lookup(type);
         converter.toXML(objectGraph.newStack(item), xmlWriter, converterLookup);
-        xmlWriter.pop();
+        xmlWriter.endElement();
     }
 
     protected Object readItem(XMLReader xmlReader, int childIndex, ObjectTree objectGraph, ConverterLookup converterLookup) {

@@ -12,6 +12,10 @@ public class DateConverter extends AbstractBasicConverter {
 
     private DateFormat dateFormat;
 
+    public boolean canConvert(Class type) {
+        return type.equals(Date.class);
+    }
+
     public DateConverter(DateFormat dateFormat) {
         this.dateFormat = dateFormat;
     }
