@@ -6,10 +6,7 @@ import com.thoughtworks.xstream.alias.DefaultNameMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
-import com.thoughtworks.xstream.converters.collections.ArrayConverter;
-import com.thoughtworks.xstream.converters.collections.CollectionConverter;
-import com.thoughtworks.xstream.converters.collections.MapConverter;
-import com.thoughtworks.xstream.converters.collections.PropertiesConverter;
+import com.thoughtworks.xstream.converters.collections.*;
 import com.thoughtworks.xstream.converters.composite.ObjectWithFieldsConverter;
 import com.thoughtworks.xstream.converters.lookup.DefaultConverterLookup;
 import com.thoughtworks.xstream.converters.old.MarshallingContextAdaptor;
@@ -92,6 +89,7 @@ public class XStream {
         registerConverter(new JavaClassConverter());
 
         registerConverter(new ArrayConverter(classMapper,classAttributeIdentifier));
+        registerConverter(new CharArrayConverter());
         registerConverter(new CollectionConverter(classMapper,classAttributeIdentifier));
         registerConverter(new MapConverter(classMapper,classAttributeIdentifier));
         registerConverter(new PropertiesConverter());
