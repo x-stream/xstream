@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.core.util.IntQueue;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -18,11 +19,13 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants {
 
+    private QNameMap qnameMap;
     private final XMLStreamReader in;
     private final FastStack elementStack = new FastStack(16);
     private final IntQueue lookaheadQueue = new IntQueue(4);
 
-    public StaxReader(XMLStreamReader in) {
+    public StaxReader(QNameMap qnameMap, XMLStreamReader in) {
+        this.qnameMap = qnameMap;
         this.in = in;
         moveDown();
     }
@@ -136,7 +139,12 @@ public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants 
     private void read() {
         switch (next()) {
             case START_ELEMENT:
-                elementStack.push(in.getName().getLocalPart());
+                {
+                    // let the QNameMap handle any mapping of QNames to Java class names
+                    QName qname = in.getName();
+                    String jname = qnameMap.getJavaClassName(qname);
+                    elementStack.push(jname);
+                }
                 break;
             case END_ELEMENT:
             case END_DOCUMENT:
