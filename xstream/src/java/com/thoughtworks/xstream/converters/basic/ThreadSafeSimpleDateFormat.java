@@ -45,7 +45,7 @@ public class ThreadSafeSimpleDateFormat {
                 try {
                     pool.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    throw new Error(e);
                 }
             }
             result = pool[nextAvailable];

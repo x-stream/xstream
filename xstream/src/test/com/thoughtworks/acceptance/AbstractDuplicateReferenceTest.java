@@ -1,19 +1,16 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.XStream;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class DuplicateReferenceTest extends AbstractAcceptanceTest {
+public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMode(XStream.ID_REFERENCES);
         xstream.alias("thing", Thing.class);
     }
 
-    public void testReferencesAreWrittenToXml() {
+    public void testReferencesAreWorking() {
 
         Thing sameThing = new Thing("hello");
         Thing anotherThing = new Thing("hello");
@@ -23,21 +20,7 @@ public class DuplicateReferenceTest extends AbstractAcceptanceTest {
         list.add(sameThing);
         list.add(anotherThing);
 
-        String expected = "" +
-                "<list id=\"1\">\n" +
-                "  <thing id=\"2\">\n" +
-                "    <field>hello</field>\n" +
-                "  </thing>\n" +
-                "  <thing reference=\"2\"/>\n" +
-                "  <thing id=\"3\">\n" +
-                "    <field>hello</field>\n" +
-                "  </thing>\n" +
-                "</list>";
-
         String xml = xstream.toXML(list);
-
-        assertEquals(expected, xml);
-
         List result = (List) xstream.fromXML(xml);
 
         assertEquals(list, result);
@@ -75,5 +58,21 @@ public class DuplicateReferenceTest extends AbstractAcceptanceTest {
             this.field = field;
         }
     }
+
+    class MultRef {
+        public Object s1 = new Object();
+        public Object s2 = s1;
+    }
+
+    public void testMultipleReferencesToObjectsWithNoChildren() {
+        MultRef in = new MultRef();
+        assertSame(in.s1, in.s2);
+
+        String xml = xstream.toXML(in);
+        MultRef out = (MultRef) xstream.fromXML(xml);
+
+        assertSame(out.s1, out.s2);
+    }
+
 
 }

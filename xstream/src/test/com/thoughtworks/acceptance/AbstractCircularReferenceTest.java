@@ -1,12 +1,9 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.XStream;
-
-public class CircularReferenceTest extends AbstractAcceptanceTest {
+public abstract class AbstractCircularReferenceTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMode(XStream.ID_REFERENCES);
         xstream.alias("person", Person.class);
     }
 
@@ -16,17 +13,7 @@ public class CircularReferenceTest extends AbstractAcceptanceTest {
         bob.likes = jane;
         jane.likes = bob;
 
-        String expected = "" +
-                "<person id=\"1\">\n" +
-                "  <firstname>bob</firstname>\n" +
-                "  <likes id=\"2\">\n" +
-                "    <firstname>jane</firstname>\n" +
-                "    <likes reference=\"1\"/>\n" +
-                "  </likes>\n" +
-                "</person>";
-
         String xml = xstream.toXML(bob);
-        assertEquals(expected, xml);
 
         Person bobOut = (Person) xstream.fromXML(xml);
         assertEquals("bob", bobOut.firstname);
@@ -42,14 +29,7 @@ public class CircularReferenceTest extends AbstractAcceptanceTest {
         Person bob = new Person("bob");
         bob.likes = bob;
 
-        String expected = "" +
-                "<person id=\"1\">\n" +
-                "  <firstname>bob</firstname>\n" +
-                "  <likes reference=\"1\"/>\n" +
-                "</person>";
-
         String xml = xstream.toXML(bob);
-        assertEquals(expected, xml);
 
         Person bobOut = (Person) xstream.fromXML(xml);
         assertEquals("bob", bobOut.firstname);
@@ -90,8 +70,8 @@ public class CircularReferenceTest extends AbstractAcceptanceTest {
 
     class Person {
         public String firstname;
-        public Person likes;
-        public Person loathes;
+        public XPathCircularReferenceTest.Person likes;
+        public XPathCircularReferenceTest.Person loathes;
 
         public Person(String name) {
             this.firstname = name;
