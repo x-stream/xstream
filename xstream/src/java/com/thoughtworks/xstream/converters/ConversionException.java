@@ -8,7 +8,12 @@ import java.util.Map;
  * Thrown by {@link Converter} implementations when they cannot convert an object
  * to/from textual data.
  *
+ * When this exception is thrown it can be passed around to things that accept an
+ * {@link ErrorWriter}, allowing them to add diagnostics to the stack trace.
+ *
  * @author Joe Walnes
+ *
+ * @see ErrorWriter
  */
 public class ConversionException extends RuntimeException implements ErrorWriter {
 
@@ -21,9 +26,12 @@ public class ConversionException extends RuntimeException implements ErrorWriter
 
     public ConversionException(String msg, Exception cause) {
         super(msg);
+        if (msg != null) {
+            add("message", msg);
+        }
         if (cause != null) {
-            add("exception", cause.getClass().getName());
-            add("message", cause.getMessage());
+            add("cause-exception", cause.getClass().getName());
+            add("cause-message", cause.getMessage());
             this.cause = cause;
         }
     }
