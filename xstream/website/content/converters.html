@@ -23,13 +23,33 @@
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1>java.lang (and primitive types)</h1></td>
+                <td colspan="4" class="headerRow"><h1>java.lang (and core special types)</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/NullConverter.html">NullConverter</a></td>
+                <td>null values</td>
+                <td class="example">&lt;null/&gt;</td>
+                <td>Usually, null fields are left out of the XML, however when used in arrays or the root object they
+                have to be explicitly marked.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/ArrayConverter.html">ArrayConverter</a></td>
+                <td>Any kind of array</td>
+                <td class="example">
+                    &lt;string-array&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;banana&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;cabbage&lt;/string&gt;<br/>
+                    &lt;/string-array&gt;
+                </td>
+                <td>This supports arrays of primitives as well as objects. It also supports multi-dimiensional arrays, even if
+                they are non-rectangular.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/BooleanConverter.html">BooleanConverter</a></td>
@@ -41,13 +61,28 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/ByteConverter.html">ByteConverter</a></td>
                 <td>byte<br/>java.lang.Byte</td>
                 <td class="example">&lt;byte&gt;22&lt;/byte&gt;</td>
-                <td>&nbsp;</td>
+                <td>The byte is represented as an integer.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/EncodedByteArrayConverter.html">EncodedByteArrayConverter</a></td>
+                <td>byte[]</td>
+                <td class="example">&lt;byte-array&gt;AHiEFiEABQ==&lt;/byte-array&gt;</td>
+                <td>Uses Base64 encoding to store binary images as in XML.<br/>
+                <b>Note:</b> This converter is NOT registered by default as it has a dependency on internal classes from the Sun JDK.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/CharConverter.html">CharConverter</a></td>
                 <td>char<br/>java.lang.Character</td>
                 <td class="example">&lt;char&gt;X&lt;/char&gt;</td>
                 <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/CharArrayConverter.html">CharArrayConverter</a></td>
+                <td>char[]</td>
+                <td class="example">
+                    &lt;char-array&gt;hello&lt;char-array&gt;
+                </td>
+                <td>Joins all characters into a single String.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/DoubleConverter.html">DoubleConverter</a></td>
@@ -108,46 +143,6 @@
                 <td>This is only available under Java 1.4 or greater. It retains the full stack trace, including that of any
                 nested exceptions. The stack trace elements are handled by the
                 <a href="javadoc/com/thoughtworks/xstream/converters/extended/StackTraceElementConverter.html">StackTraceElementConverter</a>.</td>
-            </tr>
-
-            <!-- .................................................................................................. -->
-            <tr>
-                <td colspan="4" class="headerRow"><h1>Special types</h1></td>
-            </tr>
-            <tr>
-                <th>Converter</th>
-                <th>Supported types</th>
-                <th>Example</th>
-                <th>Notes</th>
-            </tr>
-            <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/NullConverter.html">NullConverter</a></td>
-                <td>null values</td>
-                <td class="example">&lt;null/&gt;</td>
-                <td>Usually, null fields are left out of the XML, however when used in arrays or the root object they
-                have to be explicitly marked.</td>
-            </tr>
-            <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/ArrayConverter.html">ArrayConverter</a></td>
-                <td>Any kind of array</td>
-                <td class="example">
-                    &lt;string-array&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;banana&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;cabbage&lt;/string&gt;<br/>
-                    &lt;/string-array&gt;
-                </td>
-                <td>This supports arrays of primitives as well as objects. It also supports multi-dimiensional arrays, even if
-                they are non-rectangular.</td>
-            </tr>
-
-            <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/CharArrayConverter.html">CharArrayConverter</a></td>
-                <td>char[]<br/>java.lang.Character[]</td>
-                <td class="example">
-                    &lt;char-array&gt;hello&lt;char-array&gt;
-                </td>
-                <td>Joins all characters into a single String.</td>
             </tr>
 
             <!-- .................................................................................................. -->
@@ -333,7 +328,7 @@
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/UrlConverter.html">UrlConverter</a></td>
                 <td>java.net.Url</td>
-                <td class="example">&lt;url&gt;http://xstream.codehaus.org/index.html&lt;/url&gt;</td>
+                <td class="example">&lt;url&gt;http://codehaus.org/blah&lt;/url&gt;</td>
                 <td>&nbsp;</td>
             </tr>
 
@@ -393,8 +388,8 @@
                 <td>Any dynamic proxy generated by java.lang.reflect.Proxy</td>
                 <td class="example">
                     &lt;dynamic-proxy&gt;<br/>
-                    &nbsp;&nbsp;&lt;interface&gt;com.foo.SomeInterface&lt;/interface&gt;<br/>
-                    &nbsp;&nbsp;&lt;interface&gt;com.foo.AnotherInterface&lt;/interface&gt;<br/>
+                    &nbsp;&nbsp;&lt;interface&gt;com.foo.Blah&lt;/interface&gt;<br/>
+                    &nbsp;&nbsp;&lt;interface&gt;com.foo.Woo&lt;/interface&gt;<br/>
                     &nbsp;&nbsp;&lt;handler class=&quot;com.foo.MyHandler&quot;&gt;<br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&lt;something&gt;blah&lt;/something&gt;<br/>
                     &nbsp;&nbsp;&lt;/handler&gt;<br/>
@@ -425,27 +420,18 @@
                     &nbsp;&nbsp;&lt;alpha&gt;255&lt;/alpha&gt;<br/>
                     &lt;/color&gt;
                 </td>
-                <td>Warning: XStream will initialize the AWT toolkit when it deserializes a Color due to the internals of the Color class.
+                <td><b>Warning:</b> The AWT toolkit is initiailized when a Color is deserialized due to the internals of the Color class.
                 This should only be an issue if deserializing a Color on a headless server process.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/FontConverter.html">FontConverter</a></td>
                 <td>java.awt.Font</td>
-                <td class="example">
-                    Example not shown for brevity.
-                </td>
-                <td>Warning 1: The output of the Font is quite large. Only use this if you really need to.<br/>
-                Warning 2: XStream will initialize the AWT toolkit when it deserializes a Color due to the internals of the Color class.
-                This should only be an issue if deserializing a Color on a headless server process.<br/></td>
+                <td class="example">&nbsp;</td>
+                <td><b>Warning:</b> The AWT toolkit is initiailized when a Font is deserialized due to the internals of the Font class.
+                This should only be an issue if deserializing a Font on a headless server process.</td>
             </tr>
 
         </table>
-            <!--
-
-        ReflectionConverter
-        EncodedByteArrayConverter ***
-
-           -->
 
     </body>
 </html>
