@@ -1,6 +1,5 @@
-package com.thoughtworks.xstream.objecttree.reflection;
+package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.objecttree.ObjectAccessException;
 
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects

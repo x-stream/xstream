@@ -5,7 +5,6 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.objecttree.reflection.ObjectFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -9,10 +9,10 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.reflection.SunReflectionObjectFactory;
 import com.thoughtworks.xstream.core.DefaultClassMapper;
 import com.thoughtworks.xstream.core.DefaultNameMapper;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
-import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
 import junit.framework.TestCase;
 
 public class Xpp3XStreamTest extends TestCase {

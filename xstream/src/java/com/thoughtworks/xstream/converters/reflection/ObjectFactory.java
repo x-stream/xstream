@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.objecttree.reflection;
+package com.thoughtworks.xstream.converters.reflection;
 
 /**
  * An ObjectFactory is responsible for instantiating a new instance of a type.

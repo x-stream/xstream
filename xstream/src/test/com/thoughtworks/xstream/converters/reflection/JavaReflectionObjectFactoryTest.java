@@ -1,6 +1,5 @@
-package com.thoughtworks.xstream.objecttree.reflection;
+package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.objecttree.ObjectAccessException;
 import junit.framework.TestCase;
 
 public class JavaReflectionObjectFactoryTest extends TestCase {

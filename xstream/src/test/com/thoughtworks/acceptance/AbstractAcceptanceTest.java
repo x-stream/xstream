@@ -1,10 +1,10 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.SunReflectionObjectFactory;
 import com.thoughtworks.xstream.core.DefaultClassMapper;
 import com.thoughtworks.xstream.core.DefaultNameMapper;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
-import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Array;

@@ -5,15 +5,15 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
+import com.thoughtworks.xstream.converters.reflection.ObjectFactory;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
+import com.thoughtworks.xstream.converters.reflection.SunReflectionObjectFactory;
 import com.thoughtworks.xstream.core.*;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.objecttree.reflection.ObjectFactory;
-import com.thoughtworks.xstream.objecttree.reflection.SunReflectionObjectFactory;
 
 import java.io.StringWriter;
 import java.io.Writer;
