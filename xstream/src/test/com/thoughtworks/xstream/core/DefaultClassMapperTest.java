@@ -24,11 +24,13 @@ public class DefaultClassMapperTest extends TestCase {
 
     public void testPrefixesIllegalXmlElementNamesWithValue() {
         Class proxyCls = SampleDynamicProxy.newInstance().getClass();
-        assertEquals("default-Proxy0", mapper.lookupName(proxyCls));
-        assertEquals(proxyCls, mapper.lookupType("default-Proxy0"));
+        String aliasedName = mapper.lookupName(proxyCls);
+        assertTrue("Does not start with 'default-Proxy' : <" + aliasedName + ">",
+                aliasedName.startsWith("default-Proxy"));
+        assertEquals(proxyCls, mapper.lookupType(aliasedName));
     }
-    // @TODO
-    public void TODO_testArrayClassesCanBeCreated() {
+
+    public void testArrayClassesCanBeCreated() {
         Class arrayType = mapper.lookupType("java.lang.String-array");
         assertTrue(arrayType.isArray());
         assertEquals(String.class, arrayType.getComponentType());
@@ -41,6 +43,6 @@ public class DefaultClassMapperTest extends TestCase {
         mapper.alias("int", int.class, int.class);
         arrayType = mapper.lookupType("int-array");
         assertTrue(arrayType.isArray());
-        assertEquals(Integer.class, arrayType.getComponentType());
+        assertEquals(int.class, arrayType.getComponentType());
     }
 }
