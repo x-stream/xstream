@@ -96,4 +96,26 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         Calendar out = (Calendar) assertBothWays(in, expected);
         assertEquals(in.getTime(), out.getTime());
     }
+
+    public void testRegexPattern() {
+        // setup
+        Pattern pattern = Pattern.compile("^[ae]*$", Pattern.MULTILINE | Pattern.UNIX_LINES);
+        String expectedXml = "" +
+                "<java.util.regex.Pattern>\n" +
+                "  <pattern>^[ae]*$</pattern>\n" +
+                "  <flags>9</flags>\n" +
+                "</java.util.regex.Pattern>";
+
+        // execute
+        String actualXml = xstream.toXML(pattern);
+        Pattern result = (Pattern) xstream.fromXML(actualXml);
+
+        // verify
+        assertEquals(expectedXml, actualXml);
+        assertEquals(pattern.pattern(), result.pattern());
+        assertEquals(pattern.flags(), result.flags());
+
+        assertFalse("regex should not hava matched", result.matcher("oooo").matches());
+        assertTrue("regex should have matched", result.matcher("aeae").matches());
+    }
 }

@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
 import com.thoughtworks.xstream.converters.extended.GregorianCalendarConverter;
+import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
@@ -47,7 +48,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
     private Map defaultCollections = new HashMap();
     private JVM jvm;
 
-    private transient ClassLoader classLoader = getClass().getClassLoader();
+    private transient ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
     public DefaultConverterLookup(ReflectionProvider reflectionProvider,
                                   ClassMapper classMapper,
@@ -194,6 +195,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
 
             registerConverter(new CurrencyConverter());
             alias("currency", jvm.loadClass("java.util.Currency"));
+            registerConverter(new RegexPatternConverter(defaultConverter()));
         }
     }
 
@@ -218,7 +220,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
     }
 
     private Object readResolve() {
-        this.classLoader = getClass().getClassLoader();
+        this.classLoader = Thread.currentThread().getContextClassLoader();
         return this;
     }
 
