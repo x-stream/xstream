@@ -1,8 +1,19 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.mapper;
 
-public class XmlFriendlyClassMapper extends ClassMapperWrapper {
+import com.thoughtworks.xstream.alias.ClassMapper;
 
-    public XmlFriendlyClassMapper(ClassMapper wrapped) {
+/**
+ * Mapper that ensures that all names in the serialization stream are XML friendly.
+ *
+ * <b>$</b> (dollar) chars appearing in class names are replaced with <b>_</b> (underscore) chars.<br>
+ * <b>$</b> (dollar) chars appearing in field names are replaced with <b>_DOLLAR_</b> string.<br>
+ * <b>_</b> (underscore) chars appearing in field names are replaced with <b>__</b> (double underscore) string.<br>
+ *
+ * @author Joe Walnes
+ */
+public class XmlFriendlyMapper extends MapperWrapper {
+
+    public XmlFriendlyMapper(ClassMapper wrapped) {
         super(wrapped);
     }
 

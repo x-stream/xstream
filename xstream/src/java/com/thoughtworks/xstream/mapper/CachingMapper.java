@@ -1,10 +1,17 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.mapper;
+
+import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.util.Map;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class CachingMapper extends ClassMapperWrapper {
+/**
+ * Mapper that caches which names map to which classes. Prevents repetitive searching and class loading.
+ *
+ * @author Joe Walnes
+ */
+public class CachingMapper extends MapperWrapper {
 
     private final Map cache = Collections.synchronizedMap(new HashMap());
 

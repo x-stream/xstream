@@ -1,14 +1,22 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.mapper;
 
-import java.util.Set;
-import java.util.Collections;
-import java.util.HashSet;
+import com.thoughtworks.xstream.alias.ClassMapper;
+
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
-import java.io.File;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-public class ImmutableTypesMapper extends ClassMapperWrapper {
+/**
+ * Mapper that specifies which types are basic immutable types. Types that are marked as immutable will be written
+ * multiple times in the serialization stream without using references.
+ *
+ * @author Joe Walnes
+ */
+public class ImmutableTypesMapper extends MapperWrapper {
 
     private final Set immutableTypes = Collections.synchronizedSet(new HashSet());
 

@@ -1,10 +1,17 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.mapper;
+
+import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.util.Map;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class AliasingMapper extends ClassMapperWrapper {
+/**
+ * Mapper that allows a fully qualified class name to be replaced with a shorter alias.
+ *
+ * @author Joe Walnes
+ */
+public class AliasingMapper extends MapperWrapper {
 
     protected final Map typeToNameMap = Collections.synchronizedMap(new HashMap());
     protected final Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
@@ -29,7 +36,7 @@ public class AliasingMapper extends ClassMapperWrapper {
     }
 
     public Class lookupType(String elementName) {
-        if (elementName.equals("null")) { // TODO: This should be elsewhere
+        if (elementName.equals("null")) { // TODO: This is probably the wrong place for this.
             return null;
         }
 

@@ -1,9 +1,14 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
-import com.thoughtworks.xstream.core.util.CompositeClassLoader;
+import com.thoughtworks.xstream.alias.ClassMapper;
 
+/**
+ * Default mapper implementation with 'vanilla' functionality. To build up the functionality required, wrap this mapper
+ * with other mapper implementations.
+ *
+ * @author Joe Walnes
+ */
 public class DefaultMapper implements ClassMapper {
 
     private final ClassLoader classLoader;

@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.alias;
 
+import com.thoughtworks.xstream.mapper.Mapper;
+
 public interface ClassMapper extends Mapper {
 
     String lookupName(Class type);
@@ -21,8 +23,8 @@ public interface ClassMapper extends Mapper {
     Class lookupDefaultType(Class baseType);
 
     /**
-     * @deprecated As of 1.1.1, use {@link AliasingMapper#addAlias(String, Class)} for creating an alias and
-     *             {@link DefaultImplementationsMapper#addDefaultImplementation(Class, Class)} for specifiny a
+     * @deprecated As of 1.1.1, use {@link com.thoughtworks.xstream.mapper.AliasingMapper#addAlias(String, Class)} for creating an alias and
+     *             {@link com.thoughtworks.xstream.mapper.DefaultImplementationsMapper#addDefaultImplementation(Class, Class)} for specifiny a
      *             default implementation.
      */
     void alias(String elementName, Class type, Class defaultImplementation);

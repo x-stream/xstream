@@ -2,17 +2,16 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
-import com.thoughtworks.xstream.alias.DefaultMapper;
+import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import junit.framework.TestCase;
 
-public class DefaultClassMapperTest extends TestCase {
+public class DefaultMapperTest extends TestCase {
     private ClassMapper mapper;
 
     protected void setUp() throws Exception {
         super.setUp();
-        mapper = new DefaultClassMapper();
+        mapper = new DefaultMapper();
     }
 
     public void testAppendsArraySuffixOnArrays() {
@@ -38,7 +37,7 @@ public class DefaultClassMapperTest extends TestCase {
     }
 
     public void testPrefixesIllegalXmlElementNamesWithValue() {
-        mapper = new XmlFriendlyClassMapper(new DefaultMapper(new CompositeClassLoader()));
+        mapper = new XmlFriendlyMapper(new com.thoughtworks.xstream.mapper.DefaultMapper(new CompositeClassLoader()));
         Class proxyCls = SampleDynamicProxy.newInstance().getClass();
         String aliasedName = mapper.lookupName(proxyCls);
         assertTrue("Does not start with 'default-Proxy' : <" + aliasedName + ">",

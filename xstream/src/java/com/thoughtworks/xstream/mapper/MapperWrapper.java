@@ -1,10 +1,12 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.mapper;
 
-public abstract class ClassMapperWrapper implements ClassMapper {
+import com.thoughtworks.xstream.alias.ClassMapper;
+
+public abstract class MapperWrapper implements ClassMapper {
 
     private final ClassMapper wrapped;
 
-    public ClassMapperWrapper(ClassMapper wrapped) {
+    public MapperWrapper(ClassMapper wrapped) {
         this.wrapped = wrapped;
     }
 
@@ -48,7 +50,7 @@ public abstract class ClassMapperWrapper implements ClassMapper {
     }
 
     /**
-     * @deprecated As of 1.1.1, use {@link AliasingMapper#addAlias(String, Class)} for creating an alias and
+     * @deprecated As of 1.1.1, use {@link com.thoughtworks.xstream.mapper.AliasingMapper#addAlias(String, Class)} for creating an alias and
      *             {@link DefaultImplementationsMapper#addDefaultImplementation(Class, Class)} for specifiny a
      *             default implementation.
      */
@@ -74,8 +76,8 @@ public abstract class ClassMapperWrapper implements ClassMapper {
         while (true) {
             if (current.getClass().isAssignableFrom(typeOfMapper)) {
                 return current;
-            } else if (current instanceof ClassMapperWrapper) {
-                ClassMapperWrapper wrapper = (ClassMapperWrapper) current;
+            } else if (current instanceof MapperWrapper) {
+                MapperWrapper wrapper = (MapperWrapper) current;
                 current = wrapper.wrapped;
             } else {
                 return null;

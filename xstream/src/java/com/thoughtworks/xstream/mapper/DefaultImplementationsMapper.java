@@ -1,10 +1,18 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.mapper;
 
-import java.util.Map;
+import com.thoughtworks.xstream.alias.ClassMapper;
+
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
-public class DefaultImplementationsMapper extends ClassMapperWrapper {
+/**
+ * Mapper that resolves default implementations of classes. For example, mapper.lookupName(ArrayList.class) will return
+ * java.util.List. Calling mapper.defaultImplementationOf(List.class) will return ArrayList.
+ *
+ * @author Joe Walnes 
+ */
+public class DefaultImplementationsMapper extends MapperWrapper {
 
     private final Map typeToImpl = Collections.synchronizedMap(new HashMap());
     private final Map implToType = Collections.synchronizedMap(new HashMap());

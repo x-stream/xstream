@@ -1,14 +1,14 @@
 package com.thoughtworks.xstream;
 
-import com.thoughtworks.xstream.alias.AliasingMapper;
-import com.thoughtworks.xstream.alias.ArrayMapper;
-import com.thoughtworks.xstream.alias.CachingMapper;
+import com.thoughtworks.xstream.mapper.AliasingMapper;
+import com.thoughtworks.xstream.mapper.ArrayMapper;
+import com.thoughtworks.xstream.mapper.CachingMapper;
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.DefaultImplementationsMapper;
-import com.thoughtworks.xstream.alias.DefaultMapper;
-import com.thoughtworks.xstream.alias.DynamicProxyMapper;
-import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
-import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
+import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
+import com.thoughtworks.xstream.mapper.DefaultMapper;
+import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
+import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
+import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -69,6 +69,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.thoughtworks.xstream.mapper.AliasingMapper;
+import com.thoughtworks.xstream.mapper.CachingMapper;
+import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
+import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
+import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 
 import java.io.EOFException;
 import java.io.File;
@@ -279,7 +284,7 @@ public class XStream {
 
     private ClassMapper buildMapper(String classAttributeIdentifier) {
         ClassMapper mapper = new DefaultMapper(classLoader, classAttributeIdentifier);
-        mapper = new XmlFriendlyClassMapper(mapper);
+        mapper = new XmlFriendlyMapper(mapper);
         aliasingMapper = new AliasingMapper(mapper);
         mapper = new DynamicProxyMapper(aliasingMapper); // special handling of dynamic proxy instances
         mapper = new ArrayMapper(mapper);

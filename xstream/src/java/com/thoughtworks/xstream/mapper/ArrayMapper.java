@@ -1,6 +1,15 @@
-package com.thoughtworks.xstream.alias;
+package com.thoughtworks.xstream.mapper;
 
-public class ArrayMapper extends ClassMapperWrapper {
+import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.CannotResolveClassException;
+
+/**
+ * Mapper that detects arrays and changes the name so it can identified as an array
+ * (for example Foo[] gets serialized as foo-array). Supports multi-dimensional arrays.
+ *
+ * @author Joe Walnes 
+ */
+public class ArrayMapper extends MapperWrapper {
 
     public ArrayMapper(ClassMapper wrapped) {
         super(wrapped);
