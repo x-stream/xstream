@@ -4,17 +4,19 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
-import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.basic.*;
 import com.thoughtworks.xstream.converters.collections.*;
+import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
+import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.*;
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
 
 public class DefaultConverterLookup implements ConverterLookup {
 
@@ -67,6 +69,8 @@ public class DefaultConverterLookup implements ConverterLookup {
         alias("number", Number.class);
         alias("object", Object.class);
         alias("dynamic-proxy", ClassMapper.DynamicProxy.class);
+        alias("big-int", BigInteger.class);
+        alias("big-decimal", BigDecimal.class);
 
         alias("string-buffer", StringBuffer.class);
         alias("string", String.class);
@@ -108,6 +112,8 @@ public class DefaultConverterLookup implements ConverterLookup {
         registerConverter(new JavaMethodConverter());
         registerConverter(new BitSetConverter());
         registerConverter(new URLConverter());
+        registerConverter(new BigIntegerConverter());
+        registerConverter(new BigDecimalConverter());
 
         registerConverter(new ArrayConverter(classMapper, classAttributeIdentifier));
         registerConverter(new CharArrayConverter());

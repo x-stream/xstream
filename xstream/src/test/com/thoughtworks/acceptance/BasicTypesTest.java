@@ -1,5 +1,7 @@
 package com.thoughtworks.acceptance;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 public class BasicTypesTest extends AbstractAcceptanceTest {
@@ -12,6 +14,11 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertBothWays(new Double(-1234567890.12345), "<double>-1.23456789012345E9</double>");
         assertBothWays(new Long(123456789123456L), "<long>123456789123456</long>");
         assertBothWays(new Short((short) 123), "<short>123</short>");
+    }
+
+    public void testDifferentBaseIntegers() {
+        assertEquals(new Integer(255), xstream.fromXML("<int>0xFF</int>"));
+        assertEquals(new Integer(8), xstream.fromXML("<int>010</int>"));
     }
 
     public void testOtherPrimitives() {
@@ -37,6 +44,16 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     public void testDate() {
         Date date = new Date(103, 02, 15, 8, 22, 7);
         assertBothWays(date, "<date>2003-03-15 08:22:07.0 AM</date>");
+    }
+
+    public void testBigInteger() {
+        BigInteger bigInteger = new BigInteger("1234567890123456");
+        assertBothWays(bigInteger, "<big-int>1234567890123456</big-int>");
+    }
+
+    public void testBigDecimal() {
+        BigDecimal bigDecimal = new BigDecimal("1234567890123456.987654321");
+        assertBothWays(bigDecimal, "<big-decimal>1234567890123456.987654321</big-decimal>");
     }
 
 }

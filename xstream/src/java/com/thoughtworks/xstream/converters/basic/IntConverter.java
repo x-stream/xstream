@@ -7,7 +7,7 @@ public class IntConverter extends AbstractBasicConverter {
     }
 
     protected Object fromString(String str) {
-        return Integer.valueOf(str);
+        return Integer.decode(str);
     }
 
 }
