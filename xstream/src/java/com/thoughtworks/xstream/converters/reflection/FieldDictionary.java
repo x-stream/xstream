@@ -8,12 +8,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class FieldDictionary {
 
-    private final Map keyedByFieldNameCache = new TreeMap();
-    private final Map keyedByFieldKeyCache = new TreeMap();
+    private final Map keyedByFieldNameCache = new HashMap();
+    private final Map keyedByFieldKeyCache = new HashMap();
 
     public Iterator serializableFieldsFor(Class cls) {
         return buildMap(cls, true).values().iterator();
@@ -32,7 +31,7 @@ public class FieldDictionary {
     private Map buildMap(Class cls, boolean tupleKeyed) {
         final String clsName = cls.getName();
         if (!keyedByFieldNameCache.containsKey(clsName)) {
-            final Map keyedByFieldName = new TreeMap();
+            final Map keyedByFieldName = new HashMap();
             final Map keyedByFieldKey = new OrderRetainingMap();
             while (!Object.class.equals(cls)) {
                 Field[] fields = cls.getDeclaredFields();
