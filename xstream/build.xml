@@ -23,6 +23,11 @@
         <javac srcdir="src/java;build/src" destdir="build/classes">
             <classpath refid="classpath"/>
         </javac>
+        <copy todir="build/classes">
+            <fileset dir="build/src">
+                <include name="**/*.dat"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="sablecc" unless="sablecc.uptodate" description="Generate parser">
@@ -42,13 +47,13 @@
     <target name="test" depends="compile" description="Run all acceptance tests and unit tests">
         <mkdir dir="build/test-classes"/>
         <javac srcdir="src/test" destdir="build/test-classes" classpath="build/classes" classpathref="classpath"/>
-        <junit printsummary="yes" haltonfailure="yes" fork="no">
+        <junit printsummary="no" haltonfailure="yes" fork="no">
             <classpath refid="classpath"/>
             <classpath>
                 <pathelement location="build/classes"/>
                 <pathelement location="build/test-classes"/>
             </classpath>
-            <formatter type="brief" usefile="no"/>
+            <!--<formatter type="brief" usefile="no"/>-->
             <batchtest>
                 <fileset dir="src/test">
                     <include name="**/*Test*.java"/>
