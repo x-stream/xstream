@@ -5,10 +5,14 @@ import com.thoughtworks.xstream.converters.DataHolder;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.ObjectOutput;
+import java.util.Map;
+import java.util.HashMap;
 
 public class CustomObjectOutputStream extends ObjectOutputStream {
 
     private StreamCallback callback;
+    private FastStack customFields = new FastStack(1);
 
     private static final String DATA_HOLDER_KEY = CustomObjectOutputStream.class.getName();
 
@@ -28,8 +32,10 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
     }
 
     public static interface StreamCallback {
-        void writeToStream(Object object);
-        void defaultWriteObject();
+        void writeToStream(Object object) throws IOException;
+        void writeFieldsToStream(Map fields) throws IOException;
+        void defaultWriteObject() throws IOException;
+        void close() throws IOException;
     }
 
     /**
@@ -115,25 +121,75 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
         callback.writeToStream(b);
     }
 
-    /****** Methods currently missing from implementation ******/
+    public void flush() throws IOException {
+    }
+
+    public void close() throws IOException {
+        callback.close();
+    }
 
     public PutField putFields() throws IOException {
-        throw new UnsupportedOperationException();
+        CustomPutField result = new CustomPutField();
+        customFields.push(result);
+        return result;
     }
 
     public void writeFields() throws IOException {
-        throw new UnsupportedOperationException();
+        CustomPutField customPutField = (CustomPutField) customFields.pop();
+        callback.writeFieldsToStream(customPutField.asMap());
+    }
+
+    private class CustomPutField extends PutField {
+
+        private final Map fields = new HashMap();
+
+        public Map asMap() {
+            return fields;
+        }
+
+        public void write(ObjectOutput out) throws IOException {
+            callback.writeToStream(asMap());
+        }
+
+        public void put(String name, Object val) {
+            fields.put(name, val);
+        }
+
+        public void put(String name, byte val) {
+            put(name, new Byte(val));
+        }
+
+        public void put(String name, char val) {
+            put(name, new Character(val));
+        }
+
+        public void put(String name, double val) {
+            put(name, new Double(val));
+        }
+
+        public void put(String name, float val) {
+            put(name, new Float(val));
+        }
+
+        public void put(String name, int val) {
+            put(name, new Integer(val));
+        }
+
+        public void put(String name, long val) {
+            put(name, new Long(val));
+        }
+
+        public void put(String name, short val) {
+            put(name, new Short(val));
+        }
+
+        public void put(String name, boolean val) {
+            put(name, new Boolean(val));
+        }
+
     }
 
     /****** Unsupported methods ******/
-
-    public void close() throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-    public void flush() throws IOException {
-        throw new UnsupportedOperationException();
-    }
 
     public void reset() throws IOException {
         throw new UnsupportedOperationException();

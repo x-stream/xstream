@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream;
 
 import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.someobjects.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -13,6 +14,11 @@ import junit.framework.TestCase;
 import org.dom4j.Element;
 
 import java.io.StringReader;
+import java.io.ObjectOutputStream;
+import java.io.Writer;
+import java.io.StringWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class XStreamTest extends TestCase {
 
@@ -276,6 +282,35 @@ public class XStreamTest extends TestCase {
         Z z = (Z) xstream.fromXML(xml);
 
         assertEquals("z", z.field);
+    }
+
+    public void testAllowsStreamDrivenFromObjectOutputStream() throws IOException, ClassNotFoundException {
+        Writer writer = new StringWriter();
+        xstream.alias("software", Software.class);
+
+        ObjectOutputStream oos = xstream.createObjectOutputStream(writer, "some-objects");
+        oos.writeInt(123);
+        oos.writeObject("hello");
+        oos.writeObject(new Software("tw", "xs"));
+        oos.close();
+
+        String expectedXml = ""
+                + "<some-objects>\n"
+                + "  <int>123</int>\n"
+                + "  <string>hello</string>\n"
+                + "  <software>\n"
+                + "    <vendor>tw</vendor>\n"
+                + "    <name>xs</name>\n"
+                + "  </software>\n"
+                + "</some-objects>";
+
+        assertEquals(expectedXml, writer.toString());
+
+        ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(writer.toString()));
+        assertEquals(123, ois.readInt());
+        assertEquals("hello", ois.readObject());
+        assertEquals(new Software("tw", "xs"), ois.readObject());
+        // TODO: detect end of stream
     }
 
 }

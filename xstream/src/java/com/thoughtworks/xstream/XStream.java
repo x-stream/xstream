@@ -4,6 +4,11 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.NotActiveException;
+import java.io.ObjectInputStream;
+import java.util.Map;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
@@ -18,9 +23,12 @@ import com.thoughtworks.xstream.core.MapBackedDataHolder;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
+import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
@@ -381,5 +389,53 @@ public class XStream {
 
     public DataHolder newDataHolder() {
         return new MapBackedDataHolder();
+    }
+
+    public ObjectOutputStream createObjectOutputStream(Writer writer, String rootNodeName) throws IOException {
+        return createObjectOutputStream(new PrettyPrintWriter(writer), rootNodeName);
+    }
+
+    public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, String rootNodeName) throws IOException {
+        writer.startNode(rootNodeName);
+        return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
+            public void writeToStream(Object object) {
+                marshal(object, writer);
+            }
+
+            public void writeFieldsToStream(Map fields) throws NotActiveException {
+                throw new NotActiveException("not in call to writeObject");
+            }
+
+            public void defaultWriteObject() throws NotActiveException {
+                throw new NotActiveException("not in call to writeObject");
+            }
+
+            public void close() {
+                writer.endNode();
+            }
+        });
+    }
+
+    public ObjectInputStream createObjectInputStream(Reader xmlReader) throws IOException {
+        return createObjectInputStream(hierarchicalStreamDriver.createReader(xmlReader));
+    }
+
+    public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader) throws IOException {
+        return new CustomObjectInputStream(new CustomObjectInputStream.StreamCallback() {
+            public Object readFromStream() {
+                reader.moveDown();
+                Object result = unmarshal(reader);
+                reader.moveUp();
+                return result;
+            }
+
+            public Map readFieldsFromStream() throws IOException {
+                throw new NotActiveException("not in call to readObject");
+            }
+
+            public void defaultReadObject() throws NotActiveException {
+                throw new NotActiveException("not in call to readObject");
+            }
+        });
     }
 }

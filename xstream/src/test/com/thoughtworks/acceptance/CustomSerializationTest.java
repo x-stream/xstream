@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.acceptance.objects.Hardware;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -225,4 +226,152 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         String xml2 = xstream.toXML(in2);
         assertObjectsEqual(in2, xstream.fromXML(xml2));
     }
+
+    public static class ObjectWithNamedFields extends StandardObject implements Serializable {
+
+        private String name;
+        private int number;
+        private Software someSoftware;
+        private Object polymorphic;
+        private Object nothing;
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            // don't call defaultWriteObject()
+            ObjectOutputStream.PutField fields = out.putFields();
+            fields.put("the-name", name);
+            fields.put("the-number", number);
+            fields.put("the-software", someSoftware);
+            fields.put("the-polymorphic", polymorphic);
+            fields.put("the-nothing", nothing);
+            out.writeFields();
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            // don't call defaultReadObject()
+            ObjectInputStream.GetField fields = in.readFields();
+            name = (String) fields.get("the-name", "unknown");
+            number = fields.get("the-number", -1);
+            someSoftware = (Software) fields.get("the-software", null);
+            polymorphic = fields.get("the-polymorphic", null);
+            nothing = fields.get("the-nothing", null);
+        }
+
+    }
+
+    public void testAllowsNamedFields() {
+        ObjectWithNamedFields obj = new ObjectWithNamedFields();
+        obj.name = "Joe";
+        obj.number = 99;
+        obj.someSoftware = new Software("tw", "xs");
+        obj.polymorphic = new Hardware("small", "ipod");
+        obj.nothing = null;
+
+        xstream.alias("with-named-fields", ObjectWithNamedFields.class);
+        xstream.alias("software", Software.class);
+
+        String expectedXml = ""
+                + "<with-named-fields serialization=\"custom\">\n"
+                + "  <with-named-fields>\n"
+                + "    <fields>\n"
+                + "      <field name=\"the-polymorphic\" class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
+                + "        <arch>small</arch>\n"
+                + "        <name>ipod</name>\n"
+                + "      </field>\n"
+                + "      <field name=\"the-software\" class=\"software\">\n"
+                + "        <vendor>tw</vendor>\n"
+                + "        <name>xs</name>\n"
+                + "      </field>\n"
+                + "      <field name=\"the-name\" class=\"string\">Joe</field>\n"
+                + "      <field name=\"the-number\" class=\"int\">99</field>\n"
+                + "    </fields>\n"
+                + "  </with-named-fields>\n"
+                + "  <com.thoughtworks.acceptance.StandardObject>\n"
+                + "    <default/>\n"
+                + "  </com.thoughtworks.acceptance.StandardObject>\n"
+                + "  <object>\n"
+                + "    <default/>\n"
+                + "  </object>\n"
+                + "</with-named-fields>";
+
+        assertBothWays(obj, expectedXml);
+    }
+
+    public void testUsesDefaultIfNamedFieldNotFound() {
+        xstream.alias("with-named-fields", ObjectWithNamedFields.class);
+        xstream.alias("software", Software.class);
+
+        String inputXml = ""
+                + "<with-named-fields serialization=\"custom\">\n"
+                + "  <with-named-fields>\n"
+                + "    <fields>\n"
+                + "      <field name=\"the-polymorphic\" class=\"com.thoughtworks.acceptance.objects.Hardware\">\n"
+                + "        <arch>small</arch>\n"
+                + "        <name>ipod</name>\n"
+                + "      </field>\n"
+                + "      <field name=\"the-software\" class=\"software\">\n"
+                + "        <vendor>tw</vendor>\n"
+                + "        <name>xs</name>\n"
+                + "      </field>\n"
+                + "    </fields>\n"
+                + "  </with-named-fields>\n"
+                + "</with-named-fields>";
+
+        ObjectWithNamedFields result = (ObjectWithNamedFields) xstream.fromXML(inputXml);
+        assertEquals(-1, result.number);
+        assertEquals("unknown", result.name);
+        assertEquals(new Software("tw", "xs"), result.someSoftware);
+    }
+
+    public void testCustomStreamWithNestedCustomStream() {
+        ObjectWithNamedFields outer = new ObjectWithNamedFields();
+        outer.name = "Joe";
+        outer.someSoftware = new Software("tw", "xs");
+        outer.nothing = null;
+
+        ObjectWithNamedFields inner = new ObjectWithNamedFields();
+        inner.name = "Thing";
+
+        outer.polymorphic = inner;
+
+        xstream.alias("with-named-fields", ObjectWithNamedFields.class);
+        xstream.alias("software", Software.class);
+
+        String expectedXml = ""
+                + "<with-named-fields serialization=\"custom\">\n"
+                + "  <with-named-fields>\n"
+                + "    <fields>\n"
+                + "      <field name=\"the-polymorphic\" class=\"with-named-fields\" serialization=\"custom\">\n"
+                + "        <with-named-fields>\n"
+                + "          <fields>\n"
+                + "            <field name=\"the-name\" class=\"string\">Thing</field>\n"
+                + "            <field name=\"the-number\" class=\"int\">0</field>\n"
+                + "          </fields>\n"
+                + "        </with-named-fields>\n"
+                + "        <com.thoughtworks.acceptance.StandardObject>\n"
+                + "          <default/>\n"
+                + "        </com.thoughtworks.acceptance.StandardObject>\n"
+                + "        <object>\n"
+                + "          <default/>\n"
+                + "        </object>\n"
+                + "      </field>\n"
+                + "      <field name=\"the-software\" class=\"software\">\n"
+                + "        <vendor>tw</vendor>\n"
+                + "        <name>xs</name>\n"
+                + "      </field>\n"
+                + "      <field name=\"the-name\" class=\"string\">Joe</field>\n"
+                + "      <field name=\"the-number\" class=\"int\">0</field>\n"
+                + "    </fields>\n"
+                + "  </with-named-fields>\n"
+                + "  <com.thoughtworks.acceptance.StandardObject>\n"
+                + "    <default/>\n"
+                + "  </com.thoughtworks.acceptance.StandardObject>\n"
+                + "  <object>\n"
+                + "    <default/>\n"
+                + "  </object>\n"
+                + "</with-named-fields>";
+
+        assertBothWays(outer, expectedXml);
+    }
+
+
 }

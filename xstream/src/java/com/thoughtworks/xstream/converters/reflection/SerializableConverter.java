@@ -13,7 +13,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.ObjectInputStream;
+import java.io.IOException;
 import java.util.Map;
+import java.util.Iterator;
+import java.util.HashMap;
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
@@ -46,6 +49,9 @@ public class SerializableConverter implements Converter {
     private static final String ATTRIBUTE_CLASS = "class";
     private static final String ATTRIBUTE_SERIALIZATION = "serialization";
     private static final String ATTRIBUTE_VALUE_CUSTOM = "custom";
+    private static final String ELEMENT_FIELDS = "fields";
+    private static final String ELEMENT_FIELD = "field";
+    private static final String ATTRIBUTE_NAME = "name";
 
     public SerializableConverter(ClassMapper classMapper, ReflectionProvider reflectionProvider) {
         this.classMapper = classMapper;
@@ -79,6 +85,22 @@ public class SerializableConverter implements Converter {
                 }
             }
 
+            public void writeFieldsToStream(Map fields) {
+                writer.startNode(ELEMENT_FIELDS);
+                for (Iterator iterator = fields.keySet().iterator(); iterator.hasNext();) {
+                    String name = (String) iterator.next();
+                    Object value = fields.get(name);
+                    if (value != null) {
+                        writer.startNode(ELEMENT_FIELD);
+                        writer.addAttribute(ATTRIBUTE_NAME, name);
+                        writer.addAttribute(ATTRIBUTE_CLASS, classMapper.lookupName(value.getClass()));
+                        context.convertAnother(value);
+                        writer.endNode();
+                    }
+                }
+                writer.endNode();
+            }
+
             public void defaultWriteObject() {
                 writer.startNode(ELEMENT_DEFAULT);
 
@@ -101,6 +123,10 @@ public class SerializableConverter implements Converter {
                 });
                 writer.endNode();
             }
+
+            public void close() {
+                throw new UnsupportedOperationException();
+            }
         };
 
         currentType[0] = replacedSource.getClass();
@@ -110,7 +136,11 @@ public class SerializableConverter implements Converter {
                 ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
                 serializationMethodInvoker.callWriteObject(currentType[0], replacedSource, objectOutputStream);
             } else {
-                callback.defaultWriteObject();
+                try {
+                    callback.defaultWriteObject();
+                } catch (IOException e) {
+                    throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+                }
             }
             currentType[0] = currentType[0].getSuperclass();
             writer.endNode();
@@ -128,12 +158,33 @@ public class SerializableConverter implements Converter {
         }
 
         CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
-            public Object deserialize() {
+            public Object readFromStream() {
                 reader.moveDown();
                 Class type = classMapper.lookupType(reader.getNodeName());
                 Object value = context.convertAnother(result, type);
                 reader.moveUp();
                 return value;
+            }
+
+            public Map readFieldsFromStream() {
+                Map result = new HashMap();
+                reader.moveDown();
+                if (!reader.getNodeName().equals(ELEMENT_FIELDS)) {
+                    throw new ConversionException("Expected <" + ELEMENT_FIELDS + "/> element when calling ObjectInputStream.readFields()");
+                }
+                while (reader.hasMoreChildren()) {
+                    reader.moveDown();
+                    if (!reader.getNodeName().equals(ELEMENT_FIELD)) {
+                        throw new ConversionException("Expected <" + ELEMENT_FIELD + "/> element inside <" + ELEMENT_FIELD + "/>");
+                    }
+                    String name = reader.getAttribute(ATTRIBUTE_NAME);
+                    Class type = classMapper.lookupType(reader.getAttribute(ATTRIBUTE_CLASS));
+                    Object value = context.convertAnother(result, type);
+                    result.put(name, value);
+                    reader.moveUp();
+                }
+                reader.moveUp();
+                return result;
             }
 
             public void defaultReadObject() {
@@ -169,7 +220,11 @@ public class SerializableConverter implements Converter {
                 ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
                 serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);
             } else {
-                callback.defaultReadObject();
+                try {
+                    callback.defaultReadObject();
+                } catch (IOException e) {
+                    throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+                }
             }
             reader.moveUp();
         }

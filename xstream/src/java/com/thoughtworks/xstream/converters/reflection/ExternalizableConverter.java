@@ -14,6 +14,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectInput;
+import java.util.Map;
 
 /**
  * Converts any object that implements the java.io.Externalizable interface, allowing compatability with native Java
@@ -48,7 +49,15 @@ public class ExternalizableConverter implements Converter {
                     }
                 }
 
+                public void writeFieldsToStream(Map fields) {
+                    throw new UnsupportedOperationException();
+                }
+
                 public void defaultWriteObject() {
+                    throw new UnsupportedOperationException();
+                }
+
+                public void close() {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -64,11 +73,15 @@ public class ExternalizableConverter implements Converter {
         try {
             Externalizable externalizable = (Externalizable) type.newInstance();
             CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
-                public Object deserialize() {
+                public Object readFromStream() {
                     reader.moveDown();
                     Object streamItem = context.convertAnother(type, classMapper.lookupType(reader.getNodeName()));
                     reader.moveUp();
                     return streamItem;
+                }
+
+                public Map readFieldsFromStream() {
+                    throw new UnsupportedOperationException();
                 }
 
                 public void defaultReadObject() {
