@@ -10,7 +10,7 @@ public class PathTracker {
     private String[] pathStack;
     private Map[] indexMapStack;
 
-    private String currentPath;
+    private Path currentPath;
 
     public PathTracker() {
         this(16);
@@ -77,8 +77,8 @@ public class PathTracker {
                     result.append('[').append(index).append(']');
                 }
             }
-            currentPath = result.toString();
+            currentPath = new Path(result.toString());
         }
-        return new Path(currentPath);
+        return currentPath;
     }
 }
