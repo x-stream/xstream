@@ -13,5 +13,4 @@
 # comment lines begin with '#'
 passwd
 cvsspam.conf
-damagecontrol-xstream.conf
 dctrigger.rb
