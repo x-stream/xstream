@@ -31,25 +31,29 @@ public class FieldDictionary {
     private Map buildMap(Class cls, boolean tupleKeyed) {
         final String clsName = cls.getName();
         if (!keyedByFieldNameCache.containsKey(clsName)) {
-            final Map keyedByFieldName = new HashMap();
-            final Map keyedByFieldKey = new OrderRetainingMap();
-            while (!Object.class.equals(cls)) {
-                Field[] fields = cls.getDeclaredFields();
-                for (int i = 0; i < fields.length; i++) {
-                    Field field = fields[i];
-                    if (field.getName().startsWith("this$")) {
-                        continue;
+            synchronized (keyedByFieldKeyCache) {
+                if (!keyedByFieldNameCache.containsKey(clsName)) { // double check
+                    final Map keyedByFieldName = new HashMap();
+                    final Map keyedByFieldKey = new OrderRetainingMap();
+                    while (!Object.class.equals(cls)) {
+                        Field[] fields = cls.getDeclaredFields();
+                        for (int i = 0; i < fields.length; i++) {
+                            Field field = fields[i];
+                            if (field.getName().startsWith("this$")) {
+                                continue;
+                            }
+                            field.setAccessible(true);
+                            if (!keyedByFieldName.containsKey(field.getName())) {
+                                keyedByFieldName.put(field.getName(), field);
+                            }
+                            keyedByFieldKey.put(new FieldKey(field.getName(), field.getDeclaringClass(), i), field);
+                        }
+                        cls = cls.getSuperclass();
                     }
-                    field.setAccessible(true);
-                    if (!keyedByFieldName.containsKey(field.getName())) {
-                        keyedByFieldName.put(field.getName(), field);
-                    }
-                    keyedByFieldKey.put(new FieldKey(field.getName(), field.getDeclaringClass(), i), field);
+                    keyedByFieldNameCache.put(clsName, keyedByFieldName);
+                    keyedByFieldKeyCache.put(clsName, keyedByFieldKey);
                 }
-                cls = cls.getSuperclass();
             }
-            keyedByFieldNameCache.put(clsName, keyedByFieldName);
-            keyedByFieldKeyCache.put(clsName, keyedByFieldKey);
         }
         return (Map) (tupleKeyed ? keyedByFieldKeyCache.get(clsName) : keyedByFieldNameCache.get(clsName));
     }

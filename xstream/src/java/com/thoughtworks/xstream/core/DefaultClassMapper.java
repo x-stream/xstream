@@ -12,14 +12,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class DefaultClassMapper implements ClassMapper {
 
-    protected Map typeToNameMap = new HashMap();
-    protected Map nameToTypeMap = new HashMap();
-    protected Map baseTypeToDefaultTypeMap = new HashMap();
+    protected Map typeToNameMap = Collections.synchronizedMap(new HashMap());
+    protected Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
+    protected Map baseTypeToDefaultTypeMap = Collections.synchronizedMap(new HashMap());
     private Map lookupTypeCache = Collections.synchronizedMap(new HashMap());
-    private HashSet immutableTypes = new HashSet();
+    private Set immutableTypes = Collections.synchronizedSet(new HashSet());
 
     public DefaultClassMapper() {
         // register primitive types
