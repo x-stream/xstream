@@ -68,10 +68,13 @@ public abstract class AbstractCircularReferenceTest extends AbstractAcceptanceTe
         assertSame(annOut, pooOut.loathes);
     }
 
-    class Person {
+    public static class Person {
         public String firstname;
-        public XPathCircularReferenceTest.Person likes;
-        public XPathCircularReferenceTest.Person loathes;
+        public Person likes;
+        public Person loathes;
+
+        public Person() {
+        }
 
         public Person(String name) {
             this.firstname = name;

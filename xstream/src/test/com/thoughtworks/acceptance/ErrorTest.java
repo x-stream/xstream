@@ -5,7 +5,7 @@ import com.thoughtworks.xstream.io.StreamException;
 
 public class ErrorTest extends AbstractAcceptanceTest {
 
-    class Thing {
+    public static class Thing {
         String one;
         int two;
     }

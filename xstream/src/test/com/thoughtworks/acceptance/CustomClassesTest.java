@@ -2,7 +2,7 @@ package com.thoughtworks.acceptance;
 
 public class CustomClassesTest extends AbstractAcceptanceTest {
 
-    class SamplePerson extends StandardObject {
+    public static class SamplePerson extends StandardObject {
         int anInt;
         String firstName;
         String lastName;
@@ -28,7 +28,7 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
     }
 
-    class SamplePersonHolder {
+    public static class SamplePersonHolder {
         String aString;
         SamplePerson brother;
 
@@ -92,7 +92,7 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
         assertBothWays(obj, expected);
     }
 
-    public class WithSomeFields extends StandardObject {
+    public static class WithSomeFields extends StandardObject {
         Object a;
         String b;
     }
@@ -128,7 +128,7 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
         assertBothWays(new FieldWithObjectType(), expected);
     }
 
-    class FieldWithObjectType extends StandardObject {
+    public static class FieldWithObjectType extends StandardObject {
         Double one = new Double(1.0);
         Object two = new Double(2.0);
     }

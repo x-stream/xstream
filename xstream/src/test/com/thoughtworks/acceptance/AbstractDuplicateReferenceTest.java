@@ -51,15 +51,18 @@ public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceT
 
     }
 
-    class Thing extends StandardObject {
+    public static class Thing extends StandardObject {
         public String field;
+
+        public Thing() {
+        }
 
         public Thing(String field) {
             this.field = field;
         }
     }
 
-    class MultRef {
+    public static class MultRef {
         public Object s1 = new Object();
         public Object s2 = s1;
     }

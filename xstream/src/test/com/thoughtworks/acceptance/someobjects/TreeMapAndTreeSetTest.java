@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
 
-    class MyComparator implements Comparator {
+    public static class MyComparator implements Comparator {
         private String something = "stuff";
 
         public int compare(Object o1, Object o2) {

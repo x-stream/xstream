@@ -27,7 +27,7 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertBothWays(array, expected);
     }
 
-    class X extends StandardObject {
+    public static class X extends StandardObject {
         String s = "hi";
     }
 
@@ -102,27 +102,27 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertBothWays(objWithArray, expected);
     }
 
-    class ObjWithArray extends StandardObject {
+    public static class ObjWithArray extends StandardObject {
         String[] strings;
     }
 
     public void testDeserializingObjectWhichContainsAPrimitiveLongArray() {
         String xml =
-            "<owla>" +
-            "  <bits class=\"long-array\">" +
-            "    <long>0</long>" +
-            "    <long>1</long>" +
-            "    <long>2</long>" +
-            "  </bits>" +
-            "</owla>";
+                "<owla>" +
+                "  <bits class=\"long-array\">" +
+                "    <long>0</long>" +
+                "    <long>1</long>" +
+                "    <long>2</long>" +
+                "  </bits>" +
+                "</owla>";
 
-        xstream.alias( "owla", ObjectWithLongArray.class );
+        xstream.alias("owla", ObjectWithLongArray.class);
 
-        ObjectWithLongArray o = (ObjectWithLongArray) xstream.fromXML( xml );
+        ObjectWithLongArray o = (ObjectWithLongArray) xstream.fromXML(xml);
 
-        assertEquals( o.bits[0], 0 );
-        assertEquals( o.bits[1], 1 );
-        assertEquals( o.bits[2], 2 );
+        assertEquals(o.bits[0], 0);
+        assertEquals(o.bits[1], 1);
+        assertEquals(o.bits[2], 2);
     }
 
     class ObjectWithLongArray {

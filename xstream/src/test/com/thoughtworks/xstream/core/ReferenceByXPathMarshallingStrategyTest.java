@@ -15,15 +15,18 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
         xstream.alias("thing", Thing.class);
     }
 
-    class Thing extends StandardObject {
+    public static class Thing extends StandardObject {
         private String name;
+
+        public Thing() {
+        }
 
         public Thing(String name) {
             this.name = name;
         }
     }
 
-    public void testX() {
+    public void testStoresReferencesUsingXPath() {
         Thing a = new Thing("a");
         Thing b = new Thing("b");
         Thing c = b;
