@@ -10,6 +10,12 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Converts a java.awt.Color to XML, using four nested elements:
+ * red, green, blue, alpha.
+ *
+ * @author Joe Walnes
+ */
 public class ColorConverter implements Converter {
 
     public boolean canConvert(Class type) {
@@ -31,12 +37,10 @@ public class ColorConverter implements Converter {
             elements.put(reader.getNodeName(), Integer.valueOf(reader.getValue()));
             reader.moveUp();
         }
-        Color color = new Color(
-                ((Integer) elements.get("red")).intValue(),
+        Color color = new Color(((Integer) elements.get("red")).intValue(),
                 ((Integer) elements.get("green")).intValue(),
                 ((Integer) elements.get("blue")).intValue(),
-                ((Integer) elements.get("alpha")).intValue()
-        );
+                ((Integer) elements.get("alpha")).intValue());
         return color;
     }
 

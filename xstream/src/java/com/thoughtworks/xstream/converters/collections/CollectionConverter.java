@@ -9,6 +9,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.util.*;
 
+/**
+ * Converts most common Collections (Lists and Sets) to XML, specifying a nested
+ * element for each item.
+ * <p/>
+ * <p>Supports java.util.ArrayList, java.util.HashSet,
+ * java.util.LinkedList, java.util.Vector and java.util.LinkedHashSet.</p>
+ *
+ * @author Joe Walnes
+ */
 public class CollectionConverter extends AbstractCollectionConverter {
 
     public CollectionConverter(ClassMapper classMapper, String classAttributeIdentifier) {

@@ -10,6 +10,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.Comparator;
 import java.util.TreeSet;
 
+/**
+ * Converts a java.util.TreeSet to XML, and serializes
+ * the associated java.util.Comparator.
+ *
+ * @author Joe Walnes
+ */
 public class TreeSetConverter extends CollectionConverter {
 
     public TreeSetConverter(ClassMapper classMapper, String classAttributeIdentifier) {

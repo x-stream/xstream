@@ -1,18 +1,24 @@
 package com.thoughtworks.xstream.converters.extended;
 
+import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Converts a dynamic proxy to XML, storing the implemented
+ * interfaces and handler.
+ *
+ * @author Joe Walnes
+ */
 public class DynamicProxyConverter implements Converter {
 
     private ClassLoader classLoader;
@@ -53,7 +59,7 @@ public class DynamicProxyConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         List interfaces = new ArrayList();
         InvocationHandler handler = null;
-        while(reader.hasMoreChildren()) {
+        while (reader.hasMoreChildren()) {
             reader.moveDown();
             String elementName = reader.getNodeName();
             if (elementName.equals("interface")) {

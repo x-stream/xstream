@@ -16,13 +16,15 @@ import java.io.IOException;
 /**
  * Converts a byte array to a single encoding string (such as base64).
  * Because this uses Sun specific classes it is not registered in XStream by default.
- *
+ * <p/>
  * The following CharacterEncoder/CharacterDecoders pairs are available.
  * <ul>
- *  <li> sun.misc.BASE64Encoder, sun.mis.BASE64Decoder (default) </li>
- *  <li> sun.misc.UCEncoder, sun.misc.UCDecoder </li>
- *  <li> sun.misc.UUEncoder, sun.misc.UUDecoder </li>
+ * <li> sun.misc.BASE64Encoder, sun.mis.BASE64Decoder (default) </li>
+ * <li> sun.misc.UCEncoder, sun.misc.UCDecoder </li>
+ * <li> sun.misc.UUEncoder, sun.misc.UUDecoder </li>
  * </ul>
+ *
+ * @author Joe Walnes
  */
 public class EncodedByteArrayConverter implements Converter {
 

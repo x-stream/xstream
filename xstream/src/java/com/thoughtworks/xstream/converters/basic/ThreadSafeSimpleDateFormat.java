@@ -5,6 +5,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Wrapper around java.text.SimpleDateFormat that can
+ * be called by multiple threads concurrently.
+ * <p/>
+ * <p>SimpleDateFormat has a high overhead in creating
+ * and is not thread safe. To make best use of resources,
+ * the ThreadSafeSimpleDateFormat provides a dynamically
+ * sizing pool of instances, each of which will only
+ * be called by a single thread at a time.</p>
+ * <p/>
+ * <p>The pool has a maximum capacity, to limit overhead.
+ * If all instances in the pool are in use and another is
+ * required, it shall block until one becomes available.</p>
+ *
+ * @author Joe Walnes
+ */
 public class ThreadSafeSimpleDateFormat {
 
     private String formatString;

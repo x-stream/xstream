@@ -24,9 +24,9 @@ public class ErrorTest extends AbstractAcceptanceTest {
             fail("Error expected");
         } catch (ConversionException e) {
             assertEquals("java.lang.NumberFormatException",
-                    e.get("exception"));
+                    e.get("cause-exception"));
             assertEquals("For input string: \"another string\"",
-                    e.get("message"));
+                    e.get("cause-message"));
             assertEquals(Thing.class.getName(),
                     e.get("class"));
             assertEquals("/thing/two",
@@ -47,9 +47,9 @@ public class ErrorTest extends AbstractAcceptanceTest {
             fail("Error expected");
         } catch (ConversionException e) {
             assertEquals(StreamException.class.getName(),
-                    e.get("exception"));
+                    e.get("cause-exception"));
             assertContains("unexpected character in markup",
-                    e.get("message"));
+                    e.get("cause-message"));
             assertEquals("/thing/two",
                     e.get("path"));
             assertEquals("3",

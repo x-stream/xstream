@@ -1,5 +1,11 @@
 package com.thoughtworks.xstream.converters.basic;
 
+/**
+ * Converts a short primitive or java.lang.Short wrapper to
+ * a String.
+ *
+ * @author Joe Walnes
+ */
 public class ShortConverter extends AbstractBasicConverter {
 
     public boolean canConvert(Class type) {

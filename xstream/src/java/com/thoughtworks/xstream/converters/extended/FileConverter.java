@@ -7,6 +7,8 @@ import java.io.File;
 /**
  * This converter will take care of storing and retrieving File with either
  * an absolute path OR a relative path depending on how they were created.
+ *
+ * @author Joe Walnes
  */
 public class FileConverter extends AbstractBasicConverter {
 
@@ -19,7 +21,7 @@ public class FileConverter extends AbstractBasicConverter {
     }
 
     protected String toString(Object obj) {
-        return ((File)obj).getPath();
+        return ((File) obj).getPath();
     }
 
 }

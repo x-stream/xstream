@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Converts a java.lang.reflect.Method to XML.
+ * 
  * @author Aslak Helles&oslash;y
  */
 public class JavaMethodConverter implements Converter {

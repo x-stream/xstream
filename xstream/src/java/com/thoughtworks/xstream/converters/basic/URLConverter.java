@@ -2,11 +2,13 @@ package com.thoughtworks.xstream.converters.basic;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
- * @author J. Matthew Prior
+ * Converts a java.net.URL to a string.
+ *
+ * @author J. Matthew Pryor
  */
 public class URLConverter extends AbstractBasicConverter {
 
@@ -18,7 +20,7 @@ public class URLConverter extends AbstractBasicConverter {
         try {
             return new URL(str);
         } catch (MalformedURLException e) {
-            throw new ConversionException(e.getMessage(), e);
+            throw new ConversionException(e);
         }
     }
 

@@ -4,6 +4,11 @@ import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 
 import java.sql.Timestamp;
 
+/**
+ * Converts a java.sql.Timestamp to text.
+ *
+ * @author Joe Walnes
+ */
 public class SqlTimestampConverter extends AbstractBasicConverter {
 
     protected Object fromString(String str) {

@@ -6,6 +6,11 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * Special converter to signify nulls at the root level.
+ *
+ * @author Joe Walnes
+ */
 public class NullConverter implements Converter {
 
     public boolean canConvert(Class type) {

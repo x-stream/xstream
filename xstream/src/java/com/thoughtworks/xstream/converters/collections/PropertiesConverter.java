@@ -10,6 +10,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Special converter for java.util.Properties that stores
+ * properties in a more compact form than java.util.Map.
+ * <p/>
+ * <p>Because all entries of a Properties instance
+ * are Strings, a single element is used for each property
+ * with two attributes; one for key and one for value.</p>
+ *
+ * @author Joe Walnes
+ */
 public class PropertiesConverter implements Converter {
 
     public boolean canConvert(Class type) {

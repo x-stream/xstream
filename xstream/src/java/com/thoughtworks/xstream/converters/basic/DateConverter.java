@@ -5,6 +5,12 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import java.text.ParseException;
 import java.util.Date;
 
+/**
+ * Converts a java.util.Date to a String as a date format,
+ * retaining precision down to milliseconds.
+ *
+ * @author Joe Walnes
+ */
 public class DateConverter extends AbstractBasicConverter {
 
     private ThreadSafeSimpleDateFormat[] formats = {

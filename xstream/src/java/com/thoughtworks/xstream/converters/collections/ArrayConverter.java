@@ -11,10 +11,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Converts an array of objects or primitives to XML, using
+ * a nested child element for each item.
+ *
+ * @author Joe Walnes
+ */
 public class ArrayConverter extends AbstractCollectionConverter {
 
-    public ArrayConverter(ClassMapper classMapper,String classAttributeIdentifier) {
-        super(classMapper,classAttributeIdentifier);
+    public ArrayConverter(ClassMapper classMapper, String classAttributeIdentifier) {
+        super(classMapper, classAttributeIdentifier);
     }
 
     public boolean canConvert(Class type) {

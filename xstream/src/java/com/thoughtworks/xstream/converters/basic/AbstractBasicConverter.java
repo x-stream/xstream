@@ -6,6 +6,15 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * Base helper class for converters that can store the
+ * state of an object as a single String.
+ * <p/>
+ * <p>Subclasses should implement the toString(Object) and
+ * fromString(String) methods for the conversion.</p>
+ *
+ * @author Joe Walnes
+ */
 public abstract class AbstractBasicConverter implements Converter {
 
     protected abstract Object fromString(String str);

@@ -3,6 +3,12 @@ package com.thoughtworks.xstream.converters.extended;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 
+/**
+ * Converts a java.lang.Class to XML.
+ * 
+ * @author Aslak Helles&oslash;y
+ * @author Joe Walnes
+ */
 public class JavaClassConverter extends AbstractBasicConverter {
 
     private ClassLoader classLoader;

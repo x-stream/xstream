@@ -9,6 +9,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.BitSet;
 import java.util.StringTokenizer;
 
+/**
+ * Converts a java.util.BitSet to XML, as a compact
+ * comma delimited list of ones and zeros.
+ *
+ * @author Joe Walnes
+ */
 public class BitSetConverter implements Converter {
 
     public boolean canConvert(Class type) {
@@ -35,7 +41,7 @@ public class BitSetConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         BitSet result = new BitSet();
         StringTokenizer tokenizer = new StringTokenizer(reader.getValue(), ",", false);
-        while(tokenizer.hasMoreTokens()) {
+        while (tokenizer.hasMoreTokens()) {
             int index = Integer.parseInt(tokenizer.nextToken());
             result.set(index);
         }

@@ -12,6 +12,15 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Converts a java.util.Map to XML, specifying an 'entry'
+ * element with 'key' and 'value' children.
+ * <p/>
+ * <p>Supports java.util.HashMap, java.util.Hashtable and
+ * java.util.LinkedHashMap.</p>
+ *
+ * @author Joe Walnes
+ */
 public class MapConverter extends AbstractCollectionConverter {
 
     public MapConverter(ClassMapper classMapper, String classAttributeIdentifier) {
