@@ -67,14 +67,15 @@ public class PathTracker {
 
     public Path getPath() {
         if (currentPath == null) {
-            String[] chunks = new String[pointer];
+            String[] chunks = new String[pointer + 1];
+            chunks[0] = "";
             for (int i = 0; i < pointer; i++) {
                 Integer integer = ((Integer) indexMapStack[i].get(pathStack[i]));
                 int index = integer.intValue();
                 if (index > 1) {
-                    chunks[i] = pathStack[i] + '[' + index + ']';
+                    chunks[i + 1] = pathStack[i] + '[' + index + ']';
                 } else {
-                    chunks[i] = pathStack[i];
+                    chunks[i + 1] = pathStack[i];
                 }
             }
             currentPath = new Path(chunks);

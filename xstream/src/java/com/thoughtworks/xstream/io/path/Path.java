@@ -9,6 +9,7 @@ public class Path {
 
     private final String[] chunks;
     private transient String pathAsString;
+    private static final Path DOT = new Path(new String[] {"."});
 
     public Path(String pathAsString) {
         // String.split() too slow. StringTokenizer too crappy.
@@ -30,16 +31,11 @@ public class Path {
         this.chunks = chunks;
     }
 
-    public Path(String[] chunks, String pathAsString) {
-        this.chunks = chunks;
-        this.pathAsString = pathAsString;
-    }
-
     public String toString() {
         if (pathAsString == null) {
             StringBuffer buffer = new StringBuffer();
             for (int i = 0; i < chunks.length; i++) {
-                buffer.append('/');
+                if (i > 0) buffer.append('/');
                 buffer.append(chunks[i]);
             }
             pathAsString = buffer.toString();
@@ -70,33 +66,21 @@ public class Path {
     }
 
     public Path relativeTo(Path that) {
-        StringBuffer result = new StringBuffer();
-        boolean nothingWrittenYet = true;
-
         int depthOfPathDivergence = depthOfPathDivergence(chunks, that.chunks);
+        String[] result = new String[chunks.length + that.chunks.length - 2 * depthOfPathDivergence];
+        int count = 0;
 
         for (int i = depthOfPathDivergence; i < chunks.length; i++) {
-            if (nothingWrittenYet) {
-                nothingWrittenYet = false;
-            } else {
-                result.append('/');
-            }
-            result.append("..");
+            result[count++] = "..";
         }
-
         for (int j = depthOfPathDivergence; j < that.chunks.length; j++) {
-            if (nothingWrittenYet) {
-                nothingWrittenYet = false;
-            } else {
-                result.append('/');
-            }
-            result.append(that.chunks[j]);
+            result[count++] = that.chunks[j];
         }
 
-        if (nothingWrittenYet) {
-            return new Path(".");
+        if (count == 0) {
+            return DOT;
         } else {
-            return new Path(result.toString());
+            return new Path(result);
         }
     }
 
