@@ -12,5 +12,7 @@ public interface Mapper {
 
     String attributeForImplementationClass();
     String attributeForClassDefiningField();
+    String attributeForReadResolveField();
+
 
 }

@@ -35,6 +35,7 @@
 		<li>Bugfix: Order of fields are maintained when calling ObjectOutputStream.putFields().</li>
 		<li>Bugfix: FontConverter extended to support FontUIResource which does some awkward native calls.</li>
 		<li>Bugfix: Deserialization of very complicated graphs (such as Swing components) sometimes resulted in broken object references. Now fixed.</li>
+		<li>Bugfix: <jira>XSTR-188</jira> Classes that use readResolve()/writeReplace() can now return different types.</li>
     </ul>
 
     <h1>Version 1.1</h1>

@@ -42,6 +42,10 @@ public abstract class MapperWrapper implements ClassMapper {
         return wrapped.attributeForImplementationClass();
     }
 
+    public String attributeForReadResolveField() {
+        return wrapped.attributeForReadResolveField();
+    }
+
     /**
      * @deprecated As of 1.1.1, use {@link #defaultImplementationOf(Class)}
      */

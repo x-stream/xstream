@@ -47,6 +47,10 @@ public class DefaultMapper implements ClassMapper {
         return "defined-in";
     }
 
+    public String attributeForReadResolveField() {
+        return "resolves-to";
+    }
+
     public String attributeForImplementationClass() {
         return classAttributeIdentifier;
     }

@@ -36,8 +36,12 @@ public class ReflectionConverter implements Converter {
         return true;
     }
 
-    public void marshal(Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        source = serializationMethodInvoker.callWriteReplace(source);
+    public void marshal(Object original, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+        Object source = serializationMethodInvoker.callWriteReplace(original);
+
+        if (source.getClass() != original.getClass()) {
+            writer.addAttribute(classMapper.attributeForReadResolveField(), classMapper.lookupName(source.getClass()));
+        }
 
         final Set seenFields = new HashSet();
 
@@ -84,7 +88,7 @@ public class ReflectionConverter implements Converter {
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Object result = instantiateNewInstance(context);
+        final Object result = instantiateNewInstance(context, reader.getAttribute(classMapper.attributeForReadResolveField()));
         final SeenFields seenFields = new SeenFields();
 
         Map implicitCollectionsForCurrentObject = null;
@@ -135,12 +139,15 @@ public class ReflectionConverter implements Converter {
         return definedIn == null ? null : classMapper.lookupType(definedIn);
     }
 
-    private Object instantiateNewInstance(UnmarshallingContext context) {
-        Object result = context.currentObject();
-        if (result == null) {
-            result = reflectionProvider.newInstance(context.getRequiredType());
+    private Object instantiateNewInstance(UnmarshallingContext context, String readResolveValue) {
+        Object currentObject = context.currentObject();
+        if (currentObject != null) {
+            return currentObject;
+        } else if (readResolveValue != null) {
+            return reflectionProvider.newInstance(classMapper.lookupType(readResolveValue));
+        } else {
+            return reflectionProvider.newInstance(context.getRequiredType());
         }
-        return result;
     }
 
     private static class SeenFields {

@@ -75,6 +75,10 @@ public class SerializableConverter implements Converter {
     public void marshal(Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Object replacedSource = serializationMethodInvoker.callWriteReplace(source);
 
+        if (replacedSource.getClass() != source.getClass()) {
+            writer.addAttribute(classMapper.attributeForReadResolveField(), classMapper.lookupName(replacedSource.getClass()));
+        }
+
         writer.addAttribute(ATTRIBUTE_SERIALIZATION, ATTRIBUTE_VALUE_CUSTOM);
 
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
@@ -228,7 +232,14 @@ public class SerializableConverter implements Converter {
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Object result = reflectionProvider.newInstance(context.getRequiredType());
+        String resolvesAttribute = reader.getAttribute(classMapper.attributeForReadResolveField());
+        Class requiredType;
+        if (resolvesAttribute != null) {
+            requiredType = classMapper.lookupType(resolvesAttribute);
+        } else {
+            requiredType = context.getRequiredType();
+        }
+        final Object result = reflectionProvider.newInstance(requiredType);
 
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
