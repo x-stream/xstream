@@ -9,6 +9,10 @@ import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.Collections;
 
 public class TreeMarshaller implements MarshallingContext {
 
@@ -16,6 +20,7 @@ public class TreeMarshaller implements MarshallingContext {
     protected ConverterLookup converterLookup;
     protected ClassMapper classMapper;
     private ObjectIdDictionary parentObjects = new ObjectIdDictionary();
+    private Map data;
 
     public TreeMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup,
                                      ClassMapper classMapper) {
@@ -42,6 +47,27 @@ public class TreeMarshaller implements MarshallingContext {
             writer.startNode(classMapper.lookupName(item.getClass()));
             convertAnother(item);
             writer.endNode();
+        }
+    }
+
+    public Object get(Object key) {
+        initData();
+        return data.get(key);
+    }
+
+    public void put(Object key, Object value) {
+        initData();
+        data.put(key, value);
+    }
+
+    public Iterator keys() {
+        initData();
+        return Collections.unmodifiableCollection(data.keySet()).iterator();
+    }
+
+    private void initData() {
+        if (data == null) {
+            data = new HashMap();
         }
     }
 

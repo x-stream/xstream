@@ -15,13 +15,15 @@
 
     <h1>Latest snapshot</h1>
 
-    <p>Not officially released yet.</p>
+    <p>Not officially released yet. Misc feature enhancements.</p>
 
-    <h2>Majoe changes</h2>
+    <h2>Major changes</h2>
 
     <ul>
         <li>Implicit collections can be specified for classes, allowing the element wrapping the collection to be skipped.</li>
-        <li>New writer implementations to allow XStream to serialize directly to a SAX stream or TrAX pipeline.</li>  
+        <li>New writer implementations to allow XStream to serialize directly to a SAX stream or TrAX pipeline.</li>
+        <li>The MarshallingContext and UnmarshallingContext interfaces now extend DataHolder, allowing arbitary data to be stored
+        by the user whilst walking the object graph.</li>  
     </ul>
 
     <h2>Minor changes</h2>

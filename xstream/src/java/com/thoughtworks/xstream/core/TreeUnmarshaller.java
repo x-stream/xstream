@@ -5,6 +5,11 @@ import com.thoughtworks.xstream.converters.*;
 import com.thoughtworks.xstream.core.util.ClassStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.Collections;
+
 public class TreeUnmarshaller implements UnmarshallingContext {
 
     private Object root;
@@ -13,6 +18,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
     private ClassStack types = new ClassStack(16);
+    private Map data;
 
     public TreeUnmarshaller(Object root, HierarchicalStreamReader reader,
                             ConverterLookup converterLookup, ClassMapper classMapper,
@@ -53,6 +59,27 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
     public Class getRequiredType() {
         return types.peek();
+    }
+
+    public Object get(Object key) {
+        initData();
+        return data.get(key);
+    }
+
+    public void put(Object key, Object value) {
+        initData();
+        data.put(key, value);
+    }
+
+    public Iterator keys() {
+        initData();
+        return Collections.unmodifiableCollection(data.keySet()).iterator();
+    }
+
+    private void initData() {
+        if (data == null) {
+            data = new HashMap();
+        }
     }
 
     public Object start() {
