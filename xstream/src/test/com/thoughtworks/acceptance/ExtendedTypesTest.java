@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
 
 import java.awt.*;
 import java.sql.Timestamp;
+import java.util.TimeZone;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
@@ -31,8 +32,9 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         xstream.alias("sql-timestamp", Timestamp.class);
         xstream.registerConverter(new SqlTimestampConverter());
 
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         assertBothWays(new Timestamp(1234),
-                "<sql-timestamp>1970-01-01 01:00:01.234</sql-timestamp>");
+                "<sql-timestamp>1970-01-01 00:00:01.234</sql-timestamp>");                
     }
 
 
