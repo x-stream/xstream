@@ -52,18 +52,15 @@
       <li><a href="tutorial.html">Use it</a>.</li>
     </ul>
 
-    <h2><b>Jan 15, 2005</b> XStream 1.1 released</h2>
+    <h2><b>Mar 7, 2005</b> XStream 1.1.1 released</h2>
       <ul>
-        <li>Improved support for serializing objects as per the <a href="http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/serialTOC.html">Java Serialization</a> Specification:
-        <ul>
-            <li>Calls custom serialization methods, readObject(), writeObject(), readResolve() and writeReplace() in class, if defined.</li>
-            <li>Supports ObjectInputStream.getFields() and ObjectOutputStream.putFields() in custom serialization.</li>
-        </ul></li>
-        <li>Provides implementations of ObjectInputStream and ObjectOutputStream, allowing drop in replacements for standard serialization,
-        including support for streams of objects. [<a href="objectstream.html">More...</a>]</li>
-        <li>Reads and writes directly to most XML Java APIs: DOM, DOM4J, JDOM, XOM, Electric XML, StAX, Trax (write only), SAX (write only).
-        [<a href="javadoc/com/thoughtworks/xstream/io/xml/package-summary.html">More...</a>]</li>
+		<li>Converters can be registered with a priority, allowing more <i>generic</i> filters to handle classes that don't have more specific converters.</li>
+		<li>Converters can now access underlying HierarchicalStreamReader/Writer implementations to make implementation specific calls.</li>
+		<li>Improved support for classes using ObjectInputFields and ObjectInputValidation to follow the serialization specification.</li>
+		<li>Default ClassLoader may be changed using XStream.setClassLoader().</li>
+		<li>Many bugfixes and performance enhancements.</li>
       </ul>
+      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
 
   </body>
 </html>

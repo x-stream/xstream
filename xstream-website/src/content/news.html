@@ -5,6 +5,16 @@
 
   <body>
 
+    <h2><b>Mar 7, 2005</b> XStream 1.1.1 released</h2>
+      <ul>
+		<li>Converters can be registered with a priority, allowing more <i>generic</i> filters to handle classes that don't have more specific converters.</li>
+		<li>Converters can now access underlying HierarchicalStreamReader/Writer implementations to make implementation specific calls.</li>
+		<li>Improved support for classes using ObjectInputFields and ObjectInputValidation to follow the serialization specification.</li>
+		<li>Default ClassLoader may be changed using XStream.setClassLoader().</li>
+		<li>Many bugfixes and performance enhancements.</li>
+      </ul>
+      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+
     <h2><b>Jan 15, 2005</b> XStream 1.1 released</h2>
       <ul>
         <li>Improved support for serializing objects as per the <a href="http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/serialTOC.html">Java Serialization</a> Specification:
@@ -18,17 +28,6 @@
         [<a href="javadoc/com/thoughtworks/xstream/io/xml/package-summary.html">More...</a>]</li>
       </ul>
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
-
-    <h2><b>Aug 7, 2004</b> XStream 1.0.2 released</h2>
-      <ul>
-          <li>Many more converters for common Java types.</li>
-          <li>Fields of type byte[] are now encoded using Base64.</li>
-          <li>Improved support for using XStream in environments where classes are hot-redeployed.</li>
-      </ul>
-      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
-
-    <h2><b>Aug 4, 2004</b> Guide to Converters</h2>
-      <p><a href="converters.html">New Converter documentation</a>.</p>
 
   </body>
 </html>
