@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Changes</title>
+    <author email="jason@maven.org">Jason van Zyl</author>
+  </properties>
+
+  <!-- action types are add/update/fix/remove -->
+  <body>
+    <release version="1.0" date="In CVS">
+
+      <action dev="jvanzyl" type="add">
+        Added ElementMapper interface and default implementations to allow fine
+        grained control over element name to class mapper operations.
+      </action>
+
+      <action dev="jvanzyl" type="add">
+        Added XMLReader.peek() method to allow access to the underlying hierarchical
+        object being unmarshalled.
+      </action>
+
+    </release>
+
+  </body>
+</document>
+
