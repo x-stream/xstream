@@ -186,10 +186,28 @@ public class XStream {
     }
 
     /**
-     * Deserialize an object from an XML Reader.
+     * Deserialize an object from an XML Reader,
+     * populating the fields of the given root object instead of instantiating
+     * a new one.
      */
     public Object fromXML(Reader xml) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), null);
+    }
+
+    /**
+     * Deserialize an object from an XML String,
+     * populating the fields of the given root object instead of instantiating
+     * a new one.
+     */
+    public Object fromXML(String xml, Object root) {
+        return fromXML(new StringReader(xml), root);
+    }
+
+    /**
+     * Deserialize an object from an XML Reader.
+     */
+    public Object fromXML(Reader xml, Object root) {
+        return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
     }
 
     /**
