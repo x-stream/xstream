@@ -12,6 +12,10 @@ public class JVM {
         return majorJavaVersion >= 1.4f;
     }
 
+    public static boolean isSun() {
+        return System.getProperty("java.vm.vendor").indexOf("Sun") != -1;
+    }
+
     public Class loadClass(String name) {
         try {
             return Class.forName(name, false, getClass().getClassLoader());
@@ -19,11 +23,11 @@ public class JVM {
             return null;
         }
     }
-
+    
     public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
             try {
-                if (loadClass("sun.misc.Unsafe") != null) {
+                if (isSun() && is14() && loadClass("sun.misc.Unsafe") != null) {
                     String cls = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
                     reflectionProvider = (ReflectionProvider) loadClass(cls).newInstance();
                 } else {
