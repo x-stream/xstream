@@ -38,7 +38,7 @@ public class ObjectWithFieldsConverter implements Converter {
         xmlWriter.startElement(fieldName);
 
         writeClassAttributeInXMLIfNotDefaultImplementation(objectGraph, xmlWriter);
-        Converter converter = converterLookup.lookup(objectGraph.type());
+        Converter converter = converterLookup.lookupConverterForType(objectGraph.type());
         converter.toXML(objectGraph, xmlWriter, converterLookup);
 
         xmlWriter.endElement();
@@ -61,7 +61,7 @@ public class ObjectWithFieldsConverter implements Converter {
             xmlReader.child(fieldName);
 
             Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
-            Converter converter = converterLookup.lookup(type);
+            Converter converter = converterLookup.lookupConverterForType(type);
             converter.fromXML(objectGraph, xmlReader, converterLookup, type);
 
             xmlReader.pop();

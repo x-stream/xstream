@@ -24,7 +24,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     protected void writeItem(Object item, XMLWriter xmlWriter, ConverterLookup converterLookup, ObjectTree objectGraph) {
         Class type = item.getClass();
         xmlWriter.startElement(classMapper.lookupName(type));
-        Converter converter = converterLookup.lookup(type);
+        Converter converter = converterLookup.lookupConverterForType(type);
         converter.toXML(objectGraph.newStack(item), xmlWriter, converterLookup);
         xmlWriter.endElement();
     }
@@ -33,7 +33,7 @@ public abstract class AbstractCollectionConverter implements Converter {
         xmlReader.child(childIndex);
         Class type = classMapper.lookupType(xmlReader.name());
         ObjectTree itemWriter = objectGraph.newStack(type);
-        Converter converter = converterLookup.lookup(type);
+        Converter converter = converterLookup.lookupConverterForType(type);
         converter.fromXML(itemWriter, xmlReader, converterLookup, type);
         xmlReader.pop();
         return itemWriter.get();

@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.converters;
 
 public interface ConverterLookup {
-    Converter lookup(Class type);
+    void registerConverter(Converter converter);
+
+    Converter lookupConverterForType(Class type);
 }
