@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.io.xml.xppdom;
 
+import org.xmlpull.mxp1.MXParser;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.Reader;
 import java.util.ArrayList;
@@ -16,9 +16,7 @@ public class Xpp3DomBuilder {
 
         Xpp3Dom configuration = null;
 
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-
-        XmlPullParser parser = factory.newPullParser();
+        XmlPullParser parser = new MXParser();
 
         parser.setInput(reader);
 
