@@ -5,15 +5,19 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class DateConverter extends AbstractBasicConverter {
 
-    private static final DateFormat[] formats = {
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S a"),
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ssa")
+    // DateFormats are not thread safe, so ensure we only ever have one
+    // SimpleDateFormat per thread.
+    private static final ThreadLocal formats = new ThreadLocal() {
+        protected Object initialValue() {
+            return new DateFormat[]{
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S a"),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ssa")
+            };
+        }
     };
 
     public boolean canConvert(Class type) {
@@ -21,9 +25,10 @@ public class DateConverter extends AbstractBasicConverter {
     }
 
     protected Object fromString(String str) {
-        for (int i = 0; i < formats.length; i++) {
+        DateFormat[] dateFormats = ((DateFormat[]) formats.get());
+        for (int i = 0; i < dateFormats.length; i++) {
             try {
-                return formats[i].parse(str);
+                return dateFormats[i].parse(str);
             } catch (ParseException e) {
                 // no worries, let's try the next format.
             }
@@ -34,7 +39,7 @@ public class DateConverter extends AbstractBasicConverter {
 
     protected String toString(Object obj) {
         Date date = (Date) obj;
-        return formats[0].format(date);
+        return ((DateFormat[]) formats.get())[0].format(date);
     }
 
 }
