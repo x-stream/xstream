@@ -29,17 +29,18 @@ import java.util.*;
 public class XStream {
 
     private ConverterLookup converterLookup = new DefaultConverterLookup();
-    private XMLReaderDriver xmlReaderDriver = new DomXMLReaderDriver();
+    private XMLReaderDriver xmlReaderDriver;
     private ClassMapper classMapper;
     private ObjectFactory objectFactory;
 
     public XStream() {
-        this(new SunReflectionObjectFactory(), new DefaultClassMapper(), new DefaultElementMapper());
+        this(new SunReflectionObjectFactory(), new DefaultClassMapper(), new DefaultElementMapper(), new DomXMLReaderDriver());
     }
 
-    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, ElementMapper elementMapper) {
+    public XStream(ObjectFactory objectFactory, ClassMapper classMapper, ElementMapper elementMapper, XMLReaderDriver xmlReaderDriver) {
         this.classMapper = classMapper;
         this.objectFactory = objectFactory;
+        this.xmlReaderDriver = xmlReaderDriver;
 
         alias("int", Integer.class);
         alias("float", Float.class);
