@@ -1,21 +1,11 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import junit.framework.TestCase;
+public class PureJavaReflectionProviderTest extends AbstractReflectionProviderTest {
 
-public class PureJavaReflectionProviderTest extends TestCase {
-    private ReflectionProvider objectFactory;
+    // inherits tests from superclass
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        objectFactory = new PureJavaReflectionProvider();
-    }
-
-    public void testConstructsStandardClass() {
-        assertCanCreate(OuterClass.class);
-    }
-
-    public void testConstructsStaticInnerClass() {
-        assertCanCreate(PublicStaticInnerClass.class);
+    public ReflectionProvider createReflectionProvider() {
+        return new PureJavaReflectionProvider();
     }
 
     public void testNotCapableOfConstructingNonPublicAndNonStaticInnerClasses() {
@@ -26,7 +16,7 @@ public class PureJavaReflectionProviderTest extends TestCase {
 
     public void testUnfortunatelyExecutesCodeInsideConstructor() {
         try {
-            objectFactory.newInstance(WithConstructorThatDoesStuff.class);
+            reflectionProvider.newInstance(WithConstructorThatDoesStuff.class);
             fail("Expected code in constructor to be executed and throw an exception");
         } catch (UnsupportedOperationException expectedException) {
             // good
@@ -35,22 +25,6 @@ public class PureJavaReflectionProviderTest extends TestCase {
 
     public void testIsNotCapableOfConstructingClassesWithoutDefault() {
         assertCannotCreate(WithoutDefaultConstructor.class);
-    }
-
-    private void assertCanCreate(Class type) {
-        Object result = objectFactory.newInstance(type);
-        assertEquals(type, result.getClass());
-    }
-
-    private void assertCannotCreate(Class type) {
-        try {
-            objectFactory.newInstance(type);
-            fail("Should not have been able to newInstance " + type);
-        } catch (ObjectAccessException goodException) {
-        }
-    }
-
-    public static class PublicStaticInnerClass {
     }
 
     private static class PrivateStaticInnerClass {
@@ -73,8 +47,5 @@ public class PureJavaReflectionProviderTest extends TestCase {
         }
     }
 
-}
-
-class OuterClass {
 }
 

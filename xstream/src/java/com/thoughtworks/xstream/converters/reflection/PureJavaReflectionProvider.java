@@ -3,8 +3,6 @@ package com.thoughtworks.xstream.converters.reflection;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects
@@ -17,7 +15,7 @@ import java.util.TreeMap;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private static final Map cache = new TreeMap();
+    protected FieldDictionary fieldDictionary = new FieldDictionary();
 
     public Object newInstance(Class type) {
         try {
@@ -29,27 +27,39 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         }
     }
 
-    public void eachSerializableField(Class type, ReflectionProvider.Block visitor) {
-        for (Iterator iterator = findAllSerializableFieldsForClass(type).entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            visitor.visit((String) entry.getKey(), ((Field) entry.getValue()).getType());
-        }
-    }
-
-    public Object readField(Object object, String fieldName) {
-        Field field = findField(object.getClass(), fieldName);
-        validateFieldAccess(field);
-        try {
-            return field.get(object);
-        } catch (IllegalArgumentException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
+    public void readSerializableFields(Object object, ReflectionProvider.Block visitor) {
+        for (Iterator iterator = fieldDictionary.serializableFieldsFor(object.getClass()); iterator.hasNext();) {
+            Field field = (Field) iterator.next();
+            if (!fieldModifiersSupported(field)) {
+                continue;
+            }
+            validateFieldAccess(field);
+            Object value = null;
+            try {
+                value = field.get(object);
+            } catch (IllegalArgumentException e) {
+                throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
+            } catch (IllegalAccessException e) {
+                throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
+            }
+            visitor.visit(field.getName(), field.getType(), field.getDeclaringClass(), value);
         }
     }
 
     public void writeField(Object object, String fieldName, Object value) {
-        Field field = findField(object.getClass(), fieldName);
+        Field field = fieldDictionary.field(object.getClass(), fieldName);
+        validateFieldAccess(field);
+        try {
+            field.set(object, value);
+        } catch (IllegalArgumentException e) {
+            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
+        } catch (IllegalAccessException e) {
+            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
+        }
+    }
+
+    public void writeField(Object object, String fieldName, Object value, Class definedIn) {
+        Field field = fieldDictionary.field(object.getClass(), fieldName, definedIn);
         validateFieldAccess(field);
         try {
             field.set(object, value);
@@ -61,47 +71,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     public Class getFieldType(Object object, String fieldName) {
-        return findField(object.getClass(), fieldName).getType();
+        return fieldDictionary.field(object.getClass(), fieldName).getType();
     }
 
-    protected Field findField(Class cls, String fieldName) {
-        Map fields = findAllSerializableFieldsForClass(cls);
-        Field field = (Field) fields.get(fieldName);
-        if (field == null) {
-            throw new ObjectAccessException("No such field " + cls + "." + fieldName);
-        } else {
-            return field;
-        }
-    }
-
-    private Map findAllSerializableFieldsForClass(Class cls) {
-        final String clsName = cls.getName();
-        if (!cache.containsKey(clsName)) {
-            final Map result = new TreeMap();
-            while (!Object.class.equals(cls)) {
-                Field[] fields = cls.getDeclaredFields();
-                for (int i = 0; i < fields.length; i++) {
-                    Field field = fields[i];
-                    int modifiers = field.getModifiers();
-                    if (field.getName().startsWith("this$")) {
-                        continue;
-                    }
-                    if (!fieldModifiersSupported(modifiers)) {
-                        continue;
-                    }
-                    field.setAccessible(true);
-                    result.put(field.getName(), field);
-                }
-                cls = cls.getSuperclass();
-            }
-            cache.put(clsName, result);
-        }
-        return (Map) cache.get(clsName);
-    }
-
-    protected boolean fieldModifiersSupported(int modifiers) {
-        return !(Modifier.isStatic(modifiers)
-                || Modifier.isTransient(modifiers));
+    protected boolean fieldModifiersSupported(Field field) {
+        return !(Modifier.isStatic(field.getModifiers())
+                || Modifier.isTransient(field.getModifiers()));
     }
 
     protected void validateFieldAccess(Field field) {
@@ -109,7 +84,6 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             throw new ObjectAccessException("Invalid final field "
                     + field.getDeclaringClass().getName() + "." + field.getName());
         }
-        ;
     }
 
 }

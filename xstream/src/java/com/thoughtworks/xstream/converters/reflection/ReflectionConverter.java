@@ -7,11 +7,15 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ReflectionConverter implements Converter {
 
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
     private ReflectionProvider reflectionProvider;
+    private static final String DEFINED_IN = "defined-in";
 
     public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, ReflectionProvider reflectionProvider) {
         this.classMapper = classMapper;
@@ -24,9 +28,9 @@ public class ReflectionConverter implements Converter {
     }
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        reflectionProvider.eachSerializableField(source.getClass(), new ReflectionProvider.Block() {
-            public void visit(String fieldName, Class fieldType) {
-                Object newObj = reflectionProvider.readField(source, fieldName);
+        final Set seenFields = new HashSet();
+        reflectionProvider.readSerializableFields(source, new ReflectionProvider.Block() {
+            public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                 if (newObj != null) {
                     writer.startNode(classMapper.mapNameToXML(fieldName));
 
@@ -37,9 +41,13 @@ public class ReflectionConverter implements Converter {
                         writer.addAttribute(classAttributeIdentifier, classMapper.lookupName(actualType));
                     }
 
+                    if (seenFields.contains(fieldName)) {
+                        writer.addAttribute(DEFINED_IN, classMapper.lookupName(definedIn));
+                    }
                     context.convertAnother(newObj);
 
                     writer.endNode();
+                    seenFields.add(fieldName);
                 }
             }
         });
@@ -53,7 +61,6 @@ public class ReflectionConverter implements Converter {
         }
 
         while (reader.hasMoreChildren()) {
-
             reader.moveDown();
 
             String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
@@ -66,12 +73,17 @@ public class ReflectionConverter implements Converter {
                 type = classMapper.lookupType(classAttribute);
             }
 
+            String definedIn = reader.getAttribute("defined-in");
+
             Object fieldValue = context.convertAnother(result, type);
 
-            reflectionProvider.writeField(result, fieldName, fieldValue);
+            if (definedIn != null) {
+                reflectionProvider.writeField(result, fieldName, fieldValue, classMapper.lookupType(definedIn));
+            } else {
+                reflectionProvider.writeField(result, fieldName, fieldValue);
+            }
 
             reader.moveUp();
-
         }
         return result;
     }

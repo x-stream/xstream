@@ -1,44 +1,44 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import junit.framework.TestCase;
+public class Sun14ReflectionProviderTest extends AbstractReflectionProviderTest {
 
-public class Sun14ReflectionProviderTest extends TestCase {
+    // inherits tests from superclass
 
-    private ReflectionProvider objectFactory;
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        objectFactory = new Sun14ReflectionProvider();
+    public ReflectionProvider createReflectionProvider() {
+        return new Sun14ReflectionProvider();
     }
 
-    public void testFinalField() {
+    public void testCanWriteFinalFields() {
         WithFinalFields thingy = new WithFinalFields();
-        objectFactory.writeField(thingy, "finalField", "zero");
+        reflectionProvider.writeField(thingy, "finalField", "zero", WithFinalFields.class);
         assertEquals("zero", thingy.finalField);
 
-        objectFactory.writeField(thingy, "finalInt", new Integer(1));
+        reflectionProvider.writeField(thingy, "finalInt", new Integer(1), WithFinalFields.class);
         assertEquals(1, thingy.finalInt);
 
-        objectFactory.writeField(thingy, "finalLong", new Long(2));
+        reflectionProvider.writeField(thingy, "finalLong", new Long(2), WithFinalFields.class);
         assertEquals(2, thingy.finalLong);
 
-        objectFactory.writeField(thingy, "finalShort", new Short((short) 3));
+        reflectionProvider.writeField(thingy, "finalShort", new Short((short) 3), WithFinalFields.class);
         assertEquals(3, thingy.finalShort);
 
-        objectFactory.writeField(thingy, "finalChar", new Character('4'));
+        reflectionProvider.writeField(thingy, "finalChar", new Character('4'), WithFinalFields.class);
         assertEquals('4', thingy.finalChar);
 
-        objectFactory.writeField(thingy, "finalByte", new Byte((byte) 5));
+        reflectionProvider.writeField(thingy, "finalByte", new Byte((byte) 5), WithFinalFields.class);
         assertEquals(5, thingy.finalByte);
 
-        objectFactory.writeField(thingy, "finalFloat", new Float(0.6));
+        reflectionProvider.writeField(thingy, "finalFloat", new Float(0.6), WithFinalFields.class);
         assertEquals(0.6f, thingy.finalFloat, 0.0);
 
-        objectFactory.writeField(thingy, "finalDouble", new Double(0.7));
+        reflectionProvider.writeField(thingy, "finalDouble", new Double(0.7), WithFinalFields.class);
         assertEquals(0.7, thingy.finalDouble, 0.0);
 
-        objectFactory.writeField(thingy, "finalBoolean", new Boolean(true));
+        reflectionProvider.writeField(thingy, "finalBoolean", new Boolean(true), WithFinalFields.class);
         assertEquals(true, thingy.finalBoolean);
+
+        reflectionProvider.writeField(thingy, "finalBoolean", new Boolean(false));
+        assertEquals(false, thingy.finalBoolean);
     }
 
     private static class WithFinalFields {
