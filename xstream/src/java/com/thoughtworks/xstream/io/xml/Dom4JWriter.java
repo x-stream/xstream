@@ -16,13 +16,13 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
         elementStack.addLast(container);
     }
 
-    public void startElement(String name) {
+    public void startNode(String name) {
         Element element = documentFactory.createElement(name);
         top().add(element);
         elementStack.addLast(element);
     }
 
-    public void writeText(String text) {
+    public void setValue(String text) {
         top().setText(text);
     }
 
@@ -30,7 +30,7 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
         ((Element) top()).addAttribute(key, value);
     }
 
-    public void endElement() {
+    public void startNode() {
         elementStack.removeLast();
     }
 

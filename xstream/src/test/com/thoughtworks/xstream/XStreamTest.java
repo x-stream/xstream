@@ -197,10 +197,10 @@ public class XStreamTest extends TestCase {
 
         public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
 
-            Element element = (Element) reader.peek();
+            Element element = (Element) reader.peekUnderlyingNode();
 
-            while (reader.nextChild()) {
-                reader.pop();
+            while (reader.getNextChildNode()) {
+                reader.getParentNode();
             }
 
             return element;

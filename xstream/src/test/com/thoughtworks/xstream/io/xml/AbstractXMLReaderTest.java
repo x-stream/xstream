@@ -10,62 +10,62 @@ public abstract class AbstractXMLReaderTest extends TestCase {
 
     public void testStartsAtRootTag() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<hello/>");
-        assertEquals("hello", xmlReader.name());
+        assertEquals("hello", xmlReader.getNodeName());
     }
 
     public void testCanNavigateDownChildTagsByIndex() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<a><b><ooh/></b><b><aah/></b></a>");
 
-        assertEquals("a", xmlReader.name());
+        assertEquals("a", xmlReader.getNodeName());
 
-        assertTrue(xmlReader.nextChild());
+        assertTrue(xmlReader.getNextChildNode());
         {
-            assertEquals("b", xmlReader.name());
+            assertEquals("b", xmlReader.getNodeName());
 
-            assertTrue(xmlReader.nextChild());
+            assertTrue(xmlReader.getNextChildNode());
             {
-                assertEquals("ooh", xmlReader.name());
-                assertFalse(xmlReader.nextChild());
+                assertEquals("ooh", xmlReader.getNodeName());
+                assertFalse(xmlReader.getNextChildNode());
             }
-            xmlReader.pop();
+            xmlReader.getParentNode();
 
-            assertFalse(xmlReader.nextChild());
+            assertFalse(xmlReader.getNextChildNode());
 
 
         }
-        xmlReader.pop();
+        xmlReader.getParentNode();
 
-        assertTrue(xmlReader.nextChild());
+        assertTrue(xmlReader.getNextChildNode());
         {
-            assertEquals("b", xmlReader.name());
+            assertEquals("b", xmlReader.getNodeName());
 
-            assertTrue(xmlReader.nextChild());
+            assertTrue(xmlReader.getNextChildNode());
             {
-                assertEquals("aah", xmlReader.name());
-                assertFalse(xmlReader.nextChild());
+                assertEquals("aah", xmlReader.getNodeName());
+                assertFalse(xmlReader.getNextChildNode());
             }
-            xmlReader.pop();
+            xmlReader.getParentNode();
 
-            assertFalse(xmlReader.nextChild());
+            assertFalse(xmlReader.getNextChildNode());
 
         }
-        xmlReader.pop();
+        xmlReader.getParentNode();
 
-        assertFalse(xmlReader.nextChild());
+        assertFalse(xmlReader.getNextChildNode());
     }
 
     public void testChildTagsCanBeMixedWithOtherNodes() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<!-- xx --><a> <hello/> <!-- x --> text <world/></a>");
+        HierarchicalStreamReader xmlReader = createReader("<!-- xx --><a> <hello/> <!-- x --> getValue <world/></a>");
 
-        assertTrue(xmlReader.nextChild());
-        assertEquals("hello", xmlReader.name());
-        xmlReader.pop();
+        assertTrue(xmlReader.getNextChildNode());
+        assertEquals("hello", xmlReader.getNodeName());
+        xmlReader.getParentNode();
 
-        assertTrue(xmlReader.nextChild());
-        assertEquals("world", xmlReader.name());
-        xmlReader.pop();
+        assertTrue(xmlReader.getNextChildNode());
+        assertEquals("world", xmlReader.getNodeName());
+        xmlReader.getParentNode();
 
-        assertFalse(xmlReader.nextChild());
+        assertFalse(xmlReader.getNextChildNode());
     }
 
     public void testAttributesCanBeFetchedFromTags() throws Exception {
@@ -74,39 +74,39 @@ public abstract class AbstractXMLReaderTest extends TestCase {
                 "  <child three=\"3\"/>" +
                 "</hello>");
 
-        assertEquals("1", xmlReader.attribute("one"));
-        assertEquals("2", xmlReader.attribute("two"));
-        assertNull(xmlReader.attribute("three"));
+        assertEquals("1", xmlReader.getAttribute("one"));
+        assertEquals("2", xmlReader.getAttribute("two"));
+        assertNull(xmlReader.getAttribute("three"));
 
-        xmlReader.nextChild();
-        assertNull(xmlReader.attribute("one"));
-        assertNull(xmlReader.attribute("two"));
-        assertEquals("3", xmlReader.attribute("three"));
+        xmlReader.getNextChildNode();
+        assertNull(xmlReader.getAttribute("one"));
+        assertNull(xmlReader.getAttribute("two"));
+        assertEquals("3", xmlReader.getAttribute("three"));
 
     }
 
     public void testTextCanBeExtractedFromTag() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<root><a>some<!-- ignore me --> text!</a><b>more</b></root>");
+        HierarchicalStreamReader xmlReader = createReader("<root><a>some<!-- ignore me --> getValue!</a><b>more</b></root>");
 
-        xmlReader.nextChild();
-        assertEquals("some text!", xmlReader.text());
-        xmlReader.pop();
+        xmlReader.getNextChildNode();
+        assertEquals("some getValue!", xmlReader.getValue());
+        xmlReader.getParentNode();
 
-        xmlReader.nextChild();
-        assertEquals("more", xmlReader.text());
-        xmlReader.pop();
+        xmlReader.getNextChildNode();
+        assertEquals("more", xmlReader.getValue());
+        xmlReader.getParentNode();
     }
 
     public void testDoesNotIgnoreWhitespaceAroundText() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<root> hello world </root>");
 
-        assertEquals(" hello world ", xmlReader.text());
+        assertEquals(" hello world ", xmlReader.getValue());
     }
 
     public void testReturnsEmptyStringForEmptyTags() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<root></root>");
 
-        String text = xmlReader.text();
+        String text = xmlReader.getValue();
         assertNotNull(text);
         assertEquals("", text);
     }

@@ -21,28 +21,28 @@ public class Dom4Reader implements HierarchicalStreamReader {
         pointers.addLast(new Pointer());
     }
 
-    public String name() {
+    public String getNodeName() {
         return currentElement.getName();
     }
 
-    public String text() {
+    public String getValue() {
         return currentElement.getText();
     }
 
-    public String attribute(String name) {
+    public String getAttribute(String name) {
         return currentElement.attributeValue(name);
     }
 
-    public void pop() {
+    public void getParentNode() {
         currentElement = currentElement.getParent();
         pointers.removeLast();
     }
 
-    public Object peek() {
+    public Object peekUnderlyingNode() {
         return currentElement;
     }
     
-    public boolean nextChild() {
+    public boolean getNextChildNode() {
         Pointer pointer = (Pointer) pointers.getLast();
         if (pointer.v < currentElement.elements().size()) {
             pointers.addLast(new Pointer());

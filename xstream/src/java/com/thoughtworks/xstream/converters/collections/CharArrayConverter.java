@@ -14,10 +14,10 @@ public class CharArrayConverter implements Converter {
 
     public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         char[] chars = (char[]) source;
-        writer.writeText(new String(chars));
+        writer.setValue(new String(chars));
     }
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        return reader.text().toCharArray();
+        return reader.getValue().toCharArray();
     }
 }

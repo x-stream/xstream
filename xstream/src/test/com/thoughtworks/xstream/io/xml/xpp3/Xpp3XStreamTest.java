@@ -202,10 +202,10 @@ public class Xpp3XStreamTest extends TestCase {
         }
 
         public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
-            Xpp3Dom element = (Xpp3Dom) reader.peek();
+            Xpp3Dom element = (Xpp3Dom) reader.peekUnderlyingNode();
 
-            while (reader.nextChild()) {
-                reader.pop();
+            while (reader.getNextChildNode()) {
+                reader.getParentNode();
             }
 
             return element;

@@ -48,12 +48,12 @@ public class EncodedByteArrayConverter implements Converter {
 
     public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         byte[] data = (byte[]) source;
-        writer.writeText(encoder.encode(data));
+        writer.setValue(encoder.encode(data));
     }
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         try {
-            return decoder.decodeBuffer(reader.text());
+            return decoder.decodeBuffer(reader.getValue());
         } catch (IOException e) {
             throw new ConversionException("Cannot decode binary data", e);
         }

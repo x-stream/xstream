@@ -28,10 +28,10 @@ public class Xpp3ReaderTest extends AbstractXMLReaderTest {
 
         HierarchicalStreamReader xmlReader = new Xpp3Reader(small);
 
-        assertEquals("small", xmlReader.name());
+        assertEquals("small", xmlReader.getNodeName());
 
-        xmlReader.nextChild();
+        xmlReader.getNextChildNode();
 
-        assertEquals("tiny", xmlReader.name());
+        assertEquals("tiny", xmlReader.getNodeName());
     }
 }

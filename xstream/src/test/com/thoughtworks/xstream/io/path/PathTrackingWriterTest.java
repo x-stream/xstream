@@ -22,28 +22,28 @@ public class PathTrackingWriterTest extends TestCase {
 
     public void testDecoratesXmlWriterProxyingAllInvocations() {
 
-        writer.startElement("foo");
+        writer.startNode("foo");
         writer.addAttribute("att", "something");
-        writer.writeText("text");
-        writer.endElement();
+        writer.setValue("getValue");
+        writer.startNode();
 
-        assertEquals("<foo att=\"something\">text</foo>", out.toString());
+        assertEquals("<foo att=\"something\">getValue</foo>", out.toString());
     }
 
     public void testInterceptsWhenWriterMovesLocationInDocumentAndUpdatesPathTracker() {
 
         assertEquals("", pathTracker.getCurrentPath());
 
-        writer.startElement("foo");
+        writer.startNode("foo");
         assertEquals("/foo", pathTracker.getCurrentPath());
 
-        writer.startElement("do");
+        writer.startNode("do");
         assertEquals("/foo/do", pathTracker.getCurrentPath());
 
-        writer.endElement();
+        writer.startNode();
         assertEquals("/foo", pathTracker.getCurrentPath());
 
-        writer.endElement();
+        writer.startNode();
         assertEquals("", pathTracker.getCurrentPath());
 
     }

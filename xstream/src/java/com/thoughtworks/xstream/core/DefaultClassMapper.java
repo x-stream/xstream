@@ -54,7 +54,7 @@ public class DefaultClassMapper implements ClassMapper {
         }
         String result = (String) typeToNameMap.get(type);
         if (result == null) {
-            // the $ used in inner class names is illegal as an xml element name
+            // the $ used in inner class names is illegal as an xml element getNodeName
             result = type.getName().replaceAll("\\$", "-");
         }
         if (isArray) {
@@ -104,7 +104,7 @@ public class DefaultClassMapper implements ClassMapper {
         }
 
         
-        // the $ used in inner class names is illegal as an xml element name
+        // the $ used in inner class names is illegal as an xml element getNodeName
         elementName = elementName.replaceAll("\\-", "\\$");
         try {
             if (isArray) {

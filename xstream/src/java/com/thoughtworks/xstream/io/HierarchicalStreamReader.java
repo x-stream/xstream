@@ -2,15 +2,15 @@ package com.thoughtworks.xstream.io;
 
 public interface HierarchicalStreamReader {
 
-    String name();
+    boolean getNextChildNode();
 
-    String text();
+    String getNodeName();
 
-    String attribute(String name);
+    String getValue();
 
-    boolean nextChild();
+    String getAttribute(String name);
 
-    void pop();
+    void getParentNode();
     
-    Object peek();
+    Object peekUnderlyingNode();
 }

@@ -109,10 +109,10 @@ public class XStream {
 
     public void toXML(Object obj, HierarchicalStreamWriter writer) {
         Converter rootConverter = converterLookup.lookupConverterForType(obj.getClass());
-        writer.startElement(classMapper.lookupName(obj.getClass()));
+        writer.startNode(classMapper.lookupName(obj.getClass()));
         MarshallingContextAdaptor context = new MarshallingContextAdaptor(obj, writer, converterLookup);
         rootConverter.toXML(obj, writer, context);
-        writer.endElement();
+        writer.startNode();
     }
 
     public Object fromXML(String xml) {
@@ -124,10 +124,10 @@ public class XStream {
     }
 
     public Object fromXML(HierarchicalStreamReader xmlReader, Object root) {
-        String classAttribute = xmlReader.attribute(classAttributeIdentifier);
+        String classAttribute = xmlReader.getAttribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
-            type = classMapper.lookupType(xmlReader.name());
+            type = classMapper.lookupType(xmlReader.getNodeName());
         } else {
             type = classMapper.lookupType(classAttribute);
         }

@@ -24,20 +24,20 @@ public abstract class AbstractCollectionConverter implements Converter {
 
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         if (item == null) {
-            writer.startElement("null");
-            writer.endElement();
+            writer.startNode("null");
+            writer.startNode();
         } else {
-            writer.startElement(classMapper.lookupName(item.getClass()));
+            writer.startNode(classMapper.lookupName(item.getClass()));
             context.convertAnother(item);
-            writer.endElement();
+            writer.startNode();
         }
     }
 
     protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        String classAttribute = reader.attribute(classAttributeIdentifier);
+        String classAttribute = reader.getAttribute(classAttributeIdentifier);
         Class type;
         if (classAttribute == null) {
-            type = classMapper.lookupType(reader.name());
+            type = classMapper.lookupType(reader.getNodeName());
         } else {
             type = classMapper.lookupType(classAttribute);
         }

@@ -18,7 +18,7 @@ public class Xpp3Writer
         return configuration;
     }
 
-    public void startElement(String name) {
+    public void startNode(String name) {
         Xpp3Dom configuration = new Xpp3Dom(name);
 
         if (this.configuration == null) {
@@ -30,7 +30,7 @@ public class Xpp3Writer
         elementStack.addLast(configuration);
     }
 
-    public void writeText(String text) {
+    public void setValue(String text) {
         top().setValue(text);
     }
 
@@ -38,7 +38,7 @@ public class Xpp3Writer
         top().setAttribute(key, value);
     }
 
-    public void endElement() {
+    public void startNode() {
         elementStack.removeLast();
     }
 

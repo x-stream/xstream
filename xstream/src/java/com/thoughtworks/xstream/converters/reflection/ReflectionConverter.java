@@ -48,7 +48,7 @@ public class ReflectionConverter implements Converter {
     }
 
     private void writeFieldAsXML(MarshallingContext context, Field field, Object obj, HierarchicalStreamWriter writer) {
-        writer.startElement(classMapper.mapNameToXML(field.getName()));
+        writer.startNode(classMapper.mapNameToXML(field.getName()));
 
         Class actualType = obj.getClass();
 
@@ -59,7 +59,7 @@ public class ReflectionConverter implements Converter {
 
         context.convertAnother(obj);
 
-        writer.endElement();
+        writer.startNode();
     }
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
@@ -69,8 +69,8 @@ public class ReflectionConverter implements Converter {
             result = objectFactory.create(context.getRequiredType());
         }
 
-        while (reader.nextChild()) {
-            String fieldName = classMapper.mapNameFromXML(reader.name());
+        while (reader.getNextChildNode()) {
+            String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
             Iterator fields = getFields(result.getClass());
             Field field = null;
             while (fields.hasNext()) {
@@ -85,7 +85,7 @@ public class ReflectionConverter implements Converter {
             }
 
             Class type;
-            String classAttribute = reader.attribute(classAttributeIdentifier);
+            String classAttribute = reader.getAttribute(classAttributeIdentifier);
             if (classAttribute == null) {
                 type = field.getType();
             } else {
@@ -102,7 +102,7 @@ public class ReflectionConverter implements Converter {
                         "Cannot access field " + type + "." + field.getName(), e);
             }
 
-            reader.pop();
+            reader.getParentNode();
         }
         return result;
     }

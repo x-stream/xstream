@@ -13,8 +13,8 @@ public class NullConverter implements Converter {
     }
 
     public void toXML(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        writer.startElement("null");
-        writer.endElement();
+        writer.startNode("null");
+        writer.startNode();
     }
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {

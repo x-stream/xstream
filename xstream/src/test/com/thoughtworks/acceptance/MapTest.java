@@ -2,11 +2,10 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
-import com.thoughtworks.xstream.XStream;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class MapTest extends AbstractAcceptanceTest {

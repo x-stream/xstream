@@ -20,21 +20,21 @@ public class PropertiesConverter implements Converter {
         Properties properties = (Properties) source;
         for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            writer.startElement("property");
-            writer.addAttribute("name", entry.getKey().toString());
+            writer.startNode("property");
+            writer.addAttribute("getNodeName", entry.getKey().toString());
             writer.addAttribute("value", entry.getValue().toString());
-            writer.endElement();
+            writer.startNode();
         }
     }
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Properties properties = new Properties();
-        while (reader.nextChild()) {
-            reader.nextChild();
-            String name = reader.attribute("name");
-            String value = reader.attribute("value");;
+        while (reader.getNextChildNode()) {
+            reader.getNextChildNode();
+            String name = reader.getAttribute("getNodeName");
+            String value = reader.getAttribute("value");;
             properties.setProperty(name, value);
-            reader.pop();
+            reader.getParentNode();
         }
         return properties;
     }

@@ -24,11 +24,11 @@ public class DomReader implements HierarchicalStreamReader {
         setCurrent(document.getDocumentElement());
     }
 
-    public String name() {
+    public String getNodeName() {
         return currentElement.getTagName();
     }
 
-    public String text() {
+    public String getValue() {
 		NodeList childNodes = currentElement.getChildNodes();
 		textBuffer.setLength(0);
 		int length = childNodes.getLength();
@@ -42,17 +42,17 @@ public class DomReader implements HierarchicalStreamReader {
 		return textBuffer.toString();
     }
 
-    public String attribute(String name) {
+    public String getAttribute(String name) {
         Attr attribute = currentElement.getAttributeNode(name);
         return attribute == null ? null : attribute.getValue();
     }
 
-    public void pop() {
+    public void getParentNode() {
         setCurrent(currentElement.getParentNode());
         pointers.removeLast();
     }
 
-    public Object peek() {
+    public Object peekUnderlyingNode() {
         return currentElement;
     }
 
@@ -61,7 +61,7 @@ public class DomReader implements HierarchicalStreamReader {
         childNodes = currentElement.getChildNodes();
     }
 
-    public boolean nextChild() {
+    public boolean getNextChildNode() {
         Pointer pointer = (Pointer) pointers.getLast();
         int len = childNodes.getLength();
         for(; pointer.v < len; pointer.v++){

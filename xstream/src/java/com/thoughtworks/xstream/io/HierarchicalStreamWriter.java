@@ -2,12 +2,12 @@ package com.thoughtworks.xstream.io;
 
 public interface HierarchicalStreamWriter {
 
-    void startElement(String name);
+    void startNode(String name);
 
-    void addAttribute(String key, String value);
+    void addAttribute(String name, String value);
 
-    void writeText(String text);
+    void setValue(String text);
 
-    void endElement();
+    void startNode();
 
 }

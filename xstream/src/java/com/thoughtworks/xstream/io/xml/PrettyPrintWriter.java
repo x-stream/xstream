@@ -33,7 +33,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         this(new PrintWriter(writer));
     }
 
-    public void startElement(String name) {
+    public void startNode(String name) {
         tagIsEmpty = false;
         finishTag();
         write("<");
@@ -45,7 +45,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         tagIsEmpty = true;
     }
 
-    public void writeText(String text) {
+    public void setValue(String text) {
         readyForNewLine = false;
         tagIsEmpty = false;
         finishTag();
@@ -63,7 +63,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         write("\"");
     }
 
-    public void endElement() {
+    public void startNode() {
         depth--;
         if (tagIsEmpty) {
             write("/");

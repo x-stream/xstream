@@ -35,9 +35,9 @@ public class DomReaderTest extends AbstractXMLReaderTest {
         Element small = (Element) document.getDocumentElement().getElementsByTagName("small").item(0);
 
         HierarchicalStreamReader xmlReader = new DomReader(small);
-        assertEquals("small", xmlReader.name());
-        xmlReader.nextChild();
-        assertEquals("tiny", xmlReader.name());
+        assertEquals("small", xmlReader.getNodeName());
+        xmlReader.getNextChildNode();
+        assertEquals("tiny", xmlReader.getNodeName());
     }
 
 }

@@ -26,9 +26,9 @@ public class ColorConverter implements Converter {
 
     public Object fromXML(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Map elements = new HashMap();
-        while (reader.nextChild()) {
-            elements.put(reader.name(), Integer.valueOf(reader.text()));
-            reader.pop();
+        while (reader.getNextChildNode()) {
+            elements.put(reader.getNodeName(), Integer.valueOf(reader.getValue()));
+            reader.getParentNode();
         }
         Color color = new Color(
                 ((Integer) elements.get("red")).intValue(),
@@ -40,9 +40,9 @@ public class ColorConverter implements Converter {
     }
 
     private void write(String fieldName, int value, HierarchicalStreamWriter writer) {
-        writer.startElement(fieldName);
-        writer.writeText(String.valueOf(value));
-        writer.endElement();
+        writer.startNode(fieldName);
+        writer.setValue(String.valueOf(value));
+        writer.startNode();
     }
 
 }

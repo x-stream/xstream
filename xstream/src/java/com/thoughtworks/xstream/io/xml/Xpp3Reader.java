@@ -24,11 +24,11 @@ public class Xpp3Reader
         pointers.addLast(new Pointer());
     }
 
-    public String name() {
+    public String getNodeName() {
         return current.getName();
     }
 
-    public String text() {
+    public String getValue() {
         String text = null;
 
         try {
@@ -40,7 +40,7 @@ public class Xpp3Reader
         return text == null ? "" : text;
     }
 
-    public String attribute(String attributeName) {
+    public String getAttribute(String attributeName) {
         String text = null;
 
         try {
@@ -52,7 +52,7 @@ public class Xpp3Reader
         return text;
     }
 
-    public boolean nextChild() {
+    public boolean getNextChildNode() {
         Pointer pointer = (Pointer) pointers.getLast();
 
         if (pointer.v < current.getChildCount()) {
@@ -68,13 +68,13 @@ public class Xpp3Reader
         }
     }
 
-    public void pop() {
+    public void getParentNode() {
         current = current.getParent();
 
         pointers.removeLast();
     }
 
-    public Object peek() {
+    public Object peekUnderlyingNode() {
         return current;
     }
 

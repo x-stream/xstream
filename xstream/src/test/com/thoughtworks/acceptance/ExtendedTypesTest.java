@@ -68,6 +68,6 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         // now comes the part that fails without a specific converter
         // in the case of a relative file, this will work, because we run the comparison test from the same working directory
         assertEquals(f.getAbsolutePath(), ((File)resultObj).getAbsolutePath());
-        assertEquals(f.isAbsolute(), ((File)resultObj).isAbsolute()); // needed because File's equals method only compares the path attribute, at least in the win32 implementation
+        assertEquals(f.isAbsolute(), ((File)resultObj).isAbsolute()); // needed because File's equals method only compares the path getAttribute, at least in the win32 implementation
     }
 }

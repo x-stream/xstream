@@ -11,25 +11,25 @@ public class PrettyPrintWriterTest extends TestCase {
         StringWriter stringWriter = new StringWriter();
         HierarchicalStreamWriter xmlWriter = new PrettyPrintWriter(stringWriter, "  ");
 
-        xmlWriter.startElement("hello");
-        xmlWriter.startElement("world");
+        xmlWriter.startNode("hello");
+        xmlWriter.startNode("world");
         xmlWriter.addAttribute("id", "one");
 
-        xmlWriter.startElement("one");
-        xmlWriter.writeText("potato");
-        xmlWriter.endElement();
+        xmlWriter.startNode("one");
+        xmlWriter.setValue("potato");
+        xmlWriter.startNode();
 
-        xmlWriter.startElement("two");
+        xmlWriter.startNode("two");
         xmlWriter.addAttribute("id", "two");
-        xmlWriter.writeText("potatae");
-        xmlWriter.endElement();
+        xmlWriter.setValue("potatae");
+        xmlWriter.startNode();
 
-        xmlWriter.endElement();
+        xmlWriter.startNode();
 
-        xmlWriter.startElement("empty");
-        xmlWriter.endElement();
+        xmlWriter.startNode("empty");
+        xmlWriter.startNode();
 
-        xmlWriter.endElement();
+        xmlWriter.startNode();
 
         String expected =
                 "<hello>\n" +
