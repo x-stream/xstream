@@ -183,7 +183,7 @@ public class XStreamTest extends TestCase {
         assertEquals("bar", person.element.element("foo").getText());
     }
 
-    public static class Person {
+    public static class Person extends StandardObject {
         String firstName;
         String lastName;
         Element element;

@@ -20,7 +20,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
                 || type.equals(HashSet.class)
                 || type.equals(LinkedList.class)
                 || type.equals(Vector.class)
-                || (JVM.is14() && type.getName().equals("java.util.LinkedSet"));
+                || (JVM.is14() && type.getName().equals("java.util.LinkedHashSet"));
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
