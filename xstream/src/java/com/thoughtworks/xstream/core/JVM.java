@@ -12,7 +12,8 @@ public class JVM {
     private static ReflectionProvider reflectionProvider;
 
     public static boolean is14() {
-        return loadClass("java.util.LinkedHashMap") != null;
+        float majorJavaVersion = Float.parseFloat(System.getProperty("java.version").substring(0, 3));
+        return majorJavaVersion >= 1.4f;
     }
 
     public static Class loadClass(String name) {
