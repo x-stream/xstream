@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Converts a java.lang.reflect.Method to XML.
- * 
+ *
  * @author Aslak Helles&oslash;y
  */
 public class JavaMethodConverter implements Converter {
@@ -96,9 +96,9 @@ public class JavaMethodConverter implements Converter {
             reader.moveUp();
 
             if (isMethodNotConstructor) {
-                return declaringClass.getMethod(methodName, parameterTypes);
+                return declaringClass.getDeclaredMethod(methodName, parameterTypes);
             } else {
-                return declaringClass.getConstructor(parameterTypes);
+                return declaringClass.getDeclaredConstructor(parameterTypes);
             }
         } catch (ClassNotFoundException e) {
             throw new ConversionException(e);
@@ -114,7 +114,7 @@ public class JavaMethodConverter implements Converter {
         }
         return classLoader.loadClass(className);
     }
-    
+
     /**
      * Lookup table for primitive types.
      */
