@@ -14,12 +14,13 @@ public class ReflectionConverter implements Converter {
 
     private ClassMapper classMapper;
     private String classAttributeIdentifier;
+    private String definedInAttributeIdentifier = "defined-in";
     private ReflectionProvider reflectionProvider;
-    private static final String DEFINED_IN = "defined-in";
 
-    public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, ReflectionProvider reflectionProvider) {
+    public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier, ReflectionProvider reflectionProvider) {
         this.classMapper = classMapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
+        this.definedInAttributeIdentifier = definedInAttributeIdentifier;
         this.reflectionProvider = reflectionProvider;
     }
 
@@ -42,7 +43,7 @@ public class ReflectionConverter implements Converter {
                     }
 
                     if (seenFields.contains(fieldName)) {
-                        writer.addAttribute(DEFINED_IN, classMapper.lookupName(definedIn));
+                        writer.addAttribute(definedInAttributeIdentifier, classMapper.lookupName(definedIn));
                     }
                     context.convertAnother(newObj);
 
@@ -65,7 +66,7 @@ public class ReflectionConverter implements Converter {
 
             String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
 
-            String definedIn = reader.getAttribute("defined-in");
+            String definedIn = reader.getAttribute(definedInAttributeIdentifier);
             Class definedInCls = definedIn == null ? null : classMapper.lookupType(definedIn);
 
             Class type;

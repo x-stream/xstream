@@ -97,7 +97,7 @@ public class DefaultConverterLookup implements ConverterLookup {
             alias("linked-hash-set", JVM.loadClass("java.util.LinkedHashSet"));
         }
 
-        registerConverter(new ReflectionConverter(classMapper, classAttributeIdentifier, reflectionProvider));
+        registerConverter(new ReflectionConverter(classMapper, classAttributeIdentifier, "defined-in", reflectionProvider));
 
         registerConverter(new IntConverter());
         registerConverter(new FloatConverter());
