@@ -1,12 +1,12 @@
 <project name="xstream" default="library">
 
-	<property file="build.properties"/>
+    <property file="build.properties"/>
     <property name="version" value="SNAPSHOT"/>
 
     <path id="classpath">
         <fileset dir="lib"/>
-		<pathelement path="${java.build.dir}"/>
-		<pathelement path="${test.build.dir}"/>
+        <pathelement path="${java.build.dir}"/>
+        <pathelement path="${test.build.dir}"/>
     </path>
 
     <target name="library" depends="clean, compile, test, jar" description="Build and test library only"/>
@@ -24,85 +24,64 @@
         </javac>
     </target>
 
-    	<!-- 
-    		Default test target 
-    	-->		
-    	<target name="test" depends="test:reports">
-    	</target>
-    	    
-    	<!--
-    		Runs test reports
-    	-->
-    	<target name="test:reports" depends="test:all">
-    		<junitreport todir="${test.reports.dir}">
-    			<fileset dir="${test.reports.dir}">
-    				<include name="TEST-*.xml"/>
-    			</fileset>
-    			<report format="frames" todir="${test.reports.dir}/html"/>
-    		</junitreport>
-    	</target>
-    	
-    	<!--
-    	    Runs all tests 
-    -->
-    	<target name="test:all" depends="test:compile" description="Run all acceptance tests and unit tests">
-    		<mkdir dir="${test.reports.dir}"/>
-    		<junit printsummary="${junit.printsummary}" fork="${junit.fork}" 
-               haltonfailure="${junit.haltonfailure}">
-    			<classpath refid="classpath"/>
-    			<jvmarg line="${junit.jvmarg}"/>
-     	     <formatter type="xml"/>
-     		 <formatter type="${junit.formatter}" />
-    			 <batchtest fork="${junit.fork}" todir="${test.reports.dir}">
-    				<fileset dir="${test.src.dir}">
-    					<include name="${test.src.includes}" />
-    					<exclude name="${test.src.excludes}" />
-    				</fileset>
-    			</batchtest>
-    		</junit>
-    	</target>
+    <target name="test" depends="test:reports"/>
 
-    	<!--
-      	Runs a single test specified by property 'testcase'
-    -->
-    	<target name="test:single" depends="test:compile" description="Run a single test">
-    		<echo message="testcase: ${testcase}"/>
-    		<mkdir dir="${test.reports.dir}"/>
-    		<junit printsummary="${junit.printsummary}" fork="${junit.fork}" 
-               haltonfailure="${junit.haltonfailure}">
-    			<classpath refid="classpath"/>
-    			<jvmarg line="${junit.jvmarg}"/>
-    			<formatter type="${junit.formatter}" />
-             <test name="${testcase}" todir="${test.reports.dir}"/>
-    		</junit>
-    	</target>
+    <target name="test:reports" depends="test:all">
+        <junitreport todir="${test.reports.dir}">
+            <fileset dir="${test.reports.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${test.reports.dir}/html"/>
+        </junitreport>
+    </target>
 
-    	<!--
-        Compiles test src
-     -->
-    	<target name="test:compile" depends="compile, test:resources" description="Compile test src">
-    		<mkdir dir="${test.build.dir}"/>
-    		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
-    			<classpath refid="classpath"/>
-    		</javac>
-    	</target>
+    <target name="test:all" depends="test:compile" description="Run all acceptance tests and unit tests">
+        <mkdir dir="${test.reports.dir}"/>
+        <junit printsummary="${junit.printsummary}" haltonfailure="${junit.haltonfailure}">
+            <classpath refid="classpath"/>
+            <formatter type="xml"/>
+            <formatter type="${junit.formatter}"/>
+            <batchtest todir="${test.reports.dir}">
+                <fileset dir="${test.src.dir}">
+                    <include name="${test.src.includes}"/>
+                    <exclude name="${test.src.excludes}"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
 
-    	<!-- 
-    		Copies test resources
-    	-->	
-    	<target name="test:resources">
-    		<copy todir="${test.build.dir}" overwrite="yes">
-    			<fileset dir="${java.src.dir}">
-    				<include name="**/*"/>
-    				<exclude name="**/*.java"/>
-    			</fileset>
-    			<fileset dir="${test.src.dir}">
-    				<include name="**/*"/>
-    				<exclude name="**/*.java"/>
-    			</fileset>
-    		</copy>	
-    	</target>	
-    	    	
+    <target name="test:single" depends="test:compile" description="Run a single test (specified by property 'testcase')">
+        <echo message="testcase: ${testcase}"/>
+        <mkdir dir="${test.reports.dir}"/>
+        <junit printsummary="${junit.printsummary}" fork="${junit.fork}"
+            haltonfailure="${junit.haltonfailure}">
+            <jvmarg line="${junit.jvmarg}"/>
+            <formatter type="${junit.formatter}"/>
+            <test name="${testcase}" todir="${test.reports.dir}"/>
+        </junit>
+    </target>
+
+    <target name="test:compile" depends="compile, test:resources" description="Compile test src">
+        <mkdir dir="${test.build.dir}"/>
+        <javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="test:resources">
+        <!-- Copies test resources -->
+        <copy todir="${test.build.dir}" overwrite="yes">
+            <fileset dir="${java.src.dir}">
+                <include name="**/*"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+            <fileset dir="${test.src.dir}">
+                <include name="**/*"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
     <target name="jar" depends="compile" description="Build JARs">
         <jar jarfile="build/xstream-${version}.jar">
             <fileset dir="${java.build.dir}"/>
