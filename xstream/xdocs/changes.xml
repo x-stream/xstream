@@ -20,7 +20,7 @@
 
       <action dev="joe" type="add">
         Added custom converters for
-        java.io.File, java.util.Properties, java.util.Vector, java.util.Hashtable,
+        java.io.File, java.util.Properties, java.util.Vector, java.util.Hashtable, java.util.BitSet
         byte[] (Base64 encoded), char[].
       </action>
 

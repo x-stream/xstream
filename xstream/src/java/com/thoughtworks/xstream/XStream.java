@@ -56,6 +56,7 @@ public class XStream {
         alias("string", String.class);
         alias("java-class", Class.class);
         alias("date", Date.class);
+        alias("bit-set", BitSet.class);
 
         alias("map", Map.class, HashMap.class);
         alias("properties", Properties.class);
@@ -83,6 +84,7 @@ public class XStream {
         registerConverter(new StringBufferConverter());
         registerConverter(new DateConverter());
         registerConverter(new JavaClassConverter());
+        registerConverter(new BitSetConverter());
 
         registerConverter(new ArrayConverter(classMapper,classAttributeIdentifier));
         registerConverter(new CharArrayConverter());
