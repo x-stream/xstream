@@ -7,8 +7,8 @@
 
     <target name="publish">
         <ant dir="." target="all"/>
-        <copy file="xstream-${VERSION}.jar" todir="${jar.path}"/>
-        <copy file="xstream-${VERSION}.zip" todir="${dist.path}"/>
+        <copy file="xstream-${version}.jar" todir="${jar.path}"/>
+        <copy file="xstream-${version}.zip" todir="${dist.path}"/>
     </target> 
 
 </project>
