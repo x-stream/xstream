@@ -86,6 +86,12 @@ import java.io.Writer;
  * </tr>
  * </table>
  *
+ * <h3>Thread safety</h3>
+ *
+ * <p>The XStream instance is thread-safe. That is, once the XStream instance
+ * has been created and configured, it may be shared across multiple threads
+ * allowing objects to be serialized/deserialized concurrently.
+ *
  * @author Joe Walnes
  */
 public class XStream {
