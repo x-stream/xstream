@@ -74,4 +74,25 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
     }
 
+    public void testNullObjectsDoNotHaveFieldsWritten() {
+
+        xstream.alias("cls", WithSomeFields.class);
+
+        WithSomeFields obj = new WithSomeFields();
+
+        String expected = "<cls/>";
+
+        assertBothWays(obj, expected);
+    }
+
+    public class WithSomeFields {
+        Object a;
+        String b;
+
+        public boolean equals(Object obj) {
+            WithSomeFields w = (WithSomeFields) obj;
+            return w.a == a && w.b == b;
+        }
+    }
+
 }

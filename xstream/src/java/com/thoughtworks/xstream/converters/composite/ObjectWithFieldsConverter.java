@@ -57,15 +57,17 @@ public class ObjectWithFieldsConverter implements Converter {
         String[] fieldNames = objectGraph.fieldNames();
         for (int i = 0; i < fieldNames.length; i++) {
             String fieldName = fieldNames[i];
-            objectGraph.push(fieldName);
-            xmlReader.child(fieldName);
+            if (xmlReader.childExists(fieldName)) {
+                objectGraph.push(fieldName);
+                xmlReader.child(fieldName);
 
-            Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
-            Converter converter = converterLookup.lookupConverterForType(type);
-            converter.fromXML(objectGraph, xmlReader, converterLookup, type);
+                Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
+                Converter converter = converterLookup.lookupConverterForType(type);
+                converter.fromXML(objectGraph, xmlReader, converterLookup, type);
 
-            xmlReader.pop();
-            objectGraph.pop();
+                xmlReader.pop();
+                objectGraph.pop();
+            }
         }
     }
 

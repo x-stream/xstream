@@ -139,19 +139,4 @@ public class XStreamTest extends TestCase {
         int field;
     }
 
-    public void testNullObjectsDoNotHaveFieldsWritten() {
-        WithSomeFields obj = new WithSomeFields();
-
-        xstream.alias("cls", WithSomeFields.class);
-        String xml = xstream.toXML(obj);
-
-        String expected = "<cls/>";
-
-        assertEquals(expected, xml);
-    }
-
-    public class WithSomeFields {
-        Object a;
-        String b;
-    }
 }

@@ -43,4 +43,8 @@ public class Dom4JXMLReader implements XMLReader {
     public void pop() {
         currentElement = currentElement.getParent();
     }
+
+    public boolean childExists(String elementName) {
+        return currentElement.element(elementName) != null;
+    }
 }

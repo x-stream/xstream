@@ -125,4 +125,12 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals("more", xmlReader.text());
         xmlReader.pop();
     }
+
+    public void testChildElementsCanBeTestedToSeeIfTheyExist() throws Exception {
+        XMLReader xmlReader = createReader("<root><present/></root>");
+
+        assertTrue(xmlReader.childExists("present"));
+        assertTrue(!xmlReader.childExists("not-present"));
+
+    }
 }
