@@ -391,10 +391,38 @@ public class XStream {
         return new MapBackedDataHolder();
     }
 
+    /**
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since 1.0.3
+     */
     public ObjectOutputStream createObjectOutputStream(Writer writer, String rootNodeName) throws IOException {
         return createObjectOutputStream(new PrettyPrintWriter(writer), rootNodeName);
     }
 
+    /**
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
+     *
+     * <p>Because an ObjectOutputStream can contain multiple items and XML only allows a single root node, the stream
+     * must be written inside an enclosing node.</p>
+     *
+     * <p>It is necessary to call ObjectOutputStream.close() when done, otherwise the stream will be incomplete.</p>
+     *
+     * <h3>Example</h3>
+     * <pre>ObjectOutputStream out = xstream.createObjectOutputStream(aWriter, "things");
+     * out.writeInt(123);
+     * out.writeObject("Hello");
+     * out.writeObject(someObject)
+     * out.close();</pre>
+     *
+     * @param writer The writer to serialize the objects to.
+     * @param rootNodeName The name of the root node enclosing the stream of objects.
+     *
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since 1.0.3
+     */
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, String rootNodeName) throws IOException {
         writer.startNode(rootNodeName);
         return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
@@ -416,10 +444,29 @@ public class XStream {
         });
     }
 
+    /**
+     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream.
+     *
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @since 1.0.3
+     */
     public ObjectInputStream createObjectInputStream(Reader xmlReader) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(xmlReader));
     }
 
+    /**
+     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream.
+     *
+     * <h3>Example</h3>
+     * <pre>ObjectInputStream in = xstream.createObjectOutputStream(aReader);
+     * int a = out.readInt();
+     * Object b = out.readObject();
+     * Object c = out.readObject();</pre>
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @since 1.0.3
+     */
     public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader) throws IOException {
         return new CustomObjectInputStream(new CustomObjectInputStream.StreamCallback() {
             public Object readFromStream() {

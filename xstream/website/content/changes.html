@@ -19,11 +19,12 @@
     <h2>Major changes</h2>
 
     <ul>
-        <li>Support for any object that performs custom serialization by implementing java.io.Externalizable (as in Java serialization spec).</li>
-        <li>Partial support for objects that specify their own serialization schemes by implementing readObject() and writeObject()
-        (as in Java serialization spec). Note, this currently does not support the putFields()/readFields() method (use by only 8 classes in
-        the entire JDK).</li>  
+        <li>Provides drop in replacement for ObjectInputStream and ObjectOutputStream, using XStream.createObjectInputStream() and
+        XStream.createObjectOutputStream() and XStream.createObjectInputStream(). This provides support for streaming objects.</li>
+        <li>Support for objects that specify their own serialization schemes by implementing readObject() and writeObject()
+        (as in Java serialization spec). This includes support for ObjectInputStream.getFields() and ObjectOuputStream.putFields().</li>
         <li>Support for objects to serialize other objects to the stream by implementing writeReplace() (as in Java serialization spec).</li>
+        <li>Support for any object that performs custom serialization by implementing java.io.Externalizable (as in Java serialization spec).</li>
         <li>Implicit collections can be specified for classes, allowing the element wrapping the collection to be skipped.</li>
         <li>New writer implementations to allow XStream to serialize directly to a SAX stream or TrAX pipeline.</li>
         <li>The MarshallingContext and UnmarshallingContext interfaces now extend DataHolder, allowing arbitary data to be stored
@@ -35,10 +36,9 @@
         <li>DOM, DOM4J, JDOM, XOM, Electric-XML, SAX, STAX</li>
         <li>Specific ClassLoaders can be passed into XStream, to allow for greater compatability in J2EE containers.</li>
         <li>Ability to change the default converter</li>
-        <li>Added ISO8601DateConverter for full ISO8601 date format support. 
-        	   The converter is not registered by default as it requires the joda-time dependency (http://joda-time.sf.net). 
-        	   To use, ensure joda-time is in classpath and register explicitly.
-        </li>
+        <li>Added optional ISO8601DateConverter for full ISO8601 date format support. The converter is not registered by default
+        as it requires the joda-time dependency (http://joda-time.sf.net). To use, ensure joda-time is in classpath and register explicitly.</li>
+        <li>Enhanced mode is now supported on the Apple 1.4 JDK.</li>
     </ul>
 
     <h2>Minor changes</h2>
