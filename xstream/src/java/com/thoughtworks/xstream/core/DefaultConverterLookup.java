@@ -17,6 +17,7 @@ import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
 import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
 import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
+import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
@@ -130,6 +131,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
 
         alias("sql-timestamp", Timestamp.class);
         alias("sql-time", Time.class);
+        alias("sql-date", java.sql.Date.class);
         alias("file", File.class);
 
         if (JVM.is14()) {
@@ -167,6 +169,7 @@ public class DefaultConverterLookup implements ConverterLookup, DefaultCollectio
         registerConverter(new FileConverter());
         registerConverter(new SqlTimestampConverter());
         registerConverter(new SqlTimeConverter());
+        registerConverter(new SqlDateConverter());
         registerConverter(new DynamicProxyConverter(classMapper, classLoader));
         registerConverter(new JavaClassConverter(classLoader));
         registerConverter(new JavaMethodConverter());

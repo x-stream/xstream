@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 
-import java.sql.Timestamp;
 import java.sql.Time;
 
 /**
@@ -12,12 +11,12 @@ import java.sql.Time;
  */
 public class SqlTimeConverter extends AbstractBasicConverter {
 
-    protected Object fromString(String str) {
-        return Time.valueOf(str);
-    }
-
     public boolean canConvert(Class type) {
         return type.equals(Time.class);
+    }
+
+    protected Object fromString(String str) {
+        return Time.valueOf(str);
     }
 
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.sql.Time;
+import java.sql.Date;
 import java.util.TimeZone;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
@@ -32,6 +33,11 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
     public void testSqlTime() {
         assertBothWays(new Time(14, 7, 33),
                 "<sql-time>14:07:33</sql-time>");
+    }
+
+    public void testSqlDate() {
+        assertBothWays(new Date(78, 7, 25),
+                "<sql-date>1978-08-25</sql-date>");
     }
 
     public void testFile() throws IOException {

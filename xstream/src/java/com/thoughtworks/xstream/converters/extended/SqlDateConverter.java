@@ -2,21 +2,22 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 
 /**
- * Converts a java.sql.Timestamp to text.
+ * Converts a java.sql.Date to text.
  *
- * @author Joe Walnes
+ * @author Jose A. Illescas
  */
-public class SqlTimestampConverter extends AbstractBasicConverter {
+public class SqlDateConverter extends AbstractBasicConverter {
 
     public boolean canConvert(Class type) {
-        return type.equals(Timestamp.class);
+        return type.equals(Date.class);
     }
 
     protected Object fromString(String str) {
-        return Timestamp.valueOf(str);
+        return Date.valueOf(str);
     }
 
 }
