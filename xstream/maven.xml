@@ -1,4 +1,4 @@
-<project>
+<project default="jar:jar">
 
     <goal name="deploy"
         description="Deploy website, jar and distribution releases"
