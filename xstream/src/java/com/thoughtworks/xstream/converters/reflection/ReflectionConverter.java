@@ -7,13 +7,9 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
-import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +26,6 @@ public class ReflectionConverter implements Converter {
     private ReflectionProvider reflectionProvider;
     private ImplicitCollectionMapper implicitCollectionMapper;
     private SerializationMethodInvoker serializationMethodInvoker;
-    private static final String PREFIX = "field.";
 
     public ReflectionConverter(ClassMapper classMapper, String classAttributeIdentifier, String definedInAttributeIdentifier,
                                ReflectionProvider reflectionProvider, ImplicitCollectionMapper implicitCollectionMapper) {
@@ -97,75 +92,26 @@ public class ReflectionConverter implements Converter {
         final Object result = instantiateNewInstance(context);
         final SeenFields seenFields = new SeenFields();
 
-        final Class[] currentClass = new Class[1];
-        CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
+        Map implicitCollectionsForCurrentObject = null;
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
 
-            private Object pushbackValue;
+            String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
 
-            public Object deserialize() {
-                if (pushbackValue != null) {
-                    Object result = pushbackValue;
-                    pushbackValue = null;
-                    return result;
-                } else {
-                    reader.moveDown();
-                    if (!reader.getNodeName().startsWith(PREFIX)) {
-                        throw new RuntimeException("dfds");
-                    }
-                    Object value = deserializePrefixedNode(reader, context, result);
-                    reader.moveUp();
-                    return value;
-                }
-            }
+            Class classDefiningField = determineWhichClassDefinesField(reader);
+            boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
 
-            private Object deserializePrefixedNode(final HierarchicalStreamReader reader, final UnmarshallingContext context, final Object result) {
-                String name = reader.getNodeName().substring(PREFIX.length());
-                Class type = classMapper.lookupType(name);
-                Object value = context.convertAnother(result, type);
-                return value;
-            }
+            Class type = determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField);
+            Object value = context.convertAnother(result, type);
 
-            public void defaultReadObject() {
-                Map implicitCollectionsForCurrentObject = null;
-                while (reader.hasMoreChildren()) {
-                    reader.moveDown();
-
-                    String nodeName = reader.getNodeName();
-                    if (nodeName.startsWith(PREFIX)) {
-                        pushbackValue = deserializePrefixedNode(reader, context, result);
-                        reader.moveUp();
-                        break;
-                    }
-                    String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
-
-                    Class classDefiningField = determineWhichClassDefinesField(reader);
-                    boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
-
-                    Class type = determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField);
-                    Object value = context.convertAnother(result, type);
-
-                    if (fieldExistsInClass) {
-                        reflectionProvider.writeField(result, fieldName, value, classDefiningField);
-                        seenFields.add(classDefiningField, fieldName);
-                    } else {
-                        implicitCollectionsForCurrentObject = writeValueToImplicitCollection(context, value, implicitCollectionsForCurrentObject, result, fieldName);
-                    }
-
-                    reader.moveUp();
-                }
-            }
-
-        };
-
-
-        for (currentClass[0] = result.getClass(); currentClass[0] != null; currentClass[0] = currentClass[0].getSuperclass()) {
-//        currentClass[0] = result.getClass();
-            if (serializationMethodInvoker.supportsReadObject(currentClass[0], false)) {
-                ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
-                serializationMethodInvoker.callReadObject(currentClass[0], result, objectInputStream);
+            if (fieldExistsInClass) {
+                reflectionProvider.writeField(result, fieldName, value, classDefiningField);
+                seenFields.add(classDefiningField, fieldName);
             } else {
-                callback.defaultReadObject();
+                implicitCollectionsForCurrentObject = writeValueToImplicitCollection(context, value, implicitCollectionsForCurrentObject, result, fieldName);
             }
+
+            reader.moveUp();
         }
 
         return serializationMethodInvoker.callReadResolve(result);
