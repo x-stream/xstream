@@ -6,8 +6,6 @@ public interface ClassMapper extends Mapper {
 
     Class lookupType(String elementName);
 
-    void alias(String elementName, Class type, Class defaultImplementation);
-
     String mapNameFromXML( String xmlName );
 
     String mapNameToXML( String javaName );
@@ -17,10 +15,16 @@ public interface ClassMapper extends Mapper {
      */
     class Null {}
 
-
     /**
      * @deprecated As of 1.1.1, use {@link #defaultImplementationOf(Class)}
      */
     Class lookupDefaultType(Class baseType);
+
+    /**
+     * @deprecated As of 1.1.1, use {@link AliasingMapper#addAlias(String, Class)} for creating an alias and
+     *             {@link DefaultImplementationsMapper#addDefaultImplementation(Class, Class)} for specifiny a
+     *             default implementation.
+     */
+    void alias(String elementName, Class type, Class defaultImplementation);
 
 }

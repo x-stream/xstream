@@ -40,7 +40,9 @@ public abstract class ClassMapperWrapper implements ClassMapper {
     }
 
     /**
-     * @deprecated As of 1.1.1, use {@link AliasingMapper#alias(String, Class, Class)}
+     * @deprecated As of 1.1.1, use {@link AliasingMapper#addAlias(String, Class)} for creating an alias and
+     *             {@link DefaultImplementationsMapper#addDefaultImplementation(Class, Class)} for specifiny a
+     *             default implementation.
      */
     public void alias(String elementName, Class type, Class defaultImplementation) {
         AliasingMapper aliasingMapper = (AliasingMapper) findWrapped(AliasingMapper.class);
