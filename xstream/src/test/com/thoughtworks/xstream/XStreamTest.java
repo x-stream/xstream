@@ -19,6 +19,7 @@ import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.EOFException;
 
 public class XStreamTest extends TestCase {
 
@@ -310,7 +311,13 @@ public class XStreamTest extends TestCase {
         assertEquals(123, ois.readInt());
         assertEquals("hello", ois.readObject());
         assertEquals(new Software("tw", "xs"), ois.readObject());
-        // TODO: detect end of stream
+
+        try {
+            ois.readObject(); // As far as I can see this is the only clue the ObjectInputStream gives that it's done.
+            fail("Expected EOFException");
+        } catch (EOFException expectedException) {
+            // good
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.NotActiveException;
 import java.io.ObjectInputStream;
+import java.io.EOFException;
 import java.util.Map;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
@@ -469,7 +470,10 @@ public class XStream {
      */
     public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader) throws IOException {
         return new CustomObjectInputStream(new CustomObjectInputStream.StreamCallback() {
-            public Object readFromStream() {
+            public Object readFromStream() throws EOFException {
+                if (!reader.hasMoreChildren()) {
+                    throw new EOFException();
+                }
                 reader.moveDown();
                 Object result = unmarshal(reader);
                 reader.moveUp();
