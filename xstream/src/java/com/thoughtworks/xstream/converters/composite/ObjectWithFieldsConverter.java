@@ -56,20 +56,16 @@ public class ObjectWithFieldsConverter implements Converter {
 
     public void fromXML(final ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
         objectGraph.create(requiredType);
-        String[] fieldNames = objectGraph.fieldNames();
-        for (int i = 0; i < fieldNames.length; i++) {
-            String fieldName = fieldNames[i];
-            if (xmlReader.childExists(fieldName)) {
-                objectGraph.push(fieldName);
-                xmlReader.child(fieldName);
+        for (int i = 0; i < xmlReader.childCount(); i++) {
+            xmlReader.child(i);
+            objectGraph.push(xmlReader.name());
 
-                Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
-                Converter converter = converterLookup.lookupConverterForType(type);
-                converter.fromXML(objectGraph, xmlReader, converterLookup, type);
+            Class type = determineWhichImplementationToUse(xmlReader, objectGraph);
+            Converter converter = converterLookup.lookupConverterForType(type);
+            converter.fromXML(objectGraph, xmlReader, converterLookup, type);
+            objectGraph.pop();
 
-                xmlReader.pop();
-                objectGraph.pop();
-            }
+            xmlReader.pop();
         }
     }
 

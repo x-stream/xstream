@@ -12,8 +12,6 @@ public interface XMLReader {
 
     int childCount();
 
-    boolean childExists(String elementName);
-
     void child(int index);
 
     void child(String elementName);

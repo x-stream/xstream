@@ -73,8 +73,4 @@ public class DomXMLReader implements XMLReader {
         }
     }
 
-    public boolean childExists(String elementName) {
-        return childElementsByName.containsKey(elementName);
-    }
-
 }
