@@ -176,7 +176,6 @@ public class MapTest extends AbstractAcceptanceTest {
         MyMap myMap = new MyMap();
         myMap.put("hehe", "hoho");
         String xml = xstream.toXML(myMap);
-        System.out.println(xml);
         MyMap myOtherMap = (MyMap) xstream.fromXML(xml);
         assertEquals(myMap, myOtherMap);
     }
