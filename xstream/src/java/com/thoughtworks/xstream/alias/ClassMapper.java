@@ -15,7 +15,7 @@ public interface ClassMapper {
 
     /**
      * Whether this type is a simple immutable value (int, boolean, String, URL, etc.
-     */ 
+     */
     boolean isImmutableValueType(Class type);
 
     /**

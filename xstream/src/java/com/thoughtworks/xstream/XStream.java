@@ -12,6 +12,14 @@ import java.io.EOFException;
 import java.util.Map;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.alias.CachingMapper;
+import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
+import com.thoughtworks.xstream.alias.DefaultImplementationsMapper;
+import com.thoughtworks.xstream.alias.ArrayMapper;
+import com.thoughtworks.xstream.alias.DynamicProxyMapper;
+import com.thoughtworks.xstream.alias.AliasingMapper;
+import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
+import com.thoughtworks.xstream.alias.DefaultMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -24,6 +32,7 @@ import com.thoughtworks.xstream.core.MapBackedDataHolder;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
+import com.thoughtworks.xstream.alias.DefaultMapper;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
@@ -153,11 +162,11 @@ public class XStream {
     }
 
     public XStream(ReflectionProvider reflectionProvider) {
-        this(reflectionProvider, new DefaultClassMapper(), new XppDriver());
+        this(reflectionProvider, null, new XppDriver());
     }
 
     public XStream(ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(reflectionProvider, new DefaultClassMapper(), hierarchicalStreamDriver);
+        this(reflectionProvider, null, hierarchicalStreamDriver);
     }
 
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver) {
@@ -169,10 +178,10 @@ public class XStream {
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
-        this.classMapper = classMapper;
         this.hierarchicalStreamDriver = driver;
+        this.classMapper = classMapper == null ? setupMapper() : classMapper;
         setMode(XPATH_REFERENCES);
-        converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, implicitCollectionMapper, classMapper, classAttributeIdentifier);
+        converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, implicitCollectionMapper, this.classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
     }
 
@@ -181,13 +190,25 @@ public class XStream {
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
-        this.classMapper = classMapper;
         this.hierarchicalStreamDriver = driver;
+        this.classMapper = classMapper == null ? setupMapper() : classMapper;
         setMode(XPATH_REFERENCES);
-        converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, defaultConverter, classMapper, classAttributeIdentifier);
+        converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, defaultConverter, this.classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
     }
-    
+
+    protected ClassMapper setupMapper() {
+        ClassMapper mapper = new DefaultMapper();
+        mapper = new XmlFriendlyClassMapper(mapper);
+        mapper = new AliasingMapper(mapper);
+        mapper = new DynamicProxyMapper(mapper); // special handling of dynamic proxy instances
+        mapper = new ArrayMapper(mapper);
+        mapper = new DefaultImplementationsMapper(mapper);
+        mapper = new ImmutableTypesMapper(mapper);
+        mapper = new CachingMapper(mapper);
+        return mapper;
+    }
+
     public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {
         this.marshallingStrategy = marshallingStrategy;
     }
