@@ -54,7 +54,7 @@ public class XppDomReader
         return current;
     }
 
-    private class Pointer {
+    private static class Pointer {
         public int v;
     }
 

@@ -45,7 +45,7 @@ public class TreeMarshaller implements MarshallingContext {
         }
     }
 
-    public class CircularReferenceException extends RuntimeException {
+    public static class CircularReferenceException extends RuntimeException {
     }
 
 }

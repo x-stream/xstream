@@ -67,7 +67,7 @@ public class DomReader implements HierarchicalStreamReader {
         }
     }
 
-    private class Pointer {
+    private static class Pointer {
         public int v;
     }
 

@@ -38,7 +38,7 @@ public class Dom4JReader implements HierarchicalStreamReader {
         return currentElement;
     }
 
-    private class Pointer {
+    private static class Pointer {
         public int v;
     }
 
