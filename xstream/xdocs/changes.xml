@@ -10,12 +10,12 @@
     <release version="0.5" date="...">
 
       <action dev="joe" type="add">
-          Renamed XMLReader/Writer to HierarchicalStreamReader/Writer as XStream is not
-          actually coupled to serializing just to XML.
+        Renamed XMLReader/Writer to HierarchicalStreamReader/Writer as XStream is not
+        actually coupled to serializing just to XML.
       </action>
         
       <action dev="joe" type="add">
-          Overhaul of interface for Converters. Makes Converters much cleaner to write.
+        Overhaul of interface for Converters. Makes Converters much cleaner to write.
       </action>
 
       <action dev="joe" type="add">
@@ -25,7 +25,11 @@
       </action>
 
       <action dev="joe" type="add">
-          Moved internal XStream implementation classes to core package.
+        Moved internal XStream implementation classes to core package.
+      </action>
+
+      <action dev="joe" type="add">
+        Alternate encodings can be used with DomDriver.
       </action>
 
       <action dev="joe" type="add">
