@@ -19,6 +19,16 @@
         object being unmarshalled.
       </action>
 
+      <action dev="jvanzyl" type="add">
+        Added XStream.fromXML(XMLReader xmlReader,Object root) method to
+        allow the population of an object graph starting with a live object root.
+      </action>
+
+      <action dev="jvanzyl" type="fix">
+        Aligned the the methods in XStream to use the specified ObjectFactory in the constructor 
+        instead of creating a SunReflectionObjectFactory.
+      </action>
+
     </release>
 
   </body>
