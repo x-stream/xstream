@@ -1,7 +1,8 @@
 <project>
 
   <pomVersion>3</pomVersion>
-  <id>xstream</id>
+  <groupId>xstream</groupId>
+  <artifactId>xstream</artifactId>
   <name>XStream</name>
   <currentVersion>0.4-SNAPSHOT</currentVersion>
 
@@ -119,13 +120,18 @@
       <version>1.3</version>
     </dependency>
     <dependency>
+      <groupId>xpp3</groupId>
+      <artifactId>xpp3</artifactId>
+      <version>1.1.2a</version>
+    </dependency>
+    <dependency>
       <id>commons-lang</id>
       <version>2.0</version>
     </dependency>
   </dependencies>
 
   <build>
-    <sourceDirectory>${basedir}/src/java</sourceDirectory>
+    <sourceDirectory>src/java</sourceDirectory>
     <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
