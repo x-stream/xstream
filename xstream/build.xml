@@ -60,12 +60,24 @@
         </javadoc>
     </target>
 
-    <target name="website" description="Build website">
+    <target name="website" depends="javadoc" description="Build website">
+        <delete dir="website/output"/>
         <mkdir dir="website/output"/>
-        <!-- todo -->
+        <exec executable="ruby" dir="website">
+            <arg value="skinner.rb"/>
+        </exec>
+        <mkdir dir="build/website/api"/>
+        <copy todir="build/website">
+            <fileset dir="website/output"/>
+            <fileset dir="build">
+                <include name="javadoc/**"/>
+            </fileset>
+        </copy>
+        <tar tarfile="build/xstream-website.tar" basedir="build/website"/>
+        <gzip zipfile="build/xstream-website.tgz" src="build/xstream-website.tar"/>
+        <delete file="build/xstream-website.tar"/>
     </target>
 
-    <!-- assemble complete website -->
     <!-- assemble offline docs -->
 
     <target name="dist" depends="jar" description="Build distribution package">

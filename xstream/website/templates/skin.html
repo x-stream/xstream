@@ -1,117 +1,233 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+
+
 <html xmlns="http://www.w3.org/1999/xhtml"
+
       xmlns:template="http://www.b13media.com/xemplate/1.0">
+
   <head>
+
     <title>XStream - <template:include srcvar="content" elements="/html/head/title/text()"/></title>
+
     <link rel="stylesheet" type="text/css" href="style.css"/>
+
     <template:include srcvar="content" elements="/html/head/*[not(name()='title')]"/>
+
   </head>
 
+
+
   <body>
+
     <div id="banner">
+
       <a href="http://xstream.codehaus.org/"><img id="logo" src="logo.gif" alt="XStream"/></a>
+
     </div>
+
+
 
     <template:when var="isindex" value="true">
+
       <div id="center" class="Content3Column">
+
         <div id="content">
+
           <template:include srcvar="content" elements="/html/body/*"/>
+
     	</div>
+
 	    <div class="Meta">
+
 	      <p><a><template:attr name="href" valuevar="history"/>Document History</a></p>
+
 	    </div>
+
       </div>
+
     </template:when>
+
+
 
     <template:when var="isindex" value="false">
+
       <div id="center" class="Content2Column">
+
         <div id="content">
+
           <template:include srcvar="content" elements="/html/body/*"/>
+
         </div>
+
 	    <div class="Meta">
+
 	      <p><a><template:attr name="href" valuevar="history"/>Document History</a></p>
+
 	    </div>
+
       </div>
+
     </template:when>
+
+
 
     <div class="SidePanel" id="left">
+
       <div class="MenuGroup">
+
         <h1>Software</h1>
+
         <ul>
+
           <li><a href="download.html">Download</a></li>
+
           <li><a href="changes.html">Change History</a></li>
+
           <li><a href="license.html">Project License</a></li>
+
           <li><a href="versioning.html">About Versioning</a></li>
+
           <li><a href="repository.html">Anonymous CVS Access</a></li>
+
         </ul>
+
       </div>
 
+
+
       <div class="MenuGroup">
+
         <h1>Documentation</h1>
+
         <ul>
+
           <li><a href="tutorial.html">Two Minute Tutorial</a></li>
+
           <li><a href="faq.html">Frequently Asked Questions</a></li>
-          <!--<li><a href="api/index.html">JavaDoc</a></li>-->
+
+          <li><a href="javadoc/index.html">JavaDoc</a></li>
+
         </ul>
+
       </div>
 
+
+
       <div class="MenuGroup">
+
         <h1>User Support</h1>
+
         <ul>
+
           <li><a href="mailing-lists.html">Mailing Lists</a></li>
+
           <li><a href="http://jira.codehaus.org/secure/BrowseProject.jspa?id=10230">Issue Tracker</a></li>
+
           <li><a href="news.html">News</a></li>
+
         </ul>
+
       </div>
 
+
+
       <div class="MenuGroup">
+
         <h1>Development</h1>
+
         <ul>
+
           <li><a href="how-to-contribute.html">How to Contribute</a></li>
+
           <li><a href="team.html">Development Team</a></li>
+
         </ul>
+
       </div>
+
+
 
       <!--
+
       <div class="MenuGroup">
+
         <h1>Supporting Sites</h1>
+
         <ul>
+
           <li><a href="http://joe.truemesh.com/">Joe Walnes</a></li>
+
           <li><a href="http://www.thoughtworks.com/">ThoughtWorks</a></li>
+
           <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+
         </ul>
+
       </div>
+
       -->
+
     </div>
 
+
+
     <template:when var="isindex">
+
       <div class="SidePanel" id="right">
+
         <div class="NewsGroup">
+
           <h1>Latest Versions</h1>
+
           <table>
+
             <tr>
+
               <td><a href="download.html#stable">Stable:</a></td>
+
               <td><a href="download.html#stable"><template:text var="release"/></a></td>
+
             </tr>
+
             <tr>
+
               <td><a href="download.html#prerelease">Prerelease:</a></td>
+
               <td><a href="download.html#prerelease"><template:text var="prerelease"/></a></td>
+
             </tr>
+
           </table>
 
+
+
           <p class="NewsMore"><a href="versioning.html">About XStream version numbers...</a></p>
+
         </div>
 
+
+
         <div class="NewsGroup">
+
           <h1><a href="news.html">News...</a></h1>
+
           <template:include src="../content/news.html"
+
                         elements="/html/body/*[@class='NewsItem' and position()<=5]"/>
+
           <!-- <p class="NewsMore"><a href="news.rdf">News feed (XML)</a></p> -->
+
         </div>
+
       </div>
+
     </template:when>
+
   </body>
+
 </html>
