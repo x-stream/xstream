@@ -16,21 +16,24 @@ public class JDomWriter implements HierarchicalStreamWriter {
 
     private List result = new LinkedList();
     private List elementStack = new LinkedList();
-    private JDOMFactory documentFactory = new DefaultJDOMFactory();
+    private final JDOMFactory documentFactory;
 
-    public JDomWriter() {
+    public JDomWriter(Element container, JDOMFactory factory) {
+        elementStack.add(0, container);
+        this.result.add(container);
+        this.documentFactory = factory;
+    }
+
+    public JDomWriter(JDOMFactory documentFactory) {
+        this.documentFactory = documentFactory;
     }
 
     public JDomWriter(Element container) {
-        elementStack.add(0, container);
-        this.result.add(container);
+        this(container, new DefaultJDOMFactory());
     }
 
-    public void setJDOMFactory(JDOMFactory factory) {
-        if (factory == null) {
-            throw new IllegalArgumentException("factory");
-        }
-        this.documentFactory = factory;
+    public JDomWriter() {
+        this(new DefaultJDOMFactory());
     }
 
     public void startNode(String name) {
