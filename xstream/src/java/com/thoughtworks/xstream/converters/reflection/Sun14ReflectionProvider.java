@@ -67,10 +67,6 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         write(fieldDictionary.field(object.getClass(), fieldName, definedIn), object, value);
     }
 
-    public void writeField(Object object, String fieldName, Object value) {
-        write(fieldDictionary.field(object.getClass(), fieldName), object, value);
-    }
-
     private void write(Field field, Object object, Object value) {
         try {
             Unsafe unsafe = getUnsafe();

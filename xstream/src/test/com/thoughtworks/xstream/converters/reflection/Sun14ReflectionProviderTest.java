@@ -37,7 +37,7 @@ public class Sun14ReflectionProviderTest extends AbstractReflectionProviderTest 
         reflectionProvider.writeField(thingy, "finalBoolean", new Boolean(true), WithFinalFields.class);
         assertEquals(true, thingy.finalBoolean);
 
-        reflectionProvider.writeField(thingy, "finalBoolean", new Boolean(false));
+        reflectionProvider.writeField(thingy, "finalBoolean", new Boolean(false), null);
         assertEquals(false, thingy.finalBoolean);
     }
 

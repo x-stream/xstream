@@ -29,7 +29,7 @@ public class ReflectionConverter implements Converter {
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Set seenFields = new HashSet();
-        reflectionProvider.readSerializableFields(source, new ReflectionProvider.Block() {
+        reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
                 if (newObj != null) {
                     writer.startNode(classMapper.mapNameToXML(fieldName));
@@ -65,6 +65,9 @@ public class ReflectionConverter implements Converter {
 
             String fieldName = classMapper.mapNameFromXML(reader.getNodeName());
 
+            String definedIn = reader.getAttribute("defined-in");
+            Class definedInCls = definedIn == null ? null : classMapper.lookupType(definedIn);
+
             Class type;
             String classAttribute = reader.getAttribute(classAttributeIdentifier);
             if (classAttribute == null) {
@@ -73,15 +76,9 @@ public class ReflectionConverter implements Converter {
                 type = classMapper.lookupType(classAttribute);
             }
 
-            String definedIn = reader.getAttribute("defined-in");
-
             Object fieldValue = context.convertAnother(result, type);
 
-            if (definedIn != null) {
-                reflectionProvider.writeField(result, fieldName, fieldValue, classMapper.lookupType(definedIn));
-            } else {
-                reflectionProvider.writeField(result, fieldName, fieldValue);
-            }
+            reflectionProvider.writeField(result, fieldName, fieldValue, definedInCls);
 
             reader.moveUp();
         }

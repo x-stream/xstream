@@ -14,19 +14,9 @@ public class FieldDictionary {
         return buildMap(cls, true).values().iterator();
     }
 
-    public Field field(Class cls, String name) {
-        Map fields = buildMap(cls, false);
-        Field field = (Field) fields.get(name);
-        if (field == null) {
-            throw new ObjectAccessException("No such field " + cls.getName() + "." + name);
-        } else {
-            return field;
-        }
-    }
-
     public Field field(Class cls, String name, Class definedIn) {
-        Map fields = buildMap(cls, true);
-        Field field = (Field) fields.get(new FieldKey(name, definedIn));
+        Map fields = buildMap(cls, definedIn != null);
+        Field field = (Field) fields.get(definedIn != null ? (Object) new FieldKey(name, definedIn) : (Object) name);
         if (field == null) {
             throw new ObjectAccessException("No such field " + cls.getName() + "." + name);
         } else {

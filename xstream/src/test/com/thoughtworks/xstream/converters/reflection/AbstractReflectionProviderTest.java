@@ -33,7 +33,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
 
     public void testVisitsEachFieldInClass() {
         // setup
-        Mock mockBlock = new Mock(ReflectionProvider.Block.class);
+        Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
         mockBlock.expect(once())
@@ -44,7 +44,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
                 .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING);
 
         // execute
-        reflectionProvider.readSerializableFields(new WithFields(), (ReflectionProvider.Block) mockBlock.proxy());
+        reflectionProvider.visitSerializableFields(new WithFields(), (ReflectionProvider.Visitor) mockBlock.proxy());
 
         // verify
         mockBlock.verify();
@@ -56,7 +56,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
 
     public void testVisitsEachFieldInHeirarchy() {
         // setup
-        Mock mockBlock = new Mock(ReflectionProvider.Block.class);
+        Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
         mockBlock.expect(once())
@@ -70,7 +70,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
                 .with(eq("c"), eq(int.class), eq(SubClassWithFields.class), ANYTHING);
 
         // execute
-        reflectionProvider.readSerializableFields(new SubClassWithFields(), (ReflectionProvider.Block) mockBlock.proxy());
+        reflectionProvider.visitSerializableFields(new SubClassWithFields(), (ReflectionProvider.Visitor) mockBlock.proxy());
 
         // verify
         mockBlock.verify();
@@ -86,7 +86,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
 
     public void testVisitsFieldsHiddenBySubclass() {
         // setup
-        Mock mockBlock = new Mock(ReflectionProvider.Block.class);
+        Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
         mockBlock.expect(once())
@@ -102,7 +102,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
                 .with(eq("a"), ANYTHING, ANYTHING, ANYTHING);
 
         // execute
-        reflectionProvider.readSerializableFields(new SubClassWithHiddenFields(), (ReflectionProvider.Block) mockBlock.proxy());
+        reflectionProvider.visitSerializableFields(new SubClassWithHiddenFields(), (ReflectionProvider.Visitor) mockBlock.proxy());
 
         // verify
         mockBlock.verify();
@@ -110,7 +110,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
 
     public void testWritesHiddenFields() {
         SubClassWithHiddenFields o = new SubClassWithHiddenFields();
-        reflectionProvider.writeField(o, "b", new Integer(10));
+        reflectionProvider.writeField(o, "b", new Integer(10), null);
         reflectionProvider.writeField(o, "b", new Integer(20), WithFields.class);
         assertEquals(10, o.getChildB());
         assertEquals(20, o.getParentB());

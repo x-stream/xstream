@@ -27,7 +27,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         }
     }
 
-    public void readSerializableFields(Object object, ReflectionProvider.Block visitor) {
+    public void visitSerializableFields(Object object, ReflectionProvider.Visitor visitor) {
         for (Iterator iterator = fieldDictionary.serializableFieldsFor(object.getClass()); iterator.hasNext();) {
             Field field = (Field) iterator.next();
             if (!fieldModifiersSupported(field)) {
@@ -46,18 +46,6 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         }
     }
 
-    public void writeField(Object object, String fieldName, Object value) {
-        Field field = fieldDictionary.field(object.getClass(), fieldName);
-        validateFieldAccess(field);
-        try {
-            field.set(object, value);
-        } catch (IllegalArgumentException e) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
-        } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
-        }
-    }
-
     public void writeField(Object object, String fieldName, Object value, Class definedIn) {
         Field field = fieldDictionary.field(object.getClass(), fieldName, definedIn);
         validateFieldAccess(field);
@@ -71,7 +59,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     public Class getFieldType(Object object, String fieldName) {
-        return fieldDictionary.field(object.getClass(), fieldName).getType();
+        return fieldDictionary.field(object.getClass(), fieldName, null).getType();
     }
 
     protected boolean fieldModifiersSupported(Field field) {
