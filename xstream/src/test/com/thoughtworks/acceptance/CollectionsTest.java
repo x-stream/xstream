@@ -3,11 +3,9 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Vector;
+import java.util.*;
 
 public class CollectionsTest extends AbstractAcceptanceTest {
 
@@ -98,7 +96,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         assertBothWays(set, expected);
     }
 
-    public void test() {
+    public void testVector() {
         Vector vector = new Vector();
         vector.addElement("a");
         vector.addElement("b");
@@ -110,4 +108,37 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "</vector>");
     }
 
+    public void testSyncronizedWrapper() {
+        // syncronized list has circular reference
+        xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+
+        List list = Collections.synchronizedList(new LinkedList());
+        list.add("hi");
+
+        assertBothWays(list,
+                "<java.util.Collections-SynchronizedList id=\"1\">\n" +
+                "  <c class=\"linked-list\" id=\"2\">\n" +
+                "    <string>hi</string>\n" +
+                "  </c>\n" +
+                "  <list class=\"linked-list\" reference=\"2\"/>\n" +
+                "  <mutex class=\"java.util.Collections-SynchronizedList\" reference=\"1\"/>\n" +
+                "</java.util.Collections-SynchronizedList>");
+    }
+
+    public void testEmptyList() {
+        assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections-EmptyList/>");
+    }
+    
+    public void testUnmodifiableList() {
+        List list = new ArrayList();
+        list.add("hi");
+        list = Collections.unmodifiableList(list);
+
+        assertBothWays(list,
+                "<java.util.Collections-UnmodifiableList>\n" +
+                "  <list>\n" +
+                "    <string>hi</string>\n" +
+                "  </list>\n" +
+                "</java.util.Collections-UnmodifiableList>");
+    }
 }
