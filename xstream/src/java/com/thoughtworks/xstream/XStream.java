@@ -46,7 +46,6 @@ import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
-import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.MapBackedDataHolder;
@@ -68,9 +67,10 @@ import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
+import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
 import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
-import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import java.io.EOFException;
 import java.io.File;
@@ -282,7 +282,7 @@ public class XStream {
     }
 
     private ClassMapper buildMapper(String classAttributeIdentifier) {
-        ClassMapper mapper = new DefaultMapper(classLoader, classAttributeIdentifier);
+        MapperWrapper mapper = new DefaultMapper(classLoader, classAttributeIdentifier);
         mapper = new XmlFriendlyMapper(mapper);
         mapper = new AliasingMapper(mapper);
         aliasingMapper = (AliasingMapper) mapper; // need a reference to that one
@@ -295,8 +295,13 @@ public class XStream {
         defaultImplementationsMapper = (DefaultImplementationsMapper) mapper; // and that one
         mapper = new ImmutableTypesMapper(mapper);
         immutableTypesMapper = (ImmutableTypesMapper)mapper; // that one too
+        mapper = wrapMapper(mapper);
         mapper = new CachingMapper(mapper);
         return mapper;
+    }
+
+    protected MapperWrapper wrapMapper(MapperWrapper next) {
+        return next;
     }
 
     protected void setupAliases() {

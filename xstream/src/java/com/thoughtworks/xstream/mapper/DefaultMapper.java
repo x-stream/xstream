@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.alias.ClassMapper;
  *
  * @author Joe Walnes
  */
-public class DefaultMapper implements ClassMapper {
+public class DefaultMapper extends MapperWrapper {
 
     private final ClassLoader classLoader;
     private final String classAttributeIdentifier;
@@ -19,6 +19,7 @@ public class DefaultMapper implements ClassMapper {
     }
 
     public DefaultMapper(ClassLoader classLoader, String classAttributeIdentifier) {
+        super(null);
         this.classLoader = classLoader;
         this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
     }
