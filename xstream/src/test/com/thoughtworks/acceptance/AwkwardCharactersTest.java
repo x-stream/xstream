@@ -69,4 +69,11 @@ public class AwkwardCharactersTest extends AbstractAcceptanceTest {
                 + "  <x>3</x>\n"
                 + "</com.thoughtworks.acceptance.AwkwardCharactersTest-A_B>");
     }
+
+    public void testSlashRSlashSlashSlashN() {
+        String before = "\r\\\n";
+        String xml = xstream.toXML(before);
+        assertEquals(before, xstream.fromXML(xml));
+    }
+
 }

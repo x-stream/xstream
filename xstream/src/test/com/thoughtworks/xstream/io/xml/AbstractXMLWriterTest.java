@@ -44,7 +44,7 @@ public abstract class AbstractXMLWriterTest extends TestCase {
         writer.startNode("empty");
         writer.endNode();
 
-        assertXmlProducedIs("<empty />");
+        assertXmlProducedIs("<empty/>");
     }
 
     public void testSupportsAttributes() {
@@ -53,7 +53,7 @@ public abstract class AbstractXMLWriterTest extends TestCase {
         writer.addAttribute("lastname", "Walnes");
         writer.endNode();
 
-        assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\" />");
+        assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\"/>");
     }
 
     public void testEscapesXmlUnfriendlyCharacters() {
@@ -63,4 +63,16 @@ public abstract class AbstractXMLWriterTest extends TestCase {
 
         assertXmlProducedIs("<evil>w0000 $ &lt;xx&gt; &amp;!;</evil>");
     }
+
+    public void testEscapesWhitespaceCharacters() {
+        writer.startNode("evil");
+        writer.setValue("one\ntwo\rthree\r\nfour\n\rfive\tsix");
+        writer.endNode();
+
+        assertXmlProducedIs("<evil>one\n"
+                + "two&#x0D;three&#x0D;\n"
+                + "four\n"
+                + "&#x0D;five\tsix</evil>");
+    }
+
 }

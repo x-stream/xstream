@@ -17,6 +17,9 @@ public class JDomWriterTest extends AbstractXMLWriterTest {
     protected void assertXmlProducedIs(String expected) {
         XMLOutputter outputter = new XMLOutputter();
         String actual = outputter.outputString(result);
+        actual = actual.replaceAll("&#xD;", "&#x0D;"); // close enough
+        actual = actual.replaceAll("\r\n", "\n");
+        actual = actual.replaceAll(" />", "/>");
         assertEquals(expected, actual);
     }
 

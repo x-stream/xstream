@@ -5,31 +5,40 @@ import junit.framework.TestCase;
 
 import java.io.StringWriter;
 
-public class PrettyPrintWriterTest extends TestCase {
+public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
+    private StringWriter buffer;
 
-    public void testXmlIsIndented() {
-        StringWriter stringWriter = new StringWriter();
-        HierarchicalStreamWriter xmlWriter = new PrettyPrintWriter(stringWriter, "  ");
+    protected void setUp() throws Exception {
+        super.setUp();
+        buffer = new StringWriter();
+        writer = new PrettyPrintWriter(buffer, "  ");
+    }
 
-        xmlWriter.startNode("hello");
-        xmlWriter.startNode("world");
-        xmlWriter.addAttribute("id", "one");
+    protected void assertXmlProducedIs(String expected) {
+        assertEquals(expected, buffer.toString());
+    }
 
-        xmlWriter.startNode("one");
-        xmlWriter.setValue("potato");
-        xmlWriter.endNode();
+    public void testSupportsNestedElements() { // Note: This overrides a test in superclass to include indentation
 
-        xmlWriter.startNode("two");
-        xmlWriter.addAttribute("id", "two");
-        xmlWriter.setValue("potatae");
-        xmlWriter.endNode();
+        writer.startNode("hello");
+        writer.startNode("world");
+        writer.addAttribute("id", "one");
 
-        xmlWriter.endNode();
+        writer.startNode("one");
+        writer.setValue("potato");
+        writer.endNode();
 
-        xmlWriter.startNode("empty");
-        xmlWriter.endNode();
+        writer.startNode("two");
+        writer.addAttribute("id", "two");
+        writer.setValue("potatae");
+        writer.endNode();
 
-        xmlWriter.endNode();
+        writer.endNode();
+
+        writer.startNode("empty");
+        writer.endNode();
+
+        writer.endNode();
 
         String expected =
                 "<hello>\n" +
@@ -40,7 +49,7 @@ public class PrettyPrintWriterTest extends TestCase {
                 "  <empty/>\n" +
                 "</hello>";
 
-        assertEquals(expected, stringWriter.toString());
+        assertXmlProducedIs(expected);
     }
 
 }

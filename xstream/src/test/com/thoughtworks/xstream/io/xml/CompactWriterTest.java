@@ -4,63 +4,66 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import junit.framework.TestCase;
 
 import java.io.StringWriter;
+import java.io.Writer;
 
-public class CompactWriterTest extends TestCase {
-    private StringWriter stringWriter;
-    private HierarchicalStreamWriter xmlWriter;
+public class CompactWriterTest extends AbstractXMLWriterTest {
+    private Writer buffer;
 
     protected void setUp() throws Exception {
         super.setUp();
-        stringWriter = new StringWriter();
-        xmlWriter = new CompactWriter(stringWriter);
+        buffer = new StringWriter();
+        writer = new CompactWriter(buffer);
+    }
+
+    protected void assertXmlProducedIs(String expected) {
+        assertEquals(expected, buffer.toString());
     }
 
     public void testXmlIsIndented() {
-        xmlWriter.startNode("hello");
-        xmlWriter.startNode("world");
+        writer.startNode("hello");
+        writer.startNode("world");
 
-        xmlWriter.startNode("one");
-        xmlWriter.setValue("potato");
-        xmlWriter.endNode();
+        writer.startNode("one");
+        writer.setValue("potato");
+        writer.endNode();
 
-        xmlWriter.startNode("two");
-        xmlWriter.setValue("potatae");
-        xmlWriter.endNode();
+        writer.startNode("two");
+        writer.setValue("potatae");
+        writer.endNode();
 
-        xmlWriter.endNode();
-        xmlWriter.endNode();
+        writer.endNode();
+        writer.endNode();
 
         String expected = "<hello><world><one>potato</one><two>potatae</two></world></hello>";
-
-        assertEquals(expected, stringWriter.toString());
+        assertXmlProducedIs(expected);
     }
 
     public void testEncodesFunnyXmlChars() {
-        xmlWriter.startNode("tag");
-        xmlWriter.setValue("hello & this isn't \"really\" <good>");
-        xmlWriter.endNode();
+        writer.startNode("tag");
+        writer.setValue("hello & this isn't \"really\" <good>");
+        writer.endNode();
 
-        String expected = "<tag>hello &amp; this isn't \"really\" &lt;good&gt;</tag>";
+        String expected = "<tag>hello &amp; this isn&apos;t &quot;really&quot; &lt;good&gt;</tag>";
 
-        assertEquals(expected, stringWriter.toString());
+        assertXmlProducedIs(expected);
     }
 
     public void testAttributesCanBeWritten() {
-        xmlWriter.startNode("tag");
-        xmlWriter.addAttribute("hello", "world");
-        xmlWriter.startNode("inner");
-        xmlWriter.addAttribute("foo", "bar");
-        xmlWriter.addAttribute("poo", "par");
-        xmlWriter.setValue("hi");
-        xmlWriter.endNode();
-        xmlWriter.endNode();
+        writer.startNode("tag");
+        writer.addAttribute("hello", "world");
+        writer.startNode("inner");
+        writer.addAttribute("foo", "bar");
+        writer.addAttribute("poo", "par");
+        writer.setValue("hi");
+        writer.endNode();
+        writer.endNode();
 
         String expected = "" +
                 "<tag hello=\"world\">" +
                 "<inner foo=\"bar\" poo=\"par\">hi</inner>" +
                 "</tag>";
 
-        assertEquals(expected, stringWriter.toString());
+        assertXmlProducedIs(expected);
     }
 
 }
