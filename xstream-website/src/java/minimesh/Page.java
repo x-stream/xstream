@@ -6,17 +6,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.BlockExtractingRule;
 import com.opensymphony.module.sitemesh.html.HTMLProcessor;
 import com.opensymphony.module.sitemesh.html.Tag;
+import com.opensymphony.module.sitemesh.html.TextFilter;
+import com.opensymphony.module.sitemesh.html.rules.BodyTagRule;
+import com.opensymphony.module.sitemesh.html.rules.HeadExtractingRule;
+import com.opensymphony.module.sitemesh.html.rules.MetaTagRule;
+import com.opensymphony.module.sitemesh.html.rules.PageBuilder;
+import com.opensymphony.module.sitemesh.html.rules.RegexReplacementTextFilter;
+import com.opensymphony.module.sitemesh.html.rules.TitleExtractingRule;
 import com.opensymphony.module.sitemesh.html.util.CharArray;
-import com.opensymphony.module.sitemesh.parser.PageBuilder;
-import com.opensymphony.module.sitemesh.parser.rules.BodyTagRule;
-import com.opensymphony.module.sitemesh.parser.rules.HeadExtractingRule;
-import com.opensymphony.module.sitemesh.parser.rules.MetaTagRule;
-import com.opensymphony.module.sitemesh.parser.rules.TitleExtractingRule;
 
 /**
  * A single page in a website, including title, filename and content.
@@ -73,7 +77,8 @@ public class Page {
         htmlProcessor.addRule(new TitleExtractingRule(pageBuilder));
         htmlProcessor.addRule(new MetaTagRule(pageBuilder));
         htmlProcessor.addRule(new LinkExtractingRule());
-        htmlProcessor.addRule(new JiraLinkRule());
+        // turn JIRA:XSTR-123 snippets into links
+        htmlProcessor.addTextFilter(new RegexReplacementTextFilter("JIRA:(XSTR\\-[0-9]+)", "<a href=\"http://jira.codehaus.org/browse/$1\">$1</a>"));	
 
         // go!
         htmlProcessor.process();
@@ -130,22 +135,5 @@ public class Page {
             tag.writeTo(currentBuffer());
         }
     }
-
-    /**
-     * Rule for HTMLProcessor that turns <jira>XSTR-123</jira> tags into links.
-     */
-    private class JiraLinkRule extends BlockExtractingRule {
-
-        protected JiraLinkRule() {
-            super(false, "jira");            
-        }
-        
-        protected void end(Tag tag) {
-            CharArray buffer = currentBuffer();
-            String id = buffer.toString();
-            buffer.clear();
-            buffer.append("<a href=\"http://jira.codehaus.org/browse/" + id+ "\">" + id + "</a>");
-            context.mergeBuffer();
-        }
-    }
+    
 }

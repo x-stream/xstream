@@ -30,17 +30,17 @@
     <ul>
         <li>Bugfix: Thread context classloader is loaded by the correct thread. (Thanks to Padraic Renaghan for pointing this out).</li>
         <li>Bugfix: Default implementations of aliased classes were not being deserialized by SerializableConverter.</li>
-        <li>Bugfix: <jira>XSTR-180</jira> Serializable objects support defaultReadObject() even when no default fields available.</li>
+        <li>Bugfix: JIRA:XSTR-180 Serializable objects support defaultReadObject() even when no default fields available.</li>
 		<li>Bugfix: For serialized objects class hierarchy is serialized starting with superclass (as per Java Object Serialization).</li>
 		<li>Bugfix: readObject() is now called for classes containing only transient fields.</li>
 		<li>Bugfix: Order of fields are maintained when calling ObjectOutputStream.putFields().</li>
 		<li>Bugfix: FontConverter extended to support FontUIResource which does some awkward native calls.</li>
 		<li>Bugfix: Deserialization of very complicated graphs (such as Swing components) sometimes resulted in broken object references. Now fixed.</li>
-		<li>Bugfix: <jira>XSTR-188</jira> Classes that use readResolve()/writeReplace() can now return different types.</li>
-		<li>Bugfix: <jira>XSTR-185</jira>, <jira>XSTR-195</jira> Support for loading of array classes for classes that have not yet been loaded. (Thanks to Henri Tremblay and Simon Daniel)</li>
-		<li>Bugfix: <jira>XSTR-190</jira> PrettyPrintWriter and CompactWriter escape characters in XML attributes.</li>
-		<li>Bugfix: <jira>XSTR-176</jira>, <jira>XSTR-196</jira> The XStream ObjectInputStream and ObjectOutputStream implementations now propegate the flush() and close() events to the underlying streams.</li>
-		<li>Bugfix: <jira>XSTR-192</jira> Implicit collection mappings are now supported in inheritance hierarchies.</li>
+		<li>Bugfix: JIRA:XSTR-188 Classes that use readResolve()/writeReplace() can now return different types.</li>
+		<li>Bugfix: JIRA:XSTR-185, JIRA:XSTR-195 Support for loading of array classes for classes that have not yet been loaded. (Thanks to Henri Tremblay and Simon Daniel)</li>
+		<li>Bugfix: JIRA:XSTR-190 PrettyPrintWriter and CompactWriter escape characters in XML attributes.</li>
+		<li>Bugfix: JIRA:XSTR-176, JIRA:XSTR-196 The XStream ObjectInputStream and ObjectOutputStream implementations now propegate the flush() and close() events to the underlying streams.</li>
+		<li>Bugfix: JIRA:XSTR-192 Implicit collection mappings are now supported in inheritance hierarchies.</li>
     </ul>
 
     <h2>API changes</h2>
