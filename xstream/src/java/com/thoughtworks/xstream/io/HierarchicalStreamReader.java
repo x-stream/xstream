@@ -16,6 +16,7 @@ public interface HierarchicalStreamReader {
 
     String getAttribute(String name);
 
+    /** @deprecated */
     Object peekUnderlyingNode();
 
     void appendErrors(ErrorWriter errorWriter);
