@@ -128,17 +128,21 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     public void testEmptyList() {
         assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections-EmptyList/>");
     }
-    
+
     public void testUnmodifiableList() {
+        // unodifiable list has duplicate refs
+        xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+
         List list = new ArrayList();
         list.add("hi");
         list = Collections.unmodifiableList(list);
 
         assertBothWays(list,
-                "<java.util.Collections-UnmodifiableList>\n" +
-                "  <list>\n" +
+                "<java.util.Collections-UnmodifiableRandomAccessList id=\"1\">\n" +
+                "  <c class=\"list\" id=\"2\">\n" +
                 "    <string>hi</string>\n" +
-                "  </list>\n" +
-                "</java.util.Collections-UnmodifiableList>");
+                "  </c>\n" +
+                "  <list reference=\"2\"/>\n" +
+                "</java.util.Collections-UnmodifiableRandomAccessList>");
     }
 }

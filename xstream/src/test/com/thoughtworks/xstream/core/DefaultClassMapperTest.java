@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.core;
 
 import junit.framework.TestCase;
+import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
 
 public class DefaultClassMapperTest extends TestCase {
     private DefaultClassMapper mapper;
@@ -21,6 +22,11 @@ public class DefaultClassMapperTest extends TestCase {
         assertEquals("int-array", mapper.lookupName(new int[0].getClass()));
     }
 
+    public void testPrefixesIllegalXmlElementNamesWithValue() {
+        Class proxyCls = SampleDynamicProxy.newInstance().getClass();
+        assertEquals("default-Proxy0", mapper.lookupName(proxyCls));
+        assertEquals(proxyCls, mapper.lookupType("default-Proxy0"));
+    }
     // @TODO
     public void TODO_testArrayClassesCanBeCreated() {
         Class arrayType = mapper.lookupType("java.lang.String-array");

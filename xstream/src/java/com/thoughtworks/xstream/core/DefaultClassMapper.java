@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.reflect.Proxy;
 
 public class DefaultClassMapper implements ClassMapper {
 
@@ -48,9 +49,16 @@ public class DefaultClassMapper implements ClassMapper {
             type = type.getComponentType();
         }
         String result = (String) typeToNameMap.get(type);
+        if (result == null && Proxy.isProxyClass(type)) {
+            result = (String) typeToNameMap.get(DynamicProxy.class);
+        }
         if (result == null) {
             // the $ used in inner class names is illegal as an xml element getNodeName
             result = type.getName().replace('$', '-');
+            if (result.charAt(0) == '-') {
+                // special case for classes named $Blah with no package; <-Blah> is illegal XML
+                result = "default" + result;
+            }
         }
         if (isArray) {
             result += "-array";
@@ -106,6 +114,10 @@ public class DefaultClassMapper implements ClassMapper {
         
         // the $ used in inner class names is illegal as an xml element getNodeName
         elementName = elementName.replace('-', '$');
+        if (elementName.startsWith("default$")) {
+            // special case for classes named $Blah with no package; <-Blah> is illegal XML
+            elementName = elementName.substring(7);
+        }
 
         Class result;
 

@@ -17,4 +17,9 @@ public interface ClassMapper {
      * Place holder type used for null values.
      */
     class Null {}
+
+    /**
+     * Place holder type used for dynamic proxies.
+     */
+    class DynamicProxy {}
 }
