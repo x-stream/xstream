@@ -1,0 +1,97 @@
+<project name="xstream" default="all">
+
+    <property name="version" value="0.6-RC1"/>
+
+    <path id="classpath">
+        <fileset dir="lib"/>
+    </path>
+
+    <target name="all" depends="clean, compile, test, jar, javadoc, website, dist" description="Rebuild everything"/>
+
+    <target name="clean" description="Clean up all built files">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile" description="Compile all Java">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src/java" destdir="build/classes">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="compile" description="Run all acceptance tests and unit tests">
+        <mkdir dir="build/test-classes"/>
+        <javac srcdir="src/test" destdir="build/test-classes" classpath="build/classes" classpathref="classpath"/>
+        <junit printsummary="yes" haltonfailure="yes" fork="no">
+            <classpath refid="classpath"/>
+            <classpath>
+                <pathelement location="build/classes"/>
+                <pathelement location="build/test-classes"/>
+            </classpath>
+            <formatter type="brief" usefile="no"/>
+            <batchtest>
+                <fileset dir="src/test">
+                    <include name="**/*Test*.java"/>
+                    <exclude name="**/Abstract*"/>
+                    <exclude name="**/complexobjects/**"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="jar" depends="compile" description="Build JARs">
+        <mkdir dir="build/extra-classes"/>
+        <unjar src="lib/xpp3-1.1.3.4d_b4_min.jar" dest="build/extra-classes"/>
+        <jar jarfile="build/xstream-${version}.jar">
+            <fileset dir="build/classes"/>
+            <fileset dir="build/extra-classes">
+                <!-- TODO: include XPP3 license in jar -->
+                <include name="org/xmlpull/**"/>
+            </fileset>
+        </jar>
+        <jar jarfile="build/xstream-${version}-core.jar">
+            <fileset dir="build/classes"/>
+        </jar>
+        <echo message="--- Created JARs ---"/>
+        <echo message=" build/xstream-${version}.jar"/>
+        <echo message=" build/xstream-${version}-core.jar"/>
+        <echo message="--------------------"/>
+    </target>
+
+    <target name="javadoc" description="Build JavaDoc">
+        <mkdir dir="build/javadoc"/>
+        <javadoc destdir="build/javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
+            <packageset dir="src/java" defaultexcludes="yes">
+              <exclude name="com/thoughtworks/xstream/core/**"/>
+              <exclude name="com/thoughtworks/xstream/io/path/**"/>
+              <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
+            </packageset>
+            <doctitle><![CDATA[<h1>XStream ${version} API</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Joe Walnes, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]></bottom>
+        </javadoc>
+    </target>
+    
+    <target name="website" description="Build website">
+        <mkdir dir="website/output"/>
+        <!-- todo -->
+    </target>
+
+    <!-- assemble complete website -->
+    <!-- assemble offline docs -->
+    
+    <target name="dist" depends="jar" description="Build distribution package">
+        <zip zipfile="build/xstream-${version}.zip">
+            <zipfileset dir=".">
+                <include name="build.xml"/>
+                <include name="LICENSE.txt"/>
+                <include name="README.txt"/>
+                <include name="src/**"/>
+                <include name="lib/**"/>
+            </zipfileset>
+            <zipfileset dir="build">
+                <include name="xstream-${version}*.jar"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+</project>
