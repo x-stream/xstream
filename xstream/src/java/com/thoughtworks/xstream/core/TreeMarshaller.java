@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ public class TreeMarshaller implements MarshallingContext {
     protected HierarchicalStreamWriter writer;
     protected ConverterLookup converterLookup;
     protected ClassMapper classMapper;
-    private Collection parentObjects = new HashSet();
+    private ObjectIdDictionary parentObjects = new ObjectIdDictionary();
 
     public TreeMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup,
                                      ClassMapper classMapper) {
@@ -24,14 +25,13 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     public void convertAnother(Object item) {
-        Integer id = new Integer(System.identityHashCode(item));
-        if (parentObjects.contains(id)) {
+        if (parentObjects.containsId(item)) {
             throw new CircularReferenceException();
         }
-        parentObjects.add(id);
+        parentObjects.associateId(item, "");
         Converter converter = converterLookup.lookupConverterForType(item.getClass());
         converter.marshal(item, writer, this);
-        parentObjects.remove(id);
+        parentObjects.removeId(item);
     }
 
     public void start(Object item) {

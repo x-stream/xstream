@@ -12,16 +12,33 @@ public class ObjectIdDictionary {
 
     private Map map = new HashMap();
 
+    private static class IdWrapper {
+
+        private final Object obj;
+
+        public IdWrapper(Object obj) {
+            this.obj = obj;
+        }
+
+        public int hashCode() {
+            return System.identityHashCode(obj);
+        }
+
+        public boolean equals(Object other) {
+            return obj == ((IdWrapper)other).obj;
+        }
+
+        public String toString() {
+            return obj.toString();
+        }
+    }
+
     public void associateId(Object obj, String id) {
-        map.put(id(obj), id);
+        map.put(new IdWrapper(obj), id);
     }
 
     public String lookupId(Object obj) {
-        return (String) map.get(id(obj));
-    }
-
-    private Object id(Object obj) {
-        return new Integer(System.identityHashCode(obj));
+        return (String) map.get(new IdWrapper(obj));
     }
 
 }
