@@ -9,6 +9,7 @@ import org.xmlpull.mxp1.MXParser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -21,7 +22,7 @@ public class XppReader implements HierarchicalStreamReader {
     public XppReader(Reader reader) {
         try {
             parser = createParser();
-            parser.setInput(reader);
+            parser.setInput(new BufferedReader(reader));
             moveDown();
         } catch (XmlPullParserException e) {
             throw new StreamException(e);
