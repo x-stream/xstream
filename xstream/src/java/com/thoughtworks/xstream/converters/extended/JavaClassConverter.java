@@ -33,6 +33,7 @@ public class JavaClassConverter extends AbstractBasicConverter {
     protected Object fromString(String str) {
         try {
             return
+                    str.equals("void") ? void.class :
                     str.equals("byte") ? byte.class :
                     str.equals("int") ? int.class :
                     str.equals("long") ? long.class :
