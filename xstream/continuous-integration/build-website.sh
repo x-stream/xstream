@@ -1,4 +1,4 @@
 #!/bin/bash
 
 ant clean website
-tar cf - build/website | ssh beaver tar -C /home/projects/xstream/public_html -xf -
+tar -C build/website -cf - . | ssh beaver tar -C /home/projects/xstream/public_html -xf -
