@@ -125,13 +125,6 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
         String expectedXml = ""
                 + "<child serialization=\"custom\">\n"
-                + "  <child>\n"
-                + "    <int>10</int>\n"
-                + "    <default>\n"
-                + "      <childB>20</childB>\n"
-                + "    </default>\n"
-                + "    <int>30</int>\n"
-                + "  </child>\n"
                 + "  <parent>\n"
                 + "    <int>1</int>\n"
                 + "    <default>\n"
@@ -139,6 +132,13 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "    <int>3</int>\n"
                 + "  </parent>\n"
+                + "  <child>\n"
+                + "    <int>10</int>\n"
+                + "    <default>\n"
+                + "      <childB>20</childB>\n"
+                + "    </default>\n"
+                + "    <int>30</int>\n"
+                + "  </child>\n"
                 + "</child>";
 
         assertBothWays(child, expectedXml);
@@ -162,11 +162,6 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
         String expectedXml = ""
                 + "<child2 serialization=\"custom\">\n"
-                + "  <child2>\n"
-                + "    <default>\n"
-                + "      <childA>20</childA>\n"
-                + "    </default>\n"
-                + "  </child2>\n"
                 + "  <parent>\n"
                 + "    <int>1</int>\n"
                 + "    <default>\n"
@@ -174,6 +169,11 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "    <int>3</int>\n"
                 + "  </parent>\n"
+                + "  <child2>\n"
+                + "    <default>\n"
+                + "      <childA>20</childA>\n"
+                + "    </default>\n"
+                + "  </child2>\n"
                 + "</child2>";
 
         assertBothWays(child, expectedXml);

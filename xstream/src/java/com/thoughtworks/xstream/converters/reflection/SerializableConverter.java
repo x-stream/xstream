@@ -17,6 +17,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
@@ -144,8 +147,9 @@ public class SerializableConverter implements Converter {
             }
         };
 
-        currentType[0] = replacedSource.getClass();
-        while (currentType[0] != null) {
+        Iterator classHieararchy = hierarchyFor(replacedSource.getClass());
+        while (classHieararchy.hasNext()) {
+            currentType[0] = (Class) classHieararchy.next();
             if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
                 writtenClassWrapper[0] = true;
                 writer.startNode(classMapper.lookupName(currentType[0]));
@@ -163,8 +167,20 @@ public class SerializableConverter implements Converter {
                     writer.endNode();
                 }
             }
-            currentType[0] = currentType[0].getSuperclass();
         }
+    }
+
+    private Iterator hierarchyFor(Class type) {
+        List result = new ArrayList();
+        while(type != null) {
+            result.add(type);
+            type = type.getSuperclass();
+        }
+
+        // In Java Object Serialization, the classes are deserialized starting from parent class and moving down.
+        Collections.reverse(result);
+
+        return result.iterator();
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
