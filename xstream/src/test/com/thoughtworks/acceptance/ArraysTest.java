@@ -88,22 +88,21 @@ public class ArraysTest extends AbstractAcceptanceTest {
 
     }
 
-    // @TODO
-    public void TODO_testArrayInCustomObject() {
+    public void testArrayInCustomObject() {
         ObjWithArray objWithArray = new ObjWithArray();
-        objWithArray.ints = new int[]{1, 2};
+        objWithArray.strings = new String[]{"hi", "bye"};
         xstream.alias("owa", ObjWithArray.class);
         String expected = "" +
                 "<owa>\n" +
-                "  <ints class=\"int-array\">\n" +
-                "    <int>1</int>\n" +
-                "    <int>2</int>\n" +
-                "  </ints>\n" +
+                "  <strings class=\"string-array\">\n" +
+                "    <string>hi</string>\n" +
+                "    <string>bye</string>\n" +
+                "  </strings>\n" +
                 "</owa>";
         assertBothWays(objWithArray, expected);
     }
 
     class ObjWithArray extends StandardObject {
-        int[] ints;
+        String[] strings;
     }
 }

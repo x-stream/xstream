@@ -29,8 +29,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
 
     public void fromXML(ObjectTree objectGraph, XMLReader xmlReader, ConverterLookup converterLookup, Class requiredType) {
         int size = xmlReader.childCount();
-        Class type = classMapper.lookupType(xmlReader.name());
-        Object array = Array.newInstance(type.getComponentType(), size);
+        Object array = Array.newInstance(requiredType.getComponentType(), size);
         for (int i = 0; i < size; i++) {
             Object item = readItem(xmlReader, i, objectGraph, converterLookup);
             Array.set(array, i, item);

@@ -134,7 +134,7 @@ public class ReflectionObjectGraphTest extends TestCase {
         int b;
     }
 
-    public void testInheritance() {
+    public void testFieldsFromInheritedClassesAreExposed() {
         ObjectTree writer = new ReflectionObjectGraph(Z.class, objectFactory);
         writer.create(Z2.class);
 
@@ -142,6 +142,21 @@ public class ReflectionObjectGraphTest extends TestCase {
         assertEquals(2, result.length);
         assertEquals("b", result[0]);
         assertEquals("a", result[1]);
+    }
+
+    class W {
+        String[] a;
+    }
+
+    public void testArraysCanBeSet() {
+        ObjectTree objectTree = new ReflectionObjectGraph(Z.class, objectFactory);
+        W w = new W();
+        objectTree.set(w);
+        objectTree.push("a");
+        objectTree.set(new String[]{"hi", "bye"});
+        objectTree.pop();
+
+        assertEquals("bye", w.a[1]);
     }
 }
 
