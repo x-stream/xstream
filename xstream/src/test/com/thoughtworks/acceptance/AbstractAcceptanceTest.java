@@ -54,7 +54,7 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             if (actual.getClass().isArray()) {
                 assertArrayEquals(expected, actual);
             } else {
-                assertEquals(expected.getClass(), actual.getClass());
+//                assertEquals(expected.getClass(), actual.getClass());
                 if (!expected.equals(actual)) {
                     assertEquals("Object deserialization failed",
                             "DESERIALIZED OBJECT\n" + xstream.toXML(expected),

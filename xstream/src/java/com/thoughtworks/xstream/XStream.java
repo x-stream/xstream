@@ -12,7 +12,47 @@ import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
+import com.thoughtworks.xstream.converters.extended.FileConverter;
+import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
+import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
+import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
+import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
+import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
+import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
+import com.thoughtworks.xstream.converters.extended.FontConverter;
+import com.thoughtworks.xstream.converters.extended.ColorConverter;
+import com.thoughtworks.xstream.converters.extended.LocaleConverter;
+import com.thoughtworks.xstream.converters.extended.GregorianCalendarConverter;
+import com.thoughtworks.xstream.converters.extended.ThrowableConverter;
+import com.thoughtworks.xstream.converters.extended.StackTraceElementConverter;
+import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
+import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
+import com.thoughtworks.xstream.converters.collections.BitSetConverter;
+import com.thoughtworks.xstream.converters.collections.ArrayConverter;
+import com.thoughtworks.xstream.converters.collections.CharArrayConverter;
+import com.thoughtworks.xstream.converters.collections.CollectionConverter;
+import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.converters.collections.TreeMapConverter;
+import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
+import com.thoughtworks.xstream.converters.collections.PropertiesConverter;
+import com.thoughtworks.xstream.converters.basic.IntConverter;
+import com.thoughtworks.xstream.converters.basic.FloatConverter;
+import com.thoughtworks.xstream.converters.basic.DoubleConverter;
+import com.thoughtworks.xstream.converters.basic.LongConverter;
+import com.thoughtworks.xstream.converters.basic.ShortConverter;
+import com.thoughtworks.xstream.converters.basic.CharConverter;
+import com.thoughtworks.xstream.converters.basic.BooleanConverter;
+import com.thoughtworks.xstream.converters.basic.ByteConverter;
+import com.thoughtworks.xstream.converters.basic.StringConverter;
+import com.thoughtworks.xstream.converters.basic.StringBufferConverter;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
+import com.thoughtworks.xstream.converters.basic.URLConverter;
+import com.thoughtworks.xstream.converters.basic.BigIntegerConverter;
+import com.thoughtworks.xstream.converters.basic.BigDecimalConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
+import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.core.AddableImplicitCollectionMapper;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
@@ -22,6 +62,7 @@ import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -162,9 +203,13 @@ public class XStream {
     private AliasingMapper aliasingMapper;
     private DefaultImplementationsMapper defaultImplementationsMapper;
 
+    private ReflectionProvider reflectionProvider;
     private HierarchicalStreamDriver hierarchicalStreamDriver;
     private MarshallingStrategy marshallingStrategy;
+    private ClassLoader classLoader; // TODO: Should be changeable
+
     private ClassMapper classMapper;
+    private String classAttributeIdentifier;
     private DefaultConverterLookup converterLookup;
     private JVM jvm = new JVM();
     private AddableImplicitCollectionMapper implicitCollectionMapper = new AddableImplicitCollectionMapper();
@@ -202,13 +247,17 @@ public class XStream {
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
+        this.classAttributeIdentifier = classAttributeIdentifier;
+        this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
+        this.classLoader = new CompositeClassLoader();
         this.classMapper = classMapper == null ? setupMapper() : classMapper;
         setMode(XPATH_REFERENCES);
         converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, implicitCollectionMapper, this.classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
         setupAliases();
         setupDefaultImplementations();
+        setupConverters();
     }
 
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier, Converter defaultConverter) {
@@ -216,17 +265,21 @@ public class XStream {
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
+        this.classAttributeIdentifier = classAttributeIdentifier;
+        this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
+        this.classLoader = new CompositeClassLoader();
         this.classMapper = classMapper == null ? setupMapper() : classMapper;
         setMode(XPATH_REFERENCES);
         converterLookup = new DefaultConverterLookup(jvm, reflectionProvider, defaultConverter, this.classMapper, classAttributeIdentifier);
         converterLookup.setupDefaults();
         setupAliases();
         setupDefaultImplementations();
+        setupConverters();
     }
 
     protected ClassMapper setupMapper() {
-        ClassMapper mapper = new DefaultMapper();
+        ClassMapper mapper = new DefaultMapper(classLoader);
         mapper = new XmlFriendlyClassMapper(mapper);
         aliasingMapper = new AliasingMapper(mapper);
         mapper = new DynamicProxyMapper(aliasingMapper); // special handling of dynamic proxy instances
@@ -293,11 +346,62 @@ public class XStream {
         }
     }
 
-    private void setupDefaultImplementations() {
+    protected void setupDefaultImplementations() {
         addDefaultImplementation(HashMap.class, Map.class);
         addDefaultImplementation(ArrayList.class, List.class);
         addDefaultImplementation(HashSet.class, Set.class);
         addDefaultImplementation(GregorianCalendar.class, Calendar.class);
+    }
+
+    protected void setupConverters() {
+        registerConverter(new SerializableConverter(classMapper, reflectionProvider));
+        registerConverter(new ExternalizableConverter(classMapper));
+
+        registerConverter(new IntConverter());
+        registerConverter(new FloatConverter());
+        registerConverter(new DoubleConverter());
+        registerConverter(new LongConverter());
+        registerConverter(new ShortConverter());
+        registerConverter(new CharConverter());
+        registerConverter(new BooleanConverter());
+        registerConverter(new ByteConverter());
+
+        registerConverter(new StringConverter());
+        registerConverter(new StringBufferConverter());
+        registerConverter(new DateConverter());
+        registerConverter(new BitSetConverter());
+        registerConverter(new URLConverter());
+        registerConverter(new BigIntegerConverter());
+        registerConverter(new BigDecimalConverter());
+
+        registerConverter(new ArrayConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new CharArrayConverter());
+        registerConverter(new CollectionConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new MapConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new TreeMapConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new TreeSetConverter(classMapper, classAttributeIdentifier));
+        registerConverter(new PropertiesConverter());
+        registerConverter(new EncodedByteArrayConverter());
+
+        registerConverter(new FileConverter());
+        registerConverter(new SqlTimestampConverter());
+        registerConverter(new SqlTimeConverter());
+        registerConverter(new SqlDateConverter());
+        registerConverter(new DynamicProxyConverter(classMapper, classLoader));
+        registerConverter(new JavaClassConverter(classLoader));
+        registerConverter(new JavaMethodConverter());
+        registerConverter(new FontConverter());
+        registerConverter(new ColorConverter());
+        registerConverter(new LocaleConverter());
+        registerConverter(new GregorianCalendarConverter());
+
+        if (JVM.is14()) {
+            registerConverter(new ThrowableConverter(converterLookup.defaultConverter()));
+            registerConverter(new StackTraceElementConverter());
+
+            registerConverter(new CurrencyConverter());
+            registerConverter(new RegexPatternConverter(converterLookup.defaultConverter()));
+        }
     }
 
     public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {

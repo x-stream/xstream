@@ -8,10 +8,6 @@ public class DefaultMapper implements ClassMapper {
 
     private final ClassLoader classLoader;
 
-    public DefaultMapper() {
-        this(new CompositeClassLoader());
-    }
-
     public DefaultMapper(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }

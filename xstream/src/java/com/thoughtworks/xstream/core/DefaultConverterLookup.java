@@ -146,54 +146,6 @@ public class DefaultConverterLookup implements ConverterLookup {
 
     public void setupDefaults() {
         registerConverter(defaultConverter);
-        registerConverter(new SerializableConverter(classMapper, reflectionProvider));
-        registerConverter(new ExternalizableConverter(classMapper));
-
-        registerConverter(new IntConverter());
-        registerConverter(new FloatConverter());
-        registerConverter(new DoubleConverter());
-        registerConverter(new LongConverter());
-        registerConverter(new ShortConverter());
-        registerConverter(new CharConverter());
-        registerConverter(new BooleanConverter());
-        registerConverter(new ByteConverter());
-
-        registerConverter(new StringConverter());
-        registerConverter(new StringBufferConverter());
-        registerConverter(new DateConverter());
-        registerConverter(new BitSetConverter());
-        registerConverter(new URLConverter());
-        registerConverter(new BigIntegerConverter());
-        registerConverter(new BigDecimalConverter());
-
-        registerConverter(new ArrayConverter(classMapper, classAttributeIdentifier));
-        registerConverter(new CharArrayConverter());
-        registerConverter(new CollectionConverter(classMapper, classAttributeIdentifier));
-        registerConverter(new MapConverter(classMapper, classAttributeIdentifier));
-        registerConverter(new TreeMapConverter(classMapper, classAttributeIdentifier));
-        registerConverter(new TreeSetConverter(classMapper, classAttributeIdentifier));
-        registerConverter(new PropertiesConverter());
-        registerConverter(new EncodedByteArrayConverter());
-
-        registerConverter(new FileConverter());
-        registerConverter(new SqlTimestampConverter());
-        registerConverter(new SqlTimeConverter());
-        registerConverter(new SqlDateConverter());
-        registerConverter(new DynamicProxyConverter(classMapper, classLoader));
-        registerConverter(new JavaClassConverter(classLoader));
-        registerConverter(new JavaMethodConverter());
-        registerConverter(new FontConverter());
-        registerConverter(new ColorConverter());
-        registerConverter(new LocaleConverter());
-        registerConverter(new GregorianCalendarConverter());
-
-        if (JVM.is14()) {
-            registerConverter(new ThrowableConverter(defaultConverter()));
-            registerConverter(new StackTraceElementConverter());
-
-            registerConverter(new CurrencyConverter());
-            registerConverter(new RegexPatternConverter(defaultConverter()));
-        }
     }
 
     public String getClassAttributeIdentifier() {

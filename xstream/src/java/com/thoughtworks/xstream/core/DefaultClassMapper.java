@@ -9,14 +9,15 @@ import com.thoughtworks.xstream.alias.DefaultMapper;
 import com.thoughtworks.xstream.alias.DynamicProxyMapper;
 import com.thoughtworks.xstream.alias.ImmutableTypesMapper;
 import com.thoughtworks.xstream.alias.XmlFriendlyClassMapper;
+import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
 /**
- * @deprecated As of 1.1.1. 
+ * @deprecated As of 1.1.1.
  */
 public class DefaultClassMapper extends ClassMapperWrapper {
 
     public DefaultClassMapper() {
-        super(new CachingMapper(new ImmutableTypesMapper(new DefaultImplementationsMapper(new ArrayMapper(new DynamicProxyMapper(new AliasingMapper(new XmlFriendlyClassMapper(new DefaultMapper()))))))));
+        super(new CachingMapper(new ImmutableTypesMapper(new DefaultImplementationsMapper(new ArrayMapper(new DynamicProxyMapper(new AliasingMapper(new XmlFriendlyClassMapper(new DefaultMapper(new CompositeClassLoader())))))))));
     }
 
 }
