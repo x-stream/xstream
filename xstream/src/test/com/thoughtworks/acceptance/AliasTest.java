@@ -8,23 +8,23 @@ import com.thoughtworks.xstream.alias.CannotResolveClassException;
  */
 public class AliasTest extends AbstractAcceptanceTest {
 
-   public void testBarfsIfAliasDoesNotExist() {
+    public void testBarfsIfAliasDoesNotExist() {
 
-       String xml = "" +
-               "<X-array>\n" +
-               "  <X>\n" +
-               "    <anInt>0</anInt>\n" +
-               "  </X>\n" +
-               "</X-array>";
+        String xml = "" +
+                "<X-array>\n" +
+                "  <X>\n" +
+                "    <anInt>0</anInt>\n" +
+                "  </X>\n" +
+                "</X-array>";
 
-       // now change the alias
-       xstream.alias("Xxxxxxxx", X.class);
-       try {
-           xstream.fromXML(xml);
-           fail("Should have barfed");
-       } catch (CannotResolveClassException expectedException) {
-           // expected
-       }
-   }
+        // now change the alias
+        xstream.alias("Xxxxxxxx", X.class);
+        try {
+            xstream.fromXML(xml);
+            fail("Should have barfed");
+        } catch (CannotResolveClassException expectedException) {
+            // expected
+        }
+    }
 
 }
