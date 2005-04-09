@@ -5,6 +5,8 @@ import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
 
 import java.io.StringReader;
+import java.util.Map;
+import java.util.HashMap;
 
 public class XppDomReaderTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
@@ -37,22 +39,29 @@ public class XppDomReaderTest extends AbstractXMLReaderTest {
 
     public void testExposesAttributesKeysAndValuesByIndex() throws Exception {
 
-        // overrides test in superclass, because XppDom does not retain order of attributes.
+        // overrides test in superclass, because XppDom does not retain order of actualAttributes.
 
         HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
 
         assertEquals(3, xmlReader.getAttributeCount());
 
-        assertEquals("a", xmlReader.getAttributeName(0));
-        assertEquals("hello", xmlReader.getAttributeName(1));
-        assertEquals("c", xmlReader.getAttributeName(2));
+        Map expectedAttributes = new HashMap();
+        expectedAttributes.put("hello", "world");
+        expectedAttributes.put("a", "b");
+        expectedAttributes.put("c", "d");
 
-        assertEquals("b", xmlReader.getAttribute(0));
-        assertEquals("world", xmlReader.getAttribute(1));
-        assertEquals("d", xmlReader.getAttribute(2));
+        Map actualAttributes = new HashMap();
+        for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
+            String name = xmlReader.getAttributeName(i);
+            String value = xmlReader.getAttribute(i);
+            actualAttributes.put(name, value);
+        }
+
+        assertEquals(expectedAttributes, actualAttributes);
 
         xmlReader.moveDown();
         assertEquals("empty", xmlReader.getNodeName());
         assertEquals(0, xmlReader.getAttributeCount());
     }
+
 }

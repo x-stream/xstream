@@ -7,6 +7,8 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DomReaderTest extends AbstractXMLReaderTest {
 
@@ -29,7 +31,7 @@ public class DomReaderTest extends AbstractXMLReaderTest {
                 "  <small>" +
                 "    <tiny/>" +
                 "  </small>" +
-                "  <small-two>" +           
+                "  <small-two>" +
                 "  </small-two>" +
                 "</big>");
         Element small = (Element) document.getDocumentElement().getElementsByTagName("small").item(0);
@@ -42,19 +44,25 @@ public class DomReaderTest extends AbstractXMLReaderTest {
 
     public void testExposesAttributesKeysAndValuesByIndex() throws Exception {
 
-        // overrides test in superclass, because DOM does not retain order of attributes.
+        // overrides test in superclass, because DOM does not retain order of actualAttributes.
 
         HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
 
         assertEquals(3, xmlReader.getAttributeCount());
 
-        assertEquals("a", xmlReader.getAttributeName(0));
-        assertEquals("c", xmlReader.getAttributeName(1));
-        assertEquals("hello", xmlReader.getAttributeName(2));
+        Map expectedAttributes = new HashMap();
+        expectedAttributes.put("hello", "world");
+        expectedAttributes.put("a", "b");
+        expectedAttributes.put("c", "d");
 
-        assertEquals("b", xmlReader.getAttribute(0));
-        assertEquals("d", xmlReader.getAttribute(1));
-        assertEquals("world", xmlReader.getAttribute(2));
+        Map actualAttributes = new HashMap();
+        for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
+            String name = xmlReader.getAttributeName(i);
+            String value = xmlReader.getAttribute(i);
+            actualAttributes.put(name, value);
+        }
+
+        assertEquals(expectedAttributes, actualAttributes);
 
         xmlReader.moveDown();
         assertEquals("empty", xmlReader.getNodeName());
