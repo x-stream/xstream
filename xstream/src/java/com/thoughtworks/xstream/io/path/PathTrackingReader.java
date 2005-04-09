@@ -3,6 +3,8 @@ package com.thoughtworks.xstream.io.path;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
+import java.util.Iterator;
+
 public class PathTrackingReader implements HierarchicalStreamReader {
     private HierarchicalStreamReader reader;
     private PathTracker pathTracker;
@@ -49,6 +51,10 @@ public class PathTrackingReader implements HierarchicalStreamReader {
 
     public String getAttributeName(int index) {
         return reader.getAttributeName(index);
+    }
+
+    public Iterator getAttributeNames() {
+        return reader.getAttributeNames();
     }
 
     public Object peekUnderlyingNode() {

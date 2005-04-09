@@ -12,8 +12,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Iterator;
 
-public class XppReader implements HierarchicalStreamReader {
+public class XppReader extends AbstractReader {
 
     private final XmlPullParser parser;
     private final FastStack elementStack = new FastStack(16);

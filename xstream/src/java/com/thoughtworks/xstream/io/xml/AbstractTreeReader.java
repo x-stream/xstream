@@ -4,7 +4,9 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-public abstract class AbstractTreeReader implements HierarchicalStreamReader {
+import java.util.Iterator;
+
+public abstract class AbstractTreeReader extends AbstractReader implements HierarchicalStreamReader {
 
     private FastStack pointers = new FastStack(16);
     private Object current;

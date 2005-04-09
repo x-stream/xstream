@@ -3,6 +3,10 @@ package com.thoughtworks.xstream.io.xml;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import junit.framework.TestCase;
 
+import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class AbstractXMLReaderTest extends TestCase {
 
     // factory method
@@ -140,5 +144,30 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveDown();
         assertEquals("empty", xmlReader.getNodeName());
         assertEquals(0, xmlReader.getAttributeCount());
+    }
+
+    public void testExposesAttributesKeysAsIterator() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
+
+        Set expected = new HashSet();
+        expected.add("hello");
+        expected.add("a");
+        expected.add("c");
+
+        Set actual = new HashSet();
+        Iterator iterator;
+
+        iterator = xmlReader.getAttributeNames();
+        while(iterator.hasNext()) {
+            actual.add(iterator.next());
+        }
+        assertEquals(expected, actual);
+
+        // again, to check iteration is repeatable 
+        iterator = xmlReader.getAttributeNames();
+        while(iterator.hasNext()) {
+            actual.add(iterator.next());
+        }
+        assertEquals(expected, actual);
     }
 }

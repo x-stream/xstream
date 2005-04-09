@@ -2,6 +2,8 @@ package com.thoughtworks.xstream.io;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
 
+import java.util.Iterator;
+
 /**
  * @author Joe Walnes
  */
@@ -45,6 +47,11 @@ public interface HierarchicalStreamReader {
      * Name of attribute in current node.
      */
     String getAttributeName(int index);
+
+    /**
+     * Names of attributes (as Strings). 
+     */
+    Iterator getAttributeNames();
 
     /**
      * If any errors are detected, allow the reader to add any additional information that can aid debugging

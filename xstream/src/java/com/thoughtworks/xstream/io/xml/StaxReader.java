@@ -10,6 +10,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.util.Iterator;
 
 /**
  * A reader using the StAX API
@@ -17,7 +18,7 @@ import javax.xml.stream.XMLStreamReader;
  * @author James Strachan
  * @version $Revision$
  */
-public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants {
+public class StaxReader extends AbstractReader implements XMLStreamConstants {
 
     private final QNameMap qnameMap;
     private final XMLStreamReader in;
