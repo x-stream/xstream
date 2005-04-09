@@ -51,6 +51,18 @@ public class DomReader extends AbstractTreeReader {
         return attribute == null ? null : attribute.getValue();
     }
 
+    public String getAttribute(int index) {
+        return ((Attr) currentElement.getAttributes().item(index)).getValue();
+    }
+
+    public int getAttributeCount() {
+        return currentElement.getAttributes().getLength();
+    }
+
+    public String getAttributeName(int index) {
+        return ((Attr) currentElement.getAttributes().item(index)).getName();
+    }
+
     protected Object getParent() {
         return currentElement.getParentNode();
     }

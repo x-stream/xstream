@@ -31,11 +31,19 @@ public class XppDomReader extends AbstractTreeReader {
     }
 
     public String getAttribute(String attributeName) {
-        try {
-            return currentElement.getAttribute(attributeName);
-        } catch (Exception e) {
-            return null;
-        }
+        return currentElement.getAttribute(attributeName);
+    }
+
+    public String getAttribute(int index) {
+        return currentElement.getAttribute(currentElement.getAttributeNames()[index]);
+    }
+
+    public int getAttributeCount() {
+        return currentElement.getAttributeNames().length;
+    }
+
+    public String getAttributeName(int index) {
+        return currentElement.getAttributeNames()[index];
     }
 
     protected Object getParent() {

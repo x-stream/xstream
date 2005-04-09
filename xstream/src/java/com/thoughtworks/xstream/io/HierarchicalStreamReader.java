@@ -32,6 +32,21 @@ public interface HierarchicalStreamReader {
     String getAttribute(String name);
 
     /**
+     * Get the value of an attribute of the current node, by index.
+     */
+    String getAttribute(int index);
+    
+    /**
+     * Number of attributes in current node.
+     */
+    int getAttributeCount();
+
+    /**
+     * Name of attribute in current node.
+     */
+    String getAttributeName(int index);
+
+    /**
      * If any errors are detected, allow the reader to add any additional information that can aid debugging
      * (such as line numbers, XPath expressions, etc).
      */

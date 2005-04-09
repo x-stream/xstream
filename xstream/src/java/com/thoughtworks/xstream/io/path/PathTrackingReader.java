@@ -39,6 +39,18 @@ public class PathTrackingReader implements HierarchicalStreamReader {
         return reader.getAttribute(name);
     }
 
+    public String getAttribute(int index) {
+        return reader.getAttribute(index);
+    }
+
+    public int getAttributeCount() {
+        return reader.getAttributeCount();
+    }
+
+    public String getAttributeName(int index) {
+        return reader.getAttributeName(index);
+    }
+
     public Object peekUnderlyingNode() {
         return reader.peekUnderlyingNode();
     }

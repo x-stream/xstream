@@ -127,6 +127,18 @@ public class XppReader implements HierarchicalStreamReader {
         return parser.getAttributeValue(null, name);
     }
 
+    public String getAttribute(int index) {
+        return parser.getAttributeValue(index);
+    }
+
+    public int getAttributeCount() {
+        return parser.getAttributeCount();
+    }
+
+    public String getAttributeName(int index) {
+        return parser.getAttributeName(index);
+    }
+
     public Object peekUnderlyingNode() {
         throw new UnsupportedOperationException();
     }

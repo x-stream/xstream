@@ -144,6 +144,18 @@ public class StaxReader implements HierarchicalStreamReader, XMLStreamConstants 
         return in.getAttributeValue(null, name);
     }
 
+    public String getAttribute(int index) {
+        return in.getAttributeValue(index);
+    }
+
+    public int getAttributeCount() {
+        return in.getAttributeCount();
+    }
+
+    public String getAttributeName(int index) {
+        return in.getAttributeLocalName(index);
+    }
+
     public Object peekUnderlyingNode() {
         throw new UnsupportedOperationException();
     }

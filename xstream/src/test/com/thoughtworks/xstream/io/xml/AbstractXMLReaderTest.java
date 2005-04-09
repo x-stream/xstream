@@ -123,4 +123,22 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertTrue(xmlReader.hasMoreChildren()); // this is OK
         assertTrue(xmlReader.hasMoreChildren()); // this fails
     }
+
+    public void testExposesAttributesKeysAndValuesByIndex() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
+
+        assertEquals(3, xmlReader.getAttributeCount());
+
+        assertEquals("hello", xmlReader.getAttributeName(0));
+        assertEquals("a", xmlReader.getAttributeName(1));
+        assertEquals("c", xmlReader.getAttributeName(2));
+
+        assertEquals("world", xmlReader.getAttribute(0));
+        assertEquals("b", xmlReader.getAttribute(1));
+        assertEquals("d", xmlReader.getAttribute(2));
+
+        xmlReader.moveDown();
+        assertEquals("empty", xmlReader.getNodeName());
+        assertEquals(0, xmlReader.getAttributeCount());
+    }
 }

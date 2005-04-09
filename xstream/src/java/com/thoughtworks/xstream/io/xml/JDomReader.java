@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.io.xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Parent;
+import org.jdom.Attribute;
 
 /**
  * @author Laurent Bihanic
@@ -55,5 +56,16 @@ public class JDomReader extends AbstractTreeReader {
         return currentElement.getAttributeValue(name);
     }
 
+    public String getAttribute(int index) {
+        return ((Attribute) currentElement.getAttributes().get(index)).getValue();
+    }
+
+    public int getAttributeCount() {
+        return currentElement.getAttributes().size();
+    }
+
+    public String getAttributeName(int index) {
+        return ((Attribute) currentElement.getAttributes().get(index)).getQualifiedName();
+    }
 }
 

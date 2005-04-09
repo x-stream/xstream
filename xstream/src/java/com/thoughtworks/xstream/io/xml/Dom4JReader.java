@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Attribute;
 
 public class Dom4JReader extends AbstractTreeReader {
 
@@ -27,6 +28,18 @@ public class Dom4JReader extends AbstractTreeReader {
 
     public String getAttribute(String name) {
         return currentElement.attributeValue(name);
+    }
+
+    public String getAttribute(int index) {
+        return currentElement.attribute(index).getValue();
+    }
+
+    public int getAttributeCount() {
+        return currentElement.attributeCount();
+    }
+
+    public String getAttributeName(int index) {
+        return currentElement.attribute(index).getQualifiedName();
     }
 
     protected Object getParent() {

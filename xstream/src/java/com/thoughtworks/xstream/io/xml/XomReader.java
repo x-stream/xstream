@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import nu.xom.Document;
 import nu.xom.Element;
+import nu.xom.Attribute;
 
 public class XomReader extends AbstractTreeReader {
 
@@ -25,6 +26,18 @@ public class XomReader extends AbstractTreeReader {
 
     public String getAttribute(String name) {
         return currentElement.getAttributeValue(name);
+    }
+
+    public String getAttribute(int index) {
+        return currentElement.getAttribute(index).getValue();
+    }
+
+    public int getAttributeCount() {
+        return currentElement.getAttributeCount();
+    }
+
+    public String getAttributeName(int index) {
+        return currentElement.getAttribute(index).getQualifiedName();
     }
 
     protected int getChildCount() {
