@@ -129,7 +129,8 @@ import java.util.*;
  */
 public class XStream {
 
-    private AliasingMapper aliasingMapper;
+    private ClassAliasingMapper classAliasingMapper;
+    private FieldAliasingMapper fieldAliasingMapper;
     private DefaultImplementationsMapper defaultImplementationsMapper;
     private ImmutableTypesMapper immutableTypesMapper;
     private ImplicitCollectionMapper implicitCollectionMapper;
@@ -209,8 +210,10 @@ public class XStream {
     private ClassMapper buildMapper(String classAttributeIdentifier) {
         MapperWrapper mapper = new DefaultMapper(classLoaderReference, classAttributeIdentifier);
         mapper = new XmlFriendlyMapper(mapper);
-        mapper = new AliasingMapper(mapper);
-        aliasingMapper = (AliasingMapper) mapper; // need a reference to that one
+        mapper = new ClassAliasingMapper(mapper);
+        classAliasingMapper = (ClassAliasingMapper) mapper; // need a reference to that one
+        mapper = new FieldAliasingMapper(mapper);
+        fieldAliasingMapper = (FieldAliasingMapper) mapper; // need a reference to that one
         mapper = new ImplicitCollectionMapper(mapper);
         implicitCollectionMapper = (ImplicitCollectionMapper)mapper; // need a reference to this one
         mapper = new DynamicProxyMapper(mapper);
@@ -513,7 +516,7 @@ public class XStream {
      * @param type  Type to be aliased
      */
     public void alias(String name, Class type) {
-        aliasingMapper.addAlias(name, type);
+        classAliasingMapper.addClassAlias(name, type);
     }
 
     /**
@@ -526,6 +529,10 @@ public class XStream {
     public void alias(String name, Class type, Class defaultImplementation) {
         alias(name, type);
         addDefaultImplementation(defaultImplementation, type);
+    }
+
+    public void aliasField(String alias, Class type, String fieldName) {
+        fieldAliasingMapper.addFieldAlias(alias, type, fieldName);
     }
 
     /**

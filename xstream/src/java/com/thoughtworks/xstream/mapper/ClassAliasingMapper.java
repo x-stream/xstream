@@ -11,16 +11,16 @@ import java.util.HashMap;
  *
  * @author Joe Walnes
  */
-public class AliasingMapper extends MapperWrapper {
+public class ClassAliasingMapper extends MapperWrapper {
 
     protected final Map typeToNameMap = Collections.synchronizedMap(new HashMap());
     protected final Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
 
-    public AliasingMapper(ClassMapper wrapped) {
+    public ClassAliasingMapper(ClassMapper wrapped) {
         super(wrapped);
     }
 
-    public void addAlias(String name, Class type) {
+    public void addClassAlias(String name, Class type) {
         nameToTypeMap.put(name, type.getName());
         typeToNameMap.put(type.getName(), name);
     }

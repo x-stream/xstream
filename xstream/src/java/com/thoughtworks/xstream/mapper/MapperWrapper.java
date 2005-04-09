@@ -86,16 +86,16 @@ public abstract class MapperWrapper implements ClassMapper {
     }
 
     /**
-     * @deprecated As of 1.1.1, use {@link com.thoughtworks.xstream.mapper.AliasingMapper#addAlias(String, Class)} for creating an alias and
+     * @deprecated As of 1.1.1, use {@link com.thoughtworks.xstream.mapper.ClassAliasingMapper#addClassAlias(String, Class)} for creating an alias and
      *             {@link DefaultImplementationsMapper#addDefaultImplementation(Class, Class)} for specifiny a
      *             default implementation.
      */
     public void alias(String elementName, Class type, Class defaultImplementation) {
-        AliasingMapper aliasingMapper = (AliasingMapper) findWrapped(AliasingMapper.class);
-        if (aliasingMapper == null) {
-            throw new UnsupportedOperationException("ClassMapper.alias() longer supported. Use AliasingMapper.alias() instead.");
+        ClassAliasingMapper classAliasingMapper = (ClassAliasingMapper) findWrapped(ClassAliasingMapper.class);
+        if (classAliasingMapper == null) {
+            throw new UnsupportedOperationException("ClassMapper.alias() longer supported. Use ClassAliasingMapper.alias() instead.");
         } else {
-            aliasingMapper.addAlias(elementName, type);
+            classAliasingMapper.addClassAlias(elementName, type);
         }
         if (defaultImplementation != null && defaultImplementation != type) {
             DefaultImplementationsMapper defaultImplementationsMapper = (DefaultImplementationsMapper) findWrapped(DefaultImplementationsMapper.class);

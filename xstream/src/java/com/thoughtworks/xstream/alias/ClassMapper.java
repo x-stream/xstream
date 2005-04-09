@@ -35,7 +35,7 @@ public interface ClassMapper extends Mapper {
     Class lookupDefaultType(Class baseType);
 
     /**
-     * @deprecated As of 1.1.1, use {@link com.thoughtworks.xstream.mapper.AliasingMapper#addAlias(String, Class)} for creating an alias and
+     * @deprecated As of 1.1.1, use {@link com.thoughtworks.xstream.mapper.ClassAliasingMapper#addClassAlias(String, Class)} for creating an alias and
      *             {@link com.thoughtworks.xstream.mapper.DefaultImplementationsMapper#addDefaultImplementation(Class, Class)} for specifiny a
      *             default implementation.
      */
