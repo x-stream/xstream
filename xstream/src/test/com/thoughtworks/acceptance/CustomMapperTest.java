@@ -3,6 +3,7 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
+import com.thoughtworks.acceptance.objects.Software;
 
 public class CustomMapperTest extends AbstractAcceptanceTest {
 
@@ -73,5 +74,33 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
                 + "</thing>";
 
         assertBothWays(in, expectedXml);
+    }
+
+    private static class PackageStrippingMapper extends MapperWrapper {
+        public PackageStrippingMapper(ClassMapper wrapped) {
+            super(wrapped);
+        }
+
+        public String serializedClass(Class type) {
+            return type.getName().replaceFirst(".*\\.", "");
+        }
+    }
+    
+    public void testStripsPackagesUponDeserialization() {
+        // obviously this isn't deserializable!
+        xstream = new XStream() {
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new PackageStrippingMapper(next);
+            }
+        };
+
+        // NOTE: no aliases defined!
+
+        String expectedXml = "" +
+                "<Software>\n" +
+                "  <vendor>ms</vendor>\n" +
+                "  <name>word</name>\n" +
+                "</Software>";
+        assertEquals(expectedXml, xstream.toXML(new Software("ms", "word")));
     }
 }
