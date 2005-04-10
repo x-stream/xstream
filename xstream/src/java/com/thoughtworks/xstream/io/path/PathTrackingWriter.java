@@ -1,44 +1,33 @@
 package com.thoughtworks.xstream.io.path;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.WriterWrapper;
 
-public class PathTrackingWriter implements HierarchicalStreamWriter {
+/**
+ * Wrapper for HierarchicalStreamWriter that tracks the path (a subset of XPath) of the current node that is being written.
+ *
+ * @see PathTracker
+ * @see Path
+ *
+ * @author Joe Walnes
+ */
+public class PathTrackingWriter extends WriterWrapper {
 
-    private HierarchicalStreamWriter targetWriter;
-    private PathTracker pathTracker;
+    private final PathTracker pathTracker;
 
-    public PathTrackingWriter(HierarchicalStreamWriter targetWriter, PathTracker pathTracker) {
-        this.targetWriter = targetWriter;
+    public PathTrackingWriter(HierarchicalStreamWriter writer, PathTracker pathTracker) {
+        super(writer);
         this.pathTracker = pathTracker;
     }
 
     public void startNode(String name) {
         pathTracker.pushElement(name);
-        targetWriter.startNode(name);
-    }
-
-    public void addAttribute(String key, String value) {
-        targetWriter.addAttribute(key, value);
-    }
-
-    public void setValue(String text) {
-        targetWriter.setValue(text);
+        super.startNode(name);
     }
 
     public void endNode() {
-        targetWriter.endNode();
+        super.endNode();
         pathTracker.popElement();
     }
 
-    public void flush() {
-        targetWriter.flush();
-    }
-
-    public void close() {
-        targetWriter.close();
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return targetWriter.underlyingWriter();
-    }
 }

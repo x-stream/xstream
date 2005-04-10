@@ -20,26 +20,26 @@ public class PathTrackingReaderTest extends TestCase {
         PathTracker pathTracker = new PathTracker();
 
         reader = new PathTrackingReader(reader, pathTracker);
-        assertEquals("/a", pathTracker.getCurrentPath());
+        assertEquals(new Path("/a"), pathTracker.getPath());
 
         reader.moveDown();
-        assertEquals("/a/b", pathTracker.getCurrentPath());
+        assertEquals(new Path("/a/b"), pathTracker.getPath());
 
         reader.moveDown();
-        assertEquals("/a/b/c", pathTracker.getCurrentPath());
+        assertEquals(new Path("/a/b/c"), pathTracker.getPath());
 
         reader.moveUp();
-        assertEquals("/a/b", pathTracker.getCurrentPath());
-
-        reader.moveUp();
-        reader.moveDown();
-        assertEquals("/a/b[2]", pathTracker.getCurrentPath());
+        assertEquals(new Path("/a/b"), pathTracker.getPath());
 
         reader.moveUp();
         reader.moveDown();
-        assertEquals("/a/d", pathTracker.getCurrentPath());
+        assertEquals(new Path("/a/b[2]"), pathTracker.getPath());
 
         reader.moveUp();
-        assertEquals("/a", pathTracker.getCurrentPath());
+        reader.moveDown();
+        assertEquals(new Path("/a/d"), pathTracker.getPath());
+
+        reader.moveUp();
+        assertEquals(new Path("/a"), pathTracker.getPath());
     }
 }

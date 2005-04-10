@@ -32,19 +32,19 @@ public class PathTrackingWriterTest extends TestCase {
 
     public void testInterceptsWhenWriterMovesLocationInDocumentAndUpdatesPathTracker() {
 
-        assertEquals("", pathTracker.getCurrentPath());
+        assertEquals(new Path(""), pathTracker.getPath());
 
         writer.startNode("foo");
-        assertEquals("/foo", pathTracker.getCurrentPath());
+        assertEquals(new Path("/foo"), pathTracker.getPath());
 
         writer.startNode("do");
-        assertEquals("/foo/do", pathTracker.getCurrentPath());
+        assertEquals(new Path("/foo/do"), pathTracker.getPath());
 
         writer.endNode();
-        assertEquals("/foo", pathTracker.getCurrentPath());
+        assertEquals(new Path("/foo"), pathTracker.getPath());
 
         writer.endNode();
-        assertEquals("", pathTracker.getCurrentPath());
+        assertEquals(new Path(""), pathTracker.getPath());
 
     }
 

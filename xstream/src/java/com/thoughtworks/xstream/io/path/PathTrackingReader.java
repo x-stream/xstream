@@ -2,75 +2,39 @@ package com.thoughtworks.xstream.io.path;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.ReaderWrapper;
 
-import java.util.Iterator;
+/**
+ * Wrapper for HierarchicalStreamReader that tracks the path (a subset of XPath) of the current node that is being read.
+ *
+ * @see PathTracker
+ * @see Path
+ *
+ * @author Joe Walnes
+ */
+public class PathTrackingReader extends ReaderWrapper {
 
-public class PathTrackingReader implements HierarchicalStreamReader {
-    private HierarchicalStreamReader reader;
-    private PathTracker pathTracker;
+    private final PathTracker pathTracker;
 
     public PathTrackingReader(HierarchicalStreamReader reader, PathTracker pathTracker) {
-        this.reader = reader;
+        super(reader);
         this.pathTracker = pathTracker;
         pathTracker.pushElement(getNodeName());
     }
 
-    public boolean hasMoreChildren() {
-        return reader.hasMoreChildren();
-    }
-
     public void moveDown() {
-        reader.moveDown();
+        super.moveDown();
         pathTracker.pushElement(getNodeName());
     }
 
     public void moveUp() {
-        reader.moveUp();
+        super.moveUp();
         pathTracker.popElement();
     }
 
-    public String getNodeName() {
-        return reader.getNodeName();
-    }
-
-    public String getValue() {
-        return reader.getValue();
-    }
-
-    public String getAttribute(String name) {
-        return reader.getAttribute(name);
-    }
-
-    public String getAttribute(int index) {
-        return reader.getAttribute(index);
-    }
-
-    public int getAttributeCount() {
-        return reader.getAttributeCount();
-    }
-
-    public String getAttributeName(int index) {
-        return reader.getAttributeName(index);
-    }
-
-    public Iterator getAttributeNames() {
-        return reader.getAttributeNames();
-    }
-
-    public Object peekUnderlyingNode() {
-        return reader.peekUnderlyingNode();
-    }
-
     public void appendErrors(ErrorWriter errorWriter) {
-        errorWriter.add("path", pathTracker.getCurrentPath());
-        reader.appendErrors(errorWriter);
+        errorWriter.add("path", pathTracker.getPath().toString());
+        super.appendErrors(errorWriter);
     }
 
-    public void close() {
-        reader.close();
-    }
-
-    public HierarchicalStreamReader underlyingReader() {
-        return reader.underlyingReader();
-    }
 }

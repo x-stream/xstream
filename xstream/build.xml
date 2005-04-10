@@ -105,7 +105,6 @@
             <classpath refid="classpath"/>
             <packageset dir="src/java" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
-                <exclude name="com/thoughtworks/xstream/io/path/**"/>
                 <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
             </packageset>
             <doctitle><![CDATA[<h1>XStream ${version}</h1>]]></doctitle>

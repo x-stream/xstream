@@ -5,6 +5,36 @@ import com.thoughtworks.xstream.core.util.FastStack;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Represents a path (subset of XPath) to a single node in the tree.
+ *
+ * <p>Two absolute paths can also be compared to calculate the relative path between them.
+ * A relative path can be applied to an absolute path to calculate another absolute path.</p>
+ *
+ * <p>Note that the paths produced are XPath compliant, so can be read by other XPath engines.
+ * The following are examples of path expressions that the Path object supports:</p>
+ * <ul>
+ *     <li>/</li>
+ *     <li>/some/node</li>
+ *     <li>/a/b/c/b/a</li>
+ *     <li>/some[3]/node[2]/a</li>
+ *     <li>../../../another[3]/node</li>
+ * </ul>
+ *
+ * <h3>Example<h3>
+ *
+ * <pre>
+ * Path a = new Path("/html/body/div/table[2]/tr[3]/td/div");
+ * Path b = new Path("/html/body/div/table[2]/tr[6]/td/form");
+ *
+ * Path relativePath = a.relativeTo(b); // produces: "../../../tr[6]/td/form"
+ * Path c = a.apply(relativePath); // same as Path b.
+ * </pre>
+ *
+ * @see PathTracker
+ *
+ * @author Joe Walnes
+ */
 public class Path {
 
     private final String[] chunks;
@@ -57,10 +87,9 @@ public class Path {
     }
 
     public int hashCode() {
-        // todo: more unique algorithm
         int result = 543645643;
         for (int i = 0; i < chunks.length; i++) {
-            result += chunks[i].hashCode() * i;
+            result = 29 * result + chunks[i].hashCode();
         }
         return result;
     }

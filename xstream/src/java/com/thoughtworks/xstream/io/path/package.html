@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+    <body>
+
+        <p>Library for tracking paths of nodes in documents using a subset of XPath. This subset of XPath is <i>just enough</i>
+        for XStream to be able to use XPath expressions to represent references across the object graph, while still remaining
+        very quick.</p>
+
+        <p>The <a href="Path.html">Path</a> class represents a path to a single node in the tree.
+        Two absolute paths can also be compared to calculate the relative path between them.
+        A relative path can be applied to an absolute path to calculate another absolute path.</p>
+
+        <p>A <a href="PathTracker.html">PathTracker</a> can be linked to a
+        <a href="../HierarchicalStreamWriter.html">HierarchicalStreamWriter</a> or
+        <a href="../HierarchicalStreamReader.html">HierarchicalStreamReader</a> and expose the path of wherever the node
+        is currently positioned. This is done by wrapping the HierarchicalStreamWriter/HierarchicalStreamReader instances
+        with a <a href="PathTrackingWriter.html">PathTrackingWriter</a> or <a href="PathTrackingReader.html">PathTrackingReader</a>.</p>
+
+        <p>Note that the paths produced are XPath compliant, so can be read by other XPath engines. The following are examples of path
+        expressions that the Path object supports:</p>
+
+        <ul>
+            <li>/</li>
+            <li>/some/node</li>
+            <li>/a/b/c/b/a</li>
+            <li>/some[3]/node[2]/a</li>
+            <li>../../../another[3]/node</li>
+        </ul>
+
+    </body>
+</html>
+
