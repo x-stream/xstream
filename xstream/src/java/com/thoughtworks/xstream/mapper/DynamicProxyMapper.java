@@ -40,7 +40,7 @@ public class DynamicProxyMapper extends MapperWrapper {
     }
 
     public Class realClass(String elementName) {
-        if (elementName.equals("dynamic-proxy")) {
+        if (elementName.equals(alias)) {
             return DynamicProxy.class;
         } else {
             return super.realClass(elementName);
