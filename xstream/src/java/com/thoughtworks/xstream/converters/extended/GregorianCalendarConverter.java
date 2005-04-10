@@ -18,8 +18,6 @@ import java.util.Date;
  */
 public class GregorianCalendarConverter implements Converter {
 
-    private static final boolean isTimeInMillisAvailable = JVM.is14(); // calendar.getTimeInMillis() is faster but not available in JDK 1.3
-
     public boolean canConvert(Class type) {
         return type.equals(GregorianCalendar.class);
     }
@@ -27,7 +25,7 @@ public class GregorianCalendarConverter implements Converter {
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         GregorianCalendar calendar = (GregorianCalendar) source;
         writer.startNode("time");
-        long timeInMillis = isTimeInMillisAvailable ? calendar.getTimeInMillis() : calendar.getTime().getTime();
+        long timeInMillis = calendar.getTime().getTime(); // calendar.getTimeInMillis() not available under JDK 1.3
         writer.setValue(String.valueOf(timeInMillis));
         writer.endNode();
     }
@@ -38,11 +36,8 @@ public class GregorianCalendarConverter implements Converter {
         reader.moveUp();
 
         GregorianCalendar result = new GregorianCalendar();
-        if (isTimeInMillisAvailable) {
-            result.setTimeInMillis(timeInMillis);
-        } else {
-            result.setTime(new Date(timeInMillis));
-        }
+        result.setTime(new Date(timeInMillis)); // calendar.setTimeInMillis() not available under JDK 1.3
+
         return result;
     }
 

@@ -349,15 +349,23 @@ public class XStream {
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
 
         if (JVM.is14()) {
-            registerConverter(new ThrowableConverter(reflectionConverter), PRIORITY_NORMAL);
-            registerConverter(new StackTraceElementConverter(), PRIORITY_NORMAL);
-
-            registerConverter(new CurrencyConverter(), PRIORITY_NORMAL);
-            registerConverter(new RegexPatternConverter(reflectionConverter), PRIORITY_NORMAL);
+            // late bound converters - allows XStream to be compiled on earlier JDKs
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.ThrowableConverter", PRIORITY_NORMAL,
+                    new Class[] {Converter.class} , new Object[] { reflectionConverter} );
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.StackTraceElementConverter", PRIORITY_NORMAL,
+                    null, null);
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.CurrencyConverter", PRIORITY_NORMAL,
+                    null, null);
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.RegexPatternConverter", PRIORITY_NORMAL,
+                    new Class[] {Converter.class} , new Object[] { reflectionConverter} );
         }
 
         if (JVM.is15()) {
-            // late bound converters - allows XStream to be compiled on JDK1.4.
+            // late bound converters - allows XStream to be compiled on earlier JDKs
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.enums.EnumConverter", PRIORITY_NORMAL,
                     null, null);
