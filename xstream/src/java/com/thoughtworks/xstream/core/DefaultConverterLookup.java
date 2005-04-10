@@ -37,18 +37,17 @@ public class DefaultConverterLookup implements ConverterLookup {
         }
         Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
-        type = classMapper.defaultImplementationOf(type);
+        Class mapType = classMapper.defaultImplementationOf(type);
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {
             Converter converter = (Converter) iterator.next();
-            if (converter.canConvert(type)) {
+            if (converter.canConvert(mapType)) {
                 typeToConverterMap.put(type, converter);
                 return converter;
             }
         }
         throw new ConversionException("No converter specified for " + type);
     }
-
     public void registerConverter(Converter converter, int priority) {
         converters.add(converter, priority);
     }
