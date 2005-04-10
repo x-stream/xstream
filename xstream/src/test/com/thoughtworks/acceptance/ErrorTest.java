@@ -2,6 +2,7 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.core.JVM;
 
 public class ErrorTest extends AbstractAcceptanceTest {
 
@@ -25,8 +26,13 @@ public class ErrorTest extends AbstractAcceptanceTest {
         } catch (ConversionException e) {
             assertEquals("java.lang.NumberFormatException",
                     e.get("cause-exception"));
-            assertEquals("For input string: \"another string\"",
-                    e.get("cause-message"));
+            if (JVM.is14()) {
+                assertEquals("For input string: \"another string\"",
+                        e.get("cause-message"));
+            } else {
+                assertEquals("another string",
+                        e.get("cause-message"));
+            }
             assertEquals(Thing.class.getName(),
                     e.get("class"));
             assertEquals("/thing/two",
