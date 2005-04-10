@@ -25,6 +25,9 @@ public class InheritanceTest extends AbstractAcceptanceTest {
     public static class ParentClass {
         private String name;
 
+        public ParentClass() {
+        }
+
         public ParentClass(String name) {
             this.name = name;
         }
@@ -36,6 +39,9 @@ public class InheritanceTest extends AbstractAcceptanceTest {
 
     public static class ChildClass extends ParentClass {
         private String name;
+
+        public ChildClass() {
+        }
 
         public ChildClass(String parentName, String childName) {
             super(parentName);

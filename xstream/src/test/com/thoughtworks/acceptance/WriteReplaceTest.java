@@ -9,6 +9,9 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
         int a;
         int b;
 
+        public Thing() {
+        }
+
         public Thing(int a, int b) {
             this.a = a;
             this.b = b;
@@ -41,6 +44,9 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     public static class Original extends StandardObject {
         String originalValue;
 
+        public Original() {
+        }
+
         public Original(String originalValue) {
             this.originalValue = originalValue;
         }
@@ -52,6 +58,9 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
 
     public static class Replaced extends StandardObject {
         String replacedValue;
+
+        public Replaced() {
+        }
 
         public Replaced(String replacedValue) {
             this.replacedValue = replacedValue;
@@ -79,6 +88,9 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     public static class OriginalSerializable extends StandardObject {
         String originalValue;
 
+        public OriginalSerializable() {
+        }
+
         public OriginalSerializable(String originalValue) {
             this.originalValue = originalValue;
         }
@@ -94,6 +106,9 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
 
     public static class ReplacedSerializable extends StandardObject {
         String replacedValue;
+
+        public ReplacedSerializable() {
+        }
 
         public ReplacedSerializable(String replacedValue) {
             this.replacedValue = replacedValue;

@@ -125,7 +125,7 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertEquals(o.bits[2], 2);
     }
 
-    class ObjectWithLongArray {
+    public static class ObjectWithLongArray {
         long[] bits;
     }
 

@@ -53,10 +53,9 @@ public class ReflectionConverterTest extends TestCase {
         assertEquals(expected, xstream.toXML(world));
     }
 
-    static class TypesOfFields extends StandardObject {
+    public static class TypesOfFields extends StandardObject {
         String normal = "normal";
         transient String trans = "transient";
-        final String fin = "final";
         static String stat = "stat";
     }
 
@@ -65,7 +64,6 @@ public class ReflectionConverterTest extends TestCase {
         String expected = "" +
                 "<types>\n" +
                 "  <normal>normal</normal>\n" +
-                "  <fin>final</fin>\n" +
                 "</types>";
 
         XStream xstream = new XStream(new XppDriver());

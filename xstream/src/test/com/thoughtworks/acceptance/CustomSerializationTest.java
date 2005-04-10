@@ -21,6 +21,9 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         private transient Object d;
         private transient Software e;
 
+        public ObjectWithCustomSerialization() {
+        }
+
         public ObjectWithCustomSerialization(int a, int b, String c, Software e) {
             this.a = a;
             this.b = b;
@@ -76,6 +79,9 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         private int parentB;
         private transient int parentC;
 
+        public Parent() {
+        }
+
         public Parent(int parentA, int parentB, int parentC) {
             this.parentA = parentA;
             this.parentB = parentB;
@@ -100,6 +106,9 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         private transient int childA;
         private int childB;
         private transient int childC;
+
+        public Child() {
+        }
 
         public Child(int parentA, int parentB, int parentC, int childA, int childB, int childC) {
             super(parentA, parentB, parentC);
@@ -351,6 +360,9 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
     public static class NoDefaultFields extends StandardObject implements Serializable {
 
         private transient int something;
+
+        public NoDefaultFields() {
+        }
 
         public NoDefaultFields(int something) {
             this.something = something;
