@@ -19,9 +19,11 @@
     <h2>Major changes</h2>
 
     <ul>
+    	<li>JIRA:XSTR-186, Option to serialize JavaBeans using public accessors, rather than private fields (contributed by Andrea Aime).</li>
 		<li>Ability to alias fields as well as classes, using XStream.addFieldAlias().</li>
 		<li>JIRA:XSTR-70, JIRA:XSTR-204 Support for JDK 5 enums (contributed by Eric Snell and Bryan Coleman).</li>
 		<li>JIRA:XSTR-206 Clean representation of JDK 5 EnumMap and EnumSet.</li>
+		<li>XStream can now be built using JDK 1.3 (previously it required JDK 1.4 to compile, but 1.3 to run).</li>
 	</ul>
 
 	<h2>Minor changes</h2>
@@ -36,7 +38,7 @@
     <h2>API changes</h2>
 
     <ul>
-    	<li>None.</li>
+        <li>Introduced ReaderWrapper/WriterWrapper classes to make it easier to wrap (decorate) HierarchicalStreamReader/Writer instances.</li>
     </ul>
 
     <h1>Version 1.1.1</h1>
