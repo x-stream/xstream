@@ -177,7 +177,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals(expected, actual);
     }
 
-    public void test() throws Exception {
+    public void testAllowsValueToBeReadWithoutDisturbingChildren() throws Exception {
         HierarchicalStreamReader xmlReader
                 = createReader("<root><child></child><sibling>text2</sibling></root>"); // at: /root
 
@@ -202,18 +202,5 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveUp(); // at: /root
 
         assertFalse(xmlReader.hasMoreChildren());
-    }
-
-    public void test3() throws XmlPullParserException, IOException {
-        XmlPullParser parser = new MXParser();
-        parser.setInput(new StringReader("<root><child>x</child><sibling>text2</sibling></root>"));
-        loop: while(true) {
-            int next = parser.next();
-            System.out.println(XmlPullParser.TYPES[next] + " : " + parser.getName());
-            switch(next) {
-                case XmlPullParser.END_DOCUMENT:
-                    break loop;
-            }
-        }
     }
 }
