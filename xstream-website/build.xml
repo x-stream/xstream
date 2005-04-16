@@ -1,7 +1,7 @@
 <project name="xstream-website" default="website">
 
-	<property name="publish.path" value="/home/projects/xstream/public_html"/>
-	
+    <property name="publish.path" value="/home/projects/xstream/public_html"/>
+
     <target name="clean" description="Clean up all built files">
         <delete dir="build"/>
     </target>
@@ -10,7 +10,9 @@
         <mkdir dir="build/classes"/>
         <javac srcdir="src/java" destdir="build/classes">
             <classpath>
-                <fileset dir="lib"/>
+                <fileset dir="lib">
+                    <include name="**/*.jar"/>
+                </fileset>
             </classpath>
         </javac>
     </target>
@@ -19,7 +21,9 @@
         <mkdir dir="build/website"/>
         <java classname="minimesh.Main" failonerror="true">
             <classpath>
-                <fileset dir="lib"/>
+                <fileset dir="lib">
+                    <include name="**/*.jar"/>
+                </fileset>
                 <pathelement path="build/classes"/>
             </classpath>
             <arg value="src/content/website.xml"/>
@@ -28,10 +32,10 @@
         </java>
     </target>
 
-	<target name="publish" depends="website" description="Publish website">
-		<copy todir="${publish.path}">
-			<fileset dir="build/website"/>
-		</copy>
-	</target>
+    <target name="publish" depends="website" description="Publish website">
+        <copy todir="${publish.path}">
+            <fileset dir="build/website"/>
+        </copy>
+    </target>
 
 </project>
