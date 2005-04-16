@@ -10,7 +10,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.util.Iterator;
 
 /**
  * A reader using the StAX API
@@ -127,6 +126,13 @@ public class StaxReader extends AbstractReader implements XMLStreamConstants {
                         buffer.append(text);
                     }
                 }
+            }
+            else if (value == END_ELEMENT || value == END_DOCUMENT) {
+                // if we lookahead and see the end of an element, we should remember there's no more children,
+                // as the hasMoreChildren() call will skip what we've just read.
+                hasMoreChildrenCached = true;
+                hasMoreChildrenResult = false;
+                break;
             }
             else if (value != COMMENT) {
                 break;

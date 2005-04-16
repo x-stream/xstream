@@ -1,6 +1,10 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.XppReader;
 
 public class EncodedByteArrayConverterTest extends AbstractAcceptanceTest {
 
@@ -27,4 +31,31 @@ public class EncodedByteArrayConverterTest extends AbstractAcceptanceTest {
         byte[] expected = {0, 120, -124, 22, 33, 0, 5};
         assertByteArrayEquals(expected, (byte[])xstream.fromXML(input));
     }
+
+    public void testUnmarshallsEmptyByteArrays() {
+        byte[] input =  {};
+        String expected = "<byte-array></byte-array>";
+
+        assertBothWays(input, expected);
+    }
+
+    public static class TestObject extends StandardObject {
+        private byte[] data;
+        private boolean something;
+    }
+
+    public void testUnmarshallsEmptyByteArrayAsFieldOfAnotherObject() {
+        // exposes a weird bug that was in the XML pull readers.
+        TestObject in = new TestObject();
+        in.data = new byte[0];
+
+        xstream.alias("TestObject", TestObject.class);
+        String expectedXml = "" +
+                "<TestObject>\n" +
+                "  <data></data>\n" +
+                "  <something>false</something>\n" +
+                "</TestObject>";
+        assertBothWays(in, expectedXml);
+    }
+
 }

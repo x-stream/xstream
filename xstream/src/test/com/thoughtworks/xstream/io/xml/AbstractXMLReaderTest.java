@@ -6,6 +6,12 @@ import junit.framework.TestCase;
 import java.util.Iterator;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.StringReader;
+import java.io.IOException;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.mxp1.MXParser;
 
 public abstract class AbstractXMLReaderTest extends TestCase {
 
@@ -169,5 +175,45 @@ public abstract class AbstractXMLReaderTest extends TestCase {
             actual.add(iterator.next());
         }
         assertEquals(expected, actual);
+    }
+
+    public void test() throws Exception {
+        HierarchicalStreamReader xmlReader
+                = createReader("<root><child></child><sibling>text2</sibling></root>"); // at: /root
+
+        assertEquals("root", xmlReader.getNodeName());
+        assertTrue(xmlReader.hasMoreChildren());
+
+        xmlReader.moveDown(); // at: /root/child
+        assertEquals("child", xmlReader.getNodeName());
+        assertEquals(null, xmlReader.getAttribute("something"));
+        assertEquals("", xmlReader.getValue());
+
+        assertFalse(xmlReader.hasMoreChildren()); // <--- This is an awkward one for pull parsers
+
+        xmlReader.moveUp(); // at: /root
+
+        assertTrue(xmlReader.hasMoreChildren());
+
+        xmlReader.moveDown(); // at: /root/sibling
+        assertEquals("sibling", xmlReader.getNodeName());
+        assertEquals("text2", xmlReader.getValue());
+        assertFalse(xmlReader.hasMoreChildren());
+        xmlReader.moveUp(); // at: /root
+
+        assertFalse(xmlReader.hasMoreChildren());
+    }
+
+    public void test3() throws XmlPullParserException, IOException {
+        XmlPullParser parser = new MXParser();
+        parser.setInput(new StringReader("<root><child>x</child><sibling>text2</sibling></root>"));
+        loop: while(true) {
+            int next = parser.next();
+            System.out.println(XmlPullParser.TYPES[next] + " : " + parser.getName());
+            switch(next) {
+                case XmlPullParser.END_DOCUMENT:
+                    break loop;
+            }
+        }
     }
 }

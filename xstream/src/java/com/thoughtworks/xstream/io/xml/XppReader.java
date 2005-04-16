@@ -1,8 +1,8 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
-import com.thoughtworks.xstream.core.util.IntQueue;
 import com.thoughtworks.xstream.core.util.FastStack;
+import com.thoughtworks.xstream.core.util.IntQueue;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
 import org.xmlpull.mxp1.MXParser;
@@ -12,7 +12,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Iterator;
 
 public class XppReader extends AbstractReader {
 
@@ -116,11 +115,19 @@ public class XppReader extends AbstractReader {
         // text event. This allows us to only need to lookahead
         // one step. However if using a different pull parser
         // impl, you may need to look ahead further.
-        if (lookahead() == XmlPullParser.TEXT) {
-            String text = parser.getText();
-            return text == null ? "" : text;
-        } else {
-            return "";
+        switch (lookahead()) {
+            case XmlPullParser.TEXT:
+                String text = parser.getText();
+                return text == null ? "" : text;
+            case XmlPullParser.END_TAG:
+            case XmlPullParser.END_DOCUMENT:
+                // if we lookahead and see the end of an element, we should remember there's no more children,
+                // as the hasMoreChildren() call will skip what we've just read.
+                hasMoreChildrenCached = true;
+                hasMoreChildrenResult = false;
+                return "";
+            default:
+                return "";
         }
     }
 
