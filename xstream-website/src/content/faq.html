@@ -14,19 +14,19 @@
 
     <!-- ...................................................... -->
     <h2>Does XStream behave differently across different JVMs?</h2>
-    
+
     <p>XStream has two modes of operation: <b>Pure Java</b> and <b>Enhanced</b>. In pure Java mode,
     XStream behaves in the same way across different JVMs, however it's features are limited to what
-    reflection allows, meaning it cannot serialize certain classes or fields. In <b>enhanced</b> mode, 
+    reflection allows, meaning it cannot serialize certain classes or fields. In <b>enhanced</b> mode,
     XStream does not have these limitations, however this mode of operation is not available to all JVMs.</p>
-    
+
     <!-- ...................................................... -->
     <h2>Which JVMs allow XStream to operate in enhanced mode?</h2>
-    
+
     <p>Currently on the Sun, Apple or HP 1.4 JVMs and onwards. For all other JVMs, XStream should be used in pure Java mode.</p>
-    
+
     <h2>What are the advantages of using enhanced mode over pure Java mode?</h2>
-    
+
     <table>
       <tr><th>Feature</th><th>Pure Java</th><th>Enhanced (Sun 1.4 only)</th></tr>
       <tr><td>Public classes</td><td>Yes</td><td>Yes</td></tr>
@@ -39,7 +39,7 @@
       <tr><td>Private fields</td><td>Yes</td><td>Yes</td></tr>
       <tr><td>Final fields</td><td>No</td><td>Yes</td></tr>
     </table>
-    
+
     <!-- ...................................................... -->
     <h2>Are there plans to provide enhanced mode support to other JVMs?</h2>
     <p>Yes. <a href="list-user.html">Let us know</a> which JVM you would like supported.</p>
@@ -56,9 +56,9 @@
 
     <!-- ...................................................... -->
     <h2>What do serialized collections look like?</h2>
-    
+
     <p>Example:</p>
-    
+
 <div class="Source Java"><pre>class Person {
   private String name;
   private List toys = new ArrayList();
@@ -83,9 +83,9 @@ person.addToy(new Computer("spectrum"));
 person.addToy(new Car("blue"));
 
 String xml = xstream.toXML(joe);</pre></div>
-    
+
     <p>Results in:</p>
-    
+
 <div class="Source Java"><pre>&lt;person&gt;
   &lt;name&gt;Joe&lt;/name&gt;
   &lt;toys&gt;
@@ -108,7 +108,7 @@ String xml = xstream.toXML(joe);</pre></div>
     <!-- ...................................................... -->
     <h2>Can dynamic proxies be serialized?</h2>
     <p>Yes.</p>
-    
+
     <!-- ...................................................... -->
     <h2>How does XStream deal with newer versions of classes?</h2>
 
@@ -187,11 +187,20 @@ String xml = xstream.toXML(joe);</pre></div>
     <p>No. For this kind of work a data binding tool such as <a href="http://xmlbeans.apache.org">XMLBeans</a> is appropriate.</p>
 
 
+    <!-- ****************************************************** -->
+    <h1>Development</h1>
+
+    <h2>Why is the XStream source stored in a Subversion repository? What's wrong with CVS?</h2>
+
+    <p>The main reason for the use of <a href="http://subversion.tigris.org/">Subversion</a> instead of
+    CVS is that most of the development work for XStream takes place while not connected to the Internet.
+    With Subversion, commands like add, remove, rename, diff and revert do not require a connection to
+    the server.</p>
     <!--
     Why is there no SaxReader?
     Inheritance of collections
     Classloader
-        
+
 
     -->
   </body>
