@@ -42,8 +42,7 @@ public class JavaBeanConverter implements Converter {
         return beanProvider.canInstantiate(type);
     }
 
-    public void marshal(Object source, final HierarchicalStreamWriter writer,
-            final MarshallingContext context) {
+    public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
 
         beanProvider.visitSerializableProperties(source, new BeanProvider.Visitor() {
             public void visit(String propertyName, Class fieldType, Object newObj) {
@@ -53,14 +52,13 @@ public class JavaBeanConverter implements Converter {
             }
 
             private void writeField(String propertyName, Class fieldType, Object newObj) {
-                writer.startNode(classMapper.mapNameToXML(propertyName));
+                writer.startNode(classMapper.serializedMember(source.getClass(), propertyName));
 
                 Class actualType = newObj.getClass();
 
-                Class defaultType = classMapper.lookupDefaultType(fieldType);
+                Class defaultType = classMapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
-                    writer.addAttribute(classAttributeIdentifier, classMapper
-                            .lookupName(actualType));
+                    writer.addAttribute(classAttributeIdentifier, classMapper.serializedClass(actualType));
                 }
                 context.convertAnother(newObj);
 
@@ -70,19 +68,17 @@ public class JavaBeanConverter implements Converter {
         });
     }
 
-    public Object unmarshal(final HierarchicalStreamReader reader,
-            final UnmarshallingContext context) {
+    public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final Object result = instantiateNewInstance(context);
 
         while (reader.hasMoreChildren()) {
             reader.moveDown();
 
-            String propertyName = classMapper.mapNameFromXML(reader.getNodeName());
+            String propertyName = classMapper.realMember(result.getClass(), reader.getNodeName());
 
-            boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName,
-                    result.getClass());
+            boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName, result.getClass());
 
-            Class type = determineType(reader, propertyExistsInClass, result, propertyName);
+            Class type = determineType(reader, result, propertyName);
             Object value = context.convertAnother(result, type);
 
             if (propertyExistsInClass) {
@@ -103,14 +99,12 @@ public class JavaBeanConverter implements Converter {
         return result;
     }
 
-    private Class determineType(HierarchicalStreamReader reader, boolean validField, Object result,
-            String fieldName) {
+    private Class determineType(HierarchicalStreamReader reader, Object result, String fieldName) {
         String classAttribute = reader.getAttribute(classAttributeIdentifier);
         if (classAttribute != null) {
-            return classMapper.lookupType(classAttribute);
+            return classMapper.realClass(classAttribute);
         } else {
-            return classMapper.lookupDefaultType(beanProvider.getPropertyType(result,
-                    fieldName));
+            return classMapper.defaultImplementationOf(beanProvider.getPropertyType(result, fieldName));
         }
     }
 
