@@ -35,6 +35,10 @@ public class JVM {
         return System.getProperty("java.vm.vendor").indexOf("Hewlett-Packard Company") != -1;
     }
 
+	private static boolean isIBM() {
+		return System.getProperty("java.vm.vendor").indexOf("IBM") != -1;
+	}
+
     public Class loadClass(String name) {
         try {
             return Class.forName(name, false, getClass().getClassLoader());
@@ -65,7 +69,7 @@ public class JVM {
     }
 
 	private boolean canUseSun14ReflectionProvider() {
-		return (isSun() || isApple() || isHPUX()) && is14() && loadClass("sun.misc.Unsafe") != null;
+		return (isSun() || isApple() || isHPUX() || isIBM()) && is14() && loadClass("sun.misc.Unsafe") != null;
 	}
 
 }

@@ -78,7 +78,7 @@ public class XStreamTest extends TestCase {
                 "  </innerObj>\n" +
                 "</x>";
 
-        assertEquals(expected, xstream.toXML(x));
+        assertEquals(xstream.fromXML(expected), x);
     }
 
     public void testUnmarshalsClassWithoutDefaultConstructor() {
@@ -144,7 +144,7 @@ public class XStreamTest extends TestCase {
                 + "  </outer-class>\n"
                 + "</inner>";
 
-        assertEquals(expected, xml);
+        assertEquals(xstream.fromXML(expected), obj);
 
         NonStaticInnerClass result = (NonStaticInnerClass) xstream.fromXML(xml);
         assertEquals(obj.field, result.field);
