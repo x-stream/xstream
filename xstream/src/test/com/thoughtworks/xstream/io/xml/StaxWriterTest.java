@@ -62,7 +62,7 @@ public class StaxWriterTest extends TestCase {
     }
 
     public void testMarshalsObjectToSAX() throws XMLStreamException {
-        String expected="<?xml version=\"1.0\" encoding=\"utf-8\" ?><x><aStr>zzz</aStr><anInt>9</anInt><innerObj><yField>ooo</yField></innerObj></x>";
+        String expected="<?xml version='1.0' encoding='utf-8'?><x><aStr>zzz</aStr><anInt>9</anInt><innerObj><yField>ooo</yField></innerObj></x>";
 
         Writer buffer = new StringWriter();
         StaxWriter writer = createStaxWriter(buffer);
