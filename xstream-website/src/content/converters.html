@@ -17,6 +17,19 @@
         <p>XStream is provided with Converters for common types such as primitives, String, File, Collections, arrays,
         and Dates.</p>
 
+		<!--
+		
+		TODO:
+			ISO8601DateConverter
+			ReflectionConverter
+			SerializableConverter
+			ExternalizableConverter
+			EnumConverter
+			EnumSetConverter
+			EnumMapConverter
+			
+		-->
+		
         <table class="examplesTable">
             <!-- .................................................................................................. -->
             <tr>
@@ -189,7 +202,8 @@
                     &nbsp;&nbsp;&lt;property name=&quot;port&quot; value=&quot;888&quot;/&gt;<br/>
                     &lt;/properties&gt;
                 </td>
-                <td>Because the Properties class only accepts Strings for keys and values, the XML can be more concise.</td>
+                <td>Because the Properties class only accepts Strings for keys and values, the XML can be more concise. 
+                If the Properties instance includes a set of default Properties, these are serialized in a nested <code>&lt;defaults&gt;</code> element.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/TreeMapConverter.html">TreeMapConverter</a></td>
