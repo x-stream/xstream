@@ -8,7 +8,7 @@ import org.jdom.Attribute;
 /**
  * @author Laurent Bihanic
  */
-public class JDomReader extends AbstractTreeReader {
+public class JDomReader extends AbstractDocumentReader {
 
     private Element currentElement;
 
@@ -49,7 +49,7 @@ public class JDomReader extends AbstractTreeReader {
     }
 
     public String getValue() {
-        return currentElement.getValue();
+        return currentElement.getText();
     }
 
     public String getAttribute(String name) {

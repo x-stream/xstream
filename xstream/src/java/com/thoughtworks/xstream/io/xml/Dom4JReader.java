@@ -6,7 +6,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Attribute;
 
-public class Dom4JReader extends AbstractTreeReader {
+public class Dom4JReader extends AbstractDocumentReader {
 
     private Element currentElement;
 

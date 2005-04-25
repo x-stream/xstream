@@ -64,7 +64,7 @@ public class StaxDriver implements HierarchicalStreamDriver {
         }
     }
 
-    public StaxReader createStaxReader(XMLStreamReader in) {
+    public AbstractPullReader createStaxReader(XMLStreamReader in) {
         return new StaxReader(qnameMap, in);
     }
 

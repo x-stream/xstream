@@ -9,11 +9,12 @@ public final class FastStack {
         stack = new Object[initialCapacity];
     }
 
-    public void push(Object value) {
+    public Object push(Object value) {
         if (pointer + 1 >= stack.length) {
             resizeStack(stack.length * 2);
         }
         stack[pointer++] = value;
+        return value;
     }
 
     public void popSilently() {
@@ -30,6 +31,10 @@ public final class FastStack {
 
     public int size() {
         return pointer;
+    }
+
+    public boolean hasStuff() {
+        return pointer > 0;
     }
 
     public Object get(int i) {

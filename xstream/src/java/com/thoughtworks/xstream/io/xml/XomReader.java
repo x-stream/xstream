@@ -1,10 +1,8 @@
 package com.thoughtworks.xstream.io.xml;
 
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Attribute;
+import nu.xom.*;
 
-public class XomReader extends AbstractTreeReader {
+public class XomReader extends AbstractDocumentReader {
 
     private Element currentElement;
 
@@ -21,7 +19,17 @@ public class XomReader extends AbstractTreeReader {
     }
 
     public String getValue() {
-        return currentElement.getValue();
+        // currentElement.getValue() not used as this includes text of child elements, which we don't want.
+        StringBuffer result = new StringBuffer();
+        int childCount = currentElement.getChildCount();
+        for(int i = 0; i < childCount; i++) {
+            Node child = currentElement.getChild(i);
+            if (child instanceof Text) {
+                Text text = (Text) child;
+                result.append(text.getValue());
+            }
+        }
+        return result.toString();
     }
 
     public String getAttribute(String name) {

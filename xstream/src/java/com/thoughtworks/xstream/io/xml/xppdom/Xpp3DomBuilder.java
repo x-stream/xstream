@@ -14,7 +14,7 @@ public class Xpp3DomBuilder {
 
         List values = new ArrayList();
 
-        Xpp3Dom configuration = null;
+        Xpp3Dom node = null;
 
         XmlPullParser parser = new MXParser();
 
@@ -26,17 +26,17 @@ public class Xpp3DomBuilder {
             if (eventType == XmlPullParser.START_TAG) {
                 String rawName = parser.getName();
 
-                Xpp3Dom childConfiguration = createConfiguration(rawName);
+                Xpp3Dom child = new Xpp3Dom(rawName);
 
                 int depth = elements.size();
 
                 if (depth > 0) {
                     Xpp3Dom parent = (Xpp3Dom) elements.get(depth - 1);
 
-                    parent.addChild(childConfiguration);
+                    parent.addChild(child);
                 }
 
-                elements.add(childConfiguration);
+                elements.add(child);
 
                 values.add(new StringBuffer());
 
@@ -47,7 +47,7 @@ public class Xpp3DomBuilder {
 
                     String value = parser.getAttributeValue(i);
 
-                    childConfiguration.setAttribute(name, value);
+                    child.setAttribute(name, value);
                 }
             } else if (eventType == XmlPullParser.TEXT) {
                 int depth = values.size() - 1;
@@ -58,24 +58,22 @@ public class Xpp3DomBuilder {
             } else if (eventType == XmlPullParser.END_TAG) {
                 int depth = elements.size() - 1;
 
-                Xpp3Dom finishedConfiguration = (Xpp3Dom) elements.remove(depth);
+                Xpp3Dom finalNode = (Xpp3Dom) elements.remove(depth);
 
                 String accumulatedValue = (values.remove(depth)).toString();
 
-                if (finishedConfiguration.getChildCount() == 0) {
-                    String finishedValue;
+                String finishedValue;
 
-                    if (0 == accumulatedValue.length()) {
-                        finishedValue = null;
-                    } else {
-                        finishedValue = accumulatedValue;
-                    }
-
-                    finishedConfiguration.setValue(finishedValue);
+                if (0 == accumulatedValue.length()) {
+                    finishedValue = null;
+                } else {
+                    finishedValue = accumulatedValue;
                 }
 
+                finalNode.setValue(finishedValue);
+
                 if (0 == depth) {
-                    configuration = finishedConfiguration;
+                    node = finalNode;
                 }
             }
 
@@ -84,10 +82,7 @@ public class Xpp3DomBuilder {
 
         reader.close();
 
-        return configuration;
+        return node;
     }
 
-    private static Xpp3Dom createConfiguration(String localName) {
-        return new Xpp3Dom(localName);
-    }
 }

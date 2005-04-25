@@ -12,7 +12,7 @@ import java.util.List;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-public class DomReader extends AbstractTreeReader {
+public class DomReader extends AbstractDocumentReader {
 
     private Element currentElement;
     private StringBuffer textBuffer;

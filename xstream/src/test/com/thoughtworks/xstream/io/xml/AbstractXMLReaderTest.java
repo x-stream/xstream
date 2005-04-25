@@ -182,6 +182,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
                 = createReader("<root><child></child><sibling>text2</sibling></root>"); // at: /root
 
         assertEquals("root", xmlReader.getNodeName());
+        assertEquals("", xmlReader.getValue());
         assertTrue(xmlReader.hasMoreChildren());
 
         xmlReader.moveDown(); // at: /root/child
@@ -202,5 +203,14 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveUp(); // at: /root
 
         assertFalse(xmlReader.hasMoreChildren());
+    }
+
+    public void testExposesTextValueOfCurrentElementButNotChildren() throws Exception {
+        HierarchicalStreamReader xmlReader
+                = createReader("<root>hello<child>FNARR</child></root>");
+
+        assertEquals("hello", xmlReader.getValue());
+        xmlReader.moveDown();
+        assertEquals("FNARR", xmlReader.getValue());
     }
 }
