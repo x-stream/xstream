@@ -34,7 +34,7 @@
         <li>Bugfix: Externalizable deserialization supported for objects not at the root of tree.</li>
         <li>JavaMethodConverter handles non public methods/constructors (contributed by Kevin Ring).</li>
         <li>PropertiesConverter also serializes default properties, if present (contributed by Kevin Ring).</li>
-        <li>Bugfix: In some cases, XppReader and StaxReader would get confused when calling hasMoreChildren() on elements with empty text values.</li>
+        <li>Bugfix: In some cases, XppReader and StaxReader would get confused when calling hasMoreChildren() and getValue() on the same node.</li>
     </ul>
 
     <h2>API changes</h2>
