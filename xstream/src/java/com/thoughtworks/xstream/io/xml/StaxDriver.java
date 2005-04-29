@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.NamespaceAwareDriver;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -19,14 +20,14 @@ import java.io.Writer;
  * @author James Strachan
  * @version $Revision$
  */
-public class StaxDriver implements HierarchicalStreamDriver {
+public class StaxDriver implements NamespaceAwareDriver {
 
     private static boolean libraryPresent;
 
     private QNameMap qnameMap;
     private XMLInputFactory inputFactory;
     private XMLOutputFactory outputFactory;
-    private boolean repairingNamespace = true;
+    private boolean repairingNamespace = false;
 
     public StaxDriver() {
         this.qnameMap = new QNameMap();
@@ -34,6 +35,11 @@ public class StaxDriver implements HierarchicalStreamDriver {
 
     public StaxDriver(QNameMap qnameMap) {
         this.qnameMap = qnameMap;
+    }
+
+    public StaxDriver(QNameMap qnameMap, boolean repairingNamespace) {
+        this.qnameMap = qnameMap;
+        this.repairingNamespace = repairingNamespace;
     }
 
     public HierarchicalStreamReader createReader(Reader xml) {
@@ -57,7 +63,7 @@ public class StaxDriver implements HierarchicalStreamDriver {
 
     public HierarchicalStreamWriter createWriter(Writer out) {
         try {
-            return new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out));
+            return new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace());
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -69,7 +75,7 @@ public class StaxDriver implements HierarchicalStreamDriver {
     }
 
     public StaxWriter createStaxWriter(XMLStreamWriter out, boolean writeStartEndDocument) throws XMLStreamException {
-        return new StaxWriter(qnameMap, out, writeStartEndDocument);
+        return new StaxWriter(qnameMap, out, writeStartEndDocument, repairingNamespace);
     }
 
     public StaxWriter createStaxWriter(XMLStreamWriter out) throws XMLStreamException {
@@ -97,19 +103,13 @@ public class StaxDriver implements HierarchicalStreamDriver {
     public XMLOutputFactory getOutputFactory() {
         if (outputFactory == null) {
             outputFactory = XMLOutputFactory.newInstance();
-            if (isRepairingNamespace()) {
-                outputFactory.setProperty("javax.xml.stream.isRepairingNamespaces", Boolean.TRUE);
-            }
+            outputFactory.setProperty("javax.xml.stream.isRepairingNamespaces", isRepairingNamespace() ? Boolean.TRUE : Boolean.FALSE);
         }
         return outputFactory;
     }
 
     public boolean isRepairingNamespace() {
         return repairingNamespace;
-    }
-
-    public void setRepairingNamespace(boolean repairingNamespace) {
-        this.repairingNamespace = repairingNamespace;
     }
 
 

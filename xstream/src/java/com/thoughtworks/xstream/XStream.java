@@ -19,8 +19,10 @@ import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.NamespaceAwareDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.thoughtworks.xstream.io.NamespaceAwareDriver;
 import com.thoughtworks.xstream.mapper.*;
 
 import java.io.*;
@@ -428,7 +430,7 @@ public class XStream {
      */
     public String toXML(Object obj) {
         Writer stringWriter = new StringWriter();
-        HierarchicalStreamWriter writer = new PrettyPrintWriter(stringWriter);
+        HierarchicalStreamWriter writer = createStreamWriter(stringWriter);
         marshal(obj, writer);
         return stringWriter.toString();
     }
@@ -436,8 +438,9 @@ public class XStream {
     /**
      * Serialize an object to the given Writer as pretty-printed XML.
      */
-    public void toXML(Object obj, Writer writer) {
-        marshal(obj, new PrettyPrintWriter(writer));
+    public void toXML(Object obj, Writer out) {
+        HierarchicalStreamWriter writer = createStreamWriter(out);
+        marshal(obj, writer);
     }
 
     /**
@@ -812,5 +815,21 @@ public class XStream {
         public InitializationException(String message, Throwable cause) {
             super(message, cause);
         }
+    }
+
+    /**
+     * Creates a stream writer, either using the driver itself to decide
+     * or just using a regular pretty printer
+     */
+    protected HierarchicalStreamWriter createStreamWriter(Writer stringWriter) {
+        HierarchicalStreamWriter writer = null;
+        if (hierarchicalStreamDriver instanceof NamespaceAwareDriver) {
+            NamespaceAwareDriver driver = (NamespaceAwareDriver) hierarchicalStreamDriver;
+            writer = driver.createWriter(stringWriter);
+        }
+        else {
+            writer = new PrettyPrintWriter(stringWriter);
+        }
+        return writer;
     }
 }
