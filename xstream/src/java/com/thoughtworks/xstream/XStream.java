@@ -430,8 +430,10 @@ public class XStream {
      */
     public String toXML(Object obj) {
         Writer stringWriter = new StringWriter();
-        HierarchicalStreamWriter writer = createStreamWriter(stringWriter);
+        HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(stringWriter);
         marshal(obj, writer);
+        writer.flush();
+        writer.close();
         return stringWriter.toString();
     }
 
@@ -439,8 +441,9 @@ public class XStream {
      * Serialize an object to the given Writer as pretty-printed XML.
      */
     public void toXML(Object obj, Writer out) {
-        HierarchicalStreamWriter writer = createStreamWriter(out);
+        HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
         marshal(obj, writer);
+        writer.flush();
     }
 
     /**
@@ -817,19 +820,4 @@ public class XStream {
         }
     }
 
-    /**
-     * Creates a stream writer, either using the driver itself to decide
-     * or just using a regular pretty printer
-     */
-    protected HierarchicalStreamWriter createStreamWriter(Writer stringWriter) {
-        HierarchicalStreamWriter writer = null;
-        if (hierarchicalStreamDriver instanceof NamespaceAwareDriver) {
-            NamespaceAwareDriver driver = (NamespaceAwareDriver) hierarchicalStreamDriver;
-            writer = driver.createWriter(stringWriter);
-        }
-        else {
-            writer = new PrettyPrintWriter(stringWriter);
-        }
-        return writer;
-    }
 }

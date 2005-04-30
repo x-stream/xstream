@@ -2,8 +2,10 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.io.Reader;
+import java.io.Writer;
 
 public class XppDriver implements HierarchicalStreamDriver {
 
@@ -20,5 +22,9 @@ public class XppDriver implements HierarchicalStreamDriver {
             xppLibraryPresent = true;
         }
         return new XppReader(xml);
+    }
+
+    public HierarchicalStreamWriter createWriter(Writer out) {
+        return new PrettyPrintWriter(out);
     }
 }
