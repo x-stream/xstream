@@ -4,7 +4,6 @@ import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-import com.thoughtworks.xstream.io.NamespaceAwareDriver;
 
 import javax.xml.namespace.QName;
 import java.io.StringWriter;
@@ -20,7 +19,7 @@ public class QNameMappedConcreteClassesTest extends ConcreteClassesTest {
     public static final String XML_HEADER = "<?xml version='1.0' encoding='utf-8'?>";
 
     protected QNameMap qnameMap;
-    protected NamespaceAwareDriver staxDriver;
+    protected HierarchicalStreamDriver staxDriver;
     protected String namespace = "java://" + WithList.class.getPackage().getName();
 
     public void testDefaultImplementationOfInterface() {

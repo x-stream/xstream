@@ -1,16 +1,11 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
-import com.thoughtworks.xstream.io.NamespaceAwareDriver;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.*;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -20,7 +15,7 @@ import java.io.Writer;
  * @author James Strachan
  * @version $Revision$
  */
-public class StaxDriver implements NamespaceAwareDriver {
+public class StaxDriver implements HierarchicalStreamDriver {
 
     private static boolean libraryPresent;
 
