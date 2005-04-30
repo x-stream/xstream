@@ -7,6 +7,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 
+/**
+ * A simple writer that outputs XML in a pretty-printed indented stream.
+ *
+ * <p>By default, the chars <code><xmp>& < > " ' \r</xmp></code> are escaped and replaced with a suitable XML entity.
+ * To alter this behavior, override the the {@link #writeText(com.thoughtworks.xstream.core.util.QuickWriter, String)}
+ * and {@link #writeAttributeValue(com.thoughtworks.xstream.core.util.QuickWriter, String)} methods.</p>
+ *
+ * @author Joe Walnes 
+ */
 public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
     private final QuickWriter writer;
@@ -33,7 +42,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
     public PrettyPrintWriter(Writer writer, String lineIndenter) {
         this(writer, lineIndenter.toCharArray());
-    }
+    }            
 
     public PrettyPrintWriter(PrintWriter writer) {
         this(writer, new char[]{' ', ' '});
@@ -60,7 +69,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         tagIsEmpty = false;
         finishTag();
 
-        writeEscapedString(text);
+        writeText(writer, text);
     }
 
     public void addAttribute(String key, String value) {
@@ -68,36 +77,64 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         writer.write(key);
         writer.write('=');
         writer.write('\"');
-        writeEscapedString(value);
+        writeAttributeValue(writer, value);
         writer.write('\"');
     }
 
-    private void writeEscapedString(String text) {
-        // Profiler said this was a bottleneck
+    protected void writeAttributeValue(QuickWriter writer, String text) {
         int length = text.length();
         for (int i = 0; i < length; i++) {
             char c = text.charAt(i);
             switch (c) {
                 case '&':
-                    writer.write(AMP);
+                    this.writer.write(AMP);
                     break;
                 case '<':
-                    writer.write(LT);
+                    this.writer.write(LT);
                     break;
                 case '>':
-                    writer.write(GT);
+                    this.writer.write(GT);
                     break;
                 case '"':
-                    writer.write(QUOT);
+                    this.writer.write(QUOT);
                     break;
                 case '\'':
-                    writer.write(APOS);
+                    this.writer.write(APOS);
                     break;
                 case '\r':
-                    writer.write(SLASH_R);
+                    this.writer.write(SLASH_R);
                     break;
                 default:
-                    writer.write(c);
+                    this.writer.write(c);
+            }
+        }
+    }
+
+    protected void writeText(QuickWriter writer, String text) {
+        int length = text.length();
+        for (int i = 0; i < length; i++) {
+            char c = text.charAt(i);
+            switch (c) {
+                case '&':
+                    this.writer.write(AMP);
+                    break;
+                case '<':
+                    this.writer.write(LT);
+                    break;
+                case '>':
+                    this.writer.write(GT);
+                    break;
+                case '"':
+                    this.writer.write(QUOT);
+                    break;
+                case '\'':
+                    this.writer.write(APOS);
+                    break;
+                case '\r':
+                    this.writer.write(SLASH_R);
+                    break;
+                default:
+                    this.writer.write(c);
             }
         }
     }

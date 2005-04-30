@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.core.util.QuickWriter;
 import junit.framework.TestCase;
 
 import java.io.StringWriter;
@@ -52,4 +53,22 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs(expected);
     }
 
+    public void testAllowsUserToOverrideTextAndAttributeEscapingRules() {
+        writer = new PrettyPrintWriter(buffer, "  ") {
+            protected void writeAttributeValue(QuickWriter writer, String text) {
+                writer.write(text.replaceAll("&", "_&_"));
+            }
+
+            protected void writeText(QuickWriter writer, String text) {
+                writer.write(text.replaceAll("&", "AND"));
+            }
+        };
+
+        writer.startNode("evil");
+        writer.addAttribute("attr", "hello & stuff");
+        writer.setValue("bye & stuff");
+        writer.endNode();
+
+        assertXmlProducedIs("<evil attr=\"hello _&_ stuff\">bye AND stuff</evil>");
+    }
 }
