@@ -86,7 +86,7 @@ public class BeanProperty {
         try {
             return getter.invoke(member, null);
         } catch (InvocationTargetException e) {
-            throw new UndeclaredThrowableException(e.getCause());
+            throw new UndeclaredThrowableException(e.getTargetException());
         }
     }
 
@@ -103,7 +103,7 @@ public class BeanProperty {
         try {
             return setter.invoke(member, new Object[] { newValue });
         } catch (InvocationTargetException e) {
-            throw new UndeclaredThrowableException(e.getCause());
+            throw new UndeclaredThrowableException(e.getTargetException());
         }
     }
 

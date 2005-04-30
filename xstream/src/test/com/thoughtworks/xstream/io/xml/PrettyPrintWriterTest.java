@@ -56,11 +56,11 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     public void testAllowsUserToOverrideTextAndAttributeEscapingRules() {
         writer = new PrettyPrintWriter(buffer, "  ") {
             protected void writeAttributeValue(QuickWriter writer, String text) {
-                writer.write(text.replaceAll("&", "_&_"));
+                writer.write(replace(text, '&', "_&_"));
             }
 
             protected void writeText(QuickWriter writer, String text) {
-                writer.write(text.replaceAll("&", "AND"));
+                writer.write(replace(text, '&', "AND"));
             }
         };
 
@@ -70,5 +70,14 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         writer.endNode();
 
         assertXmlProducedIs("<evil attr=\"hello _&_ stuff\">bye AND stuff</evil>");
+    }
+
+    private String replace(String in, char what, String with) {
+        int pos = in.indexOf(what);
+        if (pos == -1) {
+            return in;
+        } else {
+            return in.substring(0, pos) + with + in.substring(pos + 1);
+        }
     }
 }
