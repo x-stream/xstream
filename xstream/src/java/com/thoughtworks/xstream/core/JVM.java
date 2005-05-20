@@ -9,10 +9,24 @@ public class JVM {
 
     private ReflectionProvider reflectionProvider;
 
-    private static final float majorJavaVersion;
+    private static final float majorJavaVersion = getMajorJavaVersion(System.getProperty("java.version"));
 
-    static {
-       majorJavaVersion = Float.parseFloat(System.getProperty("java.version").substring(0, 3));
+    static final float DEFAULT_JAVA_VERSION = 1.3f;
+    
+    /**
+     * Parses the java version system property to determine the major java version, 
+     * ie 1.x 
+     * 
+     * @param javaVersion the system property 'java.version' 
+     * @return A float of the form 1.x
+     */
+    static final float getMajorJavaVersion(String javaVersion) {
+        try { 
+            return Float.parseFloat(javaVersion.substring(0, 3));
+        } catch ( NumberFormatException e ){
+            // Some JVMs may not conform to the x.y.z java.version format
+            return DEFAULT_JAVA_VERSION;
+        }
     }
 
     public static boolean is14() {
