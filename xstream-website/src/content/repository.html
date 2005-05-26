@@ -4,28 +4,63 @@
   </head>
   <body>
 
-    <!--
-    <h2>Web Access</h2>
+    <h2>Subversion</h2>
+    
+    XStream uses Subversion as the SCM.  See <a href="http://subversion.tigris.org">Subversion website</a> for details and documentation on IDE integration.
 
-    <p><a href="http://cvs.xstream.codehaus.org/">http://cvs.xstream.codehaus.org/</a></p>
-    --->
+	<h2>Svnserve Access</h2>
 
-    <h2>Anonymous Subversion Access</h2>
+	Svnserve access is via a specific port (typically 3690 on Unix systems) and requires ssh access for developers.  This is often not allowed by corporate firewalls.
 
-    <p>This XStream source can be checkout out anoymously from this Subversion repository:</p>
+	<h3>Anonymous Access</h3>
+	
+		<div class="Source"><pre>svn co svn://svn.xstream.codehaus.org/xstream/scm/trunk</pre></div>
+		
+	<h3>Developer Access over SSH</h3>
+	
+		<p>
+		<div class="Source"><pre>svn co svn+ssh://username@svn.xstream.codehaus.org/scm/xstream/trunk</pre></div>
+		where username is your unix Codehaus username.
+		</p>
+		<p>
+		<b>Note</b>: the path is different when accessing over SSH, ie scm/xstream in place of xstream/scm. 
+		</p>
 
-    <div class="Source"><pre>svn://svn.xstream.codehaus.org/xstream/scm/trunk/xstream</pre></div>
+	<h2>WebDav Access</h2>
 
-    <h3>Example</h3>
+	WebDav is an alternative access protocol supported by SVN and being http-based is often allowed by corporate firewalls. 
 
-    <div class="Source"><pre>svn co svn://svn.xstream.codehaus.org/xstream/scm/trunk/xstream</pre></div>
+	<h3>WebDAV over SSL</h3>
 
-    <h2>Developer Subversion Access</h2>
+		<div class="Source"><pre>svn co https://svn.codehaus.org/xstream/trunk</pre></div>
 
-    <p>For commit access, developers require an SSH account.</p>
+		<p>
+		This access protocol is available to all, but only developers can commit changes.    
+		</p>
+		<p>
+		Developers require a unix password for Codehaus username (contact Bob at the Haus to get assigned a password if you don't have one).
+		</p>
+		<p>
+		To test https commit access, one may eg: 
+			<div class="Source"><pre>
+svn co https://svn.codehaus.org/xstream/trunk xstream
+cd xstream
+echo "test" > TEST
+svn add TEST
+svn commit --username username --password your-password --message "Testing https"
+			</pre></div>
+		</p>
+		<p>
+		<b>Note</b>: you only need to specify username and password once per client.
+		</p>
+	
+	<h2>Modules</h2>
 
-    <div class="Source"><pre>svn+ssh://svn.xstream.codehaus.org/scm/xstream/trunk/xstream
-svn+ssh://svn.xstream.codehaus.org/scm/xstream/trunk/xstream-website</pre></div>
+	XStream project consists of two modules:  xstream and xstream-website.
+	When you checkout the trunk you'll get both, but you can just add the module you are interested in to the URL, eg
+		<div class="Source"><pre>svn co https://svn.codehaus.org/xstream/trunk/xstream xstream</pre></div>
+		<div class="Source"><pre>svn co https://svn.codehaus.org/xstream/trunk/xstream-website xstream-website</pre></div>
+	checkout out the two modules separately.
 
   </body>
 </html>
