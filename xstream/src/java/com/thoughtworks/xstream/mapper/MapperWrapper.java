@@ -70,6 +70,10 @@ public abstract class MapperWrapper implements ClassMapper {
         return wrapped.getImplicitCollectionDefForFieldName(itemType, fieldName);
     }
 
+    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+        return wrapped.shouldSerializeMember(definedIn, fieldName);
+    }
+
     /**
      * @deprecated As of 1.1.1, use {@link #defaultImplementationOf(Class)}
      */

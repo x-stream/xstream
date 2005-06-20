@@ -812,6 +812,15 @@ public class XStream {
         return classLoaderReference.getReference();
     }
 
+    /**
+     * Prevents a field from being serialized.
+     *
+     * @since 1.2
+     */
+    public void omitField(Class type, String fieldName) {
+        fieldAliasingMapper.omitField(type, fieldName);
+    }
+
     public static class InitializationException extends BaseException {
         public InitializationException(String message, Throwable cause) {
             super(message, cause);

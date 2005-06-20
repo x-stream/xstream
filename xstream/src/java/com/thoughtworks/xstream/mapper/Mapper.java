@@ -1,7 +1,5 @@
 package com.thoughtworks.xstream.mapper;
 
-
-
 public interface Mapper {
 
     /**
@@ -52,6 +50,13 @@ public interface Mapper {
     Class getItemTypeForItemFieldName(Class definedIn, String itemFieldName);
 
     ImplicitCollectionMapping getImplicitCollectionDefForFieldName(Class itemType, String fieldName);
+
+    /**
+     * Determine whether a specific member should be serialized.
+     *
+     * @since 1.2
+     */
+    boolean shouldSerializeMember(Class definedIn, String fieldName);
 
     interface ImplicitCollectionMapping {
         String getFieldName();

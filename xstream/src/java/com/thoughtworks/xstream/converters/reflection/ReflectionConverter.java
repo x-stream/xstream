@@ -63,6 +63,9 @@ public class ReflectionConverter implements Converter {
             }
 
             private void writeField(String fieldName, Class fieldType, Class definedIn, Object newObj) {
+                if (!mapper.shouldSerializeMember(definedIn, fieldName)) {
+                    return;
+                }
                 writer.startNode(mapper.serializedMember(definedIn, fieldName));
 
                 Class actualType = newObj.getClass();

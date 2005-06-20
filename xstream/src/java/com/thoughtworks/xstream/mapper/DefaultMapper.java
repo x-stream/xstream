@@ -76,6 +76,10 @@ public class DefaultMapper extends MapperWrapper {
         return null;
     }
 
+    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+        return true;
+    }
+
     public String lookupName(Class type) {
         return serializedClass(type);
     }
