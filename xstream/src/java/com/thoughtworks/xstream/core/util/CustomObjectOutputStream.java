@@ -67,7 +67,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
     }
 
     public void writeBoolean(boolean val) throws IOException {
-        callback.writeToStream(new Boolean(val));
+        callback.writeToStream(val ? Boolean.TRUE : Boolean.FALSE); // JDK 1.3 friendly
     }
 
     public void writeByte(int val) throws IOException {
@@ -116,9 +116,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     public void write(byte[] buf, int off, int len) throws IOException {
         byte[] b = new byte[len];
-        for(int i = 0; i < len; i++) {
-            b[i] = buf[i + off];
-        }
+        System.arraycopy(buf, off, b, 0, len);
         callback.writeToStream(b);
     }
 
@@ -186,7 +184,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
         }
 
         public void put(String name, boolean val) {
-            put(name, new Boolean(val));
+            put(name, val ? Boolean.TRUE : Boolean.FALSE); // JDK 1.3 friendly
         }
 
     }

@@ -38,8 +38,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     public Object newInstance(Class type) {
         try {
             Constructor customConstructor = getMungedConstructor(type);
-            Object newValue = customConstructor.newInstance(new Object[0]);
-            return newValue;
+            return customConstructor.newInstance(new Object[0]);
         } catch (NoSuchMethodException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (SecurityException e) {

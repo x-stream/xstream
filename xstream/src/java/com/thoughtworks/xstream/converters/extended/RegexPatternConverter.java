@@ -29,8 +29,7 @@ public class RegexPatternConverter implements Converter {
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Pattern notCompiled = (Pattern) defaultConverter.unmarshal(reader, context);
-        Pattern compiled = Pattern.compile(notCompiled.pattern(), notCompiled.flags());
-        return compiled;
+        return Pattern.compile(notCompiled.pattern(), notCompiled.flags());
     }
 
 }

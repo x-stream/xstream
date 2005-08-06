@@ -70,7 +70,7 @@ public class Path {
             }
             pathAsString = buffer.toString();
         }
-        return pathAsString.toString();
+        return pathAsString;
     }
 
     public boolean equals(Object o) {

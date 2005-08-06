@@ -25,6 +25,8 @@ public class BeanProperty {
 
     /** the setter */
     private Method setter;
+    
+    private static final Object[] EMPTY_ARGS = new Object[0];
 
     /**
      * Creates a new {@link BeanProperty}that gets the specified property from
@@ -84,7 +86,7 @@ public class BeanProperty {
                     + " not readable");
 
         try {
-            return getter.invoke(member, null);
+            return getter.invoke(member, EMPTY_ARGS);
         } catch (InvocationTargetException e) {
             throw new UndeclaredThrowableException(e.getTargetException());
         }

@@ -29,7 +29,7 @@ public class ThreadSafeSimpleDateFormat {
     private final int maxPoolSize;
     private transient DateFormat[] pool;
     private int nextAvailable = 0;
-    private Object mutex = new Object();
+    private final Object mutex = new Object();
 
     public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize) {
         this.formatString = format;

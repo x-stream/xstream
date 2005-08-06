@@ -80,9 +80,9 @@ public class BeanProvider {
         for (Iterator iterator = propertyDictionary.serializablePropertiesFor(object.getClass()); iterator
                 .hasNext();) {
             BeanProperty property = (BeanProperty) iterator.next();
-            Object value = null;
             try {
-                value = property.get(object);
+                Object value = property.get(object);
+                visitor.visit(property.getName(), property.getType(), value);
             } catch (IllegalArgumentException e) {
                 throw new ObjectAccessException("Could not get property " + property.getClass()
                         + "." + property.getName(), e);
@@ -90,7 +90,6 @@ public class BeanProvider {
                 throw new ObjectAccessException("Could not get property " + property.getClass()
                         + "." + property.getName(), e);
             }
-            visitor.visit(property.getName(), property.getType(), value);
         }
     }
 

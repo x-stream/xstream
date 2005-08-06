@@ -20,7 +20,7 @@ public class JDomWriter implements HierarchicalStreamWriter {
 
     public JDomWriter(Element container, JDOMFactory factory) {
         elementStack.add(0, container);
-        this.result.add(container);
+        result.add(container);
         this.documentFactory = factory;
     }
 
@@ -44,17 +44,17 @@ public class JDomWriter implements HierarchicalStreamWriter {
             parent.addContent(element);
         }
         else {
-            this.result.add(element);
+            result.add(element);
         }
         elementStack.add(0, element);
     }
 
     public void setValue(String text) {
-        this.top().addContent(this.documentFactory.text(text));
+        top().addContent(this.documentFactory.text(text));
     }
 
     public void addAttribute(String key, String value) {
-        ((Element) this.top()).setAttribute(
+        top().setAttribute(
                         this.documentFactory.attribute(key, value));
     }
 

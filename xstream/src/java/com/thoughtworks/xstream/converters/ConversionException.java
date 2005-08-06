@@ -67,12 +67,12 @@ public class ConversionException extends BaseException implements ErrorWriter {
         for (Iterator iterator = keys(); iterator.hasNext();) {
             String k = (String) iterator.next();
             String v = get(k);
-            result.append("\n" + k);
+            result.append('\n').append(k);
             int padding = 20 - k.length();
             for (int i = 0; i < padding; i++) {
                 result.append(' ');
             }
-            result.append(": " + v + " ");
+            result.append(": ").append(v).append(' ');
         }
         result.append("\n-------------------------------");
         return result.toString();

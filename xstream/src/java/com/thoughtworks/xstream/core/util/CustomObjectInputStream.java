@@ -108,9 +108,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
     public void readFully(byte[] buf, int off, int len) throws IOException {
         byte[] b = (byte[])callback.readFromStream();
-        for(int i = 0; i < len; i++) {
-            buf[i + off] = b[i];
-        }
+        System.arraycopy(b, 0, buf, off, len);
     }
 
     public GetField readFields() throws IOException, ClassNotFoundException {

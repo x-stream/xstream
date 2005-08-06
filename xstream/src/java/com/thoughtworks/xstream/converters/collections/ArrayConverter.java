@@ -58,9 +58,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
         Object array = Array.newInstance(context.getRequiredType().getComponentType(), items.size());
         int i = 0;
         for (Iterator iterator = items.iterator(); iterator.hasNext();) {
-            Object item = (Object) iterator.next();
-            Array.set(array, i, item);
-            i++;
+            Array.set(array, i++, iterator.next());
         }
         return array;
     }

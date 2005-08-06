@@ -70,18 +70,19 @@ public class PropertyDictionary {
                         String methodName = methods[i].getName();
                         Class[] parameters = methods[i].getParameterTypes();
                         Class returnType = methods[i].getReturnType();
-                        String propertyName = null;
+                        String propertyName;
                         if ((methodName.startsWith("get") || methodName.startsWith("is"))
-                                && parameters.length == 0 && returnType != null) {
-                            if (methodName.startsWith("get"))
+                                && parameters.length == 0 && returnType != void.class) {
+                            if (methodName.startsWith("get")) {
                                 propertyName = Introspector.decapitalize(methodName.substring(3));
-                            else
+                            } else {
                                 propertyName = Introspector.decapitalize(methodName.substring(2));
+                            }
                             BeanProperty property = getBeanProperty(propertyMap, cls, propertyName,
                                     returnType);
                             property.setGetterMethod(methods[i]);
                         } else if (methodName.startsWith("set") && parameters.length == 1
-                                && returnType.equals(void.class)) {
+                                && returnType == void.class) {
                             propertyName = Introspector.decapitalize(methodName.substring(3));
                             BeanProperty property = getBeanProperty(propertyMap, cls, propertyName,
                                     parameters[0]);

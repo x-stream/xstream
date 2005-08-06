@@ -20,13 +20,12 @@ public class CachingMapper extends MapperWrapper {
     }
 
     public Class realClass(String elementName) {
-        final String key = elementName;
-        Class cached = (Class) cache.get(key);
+        Class cached = (Class) cache.get(elementName);
         if (cached != null) {
             return cached;
         } else {
             Class result = super.realClass(elementName);
-            cache.put(key, result);
+            cache.put(elementName, result);
             return result;
         }
     }

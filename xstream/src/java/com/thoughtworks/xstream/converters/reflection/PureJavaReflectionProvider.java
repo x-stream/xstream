@@ -103,15 +103,14 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                 continue;
             }
             validateFieldAccess(field);
-            Object value = null;
             try {
-                value = field.get(object);
+                Object value = field.get(object);
+                visitor.visit(field.getName(), field.getType(), field.getDeclaringClass(), value);
             } catch (IllegalArgumentException e) {
                 throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
             } catch (IllegalAccessException e) {
                 throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
             }
-            visitor.visit(field.getName(), field.getType(), field.getDeclaringClass(), value);
         }
     }
 

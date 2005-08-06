@@ -19,6 +19,7 @@ public class SerializationMethodInvoker {
 
     private Map cache = Collections.synchronizedMap(new HashMap());
     private static final Object NO_METHOD = new Object();
+    private static final Object[] EMPTY_ARGS = new Object[0];
 
     /**
      * Resolves an object as native serialization does by calling readResolve(), if available.
@@ -30,7 +31,7 @@ public class SerializationMethodInvoker {
             Method readResolveMethod = getMethod(result.getClass(), "readResolve", null, true);
             if (readResolveMethod != null) {
                 try {
-                    return readResolveMethod.invoke(result, null);
+                    return readResolveMethod.invoke(result, EMPTY_ARGS);
                 } catch (IllegalAccessException e) {
                     throw new ObjectAccessException("Could not call " + result.getClass().getName() + ".readResolve()", e);
                 } catch (InvocationTargetException e) {
@@ -49,7 +50,8 @@ public class SerializationMethodInvoker {
             Method writeReplaceMethod = getMethod(object.getClass(), "writeReplace", null, true);
             if (writeReplaceMethod != null) {
                 try {
-                    return writeReplaceMethod.invoke(object, null);
+                    Object[] EMPTY_ARGS = new Object[0];
+                    return writeReplaceMethod.invoke(object, EMPTY_ARGS);
                 } catch (IllegalAccessException e) {
                     throw new ObjectAccessException("Could not call " + object.getClass().getName() + ".writeReplace()", e);
                 } catch (InvocationTargetException e) {

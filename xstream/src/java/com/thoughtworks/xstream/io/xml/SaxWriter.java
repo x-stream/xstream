@@ -149,7 +149,7 @@ public final class SaxWriter implements HierarchicalStreamWriter, XMLReader {
             throws SAXNotRecognizedException {
         if ((name.equals("http://xml.org/sax/features/namespaces")) ||
                 (name.equals("http://xml.org/sax/features/namespace-prefixes"))) {
-            this.features.put(name, new Boolean(value));
+            this.features.put(name, value ? Boolean.TRUE : Boolean.FALSE); // JDK 1.3 friendly
         } else {
             throw new SAXNotRecognizedException(name);
         }

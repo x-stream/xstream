@@ -16,7 +16,6 @@ public class DomReader extends AbstractDocumentReader {
 
     private Element currentElement;
     private StringBuffer textBuffer;
-    private NodeList childNodes;
     private List childElements;
 
     public DomReader(Element rootElement) {
@@ -77,7 +76,7 @@ public class DomReader extends AbstractDocumentReader {
 
     protected void reassignCurrentElement(Object current) {
         currentElement = (Element) current;
-        childNodes = currentElement.getChildNodes();
+        NodeList childNodes = currentElement.getChildNodes();
         childElements = new ArrayList();
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node node = childNodes.item(i);
