@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.io.PrintWriter;
 import java.io.Writer;
 
 /**
@@ -44,12 +43,8 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         this(writer, lineIndenter.toCharArray());
     }            
 
-    public PrettyPrintWriter(PrintWriter writer) {
-        this(writer, new char[]{' ', ' '});
-    }
-
     public PrettyPrintWriter(Writer writer) {
-        this(new PrintWriter(writer));
+        this(writer, new char[]{' ', ' '});
     }
 
     public void startNode(String name) {
