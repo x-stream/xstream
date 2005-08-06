@@ -445,6 +445,15 @@ public class XStream {
     }
 
     /**
+     * Serialize an object to the given OutputStream as pretty-printed XML.
+     */
+    public void toXML(Object obj, OutputStream out) {
+        HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
+        marshal(obj, writer);
+        writer.flush();
+    }
+
+    /**
      * Serialize and object to a hierarchical data structure (such as XML).
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
@@ -476,6 +485,13 @@ public class XStream {
     }
 
     /**
+     * Deserialize an object from an XML InputStream.
+     */
+    public Object fromXML(InputStream input) {
+        return unmarshal(hierarchicalStreamDriver.createReader(input), null);
+    }
+
+    /**
      * Deserialize an object from an XML String,
      * populating the fields of the given root object instead of instantiating
      * a new one.
@@ -490,6 +506,15 @@ public class XStream {
      * a new one.
      */
     public Object fromXML(Reader xml, Object root) {
+        return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
+    }
+
+    /**
+     * Deserialize an object from an XML InputStream,
+     * populating the fields of the given root object instead of instantiating
+     * a new one.
+     */
+    public Object fromXML(InputStream xml, Object root) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
     }
 

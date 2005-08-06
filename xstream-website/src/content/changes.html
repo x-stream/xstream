@@ -19,13 +19,14 @@
     <h2>Major changes</h2>
 
     <ul>
-    	<li>Ability to prevent fields from being serialized by calling XStream.omitField() or by implementing Mapper.shouldSerializeMember().</li>
+        <li>Added XStream.toXML(OutputStream) and XStream.fromXML(InputStream).</li>
+        <li>Ability to prevent fields from being serialized by calling XStream.omitField() or by implementing Mapper.shouldSerializeMember().</li>
    	</ul>
 
 	<h2>Minor changes</h2>
 
     <ul>
-        <li>None.</li>
+        <li>Remove unnecessary PrintWriter wrapper in default writers (pointed out by Mathieu Champlon)</li>
     </ul>
 
     <h2>API changes</h2>

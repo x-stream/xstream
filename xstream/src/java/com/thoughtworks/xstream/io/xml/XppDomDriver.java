@@ -6,8 +6,7 @@ import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
 
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 
 public class XppDomDriver implements HierarchicalStreamDriver {
 
@@ -19,8 +18,15 @@ public class XppDomDriver implements HierarchicalStreamDriver {
         }
     }
 
+    public HierarchicalStreamReader createReader(InputStream in) {
+        return createReader(new InputStreamReader(in));
+    }
+
     public HierarchicalStreamWriter createWriter(Writer out) {
         return new PrettyPrintWriter(out);
     }
 
+    public HierarchicalStreamWriter createWriter(OutputStream out) {
+        return createWriter(new OutputStreamWriter(out));
+    }
 }

@@ -8,9 +8,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import java.io.Reader;
-import java.io.Writer;
-import java.io.IOException;
+import java.io.*;
 
 public class Dom4JDriver implements HierarchicalStreamDriver {
 
@@ -52,7 +50,38 @@ public class Dom4JDriver implements HierarchicalStreamDriver {
         }
     }
 
+    public HierarchicalStreamReader createReader(InputStream in) {
+        try {
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(in);
+            return new Dom4JReader(document);
+        } catch (DocumentException e) {
+            throw new StreamException(e);
+        }
+    }
+
     public HierarchicalStreamWriter createWriter(final Writer out) {
+        final Document document = documentFactory.createDocument();
+        HierarchicalStreamWriter writer = new Dom4JWriter(document);
+
+        // Ensure that on writer.close(), the Document is written back to the text output.
+        writer = new WriterWrapper(writer) {
+            public void close() {
+                super.close();
+                try {
+                    XMLWriter writer = new XMLWriter(out, outputFormat);
+                    writer.write(document);
+                    writer.flush();
+                } catch (IOException e) {
+                    throw new StreamException(e);
+                }
+            }
+        };
+
+        return writer;
+    }
+
+    public HierarchicalStreamWriter createWriter(final OutputStream out) {
         final Document document = documentFactory.createDocument();
         HierarchicalStreamWriter writer = new Dom4JWriter(document);
 

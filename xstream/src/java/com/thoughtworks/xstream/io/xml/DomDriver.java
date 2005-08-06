@@ -4,19 +4,12 @@ import com.thoughtworks.xstream.io.*;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.dom4j.io.XMLWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 
 public class DomDriver implements HierarchicalStreamDriver {
 
@@ -33,9 +26,16 @@ public class DomDriver implements HierarchicalStreamDriver {
     }
 
     public HierarchicalStreamReader createReader(Reader xml) {
+        return createReader(new InputSource(xml));
+    }
+
+    public HierarchicalStreamReader createReader(InputStream xml) {
+        return createReader(new InputSource(xml));
+    }
+
+    private HierarchicalStreamReader createReader(InputSource source) {
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            InputSource source = new InputSource(xml);
             source.setEncoding(encoding);
             Document document = documentBuilder.parse(source);
             return new DomReader(document);
@@ -54,4 +54,7 @@ public class DomDriver implements HierarchicalStreamDriver {
         return new PrettyPrintWriter(out);
     }
 
+    public HierarchicalStreamWriter createWriter(OutputStream out) {
+        return createWriter(new OutputStreamWriter(out));
+    }
 }

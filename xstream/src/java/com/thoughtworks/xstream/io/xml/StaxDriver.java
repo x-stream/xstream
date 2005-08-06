@@ -1,11 +1,13 @@
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 
 import javax.xml.stream.*;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -38,6 +40,26 @@ public class StaxDriver implements HierarchicalStreamDriver {
     }
 
     public HierarchicalStreamReader createReader(Reader xml) {
+        loadLibrary();
+        try {
+            return new StaxReader(qnameMap, createParser(xml));
+        }
+        catch (XMLStreamException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    public HierarchicalStreamReader createReader(InputStream in) {
+        loadLibrary();
+        try {
+            return new StaxReader(qnameMap, createParser(in));
+        }
+        catch (XMLStreamException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    private void loadLibrary() {
         if (!libraryPresent) {
             try {
                 Class.forName("javax.xml.stream.XMLStreamReader");
@@ -48,15 +70,18 @@ public class StaxDriver implements HierarchicalStreamDriver {
             }
             libraryPresent = true;
         }
+    }
+
+    public HierarchicalStreamWriter createWriter(Writer out) {
         try {
-            return new StaxReader(qnameMap, createParser(xml));
+            return new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace());
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
         }
     }
 
-    public HierarchicalStreamWriter createWriter(Writer out) {
+    public HierarchicalStreamWriter createWriter(OutputStream out) {
         try {
             return new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace());
         }
@@ -111,6 +136,10 @@ public class StaxDriver implements HierarchicalStreamDriver {
     // Implementation methods
     //-------------------------------------------------------------------------
     protected XMLStreamReader createParser(Reader xml) throws XMLStreamException {
+        return getInputFactory().createXMLStreamReader(xml);
+    }
+
+    protected XMLStreamReader createParser(InputStream xml) throws XMLStreamException {
         return getInputFactory().createXMLStreamReader(xml);
     }
 }
