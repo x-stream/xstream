@@ -1,3 +1,4 @@
 # The following patterns are files that should not be compiled or tested by the build, UNLESS using JDK 1.5 or greater.
 
+com/thoughtworks/xstream/annotations/**
 com/thoughtworks/xstream/converters/enums/**
