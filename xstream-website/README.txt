@@ -1,6 +1,5 @@
 (The XStream website is modelled on the jMock.org website, created by Nat Pryce).
 
-
 STRUCTURE
 
 The directories should be self explanatory:
