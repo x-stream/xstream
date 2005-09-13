@@ -63,7 +63,9 @@ public class EnumSetConverter implements Converter {
         String[] enumValues = reader.getValue().split(",");
         for (int i = 0; i < enumValues.length; i++) {
             String enumValue = enumValues[i];
-            set.add(Enum.valueOf(enumTypeForSet, enumValue));
+            if(enumValue.length() > 0) {
+                set.add(Enum.valueOf(enumTypeForSet, enumValue));
+            }
         }
         return set;
     }

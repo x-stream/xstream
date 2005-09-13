@@ -1,14 +1,9 @@
 package com.thoughtworks.xstream.converters.enums;
 
+import com.thoughtworks.xstream.XStream;
 import junit.framework.TestCase;
 
 import java.util.EnumSet;
-import java.util.EnumMap;
-import java.beans.XMLEncoder;
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-
-import com.thoughtworks.xstream.XStream;
 
 public class EnumSetConverterTest extends TestCase {
 
@@ -52,4 +47,15 @@ public class EnumSetConverterTest extends TestCase {
         assertEquals(expectedXml, xstream.toXML(set));
         assertEquals(set, xstream.fromXML(expectedXml));
     }
+
+    public void testEmptyEnumSet() {
+        xstream.alias("simple", SimpleEnum.class);
+        EnumSet<SimpleEnum> set = EnumSet.noneOf(SimpleEnum.class);
+
+        String expectedXml = "<enum-set enum-type=\"simple\"></enum-set>";
+
+        assertEquals(expectedXml, xstream.toXML(set));
+        assertEquals(set, xstream.fromXML(expectedXml));
+    }
+
 }
