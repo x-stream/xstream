@@ -55,6 +55,7 @@
     <target name="test" depends="test:compile" description="Run all acceptance tests and unit tests">
         <mkdir dir="${test.reports.dir}"/>
         <junit printsummary="no" fork="yes" forkmode="once" haltonfailure="${junit.haltonfailure}" includeantruntime="true">
+            <sysproperty key="java.awt.headless" value="true"/>
             <classpath refid="classpath"/>
             <formatter type="brief" usefile="no"/>
             <formatter type="xml"/>
