@@ -1,8 +1,6 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.testutil.TimeZoneChanger;
-
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
@@ -11,7 +9,10 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
+
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
@@ -99,10 +100,12 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
     public void testGregorianCalendar() {
         Calendar in = Calendar.getInstance();
+        in.setTimeZone(TimeZone.getTimeZone("AST"));
         in.setTimeInMillis(44444);
         String expected = "" +
                 "<gregorian-calendar>\n" +
                 "  <time>44444</time>\n" +
+                "  <timezone>AST</timezone>\n" +
                 "</gregorian-calendar>";
         Calendar out = (Calendar) assertBothWays(in, expected);
         assertEquals(in.getTime(), out.getTime());
