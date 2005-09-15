@@ -21,14 +21,14 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * @author Emil Kirschner
  * @author Chung-Onn Cheong
  */
-public class XStreamConfig {
+public class Annotations {
     private static final Set<Class<?>> configuredTypes = new HashSet<Class<?>>();
     private static boolean debug = false;
 
     /**
      * This class is not instantiable
      */
-    private XStreamConfig() {
+    private Annotations() {
     }
 
     /**

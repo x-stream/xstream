@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamConfig;
+import com.thoughtworks.xstream.annotations.Annotations;
 import com.thoughtworks.xstream.annotations.XStreamContainedType;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
@@ -17,10 +17,10 @@ import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
  * @author Chung-Onn Cheong
  * @author Mauro Talevi
  */
-public class XStreamAnnotationTest extends AbstractAcceptanceTest {
+public class AnnotationsTest extends AbstractAcceptanceTest {
     
     public void testAnnotations()  {
-        XStreamConfig.configureAliases(xstream, Person.class, AddressBookInfo.class);
+        Annotations.configureAliases(xstream, Person.class, AddressBookInfo.class);
         Map<String, Person> map = new HashMap<String, Person>();
         map.put("first person", new Person("john doe"));
         map.put("second person", new Person("jane doe"));
