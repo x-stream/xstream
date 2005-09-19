@@ -1,4 +1,4 @@
-final package com.thoughtworks.xstream.converters.extended;
+package com.thoughtworks.xstream.converters.extended;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
