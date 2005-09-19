@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.converters.extended;
+final package com.thoughtworks.xstream.converters.extended;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -31,17 +31,22 @@ public class GregorianCalendarConverter implements Converter {
         writer.endNode();
         writer.startNode("timezone");
         writer.setValue(calendar.getTimeZone().getID());
-        writer.endNode();    
+        writer.endNode();
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         reader.moveDown();
         long timeInMillis = Long.parseLong(reader.getValue());
         reader.moveUp();
-        reader.moveDown();
-        String timeZone = reader.getValue();
-        reader.moveUp();
-         
+        final String timeZone;
+        if (reader.hasMoreChildren()) {
+            reader.moveDown();
+            timeZone = reader.getValue();
+            reader.moveUp();
+        } else { // backward compatibility to XStream 1.1.2 and below
+            timeZone = TimeZone.getDefault().getID();
+        }
+
         GregorianCalendar result = new GregorianCalendar();
         result.setTimeZone(TimeZone.getTimeZone(timeZone));
         result.setTime(new Date(timeInMillis)); // calendar.setTimeInMillis() not available under JDK 1.3

@@ -109,6 +109,19 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
                 "</gregorian-calendar>";
         Calendar out = (Calendar) assertBothWays(in, expected);
         assertEquals(in.getTime(), out.getTime());
+        assertEquals(TimeZone.getTimeZone("AST"), out.getTimeZone());
+    }
+
+    public void testGregorianCalendarCompat() { // compatibility to 1.1.2 and below
+        Calendar in = Calendar.getInstance();
+        in.setTimeInMillis(44444);
+        String oldXML = "" +
+                "<gregorian-calendar>\n" +
+                "  <time>44444</time>\n" +
+                "</gregorian-calendar>";
+        Calendar out = (Calendar) xstream.fromXML(oldXML);
+        assertEquals(in.getTime(), out.getTime());
+        assertEquals(TimeZone.getTimeZone("EST"), out.getTimeZone());
     }
 
     public void testRegexPattern() {
