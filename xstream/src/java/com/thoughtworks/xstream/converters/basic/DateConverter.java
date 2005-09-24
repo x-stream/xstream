@@ -18,7 +18,10 @@ public class DateConverter extends AbstractBasicConverter {
 
     public DateConverter() {
         this("yyyy-MM-dd HH:mm:ss.S z",
-            new String[] { "yyyy-MM-dd HH:mm:ss.S a", "yyyy-MM-dd HH:mm:ssz", "yyyy-MM-dd HH:mm:ssa" }); // backwards compatability
+            new String[] { 
+                "yyyy-MM-dd HH:mm:ss.S a", 
+                "yyyy-MM-dd HH:mm:ssz", "yyyy-MM-dd HH:mm:ss z", // JDK 1.3 needs both versions
+                "yyyy-MM-dd HH:mm:ssa" }); // backwards compatability
 	}
 
     public DateConverter(String defaultFormat, String[] acceptableFormats) {

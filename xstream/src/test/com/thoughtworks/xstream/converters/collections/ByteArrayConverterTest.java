@@ -14,6 +14,9 @@ public class ByteArrayConverterTest extends AbstractAcceptanceTest {
 
     public static class Dummy {
         byte[] data;
+        
+        private Dummy() {
+        }
 
         public Dummy(byte[] data) {
             this.data = data;

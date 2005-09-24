@@ -26,7 +26,7 @@ public class TreeUnmarshallerTest extends AbstractAcceptanceTest {
 		public void setAddresses(List address);
 	}
 
-	public class AddressBook implements AddressBookInfo {
+	public static class AddressBook implements AddressBookInfo {
 		private List addresses;
 
 		public AddressBook() {
@@ -56,10 +56,13 @@ public class TreeUnmarshallerTest extends AbstractAcceptanceTest {
 		public void setAddr2(String addr2);
 	}
 
-	public class Address implements AddressInfo {
+	public static class Address implements AddressInfo {
 		private String addr1 = "addr1";
 
 		private String addr2 = "addr2";
+        
+        private Address() {
+        }
 
 		public Address(String addr1, String addr2) {
 			this.addr1 = addr1;

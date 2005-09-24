@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.converters.basic;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
+
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class DateConverterTest extends TestCase {
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 PM"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04PM"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04 EST"));
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04EST"));
     }
 
     

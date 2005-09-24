@@ -1,23 +1,26 @@
 # The following patterns are files that should not be compiled or tested by the build, UNLESS using JDK 1.4 or greater.
 
 com/thoughtworks/xstream/converters/extended/Currency*
+com/thoughtworks/xstream/converters/extended/RegexPattern*
 com/thoughtworks/xstream/converters/extended/StackTrace*
 com/thoughtworks/xstream/converters/extended/Throwable*
-com/thoughtworks/xstream/converters/extended/RegexPattern*
 com/thoughtworks/xstream/converters/reflection/Sun14ReflectionProvider*
 
+com/thoughtworks/acceptance/CollectionsTest*
+com/thoughtworks/acceptance/CustomMapperTest*
 com/thoughtworks/acceptance/ExtendedTypesTest*
 com/thoughtworks/acceptance/FinalFieldsTest*
-com/thoughtworks/acceptance/CollectionsTest*
-com/thoughtworks/acceptance/MapTest*
-com/thoughtworks/acceptance/CustomMapperTest*
-com/thoughtworks/acceptance/QNameMappedConcreteClassesTest*
+com/thoughtworks/acceptance/IDNestedCircularReferenceTest*
+com/thoughtworks/acceptance/InnerClassesTest*
 com/thoughtworks/acceptance/JTableTest*
+com/thoughtworks/acceptance/MapTest*
+com/thoughtworks/acceptance/QNameMappedConcreteClassesTest*
+com/thoughtworks/acceptance/XPathNestedCircularReferenceTest*
 com/thoughtworks/xstream/io/xml/JDomWriterTest*
-com/thoughtworks/xstream/io/xml/XomWriterTest*
 com/thoughtworks/xstream/io/xml/StaxReaderTest*
 com/thoughtworks/xstream/io/xml/StaxWriter2Test*
 com/thoughtworks/xstream/io/xml/StaxWriterTest*
+com/thoughtworks/xstream/io/xml/XomWriterTest*
 com/thoughtworks/xstream/converters/extended/FontConverterTest*
 
 
