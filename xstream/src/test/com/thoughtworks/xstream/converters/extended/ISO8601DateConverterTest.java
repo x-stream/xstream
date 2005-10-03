@@ -1,13 +1,11 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
+
 import junit.framework.TestCase;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class ISO8601DateConverterTest extends TestCase {
 
@@ -41,54 +39,25 @@ public class ISO8601DateConverterTest extends TestCase {
         assertEquals(in.toString(), out.toString());
         assertEquals(in.getTime(), out.getTime());
     }
+    
+    public void testSavedTimeIsInUTC() {
+        Date in = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        String jdkConverted = format.format(in);
+        String iso8601 = jdkConverted.substring(0, jdkConverted.length() - 2) + ":" + jdkConverted.substring(jdkConverted.length() - 2);
+        String converterXML =  converter.toString(in);
+        assertEquals(iso8601, converterXML);
+        
+        Date out = (Date) converter.fromString(converterXML);
+        assertEquals(in, out);
+    }
 
-    // Note: this test assumes that your are in the GMT timezone
-    // if not - simply set your computers' timezone to be in GMT
-    public void TODOtestUnmarshallsISOFormat() { // TODO: Temporarily disabled as the results vary between timezone
+    public void testUnmarshallsISOFormat() {
         // setup
         String isoFormat = "1993-02-14T13:10:30";
         // execute
         Date out = (Date) converter.fromString(isoFormat);
-        // verify
-        assertEquals("1993-02-14T13:10:30.000Z", converter.toString(out));
-    }
-
-    public void testIsThreadSafe() throws InterruptedException {
-        final List results = Collections.synchronizedList(new ArrayList());
-        final ISO8601DateConverter converter = new ISO8601DateConverter();
-        final Object monitor = new Object();
-        final int numberOfCallsPerThread = 20;
-        final int numberOfThreads = 20;
-
-        // spawn some concurrent threads, that hammer the converter
-        Runnable runnable = new Runnable() {
-            public void run() {
-                for (int i = 0; i < numberOfCallsPerThread; i++) {
-                    try {
-                        converter.fromString("1993-02-14T13:10:30");
-                        results.add("PASS");
-                    } catch (ConversionException e) {
-                        results.add("FAIL");
-                    } finally {
-                        synchronized (monitor) {
-                            monitor.notifyAll();
-                        }
-                    }
-                }
-            }
-        };
-        for (int i = 0; i < numberOfThreads; i++) {
-            new Thread(runnable).start();
-        }
-
-        // wait for all results
-        while (results.size() < numberOfThreads * numberOfCallsPerThread) {
-            synchronized (monitor) {
-                monitor.wait(100);
-            }
-        }
-
-        assertTrue("Nothing succeded", results.contains("PASS"));
-        assertFalse("At least one attempt failed", results.contains("FAIL"));
+        // verify for EST
+        assertEquals("1993-02-14T07:10:30.000-05:00", converter.toString(out));
     }
 }

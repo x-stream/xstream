@@ -2,38 +2,50 @@ package com.thoughtworks.xstream.converters.extended;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.TimeZone;
 
 
 /**
  * A SqlTimestampConverter conforming to the ISO8601 standard.
  * http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=26780
- * <p>
- * Note, that this converter cannot handle the nano and micro part of the Timestamp.
- * Any value is truncated at milliseconds level.
- * </p>
  * 
  * @author J&ouml;rg Schaible
  * @since 1.2
  */
 public class ISO8601SqlTimestampConverter extends ISO8601DateConverter {
 
+    final static String PADDING = "000000000";
+
     public boolean canConvert(Class type) {
         return type.equals(Timestamp.class);
     }
 
     protected Object fromString(String str) {
-        // special nano handling required for JDK 1.3
+        final int idxFraction = str.lastIndexOf('.');
+        int nanos = 0;
+        if (idxFraction > 0) {
+            int idx;
+            for (idx = idxFraction + 1; Character.isDigit(str.charAt(idx)); ++idx)
+                ;
+            nanos = Integer.parseInt(str.substring(idxFraction + 1, idx));
+            str = str.substring(0, idxFraction) + str.substring(idx);
+        }
         final Date date = (Date)super.fromString(str);
-        final Timestamp timestamp = new Timestamp((date.getTime() / 1000) * 1000);
-        timestamp.setNanos((int)((date.getTime() % 1000) * 1000000));
+        final Timestamp timestamp = new Timestamp(date.getTime());
+        timestamp.setNanos(nanos);
         return timestamp;
     }
 
     protected String toString(Object obj) {
-        // special nano handling required for JDK 1.3
         final Timestamp timestamp = (Timestamp)obj;
-        return super.toString(new Date(((timestamp.getTime() / 1000) * 1000)
-                + (timestamp.getNanos() / 1000000)));
+        String str = super.toString(new Date((timestamp.getTime() / 1000) * 1000));
+        final String nanos = String.valueOf(timestamp.getNanos());
+        final int idxFraction = str.lastIndexOf('.');
+        str = str.substring(0, idxFraction + 1)
+                + nanos
+                + PADDING.substring(nanos.length())
+                + str.substring(idxFraction + 4);
+        return str;
     }
 
 }
