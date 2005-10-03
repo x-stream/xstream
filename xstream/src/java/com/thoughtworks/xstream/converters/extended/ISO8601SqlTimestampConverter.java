@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.converters.extended;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.TimeZone;
 
 
 /**
@@ -42,8 +41,8 @@ public class ISO8601SqlTimestampConverter extends ISO8601DateConverter {
         final String nanos = String.valueOf(timestamp.getNanos());
         final int idxFraction = str.lastIndexOf('.');
         str = str.substring(0, idxFraction + 1)
-                + nanos
                 + PADDING.substring(nanos.length())
+                + nanos
                 + str.substring(idxFraction + 4);
         return str;
     }

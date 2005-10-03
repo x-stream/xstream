@@ -6,7 +6,6 @@ import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 import junit.framework.TestCase;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 
 /**
@@ -48,6 +47,23 @@ public class ISO8601SqlTimestampConverterTest extends TestCase {
                 (ts2.getTime() / 1000) * 1000 + ts2.getNanos() / 1000000);
     }
 
+    public void testISO8601SqlTimestampWith1Milli() {
+        XStream xs = new XStream();
+        xs.registerConverter(converter);
+
+        long currentTime = (System.currentTimeMillis() / 1000 * 1000) + 1;
+
+        Timestamp ts1 = new Timestamp(currentTime);
+        String xmlString = xs.toXML(ts1);
+
+        Timestamp ts2 = (Timestamp)xs.fromXML(xmlString);
+
+        assertEquals("ISO Timestamp Converted is not the same ", ts1, ts2);
+        assertEquals(
+                "Current time not equal to converted timestamp", currentTime,
+                (ts2.getTime() / 1000) * 1000 + ts2.getNanos() / 1000000);
+    }
+
     public void testISO8601SqlTimestampWithNanos() {
         XStream xs = new XStream();
         xs.registerConverter(converter);
@@ -64,10 +80,10 @@ public class ISO8601SqlTimestampConverterTest extends TestCase {
 
     public void testTimestampWithoutFraction() {
         // setup
-        String isoFormat = "1993-02-14T13:10:30";
+        String isoFormat = "1993-02-14T13:10:30Z";
         // execute
         Timestamp out = (Timestamp)converter.fromString(isoFormat);
         // verify for EST
-        assertEquals("1993-02-14T07:10:30.000000000-05:00", converter.toString(out));
+        assertEquals("1993-02-14T08:10:30.000000000-05:00", converter.toString(out));
     }
 }
