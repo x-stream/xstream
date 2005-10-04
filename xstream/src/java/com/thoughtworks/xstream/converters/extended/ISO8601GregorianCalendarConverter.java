@@ -82,10 +82,10 @@ public class ISO8601GregorianCalendarConverter extends AbstractBasicConverter {
                 // try with next formatter
             }
         }
+        String timeZoneID = TimeZone.getDefault().getID();
         for (int i = 0; i < formattersNoUTC.length; i++) {
-            DateTimeFormatter formatter = formattersNoUTC[i];
             try {
-                formatter.withZone(DateTimeZone.forID(TimeZone.getDefault().getID()));
+                DateTimeFormatter formatter = formattersNoUTC[i].withZone(DateTimeZone.forID(timeZoneID));
                 DateTime dt = formatter.parseDateTime(str);
                 Calendar calendar = dt.toCalendar(Locale.getDefault());
                 calendar.setTimeZone(TimeZone.getDefault());

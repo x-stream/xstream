@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ISO8601DateConverterTest extends TestCase {
@@ -59,6 +60,8 @@ public class ISO8601DateConverterTest extends TestCase {
         // execute
         Date out = (Date) converter.fromString(isoFormat);
         // verify for EST
-        assertEquals("Sun Feb 14 07:10:30 EST 1993", out.toString());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1993, 1, 14, 13, 10, 30);
+        assertEquals(calendar.getTime().toString(), out.toString());
     }
 }
