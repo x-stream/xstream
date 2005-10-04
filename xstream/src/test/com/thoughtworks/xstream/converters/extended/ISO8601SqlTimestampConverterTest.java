@@ -79,11 +79,8 @@ public class ISO8601SqlTimestampConverterTest extends TestCase {
     }
 
     public void testTimestampWithoutFraction() {
-        // setup
-        String isoFormat = "1993-02-14T13:10:30Z";
-        // execute
+        String isoFormat = "1993-02-14T13:10:30-05:00";
         Timestamp out = (Timestamp)converter.fromString(isoFormat);
-        // verify for EST
-        assertEquals("1993-02-14T08:10:30.000000000-05:00", converter.toString(out));
+        assertEquals("1993-02-14T13:10:30.000000000-05:00", converter.toString(out));
     }
 }
