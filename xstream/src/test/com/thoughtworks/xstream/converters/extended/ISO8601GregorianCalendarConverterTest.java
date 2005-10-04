@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import junit.framework.TestCase;
@@ -45,9 +46,18 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
     
     public void testSavedTimeIsInUTC() {
         Calendar in = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        String jdkConverted = format.format(in.getTime());
-        String iso8601 = jdkConverted.substring(0, jdkConverted.length() - 2) + ":" + jdkConverted.substring(jdkConverted.length() - 2);
+        String simpleDateFormatString = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+        final String iso8601;
+        if (JVM.is14()) {
+            SimpleDateFormat format = new SimpleDateFormat(simpleDateFormatString + "Z");
+            String jdkConverted = format.format(in.getTime());
+            iso8601 = jdkConverted.substring(0, jdkConverted.length() - 2) + ":" + jdkConverted.substring(jdkConverted.length() - 2);
+        } else {
+            // JDK 1.3 can only format with symbolic time zones, hour must match still though ensuring validity
+            SimpleDateFormat format = new SimpleDateFormat(simpleDateFormatString + "z");
+            String jdkConverted = format.format(in.getTime());
+            iso8601 = jdkConverted.substring(0, jdkConverted.length() - 3) + "-04:00";
+        }
         String converterXML =  converter.toString(in);
         assertEquals(iso8601, converterXML);
         

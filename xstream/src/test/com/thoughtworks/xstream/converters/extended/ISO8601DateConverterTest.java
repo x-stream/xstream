@@ -26,7 +26,7 @@ public class ISO8601DateConverterTest extends TestCase {
         super.tearDown();
     }
 
-    public void testRetainsDetailDownToMillisecondLevel() {
+    public void testUnmashallsInCorrectTimeZone() {
         // setup
         Date in = new Date();
 
@@ -38,18 +38,6 @@ public class ISO8601DateConverterTest extends TestCase {
         assertEquals(in, out);
         assertEquals(in.toString(), out.toString());
         assertEquals(in.getTime(), out.getTime());
-    }
-    
-    public void testSavedTimeIsInUTC() {
-        Date in = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        String jdkConverted = format.format(in);
-        String iso8601 = jdkConverted.substring(0, jdkConverted.length() - 2) + ":" + jdkConverted.substring(jdkConverted.length() - 2);
-        String converterXML =  converter.toString(in);
-        assertEquals(iso8601, converterXML);
-        
-        Date out = (Date) converter.fromString(converterXML);
-        assertEquals(in, out);
     }
 
     public void testUnmarshallsISOFormat() {
