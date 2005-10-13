@@ -1,9 +1,14 @@
 package com.thoughtworks.xstream.converters.reflection;
 
+import junit.framework.TestCase;
+
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import junit.framework.TestCase;
+import com.thoughtworks.xstream.mapper.DefaultMapper;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReflectionConverterTest extends TestCase {
 
@@ -74,4 +79,10 @@ public class ReflectionConverterTest extends TestCase {
 
     }
 
+    public void testConverterCanBeInstantiatedAndRegisteredWithDesiredPriority() {
+        XStream xstream = new XStream(new XppDriver());
+        Mapper mapper = new DefaultMapper(new CompositeClassLoader());
+        Converter converter = new ReflectionConverter(mapper, new Sun14ReflectionProvider());
+        xstream.registerConverter(converter, 0);
+    }
 }
