@@ -109,4 +109,12 @@ public class ReflectionConverterTest extends TestCase {
         assertEquals(expected, xstream.toXML(world));
 
     }
+
+    static class CustomReflectionConverter extends ReflectionConverter {
+
+        public CustomReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
+            super(mapper, reflectionProvider);
+        }
+    }
+    
 }
