@@ -79,10 +79,34 @@ public class ReflectionConverterTest extends TestCase {
 
     }
 
-    public void testConverterCanBeInstantiatedAndRegisteredWithDesiredPriority() {
+    public void testCustomConverterCanBeInstantiatedAndRegisteredWithDesiredPriority() {
         XStream xstream = new XStream(new XppDriver());
+        // using default mapper instead of XStream#buildMapper()
         Mapper mapper = new DefaultMapper(new CompositeClassLoader());
-        Converter converter = new ReflectionConverter(mapper, new Sun14ReflectionProvider());
-        xstream.registerConverter(converter, 0);
+        Converter converter = new CustomReflectionConverter(mapper, new Sun14ReflectionProvider());
+        xstream.registerConverter(converter, -20);
+        xstream.alias("world", World.class);
+        World world = new World();
+
+        String expected =
+                "<world>\n" +
+                "  <anInt class=\"java.lang.Integer\">1</anInt>\n" +
+                "  <anInteger>2</anInteger>\n" +
+                "  <anChar class=\"java.lang.Character\">a</anChar>\n" +
+                "  <anCharacter>w</anCharacter>\n" +
+                "  <anBool class=\"java.lang.Boolean\">true</anBool>\n" +
+                "  <anBoolean>false</anBoolean>\n" +
+                "  <aByte class=\"java.lang.Byte\">4</aByte>\n" +
+                "  <aByteClass>5</aByteClass>\n" +
+                "  <aShort class=\"java.lang.Short\">6</aShort>\n" +
+                "  <aShortClass>7</aShortClass>\n" +
+                "  <aFloat class=\"java.lang.Float\">8.0</aFloat>\n" +
+                "  <aFloatClass>9.0</aFloatClass>\n" +
+                "  <aLong class=\"java.lang.Long\">10</aLong>\n" +
+                "  <aLongClass>11</aLongClass>\n" +
+                "  <anString>XStream programming!</anString>\n" +
+                "</world>";
+        assertEquals(expected, xstream.toXML(world));
+
     }
 }
