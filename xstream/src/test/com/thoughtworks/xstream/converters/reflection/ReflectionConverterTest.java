@@ -83,7 +83,7 @@ public class ReflectionConverterTest extends TestCase {
         XStream xstream = new XStream(new XppDriver());
         // using default mapper instead of XStream#buildMapper()
         Mapper mapper = new DefaultMapper(new CompositeClassLoader());
-        Converter converter = new CustomReflectionConverter(mapper, new Sun14ReflectionProvider());
+        Converter converter = new CustomReflectionConverter(mapper, new PureJavaReflectionProvider());
         xstream.registerConverter(converter, -20);
         xstream.alias("world", World.class);
         World world = new World();
