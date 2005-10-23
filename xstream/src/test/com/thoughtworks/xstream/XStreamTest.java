@@ -28,6 +28,23 @@ public class XStreamTest extends TestCase {
         xstream.alias("with-list", WithList.class);
     }
 
+    public void testUnmarshalsObjectFromXmlWithUnderscores() {
+
+        String xml =
+                "<u>" +
+                "  <uf>foo</uf>" +
+                "  <u_f>_foo</u_f>" +
+                "</u>";
+
+        xstream.alias("u", U.class);
+        xstream.aliasField("uf", U.class, "aStr");
+        xstream.aliasField("u_f", U.class, "a_Str");
+        U u = (U) xstream.fromXML(xml);
+
+        assertEquals("foo", u.aStr);
+        assertEquals("_foo", u.a_Str);
+    }
+
     public void testUnmarshalsObjectFromXml() {
 
         String xml =
