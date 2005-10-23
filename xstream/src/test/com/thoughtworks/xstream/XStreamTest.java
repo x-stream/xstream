@@ -29,15 +29,14 @@ public class XStreamTest extends TestCase {
     }
 
     public void testUnmarshalsObjectFromXmlWithUnderscores() {
-
         String xml =
-                "<u>" +
-                "  <uf>foo</uf>" +
+                "<u-u>" +
+                "  <u-f>foo</u-f>" +
                 "  <u_f>_foo</u_f>" +
-                "</u>";
+                "</u-u>";
 
-        xstream.alias("u", U.class);
-        xstream.aliasField("uf", U.class, "aStr");
+        xstream.alias("u-u", U.class);
+        xstream.aliasField("u-f", U.class, "aStr");
         xstream.aliasField("u_f", U.class, "a_Str");
         U u = (U) xstream.fromXML(xml);
 
