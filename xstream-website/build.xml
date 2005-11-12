@@ -15,7 +15,10 @@
                 </fileset>
             </classpath>
         </javac>
-    </target>
+        <jar jarfile="build/minimesh.jar">
+            <fileset dir="build/classes"/>
+        </jar>
+    	</target>
     
     <target name="website" depends="supporting-java" description="Build website">
         <mkdir dir="build/website"/>
@@ -24,7 +27,7 @@
                 <fileset dir="lib">
                     <include name="**/*.jar"/>
                 </fileset>
-                <pathelement path="build/classes"/>
+                <pathelement path="build/minimesh.jar"/>
             </classpath>
             <arg value="src/content/website.xml"/>
             <arg value="src/templates/skin.html"/>
