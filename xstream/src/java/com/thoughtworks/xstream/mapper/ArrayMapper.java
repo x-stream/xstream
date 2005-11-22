@@ -3,6 +3,9 @@ package com.thoughtworks.xstream.mapper;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
  * Mapper that detects arrays and changes the name so it can identified as an array
  * (for example Foo[] gets serialized as foo-array). Supports multi-dimensional arrays.
@@ -10,6 +13,18 @@ import com.thoughtworks.xstream.alias.CannotResolveClassException;
  * @author Joe Walnes 
  */
 public class ArrayMapper extends MapperWrapper {
+
+    private final static Collection BOXED_TYPES = Arrays.asList(
+            new Class[] {
+                    Boolean.class,
+                    Byte.class,
+                    Character.class,
+                    Short.class,
+                    Integer.class,
+                    Long.class,
+                    Float.class,
+                    Double.class
+            });
 
     public ArrayMapper(ClassMapper wrapped) {
         super(wrapped);
@@ -21,7 +36,10 @@ public class ArrayMapper extends MapperWrapper {
             type = type.getComponentType();
             arraySuffix.append("-array");
         }
-        String name = super.serializedClass(type);
+        String name = boxedTypeName(type);
+        if (name == null) {
+            name = super.serializedClass(type);
+        }
         if (arraySuffix.length() > 0) {
             return name + arraySuffix;
         } else {
@@ -93,5 +111,8 @@ public class ArrayMapper extends MapperWrapper {
                 (primvCls == double.class) ? 'D' :
                 0;
     }
-
+    
+    private String boxedTypeName(Class type) {
+        return BOXED_TYPES.contains(type) ? type.getName() : null;
+    }
 }

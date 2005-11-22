@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.converters.basic;
 
 /**
- * Converts a byte primitive or java.lang.Byre wrapper to
+ * Converts a byte primitive or java.lang.Byte wrapper to
  * a String.
  *
  * @author Joe Walnes

@@ -27,6 +27,18 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertBothWays(array, expected);
     }
 
+    public void testBoxedTypeArray() {
+        Integer[] array = new Integer[]{new Integer(1), new Integer(2)};
+
+        String expected = "" +
+                "<java.lang.Integer-array>\n" +
+                "  <int>1</int>\n" +
+                "  <int>2</int>\n" +
+                "</java.lang.Integer-array>";
+
+        assertBothWays(array, expected);
+    }
+
     public static class X extends StandardObject {
         String s = "hi";
     }
