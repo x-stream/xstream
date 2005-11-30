@@ -13,7 +13,7 @@ import java.io.Writer;
  * To alter this behavior, override the the {@link #writeText(com.thoughtworks.xstream.core.util.QuickWriter, String)}
  * and {@link #writeAttributeValue(com.thoughtworks.xstream.core.util.QuickWriter, String)} methods.</p>
  *
- * @author Joe Walnes 
+ * @author Joe Walnes
  */
 public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
@@ -26,6 +26,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     private boolean readyForNewLine;
     private boolean tagIsEmpty;
 
+    private static final char[] NULL = "&#x0;".toCharArray();
     private static final char[] AMP = "&amp;".toCharArray();
     private static final char[] LT = "&lt;".toCharArray();
     private static final char[] GT = "&gt;".toCharArray();
@@ -41,7 +42,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
     public PrettyPrintWriter(Writer writer, String lineIndenter) {
         this(writer, lineIndenter.toCharArray());
-    }            
+    }
 
     public PrettyPrintWriter(Writer writer) {
         this(writer, new char[]{' ', ' '});
@@ -77,39 +78,21 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     }
 
     protected void writeAttributeValue(QuickWriter writer, String text) {
-        int length = text.length();
-        for (int i = 0; i < length; i++) {
-            char c = text.charAt(i);
-            switch (c) {
-                case '&':
-                    this.writer.write(AMP);
-                    break;
-                case '<':
-                    this.writer.write(LT);
-                    break;
-                case '>':
-                    this.writer.write(GT);
-                    break;
-                case '"':
-                    this.writer.write(QUOT);
-                    break;
-                case '\'':
-                    this.writer.write(APOS);
-                    break;
-                case '\r':
-                    this.writer.write(SLASH_R);
-                    break;
-                default:
-                    this.writer.write(c);
-            }
-        }
+        writeText(text);
     }
 
     protected void writeText(QuickWriter writer, String text) {
+        writeText(text);
+    }
+
+    private void writeText(String text) {
         int length = text.length();
         for (int i = 0; i < length; i++) {
             char c = text.charAt(i);
             switch (c) {
+                case '\0':
+                    this.writer.write(NULL);
+                    break;
                 case '&':
                     this.writer.write(AMP);
                     break;
