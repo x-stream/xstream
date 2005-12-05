@@ -72,7 +72,7 @@ import java.util.*;
  * xstream.registerConverter(new SqlTimestampConverter());
  * xstream.registerConverter(new DynamicProxyConverter());
  * </pre></blockquote><hr>
- * <p>The default converter, ie the converter which will be used if no other registered 
+ * <p>The default converter, ie the converter which will be used if no other registered
  * converter is suitable, can be configured by either one of the constructors
  * or can be changed using the <code>changeDefaultConverter()</code> method.
  * If not set, XStream uses {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter}
@@ -121,9 +121,9 @@ import java.util.*;
  *
  * <h3>Implicit collections</h3>
  * <p/>
- * <p>To avoid the need for special tags for collections, you can define implicit collections using one of the 
+ * <p>To avoid the need for special tags for collections, you can define implicit collections using one of the
  * <code>addImplicitCollection</code> methods.</p>
- * 
+ *
  * @author Joe Walnes
  * @author Mauro Talevi
  */
@@ -164,7 +164,7 @@ public class XStream {
         this(null, null, new XppDriver(), null);
         registerConverter(defaultConverter, PRIORITY_VERY_LOW);
     }
-    
+
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(null, null, hierarchicalStreamDriver);
     }
@@ -645,9 +645,9 @@ public class XStream {
 
     /**
      * Adds a default implicit collection which is used for any unmapped xml tag.
-     * 
+     *
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This filed must be an <code>java.util.ArrayList</code>.
+     * @param fieldName name of the field in the ownerType. This field must be an <code>java.util.ArrayList</code>.
      */
     public void addImplicitCollection(Class ownerType, String fieldName) {
         implicitCollectionMapper.add(ownerType, fieldName, null, Object.class);
@@ -657,8 +657,8 @@ public class XStream {
      * Adds implicit collection which is used for all items of the given itemType.
      *
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This filed must be an <code>java.util.ArrayList</code>.
-     * @param itemType type of the items to be part of this collection. 
+     * @param fieldName name of the field in the ownerType. This field must be an <code>java.util.ArrayList</code>.
+     * @param itemType type of the items to be part of this collection.
      */
     public void addImplicitCollection(Class ownerType, String fieldName, Class itemType) {
         implicitCollectionMapper.add(ownerType, fieldName, null, itemType);
@@ -668,7 +668,7 @@ public class XStream {
      * Adds implicit collection which is used for all items of the given element name defined by itemFieldName.
      *
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This filed must be an <code>java.util.ArrayList</code>.
+     * @param fieldName name of the field in the ownerType. This field must be an <code>java.util.ArrayList</code>.
      * @param itemFieldName element  name of the implicit collection
      * @param itemType item type to be aliases be the itemFieldName
      */
