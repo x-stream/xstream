@@ -68,5 +68,72 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
 
         assertBothWays(in, expected);
     }
+    
+    public static class CircularExternalizable implements Externalizable {
+        private String name;
+        private CircularExternalizable parent;
+        private CircularExternalizable child;
+        
+        public CircularExternalizable() {
+        }
+        
+        public CircularExternalizable(String name) {
+            this.name = name;
+        }
+        
+        public void setParent(CircularExternalizable parent) {
+            this.parent = parent;
+            if (parent != null) {
+                parent.child = this;
+            }
+        }
+        
+        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+            name = (String)in.readObject();
+            parent = (CircularExternalizable)in.readObject();
+            child = (CircularExternalizable)in.readObject();
+        }
 
+        public void writeExternal(ObjectOutput out) throws IOException {
+            out.writeObject(name);
+            out.writeObject(parent);
+            out.writeObject(child);
+        }
+
+        // StandardObject uses EqualsBuilder.reflectionEquals of commons-lang, 
+        // that does not handle circular dependencies
+        public boolean equals(Object obj) {
+            return obj instanceof CircularExternalizable && name.equals(obj.toString());
+        }
+
+        public int hashCode() {
+            return name.hashCode()+1;
+        }
+
+        public String toString() {
+            return name;
+        }
+        
+    }
+
+    public void testCircularExternalizable() {
+        xstream.alias("elem", CircularExternalizable.class);
+        
+        CircularExternalizable parent = new CircularExternalizable("parent");
+        CircularExternalizable child = new CircularExternalizable("child");
+        child.setParent(parent);
+        
+        String expected = ""
+            + "<elem>\n"
+            + "  <string>parent</string>\n"
+            + "  <null/>\n"
+            + "  <elem>\n"
+            + "    <string>child</string>\n"
+            + "    <elem reference=\"../..\"/>\n"
+            + "    <null/>\n"
+            + "  </elem>\n"
+            + "</elem>";
+
+        assertBothWays(parent, expected);
+    }
 }
