@@ -18,11 +18,13 @@ public final class FastStack {
     }
 
     public void popSilently() {
-        pointer--;
+        stack[--pointer] = null;
     }
 
     public Object pop() {
-        return stack[--pointer];
+        final Object result = stack[--pointer]; 
+        stack[pointer] = null; 
+        return result;
     }
 
     public Object peek() {
