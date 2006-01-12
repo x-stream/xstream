@@ -86,7 +86,5 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
     public void testLocale() {
         assertBothWays(new Locale("zh", "", ""), "<locale>zh</locale>");
         assertBothWays(new Locale("zh", "CN", ""), "<locale>zh_CN</locale>");
-        assertBothWays(new Locale("zh", "CN", "cc"), "<locale>zh_CN_cc</locale>");
-        assertBothWays(new Locale("zh", "", "cc"), "<locale>zh__cc</locale>");
     }
 }

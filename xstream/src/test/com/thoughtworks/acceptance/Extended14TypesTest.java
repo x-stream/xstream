@@ -8,6 +8,7 @@ import javax.security.auth.x500.X500Principal;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Currency;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -26,6 +27,12 @@ public class Extended14TypesTest extends AbstractAcceptanceTest {
         TimeZoneChanger.reset();
         super.tearDown();
     }
+
+    public void testLocaleWithVariant() {
+        assertBothWays(new Locale("zh", "CN", "cc"), "<locale>zh_CN_cc</locale>");
+        assertBothWays(new Locale("zh", "", "cc"), "<locale>zh__cc</locale>");
+    }
+
     public void testCurrency() {
         assertBothWays(Currency.getInstance("USD"), "<currency>USD</currency>");
     }
