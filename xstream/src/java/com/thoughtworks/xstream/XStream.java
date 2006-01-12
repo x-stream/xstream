@@ -283,11 +283,14 @@ public class XStream {
         alias("locale", Locale.class);
         alias("gregorian-calendar", Calendar.class);
 
+        
         if (JVM.is14()) {
             alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
             alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
             alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
             alias("currency", jvm.loadClass("java.util.Currency"));
+            // since jdk 1.4 included, but previously available as separate package ...
+            alias("auth-subject", jvm.loadClass("javax.security.auth.Subject"));
         }
 
         if (JVM.is15()) {
@@ -362,6 +365,9 @@ public class XStream {
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.RegexPatternConverter", PRIORITY_NORMAL,
                     new Class[] {Converter.class} , new Object[] { reflectionConverter} );
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.SubjectConverter", PRIORITY_NORMAL,
+                    new Class[] {Mapper.class}, new Object[] {classMapper});
         }
 
         if (JVM.is15()) {

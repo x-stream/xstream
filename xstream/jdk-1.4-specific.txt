@@ -8,7 +8,7 @@ com/thoughtworks/xstream/converters/reflection/Sun14ReflectionProvider*
 
 com/thoughtworks/acceptance/CollectionsTest*
 com/thoughtworks/acceptance/CustomMapperTest*
-com/thoughtworks/acceptance/ExtendedTypesTest*
+com/thoughtworks/acceptance/Extended14TypesTest*
 com/thoughtworks/acceptance/FinalFieldsTest*
 com/thoughtworks/acceptance/IDNestedCircularReferenceTest*
 com/thoughtworks/acceptance/InnerClassesTest*
@@ -22,5 +22,6 @@ com/thoughtworks/xstream/io/xml/StaxWriter2Test*
 com/thoughtworks/xstream/io/xml/StaxWriterTest*
 com/thoughtworks/xstream/io/xml/XomWriterTest*
 com/thoughtworks/xstream/converters/extended/FontConverterTest*
+com/thoughtworks/xstream/converters/extended/SubjectTest*
 
 
