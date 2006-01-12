@@ -3,6 +3,7 @@
 com/thoughtworks/xstream/converters/extended/Currency*
 com/thoughtworks/xstream/converters/extended/RegexPattern*
 com/thoughtworks/xstream/converters/extended/StackTrace*
+com/thoughtworks/xstream/converters/extended/Subject*
 com/thoughtworks/xstream/converters/extended/Throwable*
 com/thoughtworks/xstream/converters/reflection/Sun14ReflectionProvider*
 
