@@ -1,18 +1,14 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
+
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Currency;
 import java.util.Locale;
-import java.util.TimeZone;
-import java.util.regex.Pattern;
-
-import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
@@ -92,57 +88,5 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         assertBothWays(new Locale("zh", "CN", ""), "<locale>zh_CN</locale>");
         assertBothWays(new Locale("zh", "CN", "cc"), "<locale>zh_CN_cc</locale>");
         assertBothWays(new Locale("zh", "", "cc"), "<locale>zh__cc</locale>");
-    }
-
-    public void testCurrency() {
-        assertBothWays(Currency.getInstance("USD"), "<currency>USD</currency>");
-    }
-
-    public void testGregorianCalendar() {
-        Calendar in = Calendar.getInstance();
-        in.setTimeZone(TimeZone.getTimeZone("AST"));
-        in.setTimeInMillis(44444);
-        String expected = "" +
-                "<gregorian-calendar>\n" +
-                "  <time>44444</time>\n" +
-                "  <timezone>AST</timezone>\n" +
-                "</gregorian-calendar>";
-        Calendar out = (Calendar) assertBothWays(in, expected);
-        assertEquals(in.getTime(), out.getTime());
-        assertEquals(TimeZone.getTimeZone("AST"), out.getTimeZone());
-    }
-
-    public void testGregorianCalendarCompat() { // compatibility to 1.1.2 and below
-        Calendar in = Calendar.getInstance();
-        in.setTimeInMillis(44444);
-        String oldXML = "" +
-                "<gregorian-calendar>\n" +
-                "  <time>44444</time>\n" +
-                "</gregorian-calendar>";
-        Calendar out = (Calendar) xstream.fromXML(oldXML);
-        assertEquals(in.getTime(), out.getTime());
-        assertEquals(TimeZone.getTimeZone("EST"), out.getTimeZone());
-    }
-
-    public void testRegexPattern() {
-        // setup
-        Pattern pattern = Pattern.compile("^[ae]*$", Pattern.MULTILINE | Pattern.UNIX_LINES);
-        String expectedXml = "" +
-                "<java.util.regex.Pattern>\n" +
-                "  <pattern>^[ae]*$</pattern>\n" +
-                "  <flags>9</flags>\n" +
-                "</java.util.regex.Pattern>";
-
-        // execute
-        String actualXml = xstream.toXML(pattern);
-        Pattern result = (Pattern) xstream.fromXML(actualXml);
-
-        // verify
-        assertEquals(expectedXml, actualXml);
-        assertEquals(pattern.pattern(), result.pattern());
-        assertEquals(pattern.flags(), result.flags());
-
-        assertFalse("regex should not hava matched", result.matcher("oooo").matches());
-        assertTrue("regex should have matched", result.matcher("aeae").matches());
     }
 }
