@@ -169,4 +169,16 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         assertEquals("C", values[1]);
         assertEquals("X", values[2]);
     }
+
+    public void testListFromArrayAsList() {
+        List list = Arrays.asList(new String[] {"hi", "bye"});
+
+        assertBothWays(list,
+                "<java.util.Arrays-ArrayList>\n" +
+                "  <a class=\"string-array\">\n" +
+                "    <string>hi</string>\n" +
+                "    <string>bye</string>\n" +
+                "  </a>\n" +
+                "</java.util.Arrays-ArrayList>");
+    }
 }
