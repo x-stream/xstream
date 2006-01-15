@@ -52,15 +52,14 @@
       <li><a href="tutorial.html">Use it</a>.</li>
     </ul>
 
-    <h2><b>Apr 30, 2005</b> XStream 1.1.2 released</h2>
-      <p>Most popular feature requests implemented.</p>
-      <ul>
-        <li>Java 5 Enum support.</li>
-        <li>JavaBeanConverter for serialization using getters and setters.</li>
-        <li>Aliasing of fields.</li>
-        <li>StAX integration, with namespaces.</li>
-        <li>Improved support on JDK 1.3 and IBM JDK.</li>
-      </ul>
+    <h2><b>Jan 13, 2006</b> XStream 1.1.3 released</h2>
+	  <ul>
+        <li>Added XStream.toXML(OutputStream) and XStream.fromXML(InputStream).</li>
+        <li>Ability to prevent fields from being serialized by calling XStream.omitField() or by implementing Mapper.shouldSerializeMember().</li>
+        <li>Added Converter for Enum, EnumMap and EnumSet</li>
+        <li>Added BeanConverter and ISO8601SqlTimestampConverter</li>
+        <li>Fixed support for IBM JVM (contributed by Gabor Liptak)</li>
+   	  </ul>
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
 
   </body>
