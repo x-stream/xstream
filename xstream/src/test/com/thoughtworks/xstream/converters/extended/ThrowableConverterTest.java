@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import junit.framework.AssertionFailedError;
+import com.thoughtworks.xstream.XStream;
 
 import java.math.BigDecimal;
 
@@ -69,6 +69,18 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
         } catch (MyException exception) {
             Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
             assertThrowableEquals(exception, result);
+        }
+    }
+    
+    public void testSerializesWithNoSelfReferenceForUninitializedCauseInJdk14() {
+        xstream.setMode(XStream.NO_REFERENCES);
+        try {
+            throw new RuntimeException("Without cause");
+        } catch (RuntimeException exception) {
+            Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
+            assertThrowableEquals(exception, result);
+            assertNull(exception.getCause());
+            assertNull(result.getCause());
         }
     }
 

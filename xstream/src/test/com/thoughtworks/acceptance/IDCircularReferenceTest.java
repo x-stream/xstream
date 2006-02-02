@@ -35,7 +35,7 @@ public class IDCircularReferenceTest extends AbstractCircularReferenceTest {
         String expected = "" +
                 "<person id=\"1\">\n" +
                 "  <firstname>bob</firstname>\n" +
-                "  <likes reference=\"1\"/>\n" +
+                "  <likes self=\"\"/>\n" +
                 "</person>";
 
         assertEquals(expected, xstream.toXML(bob));

@@ -69,7 +69,7 @@ public class ReflectionConverter implements Converter {
                 writer.startNode(mapper.serializedMember(definedIn, fieldName));
 
                 Class actualType = newObj.getClass();
-
+                
                 Class defaultType = mapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
                     writer.addAttribute(mapper.attributeForImplementationClass(), mapper.serializedClass(actualType));
@@ -78,8 +78,12 @@ public class ReflectionConverter implements Converter {
                 if (seenFields.contains(fieldName)) {
                     writer.addAttribute(mapper.attributeForClassDefiningField(), mapper.serializedClass(definedIn));
                 }
-                context.convertAnother(newObj);
-
+                
+                if (source != newObj) {
+                    context.convertAnother(newObj);
+                } else {
+                    writer.addAttribute("self", "");
+                }
                 writer.endNode();
             }
 
@@ -95,13 +99,19 @@ public class ReflectionConverter implements Converter {
             reader.moveDown();
 
             String fieldName = mapper.realMember(result.getClass(), reader.getNodeName());
-
+            
             Class classDefiningField = determineWhichClassDefinesField(reader);
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
 
             Class type = determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField);
-            Object value = context.convertAnother(result, type);
-
+            final Object value;
+            String self = reader.getAttribute("self");
+            if (self == null) {
+                value = context.convertAnother(result, type);
+            } else {
+                value = result;
+            }    
+            
             if (fieldExistsInClass) {
                 reflectionProvider.writeField(result, fieldName, value, classDefiningField);
                 seenFields.add(classDefiningField, fieldName);
