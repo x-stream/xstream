@@ -16,7 +16,9 @@ import java.util.Map;
 /**
  * Converts a java.util.Map to XML, specifying an 'entry'
  * element with 'key' and 'value' children.
- * <p/>
+ * <p>Note: 'key' and 'value' is not the name of the generated tag. The
+ * children are serialized as normal elements and the implementation expects
+ * them in the order 'key'/'value'.</p>
  * <p>Supports java.util.HashMap, java.util.Hashtable and
  * java.util.LinkedHashMap.</p>
  *
