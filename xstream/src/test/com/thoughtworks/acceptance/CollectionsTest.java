@@ -110,8 +110,33 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     }
 
     public void testSyncronizedWrapper() {
+        final String xml;
         if (JVM.is15()) {
-            return; // TODO: The list has changed on Java 1.5
+            xml = 
+                "<java.util.Collections-SynchronizedList serialization=\"custom\">\n" +
+                "  <java.util.Collections-SynchronizedCollection>\n" +
+                "    <default>\n" +
+                "      <c class=\"linked-list\">\n" +
+                "        <string>hi</string>\n" +
+                "      </c>\n" +
+                "      <mutex class=\"java.util.Collections-SynchronizedList\" reference=\"../../..\"/>\n" +
+                "    </default>\n" +
+                "  </java.util.Collections-SynchronizedCollection>\n" +
+                "  <java.util.Collections-SynchronizedList>\n" +
+                "    <default>\n" +
+                "      <list class=\"linked-list\" reference=\"../../../java.util.Collections-SynchronizedCollection/default/c\"/>\n" +
+                "    </default>\n" +
+                "  </java.util.Collections-SynchronizedList>\n" +
+                "</java.util.Collections-SynchronizedList>";
+        } else {
+            xml = 
+                "<java.util.Collections-SynchronizedList>\n" +
+                "  <list class=\"linked-list\">\n" +
+                "    <string>hi</string>\n" +
+                "  </list>\n" +
+                "  <c class=\"linked-list\" reference=\"../list\"/>\n" +
+                "  <mutex class=\"java.util.Collections-SynchronizedList\" self=\"\"/>\n" +
+                "</java.util.Collections-SynchronizedList>";
         }
 
         // syncronized list has circular reference
@@ -120,14 +145,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         List list = Collections.synchronizedList(new LinkedList());
         list.add("hi");
 
-        assertBothWays(list,
-                "<java.util.Collections-SynchronizedList>\n" +
-                "  <list class=\"linked-list\">\n" +
-                "    <string>hi</string>\n" +
-                "  </list>\n" +
-                "  <c class=\"linked-list\" reference=\"../list\"/>\n" +
-                "  <mutex class=\"java.util.Collections-SynchronizedList\" self=\"\"/>\n" +
-                "</java.util.Collections-SynchronizedList>");
+        assertBothWays(list, xml);
     }
 
     public void testEmptyList() {
