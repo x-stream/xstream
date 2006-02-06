@@ -49,7 +49,6 @@ public class EncodingTest extends AbstractAcceptanceTest {
                 + "      <currencySymbol>DM</currencySymbol>\n"
                 + "      <infinity>\u221e</infinity>\n"
                 + "      <intlCurrencySymbol>DEM</intlCurrencySymbol>\n"
-                + "      <locale>de_DE</locale>\n"
                 + "    </default>\n"
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
