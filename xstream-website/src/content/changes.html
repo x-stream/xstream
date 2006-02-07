@@ -19,17 +19,17 @@
     <h1>Current Version</h1>
 
     <p>Not yet released</p>
-
+    
     <h2>Major changes</h2>
 
     <ul>
-        <li>None yet</li>
-   	</ul>
-
-	<h2>Minor changes</h2>
+        <li>JIRA:XSTR-256, PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
+    </ul>
+    
+    <h2>Minor changes</h2>
 
     <ul>
-        <li>None yet</li>
+        <li>None.</li>
     </ul>
 
     <h2>API changes</h2>
@@ -38,6 +38,8 @@
         <li>None.</li>
     </ul>
 
+    <ul>
+    
     <h1>Version 1.1.3</h1>
 
     <p>Released 13 January 2006.</p>
@@ -48,17 +50,24 @@
         <li>Added XStream.toXML(OutputStream) and XStream.fromXML(InputStream).</li>
         <li>Ability to prevent fields from being serialized by calling XStream.omitField() or by implementing Mapper.shouldSerializeMember().</li>
         <li>Added Converter for Enum, EnumMap and EnumSet</li>
-        <li>XSTR-186: Added BeanConverter (contributed by Andrea Aime)</li>
-        <li>XSTR-246: Added ISO8601SqlTimestampConverter (contributed by Cheong, Chung-Onn)</li>
-        <li>XSTR-215: Fixed support for IBM JVM (contributed by Gabor Liptak)</li>
-   	</ul>
+        <li>JIRA:XSTR-186, Added BeanConverter (contributed by Andrea Aime)</li>
+        <li>JIRA:XSTR-246, Added ISO8601SqlTimestampConverter (contributed by Cheong, Chung-Onn)</li>
+        <li>Added ISO8601GregorianCaledarConverter</li>
+        <li>JIRA:XSTR-215, Fixed support for IBM JVM (contributed by Gabor Liptak)</li>
+        <li>Enhanced mode support for Blackdown JDK</li>
+        <li>JIRA:XSTR-265, support for javax.security.auth.Subject</li>
+        <li>JIRA:XSTR-233, support for Integer[] arrays</li>
+    </ul>
 
-	<h2>Minor changes</h2>
+    <h2>Minor changes</h2>
 
     <ul>
         <li>Remove unnecessary PrintWriter wrapper in default writers (pointed out by Mathieu Champlon)</li>
         <li>Bugfix: EnumSet converter can now deal with empty sets (contributed by Baba Buehler)</li>
         <li>Update ISO8601DateConverter to use Joda 1.0</li>
+        <li>JIRA:XSTR-242, GregorianCalenderConverter saves now the timezone</li>
+        <li>JIRA:XSTR-247, ISO8601DateConverter now independent on timezone</li>
+        <li>JIRA:XSTR-263, Circular references with Externalizable objects fail</li>
     </ul>
 
     <h2>API changes</h2>
