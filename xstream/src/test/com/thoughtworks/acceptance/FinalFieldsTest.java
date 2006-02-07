@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
+import com.thoughtworks.xstream.core.JVM;
 
 public class FinalFieldsTest extends AbstractAcceptanceTest {
 
@@ -27,7 +28,9 @@ public class FinalFieldsTest extends AbstractAcceptanceTest {
 
         try {
             xstream.toXML(new ThingWithFinalField());
-            fail("Expected exception");
+            if (!JVM.is15()) {
+                fail("Expected exception");
+            }
         } catch (ObjectAccessException expectedException) {
             assertEquals("Invalid final field " + ThingWithFinalField.class.getName() + ".number",
                     expectedException.getMessage());
