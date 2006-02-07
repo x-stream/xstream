@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.converters.reflection;
 
+import com.thoughtworks.xstream.core.JVM;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Constructor;
@@ -146,8 +148,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     protected void validateFieldAccess(Field field) {
         if (Modifier.isFinal(field.getModifiers())) {
-            throw new ObjectAccessException("Invalid final field "
-                    + field.getDeclaringClass().getName() + "." + field.getName());
+            if (JVM.is15()) {
+                field.setAccessible(true);
+            } else {
+                throw new ObjectAccessException("Invalid final field "
+                        + field.getDeclaringClass().getName() + "." + field.getName());
+            }
         }
     }
 
