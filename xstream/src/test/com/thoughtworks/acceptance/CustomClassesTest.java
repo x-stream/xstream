@@ -1,12 +1,9 @@
 package com.thoughtworks.acceptance;
 
-import org.dom4j.io.XPPReader;
+import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
+import com.thoughtworks.xstream.io.xml.XppReader;
 
 import java.io.StringReader;
-
-import com.thoughtworks.xstream.io.xml.XppReader;
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 
 public class CustomClassesTest extends AbstractAcceptanceTest {
 
@@ -42,7 +39,7 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
         public boolean equals(Object obj) {
             SamplePersonHolder containerObject = (SamplePersonHolder) obj;
-            return aString.equals(containerObject.aString)
+            return (aString == null ? containerObject.aString == null : aString.equals(containerObject.aString))
                     && brother.equals(containerObject.brother);
         }
     }
@@ -68,6 +65,32 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
                 "    <anInt>3</anInt>\n" +
                 "    <firstName>Joe</firstName>\n" +
                 "    <lastName>Walnes</lastName>\n" +
+                "  </brother>\n" +
+                "</personHolder>";
+
+        assertBothWays(personHolder, expected);
+
+    }
+
+    public void testCustomObjectWithCustomObjectFieldsSetToNull() {
+        xstream.alias("friend", SamplePerson.class);
+        xstream.alias("personHolder", SamplePersonHolder.class);
+
+        SamplePersonHolder personHolder = new SamplePersonHolder();
+        personHolder.aString = null;
+
+        SamplePerson person = new SamplePerson();
+        person.anInt = 3;
+        person.firstName = "Joe";
+        person.lastName = null;
+
+        personHolder.brother = person;
+
+        String expected =
+                "<personHolder>\n" +
+                "  <brother>\n" +
+                "    <anInt>3</anInt>\n" +
+                "    <firstName>Joe</firstName>\n" +
                 "  </brother>\n" +
                 "</personHolder>";
 
