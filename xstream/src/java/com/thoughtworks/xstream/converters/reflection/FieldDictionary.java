@@ -1,14 +1,12 @@
 package com.thoughtworks.xstream.converters.reflection;
 
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class FieldDictionary {
@@ -39,6 +37,14 @@ public class FieldDictionary {
                     final Map keyedByFieldKey = new OrderRetainingMap();
                     while (!Object.class.equals(cls)) {
                         Field[] fields = cls.getDeclaredFields();
+                        if (JVM.reverseMemberDefinition()) {
+                            for (int i = fields.length >> 1; i-- > 0;) {
+                                final int idx = fields.length-i-1;
+                                final Field field = fields[i];
+                                fields[i] = fields[idx];
+                                fields[idx] = field;
+                            }
+                        }
                         for (int i = 0; i < fields.length; i++) {
                             Field field = fields[i];
                             field.setAccessible(true);

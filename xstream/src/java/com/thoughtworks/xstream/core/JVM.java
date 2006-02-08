@@ -3,15 +3,24 @@ package com.thoughtworks.xstream.core;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
+import java.lang.reflect.Field;
 import java.security.AccessControlException;
 
 public class JVM {
 
+    // Beware the sequence of definition for this fields since it is checked.
     private ReflectionProvider reflectionProvider;
+    private Object dummy; // Need at least two fields
 
+    private static final boolean reverseMemberOrder;
     private static final float majorJavaVersion = getMajorJavaVersion(System.getProperty("java.specification.version"));
 
     static final float DEFAULT_JAVA_VERSION = 1.3f;
+
+    static {
+        Field[] fields = JVM.class.getDeclaredFields();
+        reverseMemberOrder = fields[fields.length-1].getName().equals("reflectionProvider");
+    }
     
     /**
      * Parses the java version system property to determine the major java version, 
@@ -20,7 +29,7 @@ public class JVM {
      * @param javaVersion the system property 'java.specification.version' 
      * @return A float of the form 1.x
      */
-    static final float getMajorJavaVersion(String javaVersion) {
+    private static final float getMajorJavaVersion(String javaVersion) {
         try { 
             return Float.parseFloat(javaVersion.substring(0, 3));
         } catch ( NumberFormatException e ){
@@ -90,8 +99,11 @@ public class JVM {
         return reflectionProvider;
     }
 
-	private boolean canUseSun14ReflectionProvider() {
-		return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown()) && is14() && loadClass("sun.misc.Unsafe") != null;
-	}
+    private boolean canUseSun14ReflectionProvider() {
+    	return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown()) && is14() && loadClass("sun.misc.Unsafe") != null;
+    }
 
+    public static synchronized boolean reverseMemberDefinition() {
+        return reverseMemberOrder;
+    }
 }
