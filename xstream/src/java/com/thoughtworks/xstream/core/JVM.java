@@ -9,7 +9,7 @@ public class JVM {
 
     private ReflectionProvider reflectionProvider;
 
-    private static final float majorJavaVersion = getMajorJavaVersion(System.getProperty("java.version"));
+    private static final float majorJavaVersion = getMajorJavaVersion(System.getProperty("java.specification.version"));
 
     static final float DEFAULT_JAVA_VERSION = 1.3f;
     
@@ -17,7 +17,7 @@ public class JVM {
      * Parses the java version system property to determine the major java version, 
      * ie 1.x 
      * 
-     * @param javaVersion the system property 'java.version' 
+     * @param javaVersion the system property 'java.specification.version' 
      * @return A float of the form 1.x
      */
     static final float getMajorJavaVersion(String javaVersion) {

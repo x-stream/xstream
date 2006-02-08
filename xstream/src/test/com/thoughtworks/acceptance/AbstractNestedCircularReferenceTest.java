@@ -41,6 +41,9 @@ public abstract class AbstractNestedCircularReferenceTest extends AbstractAccept
         // xstream.toXML(out); ....causes JVM crash on 1.4.1
 
         // WeirdThing is the least possible code I can create to reproduce the problem.
+        
+        // This also fails for JRockit 1.4.2 deeply nested, when it tries to set the final field
+        // AbstractNestedCircularReferenceTest$WeirdThing$NestedThing$this$1.
 
         // setup
         WeirdThing in = new WeirdThing();
