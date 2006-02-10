@@ -9,6 +9,7 @@
     <section>
         <name>Evaluating XStream</name>
         <page>tutorial.html</page>
+        <page>converter-tutorial.html</page>
         <page>license.html</page>
         <page>download.html</page>
     </section>
