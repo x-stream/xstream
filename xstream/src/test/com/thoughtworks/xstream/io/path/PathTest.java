@@ -7,7 +7,7 @@ import junit.framework.TestSuite;
 public class PathTest {
 
     public static Test suite() {
-        TestSuite result = new TestSuite("PathTest");
+        TestSuite result = new TestSuite(PathTest.class.getName());
 
         addTest(result,
                 "/a/b/c",
