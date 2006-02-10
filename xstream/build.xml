@@ -138,6 +138,7 @@
                 <include name="build.properties"/>
                 <include name="LICENSE.txt"/>
                 <include name="README.txt"/>
+                <include name="jdk*.txt"/>
                 <include name="src/java/**"/>
                 <include name="src/test/**"/>
                 <include name="lib/**"/>
