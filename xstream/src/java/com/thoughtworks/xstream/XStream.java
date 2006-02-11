@@ -148,6 +148,7 @@ public class XStream {
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_REFERENCES = 1003;
 
+    private static final int PRIORITY_VERY_HIGH = 10000;
     private static final int PRIORITY_NORMAL = 0;
     private static final int PRIORITY_LOW = -10;
     private static final int PRIORITY_VERY_LOW = -20;
@@ -313,6 +314,7 @@ public class XStream {
         registerConverter(new SerializableConverter(classMapper, reflectionProvider), PRIORITY_LOW);
         registerConverter(new ExternalizableConverter(classMapper), PRIORITY_LOW);
 
+        registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
         registerConverter(new IntConverter(), PRIORITY_NORMAL);
         registerConverter(new FloatConverter(), PRIORITY_NORMAL);
         registerConverter(new DoubleConverter(), PRIORITY_NORMAL);

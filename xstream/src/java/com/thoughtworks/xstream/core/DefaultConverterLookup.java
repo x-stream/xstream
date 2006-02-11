@@ -4,9 +4,7 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.basic.NullConverter;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
-import com.thoughtworks.xstream.XStream;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,7 +14,6 @@ import java.util.Map;
 public class DefaultConverterLookup implements ConverterLookup {
 
     private final PrioritizedList converters = new PrioritizedList();
-    private final Converter nullConverter = new NullConverter();
     private final Map typeToConverterMap = Collections.synchronizedMap(new HashMap());
     private final ClassMapper classMapper;
 
@@ -32,9 +29,6 @@ public class DefaultConverterLookup implements ConverterLookup {
     }
 
     public Converter lookupConverterForType(Class type) {
-        if (type == null) {
-            return nullConverter;
-        }
         Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
         Class mapType = classMapper.defaultImplementationOf(type);
@@ -48,6 +42,7 @@ public class DefaultConverterLookup implements ConverterLookup {
         }
         throw new ConversionException("No converter specified for " + type);
     }
+    
     public void registerConverter(Converter converter, int priority) {
         converters.add(converter, priority);
     }

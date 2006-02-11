@@ -23,6 +23,8 @@ public class DefaultImplementationsMapper extends MapperWrapper {
     }
 
     protected void addDefaults() {
+        // null handling
+        addDefaultImplementation(null, ClassMapper.Null.class);
         // register primitive types
         addDefaultImplementation(Boolean.class, boolean.class);
         addDefaultImplementation(Character.class, char.class);
@@ -45,8 +47,11 @@ public class DefaultImplementationsMapper extends MapperWrapper {
     }
 
     public Class defaultImplementationOf(Class type) {
-        Class result = (Class) typeToImpl.get(type);
-        return result == null ? super.defaultImplementationOf(type) : result;
+        if (typeToImpl.containsKey(type)) {
+            return (Class)typeToImpl.get(type);
+        } else {
+            return super.defaultImplementationOf(type);
+        }
     }
 
 }

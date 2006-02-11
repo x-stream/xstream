@@ -1,7 +1,6 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
-import com.thoughtworks.xstream.alias.ClassMapper;
 
 /**
  * Default mapper implementation with 'vanilla' functionality. To build up the functionality required, wrap this mapper

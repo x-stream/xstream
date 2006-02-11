@@ -61,7 +61,7 @@ public abstract class AbstractCollectionConverter implements Converter {
         // PUBLISHED API METHOD! If changing signature, ensure backwards compatability.
         if (item == null) {
             // todo: this is duplicated in TreeMarshaller.start()
-            writer.startNode(mapper().serializedClass(ClassMapper.Null.class));
+            writer.startNode(mapper().serializedClass(null));
             writer.endNode();
         } else {
             writer.startNode(mapper().serializedClass(item.getClass()));

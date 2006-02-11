@@ -26,20 +26,15 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     public String serializedClass(Class type) {
-        String name = super.serializedClass(type);
         String alias = (String) typeToNameMap.get(type.getName());
         if (alias != null) {
             return alias;
         } else {
-            return name;
+            return super.serializedClass(type);
         }
     }
 
     public Class realClass(String elementName) {
-        if (elementName.equals("null")) { // TODO: This is probably the wrong place for this.
-            return null;
-        }
-
         String mappedName = (String) nameToTypeMap.get(mapNameFromXML(elementName));
 
         if (mappedName != null) {

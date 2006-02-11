@@ -2,7 +2,6 @@ package com.thoughtworks.acceptance;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 
 public class BasicTypesTest extends AbstractAcceptanceTest {
 
@@ -49,6 +48,10 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     public void testBigDecimal() {
         BigDecimal bigDecimal = new BigDecimal("1234567890123456.987654321");
         assertBothWays(bigDecimal, "<big-decimal>1234567890123456.987654321</big-decimal>");
+    }
+    
+    public void testNull() {
+        assertBothWays(null, "<null/>");
     }
 
 }
