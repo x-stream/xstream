@@ -99,7 +99,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
-    public void testXStreamSerialization() throws IOException {
+    public void testXStreamSerialization() {
         // expectations
         log.expect("Child.writeReplace()");
         log.expect("Base.writeObject() start");
