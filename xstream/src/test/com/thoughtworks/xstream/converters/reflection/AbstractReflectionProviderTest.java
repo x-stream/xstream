@@ -36,10 +36,10 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
         Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
-        mockBlock.expect(once())
+        mockBlock.expects(once())
                 .method("visit")
                 .with(eq("a"), eq(int.class), eq(WithFields.class), ANYTHING);
-        mockBlock.expect(once())
+        mockBlock.expects(once())
                 .method("visit")
                 .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING);
 
@@ -59,13 +59,13 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
         Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
-        mockBlock.expect(once())
+        mockBlock.expects(once())
                 .method("visit")
                 .with(eq("a"), eq(int.class), eq(WithFields.class), ANYTHING);
-        mockBlock.expect(once())
+        mockBlock.expects(once())
                 .method("visit")
                 .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING);
-        mockBlock.expect(once())
+        mockBlock.expects(once())
                 .method("visit")
                 .with(eq("c"), eq(int.class), eq(SubClassWithFields.class), ANYTHING);
 
@@ -89,15 +89,15 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
         Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
-        mockBlock.expect(once())
+        mockBlock.expects(once())
                 .method("visit")
                 .with(eq("b"), eq(int.class), eq(SubClassWithHiddenFields.class), ANYTHING)
                 .id("first");
-        mockBlock.expect(once())
+        mockBlock.expects(once())
                 .method("visit")
                 .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING)
                 .after("first");
-        mockBlock.expect(once())
+        mockBlock.expects(once())
                 .method("visit")
                 .with(eq("a"), ANYTHING, ANYTHING, ANYTHING);
 

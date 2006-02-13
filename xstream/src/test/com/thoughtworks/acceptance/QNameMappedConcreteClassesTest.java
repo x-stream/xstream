@@ -33,7 +33,7 @@ public class QNameMappedConcreteClassesTest extends ConcreteClassesTest {
 
         String expected =
                 XML_HEADER + "<w:withList xmlns:w=\"java://com.thoughtworks.acceptance.someobjects\">" +
-                "<things></things>" +
+                "<things/>" +
                 "</w:withList>";
 
         assertBothWays(withList, expected);
@@ -48,7 +48,7 @@ public class QNameMappedConcreteClassesTest extends ConcreteClassesTest {
 
         String expected =
                 XML_HEADER + "<withList xmlns=\"java://com.thoughtworks.acceptance.someobjects\">" +
-                "<things></things>" +
+                "<things/>" +
                 "</withList>";
 
         assertBothWays(withList, expected);
@@ -65,7 +65,7 @@ public class QNameMappedConcreteClassesTest extends ConcreteClassesTest {
 
         String expected =
                 XML_HEADER + "<x:withList xmlns:x=\"java://com.thoughtworks.acceptance.someobjects\">" +
-                "<x:things></x:things>" +
+                "<x:things/>" +
                 "</x:withList>";
 
         assertBothWays(withList, expected);
@@ -79,7 +79,7 @@ public class QNameMappedConcreteClassesTest extends ConcreteClassesTest {
         withList.things = new LinkedList();
 
         String expected =
-                "<?xml version='1.0' encoding='utf-8'?><with-list><things class=\"linked-list\"></things></with-list>";
+                "<?xml version='1.0' encoding='utf-8'?><with-list><things class=\"linked-list\"/></with-list>";
 
         assertBothWays(withList, expected);
     }

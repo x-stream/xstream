@@ -28,21 +28,19 @@ public class StaxWriterTest extends AbstractXMLWriterTest {
     }
 
     public void testSupportsEmptyTags() {
-        // overriding test in superclass.... StaxWriter writes <blah></blah> instead of <blah/>
         writer.startNode("empty");
         writer.endNode();
 
-        assertXmlProducedIs("<empty></empty>");
+        assertXmlProducedIs("<empty/>");
     }
 
     public void testSupportsAttributes() {
-        // overriding test in superclass.... StaxWriter writes <blah></blah> instead of <blah/>
         writer.startNode("person");
         writer.addAttribute("firstname", "Joe");
         writer.addAttribute("lastname", "Walnes");
         writer.endNode();
 
-        assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\"></person>");
+        assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\"/>");
     }
 
 }
