@@ -1,6 +1,10 @@
 package com.thoughtworks.xstream.mapper;
 
 public interface Mapper {
+    /**
+     * Place holder type used for null values.
+     */
+    class Null {}
 
     /**
      * How a class name should be represented in its serialized form.

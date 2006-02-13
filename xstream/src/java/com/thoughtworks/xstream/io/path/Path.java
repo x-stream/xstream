@@ -2,8 +2,8 @@ package com.thoughtworks.xstream.io.path;
 
 import com.thoughtworks.xstream.core.util.FastStack;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a path (subset of XPath) to a single node in the tree.

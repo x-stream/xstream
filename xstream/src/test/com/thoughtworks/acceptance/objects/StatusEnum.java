@@ -1,6 +1,5 @@
 package com.thoughtworks.acceptance.objects;
 
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,7 +35,7 @@ public class StatusEnum implements Serializable, Comparable {
         return ordinal - ((StatusEnum) o).ordinal;
     }
 
-    private Object readResolve() throws ObjectStreamException {
+    private Object readResolve() {
         return PRIVATE_VALUES[ordinal]; //Canonicalize
     }
 }

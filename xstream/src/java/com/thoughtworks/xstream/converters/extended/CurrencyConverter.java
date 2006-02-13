@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 
-import java.sql.Date;
 import java.util.Currency;
 
 /**

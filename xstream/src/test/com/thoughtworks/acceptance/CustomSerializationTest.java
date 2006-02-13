@@ -1,15 +1,13 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.Hardware;
+import com.thoughtworks.acceptance.objects.Software;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.io.ObjectStreamField;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.io.Serializable;
 
 public class CustomSerializationTest extends AbstractAcceptanceTest {
 

@@ -1,11 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
-import org.dom4j.DocumentFactory;
-import org.dom4j.Document;
 import org.dom4j.io.OutputFormat;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 
-import java.io.Writer;
 import java.io.StringWriter;
 
 public class Dom4JWriterTest extends AbstractXMLWriterTest {

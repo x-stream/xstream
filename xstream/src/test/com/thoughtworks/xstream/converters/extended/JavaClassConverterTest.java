@@ -1,7 +1,5 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import java.lang.reflect.Method;
-
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
 public class JavaClassConverterTest extends AbstractAcceptanceTest {

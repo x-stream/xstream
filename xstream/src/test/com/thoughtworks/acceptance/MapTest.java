@@ -2,7 +2,6 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
-import com.thoughtworks.xstream.XStream;
 
 import java.util.HashMap;
 import java.util.Hashtable;

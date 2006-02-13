@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.converters.javabean;
 
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+
 import java.beans.Introspector;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -11,8 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 /**
  * Builds the serializable properties maps for each bean and caches them.
@@ -30,8 +30,6 @@ public class PropertyDictionary {
      * 
      * @param cls
      * @param name
-     * @param definedIn
-     * @return
      */
     public BeanProperty property(Class cls, String name) {
         Map properties = buildMap(cls);
@@ -47,8 +45,6 @@ public class PropertyDictionary {
      * Builds the map of all serializable properties for the the provided bean
      * 
      * @param cls
-     * @param tupleKeyed
-     * @return
      */
     private Map buildMap(Class cls) {
         final String clsName = cls.getName();

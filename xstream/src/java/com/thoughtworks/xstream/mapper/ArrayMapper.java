@@ -1,7 +1,6 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.alias.CannotResolveClassException;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,8 +25,15 @@ public class ArrayMapper extends MapperWrapper {
                     Double.class
             });
 
-    public ArrayMapper(ClassMapper wrapped) {
+    public ArrayMapper(Mapper wrapped) {
         super(wrapped);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #ArrayMapper(Mapper)}
+     */
+    public ArrayMapper(ClassMapper wrapped) {
+        this((Mapper)wrapped);
     }
 
     public String serializedClass(Class type) {

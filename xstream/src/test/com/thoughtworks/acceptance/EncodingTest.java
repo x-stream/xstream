@@ -1,9 +1,9 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.core.JVM;
+
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-
-import com.thoughtworks.xstream.core.JVM;
 
 
 public class EncodingTest extends AbstractAcceptanceTest {

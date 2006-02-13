@@ -17,14 +17,21 @@ public class DefaultImplementationsMapper extends MapperWrapper {
     private final Map typeToImpl = Collections.synchronizedMap(new HashMap());
     private final Map implToType = Collections.synchronizedMap(new HashMap());
 
-    public DefaultImplementationsMapper(ClassMapper wrapped) {
+    public DefaultImplementationsMapper(Mapper wrapped) {
         super(wrapped);
         addDefaults();
     }
 
+    /**
+     * @deprecated As of 1.2, use {@link #DefaultImplementationsMapper(Mapper)}
+     */
+    public DefaultImplementationsMapper(ClassMapper wrapped) {
+        this((Mapper)wrapped);
+    }
+
     protected void addDefaults() {
         // null handling
-        addDefaultImplementation(null, ClassMapper.Null.class);
+        addDefaultImplementation(null, Mapper.Null.class);
         // register primitive types
         addDefaultImplementation(Boolean.class, boolean.class);
         addDefaultImplementation(Character.class, char.class);

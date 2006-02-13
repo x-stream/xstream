@@ -2,22 +2,22 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.core.JVM;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
-import java.io.Serializable;
-import java.io.ObjectStreamConstants;
-import java.io.DataOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
+import java.io.ObjectStreamConstants;
+import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects

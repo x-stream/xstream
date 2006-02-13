@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import javax.xml.stream.XMLOutputFactory;
+
 import java.io.StringWriter;
 
 /*

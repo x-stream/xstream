@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.CannotResolveClassException;
 
 /**
  * Default mapper implementation with 'vanilla' functionality. To build up the functionality required, wrap this mapper
@@ -18,7 +17,7 @@ public class DefaultMapper extends MapperWrapper {
     }
 
     public DefaultMapper(ClassLoader classLoader, String classAttributeIdentifier) {
-        super(null);
+        super((Mapper)null);
         this.classLoader = classLoader;
         this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
     }
@@ -33,10 +32,6 @@ public class DefaultMapper extends MapperWrapper {
         } catch (ClassNotFoundException e) {
             throw new CannotResolveClassException(elementName + " : " + e.getMessage());
         }
-    }
-
-    public Class lookupDefaultType(Class baseType) {
-        return baseType;
     }
 
     public Class defaultImplementationOf(Class type) {
@@ -94,16 +89,4 @@ public class DefaultMapper extends MapperWrapper {
     public String realMember(Class type, String serialized) {
         return serialized;
     }
-
-    public String mapNameFromXML(String xmlName) {
-        return xmlName;
-    }
-
-    public String mapNameToXML(String javaName) {
-        return javaName;
-    }
-
-    public void alias(String elementName, Class type, Class defaultImplementation) {
-    }
-
 }

@@ -2,7 +2,11 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.StatusEnum;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * @author Chris Kelly

@@ -1,7 +1,5 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import junit.framework.TestCase;
-
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
@@ -9,6 +7,8 @@ import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
+
+import junit.framework.TestCase;
 
 public class ReflectionConverterTest extends TestCase {
 

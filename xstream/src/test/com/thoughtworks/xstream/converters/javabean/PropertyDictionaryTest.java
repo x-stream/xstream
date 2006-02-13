@@ -1,8 +1,8 @@
 package com.thoughtworks.xstream.converters.javabean;
 
-import java.util.Iterator;
-
 import junit.framework.TestCase;
+
+import java.util.Iterator;
 
 public class PropertyDictionaryTest extends TestCase {
 

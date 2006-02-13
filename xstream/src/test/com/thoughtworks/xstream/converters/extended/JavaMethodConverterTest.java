@@ -1,9 +1,9 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 public class JavaMethodConverterTest extends AbstractAcceptanceTest {
 

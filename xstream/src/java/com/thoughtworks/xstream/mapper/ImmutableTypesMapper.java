@@ -16,8 +16,15 @@ public class ImmutableTypesMapper extends MapperWrapper {
 
     private final Set immutableTypes = Collections.synchronizedSet(new HashSet());
 
-    public ImmutableTypesMapper(ClassMapper wrapped) {
+    public ImmutableTypesMapper(Mapper wrapped) {
         super(wrapped);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #ImmutableTypesMapper(Mapper)}
+     */
+    public ImmutableTypesMapper(ClassMapper wrapped) {
+        this((Mapper)wrapped);
     }
 
     public void addImmutableType(Class type) {

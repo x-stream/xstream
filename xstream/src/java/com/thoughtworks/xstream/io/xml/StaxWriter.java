@@ -153,8 +153,6 @@ public class StaxWriter implements HierarchicalStreamWriter {
 
     /**
      * Is StAX namespace repairing mode on or off?
-     *
-     * @return
      */
     public boolean isNamespaceRepairingMode() {
         return namespaceRepairingMode;

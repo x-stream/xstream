@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
 import org.dom4j.Branch;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;

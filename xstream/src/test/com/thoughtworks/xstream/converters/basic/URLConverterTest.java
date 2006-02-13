@@ -1,12 +1,9 @@
 package com.thoughtworks.xstream.converters.basic;
 
-import junit.framework.TestCase;
-
-import java.util.Date;
-import java.net.URL;
-import java.net.MalformedURLException;
-
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class URLConverterTest extends AbstractAcceptanceTest {
 

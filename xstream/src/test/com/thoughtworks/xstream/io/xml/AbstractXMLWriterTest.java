@@ -1,7 +1,8 @@
 package com.thoughtworks.xstream.io.xml;
 
-import junit.framework.TestCase;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
+import junit.framework.TestCase;
 
 public abstract class AbstractXMLWriterTest extends TestCase {
 

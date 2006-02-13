@@ -1,7 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.someobjects.X;
-import com.thoughtworks.xstream.alias.CannotResolveClassException;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 
 /**
  * @author Paul Hammant
@@ -36,12 +36,7 @@ public class AliasTest extends AbstractAcceptanceTest {
         // now change the alias
         xstream.alias("X_alias", X.class);
         X x = new X(0);
-        try {
-            assertBothWays(x, xml);
-            fail("CannotResolveClassException expected");
-        } catch (CannotResolveClassException e) {
-            //expected - marshalling works but not unmarshalling
-        }
+        assertBothWays(x, xml);
     }
 
 }

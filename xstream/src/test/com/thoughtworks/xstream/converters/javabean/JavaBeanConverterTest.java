@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.converters.javabean;
 
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.xstream.XStream;
+
 import junit.framework.TestCase;
 
 public class JavaBeanConverterTest extends TestCase {
@@ -162,7 +163,7 @@ public class JavaBeanConverterTest extends TestCase {
         World world = new World();
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getClassMapper(), "class"), -20);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), "class"), -20);
         xstream.alias("world", World.class);
 
 
@@ -244,7 +245,7 @@ public class JavaBeanConverterTest extends TestCase {
 
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getClassMapper(), "class"), -20);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), "class"), -20);
         xstream.alias("types", TypesOfFields.class);
 
         String xml = xstream.toXML(fields);

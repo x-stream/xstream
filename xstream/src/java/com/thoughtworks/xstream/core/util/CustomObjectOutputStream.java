@@ -4,10 +4,9 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.DataHolder;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.Map;
-import java.util.HashMap;
 
 public class CustomObjectOutputStream extends ObjectOutputStream {
 
@@ -128,7 +127,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
         callback.close();
     }
 
-    public PutField putFields() throws IOException {
+    public PutField putFields() {
         CustomPutField result = new CustomPutField();
         customFields.push(result);
         return result;
@@ -191,19 +190,19 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     /****** Unsupported methods ******/
 
-    public void reset() throws IOException {
+    public void reset() {
         throw new UnsupportedOperationException();
     }
 
-    public void useProtocolVersion(int version) throws IOException {
+    public void useProtocolVersion(int version) {
         throw new UnsupportedOperationException();
     }
 
-    public void writeBytes(String str) throws IOException {
+    public void writeBytes(String str) {
         throw new UnsupportedOperationException();
     }
 
-    public void writeUnshared(Object obj) throws IOException {
+    public void writeUnshared(Object obj) {
         throw new UnsupportedOperationException();
     }
 

@@ -1,9 +1,9 @@
 package com.thoughtworks.xstream.core;
 
+import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
 public class TreeUnmarshallerTest extends AbstractAcceptanceTest {
 

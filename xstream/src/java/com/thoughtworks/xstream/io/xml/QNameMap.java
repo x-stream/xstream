@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import javax.xml.namespace.QName;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

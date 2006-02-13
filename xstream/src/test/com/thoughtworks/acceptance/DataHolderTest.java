@@ -9,8 +9,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppReader;
 
-import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 public class DataHolderTest extends AbstractAcceptanceTest {
 

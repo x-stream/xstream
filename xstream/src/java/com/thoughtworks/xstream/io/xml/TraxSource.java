@@ -1,12 +1,14 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.XStream;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
 import org.xml.sax.XMLReader;
 
 import javax.xml.transform.sax.SAXSource;
+
 import java.util.ArrayList;
 import java.util.List;
 

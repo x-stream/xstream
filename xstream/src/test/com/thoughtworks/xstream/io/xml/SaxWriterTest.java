@@ -4,6 +4,7 @@ import com.megginson.sax.DataWriter;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
+
 import junit.framework.TestCase;
 
 import javax.xml.transform.ErrorListener;
@@ -13,6 +14,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -201,13 +203,11 @@ public class SaxWriterTest extends TestCase {
             super();
         }
 
-        public void warning(TransformerException e)
-                throws TransformerException {
+        public void warning(TransformerException e) {
             /* Ignore... */
         }
 
-        public void error(TransformerException e)
-                throws TransformerException {
+        public void error(TransformerException e) {
             /* Ignore... */
         }
 

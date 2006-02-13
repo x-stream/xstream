@@ -11,7 +11,7 @@ public class ClassLoaderTest extends AbstractAcceptanceTest {
     }
 
     private class MockClassLoader extends ClassLoader {
-        public Class loadClass(String name) throws ClassNotFoundException {
+        public Class loadClass(String name) {
             classLoaderCall = name;
             return String.class;
         }

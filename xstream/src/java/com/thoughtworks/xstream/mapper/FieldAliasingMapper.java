@@ -2,7 +2,11 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Mapper that allows a field of a specific class to be replaced with a shorter alias, or omitted
@@ -16,8 +20,15 @@ public class FieldAliasingMapper extends MapperWrapper {
     protected final Map aliasToFieldMap = Collections.synchronizedMap(new HashMap());
     protected final Set fieldsToOmit = Collections.synchronizedSet(new HashSet());
 
-    public FieldAliasingMapper(ClassMapper wrapped) {
+    public FieldAliasingMapper(Mapper wrapped) {
         super(wrapped);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #FieldAliasingMapper(Mapper)}
+     */
+    public FieldAliasingMapper(ClassMapper wrapped) {
+        this((Mapper)wrapped);
     }
 
     public void addFieldAlias(String alias, Class type, String fieldName) {

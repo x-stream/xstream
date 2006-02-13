@@ -15,10 +15,4 @@ public interface ConverterLookup {
      * the value to be converted is a null type.
      */
     Converter lookupConverterForType(Class type);
-
-    /**
-     * @deprecated As of 1.1.1 you can register Converters with priorities, making the need for a default converter redundant.
-     */
-    Converter defaultConverter();
-
 }

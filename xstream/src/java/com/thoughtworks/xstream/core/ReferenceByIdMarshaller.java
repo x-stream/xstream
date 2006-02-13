@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReferenceByIdMarshaller extends TreeMarshaller {
 
@@ -17,12 +18,32 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
 
     public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
                                    ConverterLookup converterLookup,
+                                   Mapper mapper,
+                                   IDGenerator idGenerator) {
+        super(writer, converterLookup, mapper);
+        this.idGenerator = idGenerator;
+    }
+
+    public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
+                                   ConverterLookup converterLookup,
+                                   Mapper mapper) {
+        this(writer, converterLookup, mapper, new SequenceGenerator(1));
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #ReferenceByIdMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper, IDGenerator)}
+     */
+    public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
+                                   ConverterLookup converterLookup,
                                    ClassMapper classMapper,
                                    IDGenerator idGenerator) {
         super(writer, converterLookup, classMapper);
         this.idGenerator = idGenerator;
     }
 
+    /**
+     * @deprecated As of 1.2, use {@link #ReferenceByIdMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper)}
+     */
     public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
                                    ConverterLookup converterLookup,
                                    ClassMapper classMapper) {
@@ -32,7 +53,7 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
     public void convertAnother(Object item) {
         Converter converter = converterLookup.lookupConverterForType(item.getClass());
 
-        if (classMapper.isImmutableValueType(item.getClass())) {
+        if (getMapper().isImmutableValueType(item.getClass())) {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {

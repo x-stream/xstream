@@ -1,8 +1,9 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import nu.xom.Element;
+
 import nu.xom.Attribute;
+import nu.xom.Element;
 
 public class XomWriter implements HierarchicalStreamWriter {
 

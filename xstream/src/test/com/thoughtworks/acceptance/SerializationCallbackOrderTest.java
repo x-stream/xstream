@@ -133,7 +133,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
-    public void testXStreamDeserialization() throws IOException, ClassNotFoundException {
+    public void testXStreamDeserialization() {
         // setup
         String data = xstream.toXML(new Child());
         log.reset();
@@ -253,7 +253,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
-    public void testXStreamSerializationValidatesObjectIsCalledInPriorityOrder() throws IOException, ClassNotFoundException {
+    public void testXStreamSerializationValidatesObjectIsCalledInPriorityOrder() {
         // expect
         log.expect("validateObject() high priority");
         log.expect("validateObject() medium priority 2");

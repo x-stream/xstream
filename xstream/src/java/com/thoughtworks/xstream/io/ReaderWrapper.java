@@ -57,10 +57,6 @@ public abstract class ReaderWrapper implements HierarchicalStreamReader {
         return wrapped.getAttributeNames();
     }
 
-    public Object peekUnderlyingNode() {
-        return wrapped.peekUnderlyingNode();
-    }
-
     public void appendErrors(ErrorWriter errorWriter) {
         wrapped.appendErrors(errorWriter);
     }

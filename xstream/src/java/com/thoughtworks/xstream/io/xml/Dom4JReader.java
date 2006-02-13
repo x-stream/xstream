@@ -1,10 +1,9 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.dom4j.Attribute;
 
 public class Dom4JReader extends AbstractDocumentReader {
 

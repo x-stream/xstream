@@ -1,23 +1,20 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import com.thoughtworks.xstream.testutil.CallLog;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.acceptance.objects.Software;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.IOException;
 import java.io.Writer;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
-import java.io.EOFException;
-import java.io.Reader;
-import java.util.List;
-import java.util.ArrayList;
 
 public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
@@ -123,11 +120,11 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         // setup
         final CallLog log = new CallLog();
         Writer loggingWriter = new Writer() {
-            public void close() throws IOException {
+            public void close() {
                 log.actual("close");
             }
 
-            public void flush() throws IOException {
+            public void flush() {
                 log.actual("flush");
             }
 

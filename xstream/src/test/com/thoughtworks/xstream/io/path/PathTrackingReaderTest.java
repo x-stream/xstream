@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.io.path;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.XppReader;
+
 import junit.framework.TestCase;
 
 import java.io.Reader;

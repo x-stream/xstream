@@ -1,8 +1,8 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.io.StreamException;
 
 public class ErrorTest extends AbstractAcceptanceTest {
 

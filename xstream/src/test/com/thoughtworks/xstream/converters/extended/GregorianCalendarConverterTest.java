@@ -1,11 +1,11 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-
 import com.thoughtworks.xstream.XStream;
 
 import junit.framework.TestCase;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * @author J&ouml;rg Schaible

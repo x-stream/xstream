@@ -3,6 +3,7 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+
 import junit.framework.TestCase;
 
 import java.lang.reflect.Array;

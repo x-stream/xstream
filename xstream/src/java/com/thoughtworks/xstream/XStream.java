@@ -4,14 +4,52 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
-import com.thoughtworks.xstream.converters.basic.*;
-import com.thoughtworks.xstream.converters.collections.*;
-import com.thoughtworks.xstream.converters.extended.*;
+import com.thoughtworks.xstream.converters.basic.BigDecimalConverter;
+import com.thoughtworks.xstream.converters.basic.BigIntegerConverter;
+import com.thoughtworks.xstream.converters.basic.BooleanConverter;
+import com.thoughtworks.xstream.converters.basic.ByteConverter;
+import com.thoughtworks.xstream.converters.basic.CharConverter;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
+import com.thoughtworks.xstream.converters.basic.DoubleConverter;
+import com.thoughtworks.xstream.converters.basic.FloatConverter;
+import com.thoughtworks.xstream.converters.basic.IntConverter;
+import com.thoughtworks.xstream.converters.basic.LongConverter;
+import com.thoughtworks.xstream.converters.basic.NullConverter;
+import com.thoughtworks.xstream.converters.basic.ShortConverter;
+import com.thoughtworks.xstream.converters.basic.StringBufferConverter;
+import com.thoughtworks.xstream.converters.basic.StringConverter;
+import com.thoughtworks.xstream.converters.basic.URLConverter;
+import com.thoughtworks.xstream.converters.collections.ArrayConverter;
+import com.thoughtworks.xstream.converters.collections.BitSetConverter;
+import com.thoughtworks.xstream.converters.collections.CharArrayConverter;
+import com.thoughtworks.xstream.converters.collections.CollectionConverter;
+import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.converters.collections.PropertiesConverter;
+import com.thoughtworks.xstream.converters.collections.TreeMapConverter;
+import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
+import com.thoughtworks.xstream.converters.extended.ColorConverter;
+import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
+import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
+import com.thoughtworks.xstream.converters.extended.FileConverter;
+import com.thoughtworks.xstream.converters.extended.FontConverter;
+import com.thoughtworks.xstream.converters.extended.GregorianCalendarConverter;
+import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
+import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
+import com.thoughtworks.xstream.converters.extended.LocaleConverter;
+import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
+import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
+import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
-import com.thoughtworks.xstream.core.*;
+import com.thoughtworks.xstream.core.BaseException;
+import com.thoughtworks.xstream.core.DefaultConverterLookup;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.MapBackedDataHolder;
+import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
+import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
+import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
 import com.thoughtworks.xstream.core.util.ClassLoaderReference;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
@@ -21,9 +59,34 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.thoughtworks.xstream.mapper.*;
+import com.thoughtworks.xstream.mapper.ArrayMapper;
+import com.thoughtworks.xstream.mapper.CachingMapper;
+import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
+import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
+import com.thoughtworks.xstream.mapper.DefaultMapper;
+import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
+import com.thoughtworks.xstream.mapper.EnumMapper;
+import com.thoughtworks.xstream.mapper.FieldAliasingMapper;
+import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
+import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
+import com.thoughtworks.xstream.mapper.Mapper;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
+import com.thoughtworks.xstream.mapper.OuterClassMapper;
+import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.NotActiveException;
+import java.io.ObjectInputStream;
+import java.io.ObjectInputValidation;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -31,7 +94,23 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Vector;
 
 /**
  * Simple facade to XStream library, a Java-XML serialization tool.
@@ -140,7 +219,7 @@ public class XStream {
     private MarshallingStrategy marshallingStrategy;
     private ClassLoaderReference classLoaderReference; // TODO: Should be changeable
 
-    private ClassMapper classMapper;
+    private Mapper mapper;
     private DefaultConverterLookup converterLookup;
     private JVM jvm = new JVM();
 
@@ -154,35 +233,40 @@ public class XStream {
     private static final int PRIORITY_VERY_LOW = -20;
 
     public XStream() {
-        this(null, null, new XppDriver());
-    }
-
-    /**
-     * @deprecated As of XStream 1.1.1, a default Converter is unnecessary as you can register a Converter with an
-     *             associated priority. Use an alternate constructor.
-     */
-    public XStream(Converter defaultConverter) {
-        this(null, null, new XppDriver(), null);
-        registerConverter(defaultConverter, PRIORITY_VERY_LOW);
+        this(null, (Mapper)null, new XppDriver());
     }
 
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(null, null, hierarchicalStreamDriver);
+        this(null, (Mapper)null, hierarchicalStreamDriver);
     }
 
     public XStream(ReflectionProvider reflectionProvider) {
-        this(reflectionProvider, null, new XppDriver());
+        this(reflectionProvider, (Mapper)null, new XppDriver());
     }
 
     public XStream(ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(reflectionProvider, null, hierarchicalStreamDriver);
+        this(reflectionProvider, (Mapper)null, hierarchicalStreamDriver);
     }
 
+    /**
+     * @deprecated As of 1.2, use {@link #XStream(ReflectionProvider, Mapper, HierarchicalStreamDriver)}
+     */
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver) {
         this(reflectionProvider, classMapper, driver, null);
     }
 
+    public XStream(ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
+        this(reflectionProvider, mapper, driver, null);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #XStream(ReflectionProvider, Mapper, HierarchicalStreamDriver, String)}
+     */
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier) {
+        this(reflectionProvider, (Mapper)classMapper, driver, classAttributeIdentifier);
+    }
+
+    public XStream(ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver, String classAttributeIdentifier) {
         jvm = new JVM();
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
@@ -190,8 +274,8 @@ public class XStream {
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
-        this.classMapper = classMapper == null ? buildMapper(classAttributeIdentifier) : classMapper;
-        converterLookup = new DefaultConverterLookup(this.classMapper);
+        this.mapper = mapper == null ? buildMapper(classAttributeIdentifier) : mapper;
+        converterLookup = new DefaultConverterLookup(this.mapper);
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
@@ -199,17 +283,8 @@ public class XStream {
         setMode(XPATH_REFERENCES);
     }
 
-    /**
-     * @deprecated As of XStream 1.1.1, a default Converter is unnecessary as you can register a Converter with an
-     *             associated priority. Use an alternate constructor.
-     */
-    public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier, Converter defaultConverter) {
-        this(reflectionProvider, classMapper, driver, classAttributeIdentifier);
-        registerConverter(defaultConverter, PRIORITY_VERY_LOW);
-    }
-
-    private ClassMapper buildMapper(String classAttributeIdentifier) {
-        MapperWrapper mapper = new DefaultMapper(classLoaderReference, classAttributeIdentifier);
+    private Mapper buildMapper(String classAttributeIdentifier) {
+        Mapper mapper = new DefaultMapper(classLoaderReference, classAttributeIdentifier);
         mapper = new XmlFriendlyMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
         classAliasingMapper = (ClassAliasingMapper) mapper; // need a reference to that one
@@ -227,7 +302,7 @@ public class XStream {
         defaultImplementationsMapper = (DefaultImplementationsMapper) mapper; // and that one
         mapper = new ImmutableTypesMapper(mapper);
         immutableTypesMapper = (ImmutableTypesMapper)mapper; // that one too
-        mapper = wrapMapper(mapper);
+        mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);
         return mapper;
     }
@@ -237,7 +312,7 @@ public class XStream {
     }
 
     protected void setupAliases() {
-        alias("null", ClassMapper.Null.class);
+        alias("null", Mapper.Null.class);
         alias("int", Integer.class);
         alias("float", Float.class);
         alias("double", Double.class);
@@ -308,11 +383,11 @@ public class XStream {
     }
 
     protected void setupConverters() {
-        ReflectionConverter reflectionConverter = new ReflectionConverter(classMapper, reflectionProvider);
+        ReflectionConverter reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
         registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
-        registerConverter(new SerializableConverter(classMapper, reflectionProvider), PRIORITY_LOW);
-        registerConverter(new ExternalizableConverter(classMapper), PRIORITY_LOW);
+        registerConverter(new SerializableConverter(mapper, reflectionProvider), PRIORITY_LOW);
+        registerConverter(new ExternalizableConverter(mapper), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
         registerConverter(new IntConverter(), PRIORITY_NORMAL);
@@ -332,12 +407,12 @@ public class XStream {
         registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
         registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
 
-        registerConverter(new ArrayConverter(classMapper), PRIORITY_NORMAL);
+        registerConverter(new ArrayConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new CharArrayConverter(), PRIORITY_NORMAL);
-        registerConverter(new CollectionConverter(classMapper), PRIORITY_NORMAL);
-        registerConverter(new MapConverter(classMapper), PRIORITY_NORMAL);
-        registerConverter(new TreeMapConverter(classMapper), PRIORITY_NORMAL);
-        registerConverter(new TreeSetConverter(classMapper), PRIORITY_NORMAL);
+        registerConverter(new CollectionConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new MapConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new TreeMapConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new TreeSetConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
         registerConverter(new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
@@ -345,7 +420,7 @@ public class XStream {
         registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
         registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
         registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
-        registerConverter(new DynamicProxyConverter(classMapper, classLoaderReference), PRIORITY_NORMAL);
+        registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(), PRIORITY_NORMAL);
         registerConverter(new FontConverter(), PRIORITY_NORMAL);
@@ -369,7 +444,7 @@ public class XStream {
                     new Class[] {Converter.class} , new Object[] { reflectionConverter} );
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.SubjectConverter", PRIORITY_NORMAL,
-                    new Class[] {Mapper.class}, new Object[] {classMapper});
+                    new Class[] {Mapper.class}, new Object[] {mapper});
         }
 
         if (JVM.is15()) {
@@ -379,10 +454,10 @@ public class XStream {
                     null, null);
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.enums.EnumSetConverter", PRIORITY_NORMAL,
-                    new Class[] {Mapper.class}, new Object[] {classMapper});
+                    new Class[] {Mapper.class}, new Object[] {mapper});
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.enums.EnumMapConverter", PRIORITY_NORMAL,
-                    new Class[] {Mapper.class}, new Object[] {classMapper});
+                    new Class[] {Mapper.class}, new Object[] {mapper});
         }
     }
 
@@ -418,7 +493,7 @@ public class XStream {
         addImmutableType(Short.class);
 
         // additional types
-        addImmutableType(ClassMapper.Null.class);
+        addImmutableType(Mapper.Null.class);
         addImmutableType(BigDecimal.class);
         addImmutableType(BigInteger.class);
         addImmutableType(String.class);
@@ -475,7 +550,7 @@ public class XStream {
      *                   shall create one lazily as needed.
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer, DataHolder dataHolder) {
-        marshallingStrategy.marshal(writer, obj, converterLookup, classMapper, dataHolder);
+        marshallingStrategy.marshal(writer, obj, converterLookup, mapper, dataHolder);
     }
 
     /**
@@ -551,7 +626,7 @@ public class XStream {
      *                   shall create one lazily as needed.
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root, DataHolder dataHolder) {
-        return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, classMapper);
+        return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
     }
 
     /**
@@ -596,13 +671,6 @@ public class XStream {
         immutableTypesMapper.addImmutableType(type);
     }
 
-    /**
-     * @deprecated As of 1.1.1 you should register a converter with the appropriate priority.
-     */
-    public void changeDefaultConverter(Converter defaultConverter) {
-        registerConverter(defaultConverter, PRIORITY_VERY_LOW);
-    }
-
     public void registerConverter(Converter converter) {
         registerConverter(converter, PRIORITY_NORMAL);
     }
@@ -611,8 +679,22 @@ public class XStream {
         converterLookup.registerConverter(converter, priority);
     }
 
+    /**
+     * @throws ClassCastException if mapper is not really a deprecated {@link ClassMapper} instance
+     * @deprecated As of 1.2, use {@link #getMapper}
+     */
     public ClassMapper getClassMapper() {
-        return classMapper;
+        return (ClassMapper)mapper;
+    }
+
+    /**
+     * Retrieve the mapper. This is by default a chain of {@link MapperWrapper MapperWrappers}.
+     * 
+     * @return the mapper
+     * @since 1.2
+     */
+    public Mapper getMapper() {
+        return mapper;
     }
 
     public ConverterLookup getConverterLookup() {
@@ -642,13 +724,6 @@ public class XStream {
             default:
                 throw new IllegalArgumentException("Unknown mode : " + mode);
         }
-    }
-
-    /**
-     * @deprecated Use addImplicitCollection() instead.
-     */
-    public void addDefaultCollection(Class ownerType, String fieldName) {
-        addImplicitCollection(ownerType, fieldName);
     }
 
     /**

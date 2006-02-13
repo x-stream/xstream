@@ -1,9 +1,5 @@
 package com.thoughtworks.xstream.testutil;
 
-import junit.extensions.TestDecorator;
-import junit.framework.Test;
-import junit.framework.TestResult;
-
 import java.util.TimeZone;
 
 public class TimeZoneChanger {

@@ -5,8 +5,8 @@ import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
 
 import java.io.StringReader;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class XppDomReaderTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {

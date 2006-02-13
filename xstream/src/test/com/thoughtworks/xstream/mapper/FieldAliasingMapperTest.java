@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.acceptance.objects.Software;
-import com.thoughtworks.xstream.XStream;
 
 public class FieldAliasingMapperTest extends AbstractAcceptanceTest {
 

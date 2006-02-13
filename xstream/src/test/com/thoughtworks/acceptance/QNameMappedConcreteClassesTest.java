@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import javax.xml.namespace.QName;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;

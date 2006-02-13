@@ -10,6 +10,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.ClassStack;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.Iterator;
 
@@ -18,23 +19,31 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     private Object root;
     protected HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
-    private ClassMapper classMapper;
+    private Mapper mapper;
     private ClassStack types = new ClassStack(16);
     private DataHolder dataHolder;
     private final PrioritizedList validationList = new PrioritizedList();
 
     public TreeUnmarshaller(Object root, HierarchicalStreamReader reader,
-                            ConverterLookup converterLookup, ClassMapper classMapper) {
+                            ConverterLookup converterLookup, Mapper mapper) {
         this.root = root;
         this.reader = reader;
         this.converterLookup = converterLookup;
-        this.classMapper = classMapper;
+        this.mapper = mapper;
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #TreeUnmarshaller(Object, HierarchicalStreamReader, ConverterLookup, Mapper)}
+     */
+    public TreeUnmarshaller(Object root, HierarchicalStreamReader reader,
+                            ConverterLookup converterLookup, ClassMapper classMapper) {
+        this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
     public Object convertAnother(Object parent, Class type) {
         try {
             Converter converter = converterLookup.lookupConverterForType(type);
-            types.push(classMapper.defaultImplementationOf(type));
+            types.push(mapper.defaultImplementationOf(type));
             Object result = converter.unmarshal(reader, this);
             types.popSilently();
             return result;
@@ -89,12 +98,12 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
     public Object start(DataHolder dataHolder) {
         this.dataHolder = dataHolder;
-        String classAttribute = reader.getAttribute(classMapper.attributeForImplementationClass());
+        String classAttribute = reader.getAttribute(mapper.attributeForImplementationClass());
         Class type;
         if (classAttribute == null) {
-            type = classMapper.realClass(reader.getNodeName());
+            type = mapper.realClass(reader.getNodeName());
         } else {
-            type = classMapper.realClass(classAttribute);
+            type = mapper.realClass(classAttribute);
         }
         Object result = convertAnother(root, type);
         Iterator validations = validationList.iterator();

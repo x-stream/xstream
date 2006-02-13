@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.converters.collections;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
@@ -25,13 +24,6 @@ import java.util.Map;
  * @author Joe Walnes
  */
 public class MapConverter extends AbstractCollectionConverter {
-
-    /**
-     * @deprecated As of 1.1.1, use other constructor.
-     */
-    public MapConverter(ClassMapper classMapper, String classAttributeIdentifier) {
-        super(classMapper, classAttributeIdentifier);
-    }
 
     public MapConverter(Mapper mapper) {
         super(mapper);

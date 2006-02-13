@@ -1,7 +1,6 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
-import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
 
 public class DynamicProxyTest extends AbstractAcceptanceTest {
 

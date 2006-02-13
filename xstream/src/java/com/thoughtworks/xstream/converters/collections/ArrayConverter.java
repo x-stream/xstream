@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.converters.collections;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -19,13 +18,6 @@ import java.util.List;
  * @author Joe Walnes
  */
 public class ArrayConverter extends AbstractCollectionConverter {
-
-    /**
-     * @deprecated As of 1.1.1, use other constructor.
-     */
-    public ArrayConverter(ClassMapper classMapper, String classAttributeIdentifier) {
-        super(classMapper, classAttributeIdentifier);
-    }
 
     public ArrayConverter(Mapper mapper) {
         super(mapper);

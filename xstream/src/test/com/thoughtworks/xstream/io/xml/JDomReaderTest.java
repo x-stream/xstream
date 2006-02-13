@@ -2,10 +2,10 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-import java.io.StringReader;
-
-import org.jdom.input.SAXBuilder;
 import org.jdom.Document;
+import org.jdom.input.SAXBuilder;
+
+import java.io.StringReader;
 
 public class JDomReaderTest extends AbstractXMLReaderTest {
 

@@ -1,8 +1,5 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import junit.framework.TestCase;
-
 import java.io.StringWriter;
 import java.io.Writer;
 

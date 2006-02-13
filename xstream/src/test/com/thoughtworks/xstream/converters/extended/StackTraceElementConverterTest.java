@@ -1,11 +1,6 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import junit.framework.TestCase;
-import com.thoughtworks.xstream.converters.extended.StackTraceElementConverter;
 
 /**
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>

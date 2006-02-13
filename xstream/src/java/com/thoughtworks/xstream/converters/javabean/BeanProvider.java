@@ -1,11 +1,11 @@
 package com.thoughtworks.xstream.converters.javabean;
 
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
-
-import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java
@@ -124,7 +124,6 @@ public class BeanProvider {
     /**
      * Returns the default constructor, or null if none is found
      * @param type
-     * @return
      */
     protected Constructor getDefaultConstrutor(Class type) {
         Constructor[] constructors = type.getConstructors();

@@ -1,9 +1,9 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.mapper.Mapper;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 public class CustomMapperTest extends AbstractAcceptanceTest {
 
@@ -11,7 +11,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
      * A sample mapper strips the underscore prefix of fieldnames in the XML
      */
     private static class FieldPrefixStrippingMapper extends MapperWrapper {
-        public FieldPrefixStrippingMapper(ClassMapper wrapped) {
+        public FieldPrefixStrippingMapper(Mapper wrapped) {
             super(wrapped);
         }
 
@@ -77,7 +77,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
     }
 
     private static class PackageStrippingMapper extends MapperWrapper {
-        public PackageStrippingMapper(ClassMapper wrapped) {
+        public PackageStrippingMapper(Mapper wrapped) {
             super(wrapped);
         }
 

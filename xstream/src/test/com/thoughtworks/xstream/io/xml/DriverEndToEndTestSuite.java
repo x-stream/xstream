@@ -1,12 +1,13 @@
 package com.thoughtworks.xstream.io.xml;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.framework.TestCase;
-import junit.framework.Assert;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+
+import junit.framework.Assert;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class DriverEndToEndTestSuite extends TestSuite {
 

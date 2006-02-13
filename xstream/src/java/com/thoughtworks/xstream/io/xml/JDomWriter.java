@@ -1,13 +1,13 @@
 package com.thoughtworks.xstream.io.xml;
 
-import java.util.List;
-import java.util.LinkedList;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
-import org.jdom.DefaultJDOMFactory;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Laurent Bihanic

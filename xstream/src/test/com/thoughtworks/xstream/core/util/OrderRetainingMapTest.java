@@ -2,8 +2,8 @@ package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
 
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 public class OrderRetainingMapTest extends TestCase {
     private Map map;

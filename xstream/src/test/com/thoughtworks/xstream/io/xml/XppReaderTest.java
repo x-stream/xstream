@@ -1,8 +1,6 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
 
 import java.io.StringReader;
 

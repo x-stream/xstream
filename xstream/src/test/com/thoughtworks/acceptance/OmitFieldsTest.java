@@ -1,7 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 public class OmitFieldsTest extends AbstractAcceptanceTest {
@@ -79,7 +79,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
                 "</thing>";
 
         class OmitFieldsWithMyPrefixMapper extends MapperWrapper {
-            public OmitFieldsWithMyPrefixMapper(ClassMapper wrapped) {
+            public OmitFieldsWithMyPrefixMapper(Mapper wrapped) {
                 super(wrapped);
             }
 

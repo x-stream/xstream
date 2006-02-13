@@ -1,11 +1,13 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.XStream;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.font.TextAttribute;
 import java.util.Map;
 

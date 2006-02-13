@@ -1,6 +1,6 @@
 package com.thoughtworks.acceptance;
 
-import javax.swing.*;
+import javax.swing.JTable;
 
 public class JTableTest extends AbstractAcceptanceTest {
 

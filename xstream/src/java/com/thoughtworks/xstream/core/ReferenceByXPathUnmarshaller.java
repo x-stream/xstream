@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.path.Path;
 import com.thoughtworks.xstream.io.path.PathTracker;
 import com.thoughtworks.xstream.io.path.PathTrackingReader;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +19,17 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
     private PathTracker pathTracker = new PathTracker();
 
     public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                        ConverterLookup converterLookup, ClassMapper classMapper) {
-        super(root, reader, converterLookup, classMapper);
+                                        ConverterLookup converterLookup, Mapper mapper) {
+        super(root, reader, converterLookup, mapper);
         this.reader = new PathTrackingReader(reader, pathTracker);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #ReferenceByXPathUnmarshaller(Object, HierarchicalStreamReader, ConverterLookup, Mapper)}
+     */
+    public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
+                                        ConverterLookup converterLookup, ClassMapper classMapper) {
+        this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
     public Object convertAnother(Object parent, Class type) {

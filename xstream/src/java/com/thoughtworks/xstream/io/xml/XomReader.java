@@ -1,6 +1,9 @@
 package com.thoughtworks.xstream.io.xml;
 
-import nu.xom.*;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Text;
 
 public class XomReader extends AbstractDocumentReader {
 

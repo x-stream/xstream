@@ -4,11 +4,12 @@ import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.Software;
+
 import junit.framework.TestCase;
 
 public class ImplicitCollectionMapperTest extends TestCase {
 
-    private ImplicitCollectionMapper implicitCollections = new ImplicitCollectionMapper(new DefaultMapper(null));
+    private ImplicitCollectionMapper implicitCollections = new ImplicitCollectionMapper((Mapper)new DefaultMapper(null));
 
     public void testAllowsFieldsToBeMarkedAsImplicitCollectionsToBeAdded() {
         implicitCollections.add(SampleLists.class, "good", Object.class);

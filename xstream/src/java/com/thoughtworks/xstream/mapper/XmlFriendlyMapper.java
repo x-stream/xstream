@@ -13,8 +13,15 @@ import com.thoughtworks.xstream.alias.ClassMapper;
  */
 public class XmlFriendlyMapper extends MapperWrapper {
 
-    public XmlFriendlyMapper(ClassMapper wrapped) {
+    public XmlFriendlyMapper(Mapper wrapped) {
         super(wrapped);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #XmlFriendlyMapper(Mapper)}
+     */
+    public XmlFriendlyMapper(ClassMapper wrapped) {
+        this((Mapper)wrapped);
     }
 
     public String serializedClass(Class type) {

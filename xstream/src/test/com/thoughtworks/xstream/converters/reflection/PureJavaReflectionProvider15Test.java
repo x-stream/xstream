@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import java.io.Serializable;
 
 public class PureJavaReflectionProvider15Test extends AbstractReflectionProviderTest {
 

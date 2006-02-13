@@ -69,7 +69,7 @@ public class DefaultCollectionTest extends AbstractAcceptanceTest {
                 "  </animal>\n" +
                 "</farm>";
 
-        xstream.addDefaultCollection(Farm.class, "animals");
+        xstream.addImplicitCollection(Farm.class, "animals");
         assertBothWays(farm, expected);
     }
 }

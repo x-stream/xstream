@@ -1,9 +1,8 @@
 package com.thoughtworks.xstream.io.xml;
 
+import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.Parent;
-import org.jdom.Attribute;
 
 /**
  * @author Laurent Bihanic

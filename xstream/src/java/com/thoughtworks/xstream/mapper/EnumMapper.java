@@ -19,8 +19,15 @@ public class EnumMapper extends MapperWrapper {
 
     private static final Class enumSetClass = active ? jvm.loadClass("java.util.EnumSet") : null;
 
-    public EnumMapper(ClassMapper wrapped) {
+    public EnumMapper(Mapper wrapped) {
         super(wrapped);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #EnumMapper(Mapper)}
+     */
+    public EnumMapper(ClassMapper wrapped) {
+        this((Mapper)wrapped);
     }
 
     public String serializedClass(Class type) {

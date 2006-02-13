@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.converters.collections;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
@@ -8,7 +7,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * Converts most common Collections (Lists and Sets) to XML, specifying a nested
@@ -20,13 +24,6 @@ import java.util.*;
  * @author Joe Walnes
  */
 public class CollectionConverter extends AbstractCollectionConverter {
-
-    /**
-     * @deprecated As of 1.1.1, use other constructor.
-     */
-    public CollectionConverter(ClassMapper classMapper, String classAttributeIdentifier) {
-        super(classMapper, classAttributeIdentifier);
-    }
 
     public CollectionConverter(Mapper mapper) {
         super(mapper);

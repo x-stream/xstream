@@ -7,10 +7,8 @@ import com.thoughtworks.xstream.XStream;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+
 import java.io.StringWriter;
-import java.io.Writer;
 
 /*
  * @author James Strachan
@@ -76,7 +74,7 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
 
     }
 
-    protected void marshalWithBothRepairingModes(QNameMap qnameMap, String expected) throws XMLStreamException {
+    protected void marshalWithBothRepairingModes(QNameMap qnameMap, String expected) {
         String text = marshall(qnameMap, true);
         assertEquals("Generated XML with repairing mode: true", expected, text);
 
@@ -84,7 +82,7 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
         assertEquals("Generated XML with repairing mode: false", expected, text);
     }
 
-    protected String marshall(QNameMap qnameMap, boolean repairNamespaceMode) throws XMLStreamException {
+    protected String marshall(QNameMap qnameMap, boolean repairNamespaceMode) {
         StaxDriver staxDriver = new StaxDriver(qnameMap, repairNamespaceMode);
         XStream xstream = new XStream(staxDriver);
         return xstream.toXML(testInput);

@@ -1,7 +1,5 @@
 package com.thoughtworks.xstream.io;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-
 import java.util.Iterator;
 
 /**

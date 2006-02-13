@@ -1,9 +1,9 @@
 package com.thoughtworks.xstream.io;
 
-import java.io.Reader;
-import java.io.Writer;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 
 /**
  * Provides implementation of XML parsers and writers to XStream.

@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+
 import nu.xom.Builder;
 import nu.xom.Document;
 

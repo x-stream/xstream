@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,14 @@ public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
     private Map values = new HashMap();
     private FastStack parentIdStack = new FastStack(16);
 
+    public ReferenceByIdUnmarshaller(Object root, HierarchicalStreamReader reader,
+                                     ConverterLookup converterLookup, Mapper mapper) {
+        super(root, reader, converterLookup, mapper);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #ReferenceByIdUnmarshaller(Object, HierarchicalStreamReader, ConverterLookup, Mapper)}
+     */
     public ReferenceByIdUnmarshaller(Object root, HierarchicalStreamReader reader,
                                      ConverterLookup converterLookup, ClassMapper classMapper) {
         super(root, reader, converterLookup, classMapper);

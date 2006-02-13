@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Can convert any bean with a public default constructor. BeanInfo are not
@@ -22,16 +23,23 @@ public class JavaBeanConverter implements Converter {
      *  - ignore default values
      *  - use BeanInfo
      */
-    private ClassMapper classMapper;
+    private Mapper classMapper;
 
     private String classAttributeIdentifier;
 
     private BeanProvider beanProvider;
 
-    public JavaBeanConverter(ClassMapper classMapper, String classAttributeIdentifier) {
-        this.classMapper = classMapper;
+    public JavaBeanConverter(Mapper mapper, String classAttributeIdentifier) {
+        this.classMapper = mapper;
         this.classAttributeIdentifier = classAttributeIdentifier;
         this.beanProvider = new BeanProvider();
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #JavaBeanConverter(Mapper, String)}
+     */
+    public JavaBeanConverter(ClassMapper classMapper, String classAttributeIdentifier) {
+        this((Mapper)classMapper, classAttributeIdentifier);
     }
 
     /**

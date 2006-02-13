@@ -2,8 +2,8 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import junit.framework.TestCase;
 
-import java.util.Iterator;
 import java.lang.reflect.Field;
+import java.util.Iterator;
 
 public class FieldDictionaryTest extends TestCase {
 

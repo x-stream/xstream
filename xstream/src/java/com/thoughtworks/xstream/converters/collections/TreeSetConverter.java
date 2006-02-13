@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.converters.collections;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -18,13 +17,6 @@ import java.util.TreeSet;
  * @author Joe Walnes
  */
 public class TreeSetConverter extends CollectionConverter {
-
-    /**
-     * @deprecated As of 1.1.1, use other constructor.
-     */
-    public TreeSetConverter(ClassMapper classMapper, String classAttributeIdentifier) {
-        super(classMapper, classAttributeIdentifier);
-    }
 
     public TreeSetConverter(Mapper mapper) {
         super(mapper);

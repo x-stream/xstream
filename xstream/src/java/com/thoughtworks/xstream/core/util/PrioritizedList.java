@@ -1,7 +1,5 @@
 package com.thoughtworks.xstream.core.util;
 
-import com.thoughtworks.xstream.converters.Converter;
-
 import java.util.Iterator;
 
 /**

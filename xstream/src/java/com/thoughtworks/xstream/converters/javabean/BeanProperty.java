@@ -47,8 +47,6 @@ public class BeanProperty {
 
     /**
      * Returns the property type
-     * 
-     * @return
      */
     public Class getType() {
         return type;

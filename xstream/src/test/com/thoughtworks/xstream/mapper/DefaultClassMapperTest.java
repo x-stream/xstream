@@ -1,64 +1,31 @@
-package com.thoughtworks.xstream.core;
+package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
-import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
+
 import junit.framework.TestCase;
 
 public class DefaultClassMapperTest extends TestCase {
-    private ClassMapper mapper;
+    private Mapper mapper;
 
     protected void setUp() throws Exception {
         super.setUp();
-        mapper = new DefaultClassMapper();
+        mapper = new ArrayMapper((Mapper)new DefaultMapper(new CompositeClassLoader()));
     }
 
     public void testAppendsArraySuffixOnArrays() {
         Class arrayCls = new String[0].getClass();
         assertEquals("java.lang.String-array", mapper.serializedClass(arrayCls));
-
-        mapper.alias("str", String.class, String.class);
-        assertEquals("str-array", mapper.serializedClass(arrayCls));
-
-        mapper.alias("int", int.class, int.class);
-        assertEquals("int-array", mapper.serializedClass(new int[0].getClass()));
     }
 
     public void testAppendsMultipleArraySuffixesOnMultidimensionalArrays() {
         Class arrayCls = new String[0][0][0].getClass();
         assertEquals("java.lang.String-array-array-array", mapper.serializedClass(arrayCls));
-
-        mapper.alias("str", String.class, String.class);
-        assertEquals("str-array-array-array", mapper.serializedClass(arrayCls));
-
-        mapper.alias("int", int.class, int.class);
-        assertEquals("int-array-array-array", mapper.serializedClass(new int[0][0][0].getClass()));
-    }
-
-    public void testPrefixesIllegalXmlElementNamesWithValue() {
-        mapper = new XmlFriendlyMapper(new com.thoughtworks.xstream.mapper.DefaultMapper(new CompositeClassLoader()));
-        Class proxyCls = SampleDynamicProxy.newInstance().getClass();
-        String aliasedName = mapper.serializedClass(proxyCls);
-        assertTrue("Does not start with 'default-Proxy' : <" + aliasedName + ">",
-                aliasedName.startsWith("default-Proxy"));
-        assertEquals(proxyCls, mapper.realClass(aliasedName));
     }
 
     public void testCreatesInstancesOfArrays() {
         Class arrayType = mapper.realClass("java.lang.String-array");
         assertTrue(arrayType.isArray());
         assertEquals(String.class, arrayType.getComponentType());
-
-        mapper.alias("str", String.class, String.class);
-        arrayType = mapper.realClass("str-array");
-        assertTrue(arrayType.isArray());
-        assertEquals(String.class, arrayType.getComponentType());
-
-        mapper.alias("int", int.class, int.class);
-        arrayType = mapper.realClass("int-array");
-        assertTrue(arrayType.isArray());
-        assertEquals(int.class, arrayType.getComponentType());
     }
 
     public void testSupportsAllPrimitiveArrayTypes() {

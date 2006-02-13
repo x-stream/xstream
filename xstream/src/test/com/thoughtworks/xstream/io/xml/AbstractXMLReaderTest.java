@@ -1,17 +1,12 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+
 import junit.framework.TestCase;
 
-import java.util.Iterator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
-import java.io.StringReader;
-import java.io.IOException;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.mxp1.MXParser;
 
 public abstract class AbstractXMLReaderTest extends TestCase {
 

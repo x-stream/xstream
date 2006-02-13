@@ -180,10 +180,6 @@ public abstract class AbstractPullReader implements HierarchicalStreamReader {
         return (String) elementStack.peek();
     }
 
-    public Object peekUnderlyingNode() {
-        throw new UnsupportedOperationException();
-    }
-
     public HierarchicalStreamReader underlyingReader() {
         return this;
     }

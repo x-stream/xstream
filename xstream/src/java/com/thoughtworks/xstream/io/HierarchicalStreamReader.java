@@ -84,11 +84,4 @@ public interface HierarchicalStreamReader {
      */
     HierarchicalStreamReader underlyingReader();
 
-    /**
-     * @deprecated This method should not be used and is only provided for backwards compatability.
-     *             As of XStream 1.1.1, you can use the {@link #underlyingReader()} method to get the underlying
-     *             reader implementation and call implementation specific methods on that.
-     */
-    Object peekUnderlyingNode();
-
 }

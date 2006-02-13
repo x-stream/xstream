@@ -8,21 +8,29 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.path.Path;
 import com.thoughtworks.xstream.io.path.PathTracker;
 import com.thoughtworks.xstream.io.path.PathTrackingWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReferenceByXPathMarshaller extends TreeMarshaller {
 
     private PathTracker pathTracker = new PathTracker();
     private ObjectIdDictionary references = new ObjectIdDictionary();
 
-    public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, ClassMapper classMapper) {
-        super(writer, converterLookup, classMapper);
+    public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, Mapper mapper) {
+        super(writer, converterLookup, mapper);
         this.writer = new PathTrackingWriter(writer, pathTracker);
+    }
+
+    /**
+     * @deprecated As of 1.2, use {@link #ReferenceByXPathMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper)}
+     */
+    public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, ClassMapper classMapper) {
+        this(writer, converterLookup, (Mapper)classMapper);
     }
 
     public void convertAnother(Object item) {
         Converter converter = converterLookup.lookupConverterForType(item.getClass());
 
-        if (classMapper.isImmutableValueType(item.getClass())) {
+        if (getMapper().isImmutableValueType(item.getClass())) {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {

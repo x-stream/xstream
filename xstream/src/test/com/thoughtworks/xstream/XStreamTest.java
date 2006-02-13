@@ -1,15 +1,27 @@
 package com.thoughtworks.xstream;
 
 import com.thoughtworks.acceptance.StandardObject;
-import com.thoughtworks.acceptance.someobjects.*;
+import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
+import com.thoughtworks.acceptance.someobjects.Handler;
+import com.thoughtworks.acceptance.someobjects.HandlerManager;
+import com.thoughtworks.acceptance.someobjects.Protocol;
+import com.thoughtworks.acceptance.someobjects.U;
+import com.thoughtworks.acceptance.someobjects.WithList;
+import com.thoughtworks.acceptance.someobjects.X;
+import com.thoughtworks.acceptance.someobjects.Y;
+import com.thoughtworks.acceptance.someobjects.Z;
+import com.thoughtworks.acceptance.someobjects.ZConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.AbstractDocumentReader;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
+
 import junit.framework.TestCase;
+
 import org.dom4j.Element;
 
 import java.io.StringReader;
@@ -220,7 +232,8 @@ public class XStreamTest extends TestCase {
 
         public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 
-            Element element = (Element) reader.peekUnderlyingNode();
+            AbstractDocumentReader documentReader = (AbstractDocumentReader)reader.underlyingReader();
+            Element element = (Element) documentReader.getCurrent();
 
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
@@ -281,20 +294,6 @@ public class XStreamTest extends TestCase {
         Protocol p = h.getProtocol();
 
         assertEquals("foo", p.getId());
-    }
-    
-    public void testUnmarshalsObjectFromXmlWithCustomDefaultConverterXStream1_1_Style() {
-    		
-        xstream.changeDefaultConverter(new ZConverter());
-        
-        String xml =
-                "<z>" +
-                "  <any-old-suff/>" +
-                "</z>";
-        
-        Z z = (Z) xstream.fromXML(xml);
-
-        assertEquals("z", z.field);
     }
 
     public void testUnmarshalsObjectFromXmlWithCustomDefaultConverterXStream_1_1_1_Style() {

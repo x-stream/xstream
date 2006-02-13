@@ -7,7 +7,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import javax.swing.plaf.FontUIResource;
-import java.awt.*;
+
+import java.awt.Font;
 import java.util.Map;
 
 public class FontConverter implements Converter {

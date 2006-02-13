@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.io.path;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
+
 import junit.framework.TestCase;
 
 import java.io.StringWriter;
