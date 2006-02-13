@@ -9,7 +9,7 @@ import java.util.Date;
  * http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=26780
  * 
  * @author J&ouml;rg Schaible
- * @since 1.2
+ * @since 1.1.3
  */
 public class ISO8601SqlTimestampConverter extends ISO8601DateConverter {
 

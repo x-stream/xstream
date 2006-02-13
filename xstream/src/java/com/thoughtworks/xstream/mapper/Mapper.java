@@ -54,7 +54,7 @@ public interface Mapper {
     /**
      * Determine whether a specific member should be serialized.
      *
-     * @since 1.2
+     * @since 1.1.3
      */
     boolean shouldSerializeMember(Class definedIn, String fieldName);
 

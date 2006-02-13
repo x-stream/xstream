@@ -848,7 +848,7 @@ public class XStream {
     /**
      * Prevents a field from being serialized.
      *
-     * @since 1.2
+     * @since 1.1.3
      */
     public void omitField(Class type, String fieldName) {
         fieldAliasingMapper.omitField(type, fieldName);

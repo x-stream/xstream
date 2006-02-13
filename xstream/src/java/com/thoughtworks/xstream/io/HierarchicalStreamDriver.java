@@ -14,11 +14,11 @@ import java.io.OutputStream;
 public interface HierarchicalStreamDriver {
 
     HierarchicalStreamReader createReader(Reader in);
-    /** @since 1.2 */
+    /** @since 1.1.3 */
     HierarchicalStreamReader createReader(InputStream in);
 
     HierarchicalStreamWriter createWriter(Writer out);
-    /** @since 1.2 */
+    /** @since 1.1.3 */
     HierarchicalStreamWriter createWriter(OutputStream out);
 
 }

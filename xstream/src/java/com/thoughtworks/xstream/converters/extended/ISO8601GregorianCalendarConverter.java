@@ -20,6 +20,7 @@ import java.util.TimeZone;
  * 
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
+ * @since 1.1.3
  */
 public class ISO8601GregorianCalendarConverter extends AbstractBasicConverter {
     private static final DateTimeFormatter[] formattersUTC = new DateTimeFormatter[]{

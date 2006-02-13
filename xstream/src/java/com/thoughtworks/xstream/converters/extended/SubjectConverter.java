@@ -20,6 +20,7 @@ import java.util.Set;
  * overload the appropriate methods and register it in the {@link com.thoughtworks.xstream.XStream}.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.1.3
  */
 public class SubjectConverter extends AbstractCollectionConverter {
 
