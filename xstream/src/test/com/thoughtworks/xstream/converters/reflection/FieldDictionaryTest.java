@@ -18,6 +18,8 @@ public class FieldDictionaryTest extends TestCase {
         private String a;
         private String c;
         private String b;
+        private transient String e;
+        private static String d;
     }
 
     public void testListsFieldsInClassInDefinitionOrder() {
@@ -25,6 +27,8 @@ public class FieldDictionaryTest extends TestCase {
         assertEquals("a", ((Field)fields.next()).getName());
         assertEquals("c", ((Field)fields.next()).getName());
         assertEquals("b", ((Field)fields.next()).getName());
+        assertEquals("e", ((Field)fields.next()).getName());
+        assertEquals("d", ((Field)fields.next()).getName());
         assertFalse("No more fields should be present", fields.hasNext());
     }
 
@@ -38,6 +42,8 @@ public class FieldDictionaryTest extends TestCase {
         assertEquals("a", ((Field)fields.next()).getName());
         assertEquals("c", ((Field)fields.next()).getName());
         assertEquals("b", ((Field)fields.next()).getName());
+        assertEquals("e", ((Field)fields.next()).getName());
+        assertEquals("d", ((Field)fields.next()).getName());
         assertFalse("No more fields should be present", fields.hasNext());
     }
 
