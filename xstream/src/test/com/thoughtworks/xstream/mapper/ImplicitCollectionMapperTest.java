@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 public class ImplicitCollectionMapperTest extends TestCase {
 
-    private ImplicitCollectionMapper implicitCollections = new ImplicitCollectionMapper((Mapper)new DefaultMapper(null));
+    private ImplicitCollectionMapper implicitCollections = new ImplicitCollectionMapper(new DefaultMapper(null));
 
     public void testAllowsFieldsToBeMarkedAsImplicitCollectionsToBeAdded() {
         implicitCollections.add(SampleLists.class, "good", Object.class);

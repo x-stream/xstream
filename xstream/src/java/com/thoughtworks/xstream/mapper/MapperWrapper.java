@@ -2,7 +2,7 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-public abstract class MapperWrapper implements Mapper, ClassMapper {
+public abstract class MapperWrapper implements Mapper {
 
     private final Mapper wrapped;
 

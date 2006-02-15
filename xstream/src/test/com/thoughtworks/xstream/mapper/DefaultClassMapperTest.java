@@ -9,7 +9,7 @@ public class DefaultClassMapperTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        mapper = new ArrayMapper((Mapper)new DefaultMapper(new CompositeClassLoader()));
+        mapper = new ArrayMapper(new DefaultMapper(new CompositeClassLoader()));
     }
 
     public void testAppendsArraySuffixOnArrays() {

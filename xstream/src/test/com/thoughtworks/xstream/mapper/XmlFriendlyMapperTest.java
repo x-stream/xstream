@@ -14,7 +14,7 @@ public class XmlFriendlyMapperTest extends TestCase {
     private Mapper mapper;
 
     public void testPrefixesIllegalXmlElementNamesWithValue() {
-        mapper = new XmlFriendlyMapper((Mapper)new DefaultMapper(new CompositeClassLoader()));
+        mapper = new XmlFriendlyMapper(new DefaultMapper(new CompositeClassLoader()));
         Class proxyCls = SampleDynamicProxy.newInstance().getClass();
         String aliasedName = mapper.serializedClass(proxyCls);
         assertTrue("Does not start with 'default-Proxy' : <" + aliasedName + ">",
