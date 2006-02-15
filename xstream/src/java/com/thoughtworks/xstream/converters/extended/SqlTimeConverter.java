@@ -1,6 +1,6 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 import java.sql.Time;
 
@@ -9,13 +9,13 @@ import java.sql.Time;
  *
  * @author Jose A. Illescas
  */
-public class SqlTimeConverter extends AbstractBasicConverter {
+public class SqlTimeConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(Time.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return Time.valueOf(str);
     }
 

@@ -6,13 +6,13 @@ package com.thoughtworks.xstream.converters.basic;
  *
  * @author Joe Walnes
  */
-public class DoubleConverter extends AbstractBasicConverter {
+public class DoubleConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(double.class) || type.equals(Double.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return Double.valueOf(str);
     }
 

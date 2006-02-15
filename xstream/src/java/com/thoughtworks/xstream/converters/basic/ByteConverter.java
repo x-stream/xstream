@@ -6,13 +6,13 @@ package com.thoughtworks.xstream.converters.basic;
  *
  * @author Joe Walnes
  */
-public class ByteConverter extends AbstractBasicConverter {
+public class ByteConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(byte.class) || type.equals(Byte.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return new Byte((byte) Integer.parseInt(str));
     }
 

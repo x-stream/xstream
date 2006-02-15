@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 /**
  * Converts a java.lang.Class to XML.
@@ -10,7 +10,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
  * @author Joe Walnes
  * @author Matthew Sandoz
  */
-public class JavaClassConverter extends AbstractBasicConverter {
+public class JavaClassConverter extends AbstractSingleValueConverter {
 
     private ClassLoader classLoader;
 
@@ -29,11 +29,11 @@ public class JavaClassConverter extends AbstractBasicConverter {
         return Class.class.equals(clazz); // :)
     }
 
-    protected String toString(Object obj) {
+    public String toString(Object obj) {
         return ((Class) obj).getName();
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         try {
             return
                     str.equals("void") ? void.class :

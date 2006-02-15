@@ -17,9 +17,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * {@link com.thoughtworks.xstream.converters.ConverterLookup} implementation is
  * responsible for looking up the appropriate converter.</p>
  * <p/>
- * <p>{@link com.thoughtworks.xstream.converters.basic.AbstractBasicConverter}
- * provides a starting point for objects that can store all information
- * in a single String.</p>
+ * <p>Converters for object that can store all information in a single value
+ * should implement {@link com.thoughtworks.xstream.converters.SingleValueConverter}.
+ * <p>{@link com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter}
+ * provides a starting point.</p>
  * <p/>
  * <p>{@link com.thoughtworks.xstream.converters.collections.AbstractCollectionConverter}
  * provides a starting point for objects that hold a collection of other objects
@@ -28,16 +29,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author Joe Walnes
  * @see com.thoughtworks.xstream.XStream
  * @see com.thoughtworks.xstream.converters.ConverterLookup
- * @see com.thoughtworks.xstream.converters.basic.AbstractBasicConverter
+ * @see com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter
  * @see com.thoughtworks.xstream.converters.collections.AbstractCollectionConverter
  */
-public interface Converter {
-
-    /**
-     * Called by XStream to determine whether to use this converter
-     * instance to marshall a particular type.
-     */
-    boolean canConvert(Class type);
+public interface Converter extends ConverterMatcher {
 
     /**
      * Convert an object to textual data.

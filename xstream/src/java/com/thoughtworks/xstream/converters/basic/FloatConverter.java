@@ -6,13 +6,13 @@ package com.thoughtworks.xstream.converters.basic;
  *
  * @author Joe Walnes
  */
-public class FloatConverter extends AbstractBasicConverter {
+public class FloatConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(float.class) || type.equals(Float.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return Float.valueOf(str);
     }
 

@@ -17,11 +17,11 @@ public class ISO8601DateConverter extends ISO8601GregorianCalendarConverter {
         return type.equals(Date.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return ((Calendar)super.fromString(str)).getTime();
     }
 
-    protected String toString(Object obj) {
+    public String toString(Object obj) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime((Date)obj);
         return super.toString(calendar);

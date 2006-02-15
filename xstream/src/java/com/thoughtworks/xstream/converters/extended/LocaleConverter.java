@@ -1,6 +1,6 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 import java.util.Locale;
 
@@ -10,13 +10,13 @@ import java.util.Locale;
  * @author Jose A. Illescas
  * @author Joe Walnes
  */
-public class LocaleConverter extends AbstractBasicConverter {
+public class LocaleConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(Locale.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         int[] underscorePositions = underscorePositions(str);
         String language, country, variant;
         if (underscorePositions[0] == -1) { // "language"

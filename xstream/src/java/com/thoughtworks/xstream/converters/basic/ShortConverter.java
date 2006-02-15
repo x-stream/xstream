@@ -6,13 +6,13 @@ package com.thoughtworks.xstream.converters.basic;
  *
  * @author Joe Walnes
  */
-public class ShortConverter extends AbstractBasicConverter {
+public class ShortConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(short.class) || type.equals(Short.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return Short.valueOf(str);
     }
 

@@ -9,13 +9,13 @@ package com.thoughtworks.xstream.converters.basic;
  * @author Joe Walnes
  * @see String#intern()
  */
-public class StringConverter extends AbstractBasicConverter {
+public class StringConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(String.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return str.intern();
     }
 

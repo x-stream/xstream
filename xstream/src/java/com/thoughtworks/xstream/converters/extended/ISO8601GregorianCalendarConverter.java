@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -22,7 +22,7 @@ import java.util.TimeZone;
  * @author J&ouml;rg Schaible
  * @since 1.1.3
  */
-public class ISO8601GregorianCalendarConverter extends AbstractBasicConverter {
+public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConverter {
     private static final DateTimeFormatter[] formattersUTC = new DateTimeFormatter[]{
             ISODateTimeFormat.dateTime(), 
             ISODateTimeFormat.dateTimeNoMillis(),
@@ -71,7 +71,7 @@ public class ISO8601GregorianCalendarConverter extends AbstractBasicConverter {
         return type.equals(GregorianCalendar.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         for (int i = 0; i < formattersUTC.length; i++) {
             DateTimeFormatter formatter = formattersUTC[i];
             try {
@@ -98,7 +98,7 @@ public class ISO8601GregorianCalendarConverter extends AbstractBasicConverter {
         throw new ConversionException("Cannot parse date " + str);
     }
 
-    protected String toString(Object obj) {
+    public String toString(Object obj) {
         DateTime dt = new DateTime(obj);
         return dt.toString(formattersUTC[0]);
     }

@@ -1,8 +1,8 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
-
 import java.util.Currency;
+
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 /**
  * Converts a java.util.Currency to String. Despite the name of this class, it has nothing to do with converting
@@ -11,13 +11,13 @@ import java.util.Currency;
  * @author Jose A. Illescas 
  * @author Joe Walnes
  */
-public class CurrencyConverter extends AbstractBasicConverter {
+public class CurrencyConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(Currency.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return Currency.getInstance(str);
     }
 

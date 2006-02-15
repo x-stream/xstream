@@ -7,13 +7,13 @@ import java.math.BigInteger;
  *
  * @author Joe Walnes
  */
-public class BigIntegerConverter extends AbstractBasicConverter {
+public class BigIntegerConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(BigInteger.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return new BigInteger(str);
     }
 

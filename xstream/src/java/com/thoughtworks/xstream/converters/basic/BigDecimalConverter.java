@@ -8,13 +8,13 @@ import java.math.BigDecimal;
  *
  * @author Joe Walnes
  */
-public class BigDecimalConverter extends AbstractBasicConverter {
+public class BigDecimalConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(BigDecimal.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return new BigDecimal(str);
     }
 

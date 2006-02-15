@@ -1,10 +1,10 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 /**
  * Converter for StackTraceElement (the lines of a stack trace) - JDK 1.4+ only.
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
  * @author Joe Walnes
  */
-public class StackTraceElementConverter extends AbstractBasicConverter {
+public class StackTraceElementConverter extends AbstractSingleValueConverter {
 
     // Regular expression to parse a line of a stack trace. Returns 4 groups.
     //
@@ -28,7 +28,7 @@ public class StackTraceElementConverter extends AbstractBasicConverter {
         return StackTraceElement.class.equals(type);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         Matcher matcher = PATTERN.matcher(str);
         if (matcher.matches()) {
             String declaringClass = matcher.group(1);

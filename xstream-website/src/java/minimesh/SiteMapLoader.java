@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -39,7 +39,7 @@ public class SiteMapLoader {
         }
     }
 
-    private static class PageConverter extends AbstractBasicConverter {
+    private static class PageConverter extends AbstractSingleValueConverter {
 
         private final File baseDirectory;
 
@@ -51,11 +51,11 @@ public class SiteMapLoader {
             return type == Page.class;
         }
 
-        protected Object fromString(String text) {
+        public Object fromString(String text) {
             return new Page(new File(baseDirectory, text));
         }
 
-        protected String toString(Object o) {
+        public String toString(Object o) {
             Page page = (Page) o;
             return page.getFilename();
         }

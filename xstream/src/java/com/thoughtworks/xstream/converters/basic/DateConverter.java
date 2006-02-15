@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author Joe Walnes
  */
-public class DateConverter extends AbstractBasicConverter {
+public class DateConverter extends AbstractSingleValueConverter {
 
     private final ThreadSafeSimpleDateFormat defaultFormat;
     private final ThreadSafeSimpleDateFormat[] acceptableFormats;
@@ -36,7 +36,7 @@ public class DateConverter extends AbstractBasicConverter {
         return type.equals(Date.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         try {
             return defaultFormat.parse(str);
         } catch (ParseException e) {
@@ -52,7 +52,7 @@ public class DateConverter extends AbstractBasicConverter {
         }
     }
 
-    protected String toString(Object obj) {
+    public String toString(Object obj) {
         return defaultFormat.format((Date) obj);
     }
 

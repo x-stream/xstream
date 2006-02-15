@@ -6,13 +6,13 @@ package com.thoughtworks.xstream.converters.basic;
  *
  * @author Joe Walnes
  */
-public class IntConverter extends AbstractBasicConverter {
+public class IntConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(int.class) || type.equals(Integer.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         return Integer.decode(str);
     }
 

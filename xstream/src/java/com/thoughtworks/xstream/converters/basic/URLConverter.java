@@ -10,13 +10,13 @@ import java.net.URL;
  *
  * @author J. Matthew Pryor
  */
-public class URLConverter extends AbstractBasicConverter {
+public class URLConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(URL.class);
     }
 
-    protected Object fromString(String str) {
+    public Object fromString(String str) {
         try {
             return new URL(str);
         } catch (MalformedURLException e) {

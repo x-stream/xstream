@@ -10,7 +10,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.Annotations;
 import com.thoughtworks.xstream.annotations.XStreamContainedType;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 /**
  * 
@@ -124,16 +124,16 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         
     }
     
-    public static class PersonConverter extends AbstractBasicConverter{
+    public static class PersonConverter extends AbstractSingleValueConverter{
         public PersonConverter() {}
         
         @Override
-        protected String toString(Object obj) {
+        public String toString(Object obj) {
             return super.toString(((Person)obj).name);
         }
         
         @Override
-        protected Object fromString(String str) {
+        public Object fromString(String str) {
             return new Person(str);
         }
 
