@@ -134,8 +134,8 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public boolean fieldDefinedInClass(String fieldName, Class type) {
         try {
-            fieldDictionary.field(type, fieldName, null);
-            return true;
+            Field field = fieldDictionary.field(type, fieldName, null);
+            return fieldModifiersSupported(field);
         } catch (ObjectAccessException e) {
             return false;
         }

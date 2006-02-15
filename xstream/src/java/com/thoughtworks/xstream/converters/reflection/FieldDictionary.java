@@ -49,12 +49,10 @@ public class FieldDictionary {
                         for (int i = 0; i < fields.length; i++) {
                             Field field = fields[i];
                             field.setAccessible(true);
-                            if ((field.getModifiers() & Modifier.TRANSIENT) == 0) {
-                                if (!keyedByFieldName.containsKey(field.getName())) {
-                                    keyedByFieldName.put(field.getName(), field);
-                                }
-                                keyedByFieldKey.put(new FieldKey(field.getName(), field.getDeclaringClass(), i), field);
+                            if (!keyedByFieldName.containsKey(field.getName())) {
+                                keyedByFieldName.put(field.getName(), field);
                             }
+                            keyedByFieldKey.put(new FieldKey(field.getName(), field.getDeclaringClass(), i), field);
                         }
                         cls = cls.getSuperclass();
                     }
