@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,10 +49,12 @@ public class FieldDictionary {
                         for (int i = 0; i < fields.length; i++) {
                             Field field = fields[i];
                             field.setAccessible(true);
-                            if (!keyedByFieldName.containsKey(field.getName())) {
-                                keyedByFieldName.put(field.getName(), field);
+                            if ((field.getModifiers() & Modifier.TRANSIENT) == 0) {
+                                if (!keyedByFieldName.containsKey(field.getName())) {
+                                    keyedByFieldName.put(field.getName(), field);
+                                }
+                                keyedByFieldKey.put(new FieldKey(field.getName(), field.getDeclaringClass(), i), field);
                             }
-                            keyedByFieldKey.put(new FieldKey(field.getName(), field.getDeclaringClass(), i), field);
                         }
                         cls = cls.getSuperclass();
                     }

@@ -1,5 +1,6 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.io.xml.XppReader;
 
@@ -11,6 +12,7 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
         int anInt;
         String firstName;
         String lastName;
+        transient String aComment = "";
     }
 
     public void testCustomObjectWithBasicFields() {
@@ -127,6 +129,26 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
         expectedResult.brother = expectedPerson;
 
         assertEquals(expectedResult, alreadyInstantiated);
+    }
+
+    public void testCustomObjectWillNotUnmarshalTransientFields() {
+
+        xstream.alias("friend", SamplePerson.class);
+
+        String xml =
+                "<friend>\n" +
+                "  <anInt>3</anInt>\n" +
+                "  <firstName>Joe</firstName>\n" +
+                "  <lastName>Walnes</lastName>\n" +
+                "  <aComment>XStream Despot</aComment>\n" +
+                "</friend>";
+
+        try {
+            xstream.fromXML(xml);
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertTrue(e.getMessage().indexOf("aComment") >= 0);
+        }
     }
 
     public void testNullObjectsDoNotHaveFieldsWritten() {
