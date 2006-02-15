@@ -11,7 +11,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class QNameMappedConcreteClassesTest extends ConcreteClassesTest {
+public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
     // For WoodStox
     //public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
@@ -85,14 +85,14 @@ public class QNameMappedConcreteClassesTest extends ConcreteClassesTest {
     }
 
     public void testCustomInterfaceCanHaveMultipleImplementations() {
-        xstream.alias("intf", MyInterface.class);
-        xstream.alias("imp1", MyImp1.class);
-        xstream.alias("imp2", MyImp2.class);
-        xstream.alias("h", MyHolder.class);
+        xstream.alias("intf", ConcreteClassesTest.MyInterface.class);
+        xstream.alias("imp1", ConcreteClassesTest.MyImp1.class);
+        xstream.alias("imp2", ConcreteClassesTest.MyImp2.class);
+        xstream.alias("h", ConcreteClassesTest.MyHolder.class);
 
-        MyHolder in = new MyHolder();
-        in.field1 = new MyImp1();
-        in.field2 = new MyImp2();
+        ConcreteClassesTest.MyHolder in = new ConcreteClassesTest.MyHolder();
+        in.field1 = new ConcreteClassesTest.MyImp1();
+        in.field2 = new ConcreteClassesTest.MyImp2();
 
         String expected = "" +
                 "<?xml version='1.0' encoding='utf-8'?><h><field1 class=\"imp1\"><x>1</x></field1><field2 class=\"imp2\"><y>2</y></field2></h>";
@@ -100,10 +100,10 @@ public class QNameMappedConcreteClassesTest extends ConcreteClassesTest {
         String xml = xstream.toXML(in);
         assertEquals(expected, xml);
 
-        MyHolder out = (MyHolder) xstream.fromXML(xml);
-        assertEquals(MyImp1.class, out.field1.getClass());
-        assertEquals(MyImp2.class, out.field2.getClass());
-        assertEquals(2, ((MyImp2) out.field2).y);
+        ConcreteClassesTest.MyHolder out = (ConcreteClassesTest.MyHolder) xstream.fromXML(xml);
+        assertEquals(ConcreteClassesTest.MyImp1.class, out.field1.getClass());
+        assertEquals(ConcreteClassesTest.MyImp2.class, out.field2.getClass());
+        assertEquals(2, ((ConcreteClassesTest.MyImp2) out.field2).y);
     }
 
     protected HierarchicalStreamDriver createDriver() {

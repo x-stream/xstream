@@ -21,6 +21,7 @@ public class ReflectionConverter implements Converter {
     private final Mapper mapper;
     private final ReflectionProvider reflectionProvider;
     private final SerializationMethodInvoker serializationMethodInvoker;
+    private transient ReflectionProvider pureJavaReflectionProvider;
 
     public ReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         this.mapper = mapper;
@@ -47,7 +48,7 @@ public class ReflectionConverter implements Converter {
                     Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(source.getClass(), fieldName);
                     if (mapping != null) {
                         if (mapping.getItemFieldName() != null) {
-                            ArrayList list = (ArrayList) newObj;
+                            Collection list = (Collection) newObj;
                             for (Iterator iter = list.iterator(); iter.hasNext();) {
                                 Object obj = iter.next();
                                 writeField(mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
@@ -69,7 +70,7 @@ public class ReflectionConverter implements Converter {
                 writer.startNode(mapper.serializedMember(definedIn, fieldName));
 
                 Class actualType = newObj.getClass();
-                
+
                 Class defaultType = mapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
                     writer.addAttribute(mapper.attributeForImplementationClass(), mapper.serializedClass(actualType));
@@ -78,7 +79,7 @@ public class ReflectionConverter implements Converter {
                 if (seenFields.contains(fieldName)) {
                     writer.addAttribute(mapper.attributeForClassDefiningField(), mapper.serializedClass(definedIn));
                 }
-                
+
                 if (source != newObj) {
                     context.convertAnother(newObj);
                 } else {
@@ -99,7 +100,7 @@ public class ReflectionConverter implements Converter {
             reader.moveDown();
 
             String fieldName = mapper.realMember(result.getClass(), reader.getNodeName());
-            
+
             Class classDefiningField = determineWhichClassDefinesField(reader);
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
 
@@ -110,8 +111,8 @@ public class ReflectionConverter implements Converter {
                 value = context.convertAnother(result, type);
             } else {
                 value = result;
-            }    
-            
+            }
+
             if (fieldExistsInClass) {
                 reflectionProvider.writeField(result, fieldName, value, classDefiningField);
                 seenFields.add(classDefiningField, fieldName);
@@ -134,7 +135,15 @@ public class ReflectionConverter implements Converter {
             }
             Collection collection = (Collection) implicitCollections.get(fieldName);
             if (collection == null) {
-                collection = new ArrayList();
+                Class fieldType = mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, null));
+                if (!Collection.class.isAssignableFrom(fieldType)) {
+                    throw new ObjectAccessException("Field " + fieldName + " of " + result.getClass().getName() +
+                            " is configured for an implicit Collection, but field is of type " + fieldType.getName());
+                }
+                if (pureJavaReflectionProvider == null) {
+                    pureJavaReflectionProvider = new PureJavaReflectionProvider();
+                }
+                collection = (Collection)pureJavaReflectionProvider.newInstance(fieldType);
                 reflectionProvider.writeField(result, fieldName, collection, null);
                 implicitCollections.put(fieldName, collection);
             }

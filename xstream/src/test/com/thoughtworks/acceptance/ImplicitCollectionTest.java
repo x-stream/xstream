@@ -3,7 +3,11 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.SampleLists;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
@@ -20,16 +24,21 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class Animal extends StandardObject {
+    public static class Animal extends StandardObject implements Comparable {
         String name;
 
         public Animal(String name) {
             this.name = name;
         }
+
+        public int compareTo(Object o) {
+            return name.compareTo(((Animal)o).name);
+        }
     }
 
     protected void setUp() throws Exception {
         super.setUp();
+        xstream.alias("zoo", Zoo.class);
         xstream.alias("farm", Farm.class);
         xstream.alias("animal", Animal.class);
         xstream.alias("room", Room.class);
@@ -59,7 +68,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(farm, expected);
     }
 
-    public void testWith() {
+    public void testWithList() {
         Farm farm = new Farm(100);
         farm.add(new Animal("Cow"));
         farm.add(new Animal("Sheep"));
@@ -85,7 +94,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testIneritsImplicitCollectionFromSuperclass() {
+    public void testInheritsImplicitCollectionFromSuperclass() {
         xstream.alias("MEGA-farm", MegaFarm.class);
 
         Farm farm = new MegaFarm(100); // subclass
@@ -152,7 +161,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
     public static class Person extends StandardObject {
         private String name;
-        private ArrayList emailAddresses = new ArrayList();
+        private LinkedList emailAddresses = new LinkedList();
 
         public Person(String name) {
             this.name = name;
@@ -204,4 +213,48 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
         assertBothWays(house, expected);
     }
+
+    public static class Zoo extends StandardObject {
+        private Set animals = new HashSet();
+        public void add(Animal animal) {
+            animals.add(animal);
+        }
+    }
+
+    public void testWithSet() {
+        Zoo zoo = new Zoo();
+        zoo.add(new Animal("Lion"));
+        zoo.add(new Animal("Ape"));
+
+        String expected = "" +
+                "<zoo>\n" +
+                "  <animal>\n" +
+                "    <name>Lion</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Ape</name>\n" +
+                "  </animal>\n" +
+                "</zoo>";
+
+        xstream.addImplicitCollection(Zoo.class, "animals");
+        assertBothWays(zoo, expected);
+    }
+
+    public void testWithDifferentDefaultImplementation() {
+        String xml = "" +
+                "<zoo>\n" +
+                "  <animal>\n" +
+                "    <name>Lion</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Ape</name>\n" +
+                "  </animal>\n" +
+                "</zoo>";
+
+        xstream.addImplicitCollection(Zoo.class, "animals");
+        xstream.addDefaultImplementation(TreeSet.class, Set.class);
+        Zoo zoo = (Zoo)xstream.fromXML(xml);
+        assertTrue("Collection was a " + zoo.animals.getClass().getName(), zoo.animals instanceof TreeSet);
+    }
+
 }
