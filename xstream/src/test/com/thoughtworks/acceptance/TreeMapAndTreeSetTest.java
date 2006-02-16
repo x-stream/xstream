@@ -1,6 +1,5 @@
-package com.thoughtworks.acceptance.someobjects;
+package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
 import java.util.Comparator;
 import java.util.TreeMap;

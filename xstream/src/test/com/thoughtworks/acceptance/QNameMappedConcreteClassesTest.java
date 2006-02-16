@@ -1,15 +1,17 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.someobjects.Handler;
+import com.thoughtworks.acceptance.someobjects.Protocol;
 import com.thoughtworks.acceptance.someobjects.WithList;
+import com.thoughtworks.acceptance.someobjects.X;
+import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import javax.xml.namespace.QName;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
@@ -20,10 +22,9 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
     public static final String XML_HEADER = "<?xml version='1.0' encoding='utf-8'?>";
 
     protected QNameMap qnameMap;
-    protected HierarchicalStreamDriver staxDriver;
-    protected String namespace = "java://" + WithList.class.getPackage().getName();
+    protected String namespace = getDefaultNS(WithList.class);
 
-    public void testDefaultImplementationOfInterface() {
+    public void testUsingNamespace() {
         // lets register some qnames
         QName qname = new QName(namespace, "withList", "w");
         qnameMap.registerMapping(qname, WithList.class);
@@ -32,7 +33,8 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
         withList.things = new ArrayList();
 
         String expected =
-                XML_HEADER + "<w:withList xmlns:w=\"java://com.thoughtworks.acceptance.someobjects\">" +
+                XML_HEADER +
+                "<w:withList xmlns:w=\"java://com.thoughtworks.acceptance.someobjects\">" +
                 "<things/>" +
                 "</w:withList>";
 
@@ -47,7 +49,8 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
         withList.things = new ArrayList();
 
         String expected =
-                XML_HEADER + "<withList xmlns=\"java://com.thoughtworks.acceptance.someobjects\">" +
+                XML_HEADER +
+                "<withList xmlns=\"java://com.thoughtworks.acceptance.someobjects\">" +
                 "<things/>" +
                 "</withList>";
 
@@ -64,59 +67,64 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
         withList.things = new ArrayList();
 
         String expected =
-                XML_HEADER + "<x:withList xmlns:x=\"java://com.thoughtworks.acceptance.someobjects\">" +
+                XML_HEADER +
+                "<x:withList xmlns:x=\"java://com.thoughtworks.acceptance.someobjects\">" +
                 "<x:things/>" +
                 "</x:withList>";
 
         assertBothWays(withList, expected);
     }
 
-    public void testAlternativeImplementationOfInterface() {
-        xstream.alias("with-list", WithList.class);
-        xstream.alias("linked-list", LinkedList.class);
+    public void testUsingDifferentNamespaces() {
+        // lets register some qnames
+        qnameMap.registerMapping(new QName(namespace, "withList", "w"), WithList.class);
+        qnameMap.registerMapping(new QName("urn:foo", "things", "f"), "things");
 
         WithList withList = new WithList();
-        withList.things = new LinkedList();
+        withList.things = new ArrayList();
 
         String expected =
-                "<?xml version='1.0' encoding='utf-8'?><with-list><things class=\"linked-list\"/></with-list>";
+                XML_HEADER +
+                "<w:withList xmlns:w=\"java://com.thoughtworks.acceptance.someobjects\">" +
+                "<f:things xmlns:f=\"urn:foo\"/>" +
+                "</w:withList>";
 
         assertBothWays(withList, expected);
     }
 
-    public void testCustomInterfaceCanHaveMultipleImplementations() {
-        xstream.alias("intf", ConcreteClassesTest.MyInterface.class);
-        xstream.alias("imp1", ConcreteClassesTest.MyImp1.class);
-        xstream.alias("imp2", ConcreteClassesTest.MyImp2.class);
-        xstream.alias("h", ConcreteClassesTest.MyHolder.class);
+    public void testUsingDifferentNamespacesWithAliases() {
+        xstream.alias("handler", X.class);
+        xstream.alias("protocol", Y.class);
 
-        ConcreteClassesTest.MyHolder in = new ConcreteClassesTest.MyHolder();
-        in.field1 = new ConcreteClassesTest.MyImp1();
-        in.field2 = new ConcreteClassesTest.MyImp2();
+        qnameMap.registerMapping(new QName(getDefaultNS(Handler.class)+1, "handler", "h"), "handler");
+        qnameMap.registerMapping(new QName(getDefaultNS(Protocol.class)+2, "protocol", "p"), "innerObj");
 
-        String expected = "" +
-                "<?xml version='1.0' encoding='utf-8'?><h><field1 class=\"imp1\"><x>1</x></field1><field2 class=\"imp2\"><y>2</y></field2></h>";
+        X x = new X();
+        x.aStr = "foo";
+        x.anInt = 42;
+        x.innerObj = new Y();
+        x.innerObj.yField = "YField";
 
-        String xml = xstream.toXML(in);
-        assertEquals(expected, xml);
+        String expected =
+                XML_HEADER +
+                "<h:handler xmlns:h=\"java://com.thoughtworks.acceptance.someobjects1\">" +
+                "<aStr>foo</aStr>" +
+                "<anInt>42</anInt>" +
+                "<p:protocol xmlns:p=\"java://com.thoughtworks.acceptance.someobjects2\">" +
+                "<yField>YField</yField>" +
+                "</p:protocol>" +
+                "</h:handler>";
 
-        ConcreteClassesTest.MyHolder out = (ConcreteClassesTest.MyHolder) xstream.fromXML(xml);
-        assertEquals(ConcreteClassesTest.MyImp1.class, out.field1.getClass());
-        assertEquals(ConcreteClassesTest.MyImp2.class, out.field2.getClass());
-        assertEquals(2, ((ConcreteClassesTest.MyImp2) out.field2).y);
+        assertBothWays(x, expected);
     }
 
     protected HierarchicalStreamDriver createDriver() {
         // careful, called from inside base class constructor
         qnameMap = new QNameMap();
-        staxDriver = new StaxDriver(qnameMap);
-        return staxDriver;
+        return new StaxDriver(qnameMap);
     }
 
-    protected String toXML(Object root) {
-        StringWriter buffer = new StringWriter();
-        xstream.marshal(root, staxDriver.createWriter(buffer));
-        return buffer.toString();
+    protected String getDefaultNS(Class type) {
+        return "java://" + type.getPackage().getName();
     }
-
 }
