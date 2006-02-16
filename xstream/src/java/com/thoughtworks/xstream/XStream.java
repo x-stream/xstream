@@ -227,10 +227,10 @@ public class XStream {
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_REFERENCES = 1003;
 
-    private static final int PRIORITY_VERY_HIGH = 10000;
-    private static final int PRIORITY_NORMAL = 0;
-    private static final int PRIORITY_LOW = -10;
-    private static final int PRIORITY_VERY_LOW = -20;
+    public static final int PRIORITY_VERY_HIGH = 10000;
+    public static final int PRIORITY_NORMAL = 0;
+    public static final int PRIORITY_LOW = -10;
+    public static final int PRIORITY_VERY_LOW = -20;
 
     public XStream() {
         this(null, (Mapper)null, new XppDriver());
@@ -359,7 +359,7 @@ public class XStream {
         alias("locale", Locale.class);
         alias("gregorian-calendar", Calendar.class);
 
-        
+
         if (JVM.is14()) {
             alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
             alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
@@ -689,7 +689,7 @@ public class XStream {
 
     /**
      * Retrieve the mapper. This is by default a chain of {@link MapperWrapper MapperWrappers}.
-     * 
+     *
      * @return the mapper
      * @since 1.2
      */
