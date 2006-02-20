@@ -7,7 +7,7 @@ import java.util.Date;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 /**
- * @author Paul Hammant 
+ * @author Paul Hammant
  * @author Ian Cartwright
  * @author Mauro Talevi
  */
@@ -17,15 +17,15 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         Three three = new Three();
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         three.date = format.parse("19/02/2006");
-       
+
         xstream.attributeAlias("date", Date.class);
         assertEquals(
-                "<com.thoughtworks.acceptance.AttributeAliasTest-Three date=\"2006-02-19 00:00:00.0 GMT\"/>", 
+                "<com.thoughtworks.acceptance.AttributeAliasTest-Three date=\"2006-02-19 00:00:00.0 GMT\"/>",
                 xstream.toXML(three));
     }
 
     public void testDeSerializationOfAttributePossibleWithAliasAndKnownConverter() throws Exception {
-        xstream.attributeAlias("date", Date.class); 
+        xstream.attributeAlias("date", Date.class);
         Three three = (Three) xstream.fromXML(
                 "<com.thoughtworks.acceptance.AttributeAliasTest-Three date=\"2006-02-19 00:00:00.0 GMT\"/>");
 
@@ -39,7 +39,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
 
         xstream.attributeAlias("id", ID.class);
         xstream.registerSingleValueConverter(new MyIDConverter());
-        
+
         assertEquals(
                 "<com.thoughtworks.acceptance.AttributeAliasTest-One id=\"hullo\">\n" +
                 "  <two/>\n" +
@@ -50,7 +50,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
     public void testDeSerializationOfAttributePossibleWithAliasAndCustomConverter() {
         xstream.attributeAlias("id", ID.class);
         xstream.registerSingleValueConverter(new MyIDConverter());
- 
+
         One one = (One) xstream.fromXML(
                 "<com.thoughtworks.acceptance.AttributeAliasTest-One id=\"hullo\">\n" +
                 "  <two/>\n" +
@@ -72,13 +72,13 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
     public static interface HasID {
         void setID(ID id);
     }
-    
+
     public static class Two {}
 
     public static class Three {
         public Date date;
     }
-    
+
     public static class ID {
         public ID(String value) {
             this.value = value;
@@ -92,13 +92,11 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
             return type.equals(ID.class);
         }
 
-        @Override
         public String toString(Object obj) {
             return ((ID) obj).value;
         }
 
-        @Override
-        public Object fromString(String str) {            
+        public Object fromString(String str) {
             return new ID(str);
         }
     }
