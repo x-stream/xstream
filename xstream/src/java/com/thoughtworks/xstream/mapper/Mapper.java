@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.mapper;
 
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+
 public interface Mapper {
     /**
      * Place holder type used for null values.
@@ -68,4 +70,8 @@ public interface Mapper {
         Class getItemType();
     }
 
+    SingleValueConverter getConverterFromItemType(Class type);
+
+    SingleValueConverter getConverterFromAttribute(String name);
+    
 }

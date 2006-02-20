@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 public abstract class MapperWrapper implements Mapper {
 
@@ -73,11 +74,12 @@ public abstract class MapperWrapper implements Mapper {
         return wrapped.shouldSerializeMember(definedIn, fieldName);
     }
 
-    public String lookupName(Class type) {
-        return serializedClass(type);
+    public SingleValueConverter getConverterFromItemType(Class clazz) {
+        return wrapped.getConverterFromItemType(clazz);
     }
 
-    public Class lookupType(String elementName) {
-        return realClass(elementName);
+    public SingleValueConverter getConverterFromAttribute(String name) {
+        return wrapped.getConverterFromAttribute(name);
     }
+
 }

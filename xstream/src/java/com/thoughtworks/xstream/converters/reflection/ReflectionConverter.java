@@ -1,19 +1,21 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.mapper.Mapper;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReflectionConverter implements Converter {
 
@@ -40,10 +42,23 @@ public class ReflectionConverter implements Converter {
         }
 
         final Set seenFields = new HashSet();
+        final Set seenAsAttributes = new HashSet();
 
+        // Attributes might be preferred to child elements ...
+         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
+            public void visit(String fieldName, Class type, Class definedIn, Object value) {
+                SingleValueConverter converter = mapper.getConverterFromItemType(type);                
+                if (converter != null) {
+                    writer.addAttribute(fieldName, converter.toString(value));
+                    seenAsAttributes.add(fieldName);
+                }
+            }
+        });
+
+        // Child Elements not covered already processed as Attributes ...
         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
-                if (newObj != null) {
+                if (!seenAsAttributes.contains(fieldName) && newObj != null) {
                     Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(source.getClass(), fieldName);
                     if (mapping != null) {
                         if (mapping.getItemFieldName() != null) {
@@ -93,6 +108,22 @@ public class ReflectionConverter implements Converter {
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final Object result = instantiateNewInstance(context, reader.getAttribute(mapper.attributeForReadResolveField()));
         final SeenFields seenFields = new SeenFields();
+        Iterator it = reader.getAttributeNames();
+
+        // Process attributes before recursing into child elements.
+        while (it.hasNext()) {
+            String attrName = (String) it.next();
+            SingleValueConverter converter = mapper.getConverterFromAttribute(attrName);            
+            if (converter != null) {
+                Object value = converter.fromString(reader.getAttribute(attrName));
+                Class classDefiningField = determineWhichClassDefinesField(reader);
+                boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
+                if (fieldExistsInClass) {
+                    reflectionProvider.writeField(result, attrName, value, classDefiningField);
+                    seenFields.add(classDefiningField, attrName);
+                }
+            }
+        }
 
         Map implicitCollectionsForCurrentObject = null;
         while (reader.hasMoreChildren()) {

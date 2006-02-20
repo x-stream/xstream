@@ -4,6 +4,8 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
 import com.thoughtworks.xstream.converters.basic.BigDecimalConverter;
 import com.thoughtworks.xstream.converters.basic.BigIntegerConverter;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
@@ -60,6 +62,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
+import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.CachingMapper;
 import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
@@ -203,13 +206,15 @@ import java.util.Vector;
  * <p>To avoid the need for special tags for collections, you can define implicit collections using one of the
  * <code>addImplicitCollection</code> methods.</p>
  *
- * @author Joe Walnes
+ * @author Joe Walnes 
+ * @author J&ouml;rg Schaible
  * @author Mauro Talevi
  */
 public class XStream {
 
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
+    private AttributeAliasingMapper attributeAliasingMapper;
     private DefaultImplementationsMapper defaultImplementationsMapper;
     private ImmutableTypesMapper immutableTypesMapper;
     private ImplicitCollectionMapper implicitCollectionMapper;
@@ -276,6 +281,7 @@ public class XStream {
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
         this.mapper = mapper == null ? buildMapper(classAttributeIdentifier) : mapper;
         converterLookup = new DefaultConverterLookup(this.mapper);
+        attributeAliasingMapper.setConverterLookup(converterLookup);
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
@@ -290,6 +296,8 @@ public class XStream {
         classAliasingMapper = (ClassAliasingMapper) mapper; // need a reference to that one
         mapper = new FieldAliasingMapper(mapper);
         fieldAliasingMapper = (FieldAliasingMapper) mapper; // need a reference to that one
+        mapper = new AttributeAliasingMapper(mapper, converterLookup);
+        attributeAliasingMapper = (AttributeAliasingMapper) mapper; // need a reference to that one
         mapper = new ImplicitCollectionMapper(mapper);
         implicitCollectionMapper = (ImplicitCollectionMapper)mapper; // need a reference to this one
         mapper = new DynamicProxyMapper(mapper);
@@ -679,6 +687,14 @@ public class XStream {
         converterLookup.registerConverter(converter, priority);
     }
 
+    public void registerSingleValueConverter(SingleValueConverter converter) {
+        registerConverter(new SingleValueConverterWrapper(converter));
+    }
+
+    public void registerSingleValueConverter(SingleValueConverter converter, int priority) {
+        converterLookup.registerConverter(new SingleValueConverterWrapper(converter), priority);
+    }
+
     /**
      * @throws ClassCastException if mapper is not really a deprecated {@link ClassMapper} instance
      * @deprecated As of 1.2, use {@link #getMapper}
@@ -927,6 +943,10 @@ public class XStream {
      */
     public void omitField(Class type, String fieldName) {
         fieldAliasingMapper.omitField(type, fieldName);
+    }
+
+    public void attributeAlias(String attrName, Class type) {
+        attributeAliasingMapper.addAttributeAlias(attrName, type);
     }
 
     public static class InitializationException extends BaseException {
