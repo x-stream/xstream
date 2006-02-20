@@ -474,8 +474,13 @@ public class XStream {
         try {
             Class type = Class.forName(className, false, classLoaderReference.getReference());
             Constructor constructor = type.getConstructor(constructorParamTypes);
-            Converter converter = (Converter) constructor.newInstance(constructorParamValues);
-            registerConverter(converter, priority);
+            Object instance = constructor.newInstance(constructorParamValues);
+            //Converter converter = (Converter) constructor.newInstance(constructorParamValues);
+            if ( instance instanceof Converter ){
+                registerConverter((Converter)instance, priority);
+            } else if ( instance instanceof SingleValueConverter ){
+                registerConverter((SingleValueConverter)instance, priority);
+            }
         } catch (Exception e) {
             throw new InitializationException("Could not instatiate converter : " + className, e);
         }
@@ -698,11 +703,11 @@ public class XStream {
         converterLookup.registerConverter(converter, priority);
     }
 
-    public void registerSingleValueConverter(SingleValueConverter converter) {
-        registerConverter(new SingleValueConverterWrapper(converter));
+    public void registerConverter(SingleValueConverter converter) {
+        registerConverter(converter, PRIORITY_NORMAL);
     }
 
-    public void registerSingleValueConverter(SingleValueConverter converter, int priority) {
+    public void registerConverter(SingleValueConverter converter, int priority) {
         converterLookup.registerConverter(new SingleValueConverterWrapper(converter), priority);
     }
 

@@ -11,6 +11,7 @@ import com.thoughtworks.xstream.testutil.TimeZoneChanger;
  * @author Paul Hammant
  * @author Ian Cartwright
  * @author Mauro Talevi
+ * @author J&ouml;rg Schaible
  */
 public class AttributeAliasTest extends AbstractAcceptanceTest {
 
@@ -33,7 +34,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         one.id  = new ID("hullo");
 
         xstream.aliasAttribute("id", ID.class);
-        xstream.registerSingleValueConverter(new MyIDConverter());
+        xstream.registerConverter(new MyIDConverter());
 
         String expected =
                 "<com.thoughtworks.acceptance.AttributeAliasTest-One id=\"hullo\">\n" +
@@ -47,7 +48,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         one.two = new Two();
         one.id  = new ID("hullo");
 
-        xstream.registerSingleValueConverter(new MyIDConverter());
+        xstream.registerConverter(new MyIDConverter());
 
         String expected =
                 "<com.thoughtworks.acceptance.AttributeAliasTest-One>\n" +

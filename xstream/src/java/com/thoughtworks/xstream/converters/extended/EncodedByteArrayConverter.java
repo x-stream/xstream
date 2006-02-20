@@ -45,7 +45,8 @@ public class EncodedByteArrayConverter implements Converter {
         boolean firstIteration = true;
         while (firstIteration || reader.hasMoreChildren()) { // hangover from previous hasMoreChildren
             reader.moveDown();
-            bytes.add(byteConverter.unmarshal(reader, context));
+            //bytes.add(byteConverter.unmarshal(reader, context));
+            bytes.add(byteConverter.fromString(reader.getValue()));
             reader.moveUp();
             firstIteration = false;
         }

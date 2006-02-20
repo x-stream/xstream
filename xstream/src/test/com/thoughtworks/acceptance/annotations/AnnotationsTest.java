@@ -6,11 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.Annotations;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamContainedType;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * 
@@ -124,22 +128,27 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         
     }
     
-    public static class PersonConverter extends AbstractSingleValueConverter{
+    public static class PersonConverter implements Converter{
         public PersonConverter() {}
         
-        @Override
         public String toString(Object obj) {
-            return super.toString(((Person)obj).name);
+            return ((Person)obj).name;
         }
         
-        @Override
         public Object fromString(String str) {
             return new Person(str);
         }
 
-        @Override
         public boolean canConvert(Class type) {
             return type == Person.class;
+        }
+
+        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+            writer.setValue(toString(source));
+        }
+
+        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+            return fromString(reader.getValue());
         }
     }
 
