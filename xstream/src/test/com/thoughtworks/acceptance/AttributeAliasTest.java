@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 /**
  * @author Paul Hammant
@@ -12,6 +13,19 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * @author Mauro Talevi
  */
 public class AttributeAliasTest extends AbstractAcceptanceTest {
+
+    private TimeZoneChanger tzc;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        tzc = new TimeZoneChanger();
+        tzc.change("GMT");
+    }
+
+    protected void tearDown() throws Exception {
+        tzc.reset();
+        super.tearDown();
+    }
 
     public void testWithAliasAndCustomConverter() {
         One one = new One();
@@ -21,7 +35,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         xstream.aliasAttribute("id", ID.class);
         xstream.registerSingleValueConverter(new MyIDConverter());
 
-        String expected =         
+        String expected =
                 "<com.thoughtworks.acceptance.AttributeAliasTest-One id=\"hullo\">\n" +
                 "  <two/>\n" +
                 "</com.thoughtworks.acceptance.AttributeAliasTest-One>";
@@ -35,7 +49,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
 
         xstream.registerSingleValueConverter(new MyIDConverter());
 
-        String expected =         
+        String expected =
                 "<com.thoughtworks.acceptance.AttributeAliasTest-One>\n" +
                 "  <id>hullo</id>\n" +
                 "  <two/>\n" +
@@ -49,7 +63,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         three.date = format.parse("19/02/2006");
 
         xstream.aliasAttribute("date", Date.class);
-        String expected = 
+        String expected =
             "<com.thoughtworks.acceptance.AttributeAliasTest-Three date=\"2006-02-19 00:00:00.0 GMT\"/>";
         assertBothWays(three, expected);
     }
@@ -59,7 +73,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         three.date = format.parse("19/02/2006");
 
-        String expected =         
+        String expected =
             "<com.thoughtworks.acceptance.AttributeAliasTest-Three>\n" +
             "  <date>2006-02-19 00:00:00.0 GMT</date>\n" +
             "</com.thoughtworks.acceptance.AttributeAliasTest-Three>";
