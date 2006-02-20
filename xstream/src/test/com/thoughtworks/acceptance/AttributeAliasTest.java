@@ -13,51 +13,57 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  */
 public class AttributeAliasTest extends AbstractAcceptanceTest {
 
-    public void testSerializationOfAttributePossibleWithAliasAndKnownConverter() throws Exception {
-        Three three = new Three();
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        three.date = format.parse("19/02/2006");
-
-        xstream.attributeAlias("date", Date.class);
-        assertEquals(
-                "<com.thoughtworks.acceptance.AttributeAliasTest-Three date=\"2006-02-19 00:00:00.0 GMT\"/>",
-                xstream.toXML(three));
-    }
-
-    public void testDeSerializationOfAttributePossibleWithAliasAndKnownConverter() throws Exception {
-        xstream.attributeAlias("date", Date.class);
-        Three three = (Three) xstream.fromXML(
-                "<com.thoughtworks.acceptance.AttributeAliasTest-Three date=\"2006-02-19 00:00:00.0 GMT\"/>");
-
-        assertEquals(three.date.toString(), "Sun Feb 19 00:00:00 GMT 2006");
-    }
-
-    public void testSerializationOfAttributePossibleWithAliasAndCustomConverter() {
+    public void testWithAliasAndCustomConverter() {
         One one = new One();
         one.two = new Two();
         one.id  = new ID("hullo");
 
-        xstream.attributeAlias("id", ID.class);
+        xstream.aliasAttribute("id", ID.class);
         xstream.registerSingleValueConverter(new MyIDConverter());
 
-        assertEquals(
+        String expected =         
                 "<com.thoughtworks.acceptance.AttributeAliasTest-One id=\"hullo\">\n" +
                 "  <two/>\n" +
-                "</com.thoughtworks.acceptance.AttributeAliasTest-One>",
-                xstream.toXML(one));
+                "</com.thoughtworks.acceptance.AttributeAliasTest-One>";
+        assertBothWays(one, expected);
     }
 
-    public void testDeSerializationOfAttributePossibleWithAliasAndCustomConverter() {
-        xstream.attributeAlias("id", ID.class);
+    public void testWithoutAliasButWithCustomConverter() {
+        One one = new One();
+        one.two = new Two();
+        one.id  = new ID("hullo");
+
         xstream.registerSingleValueConverter(new MyIDConverter());
 
-        One one = (One) xstream.fromXML(
-                "<com.thoughtworks.acceptance.AttributeAliasTest-One id=\"hullo\">\n" +
+        String expected =         
+                "<com.thoughtworks.acceptance.AttributeAliasTest-One>\n" +
+                "  <id>hullo</id>\n" +
                 "  <two/>\n" +
-                "</com.thoughtworks.acceptance.AttributeAliasTest-One>");
+                "</com.thoughtworks.acceptance.AttributeAliasTest-One>";
+        assertBothWays(one, expected);
+    }
 
-        assertEquals(one.id.value, "hullo");
-        assertNotNull(one.two);
+    public void testWithAliasAndKnownConverter() throws Exception {
+        Three three = new Three();
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        three.date = format.parse("19/02/2006");
+
+        xstream.aliasAttribute("date", Date.class);
+        String expected = 
+            "<com.thoughtworks.acceptance.AttributeAliasTest-Three date=\"2006-02-19 00:00:00.0 GMT\"/>";
+        assertBothWays(three, expected);
+    }
+
+    public void testWithAliasButWithKnownConverter() throws Exception {
+        Three three = new Three();
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        three.date = format.parse("19/02/2006");
+
+        String expected =         
+            "<com.thoughtworks.acceptance.AttributeAliasTest-Three>\n" +
+            "  <date>2006-02-19 00:00:00.0 GMT</date>\n" +
+            "</com.thoughtworks.acceptance.AttributeAliasTest-Three>";
+        assertBothWays(three, expected);
     }
 
     public static class One implements HasID {

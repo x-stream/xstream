@@ -664,6 +664,17 @@ public class XStream {
     }
 
     /**
+     * Alias a Class to be used as an XML attribute
+     * 
+     * @param attributeName the name of the attribute 
+     * @param type the Class of the type to be aliased
+     * @since 1.2
+     */
+    public void aliasAttribute(String attributeName, Class type) {
+        attributeAliasingMapper.addAttributeAlias(attributeName, type);
+    }
+
+    /**
      * Associate a default implementation of a class with an object. Whenever XStream encounters an instance of this
      * type, it will use the default implementation instead.
      *
@@ -943,10 +954,6 @@ public class XStream {
      */
     public void omitField(Class type, String fieldName) {
         fieldAliasingMapper.omitField(type, fieldName);
-    }
-
-    public void attributeAlias(String attrName, Class type) {
-        attributeAliasingMapper.addAttributeAlias(attrName, type);
     }
 
     public static class InitializationException extends BaseException {
