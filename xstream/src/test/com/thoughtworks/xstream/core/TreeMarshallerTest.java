@@ -5,7 +5,7 @@ import com.thoughtworks.xstream.XStream;
 
 public class TreeMarshallerTest extends AbstractAcceptanceTest {
 
-    class Thing {
+    static class Thing {
         Thing thing;
     }
 
