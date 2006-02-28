@@ -267,7 +267,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
-    static class UnserializableParent {
+    public static class UnserializableParent {
         public int x;
 
         public UnserializableParent() {
@@ -275,7 +275,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    static class CustomSerializableChild extends UnserializableParent implements Serializable {
+    public static class CustomSerializableChild extends UnserializableParent implements Serializable {
         public int y;
 
         public CustomSerializableChild() {
