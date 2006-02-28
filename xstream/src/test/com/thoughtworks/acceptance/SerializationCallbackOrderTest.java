@@ -267,4 +267,50 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
+    static class UnserializableParent {
+        public int x;
+
+        public UnserializableParent() {
+            x = 5;
+        }
+    }
+
+    static class CustomSerializableChild extends UnserializableParent implements Serializable {
+        public int y;
+
+        public CustomSerializableChild() {
+            y = 10;
+        }
+
+        private void writeObject(ObjectOutputStream stream) throws IOException {
+            stream.defaultWriteObject();
+        }
+
+        private void readObject(ObjectInputStream stream)
+                throws IOException, ClassNotFoundException {
+            stream.defaultReadObject();
+        }
+    }
+
+    public void testFieldsOfUnserializableParentsArePreserved() {
+        xstream.alias("parent", UnserializableParent.class);
+        xstream.alias("child", CustomSerializableChild.class);
+
+        CustomSerializableChild child = new CustomSerializableChild();
+        String expected = ""
+                + "<child serialization=\"custom\">\n"
+                + "  <unserializable-parents>\n"
+                + "    <x>5</x>\n"
+                + "  </unserializable-parents>\n"
+                + "  <child>\n"
+                + "    <default>\n"
+                + "      <y>10</y>\n"
+                + "    </default>\n"
+                + "  </child>\n"
+                + "</child>";
+
+        CustomSerializableChild serialized =(CustomSerializableChild)assertBothWays(child, expected);
+        assertEquals(5, serialized.x);
+    }
+
 }

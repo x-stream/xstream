@@ -51,9 +51,11 @@ public class SerializableConverter implements Converter {
     private final SerializationMethodInvoker serializationMethodInvoker = new SerializationMethodInvoker();
     private final Mapper mapper;
     private final ReflectionProvider reflectionProvider;
+    private final ReflectionConverter reflectionConverter;
 
     private static final String ELEMENT_NULL = "null";
     private static final String ELEMENT_DEFAULT = "default";
+    private static final String ELEMENT_UNSERIALIZABLE_PARENTS = "unserializable-parents";
     private static final String ATTRIBUTE_CLASS = "class";
     private static final String ATTRIBUTE_SERIALIZATION = "serialization";
     private static final String ATTRIBUTE_VALUE_CUSTOM = "custom";
@@ -64,6 +66,7 @@ public class SerializableConverter implements Converter {
     public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         this.mapper = mapper;
         this.reflectionProvider = reflectionProvider;
+        this.reflectionConverter = new ReflectionConverter(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
     }
 
     public boolean canConvert(Class type) {
@@ -176,10 +179,16 @@ public class SerializableConverter implements Converter {
         };
 
         try {
+            boolean hasUnserializableParent = false;
             Iterator classHieararchy = hierarchyFor(replacedSource.getClass());
             while (classHieararchy.hasNext()) {
                 currentType[0] = (Class) classHieararchy.next();
-                if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
+                if (!Serializable.class.isAssignableFrom(currentType[0])) {
+                    hasUnserializableParent = true;
+                } else if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
+                    if (hasUnserializableParent) {
+                        marshalUnserializableParent(writer, context, replacedSource);
+                    }
                     writtenClassWrapper[0] = true;
                     writer.startNode(mapper.serializedClass(currentType[0]));
                     ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
@@ -189,11 +198,17 @@ public class SerializableConverter implements Converter {
                     // Special case for objects that have readObject(), but not writeObject().
                     // The class wrapper is always written, whether or not this class in the hierarchy has
                     // serializable fields. This guarantees that readObject() will be called upon deserialization.
+                    if (hasUnserializableParent) {
+                        marshalUnserializableParent(writer, context, replacedSource);
+                    }
                     writtenClassWrapper[0] = true;
                     writer.startNode(mapper.serializedClass(currentType[0]));
                     callback.defaultWriteObject();
                     writer.endNode();
                 } else {
+                    if (hasUnserializableParent) {
+                        marshalUnserializableParent(writer, context, replacedSource);
+                    }
                     writtenClassWrapper[0] = false;
                     callback.defaultWriteObject();
                     if (writtenClassWrapper[0]) {
@@ -204,6 +219,12 @@ public class SerializableConverter implements Converter {
         } catch (IOException e) {
             throw new ObjectAccessException("Could not call defaultWriteObject()", e);
         }
+    }
+
+    private void marshalUnserializableParent(final HierarchicalStreamWriter writer, final MarshallingContext context, final Object replacedSource) {
+        writer.startNode(ELEMENT_UNSERIALIZABLE_PARENTS);
+        reflectionConverter.marshal(replacedSource, writer, context);
+        writer.endNode();
     }
 
     private Object readField(ObjectStreamField field, Class type, Object instance) {
@@ -224,7 +245,7 @@ public class SerializableConverter implements Converter {
 
     private Iterator hierarchyFor(Class type) {
         List result = new ArrayList();
-        while(type != null) {
+        while(type != Object.class) {
             result.add(type);
             type = type.getSuperclass();
         }
@@ -354,15 +375,50 @@ public class SerializableConverter implements Converter {
 
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            currentType[0] = mapper.defaultImplementationOf(mapper.realClass(reader.getNodeName()));
-            if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
-                ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
-                serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);
+            String nodeName = reader.getNodeName();
+            if (nodeName.equals(ELEMENT_UNSERIALIZABLE_PARENTS)) {
+                reflectionConverter.unmarshal(reader, new UnmarshallingContext(){
+
+                    public Object convertAnother(Object current, Class type) {
+                        return context.convertAnother(current, type);
+                    }
+
+                    public Object currentObject() {
+                        return result;
+                    }
+
+                    public Class getRequiredType() {
+                        return context.getRequiredType();
+                    }
+
+                    public void addCompletionCallback(Runnable work, int priority) {
+                        context.addCompletionCallback(work, priority);
+                    }
+
+                    public Object get(Object key) {
+                        return context.get(key);
+                    }
+
+                    public void put(Object key, Object value) {
+                        context.put(key, value);
+                    }
+
+                    public Iterator keys() {
+                        return context.keys();
+                    }
+
+                });
             } else {
-                try {
-                    callback.defaultReadObject();
-                } catch (IOException e) {
-                    throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+                currentType[0] = mapper.defaultImplementationOf(mapper.realClass(nodeName));
+                if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
+                    ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
+                    serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);
+                } else {
+                    try {
+                        callback.defaultReadObject();
+                    } catch (IOException e) {
+                        throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+                    }
                 }
             }
             reader.moveUp();
@@ -371,4 +427,39 @@ public class SerializableConverter implements Converter {
         return serializationMethodInvoker.callReadResolve(result);
     }
 
+    private static class UnserializableParentsReflectionProvider implements ReflectionProvider {
+
+        private final ReflectionProvider reflectionProvider;
+
+        public UnserializableParentsReflectionProvider(final ReflectionProvider reflectionProvider) {
+            this.reflectionProvider = reflectionProvider;
+        }
+
+        public Object newInstance(Class type) {
+            return reflectionProvider.newInstance(type);
+        }
+
+        public void visitSerializableFields(final Object object, final Visitor visitor) {
+            reflectionProvider.visitSerializableFields(object, new Visitor() {
+                public void visit(String name, Class type, Class definedIn, Object value) {
+                    if (!Serializable.class.isAssignableFrom(definedIn)) {
+                        visitor.visit(name, type, definedIn, value);
+                    }
+                }
+            });
+        }
+
+        public void writeField(Object object, String fieldName, Object value, Class definedIn) {
+            reflectionProvider.writeField(object, fieldName, value, definedIn);
+        }
+
+        public Class getFieldType(Object object, String fieldName, Class definedIn) {
+            return reflectionProvider.getFieldType(object, fieldName, definedIn);
+        }
+
+        public boolean fieldDefinedInClass(String fieldName, Class type) {
+            return reflectionProvider.fieldDefinedInClass(fieldName, type);
+        }
+
+    }
 }
