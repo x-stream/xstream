@@ -17,11 +17,13 @@ public final class ClassStack {
     }
 
     public void popSilently() {
-        pointer--;
+        stack[--pointer] = null;
     }
 
     public Class pop() {
-        return stack[--pointer];
+        final Class result = stack[--pointer];
+        stack[pointer] = null;
+        return result;
     }
 
     public Class peek() {
