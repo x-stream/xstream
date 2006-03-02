@@ -1,11 +1,7 @@
 package com.thoughtworks.xstream.core;
 
-//import com.thoughtworks.xstream.annotations.AnnotationProvider;
-//import com.thoughtworks.xstream.annotations.AnnotationReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
@@ -102,24 +98,6 @@ public class JVM {
         }
         return reflectionProvider;
     }
-
-    /**
-     * Returns the best reflection converter depending on the JVM.
-     * If JVM >= 1.5  an instance of {@link com.thoughtworks.xstream.annotations.AnnotationReflectionConverter} is returned.
-     *
-     * @param mapper    the Mapper to use
-     * @param provider the ReflectionProvider to use
-     * @return A ReflectionConverter
-     */
-//    public ReflectionConverter bestReflectionConverter(Mapper mapper, ReflectionProvider provider) {
-//        if (JVM.is15()) {
-//            // need a provider.newInstance(class, args)
-//            return new AnnotationReflectionConverter(mapper, provider,
-//                    (AnnotationProvider) provider.newInstance(loadClass("com.thoughtworks.xstream.annotations.AnnotationProvider")));
-//        } else {
-//            return new ReflectionConverter(mapper, provider);
-//        }
-//    }
 
     private boolean canUseSun14ReflectionProvider() {
     	    return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown()) && is14() && loadClass("sun.misc.Unsafe") != null;

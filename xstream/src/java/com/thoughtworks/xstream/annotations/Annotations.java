@@ -14,8 +14,8 @@ import com.thoughtworks.xstream.converters.collections.AbstractCollectionConvert
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
- * Contains utility methods that enable to configure an XStream instance 
- * with class and field aliases, based on a class decorated 
+ * Contains utility methods that enable to configure an XStream instance
+ * with class and field aliases, based on a class decorated
  * with annotations defined in this package.
  *
  * @author Emil Kirschner
@@ -34,12 +34,12 @@ public class Annotations {
     /**
      * Configures aliases on the specified XStream object based on annotations that decorate the specified class.
      *
-     * @param topLevelClass the class for which the XStream object is configured. 
+     * @param topLevelClasses the class for which the XStream object is configured.
      * This class is expected to be decorated with annotations defined in this package.
      * @param xstream the XStream object that will be configured
      */
     public static synchronized void configureAliases(XStream xstream, Class<?>... topLevelClasses) {
-        assert debug = true;
+        assert (debug = true) == true; // Accidental assignment is normally an error
         configuredTypes.clear();
         for(Class<?> topLevelClass : topLevelClasses){
             configureClass(xstream, topLevelClass);
@@ -47,12 +47,12 @@ public class Annotations {
     }
 
     private static synchronized void configureClass(XStream xstream, Class<?> configurableClass) {
-        if (configurableClass == null 
+        if (configurableClass == null
               || configuredTypes.contains(configurableClass)
               || (!configurableClass.isAnnotationPresent(XStreamAlias.class)
                       && !Converter.class.isAssignableFrom(configurableClass)))
             return;
-        
+
         if(Converter.class.isAssignableFrom(configurableClass)){
             Class<Converter> converterType = (Class<Converter>)configurableClass;
             registerConverter(xstream, converterType);
@@ -62,27 +62,27 @@ public class Annotations {
         if(debug){
             System.out.println("Aliasing class:"+ configurableClass);
         }
-        
+
         //Do Class Level Converters
         AnnotatedElement element = configurableClass;
         if(configurableClass.isAnnotationPresent(XStreamConverters.class)){
             XStreamConverters convertersAnnotation = element.getAnnotation(XStreamConverters.class);
             for(XStreamConverter converterAnnotation : convertersAnnotation.value()){
-                registerConverter(xstream, converterAnnotation.value());       
+                registerConverter(xstream, converterAnnotation.value());
             }
         }
-        
+
         //Do Class Leve - Converter
         if(configurableClass.isAnnotationPresent(XStreamConverter.class)){
             XStreamConverter converterAnnotation = element.getAnnotation(XStreamConverter.class);
             registerConverter(xstream, converterAnnotation.value());
         }
-        
+
         //Do Class Level Alias
         if(configurableClass.isAnnotationPresent(XStreamAlias.class)){
             XStreamAlias aliasAnnotation = element.getAnnotation(XStreamAlias.class);
             if(aliasAnnotation.impl() != Void.class){
-                //Alias for Interface/Class with an impl 
+                //Alias for Interface/Class with an impl
                 xstream.alias(aliasAnnotation.value(), configurableClass, aliasAnnotation.impl());
                 configuredTypes.add(configurableClass);
                 if(configurableClass.isInterface()){
@@ -95,7 +95,7 @@ public class Annotations {
             }
         }
 
-        //Do Class Level ImplicitCollection 
+        //Do Class Level ImplicitCollection
         if(configurableClass.isAnnotationPresent(XStreamImplicitCollection.class)){
             XStreamImplicitCollection implicitColAnnotation = element.getAnnotation(XStreamImplicitCollection.class);
             String fieldName = implicitColAnnotation.value();
@@ -141,12 +141,12 @@ public class Annotations {
                 }
             }
         }
-        
+
         //Do Member Classes Alias
         for(Class<?>memberClass : configurableClass.getDeclaredClasses()){
             configureClass(xstream, memberClass);
         }
-        
+
         //Do Superclass and Superinterface Alias
         Class superClass = configurableClass.getSuperclass();
         if (superClass != null && !Object.class.equals(superClass))
@@ -170,7 +170,7 @@ public class Annotations {
                 e.printStackTrace();
                 return;
             }
-            
+
         } else {
             try {
                 converter = converterType.newInstance();
@@ -184,7 +184,7 @@ public class Annotations {
         if(debug){
             System.out.println("Registered converter:"+ converterType);
         }
-               
+
     }
 
     /*
@@ -200,7 +200,7 @@ public class Annotations {
                 XStreamAlias alias =  element.getAnnotation(XStreamAlias.class);
                 configureClass(xstream, type);
                 type = alias.impl();
-                assert !type.isInterface()  : type; 
+                assert !type.isInterface()  : type;
             }
             return type;
         }

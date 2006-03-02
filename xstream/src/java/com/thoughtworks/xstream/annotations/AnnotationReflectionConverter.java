@@ -12,7 +12,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 /**
  * ReflectionConverter which uses an AnnotationProvider to marshall and unmarshall
  * fields based on the annotated converters.
- * 
+ *
  * @author Guilherme Silveira
  * @author Mauro Talevi
  */
@@ -29,8 +29,7 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
 
 	protected void marshallField(final MarshallingContext context,
 			Object newObj, Field field, ReflectionProvider reflectionProvider) {
-		XStreamConverter annotation = (XStreamConverter) annotationProvider
-				.getAnnotation(field, XStreamConverter.class);
+		XStreamConverter annotation = annotationProvider.getAnnotation(field, XStreamConverter.class);
 		if (annotation != null) {
 			context.convertAnother(newObj, (Converter) reflectionProvider
 					.newInstance(annotation.value()));
@@ -42,8 +41,7 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
 	protected Object unmarshallField(final UnmarshallingContext context,
 			final Object result, Class type, Field field,
 			ReflectionProvider reflectionProvider) {
-		XStreamConverter annotation = (XStreamConverter) annotationProvider
-				.getAnnotation(field, XStreamConverter.class);
+		XStreamConverter annotation = annotationProvider.getAnnotation(field, XStreamConverter.class);
 		if (annotation != null) {
 			return context.convertAnother(result, type,
 					(Converter) reflectionProvider.newInstance(annotation

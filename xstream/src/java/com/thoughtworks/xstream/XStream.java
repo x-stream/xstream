@@ -391,11 +391,21 @@ public class XStream {
     }
 
     protected void setupConverters() {
-        //ReflectionConverter reflectionConverter = jvm.bestReflectionConverter(mapper, reflectionProvider);
-        ReflectionConverter reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
-        registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
+        // use different ReflectionProvider depending on JDK
+        if (JVM.is15()) {
+            Class annotationProvider = jvm.loadClass("com.thoughtworks.xstream.annotations.AnnotationProvider");
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.annotations.AnnotationReflectionConverter", PRIORITY_VERY_LOW,
+                    new Class[] {Mapper.class, ReflectionProvider.class, annotationProvider},
+                    new Object[] {mapper, reflectionProvider, reflectionProvider.newInstance(annotationProvider)});
+        } else {
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.reflection.ReflectionConverter", PRIORITY_VERY_LOW,
+                    new Class[] {Mapper.class, ReflectionProvider.class}, new Object[] {mapper, reflectionProvider});
+        }
+        ReflectionConverter reflectionConverter = (ReflectionConverter)converterLookup.lookupConverterForType(Object.class);
 
-        registerConverter(new SerializableConverter(mapper, reflectionProvider /* , jvm */), PRIORITY_LOW);
+        registerConverter(new SerializableConverter(mapper, reflectionProvider), PRIORITY_LOW);
         registerConverter(new ExternalizableConverter(mapper), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);

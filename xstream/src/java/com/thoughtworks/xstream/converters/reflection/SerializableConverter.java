@@ -44,6 +44,7 @@ import java.util.Map;
  * </ul>
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
 public class SerializableConverter extends AbstractReflectionConverter {
 
@@ -59,10 +60,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
     private static final String ELEMENT_FIELD = "field";
     private static final String ATTRIBUTE_NAME = "name";
 
-    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) { //, JVM jvm) {
+    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         super(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
         this.reflectionProvider = reflectionProvider;
-//        this.reflectionConverter = jvm.bestReflectionConverter(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
     }
 
     public boolean canConvert(Class type) {
@@ -412,9 +412,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
             return reflectionProvider.fieldDefinedInClass(fieldName, type);
         }
 
-		public Field getField(Class definedIn, String fieldName) {
-			return reflectionProvider.getField(definedIn, fieldName);
-		}
+	public Field getField(Class definedIn, String fieldName) {
+	    return reflectionProvider.getField(definedIn, fieldName);
+	}
 
     }
 }

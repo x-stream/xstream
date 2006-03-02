@@ -6,8 +6,6 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReflectionConverter extends AbstractReflectionConverter {
 
-    private transient ReflectionProvider pureJavaReflectionProvider;
-
     public ReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         super(mapper, reflectionProvider);
     }
