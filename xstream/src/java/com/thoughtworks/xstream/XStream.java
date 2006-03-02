@@ -206,7 +206,7 @@ import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
  * <p>To avoid the need for special tags for collections, you can define implicit collections using one of the
  * <code>addImplicitCollection</code> methods.</p>
  *
- * @author Joe Walnes 
+ * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
  */
@@ -391,10 +391,11 @@ public class XStream {
     }
 
     protected void setupConverters() {
-    	    ReflectionConverter reflectionConverter = jvm.bestReflectionConverter(mapper, reflectionProvider);
+        //ReflectionConverter reflectionConverter = jvm.bestReflectionConverter(mapper, reflectionProvider);
+        ReflectionConverter reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
         registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
-        registerConverter(new SerializableConverter(mapper, reflectionProvider, jvm), PRIORITY_LOW);
+        registerConverter(new SerializableConverter(mapper, reflectionProvider /* , jvm */), PRIORITY_LOW);
         registerConverter(new ExternalizableConverter(mapper), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
@@ -670,8 +671,8 @@ public class XStream {
 
     /**
      * Alias a Class to be used as an XML attribute
-     * 
-     * @param attributeName the name of the attribute 
+     *
+     * @param attributeName the name of the attribute
      * @param type the Class of the type to be aliased
      * @since 1.2
      */

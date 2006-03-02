@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.annotations.AnnotationProvider;
-import com.thoughtworks.xstream.annotations.AnnotationReflectionConverter;
+//import com.thoughtworks.xstream.annotations.AnnotationProvider;
+//import com.thoughtworks.xstream.annotations.AnnotationReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
@@ -25,16 +25,16 @@ public class JVM {
         Field[] fields = JVM.class.getDeclaredFields();
         reverseMemberOrder = fields[fields.length-1].getName().equals("reflectionProvider");
     }
-    
+
     /**
-     * Parses the java version system property to determine the major java version, 
-     * ie 1.x 
-     * 
-     * @param javaVersion the system property 'java.specification.version' 
+     * Parses the java version system property to determine the major java version,
+     * ie 1.x
+     *
+     * @param javaVersion the system property 'java.specification.version'
      * @return A float of the form 1.x
      */
     private static final float getMajorJavaVersion(String javaVersion) {
-        try { 
+        try {
             return Float.parseFloat(javaVersion.substring(0, 3));
         } catch ( NumberFormatException e ){
             // Some JVMs may not conform to the x.y.z java.version format
@@ -81,7 +81,7 @@ public class JVM {
             return null;
         }
     }
-    
+
     public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
             try {
@@ -104,22 +104,22 @@ public class JVM {
     }
 
     /**
-     * Returns the best reflection converter depending on the JVM. 
+     * Returns the best reflection converter depending on the JVM.
      * If JVM >= 1.5  an instance of {@link com.thoughtworks.xstream.annotations.AnnotationReflectionConverter} is returned.
-     * 
+     *
      * @param mapper    the Mapper to use
      * @param provider the ReflectionProvider to use
      * @return A ReflectionConverter
      */
-    public ReflectionConverter bestReflectionConverter(Mapper mapper, ReflectionProvider provider) {
-        if (JVM.is15()) {
-            // need a provider.newInstance(class, args)
-            return new AnnotationReflectionConverter(mapper, provider, 
-                    (AnnotationProvider) provider.newInstance(loadClass("com.thoughtworks.xstream.annotations.AnnotationProvider")));
-        } else {
-            return new ReflectionConverter(mapper, provider);
-        }
-    }
+//    public ReflectionConverter bestReflectionConverter(Mapper mapper, ReflectionProvider provider) {
+//        if (JVM.is15()) {
+//            // need a provider.newInstance(class, args)
+//            return new AnnotationReflectionConverter(mapper, provider,
+//                    (AnnotationProvider) provider.newInstance(loadClass("com.thoughtworks.xstream.annotations.AnnotationProvider")));
+//        } else {
+//            return new ReflectionConverter(mapper, provider);
+//        }
+//    }
 
     private boolean canUseSun14ReflectionProvider() {
     	    return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown()) && is14() && loadClass("sun.misc.Unsafe") != null;

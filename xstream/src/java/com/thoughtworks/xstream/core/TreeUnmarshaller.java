@@ -114,7 +114,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         } else {
             type = mapper.realClass(classAttribute);
         }
-        Object result = convertAnother(root, type);
+        Object result = convertAnother(null, type);
         Iterator validations = validationList.iterator();
         while (validations.hasNext()) {
             Runnable runnable = (Runnable) validations.next();
