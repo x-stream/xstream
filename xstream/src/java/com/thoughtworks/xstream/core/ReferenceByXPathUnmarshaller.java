@@ -1,6 +1,10 @@
 package com.thoughtworks.xstream.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -8,9 +12,6 @@ import com.thoughtworks.xstream.io.path.Path;
 import com.thoughtworks.xstream.io.path.PathTracker;
 import com.thoughtworks.xstream.io.path.PathTrackingReader;
 import com.thoughtworks.xstream.mapper.Mapper;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
 
@@ -32,7 +33,7 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
         this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
-    public Object convertAnother(Object parent, Class type) {
+    protected Object convert(Object parent, Class type, Converter converter) {
         if (parentPathStack.size() > 0) { // handles circular references
             Object parentPath = parentPathStack.peek();
             if (!values.containsKey(parentPath)) { // see AbstractCircularReferenceTest.testWeirdCircularReference()
@@ -45,7 +46,7 @@ public class ReferenceByXPathUnmarshaller extends TreeUnmarshaller {
             return values.get(currentPath.apply(new Path(relativePathOfReference)));
         } else {
             parentPathStack.push(currentPath);
-            Object result = super.convertAnother(parent, type);
+            Object result = super.convert(parent, type, converter);
             values.put(currentPath, result);
             parentPathStack.popSilently();
             return result;

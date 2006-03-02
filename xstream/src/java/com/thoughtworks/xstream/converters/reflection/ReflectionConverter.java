@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.converters.reflection;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,23 +65,23 @@ public class ReflectionConverter implements Converter {
                             Collection list = (Collection) newObj;
                             for (Iterator iter = list.iterator(); iter.hasNext();) {
                                 Object obj = iter.next();
-                                writeField(mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
+                                writeField(fieldName, mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
                             }
                         } else {
                             context.convertAnother(newObj);
                         }
                     } else {
-                        writeField(fieldName, fieldType, definedIn, newObj);
+                        writeField(fieldName, fieldName, fieldType, definedIn, newObj);
                         seenFields.add(fieldName);
                     }
                 }
             }
 
-            private void writeField(String fieldName, Class fieldType, Class definedIn, Object newObj) {
-                if (!mapper.shouldSerializeMember(definedIn, fieldName)) {
+            private void writeField(String fieldName, String aliasName, Class fieldType, Class definedIn, Object newObj) {
+                if (!mapper.shouldSerializeMember(definedIn, aliasName)) {
                     return;
                 }
-                writer.startNode(mapper.serializedMember(definedIn, fieldName));
+                writer.startNode(mapper.serializedMember(definedIn, aliasName));
 
                 Class actualType = newObj.getClass();
 
@@ -89,12 +90,13 @@ public class ReflectionConverter implements Converter {
                     writer.addAttribute(mapper.attributeForImplementationClass(), mapper.serializedClass(actualType));
                 }
 
-                if (seenFields.contains(fieldName)) {
+                if (seenFields.contains(aliasName)) {
                     writer.addAttribute(mapper.attributeForClassDefiningField(), mapper.serializedClass(definedIn));
                 }
 
                 if (source != newObj) {
-                    context.convertAnother(newObj);
+            		Field field = reflectionProvider.getField(definedIn,fieldName);
+            		marshallField(context, newObj, field, reflectionProvider);
                 } else {
                     writer.addAttribute("self", "");
                 }
@@ -104,7 +106,11 @@ public class ReflectionConverter implements Converter {
         });
     }
 
-    public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
+	protected void marshallField(final MarshallingContext context, Object newObj, Field field, ReflectionProvider reflectionProvider) {
+		context.convertAnother(newObj);
+	}
+
+	public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final Object result = instantiateNewInstance(context, reader.getAttribute(mapper.attributeForReadResolveField()));
         final SeenFields seenFields = new SeenFields();
         Iterator it = reader.getAttributeNames();
@@ -137,7 +143,12 @@ public class ReflectionConverter implements Converter {
             final Object value;
             String self = reader.getAttribute("self");
             if (self == null) {
-                value = context.convertAnother(result, type);
+            	if (fieldExistsInClass) {
+            		Field field = reflectionProvider.getField(result.getClass(),fieldName);
+            		value = unmarshallField(context, result, type, field, reflectionProvider);
+				} else {
+					value = context.convertAnother(result, type);
+				}
             } else {
                 value = result;
             }
@@ -155,6 +166,9 @@ public class ReflectionConverter implements Converter {
         return serializationMethodInvoker.callReadResolve(result);
     }
 
+	protected Object unmarshallField(final UnmarshallingContext context, final Object result, Class type, Field field, ReflectionProvider reflectionProvider) {
+		return context.convertAnother(result, type);
+	}
 
     private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result, String itemFieldName) {
         String fieldName = mapper.getFieldNameForItemTypeAndName(context.getRequiredType(), value.getClass(), itemFieldName);

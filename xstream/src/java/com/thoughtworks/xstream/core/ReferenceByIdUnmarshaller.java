@@ -1,13 +1,14 @@
 package com.thoughtworks.xstream.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
 
@@ -27,7 +28,7 @@ public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
         super(root, reader, converterLookup, classMapper);
     }
 
-    public Object convertAnother(Object parent, Class type) {
+    protected Object convert(Object parent, Class type, Converter converter) {
         if (parentIdStack.size() > 0) { // handles circular references
             Object parentId = parentIdStack.peek();
             if (!values.containsKey(parentId)) { // see AbstractCircularReferenceTest.testWeirdCircularReference()
@@ -40,11 +41,12 @@ public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
         } else {
             String currentId = reader.getAttribute("id");
             parentIdStack.push(currentId);
-            Object result = super.convertAnother(parent, type);
+            Object result = super.convert(parent, type, converter);
             values.put(currentId, result);
             parentIdStack.popSilently();
             return result;
         }
     }
 
+    
 }

@@ -9,15 +9,33 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * A field dictionary instance caches information about classes fields. 
+ *
+ */
 public class FieldDictionary {
 
     private final Map keyedByFieldNameCache = Collections.synchronizedMap(new HashMap());
     private final Map keyedByFieldKeyCache = Collections.synchronizedMap(new HashMap());
 
+    /**
+     * Returns an iterator for all serializable fields for some class
+     * @param cls	the class you are interested on
+     * @return an iterator for its serializable fields
+     */
     public Iterator serializableFieldsFor(Class cls) {
         return buildMap(cls, true).values().iterator();
     }
 
+    /**
+     * Returns an specific field of some class. If definedIn is null, it searchs for the field named 'name' inside the class cls.
+     * If definedIn is different than null, tries to find the specified field name in the specified class cls which should be defined in
+     * class definedIn (either equals cls or a one of it's superclasses)  
+     * @param cls	the class where the field is to be searched
+     * @param name	the field name
+     * @param definedIn	the superclass (or the class itself) of cls where the field was defined
+     * @return the field itself
+     */
     public Field field(Class cls, String name, Class definedIn) {
         Map fields = buildMap(cls, definedIn != null);
         Field field = (Field) fields.get(definedIn != null ? (Object) new FieldKey(name, definedIn, 0) : (Object) name);

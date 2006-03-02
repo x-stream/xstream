@@ -45,11 +45,19 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     public void convertAnother(Object item) {
+        Converter converter = converterLookup.lookupConverterForType(item.getClass());
+        convert(item, converter);
+    }
+
+    public void convertAnother(Object item, Converter converter) {
+    	convert(item, converter);
+    }
+    
+    protected void convert(Object item, Converter converter) {
         if (parentObjects.containsId(item)) {
             throw new CircularReferenceException();
         }
         parentObjects.associateId(item, "");
-        Converter converter = converterLookup.lookupConverterForType(item.getClass());
         converter.marshal(item, writer, this);
         parentObjects.removeId(item);
     }

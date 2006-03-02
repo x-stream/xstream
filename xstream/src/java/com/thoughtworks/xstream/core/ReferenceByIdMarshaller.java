@@ -50,9 +50,7 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
         this(writer, converterLookup, classMapper, new SequenceGenerator(1));
     }
 
-    public void convertAnother(Object item) {
-        Converter converter = converterLookup.lookupConverterForType(item.getClass());
-
+    public void convert(Object item, Converter converter) {
         if (getMapper().isImmutableValueType(item.getClass())) {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);

@@ -1,15 +1,5 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
-import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.mapper.Mapper;
-
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -25,6 +15,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
+import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
@@ -63,10 +64,10 @@ public class SerializableConverter implements Converter {
     private static final String ELEMENT_FIELD = "field";
     private static final String ATTRIBUTE_NAME = "name";
 
-    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
+    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, JVM jvm) {
         this.mapper = mapper;
         this.reflectionProvider = reflectionProvider;
-        this.reflectionConverter = new ReflectionConverter(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
+        this.reflectionConverter = jvm.bestReflectionConverter(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
     }
 
     public boolean canConvert(Class type) {
@@ -407,6 +408,10 @@ public class SerializableConverter implements Converter {
                         return context.keys();
                     }
 
+					public Object convertAnother(Object current, Class type, Converter converter) {
+						return context.convertAnother(current, type, converter);
+					}
+
                 });
             } else {
                 currentType[0] = mapper.defaultImplementationOf(mapper.realClass(nodeName));
@@ -460,6 +465,10 @@ public class SerializableConverter implements Converter {
         public boolean fieldDefinedInClass(String fieldName, Class type) {
             return reflectionProvider.fieldDefinedInClass(fieldName, type);
         }
+
+		public Field getField(Class definedIn, String fieldName) {
+			return reflectionProvider.getField(definedIn, fieldName);
+		}
 
     }
 }

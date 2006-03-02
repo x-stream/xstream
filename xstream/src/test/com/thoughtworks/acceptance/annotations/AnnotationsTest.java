@@ -17,13 +17,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
+ * Simple tests for class annotations
  * 
  * @author Chung-Onn Cheong
  * @author Mauro Talevi
  */
 public class AnnotationsTest extends AbstractAcceptanceTest {
     
-    public void testAnnotations()  {
+	public void testAnnotations()  {
         Annotations.configureAliases(xstream, Person.class, AddressBookInfo.class);
         Map<String, Person> map = new HashMap<String, Person>();
         map.put("first person", new Person("john doe"));

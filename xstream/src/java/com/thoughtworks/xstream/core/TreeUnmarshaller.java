@@ -40,9 +40,18 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
+
     public Object convertAnother(Object parent, Class type) {
-        try {
-            Converter converter = converterLookup.lookupConverterForType(type);
+        Converter converter = converterLookup.lookupConverterForType(type);
+        return convert(parent, type,converter);
+    }
+
+    public Object convertAnother(Object parent, Class type, Converter converter) {
+        return convert(parent, type, converter);
+    }
+
+	protected Object convert(Object parent, Class type, Converter converter) {
+		try {
             types.push(mapper.defaultImplementationOf(type));
             Object result = converter.unmarshal(reader, this);
             types.popSilently();
@@ -55,7 +64,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
             addInformationTo(conversionException, type);
             throw conversionException;
         }
-    }
+	}
 
     private void addInformationTo(ErrorWriter errorWriter, Class type) {
         errorWriter.add("class", type.getName());

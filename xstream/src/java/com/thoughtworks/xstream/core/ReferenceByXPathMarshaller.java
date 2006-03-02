@@ -27,9 +27,7 @@ public class ReferenceByXPathMarshaller extends TreeMarshaller {
         this(writer, converterLookup, (Mapper)classMapper);
     }
 
-    public void convertAnother(Object item) {
-        Converter converter = converterLookup.lookupConverterForType(item.getClass());
-
+    protected void convert(Object item, Converter converter) {
         if (getMapper().isImmutableValueType(item.getClass())) {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
@@ -45,5 +43,4 @@ public class ReferenceByXPathMarshaller extends TreeMarshaller {
             }
         }
     }
-
 }

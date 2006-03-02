@@ -1,7 +1,5 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.core.JVM;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -19,6 +17,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.thoughtworks.xstream.core.JVM;
+
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects
  * that can be constructed are limited.
@@ -32,7 +32,7 @@ import java.util.Map;
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
     private final Map serializedDataCache = Collections.synchronizedMap(new HashMap());
-
+    
     protected FieldDictionary fieldDictionary = new FieldDictionary();
 
     public Object newInstance(Class type) {
@@ -156,5 +156,9 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             }
         }
     }
+
+	public Field getField(Class definedIn, String fieldName) {
+        return fieldDictionary.field(definedIn, fieldName, null);
+	}
 
 }
