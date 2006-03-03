@@ -12,31 +12,35 @@
       <li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
     </ul>
 
-	Full details can be found in Jira's 
+	Full details can be found in Jira's
 	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a>  and
 	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
-	
+
     <h1>Current Version</h1>
 
     <p>Not yet released</p>
-    
+
     <h2>Major changes</h2>
 
     <ul>
+        <li>JIRA:XSTR-269, Aliasing of fields (contributed by Paul Hammant and Ian Cartwright).</li>
+        <li>JIRA:XSTR-278, AnnotationConverter for fields (contributed by Guilherme Silveira).</li>
         <li>JIRA:XSTR-256, PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
-        <li>JIRA:XSTR-215, XStream writes now fields in declaration order even for JVMs reporting them in reverse order like IBM JDK.</li>
         <li>JIRA:XSTR-258, Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
     </ul>
-    
+
     <h2>Minor changes</h2>
 
     <ul>
+        <li>JIRA:XSTR-266, XStream fails to serialize elements of a unserializable class, that is a base class of a derived class</li>
         <li>JIRA:XSTR-236, priority constants for converter registration are now public</li>
+        <li>JIRA:XSTR-215, XStream writes now fields in declaration order even for JVMs reporting them in reverse order like IBM JDK.</li>
     </ul>
 
     <h2>API changes</h2>
 
     <ul>
+        <li>JIRA:XSTR-69, refactored ReflectionCopnverter allows simpler subclassing.</li>
         <li>Deprecate ClassMapper for Mapper. All methods with a ClassMapper parameter have now a duplicate taking only a Mapper. The variant with the ClassMapper is deprecated.</li>
         <li>Deprecate c.t.x.alias.CannotResolveClassException for c.t.x.mapper.CannotResolveClassException.</li>
         <li>Deprecate NameMapper (was not used within XStream anymore anyway).</li>
@@ -44,7 +48,7 @@
     </ul>
 
     <ul>
-    
+
     <h1>Version 1.1.3</h1>
 
     <p>Released 13 January 2006.</p>

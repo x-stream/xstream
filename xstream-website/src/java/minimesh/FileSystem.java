@@ -52,7 +52,7 @@ public class FileSystem {
         try {
             FileChannel sourceChannel = new FileInputStream(source).getChannel();
             FileChannel destinationChannel = new FileOutputStream(destination).getChannel();
-            sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel);
+            destinationChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
             sourceChannel.close();
             destinationChannel.close();
         } catch (IOException e) {
