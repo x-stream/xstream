@@ -54,7 +54,7 @@
         </javac>
     </target>
 
-    <target name="compile" depends="compile:java5, compile:java3" description="Compile all Java" />
+    <target name="compile" depends="compile:java3, compile:java5" description="Compile all Java" />
 
     <target name="test:compile" depends="compile">
         <mkdir dir="${test.build.dir}"/>
