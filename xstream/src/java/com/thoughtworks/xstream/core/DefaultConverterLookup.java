@@ -12,6 +12,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * The default implementation of converters lookup.
+ * 
+ * @author Joe Walnes
+ * @author J&ouml;rg Schaible
+ * @author Guilherme Silveira
+ */
 public class DefaultConverterLookup implements ConverterLookup {
 
     private final PrioritizedList converters = new PrioritizedList();
@@ -46,6 +53,12 @@ public class DefaultConverterLookup implements ConverterLookup {
     
     public void registerConverter(Converter converter, int priority) {
         converters.add(converter, priority);
+        for (Iterator iter = this.typeToConverterMap.keySet().iterator(); iter.hasNext();) {
+			Class type = (Class) iter.next();
+			if(converter.canConvert(type)) {
+				this.typeToConverterMap.remove(type);
+			}
+		}
     }
 
 }
