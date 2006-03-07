@@ -702,6 +702,10 @@ public class XStream {
         defaultImplementationsMapper.addDefaultImplementation(defaultImplementation, ofType);
     }
 
+    /**
+     * Add immutable types. The value of the instances of these types will always be written into the stream
+     * even if they appear multiple times.
+     */
     public void addImmutableType(Class type) {
         immutableTypesMapper.addImmutableType(type);
     }
@@ -964,7 +968,9 @@ public class XStream {
     }
 
     /**
-     * Prevents a field from being serialized.
+     * Prevents a field from being serialized. To omit a field you must
+     * always provide the declaring type and not necessarily the type
+     * that is converted.
      *
      * @since 1.1.3
      */

@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
- * implement a custom readObject()/writeObject() method.
+ * implement or inherit a custom readObject()/writeObject() method.
  *
  * <h3>Supported features of serialization</h3>
  * <ul>
