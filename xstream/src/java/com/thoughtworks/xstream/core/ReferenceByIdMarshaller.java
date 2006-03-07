@@ -20,14 +20,14 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
                                    ConverterLookup converterLookup,
                                    Mapper mapper,
                                    IDGenerator idGenerator) {
-        super(writer, converterLookup, mapper);
+        super(new IDCountingStreamWriter(writer), converterLookup, mapper);
         this.idGenerator = idGenerator;
     }
 
     public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
                                    ConverterLookup converterLookup,
                                    Mapper mapper) {
-        this(writer, converterLookup, mapper, new SequenceGenerator(1));
+        this(new IDCountingStreamWriter(writer), converterLookup, mapper, new SequenceGenerator(1));
     }
 
     /**
@@ -37,7 +37,7 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
                                    ConverterLookup converterLookup,
                                    ClassMapper classMapper,
                                    IDGenerator idGenerator) {
-        super(writer, converterLookup, classMapper);
+        super(new IDCountingStreamWriter(writer), converterLookup, classMapper);
         this.idGenerator = idGenerator;
     }
 
@@ -67,4 +67,52 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
         }
     }
 
+    // TODO: Attempt for XSTR-276, but we must find generic solution ... see XSTR-283
+    private static class IDCountingStreamWriter implements HierarchicalStreamWriter {
+
+        private final HierarchicalStreamWriter wrapped;
+        private int counter;
+
+        private IDCountingStreamWriter(HierarchicalStreamWriter wrapped) {
+            this.wrapped = wrapped;
+        }
+
+        public void addAttribute(String name, String value) {
+            if (name.equals("id")) {
+               if (counter == 1) {
+                   //name = "id-implicit";
+               } else {
+                   counter++;
+               }
+            }
+            this.wrapped.addAttribute(name, value);
+        }
+
+        public void close() {
+            this.wrapped.close();
+        }
+
+        public void endNode() {
+            this.wrapped.endNode();
+            counter = 0;
+        }
+
+        public void flush() {
+            this.wrapped.flush();
+        }
+
+        public void setValue(String text) {
+            this.wrapped.setValue(text);
+        }
+
+        public void startNode(String name) {
+            counter = 0;
+            this.wrapped.startNode(name);
+        }
+
+        public HierarchicalStreamWriter underlyingWriter() {
+            return this.wrapped.underlyingWriter();
+        }
+
+    }
 }
