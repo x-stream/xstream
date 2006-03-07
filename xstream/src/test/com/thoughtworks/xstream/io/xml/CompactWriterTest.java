@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.core.util.QuickWriter;
+
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -45,6 +47,24 @@ public class CompactWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs(expected);
     }
 
+    public void testWriteTextAsCDATA() {
+        writer = new CompactWriter(buffer) {
+            protected void writeText(QuickWriter writer, String text) {
+                writer.write("<[CDATA[");
+                writer.write(text);
+                writer.write("]]>");
+            }
+        };
+
+        writer.startNode("tag");
+        writer.setValue("hello & this isn't \"really\" <good>");
+        writer.endNode();
+
+        String expected = "<tag><[CDATA[hello & this isn't \"really\" <good>]]></tag>";
+
+        assertXmlProducedIs(expected);
+    }
+
     public void testAttributesCanBeWritten() {
         writer.startNode("tag");
         writer.addAttribute("hello", "world");
@@ -62,5 +82,4 @@ public class CompactWriterTest extends AbstractXMLWriterTest {
 
         assertXmlProducedIs(expected);
     }
-
 }
