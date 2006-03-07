@@ -58,6 +58,36 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("c", out.neverIgnore);
     }
 
+    public static class DerivedThing extends Thing {
+        String derived;
+    }
+
+    public void testInheritedFieldsCanBeExplicitlyOmittedThroughFacade() {
+        DerivedThing in = new DerivedThing();
+        in.alwaysIgnore = "a";
+        in.sometimesIgnore = "b";
+        in.neverIgnore = "c";
+        in.derived = "d";
+
+        String expectedXml = "" +
+                "<thing>\n" +
+                "  <derived>d</derived>\n" +
+                "  <neverIgnore>c</neverIgnore>\n" +
+                "</thing>";
+
+        xstream.alias("thing", DerivedThing.class);
+        xstream.omitField(Thing.class, "sometimesIgnore");
+
+        String actualXml = xstream.toXML(in);
+        assertEquals(expectedXml, actualXml);
+
+        DerivedThing out = (DerivedThing) xstream.fromXML(actualXml);
+        assertEquals(null, out.alwaysIgnore);
+        assertEquals(null, out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+        assertEquals("d", out.derived);
+    }
+
     public static class AnotherThing extends StandardObject {
         String stuff;
         String cheese;
