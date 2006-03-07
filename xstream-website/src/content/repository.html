@@ -5,7 +5,7 @@
   <body>
 
     <h2>Subversion</h2>
-    
+
     XStream uses Subversion as the SCM.  See <a href="http://subversion.tigris.org">Subversion website</a> for details and documentation on IDE integration.
 
 	<h2>Svnserve Access</h2>
@@ -13,35 +13,35 @@
 	Svnserve access is via a specific port (typically 3690 on Unix systems) and requires ssh access for developers.  This is often not allowed by corporate firewalls.
 
 	<h3>Anonymous Access</h3>
-	
+
 		<div class="Source"><pre>svn co svn://svn.xstream.codehaus.org/xstream/scm/trunk</pre></div>
-		
+
 	<h3>Developer Access over SSH</h3>
-	
+
 		<p>
 		<div class="Source"><pre>svn co svn+ssh://username@svn.xstream.codehaus.org/scm/xstream/trunk</pre></div>
 		where username is your unix Codehaus username.
 		</p>
 		<p>
-		<b>Note</b>: the path is different when accessing over SSH, ie scm/xstream in place of xstream/scm. 
+		<b>Note</b>: the path is different when accessing over SSH, ie scm/xstream in place of xstream/scm.
 		</p>
 
 	<h2>WebDav Access</h2>
 
-	WebDav is an alternative access protocol supported by SVN and being http-based is often allowed by corporate firewalls. 
+	WebDav is an alternative access protocol supported by SVN and being http-based is often allowed by corporate firewalls.
 
 	<h3>WebDAV over SSL</h3>
 
 		<div class="Source"><pre>svn co https://svn.codehaus.org/xstream/trunk</pre></div>
 
 		<p>
-		This access protocol is available to all, but only developers can commit changes.    
+		This access protocol is available to all, but only developers can commit changes.
 		</p>
 		<p>
 		Developers require a unix password for Codehaus username (contact Bob at the Haus to get assigned a password if you don't have one).
 		</p>
 		<p>
-		To test https commit access, one may eg: 
+		To test https commit access, one may eg:
 			<div class="Source"><pre>
 svn co https://svn.codehaus.org/xstream/trunk xstream
 cd xstream
@@ -53,7 +53,11 @@ svn commit --username username --password your-password --message "Testing https
 		<p>
 		<b>Note</b>: you only need to specify username and password once per client.
 		</p>
-	
+
+	<h2>Browser</h2>
+
+	You can use the browser to navigate within the sources <a href="http://svn.codehaus.org/trunk/?root=xstream">online</a> with the help of the ViewCVS installation on Codehaus.
+
 	<h2>Modules</h2>
 
 	XStream project consists of two modules:  xstream and xstream-website.
