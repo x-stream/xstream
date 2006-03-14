@@ -165,7 +165,7 @@ public class Annotations {
         if (AbstractCollectionConverter.class.isAssignableFrom(converterType)) {
             try {
                 Constructor<? extends Converter> converterConstructor = converterType.getConstructor(Mapper.class);
-                converter = converterConstructor.newInstance(xstream.getClassMapper());
+                converter = converterConstructor.newInstance(xstream.getMapper());
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
