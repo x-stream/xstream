@@ -43,6 +43,10 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
     public Object convertAnother(Object parent, Class type) {
         Converter converter = converterLookup.lookupConverterForType(type);
+        return convert(parent, type,converter);
+    }
+
+    public Object convertAnother(Object parent, Class type, Converter converter) {
         return convert(parent, type, converter);
     }
 

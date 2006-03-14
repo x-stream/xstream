@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 public abstract class AbstractReflectionConverter implements Converter {
 
-    private final ReflectionProvider reflectionProvider;
+    protected final ReflectionProvider reflectionProvider;
     protected final Mapper mapper;
     protected final SerializationMethodInvoker serializationMethodInvoker;
     private transient ReflectionProvider pureJavaReflectionProvider;
@@ -96,7 +96,7 @@ public abstract class AbstractReflectionConverter implements Converter {
 
                 if (source != newObj) {
                     Field field = reflectionProvider.getField(definedIn,fieldName);
-                    marshallField(context, newObj, field, reflectionProvider);
+                    marshallField(context, newObj, field);
                 } else {
                     writer.addAttribute("self", "");
                 }
@@ -106,7 +106,7 @@ public abstract class AbstractReflectionConverter implements Converter {
         });
     }
 
-    protected void marshallField(final MarshallingContext context, Object newObj, Field field, ReflectionProvider reflectionProvider) {
+    protected void marshallField(final MarshallingContext context, Object newObj, Field field) {
         context.convertAnother(newObj);
     }
 
@@ -149,7 +149,7 @@ public abstract class AbstractReflectionConverter implements Converter {
             if (self == null) {
                 if (fieldExistsInClass) {
                     Field field = reflectionProvider.getField(result.getClass(),fieldName);
-                    value = unmarshallField(context, result, type, field, reflectionProvider);
+                    value = unmarshallField(context, result, type, field);
                 } else {
                     value = context.convertAnother(result, type);
                 }
@@ -170,7 +170,7 @@ public abstract class AbstractReflectionConverter implements Converter {
         return serializationMethodInvoker.callReadResolve(result);
     }
 
-    protected Object unmarshallField(final UnmarshallingContext context, final Object result, Class type, Field field, ReflectionProvider reflectionProvider) {
+    protected Object unmarshallField(final UnmarshallingContext context, final Object result, Class type, Field field) {
         return context.convertAnother(result, type);
     }
 

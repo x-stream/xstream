@@ -28,7 +28,7 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
 	}
 
 	protected void marshallField(final MarshallingContext context,
-			Object newObj, Field field, ReflectionProvider reflectionProvider) {
+			Object newObj, Field field) {
 		XStreamConverter annotation = annotationProvider.getAnnotation(field, XStreamConverter.class);
 		if (annotation != null) {
 			context.convertAnother(newObj, (Converter) reflectionProvider
@@ -39,8 +39,7 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
 	}
 
 	protected Object unmarshallField(final UnmarshallingContext context,
-			final Object result, Class type, Field field,
-			ReflectionProvider reflectionProvider) {
+			final Object result, Class type, Field field) {
 		XStreamConverter annotation = annotationProvider.getAnnotation(field, XStreamConverter.class);
 		if (annotation != null) {
 			return context.convertAnother(result, type,

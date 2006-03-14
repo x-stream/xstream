@@ -48,8 +48,6 @@ import java.util.Map;
  */
 public class SerializableConverter extends AbstractReflectionConverter {
 
-    private final ReflectionProvider reflectionProvider;
-
     private static final String ELEMENT_NULL = "null";
     private static final String ELEMENT_DEFAULT = "default";
     private static final String ELEMENT_UNSERIALIZABLE_PARENTS = "unserializable-parents";
@@ -62,7 +60,6 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
     public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         super(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
-        this.reflectionProvider = reflectionProvider;
     }
 
     public boolean canConvert(Class type) {
