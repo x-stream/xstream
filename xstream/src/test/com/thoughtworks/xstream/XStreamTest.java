@@ -1,5 +1,14 @@
 package com.thoughtworks.xstream;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import junit.framework.TestCase;
+
+import org.dom4j.Element;
+
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
 import com.thoughtworks.acceptance.someobjects.Handler;
@@ -17,14 +26,9 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.AbstractDocumentReader;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
-
-import junit.framework.TestCase;
-
-import org.dom4j.Element;
-
-import java.io.StringReader;
 
 public class XStreamTest extends TestCase {
 
@@ -309,5 +313,37 @@ public class XStreamTest extends TestCase {
 
         assertEquals("z", z.field);
     }
+
+    public void testObjectOutputStreamCloseTwice() throws IOException {
+		ObjectOutputStream oout = xstream.createObjectOutputStream( new StringWriter() );
+		oout.writeObject( new Integer( 1 ) );
+		oout.close();
+		oout.close();
+    }
+
+    public void testObjectOutputStreamCloseAndFlush() throws IOException {
+		ObjectOutputStream oout = xstream.createObjectOutputStream( new StringWriter() );
+		oout.writeObject( new Integer( 1 ) );
+		oout.close();
+		try {
+			oout.flush();
+			fail( "Closing and flushing should throw a StreamException" );
+		} catch (StreamException e) {
+			// ok
+		}		
+    }
+
+    public void testObjectOutputStreamCloseAndWrite() throws IOException {
+		ObjectOutputStream oout = xstream.createObjectOutputStream( new StringWriter() );
+		oout.writeObject( new Integer( 1 ) );
+		oout.close();
+		try {
+			oout.writeObject( new Integer( 2 ) );
+	    	fail( "Closing and writing should throw a StreamException" );
+		} catch (StreamException e) {
+			// ok
+		}		
+    }
+
 
 }
