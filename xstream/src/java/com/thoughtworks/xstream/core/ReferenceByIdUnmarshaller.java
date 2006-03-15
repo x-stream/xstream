@@ -31,17 +31,20 @@ public class ReferenceByIdUnmarshaller extends TreeUnmarshaller {
     protected Object convert(Object parent, Class type, Converter converter) {
         if (parentIdStack.size() > 0) { // handles circular references
             Object parentId = parentIdStack.peek();
+            //System.out.print("Stacked ID: " + parentId + " <" + System.identityHashCode(parent) + ":" + parent.toString() + ">\n");
             if (!values.containsKey(parentId)) { // see AbstractCircularReferenceTest.testWeirdCircularReference()
                 values.put(parentId, parent);
             }
         }
         String reference = reader.getAttribute("reference");
         if (reference != null) {
+            //System.out.print("Pick ID: " + reference + "\n");
             return values.get(reference);
         } else {
             String currentId = reader.getAttribute("id");
             parentIdStack.push(currentId);
             Object result = super.convert(parent, type, converter);
+            //System.out.print("Current ID: " + currentId + " <" + System.identityHashCode(result) + ":" + result.toString() + ">\n");
             values.put(currentId, result);
             parentIdStack.popSilently();
             return result;

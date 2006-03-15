@@ -59,6 +59,7 @@ import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StatefulWriter;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
@@ -872,14 +873,11 @@ public class XStream {
      * @since 1.0.3
      */
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, String rootNodeName) throws IOException {
-        writer.startNode(rootNodeName);
+        final StatefulWriter statefulWriter = new StatefulWriter(writer);
+        statefulWriter.startNode(rootNodeName);
         return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
-            private boolean closed;
             public void writeToStream(Object object) {
-            	if (closed) {
-            	    throw new StreamException(new IOException("Object output stream was already closed"));
-            	}
-                marshal(object, writer);
+                marshal(object, statefulWriter);
             }
 
             public void writeFieldsToStream(Map fields) throws NotActiveException {
@@ -891,17 +889,13 @@ public class XStream {
             }
 
             public void flush() {
-            	if (closed) {
-            	    throw new StreamException(new IOException("Object output stream was already closed"));
-            	}
-           	writer.flush();
+           	statefulWriter.flush();
             }
 
             public void close() {
-            	if(!closed) {
-                    writer.endNode();
-                    writer.close();
-                    closed = true;
+            	if(statefulWriter.state() != StatefulWriter.STATE_CLOSED) {
+                    statefulWriter.endNode();
+                    statefulWriter.close();
             	}
             }
         });

@@ -48,9 +48,12 @@ public abstract class AbstractNestedCircularReferenceTest extends AbstractAccept
         // setup
         WeirdThing in = new WeirdThing();
         in.anotherObject = in;
+        
+        String xml = xstream.toXML(in);
+        //System.out.println(xml + "\n");
 
         // execute
-        WeirdThing out = (WeirdThing) xstream.fromXML(xstream.toXML(in));
+        WeirdThing out = (WeirdThing) xstream.fromXML(xml);
 
         // verify
         assertSame(out, out.anotherObject);

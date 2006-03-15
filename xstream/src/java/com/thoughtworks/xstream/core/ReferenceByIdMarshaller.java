@@ -57,11 +57,13 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
         } else {
             Object idOfExistingReference = references.lookupId(item);
             if (idOfExistingReference != null) {
+                //System.out.print("Pick ID: " + idOfExistingReference.toString() + " <" + System.identityHashCode(item) + ":" + item.getClass().getName() + ">\n");
                 writer.addAttribute("reference", idOfExistingReference.toString());
             } else {
                 String newId = idGenerator.next();
                 writer.addAttribute("id", newId);
                 references.associateId(item, newId);
+                //System.out.print("Current ID: " + newId + " <" + System.identityHashCode(item) + ":" + item.getClass().getName() + ">\n");
                 converter.marshal(item, writer, this);
             }
         }
