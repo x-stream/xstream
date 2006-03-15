@@ -6,7 +6,7 @@ package com.thoughtworks.acceptance.someobjects;
 
 
 public class WithNamedList extends WithList {
-    private final String name;
+    private String name;
 
     public WithNamedList(final String name) {
         this.name = name;
