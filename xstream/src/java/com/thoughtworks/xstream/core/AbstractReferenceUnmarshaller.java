@@ -10,6 +10,14 @@ import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+/**
+ * Abstract base class for a TreeUnmarshaller, that resolves refrences.
+ * 
+ * @author Joe Walnes
+ * @author J&ouml;rg Schaible
+ * @author Mauro Talevi
+ * @since 1.2
+ */
 public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
 
     private Map values = new HashMap();
