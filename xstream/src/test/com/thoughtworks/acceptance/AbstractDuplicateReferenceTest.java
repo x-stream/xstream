@@ -1,5 +1,9 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.someobjects.WithNamedList;
+import com.thoughtworks.xstream.core.AbstractReferenceMarshaller;
+import com.thoughtworks.xstream.io.StreamException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +106,23 @@ public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceT
 
         assertEquals("hibye", out.s1.toString());
         assertSame(out.s1, out.s2);
+    }
+
+    public void testReferencesToImplicitCollectionIsNotPossible() {
+        xstream.alias("strings", WithNamedList.class);
+        xstream.addImplicitCollection(WithNamedList.class, "things");
+        WithNamedList[] wls = new WithNamedList[]{
+                new WithNamedList("foo"), new WithNamedList("bar")};
+        wls[0].things.add("Hello");
+        wls[0].things.add("Daniel");
+        wls[1].things = wls[0].things;
+    
+        try {
+            xstream.toXML(wls);
+            fail("Thrown " + AbstractReferenceMarshaller.ReferencedImplicitElementException.class.getName() + " expected");
+        } catch (final AbstractReferenceMarshaller.ReferencedImplicitElementException e) {
+            // OK
+        }
     }
 
 }

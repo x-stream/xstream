@@ -1,15 +1,13 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.path.Path;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-public class ReferenceByIdMarshaller extends TreeMarshaller {
+public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
 
-    private ObjectIdDictionary references = new ObjectIdDictionary();
     private IDGenerator idGenerator;
 
     public static interface IDGenerator {
@@ -20,14 +18,14 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
                                    ConverterLookup converterLookup,
                                    Mapper mapper,
                                    IDGenerator idGenerator) {
-        super(new IDCountingStreamWriter(writer), converterLookup, mapper);
+        super(writer, converterLookup, mapper);
         this.idGenerator = idGenerator;
     }
 
     public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
                                    ConverterLookup converterLookup,
                                    Mapper mapper) {
-        this(new IDCountingStreamWriter(writer), converterLookup, mapper, new SequenceGenerator(1));
+        this(writer, converterLookup, mapper, new SequenceGenerator(1));
     }
 
     /**
@@ -37,7 +35,7 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
                                    ConverterLookup converterLookup,
                                    ClassMapper classMapper,
                                    IDGenerator idGenerator) {
-        super(new IDCountingStreamWriter(writer), converterLookup, classMapper);
+        super(writer, converterLookup, classMapper);
         this.idGenerator = idGenerator;
     }
 
@@ -50,71 +48,15 @@ public class ReferenceByIdMarshaller extends TreeMarshaller {
         this(writer, converterLookup, classMapper, new SequenceGenerator(1));
     }
 
-    public void convert(Object item, Converter converter) {
-        if (getMapper().isImmutableValueType(item.getClass())) {
-            // strings, ints, dates, etc... don't bother using references.
-            converter.marshal(item, writer, this);
-        } else {
-            Object idOfExistingReference = references.lookupId(item);
-            if (idOfExistingReference != null) {
-                //System.out.print("Pick ID: " + idOfExistingReference.toString() + " <" + System.identityHashCode(item) + ":" + item.getClass().getName() + ">\n");
-                writer.addAttribute("reference", idOfExistingReference.toString());
-            } else {
-                String newId = idGenerator.next();
-                writer.addAttribute("id", newId);
-                references.associateId(item, newId);
-                //System.out.print("Current ID: " + newId + " <" + System.identityHashCode(item) + ":" + item.getClass().getName() + ">\n");
-                converter.marshal(item, writer, this);
-            }
-        }
+    protected String createReference(Path currentPath, Object existingReferenceKey) {
+        return existingReferenceKey.toString();
     }
 
-    // TODO: Attempt for XSTR-276, but we must find generic solution ... see XSTR-283
-    private static class IDCountingStreamWriter implements HierarchicalStreamWriter {
+    protected Object createReferenceKey(Path currentPath) {
+        return idGenerator.next();
+    }
 
-        private final HierarchicalStreamWriter wrapped;
-        private int counter;
-
-        private IDCountingStreamWriter(HierarchicalStreamWriter wrapped) {
-            this.wrapped = wrapped;
-        }
-
-        public void addAttribute(String name, String value) {
-            if (name.equals("id")) {
-               if (counter == 1) {
-                   //name = "id-implicit";
-               } else {
-                   counter++;
-               }
-            }
-            this.wrapped.addAttribute(name, value);
-        }
-
-        public void close() {
-            this.wrapped.close();
-        }
-
-        public void endNode() {
-            this.wrapped.endNode();
-            counter = 0;
-        }
-
-        public void flush() {
-            this.wrapped.flush();
-        }
-
-        public void setValue(String text) {
-            this.wrapped.setValue(text);
-        }
-
-        public void startNode(String name) {
-            counter = 0;
-            this.wrapped.startNode(name);
-        }
-
-        public HierarchicalStreamWriter underlyingWriter() {
-            return this.wrapped.underlyingWriter();
-        }
-
+    protected void fireValidReference(Object referenceKey) {
+        writer.addAttribute("id", referenceKey.toString());
     }
 }

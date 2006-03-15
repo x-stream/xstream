@@ -87,5 +87,4 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         }
         return result.toString();
     }
-
 }

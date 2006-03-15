@@ -52,7 +52,7 @@ public class PathTracker {
      *                        use the other constructor.
      */
     public PathTracker(int initialCapacity) {
-        this.capacity = initialCapacity;
+        this.capacity = Math.max(1, initialCapacity);
         pathStack = new String[capacity];
         indexMapStack = new Map[capacity];
     }
