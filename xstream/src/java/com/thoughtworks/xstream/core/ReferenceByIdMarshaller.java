@@ -35,8 +35,7 @@ public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
                                    ConverterLookup converterLookup,
                                    ClassMapper classMapper,
                                    IDGenerator idGenerator) {
-        super(writer, converterLookup, classMapper);
-        this.idGenerator = idGenerator;
+        this(writer, converterLookup, (Mapper)classMapper, idGenerator);
     }
 
     /**
@@ -45,7 +44,7 @@ public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
     public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
                                    ConverterLookup converterLookup,
                                    ClassMapper classMapper) {
-        this(writer, converterLookup, classMapper, new SequenceGenerator(1));
+        this(writer, converterLookup, (Mapper)classMapper);
     }
 
     protected String createReference(Path currentPath, Object existingReferenceKey) {

@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -33,13 +32,6 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
                                    ConverterLookup converterLookup,
                                    Mapper mapper) {
         super(writer, converterLookup, mapper);
-        this.writer = new PathTrackingWriter(writer, pathTracker);
-    }
-
-    protected AbstractReferenceMarshaller(HierarchicalStreamWriter writer,
-                                   ConverterLookup converterLookup,
-                                   ClassMapper classMapper) {
-        super(writer, converterLookup, classMapper);
         this.writer = new PathTrackingWriter(writer, pathTracker);
     }
 

@@ -17,7 +17,7 @@ public class ReferenceByIdUnmarshaller extends AbstractReferenceUnmarshaller {
      */
     public ReferenceByIdUnmarshaller(Object root, HierarchicalStreamReader reader,
                                      ConverterLookup converterLookup, ClassMapper classMapper) {
-        super(root, reader, converterLookup, classMapper);
+        this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
     protected Object getReferenceKey(String reference) {

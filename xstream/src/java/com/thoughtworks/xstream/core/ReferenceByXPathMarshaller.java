@@ -16,7 +16,7 @@ public class ReferenceByXPathMarshaller extends AbstractReferenceMarshaller {
      * @deprecated As of 1.2, use {@link #ReferenceByXPathMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper)}
      */
     public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, ClassMapper classMapper) {
-        super(writer, converterLookup, classMapper);
+        this(writer, converterLookup, (Mapper)classMapper);
     }
 
     protected String createReference(Path currentPath, Object existingReferenceKey) {

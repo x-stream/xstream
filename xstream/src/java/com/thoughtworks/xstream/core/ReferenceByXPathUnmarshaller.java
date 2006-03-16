@@ -23,8 +23,7 @@ public class ReferenceByXPathUnmarshaller extends AbstractReferenceUnmarshaller 
      */
     public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
                                         ConverterLookup converterLookup, ClassMapper classMapper) {
-        super(root, reader, converterLookup, classMapper);
-        this.reader = new PathTrackingReader(reader, pathTracker);
+        this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
     protected Object getReferenceKey(String reference) {

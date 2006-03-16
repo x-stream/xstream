@@ -3,7 +3,6 @@ package com.thoughtworks.xstream.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.core.util.FastStack;
@@ -26,11 +25,6 @@ public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
     public AbstractReferenceUnmarshaller(Object root, HierarchicalStreamReader reader,
                                      ConverterLookup converterLookup, Mapper mapper) {
         super(root, reader, converterLookup, mapper);
-    }
-
-    protected AbstractReferenceUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                     ConverterLookup converterLookup, ClassMapper classMapper) {
-        super(root, reader, converterLookup, classMapper);
     }
 
     protected Object convert(Object parent, Class type, Converter converter) {
