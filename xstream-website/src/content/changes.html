@@ -27,6 +27,7 @@
         <li>JIRA:XSTR-278, AnnotationConverter for fields (contributed by Guilherme Silveira).</li>
         <li>JIRA:XSTR-256, PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
         <li>JIRA:XSTR-258, Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
+        <li>JIRA:XSTR-62 and JIRA:XSTR-211, New SingeValueConverter allows light wieght converters if the value can be representet by a unique string.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -35,16 +36,22 @@
         <li>JIRA:XSTR-266, XStream fails to serialize elements of a unserializable class, that is a base class of a derived class</li>
         <li>JIRA:XSTR-236, priority constants for converter registration are now public</li>
         <li>JIRA:XSTR-215, XStream writes now fields in declaration order even for JVMs reporting them in reverse order like IBM JDK.</li>
+        <li>JIRA:XSTR-276 and JIRA:XSTR-283, XStream does no longer attempt to create references to implicit element.</li>
+        <li>JIRA:XSTR-244, Closing a Writer can now be done twice, but any write attempt will later on fail.</li>
+        <li>JIRA:XSTR-243, Transient fields were unmarshalled from XML.</li>
+        <li>JIRA:XSTR-281, After registering a new converter, the internal converter cache is now cleared.</li>
     </ul>
 
     <h2>API changes</h2>
 
     <ul>
-        <li>JIRA:XSTR-69, refactored ReflectionCopnverter allows simpler subclassing.</li>
+        <li>JIRA:XSTR-69, refactored ReflectionConverter allows simpler subclassing.</li>
+        <li>Unmarshalling context has now an overloaded version of the method convertAnother to provide the Converter directly.</li>
         <li>Deprecate ClassMapper for Mapper. All methods with a ClassMapper parameter have now a duplicate taking only a Mapper. The variant with the ClassMapper is deprecated.</li>
         <li>Deprecate c.t.x.alias.CannotResolveClassException for c.t.x.mapper.CannotResolveClassException.</li>
         <li>Deprecate NameMapper (was not used within XStream anymore anyway).</li>
-        <li>Removed all deprecated stuff from 1.x</li>
+        <li>Removed all deprecated stuff from 1.1.x and 1.0.x</li>
+        <li>JIRA:XSTR-211, A lot of existing (basic) Converters have been refactored to use the new SingleValueConverter interface.</li>
     </ul>
 
     <ul>
