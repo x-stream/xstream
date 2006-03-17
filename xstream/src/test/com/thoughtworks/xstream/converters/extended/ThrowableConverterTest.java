@@ -83,6 +83,18 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
             assertNull(result.getCause());
         }
     }
+    
+    public void testSerializesWithInitializedCauseInJdk14() {
+        xstream.setMode(XStream.NO_REFERENCES);
+        try {
+            throw new RuntimeException("Without cause", null);
+        } catch (RuntimeException exception) {
+            Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
+            assertThrowableEquals(exception, result);
+            assertNull(exception.getCause());
+            assertNull(result.getCause());
+        }
+    }
 
     private static void assertThrowableEquals(final Throwable a,
                                               final Throwable b) {

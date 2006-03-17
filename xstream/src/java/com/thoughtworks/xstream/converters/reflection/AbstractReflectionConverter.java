@@ -94,12 +94,8 @@ public abstract class AbstractReflectionConverter implements Converter {
                     writer.addAttribute(mapper.attributeForClassDefiningField(), mapper.serializedClass(definedIn));
                 }
 
-                if (source != newObj) {
-                    Field field = reflectionProvider.getField(definedIn,fieldName);
-                    marshallField(context, newObj, field);
-                } else {
-                    writer.addAttribute("self", "");
-                }
+                Field field = reflectionProvider.getField(definedIn,fieldName);
+                marshallField(context, newObj, field);
                 writer.endNode();
             }
 
@@ -145,16 +141,11 @@ public abstract class AbstractReflectionConverter implements Converter {
 
             Class type = determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField);
             final Object value;
-            String self = reader.getAttribute("self");
-            if (self == null) {
-                if (fieldExistsInClass) {
-                    Field field = reflectionProvider.getField(result.getClass(),fieldName);
-                    value = unmarshallField(context, result, type, field);
-                } else {
-                    value = context.convertAnother(result, type);
-                }
+            if (fieldExistsInClass) {
+                Field field = reflectionProvider.getField(result.getClass(),fieldName);
+                value = unmarshallField(context, result, type, field);
             } else {
-                value = result;
+                value = context.convertAnother(result, type);
             }
             
             if (value != null && !type.isAssignableFrom(value.getClass())) {

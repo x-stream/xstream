@@ -35,7 +35,7 @@ public class XPathCircularReferenceTest extends AbstractCircularReferenceTest {
         String expected = "" +
                 "<person>\n" +
                 "  <firstname>bob</firstname>\n" +
-                "  <likes self=\"\"/>\n" +
+                "  <likes reference=\"..\"/>\n" +
                 "</person>";
 
         assertEquals(expected, xstream.toXML(bob));

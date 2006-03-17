@@ -144,7 +144,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "    <string>hi</string>\n" +
                 "  </list>\n" +
                 "  <c class=\"linked-list\" reference=\"../list\"/>\n" +
-                "  <mutex class=\"java.util.Collections-SynchronizedList\" self=\"\"/>\n" +
+                "  <mutex class=\"java.util.Collections-SynchronizedList\" reference=\"..\"/>\n" +
                 "</java.util.Collections-SynchronizedList>";
         }
 
