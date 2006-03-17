@@ -37,8 +37,11 @@ public class CustomConverterTest extends AbstractAcceptanceTest {
         Double d;
 
         public DoubleWrapper(double d) {
-            super();
             this.d = new Double(d);
+        }
+        
+        protected DoubleWrapper() {
+            // JDK 1.3 issue
         }
     }
 
