@@ -54,4 +54,8 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertBothWays(null, "<null/>");
     }
 
+    public void testNumberFormats() {
+        assertEquals(1.0, ((Double)xstream.fromXML("<double>1</double>")).doubleValue(), 0.001);
+        assertEquals(1.0f, ((Float)xstream.fromXML("<float>1</float>")).floatValue(), 0.001);
+    }
 }

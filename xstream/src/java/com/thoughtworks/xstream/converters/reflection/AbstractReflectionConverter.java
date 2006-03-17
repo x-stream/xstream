@@ -156,6 +156,10 @@ public abstract class AbstractReflectionConverter implements Converter {
             } else {
                 value = result;
             }
+            
+            if (value != null && !type.isAssignableFrom(value.getClass())) {
+                throw new ConversionException("Cannot convert type " + value.getClass().getName() + " to type " + type.getName());
+            }
 
             if (fieldExistsInClass) {
                 reflectionProvider.writeField(result, fieldName, value, classDefiningField);

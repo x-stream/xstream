@@ -8,9 +8,11 @@ public class DefaultCollectionTest extends AbstractAcceptanceTest {
     public static class Farm extends StandardObject {
         int size;
         List animals = new ArrayList();
+        String name;
 
-        public Farm(int size) {
+        public Farm(int size, String name) {
             this.size = size;
+            this.name = name;
         }
 
         public void add(Animal animal) {
@@ -33,7 +35,7 @@ public class DefaultCollectionTest extends AbstractAcceptanceTest {
     }
 
     public void testWithout() {
-        Farm farm = new Farm(100);
+        Farm farm = new Farm(100, "Old McDonald's");
         farm.add(new Animal("Cow"));
         farm.add(new Animal("Sheep"));
 
@@ -48,13 +50,14 @@ public class DefaultCollectionTest extends AbstractAcceptanceTest {
                 "      <name>Sheep</name>\n" +
                 "    </animal>\n" +
                 "  </animals>\n" +
+                "  <name>Old McDonald&apos;s</name>\n" +
                 "</farm>";
 
         assertBothWays(farm, expected);
     }
 
     public void testWith() {
-        Farm farm = new Farm(100);
+        Farm farm = new Farm(100, "Old McDonald's");
         farm.add(new Animal("Cow"));
         farm.add(new Animal("Sheep"));
 
@@ -67,6 +70,7 @@ public class DefaultCollectionTest extends AbstractAcceptanceTest {
                 "  <animal>\n" +
                 "    <name>Sheep</name>\n" +
                 "  </animal>\n" +
+                "  <name>Old McDonald&apos;s</name>\n" +
                 "</farm>";
 
         xstream.addImplicitCollection(Farm.class, "animals");
