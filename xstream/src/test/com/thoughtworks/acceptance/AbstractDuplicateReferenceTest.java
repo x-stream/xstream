@@ -2,7 +2,6 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.someobjects.WithNamedList;
 import com.thoughtworks.xstream.core.AbstractReferenceMarshaller;
-import com.thoughtworks.xstream.io.StreamException;
 
 import java.util.ArrayList;
 import java.util.List;
