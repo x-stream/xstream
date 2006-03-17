@@ -55,6 +55,20 @@
     <p>Make it <code>transient</code>.</p>
 
     <!-- ...................................................... -->
+    <h2>How do I initialize a transient field at deserialization?</h2>
+    
+    <p>XStream supports the same mechanism like the JDK serialization. Example:</p>
+    
+<div class="Source Java"><pre>class ThreadAwareComponent {
+  private transient ThreadLocal component;
+  // ...
+  private Object readResolve() {
+    component = new ThreadLocal();
+    return this;
+  }
+}</pre></div>
+
+    <!-- ...................................................... -->
     <h2>What do serialized collections look like?</h2>
 
     <p>Example:</p>
