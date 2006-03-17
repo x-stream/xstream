@@ -5,13 +5,13 @@ import com.thoughtworks.xstream.XStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XPathDuplicateReferenceTest extends AbstractDuplicateReferenceTest {
+public class AbsoluteXPathDuplicateReferenceTest extends AbstractDuplicateReferenceTest {
 
     // tests inherited from superclass
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMode(XStream.XPATH_REFERENCES);
+        xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
     }
 
     public void testXmlContainsReferencePaths() {
@@ -29,7 +29,7 @@ public class XPathDuplicateReferenceTest extends AbstractDuplicateReferenceTest 
                 "  <thing>\n" +
                 "    <field>hello</field>\n" +
                 "  </thing>\n" +
-                "  <thing reference=\"../thing\"/>\n" +
+                "  <thing reference=\"/list/thing\"/>\n" +
                 "  <thing>\n" +
                 "    <field>hello</field>\n" +
                 "  </thing>\n" +

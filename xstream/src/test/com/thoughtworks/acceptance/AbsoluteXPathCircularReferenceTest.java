@@ -2,12 +2,12 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
 
-public class XPathCircularReferenceTest extends AbstractCircularReferenceTest {
+public class AbsoluteXPathCircularReferenceTest extends AbstractCircularReferenceTest {
 
     // inherits test from superclass
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMode(XStream.XPATH_REFERENCES);
+        xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
     }
 
     public void testCircularReferenceXml() {
@@ -21,7 +21,7 @@ public class XPathCircularReferenceTest extends AbstractCircularReferenceTest {
                 "  <firstname>bob</firstname>\n" +
                 "  <likes>\n" +
                 "    <firstname>jane</firstname>\n" +
-                "    <likes reference=\"../..\"/>\n" +
+                "    <likes reference=\"/person\"/>\n" +
                 "  </likes>\n" +
                 "</person>";
 
@@ -35,7 +35,7 @@ public class XPathCircularReferenceTest extends AbstractCircularReferenceTest {
         String expected = "" +
                 "<person>\n" +
                 "  <firstname>bob</firstname>\n" +
-                "  <likes reference=\"..\"/>\n" +
+                "  <likes reference=\"/person\"/>\n" +
                 "</person>";
 
         assertEquals(expected, xstream.toXML(bob));

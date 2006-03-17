@@ -12,7 +12,6 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.setMode(XStream.XPATH_REFERENCES);
         xstream.alias("thing", Thing.class);
     }
 
@@ -27,7 +26,9 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
         }
     }
 
-    public void testStoresReferencesUsingXPath() {
+    public void testStoresReferencesUsingRelativeXPath() {
+        xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
+
         Thing a = new Thing("a");
         Thing b = new Thing("b");
         Thing c = b;
@@ -46,6 +47,32 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
                 "    <name>b</name>\n" +
                 "  </thing>\n" +
                 "  <thing reference=\"../thing[2]\"/>\n" + // xpath
+                "</list>";
+
+        assertBothWays(list, expected);
+    }
+
+    public void testStoresReferencesUsingAbsoluteXPath() {
+        xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
+
+        Thing a = new Thing("a");
+        Thing b = new Thing("b");
+        Thing c = b;
+
+        List list = new ArrayList();
+        list.add(a);
+        list.add(b);
+        list.add(c);
+
+        String expected = "" +
+                "<list>\n" +
+                "  <thing>\n" +
+                "    <name>a</name>\n" +
+                "  </thing>\n" +
+                "  <thing>\n" +
+                "    <name>b</name>\n" +
+                "  </thing>\n" +
+                "  <thing reference=\"/list/thing[2]\"/>\n" + // xpath
                 "</list>";
 
         assertBothWays(list, expected);

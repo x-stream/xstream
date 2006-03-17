@@ -231,7 +231,12 @@ public class XStream {
 
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
-    public static final int XPATH_REFERENCES = 1003;
+    public static final int XPATH_RELATIVE_REFERENCES = 1003;
+    public static final int XPATH_ABSOLUTE_REFERENCES = 1004;
+    /**
+     * @deprecated since 1.2, use {@value #XPATH_RELATIVE_REFERENCES} or {@value #XPATH_ABSOLUTE_REFERENCES} instead.
+     */
+    public static final int XPATH_REFERENCES = XPATH_RELATIVE_REFERENCES;
 
     public static final int PRIORITY_VERY_HIGH = 10000;
     public static final int PRIORITY_NORMAL = 0;
@@ -287,7 +292,7 @@ public class XStream {
         setupDefaultImplementations();
         setupConverters();
         setupImmutableTypes();
-        setMode(XPATH_REFERENCES);
+        setMode(XPATH_RELATIVE_REFERENCES);
     }
 
     private Mapper buildMapper(String classAttributeIdentifier) {
@@ -751,10 +756,11 @@ public class XStream {
 
     /**
      * Change mode for dealing with duplicate references.
-     * Valid valuse are <code>XStream.XPATH_REFERENCES</code>,
+     * Valid valuse are <code>XPATH_ABSOLUTE_REFERENCES</code>, <code>XPATH_RELATIVE_REFERENCES</code>,
      * <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>.
      *
-     * @see #XPATH_REFERENCES
+     * @see #XPATH_ABSOLUTE_REFERENCES
+     * @see #XPATH_RELATIVE_REFERENCES
      * @see #ID_REFERENCES
      * @see #NO_REFERENCES
      */
@@ -766,8 +772,11 @@ public class XStream {
             case ID_REFERENCES:
                 setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
                 break;
-            case XPATH_REFERENCES:
-                setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy());
+            case XPATH_RELATIVE_REFERENCES:
+                setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.RELATIVE));
+                break;
+            case XPATH_ABSOLUTE_REFERENCES:
+                setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.ABSOLUTE));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown mode : " + mode);

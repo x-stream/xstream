@@ -8,19 +8,22 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReferenceByXPathMarshaller extends AbstractReferenceMarshaller {
 
-    public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, Mapper mapper) {
+    private final int mode;
+
+    public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, Mapper mapper, int mode) {
         super(writer, converterLookup, mapper);
+        this.mode = mode;
     }
 
     /**
-     * @deprecated As of 1.2, use {@link #ReferenceByXPathMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper)}
+     * @deprecated As of 1.2, use {@link #ReferenceByXPathMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper, int)}
      */
     public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, ClassMapper classMapper) {
-        this(writer, converterLookup, (Mapper)classMapper);
+        this(writer, converterLookup, classMapper, ReferenceByXPathMarshallingStrategy.RELATIVE);
     }
 
     protected String createReference(Path currentPath, Object existingReferenceKey) {
-        return currentPath.relativeTo((Path)existingReferenceKey).toString();
+        return (mode == ReferenceByXPathMarshallingStrategy.RELATIVE ? currentPath.relativeTo((Path)existingReferenceKey) : existingReferenceKey).toString();
     }
 
     protected Object createReferenceKey(Path currentPath) {

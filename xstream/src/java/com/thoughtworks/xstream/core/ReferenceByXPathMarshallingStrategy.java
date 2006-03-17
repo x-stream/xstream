@@ -10,13 +10,28 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReferenceByXPathMarshallingStrategy implements MarshallingStrategy {
 
+    public static int RELATIVE = 0;
+    public static int ABSOLUTE = 1;
+    private final int mode;
+
+    /**
+     * @deprecated As of 1.2, use {@link #ReferenceByXPathMarshallingStrategy(int)}
+     */
+    public ReferenceByXPathMarshallingStrategy() {
+        this(RELATIVE);
+    }
+
+    public ReferenceByXPathMarshallingStrategy(int mode) {
+        this.mode = mode;
+    }
+
     public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder, ConverterLookup converterLookup, Mapper mapper) {
-        return new ReferenceByXPathUnmarshaller(root, reader, converterLookup, mapper)
+        return new ReferenceByXPathUnmarshaller(root, reader, converterLookup, mapper, mode)
             .start(dataHolder);
     }
 
     public void marshal(HierarchicalStreamWriter writer, Object obj, ConverterLookup converterLookup, Mapper mapper, DataHolder dataHolder) {
-        new ReferenceByXPathMarshaller(writer, converterLookup, mapper)
+        new ReferenceByXPathMarshaller(writer, converterLookup, mapper, mode)
             .start(obj, dataHolder);
     }
 
