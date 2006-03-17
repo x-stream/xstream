@@ -234,4 +234,24 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
             assertEquals("one", expected.getShortMessage());
         }
     }
+    
+    public static class TransientInitializingClass extends StandardObject {
+        private transient String s = "";
+        private Object readResolve() {
+            this.s = "foo";
+            return this;
+        }
+    }
+
+    public void testCustomObjectWithTransientFieldInitialization() {
+
+        xstream.alias("tran", TransientInitializingClass.class);
+
+        TransientInitializingClass tran = new TransientInitializingClass();
+
+        String expected = "<tran/>";
+
+        TransientInitializingClass serialized = (TransientInitializingClass)assertBothWays(tran, expected);
+        assertEquals("foo", serialized.s);
+    }
 }

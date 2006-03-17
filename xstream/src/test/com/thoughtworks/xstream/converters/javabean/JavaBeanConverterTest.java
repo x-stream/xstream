@@ -235,7 +235,7 @@ public class JavaBeanConverterTest extends TestCase {
 
     }
 
-    public void testDoesNotSerializeTransientOrStaticFields() {
+    public void testDoesNotSerializeStaticFields() {
         TypesOfFields fields = new TypesOfFields();
         String expected = "" +
             "<types>\n" +
