@@ -49,7 +49,7 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
         writer.startNode("empty");
         writer.endNode();
 
-        assertXmlProducedIs("<empty/>");
+        assertXmlProducedIs("<empty></empty>");
     }
 
     public void testNamespacedXmlWithPrefix() throws Exception {
@@ -93,7 +93,7 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
         writer.addAttribute("lastname", "Walnes");
         writer.endNode();
 
-        assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\"/>");
+        assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\"></person>");
     }
 
 }
