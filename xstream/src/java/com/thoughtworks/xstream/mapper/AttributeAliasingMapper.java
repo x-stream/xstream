@@ -34,6 +34,7 @@ public class AttributeAliasingMapper extends MapperWrapper {
     }
     
     // TODO: Is this needed now that it injected in ctor? - MT
+    // YES, but I want to remove it. In the ctor NULL is injected!!! - JS
     public void setConverterLookup(ConverterLookup converterLookup) {
         this.converterLookup = converterLookup;
     }

@@ -82,4 +82,8 @@ public abstract class MapperWrapper implements Mapper {
         return wrapped.getConverterFromAttribute(name);
     }
 
+    public Mapper lookupMapperOfType(Class type) {
+        return type.isAssignableFrom(getClass()) ? this : wrapped.lookupMapperOfType(type);
+    }
+
 }

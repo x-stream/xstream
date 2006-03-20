@@ -286,8 +286,9 @@ public class XStream {
         this.hierarchicalStreamDriver = driver;
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
         this.mapper = mapper == null ? buildMapper(classAttributeIdentifier) : mapper;
-        converterLookup = new DefaultConverterLookup(this.mapper);
-        attributeAliasingMapper.setConverterLookup(converterLookup);
+        this.converterLookup = new DefaultConverterLookup(this.mapper);
+        
+        setupMappers();
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
@@ -299,13 +300,9 @@ public class XStream {
         Mapper mapper = new DefaultMapper(classLoaderReference, classAttributeIdentifier);
         mapper = new XmlFriendlyMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
-        classAliasingMapper = (ClassAliasingMapper) mapper; // need a reference to that one
         mapper = new FieldAliasingMapper(mapper);
-        fieldAliasingMapper = (FieldAliasingMapper) mapper; // need a reference to that one
-        mapper = new AttributeAliasingMapper(mapper, converterLookup);
-        attributeAliasingMapper = (AttributeAliasingMapper) mapper; // need a reference to that one
+        mapper = new AttributeAliasingMapper(mapper);
         mapper = new ImplicitCollectionMapper(mapper);
-        implicitCollectionMapper = (ImplicitCollectionMapper)mapper; // need a reference to this one
         mapper = new DynamicProxyMapper(mapper);
         if (JVM.is15()) {
             mapper = new EnumMapper(mapper);
@@ -313,9 +310,7 @@ public class XStream {
         mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
-        defaultImplementationsMapper = (DefaultImplementationsMapper) mapper; // and that one
         mapper = new ImmutableTypesMapper(mapper);
-        immutableTypesMapper = (ImmutableTypesMapper)mapper; // that one too
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);
         return mapper;
@@ -325,7 +320,25 @@ public class XStream {
         return next;
     }
 
+    private void setupMappers() {
+        classAliasingMapper = (ClassAliasingMapper)this.mapper.lookupMapperOfType(ClassAliasingMapper.class);
+        fieldAliasingMapper = (FieldAliasingMapper)this.mapper.lookupMapperOfType(FieldAliasingMapper.class);
+        attributeAliasingMapper = (AttributeAliasingMapper)this.mapper.lookupMapperOfType(AttributeAliasingMapper.class);
+        implicitCollectionMapper = (ImplicitCollectionMapper)this.mapper.lookupMapperOfType(ImplicitCollectionMapper.class);
+        defaultImplementationsMapper = (DefaultImplementationsMapper)this.mapper.lookupMapperOfType(DefaultImplementationsMapper.class);
+        immutableTypesMapper = (ImmutableTypesMapper)this.mapper.lookupMapperOfType(ImmutableTypesMapper.class);
+        
+        // should use ctor, but converterLookup is not yet initialized instantiating this mapper
+        if (attributeAliasingMapper != null) {
+            attributeAliasingMapper.setConverterLookup(converterLookup); 
+        }
+    }
+
     protected void setupAliases() {
+        if (classAliasingMapper == null) {
+            return;
+        }
+        
         alias("null", Mapper.Null.class);
         alias("int", Integer.class);
         alias("float", Float.class);
@@ -390,6 +403,9 @@ public class XStream {
     }
 
     protected void setupDefaultImplementations() {
+        if (defaultImplementationsMapper == null) {
+            return;
+        }
         addDefaultImplementation(HashMap.class, Map.class);
         addDefaultImplementation(ArrayList.class, List.class);
         addDefaultImplementation(HashSet.class, Set.class);
@@ -504,6 +520,10 @@ public class XStream {
     }
 
     protected void setupImmutableTypes() {
+        if (immutableTypesMapper == null) {
+            return;
+        }
+        
         // primitives are always immutable
         addImmutableType(boolean.class);
         addImmutableType(Boolean.class);
@@ -666,6 +686,9 @@ public class XStream {
      * @param type  Type to be aliased
      */
     public void alias(String name, Class type) {
+        if (classAliasingMapper == null) {
+            throw new InitializationException("No " + ClassAliasingMapper.class.getName() + "available");
+        }
         classAliasingMapper.addClassAlias(name, type);
     }
 
@@ -682,6 +705,9 @@ public class XStream {
     }
 
     public void aliasField(String alias, Class type, String fieldName) {
+        if (fieldAliasingMapper == null) {
+            throw new InitializationException("No " + FieldAliasingMapper.class.getName() + "available");
+        }
         fieldAliasingMapper.addFieldAlias(alias, type, fieldName);
     }
 
@@ -693,6 +719,9 @@ public class XStream {
      * @since 1.2
      */
     public void aliasAttribute(String attributeName, Class type) {
+        if (attributeAliasingMapper == null) {
+            throw new InitializationException("No " + AttributeAliasingMapper.class.getName() + "available");
+        }
         attributeAliasingMapper.addAttributeAlias(attributeName, type);
     }
 
@@ -705,6 +734,9 @@ public class XStream {
      * @param ofType
      */
     public void addDefaultImplementation(Class defaultImplementation, Class ofType) {
+        if (defaultImplementationsMapper == null) {
+            throw new InitializationException("No " + DefaultImplementationsMapper.class.getName() + "available");
+        }
         defaultImplementationsMapper.addDefaultImplementation(defaultImplementation, ofType);
     }
 
@@ -713,6 +745,9 @@ public class XStream {
      * even if they appear multiple times.
      */
     public void addImmutableType(Class type) {
+        if (immutableTypesMapper == null) {
+            throw new InitializationException("No " + ImmutableTypesMapper.class.getName() + "available");
+        }
         immutableTypesMapper.addImmutableType(type);
     }
 
@@ -790,6 +825,9 @@ public class XStream {
      * @param fieldName name of the field in the ownerType. This field must be an <code>java.util.ArrayList</code>.
      */
     public void addImplicitCollection(Class ownerType, String fieldName) {
+        if (implicitCollectionMapper == null) {
+            throw new InitializationException("No " + ImplicitCollectionMapper.class.getName() + "available");
+        }
         implicitCollectionMapper.add(ownerType, fieldName, null, Object.class);
     }
 
@@ -801,6 +839,9 @@ public class XStream {
      * @param itemType type of the items to be part of this collection.
      */
     public void addImplicitCollection(Class ownerType, String fieldName, Class itemType) {
+        if (implicitCollectionMapper == null) {
+            throw new InitializationException("No " + ImplicitCollectionMapper.class.getName() + "available");
+        }
         implicitCollectionMapper.add(ownerType, fieldName, null, itemType);
     }
 
@@ -813,6 +854,9 @@ public class XStream {
      * @param itemType item type to be aliases be the itemFieldName
      */
     public void addImplicitCollection(Class ownerType, String fieldName, String itemFieldName, Class itemType) {
+        if (implicitCollectionMapper == null) {
+            throw new InitializationException("No " + ImplicitCollectionMapper.class.getName() + "available");
+        }
         implicitCollectionMapper.add(ownerType, fieldName, itemFieldName, itemType);
     }
 
@@ -988,12 +1032,18 @@ public class XStream {
      * @since 1.1.3
      */
     public void omitField(Class type, String fieldName) {
+        if (fieldAliasingMapper == null) {
+            throw new InitializationException("No " + FieldAliasingMapper.class.getName() + "available");
+        }
         fieldAliasingMapper.omitField(type, fieldName);
     }
 
     public static class InitializationException extends BaseException {
         public InitializationException(String message, Throwable cause) {
             super(message, cause);
+        }
+        public InitializationException(String message) {
+            super(message);
         }
     }
 

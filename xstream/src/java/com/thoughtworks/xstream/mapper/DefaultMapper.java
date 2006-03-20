@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.mapper;
 
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+
 
 /**
  * Default mapper implementation with 'vanilla' functionality. To build up the functionality required, wrap this mapper
@@ -7,7 +9,7 @@ package com.thoughtworks.xstream.mapper;
  *
  * @author Joe Walnes
  */
-public class DefaultMapper extends MapperWrapper {
+public class DefaultMapper implements Mapper {
 
     private final ClassLoader classLoader;
     private final String classAttributeIdentifier;
@@ -17,7 +19,6 @@ public class DefaultMapper extends MapperWrapper {
     }
 
     public DefaultMapper(ClassLoader classLoader, String classAttributeIdentifier) {
-        super((Mapper)null);
         this.classLoader = classLoader;
         this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
     }
@@ -89,4 +90,17 @@ public class DefaultMapper extends MapperWrapper {
     public String realMember(Class type, String serialized) {
         return serialized;
     }
+
+    public SingleValueConverter getConverterFromAttribute(String name) {
+        return null;
+    }
+
+    public SingleValueConverter getConverterFromItemType(Class clazz) {
+        return null;
+    }
+
+    public Mapper lookupMapperOfType(Class type) {
+        return null;
+    }
+    
 }

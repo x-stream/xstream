@@ -2,6 +2,9 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
@@ -102,5 +105,17 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
                 "  <name>word</name>\n" +
                 "</Software>";
         assertEquals(expectedXml, xstream.toXML(new Software("ms", "word")));
+    }
+    
+    public void testOwnMapperChainCanBeRegistered() {
+        Mapper mapper = new DefaultMapper(getClass().getClassLoader(), "impl");
+        xstream = new XStream(new PureJavaReflectionProvider(), mapper, new DomDriver());
+        
+        String expected = "" +
+                "<com.thoughtworks.acceptance.objects.Software>\n" +
+                "  <vendor>ms</vendor>\n" +
+                "  <name>word</name>\n" +
+                "</com.thoughtworks.acceptance.objects.Software>";
+        assertEquals(expected, xstream.toXML(new Software("ms", "word")));
     }
 }

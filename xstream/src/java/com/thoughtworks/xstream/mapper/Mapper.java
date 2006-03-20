@@ -74,4 +74,5 @@ public interface Mapper {
 
     SingleValueConverter getConverterFromAttribute(String name);
     
+    Mapper lookupMapperOfType(Class type);
 }
