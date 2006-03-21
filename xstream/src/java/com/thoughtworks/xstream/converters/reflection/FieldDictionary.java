@@ -55,7 +55,7 @@ public class FieldDictionary {
                     final Map keyedByFieldKey = new OrderRetainingMap();
                     while (!Object.class.equals(cls)) {
                         Field[] fields = cls.getDeclaredFields();
-                        if (JVM.reverseMemberDefinition()) {
+                        if (JVM.reverseFieldDefinition()) {
                             for (int i = fields.length >> 1; i-- > 0;) {
                                 final int idx = fields.length-i-1;
                                 final Field field = fields[i];

@@ -5,21 +5,27 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
+import java.text.AttributedString;
 
 public class JVM {
 
     // Beware the sequence of definition for this fields since it is checked.
     private ReflectionProvider reflectionProvider;
-    private Object dummy; // Need at least two fields
 
-    private static final boolean reverseMemberOrder;
+    private static final boolean reverseFieldOrder;
     private static final float majorJavaVersion = getMajorJavaVersion(System.getProperty("java.specification.version"));
 
     static final float DEFAULT_JAVA_VERSION = 1.3f;
 
     static {
-        Field[] fields = JVM.class.getDeclaredFields();
-        reverseMemberOrder = fields[fields.length-1].getName().equals("reflectionProvider");
+        boolean reverse = false;
+        final Field[] fields = AttributedString.class.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i].getName().equals("text")) {
+                reverse = i > 3;
+            }
+        }
+        reverseFieldOrder = reverse;
     }
 
     /**
@@ -103,8 +109,8 @@ public class JVM {
     	    return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown()) && is14() && loadClass("sun.misc.Unsafe") != null;
     }
 
-    public static synchronized boolean reverseMemberDefinition() {
-        return reverseMemberOrder;
+    public static synchronized boolean reverseFieldDefinition() {
+        return reverseFieldOrder;
     }
 
 }
