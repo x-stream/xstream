@@ -25,6 +25,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     private int depth;
     private boolean readyForNewLine;
     private boolean tagIsEmpty;
+    private String newLine;
 
     private static final char[] NULL = "&#x0;".toCharArray();
     private static final char[] AMP = "&amp;".toCharArray();
@@ -35,11 +36,18 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     private static final char[] APOS = "&apos;".toCharArray();
     private static final char[] CLOSE = "</".toCharArray();
 
-    private static final String NL = "\n";//System.getProperty("line.separator");//must fix on Win
-
-    public PrettyPrintWriter(Writer writer, char[] lineIndenter) {
+    public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine) {
         this.writer = new QuickWriter(writer);
         this.lineIndenter = lineIndenter;
+        this.newLine = newLine;
+    }
+
+    public PrettyPrintWriter(Writer writer, char[] lineIndenter) {
+        this(writer, lineIndenter, "\n");
+    }
+
+    public PrettyPrintWriter(Writer writer, String lineIndenter, String newLine) {
+        this(writer, lineIndenter.toCharArray(), newLine);
     }
 
     public PrettyPrintWriter(Writer writer, String lineIndenter) {
@@ -151,7 +159,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     }
 
     protected void endOfLine() {
-        writer.write(NL);
+        writer.write(newLine);
         for (int i = 0; i < depth; i++) {
             writer.write(lineIndenter);
         }

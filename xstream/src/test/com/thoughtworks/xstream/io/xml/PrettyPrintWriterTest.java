@@ -78,4 +78,15 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
             return in.substring(0, pos) + with + in.substring(pos + 1);
         }
     }
+    
+    public void testSupportsUserDefinedEOL() {
+        writer = new PrettyPrintWriter(buffer, "\t", "\r");
+        
+        writer.startNode("element");
+        writer.startNode("empty");
+        writer.endNode();
+        writer.endNode();
+        
+        assertXmlProducedIs("<element>\r\t<empty/>\r</elementl>");
+    }
 }
