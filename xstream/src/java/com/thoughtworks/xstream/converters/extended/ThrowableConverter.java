@@ -29,7 +29,7 @@ public class ThrowableConverter implements Converter {
         if (throwable.getCause() == null) {
             try {
                 throwable.initCause(null);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalStateException e) {
                 // ignore, initCause failed, cause was already set
             }
         }
