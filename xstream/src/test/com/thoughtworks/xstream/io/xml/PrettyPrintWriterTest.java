@@ -87,6 +87,6 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         writer.endNode();
         writer.endNode();
         
-        assertXmlProducedIs("<element>\r\t<empty/>\r</elementl>");
+        assertXmlProducedIs("<element>\r\t<empty/>\r</element>");
     }
 }
