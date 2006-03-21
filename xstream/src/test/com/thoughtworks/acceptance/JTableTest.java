@@ -6,10 +6,8 @@ public class JTableTest extends AbstractAcceptanceTest {
 
     // JTable is one of the nastiest components to serialize. If this works, we're in good shape :)
 
-    public void test$$$$TODO$$$$JTable() {
+    public void testJTable() {
         // Note: JTable does not have a sensible .equals() method, so we compare the XML instead.
-
-        if (false) {
         JTable original = new JTable();
         String originalXml = xstream.toXML(original);
 
@@ -17,7 +15,6 @@ public class JTableTest extends AbstractAcceptanceTest {
         String deserializedXml = xstream.toXML(deserialized);
 
         assertEquals(originalXml, deserializedXml);
-        }
     }
 
 }

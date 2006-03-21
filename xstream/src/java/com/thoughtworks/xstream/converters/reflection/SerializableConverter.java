@@ -261,7 +261,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
             }
 
             public Map readFieldsFromStream() {
-                Map result = new HashMap();
+                final Map fields = new HashMap();
                 reader.moveDown();
                 if (reader.getNodeName().equals(ELEMENT_FIELDS)) {
                     // Maintain compatability with XStream 1.1.0
@@ -273,7 +273,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         String name = reader.getAttribute(ATTRIBUTE_NAME);
                         Class type = mapper.realClass(reader.getAttribute(ATTRIBUTE_CLASS));
                         Object value = context.convertAnother(result, type);
-                        result.put(name, value);
+                        fields.put(name, value);
                         reader.moveUp();
                     }
                 } else if (reader.getNodeName().equals(ELEMENT_DEFAULT)) {
@@ -295,7 +295,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                             type = field.getType();
                         }
                         Object value = context.convertAnother(result, type);
-                        result.put(name, value);
+                        fields.put(name, value);
                         reader.moveUp();
                     }
                 } else {
@@ -303,7 +303,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                             ELEMENT_DEFAULT + "/> element when calling ObjectInputStream.readFields()");
                 }
                 reader.moveUp();
-                return result;
+                return fields;
             }
 
             public void defaultReadObject() {
