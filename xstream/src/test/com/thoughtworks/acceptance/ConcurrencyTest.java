@@ -37,7 +37,6 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
 
         final Object object = Arrays.asList(namedLists); 
         final String xml = xstream.toXML(object);
-        System.out.println(xml);
         final Thread[] threads = new Thread[10];
         for (int i = 0; i < threads.length; ++i) {
             threads[i] = new Thread(tg, "JUnit Thread " + i) {
