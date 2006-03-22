@@ -35,23 +35,30 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
             }
         };
 
-        final Object object = Arrays.asList(namedLists); 
+        final Object object = Arrays.asList(namedLists);
         final String xml = xstream.toXML(object);
-        final Thread[] threads = new Thread[10];
+        final int[] counter = new int[1];
+        counter[0] = 0;
+        final Thread[] threads = new Thread[5];
         for (int i = 0; i < threads.length; ++i) {
             threads[i] = new Thread(tg, "JUnit Thread " + i) {
 
                 public void run() {
+                    int i = 0;
                     try {
                         synchronized (this) {
                             notifyAll();
                             wait();
                         }
-                        while(!interrupted()) {
+                        while (!interrupted()) {
                             assertBothWays(object, xml);
+                            ++i;
                         }
                     } catch (InterruptedException e) {
                         fail("Unexpected InterruptedException");
+                    }
+                    synchronized (counter) {
+                        counter[0] += i;
                     }
                 }
 
@@ -64,22 +71,25 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
                 threads[i].wait();
             }
         }
-        
+
         for (int i = 0; i < threads.length; ++i) {
             synchronized (threads[i]) {
                 threads[i].notifyAll();
             }
         }
-        
-        Thread.sleep(500);
-        
+
+        Thread.sleep(1000);
+
+        for (int i = 0; i < threads.length; ++i) {
+            threads[i].interrupt();
+        }
         for (int i = 0; i < threads.length; ++i) {
             synchronized (threads[i]) {
-                threads[i].interrupt();
                 threads[i].join();
             }
         }
-        
+
         assertEquals(0, exceptions.size());
+        assertTrue(counter[0] >= threads.length);
     }
 }
