@@ -21,6 +21,9 @@ public class JavaMethodConverter implements Converter {
 
     private final ClassLoader classLoader;
 
+    /**
+     * @deprecated As of 1.2 - use other constructor and explicitly supply a ClassLoader.
+     */
     public JavaMethodConverter() {
         this(JavaMethodConverter.class.getClassLoader());
     }

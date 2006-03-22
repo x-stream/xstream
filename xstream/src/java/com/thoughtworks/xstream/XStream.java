@@ -463,7 +463,7 @@ public class XStream {
         registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
-        registerConverter(new JavaMethodConverter(), PRIORITY_NORMAL);
+        registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new FontConverter(), PRIORITY_NORMAL);
         registerConverter(new ColorConverter(), PRIORITY_NORMAL);
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
