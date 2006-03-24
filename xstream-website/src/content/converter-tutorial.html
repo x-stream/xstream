@@ -5,14 +5,13 @@
   <body>
 
 <h1>Simple Converter</h1>
-<ol style="list-style-type: decimal">
 <h2>Setting up a simple example</h2>
 
 This is the most basic converter... let's start with a simple Person:</p>
 <div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
 
 public class Person {
-        
+
         private String name;
 
         public String getName() {
@@ -178,7 +177,7 @@ is:</p><div class="Source Java"><pre>&lt;person&gt;
 &lt;/person&gt;</pre></div><p>So you might say... that only changed my tree, I
 want to convert data!</p><p>Try using an attribute called <i>fullname</i> in
 the <i>person</i> tag instead of creating a new chid node.</p></li>
-</ol>
+
 
 <h1>Date Converter</h1>
 <p>Now that we know how the <i>Converter</i> interface works, let's create a
@@ -228,43 +227,43 @@ and then use a <i>DateFormat</i> factory method to get a date converter to our
 localized
 string.</p><div class="Source Java"><pre>public void marshal(Object value, HierarchicalStreamWriter writer,
                 MarshallingContext context) {
-                
+
         Calendar calendar = (Calendar) value;
-        
+
         // grabs the date
         Date date = calendar.getTime();
-        
+
         // grabs the formatter
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL,
                         this.locale);
-                        
+
         // formats and sets the value
         writer.setValue(formatter.format(date));
-        
+
 }</pre></div><p>And the other way around... in order to unmarshall, we create
 a <i>GregorianCalendar</i>, retrieves the localized <i>DateFormat</i>
 instance, parses the string into a <i>Date</i> and puts this date in the
 original
 <i>GregorianCalendar</i>:</p><div class="Source Java"><pre>public Object unmarshal(HierarchicalStreamReader reader,
                 UnmarshallingContext context) {
-                
+
         // creates the calendar
         GregorianCalendar calendar = new GregorianCalendar();
-        
+
         // grabs the converter
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL,
                         this.locale);
-                        
+
         // parses the string and sets the time
         try {
                 calendar.setTime(formatter.parse(reader.getValue()));
         } catch (ParseException e) {
                 throw new ConversionException(e.getMessage(), e);
         }
-        
+
         // returns the new object
         return calendar;
-        
+
 }</pre></div><p>Note 1: remember that some <i>DateFormat</i> implementations
 are not thread-safe, therefore don't put your formatter as a member of your
 converter.</p><p>Note 2: this implementation <b>will</b> convert other types
@@ -348,8 +347,8 @@ public class DateTest {
 
                 // creates the xstream
                 XStream xStream = new XStream(new DomDriver());
-                
-                // brazilian portuguese locale 
+
+                // brazilian portuguese locale
                 xStream.registerConverter(new DateConverter(new Locale(&quot;pt&quot;, &quot;br&quot;)));
 
                 // prints the result
@@ -362,7 +361,7 @@ like:</p><div class="Source Java"><pre>&lt;gregorian-calendar&gt;Sexta-feira, 10
 we did not put any alias as <i>gregorian-calendar</i> is the default alias for
 <i>GregorianCalendar</i>.</p><p>And now let's try to unmarshall the result
 shown
-above:</p><div class="Source Java"><pre>// loads the calendar from the string 
+above:</p><div class="Source Java"><pre>// loads the calendar from the string
 Calendar loaded = (Calendar) xStream
                 .fromXML(&quot;&lt;gregorian-calendar&gt;Sexta-feira, 10 de Fevereiro de 2006&lt;/gregorian-calendar&gt;&quot;);</pre></div><p>And
 print it using the system locale, short date

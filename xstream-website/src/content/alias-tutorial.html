@@ -5,13 +5,11 @@
   <body>
 <h2>The problem</h2><p>Suppose that our client has defined a base xml file that we should make XStream read/write:</p><div class="Source Java"><pre>&lt;blog author=&quot;Guilherme Silveira&quot;&gt;
   &lt;entry&gt;
-
     &lt;title&gt;first&lt;/title&gt;
     &lt;description&gt;My first blog entry.&lt;/description&gt;
   &lt;/entry&gt;
   &lt;entry&gt;
     &lt;title&gt;tutorial&lt;/title&gt;
-
     &lt;description&gt;
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
     &lt;/description&gt;
@@ -21,18 +19,17 @@
 <p>Based on the xml file above we shall create some model classes and configure XStream to write/read from this format.</p></div><div class="section"><h2>The model</h2><p>First things first, the classes which shall represent our xml files are shown next, beginning with a simple Blog:</p><div class="Source Java"><pre>package com.thoughtworks.xstream;
 
 public class Blog {
-        
         private Author author;
         private List entries = new ArrayList();
-        
+
         public Blog(Author author) {
                 this.author = author;
         }
-        
+
         public void add(Entry entry) {
                 entries.add(entry);
         }
-        
+
         public List getContent() {
                 return entries;
         }
@@ -60,43 +57,37 @@ public class Entry {
         teamBlog.add(new Entry(&quot;first&quot;,&quot;My first blog entry.&quot;));
         teamBlog.add(new Entry(&quot;tutorial&quot;,
                 &quot;Today we have developed a nice alias tutorial. Tell your friends! NOW!&quot;));
-        
+
         XStream xstream = new XStream();
         System.out.println(xstream.toXML(teamBlog));
-        
-}</pre></div><p>And the resulting xml is not so nice as we would want it to be:</p><div class="Source Java"><pre>&lt;com.thoughtworks.xstream.Blog&gt;
 
+}</pre></div><p>And the resulting xml is not so nice as we would want it to be:</p><div class="Source Java"><pre>&lt;com.thoughtworks.xstream.Blog&gt;
   &lt;author&gt;
     &lt;name&gt;Guilherme Silveira&lt;/name&gt;
   &lt;/author&gt;
   &lt;entries&gt;
     &lt;com.thoughtworks.xstream.Entry&gt;
-
       &lt;title&gt;first&lt;/title&gt;
       &lt;description&gt;My first blog entry.&lt;/description&gt;
     &lt;/com.thoughtworks.xstream.Entry&gt;
     &lt;com.thoughtworks.xstream.Entry&gt;
       &lt;title&gt;tutorial&lt;/title&gt;
-
       &lt;description&gt;
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
       &lt;/description&gt;
     &lt;/com.thoughtworks.xstream.Entry&gt;
   &lt;/entries&gt;
 &lt;/com.thoughtworks.xstream.Blog&gt;</pre></div></div><div class="section"><h2>Class aliasing</h2><p>The first thing we shall change is how XStream refers to the <b>com.thoughtworks.xstream.Blog</b> class. We shall name it simply <i>blog</i>: let's create an alias called <i>blog</i> to the desired class:</p><div class="Source Java"><pre>xstream.alias(&quot;blog&quot;, Blog.class);</pre></div><p>Using the same idea, we can alias the 'Entry' class to 'entry':</p><div class="Source Java"><pre>xstream.alias(&quot;entry&quot;, Entry.class);</pre></div><p>The result now becomes:</p><div class="Source Java"><pre>&lt;blog&gt;
-
   &lt;author&gt;
     &lt;name&gt;Guilherme Silveira&lt;/name&gt;
   &lt;/author&gt;
   &lt;entries&gt;
     &lt;entry&gt;
-
       &lt;title&gt;first&lt;/title&gt;
       &lt;description&gt;My first blog entry.&lt;/description&gt;
     &lt;/entry&gt;
     &lt;entry&gt;
       &lt;title&gt;tutorial&lt;/title&gt;
-
       &lt;description&gt;
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
       &lt;/description&gt;
@@ -110,35 +101,32 @@ import java.util.List;
 public class Test {
 
         public static void main(String[] args) {
-                
+
                 Blog teamBlog = new Blog(new Author(&quot;Guilherme Silveira&quot;));
                 teamBlog.add(new Entry(&quot;first&quot;,&quot;My first blog entry.&quot;));
                 teamBlog.add(new Entry(&quot;tutorial&quot;,
                         &quot;Today we have developed a nice alias tutorial. Tell your friends! NOW!&quot;));
-                
+
                 XStream xstream = new XStream();
                 xstream.alias(&quot;blog&quot;, Blog.class);
                 xstream.alias(&quot;entry&quot;, Entry.class);
-                
+
                 xstream.addImplicitCollection(Blog.class, &quot;entries&quot;);
-                
+
                 System.out.println(xstream.toXML(teamBlog));
-                
+
         }
 }</pre></div><p>Pay attention to the <b>addImplicitCollection</b> method call: it describes which class and which member variable shall assume the behaviour we described.</p><p>The result is almost what we wanted:</p><div class="Source Java"><pre>&lt;blog&gt;
-
   &lt;author&gt;
     &lt;name&gt;Guilherme Silveira&lt;/name&gt;
   &lt;/author&gt;
   &lt;entry&gt;
     &lt;title&gt;first&lt;/title&gt;
-
     &lt;description&gt;My first blog entry.&lt;/description&gt;
   &lt;/entry&gt;
   &lt;entry&gt;
     &lt;title&gt;tutorial&lt;/title&gt;
     &lt;description&gt;
-
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
     &lt;/description&gt;
   &lt;/entry&gt;
@@ -162,36 +150,34 @@ public class Test {
         public boolean canConvert(Class type) {
                 return type.equals(Author.class);
         }
-        
+
 }</pre></div><p>And let's register this converter:</p><div class="Source Java"><pre>public class Test {
 
         public static void main(String[] args) {
-                
+
                 Blog teamBlog = new Blog(new Author(&quot;Guilherme Silveira&quot;));
                 teamBlog.add(new Entry(&quot;first&quot;,&quot;My first blog entry.&quot;));
                 teamBlog.add(new Entry(&quot;tutorial&quot;,
                         &quot;Today we have developed a nice alias tutorial. Tell your friends! NOW!&quot;));
-                
+
                 XStream xstream = new XStream();
                 xstream.alias(&quot;blog&quot;, Blog.class);
                 xstream.alias(&quot;entry&quot;, Entry.class);
-                
+
                 xstream.addImplicitCollection(Blog.class, &quot;entries&quot;);
-                
+
                 xstream.aliasAttribute(&quot;author&quot;, Author.class);
                 xstream.registerConverter(new AuthorConverter());
-                
+
                 System.out.println(xstream.toXML(teamBlog));
-                
+
         }
 }</pre></div><p>The result?</p><div class="Source Java"><pre>&lt;blog author=&quot;Guilherme Silveira&quot;&gt;
-
   &lt;entry&gt;
     &lt;title&gt;first&lt;/title&gt;
     &lt;description&gt;My first blog entry.&lt;/description&gt;
   &lt;/entry&gt;
   &lt;entry&gt;
-
     &lt;title&gt;tutorial&lt;/title&gt;
     &lt;description&gt;
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
