@@ -2,8 +2,12 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
+
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.FilePermission;
@@ -12,11 +16,19 @@ import java.security.CodeSource;
 import java.security.Policy;
 
 
-public class SecurityManagerTest extends AbstractAcceptanceTest {
+/**
+ * Test XStream with an active SecurityManager. Note, that it is intentional, that this test is not
+ * derived from AbstractAcceptanceTest to avoid loaded classes before the SecurityManager is in
+ * action.
+ * 
+ * @author J&ouml;rg Schaible
+ */
+public class SecurityManagerTest extends TestCase {
 
+    private XStream xstream;
     private DynamicSecurityManager securityManager;
     private CodeSource defaultCodeSource;
-    private File classes;
+    private File mainClasses;
     private File testClasses;
     private File libs;
 
@@ -24,10 +36,10 @@ public class SecurityManagerTest extends AbstractAcceptanceTest {
         super.setUp();
         System.setSecurityManager(null);
         defaultCodeSource = new CodeSource(null, null);
-        classes = new File(
-                new File(new File(System.getProperty("user.dir"), "target"), "classes"), "-");
-        testClasses = new File(new File(
-                new File(System.getProperty("user.dir"), "target"), "test-classes"), "-");
+        mainClasses = new File(
+                new File(new File(System.getProperty("user.dir"), "build"), "java"), "-");
+        testClasses = new File(
+                new File(new File(System.getProperty("user.dir"), "build"), "test"), "-");
         libs = new File(new File(System.getProperty("user.dir"), "lib"), "*");
         securityManager = new DynamicSecurityManager();
         Policy policy = Policy.getPolicy();
@@ -41,9 +53,9 @@ public class SecurityManagerTest extends AbstractAcceptanceTest {
         super.tearDown();
     }
 
-    public void testSerializeWithXpp3DriverAndActiveSecurityManager() {
+    public void testSerializeWithXpp3DriverAndSun14ReflectionProviderAndActiveSecurityManager() {
         securityManager.addPermission(defaultCodeSource, new FilePermission(
-                classes.toString(), "read"));
+                mainClasses.toString(), "read"));
         securityManager.addPermission(defaultCodeSource, new FilePermission(
                 testClasses.toString(), "read"));
         securityManager.addPermission(
@@ -56,19 +68,25 @@ public class SecurityManagerTest extends AbstractAcceptanceTest {
                 "accessClassInPackage.sun.misc"));
         securityManager
                 .addPermission(defaultCodeSource, new RuntimePermission("createClassLoader"));
+        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
+                "reflectionFactoryAccess"));
         securityManager.addPermission(defaultCodeSource, new ReflectPermission(
                 "suppressAccessChecks"));
         securityManager.setReadOnly();
         System.setSecurityManager(securityManager);
 
+        xstream = new XStream(new Sun14ReflectionProvider());
+
         assertBothWays();
     }
 
-    public void testSerializeWithDomDriverAndActiveSecurityManager() {
+    public void testSerializeWithXpp3DriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
         securityManager.addPermission(defaultCodeSource, new FilePermission(
-                classes.toString(), "read"));
+                mainClasses.toString(), "read"));
         securityManager.addPermission(defaultCodeSource, new FilePermission(
                 testClasses.toString(), "read"));
+        securityManager.addPermission(
+                defaultCodeSource, new FilePermission(libs.toString(), "read"));
         securityManager.addPermission(defaultCodeSource, new RuntimePermission(
                 "accessDeclaredMembers"));
         securityManager
@@ -78,6 +96,28 @@ public class SecurityManagerTest extends AbstractAcceptanceTest {
         securityManager.setReadOnly();
         System.setSecurityManager(securityManager);
 
+        xstream = new XStream(new PureJavaReflectionProvider());
+
+        assertBothWays();
+    }
+
+    public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        securityManager.addPermission(defaultCodeSource, new FilePermission(
+                mainClasses.toString(), "read"));
+        securityManager.addPermission(defaultCodeSource, new FilePermission(
+                testClasses.toString(), "read"));
+        securityManager.addPermission(
+                defaultCodeSource, new FilePermission(libs.toString(), "read"));
+        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
+                "accessDeclaredMembers"));
+        securityManager
+                .addPermission(defaultCodeSource, new RuntimePermission("createClassLoader"));
+        securityManager.addPermission(defaultCodeSource, new ReflectPermission(
+                "suppressAccessChecks"));
+        securityManager.setReadOnly();
+        System.setSecurityManager(securityManager);
+
+        // uses implicit PureJavaReflectionProvider, since Sun14ReflectionProvider cannot be loaded
         xstream = new XStream(new DomDriver());
 
         assertBothWays();
@@ -92,6 +132,13 @@ public class SecurityManagerTest extends AbstractAcceptanceTest {
                 + "  <vendor>jw</vendor>\n"
                 + "  <name>xstr</name>\n"
                 + "</software>";
-        assertBothWays(sw, xml);
+
+        String resultXml = xstream.toXML(sw);
+        assertEquals(xml, resultXml);
+        Object resultRoot = xstream.fromXML(resultXml);
+        if (!sw.equals(resultRoot)) {
+            assertEquals("Object deserialization failed", "DESERIALIZED OBJECT\n"
+                    + xstream.toXML(sw), "DESERIALIZED OBJECT\n" + xstream.toXML(resultRoot));
+        }
     }
 }
