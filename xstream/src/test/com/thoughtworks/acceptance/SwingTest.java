@@ -12,6 +12,8 @@ public class SwingTest extends AbstractAcceptanceTest {
         // Note: JTable does not have a sensible .equals() method, so we compare the XML instead.
         JTable original = new JTable();
         String originalXml = xstream.toXML(original);
+        
+        System.out.println(originalXml);
 
         JTable deserialized = (JTable) xstream.fromXML(originalXml);
         String deserializedXml = xstream.toXML(deserialized);

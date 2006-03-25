@@ -41,6 +41,7 @@ import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
+import com.thoughtworks.xstream.converters.extended.TextAttributeConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
@@ -78,6 +79,7 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
 import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
 
+import java.awt.font.TextAttribute;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -378,6 +380,7 @@ public class XStream {
         // a reference to the class is found but they are not instantiated.
         alias("awt-color", jvm.loadClass("java.awt.Color"));
         alias("awt-font", jvm.loadClass("java.awt.Font"));
+        alias("awt-text-attribute", TextAttribute.class);
 
         alias("sql-timestamp", Timestamp.class);
         alias("sql-time", Time.class);
@@ -466,6 +469,7 @@ public class XStream {
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new FontConverter(), PRIORITY_NORMAL);
         registerConverter(new ColorConverter(), PRIORITY_NORMAL);
+        registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
 
@@ -550,6 +554,7 @@ public class XStream {
         addImmutableType(URL.class);
         addImmutableType(File.class);
         addImmutableType(Class.class);
+        addImmutableType(TextAttribute.class);
     }
 
     public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {

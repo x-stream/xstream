@@ -35,7 +35,7 @@ public class SerializationMethodInvoker {
                 } catch (IllegalAccessException e) {
                     throw new ObjectAccessException("Could not call " + result.getClass().getName() + ".readResolve()", e);
                 } catch (InvocationTargetException e) {
-                    throw new ObjectAccessException("Could not call " + result.getClass().getName() + ".readResolve()", e);
+                    throw new ObjectAccessException("Could not call " + result.getClass().getName() + ".readResolve()", e.getTargetException());
                 }
             } else {
                 return result;
@@ -55,7 +55,7 @@ public class SerializationMethodInvoker {
                 } catch (IllegalAccessException e) {
                     throw new ObjectAccessException("Could not call " + object.getClass().getName() + ".writeReplace()", e);
                 } catch (InvocationTargetException e) {
-                    throw new ObjectAccessException("Could not call " + object.getClass().getName() + ".writeReplace()", e);
+                    throw new ObjectAccessException("Could not call " + object.getClass().getName() + ".writeReplace()", e.getTargetException());
                 }
             } else {
                 return object;
@@ -74,7 +74,7 @@ public class SerializationMethodInvoker {
         } catch (IllegalAccessException e) {
             throw new ConversionException("Could not call " + object.getClass().getName() + ".readObject()", e);
         } catch (InvocationTargetException e) {
-            throw new ConversionException("Could not call " + object.getClass().getName() + ".readObject()", e);
+            throw new ConversionException("Could not call " + object.getClass().getName() + ".readObject()", e.getTargetException());
         }
     }
 
@@ -89,7 +89,7 @@ public class SerializationMethodInvoker {
         } catch (IllegalAccessException e) {
             throw new ConversionException("Could not call " + instance.getClass().getName() + ".writeObject()", e);
         } catch (InvocationTargetException e) {
-            throw new ConversionException("Could not call " + instance.getClass().getName() + ".writeObject()", e);
+            throw new ConversionException("Could not call " + instance.getClass().getName() + ".writeObject()", e.getTargetException());
         }
     }
 

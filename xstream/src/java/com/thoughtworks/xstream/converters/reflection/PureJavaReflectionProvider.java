@@ -62,7 +62,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             } else if (e.getTargetException() instanceof Error) {
                 throw (Error)e.getTargetException();
             } else {
-                throw new ObjectAccessException("Constructor for " + type.getName() + " threw an exception", e);
+                throw new ObjectAccessException("Constructor for " + type.getName() + " threw an exception", e.getTargetException());
             }
         }
     }
@@ -92,9 +92,9 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
             return in.readObject();
         } catch (IOException e) {
-            throw new ObjectAccessException("", e);
+            throw new ObjectAccessException("Cannot create " + type.getName() + " by JDK serialization", e);
         } catch (ClassNotFoundException e) {
-            throw new ObjectAccessException("", e);
+            throw new ObjectAccessException("Cannot find class " + e.getMessage());
         }
     }
 

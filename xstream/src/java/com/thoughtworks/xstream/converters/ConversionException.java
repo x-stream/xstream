@@ -24,9 +24,9 @@ public class ConversionException extends BaseException implements ErrorWriter {
     /**
      * Plays nice with JDK1.3 and JDK1.4
      */
-    protected Exception cause;
+    protected Throwable cause;
 
-    public ConversionException(String msg, Exception cause) {
+    public ConversionException(String msg, Throwable cause) {
         super(msg);
         if (msg != null) {
             add("message", msg);
@@ -42,7 +42,7 @@ public class ConversionException extends BaseException implements ErrorWriter {
         super(msg);
     }
 
-    public ConversionException(Exception cause) {
+    public ConversionException(Throwable cause) {
         this(cause.getMessage(), cause);
     }
 
