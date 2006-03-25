@@ -25,7 +25,7 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
 
     private ObjectIdDictionary references = new ObjectIdDictionary();
     private PathTracker pathTracker = new PathTracker();
-    private Path lastPath;
+    private Set uniquePaths = new HashSet();
     private Set implicitElements = new HashSet();
 
     public AbstractReferenceMarshaller(HierarchicalStreamWriter writer,
@@ -49,12 +49,12 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
                 writer.addAttribute("reference", createReference(currentPath, existingReferenceKey));
             } else {
                 Object newReferenceKey = createReferenceKey(currentPath);
-                if (!currentPath.equals(lastPath)) {
+                if (!uniquePaths.contains(currentPath)) {
                     fireValidReference(newReferenceKey);
+                    uniquePaths.add(currentPath);
                 } else {
                     implicitElements.add(newReferenceKey);
                 }
-                lastPath = currentPath;
                 references.associateId(item, newReferenceKey);
                 converter.marshal(item, writer, this);
             }
