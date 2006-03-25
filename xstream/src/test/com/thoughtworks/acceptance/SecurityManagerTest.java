@@ -3,7 +3,6 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
 
@@ -14,6 +13,7 @@ import java.io.FilePermission;
 import java.lang.reflect.ReflectPermission;
 import java.security.CodeSource;
 import java.security.Policy;
+import java.security.cert.Certificate;
 
 
 /**
@@ -35,7 +35,7 @@ public class SecurityManagerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         System.setSecurityManager(null);
-        defaultCodeSource = new CodeSource(null, null);
+        defaultCodeSource = new CodeSource(null, (Certificate[])null);
         mainClasses = new File(
                 new File(new File(System.getProperty("user.dir"), "build"), "java"), "-");
         testClasses = new File(
@@ -75,7 +75,8 @@ public class SecurityManagerTest extends TestCase {
         securityManager.setReadOnly();
         System.setSecurityManager(securityManager);
 
-        xstream = new XStream(new Sun14ReflectionProvider());
+        // uses implicit Sun14ReflectionProvider in JDK >= 1.4, since it has the appropriate rights
+        xstream = new XStream();
 
         assertBothWays();
     }
