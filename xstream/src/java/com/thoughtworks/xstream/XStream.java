@@ -717,9 +717,9 @@ public class XStream {
     }
 
     /**
-     * Alias a Class to be used as an XML attribute
+     * Alias a field oy a specific type to be used as an XML attribute
      *
-     * @param attributeName the name of the attribute
+     * @param attributeName the name of the field
      * @param type the Class of the type to be aliased
      * @since 1.2
      */
@@ -728,6 +728,19 @@ public class XStream {
             throw new InitializationException("No " + AttributeAliasingMapper.class.getName() + "available");
         }
         attributeAliasingMapper.addAttributeAlias(attributeName, type);
+    }
+
+    /**
+     * Alias an arbotrary type to be used as an XML attribute
+     *
+     * @param type the Class of the type to be aliased
+     * @since 1.2
+     */
+    public void aliasAttribute(Class type) {
+        if (attributeAliasingMapper == null) {
+            throw new InitializationException("No " + AttributeAliasingMapper.class.getName() + "available");
+        }
+        attributeAliasingMapper.addAttributeAlias(type);
     }
 
     /**

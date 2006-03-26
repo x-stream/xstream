@@ -72,6 +72,8 @@ public interface Mapper {
 
     SingleValueConverter getConverterFromItemType(String fieldName, Class type);
 
+    SingleValueConverter getConverterFromItemType(Class type);
+
     SingleValueConverter getConverterFromAttribute(String name);
     
     Mapper lookupMapperOfType(Class type);

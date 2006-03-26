@@ -71,6 +71,22 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         assertBothWays(three, expected);
     }
 
+    public void testWithArbitraryFieldType() {
+        One one = new One();
+        one.two = new Two();
+        one.id  = new ID("hullo");
+
+        xstream.alias("one", One.class);
+        xstream.aliasAttribute(ID.class);
+        xstream.registerConverter(new MyIDConverter());
+
+        String expected =
+                "<one id=\"hullo\">\n" +
+                "  <two/>\n" +
+                "</one>";
+        assertBothWays(one, expected);
+    }
+
     public static class One implements HasID {
         public ID id;
         public Two two;

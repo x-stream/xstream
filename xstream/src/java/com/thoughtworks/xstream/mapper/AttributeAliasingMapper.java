@@ -5,7 +5,9 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Mapper that allows aliasing of attribute names and corresponding types.
@@ -20,7 +22,8 @@ import java.util.Map;
  */
 public class AttributeAliasingMapper extends MapperWrapper {
 
-    private final Map nameToTypeMap = new HashMap();
+    private final Map fieldNameToTypeMap = new HashMap();
+    private final Set typeSet = new HashSet();
     private ConverterLookup converterLookup;
 
     // TODO: Remove this - JS
@@ -40,7 +43,11 @@ public class AttributeAliasingMapper extends MapperWrapper {
     }
 
     public void addAttributeAlias(final String attributeName, final Class type) {
-        nameToTypeMap.put(attributeName, type);
+        fieldNameToTypeMap.put(attributeName, type);
+    }
+
+    public void addAttributeAlias(final Class type) {
+        typeSet.add(type);
     }
 
     protected SingleValueConverter getLocalConverterFromItemType(Class type) {
@@ -53,7 +60,15 @@ public class AttributeAliasingMapper extends MapperWrapper {
     }
 
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
-        if (nameToTypeMap.get(fieldName) == type) {
+        if (fieldNameToTypeMap.get(fieldName) == type) {
+            return getLocalConverterFromItemType(type);
+        } else {
+            return null;
+        }
+    }
+
+    public SingleValueConverter getConverterFromItemType(Class type) {
+        if (typeSet.contains(type)) {
             return getLocalConverterFromItemType(type);
         } else {
             return null;
@@ -62,7 +77,7 @@ public class AttributeAliasingMapper extends MapperWrapper {
 
     public SingleValueConverter getConverterFromAttribute(String attributeName) {
         SingleValueConverter converter = null;
-        Class type = (Class)nameToTypeMap.get(attributeName);
+        Class type = (Class)fieldNameToTypeMap.get(attributeName);
         if (type != null) {
             converter = getLocalConverterFromItemType(type);
         }

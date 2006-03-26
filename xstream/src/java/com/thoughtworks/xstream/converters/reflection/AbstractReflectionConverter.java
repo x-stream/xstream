@@ -48,6 +48,9 @@ public abstract class AbstractReflectionConverter implements Converter {
          reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class type, Class definedIn, Object value) {
                 SingleValueConverter converter = mapper.getConverterFromItemType(fieldName, type);
+                if (converter == null) {
+                    converter = mapper.getConverterFromItemType(type);
+                }
                 if (converter != null) {
                     writer.addAttribute(fieldName, converter.toString(value));
                     seenAsAttributes.add(fieldName);
@@ -118,12 +121,15 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Process attributes before recursing into child elements.
         while (it.hasNext()) {
             String attrName = (String) it.next();
-            SingleValueConverter converter = mapper.getConverterFromAttribute(attrName);
-            if (converter != null) {
-                Object value = converter.fromString(reader.getAttribute(attrName));
-                Class classDefiningField = determineWhichClassDefinesField(reader);
-                boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
-                if (fieldExistsInClass) {
+            Class classDefiningField = determineWhichClassDefinesField(reader);
+            boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
+            if (fieldExistsInClass) {
+                SingleValueConverter converter = mapper.getConverterFromAttribute(attrName);
+                if (converter == null) {
+                    converter = mapper.getConverterFromItemType(reflectionProvider.getFieldType(result, attrName, classDefiningField));
+                }
+                if (converter != null) {
+                    Object value = converter.fromString(reader.getAttribute(attrName));
                     reflectionProvider.writeField(result, attrName, value, classDefiningField);
                     seenFields.add(classDefiningField, attrName);
                 }
