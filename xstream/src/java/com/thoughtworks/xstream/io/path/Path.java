@@ -146,4 +146,16 @@ public class Path {
 
         return new Path(result);
     }
+    
+    public boolean isAncestor(Path child) {
+        if (child == null || child.chunks.length < chunks.length) {
+            return false;
+        }
+        for (int i = 0; i < chunks.length; i++) {
+            if (!chunks[i].equals(child.chunks[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
