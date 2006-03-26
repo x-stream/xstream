@@ -15,69 +15,59 @@ import com.thoughtworks.xstream.testutil.TimeZoneChanger;
  */
 public class AttributeAliasTest extends AbstractAcceptanceTest {
 
-    private TimeZoneChanger tzc;
-
     protected void setUp() throws Exception {
         super.setUp();
-        tzc = new TimeZoneChanger();
-        tzc.change("GMT");
+        TimeZoneChanger.change("GMT");
     }
 
     protected void tearDown() throws Exception {
-        tzc.reset();
+        TimeZoneChanger.reset();
         super.tearDown();
     }
 
-    public void testWithAliasAndCustomConverter() {
+    public void testWithCustomConverterAndFieldName() {
         One one = new One();
         one.two = new Two();
         one.id  = new ID("hullo");
 
+        xstream.alias("one", One.class);
         xstream.aliasAttribute("id", ID.class);
         xstream.registerConverter(new MyIDConverter());
 
         String expected =
-                "<com.thoughtworks.acceptance.AttributeAliasTest-One id=\"hullo\">\n" +
+                "<one id=\"hullo\">\n" +
                 "  <two/>\n" +
-                "</com.thoughtworks.acceptance.AttributeAliasTest-One>";
+                "</one>";
         assertBothWays(one, expected);
     }
 
-    public void testWithoutAliasButWithCustomConverter() {
+    public void testWithCustomConverterAndDifferentFieldName() {
         One one = new One();
         one.two = new Two();
         one.id  = new ID("hullo");
 
+        xstream.alias("one", One.class);
+        xstream.aliasAttribute("foo", ID.class);
         xstream.registerConverter(new MyIDConverter());
 
         String expected =
-                "<com.thoughtworks.acceptance.AttributeAliasTest-One>\n" +
+                "<one>\n" +
                 "  <id>hullo</id>\n" +
                 "  <two/>\n" +
-                "</com.thoughtworks.acceptance.AttributeAliasTest-One>";
+                "</one>";
         assertBothWays(one, expected);
     }
 
-    public void testWithAliasAndKnownConverter() throws Exception {
+    public void testWithKnownConverterAndFieldName() throws Exception {
         Three three = new Three();
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         three.date = format.parse("19/02/2006");
 
+        xstream.alias("three", Three.class);
         xstream.aliasAttribute("date", Date.class);
+        
         String expected =
-            "<com.thoughtworks.acceptance.AttributeAliasTest-Three date=\"2006-02-19 00:00:00.0 GMT\"/>";
-        assertBothWays(three, expected);
-    }
-
-    public void testWithAliasButWithKnownConverter() throws Exception {
-        Three three = new Three();
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        three.date = format.parse("19/02/2006");
-
-        String expected =
-            "<com.thoughtworks.acceptance.AttributeAliasTest-Three>\n" +
-            "  <date>2006-02-19 00:00:00.0 GMT</date>\n" +
-            "</com.thoughtworks.acceptance.AttributeAliasTest-Three>";
+            "<three date=\"2006-02-19 00:00:00.0 GMT\"/>";
         assertBothWays(three, expected);
     }
 

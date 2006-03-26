@@ -95,7 +95,7 @@ public class DefaultMapper implements Mapper {
         return null;
     }
 
-    public SingleValueConverter getConverterFromItemType(Class clazz) {
+    public SingleValueConverter getConverterFromItemType(String fieldName, Class clazz) {
         return null;
     }
 

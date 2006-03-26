@@ -47,7 +47,7 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Attributes might be preferred to child elements ...
          reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class type, Class definedIn, Object value) {
-                SingleValueConverter converter = mapper.getConverterFromItemType(type);
+                SingleValueConverter converter = mapper.getConverterFromItemType(fieldName, type);
                 if (converter != null) {
                     writer.addAttribute(fieldName, converter.toString(value));
                     seenAsAttributes.add(fieldName);

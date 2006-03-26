@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +20,10 @@ import java.util.Map;
  */
 public class AttributeAliasingMapper extends MapperWrapper {
 
-    protected final Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
+    private final Map nameToTypeMap = new HashMap();
     private ConverterLookup converterLookup;
 
+    // TODO: Remove this - JS
     public AttributeAliasingMapper(Mapper wrapped) {
         this(wrapped, null);
     }
@@ -52,8 +52,8 @@ public class AttributeAliasingMapper extends MapperWrapper {
         }
     }
 
-    public SingleValueConverter getConverterFromItemType(Class type) {
-        if (nameToTypeMap.containsValue(type)) {
+    public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
+        if (nameToTypeMap.get(fieldName) == type) {
             return getLocalConverterFromItemType(type);
         } else {
             return null;

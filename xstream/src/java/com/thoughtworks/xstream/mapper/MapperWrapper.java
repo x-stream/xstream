@@ -74,8 +74,8 @@ public abstract class MapperWrapper implements Mapper {
         return wrapped.shouldSerializeMember(definedIn, fieldName);
     }
 
-    public SingleValueConverter getConverterFromItemType(Class clazz) {
-        return wrapped.getConverterFromItemType(clazz);
+    public SingleValueConverter getConverterFromItemType(String fieldName, Class clazz) {
+        return wrapped.getConverterFromItemType(fieldName, clazz);
     }
 
     public SingleValueConverter getConverterFromAttribute(String name) {

@@ -70,7 +70,7 @@ public interface Mapper {
         Class getItemType();
     }
 
-    SingleValueConverter getConverterFromItemType(Class type);
+    SingleValueConverter getConverterFromItemType(String fieldName, Class type);
 
     SingleValueConverter getConverterFromAttribute(String name);
     
