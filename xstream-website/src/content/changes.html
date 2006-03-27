@@ -23,7 +23,8 @@
     <h2>Major changes</h2>
 
     <ul>
-        <li>JIRA:XSTR-269, Aliasing of fields (contributed by Paul Hammant and Ian Cartwright).</li>
+        <li>JIRA:XSTR-269, Using attributes for fields (contributed by Paul Hammant and Ian Cartwright).</li>
+        <li>Aliasing of attributes.</li>
         <li>JIRA:XSTR-278, AnnotationConverter for fields (contributed by Guilherme Silveira).</li>
         <li>JIRA:XSTR-256, PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
         <li>JIRA:XSTR-258, Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
@@ -44,6 +45,7 @@
         <li>JIRA:XSTR-281, After registering a new converter, the internal converter cache is now cleared.</li>
         <li>JIRA:XSTR-284, XStream checks the object returned by a converter for compatibility.</li>
         <li>XStream no longer fails serializing an Throwable without cause when no references shall be written.</li>
+        <li>Converter for java.awt.font.TextAttribute.</li>
     </ul>
 
     <h2>API changes</h2>
