@@ -51,6 +51,10 @@ public class AliasTest extends AbstractAcceptanceTest {
             this.name = name;
             this.vendor = vendor;
         }
+        
+        protected Software() {
+            // for JDK 1.3
+        }
     }
     
     public void testForFieldAsAttribute() {
