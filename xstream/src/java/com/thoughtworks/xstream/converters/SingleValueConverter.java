@@ -16,16 +16,16 @@ package com.thoughtworks.xstream.converters;
 public interface SingleValueConverter extends ConverterMatcher {
 
     /**
-     * Marshalls an Object into a single value representation
+     * Marshalls an Object into a single value representation.
      * @param obj the Object to be converted
-     * @return A String with the single value of the Object
+     * @return a String with the single value of the Object or <code>null</code>
      */
     public String toString(Object obj);
 
     /**
-     * Unmarshalls an Object from its single value representation
+     * Unmarshalls an Object from its single value representation.
      * @param str the String with the single value of the Object
-     * @return The Object
+     * @return the Object
      */
     public Object fromString(String str);
 

@@ -20,18 +20,18 @@ import java.util.Set;
  * @author Mauro Talevi
  * @since 1.2
  */
-public class AttributeAliasingMapper extends MapperWrapper {
+public class AttributeMapper extends MapperWrapper {
 
     private final Map fieldNameToTypeMap = new HashMap();
     private final Set typeSet = new HashSet();
     private ConverterLookup converterLookup;
 
     // TODO: Remove this - JS
-    public AttributeAliasingMapper(Mapper wrapped) {
+    public AttributeMapper(Mapper wrapped) {
         this(wrapped, null);
     }
 
-    public AttributeAliasingMapper(Mapper wrapped, ConverterLookup converterLookup) {
+    public AttributeMapper(Mapper wrapped, ConverterLookup converterLookup) {
         super(wrapped);
         this.converterLookup = converterLookup;
     }
@@ -42,11 +42,11 @@ public class AttributeAliasingMapper extends MapperWrapper {
         this.converterLookup = converterLookup;
     }
 
-    public void addAttributeAlias(final String attributeName, final Class type) {
-        fieldNameToTypeMap.put(attributeName, type);
+    public void addAttributeFor(final String fieldName, final Class type) {
+        fieldNameToTypeMap.put(fieldName, type);
     }
 
-    public void addAttributeAlias(final Class type) {
+    public void addAttributeFor(final Class type) {
         typeSet.add(type);
     }
 

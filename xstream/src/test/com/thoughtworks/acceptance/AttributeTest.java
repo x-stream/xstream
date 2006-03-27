@@ -13,7 +13,7 @@ import com.thoughtworks.xstream.testutil.TimeZoneChanger;
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  */
-public class AttributeAliasTest extends AbstractAcceptanceTest {
+public class AttributeTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -31,7 +31,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         one.id  = new ID("hullo");
 
         xstream.alias("one", One.class);
-        xstream.aliasAttribute("id", ID.class);
+        xstream.useAttributeFor("id", ID.class);
         xstream.registerConverter(new MyIDConverter());
 
         String expected =
@@ -47,7 +47,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         one.id  = new ID("hullo");
 
         xstream.alias("one", One.class);
-        xstream.aliasAttribute("foo", ID.class);
+        xstream.useAttributeFor("foo", ID.class);
         xstream.registerConverter(new MyIDConverter());
 
         String expected =
@@ -64,7 +64,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         three.date = format.parse("19/02/2006");
 
         xstream.alias("three", Three.class);
-        xstream.aliasAttribute("date", Date.class);
+        xstream.useAttributeFor("date", Date.class);
         
         String expected =
             "<three date=\"2006-02-19 00:00:00.0 GMT\"/>";
@@ -77,7 +77,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         one.id  = new ID("hullo");
 
         xstream.alias("one", One.class);
-        xstream.aliasAttribute(ID.class);
+        xstream.useAttributeFor(ID.class);
         xstream.registerConverter(new MyIDConverter());
 
         String expected =
@@ -92,7 +92,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         one.two = new Two();
 
         xstream.alias("one", One.class);
-        xstream.aliasAttribute(ID.class);
+        xstream.useAttributeFor(ID.class);
         xstream.registerConverter(new MyIDConverter());
 
         String expected =

@@ -5,7 +5,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
+import com.thoughtworks.xstream.mapper.AttributeMapper;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
@@ -85,7 +85,7 @@ public class ReflectionConverterTest extends TestCase {
         // using default mapper instead of XStream#buildMapper()
         Mapper mapper = new DefaultMapper(new CompositeClassLoader());
         // AttributeAliasingMapper required by ReflectionConverter
-        mapper = new AttributeAliasingMapper(mapper, xstream.getConverterLookup());
+        mapper = new AttributeMapper(mapper, xstream.getConverterLookup());
         Converter converter = new CustomReflectionConverter(mapper, new PureJavaReflectionProvider());
         xstream.registerConverter(converter, -20);
         xstream.alias("world", World.class);

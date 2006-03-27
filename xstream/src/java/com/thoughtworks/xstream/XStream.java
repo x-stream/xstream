@@ -64,7 +64,7 @@ import com.thoughtworks.xstream.io.StatefulWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
-import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
+import com.thoughtworks.xstream.mapper.AttributeMapper;
 import com.thoughtworks.xstream.mapper.CachingMapper;
 import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
@@ -217,7 +217,7 @@ public class XStream {
 
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
-    private AttributeAliasingMapper attributeAliasingMapper;
+    private AttributeMapper attributeMapper;
     private DefaultImplementationsMapper defaultImplementationsMapper;
     private ImmutableTypesMapper immutableTypesMapper;
     private ImplicitCollectionMapper implicitCollectionMapper;
@@ -303,7 +303,7 @@ public class XStream {
         mapper = new XmlFriendlyMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
-        mapper = new AttributeAliasingMapper(mapper);
+        mapper = new AttributeMapper(mapper);
         mapper = new ImplicitCollectionMapper(mapper);
         mapper = new DynamicProxyMapper(mapper);
         if (JVM.is15()) {
@@ -325,14 +325,14 @@ public class XStream {
     private void setupMappers() {
         classAliasingMapper = (ClassAliasingMapper)this.mapper.lookupMapperOfType(ClassAliasingMapper.class);
         fieldAliasingMapper = (FieldAliasingMapper)this.mapper.lookupMapperOfType(FieldAliasingMapper.class);
-        attributeAliasingMapper = (AttributeAliasingMapper)this.mapper.lookupMapperOfType(AttributeAliasingMapper.class);
+        attributeMapper = (AttributeMapper)this.mapper.lookupMapperOfType(AttributeMapper.class);
         implicitCollectionMapper = (ImplicitCollectionMapper)this.mapper.lookupMapperOfType(ImplicitCollectionMapper.class);
         defaultImplementationsMapper = (DefaultImplementationsMapper)this.mapper.lookupMapperOfType(DefaultImplementationsMapper.class);
         immutableTypesMapper = (ImmutableTypesMapper)this.mapper.lookupMapperOfType(ImmutableTypesMapper.class);
         
         // should use ctor, but converterLookup is not yet initialized instantiating this mapper
-        if (attributeAliasingMapper != null) {
-            attributeAliasingMapper.setConverterLookup(converterLookup); 
+        if (attributeMapper != null) {
+            attributeMapper.setConverterLookup(converterLookup); 
         }
     }
 
@@ -719,15 +719,15 @@ public class XStream {
     /**
      * Alias a field oy a specific type to be used as an XML attribute
      *
-     * @param attributeName the name of the field
+     * @param fieldName the name of the field
      * @param type the Class of the type to be aliased
      * @since 1.2
      */
-    public void aliasAttribute(String attributeName, Class type) {
-        if (attributeAliasingMapper == null) {
-            throw new InitializationException("No " + AttributeAliasingMapper.class.getName() + "available");
+    public void useAttributeFor(String fieldName, Class type) {
+        if (attributeMapper == null) {
+            throw new InitializationException("No " + AttributeMapper.class.getName() + "available");
         }
-        attributeAliasingMapper.addAttributeAlias(attributeName, type);
+        attributeMapper.addAttributeFor(fieldName, type);
     }
 
     /**
@@ -736,11 +736,11 @@ public class XStream {
      * @param type the Class of the type to be aliased
      * @since 1.2
      */
-    public void aliasAttribute(Class type) {
-        if (attributeAliasingMapper == null) {
-            throw new InitializationException("No " + AttributeAliasingMapper.class.getName() + "available");
+    public void useAttributeFor(Class type) {
+        if (attributeMapper == null) {
+            throw new InitializationException("No " + AttributeMapper.class.getName() + "available");
         }
-        attributeAliasingMapper.addAttributeAlias(type);
+        attributeMapper.addAttributeFor(type);
     }
 
     /**
