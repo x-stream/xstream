@@ -717,10 +717,10 @@ public class XStream {
     }
 
     /**
-     * Alias a field oy a specific type to be used as an XML attribute
+     * Use an XML attribute for a field or a specific type.
      *
      * @param fieldName the name of the field
-     * @param type the Class of the type to be aliased
+     * @param type the Class of the type to be rendered as XML attribute
      * @since 1.2
      */
     public void useAttributeFor(String fieldName, Class type) {
@@ -731,9 +731,9 @@ public class XStream {
     }
 
     /**
-     * Alias an arbotrary type to be used as an XML attribute
+     * Use an XML attribute for an arbotrary type.
      *
-     * @param type the Class of the type to be aliased
+     * @param type the Class of the type to be rendered as XML attribute
      * @since 1.2
      */
     public void useAttributeFor(Class type) {
