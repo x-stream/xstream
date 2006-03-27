@@ -87,6 +87,21 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         assertBothWays(one, expected);
     }
 
+    public void testWithNullAttribute() {
+        One one = new One();
+        one.two = new Two();
+
+        xstream.alias("one", One.class);
+        xstream.aliasAttribute(ID.class);
+        xstream.registerConverter(new MyIDConverter());
+
+        String expected =
+                "<one>\n" +
+                "  <two/>\n" +
+                "</one>";
+        assertBothWays(one, expected);
+    }
+
     public static class One implements HasID {
         public ID id;
         public Two two;
@@ -120,7 +135,7 @@ public class AttributeAliasTest extends AbstractAcceptanceTest {
         }
 
         public String toString(Object obj) {
-            return ((ID) obj).value;
+            return obj == null ? null : ((ID) obj).value;
         }
 
         public Object fromString(String str) {

@@ -17,7 +17,7 @@ public abstract class AbstractSingleValueConverter implements SingleValueConvert
     public abstract boolean canConvert(Class type);
 
     public String toString(Object obj) {
-        return obj.toString();
+        return obj == null ? null : obj.toString();
     }
 
     public abstract Object fromString(String str);

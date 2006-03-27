@@ -52,7 +52,10 @@ public abstract class AbstractReflectionConverter implements Converter {
                     converter = mapper.getConverterFromItemType(type);
                 }
                 if (converter != null) {
-                    writer.addAttribute(fieldName, converter.toString(value));
+                    final String str = converter.toString(value);
+                    if (str != null) {
+                        writer.addAttribute(fieldName, str);
+                    }
                     seenAsAttributes.add(fieldName);
                 }
             }
