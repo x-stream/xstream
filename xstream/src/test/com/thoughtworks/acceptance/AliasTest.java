@@ -1,14 +1,18 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.someobjects.Protocol;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Paul Hammant
  */
 public class AliasTest extends AbstractAcceptanceTest {
 
-    public void testBarfsIfAliasDoesNotExist() {
+    public void testBarfsIfItDoesNotExist() {
 
         String xml = "" +
                 "<X-array>\n" +
@@ -27,7 +31,7 @@ public class AliasTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testAliasWithUnderscore() {
+    public void testWithUnderscore() {
         String xml = "" +
                 "<X_alias>\n" +
                 "  <anInt>0</anInt>\n" +
@@ -39,4 +43,45 @@ public class AliasTest extends AbstractAcceptanceTest {
         assertBothWays(x, xml);
     }
 
+    final static class Software {
+        String vendor;
+        String name;
+        
+        public Software(String vendor, String name) {
+            this.name = name;
+            this.vendor = vendor;
+        }
+    }
+    
+    public void testForFieldAsAttribute() {
+        Software software = new Software("walness", "xstream");
+        
+        xstream.alias("software", Software.class);
+        xstream.useAttributeFor(String.class);
+        xstream.aliasAttribute("id", "name");
+        
+        String xml = "<software vendor=\"walness\" id=\"xstream\"/>";
+        
+        assertBothWays(software, xml);
+    }
+    
+    public void testForReferenceAttribute() {
+        List list = new ArrayList();
+        Software software = new Software("walness", "xstream");
+        list.add(software);
+        list.add(software);
+        
+        xstream.alias("software", Software.class);
+        xstream.useAttributeFor(String.class);
+        xstream.aliasAttribute("refid", "reference");
+        
+        String xml = "" + 
+            "<list>\n" +
+            "  <software vendor=\"walness\" name=\"xstream\"/>\n" +
+            "  <software refid=\"../software\"/>\n" +
+            "</list>";
+        
+        assertBothWays(list, xml);
+    }
+    
 }

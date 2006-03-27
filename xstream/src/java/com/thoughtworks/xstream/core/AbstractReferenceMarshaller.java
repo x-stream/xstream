@@ -46,7 +46,7 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
                 if (implicitElements.contains(existingReferenceKey)) {
                     throw new ReferencedImplicitElementException("Cannot reference implicit element: " + item.toString());
                 }
-                writer.addAttribute("reference", createReference(currentPath, existingReferenceKey));
+                writer.addAttribute(getMapper().attributeForReference(), createReference(currentPath, existingReferenceKey));
             } else {
                 Object newReferenceKey = createReferenceKey(currentPath);
                 if (lastPath == null || !currentPath.isAncestor(lastPath)) {

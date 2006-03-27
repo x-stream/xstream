@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Mapper that allows aliasing of attribute names and corresponding types.
- * It is responsible for the lookup of the {@link SingleValueConverter}
- * for item types and attribute names.
+ * Mapper that allows the usage of attributes for fields and corresponding 
+ * types or specified arbitrary types. It is responsible for the lookup of the 
+ * {@link SingleValueConverter} for item types and attribute names.
  *
  * @author Paul Hammant 
  * @author Ian Cartwright

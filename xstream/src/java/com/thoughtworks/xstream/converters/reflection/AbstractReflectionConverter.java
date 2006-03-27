@@ -54,7 +54,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                 if (converter != null) {
                     final String str = converter.toString(value);
                     if (str != null) {
-                        writer.addAttribute(fieldName, str);
+                        writer.addAttribute(mapper.aliasForField(fieldName), str);
                     }
                     seenAsAttributes.add(fieldName);
                 }
@@ -123,7 +123,8 @@ public abstract class AbstractReflectionConverter implements Converter {
 
         // Process attributes before recursing into child elements.
         while (it.hasNext()) {
-            String attrName = (String) it.next();
+            String attrAlias = (String) it.next();
+            String attrName = mapper.fieldForAlias(attrAlias);
             Class classDefiningField = determineWhichClassDefinesField(reader);
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
             if (fieldExistsInClass) {
@@ -132,7 +133,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                     converter = mapper.getConverterFromItemType(reflectionProvider.getFieldType(result, attrName, classDefiningField));
                 }
                 if (converter != null) {
-                    Object value = converter.fromString(reader.getAttribute(attrName));
+                    Object value = converter.fromString(reader.getAttribute(attrAlias));
                     reflectionProvider.writeField(result, attrName, value, classDefiningField);
                     seenFields.add(classDefiningField, attrName);
                 }

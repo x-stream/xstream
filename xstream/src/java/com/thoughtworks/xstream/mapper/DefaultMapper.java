@@ -51,8 +51,20 @@ public class DefaultMapper implements Mapper {
         return "enum-type";
     }
 
+    public String attributeForReference() {
+        return "reference";
+    }
+
     public String attributeForImplementationClass() {
         return classAttributeIdentifier;
+    }
+
+    public String aliasForField(String fieldName) {
+        return fieldName;
+    }
+
+    public String fieldForAlias(String alias) {
+        return alias;
     }
 
     public boolean isImmutableValueType(Class type) {

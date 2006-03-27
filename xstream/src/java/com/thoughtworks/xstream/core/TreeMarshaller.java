@@ -95,10 +95,10 @@ public class TreeMarshaller implements MarshallingContext {
         }
     }
 
-    public static class CircularReferenceException extends RuntimeException {
-    }
-
     protected Mapper getMapper() {
         return this.mapper;
+    }
+
+    public static class CircularReferenceException extends RuntimeException {
     }
 }

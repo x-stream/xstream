@@ -123,4 +123,8 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         return result;
     }
 
+    protected Mapper getMapper() {
+        return this.mapper;
+    }
+
 }

@@ -58,6 +58,18 @@ public abstract class MapperWrapper implements Mapper {
         return wrapped.attributeForEnumType();
     }
 
+    public String attributeForReference() {
+        return wrapped.attributeForReference();
+    }
+
+    public String aliasForField(String fieldName) {
+        return wrapped.aliasForField(fieldName);
+    }
+
+    public String fieldForAlias(String alias) {
+        return wrapped.fieldForAlias(alias);
+    }
+
     public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {
         return wrapped.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
     }

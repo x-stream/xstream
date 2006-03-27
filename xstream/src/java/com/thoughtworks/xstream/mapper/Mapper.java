@@ -44,6 +44,12 @@ public interface Mapper {
 
     String attributeForEnumType();
 
+    String attributeForReference();
+
+    String aliasForField(String fieldName);
+
+    String fieldForAlias(String alias);
+
     /**
      * Get the name of the field that acts as the default collection for an object, or return null if there is none.
      *
