@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
  */
 public class XStreamConverterTest extends AbstractAcceptanceTest {
 
-    final class ImplicitXStreamContainer {
+    final static class ImplicitXStreamContainer {
         private XStream myXStream;
     };
 
