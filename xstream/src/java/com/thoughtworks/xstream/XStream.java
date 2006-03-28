@@ -42,6 +42,7 @@ import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
 import com.thoughtworks.xstream.converters.extended.TextAttributeConverter;
+import com.thoughtworks.xstream.converters.extended.XStreamConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
@@ -216,6 +217,7 @@ import java.util.Vector;
  */
 public class XStream {
 
+    // CAUTION: XStream has an own Converter! Don't forget to add new fields!
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
     private AttributeAliasingMapper attributeAliasingMapper;
@@ -231,7 +233,7 @@ public class XStream {
 
     private Mapper mapper;
     private DefaultConverterLookup converterLookup;
-    private JVM jvm = new JVM();
+    private transient JVM jvm = new JVM();
 
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
@@ -476,6 +478,7 @@ public class XStream {
         registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
+        registerConverter(new XStreamConverter(this), PRIORITY_NORMAL);
 
         if (JVM.is14()) {
             // late bound converters - allows XStream to be compiled on earlier JDKs
@@ -1076,4 +1079,8 @@ public class XStream {
         }
     }
 
+    private Object readResolve() {
+        jvm = new JVM();
+        return this;
+    }
 }

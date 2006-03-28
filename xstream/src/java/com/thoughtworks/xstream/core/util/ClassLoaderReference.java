@@ -5,11 +5,12 @@ package com.thoughtworks.xstream.core.util;
  * can later have its destination changed.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  * @since 1.1.1
  */
 public class ClassLoaderReference extends ClassLoader {
 
-    private ClassLoader reference;
+    private transient ClassLoader reference;
 
     public ClassLoaderReference(ClassLoader reference) {
         this.reference = reference;
@@ -25,5 +26,10 @@ public class ClassLoaderReference extends ClassLoader {
 
     public void setReference(ClassLoader reference) {
         this.reference = reference;
+    }
+    
+    private Object readResolve() {
+        reference = new CompositeClassLoader();
+        return this;
     }
 }
