@@ -1,13 +1,5 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -17,11 +9,19 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 public abstract class AbstractReflectionConverter implements Converter {
 
     protected final ReflectionProvider reflectionProvider;
     protected final Mapper mapper;
-    protected final SerializationMethodInvoker serializationMethodInvoker;
+    protected transient SerializationMethodInvoker serializationMethodInvoker;
     private transient ReflectionProvider pureJavaReflectionProvider;
 
     public AbstractReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
@@ -253,6 +253,11 @@ public abstract class AbstractReflectionConverter implements Converter {
         } else {
             return mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, definedInCls));
         }
+    }
+    
+    private Object readResolve() {
+        serializationMethodInvoker = new SerializationMethodInvoker();
+        return this;
     }
 
     public static class DuplicateFieldException extends ConversionException {

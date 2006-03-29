@@ -28,8 +28,15 @@ public class ClassLoaderReference extends ClassLoader {
         this.reference = reference;
     }
     
-    private Object readResolve() {
-        reference = new CompositeClassLoader();
-        return this;
+    private Object writeReplace() {
+        return new Replacement();
     }
+    
+    static class Replacement {
+        
+        private Object readResolve() {
+            return new ClassLoaderReference(new CompositeClassLoader());
+        }
+        
+    };
 }

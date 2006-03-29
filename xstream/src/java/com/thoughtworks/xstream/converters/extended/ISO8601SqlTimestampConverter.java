@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class ISO8601SqlTimestampConverter extends ISO8601DateConverter {
 
-    final static String PADDING = "000000000";
+    private final static String PADDING = "000000000";
 
     public boolean canConvert(Class type) {
         return type.equals(Timestamp.class);

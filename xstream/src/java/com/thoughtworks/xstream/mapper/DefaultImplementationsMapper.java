@@ -2,8 +2,8 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public class DefaultImplementationsMapper extends MapperWrapper {
 
-    private final Map typeToImpl = Collections.synchronizedMap(new HashMap());
-    private final Map implToType = Collections.synchronizedMap(new HashMap());
+    private final Map typeToImpl = new HashMap();
+    private transient Map implToType = new HashMap();
 
     public DefaultImplementationsMapper(Mapper wrapped) {
         super(wrapped);
@@ -59,6 +59,15 @@ public class DefaultImplementationsMapper extends MapperWrapper {
         } else {
             return super.defaultImplementationOf(type);
         }
+    }
+    
+    private Object readResolve() {
+        implToType = new HashMap();
+        for (final Iterator iter = typeToImpl.keySet().iterator(); iter.hasNext();) {
+            final Object type = iter.next();
+            implToType.put(typeToImpl.get(type), type);
+        }
+        return this;
     }
 
 }

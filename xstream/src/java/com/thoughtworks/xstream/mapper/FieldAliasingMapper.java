@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,9 +15,9 @@ import java.util.Set;
  */
 public class FieldAliasingMapper extends MapperWrapper {
 
-    protected final Map fieldToAliasMap = Collections.synchronizedMap(new HashMap());
-    protected final Map aliasToFieldMap = Collections.synchronizedMap(new HashMap());
-    protected final Set fieldsToOmit = Collections.synchronizedSet(new HashSet());
+    protected final Map fieldToAliasMap = new HashMap();
+    protected final Map aliasToFieldMap = new HashMap();
+    protected final Set fieldsToOmit = new HashSet();
 
     public FieldAliasingMapper(Mapper wrapped) {
         super(wrapped);

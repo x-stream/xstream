@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.core.util;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -18,7 +17,7 @@ import java.util.TreeSet;
  */
 public class PrioritizedList {
 	
-	private final Set set = Collections.synchronizedSet(new TreeSet());
+    private final Set set = new TreeSet();
 
     private int lowestPriority = Integer.MAX_VALUE;
     
@@ -80,7 +79,7 @@ public class PrioritizedList {
 
     private static class PrioritizedItemIterator implements Iterator {
 
-		private Iterator iterator;
+	private Iterator iterator;
 
         public PrioritizedItemIterator(Iterator iterator) {
             this.iterator = iterator;

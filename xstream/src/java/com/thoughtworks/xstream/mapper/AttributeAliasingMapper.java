@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.mapper;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Map;
 public class AttributeAliasingMapper extends MapperWrapper {
 
     private final Map aliasToNameMap = new HashMap();
-    private final Map nameToAliasMap = new HashMap();
+    private transient Map nameToAliasMap = new HashMap();
 
     public AttributeAliasingMapper(Mapper wrapped) {
         super(wrapped);
@@ -56,5 +57,14 @@ public class AttributeAliasingMapper extends MapperWrapper {
     private String getAliasForName(String name) {
         String alias = (String)nameToAliasMap.get(name);
         return alias == null ? name : alias;
+    }
+    
+    private Object readResolve() {
+        nameToAliasMap = new HashMap();
+        for (final Iterator iter = aliasToNameMap.keySet().iterator(); iter.hasNext();) {
+            final Object alias = iter.next();
+            nameToAliasMap.put(aliasToNameMap.get(alias), alias);
+        }
+        return this;
     }
 }

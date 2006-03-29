@@ -12,14 +12,17 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 public class DefaultMapper implements Mapper {
 
     private final ClassLoader classLoader;
-    private final String classAttributeIdentifier;
+    private transient String classAttributeIdentifier;
 
     public DefaultMapper(ClassLoader classLoader) {
-        this(classLoader, "class");
+        this.classLoader = classLoader;
     }
 
+    /**
+     * @deprecated since 1.2, use XStream.aliasAttrbute() for a different attribute name.
+     */
     public DefaultMapper(ClassLoader classLoader, String classAttributeIdentifier) {
-        this.classLoader = classLoader;
+        this(classLoader);
         this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
     }
 
@@ -118,5 +121,4 @@ public class DefaultMapper implements Mapper {
     public Mapper lookupMapperOfType(Class type) {
         return null;
     }
-    
 }

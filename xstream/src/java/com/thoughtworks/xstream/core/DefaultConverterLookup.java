@@ -22,7 +22,7 @@ import java.util.Map;
 public class DefaultConverterLookup implements ConverterLookup {
 
     private final PrioritizedList converters = new PrioritizedList();
-    private final Map typeToConverterMap = Collections.synchronizedMap(new HashMap());
+    private transient Map typeToConverterMap = Collections.synchronizedMap(new HashMap());
     private final Mapper mapper;
 
     public DefaultConverterLookup(Mapper mapper) {
@@ -54,11 +54,16 @@ public class DefaultConverterLookup implements ConverterLookup {
     public void registerConverter(Converter converter, int priority) {
         converters.add(converter, priority);
         for (Iterator iter = this.typeToConverterMap.keySet().iterator(); iter.hasNext();) {
-			Class type = (Class) iter.next();
-			if(converter.canConvert(type)) {
-				this.typeToConverterMap.remove(type);
-			}
-		}
+            Class type = (Class)iter.next();
+            if (converter.canConvert(type)) {
+                this.typeToConverterMap.remove(type);
+            }
+        }
+    }
+    
+    private Object readResolve() {
+        typeToConverterMap = Collections.synchronizedMap(new HashMap());
+        return this;
     }
 
 }

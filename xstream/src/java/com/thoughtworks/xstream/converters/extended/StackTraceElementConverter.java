@@ -21,8 +21,7 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
     // (Note group 4 is optional is optional and only present if a colon char exists.)
 
     private static final Pattern PATTERN = Pattern.compile("^(.+)\\.([^\\(]+)\\(([^:]*)(:(\\d+))?\\)$");
-
-    private final StackTraceElementFactory factory = new StackTraceElementFactory();
+    private static final StackTraceElementFactory FACTORY = new StackTraceElementFactory();
 
     public boolean canConvert(Class type) {
         return StackTraceElement.class.equals(type);
@@ -35,15 +34,15 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
             String methodName = matcher.group(2);
             String fileName = matcher.group(3);
             if (fileName.equals("Unknown Source")) {
-                return factory.unknownSourceElement(declaringClass, methodName);
+                return FACTORY.unknownSourceElement(declaringClass, methodName);
             } else if (fileName.equals("Native Method")) {
-                return factory.nativeMethodElement(declaringClass, methodName);
+                return FACTORY.nativeMethodElement(declaringClass, methodName);
             } else {
                 if (matcher.group(4) != null) {
                     int lineNumber = Integer.parseInt(matcher.group(5));
-                    return factory.element(declaringClass, methodName, fileName, lineNumber);
+                    return FACTORY.element(declaringClass, methodName, fileName, lineNumber);
                 } else {
-                    return factory.element(declaringClass, methodName, fileName);
+                    return FACTORY.element(declaringClass, methodName, fileName);
                 }
             }
         } else {

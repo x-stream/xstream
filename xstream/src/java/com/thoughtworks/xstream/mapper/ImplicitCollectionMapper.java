@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,7 +20,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     }
 
     // { definedIn (Class) -> (ImplicitCollectionMapperForClass) }
-    private Map classNameToMapper = Collections.synchronizedMap(new HashMap());
+    private final Map classNameToMapper = new HashMap();
 
     private ImplicitCollectionMapperForClass getMapper(Class definedIn) {
         while (definedIn != null) {

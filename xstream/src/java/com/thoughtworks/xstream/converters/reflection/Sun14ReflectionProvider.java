@@ -20,20 +20,33 @@ import java.util.Map;
  */
 public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
-    private final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-    private Unsafe cachedUnsafe;
-    private final Map constructorCache = Collections.synchronizedMap(new HashMap());
-
-    private Unsafe getUnsafe() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        if (cachedUnsafe != null) {
-            return cachedUnsafe;
+    private final static Unsafe unsafe;
+    private final static Exception exception;
+    static {
+        Unsafe u = null;
+        Exception ex = null;
+        try {
+            Class objectStreamClass = Class.forName("java.io.ObjectStreamClass$FieldReflector");
+            Field unsafeField = objectStreamClass.getDeclaredField("unsafe");
+            unsafeField.setAccessible(true);
+            u = (Unsafe) unsafeField.get(null);
+        } catch (ClassNotFoundException e) {
+            ex = e;
+        } catch (SecurityException e) {
+            ex = e;
+        } catch (NoSuchFieldException e) {
+            ex = e;
+        } catch (IllegalArgumentException e) {
+            ex = e;
+        } catch (IllegalAccessException e) {
+            ex = e;
         }
-        Class objectStreamClass = Class.forName("java.io.ObjectStreamClass$FieldReflector");
-        Field unsafeField = objectStreamClass.getDeclaredField("unsafe");
-        unsafeField.setAccessible(true);
-        cachedUnsafe = (Unsafe) unsafeField.get(null);
-        return cachedUnsafe;
+        exception = ex;
+        unsafe = u;
     }
+    
+    private transient ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
+    private transient Map constructorCache = Collections.synchronizedMap(new HashMap());
 
     public Object newInstance(Class type) {
         try {
@@ -68,8 +81,10 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private void write(Field field, Object object, Object value) {
+        if (exception != null) {
+            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), exception);
+        }
         try {
-            Unsafe unsafe = getUnsafe();
             long offset = unsafe.objectFieldOffset(field);
             Class type = field.getType();
             if (type.isPrimitive()) {
@@ -100,16 +115,16 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
         } catch (IllegalArgumentException e) {
             throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
-        } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
-        } catch (NoSuchFieldException e) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
-        } catch (ClassNotFoundException e) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
         }
     }
 
     protected void validateFieldAccess(Field field) {
         // (overriden) don't mind final fields.
+    }
+
+    private Object readResolve() {
+        constructorCache = Collections.synchronizedMap(new HashMap());
+        reflectionFactory = ReflectionFactory.getReflectionFactory();
+        return this;
     }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class CachingMapper extends MapperWrapper {
 
-    private final Map cache = Collections.synchronizedMap(new HashMap());
+    private transient Map cache = Collections.synchronizedMap(new HashMap());
 
     public CachingMapper(Mapper wrapped) {
         super(wrapped);
@@ -35,6 +35,11 @@ public class CachingMapper extends MapperWrapper {
             cache.put(elementName, result);
             return result;
         }
+    }
+    
+    private Object readResolve() {
+        cache = Collections.synchronizedMap(new HashMap());
+        return this;
     }
 
 }

@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ import java.util.Set;
  */
 public class ImmutableTypesMapper extends MapperWrapper {
 
-    private final Set immutableTypes = Collections.synchronizedSet(new HashSet());
+    private final Set immutableTypes = new HashSet();
 
     public ImmutableTypesMapper(Mapper wrapped) {
         super(wrapped);

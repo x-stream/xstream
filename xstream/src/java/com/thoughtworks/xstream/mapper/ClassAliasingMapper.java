@@ -2,9 +2,9 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,9 +16,9 @@ import java.util.Set;
  */
 public class ClassAliasingMapper extends MapperWrapper {
 
-    protected final Map typeToNameMap = Collections.synchronizedMap(new HashMap());
-    protected final Map nameToTypeMap = Collections.synchronizedMap(new HashMap());
-    protected final Set knownAttributes = Collections.synchronizedSet(new HashSet());
+    protected final Map typeToNameMap = new HashMap();
+    protected transient Map nameToTypeMap = new HashMap();
+    protected final Set knownAttributes = new HashSet();
 
     public ClassAliasingMapper(Mapper wrapped) {
         super(wrapped);
@@ -66,6 +66,15 @@ public class ClassAliasingMapper extends MapperWrapper {
 
     public boolean aliasIsAttribute(String name) {
         return nameToTypeMap.containsKey(name);
+    }
+    
+    private Object readResolve() {
+        nameToTypeMap = new HashMap();
+        for (final Iterator iter = typeToNameMap.keySet().iterator(); iter.hasNext();) {
+            final Object type = iter.next();
+            nameToTypeMap.put(typeToNameMap.get(type), type);
+        }
+        return this;
     }
 
 }

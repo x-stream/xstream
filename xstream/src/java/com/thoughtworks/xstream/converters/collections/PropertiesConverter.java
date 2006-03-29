@@ -26,7 +26,7 @@ import java.util.Properties;
  */
 public class PropertiesConverter implements Converter {
 
-    private final Field defaultsField = Fields.find(Properties.class, "defaults");
+    private final static Field defaultsField = Fields.find(Properties.class, "defaults");
 
     public boolean canConvert(Class type) {
         return Properties.class == type;

@@ -217,7 +217,14 @@ import java.util.Vector;
  */
 public class XStream {
 
-    // CAUTION: XStream has an own Converter! Don't forget to add new fields!
+    // CAUTION: The sequence of the fields is intentional for an optimal XML output of a self-serializaion!
+    private ReflectionProvider reflectionProvider;
+    private HierarchicalStreamDriver hierarchicalStreamDriver;
+    private ClassLoaderReference classLoaderReference;
+    private MarshallingStrategy marshallingStrategy;
+    private Mapper mapper;
+    private DefaultConverterLookup converterLookup;
+
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
     private AttributeAliasingMapper attributeAliasingMapper;
@@ -226,13 +233,6 @@ public class XStream {
     private ImmutableTypesMapper immutableTypesMapper;
     private ImplicitCollectionMapper implicitCollectionMapper;
 
-    private ReflectionProvider reflectionProvider;
-    private HierarchicalStreamDriver hierarchicalStreamDriver;
-    private MarshallingStrategy marshallingStrategy;
-    private ClassLoaderReference classLoaderReference; // TODO: Should be changeable
-
-    private Mapper mapper;
-    private DefaultConverterLookup converterLookup;
     private transient JVM jvm = new JVM();
 
     public static final int NO_REFERENCES = 1001;
@@ -478,7 +478,7 @@ public class XStream {
         registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
-        registerConverter(new XStreamConverter(this), PRIORITY_NORMAL);
+        registerConverter(new XStreamConverter(this, reflectionConverter), PRIORITY_NORMAL);
 
         if (JVM.is14()) {
             // late bound converters - allows XStream to be compiled on earlier JDKs

@@ -16,15 +16,17 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class XStreamConverter implements Converter {
 
-    private final XStream xstream;
+    private final XStream self;
+    private final Converter defaultConverter;
 
     /**
      * @todo Auto-generated JavaDoc
      * 
      * @since 1.2
      */
-    public XStreamConverter(XStream xstream) {
-        this.xstream = xstream;
+    public XStreamConverter(XStream xstream, Converter defaultConverter) {
+        this.self = xstream;
+        this.defaultConverter = defaultConverter;
     }
 
     public boolean canConvert(Class type) {
@@ -32,13 +34,14 @@ public class XStreamConverter implements Converter {
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        if (source == xstream) {
+        if (source == self) {
             throw new ConversionException("Cannot marshal the XStream instance in action");
         }
+        defaultConverter.marshal(source, writer, context);
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        return null;
+        return defaultConverter.unmarshal(reader, context);
     }
 
 }

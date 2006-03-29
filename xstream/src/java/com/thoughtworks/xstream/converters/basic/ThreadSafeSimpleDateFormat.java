@@ -24,12 +24,12 @@ import java.util.Locale;
  */
 public class ThreadSafeSimpleDateFormat {
 
-    private String formatString;
+    private final String formatString;
     private final int initialPoolSize;
     private final int maxPoolSize;
     private transient DateFormat[] pool;
-    private int nextAvailable = 0;
-    private final Object mutex = new Object();
+    private transient int nextAvailable;
+    private transient Object mutex = new Object();
 
     public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize) {
         this.formatString = format;
@@ -93,6 +93,11 @@ public class ThreadSafeSimpleDateFormat {
 
     private DateFormat createNew() {
         return new SimpleDateFormat(formatString, Locale.ENGLISH);
+    }
+    
+    private Object readResolve() {
+        mutex = new Object();
+        return this;
     }
 
 }
