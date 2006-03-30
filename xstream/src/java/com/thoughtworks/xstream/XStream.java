@@ -272,18 +272,15 @@ public class XStream {
         this(reflectionProvider, classMapper, driver, null);
     }
 
-    public XStream(ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
-        this(reflectionProvider, mapper, driver, null);
-    }
-
     /**
-     * @deprecated As of 1.2, use {@link #XStream(ReflectionProvider, Mapper, HierarchicalStreamDriver, String)}
+     * @deprecated As of 1.2, use {@link #XStream(ReflectionProvider, Mapper, HierarchicalStreamDriver)} and register classAttributeIdentifier as alias
      */
     public XStream(ReflectionProvider reflectionProvider, ClassMapper classMapper, HierarchicalStreamDriver driver, String classAttributeIdentifier) {
-        this(reflectionProvider, (Mapper)classMapper, driver, classAttributeIdentifier);
+        this(reflectionProvider, (Mapper)classMapper, driver);
+        aliasAttribute(classAttributeIdentifier, "class");
     }
 
-    public XStream(ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver, String classAttributeIdentifier) {
+    public XStream(ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
         jvm = new JVM();
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
@@ -291,7 +288,7 @@ public class XStream {
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
-        this.mapper = mapper == null ? buildMapper(classAttributeIdentifier) : mapper;
+        this.mapper = mapper == null ? buildMapper() : mapper;
         this.converterLookup = new DefaultConverterLookup(this.mapper);
         
         setupMappers();
@@ -302,8 +299,8 @@ public class XStream {
         setMode(XPATH_RELATIVE_REFERENCES);
     }
 
-    private Mapper buildMapper(String classAttributeIdentifier) {
-        Mapper mapper = new DefaultMapper(classLoaderReference, classAttributeIdentifier);
+    private Mapper buildMapper() {
+        Mapper mapper = new DefaultMapper(classLoaderReference);
         mapper = new XmlFriendlyMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);

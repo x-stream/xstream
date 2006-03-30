@@ -12,16 +12,16 @@ import java.util.Map;
  */
 public class AttributeAliasingMapper extends MapperWrapper {
 
-    private final Map aliasToNameMap = new HashMap();
-    private transient Map nameToAliasMap = new HashMap();
+    private final Map aliasToName = new HashMap();
+    private transient Map nameToAlias = new HashMap();
 
     public AttributeAliasingMapper(Mapper wrapped) {
         super(wrapped);
     }
 
     public void addAliasFor(final String attributeName, final String alias) {
-        aliasToNameMap.put(alias, attributeName);
-        nameToAliasMap.put(attributeName, alias);
+        aliasToName.put(alias, attributeName);
+        nameToAlias.put(attributeName, alias);
     }
 
     public String attributeForClassDefiningField() {
@@ -45,25 +45,25 @@ public class AttributeAliasingMapper extends MapperWrapper {
     }
 
     public String aliasForField(String fieldName) {
-        String alias = (String)nameToAliasMap.get(fieldName);
+        String alias = (String)nameToAlias.get(fieldName);
         return alias == null ? super.aliasForField(fieldName) : alias;
     }
 
     public String fieldForAlias(String alias) {
-        String name = (String)aliasToNameMap.get(alias);
+        String name = (String)aliasToName.get(alias);
         return name == null ? super.fieldForAlias(alias) : name;
     }
 
     private String getAliasForName(String name) {
-        String alias = (String)nameToAliasMap.get(name);
+        String alias = (String)nameToAlias.get(name);
         return alias == null ? name : alias;
     }
     
     private Object readResolve() {
-        nameToAliasMap = new HashMap();
-        for (final Iterator iter = aliasToNameMap.keySet().iterator(); iter.hasNext();) {
+        nameToAlias = new HashMap();
+        for (final Iterator iter = aliasToName.keySet().iterator(); iter.hasNext();) {
             final Object alias = iter.next();
-            nameToAliasMap.put(aliasToNameMap.get(alias), alias);
+            nameToAlias.put(aliasToName.get(alias), alias);
         }
         return this;
     }

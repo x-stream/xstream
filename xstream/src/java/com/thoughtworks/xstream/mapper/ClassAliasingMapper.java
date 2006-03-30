@@ -16,8 +16,8 @@ import java.util.Set;
  */
 public class ClassAliasingMapper extends MapperWrapper {
 
-    protected final Map typeToNameMap = new HashMap();
-    protected transient Map nameToTypeMap = new HashMap();
+    protected final Map typeToName = new HashMap();
+    protected transient Map nameToType = new HashMap();
     protected final Set knownAttributes = new HashSet();
 
     public ClassAliasingMapper(Mapper wrapped) {
@@ -32,8 +32,8 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     public void addClassAlias(String name, Class type) {
-        nameToTypeMap.put(name, type.getName());
-        typeToNameMap.put(type.getName(), name);
+        nameToType.put(name, type.getName());
+        typeToName.put(type.getName(), name);
     }
 
     public void addClassAttributeAlias(String name, Class type) {
@@ -42,7 +42,7 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     public String serializedClass(Class type) {
-        String alias = (String) typeToNameMap.get(type.getName());
+        String alias = (String) typeToName.get(type.getName());
         if (alias != null) {
             return alias;
         } else {
@@ -51,7 +51,7 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     public Class realClass(String elementName) {
-        String mappedName = (String) nameToTypeMap.get(elementName);
+        String mappedName = (String) nameToType.get(elementName);
 
         if (mappedName != null) {
             elementName = mappedName;
@@ -61,18 +61,18 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     public boolean itemTypeAsAttribute(Class clazz) {
-        return typeToNameMap.containsKey(clazz);
+        return typeToName.containsKey(clazz);
     }
 
     public boolean aliasIsAttribute(String name) {
-        return nameToTypeMap.containsKey(name);
+        return nameToType.containsKey(name);
     }
     
     private Object readResolve() {
-        nameToTypeMap = new HashMap();
-        for (final Iterator iter = typeToNameMap.keySet().iterator(); iter.hasNext();) {
+        nameToType = new HashMap();
+        for (final Iterator iter = typeToName.keySet().iterator(); iter.hasNext();) {
             final Object type = iter.next();
-            nameToTypeMap.put(typeToNameMap.get(type), type);
+            nameToType.put(typeToName.get(type), type);
         }
         return this;
     }
