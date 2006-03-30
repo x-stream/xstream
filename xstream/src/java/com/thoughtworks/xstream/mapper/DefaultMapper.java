@@ -16,6 +16,7 @@ public class DefaultMapper implements Mapper {
 
     public DefaultMapper(ClassLoader classLoader) {
         this.classLoader = classLoader;
+        this.classAttributeIdentifier = "class";
     }
 
     /**

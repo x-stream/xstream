@@ -84,7 +84,7 @@ public class ReflectionConverterTest extends TestCase {
         XStream xstream = new XStream(new XppDriver());
         // using default mapper instead of XStream#buildMapper()
         Mapper mapper = new DefaultMapper(new CompositeClassLoader());
-        // AttributeAliasingMapper required by ReflectionConverter
+        // AttributeMapper required by ReflectionConverter
         mapper = new AttributeMapper(mapper, xstream.getConverterLookup());
         Converter converter = new CustomReflectionConverter(mapper, new PureJavaReflectionProvider());
         xstream.registerConverter(converter, -20);
