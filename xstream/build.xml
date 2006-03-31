@@ -64,6 +64,11 @@
             <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
             <classpath refid="classpath"/>
         </javac>
+        <copy todir="${test.build.dir}">
+            <fileset dir="src/test">
+            	<include name="**/*.xsl"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="test" depends="test:compile" description="Run all acceptance tests and unit tests">
