@@ -122,7 +122,8 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         // (overriden) don't mind final fields.
     }
 
-    private Object readResolve() {
+    protected Object readResolve() {
+        super.readResolve();
         constructorCache = Collections.synchronizedMap(new HashMap());
         reflectionFactory = ReflectionFactory.getReflectionFactory();
         return this;

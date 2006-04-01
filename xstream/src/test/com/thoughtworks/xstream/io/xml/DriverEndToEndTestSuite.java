@@ -23,6 +23,7 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new StaxDriver());
         addDriverTest(new XppDomDriver());
         addDriverTest(new XppDriver());
+        // TODO: Add XomDriver (XSTR-291)
     }
 
     private void test(HierarchicalStreamDriver driver) {

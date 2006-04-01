@@ -153,4 +153,13 @@ public class StatefulWriterTest extends TestCase {
         writer.close();
         writer.close();
     }
+    
+    public void testCaresAboutNestingLevelWritingAttributes() {
+        writer.startNode("junit");
+        writer.addAttribute("test", "true");
+        writer.startNode("junit");
+        writer.addAttribute("test", "true");
+        writer.endNode();
+        writer.endNode();
+    }
 }

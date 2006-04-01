@@ -1,5 +1,6 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 
@@ -9,7 +10,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -18,7 +18,7 @@ import java.net.URL;
 /**
  * @author J&ouml;rg Schaible
  */
-public class XStreamConverterTest extends AbstractAcceptanceTest {
+public class XStreamConvertionTest extends AbstractAcceptanceTest {
 
     private Transformer transformer; 
     
@@ -52,8 +52,20 @@ public class XStreamConverterTest extends AbstractAcceptanceTest {
         assertEquals(xml, xmlSerialized);
     }
     
+    public void testCanBeUsedAfterSerialization() throws TransformerException {
+        xstream = (XStream)xstream.fromXML(xstream.toXML(new XStream()));
+        testCanConvertAnotherInstance();
+    }
+    
+    public void testCanSerializeSelfContained() throws ClassNotFoundException {
+        final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
+        xstream.alias("software", OpenSourceSoftware.class);
+        String xml = XStream.toSelfContainedXML(xstream, oos);
+        assertEquals(oos, XStream.fromSelfContainedXML(xml));
+    }
+    
     private String normalizedXStreamXML(String xml) throws TransformerException {
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(writer));
         return writer.toString();
     }

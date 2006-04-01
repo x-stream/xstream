@@ -160,7 +160,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return fieldDictionary.field(definedIn, fieldName, null);
     }
 
-    private Object readResolve() {
+    protected Object readResolve() {
         serializedDataCache = Collections.synchronizedMap(new HashMap());
         fieldDictionary = new FieldDictionary();
         return this;

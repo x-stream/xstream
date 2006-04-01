@@ -177,14 +177,14 @@ public class CustomObjectInputStream extends ObjectInputStream {
         callback.registerValidation(validation, priority);
     }
 
+    public void close() throws IOException {
+        callback.close();
+    }
+
     /****** Unsupported methods ******/
 
     public int available() {
         throw new UnsupportedOperationException();
-    }
-
-    public void close() throws IOException {
-        callback.close();
     }
 
     public int readUnsignedByte() {

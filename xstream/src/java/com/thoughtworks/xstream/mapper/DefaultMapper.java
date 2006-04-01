@@ -27,6 +27,14 @@ public class DefaultMapper implements Mapper {
         this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
     }
 
+    /**
+     * @deprecated since 1.2, no necessity for method anymore.
+     */
+    private Object readResolve() {
+        classAttributeIdentifier = "class";
+        return this;
+    }
+
     public String serializedClass(Class type) {
         return type.getName();
     }

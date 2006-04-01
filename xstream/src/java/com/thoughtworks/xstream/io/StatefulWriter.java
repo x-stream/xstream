@@ -1,5 +1,7 @@
 package com.thoughtworks.xstream.io;
 
+import com.thoughtworks.xstream.core.util.FastStack;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,9 +49,9 @@ public class StatefulWriter extends WriterWrapper {
      */
     public static int STATE_CLOSED = 4;
 
-    private int state = STATE_OPEN;
-    private int balance;
-    private final Set attributes;
+    private transient int state = STATE_OPEN;
+    private transient int balance;
+    private transient FastStack attributes;
 
     /**
      * Constructs a StatefulWriter.
@@ -59,7 +61,7 @@ public class StatefulWriter extends WriterWrapper {
      */
     public StatefulWriter(final HierarchicalStreamWriter wrapped) {
         super(wrapped);
-        attributes = new HashSet();
+        attributes = new FastStack(16);
     }
 
     public void startNode(final String name) {
@@ -70,22 +72,24 @@ public class StatefulWriter extends WriterWrapper {
         }
         state = STATE_NODE_START;
         ++balance;
+        attributes.push(new HashSet());
         super.startNode(name);
     }
 
     public void addAttribute(String name, String value) {
         checkClosed();
         if (state != STATE_NODE_START) {
-            throw new StreamException(new IllegalStateException("Writing an attribute "
+            throw new StreamException(new IllegalStateException("Writing attribute '"
                     + name
-                    + " without an opened node"));
+                    + "' without an opened node"));
         }
-        if (attributes.contains(name)) {
-            throw new StreamException(new IllegalStateException("Writing an attribute "
+        Set currentAttributes = (Set)attributes.peek();
+        if (currentAttributes.contains(name)) {
+            throw new StreamException(new IllegalStateException("Writing attribute '"
                     + name
-                    + " twice"));
+                    + "' twice"));
         }
-        attributes.add(name);
+        currentAttributes.add(name);
         super.addAttribute(name, value);
     }
 
@@ -105,7 +109,7 @@ public class StatefulWriter extends WriterWrapper {
         if (balance-- == 0) {
             throw new StreamException(new IllegalStateException("Unbalanced node"));
         }
-        attributes.clear();
+        attributes.popSilently();
         state = STATE_NODE_END;
         super.endNode();
     }
@@ -143,5 +147,10 @@ public class StatefulWriter extends WriterWrapper {
      */
     public int state() {
         return state;
+    }
+
+    private Object readResolve() {
+        attributes = new FastStack(16);
+        return this;
     }
 }

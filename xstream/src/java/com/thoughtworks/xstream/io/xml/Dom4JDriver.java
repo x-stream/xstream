@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
-import com.thoughtworks.xstream.io.WriterWrapper;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -70,45 +69,14 @@ public class Dom4JDriver implements HierarchicalStreamDriver {
     }
 
     public HierarchicalStreamWriter createWriter(final Writer out) {
-        final Document document = documentFactory.createDocument();
-        HierarchicalStreamWriter writer = new Dom4JWriter(document);
-
-        // Ensure that on writer.close(), the Document is written back to the text output.
-        writer = new WriterWrapper(writer) {
-            public void close() {
-                super.close();
-                try {
-                    XMLWriter writer = new XMLWriter(out, outputFormat);
-                    writer.write(document);
-                    writer.flush();
-                } catch (IOException e) {
-                    throw new StreamException(e);
-                }
-            }
-        };
-
-        return writer;
+        return new Dom4JWriter(documentFactory, new XMLWriter(out, outputFormat));
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
-        final Document document = documentFactory.createDocument();
-        HierarchicalStreamWriter writer = new Dom4JWriter(document);
-
-        // Ensure that on writer.close(), the Document is written back to the text output.
-        writer = new WriterWrapper(writer) {
-            public void close() {
-                super.close();
-                try {
-                    XMLWriter writer = new XMLWriter(out, outputFormat);
-                    writer.write(document);
-                    writer.flush();
-                } catch (IOException e) {
-                    throw new StreamException(e);
-                }
-            }
-        };
-
-        return writer;
+        try {
+            return new Dom4JWriter(documentFactory, new XMLWriter(out, outputFormat));
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
     }
-
 }
