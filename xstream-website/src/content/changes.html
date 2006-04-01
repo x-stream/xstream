@@ -24,7 +24,9 @@
 
     <ul>
         <li>JIRA:XSTR-269, Using attributes for fields (contributed by Paul Hammant and Ian Cartwright).</li>
-        <li>Aliasing of attributes.</li>
+        <li>Aliasing of arbitrary attributes.</li>
+        <li>JIRA:XSTR-50, XStream can now serialice another XStream instance.</li>
+        <li>JIRA:XSTR-227, XStream has now static methods to serialize an object together with a self contained XStream instance.</li>
         <li>JIRA:XSTR-278, AnnotationConverter for fields (contributed by Guilherme Silveira).</li>
         <li>JIRA:XSTR-256, PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
         <li>JIRA:XSTR-258, Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
@@ -44,7 +46,7 @@
         <li>JIRA:XSTR-250, Providing a mapper to the XStream constructor will no longer resul tin a NPE.</li>
         <li>JIRA:XSTR-281, After registering a new converter, the internal converter cache is now cleared.</li>
         <li>JIRA:XSTR-284, XStream checks the object returned by a converter for compatibility.</li>
-        <li>XStream no longer fails serializing an Throwable without cause when no references shall be written.</li>
+        <li>XStream no longer fails serializing a Throwable without cause when no references shall be written.</li>
         <li>Converter for java.awt.font.TextAttribute.</li>
         <li>JIRA:XSTR-286, XStream detects impossible self serialization and throws now an appropriate ConversionException.</li>
     </ul>
@@ -57,8 +59,10 @@
         <li>Deprecate ClassMapper for Mapper. All methods with a ClassMapper parameter have now a duplicate taking only a Mapper. The variant with the ClassMapper is deprecated.</li>
         <li>Deprecate c.t.x.alias.CannotResolveClassException for c.t.x.mapper.CannotResolveClassException.</li>
         <li>Deprecate NameMapper (was not used within XStream anymore anyway).</li>
+        <li>Deprecate constructor of DefaultMapper taking an alternative name for the class attribute. Use the aliasAttribute method.</li>
         <li>Removed all deprecated stuff from 1.1.x and 1.0.x</li>
         <li>JIRA:XSTR-211, A lot of existing (basic) Converters have been refactored to use the new SingleValueConverter interface.</li>
+        <li>Dom4JWriter uses now a DocumentFactory and a XMLWriter as constructor arguments.</li>
     </ul>
 
     <h1>Version 1.1.3</h1>
