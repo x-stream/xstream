@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import java.io.ObjectStreamException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -57,7 +58,7 @@ public class XStreamConvertionTest extends AbstractAcceptanceTest {
         testCanConvertAnotherInstance();
     }
     
-    public void testCanSerializeSelfContained() throws ClassNotFoundException {
+    public void testCanSerializeSelfContained() throws ClassNotFoundException, ObjectStreamException {
         final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
         xstream.alias("software", OpenSourceSoftware.class);
         String xml = XStream.toSelfContainedXML(xstream, oos);

@@ -91,6 +91,7 @@ import java.io.NotActiveException;
 import java.io.ObjectInputStream;
 import java.io.ObjectInputValidation;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
@@ -638,11 +639,6 @@ public class XStream {
     public String toXML(Object obj) {
         Writer writer = new StringWriter();
         toXML(obj, writer);
-        try {
-            writer.close();
-        } catch (IOException e) {
-            throw new ConversionException("Unexpeced IO error from a StringWriter", e);
-        }
         return writer.toString();
     }
 
@@ -667,13 +663,16 @@ public class XStream {
     /**
      * Serialize an object incuding the XStream to a pretty-printed XML String.
      * 
+     * @throws ObjectStreamException if the XML contains non-serializable elements
      * @since 1.2
      * @see #toSelfContainedXML(XStream, Object, Writer)
      */
-    public static String toSelfContainedXML(XStream xstream, Object obj) {
+    public static String toSelfContainedXML(XStream xstream, Object obj) throws ObjectStreamException {
         Writer writer = new StringWriter();
         try {
             toSelfContainedXML(xstream, obj, writer);
+        } catch (ObjectStreamException e) {
+            throw e;
         } catch (IOException e) {
             throw new ConversionException("Unexpeced IO error from a StringWriter", e);
         }
@@ -774,12 +773,15 @@ public class XStream {
      * internally an XppDriver to load the contained XStream instance.
      * 
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
+     * @throws ObjectStreamException if the XML contains non-deserializable elements
      * @since 1.2
      * @see #toSelfContainedXML(XStream, Object, Writer)
      */
-    public static Object fromSelfContainedXML(String xml) throws ClassNotFoundException {
+    public static Object fromSelfContainedXML(String xml) throws ClassNotFoundException, ObjectStreamException {
         try {
             return fromSelfContainedXML(new StringReader(xml));
+        } catch (ObjectStreamException e) {
+            throw e;
         } catch (IOException e) {
             throw new ConversionException("Unexpeced IO error from a StringReader", e);
         }
@@ -789,13 +791,16 @@ public class XStream {
      * Deserialize a self-contained XStream with object from a String.
      * 
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
+     * @throws ObjectStreamException if the XML contains non-deserializable elements
      * @since 1.2
      * @see #toSelfContainedXML(XStream, Object, Writer)
      */
     public static Object fromSelfContainedXML(HierarchicalStreamDriver driver, String xml)
-            throws ClassNotFoundException {
+            throws ClassNotFoundException, ObjectStreamException {
         try {
             return fromSelfContainedXML(driver, new StringReader(xml));
+        } catch (ObjectStreamException e) {
+            throw e;
         } catch (IOException e) {
             throw new ConversionException("Unexpeced IO error from a StringReader", e);
         }
