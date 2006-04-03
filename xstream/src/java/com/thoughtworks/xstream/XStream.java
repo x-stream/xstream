@@ -209,14 +209,19 @@ import java.util.Vector;
  * </p>
  * <p/>
  * <p>
- * XStream can signify references in XML using either XPath or IDs. The mode can be changed using
+ * XStream can signify references in XML using either relative/absolute XPath or IDs. The mode can be changed using
  * <code>setMode()</code>:
  * </p>
  * <p/> <table border="1">
  * <tr>
- * <td><code>xstream.setMode(XStream.XPATH_REFERENCES);</code></td>
- * <td><i>(Default)</i> Uses XPath references to signify duplicate references. This produces XML
+ * <td><code>xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);</code></td>
+ * <td><i>(Default)</i> Uses XPath relative references to signify duplicate references. This produces XML
  * with the least clutter.</td>
+ * </tr>
+ * <tr>
+ * <td><code>xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);</code></td>
+ * <td>Uses XPath absolute references to signify duplicate
+ * references. This produces XML with the least clutter.</td>
  * </tr>
  * <tr>
  * <td><code>xstream.setMode(XStream.ID_REFERENCES);</code></td>
