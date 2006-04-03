@@ -7,9 +7,10 @@
 
     <!-- ...................................................... -->
     <h2>How does XStream deals with duplicate and circular references?</h2>
-    <p>It depends on XStream's mode, the default is uses XPath to allow serialized objects to be treated as graphs instead of simple trees (typical xml usage).<br/>
-    Sometimes it's not desirable to work this way, let's take a look in a simple example in order to switch between XStream's modes and see what its capable of.<br/>
-    We start with a simple compact-disc class, with id and a bonus cd fields:<br/>
+    <p>It depends on XStream's mode, the default is uses XPath to allow serialized objects to be treated as graphs instead of simple trees (typical xml usage).</p>
+    
+    <p>Sometimes it's not desirable to work this way, let's take a look in a simple example in order to switch between XStream's modes and see what its capable of.</p>
+    <p>We start with a simple compact-disc class, with id and a bonus cd fields:
     
 <div class="Source Java"><pre>package com.thoughtworks.xstream;
 public class Cd {
@@ -33,11 +34,11 @@ public class Cd {
 	public Cd getBonusCd() {
 		return bonusCd;
 	}
-}</pre></div>
+}</pre></div></p>
 
-	<br/>
-	And let's create an order with the same cd twice and the order itself, so we can simulate
+	<p>And let's create an order with the same cd twice and the order itself, so we can simulate
  two references to the same object and a back-reference.
+ 
 <div class="Source Java"><pre>Cd bj = new Cd("basement_jaxx_singles");
 		
 List order = new ArrayList();
@@ -51,10 +52,10 @@ order.add(order);
 XStream xstream = new XStream();
 xstream.alias("cd", Cd.class);
 System.out.println(xstream.toXML(order));
-</pre></div>
+</pre></div></p>
 
-	If we execute the above code, XStream's uses its default mode called XPath based on the
-W3C XPath specification. Cross and back references are treated in a way that it's (almost) human
+	<p>If we execute the above code, XStream's uses its <b>default mode</b> called XPATH_REFERENCES or XPATH_RELATIVE_REFERENCES
+	based on the W3C XPath specification. Cross and back references are treated in a way that it's (almost) human
 readable:
 
 <div class="Source Java"><pre>
@@ -68,19 +69,17 @@ readable:
   &lt;cd reference="../cd[2]"/&gt;
   &lt;list reference=".."/&gt;
 &lt;/list&gt;
-</pre></div>
+</pre></div></p>
 
-	The second reference to the Basement Jaxx cd was serialized as "../cd[2]" while the order inside
+	<p>The second reference to the Basement Jaxx cd was serialized as "../cd[2]" while the order inside
 itself used the ".." path. The XPath Relative mode allows any type of graphs to be used as both cross and
-back-references are supported.
+back-references are supported.</p>
 
-	In order to make use of the XPath Relative mode one can implicitelly call:
+	<p>In order to make use of the XPath Relative mode one can implicitly call:
 	
 <div class="Source Java"><pre>
 xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
-</pre></div>
-	
-    </p>
+</pre></div></p>
 
     <!-- ...................................................... -->
     <h2>Relative x Absolute</h2>
@@ -113,17 +112,17 @@ xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
     <h2>Id mode</h2>
     
 	<p>Both modes displayed until now are not so easy to write by hand. XStream has another
-	mode which makes it is easier to read/write by a human being:<br/>
+	mode which makes it is easier to read/write by a human being:
 
 <div class="Source Java"><pre>
 xstream.setMode(XStream.ID_REFERENCES);
-</pre></div>
+</pre></div></p>
 
-	The result is a xml which generates an "id" attribute for each new object marshalled, 
+	<p>The result is a xml which generates an "id" attribute for each new object marshalled, 
 	and whenever it finds back or cross-references, it uses a "reference" attribute to so
-	it doesn't copy the entire object.<br/>
-	<br/>
-	In our example, the list has id 1, the Maria Rita cd 2, and the Basement Jaxx 3. Therefore
+	it doesn't copy the entire object.</p>
+
+	<p>In our example, the list has id 1, the Maria Rita cd 2, and the Basement Jaxx 3. Therefore
 	the cross-reference to our cd should contain a reference attribute to object number 2 and
 	the back-reference to our order a reference to object 1. The result is:
 
@@ -138,18 +137,16 @@ xstream.setMode(XStream.ID_REFERENCES);
   &lt;cd reference="3"/&gt;
   &lt;list reference="1"/&gt;
 &lt;/list&gt;
-</pre></div>
-
-	</p>
+</pre></div></p>
 
     <!-- ...................................................... -->
     <h2>No references</h2>
     
 	<p>For some uses of XStream we do not desire any kind of back or cross references like a graph, but a simple
-	tree. The most famous example is when using XStream to generate XML for B2B services.<br/>
-	<br/>
-	In such scenarios it's impossible to represent a graph cycle (remember: no tree contains such structure), therefore
-	we have to remove the last <b>add</b> call from our example:<br/>
+	tree. The most famous example is when using XStream to generate XML for B2B services.</p>
+
+	<p>In such scenarios it's impossible to represent a graph cycle (remember: no tree contains such structure), therefore
+	we have to remove the last <b>add</b> call from our example:
 	
 <div class="Source Java"><pre>Cd bj = new Cd("basement_jaxx_singles");
 		
@@ -161,15 +158,15 @@ order.add(bj);
 XStream xstream = new XStream();
 xstream.alias("cd", Cd.class);
 System.out.println(xstream.toXML(order));
-</pre></div>
+</pre></div></p>
 
-	Now if we add the NO_REFERENCES option, every reference shall be completed serialized.<br/>
+	<p>Now if we add the NO_REFERENCES option, every reference shall be completed serialized.
 
 <div class="Source Java"><pre>
 xstream.setMode(XStream.NO_REFERENCES);
 </pre></div>
 
-	The result are three references:<br/>
+	The result are three references:
 
 <div class="Source Java"><pre>
 &lt;list&gt;
@@ -183,13 +180,12 @@ xstream.setMode(XStream.NO_REFERENCES);
     &lt;id&gt;basement_jaxx_singles&lt;/id&gt;
   &lt;/cd&gt;
 &lt;/list&gt;
-</pre></div>
+</pre></div></p>
 
-	After reading from the above xml, you will get three <b>different</b> Cd instances.<br/>
+	<p>After reading from the above xml, you will get three <b>different</b> Cd instances.</p>
 	
-	Remember: if you don't use back references it's impossible to support back-references (cycles).<br/>
-
-	</p>
+	<p>Remember: it's impossible to support back-references (cycles) with NO_REFERENCES mode activated therefore
+	a CircularReferenceException is thrown if you ever try to do so.</p>
 	
   </body>
 </html>
