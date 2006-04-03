@@ -46,6 +46,7 @@ import com.thoughtworks.xstream.converters.extended.TextAttributeConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
 import com.thoughtworks.xstream.core.BaseException;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
@@ -490,13 +491,8 @@ public class XStream {
                             reflectionProvider.newInstance(annotationProvider)});
             reflectionConverter = (ReflectionConverter)converterLookup
                     .lookupConverterForType(Object.class);
-            registerConverter(new ReflectionConverter(mapper, reflectionProvider, this) {
-                public boolean canConvert(Class type) {
-                    return type == XStream.class;
-                }
-            }, PRIORITY_VERY_LOW + 1);
         } else {
-            reflectionConverter = new ReflectionConverter(mapper, reflectionProvider, this);
+            reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
             registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
         }
 
@@ -576,6 +572,8 @@ public class XStream {
                     "com.thoughtworks.xstream.converters.enums.EnumMapConverter", PRIORITY_NORMAL,
                     new Class[]{Mapper.class}, new Object[]{mapper});
         }
+        
+        registerConverter(new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
     }
 
     private void dynamicallyRegisterConverter(
