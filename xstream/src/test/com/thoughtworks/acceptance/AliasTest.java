@@ -1,6 +1,5 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.someobjects.Protocol;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 

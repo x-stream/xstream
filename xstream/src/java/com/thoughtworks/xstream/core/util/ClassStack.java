@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.core.util;
 
+// TODO: Do we need this? All we save is a single cast in the TreeUnmarshaller compared to the usage of FastStack.
 public final class ClassStack {
 
     private Class[] stack;

@@ -1,14 +1,10 @@
 package com.thoughtworks.xstream.converters.enums;
 
+import com.thoughtworks.xstream.XStream;
+
 import junit.framework.TestCase;
 
-import java.util.EnumSet;
 import java.util.EnumMap;
-import java.beans.XMLEncoder;
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-
-import com.thoughtworks.xstream.XStream;
 
 public class EnumMapConverterTest extends TestCase {
 

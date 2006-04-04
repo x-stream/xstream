@@ -22,7 +22,7 @@ public class TextAttributeConverter  extends AbstractSingleValueConverter {
     private static final Field instanceMap;
     static {
         try {
-            getName = AttributedCharacterIterator.Attribute.class.getDeclaredMethod("getName", null);
+            getName = AttributedCharacterIterator.Attribute.class.getDeclaredMethod("getName", (Class[])null);
             instanceMap = TextAttribute.class.getDeclaredField("instanceMap");
         } catch (NoSuchMethodException e) {
             throw new InternalError("Missing TextAttribute.getName()");
@@ -39,7 +39,7 @@ public class TextAttributeConverter  extends AbstractSingleValueConverter {
         TextAttribute attribute = (TextAttribute)source;
         try {
             getName.setAccessible(true);
-            return (String)getName.invoke(attribute, null);
+            return (String)getName.invoke(attribute, (Object[])null);
         } catch (IllegalAccessException e) {
             throw new ObjectAccessException("Cannot get name of TextAttribute", e);
         } catch (InvocationTargetException e) {
