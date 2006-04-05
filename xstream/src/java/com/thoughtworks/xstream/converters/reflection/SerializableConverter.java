@@ -166,15 +166,16 @@ public class SerializableConverter extends AbstractReflectionConverter {
         };
 
         try {
-            boolean hasUnserializableParent = false;
+            boolean mustHandleUnserializableParent = false;
             Iterator classHieararchy = hierarchyFor(source.getClass());
             while (classHieararchy.hasNext()) {
                 currentType[0] = (Class) classHieararchy.next();
                 if (!Serializable.class.isAssignableFrom(currentType[0])) {
-                    hasUnserializableParent = true;
+                    mustHandleUnserializableParent = true;
                 } else if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
-                    if (hasUnserializableParent) {
+                    if (mustHandleUnserializableParent) {
                         marshalUnserializableParent(writer, context, source);
+                        mustHandleUnserializableParent = false;
                     }
                     writtenClassWrapper[0] = true;
                     writer.startNode(mapper.serializedClass(currentType[0]));
@@ -185,16 +186,18 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     // Special case for objects that have readObject(), but not writeObject().
                     // The class wrapper is always written, whether or not this class in the hierarchy has
                     // serializable fields. This guarantees that readObject() will be called upon deserialization.
-                    if (hasUnserializableParent) {
+                    if (mustHandleUnserializableParent) {
                         marshalUnserializableParent(writer, context, source);
+                        mustHandleUnserializableParent = false;
                     }
                     writtenClassWrapper[0] = true;
                     writer.startNode(mapper.serializedClass(currentType[0]));
                     callback.defaultWriteObject();
                     writer.endNode();
                 } else {
-                    if (hasUnserializableParent) {
+                    if (mustHandleUnserializableParent) {
                         marshalUnserializableParent(writer, context, source);
+                        mustHandleUnserializableParent = false;
                     }
                     writtenClassWrapper[0] = false;
                     callback.defaultWriteObject();

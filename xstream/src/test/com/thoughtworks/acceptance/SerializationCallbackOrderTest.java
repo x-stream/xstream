@@ -311,6 +311,45 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
         CustomSerializableChild serialized =(CustomSerializableChild)assertBothWays(child, expected);
         assertEquals(5, serialized.x);
+        assertEquals(10, serialized.y);
+    }
+    
+    public static class SerializableGrandChild extends CustomSerializableChild implements Serializable {
+        public int z;
+
+        public SerializableGrandChild() {
+            super();
+            z = 42;
+        }
+    }
+    
+    public void testUnserializableParentsAreWrittenOnlyOnce() {
+        xstream.alias("parent", UnserializableParent.class);
+        xstream.alias("child", CustomSerializableChild.class);
+        xstream.alias("grandchild", SerializableGrandChild.class);
+        
+        SerializableGrandChild grandChild = new SerializableGrandChild();
+        String expected = ""
+                + "<grandchild serialization=\"custom\">\n"
+                + "  <unserializable-parents>\n"
+                + "    <x>5</x>\n"
+                + "  </unserializable-parents>\n"
+                + "  <child>\n"
+                + "    <default>\n"
+                + "      <y>10</y>\n"
+                + "    </default>\n"
+                + "  </child>\n"
+                + "  <grandchild>\n"
+                + "    <default>\n"
+                + "      <z>42</z>\n"
+                + "    </default>\n"
+                + "  </grandchild>\n"
+                + "</grandchild>";
+
+        SerializableGrandChild serialized =(SerializableGrandChild)assertBothWays(grandChild, expected);
+        assertEquals(5, serialized.x);
+        assertEquals(10, serialized.y);
+        assertEquals(42, serialized.z);
     }
 
 }
