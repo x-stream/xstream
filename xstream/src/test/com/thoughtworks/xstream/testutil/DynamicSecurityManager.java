@@ -18,6 +18,11 @@ public class DynamicSecurityManager extends SecurityManager {
 
     private Map permissions = new HashMap();
     private AccessControlContext acc = null;
+    private final boolean printFailingPermissions;
+
+    public DynamicSecurityManager(final boolean printFailingPermissions) {
+        this.printFailingPermissions = printFailingPermissions;
+    }
 
     public void addPermission(final CodeSource codeSource, final Permission permission) {
         PermissionCollection permissionCollection = (PermissionCollection)permissions
@@ -68,7 +73,9 @@ public class DynamicSecurityManager extends SecurityManager {
             try {
                 checkPermission(perm, acc);
             } catch (final SecurityException e) {
-                System.out.println("SecurityException: Permission " + perm.toString());
+                if (printFailingPermissions) {
+                    System.out.println("SecurityException: Permission " + perm.toString());
+                }
                 throw e;
             }
         }

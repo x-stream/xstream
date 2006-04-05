@@ -41,7 +41,7 @@ public class SecurityManagerTest extends TestCase {
         testClasses = new File(
                 new File(new File(System.getProperty("user.dir"), "build"), "test"), "-");
         libs = new File(new File(System.getProperty("user.dir"), "lib"), "*");
-        securityManager = new DynamicSecurityManager();
+        securityManager = new DynamicSecurityManager(false);
         Policy policy = Policy.getPolicy();
         securityManager.setPermissions(defaultCodeSource, policy.getPermissions(defaultCodeSource));
         securityManager.addPermission(
