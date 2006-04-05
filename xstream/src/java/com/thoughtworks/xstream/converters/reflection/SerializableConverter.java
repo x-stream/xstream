@@ -172,37 +172,32 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 currentType[0] = (Class) classHieararchy.next();
                 if (!Serializable.class.isAssignableFrom(currentType[0])) {
                     mustHandleUnserializableParent = true;
-                } else if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
-                    if (mustHandleUnserializableParent) {
-                        marshalUnserializableParent(writer, context, source);
-                        mustHandleUnserializableParent = false;
-                    }
-                    writtenClassWrapper[0] = true;
-                    writer.startNode(mapper.serializedClass(currentType[0]));
-                    ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
-                    serializationMethodInvoker.callWriteObject(currentType[0], source, objectOutputStream);
-                    writer.endNode();
-                } else if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
-                    // Special case for objects that have readObject(), but not writeObject().
-                    // The class wrapper is always written, whether or not this class in the hierarchy has
-                    // serializable fields. This guarantees that readObject() will be called upon deserialization.
-                    if (mustHandleUnserializableParent) {
-                        marshalUnserializableParent(writer, context, source);
-                        mustHandleUnserializableParent = false;
-                    }
-                    writtenClassWrapper[0] = true;
-                    writer.startNode(mapper.serializedClass(currentType[0]));
-                    callback.defaultWriteObject();
-                    writer.endNode();
+                    continue;
                 } else {
                     if (mustHandleUnserializableParent) {
                         marshalUnserializableParent(writer, context, source);
                         mustHandleUnserializableParent = false;
                     }
-                    writtenClassWrapper[0] = false;
-                    callback.defaultWriteObject();
-                    if (writtenClassWrapper[0]) {
+                    if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
+                        writtenClassWrapper[0] = true;
+                        writer.startNode(mapper.serializedClass(currentType[0]));
+                        ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
+                        serializationMethodInvoker.callWriteObject(currentType[0], source, objectOutputStream);
                         writer.endNode();
+                    } else if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
+                        // Special case for objects that have readObject(), but not writeObject().
+                        // The class wrapper is always written, whether or not this class in the hierarchy has
+                        // serializable fields. This guarantees that readObject() will be called upon deserialization.
+                        writtenClassWrapper[0] = true;
+                        writer.startNode(mapper.serializedClass(currentType[0]));
+                        callback.defaultWriteObject();
+                        writer.endNode();
+                    } else {
+                        writtenClassWrapper[0] = false;
+                        callback.defaultWriteObject();
+                        if (writtenClassWrapper[0]) {
+                            writer.endNode();
+                        }
                     }
                 }
             }
