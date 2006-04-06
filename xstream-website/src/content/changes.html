@@ -32,6 +32,7 @@
         <li>JIRA:XSTR-258, Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
         <li>JIRA:XSTR-88, XStream can now write all references as absolute XPath expression.</li>
         <li>JIRA:XSTR-62 and JIRA:XSTR-211, New SingeValueConverter allows light wieght converters if the value can be representet by a unique string.</li>
+        <li>Aliasing of classes of a specific type.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -48,6 +49,7 @@
         <li>JIRA:XSTR-284, XStream checks the object returned by a converter for compatibility.</li>
         <li>XStream no longer fails serializing a Throwable without cause when no references shall be written.</li>
         <li>Converter for java.awt.font.TextAttribute.</li>
+        <li>Converter for java.nio.charset.Charset.</li>
         <li>JIRA:XSTR-286, XStream detects impossible self serialization and throws now an appropriate ConversionException.</li>
     </ul>
 
