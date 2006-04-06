@@ -7,7 +7,7 @@
 		</xsl:apply-templates>
 	</xsl:copy>
 </xsl:template>
-<xsl:template match="typeToImpl|typeToName">
+<xsl:template match="typeToImpl|typeToName|classToName">
 	<xsl:copy>
 	 	<xsl:apply-templates select="entry">
 			<xsl:sort select="java-class[1]|string[1]"/>

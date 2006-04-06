@@ -1,5 +1,6 @@
 # The following patterns are files that should not be compiled or tested by the build, UNLESS using JDK 1.4 or greater.
 
+com/thoughtworks/xstream/converters/extended/Charset*
 com/thoughtworks/xstream/converters/extended/Currency*
 com/thoughtworks/xstream/converters/extended/RegexPattern*
 com/thoughtworks/xstream/converters/extended/StackTrace*

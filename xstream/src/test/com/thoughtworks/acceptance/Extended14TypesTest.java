@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 import javax.security.auth.Subject;
 import javax.security.auth.x500.X500Principal;
 
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Currency;
@@ -102,5 +103,12 @@ public class Extended14TypesTest extends AbstractAcceptanceTest {
                 "</auth-subject>";
 
         assertBothWays(subject, expectedXml);
+    }
+    
+    public void testCharset() {
+        Charset charset = Charset.forName("utf-8");
+        String expectedXml = "<charset>UTF-8</charset>";
+
+        assertBothWays(charset, expectedXml);
     }
 }

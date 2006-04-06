@@ -459,6 +459,7 @@ public class XStream {
             alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
             alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
             alias("currency", jvm.loadClass("java.util.Currency"));
+            aliasType("charset", jvm.loadClass("java.nio.charset.Charset"));
         }
 
         if (JVM.is15()) {
@@ -539,6 +540,14 @@ public class XStream {
         registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
+        
+        // since jdk 1.4 included, but previously available as separate package ...
+        Class type = jvm.loadClass("javax.security.auth.Subject");
+        if (type != null) {
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.SubjectConverter",
+                    PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
+        }
 
         if (JVM.is14()) {
             // late bound converters - allows XStream to be compiled on earlier JDKs
@@ -557,8 +566,8 @@ public class XStream {
                     PRIORITY_NORMAL, new Class[]{Converter.class},
                     new Object[]{reflectionConverter});
             dynamicallyRegisterConverter(
-                    "com.thoughtworks.xstream.converters.extended.SubjectConverter",
-                    PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
+                    "com.thoughtworks.xstream.converters.extended.CharsetConverter",
+                    PRIORITY_NORMAL, null, null);
         }
 
         if (JVM.is15()) {
@@ -627,6 +636,12 @@ public class XStream {
         addImmutableType(File.class);
         addImmutableType(Class.class);
         addImmutableType(TextAttribute.class);
+        
+        if (JVM.is14()) {
+            // late bound types - allows XStream to be compiled on earlier JDKs
+            Class type = jvm.loadClass("com.thoughtworks.xstream.converters.extended.CharsetConverter");
+            addImmutableType(type);
+        }
     }
 
     public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {
@@ -885,6 +900,23 @@ public class XStream {
                     + "available");
         }
         classAliasingMapper.addClassAlias(name, type);
+    }
+
+    /**
+     * Alias a type to a shorter name to be used in XML elements.
+     * Any class that is assignable to this type will be aliased to the same name.
+     * 
+     * @param name Short name
+     * @param type Type to be aliased
+     * @since 1.2
+     */
+    public void aliasType(String name, Class type) {
+        if (classAliasingMapper == null) {
+            throw new InitializationException("No "
+                    + ClassAliasingMapper.class.getName()
+                    + "available");
+        }
+        classAliasingMapper.addTypeAlias(name, type);
     }
 
     /**
