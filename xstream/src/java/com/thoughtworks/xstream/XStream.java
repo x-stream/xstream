@@ -356,6 +356,11 @@ public class XStream {
         mapper = new AttributeAliasingMapper(mapper);
         mapper = new AttributeMapper(mapper);
         mapper = new ImplicitCollectionMapper(mapper);
+        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
+           mapper = buildMapperDynamically(
+                    "com.thoughtworks.xstream.mapper.CGLIBMapper", 
+                    new Class[]{Mapper.class}, new Object[]{mapper});
+        }
         mapper = new DynamicProxyMapper(mapper);
         if (JVM.is15()) {
             mapper = new EnumMapper(mapper);
@@ -367,6 +372,18 @@ public class XStream {
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);
         return mapper;
+    }
+
+    private Mapper buildMapperDynamically(
+            String className, Class[] constructorParamTypes,
+            Object[] constructorParamValues) {
+        try {
+            Class type = Class.forName(className, false, classLoaderReference.getReference());
+            Constructor constructor = type.getConstructor(constructorParamTypes);
+            return (Mapper)constructor.newInstance(constructorParamValues);
+        } catch (Exception e) {
+            throw new InitializationException("Could not instatiate mapper : " + className, e);
+        }
     }
 
     protected MapperWrapper wrapMapper(MapperWrapper next) {
@@ -435,8 +452,7 @@ public class XStream {
         alias("hashtable", Hashtable.class);
 
         // Instantiating these two classes starts the AWT system, which is undesirable. Calling
-        // loadClass ensures
-        // a reference to the class is found but they are not instantiated.
+        // loadClass ensures a reference to the class is found but they are not instantiated.
         alias("awt-color", jvm.loadClass("java.awt.Color"));
         alias("awt-font", jvm.loadClass("java.awt.Font"));
         alias("awt-text-attribute", TextAttribute.class);
@@ -542,8 +558,7 @@ public class XStream {
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
         
         // since jdk 1.4 included, but previously available as separate package ...
-        Class type = jvm.loadClass("javax.security.auth.Subject");
-        if (type != null) {
+        if (jvm.loadClass("javax.security.auth.Subject") != null) {
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.SubjectConverter",
                     PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
@@ -583,6 +598,12 @@ public class XStream {
                     new Class[]{Mapper.class}, new Object[]{mapper});
         }
         
+        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.CGLIBEnhancedConverter",
+                    PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
+        }
+        
         registerConverter(new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
     }
 
@@ -593,7 +614,6 @@ public class XStream {
             Class type = Class.forName(className, false, classLoaderReference.getReference());
             Constructor constructor = type.getConstructor(constructorParamTypes);
             Object instance = constructor.newInstance(constructorParamValues);
-            // Converter converter = (Converter) constructor.newInstance(constructorParamValues);
             if (instance instanceof Converter) {
                 registerConverter((Converter)instance, priority);
             } else if (instance instanceof SingleValueConverter) {

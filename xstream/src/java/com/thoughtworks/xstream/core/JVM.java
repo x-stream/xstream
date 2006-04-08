@@ -6,11 +6,13 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
 import java.text.AttributedString;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JVM {
 
-    // Beware the sequence of definition for this fields since it is checked.
     private ReflectionProvider reflectionProvider;
+    private Map loaderCache = new HashMap();
 
     private static final boolean reverseFieldOrder;
     private static final float majorJavaVersion = getMajorJavaVersion(System.getProperty("java.specification.version"));
@@ -78,7 +80,12 @@ public class JVM {
 
     public Class loadClass(String name) {
         try {
-            return Class.forName(name, false, getClass().getClassLoader());
+            Class clazz = (Class)loaderCache.get(name);
+            if (clazz == null) {
+                clazz = Class.forName(name, false, getClass().getClassLoader());
+                loaderCache.put(name, clazz);
+            }
+            return clazz;
         } catch (ClassNotFoundException e) {
             return null;
         }

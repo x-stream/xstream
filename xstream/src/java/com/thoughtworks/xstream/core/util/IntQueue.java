@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.core.util;
 
+// TODO: Class no longer in use ?!?
 public final class IntQueue {
 
     private final int[] data;
