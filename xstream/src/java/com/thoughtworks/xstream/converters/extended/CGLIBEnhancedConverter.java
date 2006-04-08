@@ -155,7 +155,7 @@ public class CGLIBEnhancedConverter implements Converter {
         reader.moveUp();
         if (reader.hasMoreChildren()) {
             reader.moveDown();
-            enhancer.setSerialVersionUID(Long.valueOf(reader.getValue()).longValue());
+            enhancer.setSerialVersionUID(Long.valueOf(reader.getValue()));
             reader.moveUp();
         }
         return enhancer.create();
