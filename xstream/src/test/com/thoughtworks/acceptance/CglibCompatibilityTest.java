@@ -34,7 +34,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
 //    }
 
     public static class DelegatingHandler implements InvocationHandler, Serializable {
-        private final Object delegate;
+        private Object delegate;
 
         public DelegatingHandler(Object delegate) {
             this.delegate = delegate;
