@@ -161,7 +161,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         final Enhancer enhancer = new Enhancer();
         enhancer.setCallback(NoOp.INSTANCE);
         enhancer.setInterfaces(new Class[]{Runnable.class});
-        enhancer.setSerialVersionUID(20060804L);
+        enhancer.setSerialVersionUID(Long.valueOf(20060804L));
         final Runnable orig = (Runnable)enhancer.create();
         final String xml = ""
                 + "<CGLIB-enhanced-proxy>\n"
