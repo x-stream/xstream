@@ -33,6 +33,7 @@
         <li>JIRA:XSTR-88, XStream can now write all references as absolute XPath expression.</li>
         <li>JIRA:XSTR-62 and JIRA:XSTR-211, New SingeValueConverter allows light wieght converters if the value can be representet by a unique string.</li>
         <li>Aliasing of classes of a specific type.</li>
+        <li>JIRA:XSTR-239, Support for certain types of proxies generated with the CGLIB Enhancer.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -62,6 +63,7 @@
         <li>Deprecate c.t.x.alias.CannotResolveClassException for c.t.x.mapper.CannotResolveClassException.</li>
         <li>Deprecate NameMapper (was not used within XStream anymore anyway).</li>
         <li>Deprecate constructor of DefaultMapper taking an alternative name for the class attribute. Use the aliasAttribute method.</li>
+        <li>Deprecate attributeForImplementationClass, attributeForClassDefiningField, attributeForReadResolveField, and attributeForEnumType in favour of the generalized aliasForAttribute in the Mapper interface.</li>
         <li>Removed all deprecated stuff from 1.1.x and 1.0.x</li>
         <li>JIRA:XSTR-211, A lot of existing (basic) Converters have been refactored to use the new SingleValueConverter interface.</li>
         <li>Dom4JWriter uses now a DocumentFactory and a XMLWriter as constructor arguments.</li>
