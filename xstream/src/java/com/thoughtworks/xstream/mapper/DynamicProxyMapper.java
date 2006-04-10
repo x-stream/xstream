@@ -12,10 +12,10 @@ import java.lang.reflect.Proxy;
  */
 public class DynamicProxyMapper extends MapperWrapper {
 
-    private String alias = "dynamic-proxy";
+    private String alias;
 
     public DynamicProxyMapper(Mapper wrapped) {
-        super(wrapped);
+        this(wrapped, "dynamic-proxy");
     }
 
     public DynamicProxyMapper(Mapper wrapped, String alias) {

@@ -107,7 +107,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
     public Object start(DataHolder dataHolder) {
         this.dataHolder = dataHolder;
-        String classAttribute = reader.getAttribute(mapper.attributeForImplementationClass());
+        String classAttribute = reader.getAttribute(mapper.aliasForAttribute("class"));
         Class type;
         if (classAttribute == null) {
             type = mapper.realClass(reader.getNodeName());

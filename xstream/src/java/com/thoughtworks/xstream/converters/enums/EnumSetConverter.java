@@ -38,7 +38,7 @@ public class EnumSetConverter implements Converter {
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         EnumSet set = (EnumSet) source;
         Class enumTypeForSet = (Class) Fields.read(typeField, set);
-        writer.addAttribute(mapper.attributeForEnumType(), mapper.serializedClass(enumTypeForSet));
+        writer.addAttribute(mapper.aliasForAttribute("enum-type"), mapper.serializedClass(enumTypeForSet));
         writer.setValue(joinEnumValues(set));
     }
 
@@ -58,7 +58,7 @@ public class EnumSetConverter implements Converter {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        Class enumTypeForSet = mapper.realClass(reader.getAttribute(mapper.attributeForEnumType()));
+        Class enumTypeForSet = mapper.realClass(reader.getAttribute(mapper.aliasForAttribute("enum-type")));
         EnumSet set = EnumSet.noneOf(enumTypeForSet);
         String[] enumValues = reader.getValue().split(",");
         for (int i = 0; i < enumValues.length; i++) {

@@ -36,19 +36,43 @@ public interface Mapper {
 
     Class defaultImplementationOf(Class type);
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     String attributeForImplementationClass();
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     String attributeForClassDefiningField();
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     String attributeForReadResolveField();
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     String attributeForEnumType();
 
-    String attributeForReference();
+    /**
+     * Get the alias for an attrbute's name.
+     * 
+     * @param attribute the attribute
+     * @return the alias
+     * @since upcoming
+     */
+    String aliasForAttribute(String attribute);
 
-    String aliasForField(String fieldName);
-
-    String fieldForAlias(String alias);
+    /**
+     * Get the attribut's name for an alias.
+     * 
+     * @param alias the alias
+     * @return the attribute's name
+     * @since upcoming
+     */
+    String attributeForAlias(String alias);
 
     /**
      * Get the name of the field that acts as the default collection for an object, or return null if there is none.

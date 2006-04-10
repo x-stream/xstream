@@ -34,7 +34,7 @@ public abstract class AbstractReflectionConverter implements Converter {
         final Object source = serializationMethodInvoker.callWriteReplace(original);
 
         if (source.getClass() != original.getClass()) {
-            writer.addAttribute(mapper.attributeForReadResolveField(), mapper.serializedClass(source.getClass()));
+            writer.addAttribute(mapper.aliasForAttribute("resolves-to"), mapper.serializedClass(source.getClass()));
         }
 
         doMarshal(source, writer, context);
@@ -54,7 +54,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                 if (converter != null) {
                     final String str = converter.toString(value);
                     if (str != null) {
-                        writer.addAttribute(mapper.aliasForField(fieldName), str);
+                        writer.addAttribute(mapper.aliasForAttribute(fieldName), str);
                     }
                     seenAsAttributes.add(fieldName);
                 }
@@ -93,11 +93,11 @@ public abstract class AbstractReflectionConverter implements Converter {
 
                 Class defaultType = mapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
-                    writer.addAttribute(mapper.attributeForImplementationClass(), mapper.serializedClass(actualType));
+                    writer.addAttribute(mapper.aliasForAttribute("class"), mapper.serializedClass(actualType));
                 }
 
                 if (seenFields.contains(aliasName)) {
-                    writer.addAttribute(mapper.attributeForClassDefiningField(), mapper.serializedClass(definedIn));
+                    writer.addAttribute(mapper.aliasForAttribute("defined-in"), mapper.serializedClass(definedIn));
                 }
 
                 Field field = reflectionProvider.getField(definedIn,fieldName);
@@ -124,7 +124,7 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Process attributes before recursing into child elements.
         while (it.hasNext()) {
             String attrAlias = (String) it.next();
-            String attrName = mapper.fieldForAlias(attrAlias);
+            String attrName = mapper.attributeForAlias(attrAlias);
             Class classDefiningField = determineWhichClassDefinesField(reader);
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
             if (fieldExistsInClass) {
@@ -205,12 +205,12 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     private Class determineWhichClassDefinesField(HierarchicalStreamReader reader) {
-        String definedIn = reader.getAttribute(mapper.attributeForClassDefiningField());
+        String definedIn = reader.getAttribute(mapper.aliasForAttribute("defined-in"));
         return definedIn == null ? null : mapper.realClass(definedIn);
     }
 
     protected Object instantiateNewInstance(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        String readResolveValue = reader.getAttribute(mapper.attributeForReadResolveField());
+        String readResolveValue = reader.getAttribute(mapper.aliasForAttribute("resolves-to"));
         Object currentObject = context.currentObject();
         if (currentObject != null) {
             return currentObject;
@@ -240,7 +240,7 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     private Class determineType(HierarchicalStreamReader reader, boolean validField, Object result, String fieldName, Class definedInCls) {
-        String classAttribute = reader.getAttribute(mapper.attributeForImplementationClass());
+        String classAttribute = reader.getAttribute(mapper.aliasForAttribute("class"));
         if (classAttribute != null) {
             return mapper.realClass(classAttribute);
         } else if (!validField) {

@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
 
-    private IDGenerator idGenerator;
+    private final IDGenerator idGenerator;
 
     public static interface IDGenerator {
         String next();
@@ -56,6 +56,6 @@ public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
     }
 
     protected void fireValidReference(Object referenceKey) {
-        writer.addAttribute("id", referenceKey.toString());
+        writer.addAttribute(getMapper().aliasForAttribute("id"), referenceKey.toString());
     }
 }

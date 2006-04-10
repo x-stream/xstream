@@ -16,23 +16,27 @@ import net.sf.cglib.proxy.Enhancer;
 public class CGLIBMapper extends MapperWrapper {
     
     private static String DEFAULT_NAMING_MARKER = "$$EnhancerByCGLIB$$";
+    private final String alias;
     
     public interface Marker {
     };
-    
-    private static String TAG = "CGLIB-enhanced-proxy";
 
     public CGLIBMapper(Mapper wrapped) {
+        this(wrapped, "CGLIB-enhanced-proxy");
+    }
+
+    public CGLIBMapper(Mapper wrapped, String alias) {
         super(wrapped);
+        this.alias = alias;
     }
 
     public String serializedClass(Class type) {
         return Enhancer.isEnhanced(type) && type.getName().indexOf(DEFAULT_NAMING_MARKER) > 0 
-            ? TAG 
+            ? alias 
             : super.serializedClass(type);
     }
 
     public Class realClass(String elementName) {
-        return elementName.equals(TAG) ? Marker.class : super.realClass(elementName);
+        return elementName.equals(alias) ? Marker.class : super.realClass(elementName);
     }
 }

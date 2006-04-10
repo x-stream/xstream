@@ -51,7 +51,7 @@ public abstract class AbstractCollectionConverter implements Converter {
 
     protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context, Object current) {
         // PUBLISHED API METHOD! If changing signature, ensure backwards compatability.
-        String classAttribute = reader.getAttribute(mapper().attributeForImplementationClass());
+        String classAttribute = reader.getAttribute(mapper().aliasForAttribute("class"));
         Class type;
         if (classAttribute == null) {
             type = mapper().realClass(reader.getNodeName());

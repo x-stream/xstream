@@ -24,34 +24,14 @@ public class AttributeAliasingMapper extends MapperWrapper {
         nameToAlias.put(attributeName, alias);
     }
 
-    public String attributeForClassDefiningField() {
-        return getAliasForName(super.attributeForClassDefiningField());
+    public String aliasForAttribute(String attribute) {
+        String alias = (String)nameToAlias.get(attribute);
+        return alias == null ? super.aliasForAttribute(attribute) : alias;
     }
 
-    public String attributeForEnumType() {
-        return getAliasForName(super.attributeForEnumType());
-    }
-
-    public String attributeForImplementationClass() {
-        return getAliasForName(super.attributeForImplementationClass());
-    }
-
-    public String attributeForReadResolveField() {
-        return getAliasForName(super.attributeForReadResolveField());
-    }
-
-    public String attributeForReference() {
-        return getAliasForName(super.attributeForReference());
-    }
-
-    public String aliasForField(String fieldName) {
-        String alias = (String)nameToAlias.get(fieldName);
-        return alias == null ? super.aliasForField(fieldName) : alias;
-    }
-
-    public String fieldForAlias(String alias) {
+    public String attributeForAlias(String alias) {
         String name = (String)aliasToName.get(alias);
-        return name == null ? super.fieldForAlias(alias) : name;
+        return name == null ? super.attributeForAlias(alias) : name;
     }
 
     private String getAliasForName(String name) {

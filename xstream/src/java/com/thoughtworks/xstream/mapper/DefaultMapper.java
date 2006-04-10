@@ -12,6 +12,9 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 public class DefaultMapper implements Mapper {
 
     private final ClassLoader classLoader;
+    /**
+     * @deprecated since 1.2, no necessity for field anymore.
+     */
     private transient String classAttributeIdentifier;
 
     public DefaultMapper(ClassLoader classLoader) {
@@ -51,31 +54,39 @@ public class DefaultMapper implements Mapper {
         return type;
     }
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     public String attributeForClassDefiningField() {
         return "defined-in";
     }
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     public String attributeForReadResolveField() {
         return "resolves-to";
     }
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     public String attributeForEnumType() {
         return "enum-type";
     }
 
-    public String attributeForReference() {
-        return "reference";
-    }
-
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     public String attributeForImplementationClass() {
         return classAttributeIdentifier;
     }
 
-    public String aliasForField(String fieldName) {
-        return fieldName;
+    public String aliasForAttribute(String attribute) {
+        return attribute;
     }
 
-    public String fieldForAlias(String alias) {
+    public String attributeForAlias(String alias) {
         return alias;
     }
 

@@ -36,7 +36,7 @@ public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
                 }
             }
         }
-        String reference = reader.getAttribute(getMapper().attributeForReference());
+        String reference = reader.getAttribute(getMapper().aliasForAttribute("reference"));
         if (reference != null) {
             return values.get(getReferenceKey(reference));
         } else {
