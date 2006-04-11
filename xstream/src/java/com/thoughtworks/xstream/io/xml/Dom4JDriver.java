@@ -12,6 +12,8 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
+import java.io.FilterOutputStream;
+import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,6 +32,7 @@ public class Dom4JDriver implements HierarchicalStreamDriver {
 
     public Dom4JDriver() {
         this(new DocumentFactory(), OutputFormat.createPrettyPrint());
+        outputFormat.setTrimText(false);
     }
 
     public DocumentFactory getDocumentFactory() {
@@ -69,12 +72,26 @@ public class Dom4JDriver implements HierarchicalStreamDriver {
     }
 
     public HierarchicalStreamWriter createWriter(final Writer out) {
-        return new Dom4JWriter(documentFactory, new XMLWriter(out, outputFormat));
+        final HierarchicalStreamWriter[] writer = new HierarchicalStreamWriter[1];
+        final FilterWriter filter = new FilterWriter(out){
+            public void close() {
+                writer[0].close();
+            }
+        };
+        writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat));
+        return writer[0];
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
         try {
-            return new Dom4JWriter(documentFactory, new XMLWriter(out, outputFormat));
+            final HierarchicalStreamWriter[] writer = new HierarchicalStreamWriter[1];
+            final FilterOutputStream filter = new FilterOutputStream(out){
+                public void close() {
+                    writer[0].close();
+                }
+            };
+            writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat));
+            return writer[0];
         } catch (IOException e) {
             throw new StreamException(e);
         }

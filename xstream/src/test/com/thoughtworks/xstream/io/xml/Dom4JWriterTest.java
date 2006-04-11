@@ -14,6 +14,7 @@ public class Dom4JWriterTest extends AbstractXMLWriterTest {
         Dom4JDriver driver = new Dom4JDriver();
 
         OutputFormat format = OutputFormat.createCompactFormat();
+        format.setTrimText(false);
         format.setSuppressDeclaration(true);
         driver.setOutputFormat(format);
 
@@ -30,7 +31,15 @@ public class Dom4JWriterTest extends AbstractXMLWriterTest {
     // inherits tests from superclass
 
     public void testEscapesWhitespaceCharacters() {
-        // TODO: Support whitespaces.
-        // This method overrides a test in the superclass to prevent it from being run.
+        // This method overrides a test in the superclass to prevent it from being run, since the 
+        // OutputFormat will not encode \r.
+        writer.startNode("evil");
+        writer.setValue("one\ntwo\rthree\r\nfour\n\rfive\tsix");
+        writer.endNode();
+
+        assertXmlProducedIs("<evil>one\n"
+                + "two\rthree\r\n"
+                + "four\n"
+                + "\rfive\tsix</evil>");
     }
 }
