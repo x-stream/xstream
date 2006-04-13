@@ -600,7 +600,7 @@ public class XStream {
         
         if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
             dynamicallyRegisterConverter(
-                    "com.thoughtworks.xstream.converters.extended.CGLIBEnhancedConverter",
+                    "com.thoughtworks.xstream.converters.reflection.CGLIBEnhancedConverter",
                     PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class}, 
                     new Object[]{mapper, reflectionProvider});
         }
