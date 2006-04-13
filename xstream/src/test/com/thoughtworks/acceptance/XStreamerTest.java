@@ -2,6 +2,7 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamer;
 import com.thoughtworks.xstream.converters.ConversionException;
 
 import javax.xml.transform.Transformer;
@@ -19,7 +20,7 @@ import java.net.URL;
 /**
  * @author J&ouml;rg Schaible
  */
-public class XStreamConvertionTest extends AbstractAcceptanceTest {
+public class XStreamerTest extends AbstractAcceptanceTest {
 
     private Transformer transformer; 
     
@@ -27,7 +28,7 @@ public class XStreamConvertionTest extends AbstractAcceptanceTest {
         super.setUp();
         
         final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        final URL url = getClass().getResource("XStream.xsl");
+        final URL url = getClass().getResource("XStreamer.xsl");
         transformer = transformerFactory.newTransformer(new StreamSource(url.openStream()));
     }
 
@@ -61,8 +62,8 @@ public class XStreamConvertionTest extends AbstractAcceptanceTest {
     public void testCanSerializeSelfContained() throws ClassNotFoundException, ObjectStreamException {
         final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
         xstream.alias("software", OpenSourceSoftware.class);
-        String xml = XStream.toSelfContainedXML(xstream, oos);
-        assertEquals(oos, XStream.fromSelfContainedXML(xml));
+        String xml = XStreamer.toXML(xstream, oos);
+        assertEquals(oos, XStreamer.fromXML(xml));
     }
     
     private String normalizedXStreamXML(String xml) throws TransformerException {

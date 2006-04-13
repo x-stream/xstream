@@ -19,7 +19,7 @@ com/thoughtworks/acceptance/MapTest*
 com/thoughtworks/acceptance/QNameMappedConcreteClassesTest*
 com/thoughtworks/acceptance/RelativeXPathNestedCircularReferenceTest*
 com/thoughtworks/acceptance/SwingTest*
-com/thoughtworks/acceptance/XStreamConvertionTest*
+com/thoughtworks/acceptance/XStreamerTest*
 com/thoughtworks/xstream/io/xml/JDomWriterTest*
 com/thoughtworks/xstream/io/xml/StaxReaderTest*
 com/thoughtworks/xstream/io/xml/StaxWriter2Test*
