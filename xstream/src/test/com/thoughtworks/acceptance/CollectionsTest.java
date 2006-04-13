@@ -149,7 +149,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         }
 
         // syncronized list has circular reference
-        xstream.setMode(XStream.XPATH_REFERENCES);
+        xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
         List list = Collections.synchronizedList(new LinkedList());
         list.add("hi");
@@ -163,7 +163,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
 
     public void testUnmodifiableList() {
         // unodifiable list has duplicate refs
-        xstream.setMode(XStream.XPATH_REFERENCES);
+        xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
         List list = new ArrayList();
         list.add("hi");

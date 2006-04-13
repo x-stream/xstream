@@ -89,7 +89,7 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
             }
         }
 
-        assertEquals(0, exceptions.size());
-        assertTrue(counter[0] >= threads.length);
+        assertEquals("Exceptions has been thrown: " + exceptions, 0, exceptions.size());
+        assertTrue("Each thread should have made at least 1 conversion", counter[0] >= threads.length);
     }
 }
