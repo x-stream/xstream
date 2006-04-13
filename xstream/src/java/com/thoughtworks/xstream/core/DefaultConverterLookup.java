@@ -54,9 +54,9 @@ public class DefaultConverterLookup implements ConverterLookup {
     public void registerConverter(Converter converter, int priority) {
         converters.add(converter, priority);
         for (Iterator iter = this.typeToConverterMap.keySet().iterator(); iter.hasNext();) {
-            Class type = (Class)iter.next();
+            Class type = (Class) iter.next();
             if (converter.canConvert(type)) {
-                this.typeToConverterMap.remove(type);
+                iter.remove();
             }
         }
     }
