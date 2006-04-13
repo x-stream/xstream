@@ -25,8 +25,8 @@
     <ul>
         <li>JIRA:XSTR-269, Using attributes for fields (contributed by Paul Hammant and Ian Cartwright).</li>
         <li>Aliasing of arbitrary attributes.</li>
-        <li>JIRA:XSTR-50, XStream can now serialice another XStream instance.</li>
-        <li>JIRA:XSTR-227, XStream has now static methods to serialize an object together with a self contained XStream instance.</li>
+        <li>JIRA:XSTR-50, XStream can now serialize another XStream instance.</li>
+        <li>JIRA:XSTR-227, XStream has now the XStreamer, that serializes an object together with its XStream instance.</li>
         <li>JIRA:XSTR-278, AnnotationConverter for fields (contributed by Guilherme Silveira).</li>
         <li>JIRA:XSTR-256, PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
         <li>JIRA:XSTR-258, Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
@@ -45,7 +45,7 @@
         <li>JIRA:XSTR-276 and JIRA:XSTR-283, XStream does no longer attempt to create references to implicit element.</li>
         <li>JIRA:XSTR-244, Closing a Writer can now be done twice, but any write attempt will later on fail.</li>
         <li>JIRA:XSTR-243, Transient fields were unmarshalled from XML.</li>
-        <li>JIRA:XSTR-250, Providing a mapper to the XStream constructor will no longer resul tin a NPE.</li>
+        <li>JIRA:XSTR-250, Providing a mapper to the XStream constructor will no longer result in a NPE.</li>
         <li>JIRA:XSTR-281, After registering a new converter, the internal converter cache is now cleared.</li>
         <li>JIRA:XSTR-284, XStream checks the object returned by a converter for compatibility.</li>
         <li>XStream no longer fails serializing a Throwable without cause when no references shall be written.</li>
@@ -131,7 +131,7 @@
         <li>JavaMethodConverter handles non public methods/constructors (contributed by Kevin Ring).</li>
         <li>PropertiesConverter also serializes default properties, if present (contributed by Kevin Ring).</li>
         <li>Bugfix: In some cases, XppReader and StaxReader would get confused when calling hasMoreChildren() and getValue() on the same node.</li>
-        <li>JIRA:XSTR-217, ISO8601DateConverter now requires joda-time-1.0</li>
+        <li>JIRA:XSTR-217, ISO8601DateConverter now requires joda-time-1.2.1</li>
         <li>PrettyPrintWriter and CompactWriter may have their text/attribute escaping rules customized by overriding writeText() and writeAttributeValue().</li>
     </ul>
 

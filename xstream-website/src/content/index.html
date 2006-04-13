@@ -42,8 +42,12 @@
 
     <h1>Known Limitations</h1>
 
-    <p>If using the Sun 1.4 JVM, XStream can reinstantiate classes that do not have a default constructor. However,
-    if using a different JVM, a default constructor is required.</p>
+    <p>If using the enhanced mode, XStream can reinstantiate classes that do not have a default constructor. 
+    However, if using a different JVM like JRockit or an old JDK like 1.3 or you have restrictions because of a SecurityManager, 
+    a default constructor is required.</p>
+
+    <p>The enhanced mode is also necessary to restore final fields for any JDK &lt; 1.5. This implied deserialization of
+    instances of an inner class.</p>
 
     <h1>Getting Started</h1>
 
