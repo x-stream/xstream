@@ -6,6 +6,8 @@ import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.CallbackFilter;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 import net.sf.cglib.proxy.NoOp;
 
 import java.io.Serializable;
@@ -22,16 +24,16 @@ import java.util.Map;
  */
 public class CglibCompatibilityTest extends AbstractAcceptanceTest {
 
-    //TODO: Remove this, if converter is installed by default
-//    protected void setUp() throws Exception {
-//        super.setUp();
-//        xstream = new XStream() {
-//            protected MapperWrapper wrapMapper(MapperWrapper next) {
-//                return new CGLIBMapper(super.wrapMapper(next));
-//            }
-//        };
-//        xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper()));
-//    }
+    // TODO: Remove this, if converter is installed by default
+    // protected void setUp() throws Exception {
+    // super.setUp();
+    // xstream = new XStream() {
+    // protected MapperWrapper wrapMapper(MapperWrapper next) {
+    // return new CGLIBMapper(super.wrapMapper(next));
+    // }
+    // };
+    // xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper()));
+    // }
 
     public static class DelegatingHandler implements InvocationHandler, Serializable {
         private Object delegate;
@@ -157,7 +159,8 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testSupportsSerialVersionUID() throws NullPointerException, NoSuchFieldException, IllegalAccessException {
+    public void testSupportsSerialVersionUID()
+            throws NullPointerException, NoSuchFieldException, IllegalAccessException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setCallback(NoOp.INSTANCE);
         enhancer.setInterfaces(new Class[]{Runnable.class});
@@ -178,5 +181,44 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         final Field field = serialized.getClass().getDeclaredField("serialVersionUID");
         field.setAccessible(true);
         assertEquals(20060804L, field.getLong(null));
+    }
+
+    public static class InterceptingHandler implements MethodInterceptor {
+
+        public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+            return proxy.invokeSuper(obj, args);
+        }
+    }
+
+    public void testSupportsInterceptedClassBasedProxies() throws NullPointerException, MalformedURLException {
+        final Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(HashMap.class);
+        enhancer.setCallback(new InterceptingHandler());
+        enhancer.setUseFactory(false);
+        final Map orig = (Map)enhancer.create();
+        orig.put("URL", new URL("http://xstream.codehaus.org"));
+        final String xml = ""
+                + "<CGLIB-enhanced-proxy>\n"
+                + "  <type>java.util.HashMap</type>\n"
+                + "  <interfaces/>\n"
+                + "  <hasFactory>false</hasFactory>\n"
+                + "  <com.thoughtworks.acceptance.CglibCompatibilityTest-InterceptingHandler/>\n"
+                + "  <instance serialization=\"custom\">\n"
+                + "    <unserializable-parents/>\n"
+                + "    <map>\n"
+                + "      <default>\n"
+                + "        <loadFactor>0.75</loadFactor>\n"
+                + "        <threshold>12</threshold>\n"
+                + "      </default>\n"
+                + "      <int>16</int>\n"
+                + "      <int>1</int>\n"
+                + "      <string>URL</string>\n"
+                + "      <url>http://xstream.codehaus.org</url>\n"
+                + "    </map>\n"
+                + "  </instance>\n"
+                + "</CGLIB-enhanced-proxy>";
+
+        Map serialized = (Map)assertBothWays(orig, xml);
+        assertEquals(orig.toString(), serialized.toString());
     }
 }

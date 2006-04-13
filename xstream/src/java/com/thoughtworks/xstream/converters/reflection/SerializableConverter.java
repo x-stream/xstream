@@ -63,6 +63,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     public boolean canConvert(Class type) {
+        return isSerializable(type);
+    }
+
+    private boolean isSerializable(Class type) {
         return Serializable.class.isAssignableFrom(type)
           && ( serializationMethodInvoker.supportsReadObject(type, true)
             || serializationMethodInvoker.supportsWriteObject(type, true) );
@@ -167,7 +171,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
         try {
             boolean mustHandleUnserializableParent = false;
-            Iterator classHieararchy = hierarchyFor(source.getClass());
+            Iterator classHieararchy = hierarchyFor(source.getClass()).iterator();
             while (classHieararchy.hasNext()) {
                 currentType[0] = (Class) classHieararchy.next();
                 if (!Serializable.class.isAssignableFrom(currentType[0])) {
@@ -228,7 +232,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
         }
     }
 
-    private Iterator hierarchyFor(Class type) {
+    protected List hierarchyFor(Class type) {
         List result = new ArrayList();
         while(type != Object.class) {
             result.add(type);
@@ -238,7 +242,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
         // In Java Object Serialization, the classes are deserialized starting from parent class and moving down.
         Collections.reverse(result);
 
-        return result.iterator();
+        return result;
     }
 
     public Object doUnmarshal(final Object result, final HierarchicalStreamReader reader, final UnmarshallingContext context) {
@@ -372,21 +376,27 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
         return serializationMethodInvoker.callReadResolve(result);
     }
+    
+    protected void doMarshalConditionally(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+        if(isSerializable(source.getClass())) {
+            doMarshal(source, writer, context);
+        } else {
+            super.doMarshal(source, writer, context);
+        }
+    }
+    
+    protected Object doUnmarshalConditionally(final Object result, final HierarchicalStreamReader reader, final UnmarshallingContext context) {
+        return isSerializable(result.getClass()) ? doUnmarshal(result, reader, context) : super.doUnmarshal(result, reader, context);
+    }
 
-    private static class UnserializableParentsReflectionProvider implements ReflectionProvider {
-
-        private final ReflectionProvider reflectionProvider;
+    private static class UnserializableParentsReflectionProvider extends ReflectionProviderWrapper {
 
         public UnserializableParentsReflectionProvider(final ReflectionProvider reflectionProvider) {
-            this.reflectionProvider = reflectionProvider;
-        }
-
-        public Object newInstance(Class type) {
-            return reflectionProvider.newInstance(type);
+            super(reflectionProvider);
         }
 
         public void visitSerializableFields(final Object object, final Visitor visitor) {
-            reflectionProvider.visitSerializableFields(object, new Visitor() {
+            wrapped.visitSerializableFields(object, new Visitor() {
                 public void visit(String name, Class type, Class definedIn, Object value) {
                     if (!Serializable.class.isAssignableFrom(definedIn)) {
                         visitor.visit(name, type, definedIn, value);
@@ -394,22 +404,5 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 }
             });
         }
-
-        public void writeField(Object object, String fieldName, Object value, Class definedIn) {
-            reflectionProvider.writeField(object, fieldName, value, definedIn);
-        }
-
-        public Class getFieldType(Object object, String fieldName, Class definedIn) {
-            return reflectionProvider.getFieldType(object, fieldName, definedIn);
-        }
-
-        public boolean fieldDefinedInClass(String fieldName, Class type) {
-            return reflectionProvider.fieldDefinedInClass(fieldName, type);
-        }
-
-	public Field getField(Class definedIn, String fieldName) {
-	    return reflectionProvider.getField(definedIn, fieldName);
-	}
-
     }
 }

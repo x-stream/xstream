@@ -1,14 +1,21 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProviderWrapper;
+import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.CGLIBMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
+
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.Factory;
+import net.sf.cglib.proxy.MethodInterceptor;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,14 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.cglib.proxy.Callback;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.Factory;
-
 
 /**
- * Converts a proxy created by the CGLIB {@link Enhancer}. Such a proxy is recreated while
- * deserializing the proxy. The converter does only work, if<br>
+ * Converts a proxy created by the CGLIB {@link Enhancer}. Such a proxy is recreated while deserializing the proxy. The
+ * converter does only work, if<br>
  * <ul>
  * <li>the DefaultNamingPolicy is used for the proxy's name</li>
  * <li>only one CAllback is registered</li>
@@ -34,22 +37,23 @@ import net.sf.cglib.proxy.Factory;
  * @author J&ouml;rg Schaible
  * @since 1.2
  */
-public class CGLIBEnhancedConverter implements Converter {
+public class CGLIBEnhancedConverter extends SerializableConverter {
 
-    // An alternative implementation is possible by using Enhancer.setCallbackType and 
+    // An alternative implementation is possible by using Enhancer.setCallbackType and
     // Enhancer.createClass().
     // In this case the converter must be deived from the AbstractReflectionConverter,
     // the proxy info must be written/read in a separate structure first, then the
-    // Enhancer must create the type and the functionality of the ReflectionConveter
+    // Enhancer must create the type and at last the functionality of the ReflectionConverter
     // must be used to create the instance. But let's see user feedback first.
     // No support for multiple callbacks though ...
-    
+
     private static String DEFAULT_NAMING_MARKER = "$$EnhancerByCGLIB$$";
     private static String CALLBACK_MARKER = "CGLIB$CALLBACK_";
     private transient Map fieldCache;
     private final Mapper mapper;
 
-    public CGLIBEnhancedConverter(Mapper mapper) {
+    public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
+        super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider));
         this.mapper = mapper;
         this.fieldCache = new HashMap();
     }
@@ -83,6 +87,8 @@ public class CGLIBEnhancedConverter implements Converter {
         if (callbacks.length > 1) {
             throw new ConversionException("Cannot handle CGLIB enhanced proxies with multiple callbacks");
         }
+        boolean isInterceptor = MethodInterceptor.class.isAssignableFrom(callbacks[0].getClass());
+        
         writer.startNode(mapper.serializedClass(callbacks[0].getClass()));
         context.convertAnother(callbacks[0]);
         writer.endNode();
@@ -97,6 +103,11 @@ public class CGLIBEnhancedConverter implements Converter {
             // OK, ignore
         } catch (IllegalAccessException e) {
             // OK, ignore
+        }
+        if (isInterceptor && type.getSuperclass() != Object.class) {
+            writer.startNode("instance");
+            super.doMarshalConditionally(source, writer, context);
+            writer.endNode();
         }
     }
 
@@ -153,16 +164,46 @@ public class CGLIBEnhancedConverter implements Converter {
         reader.moveDown();
         enhancer.setCallback((Callback)context.convertAnother(null, mapper.realClass(reader.getNodeName())));
         reader.moveUp();
-        if (reader.hasMoreChildren()) {
+        Object result = null;
+        while (reader.hasMoreChildren()) {
             reader.moveDown();
-            enhancer.setSerialVersionUID(Long.valueOf(reader.getValue()));
+            if (reader.getNodeName().equals("serialVersionUID")) {
+                enhancer.setSerialVersionUID(Long.valueOf(reader.getValue()));
+            } else if (reader.getNodeName().equals("instance")) {
+                result = enhancer.create();
+                super.doUnmarshalConditionally(result, reader, context);
+            }
             reader.moveUp();
         }
-        return enhancer.create();
+        return result == null ? enhancer.create() : result;
+    }
+
+    protected List hierarchyFor(Class type) {
+        List typeHierarchy = super.hierarchyFor(type);
+        // drop the CGLIB proxy
+        typeHierarchy.remove(typeHierarchy.size()-1);
+        return typeHierarchy;
     }
 
     private Object readResolve() {
         fieldCache = new HashMap();
         return this;
+    }
+
+    private static class CGLIBFilteringReflectionProvider extends ReflectionProviderWrapper {
+
+        public CGLIBFilteringReflectionProvider(final ReflectionProvider reflectionProvider) {
+            super(reflectionProvider);
+        }
+
+        public void visitSerializableFields(final Object object, final Visitor visitor) {
+            wrapped.visitSerializableFields(object, new Visitor() {
+                public void visit(String name, Class type, Class definedIn, Object value) {
+                    if (!name.startsWith("CGLIB$")) {
+                        visitor.visit(name, type, definedIn, value);
+                    }
+                }
+            });
+        }
     }
 }
