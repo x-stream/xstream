@@ -223,9 +223,9 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "</CGLIB-enhanced-proxy>");
         
         // JDK 1.3 has different threshold and capacity algorithms
-        int idx = xml.indexOf(THRESHOLD_PARAM);
+        int idx = xml.toString().indexOf(THRESHOLD_PARAM);
         xml.replace(idx, idx + THRESHOLD_PARAM.length(), JVM.is14() ? "12" : "8");
-        idx = xml.indexOf(CAPACITY_PARAM);
+        idx = xml.toString().indexOf(CAPACITY_PARAM);
         xml.replace(idx, idx + CAPACITY_PARAM.length(), JVM.is14() ? "16" : "11");
         
         Map serialized = (Map)assertBothWays(orig, xml.toString());
