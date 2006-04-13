@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.core.JVM;
 
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.CallbackFilter;
@@ -23,7 +24,7 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  */
 public class CglibCompatibilityTest extends AbstractAcceptanceTest {
-
+    
     // TODO: Remove this, if converter is installed by default
     // protected void setUp() throws Exception {
     // super.setUp();
@@ -190,6 +191,9 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         }
     }
 
+    private final static String THRESHOLD_PARAM = "$THRESHOLD$";
+    private final static String CAPACITY_PARAM = "$CAPACITY$";
+
     public void testSupportsInterceptedClassBasedProxies() throws NullPointerException, MalformedURLException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(HashMap.class);
@@ -197,7 +201,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         enhancer.setUseFactory(false);
         final Map orig = (Map)enhancer.create();
         orig.put("URL", new URL("http://xstream.codehaus.org"));
-        final String xml = ""
+        final StringBuffer xml = new StringBuffer(""
                 + "<CGLIB-enhanced-proxy>\n"
                 + "  <type>java.util.HashMap</type>\n"
                 + "  <interfaces/>\n"
@@ -208,17 +212,23 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "    <map>\n"
                 + "      <default>\n"
                 + "        <loadFactor>0.75</loadFactor>\n"
-                + "        <threshold>12</threshold>\n"
+                + "        <threshold>$THRESHOLD$</threshold>\n"
                 + "      </default>\n"
-                + "      <int>16</int>\n"
+                + "      <int>$CAPACITY$</int>\n"
                 + "      <int>1</int>\n"
                 + "      <string>URL</string>\n"
                 + "      <url>http://xstream.codehaus.org</url>\n"
                 + "    </map>\n"
                 + "  </instance>\n"
-                + "</CGLIB-enhanced-proxy>";
-
-        Map serialized = (Map)assertBothWays(orig, xml);
+                + "</CGLIB-enhanced-proxy>");
+        
+        // JDK 1.3 has different threshold and capacity algorithms
+        int idx = xml.indexOf(THRESHOLD_PARAM);
+        xml.replace(idx, idx + THRESHOLD_PARAM.length(), JVM.is14() ? "12" : "8");
+        idx = xml.indexOf(CAPACITY_PARAM);
+        xml.replace(idx, idx + CAPACITY_PARAM.length(), JVM.is14() ? "16" : "11");
+        
+        Map serialized = (Map)assertBothWays(orig, xml.toString());
         assertEquals(orig.toString(), serialized.toString());
     }
 }
