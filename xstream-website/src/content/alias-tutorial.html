@@ -166,7 +166,7 @@ public class Test {
 
                 xstream.addImplicitCollection(Blog.class, &quot;entries&quot;);
 
-                xstream.aliasAttribute(&quot;author&quot;, Author.class);
+                xstream.useAttributeFor(&quot;author&quot;, Author.class);
                 xstream.registerConverter(new AuthorConverter());
 
                 System.out.println(xstream.toXML(teamBlog));

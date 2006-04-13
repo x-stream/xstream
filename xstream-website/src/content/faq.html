@@ -28,7 +28,7 @@
     <h2>What are the advantages of using enhanced mode over pure Java mode?</h2>
 
     <table>
-      <tr><th>Feature</th><th>Pure Java</th><th>Enhanced (Sun 1.4 only)</th></tr>
+      <tr><th>Feature</th><th>Pure Java</th><th>Enhanced Mode</th></tr>
       <tr><td>Public classes</td><td>Yes</td><td>Yes</td></tr>
       <tr><td>Non public classes</td><td>No</td><td>Yes</td></tr>
       <tr><td>Static inner classes</td><td>Yes</td><td>Yes</td></tr>
@@ -52,7 +52,7 @@
 
     <!-- ...................................................... -->
     <h2>How do I specify that a field should not be serialized?</h2>
-    <p>Make it <code>transient</code>.</p>
+    <p>Make it <code>transient</code> or specify it with <code>XStream.omitField()</code></p>
 
     <!-- ...................................................... -->
     <h2>How do I initialize a transient field at deserialization?</h2>
@@ -124,6 +124,12 @@ String xml = xstream.toXML(joe);</pre></div>
     <p>Yes.</p>
 
     <!-- ...................................................... -->
+    <h2>Can CGLIB proxies be serialized?</h2>
+    <p>Limited only. A proxy generated with the CGLIB Enhancer is supported, if the 
+    proxy uses only one callback and the proxy instance can be generated without 
+    additional constructor arguments.</p>
+
+    <!-- ...................................................... -->
     <h2>How does XStream deal with newer versions of classes?</h2>
 
     <ul>
@@ -143,6 +149,7 @@ String xml = xstream.toXML(joe);</pre></div>
     </ul>
 
     <p>Future versions of XStream will include features to make these type of migrations easier.</p>
+
 
 
     <!-- ****************************************************** -->
@@ -181,6 +188,8 @@ String xml = xstream.toXML(joe);</pre></div>
 
     -->
 
+
+
     <!-- ****************************************************** -->
     <h1>Scalability</h1>
 
@@ -190,7 +199,6 @@ String xml = xstream.toXML(joe);</pre></div>
     <p>Yes. Once the XStream instance
     has been created and configured, it may be shared across multiple threads
     allowing objects to be serialized/deserialized concurrently.</p>
-
 
 
 
@@ -205,6 +213,7 @@ String xml = xstream.toXML(joe);</pre></div>
     <h2>Can XStream generate classes from XSD?</h2>
 
     <p>No. For this kind of work a data binding tool such as <a href="http://xmlbeans.apache.org">XMLBeans</a> is appropriate.</p>
+
 
 
     <!-- ****************************************************** -->
