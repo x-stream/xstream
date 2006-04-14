@@ -1,4 +1,4 @@
-package com.thoughtworks.acceptance.annotations;
+ package com.thoughtworks.acceptance.annotations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,8 +42,62 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
                 "</map>";
         assertBothWays(map, xml);
     }
+	
+	public void testFieldAliasesAnnotations()  {
+        Annotations.configureAliases(xstream, CustomPerson.class);
+        List<String> nickNames = new ArrayList<String>();
+        nickNames.add("johnny");
+        nickNames.add("jack");
+        CustomPerson person = new CustomPerson("john", "doe", 25, nickNames);
+        String expectedXml = 
+                "<person>\n"+
+                "  <first-name>john</first-name>\n" +
+                "  <last-name>doe</last-name>\n" +
+                "  <age-in-years>25</age-in-years>\n" +
+                "  <nick-names>\n" +
+                "    <string>johnny</string>\n" +
+                "    <string>jack</string>\n" +
+                "  </nick-names>\n" +
+                "</person>";
+        assertBothWays(person, expectedXml);
+    }
     
     @XStreamAlias("person")
+    public static class CustomPerson {
+        @XStreamAlias("first-name")
+        String firstName;
+        @XStreamAlias("last-name")
+        String lastName;
+        @XStreamAlias("age-in-years")
+        int ageInYears;
+        @XStreamAlias("nick-names")
+        List<String> nickNames;
+        
+        public CustomPerson(String firstName, String lastName, int ageInYears, List<String> nickNames) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.ageInYears = ageInYears;
+            this.nickNames = nickNames;
+        }
+        
+        public boolean equals(Object obj) {
+            if((obj == null) || !(obj instanceof CustomPerson)) return false;
+            return toString().equals(obj.toString());
+        }
+        
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("firstName:").append(firstName)
+            .append(",lastName:").append(lastName)
+            .append(",ageInYears:").append(ageInYears)
+            .append(",nickNames:").append(nickNames);
+            return sb.toString();
+        }
+        
+    }
+    
+   	@XStreamAlias("person")
     @XStreamConverter(PersonConverter.class)
     public static class Person {
         String name;

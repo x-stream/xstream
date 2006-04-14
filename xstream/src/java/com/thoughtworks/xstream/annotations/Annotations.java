@@ -127,12 +127,11 @@ public class Annotations {
                     Class containedClass = getFieldParameterizedType(field, xstream);
                     configureClass(xstream, containedClass);
                 }
-            } else if (!field.getType().isPrimitive()) {
-                if(field.isAnnotationPresent(XStreamAlias.class)){
-                    XStreamAlias fieldXStreamAliasAnnotation =  field.getAnnotation(XStreamAlias.class);
-                    xstream.aliasField(fieldXStreamAliasAnnotation.value(), configurableClass, field.getName());
-                    configureClass(xstream, field.getType());
-                }
+            }
+            if(field.isAnnotationPresent(XStreamAlias.class)){
+                XStreamAlias fieldXStreamAliasAnnotation =  field.getAnnotation(XStreamAlias.class);
+                xstream.aliasField(fieldXStreamAliasAnnotation.value(), configurableClass, field.getName());
+                configureClass(xstream, field.getType());
             }
         }
 
