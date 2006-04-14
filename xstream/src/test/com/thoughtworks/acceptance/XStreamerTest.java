@@ -34,7 +34,7 @@ public class XStreamerTest extends AbstractAcceptanceTest {
 
     final static class ImplicitXStreamContainer {
         private XStream myXStream;
-    };
+    }
 
     public void testDetectsSelfMarshalling() {
         ImplicitXStreamContainer c = new ImplicitXStreamContainer();
@@ -62,8 +62,8 @@ public class XStreamerTest extends AbstractAcceptanceTest {
     public void testCanSerializeSelfContained() throws ClassNotFoundException, ObjectStreamException {
         final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
         xstream.alias("software", OpenSourceSoftware.class);
-        String xml = XStreamer.toXML(xstream, oos);
-        assertEquals(oos, XStreamer.fromXML(xml));
+        String xml = new XStreamer().toXML(xstream, oos);
+        assertEquals(oos, new XStreamer().fromXML(xml));
     }
     
     private String normalizedXStreamXML(String xml) throws TransformerException {

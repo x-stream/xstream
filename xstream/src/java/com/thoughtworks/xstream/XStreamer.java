@@ -31,7 +31,7 @@ public class XStreamer {
      * @since 1.2
      * @see #toXML(XStream, Object, Writer)
      */
-    public static String toXML(XStream xstream, Object obj) throws ObjectStreamException {
+    public String toXML(XStream xstream, Object obj) throws ObjectStreamException {
         Writer writer = new StringWriter();
         try {
             toXML(xstream, obj, writer);
@@ -57,7 +57,7 @@ public class XStreamer {
      * @throws IOException if an error occurs reading from the Writer.
      * @since 1.2
      */
-    public static void toXML(XStream xstream, Object obj, Writer out)
+    public void toXML(XStream xstream, Object obj, Writer out)
             throws IOException {
         XStream outer = new XStream();
         ObjectOutputStream oos = outer.createObjectOutputStream(out);
@@ -79,7 +79,7 @@ public class XStreamer {
      * @since 1.2
      * @see #toXML(XStream, Object, Writer)
      */
-    public static Object fromXML(String xml) throws ClassNotFoundException, ObjectStreamException {
+    public Object fromXML(String xml) throws ClassNotFoundException, ObjectStreamException {
         try {
             return fromXML(new StringReader(xml));
         } catch (ObjectStreamException e) {
@@ -97,7 +97,7 @@ public class XStreamer {
      * @since 1.2
      * @see #toXML(XStream, Object, Writer)
      */
-    public static Object fromXML(HierarchicalStreamDriver driver, String xml)
+    public Object fromXML(HierarchicalStreamDriver driver, String xml)
             throws ClassNotFoundException, ObjectStreamException {
         try {
             return fromXML(driver, new StringReader(xml));
@@ -117,7 +117,7 @@ public class XStreamer {
      * @since 1.2
      * @see #toXML(XStream, Object, Writer)
      */
-    public static Object fromXML(Reader xml)
+    public Object fromXML(Reader xml)
             throws IOException, ClassNotFoundException {
         return fromXML(new XppDriver(), xml);
     }
@@ -129,7 +129,7 @@ public class XStreamer {
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @since 1.2
      */
-    public static Object fromXML(HierarchicalStreamDriver driver, Reader xml)
+    public Object fromXML(HierarchicalStreamDriver driver, Reader xml)
             throws IOException, ClassNotFoundException {
         XStream outer = new XStream(driver);
         HierarchicalStreamReader reader = driver.createReader(xml);
