@@ -19,7 +19,7 @@ public class CGLIBMapper extends MapperWrapper {
     private final String alias;
     
     public interface Marker {
-    };
+    }
 
     public CGLIBMapper(Mapper wrapped) {
         this(wrapped, "CGLIB-enhanced-proxy");
@@ -31,7 +31,7 @@ public class CGLIBMapper extends MapperWrapper {
     }
 
     public String serializedClass(Class type) {
-        return Enhancer.isEnhanced(type) && type.getName().indexOf(DEFAULT_NAMING_MARKER) > 0 
+        return type.getName().indexOf(DEFAULT_NAMING_MARKER) > 0 && Enhancer.isEnhanced(type) 
             ? alias 
             : super.serializedClass(type);
     }
