@@ -46,10 +46,9 @@ public class Annotations {
 
     private static synchronized void configureClass(XStream xstream, Class<?> configurableClass) {
         if (configurableClass == null
-              || configuredTypes.contains(configurableClass)
-              || (!configurableClass.isAnnotationPresent(XStreamAlias.class)
-                      && !Converter.class.isAssignableFrom(configurableClass)))
+              || configuredTypes.contains(configurableClass)) {
             return;
+        }
 
         if(Converter.class.isAssignableFrom(configurableClass)){
             Class<Converter> converterType = (Class<Converter>)configurableClass;

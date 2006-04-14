@@ -96,6 +96,27 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         }
         
     }
+
+    public static class House {
+    	@XStreamAlias("total-number-of-rooms")
+    	private int rooms;
+		protected House(int rooms) {
+			this.rooms = rooms;
+		}
+    	public int getRooms() {
+			return rooms;
+		}
+    }
+    
+	public void testAnnotationForFieldAliases()  {
+        Annotations.configureAliases(xstream, House.class);
+        House house = new House(5);
+        String expectedXml = 
+                "<com.thoughtworks.acceptance.annotations.AnnotationsTest-House>\n"+
+                "  <total-number-of-rooms>5</total-number-of-rooms>\n" +
+                "</com.thoughtworks.acceptance.annotations.AnnotationsTest-House>";
+        assertBothWays(house, expectedXml);
+    }
     
    	@XStreamAlias("person")
     @XStreamConverter(PersonConverter.class)
