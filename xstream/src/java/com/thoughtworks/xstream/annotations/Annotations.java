@@ -23,7 +23,6 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public class Annotations {
     private static final Set<Class<?>> configuredTypes = new HashSet<Class<?>>();
-    private static boolean debug = false;
 
     /**
      * This class is not instantiable
@@ -39,7 +38,6 @@ public class Annotations {
      * @param xstream the XStream object that will be configured
      */
     public static synchronized void configureAliases(XStream xstream, Class<?>... topLevelClasses) {
-        assert (debug = true) == true; // Accidental assignment is normally an error
         configuredTypes.clear();
         for(Class<?> topLevelClass : topLevelClasses){
             configureClass(xstream, topLevelClass);
@@ -57,10 +55,6 @@ public class Annotations {
             Class<Converter> converterType = (Class<Converter>)configurableClass;
             registerConverter(xstream, converterType);
             return;
-        }
-
-        if(debug){
-            System.out.println("Aliasing class:"+ configurableClass);
         }
 
         //Do Class Level Converters
@@ -181,9 +175,6 @@ public class Annotations {
         }
         xstream.registerConverter(converter);
         configuredTypes.add(converterType);
-        if(debug){
-            System.out.println("Registered converter:"+ converterType);
-        }
 
     }
 
