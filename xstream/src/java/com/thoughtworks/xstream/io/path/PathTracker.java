@@ -119,7 +119,9 @@ public class PathTracker {
                 Integer integer = ((Integer) indexMapStack[i].get(pathStack[i]));
                 int index = integer.intValue();
                 if (index > 1) {
-                    chunks[i + 1] = pathStack[i] + '[' + index + ']';
+                    StringBuffer chunk = new StringBuffer(pathStack[i].length() + 6);
+                    chunk.append(pathStack[i]).append('[').append(index).append(']');
+                    chunks[i + 1] = chunk.toString();
                 } else {
                     chunks[i + 1] = pathStack[i];
                 }
