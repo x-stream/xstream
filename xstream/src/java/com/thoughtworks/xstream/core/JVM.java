@@ -74,10 +74,6 @@ public class JVM {
         return System.getProperty("java.vm.vendor").indexOf("Blackdown") != -1;
     }
 
-    private static boolean isBEA() {
-        return System.getProperty("java.vm.vendor").indexOf("BEA") != -1;
-    }
-
     public Class loadClass(String name) {
         try {
             Class clazz = (Class)loaderCache.get(name);

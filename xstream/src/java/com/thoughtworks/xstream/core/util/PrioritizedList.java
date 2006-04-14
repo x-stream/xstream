@@ -23,13 +23,6 @@ public class PrioritizedList {
     
     private int lastId = 0;
 
-    /**
-     * Add an item with a default Prioritized of zero.
-     */
-    public void add(Object item) {
-        add(item, 0);
-    }
-
     public void add(Object item, int priority) {
     	if (this.lowestPriority > priority) {
 			this.lowestPriority = priority;
@@ -39,16 +32,6 @@ public class PrioritizedList {
 
     public Iterator iterator() {
         return new PrioritizedItemIterator(this.set.iterator());
-    }
-
-    public Object firstOfLowestPriority() {
-        for (Iterator it = set.iterator(); it.hasNext();) {
-			PrioritizedItem item = (PrioritizedItem) it.next();
-			if (item.priority == lowestPriority) {
-				return item.value;
-			}
-		}
-        return null;
     }
 
     private static class PrioritizedItem implements Comparable {

@@ -17,9 +17,9 @@ public class PrioritizedListTest extends TestCase {
 
     public void testIteratesOverElementsInReverseOrderTheyWereAdded() {
         PrioritizedList list = new PrioritizedList();
-        list.add("one");
-        list.add("two");
-        list.add("three");
+        list.add("one", 0);
+        list.add("two", 0);
+        list.add("three", 0);
 
         Iterator iterator = list.iterator();
         assertNextEquals("three", iterator);
@@ -30,8 +30,8 @@ public class PrioritizedListTest extends TestCase {
 
     public void testHandlesMultipleIsolatedIterators() {
         PrioritizedList list = new PrioritizedList();
-        list.add("one");
-        list.add("two");
+        list.add("one", 0);
+        list.add("two", 0);
 
         Iterator iteratorOne = list.iterator();
         assertNextEquals("two", iteratorOne);
@@ -71,14 +71,5 @@ public class PrioritizedListTest extends TestCase {
         assertNextEquals("very low", iterator);
         assertNextEquals("VERY VERY low", iterator);
         assertNoMore(iterator);
-    }
-
-    public void testAllowsIteratorToStartAtSpecificPriority() {
-        PrioritizedList list = new PrioritizedList();
-        list.add("low one", -1);
-        list.add("low two", -1);
-        list.add("medium one", 0);
-
-        assertEquals("low two", list.firstOfLowestPriority());
     }
 }

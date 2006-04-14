@@ -12,8 +12,7 @@ public class QuickWriter {
     private int pointer;
 
     public QuickWriter(Writer writer) {
-        this.writer = writer;
-        buffer = new char[1024];
+        this(writer, 1024);
     }
 
     public QuickWriter(Writer writer, int bufferSize) {

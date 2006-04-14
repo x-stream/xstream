@@ -21,12 +21,6 @@ public final class ClassStack {
         stack[--pointer] = null;
     }
 
-    public Class pop() {
-        final Class result = stack[--pointer];
-        stack[pointer] = null;
-        return result;
-    }
-
     public Class peek() {
         return pointer == 0 ? null : stack[pointer - 1];
     }
