@@ -25,7 +25,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
         super.tearDown();
     }
 
-    public void testWithCustomConverterAndFieldName() {
+    public void testAllowsAttributeWithCustomConverterAndFieldName() {
         One one = new One();
         one.two = new Two();
         one.id  = new ID("hullo");
@@ -41,7 +41,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
         assertBothWays(one, expected);
     }
 
-    public void testWithCustomConverterAndDifferentFieldName() {
+    public void testDoesNotAllowAttributeWithCustomConverterAndDifferentFieldName() {
         One one = new One();
         one.two = new Two();
         one.id  = new ID("hullo");
@@ -58,7 +58,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
         assertBothWays(one, expected);
     }
 
-    public void testWithKnownConverterAndFieldName() throws Exception {
+    public void testAllowsAttributeWithKnownConverterAndFieldName() throws Exception {
         Three three = new Three();
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         three.date = format.parse("19/02/2006");
@@ -71,7 +71,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
         assertBothWays(three, expected);
     }
 
-    public void testWithArbitraryFieldType() {
+    public void testAllowsAttributeWithArbitraryFieldType() {
         One one = new One();
         one.two = new Two();
         one.id  = new ID("hullo");
@@ -87,7 +87,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
         assertBothWays(one, expected);
     }
 
-    public void testWithNullAttribute() {
+    public void testDoesNotAllowAttributeWithNullAttribute() {
         One one = new One();
         one.two = new Two();
 
@@ -97,6 +97,23 @@ public class AttributeTest extends AbstractAcceptanceTest {
 
         String expected =
                 "<one>\n" +
+                "  <two/>\n" +
+                "</one>";
+        assertBothWays(one, expected);
+    }    
+    
+    public void testAllowsAttributeToBeAliased() {
+        One one = new One();
+        one.two = new Two();
+        one.id  = new ID("hullo");
+
+        xstream.alias("one", One.class);
+        xstream.aliasAttribute("id-alias", "id");
+        xstream.useAttributeFor("id", ID.class);        
+        xstream.registerConverter(new MyIDConverter());
+
+        String expected =
+                "<one id-alias=\"hullo\">\n" +
                 "  <two/>\n" +
                 "</one>";
         assertBothWays(one, expected);
