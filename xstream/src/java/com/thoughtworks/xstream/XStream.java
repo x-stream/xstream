@@ -293,12 +293,16 @@ public class XStream {
         this(null, (Mapper)null, new XppDriver());
     }
 
+    public XStream(ReflectionProvider reflectionProvider) {
+        this(reflectionProvider, (Mapper)null, new XppDriver());
+    }
+
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(null, (Mapper)null, hierarchicalStreamDriver);
     }
 
-    public XStream(ReflectionProvider reflectionProvider) {
-        this(reflectionProvider, (Mapper)null, new XppDriver());
+    public XStream(XmlFriendlyReplacer xmlFriendlyReplacer) {
+        this(null, (Mapper)null, new XppDriver(), xmlFriendlyReplacer);
     }
 
     public XStream(

@@ -3,11 +3,10 @@ package com.thoughtworks.xstream.io.xml;
 /**
  * Allows replacement of Strings in xml-friendly wrappers.
  * 
- * The default constructor uses:
+ * The default replacements are:
  * <ul>
- * <li><b>$</b> (dollar) chars are replaced with <b>_DOLLAR_</b> string.<br></li>
+ * <li><b>$</b> (dollar) chars are replaced with <b>_-</b> (underscore dash) string.<br></li>
  * <li><b>_</b> (underscore) chars are replaced with <b>__</b> (double underscore) string.<br></li>
- * <li><b>default</b> as the prefix for class names with no package.</li>
  * </ul>
  * 
  * @author Mauro Talevi
@@ -16,32 +15,34 @@ public class XmlFriendlyReplacer {
 
     private String dollarReplacement;
     private String underscoreReplacement;
-    private String noPackagePrefix; // this may not be needed unless we use '-' as dollar replacement
 
     /**
      * Default constructor. 
      */
     public XmlFriendlyReplacer() {
-        this("_DOLLAR_", "__", "default");
+        this("_-", "__");
     }
     
     /**
-     * Creates an XmlMapperConfiguration with custom replacement chars and strings.
-     * @param dollarReplacement
-     * @param underscoreReplacement
-     * @param noPackagePrefix
+     * Creates an XmlFriendlyReplacer with custom replacements
+     * @param dollarReplacement the replacement for '$'
+     * @param underscoreReplacement the replacement for '_'
      */
-    public XmlFriendlyReplacer(String dollarReplacement, String underscoreReplacement, String noPackagePrefix) {
+    public XmlFriendlyReplacer(String dollarReplacement, String underscoreReplacement) {
         this.dollarReplacement = dollarReplacement;
         this.underscoreReplacement = underscoreReplacement;
-        this.noPackagePrefix = noPackagePrefix;
     }
     
-    public String escapeName(String javaName) {
+    /**
+     * Escapes name substituting '$' and '_' with replacement strings
+     * @param name the name of attribute or node
+     * @return The String with the escaped name
+     */
+    public String escapeName(String name) {
         StringBuffer result = new StringBuffer();
-        int length = javaName.length();
+        int length = name.length();
         for(int i = 0; i < length; i++) {
-            char c = javaName.charAt(i);
+            char c = name.charAt(i);
             if (c == '$' ) {
                 result.append(dollarReplacement);
             } else if (c == '_') {
@@ -53,15 +54,20 @@ public class XmlFriendlyReplacer {
         return result.toString();
     }
     
-    public String unescapeName(String xmlName) {
+    /**
+     * Unescapes name re-enstating '$' and '_' when replacement strings are found
+     * @param name the name of attribute or node
+     * @return The String with unescaped name
+     */
+    public String unescapeName(String name) {
         StringBuffer result = new StringBuffer();
-        int length = xmlName.length();
+        int length = name.length();
         for(int i = 0; i < length; i++) {
-            char c = xmlName.charAt(i);
-            if ( stringFoundAt(xmlName, i, underscoreReplacement)) {
+            char c = name.charAt(i);
+            if ( stringFoundAt(name, i, underscoreReplacement)) {
                 i += underscoreReplacement.length() - 1;
                 result.append('_');
-            } else if ( stringFoundAt(xmlName, i, dollarReplacement)) {
+            } else if ( stringFoundAt(name, i, dollarReplacement)) {
                 i += dollarReplacement.length() - 1;
                 result.append('$');
             } else {

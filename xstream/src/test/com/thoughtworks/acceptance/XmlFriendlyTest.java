@@ -1,18 +1,16 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.core.JVM;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
-import com.thoughtworks.xstream.mapper.Mapper;
-
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
+
 public class XmlFriendlyTest extends AbstractAcceptanceTest {
 
-    
     protected XStream createXStream() {
-        return new XStream(null, (Mapper)null, createDriver(), new XmlFriendlyReplacer("_-", "__", "default"));
+        return new XStream(new XmlFriendlyReplacer("_-", "__"));
     }
 
     public static class WithDollarCharField extends StandardObject {
