@@ -1,5 +1,44 @@
 package com.thoughtworks.xstream;
 
+import java.awt.font.TextAttribute;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.NotActiveException;
+import java.io.ObjectInputStream;
+import java.io.ObjectInputValidation;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Vector;
+
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -63,6 +102,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StatefulWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyDriverWrapper;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
@@ -80,45 +121,6 @@ import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
 import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
-
-import java.awt.font.TextAttribute;
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.NotActiveException;
-import java.io.ObjectInputStream;
-import java.io.ObjectInputValidation;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URL;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.Vector;
 
 
 /**
@@ -311,7 +313,7 @@ public class XStream {
     public XStream(
             ReflectionProvider reflectionProvider, ClassMapper classMapper,
             HierarchicalStreamDriver driver) {
-        this(reflectionProvider, classMapper, driver, null);
+        this(reflectionProvider, classMapper, driver, (XmlFriendlyReplacer)null);
     }
 
     /**
@@ -328,14 +330,19 @@ public class XStream {
 
     public XStream(
             ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
+        this(reflectionProvider, mapper, driver, (XmlFriendlyReplacer)null);
+    }
+    
+    public XStream(
+            ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver, XmlFriendlyReplacer replacer) {
         jvm = new JVM();
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
         this.reflectionProvider = reflectionProvider;
-        this.hierarchicalStreamDriver = driver;
+        this.hierarchicalStreamDriver = replacer == null  ? driver : new XmlFriendlyDriverWrapper(driver, replacer);
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
-        this.mapper = mapper == null ? buildMapper() : mapper;
+        this.mapper = mapper == null ? buildMapper(replacer == null ? true : false) : mapper;
         this.converterLookup = new DefaultConverterLookup(this.mapper);
 
         setupMappers();
@@ -345,10 +352,12 @@ public class XStream {
         setupImmutableTypes();
         setMode(XPATH_RELATIVE_REFERENCES);
     }
-
-    private Mapper buildMapper() {
+    
+    private Mapper buildMapper(boolean useXmlFriendlyMapper) {
         Mapper mapper = new DefaultMapper(classLoaderReference);
-        mapper = new XmlFriendlyMapper(mapper);
+        if ( useXmlFriendlyMapper ){
+            mapper = new XmlFriendlyMapper(mapper);
+        }
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
