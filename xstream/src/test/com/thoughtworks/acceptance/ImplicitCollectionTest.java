@@ -257,4 +257,37 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertTrue("Collection was a " + zoo.animals.getClass().getName(), zoo.animals instanceof TreeSet);
     }
 
+    public static class Aquarium extends StandardObject {
+        private String name;
+        private LinkedList fish = new LinkedList();
+
+        public Aquarium(String name) {
+            this.name = name;
+        }
+
+        public void addFish(String fish) {
+            this.fish.add(fish);
+        }
+    }
+
+    public void testWithExplicitItemNameMatchingTheNameOfTheFieldWithTheCollection() {
+        Aquarium aquarium = new Aquarium("hatchery");
+        aquarium.addFish("salmon");
+        aquarium.addFish("halibut");
+        aquarium.addFish("snapper");
+
+        String expected = "" +
+                "<aquarium>\n" +
+                "  <name>hatchery</name>\n" +
+                "  <fish>salmon</fish>\n" +
+                "  <fish>halibut</fish>\n" +
+                "  <fish>snapper</fish>\n" +
+                "</aquarium>";
+
+        xstream.alias("aquarium", Aquarium.class);
+        xstream.addImplicitCollection(Aquarium.class, "fish", "fish", String.class);
+
+        assertBothWays(aquarium, expected);
+    }
+
 }
