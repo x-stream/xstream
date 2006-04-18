@@ -301,6 +301,9 @@ public class XStream {
         this(null, (Mapper)null, hierarchicalStreamDriver);
     }
 
+    /**
+     * @since 1.2
+     */    
     public XStream(XmlFriendlyReplacer xmlFriendlyReplacer) {
         this(null, (Mapper)null, new XppDriver(), xmlFriendlyReplacer);
     }
@@ -337,6 +340,9 @@ public class XStream {
         this(reflectionProvider, mapper, driver, (XmlFriendlyReplacer)null);
     }
     
+    /**
+     * @since 1.2
+     */    
     public XStream(
             ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver, XmlFriendlyReplacer replacer) {
         jvm = new JVM();
