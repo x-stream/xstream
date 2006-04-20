@@ -70,6 +70,8 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
                     element.addAttribute(attributes.getQName(i), attributes.getValue(i));
                 }
                 writer.write(element);
+                children = true;   // node just closed is child of node on top of stack
+                started = true;
             } else {
                 startElement();
                 writer.endElement("", "", (String)elementStack.pop());

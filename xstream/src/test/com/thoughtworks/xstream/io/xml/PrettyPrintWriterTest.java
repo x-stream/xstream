@@ -89,4 +89,13 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         
         assertXmlProducedIs("<element>\r\t<empty/>\r</element>");
     }
+
+    public void testSupportsEmptyNestedTags() {
+        writer.startNode("parent");
+        writer.startNode("child");
+        writer.endNode();
+        writer.endNode();
+
+        assertXmlProducedIs("<parent>\n  <child/>\n</parent>");
+    }
 }

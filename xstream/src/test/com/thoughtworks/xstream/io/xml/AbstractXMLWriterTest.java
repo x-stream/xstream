@@ -77,4 +77,12 @@ public abstract class AbstractXMLWriterTest extends TestCase {
                 + "&#x0D;five\tsix</evil>");
     }
 
+    public void testSupportsEmptyNestedTags() {
+        writer.startNode("parent");
+        writer.startNode("child");
+        writer.endNode();
+        writer.endNode();
+
+        assertXmlProducedIs("<parent><child/></parent>");
+    }
 }

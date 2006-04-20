@@ -52,6 +52,15 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
         assertXmlProducedIs("<empty></empty>");
     }
 
+    public void testSupportsEmptyNestedTags() {
+        writer.startNode("parent");
+        writer.startNode("child");
+        writer.endNode();
+        writer.endNode();
+
+        assertXmlProducedIs("<parent><child></child></parent>");
+    }
+
     public void testNamespacedXmlWithPrefix() throws Exception {
         QNameMap qnameMap = new QNameMap();
         QName qname = new QName("http://foo.com", "alias", "foo");

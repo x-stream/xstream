@@ -34,6 +34,15 @@ public class StaxWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs("<empty></empty>");
     }
 
+    public void testSupportsEmptyNestedTags() {
+        writer.startNode("parent");
+        writer.startNode("child");
+        writer.endNode();
+        writer.endNode();
+
+        assertXmlProducedIs("<parent><child></child></parent>");
+    }
+
     public void testSupportsAttributes() {
         writer.startNode("person");
         writer.addAttribute("firstname", "Joe");
@@ -42,6 +51,5 @@ public class StaxWriterTest extends AbstractXMLWriterTest {
 
         assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\"></person>");
     }
-
 }
 
