@@ -352,7 +352,7 @@ public class XStream {
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = replacer == null  ? driver : new XmlFriendlyDriverWrapper(driver, replacer);
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
-        this.mapper = mapper == null ? buildMapper(replacer == null ? true : false) : mapper;
+        this.mapper = mapper == null ? buildMapper(replacer == null) : mapper;
         this.converterLookup = new DefaultConverterLookup(this.mapper);
 
         setupMappers();
