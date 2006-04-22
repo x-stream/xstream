@@ -75,6 +75,26 @@ public class XStream11XmlFriendlyReplacerTest extends AbstractAcceptanceTest {
         assertWithAsymmetricalXml(in, expected11, expected11);
     }
 
+    public void FIXMEtestSupportsAliasWithDashChar() {
+        xstream.alias("under-score", WithUnderscoreCharField.class);
+
+        WithUnderscoreCharField in = new WithUnderscoreCharField();
+        in._field = "a";
+        in.field_ = "b";
+        in.fi_eld = "c";
+        in.fi__eld = "d";
+
+        String expected11 = "" +
+                "<under-score>\n" +
+                "  <__field>a</__field>\n" +
+                "  <field__>b</field__>\n" +
+                "  <fi__eld>c</fi__eld>\n" +
+                "  <fi____eld>d</fi____eld>\n" +
+                "</under-score>";
+        
+        assertWithAsymmetricalXml(in, expected11, expected11);
+    }
+
     public static class A_B extends StandardObject {
         private int x;
 
