@@ -41,6 +41,14 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         return resultRoot;
     }
 
+    protected Object assertWithAsymmetricalXml(Object root, String inXml, String outXml) {
+        String resultXml = toXML(root);
+        assertEquals(outXml, resultXml);
+        Object resultRoot = xstream.fromXML(inXml);
+        assertObjectsEqual(root, resultRoot);
+        return resultRoot;
+    }
+    
     /**
      * Allow derived classes to decide how to turn the object into XML text
      */
