@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.XStream11XmlFriendlyReplacer;
 
-public class XStream11XmlFriendlyReplacerTest extends AbstractAcceptanceTest {
+public class XStream11XmlFriendlyTest extends AbstractAcceptanceTest {
 
     protected XStream createXStream() {
         return new XStream(new XStream11XmlFriendlyReplacer());
