@@ -4,23 +4,26 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 
 /**
  * Mapper that ensures that all names in the serialization stream are XML friendly.
- * The mapper uses the {@link XmlMapperConfiguration} to allow configuration of the replacement chars in class and field names.
+ * The replacement chars and strings are:
+ * <ul>
+ * <li><b>$</b> (dollar) chars appearing in class names are replaced with <b>_</b> (underscore) chars.<br></li>
+ * <li><b>$</b> (dollar) chars appearing in field names are replaced with <b>_DOLLAR_</b> string.<br></li>
+ * <li><b>_</b> (underscore) chars appearing in field names are replaced with <b>__</b> (double underscore) string.<br></li>
+ * <li><b>default</b> as the prefix for class names with no package.</li>
+ * </ul>
  * 
  * @author Joe Walnes
  * @author Mauro Talevi
- * @see XmlMapperConfiguration
  */
 public class XmlFriendlyMapper extends MapperWrapper {
 
-    private XmlMapperConfiguration configuration;
+    private char dollarReplacementInClass = '-';
+    private String dollarReplacementInField = "_DOLLAR_";
+    private String underscoreReplacementInField = "__";
+    private String noPackagePrefix = "default";
     
     public XmlFriendlyMapper(Mapper wrapped) {
-        this(wrapped, new XmlMapperConfiguration());
-    }
-
-    public XmlFriendlyMapper(Mapper wrapped, XmlMapperConfiguration configuration) {
         super(wrapped);
-        this.configuration = configuration;
     }
     
     /**
@@ -31,57 +34,79 @@ public class XmlFriendlyMapper extends MapperWrapper {
     }
 
     public String serializedClass(Class type) {
-        String name = super.serializedClass(type);
-
-        // the $ used in inner class names is illegal as an xml element getNodeName
-        name = name.replace('$', configuration.dollarReplacementInClass());
-
-        // special case for classes named $Blah with no package; <-Blah> is illegal XML
-        if (name.charAt(0) == configuration.dollarReplacementInClass()) {
-            name = configuration.noPackagePrefix() + name;
-        }
-
-        return name;
+        return escapeClassName(super.serializedClass(type));
     }
 
     public Class realClass(String elementName) {
-        // special case for classes named $Blah with no package; <-Blah> is illegal XML
-        if (elementName.startsWith(configuration.noPackagePrefix()+configuration.dollarReplacementInClass())) {
-            elementName = elementName.substring(configuration.noPackagePrefix().length());
-        }
-
-        // the $ used in inner class names is illegal as an xml element getNodeName
-        elementName = elementName.replace(configuration.dollarReplacementInClass(), '$');
-
-        return super.realClass(elementName);
+        return super.realClass(unescapeClassName(elementName));
     }
 
     public String serializedMember(Class type, String memberName) {
-        return escape(super.serializedMember(type, memberName));
+        return escapeFieldName(super.serializedMember(type, memberName));
     }
 
     public String realMember(Class type, String serialized) {
-        return unescape(super.realMember(type, serialized));
+        return unescapeFieldName(super.realMember(type, serialized));
     }
 
     public String mapNameToXML(String javaName) {
-        return escape(javaName);
+        return escapeFieldName(javaName);
     }
 
     public String mapNameFromXML(String xmlName) {
-        return unescape(xmlName);
+        return unescapeFieldName(xmlName);
     }
 
-    private String unescape(String xmlName) {
+    private String escapeClassName(String className) {
+        // the $ used in inner class names is illegal as an xml element getNodeName
+        className = className.replace('$', dollarReplacementInClass);
+
+        // special case for classes named $Blah with no package; <-Blah> is illegal XML
+        if (className.charAt(0) == dollarReplacementInClass) {
+            className = noPackagePrefix + className;
+        }
+
+        return className;
+    }
+
+    private String unescapeClassName(String className) {
+        // special case for classes named $Blah with no package; <-Blah> is illegal XML
+        if (className.startsWith(noPackagePrefix+dollarReplacementInClass)) {
+            className = className.substring(noPackagePrefix.length());
+        }
+
+        // the $ used in inner class names is illegal as an xml element getNodeName
+        className = className.replace(dollarReplacementInClass, '$');
+
+        return className;
+    }
+
+    private String escapeFieldName(String fieldName) {
+        StringBuffer result = new StringBuffer();
+        int length = fieldName.length();
+        for(int i = 0; i < length; i++) {
+            char c = fieldName.charAt(i);
+            if (c == '$' ) {
+                result.append(dollarReplacementInField);
+            } else if (c == '_') {
+                result.append(underscoreReplacementInField);
+            } else {
+                result.append(c);
+            }
+        }
+        return result.toString();
+    }    
+    
+    private String unescapeFieldName(String xmlName) {
         StringBuffer result = new StringBuffer();
         int length = xmlName.length();
         for(int i = 0; i < length; i++) {
             char c = xmlName.charAt(i);
-            if ( stringFoundAt(xmlName, i, configuration.underscoreReplacementInField())) {
-                i += configuration.underscoreReplacementInField().length() - 1;
+            if ( stringFoundAt(xmlName, i,underscoreReplacementInField)) {
+                i +=underscoreReplacementInField.length() - 1;
                 result.append('_');
-            } else if ( stringFoundAt(xmlName, i, configuration.dollarReplacementInField())) {
-                i += configuration.dollarReplacementInField().length() - 1;
+            } else if ( stringFoundAt(xmlName, i,dollarReplacementInField)) {
+                i +=dollarReplacementInField.length() - 1;
                 result.append('$');
             } else {
                 result.append(c);
@@ -97,21 +122,5 @@ public class XmlFriendlyMapper extends MapperWrapper {
         }
         return false;
     }
-
-    private String escape(String javaName) {
-        StringBuffer result = new StringBuffer();
-        int length = javaName.length();
-        for(int i = 0; i < length; i++) {
-            char c = javaName.charAt(i);
-            if (c == '$' ) {
-                result.append(configuration.dollarReplacementInField());
-            } else if (c == '_') {
-                result.append(configuration.underscoreReplacementInField());
-            } else {
-                result.append(c);
-            }
-        }
-        return result.toString();
-    }
-
+    
 }
