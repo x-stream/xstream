@@ -106,14 +106,14 @@ public class XStream11XmlFriendlyTest extends AbstractAcceptanceTest {
 
     public void testSupportsUnderscoreInShortClassName() {
         String expected11 = ""
-            + "<com.thoughtworks.acceptance.XStream11XmlFriendlyReplacerTest-A_B>\n"
+            + "<com.thoughtworks.acceptance.XStream11XmlFriendlyTest-A_B>\n"
             + "  <x>3</x>\n"
-            + "</com.thoughtworks.acceptance.XStream11XmlFriendlyReplacerTest-A_B>";
+            + "</com.thoughtworks.acceptance.XStream11XmlFriendlyTest-A_B>";
 
         String expected12 = ""
-            + "<com.thoughtworks.acceptance.XStream11XmlFriendlyReplacerTest_-A__B>\n"
+            + "<com.thoughtworks.acceptance.XStream11XmlFriendlyTest_-A__B>\n"
             + "  <x>3</x>\n"
-            + "</com.thoughtworks.acceptance.XStream11XmlFriendlyReplacerTest_-A__B>";
+            + "</com.thoughtworks.acceptance.XStream11XmlFriendlyTest_-A__B>";
         
         assertWithAsymmetricalXml(new A_B(3), expected11, expected12);
     }
