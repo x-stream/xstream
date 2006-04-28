@@ -1,9 +1,14 @@
+/*
+ * Copyright (c) 2004-2006 Elsag Solutions AG, Germany. All rights reserved.
+ * www.elsag-solutions.com
+ *
+ * $Id$
+ */
+
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.acceptance.someobjects.X;
-import com.thoughtworks.acceptance.someobjects.Y;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import java.io.StringReader;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -12,93 +17,91 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import java.io.StringReader;
-import java.util.List;
+import com.thoughtworks.acceptance.someobjects.X;
+import com.thoughtworks.acceptance.someobjects.Y;
+import com.thoughtworks.xstream.XStream;
 
-public class JDomAcceptanceTest extends TestCase {
 
-    private XStream xstream;
+/**
+ * DOCUMENT_ME
+ *
+ * @author  jos / last modified by $Author$
+ * @version $Revision$
+ */
+public class JDomAcceptanceTest extends TestCase
+{
+	//~ Instance fields --------------------------------------------------------
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        xstream = new XStream();
-        xstream.alias("x", X.class);
-    }
+	private XStream xstream;
 
-    public void testUnmarshalsObjectFromJDOM() throws Exception {
-        String xml =
-                "<x>" +
-                "  <aStr>joe</aStr>" +
-                "  <anInt>8</anInt>" +
-                "  <innerObj>" +
-                "    <yField>walnes</yField>" +
-                "  </innerObj>" +
-                "</x>";
+	//~ Methods ----------------------------------------------------------------
 
-        Document doc = new SAXBuilder().build(new StringReader(xml));
+	/**
+	 * DOCUMENT_ME
+	 *
+	 * @throws Exception DOCUMENT_ME
+	 */
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		xstream = new XStream();
+		xstream.alias("x", X.class);
+	}
 
-        X x = (X) xstream.unmarshal(new JDomReader(doc));
+	/**
+	 * DOCUMENT_ME
+	 *
+	 * @throws Exception DOCUMENT_ME
+	 */
+	public void testUnmarshalsObjectFromJDOM() throws Exception
+	{
+		String xml =
+			"<x>"
+			+ "  <aStr>joe</aStr>"
+			+ "  <anInt>8</anInt>"
+			+ "  <innerObj>"
+			+ "    <yField>walnes</yField>"
+			+ "  </innerObj>"
+			+ "</x>";
 
-        assertEquals("joe", x.aStr);
-        assertEquals(8, x.anInt);
-        assertEquals("walnes", x.innerObj.yField);
-    }
+		Document doc = new SAXBuilder().build(new StringReader(xml));
 
-    public void testMarshalsObjectToJDOM() {
-        X x = new X();
-        x.anInt = 9;
-        x.aStr = "zzz";
-        x.innerObj = new Y();
-        x.innerObj.yField = "ooo";
+		X x = (X) xstream.unmarshal(new JDomReader(doc));
 
-        String expected =
-                "<x>\n" +
-                "  <aStr>zzz</aStr>\n" +
-                "  <anInt>9</anInt>\n" +
-                "  <innerObj>\n" +
-                "    <yField>ooo</yField>\n" +
-                "  </innerObj>\n" +
-                "</x>";
+		assertEquals("joe", x.aStr);
+		assertEquals(8, x.anInt);
+		assertEquals("walnes", x.innerObj.yField);
+	}
 
-        JDomWriter writer = new JDomWriter();
-        xstream.marshal(x, writer);
-        List result = writer.getResult();
+	/**
+	 * DOCUMENT_ME
+	 */
+	public void testMarshalsObjectToJDOM()
+	{
+		X x = new X();
+		x.anInt = 9;
+		x.aStr = "zzz";
+		x.innerObj = new Y();
+		x.innerObj.yField = "ooo";
 
-        assertEquals("Result list should contain exactly 1 element",
-                                                        1, result.size());
+		String expected =
+			"<x>\n"
+			+ "  <aStr>zzz</aStr>\n"
+			+ "  <anInt>9</anInt>\n"
+			+ "  <innerObj>\n"
+			+ "    <yField>ooo</yField>\n"
+			+ "  </innerObj>\n"
+			+ "</x>";
 
-        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
+		JDomWriter writer = new JDomWriter();
+		xstream.marshal(x, writer);
 
-        assertEquals(expected, outputter.outputString(result));
-    }
+		List result = writer.getResult();
 
-    public void testXStreamPopulatingAnObjectGraphStartingWithALiveRootObject()
-                                                throws Exception {
-        String xml =
-                "<component>" +
-                "  <host>host</host>" +
-                "  <port>8000</port>" +
-                "</component>";
+		assertEquals("Result list should contain exactly 1 element", 1, result.size());
 
-        xstream.alias("component", Component.class);
+		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
 
-        HierarchicalStreamDriver driver = new JDomDriver();
-
-        Component component0 = new Component();
-
-        Component component1 = (Component) xstream.unmarshal(
-                        driver.createReader(new StringReader(xml)), component0);
-
-        assertSame(component0, component1);
-
-        assertEquals("host", component0.host);
-
-        assertEquals(8000, component0.port);
-    }
-
-    static class Component {
-        String host;
-        int port;
-    }
+		assertEquals(expected, outputter.outputString(result));
+	}
 }
-
