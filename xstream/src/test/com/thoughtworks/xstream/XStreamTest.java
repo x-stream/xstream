@@ -190,7 +190,7 @@ public class XStreamTest extends TestCase {
         assertEquals(xstream.toXML(obj), xstream.toXML(obj));
     }
 
-    public void testXStreamWithPeekMethodWithUnderlyingDom4JImplementation()
+    public void testAccessToUnderlyingDom4JImplementation()
             throws Exception {
 
         String xml =
@@ -203,19 +203,14 @@ public class XStreamTest extends TestCase {
                 "</person>";
 
         xstream.registerConverter(new ElementConverter());
-
         xstream.alias("person", Person.class);
 
         Dom4JDriver driver = new Dom4JDriver();
-
         Person person = (Person) xstream.unmarshal(driver.createReader(new StringReader(xml)));
 
         assertEquals("jason", person.firstName);
-
         assertEquals("van Zyl", person.lastName);
-
         assertNotNull(person.element);
-
         assertEquals("bar", person.element.element("foo").getText());
     }
 
@@ -248,7 +243,7 @@ public class XStreamTest extends TestCase {
         }
     }
 
-    public void testXStreamPopulatingAnObjectGraphStartingWithALiveRootObject()
+    public void testPopulationOfAnObjectGraphStartingWithALiveRootObject()
             throws Exception {
 
         String xml =
@@ -259,16 +254,10 @@ public class XStreamTest extends TestCase {
 
         xstream.alias("component", Component.class);
 
-        Dom4JDriver driver = new Dom4JDriver();
-
         Component component0 = new Component();
-
-        Component component1 = (Component) xstream.unmarshal(driver.createReader(new StringReader(xml)), component0);
-
+        Component component1 = (Component) xstream.fromXML(xml, component0);
         assertSame(component0, component1);
-
         assertEquals("host", component0.host);
-
         assertEquals(8000, component0.port);
     }
 
@@ -277,7 +266,37 @@ public class XStreamTest extends TestCase {
         int port;
     }
 
-    public void testUnmarshallingWhereAllImplementationsAreSpecifiedUsingAClassIdentifier()
+    public void testPopulationOfThisAsRootObject()
+            throws Exception {
+        
+        String xml =""
+                + "<component>\n"
+                + "  <host>host</host>\n"
+                + "  <port>8000</port>\n"
+                + "</component>";
+
+        xstream.alias("component", SelfSerializingComponent.class);
+        SelfSerializingComponent component = new SelfSerializingComponent();
+        component.host = "host";
+        component.port = 8000;
+        assertEquals(xml, component.toXML(xstream));
+        component.host = "foo";
+        component.port = -1;
+        component.fromXML(xstream, xml);
+        assertEquals("host", component.host);
+        assertEquals(8000, component.port);
+    }
+    
+    static class SelfSerializingComponent extends Component {
+        String toXML(XStream xstream) {
+            return xstream.toXML(this);
+        }
+        void fromXML(XStream xstream, String xml) {
+            xstream.fromXML(xml, this);
+        }
+    }
+
+    public void testUnmarshalsWhenAllImplementationsAreSpecifiedUsingAClassIdentifier()
             throws Exception {
 
         String xml =
@@ -292,11 +311,8 @@ public class XStreamTest extends TestCase {
                 "</handlerManager>";
 
         HandlerManager hm = (HandlerManager) xstream.fromXML(xml);
-
         Handler h = (Handler) hm.getHandlers().get(0);
-
         Protocol p = h.getProtocol();
-
         assertEquals("foo", p.getId());
     }
 
@@ -310,7 +326,7 @@ public class XStreamTest extends TestCase {
                 "</z>";
 
         Z z = (Z) xstream.fromXML(xml);
-
+        
         assertEquals("z", z.field);
     }
 
