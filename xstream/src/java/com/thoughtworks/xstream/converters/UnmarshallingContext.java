@@ -4,6 +4,9 @@ public interface UnmarshallingContext extends DataHolder {
 
     Object convertAnother(Object current, Class type);
 
+    /**
+     * @since upcoming
+     */
     Object convertAnother(Object current, Class type, Converter converter);
 
     Object currentObject();
