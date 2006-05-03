@@ -60,14 +60,14 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "  <type>java.util.HashMap</type>\n"
                 + "  <interfaces/>\n"
                 + "  <hasFactory>true</hasFactory>\n"
-                + "  <com.thoughtworks.acceptance.CglibCompatibilityTest-DelegatingHandler>\n"
+                + "  <com.thoughtworks.acceptance.CglibCompatibilityTest_-DelegatingHandler>\n"
                 + "    <delegate class=\"map\">\n"
                 + "      <entry>\n"
                 + "        <string>URL</string>\n"
                 + "        <url>http://xstream.codehaus.org</url>\n"
                 + "      </entry>\n"
                 + "    </delegate>\n"
-                + "  </com.thoughtworks.acceptance.CglibCompatibilityTest-DelegatingHandler>\n"
+                + "  </com.thoughtworks.acceptance.CglibCompatibilityTest_-DelegatingHandler>\n"
                 + "</CGLIB-enhanced-proxy>";
 
         assertBothWays(orig, xml);
@@ -85,14 +85,14 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "  <type>java.util.HashMap</type>\n"
                 + "  <interfaces/>\n"
                 + "  <hasFactory>false</hasFactory>\n"
-                + "  <com.thoughtworks.acceptance.CglibCompatibilityTest-DelegatingHandler>\n"
+                + "  <com.thoughtworks.acceptance.CglibCompatibilityTest_-DelegatingHandler>\n"
                 + "    <delegate class=\"map\">\n"
                 + "      <entry>\n"
                 + "        <string>URL</string>\n"
                 + "        <url>http://xstream.codehaus.org</url>\n"
                 + "      </entry>\n"
                 + "    </delegate>\n"
-                + "  </com.thoughtworks.acceptance.CglibCompatibilityTest-DelegatingHandler>\n"
+                + "  </com.thoughtworks.acceptance.CglibCompatibilityTest_-DelegatingHandler>\n"
                 + "</CGLIB-enhanced-proxy>";
 
         assertBothWays(orig, xml);
@@ -111,7 +111,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "    <java-class>java.lang.Runnable</java-class>\n"
                 + "  </interfaces>\n"
                 + "  <hasFactory>true</hasFactory>\n"
-                + "  <net.sf.cglib.proxy.NoOp-1/>\n"
+                + "  <net.sf.cglib.proxy.NoOp_-1/>\n"
                 + "</CGLIB-enhanced-proxy>";
 
         final Object serialized = assertBothWays(orig, xml);
@@ -134,7 +134,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "    <java-class>java.lang.Runnable</java-class>\n"
                 + "  </interfaces>\n"
                 + "  <hasFactory>false</hasFactory>\n"
-                + "  <net.sf.cglib.proxy.NoOp-1/>\n"
+                + "  <net.sf.cglib.proxy.NoOp_-1/>\n"
                 + "</CGLIB-enhanced-proxy>";
 
         final Object serialized = assertBothWays(orig, xml);
@@ -174,7 +174,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "    <java-class>java.lang.Runnable</java-class>\n"
                 + "  </interfaces>\n"
                 + "  <hasFactory>false</hasFactory>\n"
-                + "  <net.sf.cglib.proxy.NoOp-1/>\n"
+                + "  <net.sf.cglib.proxy.NoOp_-1/>\n"
                 + "  <serialVersionUID>20060804</serialVersionUID>\n"
                 + "</CGLIB-enhanced-proxy>";
 
@@ -206,7 +206,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "  <type>java.util.HashMap</type>\n"
                 + "  <interfaces/>\n"
                 + "  <hasFactory>false</hasFactory>\n"
-                + "  <com.thoughtworks.acceptance.CglibCompatibilityTest-InterceptingHandler/>\n"
+                + "  <com.thoughtworks.acceptance.CglibCompatibilityTest_-InterceptingHandler/>\n"
                 + "  <instance serialization=\"custom\">\n"
                 + "    <unserializable-parents/>\n"
                 + "    <map>\n"

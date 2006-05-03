@@ -38,12 +38,12 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
 	public void testDifferentConverterCanBeAnnotatedForFieldsOfSameType() {
         TaskWithAnnotations task = new TaskWithAnnotations(new GregorianCalendar(1981, 9, 18),
 				new GregorianCalendar(0, 0, 0, 30, 20));
-		String xml = "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest-TaskWithAnnotations>\n"
+		String xml = "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>\n"
 				+ "  <date>\n"
 				+ "    <cal>372225600000</cal>\n"
 				+ "  </date>\n"
                 + "  <time>-62167351200000</time>\n"
-				+ "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest-TaskWithAnnotations>";
+				+ "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>";
 		assertBothWays(task, xml);
 	}
 
@@ -72,14 +72,14 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         TaskWithoutAnnotations task = new TaskWithoutAnnotations(new GregorianCalendar(1981, 9, 18),
                 new GregorianCalendar(0, 0, 0, 30, 20));
         xstream.registerConverter(new TreeCalendarConverter());
-        String xml = "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest-TaskWithoutAnnotations>\n"
+        String xml = "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>\n"
                 + "  <date>\n"
                 + "    <cal>372225600000</cal>\n"
                 + "  </date>\n"
                 + "  <time>\n"
                 + "    <cal>-62167351200000</cal>\n"
                 + "  </time>\n"
-                + "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest-TaskWithoutAnnotations>";
+                + "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>";
         assertBothWays(task, xml);
     }
 

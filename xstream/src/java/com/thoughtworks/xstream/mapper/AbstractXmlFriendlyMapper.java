@@ -1,32 +1,31 @@
-package com.thoughtworks.xstream.io.xml;
+package com.thoughtworks.xstream.mapper;
+
+import com.thoughtworks.xstream.alias.ClassMapper;
 
 /**
- * Allows replacement of Strings in xml-friendly wrappers to provide compatibility with XStream 1.1 format
- *  
+ * Mapper that ensures that all names in the serialization stream are XML friendly.
+ * The replacement chars and strings are:
+ * <ul>
+ * <li><b>$</b> (dollar) chars appearing in class names are replaced with <b>_</b> (underscore) chars.<br></li>
+ * <li><b>$</b> (dollar) chars appearing in field names are replaced with <b>_DOLLAR_</b> string.<br></li>
+ * <li><b>_</b> (underscore) chars appearing in field names are replaced with <b>__</b> (double underscore) string.<br></li>
+ * <li><b>default</b> as the prefix for class names with no package.</li>
+ * </ul>
+ * 
+ * @author Joe Walnes
  * @author Mauro Talevi
  */
-public class XStream11XmlFriendlyReplacer extends XmlFriendlyReplacer {
+public class AbstractXmlFriendlyMapper extends MapperWrapper {
 
     private char dollarReplacementInClass = '-';
     private String dollarReplacementInField = "_DOLLAR_";
     private String underscoreReplacementInField = "__";
     private String noPackagePrefix = "default";
     
-    /**
-     * Default constructor. 
-     */
-    public XStream11XmlFriendlyReplacer() {
+    protected AbstractXmlFriendlyMapper(Mapper wrapped) {
+        super(wrapped);
     }
-
-    /**
-     * Noop implementation that does not unescape name.  Used for XStream 1.1 compatibility.
-     * @param name the name of attribute or node
-     * @return The String with unescaped name
-     */
-    public String unescapeName(String name) {
-        return name;
-    }
-        
+    
     protected String escapeClassName(String className) {
         // the $ used in inner class names is illegal as an xml element getNodeName
         className = className.replace('$', dollarReplacementInClass);
@@ -38,7 +37,19 @@ public class XStream11XmlFriendlyReplacer extends XmlFriendlyReplacer {
 
         return className;
     }
-    
+
+    protected String unescapeClassName(String className) {
+        // special case for classes named $Blah with no package; <-Blah> is illegal XML
+        if (className.startsWith(noPackagePrefix+dollarReplacementInClass)) {
+            className = className.substring(noPackagePrefix.length());
+        }
+
+        // the $ used in inner class names is illegal as an xml element getNodeName
+        className = className.replace(dollarReplacementInClass, '$');
+
+        return className;
+    }
+
     protected String escapeFieldName(String fieldName) {
         StringBuffer result = new StringBuffer();
         int length = fieldName.length();
@@ -55,18 +66,6 @@ public class XStream11XmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }    
     
-    protected String unescapeClassName(String className) {
-        // special case for classes named $Blah with no package; <-Blah> is illegal XML
-        if (className.startsWith(noPackagePrefix+dollarReplacementInClass)) {
-            className = className.substring(noPackagePrefix.length());
-        }
-
-        // the $ used in inner class names is illegal as an xml element getNodeName
-        className = className.replace(dollarReplacementInClass, '$');
-
-        return className;
-    }
-
     protected String unescapeFieldName(String xmlName) {
         StringBuffer result = new StringBuffer();
         int length = xmlName.length();

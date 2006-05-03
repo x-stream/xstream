@@ -122,30 +122,30 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         final String xml;
         if (JVM.is15()) {
             xml = 
-                "<java.util.Collections-SynchronizedList serialization=\"custom\">\n" +
-                "  <java.util.Collections-SynchronizedCollection>\n" +
+                "<java.util.Collections_-SynchronizedList serialization=\"custom\">\n" +
+                "  <java.util.Collections_-SynchronizedCollection>\n" +
                 "    <default>\n" +
                 "      <c class=\"linked-list\">\n" +
                 "        <string>hi</string>\n" +
                 "      </c>\n" +
-                "      <mutex class=\"java.util.Collections-SynchronizedList\" reference=\"../../..\"/>\n" +
+                "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
                 "    </default>\n" +
-                "  </java.util.Collections-SynchronizedCollection>\n" +
-                "  <java.util.Collections-SynchronizedList>\n" +
+                "  </java.util.Collections_-SynchronizedCollection>\n" +
+                "  <java.util.Collections_-SynchronizedList>\n" +
                 "    <default>\n" +
-                "      <list class=\"linked-list\" reference=\"../../../java.util.Collections-SynchronizedCollection/default/c\"/>\n" +
+                "      <list class=\"linked-list\" reference=\"../../../java.util.Collections$SynchronizedCollection/default/c\"/>\n" +
                 "    </default>\n" +
-                "  </java.util.Collections-SynchronizedList>\n" +
-                "</java.util.Collections-SynchronizedList>";
+                "  </java.util.Collections_-SynchronizedList>\n" +
+                "</java.util.Collections_-SynchronizedList>";
         } else {
             xml = 
-                "<java.util.Collections-SynchronizedList>\n" +
+                "<java.util.Collections_-SynchronizedList>\n" +
                 "  <list class=\"linked-list\">\n" +
                 "    <string>hi</string>\n" +
                 "  </list>\n" +
                 "  <c class=\"linked-list\" reference=\"../list\"/>\n" +
-                "  <mutex class=\"java.util.Collections-SynchronizedList\" reference=\"..\"/>\n" +
-                "</java.util.Collections-SynchronizedList>";
+                "  <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"..\"/>\n" +
+                "</java.util.Collections_-SynchronizedList>";
         }
 
         // syncronized list has circular reference
@@ -158,7 +158,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     }
 
     public void testEmptyList() {
-        assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections-EmptyList/>");
+        assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections_-EmptyList/>");
     }
 
     public void testUnmodifiableList() {
@@ -170,12 +170,12 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         list = Collections.unmodifiableList(list);
 
         assertBothWays(list,
-                "<java.util.Collections-UnmodifiableRandomAccessList resolves-to=\"java.util.Collections-UnmodifiableList\">\n" +
+                "<java.util.Collections_-UnmodifiableRandomAccessList resolves-to=\"java.util.Collections$UnmodifiableList\">\n" +
                 "  <list>\n" +
                 "    <string>hi</string>\n" +
                 "  </list>\n" +
                 "  <c class=\"list\" reference=\"../list\"/>\n" +
-                "</java.util.Collections-UnmodifiableRandomAccessList>");
+                "</java.util.Collections_-UnmodifiableRandomAccessList>");
     }
 
     public void testLinkedHashSetRetainsOrdering() {
@@ -201,11 +201,11 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         List list = Arrays.asList(new String[] {"hi", "bye"});
 
         assertBothWays(list,
-                "<java.util.Arrays-ArrayList>\n" +
+                "<java.util.Arrays_-ArrayList>\n" +
                 "  <a class=\"string-array\">\n" +
                 "    <string>hi</string>\n" +
                 "    <string>bye</string>\n" +
                 "  </a>\n" +
-                "</java.util.Arrays-ArrayList>");
+                "</java.util.Arrays_-ArrayList>");
     }
 }

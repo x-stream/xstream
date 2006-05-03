@@ -112,9 +112,9 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         Annotations.configureAliases(xstream, House.class);
         House house = new House(5);
         String expectedXml = 
-                "<com.thoughtworks.acceptance.annotations.AnnotationsTest-House>\n"+
+                "<com.thoughtworks.acceptance.annotations.AnnotationsTest_-House>\n"+
                 "  <total-number-of-rooms>5</total-number-of-rooms>\n" +
-                "</com.thoughtworks.acceptance.annotations.AnnotationsTest-House>";
+                "</com.thoughtworks.acceptance.annotations.AnnotationsTest_-House>";
         assertBothWays(house, expectedXml);
     }
     

@@ -12,13 +12,13 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
         String xml = xstream.toXML(inner);
 
         String expectedXml = ""
-                + "<com.thoughtworks.acceptance.Outer-Inner>\n"
+                + "<com.thoughtworks.acceptance.Outer_-Inner>\n"
                 + "  <innerName>THE-INNER-NAME</innerName>\n"
                 + "  <outer-class>\n"
                 + "    <inner reference=\"../..\"/>\n"
                 + "    <outerName>THE-OUTER-NAME</outerName>\n"
                 + "  </outer-class>\n"
-                + "</com.thoughtworks.acceptance.Outer-Inner>";
+                + "</com.thoughtworks.acceptance.Outer_-Inner>";
         assertEquals(expectedXml, xml);
 
         Outer.Inner newInner = (Outer.Inner) xstream.fromXML(xml);

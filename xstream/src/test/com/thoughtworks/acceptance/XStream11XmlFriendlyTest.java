@@ -75,7 +75,7 @@ public class XStream11XmlFriendlyTest extends AbstractAcceptanceTest {
         assertWithAsymmetricalXml(in, expected11, expected11);
     }
 
-    public void FIXMEtestSupportsAliasWithDashChar() {
+    public void testSupportsAliasWithDashChar() {
         xstream.alias("under-score", WithUnderscoreCharField.class);
 
         WithUnderscoreCharField in = new WithUnderscoreCharField();

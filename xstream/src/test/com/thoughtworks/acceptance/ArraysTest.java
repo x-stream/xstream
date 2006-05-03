@@ -48,14 +48,14 @@ public class ArraysTest extends AbstractAcceptanceTest {
         X[] array = new X[]{new X(), new X()};
 
         String expected = "" +
-                "<com.thoughtworks.acceptance.ArraysTest-X-array>\n" +
-                "  <com.thoughtworks.acceptance.ArraysTest-X>\n" +
+                "<com.thoughtworks.acceptance.ArraysTest_-X-array>\n" +
+                "  <com.thoughtworks.acceptance.ArraysTest_-X>\n" +
                 "    <s>hi</s>\n" +
-                "  </com.thoughtworks.acceptance.ArraysTest-X>\n" +
-                "  <com.thoughtworks.acceptance.ArraysTest-X>\n" +
+                "  </com.thoughtworks.acceptance.ArraysTest_-X>\n" +
+                "  <com.thoughtworks.acceptance.ArraysTest_-X>\n" +
                 "    <s>hi</s>\n" +
-                "  </com.thoughtworks.acceptance.ArraysTest-X>\n" +
-                "</com.thoughtworks.acceptance.ArraysTest-X-array>";
+                "  </com.thoughtworks.acceptance.ArraysTest_-X>\n" +
+                "</com.thoughtworks.acceptance.ArraysTest_-X-array>";
 
         assertBothWays(array, expected);
     }
