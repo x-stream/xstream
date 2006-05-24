@@ -117,7 +117,8 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
             expectedJoined.append(expected[i]).append('\n');
         }
         for (int i = 0; i < actual.length; i++) {
-            actualJoined.append(actual[i]).append('\n');
+            // JRockit adds ":???" for invalid line number
+            actualJoined.append(actual[i].toString().replaceFirst(":\\?\\?\\?", "")).append('\n');
         }
         assertEquals(expectedJoined.toString(), actualJoined.toString());
     }

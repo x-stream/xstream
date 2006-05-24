@@ -26,6 +26,12 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
     public boolean canConvert(Class type) {
         return StackTraceElement.class.equals(type);
     }
+    
+    public String toString(Object obj) {
+        String s = super.toString(obj);
+        // JRockit adds ":???" for invalid line number
+        return s.replaceFirst(":\\?\\?\\?", "");
+    }
 
     public Object fromString(String str) {
         Matcher matcher = PATTERN.matcher(str);

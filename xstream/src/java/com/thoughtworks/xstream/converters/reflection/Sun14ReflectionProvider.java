@@ -26,8 +26,8 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         Unsafe u = null;
         Exception ex = null;
         try {
-            Class objectStreamClass = Class.forName("java.io.ObjectStreamClass$FieldReflector");
-            Field unsafeField = objectStreamClass.getDeclaredField("unsafe");
+            Class objectStreamClass = Class.forName("sun.misc.Unsafe");
+            Field unsafeField = objectStreamClass.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
             u = (Unsafe) unsafeField.get(null);
         } catch (ClassNotFoundException e) {

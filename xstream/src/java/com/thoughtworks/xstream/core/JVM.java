@@ -73,6 +73,45 @@ public class JVM {
     private static boolean isBlackdown() {
         return System.getProperty("java.vm.vendor").indexOf("Blackdown") != -1;
     }
+    
+    /*
+     * Support for sun.misc.Unsafe and sun.reflect.ReflectionFactory is present
+     * in JRockit versions R25.1.0 and later, both 1.4.2 and 5.0 (and in future
+     * 6.0 builds).
+     */
+    private static boolean isBEAWithUnsafeSupport() {
+        // This property should be "BEA Systems, Inc."
+        if (System.getProperty("java.vm.vendor").indexOf("BEA") != -1) {
+
+            /*
+             * Recent 1.4.2 and 5.0 versions of JRockit have a java.vm.version
+             * string starting with the "R" JVM version number, i.e.
+             * "R26.2.0-38-57237-1.5.0_06-20060209..."
+             */
+            String vmVersion = System.getProperty("java.vm.version");
+            if (vmVersion.startsWith("R")) {
+                /*
+                 * We *could* also check that it's R26 or later, but that is
+                 * implicitly true
+                 */
+                return true;
+            }
+
+            /*
+             * For older JRockit versions we can check java.vm.info. JRockit
+             * 1.4.2 R24 -> "Native Threads, GC strategy: parallel" and JRockit
+             * 5.0 R25 -> "R25.2.0-28".
+             */
+            String vmInfo = System.getProperty("java.vm.info");
+            if (vmInfo != null) {
+                // R25.1 or R25.2 supports Unsafe, other versions do not
+                return (vmInfo.startsWith("R25.1") || vmInfo
+                        .startsWith("R25.2"));
+            }
+        }
+        // If non-BEA, or possibly some very old JRockit version
+        return false;
+    }
 
     public Class loadClass(String name) {
         try {
@@ -109,10 +148,10 @@ public class JVM {
     }
 
     private boolean canUseSun14ReflectionProvider() {
-    	    return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown()) && is14() && loadClass("sun.misc.Unsafe") != null;
+        return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown() || isBEAWithUnsafeSupport()) && is14() && loadClass("sun.misc.Unsafe") != null;
     }
 
-    public static synchronized boolean reverseFieldDefinition() {
+    public static boolean reverseFieldDefinition() {
         return reverseFieldOrder;
     }
 

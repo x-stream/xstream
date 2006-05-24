@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.reflection;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Iterator;
 
 public class FieldDictionaryTest extends TestCase {
@@ -17,18 +18,17 @@ public class FieldDictionaryTest extends TestCase {
     static class SomeClass {
         private String a;
         private String c;
-        private String b;
-        private transient String e;
+        private transient String b;
         private static String d;
+        private String e;
     }
 
     public void testListsFieldsInClassInDefinitionOrder() {
         Iterator fields = fieldDictionary.serializableFieldsFor(SomeClass.class);
-        assertEquals("a", ((Field)fields.next()).getName());
-        assertEquals("c", ((Field)fields.next()).getName());
-        assertEquals("b", ((Field)fields.next()).getName());
-        assertEquals("e", ((Field)fields.next()).getName());
-        assertEquals("d", ((Field)fields.next()).getName());
+        assertEquals("a", getNonStaticFieldName(fields));
+        assertEquals("c", getNonStaticFieldName(fields));
+        assertEquals("b", getNonStaticFieldName(fields));
+        assertEquals("e", getNonStaticFieldName(fields));
         assertFalse("No more fields should be present", fields.hasNext());
     }
 
@@ -38,12 +38,11 @@ public class FieldDictionaryTest extends TestCase {
 
     public void testIncludesFieldsInSuperClasses() {
         Iterator fields = fieldDictionary.serializableFieldsFor(SpecialClass.class);
-        assertEquals("brilliant", ((Field)fields.next()).getName());
-        assertEquals("a", ((Field)fields.next()).getName());
-        assertEquals("c", ((Field)fields.next()).getName());
-        assertEquals("b", ((Field)fields.next()).getName());
-        assertEquals("e", ((Field)fields.next()).getName());
-        assertEquals("d", ((Field)fields.next()).getName());
+        assertEquals("brilliant", getNonStaticFieldName(fields));
+        assertEquals("a", getNonStaticFieldName(fields));
+        assertEquals("c", getNonStaticFieldName(fields));
+        assertEquals("b", getNonStaticFieldName(fields));
+        assertEquals("e", getNonStaticFieldName(fields));
         assertFalse("No more fields should be present", fields.hasNext());
     }
 
@@ -53,10 +52,19 @@ public class FieldDictionaryTest extends TestCase {
 
     public void testIncludesOuterClassReferenceForInnerClass() {
         Iterator fields = fieldDictionary.serializableFieldsFor(InnerClass.class);
-        assertEquals("someThing", ((Field)fields.next()).getName());
+        assertEquals("someThing", getNonStaticFieldName(fields));
         Field innerField = ((Field)fields.next());
         assertEquals("this$0", innerField.getName());
         assertEquals(FieldDictionaryTest.class, innerField.getType());
         assertFalse("No more fields should be present", fields.hasNext());
+    }
+
+    private static String getNonStaticFieldName(Iterator fields) {
+        final Field field = (Field)fields.next();
+        // JRockit declares static fields first, XStream will ignore them anyway
+        if ((field.getModifiers() & Modifier.STATIC) > 0) {
+            return getNonStaticFieldName(fields);
+        }
+        return field.getName();
     }
 }
