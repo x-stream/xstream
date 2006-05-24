@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.core.util.ClassStack;
+import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -20,7 +20,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     protected HierarchicalStreamReader reader;
     private ConverterLookup converterLookup;
     private Mapper mapper;
-    private ClassStack types = new ClassStack(16);
+    private FastStack types = new FastStack(16);
     private DataHolder dataHolder;
     private final PrioritizedList validationList = new PrioritizedList();
 
@@ -81,7 +81,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     }
 
     public Class getRequiredType() {
-        return types.peek();
+        return (Class)types.peek();
     }
 
     public Object get(Object key) {

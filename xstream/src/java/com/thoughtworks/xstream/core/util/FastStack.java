@@ -45,7 +45,7 @@ public final class FastStack {
 
     private void resizeStack(int newCapacity) {
         Object[] newStack = new Object[newCapacity];
-        System.arraycopy(stack, 0, newStack, 0, Math.min(stack.length, newCapacity));
+        System.arraycopy(stack, 0, newStack, 0, Math.min(pointer, newCapacity));
         stack = newStack;
     }
 
