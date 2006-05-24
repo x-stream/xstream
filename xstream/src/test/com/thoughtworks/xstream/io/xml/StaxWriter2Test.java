@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.acceptance.QNameMappedConcreteClassesTest;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
@@ -16,7 +15,11 @@ import java.io.StringWriter;
 
 public class StaxWriter2Test extends AbstractXMLWriterTest {
 
-    public static final String XML_HEADER = QNameMappedConcreteClassesTest.XML_HEADER;
+    // For WoodStox
+    //public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
+
+    // For RI
+    public static final String XML_HEADER = "<?xml version='1.0' encoding='utf-8'?>";
 
     private StringWriter buffer;
     private XMLOutputFactory outputFactory;

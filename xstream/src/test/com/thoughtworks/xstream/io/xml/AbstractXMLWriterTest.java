@@ -9,6 +9,19 @@ public abstract class AbstractXMLWriterTest extends TestCase {
     protected HierarchicalStreamWriter writer;
 
     protected abstract void assertXmlProducedIs(String expected);
+    
+    // String.replaceAll is JDK 1.4
+    protected String replaceAll(String s, final String occurance, final String replacement) {
+        final int len = occurance.length();
+        int i = 0;
+        while((i = s.indexOf(occurance, i)) >= 0) {
+            final StringBuffer buff = new StringBuffer(i > 0 ? s.substring(0, i) : "");
+            buff.append(replacement);
+            buff.append(s.substring(i + len));
+            s = buff.toString();
+        }
+        return s;
+    }
 
     public void testProducesXmlElements() {
         writer.startNode("hello");

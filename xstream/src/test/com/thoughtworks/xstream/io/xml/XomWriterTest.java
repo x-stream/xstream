@@ -15,7 +15,7 @@ public class XomWriterTest extends AbstractXMLWriterTest {
     protected void assertXmlProducedIs(String expected) {
         assertEquals(1, root.getChildCount());
         String actual = root.getChild(0).toXML();
-        actual = actual.replaceAll(" />", "/>");
+        actual = replaceAll(actual , " />", "/>");
         assertEquals(expected, actual);
     }
 
