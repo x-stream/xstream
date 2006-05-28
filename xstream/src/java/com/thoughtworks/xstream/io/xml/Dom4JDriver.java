@@ -1,17 +1,5 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentFactory;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
-
 import java.io.FilterOutputStream;
 import java.io.FilterWriter;
 import java.io.IOException;
@@ -20,20 +8,37 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-public class Dom4JDriver implements HierarchicalStreamDriver {
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentFactory;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
+
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
+
+public class Dom4JDriver extends AbstractXmlFriendlyDriver {
 
     private DocumentFactory documentFactory;
     private OutputFormat outputFormat;
-
-    public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat) {
-        this.documentFactory = documentFactory;
-        this.outputFormat = outputFormat;
-    }
 
     public Dom4JDriver() {
         this(new DocumentFactory(), OutputFormat.createPrettyPrint());
         outputFormat.setTrimText(false);
     }
+
+    public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat) {
+        this(documentFactory, outputFormat, new XmlFriendlyReplacer());
+    }
+
+    public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, XmlFriendlyReplacer replacer) {
+        super(replacer);
+        this.documentFactory = documentFactory;
+        this.outputFormat = outputFormat;
+    }
+
 
     public DocumentFactory getDocumentFactory() {
         return documentFactory;
@@ -55,7 +60,7 @@ public class Dom4JDriver implements HierarchicalStreamDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(text);
-            return new Dom4JReader(document);
+            return decorate(new Dom4JReader(document));
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -65,7 +70,7 @@ public class Dom4JDriver implements HierarchicalStreamDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(in);
-            return new Dom4JReader(document);
+            return decorate(new Dom4JReader(document));
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -79,7 +84,7 @@ public class Dom4JDriver implements HierarchicalStreamDriver {
             }
         };
         writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat));
-        return writer[0];
+        return decorate(writer[0]);
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
@@ -91,7 +96,7 @@ public class Dom4JDriver implements HierarchicalStreamDriver {
                 }
             };
             writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat));
-            return writer[0];
+            return decorate(writer[0]);
         } catch (IOException e) {
             throw new StreamException(e);
         }

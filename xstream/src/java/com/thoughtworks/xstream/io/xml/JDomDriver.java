@@ -1,14 +1,5 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
-
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,16 +7,32 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
+
 /**
  * @author Laurent Bihanic
  */
-public class JDomDriver implements HierarchicalStreamDriver {
+public class JDomDriver extends AbstractXmlFriendlyDriver {
+
+    public JDomDriver() {
+        super(new XmlFriendlyReplacer());
+    }
+
+    public JDomDriver(XmlFriendlyReplacer replacer) {
+        super(replacer);
+    }
 
     public HierarchicalStreamReader createReader(Reader reader) {
         try {
             SAXBuilder builder = new SAXBuilder();
             Document document = builder.build(reader);
-            return new JDomReader(document);
+            return decorate(new JDomReader(document));
         } catch (IOException e) {
             throw new StreamException(e);
         } catch (JDOMException e) {
@@ -37,7 +44,7 @@ public class JDomDriver implements HierarchicalStreamDriver {
         try {
             SAXBuilder builder = new SAXBuilder();
             Document document = builder.build(in);
-            return new JDomReader(document);
+            return decorate(new JDomReader(document));
         } catch (IOException e) {
             throw new StreamException(e);
         } catch (JDOMException e) {
@@ -46,11 +53,11 @@ public class JDomDriver implements HierarchicalStreamDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return new PrettyPrintWriter(out);
+        return decorate(new PrettyPrintWriter(out));
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
-        return new PrettyPrintWriter(new OutputStreamWriter(out));
+        return decorate(new PrettyPrintWriter(new OutputStreamWriter(out)));
     }
 
 }

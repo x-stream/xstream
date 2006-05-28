@@ -1,20 +1,19 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
-import com.thoughtworks.xstream.io.xml.XppDriver;
+import java.lang.reflect.Array;
 
 import junit.framework.TestCase;
 
-import java.lang.reflect.Array;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 
 public abstract class AbstractAcceptanceTest extends TestCase {
 
     protected transient XStream xstream = createXStream();
     
     protected XStream createXStream() {
-        return new XStream(createDriver(), new XmlFriendlyReplacer());
+        return new XStream(createDriver());
     }
 
     protected HierarchicalStreamDriver createDriver() {

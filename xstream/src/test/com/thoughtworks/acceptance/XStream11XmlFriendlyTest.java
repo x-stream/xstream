@@ -6,11 +6,12 @@ import java.util.Locale;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.XStream11XmlFriendlyReplacer;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 
 public class XStream11XmlFriendlyTest extends AbstractAcceptanceTest {
 
     protected XStream createXStream() {
-        return new XStream(new XStream11XmlFriendlyReplacer());
+        return new XStream(new XppDriver(new XStream11XmlFriendlyReplacer()));
     }
 
     public static class WithDollarCharField extends StandardObject {

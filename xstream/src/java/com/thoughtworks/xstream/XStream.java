@@ -102,9 +102,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StatefulWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.XStream11XmlFriendlyReplacer;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyDriverWrapper;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
@@ -301,20 +298,6 @@ public class XStream {
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(null, (Mapper)null, hierarchicalStreamDriver);
     }
-
-    /**
-     * @since 1.2
-     */    
-    public XStream(XmlFriendlyReplacer xmlFriendlyReplacer) {
-        this(null, (Mapper)null, new XppDriver(), xmlFriendlyReplacer);
-    }
-
-    /**
-     * @since 1.2
-     */    
-    public XStream(HierarchicalStreamDriver hierarchicalStreamDriver, XmlFriendlyReplacer xmlFriendlyReplacer) {
-        this(null, (Mapper)null, hierarchicalStreamDriver, xmlFriendlyReplacer);
-    }
     
     public XStream(
             ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
@@ -328,7 +311,7 @@ public class XStream {
     public XStream(
             ReflectionProvider reflectionProvider, ClassMapper classMapper,
             HierarchicalStreamDriver driver) {
-        this(reflectionProvider, classMapper, driver, new XStream11XmlFriendlyReplacer());
+        this(reflectionProvider, (Mapper)classMapper, driver);
     }
 
     /**
@@ -345,20 +328,12 @@ public class XStream {
 
     public XStream(
             ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
-        this(reflectionProvider, mapper, driver, new XStream11XmlFriendlyReplacer());
-    }
-    
-    /**
-     * @since 1.2
-     */    
-    public XStream(
-            ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver, XmlFriendlyReplacer replacer) {
         jvm = new JVM();
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
         this.reflectionProvider = reflectionProvider;
-        this.hierarchicalStreamDriver = new XmlFriendlyDriverWrapper(driver, replacer);
+        this.hierarchicalStreamDriver = driver;
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
         this.mapper = mapper == null ? buildMapper(true) : mapper;
         this.converterLookup = new DefaultConverterLookup(this.mapper);

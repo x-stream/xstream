@@ -1,9 +1,9 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -11,10 +11,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 
 /**
  * A driver using the StAX API
@@ -22,7 +21,7 @@ import java.io.Writer;
  * @author James Strachan
  * @version $Revision$
  */
-public class StaxDriver implements HierarchicalStreamDriver {
+public class StaxDriver extends AbstractXmlFriendlyDriver {
 
     private static boolean libraryPresent;
 
@@ -36,18 +35,27 @@ public class StaxDriver implements HierarchicalStreamDriver {
     }
 
     public StaxDriver(QNameMap qnameMap) {
-        this.qnameMap = qnameMap;
+        this(qnameMap, false);
     }
 
     public StaxDriver(QNameMap qnameMap, boolean repairingNamespace) {
+        this(qnameMap, repairingNamespace, new XmlFriendlyReplacer());
+    }
+
+    public StaxDriver(QNameMap qnameMap, boolean repairingNamespace, XmlFriendlyReplacer replacer) {
+        super(replacer);
         this.qnameMap = qnameMap;
         this.repairingNamespace = repairingNamespace;
+    }
+    
+    public StaxDriver(XmlFriendlyReplacer replacer) {
+        this(new QNameMap(), false, replacer);
     }
 
     public HierarchicalStreamReader createReader(Reader xml) {
         loadLibrary();
         try {
-            return new StaxReader(qnameMap, createParser(xml));
+            return decorate(new StaxReader(qnameMap, createParser(xml)));
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -57,7 +65,7 @@ public class StaxDriver implements HierarchicalStreamDriver {
     public HierarchicalStreamReader createReader(InputStream in) {
         loadLibrary();
         try {
-            return new StaxReader(qnameMap, createParser(in));
+            return decorate(new StaxReader(qnameMap, createParser(in)));
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -79,7 +87,7 @@ public class StaxDriver implements HierarchicalStreamDriver {
 
     public HierarchicalStreamWriter createWriter(Writer out) {
         try {
-            return new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace());
+            return decorate(new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace()));
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -88,7 +96,7 @@ public class StaxDriver implements HierarchicalStreamDriver {
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
         try {
-            return new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace());
+            return decorate(new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace()));
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
