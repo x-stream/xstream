@@ -29,15 +29,15 @@ public abstract class AbstractXmlFriendlyDriver implements HierarchicalStreamDri
         this.replacer = replacer;
     }
 
-    protected XmlFriendlyReplacer replacer(){
+    protected XmlFriendlyReplacer xmlFriendlyReplacer(){
         return replacer;
     }
 
-    protected HierarchicalStreamReader decorate(HierarchicalStreamReader reader){
+    protected HierarchicalStreamReader xmlFriendlyReader(HierarchicalStreamReader reader){
         return new XmlFriendlyReaderWrapper(reader, replacer);
     }
 
-    protected HierarchicalStreamWriter decorate(HierarchicalStreamWriter writer){
+    protected HierarchicalStreamWriter xmlFriendlyWriter(HierarchicalStreamWriter writer){
         return new XmlFriendlyWriterWrapper(writer, replacer);
     }
     

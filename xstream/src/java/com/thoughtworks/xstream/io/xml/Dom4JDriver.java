@@ -60,7 +60,7 @@ public class Dom4JDriver extends AbstractXmlFriendlyDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(text);
-            return decorate(new Dom4JReader(document));
+            return xmlFriendlyReader(new Dom4JReader(document));
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -70,7 +70,7 @@ public class Dom4JDriver extends AbstractXmlFriendlyDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(in);
-            return decorate(new Dom4JReader(document));
+            return xmlFriendlyReader(new Dom4JReader(document));
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -84,7 +84,7 @@ public class Dom4JDriver extends AbstractXmlFriendlyDriver {
             }
         };
         writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat));
-        return decorate(writer[0]);
+        return xmlFriendlyWriter(writer[0]);
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
@@ -96,7 +96,7 @@ public class Dom4JDriver extends AbstractXmlFriendlyDriver {
                 }
             };
             writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat));
-            return decorate(writer[0]);
+            return xmlFriendlyWriter(writer[0]);
         } catch (IOException e) {
             throw new StreamException(e);
         }

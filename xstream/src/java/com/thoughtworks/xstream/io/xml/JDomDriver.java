@@ -32,7 +32,7 @@ public class JDomDriver extends AbstractXmlFriendlyDriver {
         try {
             SAXBuilder builder = new SAXBuilder();
             Document document = builder.build(reader);
-            return decorate(new JDomReader(document));
+            return xmlFriendlyReader(new JDomReader(document));
         } catch (IOException e) {
             throw new StreamException(e);
         } catch (JDOMException e) {
@@ -44,7 +44,7 @@ public class JDomDriver extends AbstractXmlFriendlyDriver {
         try {
             SAXBuilder builder = new SAXBuilder();
             Document document = builder.build(in);
-            return decorate(new JDomReader(document));
+            return xmlFriendlyReader(new JDomReader(document));
         } catch (IOException e) {
             throw new StreamException(e);
         } catch (JDOMException e) {
@@ -53,11 +53,11 @@ public class JDomDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return decorate(new PrettyPrintWriter(out));
+        return xmlFriendlyWriter(new PrettyPrintWriter(out));
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
-        return decorate(new PrettyPrintWriter(new OutputStreamWriter(out)));
+        return xmlFriendlyWriter(new PrettyPrintWriter(new OutputStreamWriter(out)));
     }
 
 }

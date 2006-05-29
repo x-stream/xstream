@@ -24,7 +24,7 @@ public class XppDriver extends AbstractXmlFriendlyDriver {
 
     public HierarchicalStreamReader createReader(Reader xml) {
         loadLibrary();
-        return decorate(new XppReader(xml));
+        return xmlFriendlyReader(new XppReader(xml));
     }
 
     public HierarchicalStreamReader createReader(InputStream in) {
@@ -44,7 +44,7 @@ public class XppDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return decorate(new PrettyPrintWriter(out));
+        return xmlFriendlyWriter(new PrettyPrintWriter(out));
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {

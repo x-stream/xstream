@@ -44,7 +44,7 @@ public class XomDriver extends AbstractXmlFriendlyDriver {
     public HierarchicalStreamReader createReader(Reader text) {
         try {
             Document document = builder.build(text);
-            return decorate(new XomReader(document));
+            return xmlFriendlyReader(new XomReader(document));
         } catch (ValidityException e) {
             throw new StreamException(e);
         } catch (ParsingException e) {
@@ -57,7 +57,7 @@ public class XomDriver extends AbstractXmlFriendlyDriver {
     public HierarchicalStreamReader createReader(InputStream in) {
         try {
             Document document = builder.build(in);
-            return decorate(new XomReader(document));
+            return xmlFriendlyReader(new XomReader(document));
         } catch (ValidityException e) {
             throw new StreamException(e);
         } catch (ParsingException e) {
@@ -68,10 +68,10 @@ public class XomDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(final Writer out) {
-        return decorate(new PrettyPrintWriter(out));
+        return xmlFriendlyWriter(new PrettyPrintWriter(out));
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
-        return decorate(new PrettyPrintWriter(new OutputStreamWriter(out)));
+        return xmlFriendlyWriter(new PrettyPrintWriter(new OutputStreamWriter(out)));
     }
 }

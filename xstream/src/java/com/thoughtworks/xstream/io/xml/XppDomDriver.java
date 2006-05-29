@@ -24,7 +24,7 @@ public class XppDomDriver extends AbstractXmlFriendlyDriver {
     
     public HierarchicalStreamReader createReader(Reader xml) {
         try {
-            return decorate(new XppDomReader(Xpp3DomBuilder.build(xml)));
+            return xmlFriendlyReader(new XppDomReader(Xpp3DomBuilder.build(xml)));
         } catch (Exception e) {
             throw new StreamException(e);
         }
@@ -35,7 +35,7 @@ public class XppDomDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return decorate(new PrettyPrintWriter(out));
+        return xmlFriendlyWriter(new PrettyPrintWriter(out));
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {

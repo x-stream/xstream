@@ -52,7 +52,7 @@ public class DomDriver extends AbstractXmlFriendlyDriver {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             source.setEncoding(encoding);
             Document document = documentBuilder.parse(source);
-            return decorate(new DomReader(document));
+            return xmlFriendlyReader(new DomReader(document));
         } catch (FactoryConfigurationError e) {
             throw new StreamException(e);
         } catch (ParserConfigurationException e) {
@@ -65,7 +65,7 @@ public class DomDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return decorate(new PrettyPrintWriter(out));
+        return xmlFriendlyWriter(new PrettyPrintWriter(out));
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
