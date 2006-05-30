@@ -18,7 +18,10 @@
 
     <path id="classpath">
         <fileset dir="lib">
-            <include name="**/*.jar"/>
+            <include unless="jdk1.4.available" name="jdk1.3/*.jar"/>
+        </fileset>
+        <fileset dir="lib">
+            <include name="*.jar"/>
         </fileset>
         <pathelement path="${java.build.dir}"/>
         <pathelement path="${test.build.dir}"/>
