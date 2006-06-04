@@ -17,8 +17,16 @@ public class XomReader extends AbstractDocumentReader {
         super(document.getRootElement());
     }
 
+    public XomReader(Element rootElement, XmlFriendlyReplacer replacer) {
+        super(rootElement, replacer);
+    }
+
+    public XomReader(Document document, XmlFriendlyReplacer replacer) {
+        super(document.getRootElement(), replacer);
+    }
+    
     public String getNodeName() {
-        return currentElement.getLocalName();
+        return unescapeXmlName(currentElement.getLocalName());
     }
 
     public String getValue() {
@@ -48,7 +56,7 @@ public class XomReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return currentElement.getAttribute(index).getQualifiedName();
+        return unescapeXmlName(currentElement.getAttribute(index).getQualifiedName());
     }
 
     protected int getChildCount() {

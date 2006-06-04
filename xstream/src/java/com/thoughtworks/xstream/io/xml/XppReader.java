@@ -1,15 +1,15 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.converters.ErrorWriter;
-import com.thoughtworks.xstream.io.StreamException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 
 import org.xmlpull.mxp1.MXParser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
+import com.thoughtworks.xstream.converters.ErrorWriter;
+import com.thoughtworks.xstream.io.StreamException;
 
 /**
  * XStream reader that pulls directly from the stream using the XmlPullParser API.
@@ -22,6 +22,11 @@ public class XppReader extends AbstractPullReader {
     private final BufferedReader reader;
 
     public XppReader(Reader reader) {
+        this(reader, new XmlFriendlyReplacer());
+    }
+
+    public XppReader(Reader reader, XmlFriendlyReplacer replacer) {
+        super(replacer);
         try {
             parser = createParser();
             this.reader = new BufferedReader(reader);
@@ -31,7 +36,7 @@ public class XppReader extends AbstractPullReader {
             throw new StreamException(e);
         }
     }
-
+    
     /**
      * To use another implementation of org.xmlpull.v1.XmlPullParser, override this method.
      */
@@ -83,7 +88,7 @@ public class XppReader extends AbstractPullReader {
     }
 
     public String getAttributeName(int index) {
-        return parser.getAttributeName(index);
+        return unescapeXmlName(parser.getAttributeName(index));
     }
 
     public void appendErrors(ErrorWriter errorWriter) {

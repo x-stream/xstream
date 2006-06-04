@@ -13,7 +13,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import java.io.IOException;
 
 
-public class Dom4JWriter implements HierarchicalStreamWriter {
+public class Dom4JWriter extends AbstractXmlWriter {
 
     private final XMLWriter writer;
     private final FastStack elementStack;
@@ -22,6 +22,11 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
     private boolean children;
 
     public Dom4JWriter(XMLWriter writer) {
+        this(writer, new XmlFriendlyReplacer());
+    }
+
+    public Dom4JWriter(XMLWriter writer, XmlFriendlyReplacer replacer) {
+        super(replacer);
         this.writer = writer;
         this.elementStack = new FastStack(16);
         this.attributes = new AttributesImpl();
@@ -31,7 +36,7 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
             throw new StreamException(e);
         }
     }
-
+    
     public void startNode(String name) {
         if (elementStack.size() > 0) {
             try {
@@ -41,7 +46,7 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
             }
             started = false;
         }
-        elementStack.push(name);
+        elementStack.push(escapeXmlName(name));
         children = false;
     }
 
@@ -59,7 +64,7 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
     }
 
     public void addAttribute(String key, String value) {
-        attributes.addAttribute("", "", key, "string", value);
+        attributes.addAttribute("", "", escapeXmlName(key), "string", value);
     }
 
     public void endNode() {

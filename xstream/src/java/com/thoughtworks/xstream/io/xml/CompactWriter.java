@@ -8,6 +8,10 @@ public class CompactWriter extends PrettyPrintWriter {
         super(writer);
     }
 
+    public CompactWriter(Writer writer, XmlFriendlyReplacer replacer) {
+        super(writer, replacer);
+    }
+    
     protected void endOfLine() {
         // override parent: don't write anything at end of line
     }

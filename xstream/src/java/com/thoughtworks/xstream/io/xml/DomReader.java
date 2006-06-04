@@ -17,16 +17,24 @@ public class DomReader extends AbstractDocumentReader {
     private List childElements;
 
     public DomReader(Element rootElement) {
-        super(rootElement);
-        textBuffer = new StringBuffer();
+        this(rootElement, new XmlFriendlyReplacer());
     }
 
     public DomReader(Document document) {
         this(document.getDocumentElement());
     }
 
+    public DomReader(Element rootElement, XmlFriendlyReplacer replacer) {
+        super(rootElement, replacer);
+        textBuffer = new StringBuffer();
+    }
+
+    public DomReader(Document document, XmlFriendlyReplacer replacer) {
+        this(document.getDocumentElement(), replacer);
+    }
+    
     public String getNodeName() {
-        return currentElement.getTagName();
+        return unescapeXmlName(currentElement.getTagName());
     }
 
     public String getValue() {
@@ -57,7 +65,7 @@ public class DomReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return ((Attr) currentElement.getAttributes().item(index)).getName();
+        return unescapeXmlName(((Attr) currentElement.getAttributes().item(index)).getName());
     }
 
     protected Object getParent() {

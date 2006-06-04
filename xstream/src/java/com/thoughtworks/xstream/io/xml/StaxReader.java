@@ -20,11 +20,16 @@ public class StaxReader extends AbstractPullReader {
     private final XMLStreamReader in;
 
     public StaxReader(QNameMap qnameMap, XMLStreamReader in) {
+        this(qnameMap, in, new XmlFriendlyReplacer());
+    }
+
+    public StaxReader(QNameMap qnameMap, XMLStreamReader in, XmlFriendlyReplacer replacer) {
+        super(replacer);
         this.qnameMap = qnameMap;
         this.in = in;
         moveDown();
     }
-
+    
     protected int pullNextEvent() {
         try {
             switch(in.next()) {
@@ -69,7 +74,7 @@ public class StaxReader extends AbstractPullReader {
     }
 
     public String getAttributeName(int index) {
-        return in.getAttributeLocalName(index);
+        return unescapeXmlName(in.getAttributeLocalName(index));
     }
 
     public void appendErrors(ErrorWriter errorWriter) {

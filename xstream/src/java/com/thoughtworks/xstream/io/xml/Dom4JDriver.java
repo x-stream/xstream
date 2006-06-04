@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
-public class Dom4JDriver extends AbstractXmlFriendlyDriver {
+public class Dom4JDriver extends AbstractXmlDriver {
 
     private DocumentFactory documentFactory;
     private OutputFormat outputFormat;
@@ -60,7 +60,7 @@ public class Dom4JDriver extends AbstractXmlFriendlyDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(text);
-            return xmlFriendlyReader(new Dom4JReader(document));
+            return new Dom4JReader(document, xmlFriendlyReplacer());
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -70,7 +70,7 @@ public class Dom4JDriver extends AbstractXmlFriendlyDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(in);
-            return xmlFriendlyReader(new Dom4JReader(document));
+            return new Dom4JReader(document, xmlFriendlyReplacer());
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -83,8 +83,8 @@ public class Dom4JDriver extends AbstractXmlFriendlyDriver {
                 writer[0].close();
             }
         };
-        writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat));
-        return xmlFriendlyWriter(writer[0]);
+        writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat), xmlFriendlyReplacer());
+        return writer[0];
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
@@ -95,8 +95,8 @@ public class Dom4JDriver extends AbstractXmlFriendlyDriver {
                     writer[0].close();
                 }
             };
-            writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat));
-            return xmlFriendlyWriter(writer[0]);
+            writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat), xmlFriendlyReplacer());
+            return writer[0];
         } catch (IOException e) {
             throw new StreamException(e);
         }

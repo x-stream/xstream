@@ -9,22 +9,33 @@ import org.w3c.dom.Node;
 /**
  * @author Michael Kopp
  */
-public class DomWriter implements HierarchicalStreamWriter {
+public class DomWriter extends AbstractXmlWriter {
+    
     private final Document document;
     private Element current;
 
     public DomWriter(Document document) {
+        this(document, new XmlFriendlyReplacer());
+    }
+
+    public DomWriter(Element rootElement) {
+        this(rootElement, new XmlFriendlyReplacer());
+    }
+
+    public DomWriter(Document document, XmlFriendlyReplacer replacer) {
+        super(replacer);
         this.document = document;
         this.current = document.getDocumentElement();
     }
 
-    public DomWriter(Element rootElement) {
+    public DomWriter(Element rootElement, XmlFriendlyReplacer replacer) {
+        super(replacer);
         document = rootElement.getOwnerDocument();
         current = rootElement;
     }
-
+    
     public void startNode(String name) {
-        final Element child = document.createElement(name);
+        final Element child = document.createElement(escapeXmlName(name));
         if (current == null) {
             document.appendChild(child);
         } else {
@@ -34,7 +45,7 @@ public class DomWriter implements HierarchicalStreamWriter {
     }
 
     public void addAttribute(String name, String value) {
-        current.setAttribute(name, value);
+        current.setAttribute(escapeXmlName(name), value);
     }
 
     public void setValue(String text) {

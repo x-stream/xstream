@@ -16,7 +16,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
-public class XomDriver extends AbstractXmlFriendlyDriver {
+public class XomDriver extends AbstractXmlDriver {
 
     private final Builder builder;
 
@@ -44,7 +44,7 @@ public class XomDriver extends AbstractXmlFriendlyDriver {
     public HierarchicalStreamReader createReader(Reader text) {
         try {
             Document document = builder.build(text);
-            return xmlFriendlyReader(new XomReader(document));
+            return new XomReader(document, xmlFriendlyReplacer());
         } catch (ValidityException e) {
             throw new StreamException(e);
         } catch (ParsingException e) {
@@ -57,7 +57,7 @@ public class XomDriver extends AbstractXmlFriendlyDriver {
     public HierarchicalStreamReader createReader(InputStream in) {
         try {
             Document document = builder.build(in);
-            return xmlFriendlyReader(new XomReader(document));
+            return new XomReader(document, xmlFriendlyReplacer());
         } catch (ValidityException e) {
             throw new StreamException(e);
         } catch (ParsingException e) {
@@ -68,10 +68,10 @@ public class XomDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(final Writer out) {
-        return xmlFriendlyWriter(new PrettyPrintWriter(out));
+        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
-        return xmlFriendlyWriter(new PrettyPrintWriter(new OutputStreamWriter(out)));
+        return new PrettyPrintWriter(new OutputStreamWriter(out), xmlFriendlyReplacer());
     }
 }

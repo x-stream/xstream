@@ -14,8 +14,12 @@ public class XppDomReader extends AbstractDocumentReader {
         super(xpp3Dom);
     }
 
+    public XppDomReader(Xpp3Dom xpp3Dom, XmlFriendlyReplacer replacer) {
+        super(xpp3Dom, replacer);
+    }
+    
     public String getNodeName() {
-        return currentElement.getName();
+        return unescapeXmlName(currentElement.getName());
     }
 
     public String getValue() {
@@ -43,7 +47,7 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return currentElement.getAttributeNames()[index];
+        return unescapeXmlName(currentElement.getAttributeNames()[index]);
     }
 
     protected Object getParent() {

@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.StreamException;
  * @author James Strachan
  * @version $Revision$
  */
-public class StaxDriver extends AbstractXmlFriendlyDriver {
+public class StaxDriver extends AbstractXmlDriver {
 
     private static boolean libraryPresent;
 
@@ -55,7 +55,7 @@ public class StaxDriver extends AbstractXmlFriendlyDriver {
     public HierarchicalStreamReader createReader(Reader xml) {
         loadLibrary();
         try {
-            return xmlFriendlyReader(new StaxReader(qnameMap, createParser(xml)));
+            return new StaxReader(qnameMap, createParser(xml));
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -65,7 +65,7 @@ public class StaxDriver extends AbstractXmlFriendlyDriver {
     public HierarchicalStreamReader createReader(InputStream in) {
         loadLibrary();
         try {
-            return xmlFriendlyReader(new StaxReader(qnameMap, createParser(in)));
+            return new StaxReader(qnameMap, createParser(in));
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -87,7 +87,8 @@ public class StaxDriver extends AbstractXmlFriendlyDriver {
 
     public HierarchicalStreamWriter createWriter(Writer out) {
         try {
-            return xmlFriendlyWriter(new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace()));
+            return new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), 
+                    true, isRepairingNamespace(), xmlFriendlyReplacer());
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -96,7 +97,8 @@ public class StaxDriver extends AbstractXmlFriendlyDriver {
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
         try {
-            return xmlFriendlyWriter(new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), true, isRepairingNamespace()));
+            return new StaxWriter(qnameMap, getOutputFactory().createXMLStreamWriter(out), 
+                    true, isRepairingNamespace(), xmlFriendlyReplacer());
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -104,11 +106,11 @@ public class StaxDriver extends AbstractXmlFriendlyDriver {
     }
 
     public AbstractPullReader createStaxReader(XMLStreamReader in) {
-        return new StaxReader(qnameMap, in);
+        return new StaxReader(qnameMap, in, xmlFriendlyReplacer());
     }
 
     public StaxWriter createStaxWriter(XMLStreamWriter out, boolean writeStartEndDocument) throws XMLStreamException {
-        return new StaxWriter(qnameMap, out, writeStartEndDocument, repairingNamespace);
+        return new StaxWriter(qnameMap, out, writeStartEndDocument, repairingNamespace, xmlFriendlyReplacer());
     }
 
     public StaxWriter createStaxWriter(XMLStreamWriter out) throws XMLStreamException {

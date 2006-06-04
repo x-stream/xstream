@@ -15,7 +15,7 @@ import java.io.Writer;
  *
  * @author Joe Walnes
  */
-public class PrettyPrintWriter implements HierarchicalStreamWriter {
+public class PrettyPrintWriter extends AbstractXmlWriter {
 
     private final QuickWriter writer;
     private final FastStack elementStack = new FastStack(16);
@@ -36,10 +36,15 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     private static final char[] APOS = "&apos;".toCharArray();
     private static final char[] CLOSE = "</".toCharArray();
 
-    public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine) {
+    public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine, XmlFriendlyReplacer replacer) {
+        super(replacer);
         this.writer = new QuickWriter(writer);
         this.lineIndenter = lineIndenter;
         this.newLine = newLine;
+    }
+
+    public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine) {
+        this(writer, lineIndenter, newLine, new XmlFriendlyReplacer());
     }
 
     public PrettyPrintWriter(Writer writer, char[] lineIndenter) {
@@ -54,16 +59,22 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         this(writer, lineIndenter.toCharArray());
     }
 
+    public PrettyPrintWriter(Writer writer, XmlFriendlyReplacer replacer) {
+        this(writer, new char[]{' ', ' '}, "\n", replacer);
+    }
+    
     public PrettyPrintWriter(Writer writer) {
         this(writer, new char[]{' ', ' '});
     }
 
+    
     public void startNode(String name) {
+        String escapedName = escapeXmlName(name);
         tagIsEmpty = false;
         finishTag();
         writer.write('<');
-        writer.write(name);
-        elementStack.push(name);
+        writer.write(escapedName);
+        elementStack.push(escapedName);
         tagInProgress = true;
         depth++;
         readyForNewLine = true;
@@ -80,7 +91,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
     public void addAttribute(String key, String value) {
         writer.write(' ');
-        writer.write(key);
+        writer.write(escapeXmlName(key));
         writer.write('=');
         writer.write('\"');
         writeAttributeValue(writer, value);

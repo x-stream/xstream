@@ -5,22 +5,27 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
-public class XomWriter implements HierarchicalStreamWriter {
+public class XomWriter extends AbstractXmlWriter {
 
     private Element node;
 
     public XomWriter(Element parentElement) {
+        this(parentElement, new XmlFriendlyReplacer());
+    }
+    
+    public XomWriter(Element parentElement, XmlFriendlyReplacer replacer) {
+        super(replacer);
         this.node = parentElement;
     }
-
+    
     public void startNode(String name) {
-        Element newNode = new Element(name);
+        Element newNode = new Element(escapeXmlName(name));
         node.appendChild(newNode);
         node = newNode;
     }
 
     public void addAttribute(String name, String value) {
-        node.addAttribute(new Attribute(name, value));
+        node.addAttribute(new Attribute(escapeXmlName(name), value));
     }
 
     public void setValue(String text) {

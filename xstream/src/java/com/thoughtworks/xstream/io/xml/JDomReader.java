@@ -19,6 +19,14 @@ public class JDomReader extends AbstractDocumentReader {
         super(document.getRootElement());
     }
 
+    public JDomReader(Element root, XmlFriendlyReplacer replacer) {
+        super(root, replacer);
+    }
+
+    public JDomReader(Document document, XmlFriendlyReplacer replacer) {
+        super(document.getRootElement(), replacer);
+    }
+    
     protected void reassignCurrentElement(Object current) {
         currentElement = (Element) current;
     }
@@ -44,7 +52,7 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     public String getNodeName() {
-        return currentElement.getName();
+        return unescapeXmlName(currentElement.getName());
     }
 
     public String getValue() {
@@ -64,7 +72,8 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return ((Attribute) currentElement.getAttributes().get(index)).getQualifiedName();
+        return unescapeXmlName(((Attribute) currentElement.getAttributes().get(index)).getQualifiedName());
     }
+
 }
 

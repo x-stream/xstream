@@ -12,16 +12,21 @@ import java.util.List;
 /**
  * @author Laurent Bihanic
  */
-public class JDomWriter implements HierarchicalStreamWriter {
+public class JDomWriter extends AbstractXmlWriter {
 
     private List result = new LinkedList();
     private List elementStack = new LinkedList();
     private final JDOMFactory documentFactory;
 
-    public JDomWriter(Element container, JDOMFactory factory) {
+    public JDomWriter(Element container, JDOMFactory factory, XmlFriendlyReplacer replacer) {
+        super(replacer);
         elementStack.add(0, container);
         result.add(container);
         this.documentFactory = factory;
+    }
+
+    public JDomWriter(Element container, JDOMFactory factory) {
+        this(container, factory, new XmlFriendlyReplacer());
     }
 
     public JDomWriter(JDOMFactory documentFactory) {
@@ -37,7 +42,7 @@ public class JDomWriter implements HierarchicalStreamWriter {
     }
 
     public void startNode(String name) {
-        Element element = this.documentFactory.element(name);
+        Element element = this.documentFactory.element(escapeXmlName(name));
 
         Element parent = this.top();
         if (parent != null) {
@@ -55,7 +60,7 @@ public class JDomWriter implements HierarchicalStreamWriter {
 
     public void addAttribute(String key, String value) {
         top().setAttribute(
-                        this.documentFactory.attribute(key, value));
+                        this.documentFactory.attribute(escapeXmlName(key), value));
     }
 
     public void endNode() {

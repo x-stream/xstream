@@ -59,8 +59,7 @@ public class XStreamerTest extends AbstractAcceptanceTest {
         testCanConvertAnotherInstance();
     }
     
-    //FIXME the PrioritizedList$PrioritizedItem name is not converted
-    public void FIXMEtestCanSerializeSelfContained() throws ClassNotFoundException, ObjectStreamException {
+    public void testCanSerializeSelfContained() throws ClassNotFoundException, ObjectStreamException {
         final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
         xstream.alias("software", OpenSourceSoftware.class);
         String xml = new XStreamer().toXML(xstream, oos);

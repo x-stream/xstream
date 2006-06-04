@@ -1,23 +1,28 @@
 package com.thoughtworks.xstream.io.xml;
 
+import java.util.Iterator;
+
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.AttributeNameIterator;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-import java.util.Iterator;
-
-public abstract class AbstractDocumentReader implements HierarchicalStreamReader {
+public abstract class AbstractDocumentReader extends AbstractXmlReader {
 
     private FastStack pointers = new FastStack(16);
     private Object current;
 
     protected AbstractDocumentReader(Object rootElement) {
+        this(rootElement, new XmlFriendlyReplacer());
+    }
+
+    protected AbstractDocumentReader(Object rootElement, XmlFriendlyReplacer replacer) {
+        super(replacer);
         this.current = rootElement;
         pointers.push(new Pointer());
         reassignCurrentElement(current);
     }
-
+    
     protected abstract void reassignCurrentElement(Object current);
     protected abstract Object getParent();
     protected abstract Object getChild(int index);

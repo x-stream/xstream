@@ -1,10 +1,10 @@
 package com.thoughtworks.xstream.io.xml;
 
+import java.util.Iterator;
+
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.AttributeNameIterator;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-
-import java.util.Iterator;
 
 /**
  * Base class that contains common functionality across HierarchicalStreamReader implementations
@@ -13,7 +13,7 @@ import java.util.Iterator;
  * @author Joe Walnes
  * @author James Strachan
  */
-public abstract class AbstractPullReader implements HierarchicalStreamReader {
+public abstract class AbstractPullReader extends AbstractXmlReader {
 
     protected static final int START_NODE = 1;
     protected static final int END_NODE = 2;
@@ -31,6 +31,11 @@ public abstract class AbstractPullReader implements HierarchicalStreamReader {
         int type;
         String value;
     }
+    
+    protected AbstractPullReader(XmlFriendlyReplacer replacer) {
+        super(replacer);
+    }
+    
 
     /**
      * Pull the next event from the stream.
@@ -177,7 +182,7 @@ public abstract class AbstractPullReader implements HierarchicalStreamReader {
     }
 
     public String getNodeName() {
-        return (String) elementStack.peek();
+        return unescapeXmlName((String) elementStack.peek());
     }
 
     public HierarchicalStreamReader underlyingReader() {

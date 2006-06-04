@@ -10,7 +10,7 @@ import java.io.Writer;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-public class XppDriver extends AbstractXmlFriendlyDriver {
+public class XppDriver extends AbstractXmlDriver {
     
     private static boolean xppLibraryPresent;
 
@@ -24,7 +24,7 @@ public class XppDriver extends AbstractXmlFriendlyDriver {
 
     public HierarchicalStreamReader createReader(Reader xml) {
         loadLibrary();
-        return xmlFriendlyReader(new XppReader(xml));
+        return new XppReader(xml, xmlFriendlyReplacer());
     }
 
     public HierarchicalStreamReader createReader(InputStream in) {
@@ -44,7 +44,7 @@ public class XppDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return xmlFriendlyWriter(new PrettyPrintWriter(out));
+        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {

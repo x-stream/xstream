@@ -10,15 +10,23 @@ public class Dom4JReader extends AbstractDocumentReader {
     private Element currentElement;
 
     public Dom4JReader(Element rootElement) {
-        super(rootElement);
+        this(rootElement, new XmlFriendlyReplacer());
     }
 
     public Dom4JReader(Document document) {
         this(document.getRootElement());
     }
 
+    public Dom4JReader(Element rootElement, XmlFriendlyReplacer replacer) {
+        super(rootElement, replacer);
+    }
+
+    public Dom4JReader(Document document, XmlFriendlyReplacer replacer) {
+        this(document.getRootElement(), replacer);
+    }
+    
     public String getNodeName() {
-        return currentElement.getName();
+        return unescapeXmlName(currentElement.getName());
     }
 
     public String getValue() {
@@ -38,7 +46,7 @@ public class Dom4JReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return currentElement.attribute(index).getQualifiedName();
+        return unescapeXmlName(currentElement.attribute(index).getQualifiedName());
     }
 
     protected Object getParent() {

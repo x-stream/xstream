@@ -13,7 +13,8 @@ import javax.xml.stream.XMLStreamWriter;
  * @author James Strachan
  * @version $Revision$
  */
-public class StaxWriter implements HierarchicalStreamWriter {
+public class StaxWriter extends AbstractXmlWriter {
+    
     private final QNameMap qnameMap;
     private final XMLStreamWriter out;
     private final boolean writeEnclosingDocument;
@@ -34,6 +35,22 @@ public class StaxWriter implements HierarchicalStreamWriter {
      * @throws XMLStreamException if the events could not be written to the output
      */
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument, boolean namespaceRepairingMode) throws XMLStreamException {
+        this(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, new XmlFriendlyReplacer());
+    }
+
+    /**
+     * Allows a StaxWriter to be created for partial XML output
+     *
+     * @param qnameMap               is the mapper of Java class names to QNames
+     * @param out                    the stream to output to
+     * @param writeEnclosingDocument a flag to indicate whether or not the start/end document events should be written
+     * @param replacer              the xml-friendly replacer to escape Java names
+     * @throws XMLStreamException if the events could not be written to the output
+     */
+    public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, 
+            boolean writeEnclosingDocument, boolean namespaceRepairingMode,
+            XmlFriendlyReplacer replacer) throws XMLStreamException {
+        super(replacer);
         this.qnameMap = qnameMap;
         this.out = out;
         this.writeEnclosingDocument = writeEnclosingDocument;
@@ -42,7 +59,7 @@ public class StaxWriter implements HierarchicalStreamWriter {
             out.writeStartDocument();
         }
     }
-
+    
     public void flush() {
         try {
             out.close();
@@ -66,7 +83,7 @@ public class StaxWriter implements HierarchicalStreamWriter {
 
     public void addAttribute(String name, String value) {
         try {
-            out.writeAttribute(name, value);
+            out.writeAttribute(escapeXmlName(name), value);
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -97,7 +114,7 @@ public class StaxWriter implements HierarchicalStreamWriter {
 
     public void startNode(String name) {
         try {
-            QName qname = qnameMap.getQName(name);
+            QName qname = qnameMap.getQName(escapeXmlName(name));
             String prefix = qname.getPrefix();
             String uri = qname.getNamespaceURI();
 

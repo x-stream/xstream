@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
-public class DomDriver extends AbstractXmlFriendlyDriver {
+public class DomDriver extends AbstractXmlDriver {
     
     private final String encoding;
     private final DocumentBuilderFactory documentBuilderFactory;
@@ -52,7 +52,7 @@ public class DomDriver extends AbstractXmlFriendlyDriver {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             source.setEncoding(encoding);
             Document document = documentBuilder.parse(source);
-            return xmlFriendlyReader(new DomReader(document));
+            return new DomReader(document);
         } catch (FactoryConfigurationError e) {
             throw new StreamException(e);
         } catch (ParserConfigurationException e) {
@@ -65,7 +65,7 @@ public class DomDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return xmlFriendlyWriter(new PrettyPrintWriter(out));
+        return new PrettyPrintWriter(out);
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {

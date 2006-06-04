@@ -12,7 +12,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
 
-public class XppDomDriver extends AbstractXmlFriendlyDriver {
+public class XppDomDriver extends AbstractXmlDriver {
     
     public XppDomDriver() {
         super(new XmlFriendlyReplacer());
@@ -24,7 +24,7 @@ public class XppDomDriver extends AbstractXmlFriendlyDriver {
     
     public HierarchicalStreamReader createReader(Reader xml) {
         try {
-            return xmlFriendlyReader(new XppDomReader(Xpp3DomBuilder.build(xml)));
+            return new XppDomReader(Xpp3DomBuilder.build(xml), xmlFriendlyReplacer());
         } catch (Exception e) {
             throw new StreamException(e);
         }
@@ -35,7 +35,7 @@ public class XppDomDriver extends AbstractXmlFriendlyDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return xmlFriendlyWriter(new PrettyPrintWriter(out));
+        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
