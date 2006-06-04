@@ -1,11 +1,15 @@
 package com.thoughtworks.acceptance;
 
 import java.lang.reflect.Array;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
 import junit.framework.TestCase;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.binary.BinaryStreamWriter;
+import com.thoughtworks.xstream.io.binary.BinaryStreamReader;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
 public abstract class AbstractAcceptanceTest extends TestCase {
@@ -34,10 +38,26 @@ public abstract class AbstractAcceptanceTest extends TestCase {
     }
 
     protected Object assertBothWays(Object root, String xml) {
+
+        // First, serialize the object to XML and check it matches the expected XML.
         String resultXml = toXML(root);
         assertEquals(xml, resultXml);
+
+        // Now deserialize the XML back into the object and check it equals the original object.
         Object resultRoot = xstream.fromXML(resultXml);
         assertObjectsEqual(root, resultRoot);
+
+        // While we're at it, let's check the binary serialization works...
+
+        // Serialize as binary
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        xstream.marshal(root, new BinaryStreamWriter(outputStream));
+
+        // Deserialize the binary and check it equals the original object.
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+        Object binaryResult = xstream.unmarshal(new BinaryStreamReader(inputStream));
+        assertObjectsEqual(root, binaryResult);
+
         return resultRoot;
     }
 
