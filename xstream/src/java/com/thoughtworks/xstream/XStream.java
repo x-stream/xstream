@@ -812,7 +812,7 @@ public class XStream {
         if (classAliasingMapper == null) {
             throw new InitializationException("No "
                     + ClassAliasingMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         classAliasingMapper.addTypeAlias(name, type);
     }
@@ -833,7 +833,7 @@ public class XStream {
         if (fieldAliasingMapper == null) {
             throw new InitializationException("No "
                     + FieldAliasingMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         fieldAliasingMapper.addFieldAlias(alias, type, fieldName);
     }
@@ -842,7 +842,7 @@ public class XStream {
         if (attributeAliasingMapper == null) {
             throw new InitializationException("No "
                     + AttributeAliasingMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         attributeAliasingMapper.addAliasFor(attributeName, alias);
     }
@@ -856,7 +856,7 @@ public class XStream {
      */
     public void useAttributeFor(String fieldName, Class type) {
         if (attributeMapper == null) {
-            throw new InitializationException("No " + AttributeMapper.class.getName() + "available");
+            throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
         }
         attributeMapper.addAttributeFor(fieldName, type);
     }
@@ -869,7 +869,7 @@ public class XStream {
      */
     public void useAttributeFor(Class type) {
         if (attributeMapper == null) {
-            throw new InitializationException("No " + AttributeMapper.class.getName() + "available");
+            throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
         }
         attributeMapper.addAttributeFor(type);
     }
@@ -886,7 +886,7 @@ public class XStream {
         if (defaultImplementationsMapper == null) {
             throw new InitializationException("No "
                     + DefaultImplementationsMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         defaultImplementationsMapper.addDefaultImplementation(defaultImplementation, ofType);
     }
@@ -899,7 +899,7 @@ public class XStream {
         if (immutableTypesMapper == null) {
             throw new InitializationException("No "
                     + ImmutableTypesMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         immutableTypesMapper.addImmutableType(type);
     }
@@ -984,7 +984,7 @@ public class XStream {
         if (implicitCollectionMapper == null) {
             throw new InitializationException("No "
                     + ImplicitCollectionMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         implicitCollectionMapper.add(ownerType, fieldName, null, Object.class);
     }
@@ -1001,7 +1001,7 @@ public class XStream {
         if (implicitCollectionMapper == null) {
             throw new InitializationException("No "
                     + ImplicitCollectionMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         implicitCollectionMapper.add(ownerType, fieldName, null, itemType);
     }
@@ -1021,7 +1021,7 @@ public class XStream {
         if (implicitCollectionMapper == null) {
             throw new InitializationException("No "
                     + ImplicitCollectionMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         implicitCollectionMapper.add(ownerType, fieldName, itemFieldName, itemType);
     }
@@ -1219,7 +1219,7 @@ public class XStream {
         if (fieldAliasingMapper == null) {
             throw new InitializationException("No "
                     + FieldAliasingMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         fieldAliasingMapper.omitField(type, fieldName);
     }
