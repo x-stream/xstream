@@ -795,7 +795,7 @@ public class XStream {
         if (classAliasingMapper == null) {
             throw new InitializationException("No "
                     + ClassAliasingMapper.class.getName()
-                    + "available");
+                    + " available");
         }
         classAliasingMapper.addClassAlias(name, type);
     }
