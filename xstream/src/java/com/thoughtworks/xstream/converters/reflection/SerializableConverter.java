@@ -1,19 +1,8 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
-import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.mapper.Mapper;
-
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
 import java.io.ObjectInputValidation;
-import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
@@ -24,6 +13,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
+import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
@@ -185,8 +183,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
                         writtenClassWrapper[0] = true;
                         writer.startNode(mapper.serializedClass(currentType[0]));
-                        ObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
+                        CustomObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
                         serializationMethodInvoker.callWriteObject(currentType[0], source, objectOutputStream);
+                        objectOutputStream.popCallback();
                         writer.endNode();
                     } else if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
                         // Special case for objects that have readObject(), but not writeObject().
@@ -361,8 +360,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
             } else {
                 currentType[0] = mapper.defaultImplementationOf(mapper.realClass(nodeName));
                 if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
-                    ObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
+                    CustomObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
                     serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);
+                    objectInputStream.popCallback();
                 } else {
                     try {
                         callback.defaultReadObject();

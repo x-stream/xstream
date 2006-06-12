@@ -67,8 +67,9 @@ public class ExternalizableConverter implements Converter {
                     throw new UnsupportedOperationException("Objects are not allowed to call ObjecOutput.close() from writeExternal()");
                 }
             };
-            ObjectOutput objectOutput = CustomObjectOutputStream.getInstance(context, callback);
+            CustomObjectOutputStream objectOutput = CustomObjectOutputStream.getInstance(context, callback);
             externalizable.writeExternal(objectOutput);
+            objectOutput.popCallback();
         } catch (IOException e) {
             throw new ConversionException("Cannot serialize " + source.getClass().getName() + " using Externalization", e);
         }
@@ -102,8 +103,9 @@ public class ExternalizableConverter implements Converter {
                     throw new UnsupportedOperationException("Objects are not allowed to call ObjectInput.close() from readExternal()");
                 }
             };
-            ObjectInput objectInput = CustomObjectInputStream.getInstance(context, callback);
+            CustomObjectInputStream objectInput = CustomObjectInputStream.getInstance(context, callback);
             externalizable.readExternal(objectInput);
+            objectInput.popCallback();
             return externalizable;
         } catch (InstantiationException e) {
             throw new ConversionException("Cannot construct " + type.getClass(), e);

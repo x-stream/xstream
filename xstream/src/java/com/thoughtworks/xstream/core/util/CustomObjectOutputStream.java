@@ -1,16 +1,16 @@
 package com.thoughtworks.xstream.core.util;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.DataHolder;
-
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.Map;
 
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.DataHolder;
+
 public class CustomObjectOutputStream extends ObjectOutputStream {
 
-    private StreamCallback callback;
+    private FastStack callbacks = new FastStack(1);
     private FastStack customFields = new FastStack(1);
 
     private static final String DATA_HOLDER_KEY = CustomObjectOutputStream.class.getName();
@@ -22,7 +22,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
                 result = new CustomObjectOutputStream(callback);
                 whereFrom.put(DATA_HOLDER_KEY, result);
             } else {
-                result.setCallback(callback);
+                result.pushCallback(callback);
             }
             return result;
         } catch (IOException e) {
@@ -45,86 +45,94 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
      * @see #getInstance(com.thoughtworks.xstream.converters.DataHolder, com.thoughtworks.xstream.core.util.CustomObjectOutputStream.StreamCallback)
      */
     public CustomObjectOutputStream(StreamCallback callback) throws IOException, SecurityException {
-        this.callback = callback;
+        this.callbacks.push(callback);
     }
 
     /**
      * Allows the CustomObjectOutputStream (which is expensive to create) to be reused.
      */
-    public void setCallback(StreamCallback callback) {
-        this.callback = callback;
+    public void pushCallback(StreamCallback callback) {
+        this.callbacks.push(callback);
     }
-
+    
+    public StreamCallback popCallback(){
+        return (StreamCallback) this.callbacks.pop();
+    }
+    
+    public StreamCallback peekCallback(){
+        return (StreamCallback) this.callbacks.peek();
+    }
+    
     /*** Methods to delegate to callback ***/
 
     public void defaultWriteObject() throws IOException {
-        callback.defaultWriteObject();
+        peekCallback().defaultWriteObject();
     }
 
     protected void writeObjectOverride(Object obj) throws IOException {
-        callback.writeToStream(obj);
+        peekCallback().writeToStream(obj);
     }
 
     public void writeBoolean(boolean val) throws IOException {
-        callback.writeToStream(val ? Boolean.TRUE : Boolean.FALSE); // JDK 1.3 friendly
+        peekCallback().writeToStream(val ? Boolean.TRUE : Boolean.FALSE); // JDK 1.3 friendly
     }
 
     public void writeByte(int val) throws IOException {
-        callback.writeToStream(new Byte((byte) val));
+        peekCallback().writeToStream(new Byte((byte) val));
     }
 
     public void writeInt(int val) throws IOException {
-        callback.writeToStream(new Integer(val));
+        peekCallback().writeToStream(new Integer(val));
     }
 
     public void writeChar(int val) throws IOException {
-        callback.writeToStream(new Character((char)val));
+        peekCallback().writeToStream(new Character((char)val));
     }
 
     public void writeDouble(double val) throws IOException {
-        callback.writeToStream(new Double(val));
+        peekCallback().writeToStream(new Double(val));
     }
 
     public void writeFloat(float val) throws IOException {
-        callback.writeToStream(new Float(val));
+        peekCallback().writeToStream(new Float(val));
     }
 
     public void writeLong(long val) throws IOException {
-        callback.writeToStream(new Long(val));
+        peekCallback().writeToStream(new Long(val));
     }
 
     public void writeShort(int val) throws IOException {
-        callback.writeToStream(new Short((short) val));
+        peekCallback().writeToStream(new Short((short) val));
     }
 
     public void write(byte[] buf) throws IOException {
-        callback.writeToStream(buf);
+        peekCallback().writeToStream(buf);
     }
 
     public void writeChars(String str) throws IOException {
-        callback.writeToStream(str.toCharArray());
+        peekCallback().writeToStream(str.toCharArray());
     }
 
     public void writeUTF(String str) throws IOException {
-        callback.writeToStream(str);
+        peekCallback().writeToStream(str);
     }
 
     public void write(int val) throws IOException {
-        callback.writeToStream(new Byte((byte) val));
+        peekCallback().writeToStream(new Byte((byte) val));
     }
 
     public void write(byte[] buf, int off, int len) throws IOException {
         byte[] b = new byte[len];
         System.arraycopy(buf, off, b, 0, len);
-        callback.writeToStream(b);
+        peekCallback().writeToStream(b);
     }
 
     public void flush() throws IOException {
-        callback.flush();
+        peekCallback().flush();
     }
 
     public void close() throws IOException {
-        callback.close();
+        peekCallback().close();
     }
 
     public PutField putFields() {
@@ -135,7 +143,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     public void writeFields() throws IOException {
         CustomPutField customPutField = (CustomPutField) customFields.pop();
-        callback.writeFieldsToStream(customPutField.asMap());
+        peekCallback().writeFieldsToStream(customPutField.asMap());
     }
 
     private class CustomPutField extends PutField {
@@ -147,7 +155,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
         }
 
         public void write(ObjectOutput out) throws IOException {
-            callback.writeToStream(asMap());
+            peekCallback().writeToStream(asMap());
         }
 
         public void put(String name, Object val) {
