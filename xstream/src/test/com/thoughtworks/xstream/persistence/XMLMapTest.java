@@ -1,10 +1,12 @@
-package com.thoughtworks.xstream.util;
+package com.thoughtworks.xstream.persistence;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import com.thoughtworks.xstream.persistence.XMLMap;
 
 import junit.framework.TestCase;
 

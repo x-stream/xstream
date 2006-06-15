@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.util;
+package com.thoughtworks.xstream.persistence;
 
 import java.io.File;
 
