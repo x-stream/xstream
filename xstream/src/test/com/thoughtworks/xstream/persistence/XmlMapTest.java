@@ -6,11 +6,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.thoughtworks.xstream.persistence.XMLMap;
+import com.thoughtworks.xstream.persistence.XmlMap;
 
 import junit.framework.TestCase;
 
-public class XMLMapTest extends TestCase {
+public class XmlMapTest extends TestCase {
 
 	private final File baseDir = new File("tmp-xstream-test");
 
@@ -43,14 +43,14 @@ public class XMLMapTest extends TestCase {
 	}
 
 	public void testWritesASingleFile() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		File file = new File(baseDir, "guilherme.xml");
 		assertTrue(file.exists());
 	}
 
 	public void testWritesTwoFiles() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		assertTrue(new File(baseDir, "guilherme.xml").exists());
@@ -58,7 +58,7 @@ public class XMLMapTest extends TestCase {
 	}
 
 	public void testRemovesAWrittenFile() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		assertTrue(new File(baseDir, "guilherme.xml").exists());
 		String aCuteString = (String) map.remove("guilherme");
@@ -67,48 +67,48 @@ public class XMLMapTest extends TestCase {
 	}
 
 	public void testRemovesAnInvalidFile() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		String aCuteString = (String) map.remove("guilherme");
 		assertNull(aCuteString);
 	}
 
 	public void testHasZeroLength() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		assertEquals(map.size(), 0);
 	}
 
 	public void testHasOneItem() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		assertEquals(map.size(), 1);
 	}
 
 	public void testHasTwoItems() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		assertEquals(map.size(), 2);
 	}
 
 	public void testIsNotEmpty() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		assertFalse("Map should not be empty", map.isEmpty());
 	}
 
 	public void testDoesNotContainKey() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		assertFalse(map.containsKey("guilherme"));
 	}
 
 	public void testContainsKey() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		assertTrue(map.containsKey("guilherme"));
 	}
 
 	public void testGetsAFile() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		assertTrue(new File(baseDir, "guilherme.xml").exists());
 		String aCuteString = (String) map.get("guilherme");
@@ -116,13 +116,13 @@ public class XMLMapTest extends TestCase {
 	}
 
 	public void testGetsAnInvalidFile() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		String aCuteString = (String) map.get("guilherme");
 		assertNull(aCuteString);
 	}
 
 	public void testRewritesASingleFile() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		File file = new File(baseDir, "guilherme.xml");
 		assertTrue(file.exists());
@@ -131,12 +131,12 @@ public class XMLMapTest extends TestCase {
 	}
 
 	public void testIsEmpty() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		assertTrue("Map should be empty", map.isEmpty());
 	}
 
 	public void testClearsItsFiles() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		map.clear();
@@ -147,20 +147,20 @@ public class XMLMapTest extends TestCase {
 		Map original = new HashMap();
 		original.put("guilherme", "aCuteString");
 		original.put("silveira", "anotherCuteString");
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.putAll(original);
 		assertEquals(2, map.size());
 	}
 
 	public void testContainsASpecificValue() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		String value = "aCuteString";
 		map.put("guilherme", value);
 		assertTrue(map.containsValue(value));
 	}
 
 	public void testDoesNotContainASpecificValue() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		assertFalse(map.containsValue("zzzz"));
 	}
 
@@ -169,7 +169,7 @@ public class XMLMapTest extends TestCase {
 		original.put("guilherme", "aCuteString");
 		original.put("silveira", "anotherCuteString");
 		Set originalSet = original.entrySet();
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		Set set = map.entrySet();
@@ -178,10 +178,10 @@ public class XMLMapTest extends TestCase {
 
 	// actually an acceptance test?
 	public void testIteratesOverEntryAndChecksItsKeyWithAnotherInstance() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
-		XMLMap built = new XMLMap(baseDir);
+		XmlMap built = new XmlMap(baseDir);
 		for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
 			Map.Entry entry = (Map.Entry) iter.next();
 			assertTrue(built.containsKey(entry.getKey()));
@@ -190,10 +190,10 @@ public class XMLMapTest extends TestCase {
 
 	// actually an acceptance test?
 	public void testIteratesOverEntryAndChecksItsValueWithAnotherInstance() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
-		XMLMap built = new XMLMap(baseDir);
+		XmlMap built = new XmlMap(baseDir);
 		for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
 			Map.Entry entry = (Map.Entry) iter.next();
 			assertTrue(built.containsValue(entry.getValue()));
@@ -201,7 +201,7 @@ public class XMLMapTest extends TestCase {
 	}
 
 	public void testIteratesOverEntrySetContainingTwoItems() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		Map built = new HashMap();
@@ -213,7 +213,7 @@ public class XMLMapTest extends TestCase {
 	}
 
 	public void testRemovesAnItemThroughIteration() {
-		XMLMap map = new XMLMap(baseDir);
+		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {

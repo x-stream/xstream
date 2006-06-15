@@ -26,7 +26,7 @@ import com.thoughtworks.xstream.io.StreamException;
  */
 // TODO implement a cached version
 // TODO overwrite the keySet method for better performance
-public class XMLMap extends AbstractMap {
+public class XmlMap extends AbstractMap {
 
 	private final File baseDirectory;
 
@@ -36,15 +36,15 @@ public class XMLMap extends AbstractMap {
 
 	private final FilenameFilter filter;
 
-	public XMLMap(File baseDirectory) {
+	public XmlMap(File baseDirectory) {
 		this(baseDirectory, new XStream());
 	}
 
-	public XMLMap(File baseDirectory, XStream xstream) {
+	public XmlMap(File baseDirectory, XStream xstream) {
 		this(baseDirectory, xstream, new KeyNamingStrategy());
 	}
 
-	public XMLMap(File baseDirectory, XStream xstream,
+	public XmlMap(File baseDirectory, XStream xstream,
 			final NamingStrategy namingStrategy) {
 		this.baseDirectory = baseDirectory;
 		this.xstream = xstream;
@@ -132,26 +132,26 @@ public class XMLMap extends AbstractMap {
 	}
 
 	public Set entrySet() {
-		return new XMLMapEntries();
+		return new XmlMapEntries();
 	}
 
-	class XMLMapEntries extends AbstractSet {
+	class XmlMapEntries extends AbstractSet {
 
 		public int size() {
-			return XMLMap.this.size();
+			return XmlMap.this.size();
 		}
 
 		public boolean isEmpty() {
-			return XMLMap.this.isEmpty();
+			return XmlMap.this.isEmpty();
 		}
 
 		public Iterator iterator() {
-			return new XMLMapEntriesIterator();
+			return new XmlMapEntriesIterator();
 		}
 
 	}
 
-	class XMLMapEntriesIterator implements Iterator {
+	class XmlMapEntriesIterator implements Iterator {
 
 		private File[] files = baseDirectory.listFiles(filter);
 
@@ -187,7 +187,7 @@ public class XMLMap extends AbstractMap {
 				}
 
 				public Object setValue(Object value) {
-					return XMLMap.this.put(key, value);
+					return XmlMap.this.put(key, value);
 				}
 
 				public boolean equals(Object obj) {
