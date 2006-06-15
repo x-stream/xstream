@@ -14,6 +14,9 @@ public class XMLMapTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		if (baseDir.exists()) {
+			clear(baseDir);
+		}
 		baseDir.mkdirs();
 	}
 
