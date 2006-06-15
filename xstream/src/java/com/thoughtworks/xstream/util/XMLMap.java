@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -62,10 +65,17 @@ public class XMLMap extends AbstractMap {
 
 	private Object readFile(File file) {
 		try {
-			return this.xstream.fromXML(new FileInputStream(file));
+			InputStream is = new FileInputStream(file);
+			try {
+				return this.xstream.fromXML(is);
+			} finally {
+				is.close();
+			}
 		} catch (FileNotFoundException e) {
 			// not found... file.exists might generate a sync problem
 			return null;
+		} catch (IOException e) {
+			throw new StreamException(e);
 		}
 	}
 
@@ -92,8 +102,13 @@ public class XMLMap extends AbstractMap {
 
 	private void writeFile(File file, Object value) {
 		try {
-			this.xstream.toXML(value, new FileOutputStream(file));
-		} catch (FileNotFoundException e) {
+			OutputStream os = new FileOutputStream(file);
+			try {
+				this.xstream.toXML(value, os);
+			} finally {
+				os.close();
+			}
+		} catch (IOException e) {
 			throw new StreamException(e);
 		}
 	}
