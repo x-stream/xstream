@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -69,6 +70,10 @@ public class DomDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
-        return createWriter(new OutputStreamWriter(out));
+        try {
+			return createWriter(new OutputStreamWriter(out, this.encoding));
+		} catch (UnsupportedEncodingException e) {
+			throw new StreamException(e);
+		}
     }
 }
