@@ -4,7 +4,9 @@ import java.io.File;
 
 /**
  * The default naming strategy is based on the key's toString method and escapes
- * non digit, non a-z, A-Z characters.
+ * non digit, non a-z, A-Z characters. In order to change the
+ * escaping/unescaping algorithm, simply extend this class and rewrite its
+ * getName/extractKey methods.
  * 
  * @author Guilherme Silveira
  */
@@ -15,11 +17,19 @@ public class KeyNamingStrategy implements NamingStrategy {
 		return name.endsWith(".xml");
 	}
 
+	/**
+	 * Given a filename, the unescape method returns the key which originated
+	 * it.
+	 * 
+	 * @param name
+	 *            the filename
+	 * @return the original key
+	 */
 	public String extractKey(String name) {
-		return reload(name.substring(0, name.length() - 4));
+		return unescape(name.substring(0, name.length() - 4));
 	}
 
-	private String reload(String name) {
+	protected String unescape(String name) {
 		StringBuffer buffer = new StringBuffer();
 		int currentValue = -1;
 		// do we have a regex master to do it?
@@ -45,6 +55,13 @@ public class KeyNamingStrategy implements NamingStrategy {
 		return buffer.toString();
 	}
 
+	/**
+	 * Given a key, the escape method returns the filename which shall be used.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the desired and escaped filename
+	 */
 	public String getName(Object key) {
 		return escape(key.toString()) + ".xml";
 	}
