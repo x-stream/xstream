@@ -176,7 +176,7 @@ public class XmlMap extends AbstractMap {
 
 				private File file = current = files[++position];
 
-				private String key = namingStrategy.extractKey(file);
+				private String key = namingStrategy.extractKey(file.getName());
 
 				public Object getKey() {
 					return key;
