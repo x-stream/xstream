@@ -74,20 +74,20 @@ public class XmlMapTest extends TestCase {
 
 	public void testHasZeroLength() {
 		XmlMap map = new XmlMap(baseDir);
-		assertEquals(map.size(), 0);
+		assertEquals(0, map.size());
 	}
 
 	public void testHasOneItem() {
 		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
-		assertEquals(map.size(), 1);
+		assertEquals(1, map.size());
 	}
 
 	public void testHasTwoItems() {
 		XmlMap map = new XmlMap(baseDir);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
-		assertEquals(map.size(), 2);
+		assertEquals(2, map.size());
 	}
 
 	public void testIsNotEmpty() {
@@ -218,7 +218,7 @@ public class XmlMapTest extends TestCase {
 		map.put("silveira", "anotherCuteString");
 		for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
 			Map.Entry entry = (Map.Entry) iter.next();
-			if(entry.getKey().equals("guilherme")) {
+			if (entry.getKey().equals("guilherme")) {
 				iter.remove();
 			}
 		}
