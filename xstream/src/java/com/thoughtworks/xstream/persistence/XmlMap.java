@@ -95,9 +95,10 @@ public class XmlMap extends AbstractMap {
 	}
 
 	public Object put(Object key, Object value) {
+		Object oldValue = get(key); 
 		String filename = namingStrategy.getName(key);
 		writeFile(new File(baseDirectory, filename), value);
-		return value;
+		return oldValue;
 	}
 
 	private void writeFile(File file, Object value) {
@@ -122,13 +123,6 @@ public class XmlMap extends AbstractMap {
 			file.delete();
 		}
 		return value;
-	}
-
-	public void putAll(Map t) {
-		for (Iterator it = t.keySet().iterator(); it.hasNext();) {
-			Object key = (Object) it.next();
-			put(key, t.get(key));
-		}
 	}
 
 	public Set entrySet() {

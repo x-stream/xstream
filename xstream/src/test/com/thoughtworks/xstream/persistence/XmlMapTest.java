@@ -225,4 +225,17 @@ public class XmlMapTest extends TestCase {
 		assertFalse(map.containsKey("guilherme"));
 	}
 
+	public void testRewritesAFile() {
+		XmlMap map = new XmlMap(baseDir);
+		map.put("guilherme", "aCuteString");
+		map.put("guilherme", "anotherCuteString");
+		assertEquals("anotherCuteString", map.get("guilherme"));
+	}
+
+	public void testPutReturnsTheOldValueWhenRewritingAFile() {
+		XmlMap map = new XmlMap(baseDir);
+		map.put("guilherme", "aCuteString");
+		assertEquals("aCuteString", map.put("guilherme", "anotherCuteString"));
+	}
+
 }
