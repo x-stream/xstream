@@ -17,11 +17,15 @@ public class XomWriter extends AbstractXmlWriter {
         super(replacer);
         this.node = parentElement;
     }
-    
+
     public void startNode(String name) {
         Element newNode = new Element(escapeXmlName(name));
         node.appendChild(newNode);
         node = newNode;
+    }
+
+    public void startNode(String name, Class clazz) {
+        startNode(name);
     }
 
     public void addAttribute(String name, String value) {

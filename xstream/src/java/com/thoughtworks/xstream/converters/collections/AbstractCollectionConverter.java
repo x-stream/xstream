@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
@@ -36,14 +37,18 @@ public abstract class AbstractCollectionConverter implements Converter {
 
     public abstract Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context);
 
+
+
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         // PUBLISHED API METHOD! If changing signature, ensure backwards compatability.
         if (item == null) {
             // todo: this is duplicated in TreeMarshaller.start()
-            writer.startNode(mapper().serializedClass(null));
+            String name = mapper().serializedClass(null);
+            writer.startNode(name);
             writer.endNode();
         } else {
-            writer.startNode(mapper().serializedClass(item.getClass()));
+            String name = mapper().serializedClass(item.getClass());
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, item.getClass());
             context.convertAnother(item);
             writer.endNode();
         }

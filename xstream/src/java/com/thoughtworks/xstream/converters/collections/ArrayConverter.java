@@ -33,6 +33,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
             Object item = Array.get(source, i);
             writeItem(item, context, writer);
         }
+
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {

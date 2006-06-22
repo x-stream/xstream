@@ -22,7 +22,12 @@ public class PathTrackingWriter extends WriterWrapper {
 
     public void startNode(String name) {
         pathTracker.pushElement(name);
-        super.startNode(name);
+        super.startNode(name); 
+    }
+
+    public void startNode(String name, Class clazz) {
+        pathTracker.pushElement(name);
+        super.startNode(name, clazz);
     }
 
     public void endNode() {

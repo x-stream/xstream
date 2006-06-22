@@ -33,7 +33,7 @@ public class DomWriter extends AbstractXmlWriter {
         document = rootElement.getOwnerDocument();
         current = rootElement;
     }
-    
+
     public void startNode(String name) {
         final Element child = document.createElement(escapeXmlName(name));
         if (current == null) {
@@ -42,6 +42,10 @@ public class DomWriter extends AbstractXmlWriter {
             current.appendChild(child);
         }
         current = child;
+    }
+
+    public void startNode(String name, Class clazz) {
+        startNode(name);
     }
 
     public void addAttribute(String name, String value) {

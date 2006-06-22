@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
 
 /**
  * Abstract base implementation of HierarchicalStreamWriter that provides common functionality
@@ -8,7 +9,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author Mauro Talevi
  */
-public abstract class AbstractXmlWriter implements HierarchicalStreamWriter {
+public abstract class AbstractXmlWriter implements ExtendedHierarchicalStreamWriter {
 
     private XmlFriendlyReplacer replacer;
 
@@ -29,5 +30,5 @@ public abstract class AbstractXmlWriter implements HierarchicalStreamWriter {
     protected String escapeXmlName(String name) {
         return replacer.escapeName(name);
     }
-    
+
 }

@@ -8,14 +8,13 @@ import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.NotActiveException;
-import java.io.ObjectInput;
 import java.io.ObjectInputValidation;
-import java.io.ObjectOutput;
 import java.util.Map;
 
 /**
@@ -45,7 +44,7 @@ public class ExternalizableConverter implements Converter {
                         writer.startNode("null");
                         writer.endNode();
                     } else {
-                        writer.startNode(mapper.serializedClass(object.getClass()));
+                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(object.getClass()), object.getClass());
                         context.convertAnother(object);
                         writer.endNode();
                     }

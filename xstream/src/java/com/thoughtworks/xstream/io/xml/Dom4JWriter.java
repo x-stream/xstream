@@ -36,7 +36,7 @@ public class Dom4JWriter extends AbstractXmlWriter {
             throw new StreamException(e);
         }
     }
-    
+
     public void startNode(String name) {
         if (elementStack.size() > 0) {
             try {
@@ -48,6 +48,10 @@ public class Dom4JWriter extends AbstractXmlWriter {
         }
         elementStack.push(escapeXmlName(name));
         children = false;
+    }
+
+    public void startNode(String name, Class clazz) {
+        startNode(name);
     }
 
     public void setValue(String text) {

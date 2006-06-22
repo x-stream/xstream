@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
@@ -84,7 +85,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     writer.startNode(ELEMENT_NULL);
                     writer.endNode();
                 } else {
-                    writer.startNode(mapper.serializedClass(object.getClass()));
+                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(object.getClass()), object.getClass());
                     context.convertAnother(object);
                     writer.endNode();
                 }

@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.Iterator;
@@ -68,7 +69,7 @@ public class TreeMarshaller implements MarshallingContext {
             writer.startNode(mapper.serializedClass(null));
             writer.endNode();
         } else {
-            writer.startNode(mapper.serializedClass(item.getClass()));
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(item.getClass()), item.getClass());
             convertAnother(item);
             writer.endNode();
         }

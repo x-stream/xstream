@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
@@ -60,8 +61,7 @@ public class JavaBeanConverter implements Converter {
             }
 
             private void writeField(String propertyName, Class fieldType, Object newObj) {
-                writer.startNode(classMapper.serializedMember(source.getClass(), propertyName));
-
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, classMapper.serializedMember(source.getClass(), propertyName), fieldType);
                 Class actualType = newObj.getClass();
 
                 Class defaultType = classMapper.defaultImplementationOf(fieldType);

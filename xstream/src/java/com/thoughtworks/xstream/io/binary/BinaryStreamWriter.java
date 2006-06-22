@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.io.binary;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 
-public class BinaryStreamWriter implements HierarchicalStreamWriter {
+public class BinaryStreamWriter implements ExtendedHierarchicalStreamWriter {
 
     private final IdRegistry idRegistry = new IdRegistry();
     private final DataOutputStream out;
@@ -21,6 +22,10 @@ public class BinaryStreamWriter implements HierarchicalStreamWriter {
 
     public void startNode(String name) {
         write(new Token.StartNode(idRegistry.getId(name)));
+    }
+
+    public void startNode(String name, Class clazz) {
+        startNode(name);
     }
 
     public void addAttribute(String name, String value) {

@@ -5,7 +5,7 @@ package com.thoughtworks.xstream.io;
  *
  * @author Joe Walnes
  */
-public abstract class WriterWrapper implements HierarchicalStreamWriter {
+public abstract class WriterWrapper implements ExtendedHierarchicalStreamWriter {
 
     protected HierarchicalStreamWriter wrapped;
 
@@ -15,6 +15,11 @@ public abstract class WriterWrapper implements HierarchicalStreamWriter {
 
     public void startNode(String name) {
         wrapped.startNode(name);
+    }
+
+    public void startNode(String name, Class clazz) {
+
+        ((ExtendedHierarchicalStreamWriter) wrapped).startNode(name, clazz);
     }
 
     public void endNode() {

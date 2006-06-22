@@ -65,6 +65,16 @@ public class StatefulWriter extends WriterWrapper {
     }
 
     public void startNode(final String name) {
+        startNodeCommon();
+        super.startNode(name);
+    }
+
+    public void startNode(final String name, final Class clazz) {
+        startNodeCommon();
+        super.startNode(name, clazz);
+    }
+
+    private void startNodeCommon() {
         checkClosed();
         if (state == STATE_VALUE) {
             // legal XML, but not in XStream ... ?
@@ -73,7 +83,6 @@ public class StatefulWriter extends WriterWrapper {
         state = STATE_NODE_START;
         ++balance;
         attributes.push(new HashSet());
-        super.startNode(name);
     }
 
     public void addAttribute(String name, String value) {

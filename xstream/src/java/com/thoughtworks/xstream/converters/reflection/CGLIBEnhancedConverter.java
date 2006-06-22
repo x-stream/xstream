@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.CGLIBMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
@@ -62,7 +63,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         Class type = source.getClass();
         boolean hasFactory = Factory.class.isAssignableFrom(type);
-        writer.startNode("type");
+        ExtendedHierarchicalStreamWriterHelper.startNode(writer, "type", type);
         context.convertAnother(type.getSuperclass());
         writer.endNode();
         writer.startNode("interfaces");
@@ -71,7 +72,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             if (interfaces[i] == Factory.class) {
                 continue;
             }
-            writer.startNode(mapper.serializedClass(interfaces[i].getClass()));
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(interfaces[i].getClass()), interfaces[i].getClass());
             context.convertAnother(interfaces[i]);
             writer.endNode();
         }
@@ -84,15 +85,15 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             throw new ConversionException("Cannot handle CGLIB enhanced proxies with multiple callbacks");
         }
         boolean isInterceptor = MethodInterceptor.class.isAssignableFrom(callbacks[0].getClass());
-        
-        writer.startNode(mapper.serializedClass(callbacks[0].getClass()));
+
+        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(callbacks[0].getClass()), callbacks[0].getClass());
         context.convertAnother(callbacks[0]);
         writer.endNode();
         try {
             final Field field = type.getDeclaredField("serialVersionUID");
             field.setAccessible(true);
             long serialVersionUID = field.getLong(null);
-            writer.startNode("serialVersionUID");
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, "serialVersionUID", String.class);
             writer.setValue(String.valueOf(serialVersionUID));
             writer.endNode();
         } catch (NoSuchFieldException e) {

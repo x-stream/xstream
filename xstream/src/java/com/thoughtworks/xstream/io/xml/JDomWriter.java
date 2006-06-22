@@ -54,6 +54,10 @@ public class JDomWriter extends AbstractXmlWriter {
         elementStack.add(0, element);
     }
 
+    public void startNode(String name, Class clazz) {
+        startNode(name);
+    }
+
     public void setValue(String text) {
         top().addContent(this.documentFactory.text(text));
     }

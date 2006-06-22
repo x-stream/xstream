@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Field;
@@ -87,7 +88,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                 if (!mapper.shouldSerializeMember(definedIn, aliasName)) {
                     return;
                 }
-                writer.startNode(mapper.serializedMember(definedIn, aliasName));
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(definedIn, aliasName), fieldType); 
 
                 Class actualType = newObj.getClass();
 

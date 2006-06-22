@@ -1105,7 +1105,7 @@ public class XStream {
     public ObjectOutputStream createObjectOutputStream(
             final HierarchicalStreamWriter writer, String rootNodeName) throws IOException {
         final StatefulWriter statefulWriter = new StatefulWriter(writer);
-        statefulWriter.startNode(rootNodeName);
+        statefulWriter.startNode(rootNodeName, null);
         return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
             public void writeToStream(Object object) {
                 marshal(object, statefulWriter);

@@ -576,6 +576,10 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
         }
     }
 
+    public void startNode(String name, Class clazz) {
+        startNode(name);
+    }
+
     public void addAttribute(String name, String value) {
         if (this.startTagInProgress) {
             String escapedName = escapeXmlName(name);

@@ -67,7 +67,6 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
         this(writer, new char[]{' ', ' '});
     }
 
-    
     public void startNode(String name) {
         String escapedName = escapeXmlName(name);
         tagIsEmpty = false;
@@ -79,6 +78,10 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
         depth++;
         readyForNewLine = true;
         tagIsEmpty = true;
+    }
+
+    public void startNode(String name, Class clazz) {
+        startNode(name);
     }
 
     public void setValue(String text) {

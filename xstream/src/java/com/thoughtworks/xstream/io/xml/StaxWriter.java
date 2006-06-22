@@ -164,6 +164,11 @@ public class StaxWriter extends AbstractXmlWriter {
         }
     }
 
+    public void startNode(String name, Class clazz) {
+        startNode(name);
+    }
+
+
     public HierarchicalStreamWriter underlyingWriter() {
         return this;
     }
