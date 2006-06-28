@@ -1,142 +1,113 @@
 package com.thoughtworks.xstream.persistence;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.thoughtworks.xstream.persistence.XmlMap;
-
 import junit.framework.TestCase;
 
 public class XmlMapTest extends TestCase {
 
-	private final File baseDir = new File("tmp-xstream-test");
+	private MockedStrategy strategy;
 
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
-		if (baseDir.exists()) {
-			clear(baseDir);
-		}
-		baseDir.mkdirs();
+		strategy = new MockedStrategy();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		clear(baseDir);
-	}
-
-	private void clear(File dir) {
-		File[] files = dir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile()) {
-				boolean deleted = files[i].delete();
-				if (!deleted) {
-					throw new RuntimeException(
-							"Unable to continue testing: unable to remove file "
-									+ files[i].getAbsolutePath());
-				}
-			}
-		}
-		dir.delete();
-	}
-
-	public void testWritesASingleFile() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testWritesASingleObject() {
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
-		File file = new File(baseDir, "guilherme.xml");
-		assertTrue(file.exists());
+		assertTrue(strategy.map.containsKey("guilherme"));
 	}
 
-	public void testWritesTwoFiles() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testWritesTwoObjects() {
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
-		assertTrue(new File(baseDir, "guilherme.xml").exists());
-		assertTrue(new File(baseDir, "silveira.xml").exists());
+		assertTrue(strategy.map.containsKey("guilherme"));
+		assertTrue(strategy.map.containsKey("silveira"));
 	}
 
-	public void testRemovesAWrittenFile() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testRemovesAWrittenObject() {
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
-		assertTrue(new File(baseDir, "guilherme.xml").exists());
+		assertTrue(strategy.map.containsKey("guilherme"));
 		String aCuteString = (String) map.remove("guilherme");
 		assertEquals("aCuteString", aCuteString);
-		assertFalse(new File(baseDir, "guilherme.xml").exists());
+		assertFalse(strategy.map.containsKey("guilherme"));
 	}
 
-	public void testRemovesAnInvalidFile() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testRemovesAnInvalidObject() {
+		XmlMap map = new XmlMap(this.strategy);
 		String aCuteString = (String) map.remove("guilherme");
 		assertNull(aCuteString);
 	}
 
 	public void testHasZeroLength() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		assertEquals(0, map.size());
 	}
 
 	public void testHasOneItem() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		assertEquals(1, map.size());
 	}
 
 	public void testHasTwoItems() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		assertEquals(2, map.size());
 	}
 
 	public void testIsNotEmpty() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		assertFalse("Map should not be empty", map.isEmpty());
 	}
 
 	public void testDoesNotContainKey() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		assertFalse(map.containsKey("guilherme"));
 	}
 
 	public void testContainsKey() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		assertTrue(map.containsKey("guilherme"));
 	}
 
-	public void testGetsAFile() {
-		XmlMap map = new XmlMap(baseDir);
-		map.put("guilherme", "aCuteString");
-		assertTrue(new File(baseDir, "guilherme.xml").exists());
+	public void testGetsAnObject() {
+		XmlMap map = new XmlMap(this.strategy);
+		this.strategy.map.put("guilherme", "aCuteString");
 		String aCuteString = (String) map.get("guilherme");
 		assertEquals("aCuteString", aCuteString);
 	}
 
-	public void testGetsAnInvalidFile() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testGetsAnInvalidObject() {
+		XmlMap map = new XmlMap(this.strategy);
 		String aCuteString = (String) map.get("guilherme");
 		assertNull(aCuteString);
 	}
 
-	public void testRewritesASingleFile() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testRewritesASingleObject() {
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
-		File file = new File(baseDir, "guilherme.xml");
-		assertTrue(file.exists());
+		assertEquals("aCuteString", map.get("guilherme"));
 		map.put("guilherme", "anotherCuteString");
 		assertEquals("anotherCuteString", map.get("guilherme"));
 	}
 
 	public void testIsEmpty() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		assertTrue("Map should be empty", map.isEmpty());
 	}
 
-	public void testClearsItsFiles() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testClearsItsObjects() {
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		map.clear();
@@ -147,20 +118,20 @@ public class XmlMapTest extends TestCase {
 		Map original = new HashMap();
 		original.put("guilherme", "aCuteString");
 		original.put("silveira", "anotherCuteString");
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.putAll(original);
 		assertEquals(2, map.size());
 	}
 
 	public void testContainsASpecificValue() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		String value = "aCuteString";
 		map.put("guilherme", value);
 		assertTrue(map.containsValue(value));
 	}
 
 	public void testDoesNotContainASpecificValue() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		assertFalse(map.containsValue("zzzz"));
 	}
 
@@ -169,7 +140,7 @@ public class XmlMapTest extends TestCase {
 		original.put("guilherme", "aCuteString");
 		original.put("silveira", "anotherCuteString");
 		Set originalSet = original.entrySet();
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		Set set = map.entrySet();
@@ -178,10 +149,10 @@ public class XmlMapTest extends TestCase {
 
 	// actually an acceptance test?
 	public void testIteratesOverEntryAndChecksItsKeyWithAnotherInstance() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
-		XmlMap built = new XmlMap(baseDir);
+		XmlMap built = new XmlMap(this.strategy);
 		for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
 			Map.Entry entry = (Map.Entry) iter.next();
 			assertTrue(built.containsKey(entry.getKey()));
@@ -190,10 +161,10 @@ public class XmlMapTest extends TestCase {
 
 	// actually an acceptance test?
 	public void testIteratesOverEntryAndChecksItsValueWithAnotherInstance() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
-		XmlMap built = new XmlMap(baseDir);
+		XmlMap built = new XmlMap(this.strategy);
 		for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
 			Map.Entry entry = (Map.Entry) iter.next();
 			assertTrue(built.containsValue(entry.getValue()));
@@ -201,7 +172,7 @@ public class XmlMapTest extends TestCase {
 	}
 
 	public void testIteratesOverEntrySetContainingTwoItems() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		Map built = new HashMap();
@@ -213,7 +184,7 @@ public class XmlMapTest extends TestCase {
 	}
 
 	public void testRemovesAnItemThroughIteration() {
-		XmlMap map = new XmlMap(baseDir);
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("silveira", "anotherCuteString");
 		for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
@@ -225,17 +196,43 @@ public class XmlMapTest extends TestCase {
 		assertFalse(map.containsKey("guilherme"));
 	}
 
-	public void testRewritesAFile() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testRewritesAObject() {
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		map.put("guilherme", "anotherCuteString");
 		assertEquals("anotherCuteString", map.get("guilherme"));
 	}
 
-	public void testPutReturnsTheOldValueWhenRewritingAFile() {
-		XmlMap map = new XmlMap(baseDir);
+	public void testPutReturnsTheOldValueWhenRewritingAObject() {
+		XmlMap map = new XmlMap(this.strategy);
 		map.put("guilherme", "aCuteString");
 		assertEquals("aCuteString", map.put("guilherme", "anotherCuteString"));
+	}
+
+	private static class MockedStrategy implements StreamStrategy {
+
+		private Map map = new HashMap();
+
+		public Iterator iterator() {
+			return map.entrySet().iterator();
+		}
+
+		public int size() {
+			return map.size();
+		}
+
+		public Object get(Object key) {
+			return map.get(key);
+		}
+
+		public Object put(Object key, Object value) {
+			return map.put(key, value);
+		}
+
+		public Object remove(Object key) {
+			return map.remove(key);
+		}
+
 	}
 
 }
