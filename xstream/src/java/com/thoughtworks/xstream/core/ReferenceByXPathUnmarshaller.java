@@ -11,26 +11,25 @@ import com.thoughtworks.xstream.mapper.Mapper;
 public class ReferenceByXPathUnmarshaller extends AbstractReferenceUnmarshaller {
 
     private PathTracker pathTracker = new PathTracker();
-    private final int mode;
 
     public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                        ConverterLookup converterLookup, Mapper mapper, int mode) {
+                                        ConverterLookup converterLookup, Mapper mapper) {
         super(root, reader, converterLookup, mapper);
-        this.mode = mode;
         this.reader = new PathTrackingReader(reader, pathTracker);
     }
 
     /**
-     * @deprecated As of 1.2, use {@link #ReferenceByXPathUnmarshaller(Object, HierarchicalStreamReader, ConverterLookup, Mapper, int)}
+     * @deprecated As of 1.2, use {@link #ReferenceByXPathUnmarshaller(Object, HierarchicalStreamReader, ConverterLookup, Mapper)}
      */
     public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
                                         ConverterLookup converterLookup, ClassMapper classMapper) {
-        this(root, reader, converterLookup, classMapper, ReferenceByXPathMarshallingStrategy.RELATIVE);
+        this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
     protected Object getReferenceKey(String reference) {
         final Path path = new Path(reference);
-        return mode == ReferenceByXPathMarshallingStrategy.RELATIVE ? pathTracker.getPath().apply(path) : path;
+        // We have absolute references, if path starts with '/'
+        return reference.charAt(0) != '/' ? pathTracker.getPath().apply(path) : path;
     }
 
     protected Object getCurrentReferenceKey() {

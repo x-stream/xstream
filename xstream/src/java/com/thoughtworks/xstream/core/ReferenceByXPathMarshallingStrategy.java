@@ -26,7 +26,7 @@ public class ReferenceByXPathMarshallingStrategy implements MarshallingStrategy 
     }
 
     public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder, ConverterLookup converterLookup, Mapper mapper) {
-        return new ReferenceByXPathUnmarshaller(root, reader, converterLookup, mapper, mode)
+        return new ReferenceByXPathUnmarshaller(root, reader, converterLookup, mapper)
             .start(dataHolder);
     }
 
