@@ -78,9 +78,15 @@
 
         <ul>
             <li>
-                <b>XStream.XPATH_REFERENCES</b><br/>
-                <i>(Default)</i> Uses XPath references to signify duplicate references. This produces XML with the least
-                clutter.
+                <b>XStream.XPATH_RELATIVE_REFERENCES</b><br/>
+                <i>(Default)</i> Uses relative XPath references to signify duplicate references. This produces XML with 
+                the least clutter.
+            </li>
+            <li>
+                <b>XStream.XPATH_ABSOLUTE_REFERENCES</b><br/>
+                Uses absolute XPath references to signify duplicate references. This might produce for some situations
+                better readable XML. <i>Note, that XStream will read XML with relative paths as well as with absolute
+                paths independent of the XPATH mode.</i>
             </li>
             <li>
                 <b>XStream.ID_REFERENCES</b><br/>
