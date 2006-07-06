@@ -15,6 +15,12 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
     // static so it can be accessed by objects under test, without them needing a reference back to the testcase
     private static CallLog log = new CallLog();
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        log.reset();
+    }
+   
+
     // --- Sample class hiearchy
 
     public static class Base implements Serializable{
@@ -283,12 +289,26 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
 
         private void writeObject(ObjectOutputStream stream) throws IOException {
+            log.actual("Child.writeObject() start");
             stream.defaultWriteObject();
+            log.actual("Child.writeObject() end");
         }
 
         private void readObject(ObjectInputStream stream)
                 throws IOException, ClassNotFoundException {
+            log.actual("Child.readObject() start");
             stream.defaultReadObject();
+            log.actual("Child.readObject() end");
+        }
+
+        private Object writeReplace() {
+            log.actual("Child.writeReplace()");
+            return this;
+        }
+
+        private Object readResolve() {
+            log.actual("Child.readResolve()");
+            return this;
         }
     }
 
@@ -350,6 +370,36 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         assertEquals(5, serialized.x);
         assertEquals(10, serialized.y);
         assertEquals(42, serialized.z);
+    }
+
+    public void testXStreamSerializationForObjectsWithUnserializableParents() {
+        // expectations
+        log.expect("Child.writeReplace()");
+        log.expect("Child.writeObject() start");
+        log.expect("Child.writeObject() end");
+
+        // execute
+        xstream.toXML(new CustomSerializableChild());
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationForObjectsWithUnserializableParents() {
+        // setup
+        String data = xstream.toXML(new CustomSerializableChild());
+        log.reset();
+
+        // expectations
+        log.expect("Child.readObject() start");
+        log.expect("Child.readObject() end");
+        log.expect("Child.readResolve()");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
     }
 
 }

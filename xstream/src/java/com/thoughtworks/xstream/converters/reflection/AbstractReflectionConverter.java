@@ -114,8 +114,9 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Object result = instantiateNewInstance(reader, context);
-        return doUnmarshal(result, reader, context);
+        Object result = instantiateNewInstance(reader, context);
+        result = doUnmarshal(result, reader, context);
+        return serializationMethodInvoker.callReadResolve(result);
     }
 
     public Object doUnmarshal(final Object result, final HierarchicalStreamReader reader, final UnmarshallingContext context) {
@@ -174,7 +175,7 @@ public abstract class AbstractReflectionConverter implements Converter {
             reader.moveUp();
         }
 
-        return serializationMethodInvoker.callReadResolve(result);
+        return result;
     }
 
     protected Object unmarshallField(final UnmarshallingContext context, final Object result, Class type, Field field) {

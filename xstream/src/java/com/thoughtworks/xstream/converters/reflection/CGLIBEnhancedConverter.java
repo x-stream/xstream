@@ -172,7 +172,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             }
             reader.moveUp();
         }
-        return result == null ? enhancer.create() : result;
+        return serializationMethodInvoker.callReadResolve(result == null ? enhancer.create() : result);
     }
 
     protected List hierarchyFor(Class type) {

@@ -375,7 +375,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
             reader.moveUp();
         }
 
-        return serializationMethodInvoker.callReadResolve(result);
+        return result;
     }
     
     protected void doMarshalConditionally(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
