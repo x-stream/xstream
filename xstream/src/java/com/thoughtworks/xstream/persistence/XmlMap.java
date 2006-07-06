@@ -24,7 +24,6 @@ public class XmlMap extends AbstractMap {
 		return streamStrategy.size();
 	}
 
-
 	public Object get(Object key) {
 		// faster lookup
 		return streamStrategy.get(key);
@@ -57,6 +56,5 @@ public class XmlMap extends AbstractMap {
 		}
 
 	}
-
 
 }

@@ -12,11 +12,8 @@ public class XmlSet extends AbstractSet {
 
 	private final XmlMap map;
 
-	private final StreamStrategy streamStrategy;
-
 	public XmlSet(StreamStrategy streamStrategy) {
 		this.map = new XmlMap(streamStrategy);
-		this.streamStrategy = streamStrategy;
 	}
 
 	public Iterator iterator() {
