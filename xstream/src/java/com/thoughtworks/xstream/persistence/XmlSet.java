@@ -4,12 +4,10 @@ import java.util.AbstractSet;
 import java.util.Iterator;
 
 /**
+ * A persistent set implementation.
  * 
  * @author Guilherme Silveira
  */
-// TODO complications: we need a xml filename for an object, how to generate a
-// unique key? uuid algorithms?
-// currently can be quite slow as it must check if it is already contained
 public class XmlSet extends AbstractSet {
 
 	private final XmlMap map;
@@ -40,13 +38,11 @@ public class XmlSet extends AbstractSet {
 	}
 
 	private String findEmptyKey() {
-		// int i = size() + 1; might be faster
-		// wow, while true, dangerous toy
-		for (int i = 1; true; i++) {
-			if (!map.containsKey("" + i)) {
-				return "" + i;
-			}
+		long i = System.currentTimeMillis();
+		while (map.containsKey("" + i)) {
+			i++;
 		}
+		return "" + i;
 	}
 
 }
