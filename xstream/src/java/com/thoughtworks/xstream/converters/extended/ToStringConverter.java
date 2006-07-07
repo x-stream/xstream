@@ -7,6 +7,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * Convenient converter for classes with natural string representation.
+ * 
  * Converter for classes that adopt the following convention:
  *   - a constructor that takes a single string parameter
  *   - a toString() that is overloaded to issue a string that is meaningful
