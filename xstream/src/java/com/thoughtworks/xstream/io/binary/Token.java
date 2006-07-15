@@ -6,6 +6,21 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.io.DataInput;
 
+/**
+ * Represents the Tokens stored in the binary stream used by
+ * {@link BinaryStreamReader} and {@link BinaryStreamWriter}.
+ * <p/>
+ * <p>A token consists of a type and (depending on this type)
+ * it may additionally have an ID (positive long number)
+ * and/or a value (String).</p>
+ * <p/>
+ * <p>The first byte of the token represents how many subsequent
+ * bytes are used by the ID.
+ *
+ * @author Joe Walnes
+ * @see BinaryStreamReader
+ * @see BinaryStreamWriter
+ */
 public abstract class Token {
 
     private static final byte TYPE_MASK = 0x7;
@@ -17,10 +32,10 @@ public abstract class Token {
     public static final byte TYPE_VALUE = 0x6;
 
     private static final byte ID_MASK = 0x38;
-    public static final byte ID_BYTE = 0x08;
-    public static final byte ID_SHORT = 0x10;
-    public static final byte ID_INT = 0x18;
-    public static final byte ID_LONG = 0x20;
+    private static final byte ID_ONE_BYTE = 0x08;
+    private static final byte ID_TWO_BYTES = 0x10;
+    private static final byte ID_FOUR_BYTES = 0x18;
+    private static final byte ID_EIGHT_BYTES = 0x20;
 
     private final byte type;
 
@@ -75,17 +90,17 @@ public abstract class Token {
         if (id < 0) {
             throw new IOException("id must not be negative " + id);
         }
-        switch(idType) {
-            case ID_BYTE:
-                out.writeByte((byte)id + Byte.MIN_VALUE);
+        switch (idType) {
+            case ID_ONE_BYTE:
+                out.writeByte((byte) id + Byte.MIN_VALUE);
                 break;
-            case ID_SHORT:
-                out.writeShort((short)id + Short.MIN_VALUE);
+            case ID_TWO_BYTES:
+                out.writeShort((short) id + Short.MIN_VALUE);
                 break;
-            case ID_INT:
-                out.writeInt((int)id + Integer.MIN_VALUE);
+            case ID_FOUR_BYTES:
+                out.writeInt((int) id + Integer.MIN_VALUE);
                 break;
-            case ID_LONG:
+            case ID_EIGHT_BYTES:
                 out.writeLong(id + Long.MIN_VALUE);
                 break;
             default:
@@ -98,14 +113,14 @@ public abstract class Token {
     }
 
     protected long readId(DataInput in, byte idType) throws IOException {
-        switch(idType) {
-            case ID_BYTE:
+        switch (idType) {
+            case ID_ONE_BYTE:
                 return in.readByte() - Byte.MIN_VALUE;
-            case ID_SHORT:
+            case ID_TWO_BYTES:
                 return in.readShort() - Short.MIN_VALUE;
-            case ID_INT:
+            case ID_FOUR_BYTES:
                 return in.readInt() - Integer.MIN_VALUE;
-            case ID_LONG:
+            case ID_EIGHT_BYTES:
                 return in.readLong() - Long.MIN_VALUE;
             default:
                 throw new Error("Unknown idType " + idType);
@@ -122,14 +137,14 @@ public abstract class Token {
             long id = token.getId();
             byte idType;
             if (id <= Byte.MAX_VALUE - Byte.MIN_VALUE) {
-                idType = ID_BYTE;
+                idType = ID_ONE_BYTE;
             } else if (id <= Short.MAX_VALUE - Short.MIN_VALUE) {
-                idType = ID_SHORT;
-            } else if (id <= (long)Integer.MAX_VALUE - (long)Integer.MIN_VALUE) { // cast to long to prevent overflo
-                idType = ID_INT;
+                idType = ID_TWO_BYTES;
+            } else if (id <= (long) Integer.MAX_VALUE - (long) Integer.MIN_VALUE) { // cast to long to prevent overflo
+                idType = ID_FOUR_BYTES;
             } else {
-                idType = ID_LONG;
-            }            
+                idType = ID_EIGHT_BYTES;
+            }
             out.write(token.getType() + idType);
             token.writeTo(out, idType);
         }
