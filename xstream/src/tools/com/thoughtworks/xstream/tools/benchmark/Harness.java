@@ -79,8 +79,8 @@ public class Harness {
 
     private void run(Reporter reporter, Metric metric, Target target, Product product) {
         try {
-            Object result = metric.run(product, target.target());
-            reporter.metricRecorded(product, result, metric.unit());
+            Double result = metric.run(product, target.target());
+            reporter.metricRecorded(product, result);
         } catch (Exception e) {
             reporter.metricFailed(product, e);
         }

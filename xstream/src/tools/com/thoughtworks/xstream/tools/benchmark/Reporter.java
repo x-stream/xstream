@@ -32,7 +32,7 @@ public interface Reporter {
 
     void startTarget(Target target);
 
-    void metricRecorded(Product product, Object result, String unit);
+    void metricRecorded(Product product, Double result);
 
     void metricFailed(Product product, Exception e);
 

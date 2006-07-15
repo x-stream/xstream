@@ -18,6 +18,7 @@ import java.io.Writer;
 public class TextReporter implements Reporter {
 
     private final PrintWriter out;
+    private Metric currentMetric;
 
     public TextReporter(PrintWriter out) {
         this.out = out;
@@ -38,6 +39,7 @@ public class TextReporter implements Reporter {
     }
 
     public void startMetric(Metric metric) {
+        currentMetric = metric;
         out.println("======================================================================");
         out.println(metric);
         out.println("======================================================================");
@@ -47,8 +49,8 @@ public class TextReporter implements Reporter {
         out.println("* " + target + "");
     }
 
-    public void metricRecorded(Product product, Object result, String unit) {
-        out.println("  - " + pad(product.toString()) + " " + result + " " + unit);
+    public void metricRecorded(Product product, Double result) {
+        out.println("  - " + pad(product.toString()) + " " + result + " " + currentMetric.unit());
     }
 
     public void metricFailed(Product product, Exception e) {
@@ -60,6 +62,7 @@ public class TextReporter implements Reporter {
 
     public void endMetric(Metric metric) {
         out.println();
+        currentMetric = null;
     }
 
     public void endBenchmark() {

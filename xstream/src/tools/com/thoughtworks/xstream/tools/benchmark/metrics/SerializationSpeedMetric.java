@@ -20,7 +20,7 @@ public class SerializationSpeedMetric implements Metric {
         this.iterations = iterations;
     }
 
-    public Object run(Product product, Object object) throws Exception {
+    public Double run(Product product, Object object) throws Exception {
         // Do it once to warm up.
         product.serialize(object, new ByteArrayOutputStream());
 
@@ -31,11 +31,15 @@ public class SerializationSpeedMetric implements Metric {
         }
         long end = System.currentTimeMillis();
 
-        return new Long(end - start);
+        return new Double(end - start);
     }
 
     public String unit() {
         return "ms";
+    }
+
+    public boolean biggerIsBetter() {
+        return false;
     }
 
     public String toString() {
