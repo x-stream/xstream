@@ -7,6 +7,7 @@
 
     <property name="java.build.dir" value="build/java"/>
     <property name="test.build.dir" value="build/test"/>
+    <property name="tools.build.dir" value="build/tools"/>
     <property name="java.compile.debug" value="yes"/>
     <property name="test.src.includes" value="**/*Test.java"/>
     <property name="test.src.excludes" value="**/Abstract*"/>
@@ -59,7 +60,14 @@
 
     <target name="compile" depends="compile:java3, compile:java5" description="Compile all Java" />
 
-    <target name="test:compile" depends="compile">
+    <target name="tools:compile" depends="compile">
+        <mkdir dir="${tools.build.dir}"/>
+        <javac srcdir="src/tools" destdir="${tools.build.dir}">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="test:compile" depends="compile, tools:compile">
         <mkdir dir="${test.build.dir}"/>
         <javac srcdir="src/test" destdir="${test.build.dir}">
             <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
