@@ -21,7 +21,7 @@ public interface Metric {
      * @throws Exception If this metric could not be obtained. This will
      *                   be reported back to the {@link Reporter}.
      */
-    Double run(Product product, Object object) throws Exception;
+    double run(Product product, Object object) throws Exception;
 
     /**
      * The unit the metric is recorded in (for reporting purposes).

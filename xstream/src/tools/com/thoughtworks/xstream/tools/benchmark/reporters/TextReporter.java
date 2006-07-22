@@ -49,7 +49,7 @@ public class TextReporter implements Reporter {
         out.println("* " + target + "");
     }
 
-    public void metricRecorded(Product product, Double result) {
+    public void metricRecorded(Product product, double result) {
         out.println("  - " + pad(product.toString()) + " " + result + " " + currentMetric.unit());
     }
 

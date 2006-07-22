@@ -14,10 +14,10 @@ import java.io.ByteArrayOutputStream;
  */
 public class SizeMetric implements Metric {
 
-    public Double run(Product product, Object object) throws Exception {
+    public double run(Product product, Object object) throws Exception {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         product.serialize(object, buffer);
-        return new Double(buffer.size());
+        return buffer.size();
     }
 
     public String toString() {

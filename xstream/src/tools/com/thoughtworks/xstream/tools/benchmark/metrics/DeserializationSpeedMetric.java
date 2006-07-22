@@ -21,7 +21,7 @@ public class DeserializationSpeedMetric implements Metric {
         this.iterations = iterations;
     }
 
-    public Double run(Product product, Object object) throws Exception {
+    public double run(Product product, Object object) throws Exception {
 
         // Serialize once (because we need something to deserialize).
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -38,7 +38,7 @@ public class DeserializationSpeedMetric implements Metric {
         }
         long end = System.currentTimeMillis();
 
-        return new Double(end - start);
+        return (end - start);
     }
 
     public String unit() {
@@ -50,6 +50,6 @@ public class DeserializationSpeedMetric implements Metric {
     }
 
     public String toString() {
-        return "Speed of deserializing " + iterations + " times";
+        return "Deserialization speed (" + iterations + " iteration" + (iterations == 1 ? "" : "s") + ")";
     }
 }
