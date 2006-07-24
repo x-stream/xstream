@@ -70,6 +70,22 @@
 }</pre></div>
 
     <!-- ...................................................... -->
+    <h2>XStream is not calling the default constructor during deserialization.</h2>
+    
+    <p>This is, in fact, the same problem as above. XStream supports the same mechanism like the JDK serialization. When
+    using the optimized reflection api, it does not invoke the default constructor. The solution is to
+    implement the readResolve method as above:</p>
+    
+<div class="Source Java"><pre>class MyExecutor {
+  private Object readResolve() {
+    // do what you need to do here
+    System.out.println("After instantiating MyExecutor");
+    // at the end returns itself
+    return this;
+  }
+}</pre></div>
+
+    <!-- ...................................................... -->
     <h2>What do serialized collections look like?</h2>
 
     <p>Example:</p>
