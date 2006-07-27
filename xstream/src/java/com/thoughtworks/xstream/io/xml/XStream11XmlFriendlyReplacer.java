@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 /**
- * Allows replacement of Strings in xml-friendly wrappers to provide compatibility with XStream 1.1 format
+ * Allows replacement of Strings in xml-friendly drivers to provide compatibility with XStream 1.1 format
  *  
  * @author Mauro Talevi
  */

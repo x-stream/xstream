@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 /**
- * Allows replacement of Strings in xml-friendly wrappers.
+ * Allows replacement of Strings in xml-friendly drivers.
  * 
  * The default replacements are:
  * <ul>
