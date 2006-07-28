@@ -13,6 +13,7 @@ import java.util.Collection;
  * Arrays, Lists and Sets rely on you NOT using XStream.addImplicitCollection(..)
  *
  * @author Paul Hammant
+ * @since 1.2
  */
 public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamWriter {
 

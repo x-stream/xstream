@@ -94,7 +94,8 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
     }
 
     protected String marshall(QNameMap qnameMap, boolean repairNamespaceMode) {
-        StaxDriver staxDriver = new StaxDriver(qnameMap, repairNamespaceMode);
+        StaxDriver staxDriver = new StaxDriver(qnameMap);
+        staxDriver.setRepairingNamespace(repairNamespaceMode);
         XStream xstream = new XStream(staxDriver);
         return xstream.toXML(testInput);
     }

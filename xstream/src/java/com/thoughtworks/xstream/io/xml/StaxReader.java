@@ -23,6 +23,9 @@ public class StaxReader extends AbstractPullReader {
         this(qnameMap, in, new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public StaxReader(QNameMap qnameMap, XMLStreamReader in, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.qnameMap = qnameMap;

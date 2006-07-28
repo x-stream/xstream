@@ -13,6 +13,9 @@ public class XomWriter extends AbstractXmlWriter {
         this(parentElement, new XmlFriendlyReplacer());
     }
     
+    /**
+     * @since 1.2
+     */
     public XomWriter(Element parentElement, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.node = parentElement;

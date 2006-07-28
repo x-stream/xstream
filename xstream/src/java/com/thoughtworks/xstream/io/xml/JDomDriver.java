@@ -24,6 +24,9 @@ public class JDomDriver extends AbstractXmlDriver {
         super(new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public JDomDriver(XmlFriendlyReplacer replacer) {
         super(replacer);
     }

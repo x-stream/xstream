@@ -17,10 +17,16 @@ public class Dom4JReader extends AbstractDocumentReader {
         this(document.getRootElement());
     }
 
+    /**
+     * @since 1.2
+     */
     public Dom4JReader(Element rootElement, XmlFriendlyReplacer replacer) {
         super(rootElement, replacer);
     }
 
+    /**
+     * @since 1.2
+     */
     public Dom4JReader(Document document, XmlFriendlyReplacer replacer) {
         this(document.getRootElement(), replacer);
     }

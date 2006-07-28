@@ -28,10 +28,16 @@ public class XomDriver extends AbstractXmlDriver {
         this(builder, new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public XomDriver(XmlFriendlyReplacer replacer) {
         this(new Builder(), replacer);        
     }
     
+    /**
+     * @since 1.2
+     */
     public XomDriver(Builder builder, XmlFriendlyReplacer replacer) {
         super(replacer);    
         this.builder = builder;

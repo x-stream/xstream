@@ -24,11 +24,17 @@ public class DomReader extends AbstractDocumentReader {
         this(document.getDocumentElement());
     }
 
+    /**
+     * @since 1.2
+     */
     public DomReader(Element rootElement, XmlFriendlyReplacer replacer) {
         super(rootElement, replacer);
         textBuffer = new StringBuffer();
     }
 
+    /**
+     * @since 1.2
+     */
     public DomReader(Document document, XmlFriendlyReplacer replacer) {
         this(document.getDocumentElement(), replacer);
     }

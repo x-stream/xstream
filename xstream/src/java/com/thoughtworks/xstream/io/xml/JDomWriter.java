@@ -18,6 +18,9 @@ public class JDomWriter extends AbstractXmlWriter {
     private List elementStack = new LinkedList();
     private final JDOMFactory documentFactory;
 
+    /**
+     * @since 1.2
+     */
     public JDomWriter(Element container, JDOMFactory factory, XmlFriendlyReplacer replacer) {
         super(replacer);
         elementStack.add(0, container);

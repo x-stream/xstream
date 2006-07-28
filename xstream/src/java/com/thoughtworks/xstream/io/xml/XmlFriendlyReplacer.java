@@ -10,6 +10,7 @@ package com.thoughtworks.xstream.io.xml;
  * </ul>
  * 
  * @author Mauro Talevi
+ * @since 1.2
  */
 public class XmlFriendlyReplacer {
 

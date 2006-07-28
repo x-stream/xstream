@@ -28,7 +28,6 @@ public class StaxDriver extends AbstractXmlDriver {
     private QNameMap qnameMap;
     private XMLInputFactory inputFactory;
     private XMLOutputFactory outputFactory;
-    private boolean repairingNamespace = false;
 
     public StaxDriver() {
         this.qnameMap = new QNameMap();
@@ -38,18 +37,27 @@ public class StaxDriver extends AbstractXmlDriver {
         this(qnameMap, false);
     }
 
+    /**
+     * @deprecated since 1.2, use an explicit call to {@link #setRepairingNamespace(boolean)}
+     */
     public StaxDriver(QNameMap qnameMap, boolean repairingNamespace) {
-        this(qnameMap, repairingNamespace, new XmlFriendlyReplacer());
+        this(qnameMap, new XmlFriendlyReplacer());
+        setRepairingNamespace(repairingNamespace);
     }
 
-    public StaxDriver(QNameMap qnameMap, boolean repairingNamespace, XmlFriendlyReplacer replacer) {
+    /**
+     * @since 1.2
+     */
+    public StaxDriver(QNameMap qnameMap, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.qnameMap = qnameMap;
-        this.repairingNamespace = repairingNamespace;
     }
     
+    /**
+     * @since 1.2
+     */
     public StaxDriver(XmlFriendlyReplacer replacer) {
-        this(new QNameMap(), false, replacer);
+        this(new QNameMap(), replacer);
     }
 
     public HierarchicalStreamReader createReader(Reader xml) {
@@ -136,13 +144,21 @@ public class StaxDriver extends AbstractXmlDriver {
     public XMLOutputFactory getOutputFactory() {
         if (outputFactory == null) {
             outputFactory = XMLOutputFactory.newInstance();
-            outputFactory.setProperty("javax.xml.stream.isRepairingNamespaces", isRepairingNamespace() ? Boolean.TRUE : Boolean.FALSE);
         }
         return outputFactory;
     }
 
     public boolean isRepairingNamespace() {
-        return repairingNamespace;
+        return Boolean.TRUE.equals(getOutputFactory().getProperty(
+                XMLOutputFactory.IS_REPAIRING_NAMESPACES));
+    }
+
+    /**
+     * @since 1.2
+     */
+    public void setRepairingNamespace(boolean repairing) {
+        getOutputFactory().setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES,
+                repairing ? Boolean.TRUE : Boolean.FALSE);
     }
 
 

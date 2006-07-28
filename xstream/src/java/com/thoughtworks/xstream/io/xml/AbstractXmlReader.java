@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
  * to all XML-based readers.
  * 
  * @author Mauro Talevi
+ * @since 1.2
  */
 public abstract class AbstractXmlReader implements HierarchicalStreamReader {
 

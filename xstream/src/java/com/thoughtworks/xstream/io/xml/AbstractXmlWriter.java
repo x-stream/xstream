@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
 
 /**
@@ -8,6 +7,7 @@ import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
  * to all XML-based writers.
  * 
  * @author Mauro Talevi
+ * @since 1.2
  */
 public abstract class AbstractXmlWriter implements ExtendedHierarchicalStreamWriter {
 

@@ -19,10 +19,16 @@ public class JDomReader extends AbstractDocumentReader {
         super(document.getRootElement());
     }
 
+    /**
+     * @since 1.2
+     */
     public JDomReader(Element root, XmlFriendlyReplacer replacer) {
         super(root, replacer);
     }
 
+    /**
+     * @since 1.2
+     */
     public JDomReader(Document document, XmlFriendlyReplacer replacer) {
         super(document.getRootElement(), replacer);
     }

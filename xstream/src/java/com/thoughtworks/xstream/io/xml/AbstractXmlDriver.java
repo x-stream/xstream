@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
  * and HierarchicalStreamWriter.
  * 
  * @author Mauro Talevi
+ * @since 1.2
  */
 public abstract class AbstractXmlDriver implements HierarchicalStreamDriver {
     

@@ -34,6 +34,9 @@ public class DomDriver extends AbstractXmlDriver {
         this(encoding, new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public DomDriver(String encoding, XmlFriendlyReplacer replacer) {
         super(replacer);
         documentBuilderFactory = DocumentBuilderFactory.newInstance();

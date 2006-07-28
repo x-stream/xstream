@@ -36,6 +36,9 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     private static final char[] APOS = "&apos;".toCharArray();
     private static final char[] CLOSE = "</".toCharArray();
 
+    /**
+     * @since 1.2
+     */
     public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.writer = new QuickWriter(writer);

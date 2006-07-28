@@ -17,10 +17,16 @@ public class XomReader extends AbstractDocumentReader {
         super(document.getRootElement());
     }
 
+    /**
+     * @since 1.2
+     */
     public XomReader(Element rootElement, XmlFriendlyReplacer replacer) {
         super(rootElement, replacer);
     }
 
+    /**
+     * @since 1.2
+     */
     public XomReader(Document document, XmlFriendlyReplacer replacer) {
         super(document.getRootElement(), replacer);
     }

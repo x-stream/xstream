@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * </pre>
  *
  * @author Joe Walnes
+ * @since 1.2
  */
 public class HierarchicalStreamCopier {
     public void copy(HierarchicalStreamReader source, HierarchicalStreamWriter destination) {

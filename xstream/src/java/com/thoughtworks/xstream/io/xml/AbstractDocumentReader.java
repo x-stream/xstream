@@ -16,6 +16,9 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader {
         this(rootElement, new XmlFriendlyReplacer());
     }
 
+    /**
+    * @since 1.2
+    */ 
     protected AbstractDocumentReader(Object rootElement, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.current = rootElement;

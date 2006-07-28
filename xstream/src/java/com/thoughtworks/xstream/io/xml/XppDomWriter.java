@@ -14,6 +14,9 @@ public class XppDomWriter extends AbstractXmlWriter {
         this(new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public XppDomWriter(XmlFriendlyReplacer replacer) {
         super(replacer);
     }

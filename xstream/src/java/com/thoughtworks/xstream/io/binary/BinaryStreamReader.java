@@ -17,6 +17,7 @@ import java.util.*;
  *
  * @author Joe Walnes
  * @see BinaryStreamReader
+ * @since 1.2
  */
 public class BinaryStreamReader implements HierarchicalStreamReader {
 

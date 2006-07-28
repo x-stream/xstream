@@ -46,6 +46,7 @@ public class StaxWriter extends AbstractXmlWriter {
      * @param writeEnclosingDocument a flag to indicate whether or not the start/end document events should be written
      * @param replacer              the xml-friendly replacer to escape Java names
      * @throws XMLStreamException if the events could not be written to the output
+     * @since 1.2
      */
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, 
             boolean writeEnclosingDocument, boolean namespaceRepairingMode,

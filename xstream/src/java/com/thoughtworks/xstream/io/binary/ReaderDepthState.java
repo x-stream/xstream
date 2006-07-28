@@ -11,6 +11,7 @@ import java.util.Collections;
  * Used by the {@link BinaryStreamReader}
  *
  * @author Joe Walnes
+ * @since 1.2
  */
 class ReaderDepthState {
 

@@ -33,6 +33,9 @@ public class Dom4JDriver extends AbstractXmlDriver {
         this(documentFactory, outputFormat, new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.documentFactory = documentFactory;

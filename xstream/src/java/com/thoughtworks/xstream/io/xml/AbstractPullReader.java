@@ -31,7 +31,10 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
         int type;
         String value;
     }
-    
+
+    /**
+     * @since 1.2
+     */
     protected AbstractPullReader(XmlFriendlyReplacer replacer) {
         super(replacer);
     }

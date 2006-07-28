@@ -18,6 +18,9 @@ public class XppDriver extends AbstractXmlDriver {
         super(new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public XppDriver(XmlFriendlyReplacer replacer) {
         super(replacer);
     }

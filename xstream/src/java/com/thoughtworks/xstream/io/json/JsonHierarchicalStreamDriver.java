@@ -6,6 +6,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.io.*;
 
+/**
+ * @since 1.2
+ */
 public class JsonHierarchicalStreamDriver implements HierarchicalStreamDriver {
     public HierarchicalStreamReader createReader(Reader in) {
         throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");

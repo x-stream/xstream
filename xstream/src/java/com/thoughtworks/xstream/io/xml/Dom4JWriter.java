@@ -25,6 +25,9 @@ public class Dom4JWriter extends AbstractXmlWriter {
         this(writer, new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public Dom4JWriter(XMLWriter writer, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.writer = writer;

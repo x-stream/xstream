@@ -25,6 +25,9 @@ public class XppReader extends AbstractPullReader {
         this(reader, new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public XppReader(Reader reader, XmlFriendlyReplacer replacer) {
         super(replacer);
         try {

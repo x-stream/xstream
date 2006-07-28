@@ -22,12 +22,18 @@ public class DomWriter extends AbstractXmlWriter {
         this(rootElement, new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since 1.2
+     */
     public DomWriter(Document document, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.document = document;
         this.current = document.getDocumentElement();
     }
 
+    /**
+     * @since 1.2
+     */
     public DomWriter(Element rootElement, XmlFriendlyReplacer replacer) {
         super(replacer);
         document = rootElement.getOwnerDocument();

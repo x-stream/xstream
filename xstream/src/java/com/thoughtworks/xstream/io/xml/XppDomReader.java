@@ -14,6 +14,9 @@ public class XppDomReader extends AbstractDocumentReader {
         super(xpp3Dom);
     }
 
+    /**
+     * @since 1.2
+     */
     public XppDomReader(Xpp3Dom xpp3Dom, XmlFriendlyReplacer replacer) {
         super(xpp3Dom, replacer);
     }

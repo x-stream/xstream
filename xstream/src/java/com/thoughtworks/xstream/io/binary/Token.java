@@ -20,6 +20,7 @@ import java.io.DataInput;
  * @author Joe Walnes
  * @see BinaryStreamReader
  * @see BinaryStreamWriter
+ * @since 1.2
  */
 public abstract class Token {
 

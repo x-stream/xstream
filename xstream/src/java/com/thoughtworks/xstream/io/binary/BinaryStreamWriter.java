@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * @since 1.2
+ */
 public class BinaryStreamWriter implements ExtendedHierarchicalStreamWriter {
 
     private final IdRegistry idRegistry = new IdRegistry();
