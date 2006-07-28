@@ -28,6 +28,7 @@ public class XStreamer {
      * Serialize an object incuding the XStream to a pretty-printed XML String.
      * 
      * @throws ObjectStreamException if the XML contains non-serializable elements
+     * @throws com.thoughtworks.xstream.core.BaseException if the object cannot be serialized
      * @since 1.2
      * @see #toXML(XStream, Object, Writer)
      */
@@ -55,6 +56,7 @@ public class XStreamer {
      * </p>
      * 
      * @throws IOException if an error occurs reading from the Writer.
+     * @throws com.thoughtworks.xstream.core.BaseException if the object cannot be serialized
      * @since 1.2
      */
     public void toXML(XStream xstream, Object obj, Writer out)
@@ -76,6 +78,7 @@ public class XStreamer {
      * 
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws ObjectStreamException if the XML contains non-deserializable elements
+     * @throws com.thoughtworks.xstream.core.BaseException if the object cannot be deserialized
      * @since 1.2
      * @see #toXML(XStream, Object, Writer)
      */
@@ -94,6 +97,7 @@ public class XStreamer {
      * 
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws ObjectStreamException if the XML contains non-deserializable elements
+     * @throws com.thoughtworks.xstream.core.BaseException if the object cannot be deserialized
      * @since 1.2
      * @see #toXML(XStream, Object, Writer)
      */
@@ -114,6 +118,7 @@ public class XStreamer {
      * 
      * @throws IOException if an error occurs reading from the Reader.
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
+     * @throws com.thoughtworks.xstream.core.BaseException if the object cannot be deserialized
      * @since 1.2
      * @see #toXML(XStream, Object, Writer)
      */
@@ -127,6 +132,7 @@ public class XStreamer {
      * 
      * @throws IOException if an error occurs reading from the Reader.
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
+     * @throws com.thoughtworks.xstream.core.BaseException if the object cannot be deserialized
      * @since 1.2
      */
     public Object fromXML(HierarchicalStreamDriver driver, Reader xml)

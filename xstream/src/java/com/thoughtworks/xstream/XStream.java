@@ -287,18 +287,40 @@ public class XStream {
     public static final int PRIORITY_LOW = -10;
     public static final int PRIORITY_VERY_LOW = -20;
 
+    /**
+     * Constructs a default XStream. The instance will use the {@link XppDriver} as default and tries to determin the best
+     * match for the {@link ReflectionProvider} on its own.
+     * 
+     * @throws InitializationException in case of an initialization problem
+     */
     public XStream() {
         this(null, (Mapper)null, new XppDriver());
     }
 
+    /**
+     * Constructs an XStream with a special {@link ReflectionProvider}. The instance will use the {@link XppDriver} as default.
+     * 
+     * @throws InitializationException in case of an initialization problem
+     */
     public XStream(ReflectionProvider reflectionProvider) {
         this(reflectionProvider, (Mapper)null, new XppDriver());
     }
 
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}. The instance will tries to determin the best
+     * match for the {@link ReflectionProvider} on its own.
+     * 
+     * @throws InitializationException in case of an initialization problem
+     */
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(null, (Mapper)null, hierarchicalStreamDriver);
     }
     
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and {@link ReflectionProvider}.
+     * 
+     * @throws InitializationException in case of an initialization problem
+     */
     public XStream(
             ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(reflectionProvider, (Mapper)null, hierarchicalStreamDriver);
@@ -326,6 +348,11 @@ public class XStream {
         aliasAttribute(classAttributeIdentifier, "class");
     }
 
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and {@link ReflectionProvider} and additionally with a prepared {@link Mapper}.
+     * 
+     * @throws InitializationException in case of an initialization problem
+     */
     public XStream(
             ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
         jvm = new JVM();
@@ -671,6 +698,7 @@ public class XStream {
 
     /**
      * Serialize an object to a pretty-printed XML String.
+     * @throws BaseException if the object cannot be serialized
      */
     public String toXML(Object obj) {
         Writer writer = new StringWriter();
@@ -680,6 +708,7 @@ public class XStream {
 
     /**
      * Serialize an object to the given Writer as pretty-printed XML.
+     * @throws BaseException if the object cannot be serialized
      */
     public void toXML(Object obj, Writer out) {
         HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
@@ -689,6 +718,7 @@ public class XStream {
 
     /**
      * Serialize an object to the given OutputStream as pretty-printed XML.
+     * @throws BaseException if the object cannot be serialized
      */
     public void toXML(Object obj, OutputStream out) {
         HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
@@ -698,6 +728,7 @@ public class XStream {
 
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
+     * @throws BaseException if the object cannot be serialized
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
         marshal(obj, writer, null);
@@ -708,6 +739,7 @@ public class XStream {
      * 
      * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If
      *            not present, XStream shall create one lazily as needed.
+     * @throws BaseException if the object cannot be serialized
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer, DataHolder dataHolder) {
         marshallingStrategy.marshal(writer, obj, converterLookup, mapper, dataHolder);
@@ -715,6 +747,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML String.
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object fromXML(String xml) {
         return fromXML(new StringReader(xml));
@@ -722,6 +755,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML Reader.
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object fromXML(Reader xml) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), null);
@@ -729,6 +763,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML InputStream.
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object fromXML(InputStream input) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), null);
@@ -737,6 +772,7 @@ public class XStream {
     /**
      * Deserialize an object from an XML String, populating the fields of the given root object
      * instead of instantiating a new one.
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object fromXML(String xml, Object root) {
         return fromXML(new StringReader(xml), root);
@@ -745,6 +781,7 @@ public class XStream {
     /**
      * Deserialize an object from an XML Reader, populating the fields of the given root object
      * instead of instantiating a new one.
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object fromXML(Reader xml, Object root) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
@@ -753,6 +790,7 @@ public class XStream {
     /**
      * Deserialize an object from an XML InputStream, populating the fields of the given root object
      * instead of instantiating a new one.
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object fromXML(InputStream xml, Object root) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
@@ -760,6 +798,7 @@ public class XStream {
 
     /**
      * Deserialize an object from a hierarchical data structure (such as XML).
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object unmarshal(HierarchicalStreamReader reader) {
         return unmarshal(reader, null, null);
@@ -768,6 +807,7 @@ public class XStream {
     /**
      * Deserialize an object from a hierarchical data structure (such as XML), populating the fields
      * of the given root object instead of instantiating a new one.
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root) {
         return unmarshal(reader, root, null);
@@ -780,6 +820,7 @@ public class XStream {
      *            XStream creating a new instance.
      * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If
      *            not present, XStream shall create one lazily as needed.
+     * @throws BaseException if the object cannot be deserialized
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root, DataHolder dataHolder) {
         return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
@@ -790,6 +831,7 @@ public class XStream {
      * 
      * @param name Short name
      * @param type Type to be aliased
+     * @throws InitializationException if no {@link ClassAliasingMapper} is available
      */
     public void alias(String name, Class type) {
         if (classAliasingMapper == null) {
@@ -807,6 +849,7 @@ public class XStream {
      * @param name Short name
      * @param type Type to be aliased
      * @since 1.2
+     * @throws InitializationException if no {@link ClassAliasingMapper} is available
      */
     public void aliasType(String name, Class type) {
         if (classAliasingMapper == null) {
@@ -823,12 +866,21 @@ public class XStream {
      * @param name Short name
      * @param type Type to be aliased
      * @param defaultImplementation Default implementation of type to use if no other specified.
+     * @throws InitializationException if no {@link DefaultImplementationsMapper} or no {@link ClassAliasingMapper} is available
      */
     public void alias(String name, Class type, Class defaultImplementation) {
         alias(name, type);
         addDefaultImplementation(defaultImplementation, type);
     }
 
+    /**
+     * Create an alias for a field name.
+     * 
+     * @param alias the alias itself
+     * @param type the type that declares the field
+     * @param fieldName the name of the field
+     * @throws InitializationException if no {@link FieldAliasingMapper} is available
+     */
     public void aliasField(String alias, Class type, String fieldName) {
         if (fieldAliasingMapper == null) {
             throw new InitializationException("No "
@@ -838,6 +890,13 @@ public class XStream {
         fieldAliasingMapper.addFieldAlias(alias, type, fieldName);
     }
 
+    /**
+     * Create an alias for an attribute
+     * 
+     * @param alias the alias itself
+     * @param attributeName the name of the attribute
+     * @throws InitializationException if no {@link AttributeAliasingMapper} is available
+     */
     public void aliasAttribute(String alias, String attributeName) {
         if (attributeAliasingMapper == null) {
             throw new InitializationException("No "
@@ -852,6 +911,7 @@ public class XStream {
      * 
      * @param fieldName the name of the field
      * @param type the Class of the type to be rendered as XML attribute
+     * @throws InitializationException if no {@link AttributeMapper} is available
      * @since 1.2
      */
     public void useAttributeFor(String fieldName, Class type) {
@@ -865,6 +925,7 @@ public class XStream {
      * Use an XML attribute for an arbotrary type.
      * 
      * @param type the Class of the type to be rendered as XML attribute
+     * @throws InitializationException if no {@link AttributeMapper} is available
      * @since 1.2
      */
     public void useAttributeFor(Class type) {
@@ -881,6 +942,7 @@ public class XStream {
      * 
      * @param defaultImplementation
      * @param ofType
+     * @throws InitializationException if no {@link DefaultImplementationsMapper} is available
      */
     public void addDefaultImplementation(Class defaultImplementation, Class ofType) {
         if (defaultImplementationsMapper == null) {
@@ -894,6 +956,7 @@ public class XStream {
     /**
      * Add immutable types. The value of the instances of these types will always be written into
      * the stream even if they appear multiple times.
+     * @throws InitializationException if no {@link ImmutableTypesMapper} is available
      */
     public void addImmutableType(Class type) {
         if (immutableTypesMapper == null) {
@@ -947,6 +1010,7 @@ public class XStream {
      * <code>XPATH_ABSOLUTE_REFERENCES</code>, <code>XPATH_RELATIVE_REFERENCES</code>,
      * <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>.
      * 
+     * @throws IllegalArgumentException if the mode is not one of the declared types
      * @see #XPATH_ABSOLUTE_REFERENCES
      * @see #XPATH_RELATIVE_REFERENCES
      * @see #ID_REFERENCES
@@ -996,6 +1060,7 @@ public class XStream {
      * @param fieldName name of the field in the ownerType. This field must be an
      *            <code>java.util.ArrayList</code>.
      * @param itemType type of the items to be part of this collection.
+     * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
      */
     public void addImplicitCollection(Class ownerType, String fieldName, Class itemType) {
         if (implicitCollectionMapper == null) {
@@ -1015,6 +1080,7 @@ public class XStream {
      *            <code>java.util.ArrayList</code>.
      * @param itemFieldName element name of the implicit collection
      * @param itemType item type to be aliases be the itemFieldName
+     * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
      */
     public void addImplicitCollection(
             Class ownerType, String fieldName, String itemFieldName, Class itemType) {
@@ -1214,6 +1280,7 @@ public class XStream {
      * type and not necessarily the type that is converted.
      * 
      * @since 1.1.3
+     * @throws InitializationException if no {@link FieldAliasingMapper} is available
      */
     public void omitField(Class type, String fieldName) {
         if (fieldAliasingMapper == null) {
