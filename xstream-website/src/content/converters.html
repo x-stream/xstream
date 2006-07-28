@@ -20,14 +20,10 @@
 		<!--
 		
 		TODO:
-			ISO8601DateConverter
 			ReflectionConverter
 			SerializableConverter
 			ExternalizableConverter
-			EnumConverter
-			EnumSetConverter
 			EnumMapConverter
-			SubjectConverter
 			TextAttribute
 			...
 			
@@ -156,6 +152,12 @@
                 nested exceptions. The stack trace elements are handled by the
                 <a href="javadoc/com/thoughtworks/xstream/converters/extended/StackTraceElementConverter.html">StackTraceElementConverter</a>.</td>
             </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumConverter.html">EnumConverter</a></td>
+                <td>java.lang.Enum</td>
+                <td class="example">&lt;java.lang.annotation.RetentionPolicy&gt;<br/>CLASS<br/>&lt;/java.lang.annotation.RetentionPolicy&gt;</td>
+                <td>Available under Java 1.5 or greater.</td>
+            </tr>
 
             <!-- .................................................................................................. -->
             <tr>
@@ -264,6 +266,22 @@
                 <td>&nbsp;</td>
             </tr>
             <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ISO8601DateConverter.html">ISO8601DateConverter</a></td>
+                <td>java.util.Date</td>
+                <td class="example">&lt;date&gt;2006-07-28T12:06:17.654-03:00&lt;/date&gt;</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ISO8601GregorianCalendarConverter.html">ISO8601GregorianCalendarConverter</a></td>
+                <td>java.util.GregorianCalendar</td>
+                <td class="example">
+                    &lt;gregorian-calendar&gt;<br/>
+                    2006-07-28T12:07:02.788-03:00<br/>
+                    &lt;/gregorian-calendar&gt;
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/LocaleConverter.html">LocaleConverter</a></td>
                 <td>java.util.Locale</td>
                 <td class="example">&lt;locale&gt;en_GB&lt;/locale&gt;</td>
@@ -274,6 +292,23 @@
                 <td>java.util.Currency</td>
                 <td class="example">&lt;currency&gt;USD&lt;/currency&gt;</td>
                 <td>This is only available under Java 1.4 or greater.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumSetConverter.html">EnumSetConverter</a></td>
+                <td>java.util.EnumSet</td>
+                <td class="example">&lt;enum-set enum-type=\"simple\"&gt;<br/>GREEN,BLUE<br/>&lt;/enum-set&gt;</td>
+                <td>Available under Java 1.5 or greater.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/RegexPatternConverter.html">RegexPatternConverter</a></td>
+                <td>java.util.regex.Pattern</td>
+                <td class="example">
+                &lt;java.util.regex.Pattern&gt;<br/>
+				&lt;pattern&gt;.*&lt;/pattern&gt;<br/>
+				&lt;flags&gt;0&lt;/flags&gt;<br/>
+				&lt;/java.util.regex.Pattern&gt;
+                </td>
+                <td>Available under Java 1.4 or greater.</td>
             </tr>
 
             <!-- .................................................................................................. -->
@@ -442,6 +477,48 @@
                 <td class="example">&nbsp;</td>
                 <td><b>Warning:</b> The AWT toolkit is initiailized when a Font is deserialized due to the internals of the Font class.
                 This should only be an issue if deserializing a Font on a headless server process.</td>
+            </tr>
+            
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="4" class="headerRow"><h1>javax.security.auth</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/SubjectConverter.html">SubjectConverter</a></td>
+                <td>javax.security.auth.Subject</td>
+                <td class="example">
+                    &lt;color&gt;<br/>
+&lt;auth-subject&gt;<br/>
+  &lt;principals&gt;<br/>
+    &lt;com.thoughtworks.xstream.Admin/&gt;<br/>
+  &lt;/principals&gt;<br/>
+  &lt;readOnly&gt;false&lt;/readOnly&gt;<br/>
+&lt;/auth-subject&gt;<br/>
+                </td>
+                <td>This converter does not serialize any credentials but only the principals.</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="4" class="headerRow"><h1>java.nio</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CharsetConverter.html">CharsetConverter</a></td>
+                <td>java.nio.charset.Charset</td>
+                <td class="example">&lt;charset&gt;US-ASCII&lt;/charset&gt;</td>
+                <td>&nbsp;</td>
             </tr>
 
         </table>
