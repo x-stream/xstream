@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <title>Persistence API Tutorial</title>
+  </head>
+  <body>
+<h2>The problem</h2><p>Suppose that you need a easy way to persist some objects in the file system. Not just one, but a whole collection. The real problem arrives when you start using java.io api in order to create one output stream for each object, showing itself to be really painful - although simple.</p>
+<p>Imagine that you have the following Java class, a basic Author class (stolen from some other tutorial):</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream;
+
+public class Author {
+        private String name;
+        public Author(String name) {
+                this.name = name;
+        }
+        public String getName() {
+                return name;
+        }
+}</pre></div>
+<p>By using the XmlArrayList implementation of java.util.List you get an easy way to write all authors to disk</p>
+<p>The XmlArrayList (and related collections) receives a StreamStrategy during its contruction. This Strategy decides what to do
+with each of it's elements. The basic implementation - our need - is the FileStreamStrategy, capable of writing different files to a base directory.</p>
+<div class="Source Java"><pre>
+// prepares the file strategy to directory /tmp
+StreamStrategy strategy = new FileStreamStrategy(new File("/tmp"));
+</pre></div>
+<p>We can easily create an XmlArrayList from that strategy:</p>
+<div class="Source Java"><pre>
+// prepares the file strategy to directory /tmp
+StreamStrategy strategy = new FileStreamStrategy(new File("/tmp"));
+// creates the list:
+List list = new XmlArrayList(strategy);
+</pre></div>
+<h2>Adding elements</h2>
+<p>Now that we have an XmlArrayList object in our hands, we are able to add, remove and search for objects as usual. Let's add five authors and play around with our list:</p>
+<div class="Source Java"><pre>
+package org.codehaus.xstream.examples;
+
+public class AddAuthors {
+
+	public static void main(String[] args) {
+	
+		// prepares the file strategy to directory /tmp
+		StreamStrategy strategy = new FileStreamStrategy(new File("/tmp"));
+		// creates the list:
+		List list = new XmlArrayList(strategy);
+		
+		// adds four authors
+		list.add(new Author("joe walnes"));
+		list.add(new Author("joerg schaible"));
+		list.add(new Author("mauro talevi"));
+		list.add(new Author("guilherme silveira"));
+		
+		// adding an extra author
+		Author mistake = new Author("mama");
+		list.add(mistake);
+	
+	}
+}
+</pre></div>
+<p>If we check the /tmp directory, there are five files: 1.xml, 2.xml, 3.xml, 4.xml, 5.xml, each one containing the xml serialized form of our authors.</p>
+<h2>Playing around</h2>
+<p>Let's remove mama from the list and iterate over all authors:</p>
+<div class="Source Java"><pre>
+package org.codehaus.xstream.examples;
+
+public class RemoveMama {
+
+	public static void main(String[] args) {
+	
+		// prepares the file strategy to directory /tmp
+		StreamStrategy strategy = new FileStreamStrategy(new File("/tmp"));
+		// looks up the list:
+		List list = new XmlArrayList(strategy);
+		
+		// remember the list is still there! the files 1-5.xml are still in /tmp!
+		// the list was persisted!
+		
+		for(Iterator it = list.iterator(); it.hasNext(); ) {
+			Author author = (Author) it.next();
+			if(author.getName().equals("mama")) {
+				System.out.println("Removing mama...");
+				it.remove();
+			} else {
+				System.out.println("Keeping " + author.getName());
+			}
+		}
+	
+	}
+}
+</pre></div>
+<p>The result?</p>
+<div class="Source Java"><pre>
+Keeping joe walnes
+Keeping joerg schaible
+Keeping mauro talevi
+Keeping guilherme silveira
+Removing mama...
+</pre></div>
+<h2>Going further</h2>
+<p>From this point on, you can implement different StreamStrategies in order to generate other behaviour using your XmlArrayList collection, or try the other implementations: XmlSet and XmlMap.</p>
+
+
+  </body>
+</html>
