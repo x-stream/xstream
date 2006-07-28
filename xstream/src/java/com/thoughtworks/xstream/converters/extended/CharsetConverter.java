@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
  * Converts a java.nio.charset.Carset to a string.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.2
  */
 public class CharsetConverter extends AbstractSingleValueConverter {
 

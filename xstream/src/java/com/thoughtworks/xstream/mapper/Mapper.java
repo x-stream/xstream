@@ -61,7 +61,7 @@ public interface Mapper {
      * 
      * @param attribute the attribute
      * @return the alias
-     * @since upcoming
+     * @since 1.2
      */
     String aliasForAttribute(String attribute);
 
@@ -70,7 +70,7 @@ public interface Mapper {
      * 
      * @param alias the alias
      * @return the attribute's name
-     * @since upcoming
+     * @since 1.2
      */
     String attributeForAlias(String alias);
 

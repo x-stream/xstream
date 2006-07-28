@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
  * A wrapper implementation for the ReflectionProvider.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.2
  */
 public class ReflectionProviderWrapper implements ReflectionProvider {
     
