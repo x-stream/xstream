@@ -42,7 +42,7 @@
     <ul>
         <li>Experimental binary reader and writer.</li>
         <li>Experimental HierarichicalStreamCopier allows streams to be copied from one format to another without the overhead of serialization.</li>
-        <li>Experimental JSON support allows streams to be copied from one format to another without the overhead of serialization.</li>
+        <li>Experimental JSON support allows streams to be copied from one format to another without the overhead of serialization (contributed by Paul Hammant).</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -70,6 +70,7 @@
     <h2>API changes</h2>
 
     <ul>
+        <li>JIRA:XSTR-252, Refactored support for XML friendly character mapping.</li>
         <li>JIRA:XSTR-69, Refactored ReflectionConverter allows simpler subclassing.</li>
         <li>Unmarshalling context has now an overloaded version of the method convertAnother to provide the Converter directly.</li>
         <li>Deprecate ClassMapper for Mapper. All methods with a ClassMapper parameter have now a duplicate taking only a Mapper. The variant with the ClassMapper is deprecated.</li>
