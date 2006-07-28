@@ -4,11 +4,17 @@
     <property name="version" value="SNAPSHOT"/>
     <property name="dist.path" value="/home/projects/xstream/dist/distributions"/>
     <property name="jar.path" value="/home/projects/xstream/dist/jars"/>
+    <property name="javadoc.path" value="/home/projects/xstream/dist/snapshot-javadoc"/>
 
     <target name="publish">
         <ant dir="." target="all"/>
         <copy file="xstream-${version}.jar" todir="${jar.path}"/>
         <copy file="xstream-${version}.zip" todir="${dist.path}"/>
+    	<copy todir="${javadoc.path}">
+    		<fileset dir=".">
+	            <include name="javadoc/**"/>
+    		</fileset>
+    	</copy>
     </target> 
 
 </project>
