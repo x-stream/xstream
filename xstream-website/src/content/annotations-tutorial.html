@@ -1,0 +1,251 @@
+<html>
+  <head>
+    <title>Annotations Tutorial</title>
+  </head>
+  <body>
+<h2>The problem</h2><p>Sometimes it gets ugly to call all those xstream aliases/register converter methods or you might simply like the new trend on configuring pojos: java annotations.</p>
+<p>This tutorial will show you how to use some of the annotations provided by XStream in order to make configuration easier. Let's start with a custom Message class:</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream;
+package com.thoughtworks.xstream;
+public class RendezvousMessage {
+
+	private int messageType;
+	
+	public RendezvousMessage(int messageType) {
+		this.messageType = messageType;
+	}
+	
+}</pre></div>
+<p>Let's code the xstream calls which generate the xml file:</p>
+<div class="Source Java"><pre>
+package com.thoughtworks.xstream;
+public class Tutorial {
+
+	
+	public static void main(String[] args) {
+		XStream stream = new XStream(new DomDriver());
+		RendezvousMessage msg = new RendezvousMessage(15);
+		System.out.println(stream.toXML(msg));
+	}
+
+}
+</pre></div>
+<p>Results in the following xml:</p>
+<div class="Source Java"><pre>
+&lt;com.thoughtworks.xstream.RendezvousMessage&gt;
+  &lt;messageType>15&lt;/messageType&gt;
+&lt;/com.thoughtworks.xstream.RendezvousMessage&gt;
+</pre></div>
+<h2>Aliasing annotations</h2>
+<p>The most basic annotation is the one responsible for type and field aliasing: @XStreamAlias. Let's annotate both our type and field and run the tutorial method again.</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;
+	
+	public RendezvousMessage(int messageType) {
+		this.messageType = messageType;
+	}
+	
+}
+</pre></div>
+<p>In some strange way, the result is the same. What happened here? XStream does not read this annotation by default until now as it would be hard (impossible?) to unserialize the xml code. We need to tell xstream to read the annotations from this type:</p>
+<div class="Source Java"><pre>
+	public static void main(String[] args) {
+		XStream stream = new XStream(new DomDriver());
+		Annotations.configureAliases(stream, RendezvousMessage.class);
+		RendezvousMessage msg = new RendezvousMessage(15);
+		System.out.println(stream.toXML(msg));
+	}
+</pre></div>
+<p>Note that we have called the configureAliases static method in the Annotations class. This method registers all aliases annotations in the xstream instance passed as first argument. This method uses the var-args technique in order to provide a faster way to register many types. The resulting xml is what we have expected:</p>
+<div class="Source Java"><pre>
+&lt;message&gt;
+  &lt;type&gt;15&lt;/type&gt;
+&lt;/message&gt;
+</pre></div>
+<h2>Implicit collections</h2>
+<p>Let's add a List of content to our RendezvousMessage. We desire the same functionality obtained with implicit collections.</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;        
+	
+	private List&lt;String&gt; content;
+	
+	public RendezvousMessage(int messageType, String ... content) {
+		this.messageType = messageType;
+		this.content = Arrays.asList(content);
+	}
+	
+}
+</pre></div>
+<div class="Source Java"><pre>
+	public static void main(String[] args) {
+		XStream stream = new XStream(new DomDriver());
+		Annotations.configureAliases(stream, RendezvousMessage.class);
+		RendezvousMessage msg = new RendezvousMessage(15, "firstPart","secondPart");
+		System.out.println(stream.toXML(msg));
+	}
+</pre></div>
+<p>The resulting xml shows the collection name before its elements:</p>
+<div class="Source Java"><pre>
+&lt;message&gt;
+  &lt;type&gt;15&lt;/type&gt;
+  &lt;content class="java.util.Arrays$ArrayList"&gt;
+    &lt;a class="string-array"&gt;
+      &lt;string&gt;firstPart&lt;/string&gt;
+      &lt;string&gt;secondPart&lt;/string&gt;
+    &lt;/a&gt;
+  &lt;/content&gt;
+&lt;/message&gt;
+</pre></div>
+<p>This is not what we desire therefore we will annotate the content list to be recalled as an implicit collection:</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+@XStreamImplicitCollection(value="content")
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;
+
+	private List&lt;String&gt; content;
+
+	public RendezvousMessage(int messageType, String... content) {
+		this.messageType = messageType;
+		this.content = Arrays.asList(content);
+	}
+
+}
+</pre></div>
+<p>Resulting in an xml which ignores the field name (content):</p>
+<div class="Source Java"><pre>
+&lt;message&gt;
+  &lt;type&gt;15&lt;/type&gt;
+  &lt;a class="string-array"&gt;
+    &lt;string&gt;firstPart&lt;/string&gt;
+    &lt;string&gt;secondPart&lt;/string&gt;
+  &lt;/a&gt;
+&lt;/message&gt;
+</pre></div>
+<p>We are almost there... we still want to remove the 'a' tag, and define each content part with the tag 'part'. In order to do so, let's add another attribute to our implicit collection annotation. The attribute field defines the name of the tag used for data contained inside this collection:
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+@XStreamImplicitCollection(value="content",item="part")
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;
+
+	private List&lt;String&gt; content;
+
+	public RendezvousMessage(int messageType, String... content) {
+		this.messageType = messageType;
+		this.content = Arrays.asList(content);
+	}
+
+}
+</pre></div>
+<p>Resulting in a cleaner xml:</p>
+<div class="Source Java"><pre>
+&lt;message&gt;
+  &lt;type&gt;15&lt;/type&gt;
+  &lt;part&gt;firstPart&lt;/part&gt;
+  &lt;part&gt;secondPart&lt;/part&gt;
+&lt;/message&gt;
+</pre></div>
+<h2>Custom converters</h2>
+<p>Let's create another attribute which defines the timestamp when the message was created:</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+@XStreamImplicitCollection(value="content",item="part")
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;
+
+	private List&lt;String&gt; content;
+	
+	private Calendar created = new GregorianCalendar();
+
+	public RendezvousMessage(int messageType, String... content) {
+		this.messageType = messageType;
+		this.content = Arrays.asList(content);
+	}
+
+}
+</pre></div>
+<p>Resulting in the following xml:</p>
+<div class="Source Java"><pre>
+&lt;message&gt;
+  &lt;type&gt;15&lt;/type&gt;
+  &lt;part&gt;firstPart&lt;/part&gt;
+  &lt;part&gt;secondPart&lt;/part&gt;
+  &lt;created&gt;
+    &lt;time&gt;1154097812245&lt;/time&gt;
+    &lt;timezone&gt;America/Sao_Paulo&lt;/timezone&gt;
+  &lt;/created&gt;
+&lt;/message&gt;
+</pre></div>
+<p>Now we face the following problem: we want to use a custom converter for this Calendar, but only for this Calendar, this exact field in this exact type. Easy... let's annotate it with the custom converter annotation:</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+@XStreamImplicitCollection(value="content",item="part")
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;
+
+	private List&lt;String&gt; content;
+
+	@XStreamConverter(SingleValueCalendarConverter.class)
+	private Calendar created = new GregorianCalendar();
+
+	public RendezvousMessage(int messageType, String... content) {
+		this.messageType = messageType;
+		this.content = Arrays.asList(content);
+	}
+
+}
+</pre></div>
+<p>Let's create the custom converter:</p>
+<div class="Source Java"><pre>
+public class SingleValueCalendarConverter implements Converter {
+
+    public void marshal(Object source, HierarchicalStreamWriter writer,
+            MarshallingContext context) {
+        Calendar calendar = (Calendar) source;
+        writer.setValue(String.valueOf(calendar.getTime().getTime()));
+    }
+
+    public Object unmarshal(HierarchicalStreamReader reader,
+            UnmarshallingContext context) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date(Long.parseLong(reader.getValue())));
+        return calendar;
+    }
+
+    public boolean canConvert(Class type) {
+        return type.equals(GregorianCalendar.class);
+    }
+}
+</pre></div>
+<p>And we end up with the converter being used and generating the following xml:</p>
+<div class="Source Java"><pre>
+&lt;message&gt;
+  &lt;type&gt;15&lt;/type&gt;
+  &lt;part&gt;firstPart&lt;/part&gt;
+  &lt;part&gt;secondPart&lt;/part&gt;
+  &lt;created&gt;1154097812245&lt;/created&gt;
+&lt;/message&gt;
+</pre></div>
+<p>Note that the @XStreamConverter annotation on fields is automatically read, without the need for calling any Annotations static method. XStream can easily check for Java 1.5 support during runtime and load its parts accordingly.</p>
+<h2>Summing up</h2>
+<p>The XStream annotations support might help you configuring your class mappings in some ways, as the custom configuration will appear in your types, but might not be the solution for other problems, i.e. when you need to map the same type to two different xml 'standards'. Others might claim that the configuration should be clearly stated in a java class and not mixed with your model, its up to you to pick the best approach in your case: annotations or direct method calls to the XStream instance.</p>
+
+  </body>
+</html>
