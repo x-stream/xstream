@@ -6,4 +6,16 @@ Before building:
 
 mvn install:install-file -Dfile=xstream/lib/xml-writer-0.2.jar -DgroupId=xml-writer -DartifactId=xml-writer -Dversion=0.2 -Dpackaging=jar
 
-Note:  there are still issues on the xsite validation of javadoc links
+To build:
+
+mvn clean install
+
+Before deploying:
+
+ensure ~/.m2/settings.xml contains the entries for the distribution servers with the Codehaus DAV 
+username and passwords.
+
+To deploy (optionally adding sources and javadoc jars):
+mvn deploy [-DperformRelease=true]
+
+

@@ -13,26 +13,6 @@
 
 	<build>
 		<plugins>
-			<!-- Is this required? -->
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>resources</id>
-						<phase>package</phase>
-						<configuration>
-							<tasks>
-								<copy todir="target/xsite" overwrite="yes">
-									<fileset dir="${basedir}/../xstream/target/javadoc/apidocs"/>
-								</copy>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<!-- Xsite fails to validate links - Need to configure it to be optional?  -->
 			<plugin>
 				<groupId>org.codehaus.xsite</groupId>
