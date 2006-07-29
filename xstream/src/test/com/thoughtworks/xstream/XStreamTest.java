@@ -60,6 +60,35 @@ public class XStreamTest extends TestCase {
         assertEquals("_foo", u.a_Str);
     }
 
+    public void testUnmarshalsObjectFromXmlWhichClassContainsUnderscores() {
+        String xml =
+                "<com.thoughtworks.xstream.XStreamTest_-U_U>" +
+                "  <aStr>custom value</aStr>" +
+                "</com.thoughtworks.xstream.XStreamTest_-U_U>";
+
+        U_U u = (U_U) xstream.fromXML(xml);
+
+        assertEquals("custom value", u.aStr);
+    }
+
+
+    public void testUnmarshalsObjectFromXmlWithUnderscoresWithoutAliasingFields() {
+        String xml =
+                "<u-u>" +
+                "  <a_Str>custom value</a_Str>" +
+                "</u-u>";
+
+        xstream.alias("u-u", U.class);
+
+        U u = (U) xstream.fromXML(xml);
+
+        assertEquals("custom value", u.a_Str);
+    }
+    
+    public static class U_U {
+    	String aStr;
+    }
+
     public void testUnmarshalsObjectFromXml() {
 
         String xml =
