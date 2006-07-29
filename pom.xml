@@ -266,6 +266,7 @@
 				<directory>${basedir}/src/test</directory>
 				<includes>
 					<include>**/*.properties</include>
+					<include>**/*.xsl</include>
 				</includes>
 			</testResource>
 		</testResources>
