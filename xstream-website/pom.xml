@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.thoughtworks.xstream</groupId>
+		<artifactId>xstream-parent</artifactId>
+		<version>1.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>xstream-website</artifactId>
+	<packaging>pom</packaging>
+	<name>XStream Website</name>	
+
+	<build>
+		<plugins>
+			<!-- Is this required? -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>resources</id>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<copy todir="target/xsite" overwrite="yes">
+									<fileset dir="${basedir}/../xstream/target/javadoc/apidocs"/>
+								</copy>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Xsite fails to validate links - Need to configure it to be optional?  -->
+			<plugin>
+				<groupId>org.codehaus.xsite</groupId>
+				<artifactId>xsite-maven-plugin</artifactId>
+				<configuration>
+					<siteMapPath>${basedir}/src/content/website.xml</siteMapPath>
+					<skinPath>${basedir}/src/templates/skin.html</skinPath>
+					<outputDirectoryPath>${basedir}/target/xsite</outputDirectoryPath>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
