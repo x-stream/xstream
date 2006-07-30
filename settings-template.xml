@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<servers>
+		<server>
+			<id>codehaus-xstream-repository</id>
+			<username></username>
+			<password></password>
+		</server>
+		<server>
+			<id>codehaus-xstream-snapshot-repository</id>
+			<username></username>
+			<password></password>
+		</server>
+		<server>
+			<id>codehaus-xstream-site</id>
+			<username></username>
+			<password></password>
+		</server>
+	</servers>
+</settings>

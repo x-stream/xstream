@@ -12,8 +12,7 @@ mvn clean install
 
 Before deploying:
 
-ensure ~/.m2/settings.xml contains the entries for the distribution servers with the Codehaus DAV 
-username and passwords.
+copy settings-template.xml to ~/.m2/settings.xml adding your Codehaus DAV username and passwords.
 
 To deploy (optionally adding sources and javadoc jars):
 mvn deploy [-DperformRelease=true]
