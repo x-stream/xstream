@@ -297,17 +297,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<excludes>
-						<exclude implementation="java.lang.String">**/*Point*.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
@@ -352,8 +341,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clover-plugin</artifactId>
 				<configuration>
-        				<licenseLocation>${user.home}/licenses/clover.license</licenseLocation>
-        				<jdk>1.5</jdk>
+        			<licenseLocation>${user.home}/licenses/clover.license</licenseLocation>
+        			<jdk>1.5</jdk>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -399,5 +388,78 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	
+
+	<profiles>
+		<profile>
+			<id>jdk15</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<jdk>1.5</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>1.5</source>
+							<target>1.5</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>jdk14</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<jdk>1.4</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>1.4</source>
+							<target>1.4</target>
+							<excludes>
+								<exclude>**/annotations/*</exclude>
+								<exclude>**/enums/*</exclude>
+							</excludes>
+							<testExcludes>
+								<exclude>**/annotations/*</exclude>
+								<exclude>**/enums/*</exclude>								
+								<exclude>**/json/*</exclude>								
+								<exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
+							</testExcludes>
+						</configuration>
+   					</plugin>					
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>macosx</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<os>
+					<name>Mac OS X</name>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<!-- Some apple.awt classes throw UnsupportedOperationException  -->
+								<exclude>**/SwingTest.java</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>		
+	</profiles>
 </project>
