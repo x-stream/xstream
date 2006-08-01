@@ -429,8 +429,7 @@
 							</excludes>
 							<testExcludes>
 								<exclude>**/annotations/*</exclude>
-								<exclude>**/enums/*</exclude>								
-								<exclude>**/json/*</exclude>								
+								<exclude>**/enums/*</exclude>
 								<exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
 							</testExcludes>
 						</configuration>

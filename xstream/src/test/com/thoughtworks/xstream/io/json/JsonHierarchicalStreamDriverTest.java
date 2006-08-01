@@ -49,7 +49,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                         "    'num1': 3,\n" +
                         "    'bool': false\n" +
                         "  }\n" +
-                        "}}").replace("'", "\"");
+                        "}}").replace('\'', '"');
 
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
 
@@ -102,7 +102,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                     "      }\n" +
                     "    ]\n" +
                     "  }\n" +
-                    "}}").replace("'", "\"");
+                    "}}").replace('\'', '"');
 
     public void testListsRepresentedCorrectlyAsJson() {
 
@@ -238,7 +238,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                         "    'alignment': 'center',\n" +
                         "    'onMouseUp': 'sun1.opacity = (sun1.opacity / 100) * 90;'\n" +
                         "  }\n" +
-                        "}}").replace("'", "\"");
+                        "}}").replace('\'', '"');
 
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("widget", Widget.class);
