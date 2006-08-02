@@ -6,84 +6,6 @@
 	<version>1.2-SNAPSHOT</version>
 	<name>XStream Parent</name>
 
-	<ciManagement>
-	</ciManagement>
-
-	<distributionManagement>
-		<!--  
-			The servers here defined must also appear in ~/.m2/settings.xml
-		<settings>
-		  <servers>
-    		<server>
-        		<id>codehaus-xstream-repository</id>
-        		<username></username>
-        		<password></password>
-    		</server>
-    		<server>
-        		<id>codehaus-xstream-snapshot-repository</id>
-        		<username></username>
-        		<password></password>
-    		</server>
-    		<server>
-        		<id>codehaus-xstream-site</id>
-        		<username></username>
-        		<password></password>
-    		</server>
-  		  </servers>
-		</settings>          
-		 -->
-		<repository>
-			<id>codehaus-xstream-repository</id>
-			<name>Codehaus XStream Repository</name>
-			<url>dav:https://dav.codehaus.org/repository/xstream/</url>
-		</repository>
-		<snapshotRepository>
-			<id>codehaus-xstream-snapshot-repository</id>
-			<name>Codehaus XStream Snapshot Repository</name>
-			<url>dav:https://dav.codehaus.org/snapshots.repository/xstream/</url>
-		</snapshotRepository>
-		<site>
-			<id>codehaus-xstream-site</id>
-			<name>Codehaus XStream Site</name>
-			<url>dav:https://dav.codehaus.org/xstream/</url>
-		</site>
-	</distributionManagement>
-
-	<scm>
-		<connection>scm:svn:https://svn.codehaus.org/xstream/trunk</connection>
-		<developerConnection>scm:svn:https://svn.codehaus.org/xstream/trunk</developerConnection>
-	</scm>
-
-	<repositories>
-		<repository>
-			<id>codehaus-repository</id>
-			<name>Codehaus Repository</name>
-			<url>http://repository.codehaus.org</url>
-		</repository>
-		<repository>
-			<id>codehaus-legacy-repository</id>
-			<name>Codehaus Legacy Repository</name>
-			<url>http://dist.codehaus.org</url>
-			<layout>legacy</layout>
-		</repository>
-		<repository>
-			<id>apache-snapshot-repository</id>
-			<name>Apache Snapshot repository</name>
-			<url>http://people.apache.org/maven-snapshot-repository/</url>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>codehaus-plugin-repository</id>
-			<name>Codehaus Plugin Snapshot Repository</name>
-			<url>http://snapshots.maven.codehaus.org/maven2/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-	
 	<modules>
 		<module>xstream</module>
 		<module>xstream-website</module>
@@ -184,134 +106,26 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
-	<dependencies>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>jdom</groupId>
-			<artifactId>jdom</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>opensymphony</groupId>
-			<artifactId>sitemesh</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>xml-writer</groupId>
-			<artifactId>xml-writer</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>xom</groupId>
-			<artifactId>xom</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>xpp3</groupId>
-			<artifactId>xpp3_min</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-		</dependency>
-
-
-		<!-- test-scoped -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>jmock</groupId>
-			<artifactId>jmock</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>jmock</groupId>
-			<artifactId>jmock-cglib</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>cglib</groupId>
-					<artifactId>cglib-full</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
-
 	<build>
 		<sourceDirectory>${basedir}/src/java</sourceDirectory>
-		<!-- Resources that are packaged in the JAR file -->
 		<resources>
 			<resource>
 				<directory>${basedir}/src/java</directory>
-				<includes>
-					<include>**/*.properties</include>
-				</includes>
 			</resource>
 		</resources>
-
 		<testSourceDirectory>${basedir}/src/test</testSourceDirectory>
 		<testResources>
 			<testResource>
 				<directory>${basedir}/src/test</directory>
 				<includes>
-					<include>**/*.properties</include>
 					<include>**/*.xsl</include>
 				</includes>
 			</testResource>
 		</testResources>
-
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<!-- Run-time pre-processing -->
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -323,7 +137,7 @@
 					<systemProperties>
 						<property>
 							<name>test.src.dir</name>
-							<value>${basedir}/src/test</value>
+							<value>${project.build.testSourceDirectory}</value>
 						</property>
 						<property>
 							<name>java.awt.headless</name>
@@ -338,16 +152,9 @@
 				<version>2.0</version>
 			</plugin>			
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clover-plugin</artifactId>
-				<configuration>
-        			<licenseLocation>${user.home}/licenses/clover.license</licenseLocation>
-        			<jdk>1.5</jdk>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -359,11 +166,6 @@
 		</plugins>
 
 		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-1</version>
-			</extension>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-webdav</artifactId>
@@ -461,4 +263,80 @@
 			</build>
 		</profile>		
 	</profiles>
+	
+	<distributionManagement>
+		<!--  
+			The servers here defined must also appear in ~/.m2/settings.xml
+		<settings>
+		  <servers>
+    		<server>
+        		<id>codehaus-xstream-repository</id>
+        		<username></username>
+        		<password></password>
+    		</server>
+    		<server>
+        		<id>codehaus-xstream-snapshot-repository</id>
+        		<username></username>
+        		<password></password>
+    		</server>
+    		<server>
+        		<id>codehaus-xstream-site</id>
+        		<username></username>
+        		<password></password>
+    		</server>
+  		  </servers>
+		</settings>          
+		 -->
+		<repository>
+			<id>codehaus-xstream-repository</id>
+			<name>Codehaus XStream Repository</name>
+			<url>dav:https://dav.codehaus.org/repository/xstream/</url>
+		</repository>
+		<snapshotRepository>
+			<id>codehaus-xstream-snapshot-repository</id>
+			<name>Codehaus XStream Snapshot Repository</name>
+			<url>dav:https://dav.codehaus.org/snapshots.repository/xstream/</url>
+		</snapshotRepository>
+		<site>
+			<id>codehaus-xstream-site</id>
+			<name>Codehaus XStream Site</name>
+			<url>dav:https://dav.codehaus.org/xstream/</url>
+		</site>
+	</distributionManagement>
+
+	<scm>
+		<connection>scm:svn:https://svn.codehaus.org/xstream/trunk</connection>
+		<developerConnection>scm:svn:https://svn.codehaus.org/xstream/trunk</developerConnection>
+	</scm>
+
+	<repositories>
+		<repository>
+			<id>codehaus-repository</id>
+			<name>Codehaus Repository</name>
+			<url>http://repository.codehaus.org</url>
+		</repository>
+		<repository>
+			<id>codehaus-legacy-repository</id>
+			<name>Codehaus Legacy Repository</name>
+			<url>http://dist.codehaus.org</url>
+			<layout>legacy</layout>
+		</repository>
+		<repository>
+			<id>apache-snapshot-repository</id>
+			<name>Apache Snapshot repository</name>
+			<url>http://people.apache.org/maven-snapshot-repository/</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>codehaus-plugin-repository</id>
+			<name>Codehaus Plugin Snapshot Repository</name>
+			<url>http://snapshots.maven.codehaus.org/maven2/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+		
 </project>
