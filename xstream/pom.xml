@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -13,48 +12,45 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		
-		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>jdom</groupId>
 			<artifactId>jdom</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
-			<groupId>opensymphony</groupId>
-			<artifactId>sitemesh</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>xml-writer</groupId>
+			<groupId>com.megginson.sax</groupId>
 			<artifactId>xml-writer</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>stax</groupId>
 			<artifactId>stax</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>stax</groupId>
 			<artifactId>stax-api</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>xom</groupId>
 			<artifactId>xom</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -65,6 +61,7 @@
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 
@@ -80,23 +77,44 @@
 		</dependency>
 
 		<dependency>
-			<groupId>jmock</groupId>
-			<artifactId>jmock-cglib</artifactId>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemProperties>
+						<property>
+							<name>test.src.dir</name>
+							<value>${project.build.testSourceDirectory}</value>
+						</property>
+					</systemProperties>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 	<profiles>
 		<profile>
 			<id>jdk15</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
 				<jdk>1.5</jdk>
 			</activation>
 			<build>
 				<plugins>
 					<!-- two-stage compile process as a workaround until multiple JDK support is added
-						 http://jira.codehaus.org/browse/MCOMPILER-37 
-					 -->
+						http://jira.codehaus.org/browse/MCOMPILER-37 
+					-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
@@ -110,9 +128,7 @@
 							<testExcludes>
 								<exclude>**/annotations/*</exclude>
 								<exclude>**/enums/*</exclude>
-								<exclude>
-									**/reflection/PureJavaReflectionProvider15Test*
-								</exclude>
+								<exclude>**/acceptance/SecurityManagerTest*</exclude>
 							</testExcludes>
 						</configuration>
 					</plugin>
@@ -125,12 +141,9 @@
 								<phase>compile</phase>
 								<configuration>
 									<tasks>
-										<javac
-											srcdir="${project.build.sourceDirectory}"
-											destdir="${project.build.outputDirectory}"
-											source="1.5" target="1.5">
+										<javac srcdir="${project.build.sourceDirectory}"
+											destdir="${project.build.outputDirectory}" source="1.5" target="1.5">
 											<include name="**/annotations/*" />
-											<include name="**/enums/*" />
 											<classpath refid="maven.compile.classpath" />
 										</javac>
 									</tasks>
@@ -144,13 +157,9 @@
 								<phase>test-compile</phase>
 								<configuration>
 									<tasks>
-										<javac
-											srcdir="${project.build.testSourceDirectory}"
-											destdir="${project.build.testOutputDirectory}"
-											source="1.5" target="1.5">
+										<javac srcdir="${project.build.testSourceDirectory}"
+											destdir="${project.build.testOutputDirectory}" source="1.5" target="1.5">
 											<include name="**/annotations/*" />
-											<include name="**/enums/*" />
-											<include name="**/reflection/PureJavaReflectionProvider15Test*" />
 											<classpath refid="maven.test.classpath" />
 										</javac>
 									</tasks>
@@ -161,14 +170,12 @@
 							</execution>
 						</executions>
 					</plugin>
-
 				</plugins>
 			</build>
 		</profile>
 		<profile>
 			<id>jdk14</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
 				<jdk>1.4</jdk>
 			</activation>
 			<build>
@@ -187,16 +194,16 @@
 								<exclude>**/annotations/*</exclude>
 								<exclude>**/enums/*</exclude>
 								<exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
+								<exclude>**/acceptance/SecurityManagerTest*</exclude>
 							</testExcludes>
 						</configuration>
-   					</plugin>					
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
 		<profile>
 			<id>macosx</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
 				<os>
 					<name>Mac OS X</name>
 				</os>
@@ -215,8 +222,24 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>		
+		</profile>
 	</profiles>
-		
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 
 </project>
