@@ -49,14 +49,7 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
     public void testSavedTimeIsInUTC() {
         Calendar in = Calendar.getInstance();
         final String iso8601;
-        if (JVM.is14()) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            String jdkConverted = format.format(in.getTime());
-            iso8601 = jdkConverted.substring(0, jdkConverted.length() - 2) + ":" + jdkConverted.substring(jdkConverted.length() - 2);
-        } else {
-            // JDK 1.3 can only format with symbolic time zones, so use Joda - it defaults to ISO
-            iso8601 = new DateTime(in).toString();
-        }
+        iso8601 = new DateTime(in).toString();
         String converterXML =  converter.toString(in);
         assertEquals(iso8601, converterXML);
         
