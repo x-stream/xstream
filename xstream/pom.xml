@@ -141,9 +141,12 @@
 								<phase>compile</phase>
 								<configuration>
 									<tasks>
-										<javac srcdir="${project.build.sourceDirectory}"
-											destdir="${project.build.outputDirectory}" source="1.5" target="1.5">
+										<javac
+											srcdir="${project.build.sourceDirectory}"
+											destdir="${project.build.outputDirectory}" 
+											source="1.5" target="1.5">
 											<include name="**/annotations/*" />
+											<include name="**/enums/*" />
 											<classpath refid="maven.compile.classpath" />
 										</javac>
 									</tasks>
@@ -158,8 +161,10 @@
 								<configuration>
 									<tasks>
 										<javac srcdir="${project.build.testSourceDirectory}"
-											destdir="${project.build.testOutputDirectory}" source="1.5" target="1.5">
+											destdir="${project.build.testOutputDirectory}" 
+											source="1.5" target="1.5">
 											<include name="**/annotations/*" />
+											<include name="**/enums/*" />
 											<classpath refid="maven.test.classpath" />
 										</javac>
 									</tasks>

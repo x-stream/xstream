@@ -274,19 +274,4 @@
 		</repository>
 	</repositories>
 
-	<pluginRepositories>
-		<!-- Mauro: why do we need this? We should not rely on plugin snapshots -->
-		<pluginRepository>
-			<id>codehaus-plugin-repository</id>
-			<name>Codehaus Plugin Snapshot Repository</name>
-			<url>http://snapshots.maven.codehaus.org/maven2/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
 </project>
