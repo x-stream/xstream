@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.thoughtworks.xstream</groupId>
 	<artifactId>xstream-parent</artifactId>
@@ -10,6 +11,14 @@
 		<module>xstream</module>
 		<module>xstream-website</module>
 	</modules>
+
+	<licenses>
+		<license>
+			<name>BSD style</name>
+			<url>http://xstream.codehaus.com/license.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<dependencyManagement>
 		<dependencies>
@@ -29,6 +38,12 @@
 				<groupId>dom4j</groupId>
 				<artifactId>dom4j</artifactId>
 				<version>1.6.1</version>
+				<exclusions>
+					<exclusion>
+						<groupId>xml-apis</groupId>
+						<artifactId>xml-apis</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<dependency>
@@ -50,11 +65,17 @@
 			</dependency>
 
 			<dependency>
-				<groupId>xml-writer</groupId>
+				<groupId>com.megginson.sax</groupId>
 				<artifactId>xml-writer</artifactId>
 				<version>0.2</version>
+				<exclusions>
+					<exclusion>
+						<groupId>xml-apis</groupId>
+						<artifactId>xml-apis</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>stax</groupId>
 				<artifactId>stax</artifactId>
@@ -71,6 +92,24 @@
 				<groupId>xom</groupId>
 				<artifactId>xom</artifactId>
 				<version>1.1</version>
+				<exclusions>
+					<exclusion>
+						<groupId>xerces</groupId>
+						<artifactId>xmlParserAPIs</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>xerces</groupId>
+						<artifactId>xercesImpl</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>xalan</groupId>
+						<artifactId>xalan</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>jaxen</groupId>
+						<artifactId>jaxen</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<dependency>
@@ -94,18 +133,6 @@
 				<scope>test</scope>
 			</dependency>
 
-			<dependency>
-				<groupId>jmock</groupId>
-				<artifactId>jmock-cglib</artifactId>
-				<version>1.0.1</version>
-				<scope>test</scope>
-				<exclusions>
-					<exclusion>
-						<groupId>cglib</groupId>
-						<artifactId>cglib-full</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -125,45 +152,36 @@
 				</includes>
 			</testResource>
 		</testResources>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<forkMode>once</forkMode>
-					<printSummary>true</printSummary>
-					<useFile>true</useFile>
-					<systemProperties>
-						<property>
-							<name>test.src.dir</name>
-							<value>${project.build.testSourceDirectory}</value>
-						</property>
-						<property>
-							<name>java.awt.headless</name>
-							<value>true</value>
-						</property>
-					</systemProperties>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.0</version>
-			</plugin>			
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<forkMode>once</forkMode>
+						<printSummary>true</printSummary>
+						<useFile>true</useFile>
+						<systemProperties>
+							<property>
+								<name>java.awt.headless</name>
+								<value>true</value>
+							</property>
+						</systemProperties>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>cobertura-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<goals>
+								<goal>clean</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 
 		<extensions>
 			<extension>
@@ -174,46 +192,29 @@
 		</extensions>
 	</build>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</reporting>
-
 	<distributionManagement>
 		<!--  
 			The servers here defined must also appear in ~/.m2/settings.xml
-		<settings>
-		  <servers>
-    		<server>
-        		<id>codehaus-xstream-repository</id>
-        		<username></username>
-        		<password></password>
-    		</server>
-    		<server>
-        		<id>codehaus-xstream-snapshot-repository</id>
-        		<username></username>
-        		<password></password>
-    		</server>
-    		<server>
-        		<id>codehaus-xstream-site</id>
-        		<username></username>
-        		<password></password>
-    		</server>
-  		  </servers>
-		</settings>          
-		 -->
+			<settings>
+			<servers>
+			<server>
+			<id>codehaus-xstream-repository</id>
+			<username></username>
+			<password></password>
+			</server>
+			<server>
+			<id>codehaus-xstream-snapshot-repository</id>
+			<username></username>
+			<password></password>
+			</server>
+			<server>
+			<id>codehaus-xstream-site</id>
+			<username></username>
+			<password></password>
+			</server>
+			</servers>
+			</settings>          
+		-->
 		<repository>
 			<id>codehaus-xstream-repository</id>
 			<name>Codehaus XStream Repository</name>
@@ -241,29 +242,51 @@
 			<id>codehaus-repository</id>
 			<name>Codehaus Repository</name>
 			<url>http://repository.codehaus.org</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>codehaus-legacy-repository</id>
 			<name>Codehaus Legacy Repository</name>
 			<url>http://dist.codehaus.org</url>
 			<layout>legacy</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>apache-snapshot-repository</id>
 			<name>Apache Snapshot repository</name>
 			<url>http://people.apache.org/maven-snapshot-repository/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
 	<pluginRepositories>
+		<!-- Mauro: why do we need this? We should not rely on plugin snapshots -->
 		<pluginRepository>
 			<id>codehaus-plugin-repository</id>
 			<name>Codehaus Plugin Snapshot Repository</name>
 			<url>http://snapshots.maven.codehaus.org/maven2/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-		
+
 </project>
