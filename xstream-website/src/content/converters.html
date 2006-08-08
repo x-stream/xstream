@@ -20,12 +20,7 @@
 		<!--
 		
 		TODO:
-			ReflectionConverter
-			SerializableConverter
-			ExternalizableConverter
 			EnumMapConverter
-			TextAttribute
-			...
 			
 		-->
 		
@@ -76,7 +71,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/EncodedByteArrayConverter.html">EncodedByteArrayConverter</a></td>
                 <td>byte[]</td>
                 <td class="example">&lt;byte-array&gt;AHiEFiEABQ==&lt;/byte-array&gt;</td>
-                <td>Uses Base64 encoding to store binary data in XML.</td>
+                <td>Uses Base64 encoding to store binary data in XML. Converter is not automatically registered.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/CharConverter.html">CharConverter</a></td>
@@ -269,7 +264,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ISO8601DateConverter.html">ISO8601DateConverter</a></td>
                 <td>java.util.Date</td>
                 <td class="example">&lt;date&gt;2006-07-28T12:06:17.654-03:00&lt;/date&gt;</td>
-                <td></td>
+                <td>Not automatically registered, needs joda-time</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ISO8601GregorianCalendarConverter.html">ISO8601GregorianCalendarConverter</a></td>
@@ -279,7 +274,7 @@
                     2006-07-28T12:07:02.788-03:00<br/>
                     &lt;/gregorian-calendar&gt;
                 </td>
-                <td>&nbsp;</td>
+                <td>Not automatically registered, needs joda-time</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/LocaleConverter.html">LocaleConverter</a></td>
@@ -291,12 +286,12 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CurrencyConverter.html">CurrencyConverter</a></td>
                 <td>java.util.Currency</td>
                 <td class="example">&lt;currency&gt;USD&lt;/currency&gt;</td>
-                <td>This is only available under Java 1.4 or greater.</td>
+                <td>Available under Java 1.4 or greater.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumSetConverter.html">EnumSetConverter</a></td>
                 <td>java.util.EnumSet</td>
-                <td class="example">&lt;enum-set enum-type=\"simple\"&gt;<br/>GREEN,BLUE<br/>&lt;/enum-set&gt;</td>
+                <td class="example">&lt;enum-set enum-type=&quot;simple&quot;&gt;<br/>GREEN,BLUE<br/>&lt;/enum-set&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
             </tr>
             <tr>
@@ -339,6 +334,12 @@
                 <td class="example">&lt;sql-timestamp&gt;1970-01-01 00:00:01.234&lt;/sql-timestamp&gt;</td>
                 <td>&nbsp;</td>
             </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ISO8601SqlTimestampConverter.html">ISO8601SqlTimestampConverter</a></td>
+                <td>java.sql.Timestamp</td>
+                <td class="example">&lt;sql-timestamp&gt;2006-07-28T12:06:17.654000000-03:00&lt;/sql-timestamp&gt;</td>
+                <td>Not automatically registered, needs joda-time</td>
+            </tr>
 
             <!-- .................................................................................................. -->
             <tr>
@@ -374,7 +375,7 @@
                 <th>Notes</th>
             </tr>
             <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/UrlConverter.html">UrlConverter</a></td>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/URLConverter.html">URLConverter</a></td>
                 <td>java.net.Url</td>
                 <td class="example">&lt;url&gt;http://codehaus.org/blah&lt;/url&gt;</td>
                 <td>&nbsp;</td>
@@ -395,6 +396,18 @@
                 <td>java.io.File</td>
                 <td class="example">&lt;file&gt;/stuff/hello.txt&lt;/file&gt;</td>
                 <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/SerializableConverter.html">SerializableConverter</a></td>
+                <td>java.io.Serializable</td>
+                <td>&nbsp;</td>
+                <td>See description at Generalized Converters</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/ExternalizableConverter.html">ExternalizableConverter</a></td>
+                <td>java.io.Externalizable</td>
+                <td>&nbsp;</td>
+                <td>See description at Generalized Converters</td>
             </tr>
 
             <!-- .................................................................................................. -->
@@ -461,12 +474,12 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ColorConverter.html">ColorConverter</a></td>
                 <td>java.awt.Color</td>
                 <td class="example">
-                    &lt;color&gt;<br/>
+                    &lt;awt-color&gt;<br/>
                     &nbsp;&nbsp;&lt;red&gt;255&lt;/red&gt;<br/>
                     &nbsp;&nbsp;&lt;green&gt;255&lt;/green&gt;<br/>
                     &nbsp;&nbsp;&lt;blue&gt;255&lt;/blue&gt;<br/>
                     &nbsp;&nbsp;&lt;alpha&gt;255&lt;/alpha&gt;<br/>
-                    &lt;/color&gt;
+                    &lt;/awt-color&gt;
                 </td>
                 <td><b>Warning:</b> The AWT toolkit is initiailized when a Color is deserialized due to the internals of the Color class.
                 This should only be an issue if deserializing a Color on a headless server process.</td>
@@ -477,6 +490,26 @@
                 <td class="example">&nbsp;</td>
                 <td><b>Warning:</b> The AWT toolkit is initiailized when a Font is deserialized due to the internals of the Font class.
                 This should only be an issue if deserializing a Font on a headless server process.</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="4" class="headerRow"><h1>java.awt.font</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/TextAttributeConverter.html">TextAttributeConverter</a></td>
+                <td>java.awt.font.TextAttribute</td>
+                <td class="example">
+                    &lt;awt-text-attribute&gt;family&lt;/awt-text-attribute&gt;
+                </td>
+                <td><b>Warning:</b> The AWT toolkit is initiailized when a TextAttribute is deserialized due to the internals of the TextAttribute class.
+                This should only be an issue if deserializing a TextAttribute on a headless server process.</td>
             </tr>
             
             <!-- .................................................................................................. -->
@@ -493,13 +526,12 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/SubjectConverter.html">SubjectConverter</a></td>
                 <td>javax.security.auth.Subject</td>
                 <td class="example">
-                    &lt;color&gt;<br/>
-&lt;auth-subject&gt;<br/>
-  &lt;principals&gt;<br/>
-    &lt;com.thoughtworks.xstream.Admin/&gt;<br/>
-  &lt;/principals&gt;<br/>
-  &lt;readOnly&gt;false&lt;/readOnly&gt;<br/>
-&lt;/auth-subject&gt;<br/>
+                &lt;auth-subject&gt;<br/>
+				&nbsp;&nbsp;&lt;principals&gt;<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;com.thoughtworks.xstream.Admin/&gt;<br/>
+				&nbsp;&nbsp;&lt;/principals&gt;<br/>
+				&nbsp;&nbsp;&lt;readOnly&gt;false&lt;/readOnly&gt;<br/>
+				&lt;/auth-subject&gt;<br/>
                 </td>
                 <td>This converter does not serialize any credentials but only the principals.</td>
             </tr>
@@ -519,6 +551,63 @@
                 <td>java.nio.charset.Charset</td>
                 <td class="example">&lt;charset&gt;US-ASCII&lt;/charset&gt;</td>
                 <td>&nbsp;</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="4" class="headerRow"><h1>Generalized Converters</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Explanation</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/ReflectionConverter.html">ReflectionConverter</a></td>
+                <td>Any type</td>
+                <td>The Converter is used as fallback. It uses reflection to examine the class and will serialize its fields.</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/annotations/AnnotationReflectionConverter.html">AnnotationReflectionConverter</a></td>
+                <td>Any type</td>
+                <td>The Converter is used as fallback. It uses reflection to examine the class and will serialize its fields and supports annotations for 
+                individual serialization rules.</td>
+                <td>Needs JDK 1.5, default for JDK 1.5</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/SerializableConverter.html">SerializableConverter</a></td>
+                <td>java.io.Serializable or types with one of the serializable methods readObject or writeObject</td>
+                <td>The Converter is used for any JDK-serializable types, if not handled by a specialized Converter.</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/ExternalizableConverter.html">ExternalizableConverter</a></td>
+                <td>java.io.Externalizable</td>
+                <td>The Converter is used for any JDK-externalizable types, if not handled by a specialized Converter.</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ToStringConverter.html">ToStringConverter</a></td>
+                <td>Any type with natural String representation</td>
+                <td>The Converter must be initialized with a type, that provides a complete String representation with its toString() method
+                and is able to be recreated by a constructor taking a single String argument.</td>
+                <td>Must be registered explicitly for the appropriate type</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/javabean/JavaBeanConverter.html">JavaBeanConverter</a></td>
+                <td>Java beans</td>
+                <td>The Converter handles any type as Java bean. It expects the type to convert to have a public default constructor and
+                appropriate getter and setters.</td>
+                <td>Must be registered explicitly. Should be used as fallback.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/CGLIBEnhancedConverter.html">CGLIBEnhancedConverter</a></td>
+                <td>Proxies generated by the CGLIB Enhancer</td>
+                <td>The Converter handles proxies generated by the CGLIB Enhancer, if there were not multiple callbacks registered.
+                A proxy with multipole callback can currently not be handled at all.</td>
+                <td>Registered automatically if CGLIB is available</td>
             </tr>
 
         </table>
