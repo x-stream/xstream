@@ -7,7 +7,7 @@
 <h1>Simple Converter</h1>
 <h2>Setting up a simple example</h2>
 
-This is the most basic converter... let's start with a simple Person:</p>
+<p>This is the most basic converter... let's start with a simple Person:</p>
 <div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
 
 public class Person {
@@ -176,8 +176,50 @@ is:</p><div class="Source Java"><pre>&lt;person&gt;
   &lt;fullname&gt;Guilherme&lt;/fullname&gt;
 &lt;/person&gt;</pre></div><p>So you might say... that only changed my tree, I
 want to convert data!</p><p>Try using an attribute called <i>fullname</i> in
-the <i>person</i> tag instead of creating a new chid node.</p></li>
+the <i>person</i> tag instead of creating a new child node.</p>
 
+<h2>An alternative for types with String representation</h2>
+
+<p>Let's enhance the Person with a String representation, that contains all necessary 
+text to recreate the instance:</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
+
+public class Person {
+
+        private String name;
+
+        public String getName() {
+                return name;
+        }
+
+        public void setName(String name) {
+                this.name = name;
+        }
+
+        public String toString() {
+                return getName();
+        }
+}</pre></div><p>In this case we can simplify our Converter to</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
+
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+
+public class PersonConverter extends AbstractSingleValueConverter {
+
+        public boolean canConvert(Class clazz) {
+                return clazz.equals(Person.class);
+        }
+
+        public Object fromString(String str) {
+                Person person = new Person();
+                person.setName(string);
+                return person;
+        }
+
+}</pre></div><p>But even nicer, our XML is also simplified (using the alias for the 
+Person class). Since the String representation is complete, a nested element is not
+necessary anymore:</p>
+<div class="Source Java"><pre>&lt;person&gt;Guilherme&lt;/person&gt;</pre></div>
 
 <h1>Date Converter</h1>
 <p>Now that we know how the <i>Converter</i> interface works, let's create a
