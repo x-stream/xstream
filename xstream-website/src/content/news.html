@@ -5,6 +5,26 @@
 
   <body>
 
+    <h2><b>Aug 18, 2006</b> XStream 1.2 released</h2>
+	  <ul>
+        <li>Using attributes for fields (contributed by Paul Hammant and Ian Cartwright).</li>
+        <li>Aliasing of arbitrary attributes.</li>
+        <li>XStream can now serialize another XStream instance.</li>
+        <li>XStream has now the XStreamer, that serializes an object together with its XStream instance.</li>
+        <li>AnnotationConverter for fields (contributed by Guilherme Silveira).</li>
+        <li>PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
+        <li>Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
+        <li>XStream can now write all references as absolute XPath expression.</li>
+        <li>New SingeValueConverter allows light wieght converters if the value can be representet by a unique string.</li>
+        <li>Aliasing of classes of a specific type.</li>
+        <li>Support for certain types of proxies generated with the CGLIB Enhancer.</li>
+        <li>Support for BEA JRockit starting with R25.1.0 (contributed by Henrik St&aring;hl of BEA).</li>
+        <li>Experimental binary reader and writer.</li>
+        <li>Experimental HierarichicalStreamCopier allows streams to be copied from one format to another without the overhead of serialization.</li>
+        <li>Experimental JSON support allows streams to be copied from one format to another without the overhead of serialization (contributed by Paul Hammant).</li>
+   	  </ul>
+      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+
     <h2><b>Jan 13, 2006</b> XStream 1.1.3 released</h2>
 	  <ul>
         <li>Added XStream.toXML(OutputStream) and XStream.fromXML(InputStream).</li>
