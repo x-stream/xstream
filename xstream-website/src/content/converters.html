@@ -16,12 +16,6 @@
         <p>XStream is provided with Converters for common types such as primitives, String, File, Collections, arrays,
         and Dates.</p>
 
-		<!--
-		
-		TODO:
-			EnumMapConverter
-			
-		-->
 		
         <table class="examplesTable">
             <!-- .................................................................................................. -->
@@ -150,6 +144,15 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumConverter.html">EnumConverter</a></td>
                 <td>java.lang.Enum</td>
                 <td class="example">&lt;java.lang.annotation.RetentionPolicy&gt;<br/>CLASS<br/>&lt;/java.lang.annotation.RetentionPolicy&gt;</td>
+                <td>Available under Java 1.5 or greater.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumMapConverter.html">EnumMapConverter</a></td>
+                <td>java.util.EnumMap</td>
+                <td class="example">&lt;enum-map enum-type="simple"&gt;<br/>
+                &lt;entry&gt;<br/>&lt;simple&gt;GREEN&lt;/simple&gt;<br/>&lt;string&gt;grass&lt;/string&gt;<br/>&lt;/entry&gt;<br/>
+                &lt;entry&gt;<br/>&lt;simple&gt;BLUE&lt;/simple&gt;<br/>&lt;string&gt;sky&lt;/string&gt;<br/>&lt;/entry&gt;<br/>
+                &lt;/enum-map&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
             </tr>
 
