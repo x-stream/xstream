@@ -156,6 +156,7 @@
                 <include name="README.txt"/>
                 <include name="jdk*.txt"/>
                 <include name="src/java/**"/>
+                <include name="src/tools/**"/>
                 <include name="src/test/**"/>
                 <include name="lib/**"/>
                 <include name="javadoc/**"/>
