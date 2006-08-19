@@ -127,7 +127,12 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         if (needsQuotes(clazz)) {
             writer.write("\"");
         }
-        this.writer.write(text.replaceAll("\"", "\\\\\""));
+		int i = 0;
+		for(int idx = 0; (idx = text.indexOf('"', idx)) >= 0; i = idx+1) {
+			this.writer.write(text.substring(i, idx));
+			this.writer.write("\\\\\"");
+		}
+        this.writer.write(text.substring(i));
         if (needsQuotes(clazz)) {
             writer.write("\"");
         }

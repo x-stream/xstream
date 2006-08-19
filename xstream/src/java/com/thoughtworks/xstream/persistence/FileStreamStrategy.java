@@ -80,7 +80,7 @@ public class FileStreamStrategy implements StreamStrategy {
 				currentValue = 0;
 			} else if (currentValue != -1) {
 				currentValue = currentValue * 16
-						+ Integer.parseInt(Character.toString(c), 16);
+						+ Integer.parseInt(String.valueOf(c), 16);
 			} else {
 				buffer.append(c);
 			}
