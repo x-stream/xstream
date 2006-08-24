@@ -40,9 +40,9 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
 				new GregorianCalendar(0, 0, 0, 30, 20));
 		String xml = "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>\n"
 				+ "  <date>\n"
-				+ "    <cal>372225600000</cal>\n"
+				+ "    <cal>372229200000</cal>\n"
 				+ "  </date>\n"
-                + "  <time>-62167351200000</time>\n"
+                                + "  <time>-62167351200000</time>\n"
 				+ "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>";
 		assertBothWays(task, xml);
 	}
@@ -74,7 +74,7 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         xstream.registerConverter(new TreeCalendarConverter());
         String xml = "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>\n"
                 + "  <date>\n"
-                + "    <cal>372225600000</cal>\n"
+                + "    <cal>372229200000</cal>\n"
                 + "  </date>\n"
                 + "  <time>\n"
                 + "    <cal>-62167351200000</cal>\n"
