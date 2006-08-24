@@ -38,7 +38,6 @@ public class Annotations {
      * @param xstream the XStream object that will be configured
      */
     public static synchronized void configureAliases(XStream xstream, Class<?>... topLevelClasses) {
-        configuredTypes.clear();
         for(Class<?> topLevelClass : topLevelClasses){
             configureClass(xstream, topLevelClass);
         }
@@ -49,6 +48,8 @@ public class Annotations {
               || configuredTypes.contains(configurableClass)) {
             return;
         }
+        
+        configuredTypes.add(configurableClass);
 
         if(Converter.class.isAssignableFrom(configurableClass)){
             Class<Converter> converterType = (Class<Converter>)configurableClass;
@@ -65,7 +66,7 @@ public class Annotations {
             }
         }
 
-        //Do Class Leve - Converter
+        //Do Class Level - Converter
         if(configurableClass.isAnnotationPresent(XStreamConverter.class)){
             XStreamConverter converterAnnotation = element.getAnnotation(XStreamConverter.class);
             registerConverter(xstream, converterAnnotation.value());
@@ -152,8 +153,6 @@ public class Annotations {
 
     private static void registerConverter(XStream xstream, Class<? extends Converter> converterType) {
         Converter converter;
-        if(configuredTypes.contains(converterType))
-            return;
         if (AbstractCollectionConverter.class.isAssignableFrom(converterType)) {
             try {
                 Constructor<? extends Converter> converterConstructor = converterType.getConstructor(Mapper.class);
