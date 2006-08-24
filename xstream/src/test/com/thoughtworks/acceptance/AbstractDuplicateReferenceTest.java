@@ -124,4 +124,34 @@ public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceT
         }
     }
 
+    public void testReferencesToElementsOfImplicitCollectionIsPossible() {
+        xstream.alias("strings", WithNamedList.class);
+        xstream.addImplicitCollection(WithNamedList.class, "things");
+        WithNamedList[] wls = new WithNamedList[]{
+                new WithNamedList("foo"), new WithNamedList("bar")};
+        wls[0].things.add("Hello");
+        wls[0].things.add("Daniel");
+        wls[1].things.add(wls[0]);
+        
+        String xml = xstream.toXML(wls);
+        WithNamedList[] out = (WithNamedList[]) xstream.fromXML(xml);
+
+        assertSame(out[0], out[1].things.get(0));
+    }
+
+    public void testReferencesToElementsOfNthImplicitCollectionIsPossible() {
+        xstream.alias("strings", WithNamedList.class);
+        xstream.addImplicitCollection(WithNamedList.class, "things");
+        WithNamedList[] wls = new WithNamedList[]{
+                new WithNamedList("foo"), new WithNamedList("bar"), new WithNamedList("foobar")};
+        wls[1].things.add("Hello");
+        wls[1].things.add("Daniel");
+        wls[2].things.add(wls[1]);
+        
+        String xml = xstream.toXML(wls);
+        System.out.println(xml);
+        WithNamedList[] out = (WithNamedList[]) xstream.fromXML(xml);
+
+        assertSame(out[1], out[2].things.get(0));
+    }
 }
