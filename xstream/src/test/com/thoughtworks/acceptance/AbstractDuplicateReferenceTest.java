@@ -149,7 +149,6 @@ public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceT
         wls[2].things.add(wls[1]);
         
         String xml = xstream.toXML(wls);
-        System.out.println(xml);
         WithNamedList[] out = (WithNamedList[]) xstream.fromXML(xml);
 
         assertSame(out[1], out[2].things.get(0));
