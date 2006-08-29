@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.Assert;
+
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.annotations.Annotations;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -43,7 +45,29 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         assertBothWays(map, xml);
     }
 	
-	public void testFieldAliasesAnnotations()  {
+	public void testUsesClassLevelAliasesAnnotationsUsingTwoXStreamInstances()  {
+        Annotations.configureAliases(xstream, Person.class, AddressBookInfo.class);
+        Person person = new Person("john doe");
+        String xml = "<person>john doe</person>";
+        assertBothWays(person, xml);
+        xstream = createXStream();
+        Annotations.configureAliases(xstream, Person.class, AddressBookInfo.class);
+        assertBothWays(person, xml);
+    }
+	
+	public void testUsesFieldLevelAliasesAnnotationCycle()  {
+        Annotations.configureAliases(xstream, Cycle.class);
+        Cycle cycle = new Cycle();
+        String xml = "<com.thoughtworks.acceptance.annotations.AnnotationsTest_-Cycle/>";
+        assertBothWays(cycle, xml);
+    }
+	
+	public static class Cycle  {
+		@XStreamAlias("oops")
+		private Cycle internal;
+	}
+	
+	public void testUsesFieldAliasesAnnotations()  {
         Annotations.configureAliases(xstream, CustomPerson.class);
         List<String> nickNames = new ArrayList<String>();
         nickNames.add("johnny");
