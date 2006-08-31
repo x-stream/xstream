@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -207,5 +209,53 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "    <string>bye</string>\n" +
                 "  </a>\n" +
                 "</java.util.Arrays_-ArrayList>");
+    }
+    
+    public void testKeySetOfHashMapCanBeSerialized() {
+        final Map map = new HashMap();
+        map.put("JUnit", null);
+        final Collection set = map.keySet();
+
+        assertBothWays(set,
+                "<java.util.HashMap_-KeySet>\n" +
+                "  <outer-class>\n" +
+                "    <entry>\n" +
+                "      <string>JUnit</string>\n" +
+                "      <null/>\n" +
+                "    </entry>\n" +
+                "  </outer-class>\n" +
+                "</java.util.HashMap_-KeySet>");
+    }
+
+    public void testValueSetOfHashMapCanBeSerialized() {
+        final Map map = new HashMap();
+        map.put(Boolean.TRUE, "JUnit");
+        final Collection set = map.values();
+
+        assertBothWays(set,
+                "<java.util.HashMap_-Values>\n" +
+                "  <outer-class>\n" +
+                "    <entry>\n" +
+                "      <boolean>true</boolean>\n" +
+                "      <string>JUnit</string>\n" +
+                "    </entry>\n" +
+                "  </outer-class>\n" +
+                "</java.util.HashMap_-Values>");
+    }
+
+    public void testEntrySetOfHashMapCanBeSerialized() {
+        final Map map = new HashMap();
+        map.put(Boolean.TRUE, "JUnit");
+        final Collection set = map.entrySet();
+
+        assertBothWays(set,
+                "<java.util.HashMap_-EntrySet>\n" +
+                "  <outer-class>\n" +
+                "    <entry>\n" +
+                "      <boolean>true</boolean>\n" +
+                "      <string>JUnit</string>\n" +
+                "    </entry>\n" +
+                "  </outer-class>\n" +
+                "</java.util.HashMap_-EntrySet>");
     }
 }
