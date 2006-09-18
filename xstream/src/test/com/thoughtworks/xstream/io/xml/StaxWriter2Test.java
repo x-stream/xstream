@@ -50,10 +50,6 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
         assertEquals(expected, buffer.toString());
     }
 
-    public void XtestEscapesWhitespaceCharacters() {
-        // overriding test in superclass... this doesn't seem to work with StaxWriter.
-    }
-
     public void testNamespacedXmlWithPrefix() throws Exception {
         QNameMap qnameMap = new QNameMap();
         QName qname = new QName("http://foo.com", "alias", "foo");
