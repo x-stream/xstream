@@ -51,6 +51,26 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs(expected);
     }
 
+    public void testAttributesAreResettedForNewNode() { // Note: This overrides a test in superclass to include indentation
+        writer.startNode("work");
+        writer.startNode("person");
+        writer.addAttribute("firstname", "Joe");
+        writer.addAttribute("lastname", "Walnes");
+        writer.endNode();
+        writer.startNode("project");
+        writer.addAttribute("XStream", "Codehaus");
+        writer.endNode();
+        writer.endNode();
+
+        String expected =
+            "<work>\n" +
+            "  <person firstname=\"Joe\" lastname=\"Walnes\"/>\n" +
+            "  <project XStream=\"Codehaus\"/>\n" +
+            "</work>";
+
+        assertXmlProducedIs(expected);
+    }
+
     public void testAllowsUserToOverrideTextAndAttributeEscapingRules() {
         writer = new PrettyPrintWriter(buffer, "  ") {
             protected void writeAttributeValue(QuickWriter writer, String text) {

@@ -4,6 +4,8 @@ import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
 
+import org.apache.oro.text.perl.Perl5Util;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
 
@@ -24,13 +26,14 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
     private StringWriter buffer;
     private XMLOutputFactory outputFactory;
     private X testInput;
-
+    private Perl5Util perlUtil;
 
     protected void setUp() throws Exception {
         super.setUp();
         outputFactory = XMLOutputFactory.newInstance();
         buffer = new StringWriter();
         writer = new StaxWriter(new QNameMap(), outputFactory.createXMLStreamWriter(buffer));
+        perlUtil = new Perl5Util();
 
         testInput = new X();
         testInput.anInt = 9;
@@ -40,28 +43,15 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
     }
 
     protected void assertXmlProducedIs(String expected) {
-        expected = "<?xml version='1.0' encoding='utf-8'?>" + expected; // include header
+        expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
+        expected = replaceAll(expected, "&#x0D;", "&#13;");
+        expected = replaceAll(expected, "\t", "&#9;");
+        expected = "<?xml version='1.0' encoding='utf-8'?>" + expected;
         assertEquals(expected, buffer.toString());
     }
 
-    public void testEscapesWhitespaceCharacters() {
+    public void XtestEscapesWhitespaceCharacters() {
         // overriding test in superclass... this doesn't seem to work with StaxWriter.
-    }
-
-    public void testSupportsEmptyTags() {
-        writer.startNode("empty");
-        writer.endNode();
-
-        assertXmlProducedIs("<empty></empty>");
-    }
-
-    public void testSupportsEmptyNestedTags() {
-        writer.startNode("parent");
-        writer.startNode("child");
-        writer.endNode();
-        writer.endNode();
-
-        assertXmlProducedIs("<parent><child></child></parent>");
     }
 
     public void testNamespacedXmlWithPrefix() throws Exception {
@@ -98,15 +88,6 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
         staxDriver.setRepairingNamespace(repairNamespaceMode);
         XStream xstream = new XStream(staxDriver);
         return xstream.toXML(testInput);
-    }
-
-    public void testSupportsAttributes() {
-        writer.startNode("person");
-        writer.addAttribute("firstname", "Joe");
-        writer.addAttribute("lastname", "Walnes");
-        writer.endNode();
-
-        assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\"></person>");
     }
 
 }

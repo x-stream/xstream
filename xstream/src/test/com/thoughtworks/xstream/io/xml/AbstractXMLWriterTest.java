@@ -70,6 +70,20 @@ public abstract class AbstractXMLWriterTest extends TestCase {
         assertXmlProducedIs("<person firstname=\"Joe\" lastname=\"Walnes\"/>");
     }
 
+    public void testAttributesAreResettedForNewNode() {
+        writer.startNode("work");
+        writer.startNode("person");
+        writer.addAttribute("firstname", "Joe");
+        writer.addAttribute("lastname", "Walnes");
+        writer.endNode();
+        writer.startNode("project");
+        writer.addAttribute("XStream", "Codehaus");
+        writer.endNode();
+        writer.endNode();
+
+        assertXmlProducedIs("<work><person firstname=\"Joe\" lastname=\"Walnes\"/><project XStream=\"Codehaus\"/></work>");
+    }
+
     public void testEscapesXmlUnfriendlyCharacters() {
         writer.startNode("evil");
         writer.addAttribute("attr", "w0000 $ <x\"x> &!;");

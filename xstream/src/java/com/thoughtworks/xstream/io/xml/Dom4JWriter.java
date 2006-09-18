@@ -82,6 +82,7 @@ public class Dom4JWriter extends AbstractXmlWriter {
                     element.addAttribute(attributes.getQName(i), attributes.getValue(i));
                 }
                 writer.write(element);
+                attributes.clear();
                 children = true;   // node just closed is child of node on top of stack
                 started = true;
             } else {
