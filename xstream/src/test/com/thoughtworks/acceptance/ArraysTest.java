@@ -234,11 +234,11 @@ public class ArraysTest extends AbstractAcceptanceTest {
         // Catch weirdness in classloader. 
         // Resolved by using Class.forName(x, false, classLoader), instead of classLoader.loadClass(x);
         String xml = ""
-                + "<com.thoughtworks.acceptance.ArraysTest-NoOneLikesMe-array>\n"
-                + "  <com.thoughtworks.acceptance.ArraysTest-NoOneLikesMe>\n"
+                + "<com.thoughtworks.acceptance.ArraysTest_-NoOneLikesMe-array>\n"
+                + "  <com.thoughtworks.acceptance.ArraysTest_-NoOneLikesMe>\n"
                 + "    <name>99</name>\n"
-                + "  </com.thoughtworks.acceptance.ArraysTest-NoOneLikesMe>\n"
-                + "</com.thoughtworks.acceptance.ArraysTest-NoOneLikesMe-array>";
+                + "  </com.thoughtworks.acceptance.ArraysTest_-NoOneLikesMe>\n"
+                + "</com.thoughtworks.acceptance.ArraysTest_-NoOneLikesMe-array>";
         NoOneLikesMe[] result = (NoOneLikesMe[]) xstream.fromXML(xml);
         assertEquals(1, result.length);
         assertEquals(99, result[0].name);
