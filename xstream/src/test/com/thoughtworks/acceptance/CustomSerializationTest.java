@@ -128,7 +128,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testIncludesCompleteClassHeirarchy() {
+    public void testIncludesCompleteClassHierarchyWhenParentAndChildHaveSerializationMethods() {
         Child child = new Child(1, 2, 3, 10, 20, 30);
         xstream.alias("child", Child.class);
         xstream.alias("parent", Parent.class);
@@ -165,7 +165,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
     }
 
-    public void testIncludesCompleteClassHeirarchy2() {
+    public void testIncludesCompleteClassHierarchyWhenOnlyParentHasSerializationMethods() {
         Child2 child = new Child2(1, 2, 3, 20);
         xstream.alias("child2", Child2.class);
         xstream.alias("parent", Parent.class);
