@@ -70,7 +70,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     }
 
     //FIXME does not seem to work with double underscore
-    public void FIXMEtestSupportsFieldsWithDoubleUnderscoreChar() {
+    public void testSupportsFieldsWithDoubleUnderscoreChar() {
         xstream.alias("underscore", WithDoubleUnderscoreCharField.class);
 
         WithDoubleUnderscoreCharField in = new WithDoubleUnderscoreCharField();

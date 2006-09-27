@@ -15,7 +15,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -362,7 +364,7 @@ public class XStream {
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
-        this.mapper = mapper == null ? buildMapper(true) : mapper;
+        this.mapper = mapper == null ? buildMapper() : mapper;
         this.converterLookup = new DefaultConverterLookup(this.mapper);
 
         setupMappers();
@@ -373,9 +375,9 @@ public class XStream {
         setMode(XPATH_RELATIVE_REFERENCES);
     }
     
-    private Mapper buildMapper(boolean useXmlFriendlyMapper) {
+    private Mapper buildMapper() {
         Mapper mapper = new DefaultMapper(classLoaderReference);
-        if ( useXmlFriendlyMapper ){
+        if ( useXStream11XmlFriendlyMapper() ){
             mapper = new XStream11XmlFriendlyMapper(mapper);
         }
         mapper = new ClassAliasingMapper(mapper);
@@ -415,6 +417,10 @@ public class XStream {
 
     protected MapperWrapper wrapMapper(MapperWrapper next) {
         return next;
+    }
+    
+    protected boolean useXStream11XmlFriendlyMapper() {
+        return false;
     }
 
     private void setupMappers() {
@@ -988,7 +994,16 @@ public class XStream {
      * @deprecated As of 1.2, use {@link #getMapper}
      */
     public ClassMapper getClassMapper() {
-        return (ClassMapper)mapper;
+        if (mapper instanceof ClassMapper) {
+            return (ClassMapper)mapper;
+        } else {
+            return (ClassMapper)Proxy.newProxyInstance(getClassLoader(), new Class[]{ClassMapper.class}, 
+                    new InvocationHandler() {
+                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                            return method.invoke(mapper, args);
+                        }
+                    });
+        }
     }
 
     /**
