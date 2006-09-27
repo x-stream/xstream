@@ -77,12 +77,23 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("parent", Parent.class);
         xstream.alias("child", Child.class);
 
-        String sourceXml = "<object-stream>\n" + "  <parent serialization=\"custom\">\n"
-                + "    <parent>\n" + "      <child serialization=\"custom\">\n"
-                + "        <child>\n" + "          <default>\n" + "            <i>1</i>\n"
-                + "          </default>\n" + "        </child>\n" + "      </child>\n"
-                + "      <default>\n" + "        <name>ze-name</name>\n" + "      </default>\n"
-                + "    </parent>\n" + "  </parent>\n" + "</object-stream>";
+        String sourceXml = ""
+                + "<object-stream>\n"
+                + "  <parent serialization=\"custom\">\n"
+                + "    <parent>\n"
+                + "      <child serialization=\"custom\">\n"
+                + "        <child>\n"
+                + "          <default>\n"
+                + "            <i>1</i>\n"
+                + "          </default>\n"
+                + "        </child>\n"
+                + "      </child>\n"
+                + "      <default>\n"
+                + "        <name>ze-name</name>\n"
+                + "      </default>\n"
+                + "    </parent>\n"
+                + "  </parent>\n"
+                + "</object-stream>";
 
         ObjectInputStream objectInputStream = xstream.createObjectInputStream(new StringReader(
                 sourceXml));
@@ -97,12 +108,23 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("parent", Parent.class);
         xstream.alias("child", Child.class);
 
-        String expectedXml = "<object-stream>\n" + "  <parent serialization=\"custom\">\n"
-                + "    <parent>\n" + "      <child serialization=\"custom\">\n"
-                + "        <child>\n" + "          <default>\n" + "            <i>1</i>\n"
-                + "          </default>\n" + "        </child>\n" + "      </child>\n"
-                + "      <default>\n" + "        <name>ze-name</name>\n" + "      </default>\n"
-                + "    </parent>\n" + "  </parent>\n" + "</object-stream>";
+        String expectedXml = ""
+                + "<object-stream>\n"
+                + "  <parent serialization=\"custom\">\n"
+                + "    <parent>\n"
+                + "      <child serialization=\"custom\">\n"
+                + "        <child>\n"
+                + "          <default>\n"
+                + "            <i>1</i>\n"
+                + "          </default>\n"
+                + "        </child>\n"
+                + "      </child>\n"
+                + "      <default>\n"
+                + "        <name>ze-name</name>\n"
+                + "      </default>\n"
+                + "    </parent>\n"
+                + "  </parent>\n"
+                + "</object-stream>";
 
         Parent parent = new Parent("ze-name", new Child(1));
         StringWriter stringWriter = new StringWriter();
@@ -118,11 +140,20 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("parent", Parent.class);
         xstream.alias("child", Child.class);
 
-        String expected = "<parent serialization=\"custom\">\n" + "  <parent>\n"
-                + "    <child serialization=\"custom\">\n" + "      <child>\n"
-                + "        <default>\n" + "          <i>1</i>\n" + "        </default>\n"
-                + "      </child>\n" + "    </child>\n" + "    <default>\n"
-                + "      <name>ze-name</name>\n" + "    </default>\n" + "  </parent>\n"
+        String expected = ""
+                + "<parent serialization=\"custom\">\n"
+                + "  <parent>\n"
+                + "    <child serialization=\"custom\">\n"
+                + "      <child>\n"
+                + "        <default>\n"
+                + "          <i>1</i>\n"
+                + "        </default>\n"
+                + "      </child>\n"
+                + "    </child>\n"
+                + "    <default>\n"
+                + "      <name>ze-name</name>\n"
+                + "    </default>\n"
+                + "  </parent>\n"
                 + "</parent>";
 
         Parent parent = new Parent("ze-name", new Child(1));
