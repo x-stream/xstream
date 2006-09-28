@@ -120,7 +120,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "</vector>");
     }
 
-    public void testSyncronizedWrapper() {
+    public void testSyncronizedList() {
         final String xml;
         if (JVM.is15()) {
             xml = 

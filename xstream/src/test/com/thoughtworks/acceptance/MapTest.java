@@ -2,7 +2,9 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.core.JVM;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
@@ -171,11 +173,59 @@ public class MapTest extends AbstractAcceptanceTest {
 
     }
 
-    public void testCanExportSubclassesOfMap() {
+    public void testSubclassesOfMapAreHandled() {
         MyMap myMap = new MyMap();
         myMap.put("hehe", "hoho");
         String xml = xstream.toXML(myMap);
         MyMap myOtherMap = (MyMap) xstream.fromXML(xml);
         assertEquals(myMap, myOtherMap);
+    }
+    
+    public void testSynchronizedMap() {
+        final String expected;
+        if (JVM.is15()) {
+            expected = "" +
+                "<java.util.Collections_-SynchronizedMap serialization=\"custom\">\n" +
+                "  <java.util.Collections_-SynchronizedMap>\n" +
+                "    <default>\n" +
+                "      <m/>\n" +
+                "      <mutex class=\"java.util.Collections$SynchronizedMap\" reference=\"../../..\"/>\n" +
+                "    </default>\n" +
+                "  </java.util.Collections_-SynchronizedMap>\n" +
+                "</java.util.Collections_-SynchronizedMap>";
+        } else {
+            expected = "" + 
+                "<java.util.Collections_-SynchronizedMap>\n" + 
+                "  <m/>\n" + 
+                "  <mutex class=\"java.util.Collections$SynchronizedMap\" reference=\"..\"/>\n" + 
+                "</java.util.Collections_-SynchronizedMap>";
+        }
+
+        assertBothWays(Collections.synchronizedMap(new HashMap()), expected);
+    }
+    
+    public void testUnmodifiableMap() {
+        String expected = "" +
+            "<java.util.Collections_-UnmodifiableMap>\n" +
+            "  <m/>\n" +
+            "</java.util.Collections_-UnmodifiableMap>";
+
+        assertBothWays(Collections.unmodifiableMap(new HashMap()), expected);
+    }
+    
+    public void testSingletonMap() {
+        String expected =""+
+            "<java.util.Collections_-SingletonMap>\n" + 
+            "  <k class=\"com.thoughtworks.acceptance.objects.Software\">\n" + 
+            "    <vendor>microsoft</vendor>\n" + 
+            "    <name>windows</name>\n" + 
+            "  </k>\n" + 
+            "  <v class=\"com.thoughtworks.acceptance.objects.Hardware\">\n" + 
+            "    <arch>x86</arch>\n" + 
+            "    <name>p4</name>\n" + 
+            "  </v>\n" + 
+            "</java.util.Collections_-SingletonMap>";
+
+        assertBothWays(Collections.singletonMap(new Software("microsoft", "windows"), new Hardware("x86", "p4")), expected);
     }
 }

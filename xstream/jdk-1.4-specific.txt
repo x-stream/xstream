@@ -18,6 +18,7 @@ com/thoughtworks/acceptance/InnerClassesTest*
 com/thoughtworks/acceptance/MapTest*
 com/thoughtworks/acceptance/QNameMappedConcreteClassesTest*
 com/thoughtworks/acceptance/RelativeXPathNestedCircularReferenceTest*
+com/thoughtworks/acceptance/SerializationNestedWriteObjectsTest*
 com/thoughtworks/acceptance/SwingTest*
 com/thoughtworks/acceptance/XStreamerTest*
 com/thoughtworks/xstream/converters/extended/FontConverterTest*
