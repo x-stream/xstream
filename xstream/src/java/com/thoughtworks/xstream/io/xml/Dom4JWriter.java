@@ -53,10 +53,6 @@ public class Dom4JWriter extends AbstractXmlWriter {
         children = false;
     }
 
-    public void startNode(String name, Class clazz) {
-        startNode(name);
-    }
-
     public void setValue(String text) {
         char[] value = text.toCharArray();
         if (value.length > 0) {

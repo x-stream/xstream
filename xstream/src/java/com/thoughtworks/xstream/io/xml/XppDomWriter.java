@@ -37,10 +37,6 @@ public class XppDomWriter extends AbstractXmlWriter {
         elementStack.addLast(configuration);
     }
 
-    public void startNode(String name, Class clazz) {
-        startNode(name);
-    }
-
     public void setValue(String text) {
         top().setValue(text);
     }

@@ -50,10 +50,6 @@ public class DomWriter extends AbstractXmlWriter {
         current = child;
     }
 
-    public void startNode(String name, Class clazz) {
-        startNode(name);
-    }
-
     public void addAttribute(String name, String value) {
         current.setAttribute(escapeXmlName(name), value);
     }

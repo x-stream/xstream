@@ -21,6 +21,10 @@ public abstract class AbstractXmlWriter implements ExtendedHierarchicalStreamWri
         this.replacer = replacer;
     }
 
+    public void startNode(String name, Class clazz) {
+        startNode(name);
+    }
+
     /**
      * Escapes XML name (node or attribute) to be XML-friendly
      * 

@@ -2,30 +2,32 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
 
 import org.dom4j.Branch;
-import org.dom4j.Document;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
-import org.dom4j.io.XMLWriter;
 
-import java.io.IOException;
-
-public class Dom4JWriter implements HierarchicalStreamWriter {
+public class Dom4JDomWriter extends AbstractXmlWriter {
 
     private final DocumentFactory documentFactory;
     private final FastStack elementStack = new FastStack(16);
-    private final XMLWriter writer;
 
-    public Dom4JWriter(DocumentFactory documentFactory, XMLWriter writer) {
+    public Dom4JDomWriter(final DocumentFactory documentFactory, final Branch root, XmlFriendlyReplacer replacer) {
+        super(replacer);
         this.documentFactory = documentFactory;
-        this.writer = writer;
-        elementStack.push(documentFactory.createDocument());
+        elementStack.push(root);
+    }
+
+    public Dom4JDomWriter(final DocumentFactory documentFactory, XmlFriendlyReplacer replacer) {
+        this(documentFactory, documentFactory.createDocument(), replacer);
+    }
+
+    public Dom4JDomWriter(final DocumentFactory documentFactory) {
+        this(documentFactory, documentFactory.createDocument(), new XmlFriendlyReplacer());
     }
 
     public void startNode(String name) {
-        Element element = documentFactory.createElement(name);
+        Element element = documentFactory.createElement(escapeXmlName(name));
         top().add(element);
         elementStack.push(element);
     }
@@ -35,7 +37,7 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
     }
 
     public void addAttribute(String key, String value) {
-        ((Element) top()).addAttribute(key, value);
+        ((Element) top()).addAttribute(escapeXmlName(key), value);
     }
 
     public void endNode() {
@@ -47,19 +49,13 @@ public class Dom4JWriter implements HierarchicalStreamWriter {
     }
 
     public void flush() {
-        if (elementStack.size() == 1) {
-            final Document document = (Document)elementStack.peek();
-            try {
-                writer.write(document);
-                writer.flush();
-            } catch (IOException e) {
-                throw new StreamException(e);
-            }
-        }
     }
 
     public void close() {
-        flush();
+    }
+    
+    public Branch root() {
+        return (Branch)elementStack.get(0);
     }
 
     public HierarchicalStreamWriter underlyingWriter() {

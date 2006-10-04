@@ -27,10 +27,6 @@ public class XomWriter extends AbstractXmlWriter {
         node = newNode;
     }
 
-    public void startNode(String name, Class clazz) {
-        startNode(name);
-    }
-
     public void addAttribute(String name, String value) {
         node.addAttribute(new Attribute(escapeXmlName(name), value));
     }
