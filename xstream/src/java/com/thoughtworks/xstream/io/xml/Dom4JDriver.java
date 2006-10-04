@@ -5,6 +5,7 @@ import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -91,17 +92,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
-        try {
-            final HierarchicalStreamWriter[] writer = new HierarchicalStreamWriter[1];
-            final FilterOutputStream filter = new FilterOutputStream(out){
-                public void close() {
-                    writer[0].close();
-                }
-            };
-            writer[0] = new Dom4JWriter(new XMLWriter(filter,  outputFormat), xmlFriendlyReplacer());
-            return writer[0];
-        } catch (IOException e) {
-            throw new StreamException(e);
-        }
+        final Writer writer = new OutputStreamWriter(out);
+        return createWriter(writer);
     }
 }
