@@ -13,7 +13,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import java.io.IOException;
 
 
-public class Dom4JXMLWriter extends AbstractXmlWriter {
+public class Dom4JXmlWriter extends AbstractXmlWriter {
 
     private final XMLWriter writer;
     private final FastStack elementStack;
@@ -21,14 +21,14 @@ public class Dom4JXMLWriter extends AbstractXmlWriter {
     private boolean started;
     private boolean children;
 
-    public Dom4JXMLWriter(XMLWriter writer) {
+    public Dom4JXmlWriter(XMLWriter writer) {
         this(writer, new XmlFriendlyReplacer());
     }
 
     /**
      * @since 1.2
      */
-    public Dom4JXMLWriter(XMLWriter writer, XmlFriendlyReplacer replacer) {
+    public Dom4JXmlWriter(XMLWriter writer, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.writer = writer;
         this.elementStack = new FastStack(16);

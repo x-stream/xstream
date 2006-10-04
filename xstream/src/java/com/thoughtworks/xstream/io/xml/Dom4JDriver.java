@@ -85,7 +85,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
                 writer[0].close();
             }
         };
-        writer[0] = new Dom4JXMLWriter(new XMLWriter(filter,  outputFormat), xmlFriendlyReplacer());
+        writer[0] = new Dom4JXmlWriter(new XMLWriter(filter,  outputFormat), xmlFriendlyReplacer());
         return writer[0];
     }
 

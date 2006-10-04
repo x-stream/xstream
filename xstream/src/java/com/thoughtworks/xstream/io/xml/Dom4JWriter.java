@@ -7,22 +7,22 @@ import org.dom4j.Branch;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 
-public class Dom4JDomWriter extends AbstractXmlWriter {
+public class Dom4JWriter extends AbstractXmlWriter {
 
     private final DocumentFactory documentFactory;
     private final FastStack elementStack = new FastStack(16);
 
-    public Dom4JDomWriter(final DocumentFactory documentFactory, final Branch root, XmlFriendlyReplacer replacer) {
+    public Dom4JWriter(final DocumentFactory documentFactory, final Branch root, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.documentFactory = documentFactory;
         elementStack.push(root);
     }
 
-    public Dom4JDomWriter(final DocumentFactory documentFactory, XmlFriendlyReplacer replacer) {
+    public Dom4JWriter(final DocumentFactory documentFactory, XmlFriendlyReplacer replacer) {
         this(documentFactory, documentFactory.createDocument(), replacer);
     }
 
-    public Dom4JDomWriter(final DocumentFactory documentFactory) {
+    public Dom4JWriter(final DocumentFactory documentFactory) {
         this(documentFactory, documentFactory.createDocument(), new XmlFriendlyReplacer());
     }
 
