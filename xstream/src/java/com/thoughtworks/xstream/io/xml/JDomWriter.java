@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Laurent Bihanic
  */
-public class JDomWriter extends AbstractXmlWriter {
+public class JDomWriter extends AbstractXmlWriter implements DomGenerator {
 
     private List result = new LinkedList();
     private List elementStack = new LinkedList();

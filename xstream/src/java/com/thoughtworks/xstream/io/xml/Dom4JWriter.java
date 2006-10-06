@@ -1,5 +1,8 @@
 package com.thoughtworks.xstream.io.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -54,8 +57,10 @@ public class Dom4JWriter extends AbstractXmlWriter {
     public void close() {
     }
     
-    public Branch root() {
-        return (Branch)elementStack.get(0);
+    public List getResult() {
+        final List list = new ArrayList();
+        list.add(elementStack.get(0));
+        return list;
     }
 
     public HierarchicalStreamWriter underlyingWriter() {
