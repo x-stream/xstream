@@ -147,6 +147,10 @@
 		<resources>
 			<resource>
 				<directory>${basedir}/src/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
 			</resource>
 		</resources>
 		<testSourceDirectory>${basedir}/src/test</testSourceDirectory>
