@@ -118,6 +118,16 @@ public class AttributeTest extends AbstractAcceptanceTest {
                 "</one>";
         assertBothWays(one, expected);
     }
+    
+    public void testCanHandleNullValues() {
+        C c = new C(null, null);
+        xstream.alias("C", C.class);
+        xstream.useAttributeFor(Date.class);
+        xstream.useAttributeFor(String.class);
+        String expected =
+            "<C/>";
+        assertBothWays(c, expected);
+    }
 
     public static class One implements HasID {
         public ID id;
@@ -159,7 +169,19 @@ public class AttributeTest extends AbstractAcceptanceTest {
             return new ID(str);
         }
     }
+    
+    static class C
+    {
+        private Date dt;
+        private String str;
 
+        C(Date dt, String st)
+        {
+            super();
+            this.dt = dt;
+            this.str = st;
+        }
+    }
 }
 
 
