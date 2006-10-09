@@ -290,7 +290,6 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testColor() {
         Color color = Color.black;
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
-        System.out.println(xs.toXML(color));
         String expected = (
                 "{'awt-color': {\n"
             + "  'red': {'0'},\n"
