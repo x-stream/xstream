@@ -13,8 +13,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
+
 /**
- * Tests for using annotations to override field converters 
+ * Tests for using annotations to override field converters
  * 
  * @author Guilherme Silveira
  * @author Mauro Talevi
@@ -34,18 +35,22 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         TimeZoneChanger.reset();
         super.tearDown();
     }
-    
-	public void testDifferentConverterCanBeAnnotatedForFieldsOfSameType() {
-        TaskWithAnnotations task = new TaskWithAnnotations(new GregorianCalendar(1981, 9, 18),
-				new GregorianCalendar(0, 0, 0, 30, 20));
-		String xml = "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>\n"
-				+ "  <date>\n"
-				+ "    <cal>372229200000</cal>\n"
-				+ "  </date>\n"
-                                + "  <time>-62167351200000</time>\n"
-				+ "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>";
-		assertBothWays(task, xml);
-	}
+
+    public void testDifferentConverterCanBeAnnotatedForFieldsOfSameType() {
+        TaskWithAnnotations task = new TaskWithAnnotations(new GregorianCalendar(1981, 9, 18), new GregorianCalendar(
+                0, 0, 0, 30, 20));
+        // joehni:
+        // This fails with JDK 1.5.0_04 on Windows, cal is "372225600000"
+        // Test succeeds with JDK 1.5.0_09 though,don't know about the revisions inbetween
+        String xml = ""
+                + "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>\n"
+                + "  <date>\n"
+                + "    <cal>372229200000</cal>\n"
+                + "  </date>\n"
+                + "  <time>-62167351200000</time>\n"
+                + "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>";
+        assertBothWays(task, xml);
+    }
 
     public static class TaskWithAnnotations {
 
@@ -62,17 +67,22 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
 
         @Override
         public boolean equals(Object obj) {
-            return obj != null && TaskWithAnnotations.class.equals(obj.getClass())
-                    && ((TaskWithAnnotations) obj).date.equals(date)
-                    && ((TaskWithAnnotations) obj).time.equals(time);
+            return obj != null
+                    && TaskWithAnnotations.class.equals(obj.getClass())
+                    && ((TaskWithAnnotations)obj).date.equals(date)
+                    && ((TaskWithAnnotations)obj).time.equals(time);
         }
     }
 
-    public void testNonAnnotatedConvertersCanBeDefinedFieldsOfSameType() {        
-        TaskWithoutAnnotations task = new TaskWithoutAnnotations(new GregorianCalendar(1981, 9, 18),
-                new GregorianCalendar(0, 0, 0, 30, 20));
+    public void testNonAnnotatedConvertersCanBeDefinedFieldsOfSameType() {
+        TaskWithoutAnnotations task = new TaskWithoutAnnotations(
+                new GregorianCalendar(1981, 9, 18), new GregorianCalendar(0, 0, 0, 30, 20));
         xstream.registerConverter(new TreeCalendarConverter());
-        String xml = "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>\n"
+        // joehni:
+        // This fails with JDK 1.5.0_04 on Windows, cal is "372225600000"
+        // Test succeeds with JDK 1.5.0_09 though,don't know about the revisions inbetween
+        String xml = ""
+                + "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>\n"
                 + "  <date>\n"
                 + "    <cal>372229200000</cal>\n"
                 + "  </date>\n"
@@ -96,46 +106,43 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
 
         @Override
         public boolean equals(Object obj) {
-            return obj != null && TaskWithoutAnnotations.class.equals(obj.getClass())
-                    && ((TaskWithoutAnnotations) obj).date.equals(date)
-                    && ((TaskWithoutAnnotations) obj).time.equals(time);
+            return obj != null
+                    && TaskWithoutAnnotations.class.equals(obj.getClass())
+                    && ((TaskWithoutAnnotations)obj).date.equals(date)
+                    && ((TaskWithoutAnnotations)obj).time.equals(time);
         }
     }
-   
+
     public static class TreeCalendarConverter implements Converter {
 
-		public void marshal(Object source, HierarchicalStreamWriter writer,
-				MarshallingContext context) {
-			Calendar calendar = (Calendar) source;
-			writer.startNode("cal");
-			writer.setValue(String.valueOf(calendar.getTime().getTime()));
-			writer.endNode();
-		}
+        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+            Calendar calendar = (Calendar)source;
+            writer.startNode("cal");
+            writer.setValue(String.valueOf(calendar.getTime().getTime()));
+            writer.endNode();
+        }
 
-		public Object unmarshal(HierarchicalStreamReader reader,
-				UnmarshallingContext context) {
-			reader.moveDown();
-			GregorianCalendar calendar = new GregorianCalendar();
-			calendar.setTime(new Date(Long.parseLong(reader.getValue())));
-			reader.moveUp();
-			return calendar;
-		}
+        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+            reader.moveDown();
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setTime(new Date(Long.parseLong(reader.getValue())));
+            reader.moveUp();
+            return calendar;
+        }
 
-		public boolean canConvert(Class type) {
-			return type.equals(GregorianCalendar.class);
-		}
-	}
+        public boolean canConvert(Class type) {
+            return type.equals(GregorianCalendar.class);
+        }
+    }
 
     public static class SingleValueCalendarConverter implements Converter {
 
-        public void marshal(Object source, HierarchicalStreamWriter writer,
-                MarshallingContext context) {
-            Calendar calendar = (Calendar) source;
+        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+            Calendar calendar = (Calendar)source;
             writer.setValue(String.valueOf(calendar.getTime().getTime()));
         }
 
-        public Object unmarshal(HierarchicalStreamReader reader,
-                UnmarshallingContext context) {
+        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
             GregorianCalendar calendar = new GregorianCalendar();
             calendar.setTime(new Date(Long.parseLong(reader.getValue())));
             return calendar;
