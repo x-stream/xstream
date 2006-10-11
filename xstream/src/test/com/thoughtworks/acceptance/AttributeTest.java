@@ -120,12 +120,24 @@ public class AttributeTest extends AbstractAcceptanceTest {
     }
     
     public void testCanHandleNullValues() {
-        C c = new C(null, null);
+        C c = new C(null, null, 0);
         xstream.alias("C", C.class);
         xstream.useAttributeFor(Date.class);
         xstream.useAttributeFor(String.class);
         String expected =
-            "<C/>";
+            "<C>\n" +
+            "  <i>0</i>\n" +
+            "</C>";
+        assertBothWays(c, expected);
+    }
+    
+    public void testCanHandlePrimitiveValues() {
+        C c = new C(null, null, 0);
+        xstream.alias("C", C.class);
+        xstream.useAttributeFor(Date.class);
+        xstream.useAttributeFor(String.class);
+        xstream.useAttributeFor(int.class);
+        String expected ="<C i=\"0\"/>";
         assertBothWays(c, expected);
     }
 
@@ -174,12 +186,14 @@ public class AttributeTest extends AbstractAcceptanceTest {
     {
         private Date dt;
         private String str;
+        private int i;
 
-        C(Date dt, String st)
+        C(Date dt, String st, int i)
         {
             super();
             this.dt = dt;
             this.str = st;
+            this.i = i;
         }
     }
 }

@@ -20,7 +20,7 @@ public class DynamicProxyTest extends AbstractAcceptanceTest {
                 + "</dynamic-proxy>");
     }
 
-    public void TODOtestDynamicProxyAsFieldMember() {
+    public void testDynamicProxyAsFieldMember() {
         ClassWithProxyMember expected = new ClassWithProxyMember();
         expected.one = (SampleDynamicProxy.InterfaceOne)SampleDynamicProxy.newInstance();
         expected.two = (SampleDynamicProxy.InterfaceTwo)expected.one;

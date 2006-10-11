@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -133,11 +134,18 @@ public abstract class AbstractReflectionConverter implements Converter {
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
             if (fieldExistsInClass) {
                 SingleValueConverter converter = mapper.getConverterFromAttribute(attrName);
+                Class type = reflectionProvider.getFieldType(result, attrName, classDefiningField);
                 if (converter == null) {
-                    converter = mapper.getConverterFromItemType(reflectionProvider.getFieldType(result, attrName, classDefiningField));
+                    converter = mapper.getConverterFromItemType(type);
                 }
                 if (converter != null) {
                     Object value = converter.fromString(reader.getAttribute(attrAlias));
+                    if (type.isPrimitive()) {
+                        type = Primitives.box(type);
+                    }
+                    if (value != null && !type.isAssignableFrom(value.getClass())) {
+                        throw new ConversionException("Cannot convert type " + value.getClass().getName() + " to type " + type.getName());
+                    }
                     reflectionProvider.writeField(result, attrName, value, classDefiningField);
                     seenFields.add(classDefiningField, attrName);
                 }
@@ -159,6 +167,11 @@ public abstract class AbstractReflectionConverter implements Converter {
             if (fieldExistsInClass) {
                 Field field = reflectionProvider.getField(result.getClass(),fieldName);
                 value = unmarshallField(context, result, type, field);
+                // TODO the reflection provider should have returned the proper field in first place ....
+                Class definedType = reflectionProvider.getFieldType(result, fieldName, classDefiningField);
+                if (!definedType.isPrimitive()) {
+                    type = definedType;
+                }
             } else {
                 value = context.convertAnother(result, type);
             }

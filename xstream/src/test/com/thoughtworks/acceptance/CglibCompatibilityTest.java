@@ -1,7 +1,5 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.DynamicProxyTest.ClassWithProxyMember;
-import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.JVM;
 
@@ -26,17 +24,6 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  */
 public class CglibCompatibilityTest extends AbstractAcceptanceTest {
-
-    // TODO: Remove this, if converter is installed by default
-    // protected void setUp() throws Exception {
-    // super.setUp();
-    // xstream = new XStream() {
-    // protected MapperWrapper wrapMapper(MapperWrapper next) {
-    // return new CGLIBMapper(super.wrapMapper(next));
-    // }
-    // };
-    // xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper()));
-    // }
 
     public static class DelegatingHandler implements InvocationHandler, Serializable {
         private Object delegate;
@@ -239,7 +226,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         Map map;
     };
 
-    public void TODOtestSupportsProxiesAsFieldMember() throws NullPointerException {
+    public void testSupportsProxiesAsFieldMember() throws NullPointerException {
         ClassWithProxyMember expected = new ClassWithProxyMember();
         xstream.alias("with-proxy", ClassWithProxyMember.class);
         final Enhancer enhancer = new Enhancer();
