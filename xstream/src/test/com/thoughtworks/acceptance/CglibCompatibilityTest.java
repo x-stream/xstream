@@ -1,5 +1,7 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.DynamicProxyTest.ClassWithProxyMember;
+import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.JVM;
 
@@ -24,7 +26,7 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  */
 public class CglibCompatibilityTest extends AbstractAcceptanceTest {
-    
+
     // TODO: Remove this, if converter is installed by default
     // protected void setUp() throws Exception {
     // super.setUp();
@@ -221,14 +223,47 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "    </map>\n"
                 + "  </instance>\n"
                 + "</CGLIB-enhanced-proxy>");
-        
+
         // JDK 1.3 has different threshold and capacity algorithms
         int idx = xml.toString().indexOf(THRESHOLD_PARAM);
         xml.replace(idx, idx + THRESHOLD_PARAM.length(), JVM.is14() ? "12" : "8");
         idx = xml.toString().indexOf(CAPACITY_PARAM);
         xml.replace(idx, idx + CAPACITY_PARAM.length(), JVM.is14() ? "16" : "11");
-        
+
         Map serialized = (Map)assertBothWays(orig, xml.toString());
         assertEquals(orig.toString(), serialized.toString());
+    }
+
+    public static class ClassWithProxyMember {
+        Runnable runnable;
+        Map map;
+    };
+
+    public void TODOtestSupportsProxiesAsFieldMember() throws NullPointerException {
+        ClassWithProxyMember expected = new ClassWithProxyMember();
+        xstream.alias("with-proxy", ClassWithProxyMember.class);
+        final Enhancer enhancer = new Enhancer();
+        enhancer.setCallback(NoOp.INSTANCE);
+        enhancer.setInterfaces(new Class[]{Map.class, Runnable.class});
+        enhancer.setUseFactory(true);
+        final Map orig = (Map)enhancer.create();
+        expected.runnable = (Runnable)orig;
+        expected.map = orig;
+        final String xml = ""
+                + "<with-proxy>\n"
+                + "  <runnable class=\"CGLIB-enhanced-proxy\">\n"
+                + "    <type>java.lang.Object</type>\n"
+                + "    <interfaces>\n"
+                + "      <java-class>java.util.Map</java-class>\n"
+                + "      <java-class>java.lang.Runnable</java-class>\n"
+                + "    </interfaces>\n"
+                + "    <hasFactory>false</hasFactory>\n"
+                + "    <net.sf.cglib.proxy.NoOp_-1/>\n"
+                + "  </runnable>\n"
+                + "  <map class=\"CGLIB-enhanced-proxy\" reference=\"../runnable\"/>\n"
+                + "</with-proxy>";
+
+        final Object serialized = assertBothWays(expected, xml);
+        assertTrue(serialized instanceof ClassWithProxyMember);
     }
 }
