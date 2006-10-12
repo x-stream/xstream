@@ -23,6 +23,7 @@ public final class Primitives {
             { float.class, Float.class},
             { double.class, Double.class},
             { boolean.class, Boolean.class},
+            { void.class, Void.class},
         };
         for (int i = 0; i < boxing.length; i++) {
             BOX.put(boxing[i][0], boxing[i][1]);
