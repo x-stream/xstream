@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 
 import java.text.ParseException;
 import java.util.Date;
+import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
 
 /**
  * Converts a java.util.Date to a String as a date format,
