@@ -9,13 +9,11 @@ import java.util.Locale;
 /**
  * Wrapper around java.text.SimpleDateFormat that can
  * be called by multiple threads concurrently.
- * <p/>
  * <p>SimpleDateFormat has a high overhead in creating
  * and is not thread safe. To make best use of resources,
  * the ThreadSafeSimpleDateFormat provides a dynamically
  * sizing pool of instances, each of which will only
  * be called by a single thread at a time.</p>
- * <p/>
  * <p>The pool has a maximum capacity, to limit overhead.
  * If all instances in the pool are in use and another is
  * required, it shall block until one becomes available.</p>
@@ -59,13 +57,12 @@ public class ThreadSafeSimpleDateFormat {
         DateFormat result;
         synchronized (mutex) {
             if (pool == null) {
-                nextAvailable = -1;
                 pool = new DateFormat[maxPoolSize];
-                for (int i = 0; i < initialPoolSize; i++) {
+                for (nextAvailable = initialPoolSize; nextAvailable > 0; ) {
                     putInPool(createNew());
                 }
             }
-            while (nextAvailable < 0) {
+            while (nextAvailable == maxPoolSize) {
                 try {
                     mutex.wait();
                 } catch (InterruptedException e) {
@@ -73,20 +70,19 @@ public class ThreadSafeSimpleDateFormat {
                             "for a free item in the pool : " + e.getMessage());
                 }
             }
-            result = pool[nextAvailable];
-            nextAvailable--;
-        }
-        if (result == null) {
-            result = createNew();
-            putInPool(result);
+            result = pool[nextAvailable++];
+            if (result == null) {
+                result = createNew();
+                putInPool(result);
+                ++nextAvailable;
+            }
         }
         return result;
     }
 
     private void putInPool(DateFormat format) {
         synchronized (mutex) {
-            nextAvailable++;
-            pool[nextAvailable] = format;
+            pool[--nextAvailable] = format;
             mutex.notify();
         }
     }
