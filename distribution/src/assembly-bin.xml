@@ -11,6 +11,17 @@
 				<include>LICENSE.txt</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>../xstream/lib</directory>
+			<outputDirectory>/lib</outputDirectory>
+			<includes>
+				<include>*license.txt</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>target/docs</directory>
+			<outputDirectory>docs</outputDirectory>
+		</fileSet>
 	</fileSets>
 	<dependencySets>
 		<dependencySet>
