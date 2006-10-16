@@ -31,15 +31,28 @@ public class Element implements NodeType {
 						+ " so it cannot be a value element.");
 	}
 
-	public void checkChildren(List<XNode> newChildren) {
+	public void checkChildren(List<XNode> newChildren, boolean inside) {
 		for (XNode child : newChildren) {
 			if (children.contains(child)) {
-				quantity.put(child, Quantity.MANY);
+				// if inside a node, counts only if shown twice
+				if(!inside || containsMoreThanOnce(newChildren, child)) {
+					quantity.put(child, Quantity.MANY);
+				}
 			} else {
 				quantity.put(child, Quantity.ONE);
 				children.add(child);
 			}
 		}
+	}
+
+	private boolean containsMoreThanOnce(List<XNode> children, XNode child) {
+		int count = 0;
+		for(XNode x : children) {
+			if(x.equals(child)) {
+				count++;
+			}
+		}
+		return count > 1;
 	}
 
 	public List<XNode> getChildren() {
@@ -64,13 +77,7 @@ public class Element implements NodeType {
 		}
 		code += "public class " + tipify(name) + " {\n";
 		for (XNode child : children) {
-			// int qtd = ((Integer) membersQtd.get(key)).intValue();
-			// if (qtd == MORE) {
-			// code += "\tList " + t.getName() + ";\n";
-			// } else if (qtd == ONE) {
 			code += child.getType().getCodeAsMember(quantity.get(child));
-			// code += "\t" + t.getTypeName() + " " + t.getName() + ";\n";
-			// }
 		}
 		code += "}\n";
 		return code;
@@ -82,7 +89,7 @@ public class Element implements NodeType {
 
 	public String getCodeAsMember(Quantity qtd) {
 		if(isImplicitCollection()) {
-			return "\tprivate List<" + children.get(0).getType().getName() + "> " + name + ";\n";
+			return "\tprivate List<" + tipify(children.get(0).getType().getName()) + "> " + name + ";\n";
 		}
 		return "\tprivate " + tipify(name) + " " + name + ";\n";
 	}

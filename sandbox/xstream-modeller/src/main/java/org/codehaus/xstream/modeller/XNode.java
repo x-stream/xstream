@@ -15,12 +15,15 @@ public class XNode {
 	private NodeType type = new NoType();
 
 	private final Graph graph;
+	
+	private boolean inside = false;
 
 	public XNode(final Graph graph) {
 		this.graph = graph;
 	}
 
 	public void loadFrom(DomNode node) {
+		inside = true;
 		if (node.isMarker()) {
 			readMarker(node.getName());
 		} else if (node.isValue()) {
@@ -30,6 +33,7 @@ public class XNode {
 		} else if (node.isParentElement()) {
 			readElement(node);
 		}
+		inside = false;
 	}
 
 	private void readElement(DomNode node) {
@@ -45,7 +49,7 @@ public class XNode {
 			XNode c = graph.find(child);
 			children.add(c);
 		}
-		t.checkChildren(children);
+		t.checkChildren(children, inside);
 		for (DomNode child : node.getChildren()) {
 			XNode c = graph.find(child);
 			c.loadFrom(child);

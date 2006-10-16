@@ -61,4 +61,30 @@ public class ElementsNodeTest extends AcceptanceTestCase {
 		assertTrue(type.isImplicitCollection());
 	}
 
+	public void testTwiceReadsElementWithOneToManyChildCheckingItsQuantity() throws SAXException,
+	IOException {
+		String xml = "<main>" +
+					"\t<element><c1/></element>" +
+					"\t<element><c1/><c1/></element>" +
+					"</main>";
+		XNode root = createRootFor(xml);
+		Element type = (Element) root.getType();
+		XNode element = type.getChildren().get(0);
+		type = (Element) element.getType();
+		assertEquals(Quantity.MANY, type.getQuantity(type.getChildren().get(0)));
+	}
+
+	public void testTwiceReadsElementWithOneChildOnlyCheckingItsQuantity() throws SAXException,
+		IOException {
+		String xml = "<main>" +
+					"\t<element><c1/></element>" +
+					"\t<element><c1/></element>" +
+					"</main>";
+		XNode root = createRootFor(xml);
+		Element type = (Element) root.getType();
+		XNode element = type.getChildren().get(0);
+		type = (Element) element.getType();
+		assertEquals(Quantity.ONE, type.getQuantity(type.getChildren().get(0)));
+	}
+
 }

@@ -26,8 +26,13 @@ public class XStreamModeller {
 			ParserConfigurationException {
 
 		// TODO read
-		String filename = "test.xml";
-		String basePackage = "br.com.caelum.xstream.model";
+		if(args.length!=2) {
+			System.out.println("Invalid usage. Please give us the input xml file and the desired package i.e.:");
+			System.out.println("java -jar xstream-modeller.jar input.xml org.codehaus.xstream");
+			return;
+		}
+		String filename = args[0];
+		String basePackage = args[1];
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);
