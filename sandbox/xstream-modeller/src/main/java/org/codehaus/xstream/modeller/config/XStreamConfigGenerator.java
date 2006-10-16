@@ -32,7 +32,7 @@ public class XStreamConfigGenerator implements ConfigGenerator {
 			if (type.isImplicitCollection()) {
 				continue;
 			}
-			code += "\t\talias(\"" + name + "\", " + name + ".class);\n";
+			code += "\t\talias(\"" + name + "\", " + tipify(name) + ".class);\n";
 			for (XNode child : type.getChildren()) {
 				NodeType childType = child.getType();
 				// TODO nasty... should use some type of enum? factory? anything else
@@ -40,12 +40,12 @@ public class XStreamConfigGenerator implements ConfigGenerator {
 					Element el = (Element) childType;
 					if (el.isImplicitCollection()) {
 						code += "\t\taddImplicitCollection(\"" + el.getName()
-								+ "\", \"" + el.getName() + "\", " + name
+								+ "\", \"" + el.getName() + "\", " + tipify(name)
 								+ ".class);\n";
 					}
 				} else if (childType.getClass().equals(Attribute.class)) {
 					code += "\t\tuseAttributeFor(\"" + childType.getName()
-							+ "\", \"" + childType.getName() + "\", " + name
+							+ "\", \"" + childType.getName() + "\", " + tipify(name)
 							+ ".class);\n";
 				}
 			}
@@ -54,6 +54,10 @@ public class XStreamConfigGenerator implements ConfigGenerator {
 		code += "\t}\n";
 		code += "}\n";
 		System.out.println(code);
+	}
+
+	private String tipify(String name) {
+		return name.substring(0,1).toUpperCase() + name.substring(1);
 	}
 
 }
