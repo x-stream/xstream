@@ -88,4 +88,26 @@ public class AliasTest extends AbstractAcceptanceTest {
         assertBothWays(list, xml);
     }
     
+    private static class FieldsWithInternalNames {
+        String clazz;
+        String ref;
+    }
+
+    public void testCanUseInternalNameAsFieldAlias() {
+        FieldsWithInternalNames object = new FieldsWithInternalNames();
+        object.clazz = "TestIt";
+        object.ref = "MyReference";
+
+        xstream.alias("internalNames", FieldsWithInternalNames.class);
+        xstream.aliasField("class", FieldsWithInternalNames.class, "clazz");
+        xstream.aliasField("reference", FieldsWithInternalNames.class, "ref");
+        
+        String xml = ""
+                + "<internalNames>\n"
+                + "  <class>TestIt</class>\n"
+                + "  <reference>MyReference</reference>\n"
+                + "</internalNames>";
+
+        assertBothWays(object, xml);
+    }
 }
