@@ -78,7 +78,7 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>
@@ -111,7 +111,7 @@
 				<artifactId>maven-scm-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>checkout</goal>
 						</goals>
@@ -124,7 +124,7 @@
 				<executions>
 					<execution>
 						<id>bin</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>assembly</goal>
 						</goals>
@@ -136,7 +136,7 @@
 					</execution>
 					<execution>
 						<id>src</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>assembly</goal>
 						</goals>
