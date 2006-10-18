@@ -18,11 +18,15 @@
 			<version>${pom.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>xstream-benchmark</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<optional>true</optional>
 		</dependency>
-
 		<dependency>
 			<groupId>jdom</groupId>
 			<artifactId>jdom</artifactId>

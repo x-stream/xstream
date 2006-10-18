@@ -62,7 +62,7 @@
 
     <target name="tools:compile" depends="compile">
         <mkdir dir="${tools.build.dir}"/>
-        <javac srcdir="src/tools" destdir="${tools.build.dir}">
+        <javac srcdir="../xstream-benchmark/src/java" destdir="${tools.build.dir}">
             <classpath refid="classpath"/>
         </javac>
     </target>
