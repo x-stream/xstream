@@ -1,7 +1,6 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.core.util.FastStack;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
 import org.dom4j.Element;
@@ -102,10 +101,6 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
         } catch (SAXException e) {
             throw new StreamException(e);
         }
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
     }
 
     private void startElement() throws SAXException {

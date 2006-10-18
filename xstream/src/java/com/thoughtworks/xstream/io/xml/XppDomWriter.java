@@ -1,68 +1,56 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 
-import java.util.LinkedList;
 
-public class XppDomWriter extends AbstractXmlWriter {
-    private LinkedList elementStack = new LinkedList();
-
-    private Xpp3Dom configuration;
-
+public class XppDomWriter extends AbstractDocumentWriter {
     public XppDomWriter() {
-        this(new XmlFriendlyReplacer());
+        this(null, new XmlFriendlyReplacer());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public XppDomWriter(final Xpp3Dom parent) {
+        this(parent, new XmlFriendlyReplacer());
     }
 
     /**
      * @since 1.2
      */
-    public XppDomWriter(XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public XppDomWriter(final XmlFriendlyReplacer replacer) {
+        this(null, replacer);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public XppDomWriter(final Xpp3Dom parent, final XmlFriendlyReplacer replacer) {
+        super(parent, replacer);
     }
 
     public Xpp3Dom getConfiguration() {
-        return configuration;
+        return (Xpp3Dom)getTopLevelNodes().get(0);
     }
 
-    public void startNode(String name) {
-        Xpp3Dom configuration = new Xpp3Dom(escapeXmlName(name));
-
-        if (this.configuration == null) {
-            this.configuration = configuration;
-        } else {
-            top().addChild(configuration);
+    protected Object createNode(final String name) {
+        final Xpp3Dom newNode = new Xpp3Dom(escapeXmlName(name));
+        final Xpp3Dom top = top();
+        if (top != null) {
+            top().addChild(newNode);
         }
-
-        elementStack.addLast(configuration);
+        return newNode;
     }
 
-    public void setValue(String text) {
+    public void setValue(final String text) {
         top().setValue(text);
     }
 
-    public void addAttribute(String key, String value) {
+    public void addAttribute(final String key, final String value) {
         top().setAttribute(escapeXmlName(key), value);
     }
 
-    public void endNode() {
-        elementStack.removeLast();
-    }
-
     private Xpp3Dom top() {
-        return (Xpp3Dom) elementStack.getLast();
+        return (Xpp3Dom)getCurrent();
     }
-
-    public void flush() {
-        // don't need to do anything
-    }
-
-    public void close() {
-        // don't need to do anything
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
-    }
-    
 }

@@ -1,7 +1,6 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
 import org.xml.sax.ContentHandler;
@@ -25,27 +24,23 @@ import java.util.Map;
 
 /**
  * A SAX {@link org.xml.sax.XMLReader parser} that acts as an XStream
- * {@link HierarchicalStreamWriter} to enable direct generation of
- * a SAX event flow from the XStream serialization of a list of
- * list of Java objects.
- * <p/>
- * As a custom SAX parser, this class ignores the arguments of the
- * two standard parse methods ({@link #parse(java.lang.String)} and
- * {@link #parse(org.xml.sax.InputSource)}) but relies on a
- * proprietary SAX property {@link #SOURCE_OBJECT_LIST_PROPERTY} to
- * define the list of objects to serialize.</p>
- * <p/>
- * Configuration of this SAX parser is achieved through the standard
- * {@link #setProperty SAX property mecanism}. While specific setter
- * methods require direct access to the parser instance, SAX
- * properties support configuration settings to be propagated through
- * a chain of {@link org.xml.sax.XMLFilter filters} down to the
- * underlying parser object.</p>
- * <p/>
- * This mecanism shall be used to configure the
- * {@link #SOURCE_OBJECT_LIST_PROPERTY objects to be serialized} as
- * well as the {@link #CONFIGURED_XSTREAM_PROPERTY XStream facade}.</p>
- *
+ * {@link com.thoughtworks.xstream.io.HierarchicalStreamWriter} to enable direct generation of a
+ * SAX event flow from the XStream serialization of a list of list of Java objects. <p/> As a
+ * custom SAX parser, this class ignores the arguments of the two standard parse methods ({@link #parse(java.lang.String)}
+ * and {@link #parse(org.xml.sax.InputSource)}) but relies on a proprietary SAX property
+ * {@link #SOURCE_OBJECT_LIST_PROPERTY} to define the list of objects to serialize.
+ * </p>
+ * <p/> Configuration of this SAX parser is achieved through the standard
+ * {@link #setProperty SAX property mecanism}. While specific setter methods require direct
+ * access to the parser instance, SAX properties support configuration settings to be propagated
+ * through a chain of {@link org.xml.sax.XMLFilter filters} down to the underlying parser
+ * object.
+ * </p>
+ * <p/> This mecanism shall be used to configure the
+ * {@link #SOURCE_OBJECT_LIST_PROPERTY objects to be serialized} as well as the
+ * {@link #CONFIGURED_XSTREAM_PROPERTY XStream facade}.
+ * </p>
+ * 
  * @author Laurent Bihanic
  */
 public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
@@ -679,10 +674,6 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     public void close() {
         // don't need to do anything
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
     }
 }
 

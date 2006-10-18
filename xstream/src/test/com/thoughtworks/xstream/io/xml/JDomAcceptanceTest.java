@@ -61,7 +61,7 @@ public class JDomAcceptanceTest extends TestCase {
 
         JDomWriter writer = new JDomWriter();
         xstream.marshal(x, writer);
-        List result = writer.getResult();
+        List result = writer.getTopLevelNodes();
 
         assertEquals("Result list should contain exactly 1 element",
                                                         1, result.size());

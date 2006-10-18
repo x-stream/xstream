@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
 import javax.xml.namespace.QName;
@@ -163,10 +162,6 @@ public class StaxWriter extends AbstractXmlWriter {
         catch (XMLStreamException e) {
             throw new StreamException(e);
         }
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
     }
 
     /**

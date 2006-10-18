@@ -134,4 +134,33 @@ public class Xpp3Dom {
     public void setParent(Xpp3Dom parent) {
         this.parent = parent;
     }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof Xpp3Dom) {
+            Xpp3Dom dom = (Xpp3Dom)obj;
+            return name.equals(dom.getName()) 
+                && ((value == null && dom.value == null) || value.equals(dom.value)
+                && ((attributes == null && dom.attributes == null) || attributes.equals(dom.attributes))
+                && ((childList == null && dom.childList == null) || childList.equals(dom.childList)));
+        }
+        return false;
+    }
+
+    public int hashCode() {
+        int hash = -name.hashCode();
+        if (value != null) {
+            hash ^= value.hashCode();
+        }
+        if (attributes != null) {
+            hash *= 3;
+            hash ^= attributes.hashCode();
+        }
+        if (childList != null) {
+            hash *= 7;
+            hash ^= childList.hashCode();
+        }
+        return hash;
+    }
+    
+    
 }

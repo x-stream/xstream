@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.core.util.QuickWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.io.Writer;
 
@@ -188,9 +187,5 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     public void close() {
         writer.close();
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
     }
 }

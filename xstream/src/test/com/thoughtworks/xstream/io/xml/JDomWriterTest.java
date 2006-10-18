@@ -11,7 +11,7 @@ public class JDomWriterTest extends AbstractXMLWriterTest {
     protected void setUp() throws Exception {
         super.setUp();
         writer = new JDomWriter();
-        result = ((JDomWriter)writer).getResult();
+        result = ((JDomWriter)writer).getTopLevelNodes();
     }
 
     protected void assertXmlProducedIs(String expected) {

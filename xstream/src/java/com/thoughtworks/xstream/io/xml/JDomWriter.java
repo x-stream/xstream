@@ -1,42 +1,52 @@
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
 
-import java.util.LinkedList;
 import java.util.List;
+
 
 /**
  * @author Laurent Bihanic
  */
-public class JDomWriter extends AbstractXmlWriter implements DomGenerator {
+public class JDomWriter extends AbstractDocumentWriter {
 
-    private List result = new LinkedList();
-    private List elementStack = new LinkedList();
     private final JDOMFactory documentFactory;
 
     /**
      * @since 1.2
      */
-    public JDomWriter(Element container, JDOMFactory factory, XmlFriendlyReplacer replacer) {
-        super(replacer);
-        elementStack.add(0, container);
-        result.add(container);
-        this.documentFactory = factory;
+    public JDomWriter(
+                      final Element container, final JDOMFactory factory,
+                      final XmlFriendlyReplacer replacer) {
+        super(container, replacer);
+        documentFactory = factory;
     }
 
-    public JDomWriter(Element container, JDOMFactory factory) {
+    public JDomWriter(final Element container, final JDOMFactory factory) {
         this(container, factory, new XmlFriendlyReplacer());
     }
 
-    public JDomWriter(JDOMFactory documentFactory) {
-        this.documentFactory = documentFactory;
+    /**
+     * @since upcoming
+     */
+    public JDomWriter(final JDOMFactory factory, final XmlFriendlyReplacer replacer) {
+        this(null, factory, replacer);
     }
 
-    public JDomWriter(Element container) {
+    public JDomWriter(final JDOMFactory factory) {
+        this(null, factory);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public JDomWriter(final Element container, final XmlFriendlyReplacer replacer) {
+        this(container, new DefaultJDOMFactory(), replacer);
+    }
+
+    public JDomWriter(final Element container) {
         this(container, new DefaultJDOMFactory());
     }
 
@@ -44,54 +54,31 @@ public class JDomWriter extends AbstractXmlWriter implements DomGenerator {
         this(new DefaultJDOMFactory());
     }
 
-    public void startNode(String name) {
-        Element element = this.documentFactory.element(escapeXmlName(name));
-
-        Element parent = this.top();
+    protected Object createNode(final String name) {
+        final Element element = documentFactory.element(escapeXmlName(name));
+        final Element parent = top();
         if (parent != null) {
             parent.addContent(element);
         }
-        else {
-            result.add(element);
-        }
-        elementStack.add(0, element);
+        return element;
     }
 
-    public void setValue(String text) {
-        top().addContent(this.documentFactory.text(text));
+    public void setValue(final String text) {
+        top().addContent(documentFactory.text(text));
     }
 
-    public void addAttribute(String key, String value) {
-        top().setAttribute(
-                        this.documentFactory.attribute(escapeXmlName(key), value));
-    }
-
-    public void endNode() {
-        this.elementStack.remove(0);
+    public void addAttribute(final String key, final String value) {
+        top().setAttribute(documentFactory.attribute(escapeXmlName(key), value));
     }
 
     private Element top() {
-        Element top = null;
-
-        if (this.elementStack.isEmpty() == false) {
-            top = (Element) this.elementStack.get(0);
-        }
-        return top;
+        return (Element)getCurrent();
     }
 
+    /**
+     * @deprecated since upcoming, use {@link #getTopLevelNodes()} instead
+     */
     public List getResult() {
-        return this.result;
-    }
-
-    public void flush() {
-        // don't need to do anything
-    }
-
-    public void close() {
-        // don't need to do anything
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
+        return getTopLevelNodes();
     }
 }

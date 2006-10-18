@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.AttributeNameIterator;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-public abstract class AbstractDocumentReader extends AbstractXmlReader {
+public abstract class AbstractDocumentReader extends AbstractXmlReader implements DocumentReader {
 
     private FastStack pointers = new FastStack(16);
     private Object current;
