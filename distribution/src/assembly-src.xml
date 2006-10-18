@@ -5,8 +5,11 @@
 	</formats>
 	<fileSets>
 		<fileSet>
-			<directory>target/checkout</directory>
+			<directory>..</directory>
 			<outputDirectory>/</outputDirectory>
+			<excludes>
+            	<exclude>**/target/**</exclude>
+      		</excludes>			
 		</fileSet>
 	</fileSets>
 </assembly>
