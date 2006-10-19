@@ -8,6 +8,7 @@
 			<directory>..</directory>
 			<outputDirectory>/</outputDirectory>
 			<excludes>
+            	<exclude>**/build/**</exclude>
             	<exclude>**/target/**</exclude>
       		</excludes>			
 		</fileSet>
