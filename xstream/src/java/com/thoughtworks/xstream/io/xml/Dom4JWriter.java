@@ -44,6 +44,13 @@ public class Dom4JWriter extends AbstractDocumentWriter {
         this(root, new DocumentFactory(), new XmlFriendlyReplacer());
     }
 
+    /**
+     * @since upcoming
+     */
+    public Dom4JWriter() {
+        this(new DocumentFactory(), new XmlFriendlyReplacer());
+    }
+
     protected Object createNode(final String name) {
         final Element element = documentFactory.createElement(escapeXmlName(name));
         final Branch top = top();

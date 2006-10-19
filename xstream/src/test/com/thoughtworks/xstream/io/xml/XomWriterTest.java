@@ -2,21 +2,15 @@ package com.thoughtworks.xstream.io.xml;
 
 import nu.xom.Element;
 
-public class XomWriterTest extends AbstractXMLWriterTest {
-
-    private Element root;
+public class XomWriterTest extends AbstractDocumentWriterTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        root = new Element("my-root");
-        writer = new XomWriter(root);
+        writer = new XomWriter();
     }
 
-    protected void assertXmlProducedIs(String expected) {
-        assertEquals(1, root.getChildCount());
-        String actual = root.getChild(0).toXML();
-        actual = replaceAll(actual , " />", "/>");
-        assertEquals(expected, actual);
+    protected DocumentReader createDocumentReaderFor(final Object node) {
+        return new XomReader((Element)node);
     }
 
     // inherits tests from superclass

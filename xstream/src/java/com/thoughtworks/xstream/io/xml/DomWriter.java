@@ -49,8 +49,8 @@ public class DomWriter extends AbstractDocumentWriter {
         if (top != null) {
             top().appendChild(child);
         } else if (!hasRootElement) {
-            // pre 1.2.1 implementation did also append every top level child
             document.appendChild(child);
+            hasRootElement = true;
         }
         return child;
     }

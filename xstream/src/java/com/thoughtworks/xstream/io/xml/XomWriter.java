@@ -6,6 +6,13 @@ import nu.xom.Element;
 
 public class XomWriter extends AbstractDocumentWriter {
 
+    /**
+     * @since upcoming
+     */
+    public XomWriter() {
+        this(null);
+    }
+
     public XomWriter(final Element parentElement) {
         this(parentElement, new XmlFriendlyReplacer());
     }
