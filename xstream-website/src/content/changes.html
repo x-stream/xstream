@@ -20,6 +20,13 @@
 
     <p>Not yet released</p>
 
+    <h2>Major changes</h2>
+
+    <ul>
+    	<li>Introduced DocumentWriter interface and generalized functionality for all writer implementations
+    	creating a DOM structure (DOM4J, DOM, JDom, Xom, Xpp3Dom).</li>
+    </ul>
+
     <h2>Minor changes</h2>
     
     <ul>
@@ -30,8 +37,16 @@
     	<li>JIRA:XSTR-337, Annotation cycle bug.</li>
     	<li>Fix packaging error for the resulting jar building with Maven2.</li>
     	<li>JIRA:XSTR-339, NPE for attribute null values.</li>
-    	<li>JIRA:XSTR-338, NPE in JSON writer for converters using non-extended HierarchicalStreamWriter.</li>
-    	<li>Fix unmarshalling error for fields containing proxies.</li>
+    	<li>JIRA:XSTR-338, NPE in JSON writer for converters using non-extended HierarchicalStreamWriter (contributed by Chris Winters).</li>
+    	<li>JIRA:XSTR-356, Fix unmarshalling error for fields containing proxies.</li>
+    	<li>JIRA:XSTR-349, Fix backward compatibility of Dom4jWriter.</li>
+    	<li>JIRA:XSTR-309, More versatile boolean conversion options (contributed by David Blevins).</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+        <li>Deprecate JDomWriter.getResult() in favout of DocumentWriter.getTopLevelNodes().</li>
     </ul>
 
     <h1>Version 1.2</h1>
