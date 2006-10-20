@@ -13,14 +13,41 @@
 
 	<build>
 		<plugins>
-			<!-- Xsite fails to validate links - Need to configure it to be optional?  -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>dependency-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>install</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/xsite/apidocs</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${pom.groupId}</groupId>
+									<artifactId>xstream</artifactId>
+									<version>${pom.version}</version>
+									<classifier>javadoc</classifier>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- XSite fails to validate links - Need to configure it to be optional?  -->
 			<plugin>
 				<groupId>org.codehaus.xsite</groupId>
 				<artifactId>xsite-maven-plugin</artifactId>
 				<configuration>
 					<siteMapPath>${basedir}/src/content/website.xml</siteMapPath>
 					<skinPath>${basedir}/src/templates/skin.html</skinPath>
-					<outputDirectoryPath>${basedir}/target/xsite</outputDirectoryPath>
+					<outputDirectoryPath>${project.build.directory}/xsite</outputDirectoryPath>
 				</configuration>
 				<executions>
 					<execution>
