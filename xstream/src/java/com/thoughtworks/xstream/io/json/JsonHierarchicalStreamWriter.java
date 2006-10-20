@@ -128,11 +128,16 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         if (needsQuotes(clazz)) {
             writer.write("\"");
         }
-		int i = 0;
-		for(int idx = 0; (idx = text.indexOf('"', idx)) >= 0; i = idx+1) {
-			this.writer.write(text.substring(i, idx));
-			this.writer.write("\\\\\"");
-		}
+
+        int idx, i = 0;
+        while((idx = text.indexOf('"', i)) >= 0) {
+            if (idx != 0) {
+                this.writer.write(text.substring(i, idx));
+            }
+            this.writer.write("\\\\\"");
+            i = idx+1;
+        }
+        
         this.writer.write(text.substring(i));
         if (needsQuotes(clazz)) {
             writer.write("\"");
@@ -206,5 +211,4 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
     public HierarchicalStreamWriter underlyingWriter() {
         return this;
     }
-
 }

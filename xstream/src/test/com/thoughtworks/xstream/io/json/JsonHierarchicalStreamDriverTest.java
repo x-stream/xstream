@@ -158,7 +158,6 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             menuitem.add(new MenuItem("Open", "OpenDoc()"));
             menuitem.add(new MenuItem("Close", "CloseDoc()"));
         }
-
     }
 
     public static class MenuWithArray {
@@ -173,8 +172,6 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 new MenuItem("Open", "OpenDoc()"),
                 new MenuItem("Close", "CloseDoc()")
         };
-
-
     }
 
     public static class MenuWithSet {
@@ -286,7 +283,6 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         String onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;";
     }
 
-
     public void testColor() {
         Color color = Color.black;
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
@@ -298,6 +294,24 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "  'alpha': {'255'}\n"
             + "}}").replace('\'', '"');
         assertEquals(expected, xs.toXML(color));
+    }
+    
+    public void testQuoteHandling() {
+        String[] strings = new String[] {
+           "last\"" ,
+            "\"first" ,
+            "\"between\"" ,
+            "around \"\" it" ,
+        };
+        XStream xs = new XStream(new JsonHierarchicalStreamDriver());
+        String expected = (""
+            + "{#string-array#: [\n"
+            + "  #last\\\\\"#,\n"
+            + "  #\\\\\"first#,\n"
+            + "  #\\\\\"between\\\\\"#,\n"
+            + "  #around \\\\\"\\\\\" it#\n"
+            + "]}").replace('#', '"');
+        assertEquals(expected, xs.toXML(strings));
     }
 }
 
