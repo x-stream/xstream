@@ -296,20 +296,22 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         assertEquals(expected, xs.toXML(color));
     }
     
-    public void testQuoteHandling() {
+    public void testQuoteHandlingAndEscapes() {
         String[] strings = new String[] {
            "last\"" ,
             "\"first" ,
             "\"between\"" ,
             "around \"\" it" ,
+            "back\\slash" ,
         };
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         String expected = (""
             + "{#string-array#: [\n"
-            + "  #last\\\\\"#,\n"
-            + "  #\\\\\"first#,\n"
-            + "  #\\\\\"between\\\\\"#,\n"
-            + "  #around \\\\\"\\\\\" it#\n"
+            + "  #last\\\"#,\n"
+            + "  #\\\"first#,\n"
+            + "  #\\\"between\\\"#,\n"
+            + "  #around \\\"\\\" it#,\n"
+            + "  #back\\\\slash#\n"
             + "]}").replace('#', '"');
         assertEquals(expected, xs.toXML(strings));
     }
