@@ -87,20 +87,22 @@
 								<mkdir dir="${project.build.directory}/docs"/>
 								<copy todir="${project.build.directory}/docs" overwrite="true" failonerror="false">
 									<fileset dir="${basedir}/../xstream-website">
-										<include name="target/xsite/**" />
+										<include name="target/xsite/**"/>
+										<exclude name="target/xsite"/>
 									</fileset>
 									<filtermapper>
 										<replacestring from="target/xsite/" to="/"/>
 									</filtermapper>
 								</copy>
-								<copy todir="${project.build.directory}/docs" overwrite="true" failonerror="false">
+								<copy todir="${project.build.directory}/docs" verbose="true" overwrite="true" failonerror="false">
 									<fileset dir="${basedir}/../xstream">
-										<include name="target/site/apidocs/**" />
+										<include name="target/site/apidocs/**"/>
+										<exclude name="target/site"/>
 									</fileset>
-									<filtermapper>
-										<replacestring from="target/site/apidocs/" to="/javadoc/"/>
-									</filtermapper>
 								</copy>
+								<move todir="${project.build.directory}/docs/javadoc">
+									<fileset dir="${project.build.directory}/docs/apidocs"/>
+								</move> 
 							</tasks>
 						</configuration>
 					</execution>

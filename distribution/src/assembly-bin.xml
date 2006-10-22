@@ -19,6 +19,10 @@
 			</includes>
 		</fileSet>
 		<fileSet>
+			<directory>../xstream/lib/jdk1.3</directory>
+			<outputDirectory>/lib/jdk1.3</outputDirectory>
+		</fileSet>
+		<fileSet>
 			<directory>target/docs</directory>
 			<outputDirectory>docs</outputDirectory>
 		</fileSet>
