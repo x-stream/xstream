@@ -94,15 +94,6 @@
 										<replacestring from="target/xsite/" to="/"/>
 									</filtermapper>
 								</copy>
-								<copy todir="${project.build.directory}/docs" verbose="true" overwrite="true" failonerror="false">
-									<fileset dir="${basedir}/../xstream">
-										<include name="target/site/apidocs/**"/>
-										<exclude name="target/site"/>
-									</fileset>
-								</copy>
-								<move todir="${project.build.directory}/docs/javadoc">
-									<fileset dir="${project.build.directory}/docs/apidocs"/>
-								</move> 
 							</tasks>
 						</configuration>
 					</execution>
@@ -116,7 +107,7 @@
 						<id>bin</id>
 						<phase>install</phase>
 						<goals>
-							<goal>assembly</goal>
+							<goal>single</goal>
 						</goals>
 						<configuration>
 							<descriptors>
@@ -130,7 +121,7 @@
 						<id>src</id>
 						<phase>install</phase>
 						<goals>
-							<goal>assembly</goal>
+							<goal>single</goal>
 						</goals>
 						<configuration>
 							<descriptors>
