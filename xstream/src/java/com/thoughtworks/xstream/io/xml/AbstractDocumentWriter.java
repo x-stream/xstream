@@ -26,7 +26,7 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
      * 
      * @param container the top level container for the nodes to create (may be
      *            <code>null</code>)
-     * @parame replacer the object that creates XML-friendly names
+     * @param replacer the object that creates XML-friendly names
      * @since upcoming
      */
     public AbstractDocumentWriter(final Object container, final XmlFriendlyReplacer replacer) {
