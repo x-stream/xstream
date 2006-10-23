@@ -4,7 +4,9 @@ Requires maven 2.0.4
 
 Before building:
 
-mvn install:install-file -Dfile=xstream-website/lib/sitemesh-20051115.jar -DgroupId=opensymphony -DartifactId=sitemesh -Dversion=20051115 -Dpackaging=jar
+mvn install:install-file -Dfile=xstream-website/lib/sitemesh-20051115.jar
+-DgroupId=opensymphony -DartifactId=sitemesh -Dversion=20051115
+-Dpackaging=jar -DgeneratePom=true
 
 To build:
 
