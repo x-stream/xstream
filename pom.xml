@@ -11,7 +11,7 @@
 	<modules>
 		<module>xstream</module>
 		<module>xstream-benchmark</module>
-		<module>xstream-website</module>
+		<module>xstream-distribution</module>
 	</modules>
 
 	<licenses>
