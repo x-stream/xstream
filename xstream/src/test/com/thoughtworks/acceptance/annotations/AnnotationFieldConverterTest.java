@@ -1,10 +1,10 @@
 package com.thoughtworks.acceptance.annotations;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -37,30 +37,26 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testDifferentConverterCanBeAnnotatedForFieldsOfSameType() {
-        TaskWithAnnotations task = new TaskWithAnnotations(new GregorianCalendar(1981, 9, 18), new GregorianCalendar(
-                0, 0, 0, 30, 20));
-        // joehni:
-        // This fails with JDK 1.5.0_04 on Windows, cal is "372225600000"
-        // Test succeeds with JDK 1.5.0_09 though,don't know about the revisions inbetween
+        TaskWithAnnotations task = new TaskWithAnnotations("1981, 9, 18", "1981, 9, 18");
         String xml = ""
                 + "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>\n"
                 + "  <date>\n"
-                + "    <cal>372229200000</cal>\n"
+                + "    <cal>1981, 9, 18</cal>\n"
                 + "  </date>\n"
-                + "  <time>-62167351200000</time>\n"
+                + "  <time>_1981, 9, 18_</time>\n"
                 + "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>";
         assertBothWays(task, xml);
     }
 
     public static class TaskWithAnnotations {
 
-        @XStreamConverter(TreeCalendarConverter.class)
-        private Calendar date;
+        @XStreamConverter(FirstConverter.class)
+        private String date;
 
-        @XStreamConverter(SingleValueCalendarConverter.class)
-        private Calendar time;
+        @XStreamConverter(SecundaryConverter.class)
+        private String time;
 
-        public TaskWithAnnotations(Calendar date, Calendar time) {
+        public TaskWithAnnotations(String date, String time) {
             this.date = date;
             this.time = time;
         }
@@ -75,19 +71,16 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testNonAnnotatedConvertersCanBeDefinedFieldsOfSameType() {
-        TaskWithoutAnnotations task = new TaskWithoutAnnotations(
-                new GregorianCalendar(1981, 9, 18), new GregorianCalendar(0, 0, 0, 30, 20));
-        xstream.registerConverter(new TreeCalendarConverter());
-        // joehni:
-        // This fails with JDK 1.5.0_04 on Windows, cal is "372225600000"
-        // Test succeeds with JDK 1.5.0_09 though,don't know about the revisions inbetween
+        TaskWithoutAnnotations task = new TaskWithoutAnnotations("1981, 9, 18",
+				"1981, 9, 18");
+        xstream.registerConverter(new FirstConverter(), XStream.PRIORITY_VERY_HIGH);
         String xml = ""
                 + "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>\n"
                 + "  <date>\n"
-                + "    <cal>372229200000</cal>\n"
+                + "    <cal>1981, 9, 18</cal>\n"
                 + "  </date>\n"
                 + "  <time>\n"
-                + "    <cal>-62167351200000</cal>\n"
+                + "    <cal>1981, 9, 18</cal>\n"
                 + "  </time>\n"
                 + "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>";
         assertBothWays(task, xml);
@@ -95,11 +88,9 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
 
     public static class TaskWithoutAnnotations {
 
-        private Calendar date;
+        private String date, time;
 
-        private Calendar time;
-
-        public TaskWithoutAnnotations(Calendar date, Calendar time) {
+        public TaskWithoutAnnotations(String date, String time) {
             this.date = date;
             this.time = time;
         }
@@ -113,43 +104,40 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class TreeCalendarConverter implements Converter {
+    public static class FirstConverter implements Converter {
 
         public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-            Calendar calendar = (Calendar)source;
+            String calendar = source.toString();
             writer.startNode("cal");
-            writer.setValue(String.valueOf(calendar.getTime().getTime()));
+            writer.setValue(calendar);
             writer.endNode();
         }
 
         public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
             reader.moveDown();
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTime(new Date(Long.parseLong(reader.getValue())));
+            String calendar = reader.getValue();
             reader.moveUp();
             return calendar;
         }
 
         public boolean canConvert(Class type) {
-            return type.equals(GregorianCalendar.class);
+            return type.equals(String.class);
         }
     }
 
-    public static class SingleValueCalendarConverter implements Converter {
+    public static class SecundaryConverter implements Converter {
 
         public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-            Calendar calendar = (Calendar)source;
-            writer.setValue(String.valueOf(calendar.getTime().getTime()));
+            writer.setValue("_"+source.toString() + "_");
         }
 
         public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTime(new Date(Long.parseLong(reader.getValue())));
-            return calendar;
+        	String value = reader.getValue();
+            return value.substring(1,value.length()-1);
         }
 
         public boolean canConvert(Class type) {
-            return type.equals(GregorianCalendar.class);
+            return type.equals(String.class);
         }
     }
 
