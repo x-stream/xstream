@@ -85,13 +85,13 @@
 							<tasks>
  								<mkdir dir="${project.build.outputDirectory}" />
 								<mkdir dir="${project.build.directory}/docs"/>
-								<copy todir="${project.build.directory}/docs" overwrite="true" failonerror="false">
+								<copy todir="${project.build.directory}/docs" overwrite="true" failonerror="false" verbose="true">
 									<fileset dir="${basedir}/../xstream-website">
 										<include name="target/xsite/**"/>
 										<exclude name="target/xsite"/>
 									</fileset>
 									<filtermapper>
-										<replacestring from="target/xsite/" to="/"/>
+										<replacestring from="target${file.separator}xsite${file.separator}" to="${file.separator}"/>
 									</filtermapper>
 								</copy>
 							</tasks>

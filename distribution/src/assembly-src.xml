@@ -10,6 +10,14 @@
 			<excludes>
             	<exclude>**/build/**</exclude>
             	<exclude>**/target/**</exclude>
+            	<exclude>**/.*/**</exclude>
+            	<exclude>**/.*</exclude>
+            	<exclude>**/cobertura.ser</exclude>
+            	<exclude>**/release.properties</exclude>
+            	<exclude>**/surefire*.properties</exclude>
+            	<exclude>**/*~</exclude>
+            	<exclude>**/*.bak</exclude>
+            	<exclude>**/*.classpath</exclude>
       		</excludes>			
 		</fileSet>
 	</fileSets>
