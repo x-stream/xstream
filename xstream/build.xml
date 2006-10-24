@@ -148,6 +148,7 @@
     </target>
 
     <target name="dist" depends="jar" description="Build distribution package">
+    	<copy file="../LICENSE.txt" todir="."/>
         <zip zipfile="xstream-${version}.zip">
             <zipfileset dir="." prefix="xstream-${version}">
                 <include name="build.xml"/>
