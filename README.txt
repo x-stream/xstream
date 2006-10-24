@@ -8,12 +8,9 @@
 
 --[ Binaries ]-----------------------------------------------
 
-The root directory contains xstream.jar. For most uses, this
-is all you need to include in your classpath to use XStream.
-
-All libraries in the 'lib' directory are used at build time,
-or are optional extras used for tighter integration with
-third party libraries. XPP3 is recommend for use as it will
+All binary artifacts are in the 'lib' directory.  These include the 
+xstream jars and any other library used at build time,
+or optional runtime extras. XPP3 is recommend for use as it will
 greatly improve the performance of XStream.
 
 --[ Documentation ]------------------------------------------

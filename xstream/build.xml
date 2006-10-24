@@ -148,20 +148,32 @@
     </target>
 
     <target name="dist" depends="jar" description="Build distribution package">
-    	<copy file="../LICENSE.txt" todir="."/>
-        <zip zipfile="xstream-${version}.zip">
-            <zipfileset dir="." prefix="xstream-${version}">
+    	<mkdir dir="build/dist"/>    	
+    	<copy todir="build/dist">
+    		<fileset dir="..">
+    			<include name="LICENSE.txt"/>
+    			<include name="README.txt"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="build/dist">
+    		<fileset dir=".">
                 <include name="build.xml"/>
                 <include name="build.properties"/>
-                <include name="LICENSE.txt"/>
-                <include name="README.txt"/>
                 <include name="jdk*.txt"/>
                 <include name="src/java/**"/>
                 <include name="src/tools/**"/>
                 <include name="src/test/**"/>
                 <include name="lib/**"/>
                 <include name="javadoc/**"/>
-                <include name="xstream-${version}*.jar"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="build/dist/lib">
+    		<fileset dir=".">
+	            <include name="xstream-${version}*.jar"/>
+       		</fileset>
+    	</copy>
+        <zip zipfile="xstream-${version}.zip">
+            <zipfileset dir="build/dist" prefix="xstream-${version}">
             </zipfileset>
         </zip>
         <antcall target="jdk-check"/>
