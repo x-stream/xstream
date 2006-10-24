@@ -57,11 +57,15 @@ svn commit --username username --password your-password --message "Testing https
 
 	<h2>Modules</h2>
 
-	XStream project consists of two modules:  xstream and xstream-website.
-	When you checkout the trunk you'll get both, but you can just add the module you are interested in to the URL, eg
-		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk/xstream xstream</pre></div>
-		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk/xstream-website xstream-website</pre></div>
-	checkout out the two modules separately.
+	XStream project consists of several modules:  
+	<ol>
+		<li>xstream - the core module</li>
+		<li>xstream-benchmark - the benchmark tool</li>
+		<li>xstream-distribution - the module contains the documentation and assembles the src and bin distributions</li>
+	</ol>
+	When you checkout the trunk you'll get all the modules, but you can just add the module you are interested in to the URL, eg
+		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk/[module] [module]</pre></div>
+	to checkout out the single module separately.
 
   </body>
 </html>
