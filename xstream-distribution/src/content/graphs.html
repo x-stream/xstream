@@ -34,7 +34,7 @@ public class Cd {
 	public Cd getBonusCd() {
 		return bonusCd;
 	}
-}</pre></div></p>
+}</pre></div>
 
 	<p>And let's create an order with the same cd twice and the order itself, so we can simulate
  two references to the same object and a back-reference.
@@ -52,7 +52,7 @@ order.add(order);
 XStream xstream = new XStream();
 xstream.alias("cd", Cd.class);
 System.out.println(xstream.toXML(order));
-</pre></div></p>
+</pre></div>
 
 	<p>If we execute the above code, XStream's uses its <b>default mode</b> called XPATH_RELATIVE_REFERENCES
 	based on the W3C XPath specification. Cross and back references are treated in a way that it's (almost) human
@@ -69,7 +69,7 @@ readable:
   &lt;cd reference="../cd[2]"/&gt;
   &lt;list reference=".."/&gt;
 &lt;/list&gt;
-</pre></div></p>
+</pre></div>
 
 	<p>The second reference to the Basement Jaxx cd was serialized as "../cd[2]" while the order inside
 itself used the ".." path. The XPath Relative mode allows any type of graphs to be used as both cross and
@@ -79,7 +79,7 @@ back-references are supported.</p>
 	
 <div class="Source Java"><pre>
 xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
-</pre></div></p>
+</pre></div>
 
     <!-- ...................................................... -->
     <h2>Relative x Absolute</h2>
@@ -106,7 +106,6 @@ xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 &lt;/list&gt;
 </pre></div>
 
-	</p>
 
     <!-- ...................................................... -->
     <h2>Id mode</h2>
@@ -116,7 +115,7 @@ xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 
 <div class="Source Java"><pre>
 xstream.setMode(XStream.ID_REFERENCES);
-</pre></div></p>
+</pre></div>
 
 	<p>The result is a xml which generates an "id" attribute for each new object marshalled, 
 	and whenever it finds back or cross-references, it uses a "reference" attribute to so
@@ -137,7 +136,7 @@ xstream.setMode(XStream.ID_REFERENCES);
   &lt;cd reference="3"/&gt;
   &lt;list reference="1"/&gt;
 &lt;/list&gt;
-</pre></div></p>
+</pre></div>
 
     <!-- ...................................................... -->
     <h2>No references</h2>
@@ -158,7 +157,7 @@ order.add(bj);
 XStream xstream = new XStream();
 xstream.alias("cd", Cd.class);
 System.out.println(xstream.toXML(order));
-</pre></div></p>
+</pre></div>
 
 	<p>Now if we add the NO_REFERENCES option, every reference shall be completed serialized.
 
@@ -180,7 +179,7 @@ xstream.setMode(XStream.NO_REFERENCES);
     &lt;id&gt;basement_jaxx_singles&lt;/id&gt;
   &lt;/cd&gt;
 &lt;/list&gt;
-</pre></div></p>
+</pre></div>
 
 	<p>After reading from the above xml, you will get three <b>different</b> Cd instances.</p>
 	
