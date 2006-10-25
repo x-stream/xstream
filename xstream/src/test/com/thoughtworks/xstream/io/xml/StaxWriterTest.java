@@ -25,7 +25,6 @@ public class StaxWriterTest extends AbstractXMLWriterTest {
     protected void assertXmlProducedIs(String expected) {
         expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
         expected = replaceAll(expected, "&#x0D;", "&#13;");
-        expected = replaceAll(expected, "\t", "&#9;");
         expected = "<?xml version='1.0' encoding='utf-8'?>" + expected;
         assertEquals(expected, buffer.toString());
     }
