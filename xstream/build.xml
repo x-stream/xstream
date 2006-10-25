@@ -1,17 +1,18 @@
 <project name="xstream" default="library">
 
-    <!-- Give user a chance to override specific properties -->
-    <property file="build.properties"/>
-    
-    <property name="version" value="SNAPSHOT"/>
+    <property name="version" value="1.2-SNAPSHOT"/>
 
-    <property name="java.build.dir" value="build/java"/>
-    <property name="test.build.dir" value="build/test"/>
-    <property name="tools.build.dir" value="build/tools"/>
+	<property name="build.dir" value="target"/>
+	<property name="java.src.dir" value="src/java"/>
+    <property name="java.build.dir" value="${build.dir}/classes"/>
     <property name="java.compile.debug" value="yes"/>
+    <property name="benchmark.java.dir" value="../xstream-benchmark/src/java"/>
+    <property name="benchmark.build.dir" value="${build.dir}/benchmark-classes"/>
+  	<property name="test.src.dir" value="src/test"/>
+    <property name="test.build.dir" value="${build.dir}/test-classes"/>
+    <property name="test.reports.dir" value="${build.dir}/test-reports"/>
     <property name="test.src.includes" value="**/*Test.java"/>
     <property name="test.src.excludes" value="**/Abstract*"/>
-    <property name="test.reports.dir" value="build/test-reports"/>
     <property name="junit.haltonfailure" value="false"/>
 
     <available property="jdk1.4.available" classname="java.lang.StackTraceElement"/>
@@ -30,11 +31,10 @@
 
     <target name="library" depends="compile, test, jar" description="Build and test xstream.jar"/>
 
-    <target name="all" depends="clean, library, javadoc, dist" description="Rebuild complete distribution bundle"/>
+    <target name="all" depends="clean, library, javadoc" description="Rebuild complete distribution bundle"/>
 
     <target name="clean" description="Clean up all built files">
-        <delete dir="build"/>
-        <delete dir="javadoc"/>
+        <delete dir="${build.dir}"/>
     </target>
 
     <target name="compile:init" description="Prepare Java compilation">
@@ -43,14 +43,14 @@
     </target>
 
     <target name="compile:java5" depends="compile:init" if="jdk1.5.available" description="Compile all minimum Java 5 specific">
-	    <javac srcdir="src/java" destdir="${java.build.dir}" debug="${java.compile.debug}" source="1.5" target="1.5">
+	    <javac srcdir="${java.src.dir}" destdir="${java.build.dir}" debug="${java.compile.debug}" source="1.5" target="1.5">
 	        <includesfile name="jdk-1.5-minimum.txt" />
 	        <classpath refid="classpath"/>
 	    </javac>
     </target>
 
     <target name="compile:java3" depends="compile:init" description="Compile all minimum Java 1.3 specific">
-        <javac srcdir="src/java" destdir="${java.build.dir}" debug="${java.compile.debug}" source="1.3" target="1.3">
+        <javac srcdir="${java.src.dir}" destdir="${java.build.dir}" debug="${java.compile.debug}" source="1.3" target="1.3">
             <excludesfile name="jdk-1.5-minimum.txt" />
             <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
             <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
@@ -60,23 +60,23 @@
 
     <target name="compile" depends="compile:java3, compile:java5" description="Compile all Java" />
 
-    <target name="tools:compile" depends="compile">
-        <mkdir dir="${tools.build.dir}"/>
-        <javac srcdir="../xstream-benchmark/src/java" destdir="${tools.build.dir}">
+    <target name="benchmark:compile" depends="compile">
+        <mkdir dir="${benchmark.build.dir}"/>
+        <javac srcdir="${benchmark.java.dir}" destdir="${benchmark.build.dir}">
             <classpath refid="classpath"/>
         </javac>
     </target>
 
-    <target name="test:compile" depends="compile, tools:compile">
+    <target name="test:compile" depends="compile, benchmark:compile">
         <mkdir dir="${test.build.dir}"/>
-        <javac srcdir="src/test" destdir="${test.build.dir}">
+        <javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
             <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
             <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
             <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
             <classpath refid="classpath"/>
         </javac>
         <copy todir="${test.build.dir}">
-            <fileset dir="src/test">
+            <fileset dir="${test.src.dir}">
             	<include name="**/*.xsl"/>
             </fileset>
         </copy>
@@ -90,7 +90,7 @@
             <formatter type="brief" usefile="no"/>
             <formatter type="xml"/>
             <batchtest todir="${test.reports.dir}">
-                <fileset dir="src/test">
+                <fileset dir="${test.src.dir}">
                     <include name="${test.src.includes}"/>
                     <exclude name="${test.src.excludes}"/>
                     <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
@@ -128,55 +128,26 @@
     </target>
 
     <target name="jar" depends="compile">
-        <jar jarfile="xstream-${version}.jar">
+        <jar jarfile="${build.dir}/xstream-${version}.jar">
             <fileset dir="${java.build.dir}"/>
+        </jar>
+        <jar jarfile="${build.dir}/xstream-benchmark-${version}.jar">
+            <fileset dir="${benchmark.build.dir}"/>
         </jar>
         <antcall target="jdk-check"/>
     </target>
 
     <target name="javadoc" description="Build JavaDoc">
-        <mkdir dir="javadoc"/>
-        <javadoc destdir="javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
+        <mkdir dir="${build.dir}/javadoc"/>
+        <javadoc destdir="${build.dir}/javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
             <classpath refid="classpath"/>
-            <packageset dir="src/java" defaultexcludes="yes">
+            <packageset dir="${java.src.dir}" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
                 <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
             </packageset>
             <doctitle><![CDATA[<h1>XStream ${version}</h1>]]></doctitle>
             <bottom><![CDATA[<i>Joe Walnes, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]></bottom>
         </javadoc>
-    </target>
-
-    <target name="dist" depends="jar" description="Build distribution package">
-    	<mkdir dir="build/dist"/>    	
-    	<copy todir="build/dist">
-    		<fileset dir="..">
-    			<include name="LICENSE.txt"/>
-    			<include name="README.txt"/>
-    		</fileset>
-    	</copy>
-    	<copy todir="build/dist">
-    		<fileset dir=".">
-                <include name="build.xml"/>
-                <include name="build.properties"/>
-                <include name="jdk*.txt"/>
-                <include name="src/java/**"/>
-                <include name="src/tools/**"/>
-                <include name="src/test/**"/>
-                <include name="lib/**"/>
-                <include name="javadoc/**"/>
-    		</fileset>
-    	</copy>
-    	<copy todir="build/dist/lib">
-    		<fileset dir=".">
-	            <include name="xstream-${version}*.jar"/>
-       		</fileset>
-    	</copy>
-        <zip zipfile="xstream-${version}.zip">
-            <zipfileset dir="build/dist" prefix="xstream-${version}">
-            </zipfileset>
-        </zip>
-        <antcall target="jdk-check"/>
     </target>
 
 </project>

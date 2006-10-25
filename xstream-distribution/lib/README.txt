@@ -1,1 +1,0 @@
-The libraries here are only for building the website - they have nothing to do with the core XStream distribution.

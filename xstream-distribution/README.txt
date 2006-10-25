@@ -1,15 +1,24 @@
-(The XStream website is modelled on the jMock.org website, created by Nat Pryce).
+(The XStream website is build using XSite - http://xsite.codehaus.org)
 
 STRUCTURE
 
 The directories should be self explanatory:
   ./src/templates:   contains the skin HTML and style sheet. Other templates might go here.
   ./src/content:     contains the content in simple HTML.
-  ./src/java:        the code for actually generating the website.
-  ./build/website:   is where the resulting website is created.
-  ./lib:             the libraries supporting the code.
-  ./build.xml:       the Ant build file, that has a 'website' target for kicking it off.
+  ./lib:             the libraries required by XSite which are not released yet.
 
+
+BUILDING SITE
+
+Run the XSite builder using the Maven 2 plugin associated to the install goal:
+
+mvn install
+
+The new site will be deployed in target/xsite
+
+Alternatively, download the standalone xsite distribution from http://xsite.codehaus.org/download 
+
+$XSITE_HOME/bin/xsite src/content/website.xml src/template/skin.html target/xsite
 
 EDITING THE CONTENT OF THE SITE
 
@@ -20,22 +29,12 @@ EDITING THE CONTENT OF THE SITE
 
 2) If the structure of the navigation requires a change (necessary if adding a new page), update ./src/content/website.xml.
 
-3) Run the site builder from the parent XStream directory using Ant:
-
-   % ant website
-
-   The new site will be deployed in ./build/website.
-
-4) To deploy the site, commit your changes to CVS.  The continuous integration system
-   will build the site and deploy it onto xstream.codehaus.org
-
 
 EDITING THE LOOK AND FEEL OF THE SITE
 
 1) Edit the file ./src/templates/skin.html. This is a FreeMarker template that is applied to each page using SiteMesh.
 
    Supporting resources that are relevant to the look and feel (such as images or CSS) can be placed in this directory.
-
 
 
 DESIGN PRINCIPLES
