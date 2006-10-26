@@ -121,12 +121,9 @@
 							<excludePackageNames>
 								com.thoughtworks.xstream.core.*:com.thoughtworks.xstream.io.xml.xppdom.*
 							</excludePackageNames>
-							<doctitle>
-								<![CDATA[<h1>XStream ${pom.version}</h1>]]>
-							</doctitle>
-							<bottom>
-								<![CDATA[<i>Joe Walnes, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]>
-							</bottom>
+							<links>
+								<link>http://java.sun.com/j2se/1.5/docs/api</link>
+							</links>
 						</configuration>
 					</execution>
 				</executions>
