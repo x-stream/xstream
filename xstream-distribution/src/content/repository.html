@@ -8,10 +8,12 @@
 
     XStream uses Subversion as the SCM.  See <a href="http://subversion.tigris.org">Subversion website</a> for details and documentation on IDE integration.
 
+<!-- No svn protocol at the Haus anymore
 	<h2>Svnserve Access</h2>
 
 	Svnserve access is via a specific port (Codehaus uses the default 3690).  This is often not allowed by corporate firewalls.
-
+-->
+  
 	<h3>Anonymous Access</h3>
 
 		<div class="Source"><pre>svn co svn://svn.xstream.codehaus.org/xstream/trunk</pre></div>
@@ -57,14 +59,14 @@ svn commit --username username --password your-password --message "Testing https
 
 	<h2>Modules</h2>
 
-	XStream project consists of several modules:  
+	XStream project consists of several modules:
 	<ol>
 		<li>xstream - the core module</li>
 		<li>xstream-benchmark - the benchmark tool</li>
 		<li>xstream-distribution - the module contains the documentation and assembles the src and bin distributions</li>
 	</ol>
 	When you checkout the trunk you'll get all the modules, but you can just add the module you are interested in to the URL, eg
-		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk/[module] [module]</pre></div>
+		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk/[module]</pre></div>
 	to checkout out the single module separately.
 
   </body>

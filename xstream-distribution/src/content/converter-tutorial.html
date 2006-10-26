@@ -259,7 +259,7 @@ public class DateConverter implements Converter {
         }
 
 }</pre></div><p>Now let's convert anything which extends <i>Calendar</i>:
-means if instantces of class <i>clazz</i> can be assigned to the
+means if instances of class <i>clazz</i> can be assigned to the
 <i>Calendar</i> class, they extends the abstract class
 <i>Calendar</i>:</p><div class="Source Java"><pre>public boolean canConvert(Class clazz) {
         return Calendar.class.isAssignableFrom(clazz);
@@ -412,5 +412,130 @@ System.out.println(DateFormat.getDateInstance(DateFormat.SHORT).format(
                 loaded.getTime()));</pre></div><p>The result might be
 something like (if your system locale is American
 English):</p><div class="Source Java"><pre>2/10/06</pre></div>
+
+<h1>Complex Converter</h1>
+<h2>Setting up another example</h2>
+
+<p>We already defined some classes, so let them glue together:</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
+
+public class Birthday {
+
+        private Person person;
+        private Calendar date;
+
+        public Person getPerson() {
+                return person;
+        }
+
+        public void setPerson(Person person) {
+                this.person = person;
+        }
+
+        public Calendar getDate() {
+                return date;
+        }
+
+        public void setDate(Calendar date) {
+                this.date = date;
+        }
+
+}</pre></div><p>While XStream is capable of converting this class without any problem, we write our own custom converter
+just for demonstration. This time we want to reuse our already written converters for the Person and the Calendar. The 
+<code>canConvert</code> method is plain simple. We convert no derived classes this time, since they might have additional 
+fields. But we reuse the converters registered in XStream for our member fields and handle <code>null</code> values:
+</p><div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
+
+import java.util.Calendar;
+
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
+public class BirthdayConverter implements Converter {
+
+        public boolean canConvert(Class clazz) {
+                return Birthday.class == clazz;
+        }
+
+        public void marshal(Object value, HierarchicalStreamWriter writer,
+                        MarshallingContext context) {
+                Birthday birthday = (Birthday)value;
+                if (value.getPerson() != null) {
+                        writer.startNode("person");
+                        context.convertAnother(value.getPerson());
+                        writer.endNode();
+                }
+                if (value.getDate() != null) {
+                        writer.startNode("birth");
+                        context.convertAnother(value.getDate());
+                        writer.endNode();
+                }
+        }
+
+        public Object unmarshal(HierarchicalStreamReader reader,
+                        UnmarshallingContext context) {
+                Birthday birthday = new Birthday();
+                while (reader.hasMoreChildren()) {
+                        reader.moveDown();
+                        if ("person".equals(reader.getNodeName())) {
+                                Person person = (Person)context.convertAnother(birthday, Person.class);
+                                birthday.setPerson(person);
+                        } else if ("birth".equals(reader.getNodeName())) {
+                                Calendar date = (Calendar)context.convertAnother(birthday, Calendar.class);
+                                birthday.setDate(date);
+                        }
+                        reader.moveUp();
+                }
+                return birthday;
+        }
+
+}</pre></div><p>If the implementation of <code>Birthday</code> ensures, that none of its fields
+could hold a <code>null</code> value, then we could drop the <code>null</code> condition in
+the <code>marshal</code> method and in <code>unmarshal</code> we could omit the loop as
+well as the comparison of the tag names:</p><div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
+
+import java.util.Calendar;
+
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
+public class BirthdayConverter implements Converter {
+
+        public boolean canConvert(Class clazz) {
+                return Birthday.class == clazz;
+        }
+
+        public void marshal(Object value, HierarchicalStreamWriter writer,
+                        MarshallingContext context) {
+                Birthday birthday = (Birthday)value;
+                writer.startNode("person");
+                context.convertAnother(value.getPerson());
+                writer.endNode();
+                writer.startNode("birth");
+                context.convertAnother(value.getDate());
+                writer.endNode();
+        }
+
+        public Object unmarshal(HierarchicalStreamReader reader,
+                        UnmarshallingContext context) {
+                Birthday birthday = new Birthday();
+                reader.moveDown();
+                Person person = (Person)context.convertAnother(birthday, Person.class);
+                birthday.setPerson(person);
+                reader.moveUp();
+                reader.moveDown();
+                Calendar date = (Calendar)context.convertAnother(birthday, Calendar.class);
+                birthday.setDate(date);
+                reader.moveUp();
+                return birthday;
+        }
+
+}</pre></div>
  </body>
 </html>

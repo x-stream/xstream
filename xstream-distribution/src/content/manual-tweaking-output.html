@@ -4,8 +4,6 @@
     </head>
     <body>
 
-        <h1>Tweaking the Output</h1>
-
         <p>Out of the box, XStream is able to serialize most objects without the need for custom mappings to be setup.
         The XML produced is clean, however sometimes it's desirable to make tweaks to it. The most common use for this is
         when using XStream to read configuration files and some more human-friendly XML is needed.</p>
@@ -14,7 +12,8 @@
 
         <h1>Aliases</h1>
 
-        <p>The simplest and most commonly used tweak in XStream is to alias a fully qualified class to a shorter name.</p>
+        <p>Aliases offer a simple way to use different tag names in the XML.  The simplest and most commonly used tweak in 
+        XStream is to alias a fully qualified class to a shorter name.  Another use case is a different field name for a class member.</p>
 
         <h3>Example</h3>
 
@@ -25,12 +24,12 @@
 public class Cat {
 
   public Cat(int age, String name) {
-    this.age = age;
-    this.name = name;
+    this.mAge = age;
+    this.mName = name;
   }
 
-  int age;
-  String name;
+  int mAge;
+  String mName;
 }</pre></div>
 
         <p>XStream can be used to serialize and deserialize an instance of this to XML:</p>
@@ -44,15 +43,18 @@ Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
         <p>The XML representation, looks like this:</p>
 
 <div class="Source XML"><pre>&lt;<b>com.something.animals.Cat</b>&gt;
-  &lt;age&gt;4&lt;/age&gt;
-  &lt;name&gt;Garfield&lt;/name&gt;
+  &lt;<b>mAge</b>&gt;4&lt;/<b>mAge</b>&gt;
+  &lt;<b>mName</b>&gt;Garfield&lt;/<b>mName</b>&gt;
 &lt;/<b>com.something.animals.Cat</b>&gt;</pre></div>
 
-        <p>To shorten the fully qualified class name in the XML, an alias can be defined:</p>
+        <p>To shorten the fully qualified class name in the XML, an alias can be defined.
+        You can also get rid of this nasty prefix of the field names with addional alias definitions:</p>
 
 <div class="Source Java"><pre>
 XStream xstream = new XStream();
 <b>xstream.alias("cat", Cat.class);</b>
+<b>xstream.aliasField("age", Cat.class, "mAge");</b>
+<b>xstream.aliasField("name", Cat.class, "mName");</b>
 
 String xml = xstream.toXml(new Cat(4, "Garfield")); // serialize
 Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
@@ -60,21 +62,83 @@ Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
         <p>The result:</p>
 
 <div class="Source XML"><pre>&lt;<b>cat</b>&gt;
-  &lt;age&gt;4&lt;/age&gt;
-  &lt;name&gt;Garfield&lt;/name&gt;
+  &lt;<b>age</b>&gt;4&lt;/<b>age</b>&gt;
+  &lt;<b>name</b>&gt;Garfield&lt;/<b>name</b>&gt;
 &lt;/<b>cat</b>&gt;</pre></div>
 
-
         <!-- ************ -->
 
+        <h1>Attributes</h1>
+
+        <p>XML is quite clumsy to read for fields in separate tags that can represent their content in a short single string value.
+        In such a case attributes can help to shorten the XML and inrease readability:</p>
+
+<div class="Source Java"><pre>
+XStream xstream = new XStream();
+xstream.alias("cat", Cat.class);
+xstream.aliasField("age", Cat.class, "mAge");
+xstream.aliasField("name", Cat.class, "mName");
+<b>xstream.useAttributeFor(int.class);</b>
+<b>xstream.useAttributeFor("mName", String.class);</b> // All fields named "mName" of type String
+
+String xml = xstream.toXml(new Cat(4, "Garfield")); // serialize
+Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
+
+        <p>The result:</p>
+
+<div class="Source XML"><pre>&lt;cat <b>age="4" name="Garfield"</b>/&gt;</pre></div>
+
+        <!-- ************ -->
+        <!--  
         <h1>Implicit collections</h1>
-
+		-->
+		
         <!-- ************ -->
-
 
         <h1>Custom converters</h1>
 
-        <h1>XML transformations</h1>
+        <p>Sometimes the object to serialize contains fields or elements, that have no friendly representation for human beings e.g.
+        if a long value represents in reality a time stamp. Or an object contains a lot of cached data that is easily recreated and should 
+        rather not get part of the XML representation. In such cases XStream supports custom converters for arbitrary types. Have a
+        look at the <a href="converter-tutorial.html">Converter Tutorial</a> for advanced possibilities.</p>
+
+        <!-- ************ -->
+
+        <h1>XML Transformations</h1>
+
+		<p>Never forget, you're dealing with XML! It is easy to transform XML with an XSLT. XStream is delivered with a SAXSource
+		implementation, that allows an XStream instance to be the source of a XML transformer.</p>
+
+        <h3>Example</h3>
+		<p>Look at the following stylesheet:</p>
+
+<div class="Source XML"><pre>
+&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:output method="xml" omit-xml-declaration="yes" indent="no"/&gt;
+  &lt;xsl:template match="/cat"&gt;
+    &lt;xsl:copy&gt;
+      &lt;xsl:apply-templates select="mName"/&gt;
+    &lt;/xsl:copy&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</pre></div>
+
+		<p>It is used here to remove the age of the cat on the fly (assuming XSLT is a string with the stylesheet above):</p>
+		
+<div class="Source Java"><pre>
+XStream xstream = new XStream();
+xstream.alias("cat", Cat.class);
+
+TraxSource <b>traxSource</b> = new TraxSource(new Cat(4, "Garfield"), <b>xstream</b>);
+Writer buffer = new StringWriter();
+Transformer transformer = TransformerFactory.newInstance().newTransformer(
+    new StreamSource(new StringReader(XSLT)));
+transformer.transform(<b>traxSource</b>, new StreamResult(buffer));</pre></div>
+
+        <p>The result in the buffer:</p>
+
+<div class="Source XML"><pre>&lt;cat&gt;
+  &lt;mName&gt;Garfield&lt;/mName&gt;
+&lt;/cat&gt;</pre></div>
 
     </body>
 </html>
