@@ -26,7 +26,7 @@ import java.util.List;
  *     try {
  *       Transformer transformer = TransformerFactory.newInstance()
  *                             .newTransformer(new StreamSource(stylesheet));
- *       XStreamSource in = new XStreamSource(source);
+ *       TraxSource in = new TraxSource(source);
  *       Writer out = new StringWriter();
  *       transformer.transform(in, new StreamResult(out));
  *       return out.toString();
