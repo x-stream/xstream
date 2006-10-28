@@ -4,9 +4,14 @@ Requires maven 2.0.4
 
 Before building:
 
-mvn install:install-file -Dfile=xstream-website/lib/sitemesh-20051115.jar
--DgroupId=opensymphony -DartifactId=sitemesh -Dversion=20051115
--Dpackaging=jar -DgeneratePom=true
+XStream uses XSite.  XSite requires Sitemesh-2.3.  Upload request is http://jira.codehaus.org/browse/MAVENUPLOAD-1207
+
+Until it is uplaoded, steps to install locally: 
+
+1. svn http://svn.codehaus.org/xsite/trunk/lib xsite-lib
+2. cd xsite-lib
+3. ./install-bundle.sh
+(Windows users can easily execute step-by-step commands of script on a command line terminal)
 
 To build:
 
