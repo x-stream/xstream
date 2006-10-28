@@ -4,15 +4,28 @@
   </head>
 
   <body>
+  
+  	<ol>
+  		<li><a href="#Compatibility">Compatibility</a></li>
+  		<li><a href="#Serialization">Serialization</a></li>
+  		<li><a href="#XML">XML specifics</a></li>
+  		<li><a href="#Other_Products">Comparison to other procuts</a></li>
+  		<li><a href="#Scalability">Scalability</a></li>
+    	<li><a href="#Uses">Uses of XStream</a></li>
+    	<li><a href="#Development">Development</a></li>
+  	</ol>
 
     <!-- ****************************************************** -->
+    <a name="Compatibility"><!--  --></a>
     <h1>Compatibility</h1>
 
     <!-- ...................................................... -->
+    <a name="Compatibility_JDK"><!--  --></a>
     <h2>Which JDK is required to use XStream?</h2>
     <p>1.3 or later.</p>
 
     <!-- ...................................................... -->
+    <a name="Compatibility_JVMs"><!--  --></a>
     <h2>Does XStream behave differently across different JVMs?</h2>
 
     <p>XStream has two modes of operation: <b>Pure Java</b> and <b>Enhanced</b>. In pure Java mode,
@@ -21,6 +34,7 @@
     XStream does not have these limitations, however this mode of operation is not available to all JVMs.</p>
 
     <!-- ...................................................... -->
+    <a name="Compatibility_enhanced_mode"><!--  --></a>
     <h2>Which JVMs allow XStream to operate in enhanced mode?</h2>
 
     <p>Currently on the Sun, Apple, HP, IBM and Blackdown 1.4 JVMs and onwards. 
@@ -42,20 +56,55 @@
     </table>
 
     <!-- ...................................................... -->
+    <a name="Compatibility_unsupported_JVM"><!--  --></a>
     <h2>Are there plans to provide enhanced mode support to other JVMs?</h2>
     <p>Yes. <a href="list-user.html">Let us know</a> which JVM you would like supported.</p>
 
+    <!-- ...................................................... -->
+    <a name="Compatibility_no_enhanced_mode"><!--  --></a>
+    <h2>When should I use XStream not in enhanced mode?</h2>
 
+    <p>Running XStream in a secured environment can prevent XStream from running in enhanced mode. This is
+    especially true for running XStream in an applet. You may also try to use JavaBean mode as alternative to 
+    enhanced or pure Java mode.</p>
+
+    <!-- ...................................................... -->
+    <a name="Compatibility_SecurityManager"><!--  --></a>
+    <h2>Which permissions does XStream need running with an active SecurityManager?</h2>
+
+    <p>This is dependend on the mode XStream is running with. Have a look at the source of the
+    <a href="http://svn.xstream.codehaus.org/browse/xstream/trunk/xstream/src/test/com/thoughtworks/acceptance/SecurityManagerTest.java">SecurityManagerTest</a>.</p>
+
+    <!-- ...................................................... -->
+    <a name="Compatibility_XStream11"><!--  --></a>
+    <h2>Why does XStream 1.2 no longer read XML generated with XStream 1.1?</h2>
+
+    <p>The architecture in XStream has slightly changed. Starting with XStream 1.2 the 
+    <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
+    implementation is responsible to ensure that XML tags and attributes are valid names in XML. Therefore a mapping
+    is used for invalid characters that occur within Java identifiers. In XStream 1.x this functionality was part of a 
+    ClassMapper implementation.</p>
+    
+    <p>You can run XStream in 1.1 compatibility mode though:</p>
+
+<div class="Source Java"><pre>XStream xstream = new XStream(new XppDriver(new XStream11XmlFriendlyReplacer())) {
+    protected boolean useXStream11XmlFriendlyMapper() {
+        return true;
+    }
+};</pre></div>
 
 
     <!-- ****************************************************** -->
+    <a name="Serialization"><!--  --></a>
     <h1>Serialization</h1>
 
     <!-- ...................................................... -->
+    <a name="Serialization_omit_field"><!--  --></a>
     <h2>How do I specify that a field should not be serialized?</h2>
     <p>Make it <code>transient</code> or specify it with <code>XStream.omitField()</code></p>
 
     <!-- ...................................................... -->
+    <a name="Serialization_initialize_transient"><!--  --></a>
     <h2>How do I initialize a transient field at deserialization?</h2>
     
     <p>XStream supports the same mechanism like the JDK serialization. Example:</p>
@@ -70,6 +119,7 @@
 }</pre></div>
 
     <!-- ...................................................... -->
+    <a name="Serialization_no_ctor_running"><!--  --></a>
     <h2>XStream is not calling the default constructor during deserialization.</h2>
     
     <p>This is, in fact, the same problem as above. XStream supports the same mechanism like the JDK serialization. When
@@ -86,6 +136,7 @@
 }</pre></div>
 
     <!-- ...................................................... -->
+    <a name="Serialization_collections"><!--  --></a>
     <h2>What do serialized collections look like?</h2>
 
     <p>Example:</p>
@@ -132,21 +183,27 @@ String xml = xstream.toXML(joe);</pre></div>
   &lt;/toys&gt;
 &lt;/person&gt;</pre></div>
 
+	<p>Note, that it is possible to configure XStream to omit the container element <i>toys</i> using implicit collections.</p>
+	
     <!-- ...................................................... -->
+    <a name="Serialization_collections"><!--  --></a>
     <h2>Do my classes have to implement Serializable if XStream is to serialize them?</h2>
     <p>No.</p>
 
     <!-- ...................................................... -->
+    <a name="Serialization_proxies"><!--  --></a>
     <h2>Can dynamic proxies be serialized?</h2>
     <p>Yes.</p>
 
     <!-- ...................................................... -->
+    <a name="Serialization_CGLIB"><!--  --></a>
     <h2>Can CGLIB proxies be serialized?</h2>
     <p>Limited only. A proxy generated with the CGLIB Enhancer is supported, if the 
     proxy uses only one callback and the proxy instance can be generated without 
     additional constructor arguments.</p>
 
     <!-- ...................................................... -->
+    <a name="Serialization_newer_class_versions"><!--  --></a>
     <h2>How does XStream deal with newer versions of classes?</h2>
 
     <ul>
@@ -168,10 +225,55 @@ String xml = xstream.toXML(joe);</pre></div>
     <p>Future versions of XStream will include features to make these type of migrations easier.</p>
 
 
+    <!-- ****************************************************** -->
+    <a name="XML"><!--  --></a>
+    <h1>XML specifics</h1>
+
+    <!-- ...................................................... -->
+    <a name="XML_respect_XML_declaration"><!--  --></a>
+    <h2>Why does XStream not repsect the encoding in the XML declaration?</h2>
+
+    <p>XStream does not see the XML declaration at all, it is the sole business of the used XML parser. XStream 
+    uses by default the Xpp3 parser which does ignore the declaration, so you have to provide a 
+    <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Reader.html">Reader</a> with the appropriate
+    encoding yourself if you do not want to read the XML in the default encoding of the current local or you must use
+    a <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
+    with an XML parser that rspects the XML declaration.</p>
+
+    <!-- ...................................................... -->
+    <a name="XML_write_XML_declaration"><!--  --></a>
+    <h2>Why does XStream not write a XML declaration?</h2>
+
+    <p>XStream is designed to write XML snippets, so you can embed its output into an existing stream or string.
+    You can write the XML declaration yourself into the Writer before using it to call XStream.toXML(writer).</p>
+
+    <!-- ...................................................... -->
+    <a name="XML_write_UTF8"><!--  --></a>
+    <h2>Why does XStream not write XML in UTF-8?</h2>
+
+    <p>XStream does no character encoding by itself, it relies on the configuration of the underlaying XML writer.
+    By default it uses its own PrettyPrintWriter which writes into the default encoding of the current locale. To write
+    UTF-8 you have to provide a <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Writer.html">Writer</a>
+    with the appropriate encoding yourself.</p>
+
+    <!-- ...................................................... -->
+    <a name="XML_double_underscores"><!--  --></a>
+    <h2>Why do field names suddenly have double underscores in the generated XML?</h2>
+
+    <p>XStream maps Java class names and field names to XML tags or attributes. Unfortunately this mapping cannot
+    be 1:1, since some identifiers of Java contain a dollar sign which is invalid in XML names. Therefore XStream uses an 
+    <a href="javadoc/com/thoughtworks/xstream/io/xml/XmlFriendlyReplacer.html">XmlFriendlyReplacer</a> to replace
+    this character with a replacement. By default this replacement uses an underscore and therefore the replacer must
+    escape the underscore itself also. You may provide a different configured instance of the XmlFriendlyReplacer or a 
+    complete own implementation, but you must ensure, that the resulting names are valid for XML.</p>
+
 
     <!-- ****************************************************** -->
+    <a name="Other_Products"><!--  --></a>
     <h1>Comparison to other procuts</h1>
 
+    <!-- ...................................................... -->
+    <a name="Other_Products_XMLBeanEncoder"><!--  --></a>
     <h2>How does XStream compare to java.beans.XMLEncoder?</h2>
 
     <p>XStream is designed for serializing <i>objects</i> using internal fields, whereas
@@ -208,9 +310,11 @@ String xml = xstream.toXML(joe);</pre></div>
 
 
     <!-- ****************************************************** -->
+    <a name="Scalability"><!--  --></a>
     <h1>Scalability</h1>
 
     <!-- ...................................................... -->
+    <a name="Scalability_Thread_safety"><!--  --></a>
     <h2>Is XStream thread safe?</h2>
 
     <p>Yes. Once the XStream instance
@@ -220,13 +324,17 @@ String xml = xstream.toXML(joe);</pre></div>
 
 
     <!-- ****************************************************** -->
+    <a name="Uses"><!--  --></a>
     <h1>Uses of XStream</h1>
 
+    <!-- ...................................................... -->
+    <a name="Uses_Data_Binding"><!--  --></a>
     <h2>Is XStream a data binding tool?</h2>
 
     <p>No. It is a serialization tool.</p>
 
     <!-- ...................................................... -->
+    <a name="Uses_Generate_Code"><!--  --></a>
     <h2>Can XStream generate classes from XSD?</h2>
 
     <p>No. For this kind of work a data binding tool such as <a href="http://xmlbeans.apache.org">XMLBeans</a> is appropriate.</p>
@@ -234,20 +342,22 @@ String xml = xstream.toXML(joe);</pre></div>
 
 
     <!-- ****************************************************** -->
+    <a name="Development"><!--  --></a>
     <h1>Development</h1>
 
+    <!-- ...................................................... -->
+    <a name="Development_Subversion"><!--  --></a>
     <h2>Why is the XStream source stored in a Subversion repository? What's wrong with CVS?</h2>
 
     <p>The main reason for the use of <a href="http://subversion.tigris.org/">Subversion</a> instead of
     CVS is that most of the development work for XStream takes place while not connected to the Internet.
     With Subversion, commands like add, remove, rename, diff and revert do not require a connection to
     the server.</p>
+
     <!--
     Why is there no SaxReader?
     Inheritance of collections
     Classloader
-
-
     -->
   </body>
 </html>
