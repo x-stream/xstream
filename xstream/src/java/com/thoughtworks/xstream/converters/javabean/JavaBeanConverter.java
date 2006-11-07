@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public class JavaBeanConverter implements Converter {
 
-    /**
+    /*
      * TODO:
      *  - use bean introspection instead of reflection.
      *  - support indexed properties
@@ -116,6 +116,9 @@ public class JavaBeanConverter implements Converter {
         }
     }
 
+    /*
+     * TODO: This is currently unused
+     */
     public static class DuplicateFieldException extends ConversionException {
         public DuplicateFieldException(String msg) {
             super(msg);

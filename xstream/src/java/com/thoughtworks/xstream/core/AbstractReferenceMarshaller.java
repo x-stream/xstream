@@ -42,7 +42,7 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
             if (existingReferenceKey != null) {
                 writer.addAttribute(getMapper().aliasForAttribute("reference"), createReference(currentPath, existingReferenceKey));
             } else if (implicitElements.lookupId(item) != null) {
-                throw new ReferencedImplicitElementException("Cannot reference implicit element: " + item.toString());
+                throw new ReferencedImplicitElementException(item, currentPath);
             } else {
                 Object newReferenceKey = createReferenceKey(currentPath);
                 if (lastPath == null || !currentPath.isAncestor(lastPath)) {
@@ -62,8 +62,16 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
     protected abstract void fireValidReference(Object referenceKey);
     
     public static class ReferencedImplicitElementException extends ConversionException {
+        /**
+         * @deprecated since upcoming
+         */
         public ReferencedImplicitElementException(final String msg) {
             super(msg);
+        }
+        public ReferencedImplicitElementException(final Object item, final Path path) {
+            super("Cannot reference implicit element");
+            add("implicit-element", item.toString());
+            add("referencing-element", path.toString());
         }
     }
 }

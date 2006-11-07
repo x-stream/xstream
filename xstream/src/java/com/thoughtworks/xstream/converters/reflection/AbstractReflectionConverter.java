@@ -281,6 +281,7 @@ public abstract class AbstractReflectionConverter implements Converter {
     public static class DuplicateFieldException extends ConversionException {
         public DuplicateFieldException(String msg) {
             super(msg);
+            add("duplicate-field", msg);
         }
     }
 }

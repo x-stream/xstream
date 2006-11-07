@@ -1,8 +1,8 @@
 package com.thoughtworks.xstream.converters;
 
 import com.thoughtworks.xstream.core.BaseException;
+import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class ConversionException extends BaseException implements ErrorWriter {
 
-    private Map stuff = new HashMap();
+    private Map stuff = new OrderRetainingMap();
 
     /**
      * Plays nice with JDK1.3 and JDK1.4
@@ -33,7 +33,7 @@ public class ConversionException extends BaseException implements ErrorWriter {
         }
         if (cause != null) {
             add("cause-exception", cause.getClass().getName());
-            add("cause-message", cause.getMessage());
+            add("cause-message", cause instanceof ConversionException ? ((ConversionException)cause).getShortMessage() :  cause.getMessage());
             this.cause = cause;
         }
     }
@@ -72,7 +72,7 @@ public class ConversionException extends BaseException implements ErrorWriter {
             for (int i = 0; i < padding; i++) {
                 result.append(' ');
             }
-            result.append(": ").append(v).append(' ');
+            result.append(": ").append(v);
         }
         result.append("\n-------------------------------");
         return result.toString();
