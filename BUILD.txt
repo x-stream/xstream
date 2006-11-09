@@ -4,15 +4,6 @@ Requires maven 2.0.4
 
 Before building:
 
-XStream uses XSite.  XSite requires Sitemesh-2.3.  Upload request is http://jira.codehaus.org/browse/MAVENUPLOAD-1207
-
-Until it is uplaoded, steps to install locally: 
-
-1. svn http://svn.codehaus.org/xsite/trunk/lib xsite-lib
-2. cd xsite-lib
-3. ./install-bundle.sh
-(Windows users can easily execute step-by-step commands of script on a command line terminal)
-
 To build:
 
 mvn clean install
@@ -23,5 +14,3 @@ copy settings-template.xml to ~/.m2/settings.xml adding your Codehaus DAV userna
 
 To deploy (optionally adding sources and javadoc jars):
 mvn deploy [-DperformRelease=true]
-
-

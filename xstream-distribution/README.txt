@@ -5,8 +5,6 @@ STRUCTURE
 The directories should be self explanatory:
   ./src/templates:   contains the skin HTML and style sheet. Other templates might go here.
   ./src/content:     contains the content in simple HTML.
-  ./lib:             the libraries required by XSite which are not released yet.
-
 
 BUILDING SITE
 
