@@ -14,7 +14,7 @@ import java.util.List;
  * 
  * @author Laurent Bihanic
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.2.1
  */
 public abstract class AbstractDocumentWriter extends AbstractXmlWriter implements DocumentWriter {
 
@@ -27,7 +27,7 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
      * @param container the top level container for the nodes to create (may be
      *            <code>null</code>)
      * @param replacer the object that creates XML-friendly names
-     * @since upcoming
+     * @since 1.2.1
      */
     public AbstractDocumentWriter(final Object container, final XmlFriendlyReplacer replacer) {
         super(replacer);
@@ -48,7 +48,7 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
      * 
      * @param name the node name
      * @return the new node
-     * @since upcoming
+     * @since 1.2.1
      */
     protected abstract Object createNode(String name);
 
@@ -63,13 +63,13 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
     /**
      * Called when a node ends. Hook for derived implementations.
      * 
-     * @since upcoming
+     * @since 1.2.1
      */
     public void endNodeInternally() {
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     protected final Object getCurrent() {
         return nodeStack.peek();

@@ -1020,7 +1020,7 @@ public class XStream {
      * Retrieve the {@link ReflectionProvider} in use.
      * 
      * @return the mapper
-     * @since upcoming
+     * @since 1.2.1
      */
     public ReflectionProvider getReflectionProvider() {
         return reflectionProvider;

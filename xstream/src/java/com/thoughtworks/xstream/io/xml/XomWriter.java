@@ -7,7 +7,7 @@ import nu.xom.Element;
 public class XomWriter extends AbstractDocumentWriter {
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public XomWriter() {
         this(null);

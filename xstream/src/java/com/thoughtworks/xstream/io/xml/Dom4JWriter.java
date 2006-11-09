@@ -10,7 +10,7 @@ public class Dom4JWriter extends AbstractDocumentWriter {
     private final DocumentFactory documentFactory;
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public Dom4JWriter(
                        final Branch root, final DocumentFactory factory,
@@ -20,21 +20,21 @@ public class Dom4JWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public Dom4JWriter(final DocumentFactory factory, final XmlFriendlyReplacer replacer) {
         this(null, factory, replacer);
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public Dom4JWriter(final DocumentFactory documentFactory) {
         this(documentFactory, new XmlFriendlyReplacer());
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public Dom4JWriter(final Branch root, final XmlFriendlyReplacer replacer) {
         this(root, new DocumentFactory(), replacer);
@@ -45,7 +45,7 @@ public class Dom4JWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public Dom4JWriter() {
         this(new DocumentFactory(), new XmlFriendlyReplacer());

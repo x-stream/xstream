@@ -8,7 +8,7 @@ import java.util.Date;
  * be called by multiple threads concurrently.
  *
  * @author Joe Walnes
- * @deprecated since upcoming, moved to com.thoughtworks.xstream.core.util. 
+ * @deprecated since 1.2.1, moved to com.thoughtworks.xstream.core.util. 
  * It is not part of public API, use on your own risk.
  */
 public class ThreadSafeSimpleDateFormat extends com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat {

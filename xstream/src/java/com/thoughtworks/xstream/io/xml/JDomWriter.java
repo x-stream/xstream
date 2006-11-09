@@ -29,7 +29,7 @@ public class JDomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public JDomWriter(final JDOMFactory factory, final XmlFriendlyReplacer replacer) {
         this(null, factory, replacer);
@@ -40,7 +40,7 @@ public class JDomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public JDomWriter(final Element container, final XmlFriendlyReplacer replacer) {
         this(container, new DefaultJDOMFactory(), replacer);
@@ -76,7 +76,7 @@ public class JDomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getTopLevelNodes()} instead
+     * @deprecated since 1.2.1, use {@link #getTopLevelNodes()} instead
      */
     public List getResult() {
         return getTopLevelNodes();

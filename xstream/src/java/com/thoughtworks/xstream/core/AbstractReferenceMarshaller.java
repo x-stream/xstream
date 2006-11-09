@@ -63,7 +63,7 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
     
     public static class ReferencedImplicitElementException extends ConversionException {
         /**
-         * @deprecated since upcoming
+         * @deprecated since 1.2.1
          */
         public ReferencedImplicitElementException(final String msg) {
             super(msg);

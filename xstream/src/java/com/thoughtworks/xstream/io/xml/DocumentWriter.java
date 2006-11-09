@@ -10,7 +10,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * DOM.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.2.1
  */
 public interface DocumentWriter extends HierarchicalStreamWriter {
 
@@ -24,7 +24,7 @@ public interface DocumentWriter extends HierarchicalStreamWriter {
      * multiple times directly.
      * 
      * @return a {@link List} with top nodes
-     * @since upcoming
+     * @since 1.2.1
      */
     List getTopLevelNodes();
 }

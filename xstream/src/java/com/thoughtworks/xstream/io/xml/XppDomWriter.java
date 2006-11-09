@@ -9,7 +9,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public XppDomWriter(final Xpp3Dom parent) {
         this(parent, new XmlFriendlyReplacer());
@@ -23,7 +23,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public XppDomWriter(final Xpp3Dom parent, final XmlFriendlyReplacer replacer) {
         super(parent, replacer);

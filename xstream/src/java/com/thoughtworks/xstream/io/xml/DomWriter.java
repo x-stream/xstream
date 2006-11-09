@@ -28,7 +28,7 @@ public class DomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.2.1
      */
     public DomWriter(final Element element, final Document document, final XmlFriendlyReplacer replacer) {
         super(element, replacer);
