@@ -1007,13 +1007,23 @@ public class XStream {
     }
 
     /**
-     * Retrieve the mapper. This is by default a chain of {@link MapperWrapper MapperWrappers}.
+     * Retrieve the {@link Mapper}. This is by default a chain of {@link MapperWrapper MapperWrappers}.
      * 
      * @return the mapper
      * @since 1.2
      */
     public Mapper getMapper() {
         return mapper;
+    }
+
+    /**
+     * Retrieve the {@link ReflectionProvider} in use.
+     * 
+     * @return the mapper
+     * @since upcoming
+     */
+    public ReflectionProvider getReflectionProvider() {
+        return reflectionProvider;
     }
 
     public ConverterLookup getConverterLookup() {
