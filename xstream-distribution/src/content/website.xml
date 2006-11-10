@@ -21,7 +21,7 @@
         <page>faq.html</page>
         <page>list-user.html</page>
         <link title="JavaDoc">javadoc/index.html</link>
-        <link title="Reporting Issues">http://jira.codehaus.org/secure/BrowseProject.jspa?id=10230</link>
+        <link title="Reporting Issues">http://jira.codehaus.org/browse/XSTR</link>
     </section>
     <section>
         <name>Tutorials</name>

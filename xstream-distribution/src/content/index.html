@@ -56,23 +56,14 @@
       <li><a href="tutorial.html">Use it</a>.</li>
     </ul>
 
-    <h2><b>Aug 18, 2006</b> XStream 1.2 released</h2>
+    <h2><b>Nov XX, 2006</b> XStream 1.2.1 released</h2>
+    
+    <p>A maintenance update fixing some bugs and shipping some small improvements.</p>
 	  <ul>
-        <li>Using attributes for fields (contributed by Paul Hammant and Ian Cartwright).</li>
-        <li>Aliasing of arbitrary attributes.</li>
-        <li>XStream can now serialize another XStream instance.</li>
-        <li>XStream has now the XStreamer, that serializes an object together with its XStream instance.</li>
-        <li>AnnotationConverter for fields (contributed by Guilherme Silveira).</li>
-        <li>PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
-        <li>Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
-        <li>XStream can now write all references as absolute XPath expression.</li>
-        <li>New SingeValueConverter allows light wieght converters if the value can be representet by a unique string.</li>
-        <li>Aliasing of classes of a specific type.</li>
-        <li>Support for certain types of proxies generated with the CGLIB Enhancer.</li>
-        <li>Support for BEA JRockit starting with R25.1.0 (contributed by Henrik St&aring;hl of BEA).</li>
-        <li>Experimental binary reader and writer.</li>
-        <li>Experimental HierarichicalStreamCopier allows streams to be copied from one format to another without the overhead of serialization.</li>
-        <li>Experimental JSON support allows streams to be copied from one format to another without the overhead of serialization (contributed by Paul Hammant).</li>
+    	<li>Introduced DocumentWriter interface and generalized functionality for all writer implementations
+    	creating a DOM structure (DOM4J, DOM, JDom, Xom, Xpp3Dom).</li>
+        <li>Refactor of build system to use Maven 2.  Ant still supported on XStream Core.</li>
+        <li>Created separate XStream Benchmark module</li>
    	  </ul>
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
 

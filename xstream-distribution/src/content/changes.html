@@ -25,6 +25,8 @@
     <ul>
     	<li>Introduced DocumentWriter interface and generalized functionality for all writer implementations
     	creating a DOM structure (DOM4J, DOM, JDom, Xom, Xpp3Dom).</li>
+    	<li>Refactor of build system to use Maven 2.  Ant still supported on XStream Core.</li>
+        <li>Created separate XStream Benchmark module</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -37,11 +39,14 @@
     	<li>JIRA:XSTR-337, Annotation cycle bug.</li>
     	<li>Fix packaging error for the resulting jar building with Maven2.</li>
     	<li>JIRA:XSTR-339, NPE for attribute null values.</li>
-    	<li>JIRA:XSTR-338, NPE in JSON writer for converters using non-extended HierarchicalStreamWriter (contributed by Chris Winters).</li>
+    	<li>JIRA:XSTR-338, NPE in JSON writer for converters using non-extended HierarchicalStreamWriter.</li>
     	<li>JIRA:XSTR-357, Fix escaping of values in JSON writer.</li>
     	<li>JIRA:XSTR-356, Fix unmarshalling error for fields containing proxies.</li>
     	<li>JIRA:XSTR-349, Fix backward compatibility of Dom4jWriter.</li>
     	<li>JIRA:XSTR-309, More versatile boolean conversion options (contributed by David Blevins).</li>
+    	<li>Add XStream.getReflectionProvider() to retrieve ReflectionProvider in use.</li>
+    	<li>JIRA:XSTR-358, @XStreamConverter annotation does not call converter constructor.</li>
+        <li>Website generated using <a href="http://xsite.codehaus.org">XSite</a></li>
     </ul>
 
     <h2>API changes</h2>

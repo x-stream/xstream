@@ -78,13 +78,13 @@
 
     <!-- ...................................................... -->
     <a name="Compatibility_XStream11"><!--  --></a>
-    <h2>Why does XStream 1.2 no longer read XML generated with XStream 1.1?</h2>
+    <h2>Why does XStream 1.2 no longer read XML generated with XStream 1.1.x?</h2>
 
     <p>The architecture in XStream has slightly changed. Starting with XStream 1.2 the 
     <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
-    implementation is responsible to ensure that XML tags and attributes are valid names in XML. Therefore a mapping
-    is used for invalid characters that occur within Java identifiers. In XStream 1.x this functionality was part of a 
-    ClassMapper implementation.</p>
+    implementation is responsible to ensure that XML tags and attributes are valid names in XML, in XStream 1.1.x
+    this responsibility was part of the ClassMapper implementations.  Under some rare circumstances this will result in 
+    an unreadable XML due to the different processing order in the workflow of such problematic tag names.</p>
     
     <p>You can run XStream in 1.1 compatibility mode though:</p>
 
@@ -224,6 +224,16 @@ String xml = xstream.toXML(joe);</pre></div>
     </ul>
 
     <p>Future versions of XStream will include features to make these type of migrations easier.</p>
+
+    <!-- ...................................................... -->
+    <a name="Serialization_classloader"><!--  --></a>
+    <h2>How does XStream cope with isolated class loaders?</h2>
+    
+    <p>Serializing an object graph is never a problem, even if the classes of those objects have been loaded by 
+    a different class loader. The situation changes completely at deserialization time. In this case you must set the
+    class loader to use with:</p>
+    
+    <div class="Source Java"><pre>xstream.setClassLoader(yourClassLoader);</pre></div>
 
 
     <!-- ****************************************************** -->
