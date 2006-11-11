@@ -3,7 +3,7 @@
 	<groupId>com.thoughtworks.xstream</groupId>
 	<artifactId>xstream-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.1</version>
+	<version>1.2.2-SNAPSHOT</version>
 	<name>XStream Parent</name>
 
 	<inceptionYear>2004</inceptionYear>
@@ -268,9 +268,9 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.codehaus.org/xstream/tags/XSTREAM_1_2_1</connection>
-		<developerConnection>scm:svn:https://svn.codehaus.org/xstream/tags/XSTREAM_1_2_1</developerConnection>
-		<url>https://svn.codehaus.org/xstream/tags/XSTREAM_1_2_1</url>
+		<connection>scm:svn:http://svn.codehaus.org/xstream/trunk</connection>
+		<developerConnection>scm:svn:https://svn.codehaus.org/xstream/trunk</developerConnection>
+		<url>http://fisheye.codehaus.org/browse/xstream/trunk</url>
 	</scm>
 
 	<repositories>

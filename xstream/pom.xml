@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.thoughtworks.xstream</groupId>
 		<artifactId>xstream-parent</artifactId>
-		<version>1.2.1</version>
+		<version>1.2.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>xstream</artifactId>
 	<packaging>jar</packaging>
