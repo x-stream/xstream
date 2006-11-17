@@ -13,6 +13,7 @@
         <page>manual-tweaking-output.html</page>
         <page>license.html</page>
         <page>download.html</page>
+        <page>references.html</page>
     </section>
     <section>
         <name>Using XStream</name>
