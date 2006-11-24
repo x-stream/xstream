@@ -3,6 +3,7 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.SampleLists;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -149,6 +150,14 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         public void add(Person person) {
             people.add(person);
         }
+        
+        public List getPeople() {
+            return Collections.unmodifiableList(people);
+        }
+        
+        public List getRooms() {
+            return Collections.unmodifiableList(rooms);
+        }
     }
 
     public static class Room extends StandardObject {
@@ -211,7 +220,9 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.addImplicitCollection(House.class, "people", Person.class);
         xstream.addImplicitCollection(Person.class, "emailAddresses", "email", String.class);
 
-        assertBothWays(house, expected);
+        House serializedHouse = (House)assertBothWays(house, expected);
+        assertEquals(house.getPeople(), serializedHouse.getPeople());
+        assertEquals(house.getRooms(), serializedHouse.getRooms());
     }
 
     public static class Zoo extends StandardObject {
