@@ -134,6 +134,19 @@ public class Annotations {
                 xstream.aliasField(fieldXStreamAliasAnnotation.value(), configurableClass, field.getName());
                 configureClass(xstream, field.getType());
             }
+            // Do field level implicit collection
+            if (field.isAnnotationPresent(XStreamImplicit.class)
+                    && Collection.class.isAssignableFrom(field.getType())) {
+                XStreamImplicit implicitAnnotation =  field.getAnnotation(XStreamImplicit.class);
+                String fieldName = field.getName();
+                String itemFieldName = implicitAnnotation.itemFieldName();
+                Class itemType = getFieldParameterizedType(field, xstream);
+                if (itemFieldName != null && !"".equals(itemFieldName)) {
+                    xstream.addImplicitCollection(configurableClass, fieldName, itemFieldName, itemType);                    
+                } else {
+                    xstream.addImplicitCollection(configurableClass, fieldName, itemType);                    
+                }
+            }
         }
 
         //Do Member Classes Alias

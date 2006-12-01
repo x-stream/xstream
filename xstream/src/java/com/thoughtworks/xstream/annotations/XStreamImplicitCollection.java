@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 
  * @author Chung-Onn Cheong
+ * @deprecated since upcoming, use @XStreamImplicit at field level
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
