@@ -928,7 +928,7 @@ public class XStream {
     }
 
     /**
-     * Use an XML attribute for an arbotrary type.
+     * Use an XML attribute for an arbitrary type.
      * 
      * @param type the Class of the type to be rendered as XML attribute
      * @throws InitializationException if no {@link AttributeMapper} is available
