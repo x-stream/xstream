@@ -2,6 +2,8 @@ package com.thoughtworks.xstream.annotations;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -21,23 +23,32 @@ import com.thoughtworks.xstream.mapper.Mapper;
 public class AnnotationReflectionConverter extends ReflectionConverter {
 
 	private final AnnotationProvider annotationProvider;
+	
+	private final Map<Class<? extends Converter>,Converter> cachedConverters;
 
 	public AnnotationReflectionConverter(Mapper mapper,
 			ReflectionProvider reflectionProvider,
 			AnnotationProvider annotationProvider) {
 		super(mapper, reflectionProvider);
 		this.annotationProvider = annotationProvider;
+		this.cachedConverters = new HashMap<Class<? extends Converter>,Converter>();
 	}
 
 	protected void marshallField(final MarshallingContext context,
 			Object newObj, Field field) {
 		XStreamConverter annotation = annotationProvider.getAnnotation(field, XStreamConverter.class);
 		if (annotation != null) {
-			
 			Class<? extends Converter> type = annotation.value();
-			context.convertAnother(newObj, newInstance(type));
+			ensureCache(type);
+			context.convertAnother(newObj, cachedConverters.get(type));
 		} else {
 			context.convertAnother(newObj);
+		}
+	}
+
+	private void ensureCache(Class<? extends Converter> type) {
+		if(!this.cachedConverters.containsKey(type)) {
+			cachedConverters.put(type, newInstance(type));
 		}
 	}
 
@@ -46,8 +57,8 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
 		XStreamConverter annotation = annotationProvider.getAnnotation(field, XStreamConverter.class);
 		if (annotation != null) {
 			Class<? extends Converter> converterType = annotation.value();
-			Converter converter = newInstance(converterType);
-			return context.convertAnother(result, type, converter);
+			ensureCache(converterType);
+			return context.convertAnother(result, type, cachedConverters.get(converterType));
 		} else {
 			return context.convertAnother(result, type);
 		}
