@@ -135,8 +135,12 @@ public class Annotations {
                 configureClass(xstream, field.getType());
             }
             // Do field level implicit collection
-            if (field.isAnnotationPresent(XStreamImplicit.class)
-                    && Collection.class.isAssignableFrom(field.getType())) {
+            if (field.isAnnotationPresent(XStreamImplicit.class)) {
+                if (!Collection.class.isAssignableFrom(field.getType())) {
+                    // TODO: We need a separate exception for runtime initialization.
+                    throw new XStream.InitializationException("@XStreamImplicit must be assigned to Collection types, but \""
+                        + field.getDeclaringClass().getName() + ":" + field.getName() + " is of type " + field.getType().getName());
+                }
                 XStreamImplicit implicitAnnotation =  field.getAnnotation(XStreamImplicit.class);
                 String fieldName = field.getName();
                 String itemFieldName = implicitAnnotation.itemFieldName();
