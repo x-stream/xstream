@@ -28,6 +28,7 @@ public class EnumConverter implements Converter {
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Class type = context.getRequiredType();
+        // TODO: There's no test case for polymorphic enums.
         if (type.getSuperclass() != Enum.class) {
             type = type.getSuperclass(); // polymorphic enums
         }
