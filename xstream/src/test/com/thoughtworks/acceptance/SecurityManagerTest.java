@@ -21,7 +21,7 @@ import java.util.PropertyPermission;
 /**
  * Test XStream with an active SecurityManager. Note, that it is intentional, that this test is
  * not derived from AbstractAcceptanceTest to avoid loaded classes before the SecurityManager is
- * in action. Alse you should test each fixture in its own.
+ * in action. Also run each fixture in its own to avoid side-effects.
  * 
  * @author J&ouml;rg Schaible
  */
