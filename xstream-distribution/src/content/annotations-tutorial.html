@@ -107,12 +107,12 @@ class RendezvousMessage {
 <p>This is not what we desire therefore we will annotate the content list to be recalled as an implicit collection:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
-@XStreamImplicitCollection(value="content")
 class RendezvousMessage {
 
 	@XStreamAlias("type")
 	private int messageType;
 
+	@XStreamImplicit
 	private List&lt;String&gt; content;
 
 	public RendezvousMessage(int messageType, String... content) {
@@ -135,12 +135,12 @@ class RendezvousMessage {
 <p>We are almost there... we still want to remove the 'a' tag, and define each content part with the tag 'part'. In order to do so, let's add another attribute to our implicit collection annotation. The attribute field defines the name of the tag used for data contained inside this collection:
 <div class="Source Java"><pre>
 @XStreamAlias("message")
-@XStreamImplicitCollection(value="content",item="part")
 class RendezvousMessage {
 
 	@XStreamAlias("type")
 	private int messageType;
 
+	@XStreamImplicit(itemFieldName="part")
 	private List&lt;String&gt; content;
 
 	public RendezvousMessage(int messageType, String... content) {
@@ -162,12 +162,12 @@ class RendezvousMessage {
 <p>Let's create another attribute which defines the timestamp when the message was created:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
-@XStreamImplicitCollection(value="content",item="part")
 class RendezvousMessage {
 
 	@XStreamAlias("type")
 	private int messageType;
 
+	@XStreamImplicit(itemFieldName="part")
 	private List&lt;String&gt; content;
 	
 	private Calendar created = new GregorianCalendar();
@@ -194,12 +194,12 @@ class RendezvousMessage {
 <p>Now we face the following problem: we want to use a custom converter for this Calendar, but only for this Calendar, this exact field in this exact type. Easy... let's annotate it with the custom converter annotation:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
-@XStreamImplicitCollection(value="content",item="part")
 class RendezvousMessage {
 
 	@XStreamAlias("type")
 	private int messageType;
 
+	@XStreamImplicit(itemFieldName="part")
 	private List&lt;String&gt; content;
 
 	@XStreamConverter(SingleValueCalendarConverter.class)
