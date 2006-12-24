@@ -15,6 +15,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -252,6 +253,7 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
+ * @author Guilherme Silveira
  */
 public class XStream {
 
@@ -913,6 +915,22 @@ public class XStream {
     }
 
     /**
+     * Create an alias for an attribute.
+     *
+     * @param configurableClass the type where the attribute is defined
+     * @param attributeName the name of the attribute
+     * @param alias the alias itself
+     * @throws InitializationException if no {@link AttributeAliasingMapper} is available
+     */
+    public void aliasAttribute(Class configurableClass, String attributeName, String alias) {
+        if (attributeAliasingMapper == null) {
+            throw new InitializationException("No "
+					+ AttributeAliasingMapper.class.getName() + " available");
+        }
+        attributeAliasingMapper.addAliasFor(configurableClass, attributeName, alias);
+	}
+
+    /**
      * Use an XML attribute for a field or a specific type.
      * 
      * @param fieldName the name of the field
@@ -925,6 +943,28 @@ public class XStream {
             throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
         }
         attributeMapper.addAttributeFor(fieldName, type);
+    }
+
+    /**
+     * Use an XML attribute for a field of an specific type.
+     * 
+     * @param fieldName the name of the field
+     * @param type the Class containing such field
+     * @throws InitializationException if no {@link AttributeMapper} is available
+     * @since upcoming
+     */
+    public void useAttributeFor(Class type, String fieldName) {
+        if (attributeMapper == null) {
+            throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
+        }
+		try {
+			Field field = type.getDeclaredField(fieldName);
+	        attributeMapper.addAttributeFor(field);
+		} catch (SecurityException e) {
+            throw new InitializationException("Unable to access field " + fieldName + "@" + type.getName());
+		} catch (NoSuchFieldException e) {
+            throw new InitializationException("Unable to find field " + fieldName + "@" + type.getName());
+		}
     }
 
     /**

@@ -70,7 +70,7 @@ public class Annotations {
             }
         }
 
-        //Do Class Leve - Converter
+        //Do Class Level - Converter
         if(configurableClass.isAnnotationPresent(XStreamConverter.class)){
             XStreamConverter converterAnnotation = element.getAnnotation(XStreamConverter.class);
             registerConverter(xstream, converterAnnotation.value());
@@ -116,7 +116,7 @@ public class Annotations {
             }
         }
 
-        //Do Member Level Alias and  XStreamContainedType
+        //Do Member Level Field annotations 
         Field[] fields = configurableClass.getDeclaredFields();
         for (Field field : fields) {
             if(field.isSynthetic()) continue;
@@ -129,9 +129,19 @@ public class Annotations {
                     configureClass(xstream, containedClass);
                 }
             }
-            if(field.isAnnotationPresent(XStreamAlias.class)){
+            boolean shouldAlias = field.isAnnotationPresent(XStreamAlias.class);
+            boolean isAttribute = field.isAnnotationPresent(XStreamAsAttribute.class);
+			if(shouldAlias && !isAttribute){
                 XStreamAlias fieldXStreamAliasAnnotation =  field.getAnnotation(XStreamAlias.class);
                 xstream.aliasField(fieldXStreamAliasAnnotation.value(), configurableClass, field.getName());
+                configureClass(xstream, field.getType());
+            }
+			if(isAttribute){
+                xstream.useAttributeFor(configurableClass, field.getName());
+                if(shouldAlias) {
+                    XStreamAlias fieldXStreamAliasAnnotation =  field.getAnnotation(XStreamAlias.class);
+                    xstream.aliasAttribute(configurableClass, field.getName(), fieldXStreamAliasAnnotation.value());
+                }
                 configureClass(xstream, field.getType());
             }
             // Do field level implicit collection

@@ -97,5 +97,21 @@ public abstract class MapperWrapper implements Mapper {
     public Mapper lookupMapperOfType(Class type) {
         return type.isAssignableFrom(getClass()) ? this : wrapped.lookupMapperOfType(type);
     }
+    
+    public SingleValueConverter getConverterFromItemType(String fieldName, Class type, Class definedIn) {
+    	return wrapped.getConverterFromItemType(fieldName, type, definedIn);
+    }
+    
+    public String aliasForAttribute(Class definedIn, String fieldName) {
+    	return wrapped.aliasForAttribute(definedIn, fieldName);
+    }
+    
+    public String attributeForAlias(Class definedIn, String alias) {
+    	return wrapped.attributeForAlias(definedIn, alias);
+    }
+    
+    public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
+    	return wrapped.getConverterFromAttribute(type, attribute);
+    }
 
 }

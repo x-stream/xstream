@@ -49,7 +49,10 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Attributes might be preferred to child elements ...
          reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class type, Class definedIn, Object value) {
-                SingleValueConverter converter = mapper.getConverterFromItemType(fieldName, type);
+                SingleValueConverter converter = mapper.getConverterFromItemType(fieldName, type, definedIn);
+                if(converter == null) {
+                	converter = mapper.getConverterFromItemType(fieldName, type);
+                }
                 if (converter == null) {
                     converter = mapper.getConverterFromItemType(type);
                 }
@@ -57,7 +60,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                     if (value != null) {
                         final String str = converter.toString(value);
                         if (str != null) {
-                            writer.addAttribute(mapper.aliasForAttribute(fieldName), str);
+                            writer.addAttribute(mapper.aliasForAttribute(definedIn, fieldName), str);
                         }
                     }
                     seenAsAttributes.add(fieldName);
@@ -129,11 +132,11 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Process attributes before recursing into child elements.
         while (it.hasNext()) {
             String attrAlias = (String) it.next();
-            String attrName = mapper.attributeForAlias(attrAlias);
+            String attrName = mapper.attributeForAlias(result.getClass(), attrAlias);
             Class classDefiningField = determineWhichClassDefinesField(reader);
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
             if (fieldExistsInClass) {
-                SingleValueConverter converter = mapper.getConverterFromAttribute(attrName);
+                SingleValueConverter converter = mapper.getConverterFromAttribute(result.getClass(), attrName);
                 Class type = reflectionProvider.getFieldType(result, attrName, classDefiningField);
                 if (converter == null) {
                     converter = mapper.getConverterFromItemType(type);

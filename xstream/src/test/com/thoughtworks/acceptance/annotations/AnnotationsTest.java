@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.annotations.Annotations;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamContainedType;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
@@ -23,6 +22,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author Chung-Onn Cheong
  * @author Mauro Talevi
+ * @author Guilherme Silveira
  */
 public class AnnotationsTest extends AbstractAcceptanceTest {
     
@@ -251,5 +251,38 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
             return fromString(reader.getValue());
         }
     }
+    
+    @XStreamAlias("annotated")
+    public static class AnnotatedAttribute {
+    	@XStreamAsAttribute
+    	private String myField;
+    }
+    
+    public void testUsesAttributeThroughAnnotation() {
+    	AnnotatedAttribute value = new AnnotatedAttribute();
+    	value.myField = "hello";
+    	String expected = "<annotated myField=\"hello\"/>";
+    	Annotations.configureAliases(xstream, AnnotatedAttribute.class);
+    	String xml = toXML(value);
+		AnnotatedAttribute an = (AnnotatedAttribute) xstream.fromXML(xml);
+    	assertBothWays(value, expected);
+    }
 
+    @XStreamAlias("annotated")
+    public static class AnnotatedAliasedAttribute {
+    	@XStreamAsAttribute
+    	@XStreamAlias("field")
+    	private String myField;
+    }
+    
+    public void testUsesAliasedAttributeThroughAnnotation() {
+    	AnnotatedAliasedAttribute value = new AnnotatedAliasedAttribute();
+    	value.myField = "hello";
+    	String expected = "<annotated field=\"hello\"/>";
+    	Annotations.configureAliases(xstream, AnnotatedAliasedAttribute.class);
+    	String xml = toXML(value);
+		AnnotatedAliasedAttribute an = (AnnotatedAliasedAttribute) xstream.fromXML(xml);
+    	assertBothWays(value, expected);
+    }
+    
 }

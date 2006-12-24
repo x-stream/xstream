@@ -12,6 +12,7 @@ import com.thoughtworks.xstream.testutil.TimeZoneChanger;
  * @author Ian Cartwright
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
+ * @author Guilherme Silveira
  */
 public class AttributeTest extends AbstractAcceptanceTest {
 
@@ -196,7 +197,28 @@ public class AttributeTest extends AbstractAcceptanceTest {
             this.i = i;
         }
     }
+    
+    static class Camera {
+		private String name;
+    	public Camera(String name) {
+			this.name = name;
+		}
+    }
+    
+    public void testUsesAnAttributeForAnSpecificField() {
+    	xstream.alias("camera", Camera.class);
+    	xstream.useAttributeFor(Camera.class, "name");
+    	Camera camera = new Camera("Rebel 350");
+    	String expected = "<camera name=\"Rebel 350\"/>";
+    	assertBothWays(camera, expected);
+    }
+
+    public void testAliasesAnAttributeForAnSpecificField() {
+    	xstream.alias("camera", Camera.class);
+    	xstream.useAttributeFor(Camera.class, "name");
+    	xstream.aliasAttribute(Camera.class, "name", "model");
+    	Camera camera = new Camera("Rebel 350");
+    	String expected = "<camera model=\"Rebel 350\"/>";
+    	assertBothWays(camera, expected);
+    }
 }
-
-
-

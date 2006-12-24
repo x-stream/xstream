@@ -107,4 +107,38 @@ public interface Mapper {
     SingleValueConverter getConverterFromAttribute(String name);
     
     Mapper lookupMapperOfType(Class type);
+
+    /**
+     * Returns a single value converter to be used in a specific field.
+     * 
+     * @param fieldName	the field name
+     * @param type		the field type
+     * @param definedIn	the type which defines this field
+     * @return	a SingleValueConverter or null if there no such converter should be used for this field.
+     * @since upcoming
+     */
+	SingleValueConverter getConverterFromItemType(String fieldName, Class type, Class definedIn);
+
+	/**
+	 * Returns an alias for a single field defined in an specific type.
+	 * 
+	 * @param definedIn	the type where the field was defined
+	 * @param fieldName	the field name
+	 * @return	the alias for this field or its own name if no alias was defined
+	 * @since upcoming
+	 */
+	String aliasForAttribute(Class definedIn, String fieldName);
+
+	/**
+	 * Returns the field name for an aliased attribute.
+	 * @param the type
+	 * @param attrAlias	the aliased attribute
+	 * @return	the original attribute name
+	 */
+	String attributeForAlias(Class definedIn, String alias);
+
+	/**
+	 * Returns which converter to use for an specific attribute in a type.
+	 */
+	SingleValueConverter getConverterFromAttribute(Class type, String attribute);
 }
