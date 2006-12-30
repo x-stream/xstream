@@ -15,7 +15,7 @@ public class JVM {
     private Map loaderCache = new HashMap();
 
     private static final boolean reverseFieldOrder;
-    private static final float majorJavaVersion = getMajorJavaVersion(System.getProperty("java.specification.version"));
+    private static final float majorJavaVersion = getMajorJavaVersion();
 
     static final float DEFAULT_JAVA_VERSION = 1.3f;
 
@@ -34,12 +34,11 @@ public class JVM {
      * Parses the java version system property to determine the major java version,
      * ie 1.x
      *
-     * @param javaVersion the system property 'java.specification.version'
      * @return A float of the form 1.x
      */
-    private static final float getMajorJavaVersion(String javaVersion) {
+    private static final float getMajorJavaVersion() {
         try {
-            return Float.parseFloat(javaVersion.substring(0, 3));
+            return Float.parseFloat(System.getProperty("java.specification.version"));
         } catch ( NumberFormatException e ){
             // Some JVMs may not conform to the x.y.z java.version format
             return DEFAULT_JAVA_VERSION;
@@ -52,6 +51,10 @@ public class JVM {
 
     public static boolean is15() {
         return majorJavaVersion >= 1.5f;
+    }
+
+    public static boolean is16() {
+        return majorJavaVersion >= 1.6f;
     }
 
     private static boolean isSun() {

@@ -153,7 +153,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
-        } else {
+        } else if (!JVM.is15())  {
             xml =
                     "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
@@ -171,6 +171,31 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "      <zeroDigit>0</zeroDigit>\n"
                 + "      <NaN>\ufffd</NaN>\n"
                 + "      <currencySymbol>\u20ac</currencySymbol>\n"
+                + "      <infinity>\u221e</infinity>\n"
+                + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
+                + "      <locale>de_DE</locale>\n"
+                + "    </default>\n"
+                + "  </java.text.DecimalFormatSymbols>\n"
+                + "</java.text.DecimalFormatSymbols>";
+        } else {
+            xml =
+                    "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+                + "  <java.text.DecimalFormatSymbols>\n"
+                + "    <default>\n"
+                + "      <decimalSeparator>,</decimalSeparator>\n"
+                + "      <digit>#</digit>\n"
+                + "      <exponential>E</exponential>\n"
+                + "      <groupingSeparator>.</groupingSeparator>\n"
+                + "      <minusSign>-</minusSign>\n"
+                + "      <monetarySeparator>,</monetarySeparator>\n"
+                + "      <patternSeparator>;</patternSeparator>\n"
+                + "      <perMill>\u2030</perMill>\n"
+                + "      <percent>%</percent>\n"
+                + "      <serialVersionOnStream>3</serialVersionOnStream>\n"
+                + "      <zeroDigit>0</zeroDigit>\n"
+                + "      <NaN>\ufffd</NaN>\n"
+                + "      <currencySymbol>\u20ac</currencySymbol>\n"
+                + "      <exponentialSeparator>E</exponentialSeparator>\n"
                 + "      <infinity>\u221e</infinity>\n"
                 + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
                 + "      <locale>de_DE</locale>\n"
