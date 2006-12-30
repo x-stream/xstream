@@ -2,7 +2,6 @@ package com.thoughtworks.xstream.converters.collections;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -32,7 +31,9 @@ public class MapConverter extends AbstractCollectionConverter {
     public boolean canConvert(Class type) {
         return type.equals(HashMap.class)
                 || type.equals(Hashtable.class)
-                || (JVM.is14() && type.getName().equals("java.util.LinkedHashMap"));
+                || type.getName().equals("java.util.LinkedHashMap")
+                || type.getName().equals("sun.font.AttributeMap") // Used by java.awt.Font in JDK 6
+                ;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
