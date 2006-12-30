@@ -3,8 +3,17 @@ package com.thoughtworks.acceptance;
 import java.lang.reflect.Array;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
@@ -36,6 +45,31 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         }
         return new XppDriver();
     }
+    
+    protected Object assertBothWaysNormalized(Object root, String xml, final String match,
+        final String templateSelect, final String sortSelect) {
+        try {
+            // First, serialize the object to XML and check it matches the expected XML.
+            String resultXml = normalizedXML(
+                toXML(root), new String[]{match}, templateSelect, sortSelect);
+            assertEquals(
+                normalizedXML(xml, new String[]{match}, templateSelect, sortSelect), resultXml);
+
+            // Now deserialize the XML back into the object and check it equals the original
+            // object.
+            Object resultRoot = xstream.fromXML(resultXml);
+            assertObjectsEqual(root, resultRoot);
+
+            // While we're at it, let's check the binary serialization works...
+            assertBinarySerialization(root);
+
+            return resultRoot;
+
+        } catch (TransformerException e) {
+            throw (AssertionFailedError)new AssertionFailedError("Cannot normalize XML")
+                .initCause(e);
+        }
+    }
 
     protected Object assertBothWays(Object root, String xml) {
 
@@ -48,7 +82,12 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         assertObjectsEqual(root, resultRoot);
 
         // While we're at it, let's check the binary serialization works...
+        assertBinarySerialization(root);
 
+        return resultRoot;
+    }
+
+    private void assertBinarySerialization(Object root) {
         // Serialize as binary
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         xstream.marshal(root, new BinaryStreamWriter(outputStream));
@@ -57,8 +96,6 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
         Object binaryResult = xstream.unmarshal(new BinaryStreamReader(inputStream));
         assertObjectsEqual(root, binaryResult);
-
-        return resultRoot;
     }
 
     protected Object assertWithAsymmetricalXml(Object root, String inXml, String outXml) {
@@ -118,5 +155,47 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             if (i % 16 == 15) result.append('\n');
         }
         return result.toString();
+    }
+    
+    protected String normalizedXML(final String xml, final String[] matches,
+        final String templateSelect, final String sortSelect) throws TransformerException {
+        final StringBuffer match = new StringBuffer();
+        for (int i = 0; i < matches.length; i++) {
+            if (i > 0) {
+                match.append('|');
+            }
+            match.append(matches[i]);
+        }
+        final StringBuffer sort = new StringBuffer();
+        if (sortSelect != null) {
+            sort.append(" select=\"");
+            sort.append(sortSelect);
+            sort.append('"');
+        }
+
+        final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        final Transformer transformer = transformerFactory
+            .newTransformer(new StreamSource(
+                new StringReader(
+                    ""
+                        + "<?xml version=\"1.0\"?>\n"
+                        + "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n"
+                        + "<xsl:template match=\"" + match.toString() + "\">\n"
+                        + "   <xsl:copy>\n"
+                        + "           <xsl:apply-templates select=\"" + templateSelect + "\">\n"
+                        + "                   <xsl:sort" + sort.toString() + "/>\n"
+                        + "           </xsl:apply-templates>\n"
+                        + "   </xsl:copy>\n"
+                        + "</xsl:template>\n"
+                        + "<xsl:template match=\"@*|node()\">\n"
+                        + "   <xsl:copy>\n"
+                        + "           <xsl:apply-templates select=\"@*|node()\"/>\n"
+                        + "   </xsl:copy>\n"
+                        + "</xsl:template>\n"
+                        + "</xsl:stylesheet>")));
+        final StringWriter writer = new StringWriter();
+        transformer
+            .transform(new StreamSource(new StringReader(xml)), new StreamResult(writer));
+        return writer.toString();
     }
 }

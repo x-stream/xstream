@@ -42,7 +42,7 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
                 "    <person>john doe</person>\n" +
                 "  </entry>\n" +
                 "</map>";
-        assertBothWays(map, xml);
+        assertBothWaysNormalized(map, xml, "map", "entry", "string");
     }
 	
 	public void testUsesClassLevelAliasesAnnotationsUsingTwoXStreamInstances()  {

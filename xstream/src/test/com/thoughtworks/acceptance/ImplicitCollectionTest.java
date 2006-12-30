@@ -248,7 +248,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 "</zoo>";
 
         xstream.addImplicitCollection(Zoo.class, "animals");
-        assertBothWays(zoo, expected);
+        assertBothWaysNormalized(zoo, expected, "zoo", "animal", "name");
     }
 
     public void testWithDifferentDefaultImplementation() {

@@ -105,7 +105,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "  <string>bye</string>\n" +
                 "</set>";
 
-        assertBothWays(set, expected);
+        assertBothWaysNormalized(set, expected, "set", "string", null);
     }
 
     public void testVector() {

@@ -29,7 +29,7 @@ public class MapTest extends AbstractAcceptanceTest {
                 "  </entry>\n" +
                 "</map>";
 
-        assertBothWays(map, expected);
+        assertBothWaysNormalized(map, expected, "map", "entry", "string[1]");
     }
 
     public void testMapCanContainCustomObjects() {
@@ -166,7 +166,7 @@ public class MapTest extends AbstractAcceptanceTest {
                 "</map>";
 
         xstream.alias("thing", Map.Entry.class);
-        assertBothWays(map, expected);
+        assertBothWaysNormalized(map, expected, "map", "thing", "string[1]");
     }
 
     public static class MyMap extends HashMap {
