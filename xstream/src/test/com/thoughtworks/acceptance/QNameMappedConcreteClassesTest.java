@@ -8,7 +8,7 @@ import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-import com.thoughtworks.xstream.io.xml.StaxWriter2Test;
+import com.thoughtworks.xstream.io.xml.StaxWriterTest;
 
 import javax.xml.namespace.QName;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
-    public static final String XML_HEADER = StaxWriter2Test.XML_HEADER;
+    public static final String XML_HEADER = StaxWriterTest.XML_HEADER;
 
     protected QNameMap qnameMap;
     protected String namespace = getDefaultNS(WithList.class);

@@ -15,7 +15,7 @@ import java.io.StringWriter;
  * @author James Strachan
  */
 
-public class StaxWriter2Test extends AbstractXMLWriterTest {
+public class StaxWriterTest extends AbstractXMLWriterTest {
 
     public static final String XML_HEADER;
     

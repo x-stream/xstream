@@ -35,7 +35,7 @@ public class StaxDriverTest extends AbstractAcceptanceTest {
     public void testCanOverloadStaxReaderAndWriterInstantiation() {
         final MyStaxDriver driver = new MyStaxDriver();
         xstream = new XStream(driver);
-        assertBothWays("Hi", StaxWriter2Test.XML_HEADER + "<string>Hi</string>");
+        assertBothWays("Hi", StaxWriterTest.XML_HEADER + "<string>Hi</string>");
         assertTrue(driver.createStaxReaderCalled);
         assertTrue(driver.createStaxWriterCalled);
     }
