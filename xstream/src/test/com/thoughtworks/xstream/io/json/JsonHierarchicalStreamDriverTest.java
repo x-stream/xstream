@@ -83,24 +83,30 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         }
     }
 
+    String expectedNew = "" + 
+                "      {\n" +
+                "        'value': 'New',\n" +
+                "        'onclick': 'CreateNewDoc()'\n" +
+                "      }";
+    String expectedOpen = "" + 
+                "      {\n" +
+                "        'value': 'Open',\n" +
+                "        'onclick': 'OpenDoc()'\n" +
+                "      }";
+    String expectedClose = "" + 
+                "      {\n" +
+                "        'value': 'Close',\n" +
+                "        'onclick': 'CloseDoc()'\n" +
+                "      }";
     String expected = (
             "{'menu': {\n" +
                     "  'id': 'file',\n" +
                     "  'value': 'File:',\n" +
                     "  'popup': {\n" +
                     "    'menuitem': [\n" +
-                    "      {\n" +
-                    "        'value': 'New',\n" +
-                    "        'onclick': 'CreateNewDoc()'\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        'value': 'Open',\n" +
-                    "        'onclick': 'OpenDoc()'\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        'value': 'Close',\n" +
-                    "        'onclick': 'CloseDoc()'\n" +
-                    "      }\n" +
+                    expectedNew + ",\n" +
+                    expectedOpen + ",\n" +
+                    expectedClose + "\n" +
                     "    ]\n" +
                     "  }\n" +
                     "}}").replace('\'', '"');
@@ -140,7 +146,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         MenuWithSet menu = new MenuWithSet();
 
-        assertEquals(expected, xs.toXML(menu));
+        String json = xs.toXML(menu);
+        assertTrue(json.indexOf(expectedNew.replace('\'', '"')) > 0);
+        assertTrue(json.indexOf(expectedOpen.replace('\'', '"')) > 0);
+        assertTrue(json.indexOf(expectedClose.replace('\'', '"')) > 0);
     }
 
 
