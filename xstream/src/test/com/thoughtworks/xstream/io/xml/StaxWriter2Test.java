@@ -17,20 +17,28 @@ import java.io.StringWriter;
 
 public class StaxWriter2Test extends AbstractXMLWriterTest {
 
-    // For WoodStox
-    //public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
-
-    // For RI
-    public static final String XML_HEADER = "<?xml version='1.0' encoding='utf-8'?>";
+    public static final String XML_HEADER;
+    
+    static {
+        String className = XMLOutputFactory.newInstance().getClass().getName();
+        if (className.startsWith("com.bea")) {
+            XML_HEADER = "<?xml version='1.0' encoding='utf-8'?>";
+        } else if (className.startsWith("com.sun")) {
+            XML_HEADER = "<?xml version=\"1.0\" ?>";
+//        } else if (className.startsWith("??")) { // WoodStox 
+//            STAX_XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
+        } else {
+            throw new InternalError("Unknown StaX implementation: " + className);
+        }
+    }
 
     private StringWriter buffer;
-    private XMLOutputFactory outputFactory;
-    private X testInput;
     private Perl5Util perlUtil;
+    private X testInput;
 
     protected void setUp() throws Exception {
         super.setUp();
-        outputFactory = XMLOutputFactory.newInstance();
+        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         buffer = new StringWriter();
         writer = new StaxWriter(new QNameMap(), outputFactory.createXMLStreamWriter(buffer));
         perlUtil = new Perl5Util();
@@ -45,7 +53,7 @@ public class StaxWriter2Test extends AbstractXMLWriterTest {
     protected void assertXmlProducedIs(String expected) {
         expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
         expected = replaceAll(expected, "&#x0D;", "&#13;");
-        expected = "<?xml version='1.0' encoding='utf-8'?>" + expected;
+        expected = XML_HEADER + expected;
         assertEquals(expected, buffer.toString());
     }
 
