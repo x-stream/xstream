@@ -168,13 +168,12 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
 
     public void endNode() {
         depth--;
-        if (tagIsEmpty) {
+        Node node = (Node) elementStack.pop();
+        if (tagIsEmpty && !hasChildren(node.clazz)) {
             readyForNewLine = false;
             finishTag();
-            elementStack.popSilently();
         } else {
             finishTag();
-            Node node = (Node) elementStack.pop();
             if (node.clazz != null &&
                     (Collection.class.isAssignableFrom(node.clazz) || node.clazz.isArray())) {
                 writer.write("]");

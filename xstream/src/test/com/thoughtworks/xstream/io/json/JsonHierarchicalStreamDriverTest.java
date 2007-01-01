@@ -315,5 +315,47 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "]}").replace('#', '"');
         assertEquals(expected, xs.toXML(strings));
     }
+    
+    public void testSimpleTypesCanBeRepresentedAsJsonWithNullMembers() {
+        Msg message = new Msg("hello");
+        Msg message2 = new Msg(null);
+        message.innerMessage = message2;
+
+        XStream xs = new XStream(new JsonHierarchicalStreamDriver());
+        xs.alias("innerMessage", Msg.class);
+
+        String expected = (""
+                +"{'innerMessage': {\n"
+                + "  'greeting': 'hello',\n"
+                + "  'innerMessage': {\n"
+                + "  }\n"
+                + "}}").replace('\'', '"');
+        assertEquals(expected, xs.toXML(message));
+    }
+
+    public static class Msg {
+        String greeting;
+        Msg innerMessage;
+
+        public Msg(String greeting) {
+            this.greeting = greeting;
+        }
+    }
+    
+    public void testElementWithEmptyArray() {
+        XStream xs = new XStream(new JsonHierarchicalStreamDriver());
+        xs.alias("element", ElementWithEmptyArray.class);
+
+        String expected = (""
+                +"{'element': {\n"
+                + "  'array': [\n"
+                + "  ]\n"
+                + "}}").replace('\'', '"');
+        assertEquals(expected, xs.toXML(new ElementWithEmptyArray()));
+    }
+    
+    public static class ElementWithEmptyArray {
+        String[] array = new String[0];
+    }
 }
 
