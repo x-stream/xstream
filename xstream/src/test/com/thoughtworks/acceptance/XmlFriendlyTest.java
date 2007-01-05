@@ -153,7 +153,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
-        } else if (!JVM.is15())  {
+        } else if (!JVM.is16())  {
             xml =
                     "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
