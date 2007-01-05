@@ -130,7 +130,7 @@ public class Test {
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
     &lt;/description&gt;
   &lt;/entry&gt;
-&lt;/blog&gt;</pre></div></div><div class="section"><h2>Attribute aliasing</h2><p>The next step is to set the <b>author</b> member variable as a xml attribute. In order to do this, we shall tell XStream to alias the <b>Author</b> class as the <b>author</b> attribute.</p><div class="Source Java"><pre>                xstream.useAttributeFor(&quot;author&quot;, Author.class);</pre></div><p>And now it leaves us with one problem: how does XStream converts an Author in a String so it can be written as a xml tag attribute?</p><p>Let's use the <b>SimpleValueConverter</b> and implement our own Author converter:</p><div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
+&lt;/blog&gt;</pre></div></div><div class="section"><h2>Attribute aliasing</h2><p>The next step is to set the <b>author</b> member variable as a xml attribute. In order to do this, we shall tell XStream to alias the <b>author</b> field of the <b>Blog</b> class as an "author" attribute.</p><div class="Source Java"><pre>                xstream.useAttributeFor(Blog.class, &quot;author&quot;);</pre></div><p>And now it leaves us with one problem: how does XStream converts an Author in a String so it can be written as a xml tag attribute?</p><p>Let's use the <b>SimpleValueConverter</b> and implement our own Author converter:</p><div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
 }</pre></div><p>The first method to implement tells XStream which types it can deal with:</p><div class="Source Java"><pre>        public boolean canConvert(Class type) {
                 return type.equals(Author.class);
         }</pre></div><p>The second one is used to extract a String from an Author:</p><div class="Source Java"><pre>        public String toString(Object obj) {
@@ -166,7 +166,7 @@ public class Test {
 
                 xstream.addImplicitCollection(Blog.class, &quot;entries&quot;);
 
-                xstream.useAttributeFor(&quot;author&quot;, Author.class);
+                xstream.useAttributeFor(Blog.class, &quot;author&quot;);
                 xstream.registerConverter(new AuthorConverter());
 
                 System.out.println(xstream.toXML(teamBlog));
@@ -183,7 +183,10 @@ public class Test {
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
     &lt;/description&gt;
   &lt;/entry&gt;
-&lt;/blog&gt;</pre></div></div>
+&lt;/blog&gt;</pre></div>
+<p>There useAttributeFor method is overloaded with other similar functionalities, including a version which receives an extra String at the end (Class, String, String) telling
+XStream to alias that field to another name. For example: useAttributeFor(Blog.class, "author", "auth") would map the "author" field as an attribute called "auth".</p>
+</div>
 
 <h2>Summing up</h2><p>Using aliases and converters gives you enough power to configure your xml in almost any way you desire.</p><p>Don't forget to read the converter tutorial to see other type of converters that you can create using XStream.</p>
 

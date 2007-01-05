@@ -244,6 +244,36 @@ public class SingleValueCalendarConverter implements Converter {
 &lt;/message&gt;
 </pre></div>
 <p>Note that the @XStreamConverter annotation on fields is automatically read, without the need for calling any Annotations static method. XStream can easily check for Java 1.5 support during runtime and load its parts accordingly.</p>
+<p>If the client asks for the type tag to be an attribute inside the message tag, as follows:</p>
+<div class="Source Java"><pre>
+&lt;message type="15"&gt;
+  &lt;part&gt;firstPart&lt;/part&gt;
+  &lt;part&gt;secondPart&lt;/part&gt;
+  &lt;created&gt;1154097812245&lt;/created&gt;
+&lt;/message&gt;
+</pre></div>
+<p>All you need to do is add the @XStreamAsAttribute annotation:</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+   	@XStreamAsAttribute
+	private int messageType;
+
+	@XStreamImplicit(itemFieldName="part")
+	private List&lt;String&gt; content;
+
+	@XStreamConverter(SingleValueCalendarConverter.class)
+	private Calendar created = new GregorianCalendar();
+
+	public RendezvousMessage(int messageType, String... content) {
+		this.messageType = messageType;
+		this.content = Arrays.asList(content);
+	}
+
+}
+</pre></div>
 <h2>Summing up</h2>
 <p>The XStream annotations support might help you configuring your class mappings in some ways, as the custom configuration will appear in your types, but might not be the solution for other problems, i.e. when you need to map the same type to two different xml 'standards'. Others might claim that the configuration should be clearly stated in a java class and not mixed with your model, its up to you to pick the best approach in your case: annotations or direct method calls to the XStream instance.</p>
 
