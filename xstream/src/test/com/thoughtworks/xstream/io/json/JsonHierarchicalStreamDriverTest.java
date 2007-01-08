@@ -3,8 +3,10 @@ package com.thoughtworks.xstream.io.json;
 import junit.framework.TestCase;
 import com.thoughtworks.xstream.XStream;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.awt.Color;
@@ -40,17 +42,17 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         String expected = (
                 "{'innerMessage': {\n" +
-                        "  'greeting': 'hello',\n" +
-                        "  'num1': 2,\n" +
-                        "  'num2': 3,\n" +
-                        "  'bool': true,\n" +
-                        "  'bool2': true,\n" +
-                        "  'innerMessage': {\n" +
-                        "    'greeting': 'bonjour',\n" +
-                        "    'num1': 3,\n" +
-                        "    'bool': false\n" +
-                        "  }\n" +
-                        "}}").replace('\'', '"');
+                "  'greeting': 'hello',\n" +
+                "  'num1': 2,\n" +
+                "  'num2': 3,\n" +
+                "  'bool': true,\n" +
+                "  'bool2': true,\n" +
+                "  'innerMessage': {\n" +
+                "    'greeting': 'bonjour',\n" +
+                "    'num1': 3,\n" +
+                "    'bool': false\n" +
+                "  }\n" +
+                "}}").replace('\'', '"');
 
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
 
@@ -83,6 +85,12 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         }
     }
 
+    String expectedMenuStart = "" +
+                "{'menu': {\n" +
+                "  'id': 'file',\n" +
+                "  'value': 'File:',\n" +
+                "  'popup': {\n" +
+                "    'menuitem': [";
     String expectedNew = "" + 
                 "      {\n" +
                 "        'value': 'New',\n" +
@@ -98,18 +106,16 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 "        'value': 'Close',\n" +
                 "        'onclick': 'CloseDoc()'\n" +
                 "      }";
+    String expectedMenuEnd ="" +
+                "    ]\n" +
+                "  }\n" +
+                "}}";
     String expected = (
-            "{'menu': {\n" +
-                    "  'id': 'file',\n" +
-                    "  'value': 'File:',\n" +
-                    "  'popup': {\n" +
-                    "    'menuitem': [\n" +
-                    expectedNew + ",\n" +
-                    expectedOpen + ",\n" +
-                    expectedClose + "\n" +
-                    "    ]\n" +
-                    "  }\n" +
-                    "}}").replace('\'', '"');
+                expectedMenuStart + "\n" +
+                expectedNew + ",\n" +
+                expectedOpen + ",\n" +
+                expectedClose + "\n" +
+                expectedMenuEnd).replace('\'', '"');
 
     public void testListsRepresentedCorrectlyAsJson() {
 
@@ -147,9 +153,11 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         MenuWithSet menu = new MenuWithSet();
 
         String json = xs.toXML(menu);
+        assertTrue(json.startsWith(expectedMenuStart.replace('\'', '"')));
         assertTrue(json.indexOf(expectedNew.replace('\'', '"')) > 0);
         assertTrue(json.indexOf(expectedOpen.replace('\'', '"')) > 0);
         assertTrue(json.indexOf(expectedClose.replace('\'', '"')) > 0);
+        assertTrue(json.endsWith(expectedMenuEnd.replace('\'', '"')));
     }
 
 
@@ -188,6 +196,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         String value = "File:";
         PopupWithSet popup = new PopupWithSet();
     }
+    
     public static class PopupWithSet {
         Set menuitem;
         {
@@ -221,31 +230,31 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         String expected = (
                 "{'widget': {\n" +
-                        "  'debug': 'on',\n" +
-                        "  'window': {\n" +
-                        "    'title': 'Sample Konfabulator Widget',\n" +
-                        "    'name': 'main_window',\n" +
-                        "    'width': 500,\n" +
-                        "    'height': 500\n" +
-                        "  },\n" +
-                        "  'image': {\n" +
-                        "    'src': 'Images/Sun.png',\n" +
-                        "    'name': 'sun1',\n" +
-                        "    'hOffset': 250,\n" +
-                        "    'vOffset': 250,\n" +
-                        "    'alignment': 'center'\n" +
-                        "  },\n" +
-                        "  'text': {\n" +
-                        "    'data': 'Click Here',\n" +
-                        "    'size': 36,\n" +
-                        "    'style': 'bold',\n" +
-                        "    'name': 'text1',\n" +
-                        "    'hOffset': 250,\n" +
-                        "    'vOffset': 100,\n" +
-                        "    'alignment': 'center',\n" +
-                        "    'onMouseUp': 'sun1.opacity = (sun1.opacity / 100) * 90;'\n" +
-                        "  }\n" +
-                        "}}").replace('\'', '"');
+                "  'debug': 'on',\n" +
+                "  'window': {\n" +
+                "    'title': 'Sample Konfabulator Widget',\n" +
+                "    'name': 'main_window',\n" +
+                "    'width': 500,\n" +
+                "    'height': 500\n" +
+                "  },\n" +
+                "  'image': {\n" +
+                "    'src': 'Images/Sun.png',\n" +
+                "    'name': 'sun1',\n" +
+                "    'hOffset': 250,\n" +
+                "    'vOffset': 250,\n" +
+                "    'alignment': 'center'\n" +
+                "  },\n" +
+                "  'text': {\n" +
+                "    'data': 'Click Here',\n" +
+                "    'size': 36,\n" +
+                "    'style': 'bold',\n" +
+                "    'name': 'text1',\n" +
+                "    'hOffset': 250,\n" +
+                "    'vOffset': 100,\n" +
+                "    'alignment': 'center',\n" +
+                "    'onMouseUp': 'sun1.opacity = (sun1.opacity / 100) * 90;'\n" +
+                "  }\n" +
+                "}}").replace('\'', '"');
 
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("widget", Widget.class);
@@ -356,7 +365,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xs.alias("element", ElementWithEmptyArray.class);
 
         String expected = (""
-                +"{'element': {\n"
+                + "{'element': {\n"
                 + "  'array': [\n"
                 + "  ]\n"
                 + "}}").replace('\'', '"');
@@ -365,6 +374,21 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     
     public static class ElementWithEmptyArray {
         String[] array = new String[0];
+    }
+    
+    public void testJavaMap() {
+        XStream xs = new XStream(new JsonHierarchicalStreamDriver());
+        String expected = (""
+            + "{'map': {\n"
+            + "  'entry': {\n"
+            + "    'one',\n"
+            + "    1\n"
+            + "  }\n"
+            + "}}").replace('\'', '"');
+        
+        final Map map = new HashMap();
+        map.put("one", new Integer(1));
+        assertEquals(expected, xs.toXML(map));
     }
 }
 
