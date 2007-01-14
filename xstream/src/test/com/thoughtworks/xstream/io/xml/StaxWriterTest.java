@@ -25,8 +25,8 @@ public class StaxWriterTest extends AbstractXMLWriterTest {
             XML_HEADER = "<?xml version='1.0' encoding='utf-8'?>";
         } else if (className.startsWith("com.sun")) {
             XML_HEADER = "<?xml version=\"1.0\" ?>";
-//        } else if (className.startsWith("??")) { // WoodStox 
-//            STAX_XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
+        } else if (className.startsWith("com.ctc")) { // WoodStox 
+            XML_HEADER = "<?xml version='1.0' encoding='UTF-8'?>";
         } else {
             throw new InternalError("Unknown StaX implementation: " + className);
         }

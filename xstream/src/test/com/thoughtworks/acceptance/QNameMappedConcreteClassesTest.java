@@ -1,5 +1,7 @@
 package com.thoughtworks.acceptance;
 
+import com.bea.xml.stream.MXParserFactory;
+import com.bea.xml.stream.XMLOutputFactoryBase;
 import com.thoughtworks.acceptance.someobjects.Handler;
 import com.thoughtworks.acceptance.someobjects.Protocol;
 import com.thoughtworks.acceptance.someobjects.WithList;
@@ -8,15 +10,16 @@ import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-import com.thoughtworks.xstream.io.xml.StaxWriterTest;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 
 import java.util.ArrayList;
 
 public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
-    public static final String XML_HEADER = StaxWriterTest.XML_HEADER;
+    public static final String XML_HEADER = "<?xml version='1.0' encoding='utf-8'?>";
 
     protected QNameMap qnameMap;
     protected String namespace = getDefaultNS(WithList.class);
@@ -29,7 +32,7 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
         WithList withList = new WithList();
         withList.things = new ArrayList();
 
-        String expected =
+        String expected ="" +
                 XML_HEADER +
                 "<w:withList xmlns:w=\"java://com.thoughtworks.acceptance.someobjects\">" +
                 "<things></things>" +
@@ -116,6 +119,8 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
     }
 
     protected HierarchicalStreamDriver createDriver() {
+        System.setProperty(XMLInputFactory.class.getName(), MXParserFactory.class.getName());
+        System.setProperty(XMLOutputFactory.class.getName(), XMLOutputFactoryBase.class.getName());
         // careful, called from inside base class constructor
         qnameMap = new QNameMap();
         return new StaxDriver(qnameMap);
