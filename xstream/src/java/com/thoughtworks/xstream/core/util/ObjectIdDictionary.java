@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Store IDs against given object references.
  * <p>
- * Behaves the similar to java.util.IdentityHashMap, but in JDK1.3 as well. Additionally the implementation
+ * Behaves similar to java.util.IdentityHashMap, but in JDK1.3 as well. Additionally the implementation
  * keeps track of orphaned IDs by using a WeakReference to store the reference object.
  * </p>
  */
