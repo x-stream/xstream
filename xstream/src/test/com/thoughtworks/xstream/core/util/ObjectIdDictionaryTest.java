@@ -32,18 +32,18 @@ public class ObjectIdDictionaryTest extends TestCase {
         // create 100000 Strings and call GC after creation of 10000
         final int loop = 10;
         final int elements = 10000;
-        final int[] hashes = new int[loop * elements];
+        final int[] dictSizes = new int[loop * elements];
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
             System.gc();
             for (int j = 0; j < elements; ++j) {
                 final String s = new String("JUnit ") + j; // enforce new object
-                hashes[i * elements + j] = dict.size();
+                dictSizes[i * elements + j] = dict.size();
                 assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
                 dict.associateId(s, "X");
             }
         }
-        assertFalse("Algorithm did not reach last element", 0 == hashes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink", loop * elements - 1 == hashes[loop * elements - 1]);
+        assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
+        assertFalse("Dictionary did not shrink", loop * elements - 1 == dictSizes[loop * elements - 1]);
     }
 }
