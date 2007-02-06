@@ -20,15 +20,33 @@ import java.util.Iterator;
  * Serializes a Java 5 EnumSet.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
 public class EnumSetConverter implements Converter {
 
-    private final Field typeField;
+    private final static Field typeField;
+    static {
+        // field name is "elementType" in Sun JDK, but different in Harmony 
+        Field assumedTypeField = null;
+        Field[] fields = EnumSet.class.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i].getType() == Class.class) {
+                // take the fist member of type "Class"
+                assumedTypeField = fields[i];
+                assumedTypeField.setAccessible(true);
+                break;
+            }
+        }
+        if (assumedTypeField == null) {
+            throw new InternalError("Cannot detect element type of EnumSet");
+        }
+        typeField = assumedTypeField;
+    }
+    
     private final Mapper mapper;
 
     public EnumSetConverter(Mapper mapper) {
         this.mapper = mapper;
-        typeField = Fields.find(EnumSet.class, "elementType");
     }
 
     public boolean canConvert(Class type) {
