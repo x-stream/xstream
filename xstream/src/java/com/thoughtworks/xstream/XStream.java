@@ -486,15 +486,20 @@ public class XStream {
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
 
-        // Instantiating these two classes starts the AWT system, which is undesirable. Calling
-        // loadClass ensures a reference to the class is found but they are not instantiated.
-        alias("awt-color", jvm.loadClass("java.awt.Color"));
-        alias("awt-font", jvm.loadClass("java.awt.Font"));
-        alias("awt-text-attribute", TextAttribute.class);
+        if(jvm.supportsAWT()) {
+	        // Instantiating these two classes starts the AWT system, which is undesirable. Calling
+	        // loadClass ensures a reference to the class is found but they are not instantiated.
+	        alias("awt-color", jvm.loadClass("java.awt.Color"));
+	        alias("awt-font", jvm.loadClass("java.awt.Font"));
+	        alias("awt-text-attribute", TextAttribute.class);
+        }
 
-        alias("sql-timestamp", Timestamp.class);
-        alias("sql-time", Time.class);
-        alias("sql-date", java.sql.Date.class);
+        if(jvm.supportsSQL()) {
+        	alias("sql-timestamp", Timestamp.class);
+        	alias("sql-time", Time.class);
+        	alias("sql-date", java.sql.Date.class);
+        }
+        
         alias("file", File.class);
         alias("locale", Locale.class);
         alias("gregorian-calendar", Calendar.class);
@@ -580,15 +585,19 @@ public class XStream {
         registerConverter(new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
-        registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
-        registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
-        registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
+        if(jvm.supportsSQL()) {
+	        registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
+	        registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
+	        registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
+        }
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
-        registerConverter(new FontConverter(), PRIORITY_NORMAL);
-        registerConverter(new ColorConverter(), PRIORITY_NORMAL);
-        registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
+        if(jvm.supportsAWT()) {
+	        registerConverter(new FontConverter(), PRIORITY_NORMAL);
+	        registerConverter(new ColorConverter(), PRIORITY_NORMAL);
+	        registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
+        }
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
         
@@ -691,7 +700,10 @@ public class XStream {
         addImmutableType(URL.class);
         addImmutableType(File.class);
         addImmutableType(Class.class);
-        addImmutableType(TextAttribute.class);
+        
+        if(jvm.supportsAWT()) {
+        	addImmutableType(TextAttribute.class);
+        }
         
         if (JVM.is14()) {
             // late bound types - allows XStream to be compiled on earlier JDKs
