@@ -14,8 +14,8 @@ public class JVM {
     private ReflectionProvider reflectionProvider;
     private Map loaderCache = new HashMap();
     
-    private static final boolean supportsAWT = supportsType("java.awt.Color");
-    private static final boolean supportsSQL = supportsType("java.sql.Date"); 
+    private final boolean supportsAWT = loadClass("java.awt.Color") != null;
+    private final boolean supportsSQL = loadClass("java.sql.Date") != null; 
 
     private static final boolean reverseFieldOrder;
     private static final float majorJavaVersion = getMajorJavaVersion();
@@ -32,20 +32,6 @@ public class JVM {
         }
         reverseFieldOrder = reverse;
     }
-
-    /**
-     * Checks if this type is on the classpath.
-     * @param type	the type to check
-     * @return	whether its on the classpath
-     */
-    private static final boolean supportsType(String typeName) {
-		try {
-			Class.forName(typeName);
-			return true;
-		} catch (ClassNotFoundException e) {
-			return false;
-		}
-	}
 
     /**
      * Parses the java version system property to determine the major java version,
@@ -179,14 +165,14 @@ public class JVM {
 	 * Checks if the jvm supports awt.
 	 */
 	public boolean supportsAWT() {
-		return JVM.supportsAWT;
+		return this.supportsAWT;
 	}
 
 	/**
 	 * Checks if the jvm supports sql.
 	 */
 	public boolean supportsSQL() {
-		return JVM.supportsSQL;
+		return this.supportsSQL;
 	}
 
 }
