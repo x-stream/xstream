@@ -188,10 +188,13 @@ public class AttributeTest extends AbstractAcceptanceTest {
         private Date dt;
         private String str;
         private int i;
+        
+        C() {
+            // for JDK 1.3
+        }
 
         C(Date dt, String st, int i)
         {
-            super();
             this.dt = dt;
             this.str = st;
             this.i = i;
@@ -199,13 +202,18 @@ public class AttributeTest extends AbstractAcceptanceTest {
     }
     
     static class Camera {
-		private String name;
-    	public Camera(String name) {
-			this.name = name;
-		}
+        private String name;
+
+        Camera() {
+            // for JDK 1.3
+        }
+        
+        Camera(String name) {
+            this.name = name;
+        }
     }
     
-    public void testUsesAnAttributeForAnSpecificField() {
+    public void testUsesAnAttributeForASpecificField() {
     	xstream.alias("camera", Camera.class);
     	xstream.useAttributeFor(Camera.class, "name");
     	Camera camera = new Camera("Rebel 350");
@@ -213,7 +221,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
     	assertBothWays(camera, expected);
     }
 
-    public void testAliasesAnAttributeForAnSpecificField() {
+    public void testAliasesAnAttributeForASpecificField() {
     	xstream.alias("camera", Camera.class);
     	xstream.useAttributeFor(Camera.class, "name");
     	xstream.aliasAttribute(Camera.class, "name", "model");

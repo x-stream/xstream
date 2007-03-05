@@ -66,8 +66,8 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             return resultRoot;
 
         } catch (TransformerException e) {
-            throw (AssertionFailedError)new AssertionFailedError("Cannot normalize XML")
-                .initCause(e);
+            throw new AssertionFailedError("Cannot normalize XML: " + e.getMessage());
+                // .initCause(e);   ... still JDK 1.3
         }
     }
 

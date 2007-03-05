@@ -14,6 +14,10 @@ public class BooleanFieldsTest extends AbstractAcceptanceTest {
         public String name;
         public String genre;
         public boolean alive;
+        
+        public Musican() {
+            // for JDK 1.3
+        }
 
         public Musican(String name, String genre, boolean alive) {
             this.name = name;
