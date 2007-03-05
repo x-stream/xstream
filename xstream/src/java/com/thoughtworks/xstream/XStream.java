@@ -281,8 +281,8 @@ public class XStream {
     public static final int XPATH_RELATIVE_REFERENCES = 1003;
     public static final int XPATH_ABSOLUTE_REFERENCES = 1004;
     /**
-     * @deprecated since 1.2, use {@value #XPATH_RELATIVE_REFERENCES} or
-     *             {@value #XPATH_ABSOLUTE_REFERENCES} instead.
+     * @deprecated since 1.2, use {@link #XPATH_RELATIVE_REFERENCES} or
+     *             {@link #XPATH_ABSOLUTE_REFERENCES} instead.
      */
     public static final int XPATH_REFERENCES = XPATH_RELATIVE_REFERENCES;
 
