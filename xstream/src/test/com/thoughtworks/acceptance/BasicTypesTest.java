@@ -20,6 +20,20 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertEquals(new Integer(8), xstream.fromXML("<int>010</int>"));
     }
 
+    public void testNegativeIntegersInHex() {
+        assertEquals(new Byte((byte)-1), xstream.fromXML("<byte>0xFF</byte>"));
+        assertEquals(new Short((short)-1), xstream.fromXML("<short>0xFFFF</short>"));
+        assertEquals(new Integer(-1), xstream.fromXML("<int>0xFFFFFFFF</int>"));
+        assertEquals(new Long(Long.MAX_VALUE), xstream.fromXML("<long>0x7FFFFFFFFFFFFFFF</long>"));
+    }
+
+    public void testNegativeIntegersInOctal() {
+        assertEquals(new Byte((byte)-1), xstream.fromXML("<byte>0377</byte>"));
+        assertEquals(new Short((short)-1), xstream.fromXML("<short>0177777</short>"));
+        assertEquals(new Integer(-1), xstream.fromXML("<int>037777777777</int>"));
+        assertEquals(new Long(Long.MAX_VALUE), xstream.fromXML("<long>0777777777777777777777</long>"));
+    }
+
     public void testOtherPrimitives() {
         assertBothWays(new Character('z'), "<char>z</char>");
         assertBothWays(Boolean.TRUE, "<boolean>true</boolean>");

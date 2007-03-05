@@ -13,7 +13,11 @@ public class ByteConverter extends AbstractSingleValueConverter {
     }
 
     public Object fromString(String str) {
-        return new Byte((byte) Integer.parseInt(str));
+    	int value = Integer.decode(str).intValue();
+    	if(value < Byte.MIN_VALUE || value > 0xFF) {
+    		throw new NumberFormatException("For input string: \"" + str + '"');
+    	}
+        return new Byte((byte)value);
     }
 
 }

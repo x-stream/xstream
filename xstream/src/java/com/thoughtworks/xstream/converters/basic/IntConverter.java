@@ -13,7 +13,11 @@ public class IntConverter extends AbstractSingleValueConverter {
     }
 
     public Object fromString(String str) {
-        return Integer.decode(str);
+    	long value = Long.decode(str).longValue();
+    	if(value < Integer.MIN_VALUE || value > 0xFFFFFFFFl) {
+    		throw new NumberFormatException("For input string: \"" + str + '"');
+    	}
+        return new Integer((int)value);
     }
 
 }

@@ -13,7 +13,7 @@ public class LongConverter extends AbstractSingleValueConverter {
     }
 
     public Object fromString(String str) {
-        return Long.valueOf(str);
+        return Long.decode(str);
     }
 
 }
