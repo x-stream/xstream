@@ -8,7 +8,8 @@ import java.lang.reflect.Field;
 public interface ReflectionProvider {
 
 	/**
-	 * Creates a new instance of the specified type using the default (null) constructor.
+	 * Creates a new instance of the specified type. It is in the responsibility 
+         * of the implementation how such an instance is created.
 	 * @param type	the type to instantiate
 	 * @return	a new instance of this type
 	 */
