@@ -12,6 +12,7 @@ import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -136,6 +137,11 @@ public abstract class AbstractReflectionConverter implements Converter {
             Class classDefiningField = determineWhichClassDefinesField(reader);
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
             if (fieldExistsInClass) {
+                Field field = reflectionProvider.getField(result.getClass(), attrName);
+                if (Modifier.isTransient(field.getModifiers())) {
+                    reader.moveUp();
+                    continue;
+                }
                 SingleValueConverter converter = mapper.getConverterFromAttribute(result.getClass(), attrName);
                 Class type = reflectionProvider.getFieldType(result, attrName, classDefiningField);
                 if (converter == null) {
@@ -168,7 +174,11 @@ public abstract class AbstractReflectionConverter implements Converter {
             Class type = determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField);
             final Object value;
             if (fieldExistsInClass) {
-                Field field = reflectionProvider.getField(result.getClass(),fieldName);
+                Field field = reflectionProvider.getField(result.getClass(), fieldName);
+                if (Modifier.isTransient(field.getModifiers())) {
+                    reader.moveUp();
+                    continue;
+                }
                 value = unmarshallField(context, result, type, field);
                 // TODO the reflection provider should have returned the proper field in first place ....
                 Class definedType = reflectionProvider.getFieldType(result, fieldName, classDefiningField);
