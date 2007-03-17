@@ -14,8 +14,15 @@ public interface HierarchicalStreamReader {
      */
     boolean hasMoreChildren();
 
+    /**
+     * Select the current child as current node.
+     * A call to this function must be balanced with a call to {@link #moveUp()}.
+     */
     void moveDown();
 
+    /**
+     * Select the parent node as current node.
+     */
     void moveUp();
 
     /**
