@@ -111,8 +111,7 @@ public class AliasTest extends AbstractAcceptanceTest {
         assertBothWays(object, xml);
     }
     
-    //FIXME fails with an unknown type boolean 
-    public void FIXMEtestCanAliasPrimitiveTypes() {
+    public void testCanAliasPrimitiveTypes() {
         Object object = new boolean[]{true, false};
         xstream.alias("bo", Boolean.TYPE);
         String xml = ""

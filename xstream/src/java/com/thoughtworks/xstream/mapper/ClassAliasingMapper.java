@@ -66,6 +66,10 @@ public class ClassAliasingMapper extends MapperWrapper {
         String mappedName = (String) nameToType.get(elementName);
 
         if (mappedName != null) {
+            Class type = primitiveClassNamed(mappedName);
+            if (type != null) {
+                return type;
+            }
             elementName = mappedName;
         }
 
@@ -92,5 +96,18 @@ public class ClassAliasingMapper extends MapperWrapper {
         }
         return this;
     }
-
+    
+    private Class primitiveClassNamed(String name) {
+        return
+                name.equals("void") ? Void.TYPE :
+                name.equals("boolean") ? Boolean.TYPE :
+                name.equals("byte") ? Byte.TYPE :
+                name.equals("char") ? Character.TYPE :
+                name.equals("short") ? Short.TYPE :
+                name.equals("int") ? Integer.TYPE :
+                name.equals("long") ? Long.TYPE :
+                name.equals("float") ? Float.TYPE :
+                name.equals("double") ? Double.TYPE :
+                null;
+    }
 }
