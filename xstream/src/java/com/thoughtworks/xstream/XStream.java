@@ -958,7 +958,7 @@ public class XStream {
     }
 
     /**
-     * Use an XML attribute for a field of a specific type.
+     * Use an XML attribute for a field declared in a specific type.
      * 
      * @param fieldName the name of the field
      * @param definedIn the Class containing such field
