@@ -961,22 +961,22 @@ public class XStream {
      * Use an XML attribute for a field of a specific type.
      * 
      * @param fieldName the name of the field
-     * @param type the Class containing such field
+     * @param definedIn the Class containing such field
      * @throws InitializationException if no {@link AttributeMapper} is available
      * @since upcoming
      */
-    public void useAttributeFor(Class type, String fieldName) {
+    public void useAttributeFor(Class definedIn, String fieldName) {
         if (attributeMapper == null) {
             throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
         }
-		try {
-			Field field = type.getDeclaredField(fieldName);
-	        attributeMapper.addAttributeFor(field);
-		} catch (SecurityException e) {
-            throw new InitializationException("Unable to access field " + fieldName + "@" + type.getName());
-		} catch (NoSuchFieldException e) {
-            throw new InitializationException("Unable to find field " + fieldName + "@" + type.getName());
-		}
+        try {
+            final Field field = definedIn.getDeclaredField(fieldName);
+            attributeMapper.addAttributeFor(field);
+        } catch (SecurityException e) {
+            throw new InitializationException("Unable to access field " + fieldName + "@" + definedIn.getName());
+        } catch (NoSuchFieldException e) {
+            throw new InitializationException("Unable to find field " + fieldName + "@" + definedIn.getName());
+        }
     }
 
     /**
