@@ -121,4 +121,32 @@ public class AliasTest extends AbstractAcceptanceTest {
             + "</bo-array>";
         assertBothWays(object, xml);
     }
+    
+    public static class TypeA {
+        private String attrA = "testA";
+    }
+
+    public static class TypeB extends TypeA {
+        private String attrB = "testB";
+    }
+
+    public static class TypeC extends TypeB {
+        private String attrC = "testC";
+    }
+
+    public void testCanAliasInheritedFields() {
+        xstream.alias("test", TypeC.class);
+        xstream.aliasField("a", TypeA.class, "attrA");
+        xstream.aliasField("b", TypeB.class, "attrB");
+        xstream.aliasField("c", TypeC.class, "attrC");
+        TypeC object = new TypeC();
+        String xml = ""
+            + "<test>\n"
+            + "  <c>testC</c>\n"
+            + "  <b>testB</b>\n"
+            + "  <a>testA</a>\n"
+            + "</test>";
+        assertBothWays(object, xml);
+    }
+
 }

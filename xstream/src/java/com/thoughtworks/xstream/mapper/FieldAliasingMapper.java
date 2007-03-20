@@ -49,7 +49,10 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     public String realMember(Class type, String serialized) {
-        String real = (String) aliasToFieldMap.get(key(type, serialized));
+        String real = null;
+        for (Class declaringType = type; real == null && declaringType != null; declaringType = declaringType.getSuperclass()) {
+            real = (String) aliasToFieldMap.get(key(declaringType, serialized));
+        }
         if (real == null) {
             return super.realMember(type, serialized);
         } else {
