@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.SampleLists;
+import com.thoughtworks.xstream.converters.extended.ToStringConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -270,7 +271,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
     public static class Aquarium extends StandardObject {
         private String name;
-        private LinkedList fish = new LinkedList();
+        private List fish = new ArrayList();
 
         public Aquarium(String name) {
             this.name = name;
@@ -297,6 +298,27 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
         xstream.alias("aquarium", Aquarium.class);
         xstream.addImplicitCollection(Aquarium.class, "fish", "fish", String.class);
+
+        assertBothWays(aquarium, expected);
+    }
+    
+    public void testWithAliasedItemNameMatchingTheAliasedNameOfTheFieldWithTheCollection() {
+        Aquarium aquarium = new Aquarium("hatchery");
+        aquarium.addFish("salmon");
+        aquarium.addFish("halibut");
+        aquarium.addFish("snapper");
+
+        String expected = "" +
+                "<aquarium>\n" +
+                "  <name>hatchery</name>\n" +
+                "  <animal>salmon</animal>\n" +
+                "  <animal>halibut</animal>\n" +
+                "  <animal>snapper</animal>\n" +
+                "</aquarium>";
+
+        xstream.alias("aquarium", Aquarium.class);
+        xstream.aliasField("animal", Aquarium.class, "fish");
+        xstream.addImplicitCollection(Aquarium.class, "fish", "animal", String.class);
 
         assertBothWays(aquarium, expected);
     }

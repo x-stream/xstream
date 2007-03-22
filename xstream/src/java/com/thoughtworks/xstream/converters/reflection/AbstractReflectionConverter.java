@@ -165,13 +165,16 @@ public abstract class AbstractReflectionConverter implements Converter {
         while (reader.hasMoreChildren()) {
             reader.moveDown();
 
-            String fieldName = mapper.realMember(result.getClass(), reader.getNodeName());
-            boolean implicitCollectionHasSameName = mapper.getImplicitCollectionDefForFieldName(result.getClass(), reader.getNodeName()) != null;
+            String originalNodeName = reader.getNodeName();
+            String fieldName = mapper.realMember(result.getClass(), originalNodeName);
+            Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper.getImplicitCollectionDefForFieldName(result.getClass(), fieldName);
 
             Class classDefiningField = determineWhichClassDefinesField(reader);
-            boolean fieldExistsInClass = !implicitCollectionHasSameName && reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
+            boolean fieldExistsInClass = implicitCollectionMapping == null && reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
 
-            Class type = determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField);
+            Class type = implicitCollectionMapping == null
+                ? determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField) 
+                : implicitCollectionMapping.getItemType();
             final Object value;
             if (fieldExistsInClass) {
                 Field field = reflectionProvider.getField(result.getClass(), fieldName);
@@ -197,7 +200,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                 reflectionProvider.writeField(result, fieldName, value, classDefiningField);
                 seenFields.add(classDefiningField, fieldName);
             } else {
-                implicitCollectionsForCurrentObject = writeValueToImplicitCollection(context, value, implicitCollectionsForCurrentObject, result, fieldName);
+                implicitCollectionsForCurrentObject = writeValueToImplicitCollection(context, value, implicitCollectionsForCurrentObject, result, originalNodeName);
             }
 
             reader.moveUp();
