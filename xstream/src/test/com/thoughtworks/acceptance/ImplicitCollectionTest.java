@@ -1,7 +1,6 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.SampleLists;
-import com.thoughtworks.xstream.converters.extended.ToStringConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
