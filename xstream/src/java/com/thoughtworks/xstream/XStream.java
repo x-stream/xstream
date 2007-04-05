@@ -1169,6 +1169,13 @@ public class XStream {
         implicitCollectionMapper.add(ownerType, fieldName, itemFieldName, itemType);
     }
 
+    /**
+     * Create a DataHolder that can be used to pass data to the converters. The DataHolder is provided with a 
+     * call to {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)} or 
+     * {@link #unmarshal(HierarchicalStreamReader, Object, DataHolder)}.
+     * 
+     * @return a new {@link DataHolder}
+     */
     public DataHolder newDataHolder() {
         return new MapBackedDataHolder();
     }
