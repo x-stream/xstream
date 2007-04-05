@@ -100,6 +100,6 @@ public class TreeMarshaller implements MarshallingContext {
         return this.mapper;
     }
 
-    public static class CircularReferenceException extends RuntimeException {
+    public static class CircularReferenceException extends BaseException {
     }
 }
