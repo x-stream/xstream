@@ -32,9 +32,17 @@ import java.util.Map;
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
     private transient Map serializedDataCache = Collections.synchronizedMap(new HashMap());
-    protected transient FieldDictionary fieldDictionary = new FieldDictionary();
+    protected transient FieldDictionary fieldDictionary;
 
-    public Object newInstance(Class type) {
+	public PureJavaReflectionProvider() {
+		this(new FieldDictionary(new DefaultFieldKeySorter()));
+	}
+
+	public PureJavaReflectionProvider(FieldDictionary fieldDictionary) {
+		this.fieldDictionary = fieldDictionary;
+	}
+
+	public Object newInstance(Class type) {
         try {
             Constructor[] constructors = type.getDeclaredConstructors();
             for (int i = 0; i < constructors.length; i++) {
@@ -165,5 +173,9 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         fieldDictionary = new FieldDictionary();
         return this;
     }
+
+	public void setFieldDictionary(FieldDictionary dictionary) {
+		this.fieldDictionary = dictionary;
+	}
 
 }

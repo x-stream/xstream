@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 public interface ReflectionProvider {
 
 	/**
-	 * Creates a new instance of the specified type. It is in the responsibility 
+	 * Creates a new instance of the specified type. It is in the responsibility
          * of the implementation how such an instance is created.
 	 * @param type	the type to instantiate
 	 * @return	a new instance of this type
@@ -24,11 +24,11 @@ public interface ReflectionProvider {
     boolean fieldDefinedInClass(String fieldName, Class type);
 
     /**
-     * A visitor interface for serializable fields defined in a class. 
+     * A visitor interface for serializable fields defined in a class.
      *
      */
     interface Visitor {
-    	
+
     	/**
     	 * Callback for each visit
     	 * @param name	field name
@@ -38,7 +38,7 @@ public interface ReflectionProvider {
     	 */
         void visit(String name, Class type, Class definedIn, Object value);
     }
-    
+
     /**
      * Returns a field defined in some class.
      * @param definedIn	class where the field was defined
@@ -46,5 +46,5 @@ public interface ReflectionProvider {
      * @return	the field itself
      */
 	Field getField(Class definedIn, String fieldName);
-	
+
 }

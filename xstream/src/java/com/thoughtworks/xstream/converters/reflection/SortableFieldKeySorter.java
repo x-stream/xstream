@@ -1,0 +1,86 @@
+package com.thoughtworks.xstream.converters.reflection;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.thoughtworks.xstream.core.util.OrderRetainingMap;
+import com.thoughtworks.xstream.io.StreamException;
+
+/**
+ * The default implementation for sorting fields. Invoke registerFieldOrder in
+ * order to set the field order for an specific type.
+ *
+ * @author Guilherme Silveira
+ * @since upcoming
+ */
+public class SortableFieldKeySorter implements FieldKeySorter {
+
+	private final Map map = new HashMap();
+
+	public Map sort(Class definedIn, Map keyedByFieldKey) {
+		if (map.containsKey(definedIn)) {
+			Map result = new OrderRetainingMap();
+			FieldKey[] fieldKeys = (FieldKey[]) keyedByFieldKey.keySet()
+					.toArray(new FieldKey[keyedByFieldKey.size()]);
+			Arrays.sort(fieldKeys, (Comparator) map.get(definedIn));
+			for (int i = 0; i < fieldKeys.length; i++) {
+				result.put(fieldKeys[i], keyedByFieldKey.get(fieldKeys[i]));
+			}
+			return result;
+		} else {
+			return keyedByFieldKey;
+		}
+	}
+
+	/**
+	 * Registers the field order to use for a specific type. This will not
+	 * affect any of the type's super or sub classes. If you skip a field which
+	 * will be serialized, XStream will thrown an StreamException during the
+	 * serialization process.
+	 *
+	 * @param definedIn
+	 *            the type
+	 * @param fields
+	 *            the field order
+	 */
+	public void registerFieldOrder(Class definedIn, String[] fields) {
+		map.put(definedIn, new FieldComparator(fields));
+	}
+
+	private class FieldComparator implements Comparator {
+
+		private final String[] fieldOrder;
+
+		public FieldComparator(String[] fields) {
+			this.fieldOrder = fields;
+		}
+
+		public int compare(String first, String second) {
+			int firstPosition = -1, secondPosition = -1;
+			for (int i = 0; i < fieldOrder.length; i++) {
+				if (fieldOrder[i].equals(first)) {
+					firstPosition = i;
+				}
+				if (fieldOrder[i].equals(second)) {
+					secondPosition = i;
+				}
+			}
+			if (firstPosition == -1 || secondPosition == -1) {
+				// field not defined!!!
+				throw new StreamException(
+						"You have not given XStream a list of all fields to be serialized.");
+			}
+			return firstPosition - secondPosition;
+		}
+
+		public int compare(Object firstObject, Object secondObject) {
+			FieldKey first = (FieldKey) firstObject, second = (FieldKey) secondObject;
+			Class definedIn = first.declaringClass;
+			return compare(first.fieldName, second.fieldName);
+		}
+
+	}
+
+}

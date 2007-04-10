@@ -4,12 +4,12 @@ import java.lang.reflect.Field;
 
 /**
  * A wrapper implementation for the ReflectionProvider.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.2
  */
 public class ReflectionProviderWrapper implements ReflectionProvider {
-    
+
     final protected ReflectionProvider wrapped;
 
     public ReflectionProviderWrapper(ReflectionProvider wrapper) {
@@ -39,6 +39,5 @@ public class ReflectionProviderWrapper implements ReflectionProvider {
     public void writeField(Object object, String fieldName, Object value, Class definedIn) {
         this.wrapped.writeField(object, fieldName, value, definedIn);
     }
-    
-    
+
 }
