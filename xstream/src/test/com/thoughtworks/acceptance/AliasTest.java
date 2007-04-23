@@ -88,6 +88,22 @@ public class AliasTest extends AbstractAcceptanceTest {
         assertBothWays(list, xml);
     }
     
+    public void testIdentityForFields() {
+        Software software = new Software("walness", "xstream");
+
+        xstream.alias("software", Software.class);
+        xstream.aliasField("name", Software.class, "name");
+        xstream.aliasField("vendor", Software.class, "vendor");
+        
+        String xml = ""
+            + "<software>\n"
+            + "  <vendor>walness</vendor>\n"
+            + "  <name>xstream</name>\n" 
+            + "</software>";
+        
+        assertBothWays(software, xml);
+    }
+    
     private static class FieldsWithInternalNames {
         String clazz;
         String ref;
