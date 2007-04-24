@@ -4,6 +4,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +36,8 @@ public class Annotations {
 
     /**
      * Configures aliases on the specified XStream object based on annotations that decorate the specified class.
+     * It will recursively invoke itself for each field annotated with XStreamContainedType. If a field declared
+     * is parameterized, it invokes itself for each of its parameters type.
      *
      * @param topLevelClasses the class for which the XStream object is configured.
      * This class is expected to be decorated with annotations defined in this package.
@@ -52,7 +55,7 @@ public class Annotations {
               || visitedTypes.contains(configurableClass)) {
             return;
         }
-        
+
         if(Converter.class.isAssignableFrom(configurableClass)){
             Class<Converter> converterType = (Class<Converter>)configurableClass;
             registerConverter(xstream, converterType);
@@ -116,18 +119,15 @@ public class Annotations {
             }
         }
 
-        //Do Member Level Field annotations 
+        //Do Member Level Field annotations
         Field[] fields = configurableClass.getDeclaredFields();
         for (Field field : fields) {
             if(field.isSynthetic()) continue;
 
             //Alias the member's Type
             Class fieldType = field.getType();
-            if (Collection.class.isAssignableFrom(fieldType)) {
-                if(field.isAnnotationPresent(XStreamContainedType.class)){
-                    Class containedClass = getFieldParameterizedType(field, xstream);
-                    configureClass(xstream, containedClass);
-                }
+            if(field.isAnnotationPresent(XStreamContainedType.class)){
+                configureParameterizedTypes(field, xstream);
             }
             boolean shouldAlias = field.isAnnotationPresent(XStreamAlias.class);
             boolean isAttribute = field.isAnnotationPresent(XStreamAsAttribute.class);
@@ -156,11 +156,14 @@ public class Annotations {
                 String itemFieldName = implicitAnnotation.itemFieldName();
                 Class itemType = getFieldParameterizedType(field, xstream);
                 if (itemFieldName != null && !"".equals(itemFieldName)) {
-                    xstream.addImplicitCollection(configurableClass, fieldName, itemFieldName, itemType);                    
+                    xstream.addImplicitCollection(configurableClass, fieldName, itemFieldName, itemType);
                 } else {
-                    xstream.addImplicitCollection(configurableClass, fieldName, itemType);                    
+                    xstream.addImplicitCollection(configurableClass, fieldName, itemType);
                 }
             }
+
+            configureClass(xstream, fieldType);
+
         }
 
         //Do Member Classes Alias
@@ -176,6 +179,7 @@ public class Annotations {
         for(Class intf : interfaces){
             configureClass(xstream, intf);
         }
+
     }
 
 
@@ -224,5 +228,19 @@ public class Annotations {
         }
         assert false : "Field is raw type :" + field;
         return null;
+    }
+
+    /**
+     * Invokes configureClass for each parameterized type declared within this field.
+     */
+    private static void configureParameterizedTypes(Field field, XStream xstream){
+        if(field.getGenericType() instanceof ParameterizedType) {
+            ParameterizedType pType = (ParameterizedType) field.getGenericType();
+            Type[] types = pType.getActualTypeArguments();
+            for(Type parameter : types) {
+            	Class type = (Class) parameter;
+            	configureClass(xstream, type);
+            }
+        }
     }
 }
