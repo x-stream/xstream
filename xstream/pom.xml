@@ -69,6 +69,13 @@
 			<artifactId>cglib-nodep</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.codehaus.jettison</groupId>
+			<artifactId>jettison</artifactId>
+			<version>1.0-RC1</version>
+			<optional>true</optional>
+		</dependency>		
 
 
 		<!-- test-scoped -->
