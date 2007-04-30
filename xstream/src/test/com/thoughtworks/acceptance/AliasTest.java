@@ -1,6 +1,9 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.someobjects.X;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 
 import java.util.ArrayList;
@@ -30,8 +33,8 @@ public class AliasTest extends AbstractAcceptanceTest {
         }
     }
     
-    //FIXME underscore is mapped to __ 
-    public void FIXMEtestWithUnderscore() {
+    public void testWithUnderscore() {
+        xstream = new XStream(new XppDriver(new XmlFriendlyReplacer("_-", "_")));
         String xml = "" +
                 "<X_alias>\n" +
                 "  <anInt>0</anInt>\n" +
