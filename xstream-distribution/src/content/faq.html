@@ -211,6 +211,11 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     proxy uses only one callback and the proxy instance can be generated without
     additional constructor arguments.</p>
 
+    <h2>Serialization fails with NoSuchMethodError: net.sf.cglib.proxy.Enhancer.isEnhanced(Ljava/lang/Class;)Z</h2>
+    <p>XStream uses this method to detect a CGLIB-enhanced proxy. Unfortunately the method is not available in the 
+    cglib-2.0 version. Since this version is many years old and the method is available starting with cglib-2.0.1, please 
+    consider an upgrade of the dependency, it works usually smoothly.</p>
+
     <!-- ...................................................... -->
     <a name="Serialization_newer_class_versions"><!--  --></a>
     <h2>How does XStream deal with newer versions of classes?</h2>
