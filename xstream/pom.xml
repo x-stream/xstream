@@ -119,12 +119,36 @@
     </build>
 
     <profiles>
+        <!--
+        <profile>
+            <id>jdk16</id>
+            <activation>
+                <jdk>1.6</jdk>
+            </activation>
+            <properties>
+                <buildType>complete</buildType>
+            </properties>
+        </profile>
+        -->
         <profile>
             <id>jdk15</id>
             <activation>
                 <jdk>1.5</jdk>
-                <jdk>1.6</jdk>
             </activation>
+        <!--
+            <properties>
+                <buildType>complete</buildType>
+            </properties>
+        </profile>
+        <profile>
+            <id>complete</id>
+            <activation>
+                <property>
+                    <name>buildType</name>
+                    <value>complete</value>
+                </property>
+            </activation>
+        -->
             <build>
                 <plugins>
                     <!-- two-stage compile process as a workaround until multiple JDK support is added
