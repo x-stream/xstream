@@ -70,15 +70,15 @@ public class AttributeMapper extends MapperWrapper {
         }
     }
 
-	public SingleValueConverter getConverterFromItemType(String fieldName,
-			Class type, Class definedIn) {
-		Field field = getField(definedIn, fieldName);
-		if(this.fieldToUseAsAttribute.contains(field)){
-			return getLocalConverterFromItemType(type);
-		} else {
-			return super.getConverterFromItemType(fieldName, type);
-		}
-	}
+    public SingleValueConverter getConverterFromItemType(String fieldName, Class type,
+        Class definedIn) {
+        Field field = getField(definedIn, fieldName);
+        if (fieldToUseAsAttribute.contains(field)) {
+            return getLocalConverterFromItemType(type);
+        } else {
+            return getConverterFromItemType(fieldName, type);
+        }
+    }
 
     public SingleValueConverter getConverterFromItemType(Class type) {
         if (typeSet.contains(type)) {
@@ -97,30 +97,32 @@ public class AttributeMapper extends MapperWrapper {
         return converter;
     }
 
-	public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
-		Field field = getField(type,attribute);
-		if(this.fieldToUseAsAttribute.contains(field)) {
-			return getLocalConverterFromItemType(field.getType());
-		}
-		return getConverterFromAttribute(attribute);
-	}
+    public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
+        Field field = getField(type, attribute);
+        if (fieldToUseAsAttribute.contains(field)) {
+            return getLocalConverterFromItemType(field.getType());
+        }
+        return getConverterFromAttribute(attribute);
+    }
 
-	/**
-	 * Tells this mapper to use an attribute for this field.
-	 * @param field	the field itself
-	 * @since upcoming
-	 */
-	public void addAttributeFor(Field field) {
-		this.fieldToUseAsAttribute.add(field);
-	}
+    /**
+     * Tells this mapper to use an attribute for this field.
+     * 
+     * @param field the field itself
+     * @since upcoming
+     */
+    public void addAttributeFor(Field field) {
+        fieldToUseAsAttribute.add(field);
+    }
 
-	private Field getField(Class definedIn, String fieldName) {
-		try {
-			return definedIn.getDeclaredField(fieldName);
-		} catch (NoSuchFieldException e) {
-			throw new IllegalArgumentException(fieldName
-					+ " is not a proper field of " + definedIn.getName());
-		}
-	}
+    private Field getField(Class definedIn, String fieldName) {
+        try {
+            return definedIn.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException(fieldName
+                + " is not a proper field of "
+                + definedIn.getName());
+        }
+    }
 
 }

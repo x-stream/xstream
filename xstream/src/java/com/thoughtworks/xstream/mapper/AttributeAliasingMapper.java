@@ -53,72 +53,78 @@ public class AttributeAliasingMapper extends MapperWrapper {
     }
     
     public String aliasForAttribute(Class definedIn, String fieldName) {
-    	Field field = getField(definedIn, fieldName);
-		if(fieldToAlias.containsKey(field)){
-    		return (String) fieldToAlias.get(field);
-    	}
-    	return aliasForAttribute(fieldName);
+        Field field = getField(definedIn, fieldName);
+        if (fieldToAlias.containsKey(field)) {
+            return (String)fieldToAlias.get(field);
+        }
+        return aliasForAttribute(fieldName);
     }
-    
+
     public String attributeForAlias(Class definedIn, String alias) {
-    	if(aliasToField.containsKey(makeKey(definedIn, alias))) {
-    		return (String) aliasToField.get(makeKey(definedIn,alias));
-    	}
-    	return attributeForAlias(alias);
+        if (aliasToField.containsKey(makeKey(definedIn, alias))) {
+            return (String)aliasToField.get(makeKey(definedIn, alias));
+        }
+        return attributeForAlias(alias);
     }
 
-	private AliasInfo makeKey(Class definedIn, String alias) {
-		return new AliasInfo(definedIn, alias);
-	}
-	
-	private class AliasInfo {
-		private final Class definedIn;
-		private final String alias;
-		public AliasInfo(final Class definedIn, final String alias) {
-			this.definedIn = definedIn;
-			this.alias = alias;
-		}
-		public int hashCode() {
-			return alias.hashCode() * definedIn.hashCode();
-		}
-		public boolean equals(Object obj) {
-			if(!(obj instanceof AliasInfo)) {
-				return false;
-			}
-			AliasInfo info = (AliasInfo) obj;
-			return info.alias.equals(this.alias) && definedIn.equals(info.definedIn);
-		}
-	}
+    private AliasInfo makeKey(Class definedIn, String alias) {
+        return new AliasInfo(definedIn, alias);
+    }
 
-	/**
-	 * Adds an alias for an specific field.
-	 * @param definedIn	the type where the field was defined
-	 * @param fieldName	the field name
-	 * @param alias	the alias to be used
-	 * @since upcoming
-	 */
-	public void addAliasFor(Class definedIn, String fieldName, String alias) {
-		try {
-			Field field = definedIn.getDeclaredField(fieldName);
-			this.fieldToAlias.put(field,alias);
-			this.aliasToField.put(makeKey(definedIn, alias), fieldName);
-		} catch (SecurityException e) {
-			throw new IllegalArgumentException(fieldName
-					+ " is not a proper field of " + definedIn.getName());
-		} catch (NoSuchFieldException e) {
-			throw new IllegalArgumentException(fieldName
-					+ " is not a proper field of " + definedIn.getName());
-		}
-	}
-	
-	private Field getField(Class definedIn, String fieldName) {
-		try {
-			return definedIn.getDeclaredField(fieldName);
-		} catch (NoSuchFieldException e) {
-			throw new IllegalArgumentException(fieldName
-					+ " is not a proper field of " + definedIn.getName());
-		}
-	}
+    private class AliasInfo {
+        private final Class definedIn;
+        private final String alias;
 
-	
+        public AliasInfo(final Class definedIn, final String alias) {
+            this.definedIn = definedIn;
+            this.alias = alias;
+        }
+
+        public int hashCode() {
+            return alias.hashCode() * definedIn.hashCode();
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof AliasInfo)) {
+                return false;
+            }
+            AliasInfo info = (AliasInfo)obj;
+            return info.alias.equals(this.alias) && definedIn.equals(info.definedIn);
+        }
+    }
+
+    /**
+     * Adds an alias for an specific field.
+     * 
+     * @param definedIn the type where the field was defined
+     * @param fieldName the field name
+     * @param alias the alias to be used
+     * @since upcoming
+     */
+    public void addAliasFor(Class definedIn, String fieldName, String alias) {
+        try {
+            Field field = definedIn.getDeclaredField(fieldName);
+            this.fieldToAlias.put(field, alias);
+            this.aliasToField.put(makeKey(definedIn, alias), fieldName);
+        } catch (SecurityException e) {
+            throw new IllegalArgumentException(fieldName
+                + " is not a proper field of "
+                + definedIn.getName());
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException(fieldName
+                + " is not a proper field of "
+                + definedIn.getName());
+        }
+    }
+
+    private Field getField(Class definedIn, String fieldName) {
+        try {
+            return definedIn.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException(fieldName
+                + " is not a proper field of "
+                + definedIn.getName());
+        }
+    }
+
 }
