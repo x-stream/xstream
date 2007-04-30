@@ -58,6 +58,16 @@ public class AliasTest extends AbstractAcceptanceTest {
         protected Software() {
             // for JDK 1.3
         }
+
+        public boolean equals(Object obj) {
+            if (obj instanceof Software) {
+                final Software software = (Software)obj;
+                return software.vendor.equals(vendor) && software.name.equals(name);
+            }
+            return false;
+        }
+        
+        
     }
     
     public void testForFieldAsAttribute() {
@@ -168,4 +178,21 @@ public class AliasTest extends AbstractAcceptanceTest {
         assertBothWays(object, xml);
     }
 
+    public void testCanAliasArrayElements() {
+        Object[] software = new Object[]{new Software("walness", "xstream")};
+
+        xstream.alias("software", Software.class);
+        xstream.aliasField("name", Software.class, "name");
+        xstream.aliasField("vendor", Software.class, "vendor");
+        
+        String xml = ""
+            + "<object-array>\n"
+            + "  <software>\n"
+            + "    <vendor>walness</vendor>\n"
+            + "    <name>xstream</name>\n" 
+            + "  </software>\n"
+            + "</object-array>";
+        
+        assertBothWays(software, xml);
+    }
 }
