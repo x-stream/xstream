@@ -2,6 +2,8 @@ package com.thoughtworks.xstream.io.json;
 
 import junit.framework.TestCase;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.core.MapBackedDataHolder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -387,6 +389,24 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "}}").replace('\'', '"');
         
         final Map map = new HashMap();
+        map.put("one", new Integer(1));
+        assertEquals(expected, xs.toXML(map));
+    }
+    
+    public void testNestedMap() {
+        XStream xs = new XStream(new JsonHierarchicalStreamDriver());
+        xs.alias("holder", MapBackedDataHolder.class);
+        String expected = (""
+            + "{'holder': {\n"
+            + "  'map': {\n"
+            + "    'entry': {\n"
+            + "      'one',\n"
+            + "      1\n"
+            + "    }\n"
+            + "  }\n"
+            + "}}").replace('\'', '"');
+        
+        final DataHolder map = xs.newDataHolder();
         map.put("one", new Integer(1));
         assertEquals(expected, xs.toXML(map));
     }
