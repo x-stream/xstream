@@ -94,7 +94,7 @@ public class AttributeAliasingMapper extends MapperWrapper {
     }
 
     /**
-     * Adds an alias for an specific field.
+     * Adds an alias for a specific field.
      * 
      * @param definedIn the type where the field was defined
      * @param fieldName the field name
