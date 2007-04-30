@@ -118,6 +118,10 @@ public class JVM {
         // If non-BEA, or possibly some very old JRockit version
         return false;
     }
+    
+    private static boolean isHitachi() {
+        return System.getProperty("java.vm.vendor").indexOf("Hitachi") != -1;
+    }
 
     public Class loadClass(String name) {
         try {
@@ -154,7 +158,7 @@ public class JVM {
     }
 
     private boolean canUseSun14ReflectionProvider() {
-        return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown() || isBEAWithUnsafeSupport()) && is14() && loadClass("sun.misc.Unsafe") != null;
+        return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown() || isBEAWithUnsafeSupport() || isHitachi()) && is14() && loadClass("sun.misc.Unsafe") != null;
     }
 
     public static boolean reverseFieldDefinition() {
