@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
@@ -14,17 +15,17 @@ import com.thoughtworks.xstream.core.util.OrderRetainingMap;
  */
 public class FieldDictionary {
 
-    private final Map keyedByFieldNameCache = new HashMap();
-    private final Map keyedByFieldKeyCache = new HashMap();
-	private final FieldKeySorter sorter;
+    private final Map keyedByFieldNameCache = new WeakHashMap();
+    private final Map keyedByFieldKeyCache = new WeakHashMap();
+    private final FieldKeySorter sorter;
 
     public FieldDictionary() {
-		this(new DefaultFieldKeySorter());
-	}
+        this(new DefaultFieldKeySorter());
+    }
 
     public FieldDictionary(FieldKeySorter sorter) {
-		this.sorter = sorter;
-	}
+        this.sorter = sorter;
+    }
 
 	/**
      * Returns an iterator for all serializable fields for some class
@@ -60,10 +61,9 @@ public class FieldDictionary {
 
     private Map buildMap(final Class type, boolean tupleKeyed) {
     	Class cls = type;
-        final String clsName = cls.getName();
         synchronized (keyedByFieldNameCache) {
             synchronized (keyedByFieldKeyCache) {
-                if (!keyedByFieldNameCache.containsKey(clsName)) {
+                if (!keyedByFieldNameCache.containsKey(type)) {
                     final Map keyedByFieldName = new HashMap();
                     final Map keyedByFieldKey = new OrderRetainingMap();
                     while (!Object.class.equals(cls)) {
@@ -79,7 +79,7 @@ public class FieldDictionary {
                         for (int i = 0; i < fields.length; i++) {
                             Field field = fields[i];
                             FieldKey fieldKey = new FieldKey(field.getName(), field
-                                    .getDeclaringClass(), i);
+                                .getDeclaringClass(), i);
                             field.setAccessible(true);
                             if (!keyedByFieldName.containsKey(field.getName())) {
                                 keyedByFieldName.put(field.getName(), field);
@@ -88,13 +88,13 @@ public class FieldDictionary {
                         }
                         cls = cls.getSuperclass();
                     }
-                    keyedByFieldNameCache.put(clsName, keyedByFieldName);
-                    keyedByFieldKeyCache.put(clsName, sorter.sort(type, keyedByFieldKey));
+                    keyedByFieldNameCache.put(type, keyedByFieldName);
+                    keyedByFieldKeyCache.put(type, sorter.sort(type, keyedByFieldKey));
                 }
             }
         }
-        return (Map)(tupleKeyed ? keyedByFieldKeyCache.get(clsName) : keyedByFieldNameCache
-            .get(clsName));
+        return (Map)(tupleKeyed ? keyedByFieldKeyCache.get(type) : keyedByFieldNameCache
+            .get(type));
     }
 
 }
