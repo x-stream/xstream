@@ -119,36 +119,11 @@
     </build>
 
     <profiles>
-        <!--
-        <profile>
-            <id>jdk16</id>
-            <activation>
-                <jdk>1.6</jdk>
-            </activation>
-            <properties>
-                <buildType>complete</buildType>
-            </properties>
-        </profile>
-        -->
         <profile>
             <id>jdk15</id>
             <activation>
                 <jdk>1.5</jdk>
             </activation>
-        <!--
-            <properties>
-                <buildType>complete</buildType>
-            </properties>
-        </profile>
-        <profile>
-            <id>complete</id>
-            <activation>
-                <property>
-                    <name>buildType</name>
-                    <value>complete</value>
-                </property>
-            </activation>
-        -->
             <build>
                 <plugins>
                     <!-- two-stage compile process as a workaround until multiple JDK support is added
@@ -196,7 +171,84 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadoc</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <excludePackageNames>
+                                        com.thoughtworks.xstream.core.*:com.thoughtworks.xstream.io.xml.xppdom.*
+                                    </excludePackageNames>
+                                    <links>
+                                        <link>http://java.sun.com/j2se/1.5/docs/api</link>
+                                    </links>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- Drop this profile if MNG-1910 is applied! -->
+            <id>jdk16</id>
+            <activation>
+                <jdk>1.6</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <!-- two-stage compile process as a workaround until multiple JDK support is added
+                        http://jira.codehaus.org/browse/MCOMPILER-37 
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <source>1.3</source>
+                            <target>1.3</target>
+                            <excludes>
+                                <exclude>**/annotations/*</exclude>
+                                <exclude>**/enums/*</exclude>
+                            </excludes>
+                            <testExcludes>
+                                <exclude>**/annotations/*</exclude>
+                                <exclude>**/enums/*</exclude>
+                                <exclude>**/acceptance/SecurityManagerTest*</exclude>
+                            </testExcludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>compile-jdk15</id>
+                                <configuration>
+                                    <source>1.5</source>
+                                    <target>1.5</target>
+                                    <excludes>
+                                        <exclude>foo</exclude>
+                                        <exclude>foo</exclude>
+                                    </excludes>
+                                    <testExcludes>
+                                        <exclude>foo</exclude>
+                                        <exclude>foo</exclude>
+                                        <exclude>**/acceptance/SecurityManagerTest*</exclude>
+                                    </testExcludes>
+                                </configuration>
+                                <goals>
+                                    <goal>compile</goal>
+                                    <goal>testCompile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
                         <executions>
                             <execution>
                                 <id>attach-javadoc</id>
