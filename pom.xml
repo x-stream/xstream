@@ -88,11 +88,11 @@
 				<version>1.0.1</version>
 			</dependency>
 
-                        <dependency>
-                                <groupId>org.codehaus.woodstox</groupId>
-                                <artifactId>wstx-asl</artifactId>
-                                <version>3.2.0</version>
-                        </dependency>
+			<dependency>
+			   <groupId>org.codehaus.woodstox</groupId>
+			   <artifactId>wstx-asl</artifactId>
+			   <version>3.2.0</version>
+			</dependency>
 
 			<dependency>
 				<groupId>xom</groupId>
@@ -129,13 +129,12 @@
 				<artifactId>oro</artifactId>
 				<version>2.0.8</version>
 			</dependency>
-		
-        		<dependency>
-			        <groupId>org.codehaus.jettison</groupId>
-			        <artifactId>jettison</artifactId>
-			        <version>1.0-RC1</version>
-		        </dependency>		
 
+			<dependency>
+			   <groupId>org.codehaus.jettison</groupId>
+			   <artifactId>jettison</artifactId>
+			   <version>1.0-RC1</version>
+			</dependency>
 
 			<!-- always test-scoped -->
 			<dependency>
