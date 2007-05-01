@@ -240,21 +240,11 @@
 
 	<distributionManagement>
 		<!--  
-			The servers here defined must also appear in ~/.m2/settings.xml
+			The server id here defined must also appear in ~/.m2/settings.xml
 			<settings>
 			<servers>
 			<server>
-			<id>codehaus-xstream-repository</id>
-			<username></username>
-			<password></password>
-			</server>
-			<server>
-			<id>codehaus-xstream-snapshot-repository</id>
-			<username></username>
-			<password></password>
-			</server>
-			<server>
-			<id>codehaus-xstream-site</id>
+            <id>codehaus.org</id>
 			<username></username>
 			<password></password>
 			</server>
@@ -262,19 +252,19 @@
 			</settings>		  
 		-->
 		<repository>
-			<id>codehaus-xstream-repository</id>
+			<id>codehaus.org</id>
 			<name>Codehaus XStream Repository</name>
 			<url>dav:https://dav.codehaus.org/repository/xstream/</url>
 		</repository>
 		<snapshotRepository>
-			<id>codehaus-xstream-snapshot-repository</id>
+			<id>codehaus.org</id>
 			<name>Codehaus XStream Snapshot Repository</name>
 			<url>
 				dav:https://dav.codehaus.org/snapshots.repository/xstream/
 			</url>
 		</snapshotRepository>
 		<site>
-			<id>codehaus-xstream-site</id>
+			<id>codehaus.org</id>
 			<name>Codehaus XStream Site</name>
 			<url>dav:https://dav.codehaus.org/xstream/</url>
 		</site>
