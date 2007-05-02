@@ -1,188 +1,189 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.thoughtworks.xstream</groupId>
-		<artifactId>xstream-parent</artifactId>
-		<version>1.2.2-SNAPSHOT</version>
-	</parent>
-	<artifactId>xstream-distribution</artifactId>
-	<packaging>pom</packaging>
-	<name>XStream Distribution</name>	
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.thoughtworks.xstream</groupId>
+    <artifactId>xstream-parent</artifactId>
+    <version>1.2.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>xstream-distribution</artifactId>
+  <packaging>pom</packaging>
+  <name>XStream Distribution</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>${pom.groupId}</groupId>
-			<artifactId>xstream</artifactId>
-			<version>${pom.version}</version>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>${pom.groupId}</groupId>
+      <artifactId>xstream</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${pom.groupId}</groupId>
-			<artifactId>xstream-benchmark</artifactId>
-			<version>${pom.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${pom.groupId}</groupId>
+      <artifactId>xstream-benchmark</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>jdom</groupId>
-			<artifactId>jdom</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>com.megginson.sax</groupId>
-			<artifactId>xml-writer</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>com.megginson.sax</groupId>
+      <artifactId>xml-writer</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>stax</groupId>
+      <artifactId>stax</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax-api</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>stax</groupId>
+      <artifactId>stax-api</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>xom</groupId>
-			<artifactId>xom</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>xom</groupId>
+      <artifactId>xom</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-			<optional>true</optional>
-		</dependency>
-	</dependencies>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
 
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>dependency-maven-plugin</artifactId>
-				<version>1.0</version>
-				<executions>
-					<execution>
-						<id>unpack</id>
-						<phase>install</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/xsite/javadoc</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${pom.groupId}</groupId>
-									<artifactId>xstream</artifactId>
-									<version>${pom.version}</version>
-									<classifier>javadoc</classifier>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- XSite fails to validate links - Need to configure it to be optional?  -->
-			<plugin>
-				<groupId>org.codehaus.xsite</groupId>
-				<artifactId>xsite-maven-plugin</artifactId>
-				<configuration>
-					<siteMapPath>${basedir}/src/content/website.xml</siteMapPath>
-					<skinPath>${basedir}/src/templates/skin.html</skinPath>
-					<outputDirectoryPath>${project.build.directory}/xsite</outputDirectoryPath>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-                                <delete includeEmptyDirs="true">
-                                    <fileset dir="${project.build.directory}/xsite" includes="**/META-INF/*" />
-                                    <fileset dir="${project.build.directory}/xsite" includes="**/META-INF" />
-                                </delete>
-								<mkdir dir="${project.build.directory}/docs" />
-								<copy todir="${project.build.directory}/docs" overwrite="true" failonerror="false">
-									<fileset dir="${basedir}">
-										<include name="target/xsite/**" />
-										<exclude name="target/xsite" />
-									</fileset>
-									<filtermapper>
-										<replacestring from="target${file.separator}xsite${file.separator}" to="${file.separator}" />
-									</filtermapper>
-								</copy>
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>bin</id>
-						<phase>install</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<descriptors>
-								<descriptor>${basedir}/src/assembly/assembly-bin.xml</descriptor>
-							</descriptors>
-							<finalName>xstream-${pom.version}</finalName>
-							<workDirectory>${project.build.directory}/assembly/bin</workDirectory>
-						</configuration>
-					</execution>
-					<execution>
-						<id>src</id>
-						<phase>install</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<descriptors>
-								<descriptor>${basedir}/src/assembly/assembly-src.xml</descriptor>
-							</descriptors>
-							<finalName>xstream-${pom.version}</finalName>
-							<workDirectory>${project.build.directory}/assembly/src</workDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>dependency-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>install</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/xsite/javadoc</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${pom.groupId}</groupId>
+                  <artifactId>xstream</artifactId>
+                  <version>${pom.version}</version>
+                  <classifier>javadoc</classifier>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- XSite fails to validate links - Need to configure it to be optional?  -->
+      <plugin>
+        <groupId>org.codehaus.xsite</groupId>
+        <artifactId>xsite-maven-plugin</artifactId>
+        <configuration>
+          <siteMapPath>${basedir}/src/content/website.xml</siteMapPath>
+          <skinPath>${basedir}/src/templates/skin.html</skinPath>
+          <outputDirectoryPath>${project.build.directory}/xsite</outputDirectoryPath>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <delete includeEmptyDirs="true">
+                  <fileset dir="${project.build.directory}/xsite" includes="**/META-INF/*" />
+                  <fileset dir="${project.build.directory}/xsite" includes="**/META-INF" />
+                </delete>
+                <mkdir dir="${project.build.directory}/docs" />
+                <copy todir="${project.build.directory}/docs" overwrite="true" failonerror="false">
+                  <fileset dir="${basedir}">
+                    <include name="target/xsite/**" />
+                    <exclude name="target/xsite" />
+                  </fileset>
+                  <filtermapper>
+                    <replacestring from="target${file.separator}xsite${file.separator}" to="${file.separator}" />
+                  </filtermapper>
+                </copy>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.1</version>
+        <executions>
+          <execution>
+            <id>bin</id>
+            <phase>install</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${basedir}/src/assembly/assembly-bin.xml</descriptor>
+              </descriptors>
+              <finalName>xstream-${pom.version}</finalName>
+              <workDirectory>${project.build.directory}/assembly/bin</workDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>src</id>
+            <phase>install</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${basedir}/src/assembly/assembly-src.xml</descriptor>
+              </descriptors>
+              <finalName>xstream-${pom.version}</finalName>
+              <workDirectory>${project.build.directory}/assembly/src</workDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
