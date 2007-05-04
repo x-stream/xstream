@@ -177,6 +177,7 @@
         <directory>${basedir}/src/test</directory>
         <includes>
           <include>**/*.xsl</include>
+          <include>**/*.txt</include>
         </includes>
       </testResource>
     </testResources>
