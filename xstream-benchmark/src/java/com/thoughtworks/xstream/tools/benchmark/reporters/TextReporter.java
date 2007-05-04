@@ -66,6 +66,7 @@ public class TextReporter implements Reporter {
     }
 
     public void endBenchmark() {
+        out.flush();
     }
 
     private String pad(String value) {
