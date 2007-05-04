@@ -44,6 +44,11 @@
       <artifactId>xstream</artifactId>
       <version>${pom.version}</version>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <reporting>
