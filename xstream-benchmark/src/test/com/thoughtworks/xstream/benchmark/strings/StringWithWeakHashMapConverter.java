@@ -58,8 +58,12 @@ public class StringWithWeakHashMapConverter implements Product {
          */
         private final Map cache;
 
+        public StringConverter(Map map) {
+            this.cache = map;
+        }
+
         public StringConverter() {
-            this.cache = new WeakHashMap();
+            this(new WeakHashMap());
         }
 
         public boolean canConvert(Class type) {

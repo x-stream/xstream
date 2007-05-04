@@ -19,6 +19,7 @@ public class Main {
         harness.addMetric(new DeserializationSpeedMetric(10));
         harness.addProduct(new StringInternConverter());
         harness.addProduct(new StringWithWeakHashMapConverter());
+        harness.addProduct(new StringWithSynchronizedWeakHashMapConverter());
         harness.addTarget(new BigStringTarget());
         harness.addTarget(new StringArrayTarget(1024, 1024));
         harness.addTarget(new StringArrayTarget(64 * 1024, 8));
