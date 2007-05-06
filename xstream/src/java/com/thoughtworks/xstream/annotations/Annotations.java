@@ -36,8 +36,8 @@ public class Annotations {
 
     /**
      * Configures aliases on the specified XStream object based on annotations that decorate the specified class.
-     * It will recursively invoke itself for each field annotated with XStreamContainedType. If a field declared
-     * is parameterized, it invokes itself for each of its parameters type.
+     * It will recursively invoke itself for each field annotated with XStreamContainedType. If a field containing
+     * such annotation is parameterized, a recursive call for each of its parameters type will be made.
      *
      * @param topLevelClasses the class for which the XStream object is configured.
      * This class is expected to be decorated with annotations defined in this package.
@@ -124,11 +124,15 @@ public class Annotations {
         for (Field field : fields) {
             if(field.isSynthetic()) continue;
 
-            //Alias the member's Type
             Class fieldType = field.getType();
+
+            // recursive calls for fields
             if(field.isAnnotationPresent(XStreamContainedType.class)){
+                configureClass(xstream, fieldType);
                 configureParameterizedTypes(field, xstream);
             }
+
+            //Alias the member's Type
             boolean shouldAlias = field.isAnnotationPresent(XStreamAlias.class);
             boolean isAttribute = field.isAnnotationPresent(XStreamAsAttribute.class);
 			if(shouldAlias && !isAttribute){
@@ -161,8 +165,6 @@ public class Annotations {
                     xstream.addImplicitCollection(configurableClass, fieldName, itemType);
                 }
             }
-
-            configureClass(xstream, fieldType);
 
         }
 
