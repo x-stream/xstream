@@ -166,6 +166,12 @@ public class Annotations {
                 }
             }
 
+           //Do field level OmitField
+           if (field.isAnnotationPresent(XStreamOmitField.class)){
+               String fieldName = field.getName();
+               xstream.omitField(configurableClass, fieldName);
+           }
+
         }
 
         //Do Member Classes Alias

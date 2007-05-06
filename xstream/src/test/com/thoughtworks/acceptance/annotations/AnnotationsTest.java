@@ -6,11 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.xstream.annotations.Annotations;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import com.thoughtworks.xstream.annotations.XStreamContainedType;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -317,4 +313,19 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     	assertBothWays(value, expected);
     }
 
+    public static class Apartment {
+
+        @XStreamOmitField
+        int size;
+		protected Apartment(int size) {
+			this.size = size;
+		}
+    }
+
+	public void testIgnoresFieldWhenUsingTheOmitFieldAnnotation()  {
+        Annotations.configureAliases(xstream, Apartment.class);
+        Apartment ap = new Apartment(5);
+        String expectedXml = "<com.thoughtworks.acceptance.annotations.AnnotationsTest_-Apartment/>";
+        assertBothWays(ap, expectedXml);
+    }
 }
