@@ -6,6 +6,7 @@ import java.io.NotActiveException;
 import java.io.ObjectInputStream;
 import java.io.ObjectInputValidation;
 import java.io.ObjectStreamClass;
+import java.io.StreamCorruptedException;
 import java.util.Map;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -74,12 +75,24 @@ public class CustomObjectInputStream extends ObjectInputStream {
         return peekCallback().readFromStream();
     }
 
+    public Object readUnshared() throws IOException, ClassNotFoundException {
+        return readObject();
+    }
+
     public boolean readBoolean() throws IOException {
         return ((Boolean)peekCallback().readFromStream()).booleanValue();
     }
 
     public byte readByte() throws IOException {
         return ((Byte)peekCallback().readFromStream()).byteValue();
+    }
+
+    public int readUnsignedByte() throws IOException {
+        int b = ((Byte)peekCallback().readFromStream()).byteValue();
+        if (b < 0) {
+            b += Byte.MAX_VALUE;
+        }
+        return b;
     }
 
     public int readInt() throws IOException {
@@ -106,6 +119,14 @@ public class CustomObjectInputStream extends ObjectInputStream {
         return ((Short)peekCallback().readFromStream()).shortValue();
     }
 
+    public int readUnsignedShort() throws IOException {
+        int b = ((Short)peekCallback().readFromStream()).shortValue();
+        if (b < 0) {
+            b += Short.MAX_VALUE;
+        }
+        return b;
+    }
+
     public String readUTF() throws IOException {
         return (String)peekCallback().readFromStream();
     }
@@ -117,6 +138,23 @@ public class CustomObjectInputStream extends ObjectInputStream {
     public void readFully(byte[] buf, int off, int len) throws IOException {
         byte[] b = (byte[])peekCallback().readFromStream();
         System.arraycopy(b, 0, buf, off, len);
+    }
+
+    public int read() throws IOException {
+        return readUnsignedByte();
+    }
+
+    public int read(byte[] buf, int off, int len) throws IOException {
+        byte[] b = (byte[])peekCallback().readFromStream();
+        if (b.length != len) {
+            throw new StreamCorruptedException("Expected " + len + " bytes from stream, got " + b.length);
+        }
+        System.arraycopy(b, 0, buf, off, len);
+        return len;
+    }
+
+    public int read(byte b[]) throws IOException {
+        return read(b, 0, b.length);
     }
 
     public GetField readFields() throws IOException {
@@ -195,35 +233,11 @@ public class CustomObjectInputStream extends ObjectInputStream {
         throw new UnsupportedOperationException();
     }
 
-    public int readUnsignedByte() {
-        throw new UnsupportedOperationException();
-    }
-
     public String readLine() {
         throw new UnsupportedOperationException();
     }
 
-    public Object readUnshared() {
-        throw new UnsupportedOperationException();
-    }
-
-    public int readUnsignedShort() {
-        throw new UnsupportedOperationException();
-    }
-
-    public int read() {
-        throw new UnsupportedOperationException();
-    }
-
-    public int read(byte[] buf, int off, int len) {
-        throw new UnsupportedOperationException();
-    }
-
     public int skipBytes(int len) {
-        throw new UnsupportedOperationException();
-    }
-
-    public int read(byte b[]) {
         throw new UnsupportedOperationException();
     }
 

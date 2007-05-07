@@ -160,4 +160,57 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
 
         assertBothWays(parent, expected);
     }
+
+    public static class RawString implements Serializable {
+
+        private String s;
+
+        public RawString(String s) {
+            this.s = s;
+        }
+
+        public String getS() {
+            return s;
+        }
+
+        private void readObject(java.io.ObjectInputStream in) throws IOException,
+                ClassNotFoundException {
+            int i = in.read();
+            byte[] b = new byte[i];
+            in.read(b);
+            s = new String(b);
+        }
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            byte[] b = s.getBytes();
+            out.write(b.length);
+            out.write(b);
+        }
+    }
+    
+    public void testCanHandleRawBytes() throws IOException, ClassNotFoundException {
+        xstream.alias("raw", RawString.class);
+
+        String expectedXml = ""
+            + "<object-stream>\n"
+            + "  <raw serialization=\"custom\">\n"
+            + "    <raw>\n"
+            + "      <byte>7</byte>\n"
+            + "      <byte-array>WFN0cmVhbQ==</byte-array>\n"
+            + "    </raw>\n"
+            + "  </raw>\n"
+            + "</object-stream>";
+
+        StringWriter stringWriter = new StringWriter();
+        ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter);
+        os.writeObject(new RawString("XStream"));
+        os.close();
+        String actualXml = stringWriter.getBuffer().toString();
+        assertEquals(expectedXml, actualXml);
+        
+        ObjectInputStream objectInputStream = xstream.createObjectInputStream(new StringReader(actualXml));
+
+        RawString rawString = (RawString) objectInputStream.readObject();
+        assertEquals("XStream", rawString.getS());
+    }
 }
