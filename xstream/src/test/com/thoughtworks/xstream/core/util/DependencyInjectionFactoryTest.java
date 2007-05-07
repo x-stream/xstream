@@ -11,12 +11,11 @@ public class DependencyInjectionFactoryTest extends TestCase {
                 ObjectAccessException.class, new Object[]{"The message", this, new RuntimeException("JUnit")});
         assertTrue(exception instanceof ObjectAccessException);
         assertEquals("The message : JUnit", exception.getMessage());
-        assertEquals("JUnit", exception.getCause().getMessage());
+        assertEquals("JUnit", ((ObjectAccessException)exception).getCause().getMessage());
     }
 
     public void testDependencyInjectionWillUseDefaultConstructor() {
         final String string = (String)DependencyInjectionFactory.newInstance(String.class, new Object[]{this});
-        assertTrue(string instanceof String);
         assertEquals("", string);
     }
 
@@ -31,7 +30,6 @@ public class DependencyInjectionFactoryTest extends TestCase {
     public void testDependencyInjectionWillMatchPrimitives() {
         final String string = (String)DependencyInjectionFactory.newInstance(String.class, new Object[]{
                 "JUnit".getBytes(), new Integer(1), this, new Integer(4)});
-        assertTrue(string instanceof String);
         assertEquals("Unit", string);
     }
 

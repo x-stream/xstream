@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.XppReader;
 
 import java.io.StringReader;
@@ -143,7 +144,11 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
                 "</friend>";
 
         SamplePerson person = (SamplePerson)xstream.fromXML(xml);
-        assertNull(person.aComment);
+        if (JVM.is14()) {
+            assertNull(person.aComment);
+        } else {
+            assertEquals("", person.aComment);
+        }
     }
     
     static class Joe extends SamplePerson {
@@ -164,7 +169,11 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
                 "</joe>";
 
         Joe joe = (Joe)xstream.fromXML(xml);
-        assertNull(joe.aComment);
+        if (JVM.is14()) {
+            assertNull(joe.aComment);
+        } else {
+            assertEquals("", joe.aComment);
+        }
     }
 
     public void testCustomObjectWillNotUnmarshalTransientFieldsFromAttributes() {
@@ -180,13 +189,21 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
         // without attribute definition
         SamplePerson person = (SamplePerson)xstream.fromXML(xml);
-        assertNull(person.aComment);
+        if (JVM.is14()) {
+            assertNull(person.aComment);
+        } else {
+            assertEquals("", person.aComment);
+        }
 
         xstream.useAttributeFor("aComment", String.class);
 
         // with attribute definition
         person = (SamplePerson)xstream.fromXML(xml);
-        assertNull(person.aComment);
+        if (JVM.is14()) {
+            assertNull(person.aComment);
+        } else {
+            assertEquals("", person.aComment);
+        }
     }
 
     public void testNullObjectsDoNotHaveFieldsWritten() {

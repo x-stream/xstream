@@ -393,9 +393,13 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         assertEquals(expected, xs.toXML(map));
     }
     
+    final static class MapHolder {
+        private Map map = new HashMap();
+    }
+    
     public void testNestedMap() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
-        xs.alias("holder", MapBackedDataHolder.class);
+        xs.alias("holder", MapHolder.class);
         String expected = (""
             + "{'holder': {\n"
             + "  'map': {\n"
@@ -406,9 +410,9 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "  }\n"
             + "}}").replace('\'', '"');
         
-        final DataHolder map = xs.newDataHolder();
-        map.put("one", new Integer(1));
-        assertEquals(expected, xs.toXML(map));
+        final MapHolder holder = new MapHolder();
+        holder.map.put("one", new Integer(1));
+        assertEquals(expected, xs.toXML(holder));
     }
 }
 

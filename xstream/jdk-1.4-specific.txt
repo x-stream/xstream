@@ -7,6 +7,7 @@ com/thoughtworks/xstream/converters/extended/StackTrace*
 com/thoughtworks/xstream/converters/extended/Subject*
 com/thoughtworks/xstream/converters/extended/Throwable*
 com/thoughtworks/xstream/converters/reflection/Sun14ReflectionProvider*
+com/thoughtworks/xstream/io/json/Jettison*
 
 com/thoughtworks/acceptance/AbsoluteXPathNestedCircularReferenceTest*
 com/thoughtworks/acceptance/CollectionsTest*

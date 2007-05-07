@@ -13,8 +13,10 @@ import java.io.File;
 import java.io.FilePermission;
 import java.lang.reflect.ReflectPermission;
 import java.security.CodeSource;
+import java.security.Permission;
 import java.security.Policy;
 import java.security.cert.Certificate;
+import java.util.Iterator;
 import java.util.PropertyPermission;
 
 
@@ -40,15 +42,15 @@ public class SecurityManagerTest extends TestCase {
         System.setSecurityManager(null);
         defaultCodeSource = new CodeSource(null, (Certificate[])null);
         mainClasses = new File(new File(
-                new File(System.getProperty("user.dir"), "build"), "java"), "-");
+                new File(System.getProperty("user.dir"), "target"), "classes"), "-");
         testClasses = new File(new File(
-                new File(System.getProperty("user.dir"), "build"), "test"), "-");
+                new File(System.getProperty("user.dir"), "target"), "test-classes"), "-");
         libs = new File(new File(System.getProperty("user.dir"), "lib"), "*");
         if (!JVM.is14()) {
             libsJDK13 = new File(new File(
                     new File(System.getProperty("user.dir"), "lib"), "jdk1.3"), "*");
         }
-        securityManager = new DynamicSecurityManager(false);
+        securityManager = new DynamicSecurityManager();
         Policy policy = Policy.getPolicy();
         securityManager.setPermissions(defaultCodeSource, policy
                 .getPermissions(defaultCodeSource));
@@ -59,6 +61,18 @@ public class SecurityManagerTest extends TestCase {
     protected void tearDown() throws Exception {
         System.setSecurityManager(null);
         super.tearDown();
+    }
+
+    protected void runTest() throws Throwable {
+        try {
+            super.runTest();
+        } catch(Throwable e) {
+            for (final Iterator iter = securityManager.getFailedPermissions().iterator(); iter.hasNext();) {
+                final Permission permission = (Permission)iter.next();
+                System.out.println("SecurityException: Permission " + permission.toString());
+            }
+            throw e;
+        }
     }
 
     public void testSerializeWithXpp3DriverAndSun14ReflectionProviderAndActiveSecurityManager() {

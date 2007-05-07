@@ -6,8 +6,11 @@ import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 
@@ -18,11 +21,7 @@ public class DynamicSecurityManager extends SecurityManager {
 
     private Map permissions = new HashMap();
     private AccessControlContext acc = null;
-    private final boolean printFailingPermissions;
-
-    public DynamicSecurityManager(final boolean printFailingPermissions) {
-        this.printFailingPermissions = printFailingPermissions;
-    }
+    private List failedPermissions = new ArrayList();
 
     public void addPermission(final CodeSource codeSource, final Permission permission) {
         PermissionCollection permissionCollection = (PermissionCollection)permissions
@@ -73,12 +72,13 @@ public class DynamicSecurityManager extends SecurityManager {
             try {
                 checkPermission(perm, acc);
             } catch (final SecurityException e) {
-                if (printFailingPermissions) {
-                    System.out.println("SecurityException: Permission " + perm.toString());
-                }
+                failedPermissions.add(perm);
                 throw e;
             }
         }
     }
 
+    public List getFailedPermissions() {
+        return Collections.unmodifiableList(failedPermissions);
+    }
 }
