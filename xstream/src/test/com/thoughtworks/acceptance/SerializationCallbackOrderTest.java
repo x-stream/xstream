@@ -243,10 +243,16 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
                 }
             }, MEDIUM_PRIORITY);
         }
+        
+        private Object readResolve() {
+            log.actual("readResolve()");
+            return this;
+        }
     }
 
     public void testJavaSerializationValidatesObjectIsCalledInPriorityOrder() throws IOException, ClassNotFoundException {
         // expect
+        log.expect("readResolve()");
         log.expect("validateObject() high priority");
         log.expect("validateObject() medium priority 2");
         log.expect("validateObject() medium priority 1");
@@ -261,6 +267,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testXStreamSerializationValidatesObjectIsCalledInPriorityOrder() {
         // expect
+        log.expect("readResolve()");
         log.expect("validateObject() high priority");
         log.expect("validateObject() medium priority 2");
         log.expect("validateObject() medium priority 1");
