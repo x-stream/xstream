@@ -135,4 +135,35 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals(null, out.myStuff);
         assertEquals(null, out.myCheese);
     }
+    
+    public void testDeletedElementCanBeOmitted() {
+        String expectedXml = "" +
+                "<thing>\n" +
+                "  <meanwhileDeletedIgnore>c</meanwhileDeletedIgnore>\n" +
+                "  <sometimesIgnore>b</sometimesIgnore>\n" +
+                "  <neverIgnore>c</neverIgnore>\n" +
+                "</thing>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.omitField(Thing.class, "meanwhileDeletedIgnore");
+
+        Thing out = (Thing) xstream.fromXML(expectedXml);
+        assertEquals("b", out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+    }
+    
+    public void testDeletedAttributeCanBeOmitted() {
+        String expectedXml = "" +
+                "<thing meanwhileDeletedIgnore='c'>\n" +
+                "  <sometimesIgnore>b</sometimesIgnore>\n" +
+                "  <neverIgnore>c</neverIgnore>\n" +
+                "</thing>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.omitField(Thing.class, "meanwhileDeletedIgnore");
+
+        Thing out = (Thing) xstream.fromXML(expectedXml);
+        assertEquals("b", out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+    }
 }

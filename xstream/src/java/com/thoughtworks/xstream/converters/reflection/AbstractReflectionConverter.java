@@ -189,7 +189,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                     type = definedType;
                 }
             } else {
-                value = context.convertAnother(result, type);
+                value = type != null ? context.convertAnother(result, type) : null;
             }
             
             if (value != null && !type.isAssignableFrom(value.getClass())) {
@@ -199,7 +199,7 @@ public abstract class AbstractReflectionConverter implements Converter {
             if (fieldExistsInClass) {
                 reflectionProvider.writeField(result, fieldName, value, classDefiningField);
                 seenFields.add(classDefiningField, fieldName);
-            } else {
+            } else if (type != null) {
                 implicitCollectionsForCurrentObject = writeValueToImplicitCollection(context, value, implicitCollectionsForCurrentObject, result, originalNodeName);
             }
 
@@ -282,7 +282,15 @@ public abstract class AbstractReflectionConverter implements Converter {
             if (itemType != null) {
                 return itemType;
             } else {
-                return mapper.realClass(reader.getNodeName());
+                String originalNodeName = reader.getNodeName();
+                if (definedInCls == null) {
+                    for(definedInCls = result.getClass(); definedInCls != null; definedInCls = definedInCls.getSuperclass()) {
+                        if (!mapper.shouldSerializeMember(definedInCls, originalNodeName)) {
+                            return null;
+                        }
+                    }
+                }
+                return mapper.realClass(originalNodeName);
             }
         } else {
             return mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, definedInCls));
