@@ -25,14 +25,16 @@
 
     <ul>
         <li>JIRA:XSTR-391, Support for writing (and reading) JSON by the new JettisonMappedXmlDriver (by Dejan Bosanac)</li>
+    	<li>JIRA:XSTR-68, OmitField is now respected at deserialization to ignore removed fields (XSTR-68).</li>
     </ul>
 
     <h2>Minor changes</h2>
     
     <ul>
-    	<li>JIRS:XSTR-387, Fix aliasing of inherited fields.</li>
+    	<li>JIRA:XSTR-387, Fix aliasing of inherited fields.</li>
     	<li>JIRS:XSTR-395, Fix StringConverter allocating PermGen space.</li>
     	<li>JIRA:XSTR-368, @XStreamConverter converters should be cached inside the AnnotationReflectionConverter.</li>
+    	<li>JIRA:XSTR-392, @XStreamOmitField can be used to omit fields from the resulting XML (contributed by Chung-Onn Cheong).</li>
     	<li>JIRA:XSTR-371, Fix JSONWriter that omits a closing bracket for for fields with null value.</li>
     	<li>JIRA:XSTR-370, Buildable with JDK 6, fix FontConverter for JDK 6.</li>
     	<li>JIRA:XSTR-382, Support hex and octal number values.</li>
