@@ -23,16 +23,16 @@ import java.util.Locale;
 public class ThreadSafeSimpleDateFormat {
 
     private final String formatString;
-    private final int initialPoolSize;
-    private final int maxPoolSize;
-    private transient DateFormat[] pool;
-    private transient int nextAvailable;
-    private transient Object mutex = new Object();
+    private final Pool pool;
 
     public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize) {
-        this.formatString = format;
-        this.initialPoolSize = initialPoolSize;
-        this.maxPoolSize = maxPoolSize;
+        formatString = format;
+        pool = new Pool(initialPoolSize, maxPoolSize, new Pool.Factory() {
+            public Object newInstance() {
+                return new SimpleDateFormat(formatString, Locale.ENGLISH);
+            }
+            
+        });
     }
 
     public String format(Date date) {
@@ -40,7 +40,7 @@ public class ThreadSafeSimpleDateFormat {
         try {
             return format.format(date);
         } finally {
-            putInPool(format);
+            pool.putInPool(format);
         }
     }
 
@@ -49,51 +49,11 @@ public class ThreadSafeSimpleDateFormat {
         try {
             return format.parse(date);
         } finally {
-            putInPool(format);
+            pool.putInPool(format);
         }
     }
 
     private DateFormat fetchFromPool() {
-        DateFormat result;
-        synchronized (mutex) {
-            if (pool == null) {
-                pool = new DateFormat[maxPoolSize];
-                for (nextAvailable = initialPoolSize; nextAvailable > 0; ) {
-                    putInPool(createNew());
-                }
-            }
-            while (nextAvailable == maxPoolSize) {
-                try {
-                    mutex.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException("Interrupted whilst waiting " +
-                            "for a free item in the pool : " + e.getMessage());
-                }
-            }
-            result = pool[nextAvailable++];
-            if (result == null) {
-                result = createNew();
-                putInPool(result);
-                ++nextAvailable;
-            }
-        }
-        return result;
+        return (DateFormat)pool.fetchFromPool();
     }
-
-    private void putInPool(DateFormat format) {
-        synchronized (mutex) {
-            pool[--nextAvailable] = format;
-            mutex.notify();
-        }
-    }
-
-    private DateFormat createNew() {
-        return new SimpleDateFormat(formatString, Locale.ENGLISH);
-    }
-    
-    private Object readResolve() {
-        mutex = new Object();
-        return this;
-    }
-
 }
