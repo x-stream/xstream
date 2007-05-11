@@ -24,7 +24,7 @@
     <h2>Major changes</h2>
 
     <ul>
-        <li>JIRA:XSTR-391, Support for writing (and reading) JSON by the new JettisonMappedXmlDriver (by Dejan Bosanac)</li>
+        <li>JIRA:XSTR-391, Support for writing (and reading) JSON by the new JettisonMappedXmlDriver (by Dejan Bosanac).</li>
     	<li>JIRA:XSTR-68, OmitField is now respected at deserialization to ignore removed fields (XSTR-68).</li>
     </ul>
 
@@ -36,14 +36,16 @@
     	<li>JIRA:XSTR-368, @XStreamConverter converters should be cached inside the AnnotationReflectionConverter.</li>
     	<li>JIRA:XSTR-392, @XStreamOmitField can be used to omit fields from the resulting XML (contributed by Chung-Onn Cheong).</li>
     	<li>JIRA:XSTR-371, Fix JSONWriter that omits a closing bracket for for fields with null value.</li>
+    	<li>JIRA:XSTR-398, DomDriver ignores given XmlFriendlyReplacer.</li>
     	<li>JIRA:XSTR-370, Buildable with JDK 6, fix FontConverter for JDK 6.</li>
     	<li>JIRA:XSTR-382, Support hex and octal number values.</li>
     	<li>JIRA:XSTR-375, Support for aliasing native types.</li>
     	<li>JIRA:XSTR-243 again, XML elements for transient fields are now ignored completely at deserialization.</li>
-    	<li>Release internally unused object references to keep memory print low.</li>
-    	<li>Support for awt and sql is now optional: xstream now works on embedded virtual machines lacking such apis (by Nicolas Gros d'Aillon)</li>
+    	<li>Release unused object references to keep memory print low.</li>
+    	<li>Support for awt and sql is now optional: XStream now works on embedded virtual machines lacking such APIs (by Nicolas Gros d'Aillon).</li>
+    	<li>Support raw bytes read from the ObjectInputStream.</li>
     	<li>JIRA:XSTR-373, Support for Hitachi JVM (tested by Yuji Yamano).</li>
-    	<li>JIRA:XSTR-378 and JIRA:XSTR-379, Fix TextAttributeConverter and EnumSetConverter failing on Apachce Harmony</li>
+    	<li>JIRA:XSTR-378 and JIRA:XSTR-379, Fix TextAttributeConverter and EnumSetConverter failing on Apachce Harmony.</li>
     </ul>
     
     <h2>API changes</h2>
