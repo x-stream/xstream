@@ -26,6 +26,65 @@ public class AttributeTest extends AbstractAcceptanceTest {
         super.tearDown();
     }
 
+    public static class One implements HasID {
+        public ID id;
+        public Two two;
+
+        public void setID(ID id) {
+            this.id = id;
+        }
+    }
+
+    public static interface HasID {
+        void setID(ID id);
+    }
+
+    public static class Two {}
+
+    public static class Three {
+        public Date date;
+    }
+
+    public static class ID {
+        public ID(String value) {
+            this.value = value;
+        }
+
+        public String value;
+    }
+
+    private static class MyIDConverter extends AbstractSingleValueConverter {
+        public boolean canConvert(Class type) {
+            return type.equals(ID.class);
+        }
+
+        public String toString(Object obj) {
+            return obj == null ? null : ((ID) obj).value;
+        }
+
+        public Object fromString(String str) {
+            return new ID(str);
+        }
+    }
+    
+    static class C
+    {
+        private Date dt;
+        private String str;
+        private int i;
+        
+        C() {
+            // for JDK 1.3
+        }
+
+        C(Date dt, String st, int i)
+        {
+            this.dt = dt;
+            this.str = st;
+            this.i = i;
+        }
+    }
+
     public void testAllowsAttributeWithCustomConverterAndFieldName() {
         One one = new One();
         one.two = new Two();
@@ -142,67 +201,19 @@ public class AttributeTest extends AbstractAcceptanceTest {
         assertBothWays(c, expected);
     }
 
-    public static class One implements HasID {
-        public ID id;
-        public Two two;
-
-        public void setID(ID id) {
-            this.id = id;
-        }
-    }
-
-    public static interface HasID {
-        void setID(ID id);
-    }
-
-    public static class Two {}
-
-    public static class Three {
-        public Date date;
-    }
-
-    public static class ID {
-        public ID(String value) {
-            this.value = value;
-        }
-
-        public String value;
-    }
-
-    private static class MyIDConverter extends AbstractSingleValueConverter {
-        public boolean canConvert(Class type) {
-            return type.equals(ID.class);
-        }
-
-        public String toString(Object obj) {
-            return obj == null ? null : ((ID) obj).value;
-        }
-
-        public Object fromString(String str) {
-            return new ID(str);
-        }
-    }
-    
-    static class C
-    {
-        private Date dt;
-        private String str;
-        private int i;
-        
-        C() {
+    static class Name {
+        private String name;
+        Name() {
             // for JDK 1.3
         }
-
-        C(Date dt, String st, int i)
-        {
-            this.dt = dt;
-            this.str = st;
-            this.i = i;
+        Name(String name) {
+            this.name = name;
         }
     }
     
     static class Camera {
         private String name;
+        protected Name n;
 
         Camera() {
             // for JDK 1.3
@@ -213,20 +224,73 @@ public class AttributeTest extends AbstractAcceptanceTest {
         }
     }
     
-    public void testUsesAnAttributeForASpecificField() {
+    public void testAllowsAnAttributeForASpecificField() {
     	xstream.alias("camera", Camera.class);
     	xstream.useAttributeFor(Camera.class, "name");
     	Camera camera = new Camera("Rebel 350");
-    	String expected = "<camera name=\"Rebel 350\"/>";
+        camera.n = new Name("foo");
+    	String expected = "" +
+    			"<camera name=\"Rebel 350\">\n" +
+    			"  <n>\n" +
+    			"    <name>foo</name>\n" +
+    			"  </n>\n" +
+    			"</camera>";
     	assertBothWays(camera, expected);
     }
 
-    public void testAliasesAnAttributeForASpecificField() {
+    public void testAllowsAnAttributeForASpecificAliasedField() {
     	xstream.alias("camera", Camera.class);
     	xstream.useAttributeFor(Camera.class, "name");
     	xstream.aliasAttribute(Camera.class, "name", "model");
     	Camera camera = new Camera("Rebel 350");
-    	String expected = "<camera model=\"Rebel 350\"/>";
+        camera.n = new Name("foo");
+        String expected = "" +
+            "<camera model=\"Rebel 350\">\n" +
+            "  <n>\n" +
+            "    <name>foo</name>\n" +
+            "  </n>\n" +
+            "</camera>";
     	assertBothWays(camera, expected);
+    }
+    
+    static class PersonalizedCamera extends Camera {
+        private String owner;
+
+        PersonalizedCamera() {
+            // for JDK 1.3
+        }
+        
+        PersonalizedCamera(String name, String owner) {
+            super(name);
+            this.owner = owner;
+        }
+    }
+    
+    public void testAllowsAnAttributeForASpecificFieldInASuperClass() {
+        xstream.alias("camera", PersonalizedCamera.class);
+        xstream.useAttributeFor(Camera.class, "name");
+        PersonalizedCamera camera = new PersonalizedCamera("Rebel 350", "Guilherme");
+        camera.n = new Name("foo");
+        String expected = "" +
+        		"<camera name=\"Rebel 350\">\n" +
+        		"  <owner>Guilherme</owner>\n" +
+                        "  <n>\n" +
+                        "    <name>foo</name>\n" +
+                        "  </n>\n" +
+        		"</camera>";
+        assertBothWays(camera, expected);
+    }
+    
+    public void testAllowsAnAttributeForAFieldOfASpecialTypeAlsoInASuperClass() {
+        xstream.alias("camera", PersonalizedCamera.class);
+        xstream.useAttributeFor("name", String.class);
+        PersonalizedCamera camera = new PersonalizedCamera("Rebel 350", "Guilherme");
+        camera.n = new Name("foo");
+        String expected = "" +
+                        "<camera name=\"Rebel 350\">\n" +
+                        "  <owner>Guilherme</owner>\n" +
+                        "  <n name=\"foo\"/>\n" +
+                        "</camera>";
+        assertBothWays(camera, expected);
     }
 }

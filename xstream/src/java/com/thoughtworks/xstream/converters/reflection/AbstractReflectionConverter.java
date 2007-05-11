@@ -142,8 +142,11 @@ public abstract class AbstractReflectionConverter implements Converter {
                     reader.moveUp();
                     continue;
                 }
-                SingleValueConverter converter = mapper.getConverterFromAttribute(result.getClass(), attrName);
-                Class type = reflectionProvider.getFieldType(result, attrName, classDefiningField);
+                SingleValueConverter converter = mapper.getConverterFromAttribute(field.getDeclaringClass(), attrName);
+                if (converter == null) {
+                    converter = mapper.getConverterFromAttribute(attrName);
+                }
+                Class type = field.getType();
                 if (converter == null) {
                     converter = mapper.getConverterFromItemType(type);
                 }
