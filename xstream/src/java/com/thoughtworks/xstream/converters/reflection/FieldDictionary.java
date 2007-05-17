@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -81,7 +82,8 @@ public class FieldDictionary {
                             FieldKey fieldKey = new FieldKey(field.getName(), field
                                 .getDeclaringClass(), i);
                             field.setAccessible(true);
-                            if (!keyedByFieldName.containsKey(field.getName())) {
+                            if (!keyedByFieldName.containsKey(field.getName()) 
+                                    && ((field.getModifiers() & Modifier.STATIC)== 0)) {
                                 keyedByFieldName.put(field.getName(), field);
                             }
                             keyedByFieldKey.put(fieldKey, field);

@@ -79,6 +79,31 @@ public class InheritanceTest extends AbstractAcceptanceTest {
         assertBothWays(child, expected);
     }
 
+    public static class StaticChildClass extends ParentClass {
+        private static String name = "CHILD";
+
+        public StaticChildClass() {
+        }
+
+        public StaticChildClass(String parentName) {
+            super(parentName);
+        }
+    }
+    
+    public void testHandlesStaticFieldInChildDoesNotHideFieldInParent() {
+        xstream.alias("child", StaticChildClass.class);
+
+        StaticChildClass child = new StaticChildClass("PARENT");
+        String expected = "" +
+                "<child>\n" +
+                "  <name>PARENT</name>\n" +
+                "</child>";
+
+        StaticChildClass serialized =(StaticChildClass)assertBothWays(child, expected);
+        assertEquals("PARENT", child.getParentName());
+        assertEquals("CHILD", StaticChildClass.name);
+    }
+
     public static class ParentA extends StandardObject {
         private List stuff = new ArrayList();
 
