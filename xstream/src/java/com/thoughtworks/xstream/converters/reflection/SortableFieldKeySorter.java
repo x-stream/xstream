@@ -19,12 +19,12 @@ public class SortableFieldKeySorter implements FieldKeySorter {
 
 	private final Map map = new HashMap();
 
-	public Map sort(Class definedIn, Map keyedByFieldKey) {
-		if (map.containsKey(definedIn)) {
+	public Map sort(Class type, Map keyedByFieldKey) {
+		if (map.containsKey(type)) {
 			Map result = new OrderRetainingMap();
 			FieldKey[] fieldKeys = (FieldKey[]) keyedByFieldKey.keySet()
 					.toArray(new FieldKey[keyedByFieldKey.size()]);
-			Arrays.sort(fieldKeys, (Comparator) map.get(definedIn));
+			Arrays.sort(fieldKeys, (Comparator) map.get(type));
 			for (int i = 0; i < fieldKeys.length; i++) {
 				result.put(fieldKeys[i], keyedByFieldKey.get(fieldKeys[i]));
 			}
@@ -40,13 +40,13 @@ public class SortableFieldKeySorter implements FieldKeySorter {
 	 * will be serialized, XStream will thrown an StreamException during the
 	 * serialization process.
 	 *
-	 * @param definedIn
+	 * @param type
 	 *            the type
 	 * @param fields
 	 *            the field order
 	 */
-	public void registerFieldOrder(Class definedIn, String[] fields) {
-		map.put(definedIn, new FieldComparator(fields));
+	public void registerFieldOrder(Class type, String[] fields) {
+		map.put(type, new FieldComparator(fields));
 	}
 
 	private class FieldComparator implements Comparator {
@@ -77,8 +77,8 @@ public class SortableFieldKeySorter implements FieldKeySorter {
 
 		public int compare(Object firstObject, Object secondObject) {
 			FieldKey first = (FieldKey) firstObject, second = (FieldKey) secondObject;
-			Class definedIn = first.declaringClass;
-			return compare(first.fieldName, second.fieldName);
+			Class definedIn = first.getDeclaringClass();
+			return compare(first.getFieldName(), second.getFieldName());
 		}
 
 	}

@@ -4,12 +4,15 @@ package com.thoughtworks.xstream.converters.reflection;
  * A field key.
  */
 public class FieldKey {
-    final String fieldName;
-    final Class declaringClass;
-    private Integer depth;
-    final int order;
+    final private String fieldName;
+    final private Class declaringClass;
+    final private int depth;
+    final private int order;
 
     public FieldKey(String fieldName, Class declaringClass, int order) {
+        if (fieldName == null || declaringClass == null) {
+            throw new IllegalArgumentException("fieldName or declaringClass is null");
+        }
         this.fieldName = fieldName;
         this.declaringClass = declaringClass;
         this.order = order;
@@ -19,7 +22,23 @@ public class FieldKey {
             i++;
             c = c.getSuperclass();
         }
-        depth = new Integer(i);
+        depth = i;
+    }
+
+    public String getFieldName() {
+        return this.fieldName;
+    }
+
+    public Class getDeclaringClass() {
+        return this.declaringClass;
+    }
+
+    public int getDepth() {
+        return this.depth;
+    }
+
+    public int getOrder() {
+        return this.order;
     }
 
     public boolean equals(Object o) {
@@ -28,20 +47,18 @@ public class FieldKey {
 
         final FieldKey fieldKey = (FieldKey)o;
 
-        if (declaringClass != null
-            ? !declaringClass.equals(fieldKey.declaringClass)
-            : fieldKey.declaringClass != null) return false;
-        if (fieldName != null
-            ? !fieldName.equals(fieldKey.fieldName)
-            : fieldKey.fieldName != null) return false;
+        if (!declaringClass.equals(fieldKey.declaringClass)) 
+            return false;
+        if (!fieldName.equals(fieldKey.fieldName)) 
+            return false;
 
         return true;
     }
 
     public int hashCode() {
         int result;
-        result = (fieldName != null ? fieldName.hashCode() : 0);
-        result = 29 * result + (declaringClass != null ? declaringClass.hashCode() : 0);
+        result = fieldName.hashCode();
+        result = 29 * result +declaringClass.hashCode();
         return result;
     }
 

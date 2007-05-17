@@ -35,7 +35,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     protected transient FieldDictionary fieldDictionary;
 
 	public PureJavaReflectionProvider() {
-		this(new FieldDictionary(new DefaultFieldKeySorter()));
+		this(new FieldDictionary(new ImmutableFieldKeySorter()));
 	}
 
 	public PureJavaReflectionProvider(FieldDictionary fieldDictionary) {

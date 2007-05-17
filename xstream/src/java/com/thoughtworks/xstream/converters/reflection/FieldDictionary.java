@@ -20,7 +20,7 @@ public class FieldDictionary {
     private final FieldKeySorter sorter;
 
     public FieldDictionary() {
-        this(new DefaultFieldKeySorter());
+        this(new ImmutableFieldKeySorter());
     }
 
     public FieldDictionary(FieldKeySorter sorter) {
