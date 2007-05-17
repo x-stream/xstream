@@ -25,6 +25,7 @@
 
     <ul>
         <li>JIRA:XSTR-391, Support for writing (and reading) JSON by the new JettisonMappedXmlDriver (by Dejan Bosanac).</li>
+        <li>New FieldKeySorter interface allows a custom sort order of the XML elements.</li>
     	<li>JIRA:XSTR-68, OmitField is now respected at deserialization to ignore removed fields (XSTR-68).</li>
     </ul>
 
@@ -39,6 +40,7 @@
     	<li>JIRA:XSTR-398, DomDriver ignores given XmlFriendlyReplacer.</li>
     	<li>JIRA:XSTR-370, Buildable with JDK 6, fix FontConverter for JDK 6.</li>
     	<li>JIRA:XSTR-382, Support hex and octal number values.</li>
+    	<li>DateConverter did not respect change in TimeZone after first usage.</li>
     	<li>JIRA:XSTR-375, Support for aliasing native types.</li>
     	<li>JIRA:XSTR-243 again, XML elements for transient fields are now ignored completely at deserialization.</li>
     	<li>Release unused object references to keep memory print low.</li>
@@ -46,6 +48,8 @@
     	<li>Support raw bytes read from the ObjectInputStream.</li>
     	<li>JIRA:XSTR-373, Support for Hitachi JVM (tested by Yuji Yamano).</li>
     	<li>JIRA:XSTR-378 and JIRA:XSTR-379, Fix TextAttributeConverter and EnumSetConverter failing on Apachce Harmony.</li>
+    	<li>JIRA:XSTR-363, Support of native field order i.e. fields are processed in declaration order base classes first.</li>
+    	<li>JIRA:XSTR-320, Static field in child may hide non-static field in parent.</li>
     </ul>
     
     <h2>API changes</h2>
