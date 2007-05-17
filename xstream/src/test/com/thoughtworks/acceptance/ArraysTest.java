@@ -114,6 +114,13 @@ public class ArraysTest extends AbstractAcceptanceTest {
         assertBothWays(objWithArray, expected);
     }
 
+    public void testNullArrayInCustomObject() {
+        ObjWithArray objWithArray = new ObjWithArray();
+        xstream.alias("owa", ObjWithArray.class);
+        String expected = "<owa/>";
+        assertBothWays(objWithArray, expected);
+    }
+
     public static class ObjWithArray extends StandardObject {
         String[] strings;
     }
