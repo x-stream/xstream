@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Wrapper around java.text.SimpleDateFormat that can
@@ -54,6 +55,11 @@ public class ThreadSafeSimpleDateFormat {
     }
 
     private DateFormat fetchFromPool() {
-        return (DateFormat)pool.fetchFromPool();
+        TimeZone tz = TimeZone.getDefault();
+        DateFormat format = (DateFormat)pool.fetchFromPool();
+        if (!tz.equals(format.getTimeZone())) {
+            format.setTimeZone(tz);
+        }
+        return format;
     }
 }

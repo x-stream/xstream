@@ -6,9 +6,11 @@ import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class DateConverterTest extends TestCase {
 
@@ -53,6 +55,18 @@ public class DateConverterTest extends TestCase {
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04EST"));
     }
 
+    public void testRetainsTimeZone() {
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(2007, Calendar.MAY, 17, 19, 20, 32);
+        Date dateEST = cal.getTime();
+        String strEST = converter.toString(dateEST);
+        assertEquals("2007-05-17 19:20:32.0 EST", strEST);
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"));
+        Date dateGMT = (Date)converter.fromString(strEST);
+        assertEquals(dateEST, dateGMT);
+        assertEquals("2007-05-18 01:20:32.0 GMT+01:00", converter.toString(dateGMT));
+    }
     
     public void testIsThreadSafe() throws InterruptedException {
         final List results = Collections.synchronizedList(new ArrayList());
