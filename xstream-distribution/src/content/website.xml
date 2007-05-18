@@ -27,11 +27,11 @@
     <section>
         <name>Tutorials</name>
         <page>tutorial.html</page>
+        <page>alias-tutorial.html</page>
+        <page>annotations-tutorial.html</page>
         <page>converter-tutorial.html</page>
         <page>objectstream.html</page>
-        <page>alias-tutorial.html</page>
         <page>persistence-tutorial.html</page>
-        <page>annotations-tutorial.html</page>
     </section>
     <section>
         <name>Developing XStream</name>

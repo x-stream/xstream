@@ -10,101 +10,153 @@
 
         <!-- ************ -->
 
-        <h1>Aliases</h1>
+        <h1>Modification by configuration</h1>
+        
+        <p>A big part of the standard output of XStream can be configured. It is possible to set aliases for class types
+        and field names that are mapped to XML tag or attribute names. Objects that can be represented as simple string
+        value can be written as attributes. It is possible to omit fields or to flatten the structure for collections.</p>
 
-        <p>Aliases offer a simple way to use different tag names in the XML.  The simplest and most commonly used tweak in 
-        XStream is to alias a fully qualified class to a shorter name.  Another use case is a different field name for a class member.</p>
+        <!-- .................. -->
+        
+        <h2>Aliases</h2>
 
-        <h3>Example</h3>
+        <p>Aliases offer a simple way to use different tag or attribute names in the XML.  The simplest and most commonly
+        used tweak in XStream is to alias a fully qualified class to a shorter name.  Another use case is a different field name
+        for a class member.  Aliases can be set for following elements:</p>
 
-        <p>Given the following class:</p>
+		<ul>
+			<li>Class types mapped to XML tags</li>
+			<li>Field names mapped to XML tags</li>
+			<li>Internal attributes names of XStream</li>
+		</ul>        
 
-<div class="Source Java"><pre>package com.something.animals;
-
-public class Cat {
-
-  public Cat(int age, String name) {
-    this.mAge = age;
-    this.mName = name;
-  }
-
-  int mAge;
-  String mName;
-}</pre></div>
-
-        <p>XStream can be used to serialize and deserialize an instance of this to XML:</p>
-
-<div class="Source Java"><pre>
-XStream xstream = new XStream();
-
-String xml = xstream.toXml(new Cat(4, "Garfield")); // serialize
-Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
-
-        <p>The XML representation, looks like this:</p>
-
-<div class="Source XML"><pre>&lt;<b>com.something.animals.Cat</b>&gt;
-  &lt;<b>mAge</b>&gt;4&lt;/<b>mAge</b>&gt;
-  &lt;<b>mName</b>&gt;Garfield&lt;/<b>mName</b>&gt;
-&lt;/<b>com.something.animals.Cat</b>&gt;</pre></div>
-
-        <p>To shorten the fully qualified class name in the XML, an alias can be defined.
-        You can also get rid of this nasty prefix of the field names with addional alias definitions:</p>
-
-<div class="Source Java"><pre>
-XStream xstream = new XStream();
-<b>xstream.alias("cat", Cat.class);</b>
-<b>xstream.aliasField("age", Cat.class, "mAge");</b>
-<b>xstream.aliasField("name", Cat.class, "mName");</b>
-
-String xml = xstream.toXml(new Cat(4, "Garfield")); // serialize
-Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
-
-        <p>The result:</p>
+		<p>The fat elements in the following example are affected:</p>
 
 <div class="Source XML"><pre>&lt;<b>cat</b>&gt;
   &lt;<b>age</b>&gt;4&lt;/<b>age</b>&gt;
   &lt;<b>name</b>&gt;Garfield&lt;/<b>name</b>&gt;
+  &lt;<b>owner</b> <b>type</b>="<b>StandardPerson</b>"&gt;
+    &lt;<b>name</b>&gt;Jon Arbuckle&lt;/<b>name</b>&gt;
+  &lt;/<b>owner</b>&gt;
 &lt;/<b>cat</b>&gt;</pre></div>
 
-        <!-- ************ -->
+        <p>Have a look at the <a href="alias-tutorial.html">Alias Tutorial</a> for examples.</p>
 
-        <h1>Attributes</h1>
+        <!-- .................. -->
 
-        <p>XML is quite clumsy to read for fields in separate tags that can represent their content in a short single string value.
-        In such a case attributes can help to shorten the XML and inrease readability:</p>
+        <h2>Attributes</h2>
 
-<div class="Source Java"><pre>
-XStream xstream = new XStream();
-xstream.alias("cat", Cat.class);
-xstream.aliasField("age", Cat.class, "mAge");
-xstream.aliasField("name", Cat.class, "mName");
-<b>xstream.useAttributeFor(int.class);</b>
-<b>xstream.useAttributeFor("mName", String.class);</b> // All fields named "mName" of type String
+        <p>XML is quite clumsy to read for fields in separate tags that can represent their content in a short single
+        string value.  In such a case attributes can help to shorten the XML and increase readability:</p>
 
-String xml = xstream.toXml(new Cat(4, "Garfield")); // serialize
-Cat cat = (Cat)xstream.fromXml(xml); // deserialize</pre></div>
+<div class="Source XML"><pre>&lt;cat <b>age="4" name="Garfield"</b>&gt;
+  &lt;owner class="StandardPerson" <b>name="Jon Arbuckle"</b>/&gt;
+&lt;/cat&gt;</pre></div>
 
-        <p>The result:</p>
+        <p>Attributes are also presented in the <a href="alias-tutorial.html">Alias Tutorial</a>.</p>
+          
+        <!-- .................. -->
 
-<div class="Source XML"><pre>&lt;cat <b>age="4" name="Garfield"</b>/&gt;</pre></div>
+        <h2>Omitted fields</h2>
+		
+		<p>For a proper deserialization XStream has to write the complete object graph into XML that is referenced by a
+		single object.  Therefore XStream has to find a representation that contains all aspects to recreate the 
+		objects.</p>
+		
+		<p>However, some parts might be superfluous e.g. if a member field is lazy initialized and its content
+		can be easily recreated.  In such a case a field can be omitted using
+		<a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream.omitField(Class, String)</a>.</p>
+          
+        <!-- .................. -->
 
-        <!-- ************ -->
-        <!--  
-        <h1>Implicit collections</h1>
-		-->
+        <h2>Implicit collections</h2>
+		
+		<p>Another use case are collections.  If a class has a field that is a collection, by default all elements of a
+		collection are embedded in an element that represents the collection itself.  By configuring the XStream with the 
+		<a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream.addImplicitCollection()</a> methods it is
+		possible to keep the elements directly as child of the class and the surrouning tag for the collection is
+		omitted.  It is even possible todeclare more than one implicit collection for a class, but the elements must be
+		distinguishable to populate the different collections correctly at deserialization.</p>
+		
+		<p>In the following example the Java type representing the farm may have two collections, one for cats and one
+		for dogs:</p>
+		
+<div class="Source XML"><pre>&lt;farm&gt;
+  &lt;<b>cat</b>&gt;Garfield&lt;/<b>cat</b>&gt;
+  &lt;<b>cat</b>&gt;Arlene&lt;/<b>cat</b>&gt;
+  &lt;<b>cat</b>&gt;Nermal&lt;/<b>cat</b>&gt;
+  &lt;<b>dog</b>&gt;Odie&lt;/<b>dog</b>&gt;
+&lt;/farm&gt;</pre></div>
+          
+        <!-- .................. -->
+
+        <h2>Field order</h2>
+        
+        <p>XStream is delivered with a lot of <a href="converter.html">converters</a> for standard types.  Nevertheless
+        most objects are processed by converters based on reflection.  They will write the fields of a class in the
+        sequence they are defined.  It is possible to implement an algorithm for a different sequence or use an 
+        implementation that allows to define the sequence for each type separately.</p>
 		
         <!-- ************ -->
+        
+        <h1>Enhancing XStream</h1>
+        
+        <p>Sometimes customation is simply not enough to tweak the output. Depending on the use case it is fortunate to
+        use specialized converters for own types, mapper implementations that control naming of things more globally or
+        use specialized writers to influence the complete output.</p>
 
-        <h1>Custom converters</h1>
+        <!-- .................. -->
 
-        <p>Sometimes the object to serialize contains fields or elements, that have no friendly representation for human beings e.g.
-        if a long value represents in reality a time stamp. Or an object contains a lot of cached data that is easily recreated and should 
-        rather not get part of the XML representation. In such cases XStream supports custom converters for arbitrary types. Have a
-        look at the <a href="converter-tutorial.html">Converter Tutorial</a> for advanced possibilities.</p>
+        <h2>Custom Converters</h2>
 
+        <p>Sometimes the object to serialize contains fields or elements, that have no friendly representation for 
+        human beings e.g. if a long value represents in reality a time stamp.  In such cases XStream supports custom
+        converters for arbitrary types.  Have a look at the <a href="converter-tutorial.html">Converter Tutorial</a>
+        for advanced possibilities.</p>
+
+        <!-- .................. -->
+
+        <h2>Custom Mappers</h2>
+
+        <p>In case of global adjustments it can be helpful to implement an own mapper.  A mapper is used to name things
+        and map between the name in the Java world to the name used in the XML representation.  The alias mechanism
+        described above is implemented as such a mapper that can be configured.  A typical use case is dropping all
+        prefixes for field names like underscores in the resulting XML or omitting the package part of class names.</p>
+        
+        <p class="highlight">However, keep in mind that the algorithm must work in both directions to support deserialization.</p>
+
+        <!-- .................. -->
+
+        <h2>Custom Writer</h2>
+
+        <p>A custom writer can be used to affect the output completely. XStream itself delivers solutions for different
+        use cases like the <a href="javadoc/com/thoughtworks/xstream/io/xml/CompactWriter.html">CompactWriter</a>
+        that does not insert any white spaces between the XML tags or the 
+        <a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamWriter.html">JSON writer</p> that
+        produces a complete different output format.</p>
+        
+        <p>Another use case for such a writer is to drop unwanted XML elements that XStream omits on its own. 
+        Especially if the written XML is not used for deserialization it can be useful to ignore internal attributes by
+        a custom writer</p>
+		
         <!-- ************ -->
+        
+        <h1>Tweaking the own implementation</h1>
+        
+        <p>As shown, XStream can be configured and enhanced in multiple way, but sometimes it is easier to tweak the
+        implementation of the serialized classes:</p>
+        
+        <ul>
+        	<li>Declaring a field transparent will omit it automatically from the processing</li>
+        	<li>Implementing a readResolve method that can be used to initialize additional fields</li>
+        	<li>Usage of annotations</li>
+        </ul>
+		
+        <!-- ************ -->
+        
+        <h1>Preprocessing or postprocessing</h1>
 
-        <h1>XML Transformations</h1>
+        <h2>XML Transformations</h2>
 
 		<p>Never forget, you're dealing with XML! It is easy to transform XML with an XSLT. XStream is delivered with a SAXSource
 		implementation, that allows an XStream instance to be the source of a XML transformer.</p>
