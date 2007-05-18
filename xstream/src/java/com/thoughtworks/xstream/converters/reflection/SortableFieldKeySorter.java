@@ -1,12 +1,12 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 import com.thoughtworks.xstream.io.StreamException;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * The default implementation for sorting fields. Invoke registerFieldOrder in
@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.io.StreamException;
  */
 public class SortableFieldKeySorter implements FieldKeySorter {
 
-	private final Map map = new HashMap();
+	private final Map map = new WeakHashMap();
 
 	public Map sort(Class type, Map keyedByFieldKey) {
 		if (map.containsKey(type)) {

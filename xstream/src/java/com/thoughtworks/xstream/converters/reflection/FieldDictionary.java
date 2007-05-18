@@ -28,9 +28,9 @@ public class FieldDictionary {
         this.sorter = sorter;
     }
 
-	/**
+    /**
      * Returns an iterator for all serializable fields for some class
-     *
+     * 
      * @param cls the class you are interested on
      * @return an iterator for its serializable fields
      */
@@ -43,7 +43,7 @@ public class FieldDictionary {
      * named 'name' inside the class cls. If definedIn is different than null, tries to find the
      * specified field name in the specified class cls which should be defined in class
      * definedIn (either equals cls or a one of it's superclasses)
-     *
+     * 
      * @param cls the class where the field is to be searched
      * @param name the field name
      * @param definedIn the superclass (or the class itself) of cls where the field was defined
@@ -61,7 +61,7 @@ public class FieldDictionary {
     }
 
     private Map buildMap(final Class type, boolean tupleKeyed) {
-    	Class cls = type;
+        Class cls = type;
         synchronized (keyedByFieldNameCache) {
             synchronized (keyedByFieldKeyCache) {
                 if (!keyedByFieldNameCache.containsKey(type)) {
@@ -82,8 +82,12 @@ public class FieldDictionary {
                             FieldKey fieldKey = new FieldKey(field.getName(), field
                                 .getDeclaringClass(), i);
                             field.setAccessible(true);
-                            if (!keyedByFieldName.containsKey(field.getName()) 
-                                    && ((field.getModifiers() & Modifier.STATIC)== 0)) {
+                            Field existent = (Field)keyedByFieldName.get(field.getName());
+                            if (existent == null
+                            // do not overwrite with static
+                                || ((existent.getModifiers() & Modifier.STATIC) != 0)
+                                // overwrite only with non-static
+                                || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
                                 keyedByFieldName.put(field.getName(), field);
                             }
                             keyedByFieldKey.put(fieldKey, field);
