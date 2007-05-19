@@ -42,7 +42,7 @@
 
     <h2>What are the advantages of using enhanced mode over pure Java mode?</h2>
 
-    <table>
+    <table summary="Comparison of pure Java and enhanced mode">
       <tr><th>Feature</th><th>Pure Java</th><th>Enhanced Mode</th></tr>
       <tr><td>Public classes</td><td>Yes</td><td>Yes</td></tr>
       <tr><td>Non public classes</td><td>No</td><td>Yes</td></tr>
@@ -187,7 +187,7 @@ String xml = xstream.toXML(joe);</pre></div>
 	<p>Note, that it is possible to configure XStream to omit the container element <i>toys</i> using implicit collections.</p>
 
     <!-- ...................................................... -->
-    <a name="Serialization_collections"><!--  --></a>
+    <a name="Serialization_Serializable"><!--  --></a>
     <h2>Do my classes have to implement Serializable if XStream is to serialize them?</h2>
     <p>No.</p>
 
@@ -199,10 +199,11 @@ String xml = xstream.toXML(joe);</pre></div>
     <!-- ...................................................... -->
     <a name="Serialization_sort_fields"><!--  --></a>
     <h2>Can I select the field order in which XStream serializes objects?</h2>
-    <p>Yes. XStream's ReflectionConverter uses the defined field order by default. You can override it by using an specific FieldKeySorter:<pre>SortableFieldKeySorter sorter = new SortableFieldKeySorter();
+    <p>Yes. XStream's ReflectionConverter uses the defined field order by default. You can override it by using an specific FieldKeySorter:</p>
+<div class="Source Java"><pre>SortableFieldKeySorter sorter = new SortableFieldKeySorter();
 sorter.registerFieldOrder(MyType.class, new String[] { "firstToSerialize", "secondToSerialize", "thirdToSerialize" });
 xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
-</pre></p>
+</pre></div>
 
     <!-- ...................................................... -->
     <a name="Serialization_CGLIB"><!--  --></a>
@@ -248,6 +249,8 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 
     <div class="Source Java"><pre>xstream.setClassLoader(yourClassLoader);</pre></div>
 
+	<p>Although XStream caches a lot of type related information to gain speed, it keeps those information in
+	tables with weak pointers that should be cleaned by the garbage collector when the types are reloaded.</p>
 
     <!-- ****************************************************** -->
     <a name="XML"><!--  --></a>
@@ -377,7 +380,6 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <!--
     Why is there no SaxReader?
     Inheritance of collections
-    Classloader
     -->
   </body>
 </html>

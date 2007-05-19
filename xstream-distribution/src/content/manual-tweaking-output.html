@@ -92,10 +92,10 @@
 
         <h2>Field order</h2>
         
-        <p>XStream is delivered with a lot of <a href="converter.html">converters</a> for standard types.  Nevertheless
-        most objects are processed by converters based on reflection.  They will write the fields of a class in the
-        sequence they are defined.  It is possible to implement an algorithm for a different sequence or use an 
-        implementation that allows to define the sequence for each type separately.</p>
+        <p>XStream is delivered with a lot of <a href="converters.html">converters</a> for standard types.
+        Nevertheless most objects are processed by converters based on reflection.  They will write the fields of a
+        class in the sequence they are defined.  It is possible to implement an algorithm for a different sequence or
+        use an implementation that allows to define the sequence for each type separately.</p>
 		
         <!-- ************ -->
         
@@ -132,7 +132,7 @@
         <p>A custom writer can be used to affect the output completely. XStream itself delivers solutions for different
         use cases like the <a href="javadoc/com/thoughtworks/xstream/io/xml/CompactWriter.html">CompactWriter</a>
         that does not insert any white spaces between the XML tags or the 
-        <a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamWriter.html">JSON writer</p> that
+        <a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamWriter.html">JSON writer</a> that
         produces a complete different output format.</p>
         
         <p>Another use case for such a writer is to drop unwanted XML elements that XStream omits on its own. 

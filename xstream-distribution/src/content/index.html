@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Java to XML serialization, and back again</title>
-    <meta name="short" content="About XStream">
+    <meta name="short" content="About XStream"/>
   </head>
 
   <body>
@@ -27,6 +27,8 @@
         particular types are represented as XML.</li>
         <li><b>Error messages.</b> When an exception occurs due to malformed XML, detailed diagnostics are provided
         to help isolate and fix the problem.</li>
+        <li><b>Alternative output format.</b> The modular design allows other output formats. XStream ships currently
+        with JSON support and morphing.</li>
     </ul>
 
     <h1>Typical Uses</h1>
@@ -35,13 +37,14 @@
         <li><b>Persistence</b></li>
         <li><b>Transport</b></li>
         <li><b>Configuration</b></li>
+        <li><b>Unit Tests</b></li>
     </ul>
 
     <h1>Known Limitations</h1>
 
     <p>If using the enhanced mode, XStream can reinstantiate classes that do not have a default constructor. 
-    However, if using a different JVM like JRockit or an old JDK like 1.3 or you have restrictions because of a SecurityManager, 
-    a default constructor is required.</p>
+    However, if using a different JVM like an old JRockit version, a JDK 1.3 or you have restrictions because of a 
+    SecurityManager, a default constructor is required.</p>
 
     <p>The enhanced mode is also necessary to restore final fields for any JDK &lt; 1.5. This implied deserialization of
     instances of an inner class.</p>
