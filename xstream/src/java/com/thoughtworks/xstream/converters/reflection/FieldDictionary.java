@@ -84,10 +84,9 @@ public class FieldDictionary {
                             field.setAccessible(true);
                             Field existent = (Field)keyedByFieldName.get(field.getName());
                             if (existent == null
-                            // do not overwrite with static
+                            // do overwrite statics, but with non-statics only
                                 || ((existent.getModifiers() & Modifier.STATIC) != 0)
-                                // overwrite only with non-static
-                                || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
+                                && ((field.getModifiers() & Modifier.STATIC) == 0)) {
                                 keyedByFieldName.put(field.getName(), field);
                             }
                             keyedByFieldKey.put(fieldKey, field);
