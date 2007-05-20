@@ -116,7 +116,7 @@ public interface Mapper {
      * @param definedIn the type which defines this field
      * @return a SingleValueConverter or null if there no such converter should be used for this
      *         field.
-     * @since upcoming
+     * since 1.2.2
      */
     SingleValueConverter getConverterFromItemType(String fieldName, Class type, Class definedIn);
 
@@ -126,7 +126,7 @@ public interface Mapper {
      * @param definedIn the type where the field was defined
      * @param fieldName the field name
      * @return the alias for this field or its own name if no alias was defined
-     * @since upcoming
+     * since 1.2.2
      */
     String aliasForAttribute(Class definedIn, String fieldName);
 
@@ -136,7 +136,7 @@ public interface Mapper {
      * @param definedIn the type where the field was defined
      * @param alias the alias
      * @return the original attribute name
-     * @since upcoming
+     * since 1.2.2
      */
     String attributeForAlias(Class definedIn, String alias);
 
@@ -145,7 +145,7 @@ public interface Mapper {
      * 
      * @param type the field type
      * @param attribute the attribute name
-     * @since upcoming
+     * since 1.2.2
      */
     SingleValueConverter getConverterFromAttribute(Class type, String attribute);
 }

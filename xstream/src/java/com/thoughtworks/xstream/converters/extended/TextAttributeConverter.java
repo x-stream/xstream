@@ -17,7 +17,7 @@ public class TextAttributeConverter extends
     /**
      * Constructs a TextAttributeConverter.
      * 
-     * @since upcoming
+     * since 1.2.2
      */
     public TextAttributeConverter() {
         super(TextAttribute.class);

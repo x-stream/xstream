@@ -6,7 +6,7 @@ import java.util.Map;
  * Does not change the order of the fields.
  *
  * @author Guilherme Silveira
- * @since upcoming
+ * since 1.2.2
  */
 public class ImmutableFieldKeySorter implements FieldKeySorter {
 

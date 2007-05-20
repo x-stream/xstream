@@ -41,7 +41,7 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
  * A dependency injection factory.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * since 1.2.2
  */
 public class DependencyInjectionFactory {
 

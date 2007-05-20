@@ -8,7 +8,7 @@ import java.util.Map;
  * field order in which XStream serializes objects.
  * 
  * @author Guilherme Silveira
- * @since upcoming
+ * since 1.2.2
  */
 public interface FieldKeySorter {
 
@@ -23,7 +23,7 @@ public interface FieldKeySorter {
      * @param keyedByFieldKey a Map containing a {@link FieldKey} as key element and a
      *                {@link java.lang.reflect.Field} as value.
      * @return a Map with all the entries of the original Map
-     * @since upcoming
+     * since 1.2.2
      */
     Map sort(Class type, Map keyedByFieldKey);
 

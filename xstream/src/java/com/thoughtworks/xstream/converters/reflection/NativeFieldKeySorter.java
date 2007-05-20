@@ -14,7 +14,7 @@ import java.util.TreeMap;
  * fields of base classes first.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * since 1.2.2
  */
 public class NativeFieldKeySorter implements FieldKeySorter {
 
