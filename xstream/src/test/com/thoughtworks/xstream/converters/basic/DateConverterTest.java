@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.converters.basic;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import junit.framework.TestCase;
@@ -10,7 +11,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
+
 
 public class DateConverterTest extends TestCase {
 
@@ -30,14 +33,13 @@ public class DateConverterTest extends TestCase {
         super.tearDown();
     }
 
-
     public void testRetainsDetailDownToMillisecondLevel() {
         // setup
         Date in = new Date();
 
         // execute
         String text = converter.toString(in);
-        Date out = (Date) converter.fromString(text);
+        Date out = (Date)converter.fromString(text);
 
         // verify
         assertEquals(in, out);
@@ -46,7 +48,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testUnmarshallsOldXStreamDatesThatLackMillisecond() {
-        Date expected = (Date) converter.fromString("2004-02-22 15:16:04.0 EST");
+        Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
 
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 PM"));
@@ -61,13 +63,23 @@ public class DateConverterTest extends TestCase {
         cal.set(2007, Calendar.MAY, 17, 19, 20, 32);
         Date dateEST = cal.getTime();
         String strEST = converter.toString(dateEST);
-        assertEquals("2007-05-17 19:20:32.0 EST", strEST);
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"));
-        Date dateGMT = (Date)converter.fromString(strEST);
-        assertEquals(dateEST, dateGMT);
-        assertEquals("2007-05-18 01:20:32.0 GMT+01:00", converter.toString(dateGMT));
+        TimeZone timeZone = TimeZone.getDefault();
+        if (!JVM.is14() && timeZone.inDaylightTime(dateEST)) {
+            // JDK 1.3 does not support TimeZone without daylight saving!
+            assertEquals("2007-05-17 19:20:32.0 EDT", strEST);
+            TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"));
+            Date dateGMT = (Date)converter.fromString(strEST);
+            assertEquals(dateEST, dateGMT);
+            assertEquals("2007-05-18 00:20:32.0 GMT+01:00", converter.toString(dateGMT));
+        } else {
+            assertEquals("2007-05-17 19:20:32.0 EST", strEST);
+            TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"));
+            Date dateGMT = (Date)converter.fromString(strEST);
+            assertEquals(dateEST, dateGMT);
+            assertEquals("2007-05-18 01:20:32.0 GMT+01:00", converter.toString(dateGMT));
+        }
     }
-    
+
     public void testIsThreadSafe() throws InterruptedException {
         final List results = Collections.synchronizedList(new ArrayList());
         final DateConverter converter = new DateConverter();
