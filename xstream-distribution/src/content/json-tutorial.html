@@ -4,7 +4,15 @@
   </head>
   <body>
   
-<p>Due to XStream's flexible architecture, handling of JSON mappings is as easy as handling of XML documents. All you have to do is to initialize XStream object with an appropriate driver and you are ready to serialize your objects to (and from) JSON.</p>
+<p>Due to XStream's flexible architecture, handling of JSON mappings is as easy as handling of XML documents. All you
+have to do is to initialize XStream object with an appropriate driver and you are ready to serialize your objects to
+(and from) JSON.</p>
+
+<p>XStream currently delivers two drivers for JSON: The 
+<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
+and the <a href="javadoc/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriver.html">JettisonMappedXmlDriver</a>.
+The first one does not have an additional dependency, but can only be used to write XML, while the second one is based
+on Jettison and can also deserialize JSON to Java objects again.</p>
 
 <h1>Jettison driver</h1>
 
