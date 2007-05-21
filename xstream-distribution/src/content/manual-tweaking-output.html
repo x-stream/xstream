@@ -74,8 +74,8 @@
 		<p>Another use case are collections.  If a class has a field that is a collection, by default all elements of a
 		collection are embedded in an element that represents the collection itself.  By configuring the XStream with the 
 		<a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream.addImplicitCollection()</a> methods it is
-		possible to keep the elements directly as child of the class and the surrouning tag for the collection is
-		omitted.  It is even possible todeclare more than one implicit collection for a class, but the elements must be
+		possible to keep the elements directly as child of the class and the surrounding tag for the collection is
+		omitted.  It is even possible to declare more than one implicit collection for a class, but the elements must be
 		distinguishable to populate the different collections correctly at deserialization.</p>
 		
 		<p>In the following example the Java type representing the farm may have two collections, one for cats and one
@@ -101,7 +101,7 @@
         
         <h1>Enhancing XStream</h1>
         
-        <p>Sometimes customation is simply not enough to tweak the output. Depending on the use case it is fortunate to
+        <p>Sometimes customization is simply not enough to tweak the output. Depending on the use case it is fortunate to
         use specialized converters for own types, mapper implementations that control naming of things more globally or
         use specialized writers to influence the complete output.</p>
 

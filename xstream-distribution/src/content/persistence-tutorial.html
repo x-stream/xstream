@@ -17,7 +17,7 @@ public class Author {
         }
 }</pre></div>
 <p>By using the XmlArrayList implementation of java.util.List you get an easy way to write all authors to disk</p>
-<p>The XmlArrayList (and related collections) receives a StreamStrategy during its contruction. This Strategy decides what to do
+<p>The XmlArrayList (and related collections) receives a StreamStrategy during its construction. This Strategy decides what to do
 with each of it's elements. The basic implementation - our need - is the FileStreamStrategy, capable of writing different files to a base directory.</p>
 <div class="Source Java"><pre>
 // prepares the file strategy to directory /tmp
@@ -57,7 +57,7 @@ public class AddAuthors {
 	}
 }
 </pre></div>
-<p>If we check the /tmp directory, there are five files: 1.xml, 2.xml, 3.xml, 4.xml, 5.xml, each one containing the xml serialized form of our authors.</p>
+<p>If we check the /tmp directory, there are five files: 1.xml, 2.xml, 3.xml, 4.xml, 5.xml, each one containing the XML serialized form of our authors.</p>
 <h2>Playing around</h2>
 <p>Let's remove mama from the list and iterate over all authors:</p>
 <div class="Source Java"><pre>

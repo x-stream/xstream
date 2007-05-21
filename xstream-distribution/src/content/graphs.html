@@ -7,7 +7,7 @@
 
     <!-- ...................................................... -->
     <h2>How does XStream deals with duplicate and circular references?</h2>
-    <p>It depends on XStream's mode, the default is uses XPath to allow serialized objects to be treated as graphs instead of simple trees (typical xml usage).</p>
+    <p>It depends on XStream's mode, the default is uses XPath to allow serialized objects to be treated as graphs instead of simple trees (typical XML usage).</p>
     
     <p>Sometimes it's not desirable to work this way, let's take a look in a simple example in order to switch between XStream's modes and see what its capable of.</p>
     <p>We start with a simple compact-disc class, with id and a bonus cd fields:
@@ -117,7 +117,7 @@ xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 xstream.setMode(XStream.ID_REFERENCES);
 </pre></div>
 
-	<p>The result is a xml which generates an "id" attribute for each new object marshalled, 
+	<p>The result is a XML which generates an "id" attribute for each new object marshaled, 
 	and whenever it finds back or cross-references, it uses a "reference" attribute to so
 	it doesn't copy the entire object.</p>
 
@@ -181,7 +181,7 @@ xstream.setMode(XStream.NO_REFERENCES);
 &lt;/list&gt;
 </pre></div>
 
-	<p>After reading from the above xml, you will get three <b>different</b> Cd instances.</p>
+	<p>After reading from the above XML, you will get three <b>different</b> Cd instances.</p>
 	
 	<p>Remember: it's impossible to support back-references (cycles) with NO_REFERENCES mode activated therefore
 	a CircularReferenceException is thrown if you ever try to do so.</p>

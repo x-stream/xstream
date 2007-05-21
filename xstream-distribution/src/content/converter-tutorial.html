@@ -23,7 +23,7 @@ public class Person {
         }
 
 }</pre></div><p>So let's create a person and convert it to
-xml...</p><div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
+XML...</p><div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -38,7 +38,7 @@ public class PersonTest {
                 System.out.println(xStream.toXML(person));
         }
 
-}</pre></div><p>This results in a really ugly xml code which contains the full
+}</pre></div><p>This results in a really ugly XML code which contains the full
 class name (including
 package)...</p><div class="Source Java"><pre>&lt;com.thoughtworks.xstream.examples.Person&gt;
   &lt;name&gt;Guilherme&lt;/name&gt;
@@ -90,7 +90,7 @@ public class PersonConverter implements Converter {
 Person).</p><div class="Source Java"><pre>public boolean canConvert(Class clazz) {
         return clazz.equals(Person.class);
 }</pre></div><p>The second step is usually quite clean, unless you are dealing
-with generic converters.</p><p>The marshall method is responsible for
+with generic converters.</p><p>The marshal method is responsible for
 translating an object to XML. It receives three
 arguments:</p><ol style="list-style-type: decimal">
 <li>the object we are trying to convert</li>
@@ -112,7 +112,7 @@ huh?</p><div class="Source Java"><pre>public void marshal(Object value, Hierarch
 }</pre></div><p>We could have called start/end node as many times as we would
 like (but remember to close everything you open)... and conversion usually
 takes place when calling the <i>setValue</i> method.</p><p>And now let's go to
-the unmarshall. We use the <i>moveDown</i> and <i>moveUp</i> methods to move
+the unmarshal. We use the <i>moveDown</i> and <i>moveUp</i> methods to move
 in the tree hierarchy, so we can simply <i>moveDown</i>, read the value and
 <i>moveUp</i>.</p><div class="Source Java"><pre>                Person person = new Person();
                 reader.moveDown();
@@ -367,8 +367,8 @@ public class DateConverter implements Converter {
 <i>main</i> method:</p><ol style="list-style-type: decimal">
 <li>creates a calendar (current date)</li>
 <li>creates the XStream object</li>
-<li>registers the converter with a brazilian portuguese locale</li>
-<li>translates the object in xml</li>
+<li>registers the converter with a Brazilian Portuguese locale</li>
+<li>translates the object in XML</li>
 </ol>
 <p>Well, we already know how to do all those steps... so let's go:</p>
 <div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
@@ -401,7 +401,7 @@ public class DateTest {
 }</pre></div><p>The result? Well... it depends, but it will be something
 like:</p><div class="Source Java"><pre>&lt;gregorian-calendar&gt;Sexta-feira, 10 de Fevereiro de 2006&lt;/gregorian-calendar&gt;</pre></div><p>Note:
 we did not put any alias as <i>gregorian-calendar</i> is the default alias for
-<i>GregorianCalendar</i>.</p><p>And now let's try to unmarshall the result
+<i>GregorianCalendar</i>.</p><p>And now let's try to unmarshal the result
 shown
 above:</p><div class="Source Java"><pre>// loads the calendar from the string
 Calendar loaded = (Calendar) xStream

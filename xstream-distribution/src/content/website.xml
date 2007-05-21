@@ -32,6 +32,7 @@
         <page>converter-tutorial.html</page>
         <page>objectstream.html</page>
         <page>persistence-tutorial.html</page>
+        <page>json-tutorial.html</page>
     </section>
     <section>
         <name>Developing XStream</name>

@@ -3,7 +3,7 @@
     <title>Alias Tutorial</title>
   </head>
   <body>
-<h2>The problem</h2><p>Suppose that our client has defined a base xml file that we should make XStream read/write:</p><div class="Source Java"><pre>&lt;blog author=&quot;Guilherme Silveira&quot;&gt;
+<h2>The problem</h2><p>Suppose that our client has defined a base XML file that we should make XStream read/write:</p><div class="Source Java"><pre>&lt;blog author=&quot;Guilherme Silveira&quot;&gt;
   &lt;entry&gt;
     &lt;title&gt;first&lt;/title&gt;
     &lt;description&gt;My first blog entry.&lt;/description&gt;
@@ -16,7 +16,7 @@
   &lt;/entry&gt;
 &lt;/blog&gt;</pre>
 
-<p>Based on the xml file above we shall create some model classes and configure XStream to write/read from this format.</p></div><div class="section"><h2>The model</h2><p>First things first, the classes which shall represent our xml files are shown next, beginning with a simple Blog:</p><div class="Source Java"><pre>package com.thoughtworks.xstream;
+<p>Based on the XML file above we shall create some model classes and configure XStream to write/read from this format.</p></div><div class="section"><h2>The model</h2><p>First things first, the classes which shall represent our xml files are shown next, beginning with a simple Blog:</p><div class="Source Java"><pre>package com.thoughtworks.xstream;
 
 public class Blog {
         private Author author;
@@ -61,7 +61,7 @@ public class Entry {
         XStream xstream = new XStream();
         System.out.println(xstream.toXML(teamBlog));
 
-}</pre></div><p>And the resulting xml is not so nice as we would want it to be:</p><div class="Source Java"><pre>&lt;com.thoughtworks.xstream.Blog&gt;
+}</pre></div><p>And the resulting XML is not so nice as we would want it to be:</p><div class="Source Java"><pre>&lt;com.thoughtworks.xstream.Blog&gt;
   &lt;author&gt;
     &lt;name&gt;Guilherme Silveira&lt;/name&gt;
   &lt;/author&gt;
@@ -130,7 +130,7 @@ public class Test {
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
     &lt;/description&gt;
   &lt;/entry&gt;
-&lt;/blog&gt;</pre></div></div><div class="section"><h2>Attribute aliasing</h2><p>The next step is to set the <b>author</b> member variable as a xml attribute. In order to do this, we shall tell XStream to alias the <b>author</b> field of the <b>Blog</b> class as an "author" attribute.</p><div class="Source Java"><pre>                xstream.useAttributeFor(Blog.class, &quot;author&quot;);</pre></div><p>And now it leaves us with one problem: how does XStream converts an Author in a String so it can be written as a xml tag attribute?</p><p>Let's use the <b>SimpleValueConverter</b> and implement our own Author converter:</p><div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
+&lt;/blog&gt;</pre></div></div><div class="section"><h2>Attribute aliasing</h2><p>The next step is to set the <b>author</b> member variable as an XML attribute. In order to do this, we shall tell XStream to alias the <b>author</b> field of the <b>Blog</b> class as an "author" attribute.</p><div class="Source Java"><pre>                xstream.useAttributeFor(Blog.class, &quot;author&quot;);</pre></div><p>And now it leaves us with one problem: how does XStream converts an Author in a String so it can be written as a xml tag attribute?</p><p>Let's use the <b>SimpleValueConverter</b> and implement our own Author converter:</p><div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
 }</pre></div><p>The first method to implement tells XStream which types it can deal with:</p><div class="Source Java"><pre>        public boolean canConvert(Class type) {
                 return type.equals(Author.class);
         }</pre></div><p>The second one is used to extract a String from an Author:</p><div class="Source Java"><pre>        public String toString(Object obj) {
@@ -188,7 +188,7 @@ public class Test {
 XStream to alias that field to another name. For example: useAttributeFor(Blog.class, "author", "auth") would map the "author" field as an attribute called "auth".</p>
 </div>
 
-<h2>Summing up</h2><p>Using aliases and converters gives you enough power to configure your xml in almost any way you desire.</p><p>Don't forget to read the converter tutorial to see other type of converters that you can create using XStream.</p>
+<h2>Summing up</h2><p>Using aliases and converters gives you enough power to configure your XML in almost any way you desire.</p><p>Don't forget to read the converter tutorial to see other type of converters that you can create using XStream.</p>
 
   </body>
 </html>
