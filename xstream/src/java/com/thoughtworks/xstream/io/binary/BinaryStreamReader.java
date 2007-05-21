@@ -4,10 +4,12 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
 
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.DataInputStream;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A HierarchicalStreamReader that reads from a binary stream created by

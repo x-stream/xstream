@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 
 /**
  * Mapper that ensures that all names in the serialization stream are XML friendly.

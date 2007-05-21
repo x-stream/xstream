@@ -1,11 +1,11 @@
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+
 import junit.framework.TestCase;
 
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * 

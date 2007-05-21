@@ -1,19 +1,18 @@
 package com.thoughtworks.xstream.io.json;
 
-import junit.framework.TestCase;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.DataHolder;
-import com.thoughtworks.xstream.core.MapBackedDataHolder;
 
-import java.util.HashMap;
-import java.util.List;
+import junit.framework.TestCase;
+
+import java.awt.Color;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-import java.awt.Color;
-import java.io.Reader;
-import java.io.InputStream;
 
 /**
  * Some of these test cases are taken from example JSON listed at http://www.json.org/example.html

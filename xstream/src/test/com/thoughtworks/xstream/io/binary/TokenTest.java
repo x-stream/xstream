@@ -2,7 +2,12 @@ package com.thoughtworks.xstream.io.binary;
 
 import junit.framework.TestCase;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class TokenTest extends TestCase {
 
