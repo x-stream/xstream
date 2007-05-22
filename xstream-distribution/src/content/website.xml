@@ -14,6 +14,7 @@
         <page>license.html</page>
         <page>download.html</page>
         <page>references.html</page>
+        <link title="Statistics">http://www.ohloh.net/projects/3459</link>
     </section>
     <section>
         <name>Using XStream</name>
@@ -41,5 +42,6 @@
         <page>list-dev.html</page>
         <page>team.html</page>
         <page>repository.html</page>
+        <link title="Continuous Integration">http://bamboo.ci.codehaus.org/browse/XSTREAM</link>
     </section>
 </sitemap>
