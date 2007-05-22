@@ -21,7 +21,8 @@
         <page>converters.html</page>
         <page>faq.html</page>
         <page>list-user.html</page>
-        <link title="JavaDoc">javadoc/index.html</link>
+        <link title="JavaDoc Core">javadoc/index.html</link>
+        <link title="JavaDoc Benchmark">benchmark-javadoc/index.html</link>
         <page>issues.html</page>
     </section>
     <section>
