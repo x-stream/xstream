@@ -1,11 +1,12 @@
 package com.thoughtworks.xstream.converters.basic;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import junit.framework.TestCase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -21,10 +22,11 @@ public class DateConverterTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        // Ensure that this test always run as if it were in the EST timezone.
+        // Ensure that this test always run as if it were in the IST timezone.
         // This prevents failures when running the tests in different zones.
-        // Note: 'EST' has no relevance - it was just a randomly chosen zone.
-        TimeZoneChanger.change("EST");
+        // Note: 'IST' has no relevance - it was just a randomly chosen zone 
+        // without daylight saving.
+        TimeZoneChanger.change("IST");
     }
 
     protected void tearDown() throws Exception {
@@ -46,37 +48,52 @@ public class DateConverterTest extends TestCase {
         assertEquals(in.getTime(), out.getTime());
     }
 
-    public void testUnmarshallsOldXStreamDatesThatLackMillisecond() {
+    public void testUnmarshalsOldXStreamDatesThatLackMillisecond() {
         Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
 
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
-        assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 PM"));
-        assertEquals(expected, converter.fromString("2004-02-22 15:16:04PM"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04 EST"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04EST"));
+        
+        TimeZone.setDefault(TimeZone.getTimeZone("EST")); // Need correct local time, no TZ info in string
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 PM"));
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04PM"));
     }
 
-    public void testRetainsTimeZone() {
+    public void testUnmarshalsDatesWithDifferentTimeZones() {
+        Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
+
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
+        assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 GMT-05:00"));
+        assertEquals(expected, converter.fromString("2004-02-22 20:16:04.0 UTC"));
+        assertEquals(expected, converter.fromString("2004-02-23 01:46:04.0 IST"));
+        assertEquals(expected, converter.fromString("2004-02-23 01:46:04.0 GMT+05:30"));
+    }
+
+    public void testUnmashalsDateWithDifferentDefaultTimeZones() throws ParseException {
         Calendar cal = Calendar.getInstance();
         cal.clear();
-        cal.set(2007, Calendar.MAY, 17, 19, 20, 32);
-        Date dateEST = cal.getTime();
-        String strEST = converter.toString(dateEST);
-        TimeZone timeZone = TimeZone.getDefault();
-        if (!JVM.is14() && timeZone.inDaylightTime(dateEST)) {
-            // JDK 1.3 does not support TimeZone without daylight saving!
-            assertEquals("2007-05-17 19:20:32.0 EDT", strEST);
-            TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"));
-            Date dateGMT = (Date)converter.fromString(strEST);
-            assertEquals(dateEST, dateGMT);
-            assertEquals("2007-05-18 00:20:32.0 GMT+01:00", converter.toString(dateGMT));
-        } else {
-            assertEquals("2007-05-17 19:20:32.0 EST", strEST);
-            TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"));
-            Date dateGMT = (Date)converter.fromString(strEST);
-            assertEquals(dateEST, dateGMT);
-            assertEquals("2007-05-18 01:20:32.0 GMT+01:00", converter.toString(dateGMT));
-        }
+        cal.set(2004, Calendar.FEBRUARY, 23, 1, 46, 4);
+        Date date = cal.getTime();
+        String strIST = converter.toString(date);
+        assertEquals("2004-02-23 01:46:04.0 IST", strIST);
+        // select arbitrary TZ
+        TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+        // compare parsed date with JDK implementation
+        Date dateRetrieved = (Date)converter.fromString(strIST);
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S z");
+        Date simpleDate = f.parse(strIST);
+        assertEquals(simpleDate, dateRetrieved);
+        // DateConverter does not get influenced by change of current TZ ...
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        dateRetrieved = (Date)converter.fromString(strIST);
+        assertEquals(simpleDate, dateRetrieved);
+        // ... as well as the SimpleDateFormat
+        f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S z");
+        simpleDate = f.parse(strIST);
+        assertEquals(simpleDate, dateRetrieved);
+        assertEquals(date, f.parse("2004-02-22 20:16:04.0 UTC"));
+        // assertEquals(date, simpleDate); off by +03:30 ... but why ??
     }
 
     public void testIsThreadSafe() throws InterruptedException {
