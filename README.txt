@@ -32,7 +32,7 @@ The complete source for XStream is bundled. This includes:
 
 -------------------------------------------------------------
 
--Joe Walnes
+-XStream Ccommitters
 
  http://xstream.codehaus.org/
 

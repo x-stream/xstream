@@ -56,16 +56,24 @@
       <li><a href="tutorial.html">Use it</a>.</li>
     </ul>
 
-    <h2><b>Nov 11, 2006</b> XStream 1.2.1 released</h2>
+    <h2><b>May 24, 2007</b> XStream 1.2.2 released</h2>
     
-    <p>A maintenance update fixing some bugs and shipping some small improvements.</p>
+    <p>A maintenance release of XStream that contains a lot of bug fixes and has some minor highlights:
+    
 	  <ul>
-    	<li>Introduced DocumentWriter interface and generalized functionality for all writer implementations
-    	creating a DOM structure (DOM4J, DOM, JDom, Xom, Xpp3Dom).</li>
-        <li>Refactor of build system to use Maven 2.  Ant still supported on XStream Core.</li>
-        <li>Created separate XStream Benchmark module</li>
+    	<li>JSON serialization and deserialization support with the help of the new JettisonMappedXmlDriver</li>
+        <li>Supports customized field sorting</li>
+        <li>Omitting fields at deserialization time</li>
    	  </ul>
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+      
+    <p class="hightlight">Note, that next version of XStream will behave slightly different by default.  XStream emits
+    all fields in declaration order like Java serialization.  But in contrast to Java it will omit the fields of parent
+    classes last while Java serialization emits them first.  This makes it difficult to match a given XML schema that
+    defined inherited types or leads sometimes to obscure initialization problems.  However, XStream itself will not be
+    affected by the changed order of elements in the XML, any deserialization of current XML representations will work
+    fine.  Anyway we will provide with XStream 1.3 a FieldKeySorter implementation that mimics the old behaviour.  In
+    the meanwhile you can enforce the new field sorting by installing the NaturalFieldKeySorter.</p>
 
   </body>
 </html>
