@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.2.2-SNAPSHOT</version>
+  <version>1.2.2</version>
   <name>XStream Parent</name>
 
   <inceptionYear>2004</inceptionYear>
@@ -352,9 +351,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/xstream/trunk</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/trunk</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/xstream/trunk</url>
+    <connection>scm:svn:https://svn.codehaus.org/xstream/tags/XSTREAM_1_2_2</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/tags/XSTREAM_1_2_2</developerConnection>
+    <url>https://svn.codehaus.org/xstream/tags/XSTREAM_1_2_2</url>
   </scm>
 
   <repositories>
