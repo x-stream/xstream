@@ -5,9 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
@@ -244,10 +242,16 @@ public class Annotations {
     private static void configureParameterizedTypes(Field field, XStream xstream){
         if(field.getGenericType() instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) field.getGenericType();
-            Type[] types = pType.getActualTypeArguments();
-            for(Type parameter : types) {
-            	Class type = (Class) parameter;
-            	configureClass(xstream, type);
+            Queue<Type> queue = new LinkedList<Type>(Arrays.asList(pType.getActualTypeArguments()));
+            while(!queue.isEmpty()) {
+                Type parameter = queue.poll();
+                if(parameter instanceof ParameterizedType) {
+                    ParameterizedType parameterized = (ParameterizedType) parameter;
+                    queue.addAll(Arrays.asList(parameterized.getActualTypeArguments()));
+                } else if(parameter instanceof Class) {
+                	Class type = (Class) parameter;
+                	configureClass(xstream, type);
+                }
             }
         }
     }

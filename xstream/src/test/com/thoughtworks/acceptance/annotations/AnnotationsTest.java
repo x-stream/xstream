@@ -182,6 +182,20 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
 
     }
 
+    @XStreamAlias("param")
+    public static class DoubleParameterizedContainer {
+
+        @XStreamContainedType
+        private ArrayList<ArrayList<InternalType>> list;
+
+        public DoubleParameterizedContainer() {
+        	list = new ArrayList<ArrayList<InternalType>>();
+            list.add(new ArrayList<InternalType>());
+            list.get(0).add(new InternalType());
+        }
+
+    }
+
     @XStreamAlias("second")
     public static class InternalType {
     	@XStreamAlias("aliased")
@@ -200,6 +214,12 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     	Annotations.configureAliases(xstream, ParameterizedContainer.class);
     	String xml = "<param>\n  <type>\n    <fieldAlias class=\"second\">\n      <aliased>value</aliased>\n    </fieldAlias>\n  </type>\n</param>";
     	assertBothWays(new ParameterizedContainer(), xml);
+    }
+
+    public void testCrawlsWhithinAnnotatedDoubleParameterizedTypes() {
+    	Annotations.configureAliases(xstream, DoubleParameterizedContainer.class);
+    	String xml = "<param>\n  <list>\n    <list>\n      <second>\n        <aliased>value</aliased>\n      </second>\n    </list>\n  </list>\n</param>";
+    	assertBothWays(new DoubleParameterizedContainer(), xml);
     }
 
     @XStreamAlias("addressbookAlias")
