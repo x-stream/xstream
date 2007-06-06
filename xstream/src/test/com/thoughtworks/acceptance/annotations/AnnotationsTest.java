@@ -196,6 +196,39 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
 
     }
 
+    @XStreamAlias("internal")
+    public static class InternalParameterizedType {
+        @XStreamImplicit(itemFieldName="line")
+        private ArrayList<ArrayList<Point>> signatureLines;
+    }
+
+    @XStreamAlias("point")
+    public static class Point {
+        @XStreamAsAttribute
+        private int x;
+        @XStreamAsAttribute
+        private int y;
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public void testHandlesInternalParameterizedTypes() {
+        Annotations.configureAliases(xstream, InternalParameterizedType.class);
+        Annotations.configureAliases(xstream, Point.class);
+        String xml = "<internal>\n" +
+                "  <line>\n" +
+                "    <point x=\"33\" y=\"11\"/>\n" +
+                "  </line>\n" +
+                "</internal>";
+        InternalParameterizedType root = new InternalParameterizedType();
+        root.signatureLines = new ArrayList<ArrayList<Point>>();
+        root.signatureLines.add(new ArrayList<Point>());
+        root.signatureLines.get(0).add(new Point(33,11));
+        assertBothWays(root, xml);
+    }
+
     @XStreamAlias("second")
     public static class InternalType {
     	@XStreamAlias("aliased")

@@ -221,7 +221,14 @@ public class Annotations {
     private static Class getFieldParameterizedType(Field field, XStream xstream){
         if(field.getGenericType() instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) field.getGenericType();
-            Class type =  (Class) pType.getActualTypeArguments()[0];
+
+            Type typeArgument = pType.getActualTypeArguments()[0];
+            Class type = null;
+            if(typeArgument instanceof ParameterizedType) {
+                type = (Class) ((ParameterizedType) typeArgument).getRawType();
+            } else if (typeArgument instanceof Class) {
+                type = (Class) typeArgument;
+            }
             //Get the interface Impl
             if(type.isInterface()){
                 AnnotatedElement element = type;
