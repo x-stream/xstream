@@ -15,20 +15,22 @@ import java.util.Arrays;
 public class StringArrayTarget implements Target {
 
     private final String[] strings;
+	private final int unique;
 
-    public StringArrayTarget(int elements, int length) {
-        char[] zero = new char[length];
+    public StringArrayTarget(int elements, int length, int unique) {
+        this.unique = unique;
+		char[] zero = new char[length];
         Arrays.fill(zero, '0');
 
         strings = new String[elements];
         for (int i = 0; i < strings.length; i++) {
-            String hex = Integer.toHexString(i);
+            String hex = Integer.toHexString(i % unique);
             strings[i] = new String(zero, 0, zero.length - hex.length()) + hex;
         }
     }
 
     public String toString() {
-        return "String array with " + strings.length + " elements of " + strings[0].length() + " chars";
+        return "String array with " + strings.length + " elements of " + strings[0].length() + " chars and " + unique + " unique entries";
     }
 
     public Object target() {

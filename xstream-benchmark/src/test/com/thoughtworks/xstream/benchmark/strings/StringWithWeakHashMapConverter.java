@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.tools.benchmark.Product;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -18,69 +19,80 @@ import java.util.WeakHashMap;
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Product
  */
-public class StringWithWeakHashMapConverter implements Product {
+public class StringWithWeakHashMapConverter implements Product
+{
 
-    private final XStream xstream;
+	private final XStream xstream;
 
-    public StringWithWeakHashMapConverter() {
-        xstream = new XStream(new XppDriver());
-        xstream.registerConverter(new StringConverter());
-    }
+	public StringWithWeakHashMapConverter()
+	{
+		xstream = new XStream(new XppDriver());
+		xstream.registerConverter(new StringConverter());
+	}
 
-    public void serialize(Object object, OutputStream output) throws Exception {
-        xstream.toXML(object, output);
-    }
+	public void serialize(Object object, OutputStream output) throws Exception
+	{
+		xstream.toXML(object, output);
+	}
 
-    public Object deserialize(InputStream input) throws Exception {
-        return xstream.fromXML(input);
-    }
+	public Object deserialize(InputStream input) throws Exception
+	{
+		return xstream.fromXML(input);
+	}
 
-    public String toString() {
-        return "StringConverter using WeakHashMap";
-    }
+	public String toString()
+	{
+		return "StringConverter using WeakHashMap";
+	}
 
-    /**
-     * Converts a String to a String. Well ok, it doesn't <i>actually</i> do any conversion.
-     * <p>
-     * The converter always uses an external map to reduce the string occurences, because
-     * String.intern() is using the PermGenSpace and wasting it. Additionally the call to
-     * intern() is a native call and costs performance.
-     * </p>
-     * 
-     * @author Rene Schwietzke
-     * @see WeakHashMap
-     */
-    public static class StringConverter extends AbstractSingleValueConverter {
-        /**
-         * A Map to store strings as long as needed to map similar strings onto the same
-         * instance and conserve memory. The map can be set from the outside during
-         * construction, so it can be a lru map or a weak map, sychronised or not.
-         */
-        private final Map cache;
+	/**
+	 * Converts a String to a String.
+	 * <p>
+	 * Well ok, it doesn't <i>actually</i> do any conversion. The converter uses a map to reuse instances. This map is
+	 * by default a {@link WeakHashMap}.
+	 * </p>
+	 * 
+	 * @author Rene Schwietzke
+	 * @author J&ouml;rg Schaible
+	 * @see WeakHashMap
+	 */
+	public static class StringConverter extends AbstractSingleValueConverter
+	{
+		/**
+		 * A Map to store strings as long as needed to map similar strings onto the same instance and conserve memory.
+		 * The map can be set from the outside during construction, so it can be a LRU map or a weak map, sychronised or
+		 * not.
+		 */
+		private final Map cache;
 
-        public StringConverter(Map map) {
-            this.cache = map;
-        }
+		public StringConverter(Map map)
+		{
+			this.cache = map;
+		}
 
-        public StringConverter() {
-            this(new WeakHashMap());
-        }
+		public StringConverter()
+		{
+			this(new WeakHashMap());
+		}
 
-        public boolean canConvert(Class type) {
-            return type.equals(String.class);
-        }
+		public boolean canConvert(Class type)
+		{
+			return type.equals(String.class);
+		}
 
-        public Object fromString(String str) {
-            String s = (String)cache.get(str);
+		public Object fromString(String str)
+		{
+			WeakReference ref = (WeakReference)cache.get(str);
+			String s = (String)(ref == null ? null : ref.get());
 
-            if (s == null) {
-                // fill cache
-                cache.put(str, str);
+			if (s == null) {
+				// fill cache
+				cache.put(str, new WeakReference(str));
 
-                s = str;
-            }
+				s = str;
+			}
 
-            return s;
-        }
-    }
+			return s;
+		}
+	}
 }

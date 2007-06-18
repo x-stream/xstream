@@ -17,12 +17,13 @@ public class Main {
     public static void main(String[] args) {
         Harness harness = new Harness();
         harness.addMetric(new DeserializationSpeedMetric(10));
+        harness.addProduct(new StringNonCachingConverter());
         harness.addProduct(new StringInternConverter());
         harness.addProduct(new StringWithWeakHashMapConverter());
         harness.addProduct(new StringWithSynchronizedWeakHashMapConverter());
         harness.addTarget(new BigStringTarget());
-        harness.addTarget(new StringArrayTarget(1024, 1024));
-        harness.addTarget(new StringArrayTarget(64 * 1024, 8));
+        harness.addTarget(new StringArrayTarget(1024, 1024, 128));
+        harness.addTarget(new StringArrayTarget(64 * 1024, 8, 32));
         harness.run(new TextReporter());
     }
 }
