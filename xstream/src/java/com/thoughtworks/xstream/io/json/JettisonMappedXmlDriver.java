@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 
 /**
- * Simple XStream driver wrapping Jettison's Mapped reader and writter. Serializes object from
+ * Simple XStream driver wrapping Jettison's Mapped reader and writer. Serializes object from
  * and to JSON.
  * 
  * @author Dejan Bosanac
