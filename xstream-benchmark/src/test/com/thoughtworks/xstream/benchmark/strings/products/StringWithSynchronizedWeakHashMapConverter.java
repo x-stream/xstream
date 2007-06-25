@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.benchmark.strings;
+package com.thoughtworks.xstream.benchmark.strings.products;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
@@ -7,21 +7,24 @@ import com.thoughtworks.xstream.tools.benchmark.Product;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
+import java.util.WeakHashMap;
+
 
 /**
- * Uses no cache at all StringConverter.
- *
+ * Uses WeakHashMap for StringConverter.
+ * 
  * @author J&ouml;rg Schaible
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Product
  */
-public class StringNonCachingConverter implements Product {
+public class StringWithSynchronizedWeakHashMapConverter implements Product {
 
     private final XStream xstream;
 
-    public StringNonCachingConverter() {
+    public StringWithSynchronizedWeakHashMapConverter() {
         xstream = new XStream(new XppDriver());
-        xstream.registerConverter(new StringConverter());
+        xstream.registerConverter(new StringWithWeakHashMapConverter.StringConverter(Collections.synchronizedMap(new WeakHashMap())));
     }
 
     public void serialize(Object object, OutputStream output) throws Exception {
@@ -33,23 +36,6 @@ public class StringNonCachingConverter implements Product {
     }
 
     public String toString() {
-        return "StringConverter using no cache at all";
-    }
-
-    /**
-     * Converts a String to a String ;).
-     *
-     * @author J&ouml;rg Schaible
-     * @see String#intern()
-     */
-    public static class StringConverter extends AbstractSingleValueConverter {
-
-        public boolean canConvert(Class type) {
-            return type.equals(String.class);
-        }
-
-        public Object fromString(String str) {
-            return str;
-        }
+        return "StringConverter using synchronized WeakHashMap";
     }
 }

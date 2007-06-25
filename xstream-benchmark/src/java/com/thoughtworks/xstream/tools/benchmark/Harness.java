@@ -13,7 +13,7 @@ import java.util.Iterator;
  * <li>{@link Metric} (e.g. time taken, memory usage, output size...)</li>
  * <li>{@link Target} (e.g. a small object, large object, list of objects...)</li>
  * </ul>
- * The Harness will then across every permuation of these
+ * The Harness will then across every permutation of these
  * (in order of product, metric, target), and write the results to a {@link Reporter}.
  *
  * <h3>Example usage</h3>
@@ -79,7 +79,7 @@ public class Harness {
 
     private void run(Reporter reporter, Metric metric, Target target, Product product) {
         try {
-            double result = metric.run(product, target.target());
+            double result = metric.run(product, target);
             reporter.metricRecorded(product, result);
         } catch (Exception e) {
             reporter.metricFailed(product, e);

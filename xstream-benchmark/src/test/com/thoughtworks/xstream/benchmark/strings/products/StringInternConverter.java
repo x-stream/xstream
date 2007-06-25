@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.benchmark.strings;
+package com.thoughtworks.xstream.benchmark.strings.products;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;

@@ -8,6 +8,7 @@ package com.thoughtworks.xstream.tools.benchmark;
  * the operation.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  * @see Harness
  */
 public interface Metric {
@@ -17,11 +18,24 @@ public interface Metric {
      *
      * @param product Product to use in test.
      * @param object A object to use against the product.
-     * @return The resulting metric (eg. 12.22).
+     * @return The resulting metric (e.g. 12.22).
      * @throws Exception If this metric could not be obtained. This will
      *                   be reported back to the {@link Reporter}.
+     * @deprecated since upcoming
      */
     double run(Product product, Object object) throws Exception;
+    
+    /**
+     * Run the test and produce a metric.
+     *
+     * @param product Product to use in test.
+     * @param target A target to use against the product.
+     * @return The resulting metric (e.g. 12.22).
+     * @throws Exception If this metric could not be obtained. This will
+     *                   be reported back to the {@link Reporter}.
+     * @since upcoming
+     */
+    double run(Product product, Target target) throws Exception;
 
     /**
      * The unit the metric is recorded in (for reporting purposes).

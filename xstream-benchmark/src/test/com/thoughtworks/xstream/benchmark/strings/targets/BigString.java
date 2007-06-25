@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.benchmark.strings;
+package com.thoughtworks.xstream.benchmark.strings.targets;
 
 import com.thoughtworks.xstream.tools.benchmark.Target;
 
@@ -14,11 +14,11 @@ import java.io.IOException;
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Target
  */
-public class BigStringTarget implements Target {
+public class BigString implements Target {
 
     private final String string;
 
-    public BigStringTarget() {
+    public BigString() {
         try {
             string = IOUtils.toString(getClass().getResourceAsStream("eclipse-build-log.txt"));
         } catch (IOException e) {

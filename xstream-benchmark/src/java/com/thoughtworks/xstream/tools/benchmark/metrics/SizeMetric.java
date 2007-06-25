@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.tools.benchmark.metrics;
 
 import com.thoughtworks.xstream.tools.benchmark.Metric;
 import com.thoughtworks.xstream.tools.benchmark.Product;
+import com.thoughtworks.xstream.tools.benchmark.Target;
 
 import java.io.ByteArrayOutputStream;
 
@@ -14,6 +15,13 @@ import java.io.ByteArrayOutputStream;
  */
 public class SizeMetric implements Metric {
 
+    public double run(Product product, Target target) throws Exception {
+        return run(product, target.target());
+    }
+
+    /**
+     *@deprecated since upcoming
+     */
     public double run(Product product, Object object) throws Exception {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         product.serialize(object, buffer);

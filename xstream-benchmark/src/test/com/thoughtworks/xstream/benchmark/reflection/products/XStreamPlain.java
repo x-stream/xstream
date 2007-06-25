@@ -1,4 +1,4 @@
-package com.thoughtworks.xstream.benchmark.strings;
+package com.thoughtworks.xstream.benchmark.reflection.products;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.XppDriver;
@@ -6,24 +6,22 @@ import com.thoughtworks.xstream.tools.benchmark.Product;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.WeakHashMap;
-
 
 /**
- * Uses WeakHashMap for StringConverter.
- * 
- * @author J&ouml;rg Schaible
+ * Uses XStream with the XPP driver for parsing XML and no additional setup.
+ *
+ * @author Joe Walnes
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Product
+ * @see XStream
+ * @see XppDriver
  */
-public class StringWithSynchronizedWeakHashMapConverter implements Product {
+public class XStreamPlain implements Product {
 
     private final XStream xstream;
 
-    public StringWithSynchronizedWeakHashMapConverter() {
-        xstream = new XStream(new XppDriver());
-        xstream.registerConverter(new StringWithWeakHashMapConverter.StringConverter(Collections.synchronizedMap(new WeakHashMap())));
+    public XStreamPlain() {
+        this.xstream = new XStream(new XppDriver());
     }
 
     public void serialize(Object object, OutputStream output) throws Exception {
@@ -35,6 +33,7 @@ public class StringWithSynchronizedWeakHashMapConverter implements Product {
     }
 
     public String toString() {
-        return "StringConverter using synchronized WeakHashMap";
+        return "XStream (plain)";
     }
+
 }
