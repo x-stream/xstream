@@ -32,7 +32,7 @@ import java.util.Map;
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
     private transient Map serializedDataCache = Collections.synchronizedMap(new HashMap());
-    protected transient FieldDictionary fieldDictionary;
+    protected FieldDictionary fieldDictionary;
 
 	public PureJavaReflectionProvider() {
 		this(new FieldDictionary(new ImmutableFieldKeySorter()));
@@ -106,7 +106,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     public void visitSerializableFields(Object object, ReflectionProvider.Visitor visitor) {
-        for (Iterator iterator = fieldDictionary.serializableFieldsFor(object.getClass()); iterator.hasNext();) {
+        for (Iterator iterator = fieldDictionary.fieldsFor(object.getClass()); iterator.hasNext();) {
             Field field = (Field) iterator.next();
             if (!fieldModifiersSupported(field)) {
                 continue;
@@ -168,14 +168,13 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return fieldDictionary.field(definedIn, fieldName, null);
     }
 
-    protected Object readResolve() {
-        serializedDataCache = Collections.synchronizedMap(new HashMap());
-        fieldDictionary = new FieldDictionary();
-        return this;
+    public void setFieldDictionary(FieldDictionary dictionary) {
+        this.fieldDictionary = dictionary;
     }
 
-	public void setFieldDictionary(FieldDictionary dictionary) {
-		this.fieldDictionary = dictionary;
-	}
+    protected Object readResolve() {
+        serializedDataCache = Collections.synchronizedMap(new HashMap());
+        return this;
+    }
 
 }

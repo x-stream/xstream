@@ -22,9 +22,9 @@ public class ReferenceByIDMarshallingStrategyTest extends AbstractAcceptanceTest
         wl.things.add("Daniel");
 
         final String expected = "<strings id=\"1\">\n"
-                + "  <name>foo</name>\n"
                 + "  <string>Hello</string>\n"
                 + "  <string>Daniel</string>\n"
+                + "  <name>foo</name>\n"
                 + "</strings>";
 
         assertBothWays(wl, expected);

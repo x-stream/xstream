@@ -2,8 +2,11 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -16,8 +19,8 @@ import com.thoughtworks.xstream.core.util.OrderRetainingMap;
  */
 public class FieldDictionary {
 
-    private final Map keyedByFieldNameCache = new WeakHashMap();
-    private final Map keyedByFieldKeyCache = new WeakHashMap();
+    private transient Map keyedByFieldNameCache;
+    private transient Map keyedByFieldKeyCache;
     private final FieldKeySorter sorter;
 
     public FieldDictionary() {
@@ -26,20 +29,39 @@ public class FieldDictionary {
 
     public FieldDictionary(FieldKeySorter sorter) {
         this.sorter = sorter;
+        init();
+    }
+
+    private void init() {
+        keyedByFieldNameCache = new WeakHashMap();
+        keyedByFieldKeyCache = new WeakHashMap();
+        keyedByFieldNameCache.put(Object.class, Collections.EMPTY_MAP);
+        keyedByFieldKeyCache.put(Object.class, Collections.EMPTY_MAP);
     }
 
     /**
-     * Returns an iterator for all serializable fields for some class
+     * Returns an iterator for all fields for some class
      * 
      * @param cls the class you are interested on
-     * @return an iterator for its serializable fields
+     * @return an iterator for its fields
+     * @deprecated since upcoming, use {@link #fieldsFor(Class)} instead
      */
     public Iterator serializableFieldsFor(Class cls) {
+        return fieldsFor(cls);
+    }
+
+    /**
+     * Returns an iterator for all fields for some class
+     * 
+     * @param cls the class you are interested on
+     * @return an iterator for its fields
+     */
+    public Iterator fieldsFor(Class cls) {
         return buildMap(cls, true).values().iterator();
     }
 
     /**
-     * Returns an specific field of some class. If definedIn is null, it searchs for the field
+     * Returns an specific field of some class. If definedIn is null, it searches for the field
      * named 'name' inside the class cls. If definedIn is different than null, tries to find the
      * specified field name in the specified class cls which should be defined in class
      * definedIn (either equals cls or a one of it's superclasses)
@@ -62,12 +84,20 @@ public class FieldDictionary {
 
     private Map buildMap(final Class type, boolean tupleKeyed) {
         Class cls = type;
-        synchronized (keyedByFieldNameCache) {
-            synchronized (keyedByFieldKeyCache) {
-                if (!keyedByFieldNameCache.containsKey(type)) {
-                    final Map keyedByFieldName = new HashMap();
-                    final Map keyedByFieldKey = new OrderRetainingMap();
-                    while (!Object.class.equals(cls)) {
+        synchronized (this) {
+            if (!keyedByFieldNameCache.containsKey(type)) {
+                final List superClasses = new ArrayList();
+                while (!Object.class.equals(cls)) {
+                    superClasses.add(0, cls);
+                    cls = cls.getSuperclass();
+                }
+                Map lastKeyedByFieldName = Collections.EMPTY_MAP;
+                Map lastKeyedByFieldKey = Collections.EMPTY_MAP;
+                for (final Iterator iter = superClasses.iterator(); iter.hasNext();) {
+                    cls = (Class)iter.next();
+                    if (!keyedByFieldNameCache.containsKey(cls)) {
+                        final Map keyedByFieldName = new HashMap(lastKeyedByFieldName);
+                        final Map keyedByFieldKey = new OrderRetainingMap(lastKeyedByFieldKey);
                         Field[] fields = cls.getDeclaredFields();
                         if (JVM.reverseFieldDefinition()) {
                             for (int i = fields.length >> 1; i-- > 0;) {
@@ -84,22 +114,29 @@ public class FieldDictionary {
                             field.setAccessible(true);
                             Field existent = (Field)keyedByFieldName.get(field.getName());
                             if (existent == null
-                            // do overwrite statics, but with non-statics only
+                            // do overwrite statics
                                 || ((existent.getModifiers() & Modifier.STATIC) != 0)
-                                && ((field.getModifiers() & Modifier.STATIC) == 0)) {
+                                // overwrite non-statics with non-statics only
+                                || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
                                 keyedByFieldName.put(field.getName(), field);
                             }
                             keyedByFieldKey.put(fieldKey, field);
                         }
-                        cls = cls.getSuperclass();
+                        keyedByFieldNameCache.put(cls, keyedByFieldName);
+                        keyedByFieldKeyCache.put(cls, sorter.sort(type, keyedByFieldKey));
                     }
-                    keyedByFieldNameCache.put(type, keyedByFieldName);
-                    keyedByFieldKeyCache.put(type, sorter.sort(type, keyedByFieldKey));
+                    lastKeyedByFieldName = (Map)keyedByFieldNameCache.get(cls);
+                    lastKeyedByFieldKey = (Map)keyedByFieldKeyCache.get(cls);
                 }
             }
         }
         return (Map)(tupleKeyed ? keyedByFieldKeyCache.get(type) : keyedByFieldNameCache
             .get(type));
+    }
+
+    protected Object readResolve() {
+        init();
+        return this;
     }
 
 }

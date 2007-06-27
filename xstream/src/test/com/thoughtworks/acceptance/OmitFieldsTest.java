@@ -71,8 +71,8 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
 
         String expectedXml = "" +
                 "<thing>\n" +
-                "  <derived>d</derived>\n" +
                 "  <neverIgnore>c</neverIgnore>\n" +
+                "  <derived>d</derived>\n" +
                 "</thing>";
 
         xstream.alias("thing", DerivedThing.class);

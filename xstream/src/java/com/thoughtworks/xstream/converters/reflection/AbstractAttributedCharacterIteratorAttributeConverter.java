@@ -70,7 +70,7 @@ public class AbstractAttributedCharacterIteratorAttributeConverter extends
     private Object readResolve() {
         fieldDictionary = new FieldDictionary();
         attributeMap = new HashMap();
-        for (final Iterator iterator = fieldDictionary.serializableFieldsFor(type); iterator
+        for (final Iterator iterator = fieldDictionary.fieldsFor(type); iterator
             .hasNext();) {
             final Field field = (Field)iterator.next();
             if (field.getType() == type && Modifier.isStatic(field.getModifiers())) {

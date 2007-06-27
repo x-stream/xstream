@@ -24,7 +24,7 @@ public class FieldDictionaryTest extends TestCase {
     }
 
     public void testListsFieldsInClassInDefinitionOrder() {
-        Iterator fields = fieldDictionary.serializableFieldsFor(SomeClass.class);
+        Iterator fields = fieldDictionary.fieldsFor(SomeClass.class);
         assertEquals("a", getNonStaticFieldName(fields));
         assertEquals("c", getNonStaticFieldName(fields));
         assertEquals("b", getNonStaticFieldName(fields));
@@ -37,12 +37,12 @@ public class FieldDictionaryTest extends TestCase {
     }
 
     public void testIncludesFieldsInSuperClasses() {
-        Iterator fields = fieldDictionary.serializableFieldsFor(SpecialClass.class);
-        assertEquals("brilliant", getNonStaticFieldName(fields));
+        Iterator fields = fieldDictionary.fieldsFor(SpecialClass.class);
         assertEquals("a", getNonStaticFieldName(fields));
         assertEquals("c", getNonStaticFieldName(fields));
         assertEquals("b", getNonStaticFieldName(fields));
         assertEquals("e", getNonStaticFieldName(fields));
+        assertEquals("brilliant", getNonStaticFieldName(fields));
         assertFalse("No more fields should be present", fields.hasNext());
     }
 
@@ -51,7 +51,7 @@ public class FieldDictionaryTest extends TestCase {
     }
 
     public void testIncludesOuterClassReferenceForInnerClass() {
-        Iterator fields = fieldDictionary.serializableFieldsFor(InnerClass.class);
+        Iterator fields = fieldDictionary.fieldsFor(InnerClass.class);
         assertEquals("someThing", getNonStaticFieldName(fields));
         Field innerField = ((Field)fields.next());
         assertEquals("this$0", innerField.getName());

@@ -9,13 +9,13 @@ import java.util.Map;
 
 
 public class InheritanceTest extends AbstractAcceptanceTest {
-    public void testHandlesInheritanceHeirarchies() {
+    public void testHandlesInheritanceHierarchies() {
         OpenSourceSoftware openSourceSoftware = new OpenSourceSoftware("apache", "geronimo", "license");
         String xml =
                 "<oss>\n" +
-                "  <license>license</license>\n" +
                 "  <vendor>apache</vendor>\n" +
                 "  <name>geronimo</name>\n" +
+                "  <license>license</license>\n" +
                 "</oss>";
 
         xstream.alias("oss", OpenSourceSoftware.class);
@@ -72,8 +72,8 @@ public class InheritanceTest extends AbstractAcceptanceTest {
 
         String expected = "" +
                 "<child>\n" +
-                "  <name>CHILD</name>\n" +
                 "  <name defined-in=\"parent\">PARENT</name>\n" +
+                "  <name>CHILD</name>\n" +
                 "</child>";
 
         assertBothWays(child, expected);
@@ -140,14 +140,14 @@ public class InheritanceTest extends AbstractAcceptanceTest {
         childA.getParentStuff().add("woo");
         String expected = "" +
                 "<child-a>\n" +
+                "  <stuff defined-in=\"parent-a\">\n" +
+                "    <string>woo</string>\n" +
+                "  </stuff>\n" +
                 "  <stuff>\n" +
                 "    <entry>\n" +
                 "      <string>hello</string>\n" +
                 "      <string>world</string>\n" +
                 "    </entry>\n" +
-                "  </stuff>\n" +
-                "  <stuff defined-in=\"parent-a\">\n" +
-                "    <string>woo</string>\n" +
                 "  </stuff>\n" +
                 "</child-a>";
         assertBothWays(childA, expected);

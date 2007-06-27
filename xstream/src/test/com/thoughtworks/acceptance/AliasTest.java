@@ -171,9 +171,9 @@ public class AliasTest extends AbstractAcceptanceTest {
         TypeC object = new TypeC();
         String xml = ""
             + "<test>\n"
-            + "  <c>testC</c>\n"
-            + "  <b>testB</b>\n"
             + "  <a>testA</a>\n"
+            + "  <b>testB</b>\n"
+            + "  <c>testC</c>\n"
             + "</test>";
         assertBothWays(object, xml);
     }

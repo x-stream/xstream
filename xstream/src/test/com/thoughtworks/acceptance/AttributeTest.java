@@ -273,10 +273,10 @@ public class AttributeTest extends AbstractAcceptanceTest {
         camera.n = new Name("foo");
         String expected = "" +
         		"<camera name=\"Rebel 350\">\n" +
-        		"  <owner>Guilherme</owner>\n" +
                         "  <n>\n" +
                         "    <name>foo</name>\n" +
                         "  </n>\n" +
+                        "  <owner>Guilherme</owner>\n" +
         		"</camera>";
         assertBothWays(camera, expected);
     }
@@ -288,8 +288,8 @@ public class AttributeTest extends AbstractAcceptanceTest {
         camera.n = new Name("foo");
         String expected = "" +
                         "<camera name=\"Rebel 350\">\n" +
-                        "  <owner>Guilherme</owner>\n" +
                         "  <n name=\"foo\"/>\n" +
+                        "  <owner>Guilherme</owner>\n" +
                         "</camera>";
         assertBothWays(camera, expected);
     }

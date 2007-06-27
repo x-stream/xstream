@@ -91,11 +91,11 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
         // expect
         mockBlock.expects(once())
                 .method("visit")
-                .with(eq("b"), eq(int.class), eq(SubClassWithHiddenFields.class), ANYTHING)
+                .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING)
                 .id("first");
         mockBlock.expects(once())
                 .method("visit")
-                .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING)
+                .with(eq("b"), eq(int.class), eq(SubClassWithHiddenFields.class), ANYTHING)
                 .after("first");
         mockBlock.expects(once())
                 .method("visit")

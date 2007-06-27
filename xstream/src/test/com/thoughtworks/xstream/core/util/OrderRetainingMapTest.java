@@ -51,9 +51,17 @@ public class OrderRetainingMapTest extends TestCase {
         assertNoMore(valuesIterator);
     }
 
-    // TODO
-    public void TODOtestMaintainsOrderOfEntries() {
+    public void testMaintainsOrderOfEntries() {
         Iterator entrySetIterator = map.entrySet().iterator();
+        assertNextEntryEquals("one", "ONE", entrySetIterator);
+        assertNextEntryEquals("two", "TWO", entrySetIterator);
+        assertNextEntryEquals("three", "THREE", entrySetIterator);
+        assertNextEntryEquals("four", "FOUR", entrySetIterator);
+        assertNoMore(entrySetIterator);
+    }
+
+    public void testMaintainsOrderOfEntriesAfterCopyCtor() {
+        Iterator entrySetIterator = new OrderRetainingMap(map).entrySet().iterator();
         assertNextEntryEquals("one", "ONE", entrySetIterator);
         assertNextEntryEquals("two", "TWO", entrySetIterator);
         assertNextEntryEquals("three", "THREE", entrySetIterator);

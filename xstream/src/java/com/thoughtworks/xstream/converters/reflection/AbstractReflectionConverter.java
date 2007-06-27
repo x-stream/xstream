@@ -45,26 +45,35 @@ public abstract class AbstractReflectionConverter implements Converter {
 
     protected void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Set seenFields = new HashSet();
-        final Set seenAsAttributes = new HashSet();
+        final Map defaultFieldDefinition = new HashMap();
 
         // Attributes might be preferred to child elements ...
          reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class type, Class definedIn, Object value) {
+                if (!defaultFieldDefinition.containsKey(fieldName)) {
+                    defaultFieldDefinition.put(fieldName, reflectionProvider.getField(source.getClass(), fieldName));
+                }
+                
                 SingleValueConverter converter = mapper.getConverterFromItemType(fieldName, type, definedIn);
                 if(converter == null) {
-                	converter = mapper.getConverterFromItemType(fieldName, type);
+                    converter = mapper.getConverterFromItemType(fieldName, type);
                 }
                 if (converter == null) {
                     converter = mapper.getConverterFromItemType(type);
                 }
                 if (converter != null) {
                     if (value != null) {
+                        if (seenFields.contains(fieldName)) {
+                            throw new ConversionException("Cannot write field with name '" + fieldName 
+                                + "' twice as attribute for object of type " + source.getClass().getName());
+                        }
                         final String str = converter.toString(value);
                         if (str != null) {
                             writer.addAttribute(mapper.aliasForAttribute(definedIn, fieldName), str);
                         }
                     }
-                    seenAsAttributes.add(fieldName);
+                    // TODO: name is not enough, need also "definedIn"! 
+                    seenFields.add(fieldName);
                 }
             }
         });
@@ -72,7 +81,7 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Child elements not covered already processed as attributes ...
         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
-                if (!seenAsAttributes.contains(fieldName) && newObj != null) {
+                if (!seenFields.contains(fieldName) && newObj != null) {
                     Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(source.getClass(), fieldName);
                     if (mapping != null) {
                         if (mapping.getItemFieldName() != null) {
@@ -86,7 +95,6 @@ public abstract class AbstractReflectionConverter implements Converter {
                         }
                     } else {
                         writeField(fieldName, fieldName, fieldType, definedIn, newObj);
-                        seenFields.add(fieldName);
                     }
                 }
             }
@@ -104,7 +112,8 @@ public abstract class AbstractReflectionConverter implements Converter {
                     writer.addAttribute(mapper.aliasForAttribute("class"), mapper.serializedClass(actualType));
                 }
 
-                if (seenFields.contains(aliasName)) {
+                final Field defaultField = (Field)defaultFieldDefinition.get(fieldName);
+                if (defaultField.getDeclaringClass() != definedIn) {
                     writer.addAttribute(mapper.aliasForAttribute("defined-in"), mapper.serializedClass(definedIn));
                 }
 

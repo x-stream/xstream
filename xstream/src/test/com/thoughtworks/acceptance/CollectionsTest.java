@@ -173,10 +173,10 @@ public class CollectionsTest extends AbstractAcceptanceTest {
 
         assertBothWays(list,
                 "<java.util.Collections_-UnmodifiableRandomAccessList resolves-to=\"java.util.Collections$UnmodifiableList\">\n" +
-                "  <list>\n" +
+                "  <c class=\"list\">\n" +
                 "    <string>hi</string>\n" +
-                "  </list>\n" +
-                "  <c class=\"list\" reference=\"../list\"/>\n" +
+                "  </c>\n" +
+                "  <list reference=\"../c\"/>\n" +
                 "</java.util.Collections_-UnmodifiableRandomAccessList>");
     }
 
