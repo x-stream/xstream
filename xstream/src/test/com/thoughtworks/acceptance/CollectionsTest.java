@@ -142,11 +142,11 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         } else {
             xml = 
                 "<java.util.Collections_-SynchronizedList>\n" +
-                "  <list class=\"linked-list\">\n" +
+                "  <c class=\"linked-list\">\n" +
                 "    <string>hi</string>\n" +
-                "  </list>\n" +
-                "  <c class=\"linked-list\" reference=\"../list\"/>\n" +
+                "  </c>\n" +
                 "  <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"..\"/>\n" +
+                "  <list class=\"linked-list\" reference=\"../c\"/>\n" +
                 "</java.util.Collections_-SynchronizedList>";
         }
 
