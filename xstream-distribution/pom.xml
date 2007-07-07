@@ -150,13 +150,14 @@
           </execution>
         </executions>
       </plugin>
-      <!-- XSite fails to validate links - Need to configure it to be optional?  -->
       <plugin>
         <groupId>org.codehaus.xsite</groupId>
         <artifactId>xsite-maven-plugin</artifactId>
         <configuration>
-          <siteMapPath>${basedir}/src/content/website.xml</siteMapPath>
-          <skinPath>${basedir}/src/templates/skin.html</skinPath>
+          <sourceDirectoryPath>${basedir}/src</sourceDirectoryPath>
+          <sitemapPath>content/website.xml</sitemapPath>
+          <skinPath>templates/skin.html</skinPath>
+          <resourcePaths>resources</resourcePaths>
           <outputDirectoryPath>${project.build.directory}/xsite</outputDirectoryPath>
         </configuration>
         <executions>

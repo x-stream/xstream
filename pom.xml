@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
@@ -33,6 +34,7 @@
         <artifactId>commons-io</artifactId>
         <version>1.3</version>
       </dependency>
+
       <dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
@@ -306,7 +308,7 @@
         <plugin>
           <groupId>org.codehaus.xsite</groupId>
           <artifactId>xsite-maven-plugin</artifactId>
-          <version>1.0-beta-5</version>
+          <version>1.0-beta-9</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -363,5 +365,21 @@
       <url>http://repository.codehaus.org</url>
     </repository>
   </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>codehaus-plugin-repository</id>
+      <name>Codehaus Plugin Repository</name>
+      <url>http://repository.codehaus.org</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>codehaus-plugin-snapshot-repository</id>
+      <name>Codehaus Plugin Snapshot Repository</name>
+      <url>http://snapshots.repository.codehaus.org</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>
