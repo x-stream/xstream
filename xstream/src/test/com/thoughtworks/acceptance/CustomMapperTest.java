@@ -108,7 +108,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
     }
     
     public void testOwnMapperChainCanBeRegistered() {
-        Mapper mapper = new DefaultMapper(getClass().getClassLoader(), "impl");
+        Mapper mapper = new DefaultMapper(getClass().getClassLoader());
         xstream = new XStream(new PureJavaReflectionProvider(), mapper, new DomDriver());
         
         String expected = "" +
@@ -117,5 +117,33 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
                 "  <name>word</name>\n" +
                 "</com.thoughtworks.acceptance.objects.Software>";
         assertEquals(expected, xstream.toXML(new Software("ms", "word")));
+    }
+    
+    public void testCanBeUsedToOmitUnexpectedElements() {
+        String expectedXml = "" +
+                "<software>\n" +
+                "  <version>1.0</version>\n" +
+                "  <vendor>Joe</vendor>\n" +
+                "  <name>XStream</name>\n" +
+                "</software>";
+
+        xstream = new XStream() {
+
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new MapperWrapper(next) {
+
+                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                        return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                    }
+                    
+                };
+            }
+            
+        };
+        xstream.alias("software", Software.class);
+
+        Software out = (Software) xstream.fromXML(expectedXml);
+        assertEquals("Joe", out.vendor);
+        assertEquals("XStream", out.name);
     }
 }
