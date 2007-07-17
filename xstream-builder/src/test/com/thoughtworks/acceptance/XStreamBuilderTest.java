@@ -83,22 +83,6 @@ public class XStreamBuilderTest extends AbstractAcceptanceTest {
 
     }
 
-    public void testHandleCorrectlyAttributes() {
-
-        XStreamBuilder builder = new XStreamBuilder() {
-            {
-                handle(Office.class).with(alias("office"));
-                // TODO decide how to alias attribute to logradouro
-            }
-        };
-
-        Office office = new Office("Rua Vergueiro");
-        String expected = "<office logradouro=\"Rua Vergueiro\"/>";
-
-        assertBothWays(builder.buildXStream(), office, expected);
-
-    }
-
     public static class CollectionContainer {
         Collection collection;
     }
