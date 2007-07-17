@@ -31,10 +31,15 @@ public class TypeConfig implements ConfigProcessor {
 		}
 	}
 
-	public void with(TypeConfigProcessor... processors) {
-		for (TypeConfigProcessor processor : processors) {
+	public void with(TypeConfigProcessor[] processors) {
+        for (int i = 0; i < processors.length; i++) {
+            TypeConfigProcessor processor = processors[i];
 			this.childrenNodes.add(processor);
 		}
 	}
+
+    public void with(TypeConfigProcessor processor) {
+        this.childrenNodes.add(processor);
+    }
 
 }

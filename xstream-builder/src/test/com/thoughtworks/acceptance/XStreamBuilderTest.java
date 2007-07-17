@@ -5,7 +5,9 @@ import java.util.HashSet;
 
 import com.thoughtworks.xstream.ReadOnlyXStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.builder.TypeConfig;
 import com.thoughtworks.xstream.builder.XStreamBuilder;
+import com.thoughtworks.xstream.builder.processor.TypeConfigProcessor;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -40,8 +42,10 @@ public class XStreamBuilderTest extends AbstractAcceptanceTest {
 
         XStreamBuilder builder = new XStreamBuilder() {
             {
-                handle(Office.class).with(alias("office"),
-                							field("address").with(as("logradouro")));
+                handle(Office.class).with(new TypeConfigProcessor[]{ 
+                                                alias("office"),
+                                                field("address").with(as("logradouro"))
+                                            });
             }
         };
 
@@ -70,10 +74,11 @@ public class XStreamBuilderTest extends AbstractAcceptanceTest {
 
         XStreamBuilder builder = new XStreamBuilder() {
             {
-                handle(Office.class).with(alias("office"),
+                handle(Office.class).with(new TypeConfigProcessor[]{
+                                            alias("office"),
                 							ignores("address")
                 							// TODO "decision: could be" field("address").with(ignored())
-                							);
+                                            });
             }
         };
 

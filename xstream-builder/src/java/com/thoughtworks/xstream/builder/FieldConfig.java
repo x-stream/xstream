@@ -30,11 +30,17 @@ public class FieldConfig implements TypeConfigProcessor {
         }
 	}
 
-	public FieldConfig with(FieldConfigProcessor ... processors) {
-		for (FieldConfigProcessor processor : processors) {
+	public FieldConfig with(FieldConfigProcessor []processors) {
+        for (int i = 0; i < processors.length; i++) {
+            FieldConfigProcessor processor = processors[i];
 			this.processors.add(processor);
 		}
 		return this;
 	}
+
+    public FieldConfig with(FieldConfigProcessor processor) {
+        this.processors.add(processor);
+        return this;
+    }
 
 }

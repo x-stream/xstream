@@ -70,10 +70,16 @@ public class XStreamBuilder {
     	return new FieldConfig(fieldName);
     }
 
-    protected XStreamBuilder register(ConfigProcessor ... nodes) {
-    	for(ConfigProcessor node : nodes) {
+    protected XStreamBuilder register(ConfigProcessor[] nodes) {
+        for (int i = 0; i < nodes.length; i++) {
+            ConfigProcessor node = nodes[i];
             childrenNodes.add(node);
     	}
+        return this;
+    }
+
+    protected XStreamBuilder register(ConfigProcessor node) {
+        childrenNodes.add(node);
         return this;
     }
 
