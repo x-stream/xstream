@@ -1,7 +1,10 @@
 package com.thoughtworks.xstream.converters.javabean;
 
 import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 
 import junit.framework.TestCase;
 
@@ -193,7 +196,7 @@ public class JavaBeanConverterTest extends TestCase {
 
     /**
      * Only normal and trans are serializable properties, the field modifiers
-     * does not matter
+     * do not matter
      */
     public static class TypesOfFields extends StandardObject {
         String normal = "normal";
@@ -231,8 +234,6 @@ public class JavaBeanConverterTest extends TestCase {
         public void setTrans(String trans) {
             this.trans = trans;
         }
-
-
     }
 
     public void testDoesNotSerializeStaticFields() {
@@ -243,14 +244,44 @@ public class JavaBeanConverterTest extends TestCase {
             "  <trans>transient</trans>\n" +
             "</types>";
 
-
         XStream xstream = new XStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), "class"), -20);
         xstream.alias("types", TypesOfFields.class);
 
         String xml = xstream.toXML(fields);
         assertEquals(expected, xml);
-
     }
 
+    public static class SimpleBean extends StandardObject {
+        private Object member;
+
+        public Object getMember() {
+            return this.member;
+        }
+
+        public void setMember(Object member) {
+            this.member = member;
+        }
+    }
+
+    public void testSupportsTypeAlias() {
+        SimpleBean innerBean = new SimpleBean();
+        SimpleBean bean = new SimpleBean();
+        bean.setMember(innerBean);
+        innerBean.setMember("foo");
+            
+        String expected = "" +
+            "<bean>\n" +
+            "  <member class=\"bean\">\n" +
+            "    <member class=\"string\">foo</member>\n" +
+            "  </member>\n" +
+            "</bean>";
+
+        XStream xstream = new XStream();
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), "class"), -20);
+        xstream.alias("bean", SimpleBean.class);
+
+        String xml = xstream.toXML(bean);
+        assertEquals(expected, xml);
+    }
 }
