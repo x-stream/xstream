@@ -22,6 +22,10 @@ public class XStream12CompatibilityTest extends AbstractAcceptanceTest {
 
     public static class ChildClass extends ParentClass {
         String name;
+        
+        ChildClass() {
+            this("JDK", "1.3");
+        }
 
         ChildClass(final String parent, final String child) {
             ((ParentClass)this).name = parent;

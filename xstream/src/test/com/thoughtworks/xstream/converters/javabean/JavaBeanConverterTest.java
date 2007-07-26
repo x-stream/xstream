@@ -1,45 +1,41 @@
 package com.thoughtworks.xstream.converters.javabean;
 
-import com.thoughtworks.acceptance.StandardObject;
-import com.thoughtworks.acceptance.someobjects.Y;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
-
 import junit.framework.TestCase;
+
+import java.util.Comparator;
+
+import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.xstream.XStream;
+
 
 public class JavaBeanConverterTest extends TestCase {
 
+    // Different JDK versions deliver properties in different order - so sort them!
+    static class StringComparator implements Comparator {
+
+        public int compare(Object o1, Object o2) {
+            return ((String)o1).compareToIgnoreCase((String)o2);
+        }
+
+    }
+
     public static class World extends StandardObject {
+        
         int anInt = 1;
-
         Integer anInteger = new Integer(2);
-
-        char anChar = 'a';
-
-        Character anCharacter = new Character('w');
-
-        boolean anBool = true;
-
-        Boolean anBoolean = new Boolean(false);
-
+        char aChar = 'a';
+        Character aCharacter = new Character('w');
+        boolean aBool = true;
+        Boolean aBoolean = new Boolean(false);
         byte aByte = 4;
-
         Byte aByteClass = new Byte("5");
-
         short aShort = 6;
-
         Short aShortClass = new Short("7");
-
         float aFloat = 8f;
-
         Float aFloatClass = new Float("9");
-
         long aLong = 10;
-
         Long aLongClass = new Long("11");
-
-        String anString = new String("XStream programming!");
+        String aString = new String("XStream programming!");
 
         public byte getAByte() {
             return aByte;
@@ -89,36 +85,36 @@ public class JavaBeanConverterTest extends TestCase {
             aLongClass = longClass;
         }
 
-        public boolean isAnBool() {
-            return anBool;
+        public boolean isABool() {
+            return aBool;
         }
 
-        public void setAnBool(boolean anBool) {
-            this.anBool = anBool;
+        public void setABool(boolean aBool) {
+            this.aBool = aBool;
         }
 
-        public Boolean getAnBoolean() {
-            return anBoolean;
+        public Boolean getABoolean() {
+            return aBoolean;
         }
 
-        public void setAnBoolean(Boolean anBoolean) {
-            this.anBoolean = anBoolean;
+        public void setABoolean(Boolean aBoolean) {
+            this.aBoolean = aBoolean;
         }
 
-        public char getAnChar() {
-            return anChar;
+        public char getAChar() {
+            return aChar;
         }
 
-        public void setAnChar(char anChar) {
-            this.anChar = anChar;
+        public void setAChar(char aChar) {
+            this.aChar = aChar;
         }
 
-        public Character getAnCharacter() {
-            return anCharacter;
+        public Character getACharacter() {
+            return aCharacter;
         }
 
-        public void setAnCharacter(Character anCharacter) {
-            this.anCharacter = anCharacter;
+        public void setACharacter(Character aCharacter) {
+            this.aCharacter = aCharacter;
         }
 
         public int getAnInt() {
@@ -137,12 +133,12 @@ public class JavaBeanConverterTest extends TestCase {
             this.anInteger = anInteger;
         }
 
-        public String getAnString() {
-            return anString;
+        public String getAString() {
+            return aString;
         }
 
-        public void setAnString(String anString) {
-            this.anString = anString;
+        public void setAString(String aString) {
+            this.aString = aString;
         }
 
         public short getAShort() {
@@ -166,28 +162,28 @@ public class JavaBeanConverterTest extends TestCase {
         World world = new World();
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), "class"), -20);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
+            new StringComparator())), -20);
         xstream.alias("world", World.class);
 
-
-        String expected =
-            "<world>\n" +
-            "  <AByte>4</AByte>\n" +
-            "  <AByteClass>5</AByteClass>\n" +
-            "  <AFloat>8.0</AFloat>\n" +
-            "  <AFloatClass>9.0</AFloatClass>\n" +
-            "  <ALong>10</ALong>\n" +
-            "  <ALongClass>11</ALongClass>\n" +
-            "  <AShort>6</AShort>\n" +
-            "  <AShortClass>7</AShortClass>\n" +
-            "  <anBool>true</anBool>\n" +
-            "  <anBoolean>false</anBoolean>\n" +
-            "  <anChar>a</anChar>\n" +
-            "  <anCharacter>w</anCharacter>\n" +
-            "  <anInt>1</anInt>\n" +
-            "  <anInteger>2</anInteger>\n" +
-            "  <anString>XStream programming!</anString>\n" +
-            "</world>";
+        String expected = "" 
+            + "<world>\n"
+            + "  <ABool>true</ABool>\n"
+            + "  <ABoolean>false</ABoolean>\n"
+            + "  <AByte>4</AByte>\n"
+            + "  <AByteClass>5</AByteClass>\n"
+            + "  <AChar>a</AChar>\n"
+            + "  <ACharacter>w</ACharacter>\n"
+            + "  <AFloat>8.0</AFloat>\n"
+            + "  <AFloatClass>9.0</AFloatClass>\n"
+            + "  <ALong>10</ALong>\n"
+            + "  <ALongClass>11</ALongClass>\n"
+            + "  <anInt>1</anInt>\n"
+            + "  <anInteger>2</anInteger>\n"
+            + "  <AShort>6</AShort>\n"
+            + "  <AShortClass>7</AShortClass>\n"
+            + "  <AString>XStream programming!</AString>\n"
+            + "</world>";
 
         String result = xstream.toXML(world);
 
@@ -195,8 +191,7 @@ public class JavaBeanConverterTest extends TestCase {
     }
 
     /**
-     * Only normal and trans are serializable properties, the field modifiers
-     * do not matter
+     * Only normal and trans are serializable properties, the field modifiers do not matter
      */
     public static class TypesOfFields extends StandardObject {
         String normal = "normal";
@@ -238,18 +233,20 @@ public class JavaBeanConverterTest extends TestCase {
 
     public void testDoesNotSerializeStaticFields() {
         TypesOfFields fields = new TypesOfFields();
-        String expected = "" +
-            "<types>\n" +
-            "  <normal>normal</normal>\n" +
-            "  <trans>transient</trans>\n" +
-            "</types>";
+        String expected = ""
+            + "<types>\n"
+            + "  <normal>normal</normal>\n"
+            + "  <trans>transient</trans>\n"
+            + "</types>";
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), "class"), -20);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
+            new StringComparator())), -20);
         xstream.alias("types", TypesOfFields.class);
 
         String xml = xstream.toXML(fields);
         assertEquals(expected, xml);
+
     }
 
     public static class SimpleBean extends StandardObject {
@@ -269,19 +266,113 @@ public class JavaBeanConverterTest extends TestCase {
         SimpleBean bean = new SimpleBean();
         bean.setMember(innerBean);
         innerBean.setMember("foo");
-            
-        String expected = "" +
-            "<bean>\n" +
-            "  <member class=\"bean\">\n" +
-            "    <member class=\"string\">foo</member>\n" +
-            "  </member>\n" +
-            "</bean>";
+
+        String expected = ""
+            + "<bean>\n"
+            + "  <member class=\"bean\">\n"
+            + "    <member class=\"string\">foo</member>\n"
+            + "  </member>\n"
+            + "</bean>";
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), "class"), -20);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), -20);
         xstream.alias("bean", SimpleBean.class);
 
         String xml = xstream.toXML(bean);
         assertEquals(expected, xml);
+    }
+
+    public void testDoesNotSerializeOmittedFields() {
+        TypesOfFields fields = new TypesOfFields();
+        String expected = "" 
+            + "<types>\n" 
+            + "  <normal>normal</normal>\n" 
+            + "</types>";
+
+        XStream xstream = new XStream();
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
+        xstream.alias("types", TypesOfFields.class);
+        xstream.omitField(TypesOfFields.class, "trans");
+
+        String xml = xstream.toXML(fields);
+        assertEquals(expected, xml);
+    }
+
+    static class Person {
+        private String fName;
+        private String lName;
+
+        public Person() {
+            // Bean constructor
+        }
+
+        public Person(String firstName, String lastName) {
+            this.fName = firstName;
+            this.lName = lastName;
+        }
+
+        public String getFirstName() {
+            return fName;
+        }
+
+        public void setFirstName(String name) {
+            fName = name;
+        }
+
+        public String getLastName() {
+            return lName;
+        }
+
+        public void setLastName(String name) {
+            lName = name;
+        }
+    }
+
+    static class Man extends Person {
+
+        public Man() {
+            // Bean constructor
+            super();
+        }
+
+        public Man(String firstName, String lastName) {
+            super(firstName, lastName);
+        }
+
+    }
+
+    public void testDoesNotSerializeOmittedInheritedFields() {
+        XStream xstream = new XStream();
+        xstream.registerConverter(
+            new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
+        xstream.omitField(Person.class, "lastName");
+        xstream.alias("man", Man.class);
+
+        Man man = new Man("John", "Doe");
+        String expected = "" 
+            + "<man>\n" 
+            + "  <firstName>John</firstName>\n" 
+            + "</man>";
+
+        assertEquals(expected, xstream.toXML(man));
+    }
+
+    public void testUseAliasInheritedFields() {
+        XStream xstream = new XStream();
+        xstream.registerConverter(
+            new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
+                new StringComparator())), XStream.PRIORITY_LOW);
+        xstream.aliasField("first-name", Person.class, "firstName");
+        xstream.aliasField("last-name", Person.class, "lastName");
+        xstream.alias("man", Man.class);
+
+        Man man = new Man("John", "Doe");
+        String expected = "" 
+            + "<man>\n"
+            + "  <first-name>John</first-name>\n"
+            + "  <last-name>Doe</last-name>\n"
+            + "</man>";
+
+        assertEquals(expected, xstream.toXML(man));
     }
 }
