@@ -96,11 +96,12 @@ public class JavaBeanConverter implements Converter {
 
             boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName, result.getClass());
 
-            Class type = determineType(reader, result, propertyName);
-            Object value = context.convertAnother(result, type);
-
             if (propertyExistsInClass) {
+                Class type = determineType(reader, result, propertyName);
+                Object value = context.convertAnother(result, type);
                 beanProvider.writeProperty(result, propertyName, value);
+            } else if (mapper.shouldSerializeMember(result.getClass(), propertyName)) {
+                throw new ConversionException("Property '" + propertyName + "' not defined in class " + result.getClass().getName());
             }
 
             reader.moveUp();

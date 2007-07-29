@@ -163,7 +163,7 @@ public class JavaBeanConverterTest extends TestCase {
 
         XStream xstream = new XStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
-            new StringComparator())), -20);
+            new StringComparator())), XStream.PRIORITY_VERY_LOW);
         xstream.alias("world", World.class);
 
         String expected = "" 
@@ -275,7 +275,7 @@ public class JavaBeanConverterTest extends TestCase {
             + "</bean>";
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), -20);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
         xstream.alias("bean", SimpleBean.class);
 
         String xml = xstream.toXML(bean);
@@ -290,12 +290,30 @@ public class JavaBeanConverterTest extends TestCase {
             + "</types>";
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
         xstream.alias("types", TypesOfFields.class);
         xstream.omitField(TypesOfFields.class, "trans");
+        xstream.omitField(TypesOfFields.class, "foo");
 
         String xml = xstream.toXML(fields);
         assertEquals(expected, xml);
+    }
+
+    public void testDoesNotDeserializeOmittedFields() {
+        TypesOfFields fields = new TypesOfFields();
+        String xml = "" 
+            + "<types>\n" 
+            + "  <normal>normal</normal>\n" 
+            + "  <foo>bar</foo>\n" 
+            + "</types>";
+
+        XStream xstream = new XStream();
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+        xstream.alias("types", TypesOfFields.class);
+        xstream.omitField(TypesOfFields.class, "foo");
+
+        TypesOfFields unmarshalledFields = (TypesOfFields)xstream.fromXML(xml);  
+        assertEquals(fields, unmarshalledFields);
     }
 
     static class Person {
@@ -344,7 +362,7 @@ public class JavaBeanConverterTest extends TestCase {
     public void testDoesNotSerializeOmittedInheritedFields() {
         XStream xstream = new XStream();
         xstream.registerConverter(
-            new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
+            new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
         xstream.omitField(Person.class, "lastName");
         xstream.alias("man", Man.class);
 
@@ -361,7 +379,7 @@ public class JavaBeanConverterTest extends TestCase {
         XStream xstream = new XStream();
         xstream.registerConverter(
             new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
-                new StringComparator())), XStream.PRIORITY_LOW);
+                new StringComparator())), XStream.PRIORITY_VERY_LOW);
         xstream.aliasField("first-name", Person.class, "firstName");
         xstream.aliasField("last-name", Person.class, "lastName");
         xstream.alias("man", Man.class);
