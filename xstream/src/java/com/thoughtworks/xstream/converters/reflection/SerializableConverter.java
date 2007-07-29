@@ -72,7 +72,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     public void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        writer.addAttribute(ATTRIBUTE_SERIALIZATION, ATTRIBUTE_VALUE_CUSTOM);
+        writer.addAttribute(mapper.aliasForAttribute(ATTRIBUTE_SERIALIZATION), ATTRIBUTE_VALUE_CUSTOM);
 
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
@@ -104,9 +104,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
                                 + " may not write a field named '" + name + "'");
                     }
                     if (value != null) {
-                        writer.startNode(mapper.serializedMember(currentType[0], name));
+                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(currentType[0], name), field.getType());
                         if (field.getType() != value.getClass() && !field.getType().isPrimitive()) {
-                            writer.addAttribute(ATTRIBUTE_CLASS, mapper.serializedClass(value.getClass()));
+                            writer.addAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS), mapper.serializedClass(value.getClass()));
                         }
                         context.convertAnother(value);
                         writer.endNode();
@@ -137,13 +137,16 @@ public class SerializableConverter extends AbstractReflectionConverter {
                             writer.startNode(ELEMENT_DEFAULT);
                             writtenDefaultFields = true;
                         }
+                        if (!mapper.shouldSerializeMember(currentType[0], field.getName())) {
+                            continue;
+                        }
 
-                        writer.startNode(mapper.serializedMember(currentType[0], field.getName()));
+                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(currentType[0], field.getName()), field.getType());
 
                         Class actualType = value.getClass();
                         Class defaultType = mapper.defaultImplementationOf(field.getType());
                         if (!actualType.equals(defaultType)) {
-                            writer.addAttribute(ATTRIBUTE_CLASS, mapper.serializedClass(actualType));
+                            writer.addAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS), mapper.serializedClass(actualType));
                         }
 
                         context.convertAnother(value);
@@ -249,7 +252,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
 
-        if (!ATTRIBUTE_VALUE_CUSTOM.equals(reader.getAttribute(ATTRIBUTE_SERIALIZATION))) {
+        if (!ATTRIBUTE_VALUE_CUSTOM.equals(reader.getAttribute(mapper.aliasForAttribute(ATTRIBUTE_SERIALIZATION)))) {
             throw new ConversionException("Cannot deserialize object with new readObject()/writeObject() methods");
         }
 
@@ -266,7 +269,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 final Map fields = new HashMap();
                 reader.moveDown();
                 if (reader.getNodeName().equals(ELEMENT_FIELDS)) {
-                    // Maintain compatability with XStream 1.1.0
+                    // Maintain compatibility with XStream 1.1.0
                     while (reader.hasMoreChildren()) {
                         reader.moveDown();
                         if (!reader.getNodeName().equals(ELEMENT_FIELD)) {
@@ -284,20 +287,22 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     while (reader.hasMoreChildren()) {
                         reader.moveDown();
                         String name = reader.getNodeName();
-                        String typeName = reader.getAttribute(ATTRIBUTE_CLASS);
-                        Class type;
-                        if (typeName != null) {
-                            type = mapper.realClass(typeName);
-                        } else {
-                            ObjectStreamField field = objectStreamClass.getField(name);
-                            if (field == null) {
-                                throw new ObjectAccessException("Class " + currentType[0]
-                                        + " does not contain a field named '" + name + "'");
+                        if (mapper.shouldSerializeMember(currentType[0], name)) {
+                            String typeName = reader.getAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS));
+                            Class type;
+                            if (typeName != null) {
+                                type = mapper.realClass(typeName);
+                            } else {
+                                ObjectStreamField field = objectStreamClass.getField(name);
+                                if (field == null) {
+                                    throw new ObjectAccessException("Class " + currentType[0]
+                                            + " does not contain a field named '" + name + "'");
+                                }
+                                type = field.getType();
                             }
-                            type = field.getType();
+                            Object value = context.convertAnother(result, type);
+                            fields.put(name, value);
                         }
-                        Object value = context.convertAnother(result, type);
-                        fields.put(name, value);
                         reader.moveUp();
                     }
                 } else {
@@ -319,17 +324,19 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 while (reader.hasMoreChildren()) {
                     reader.moveDown();
 
-                    Class type;
                     String fieldName = mapper.realMember(currentType[0], reader.getNodeName());
-                    String classAttribute = reader.getAttribute(ATTRIBUTE_CLASS);
-                    if (classAttribute != null) {
-                        type = mapper.realClass(classAttribute);
-                    } else {
-                        type = mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, currentType[0]));
-                    }
+                    if (mapper.shouldSerializeMember(currentType[0], fieldName)) {
+                        String classAttribute = reader.getAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS));
+                        final Class type;
+                        if (classAttribute != null) {
+                            type = mapper.realClass(classAttribute);
+                        } else {
+                            type = mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, currentType[0]));
+                        }
 
-                    Object value = context.convertAnother(result, type);
-                    reflectionProvider.writeField(result, fieldName, value, currentType[0]);
+                        Object value = context.convertAnother(result, type);
+                        reflectionProvider.writeField(result, fieldName, value, currentType[0]);
+                    }
 
                     reader.moveUp();
                 }
