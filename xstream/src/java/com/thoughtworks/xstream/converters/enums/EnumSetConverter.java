@@ -38,7 +38,7 @@ public class EnumSetConverter implements Converter {
             }
         }
         if (assumedTypeField == null) {
-            throw new InternalError("Cannot detect element type of EnumSet");
+            throw new ExceptionInInitializerError("Cannot detect element type of EnumSet");
         }
         typeField = assumedTypeField;
     }

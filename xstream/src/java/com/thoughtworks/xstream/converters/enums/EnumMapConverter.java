@@ -36,7 +36,7 @@ public class EnumMapConverter extends MapConverter {
             }
         }
         if (assumedTypeField == null) {
-            throw new InternalError("Cannot detect element type of EnumMap");
+            throw new ExceptionInInitializerError("Cannot detect element type of EnumMap");
         }
         typeField = assumedTypeField;
     }
