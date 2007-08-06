@@ -22,11 +22,27 @@ import java.lang.reflect.Field;
  */
 public class EnumMapConverter extends MapConverter {
 
-    private final Field typeField;
+    private final static Field typeField;
+    static {
+        // field name is "keyType" in Sun JDK, but different in IKVM 
+        Field assumedTypeField = null;
+        Field[] fields = EnumMap.class.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i].getType() == Class.class) {
+                // take the fist member of type "Class"
+                assumedTypeField = fields[i];
+                assumedTypeField.setAccessible(true);
+                break;
+            }
+        }
+        if (assumedTypeField == null) {
+            throw new InternalError("Cannot detect element type of EnumMap");
+        }
+        typeField = assumedTypeField;
+    }
 
     public EnumMapConverter(Mapper mapper) {
         super(mapper);
-        typeField = Fields.find(EnumMap.class, "keyType");
     }
 
     public boolean canConvert(Class type) {
