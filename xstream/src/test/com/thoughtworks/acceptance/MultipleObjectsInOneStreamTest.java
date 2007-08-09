@@ -1,10 +1,18 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.MarshallingStrategy;
+import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.core.DefaultConverterLookup;
+import com.thoughtworks.xstream.core.ReferenceByIdMarshaller;
+import com.thoughtworks.xstream.core.ReferenceByIdUnmarshaller;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppReader;
+import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.testutil.CallLog;
 
 import java.io.EOFException;
@@ -191,10 +199,44 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         assertNotSame(alice, jane.secretary); // NOT SAME
     }
 
-    public void TODOtestSupportsOptionToPreserveReferencesAcrossDifferentObjectsInStream() throws Exception {
-        xstream.alias("person", Person.class);
+    static class ReusingReferenceByIdMarshallingStrategy implements MarshallingStrategy {
+        
+        private ReferenceByIdMarshaller marshaller;
+        private ReferenceByIdUnmarshaller unmarshaller;
 
-//        xstream.setObjectStreamMode(XStream.ID_REFERENCES);
+        public void marshal(HierarchicalStreamWriter writer, Object obj,
+            ConverterLookup converterLookup, Mapper mapper, DataHolder dataHolder) {
+            if (marshaller == null) {
+                marshaller = new ReferenceByIdMarshaller(writer,converterLookup, mapper);
+            }
+            marshaller.start(obj, dataHolder);
+        }
+
+        public void marshal(HierarchicalStreamWriter writer, Object obj,
+            DefaultConverterLookup converterLookup, ClassMapper classMapper,
+            DataHolder dataHolder) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Object unmarshal(Object root, HierarchicalStreamReader reader,
+            DataHolder dataHolder, ConverterLookup converterLookup, Mapper mapper) {
+            if (unmarshaller == null) {
+                unmarshaller = new ReferenceByIdUnmarshaller(root,reader,converterLookup, mapper);
+            }
+            return unmarshaller.start(dataHolder);
+        }
+
+        public Object unmarshal(Object root, HierarchicalStreamReader reader,
+            DataHolder dataHolder, DefaultConverterLookup converterLookup,
+            ClassMapper classMapper) {
+            throw new UnsupportedOperationException();
+        }
+        
+    }
+
+    public void testSupportsOptionToPreserveReferencesAcrossDifferentObjectsInStream() throws Exception {
+        xstream.alias("person", Person.class);
+        xstream.setMarshallingStrategy(new ReusingReferenceByIdMarshallingStrategy());
 
         // Setup initial data: two object, one referencing another...
         Person alice = new Person("Alice", "Thing");
@@ -214,6 +256,6 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         jane = (Person) in.readObject();
         in.close();
 
-        assertSame(alice, jane.secretary); // NOT SAME
+        assertSame(alice, jane.secretary);
     }
 }
