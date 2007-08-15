@@ -199,7 +199,7 @@ public class SerializableConverterTest extends TestCase {
 
         private static final ObjectStreamField[] serialPersistentFields = {
             new ObjectStreamField("s1", String.class),
-            new ObjectStreamField("s2", int.class),
+            new ObjectStreamField("s2", String.class),
         };
 
         private void writeObject(ObjectOutputStream out) throws IOException {
@@ -260,6 +260,56 @@ public class SerializableConverterTest extends TestCase {
         simple.setOne("one");
         simple.setTwo("2");
         
+        SimpleNamedFieldsType serialized = (SimpleNamedFieldsType)xstream.fromXML(xml);
+        assertEquals(simple, serialized);
+    }
+    
+    public void testCanAliasField() {
+        XStream xstream = new XStream();
+        xstream.alias("simple", SimpleType.class);
+        xstream.aliasField("s2", SimpleType.class, "two");
+        
+        String expected = ""
+            + "<simple serialization=\"custom\">\n"
+            + "  <simple>\n"
+            + "    <default>\n"
+            + "      <one>one</one>\n"
+            + "      <s2>two</s2>\n"
+            + "    </default>\n"
+            + "  </simple>\n"
+            + "</simple>";
+        
+        SimpleType simple = new SimpleType();
+        simple.setOne("one");
+        simple.setTwo("two");
+        
+        String xml = xstream.toXML(simple);
+        assertEquals(expected, xml);
+        SimpleType serialized = (SimpleType)xstream.fromXML(xml);
+        assertEquals(simple, serialized);
+    }
+
+    public void testCanAliasNamedField() {
+        XStream xstream = new XStream();
+        xstream.alias("simple", SimpleNamedFieldsType.class);
+        xstream.aliasField("two", SimpleNamedFieldsType.class, "s2");
+        
+        String expected = ""
+            + "<simple serialization=\"custom\">\n"
+            + "  <simple>\n"
+            + "    <default>\n"
+            + "      <s1>one</s1>\n"
+            + "      <two>two</two>\n"
+            + "    </default>\n"
+            + "  </simple>\n"
+            + "</simple>";
+        
+        SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
+        simple.setOne("one");
+        simple.setTwo("two");
+        
+        String xml = xstream.toXML(simple);
+        assertEquals(expected, xml);
         SimpleNamedFieldsType serialized = (SimpleNamedFieldsType)xstream.fromXML(xml);
         assertEquals(simple, serialized);
     }

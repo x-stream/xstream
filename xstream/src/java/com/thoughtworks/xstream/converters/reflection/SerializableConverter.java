@@ -289,7 +289,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     ObjectStreamClass objectStreamClass = ObjectStreamClass.lookup(currentType[0]);
                     while (reader.hasMoreChildren()) {
                         reader.moveDown();
-                        String name = reader.getNodeName();
+                        String name = mapper.realMember(currentType[0], reader.getNodeName());
                         if (mapper.shouldSerializeMember(currentType[0], name)) {
                             String typeName = reader.getAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS));
                             Class type;
