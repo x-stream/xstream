@@ -97,6 +97,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 writer.startNode(ELEMENT_DEFAULT);
                 for (Iterator iterator = fields.keySet().iterator(); iterator.hasNext();) {
                     String name = (String) iterator.next();
+                    if (!mapper.shouldSerializeMember(currentType[0], name)) {
+                        continue;
+                    }
                     ObjectStreamField field = objectStreamClass.getField(name);
                     Object value = fields.get(name);
                     if (field == null) {

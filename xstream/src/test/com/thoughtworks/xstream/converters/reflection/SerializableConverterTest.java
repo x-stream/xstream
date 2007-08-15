@@ -12,6 +12,8 @@ import junit.framework.TestCase;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
 
 
 /**
@@ -172,5 +174,93 @@ public class SerializableConverterTest extends TestCase {
         
         SimpleType serialized = (SimpleType)xstream.fromXML(xml);
         assertEquals(extended, serialized);
+    }
+
+    public static class SimpleNamedFieldsType extends StandardObject implements Serializable {
+
+        private String one;
+        private String two;
+
+        public String getOne() {
+            return this.one;
+        }
+
+        public void setOne(String one) {
+            this.one = one;
+        }
+
+        public String getTwo() {
+            return this.two;
+        }
+
+        public void setTwo(String two) {
+            this.two = two;
+        }
+
+        private static final ObjectStreamField[] serialPersistentFields = {
+            new ObjectStreamField("s1", String.class),
+            new ObjectStreamField("s2", int.class),
+        };
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            // don't call defaultWriteObject()
+            ObjectOutputStream.PutField fields = out.putFields();
+            fields.put("s1", one);
+            fields.put("s2", two);
+            out.writeFields();
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            // don't call defaultReadObject()
+            ObjectInputStream.GetField fields = in.readFields();
+            one = (String) fields.get("s1", "1");
+            two = (String) fields.get("s2", "2");
+        }
+    }
+    
+    public void testCanOmitNamedFieldAtSerialization() {
+        XStream xstream = new XStream();
+        xstream.alias("simple", SimpleNamedFieldsType.class);
+        xstream.omitField(SimpleNamedFieldsType.class, "s2");
+        
+        String expected = ""
+            + "<simple serialization=\"custom\">\n"
+            + "  <simple>\n"
+            + "    <default>\n"
+            + "      <s1>one</s1>\n"
+            + "    </default>\n"
+            + "  </simple>\n"
+            + "</simple>";
+        
+        SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
+        simple.setOne("one");
+        simple.setTwo("two");
+        
+        String xml = xstream.toXML(simple);
+        assertEquals(expected, xml);
+    }
+    
+    public void testCanOmitNamedFieldAtDeserialization() {
+        XStream xstream = new XStream();
+        xstream.alias("simple", SimpleNamedFieldsType.class);
+        xstream.omitField(SimpleNamedFieldsType.class, "s2");
+        xstream.omitField(SimpleNamedFieldsType.class, "x");
+        
+        String xml = ""
+            + "<simple serialization=\"custom\">\n"
+            + "  <simple>\n"
+            + "    <default>\n"
+            + "      <s1>one</s1>\n"
+            + "      <x>x</x>\n"
+            + "    </default>\n"
+            + "  </simple>\n"
+            + "</simple>";
+        
+        SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
+        simple.setOne("one");
+        simple.setTwo("2");
+        
+        SimpleNamedFieldsType serialized = (SimpleNamedFieldsType)xstream.fromXML(xml);
+        assertEquals(simple, serialized);
     }
 }
