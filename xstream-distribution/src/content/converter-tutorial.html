@@ -463,14 +463,14 @@ public class BirthdayConverter implements Converter {
         public void marshal(Object value, HierarchicalStreamWriter writer,
                         MarshallingContext context) {
                 Birthday birthday = (Birthday)value;
-                if (value.getPerson() != null) {
+                if (birthday.getPerson() != null) {
                         writer.startNode("person");
-                        context.convertAnother(value.getPerson());
+                        context.convertAnother(birthday.getPerson());
                         writer.endNode();
                 }
-                if (value.getDate() != null) {
+                if (birthday.getDate() != null) {
                         writer.startNode("birth");
-                        context.convertAnother(value.getDate());
+                        context.convertAnother(birthday.getDate());
                         writer.endNode();
                 }
         }
@@ -515,10 +515,10 @@ public class BirthdayConverter implements Converter {
                         MarshallingContext context) {
                 Birthday birthday = (Birthday)value;
                 writer.startNode("person");
-                context.convertAnother(value.getPerson());
+                context.convertAnother(birthday.getPerson());
                 writer.endNode();
                 writer.startNode("birth");
-                context.convertAnother(value.getDate());
+                context.convertAnother(birthday.getDate());
                 writer.endNode();
         }
 
