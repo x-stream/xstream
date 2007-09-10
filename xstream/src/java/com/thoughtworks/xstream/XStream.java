@@ -1083,7 +1083,7 @@ public class XStream {
     }
 
     /**
-     * Change mode for dealing with duplicate references. Valid valuse are
+     * Change mode for dealing with duplicate references. Valid values are
      * <code>XPATH_ABSOLUTE_REFERENCES</code>, <code>XPATH_RELATIVE_REFERENCES</code>,
      * <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>.
      *
