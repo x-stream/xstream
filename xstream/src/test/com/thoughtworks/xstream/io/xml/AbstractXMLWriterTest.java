@@ -13,14 +13,13 @@ public abstract class AbstractXMLWriterTest extends TestCase {
     // String.replaceAll is JDK 1.4
     protected String replaceAll(String s, final String occurance, final String replacement) {
         final int len = occurance.length();
-        int i = 0;
-        while((i = s.indexOf(occurance, i)) >= 0) {
-            final StringBuffer buff = new StringBuffer(i > 0 ? s.substring(0, i) : "");
-            buff.append(replacement);
-            buff.append(s.substring(i + len));
-            s = buff.toString();
+        final int inc = len - replacement.length();
+        int i = -inc;
+        final StringBuffer buff = new StringBuffer(s);
+        while((i = buff.indexOf(occurance, i + inc)) >= 0) {
+            buff.replace(i, i + len, replacement);
         }
-        return s;
+        return buff.toString();
     }
 
     public void testProducesXmlElements() {

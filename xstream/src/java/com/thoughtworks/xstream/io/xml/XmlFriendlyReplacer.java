@@ -65,12 +65,12 @@ public class XmlFriendlyReplacer {
         int length = name.length();
         for(int i = 0; i < length; i++) {
             char c = name.charAt(i);
-            if ( stringFoundAt(name, i, underscoreReplacement)) {
-                i += underscoreReplacement.length() - 1;
-                result.append('_');
-            } else if ( stringFoundAt(name, i, dollarReplacement)) {
+            if ( stringFoundAt(name, i, dollarReplacement)) {
                 i += dollarReplacement.length() - 1;
                 result.append('$');
+            } else if ( stringFoundAt(name, i, underscoreReplacement)) {
+                i += underscoreReplacement.length() - 1;
+                result.append('_');
             } else {
                 result.append(c);
             }
