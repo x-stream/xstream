@@ -9,6 +9,8 @@ import com.thoughtworks.xstream.benchmark.reflection.products.XStreamLocalAttrib
 import com.thoughtworks.xstream.benchmark.reflection.products.XStreamPlain;
 import com.thoughtworks.xstream.benchmark.reflection.targets.FieldReflection;
 import com.thoughtworks.xstream.benchmark.reflection.targets.HierarchyLevelReflection;
+import com.thoughtworks.xstream.benchmark.reflection.targets.InnerClassesReflection;
+import com.thoughtworks.xstream.benchmark.reflection.targets.StaticInnerClassesReflection;
 import com.thoughtworks.xstream.tools.benchmark.Harness;
 import com.thoughtworks.xstream.tools.benchmark.metrics.DeserializationSpeedMetric;
 import com.thoughtworks.xstream.tools.benchmark.metrics.SerializationSpeedMetric;
@@ -31,6 +33,8 @@ public class ReflectionBenchmark {
         harness.addProduct(new XStreamLocalAttributeAliases());
         harness.addTarget(new FieldReflection());
         harness.addTarget(new HierarchyLevelReflection());
+        harness.addTarget(new InnerClassesReflection());
+        harness.addTarget(new StaticInnerClassesReflection());
         harness.run(new TextReporter());
     }
 }

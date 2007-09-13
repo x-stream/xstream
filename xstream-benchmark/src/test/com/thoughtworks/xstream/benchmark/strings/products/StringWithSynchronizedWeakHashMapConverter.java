@@ -1,7 +1,6 @@
 package com.thoughtworks.xstream.benchmark.strings.products;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.tools.benchmark.Product;
 
