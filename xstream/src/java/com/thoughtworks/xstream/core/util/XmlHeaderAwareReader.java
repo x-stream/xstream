@@ -200,12 +200,10 @@ public final class XmlHeaderAwareReader extends Reader {
         return reader.read(cbuf);
     }
 
-    /**
-     * @see java.io.Reader#read(java.nio.CharBuffer)
-     */
-    public int read(final CharBuffer target) throws IOException {
-        return reader.read(target);
-    }
+// TODO: This is JDK 1.5    
+//    public int read(final CharBuffer target) throws IOException {
+//        return reader.read(target);
+//    }
 
     /**
      * @see java.io.Reader#ready()
