@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,10 +34,10 @@ public final class XmlHeaderAwareReader extends Reader {
 
     private static final String XML_TOKEN = "?xml";
 
-    private final int STATE_START = 0;
-    private final int STATE_AWAIT_XML_HEADER = 1;
-    private final int STATE_ATTR_NAME = 2;
-    private final int STATE_ATTR_VALUE = 3;
+    private static final int STATE_START = 0;
+    private static final int STATE_AWAIT_XML_HEADER = 1;
+    private static final int STATE_ATTR_NAME = 2;
+    private static final int STATE_ATTR_VALUE = 3;
 
     /**
      * Constructs an XmlHeaderAwareReader.
