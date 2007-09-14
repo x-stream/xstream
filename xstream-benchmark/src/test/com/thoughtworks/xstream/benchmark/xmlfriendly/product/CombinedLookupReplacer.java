@@ -15,9 +15,11 @@ import java.io.OutputStream;
 public class CombinedLookupReplacer implements Product {
 
     private final XStream xstream;
+    private final int bufferIncrement;
 
-    public CombinedLookupReplacer() {
-        this.xstream = new XStream(new XppDriver(new XmlFriendlyReplacer()));
+    public CombinedLookupReplacer(int bufferIncrement) {
+        this.bufferIncrement = bufferIncrement;
+        this.xstream = new XStream(new XppDriver(new XmlFriendlyReplacer(bufferIncrement)));
     }
 
     public void serialize(Object object, OutputStream output) throws Exception {
@@ -29,13 +31,13 @@ public class CombinedLookupReplacer implements Product {
     }
 
     public String toString() {
-        return "Combined Lookup Replacer";
+        return "Combined Lookup Replacer" + (bufferIncrement == 0 ? "" : (" (" + bufferIncrement + ")"));
     }
     
     public static class XmlFriendlyReplacer extends AbstractXmlFriendlyReplacer {
 
-        public XmlFriendlyReplacer() {
-            super("_-", "__", 0);
+        public XmlFriendlyReplacer(int bufferIncrement) {
+            super("_-", "__", bufferIncrement);
         }
 
         public XmlFriendlyReplacer(String dollarReplacement, String underscoreReplacement, int bufferIncrement) {

@@ -1,0 +1,652 @@
+<html>
+  <head>
+    <title>XmlFriendlyReplacer Benchmark</title>
+    <style type="text/css">
+body, h1, h2, h3, td { font-family: arial; }
+h1 { text-align: center; }
+table, h3 { margin-left: 40px; }
+table, td, th { border: 1px solid #999; border-collapse: collapse; font-size: smaller; }
+.success { color: #090; }
+.fail { color: #900; }
+</style>
+  </head>
+  <body>
+    <h1>XmlFriendlyReplacer Benchmark</h1>
+    <h2>Size of serialized data</h2>
+    <h3>Field Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>bytes</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">353514.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with underscores Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>bytes</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">353914.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with dollars Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>bytes</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">353914.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h2>Character count for &apos;$&apos;</h2>
+    <h3>Field Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>characters</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">0.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 0%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with underscores Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>characters</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">0.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 0%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with dollars Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>characters</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">100200.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h2>Character count for &apos;_&apos;</h2>
+    <h3>Field Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>characters</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">0.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 0%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with underscores Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>characters</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">100200.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with dollars Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>characters</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="success">0.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 0%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h2>Serialization speed (50 iterations)</h2>
+    <h3>Field Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>ms</th>
+      </tr>
+      <tr>
+        <td>XStream 1.2.2 Replacer</td>
+        <td class="success">7788.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending</td>
+        <td class="success">9173.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending (16)</td>
+        <td class="success">7628.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 83%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer</td>
+        <td class="success">7806.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer (16)</td>
+        <td class="success">7817.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender</td>
+        <td class="success">7634.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 83%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender (16)</td>
+        <td class="success">7785.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer</td>
+        <td class="success">7787.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer (16)</td>
+        <td class="success">7937.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 87%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer</td>
+        <td class="success">7779.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer (16)</td>
+        <td class="success">7765.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with underscores Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>ms</th>
+      </tr>
+      <tr>
+        <td>XStream 1.2.2 Replacer</td>
+        <td class="success">7971.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 84%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending</td>
+        <td class="success">8416.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 89%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending (16)</td>
+        <td class="success">8197.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 86%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer</td>
+        <td class="success">8477.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 89%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer (16)</td>
+        <td class="success">8673.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 91%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender</td>
+        <td class="success">7818.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 82%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender (16)</td>
+        <td class="success">9497.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer</td>
+        <td class="success">8003.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 84%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer (16)</td>
+        <td class="success">8010.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 84%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer</td>
+        <td class="success">8422.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 89%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer (16)</td>
+        <td class="success">8528.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 90%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with dollars Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>ms</th>
+      </tr>
+      <tr>
+        <td>XStream 1.2.2 Replacer</td>
+        <td class="success">8038.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 87%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending</td>
+        <td class="success">9266.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending (16)</td>
+        <td class="success">9174.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 99%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer</td>
+        <td class="success">8888.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 96%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer (16)</td>
+        <td class="success">8926.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 96%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender</td>
+        <td class="success">8337.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 90%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender (16)</td>
+        <td class="success">8402.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 91%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer</td>
+        <td class="success">9186.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 99%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer (16)</td>
+        <td class="success">8299.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 90%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer</td>
+        <td class="success">8540.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 92%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer (16)</td>
+        <td class="success">8617.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 93%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h2>Deserialization speed (50 iterations)</h2>
+    <h3>Field Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>ms</th>
+      </tr>
+      <tr>
+        <td>XStream 1.2.2 Replacer</td>
+        <td class="success">15346.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending</td>
+        <td class="success">13864.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 90%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending (16)</td>
+        <td class="success">13438.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 88%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer</td>
+        <td class="success">13480.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 88%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer (16)</td>
+        <td class="success">13700.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 89%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender</td>
+        <td class="success">14062.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 92%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender (16)</td>
+        <td class="success">13926.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 91%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer</td>
+        <td class="success">13634.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 89%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer (16)</td>
+        <td class="success">13496.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 88%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer</td>
+        <td class="success">13630.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 89%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer (16)</td>
+        <td class="success">13985.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 91%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with underscores Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>ms</th>
+      </tr>
+      <tr>
+        <td>XStream 1.2.2 Replacer</td>
+        <td class="success">15547.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 93%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending</td>
+        <td class="success">14747.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 88%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending (16)</td>
+        <td class="success">14816.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 89%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer</td>
+        <td class="success">16730.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer (16)</td>
+        <td class="success">15099.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 90%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender</td>
+        <td class="success">13857.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 83%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender (16)</td>
+        <td class="success">13982.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 84%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer</td>
+        <td class="success">16226.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 97%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer (16)</td>
+        <td class="success">16218.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 97%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer</td>
+        <td class="success">15496.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 93%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer (16)</td>
+        <td class="success">15151.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 91%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <h3>Field with dollars Target</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>ms</th>
+      </tr>
+      <tr>
+        <td>XStream 1.2.2 Replacer</td>
+        <td class="success">14163.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 81%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending</td>
+        <td class="success">14140.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 81%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Appending (16)</td>
+        <td class="success">14360.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 82%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer</td>
+        <td class="success">14938.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Combined Lookup Replacer (16)</td>
+        <td class="success">14771.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 84%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender</td>
+        <td class="success">13549.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 77%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Appender (16)</td>
+        <td class="success">13679.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 78%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer</td>
+        <td class="success">14890.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 85%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Iterative Replacer (16)</td>
+        <td class="success">15030.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 86%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer</td>
+        <td class="success">15437.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 88%; background-color: blue;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td>Separate Lookup Replacer (16)</td>
+        <td class="success">17536.0</td>
+        <td style="width: 400px;">
+          <div style="height: 100%; width: 100%; background-color: blue;"></div>
+        </td>
+      </tr>
+    </table>
+    <p>Fri Sep 14 23:41:12 CEST 2007 - Sun JDK 1.6.0_02/Linux x86 - AMD Athlon XP 2700+ (2.1Ghz)</p>
+  </body>
+</html>

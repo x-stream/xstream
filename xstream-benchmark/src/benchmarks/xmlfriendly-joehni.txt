@@ -1,0 +1,110 @@
+======================================================================
+Size of serialized data
+======================================================================
+* Field Target
+  - .................................................. 353514.0 bytes
+* Field with underscores Target
+  - .................................................. 353914.0 bytes
+* Field with dollars Target
+  - .................................................. 353914.0 bytes
+
+======================================================================
+Character count for '$'
+======================================================================
+* Field Target
+  - .................................................. 0.0 characters
+* Field with underscores Target
+  - .................................................. 0.0 characters
+* Field with dollars Target
+  - .................................................. 100200.0 characters
+
+======================================================================
+Character count for '_'
+======================================================================
+* Field Target
+  - .................................................. 0.0 characters
+* Field with underscores Target
+  - .................................................. 100200.0 characters
+* Field with dollars Target
+  - .................................................. 0.0 characters
+
+======================================================================
+Serialization speed (50 iterations)
+======================================================================
+* Field Target
+  - XStream 1.2.2 Replacer............................ 7788.0 ms
+  - Combined Lookup Appending......................... 9173.0 ms
+  - Combined Lookup Appending (16).................... 7628.0 ms
+  - Combined Lookup Replacer.......................... 7806.0 ms
+  - Combined Lookup Replacer (16)..................... 7817.0 ms
+  - Iterative Appender................................ 7634.0 ms
+  - Iterative Appender (16)........................... 7785.0 ms
+  - Iterative Replacer................................ 7787.0 ms
+  - Iterative Replacer (16)........................... 7937.0 ms
+  - Separate Lookup Replacer.......................... 7779.0 ms
+  - Separate Lookup Replacer (16)..................... 7765.0 ms
+* Field with underscores Target
+  - XStream 1.2.2 Replacer............................ 7971.0 ms
+  - Combined Lookup Appending......................... 8416.0 ms
+  - Combined Lookup Appending (16).................... 8197.0 ms
+  - Combined Lookup Replacer.......................... 8477.0 ms
+  - Combined Lookup Replacer (16)..................... 8673.0 ms
+  - Iterative Appender................................ 7818.0 ms
+  - Iterative Appender (16)........................... 9497.0 ms
+  - Iterative Replacer................................ 8003.0 ms
+  - Iterative Replacer (16)........................... 8010.0 ms
+  - Separate Lookup Replacer.......................... 8422.0 ms
+  - Separate Lookup Replacer (16)..................... 8528.0 ms
+* Field with dollars Target
+  - XStream 1.2.2 Replacer............................ 8038.0 ms
+  - Combined Lookup Appending......................... 9266.0 ms
+  - Combined Lookup Appending (16).................... 9174.0 ms
+  - Combined Lookup Replacer.......................... 8888.0 ms
+  - Combined Lookup Replacer (16)..................... 8926.0 ms
+  - Iterative Appender................................ 8337.0 ms
+  - Iterative Appender (16)........................... 8402.0 ms
+  - Iterative Replacer................................ 9186.0 ms
+  - Iterative Replacer (16)........................... 8299.0 ms
+  - Separate Lookup Replacer.......................... 8540.0 ms
+  - Separate Lookup Replacer (16)..................... 8617.0 ms
+
+======================================================================
+Deserialization speed (50 iterations)
+======================================================================
+* Field Target
+  - XStream 1.2.2 Replacer............................ 15346.0 ms
+  - Combined Lookup Appending......................... 13864.0 ms
+  - Combined Lookup Appending (16).................... 13438.0 ms
+  - Combined Lookup Replacer.......................... 13480.0 ms
+  - Combined Lookup Replacer (16)..................... 13700.0 ms
+  - Iterative Appender................................ 14062.0 ms
+  - Iterative Appender (16)........................... 13926.0 ms
+  - Iterative Replacer................................ 13634.0 ms
+  - Iterative Replacer (16)........................... 13496.0 ms
+  - Separate Lookup Replacer.......................... 13630.0 ms
+  - Separate Lookup Replacer (16)..................... 13985.0 ms
+* Field with underscores Target
+  - XStream 1.2.2 Replacer............................ 15547.0 ms
+  - Combined Lookup Appending......................... 14747.0 ms
+  - Combined Lookup Appending (16).................... 14816.0 ms
+  - Combined Lookup Replacer.......................... 16730.0 ms
+  - Combined Lookup Replacer (16)..................... 15099.0 ms
+  - Iterative Appender................................ 13857.0 ms
+  - Iterative Appender (16)........................... 13982.0 ms
+  - Iterative Replacer................................ 16226.0 ms
+  - Iterative Replacer (16)........................... 16218.0 ms
+  - Separate Lookup Replacer.......................... 15496.0 ms
+  - Separate Lookup Replacer (16)..................... 15151.0 ms
+* Field with dollars Target
+  - XStream 1.2.2 Replacer............................ 14163.0 ms
+  - Combined Lookup Appending......................... 14140.0 ms
+  - Combined Lookup Appending (16).................... 14360.0 ms
+  - Combined Lookup Replacer.......................... 14938.0 ms
+  - Combined Lookup Replacer (16)..................... 14771.0 ms
+  - Iterative Appender................................ 13549.0 ms
+  - Iterative Appender (16)........................... 13679.0 ms
+  - Iterative Replacer................................ 14890.0 ms
+  - Iterative Replacer (16)........................... 15030.0 ms
+  - Separate Lookup Replacer.......................... 15437.0 ms
+  - Separate Lookup Replacer (16)..................... 17536.0 ms
+

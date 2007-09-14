@@ -29,7 +29,7 @@ public class NoReplacer implements Product {
     }
 
     public String toString() {
-        return "Replacer Dummy";
+        return "";
     }
     
     public static class XmlFriendlyReplacer extends AbstractXmlFriendlyReplacer {
@@ -39,11 +39,11 @@ public class NoReplacer implements Product {
         }
         
         public String escapeName(String name) {
-            return super.escapeNoName(name);
+            return name;
         }
         
         public String unescapeName(String name) {
-            return super.unescapeNoName(name);
+            return name;
         }
     }
 }

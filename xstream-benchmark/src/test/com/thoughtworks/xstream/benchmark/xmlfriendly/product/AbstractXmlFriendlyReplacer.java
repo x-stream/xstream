@@ -27,7 +27,8 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
      * @param bufferIncrement buffer increment for preallocation
      */
     public AbstractXmlFriendlyReplacer(
-        String dollarReplacement, String underscoreReplacement, int bufferIncrement) {
+        final String dollarReplacement, final String underscoreReplacement,
+        final int bufferIncrement) {
         this.dollarReplacement = dollarReplacement;
         this.underscoreReplacement = underscoreReplacement;
         this.bufferIncrement = bufferIncrement;
@@ -49,19 +50,21 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
      */
     public abstract String unescapeName(String name);
 
-    protected String escapeNoName(String name) {
+    protected String escapeNoName(final String name) {
         return name;
     }
 
-    protected String unescapeNoName(String name) {
+    protected String unescapeNoName(final String name) {
         return name;
     }
 
-    protected String escapeIterativelyAppending(String name) {
-        int length = name.length();
-        StringBuffer result = new StringBuffer(length + bufferIncrement);
+    protected String escapeIterativelyAppending(final String name) {
+        final int length = name.length();
+        final StringBuffer result = bufferIncrement == 0
+            ? new StringBuffer()
+            : new StringBuffer(length + bufferIncrement);
         for (int i = 0; i < length; i++) {
-            char c = name.charAt(i);
+            final char c = name.charAt(i);
             if (c == '$') {
                 result.append(dollarReplacement);
             } else if (c == '_') {
@@ -73,13 +76,15 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String unescapeIterativelyAppending(String name) {
-        int underscoreReplacementInc = underscoreReplacement.length() - 1;
-        int dollarReplacementInc = dollarReplacement.length() - 1;
-        int length = name.length();
-        StringBuffer result = new StringBuffer(length + bufferIncrement);
+    protected String unescapeIterativelyAppending(final String name) {
+        final int underscoreReplacementInc = underscoreReplacement.length() - 1;
+        final int dollarReplacementInc = dollarReplacement.length() - 1;
+        final int length = name.length();
+        final StringBuffer result = bufferIncrement == 0
+            ? new StringBuffer()
+            : new StringBuffer(length + bufferIncrement);
         for (int i = 0; i < length; i++) {
-            char c = name.charAt(i);
+            final char c = name.charAt(i);
             if (name.startsWith(dollarReplacement, i)) {
                 i += dollarReplacementInc;
                 result.append('$');
@@ -93,9 +98,11 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String escapeByCombinedLookupAppending(String name) {
-        int length = name.length();
-        StringBuffer result = new StringBuffer(length + bufferIncrement);
+    protected String escapeByCombinedLookupAppending(final String name) {
+        final int length = name.length();
+        final StringBuffer result = bufferIncrement == 0
+            ? new StringBuffer()
+            : new StringBuffer(length + bufferIncrement);
         int posDollar = 0;
         int posUnderscore = 0;
         for (int i = 0; i < length;) {
@@ -123,11 +130,13 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String unescapeByCombinedLookupAppending(String name) {
-        int underscoreReplacementLength = underscoreReplacement.length();
-        int dollarReplacementLength = dollarReplacement.length();
-        int length = name.length();
-        StringBuffer result = new StringBuffer(length + bufferIncrement);
+    protected String unescapeByCombinedLookupAppending(final String name) {
+        final int underscoreReplacementLength = underscoreReplacement.length();
+        final int dollarReplacementLength = dollarReplacement.length();
+        final int length = name.length();
+        final StringBuffer result = bufferIncrement == 0
+            ? new StringBuffer()
+            : new StringBuffer(length + bufferIncrement);
         int posDollar = 0;
         int posUnderscore = 0;
         for (int i = 0; i < length;) {
@@ -155,11 +164,16 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String escapeByCombinedLookupReplacing(String name) {
-        int underscoreReplacementLength = underscoreReplacement.length();
-        int dollarReplacementLength = dollarReplacement.length();
-        StringBuffer result = new StringBuffer(name.length() + bufferIncrement);
-        result.append(name);
+    protected String escapeByCombinedLookupReplacing(final String name) {
+        final int underscoreReplacementLength = underscoreReplacement.length();
+        final int dollarReplacementLength = dollarReplacement.length();
+        final StringBuffer result;
+        if (bufferIncrement == 0) {
+            result = new StringBuffer(name);
+        } else {
+            result = new StringBuffer(name.length() + bufferIncrement);
+            result.append(name);
+        }
         int posDollar = 0;
         int posUnderscore = 0;
         int i = 0;
@@ -183,11 +197,16 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String unescapeByCombinedLookupReplacing(String name) {
-        int underscoreReplacementLength = underscoreReplacement.length();
-        int dollarReplacementLength = dollarReplacement.length();
-        StringBuffer result = new StringBuffer(name.length() + bufferIncrement);
-        result.append(name);
+    protected String unescapeByCombinedLookupReplacing(final String name) {
+        final int underscoreReplacementLength = underscoreReplacement.length();
+        final int dollarReplacementLength = dollarReplacement.length();
+        final StringBuffer result;
+        if (bufferIncrement == 0) {
+            result = new StringBuffer(name);
+        } else {
+            result = new StringBuffer(name.length() + bufferIncrement);
+            result.append(name);
+        }
         int posDollar = 0;
         int posUnderscore = 0;
         int i = 0;
@@ -211,10 +230,16 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String escapeBySeparateLookupReplacing(String name) {
-        StringBuffer result = new StringBuffer(name);
-        int underscoreReplacementInc = underscoreReplacement.length();
-        int dollarReplacementInc = dollarReplacement.length();
+    protected String escapeBySeparateLookupReplacing(final String name) {
+        final StringBuffer result;
+        if (bufferIncrement == 0) {
+            result = new StringBuffer(name);
+        } else {
+            result = new StringBuffer(name.length() + bufferIncrement);
+            result.append(name);
+        }
+        final int underscoreReplacementInc = underscoreReplacement.length();
+        final int dollarReplacementInc = dollarReplacement.length();
         int inc = 0;
         int pos = 0;
 
@@ -232,8 +257,14 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String unescapeBySeparateLookupReplacing(String name) {
-        StringBuffer result = new StringBuffer(name);
+    protected String unescapeBySeparateLookupReplacing(final String name) {
+        final StringBuffer result;
+        if (bufferIncrement == 0) {
+            result = new StringBuffer(name);
+        } else {
+            result = new StringBuffer(name.length() + bufferIncrement);
+            result.append(name);
+        }
         int dollarReplacementLength = dollarReplacement.length();
         int pos = -dollarReplacementLength;
         while ((pos = result.indexOf(dollarReplacement, pos + 1)) != -1) {
@@ -250,14 +281,19 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String escapeIterativelyReplacing(String name) {
+    protected String escapeIterativelyReplacing(final String name) {
         int length = name.length();
-        int underscoreReplacementInc = underscoreReplacement.length() - 1;
-        int dollarReplacementInc = dollarReplacement.length() - 1;
-        StringBuffer result = new StringBuffer(length + bufferIncrement);
-        result.append(name);
+        final int underscoreReplacementInc = underscoreReplacement.length() - 1;
+        final int dollarReplacementInc = dollarReplacement.length() - 1;
+        final StringBuffer result;
+        if (bufferIncrement == 0) {
+            result = new StringBuffer(name);
+        } else {
+            result = new StringBuffer(length + bufferIncrement);
+            result.append(name);
+        }
         for (int i = 0; i < length; i++) {
-            char c = result.charAt(i);
+            final char c = result.charAt(i);
             if (c == '$') {
                 result.replace(i, i + 1, dollarReplacement);
                 length += dollarReplacementInc;
@@ -271,16 +307,21 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
-    protected String unescapeIterativelyReplacing(String name) {
-        char dollarChar = dollarReplacement.charAt(0);
-        char underscoreChar = underscoreReplacement.charAt(0);
-        int underscoreReplacementLength = underscoreReplacement.length();
-        int dollarReplacementLength = dollarReplacement.length();
+    protected String unescapeIterativelyReplacing(final String name) {
+        final char dollarChar = dollarReplacement.charAt(0);
+        final char underscoreChar = underscoreReplacement.charAt(0);
+        final int underscoreReplacementLength = underscoreReplacement.length();
+        final int dollarReplacementLength = dollarReplacement.length();
         int length = name.length();
-        StringBuffer result = new StringBuffer(length + bufferIncrement);
-        result.append(name);
+        final StringBuffer result;
+        if (bufferIncrement == 0) {
+            result = new StringBuffer(name);
+        } else {
+            result = new StringBuffer(length + bufferIncrement);
+            result.append(name);
+        }
         for (int i = 0; i < length; ++i) {
-            char c = result.charAt(i);
+            final char c = result.charAt(i);
             if (c == dollarChar
                 && i + dollarReplacementLength <= length
                 && result.substring(i, i + dollarReplacementLength).equals(dollarReplacement)) {

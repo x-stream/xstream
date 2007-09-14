@@ -15,9 +15,11 @@ import java.io.OutputStream;
 public class IterativeAppender implements Product {
 
     private final XStream xstream;
+    private final int bufferIncrement;
 
-    public IterativeAppender() {
-        this.xstream = new XStream(new XppDriver(new XmlFriendlyReplacer()));
+    public IterativeAppender(int bufferIncrement) {
+        this.bufferIncrement = bufferIncrement;
+        this.xstream = new XStream(new XppDriver(new XmlFriendlyReplacer(bufferIncrement)));
     }
 
     public void serialize(Object object, OutputStream output) throws Exception {
@@ -29,13 +31,13 @@ public class IterativeAppender implements Product {
     }
 
     public String toString() {
-        return "Iterative Appender";
+        return "Iterative Appender" + (bufferIncrement == 0 ? "" : (" (" + bufferIncrement + ")"));
     }
     
     public static class XmlFriendlyReplacer extends AbstractXmlFriendlyReplacer {
 
-        public XmlFriendlyReplacer() {
-            super("_-", "__", 0);
+        public XmlFriendlyReplacer(int bufferIncrement) {
+            super("_-", "__", bufferIncrement);
         }
 
         public XmlFriendlyReplacer(String dollarReplacement, String underscoreReplacement, int bufferIncrement) {

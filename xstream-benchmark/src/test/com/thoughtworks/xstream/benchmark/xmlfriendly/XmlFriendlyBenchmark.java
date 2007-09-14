@@ -5,9 +5,7 @@ package com.thoughtworks.xstream.benchmark.xmlfriendly;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.benchmark.reflection.targets.FieldReflection;
-import com.thoughtworks.xstream.benchmark.reflection.targets.HierarchyLevelReflection;
-import com.thoughtworks.xstream.benchmark.reflection.targets.InnerClassesReflection;
-import com.thoughtworks.xstream.benchmark.reflection.targets.StaticInnerClassesReflection;
+import com.thoughtworks.xstream.benchmark.xmlfriendly.metric.CharacterCountMetric;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.CombinedLookupAppender;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.CombinedLookupReplacer;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.IterativeAppender;
@@ -15,19 +13,26 @@ import com.thoughtworks.xstream.benchmark.xmlfriendly.product.IterativeReplacer;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.NoReplacer;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.SeparateLookupReplacer;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.XStream122Replacer;
-import com.thoughtworks.xstream.benchmark.xmlfriendly.target.UnderscoredFieldReflection;
+import com.thoughtworks.xstream.benchmark.xmlfriendly.target.Field_Reflection;
+import com.thoughtworks.xstream.benchmark.xmlfriendly.target.Field$Reflection;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.tools.benchmark.Harness;
+import com.thoughtworks.xstream.tools.benchmark.Reporter;
 import com.thoughtworks.xstream.tools.benchmark.metrics.DeserializationSpeedMetric;
 import com.thoughtworks.xstream.tools.benchmark.metrics.SerializationSpeedMetric;
 import com.thoughtworks.xstream.tools.benchmark.metrics.SizeMetric;
+import com.thoughtworks.xstream.tools.benchmark.reporters.HtmlReporter;
+import com.thoughtworks.xstream.tools.benchmark.reporters.MultiReporter;
 import com.thoughtworks.xstream.tools.benchmark.reporters.TextReporter;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -146,22 +151,58 @@ public class XmlFriendlyBenchmark extends TestSuite {
     }
 
     public static void main(String[] args) {
+        new File("target/benchmarks").mkdirs();
+
+        Reporter[] reporters;
+        try {
+            String basename = "target/benchmarks/xmlfriendly-"
+                + System.getProperty("user.name");
+            reporters = new Reporter[]{
+                new TextReporter(), new TextReporter(new FileWriter(basename + ".txt")),
+                new HtmlReporter(new File(basename + ".html"), "XmlFriendlyReplacer Benchmark")};
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Harness stats = new Harness();
+        stats.addMetric(new SizeMetric());
+        stats.addMetric(new CharacterCountMetric('$'));
+        stats.addMetric(new CharacterCountMetric('_'));
+        stats.addProduct(new NoReplacer());
+        stats.addTarget(new FieldReflection());
+        stats.addTarget(new Field_Reflection());
+        stats.addTarget(new Field$Reflection());
+        stats.run(new MultiReporter(reporters) {
+
+            public void endBenchmark() {
+                // do nothing
+            }
+
+        });
+
         Harness harness = new Harness();
-        harness.addMetric(new SizeMetric());
-        harness.addMetric(new SerializationSpeedMetric(10));
-        harness.addMetric(new DeserializationSpeedMetric(10, true));
-        harness.addProduct(new NoReplacer());
+        harness.addMetric(new SerializationSpeedMetric(50));
+        harness.addMetric(new DeserializationSpeedMetric(50, false));
         harness.addProduct(new XStream122Replacer());
-        harness.addProduct(new CombinedLookupAppender());
-        harness.addProduct(new CombinedLookupReplacer());
-        harness.addProduct(new IterativeAppender());
-        harness.addProduct(new IterativeReplacer());
-        harness.addProduct(new SeparateLookupReplacer());
+        harness.addProduct(new CombinedLookupAppender(0));
+        harness.addProduct(new CombinedLookupAppender(16));
+        harness.addProduct(new CombinedLookupReplacer(0));
+        harness.addProduct(new CombinedLookupReplacer(16));
+        harness.addProduct(new IterativeAppender(0));
+        harness.addProduct(new IterativeAppender(16));
+        harness.addProduct(new IterativeReplacer(0));
+        harness.addProduct(new IterativeReplacer(16));
+        harness.addProduct(new SeparateLookupReplacer(0));
+        harness.addProduct(new SeparateLookupReplacer(16));
         harness.addTarget(new FieldReflection());
-        harness.addTarget(new HierarchyLevelReflection());
-        harness.addTarget(new UnderscoredFieldReflection());
-        harness.addTarget(new InnerClassesReflection());
-        harness.addTarget(new StaticInnerClassesReflection());
-        harness.run(new TextReporter());
+        harness.addTarget(new Field_Reflection());
+        harness.addTarget(new Field$Reflection());
+        harness.run(new MultiReporter(reporters) {
+
+            public void startBenchmark() {
+                // do nothing
+            }
+
+        });
     }
 }

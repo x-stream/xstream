@@ -5,11 +5,11 @@
 package com.thoughtworks.xstream.benchmark.xmlfriendly.model;
 
 /**
- * Class with 100 fields.
+ * Class with 100 fields containing each 5 underscores in the name.
  * 
  * @author J&ouml;rg Schaible
  */
-public class A100Fields {
+public class A100_Fields {
 
     String _____000;
     String _____001;
