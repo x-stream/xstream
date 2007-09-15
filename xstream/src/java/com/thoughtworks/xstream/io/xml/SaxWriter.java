@@ -105,8 +105,19 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     private final boolean includeEnclosingDocument;
 
+    public SaxWriter(XmlFriendlyReplacer replacer)
+    {
+    	this(true, replacer);
+    }
+    
+    public SaxWriter(boolean includeEnclosingDocument, XmlFriendlyReplacer replacer)
+    {
+    	super(replacer);
+    	this.includeEnclosingDocument = includeEnclosingDocument;
+    }
+    
     public SaxWriter(boolean includeEnclosingDocument) {
-        this.includeEnclosingDocument = includeEnclosingDocument;
+        this(includeEnclosingDocument, new XmlFriendlyReplacer());
     }
 
     public SaxWriter() {

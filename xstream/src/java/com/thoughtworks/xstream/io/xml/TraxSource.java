@@ -12,53 +12,47 @@ import javax.xml.transform.sax.SAXSource;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * A {@link SAXSource JAXP TrAX Source} that enables using XStream
- * object serialization as direct input for XSLT processors without
- * resorting to an intermediate representation such as text XML, DOM
- * or DOM4J.
- * <p/>
- * The following example shows how to apply an XSL Transformation
- * to a set of Java objects gathered into a List
- * (<code>source</code>):</p>
+ * A {@link SAXSource JAXP TrAX Source} that enables using XStream object serialization as
+ * direct input for XSLT processors without resorting to an intermediate representation such as
+ * text XML, DOM or DOM4J. <p/> The following example shows how to apply an XSL Transformation
+ * to a set of Java objects gathered into a List (<code>source</code>):
+ * </p>
+ * 
  * <pre><code>
- *   public static String transform(List source, String stylesheet) {
+ * public static String transform(List source, String stylesheet) {
  *     try {
- *       Transformer transformer = TransformerFactory.newInstance()
- *                             .newTransformer(new StreamSource(stylesheet));
- *       TraxSource in = new TraxSource(source);
- *       Writer out = new StringWriter();
- *       transformer.transform(in, new StreamResult(out));
- *       return out.toString();
+ *         Transformer transformer = TransformerFactory.newInstance().newTransformer(
+ *             new StreamSource(stylesheet));
+ *         TraxSource in = new TraxSource(source);
+ *         Writer out = new StringWriter();
+ *         transformer.transform(in, new StreamResult(out));
+ *         return out.toString();
+ *     } catch (TransformerException e) {
+ *         throw new RuntimeException(&quot;XSLT Transformation failed&quot;, e);
  *     }
- *     catch (TransformerException e) {
- *       throw new RuntimeException("XSLT Transformation failed", e);
- *     }
- *   }
+ * }
  * </code></pre>
- *
+ * 
  * @author Laurent Bihanic
  */
 public class TraxSource extends SAXSource {
 
     /**
-     * If {@link javax.xml.transform.TransformerFactory#getFeature}
-     * returns <code>true</code> when passed this value as an
-     * argument, the Transformer natively supports XStream.
-     * <p/>
-     * <strong>Note</strong>: This implementation does not override
-     * the {@link SAXSource#FEATURE} value defined by its superclass
-     * to be considered as a SAXSource by Transformer implementations
-     * not natively supporting this XStream-specific source
+     * If {@link javax.xml.transform.TransformerFactory#getFeature} returns <code>true</code>
+     * when passed this value as an argument, the Transformer natively supports XStream. <p/>
+     * <strong>Note</strong>: This implementation does not override the
+     * {@link SAXSource#FEATURE} value defined by its superclass to be considered as a SAXSource
+     * by Transformer implementations not natively supporting this XStream-specific source
      * </p>
      */
-    public final static String XSTREAM_FEATURE =
-            "http://com.thoughtworks.xstream/XStreamSource/feature";
+    public final static String XSTREAM_FEATURE = "http://com.thoughtworks.xstream/XStreamSource/feature";
 
     /**
-     * The XMLReader object associated to this source or
-     * <code>null</code> if no XMLReader has yet been requested.
-     *
+     * The XMLReader object associated to this source or <code>null</code> if no XMLReader has
+     * yet been requested.
+     * 
      * @see #getXMLReader
      */
     private XMLReader xmlReader = null;
@@ -73,10 +67,9 @@ public class TraxSource extends SAXSource {
      */
     private List source = null;
 
-
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Constructors
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Creates a XStream TrAX source.
@@ -86,12 +79,10 @@ public class TraxSource extends SAXSource {
     }
 
     /**
-     * Creates a XStream TrAX source, specifying the object to
-     * marshal.
-     *
+     * Creates a XStream TrAX source, specifying the object to marshal.
+     * 
      * @param source the object to marshal.
-     * @throws IllegalArgumentException if <code>source</code> is
-     *                                  <code>null</code>.
+     * @throws IllegalArgumentException if <code>source</code> is <code>null</code>.
      * @see #setSource(java.lang.Object)
      */
     public TraxSource(Object source) {
@@ -101,13 +92,13 @@ public class TraxSource extends SAXSource {
     }
 
     /**
-     * Creates a XStream TrAX source, specifying the object to
-     * marshal and a configured (with aliases) XStream facade.
-     *
-     * @param source  the object to marshal.
+     * Creates a XStream TrAX source, specifying the object to marshal and a configured (with
+     * aliases) XStream facade.
+     * 
+     * @param source the object to marshal.
      * @param xstream a configured XStream facade.
-     * @throws IllegalArgumentException if <code>source</code> or
-     *                                  <code>xstream</code> is <code>null</code>.
+     * @throws IllegalArgumentException if <code>source</code> or <code>xstream</code> is
+     *                 <code>null</code>.
      * @see #setSource(java.lang.Object)
      * @see #setXStream(com.thoughtworks.xstream.XStream)
      */
@@ -119,12 +110,11 @@ public class TraxSource extends SAXSource {
     }
 
     /**
-     * Creates a XStream TrAX source, setting the objects to
-     * marshal.
-     *
+     * Creates a XStream TrAX source, setting the objects to marshal.
+     * 
      * @param source the list of objects to marshal.
-     * @throws IllegalArgumentException if <code>source</code> is
-     *                                  <code>null</code> or empty.
+     * @throws IllegalArgumentException if <code>source</code> is <code>null</code> or
+     *                 empty.
      * @see #setSourceAsList(java.util.List)
      */
     public TraxSource(List source) {
@@ -134,14 +124,13 @@ public class TraxSource extends SAXSource {
     }
 
     /**
-     * Creates a XStream TrAX source, setting the objects to
-     * marshal and a configured (with aliases) XStream facade.
-     *
-     * @param source  the list of objects to marshal.
+     * Creates a XStream TrAX source, setting the objects to marshal and a configured (with
+     * aliases) XStream facade.
+     * 
+     * @param source the list of objects to marshal.
      * @param xstream a configured XStream facade.
-     * @throws IllegalArgumentException if <code>source</code> or
-     *                                  <code>xstream</code> is <code>null</code> or
-     *                                  <code>source</code> is empty.
+     * @throws IllegalArgumentException if <code>source</code> or <code>xstream</code> is
+     *                 <code>null</code> or <code>source</code> is empty.
      * @see #setSourceAsList(java.util.List)
      * @see #setXStream(com.thoughtworks.xstream.XStream)
      */
@@ -152,18 +141,16 @@ public class TraxSource extends SAXSource {
         this.setXStream(xstream);
     }
 
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // SAXSource overwritten methods
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Sets the SAX InputSource to be used for the Source.
-     * <p/>
-     * As this implementation only supports object lists as data
-     * source, this method always throws an
+     * Sets the SAX InputSource to be used for the Source. <p/> As this implementation only
+     * supports object lists as data source, this method always throws an
      * {@link UnsupportedOperationException}.
      * </p>
-     *
+     * 
      * @param inputSource a valid InputSource reference.
      * @throws UnsupportedOperationException always!
      */
@@ -172,19 +159,15 @@ public class TraxSource extends SAXSource {
     }
 
     /**
-     * Set the XMLReader to be used for the Source.
-     * <p/>
-     * As this implementation only supports object lists as data
-     * source, this method throws an
-     * {@link UnsupportedOperationException} if the provided reader
-     * object does not implement the SAX {@link XMLFilter}
-     * interface.  Otherwise, a {@link SaxWriter} instance will be
-     * attached as parent of the filter chain.</p>
-     *
+     * Set the XMLReader to be used for the Source. <p/> As this implementation only supports
+     * object lists as data source, this method throws an {@link UnsupportedOperationException}
+     * if the provided reader object does not implement the SAX {@link XMLFilter} interface.
+     * Otherwise, a {@link SaxWriter} instance will be attached as parent of the filter chain.
+     * </p>
+     * 
      * @param reader a valid XMLReader or XMLFilter reference.
-     * @throws UnsupportedOperationException if <code>reader</code>
-     *                                       is not a SAX
-     *                                       {@link XMLFilter}.
+     * @throws UnsupportedOperationException if <code>reader</code> is not a SAX
+     *                 {@link XMLFilter}.
      * @see #getXMLReader
      */
     public void setXMLReader(XMLReader reader) {
@@ -192,15 +175,11 @@ public class TraxSource extends SAXSource {
     }
 
     /**
-     * Returns the XMLReader to be used for the Source.
-     * <p/>
-     * This implementation returns a specific XMLReader
-     * ({@link SaxWriter}) generating the XML from a list of input
-     * objects.
+     * Returns the XMLReader to be used for the Source. <p/> This implementation returns a
+     * specific XMLReader ({@link SaxWriter}) generating the XML from a list of input objects.
      * </p>
-     *
-     * @return an XMLReader generating the XML from a list of input
-     *         objects.
+     * 
+     * @return an XMLReader generating the XML from a list of input objects.
      */
     public XMLReader getXMLReader() {
         if (this.xmlReader == null) {
@@ -209,17 +188,15 @@ public class TraxSource extends SAXSource {
         return this.xmlReader;
     }
 
-
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Specific implementation
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Sets the XStream facade to use when marshalling objects.
-     *
+     * 
      * @param xstream a configured XStream facade.
-     * @throws IllegalArgumentException if <code>xstream</code> is
-     *                                  <code>null</code>.
+     * @throws IllegalArgumentException if <code>xstream</code> is <code>null</code>.
      */
     public void setXStream(XStream xstream) {
         if (xstream == null) {
@@ -232,10 +209,9 @@ public class TraxSource extends SAXSource {
 
     /**
      * Sets the object to marshal.
-     *
+     * 
      * @param obj the object to marshal.
-     * @throws IllegalArgumentException if <code>source</code> is
-     *                                  <code>null</code>.
+     * @throws IllegalArgumentException if <code>source</code> is <code>null</code>.
      */
     public void setSource(Object obj) {
         if (obj == null) {
@@ -248,20 +224,16 @@ public class TraxSource extends SAXSource {
     }
 
     /**
-     * Sets the list of objects to marshal.
-     * <p/>
-     * When dealing with non-text input (such as SAX or DOM), XSLT
-     * processors support multiple root node children for the source
-     * tree (see
-     * <a href="http://www.w3.org/TR/xslt#root-node-children">section 3.1</a>
-     * of the &quot;XSL Transformations (XSLT) Version 1.0&quot;
-     * specification.  Using a list of objects as source makes use
-     * of this feature and allows creating XML documents merging
-     * the XML serialization of several Java objects.
-     *
+     * Sets the list of objects to marshal. <p/> When dealing with non-text input (such as SAX
+     * or DOM), XSLT processors support multiple root node children for the source tree (see <a
+     * href="http://www.w3.org/TR/xslt#root-node-children">section 3.1</a> of the &quot;XSL
+     * Transformations (XSLT) Version 1.0&quot; specification. Using a list of objects as source
+     * makes use of this feature and allows creating XML documents merging the XML serialization
+     * of several Java objects.
+     * 
      * @param list the list of objects to marshal.
-     * @throws IllegalArgumentException if <code>source</code> is
-     *                                  <code>null</code> or empty.
+     * @throws IllegalArgumentException if <code>source</code> is <code>null</code> or
+     *                 empty.
      */
     public void setSourceAsList(List list) {
         if ((list == null) || (list.isEmpty())) {
@@ -278,11 +250,13 @@ public class TraxSource extends SAXSource {
         } else {
             if (filterChain instanceof XMLFilter) {
                 // Connect the filter chain to a document reader.
-                XMLFilter filter = (XMLFilter) filterChain;
+                XMLFilter filter = (XMLFilter)filterChain;
                 while (filter.getParent() instanceof XMLFilter) {
-                    filter = (XMLFilter) (filter.getParent());
+                    filter = (XMLFilter)(filter.getParent());
                 }
-                filter.setParent(new SaxWriter());
+                if (!(filterChain instanceof SaxWriter)) {
+                    filter.setParent(new SaxWriter());
+                }
 
                 // Read XML data from filter chain.
                 this.xmlReader = filterChain;
@@ -297,10 +271,12 @@ public class TraxSource extends SAXSource {
         if (this.xmlReader != null) {
             try {
                 if (this.xstream != null) {
-                    this.xmlReader.setProperty(SaxWriter.CONFIGURED_XSTREAM_PROPERTY, this.xstream);
+                    this.xmlReader.setProperty(
+                        SaxWriter.CONFIGURED_XSTREAM_PROPERTY, this.xstream);
                 }
                 if (this.source != null) {
-                    this.xmlReader.setProperty(SaxWriter.SOURCE_OBJECT_LIST_PROPERTY, this.source);
+                    this.xmlReader.setProperty(
+                        SaxWriter.SOURCE_OBJECT_LIST_PROPERTY, this.source);
                 }
             } catch (SAXException e) {
                 throw new IllegalArgumentException(e.getMessage());
@@ -308,4 +284,3 @@ public class TraxSource extends SAXSource {
         }
     }
 }
-
