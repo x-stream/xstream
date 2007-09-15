@@ -11,6 +11,7 @@ import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
  * retaining precision down to milliseconds.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
 public class DateConverter extends AbstractSingleValueConverter {
 
@@ -22,14 +23,18 @@ public class DateConverter extends AbstractSingleValueConverter {
             new String[] { 
                 "yyyy-MM-dd HH:mm:ss.S a", 
                 "yyyy-MM-dd HH:mm:ssz", "yyyy-MM-dd HH:mm:ss z", // JDK 1.3 needs both versions
-                "yyyy-MM-dd HH:mm:ssa" }); // backwards compatability
+                "yyyy-MM-dd HH:mm:ssa" }); // backwards compatibility
 	}
 
     public DateConverter(String defaultFormat, String[] acceptableFormats) {
-        this.defaultFormat = new ThreadSafeSimpleDateFormat(defaultFormat, 4, 20);
+        this(defaultFormat, acceptableFormats, false);
+    }
+
+    public DateConverter(String defaultFormat, String[] acceptableFormats, boolean lenient) {
+        this.defaultFormat = new ThreadSafeSimpleDateFormat(defaultFormat, 4, 20, lenient);
         this.acceptableFormats = new ThreadSafeSimpleDateFormat[acceptableFormats.length];
         for (int i = 0; i < acceptableFormats.length; i++) {
-            this.acceptableFormats[i] = new ThreadSafeSimpleDateFormat(acceptableFormats[i], 1, 20);
+            this.acceptableFormats[i] = new ThreadSafeSimpleDateFormat(acceptableFormats[i], 1, 20, lenient);
         }
     }
 

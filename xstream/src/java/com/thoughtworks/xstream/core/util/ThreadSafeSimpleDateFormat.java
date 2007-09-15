@@ -26,11 +26,13 @@ public class ThreadSafeSimpleDateFormat {
     private final String formatString;
     private final Pool pool;
 
-    public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize) {
+    public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize, final boolean lenient) {
         formatString = format;
         pool = new Pool(initialPoolSize, maxPoolSize, new Pool.Factory() {
             public Object newInstance() {
-                return new SimpleDateFormat(formatString, Locale.ENGLISH);
+                SimpleDateFormat dateFormat = new SimpleDateFormat(formatString, Locale.ENGLISH);
+                dateFormat.setLenient(lenient);
+                return dateFormat;
             }
             
         });

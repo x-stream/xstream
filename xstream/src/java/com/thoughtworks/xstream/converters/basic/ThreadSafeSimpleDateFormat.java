@@ -14,7 +14,7 @@ import java.util.Date;
 public class ThreadSafeSimpleDateFormat extends com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat {
 
     public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize) {
-        super(format, initialPoolSize, maxPoolSize);
+        super(format, initialPoolSize, maxPoolSize, true);
     }
 
     public String format(Date date) {

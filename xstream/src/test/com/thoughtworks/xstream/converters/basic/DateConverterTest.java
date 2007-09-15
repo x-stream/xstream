@@ -134,4 +134,17 @@ public class DateConverterTest extends TestCase {
         assertTrue("Nothing suceeded", results.contains("PASS"));
         assertFalse("At least one attempt failed", results.contains("FAIL"));
     }
+    
+    public void testDatesInNonLenientMode() {
+        String[] dateFormats = new String[] { "yyyyMMdd", "yyyy-MM-dd'T'HH:mm:ss'Z'", "yyyy-MM-dd" };
+        converter = new DateConverter("yyyy-MM-dd'T'HH:mm:ss.S'Z'", dateFormats);
+        Date expected = (Date)converter.fromString("2004-02-22T15:16:04.0Z");
+        assertEquals(expected, converter.fromString("2004-02-22T15:16:04Z"));
+    }
+    
+    public void testDatesInLenientMode() {
+        converter = new DateConverter("yyyy-MM-dd HH:mm:ss.S z", new String[0], true);
+        Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 IST");
+        assertEquals(expected, converter.fromString("2004-02-21 39:16:04.0 IST"));
+    }
 }
