@@ -61,6 +61,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testUnmarshalsDatesWithDifferentTimeZones() {
+        converter = new DateConverter(true); // Needed by JDK 5 running on Codehaus' Bamboo installation 
         Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
 
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));

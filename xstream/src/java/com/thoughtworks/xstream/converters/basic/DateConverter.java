@@ -19,12 +19,17 @@ public class DateConverter extends AbstractSingleValueConverter {
     private final ThreadSafeSimpleDateFormat[] acceptableFormats;
 
     public DateConverter() {
+        this(false);
+    }
+
+    public DateConverter(boolean lenient) {
         this("yyyy-MM-dd HH:mm:ss.S z",
             new String[] { 
                 "yyyy-MM-dd HH:mm:ss.S a", 
                 "yyyy-MM-dd HH:mm:ssz", "yyyy-MM-dd HH:mm:ss z", // JDK 1.3 needs both versions
-                "yyyy-MM-dd HH:mm:ssa" }); // backwards compatibility
-	}
+                "yyyy-MM-dd HH:mm:ssa" },  // backwards compatibility
+                lenient);
+    }
 
     public DateConverter(String defaultFormat, String[] acceptableFormats) {
         this(defaultFormat, acceptableFormats, false);
