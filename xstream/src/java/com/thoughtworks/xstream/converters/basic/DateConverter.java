@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.basic;
 import com.thoughtworks.xstream.converters.ConversionException;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
 
@@ -18,10 +19,19 @@ public class DateConverter extends AbstractSingleValueConverter {
     private final ThreadSafeSimpleDateFormat defaultFormat;
     private final ThreadSafeSimpleDateFormat[] acceptableFormats;
 
+    /**
+     * Construct a DateConverter with standard formats and lenient set off.
+     */
     public DateConverter() {
         this(false);
     }
 
+    /**
+     * Construct a DateConverter with standard formats.
+     * 
+     * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
+     * @since upcoming
+     */
     public DateConverter(boolean lenient) {
         this("yyyy-MM-dd HH:mm:ss.S z",
             new String[] { 
@@ -31,10 +41,24 @@ public class DateConverter extends AbstractSingleValueConverter {
                 lenient);
     }
 
+    /**
+     * Construct a DateConverter with lenient set off.
+     * 
+     * @param defaultFormat the default format
+     * @param acceptableFormats fallback formats
+     */
     public DateConverter(String defaultFormat, String[] acceptableFormats) {
         this(defaultFormat, acceptableFormats, false);
     }
 
+    /**
+     * Construct a DateConverter.
+     * 
+     * @param defaultFormat the default format
+     * @param acceptableFormats fallback formats
+     * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
+     * @since upcoming
+     */
     public DateConverter(String defaultFormat, String[] acceptableFormats, boolean lenient) {
         this.defaultFormat = new ThreadSafeSimpleDateFormat(defaultFormat, 4, 20, lenient);
         this.acceptableFormats = new ThreadSafeSimpleDateFormat[acceptableFormats.length];
