@@ -16,7 +16,8 @@ public abstract class AbstractXMLWriterTest extends TestCase {
         final int inc = len - replacement.length();
         int i = -inc;
         final StringBuffer buff = new StringBuffer(s);
-        while((i = buff.indexOf(occurance, i + inc)) >= 0) {
+        // StringBuffer has no indexOf in JDK 1.3
+        while((i = buff.toString().indexOf(occurance, i + inc)) >= 0) {
             buff.replace(i, i + len, replacement);
         }
         return buff.toString();
