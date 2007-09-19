@@ -27,8 +27,6 @@
  */
 package com.thoughtworks.xstream.core.util;
 
-import java.text.DateFormat;
-
 /**
  * A simple pool implementation.
  *
@@ -58,7 +56,7 @@ public class Pool {
         Object result;
         synchronized (mutex) {
             if (pool == null) {
-                pool = new DateFormat[maxPoolSize];
+                pool = new Object[maxPoolSize];
                 for (nextAvailable = initialPoolSize; nextAvailable > 0; ) {
                     putInPool(factory.newInstance());
                 }
