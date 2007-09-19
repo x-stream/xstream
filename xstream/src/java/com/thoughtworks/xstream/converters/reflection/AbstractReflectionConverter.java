@@ -50,6 +50,9 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Attributes might be preferred to child elements ...
          reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class type, Class definedIn, Object value) {
+                if (!mapper.shouldSerializeMember(definedIn, fieldName)) {
+                    return;
+                }
                 if (!defaultFieldDefinition.containsKey(fieldName)) {
                     defaultFieldDefinition.put(fieldName, reflectionProvider.getField(source.getClass(), fieldName));
                 }
@@ -81,6 +84,9 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Child elements not covered already processed as attributes ...
         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
             public void visit(String fieldName, Class fieldType, Class definedIn, Object newObj) {
+                if (!mapper.shouldSerializeMember(definedIn, fieldName)) {
+                    return;
+                }
                 if (!seenFields.contains(fieldName) && newObj != null) {
                     Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(source.getClass(), fieldName);
                     if (mapping != null) {
@@ -100,9 +106,6 @@ public abstract class AbstractReflectionConverter implements Converter {
             }
 
             private void writeField(String fieldName, String aliasName, Class fieldType, Class definedIn, Object newObj) {
-                if (!mapper.shouldSerializeMember(definedIn, aliasName)) {
-                    return;
-                }
                 ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(definedIn, aliasName), fieldType); 
 
                 Class actualType = newObj.getClass();

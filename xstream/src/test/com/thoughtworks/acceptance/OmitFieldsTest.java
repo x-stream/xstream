@@ -166,4 +166,22 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("b", out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
     }
+    
+    public void testAttributeCanBeOmitted() {
+        String expectedXml = "<thing neverIgnore=\"c\"/>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.useAttributeFor(String.class);
+        xstream.omitField(Thing.class, "sometimesIgnore");
+
+        Thing in = new Thing();
+        in.alwaysIgnore = "a";
+        in.sometimesIgnore = "b";
+        in.neverIgnore = "c";
+        assertEquals(expectedXml, xstream.toXML(in));
+
+        Thing out = (Thing) xstream.fromXML(expectedXml);
+        assertNull(out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+    }
 }
