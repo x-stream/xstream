@@ -33,7 +33,7 @@ public class NativeFieldKeySorterTest extends TestCase {
         Field[] fields = (Field[])map.values().toArray(new Field[map.size()]);
         assertEquals(fieldOrder.length, fields.length);
         for (int i = 0; i < fieldOrder.length; i++) {
-            assertEquals(fieldOrder[i], fields[i].getName());
+            assertEquals("Field[" + i + ']', fieldOrder[i], fields[i].getName());
         }
     }
 

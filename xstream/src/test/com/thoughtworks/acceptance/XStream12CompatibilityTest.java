@@ -1,7 +1,10 @@
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.InheritanceTest.ChildA;
-import com.thoughtworks.acceptance.InheritanceTest.ParentA;
+import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.FieldDictionary;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.XStream12FieldKeySorter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,5 +89,19 @@ public class XStream12CompatibilityTest extends AbstractAcceptanceTest {
         ChildA childA = (ChildA)xstream.fromXML(expected);
         assertEquals("world", childA.getChildStuff().get("hello"));
         assertEquals("foo", childA.getParentStuff().iterator().next());
+    }
+
+    public void testCanWriteInheritanceHeirarchiesInOldOrder() {
+        xstream = new XStream(new PureJavaReflectionProvider(new FieldDictionary(new XStream12FieldKeySorter())));
+        OpenSourceSoftware openSourceSoftware = new OpenSourceSoftware("apache", "geronimo", "license");
+        String xml =
+                "<oss>\n" +
+                "  <license>license</license>\n" +
+                "  <vendor>apache</vendor>\n" +
+                "  <name>geronimo</name>\n" +
+                "</oss>";
+
+        xstream.alias("oss", OpenSourceSoftware.class);
+        assertEquals(xml, xstream.toXML(openSourceSoftware));
     }
 }
