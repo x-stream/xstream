@@ -27,11 +27,15 @@
     	<li>ReflectionConverter writes now the fields of the parent classes first.</li>
     	<li>JIRA:XSTR-415: JavaBeanConverter uses now BeanIntrospection (by Hinse ter Schuur).</li>
     	<li>JIRA:XSTR-424: DateConverter uses now by default SimpleDateFormat instances in non-lenient mode.</li>
+    	<li>JIRA:XSTR-386: SingleValueConverter that utilizes PropertyEditor implementations (by Jukka Lindstr&ounl;m)</li>
     </ul>
 
     <h2>Minor changes</h2>
 
     <ul>
+    	<li>JIRA:XSTR-430: Fields written as attributes could not be omitted.</li>
+    	<li>JIRA:XSTR-407: Comparator might access uninitialized elements for TreeSet and TreeMap. A deserialized
+    	Comparator is no longer called, the converters expect the elements now in a sorted order.</li>
     	<li>JIRA:XSTR-404, @XStreamImplicit() for ArrayList&lt;ArrayList&lt;Type&gt;&gt; throws ClassCastException.</li>
     	<li>@XStreamContainedType() for ArrayList&lt;ArrayList&lt;Type&gt;&gt; throws ClassCastException.</li>
     	<li>XStreamer did not persist a FieldKeySorter instance.</li>
