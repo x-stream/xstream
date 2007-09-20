@@ -167,7 +167,7 @@ public class TreeMapConverter extends MapConverter {
                 public Object setValue(Object value) {
                     throw new UnsupportedOperationException();
                 }});
-            return false;
+            return null;
         }
 
         public void putAll(Map m) {
