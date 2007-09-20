@@ -1,18 +1,22 @@
 package com.thoughtworks.xstream.core.util;
 
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+
 import java.beans.PropertyEditor;
 
+
 /**
- * Wrapper around {@link PropertyEditor} that can
- * be called by multiple threads concurrently.
- * <p>A PropertyEditor is not thread safe. To make best 
- * use of resources, the PropertyEditor provides a dynamically
- * sizing pool of instances, each of which will only
- * be called by a single thread at a time.</p>
- * <p>The pool has a maximum capacity, to limit overhead.
- * If all instances in the pool are in use and another is
- * required, it shall block until one becomes available.</p>
- *
+ * Wrapper around {@link PropertyEditor} that can be called by multiple threads concurrently.
+ * <p>
+ * A PropertyEditor is not thread safe. To make best use of resources, the PropertyEditor
+ * provides a dynamically sizing pool of instances, each of which will only be called by a
+ * single thread at a time.
+ * </p>
+ * <p>
+ * The pool has a maximum capacity, to limit overhead. If all instances in the pool are in use
+ * and another is required, it shall block until one becomes available.
+ * </p>
+ * 
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
@@ -23,21 +27,27 @@ public class ThreadSafePropertyEditor {
 
     public ThreadSafePropertyEditor(Class type, int initialPoolSize, int maxPoolSize) {
         if (!PropertyEditor.class.isAssignableFrom(type)) {
-            throw new IllegalArgumentException(type.getName() + " is not a " + PropertyEditor.class.getName());
+            throw new IllegalArgumentException(type.getName()
+                + " is not a "
+                + PropertyEditor.class.getName());
         }
         editorType = type;
         pool = new Pool(initialPoolSize, maxPoolSize, new Pool.Factory() {
             public Object newInstance() {
                 try {
                     return editorType.newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                } catch (InstantiationException e) {
+                    throw new ObjectAccessException("Could not call default constructor of "
+                        + editorType.getName(), e);
+                } catch (IllegalAccessException e) {
+                    throw new ObjectAccessException("Could not call default constructor of "
+                        + editorType.getName(), e);
                 }
             }
-            
+
         });
     }
-    
+
     public String getAsText(Object object) {
         PropertyEditor editor = fetchFromPool();
         try {
