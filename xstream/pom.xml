@@ -75,7 +75,6 @@
       <optional>true</optional>
     </dependency>
 
-
     <!-- test-scoped -->
     <dependency>
       <groupId>junit</groupId>
@@ -300,6 +299,16 @@
           </plugin>
         </plugins>
       </build>
+      <dependencies>
+        <dependency>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 

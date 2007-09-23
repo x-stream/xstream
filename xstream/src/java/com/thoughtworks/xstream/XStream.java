@@ -510,6 +510,11 @@ public class XStream {
             alias("auth-subject", type);
         }
 
+        type = jvm.loadClass("javax.xml.datatype.Duration");
+        if (type != null) {
+            alias("duration", type);
+        }
+
         if (JVM.is14()) {
             alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
             alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
@@ -601,11 +606,18 @@ public class XStream {
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
 
-        // since jdk 1.4 included, but previously available as separate package ...
+        // since JDK 1.4 included, but previously available as separate package ...
         if (jvm.loadClass("javax.security.auth.Subject") != null) {
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.SubjectConverter",
                     PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
+        }
+        
+        // since JDK 1.5 included, bas as part of JAXB previously available ...
+        if (jvm.loadClass("javax.xml.datatype.Duration") != null) {
+            dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.DurationConverter",
+                    PRIORITY_NORMAL, null, null);
         }
 
         if (JVM.is14()) {

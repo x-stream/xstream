@@ -146,15 +146,6 @@
                 <td class="example">&lt;java.lang.annotation.RetentionPolicy&gt;<br/>CLASS<br/>&lt;/java.lang.annotation.RetentionPolicy&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
             </tr>
-            <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumMapConverter.html">EnumMapConverter</a></td>
-                <td>java.util.EnumMap</td>
-                <td class="example">&lt;enum-map enum-type="simple"&gt;<br/>
-                &lt;entry&gt;<br/>&lt;simple&gt;GREEN&lt;/simple&gt;<br/>&lt;string&gt;grass&lt;/string&gt;<br/>&lt;/entry&gt;<br/>
-                &lt;entry&gt;<br/>&lt;simple&gt;BLUE&lt;/simple&gt;<br/>&lt;string&gt;sky&lt;/string&gt;<br/>&lt;/entry&gt;<br/>
-                &lt;/enum-map&gt;</td>
-                <td>Available under Java 1.5 or greater.</td>
-            </tr>
 
             <!-- .................................................................................................. -->
             <tr>
@@ -289,6 +280,15 @@
                 <td>java.util.Currency</td>
                 <td class="example">&lt;currency&gt;USD&lt;/currency&gt;</td>
                 <td>Available under Java 1.4 or greater.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumMapConverter.html">EnumMapConverter</a></td>
+                <td>java.util.EnumMap</td>
+                <td class="example">&lt;enum-map enum-type="simple"&gt;<br/>
+                &lt;entry&gt;<br/>&lt;simple&gt;GREEN&lt;/simple&gt;<br/>&lt;string&gt;grass&lt;/string&gt;<br/>&lt;/entry&gt;<br/>
+                &lt;entry&gt;<br/>&lt;simple&gt;BLUE&lt;/simple&gt;<br/>&lt;string&gt;sky&lt;/string&gt;<br/>&lt;/entry&gt;<br/>
+                &lt;/enum-map&gt;</td>
+                <td>Available under Java 1.5 or greater.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumSetConverter.html">EnumSetConverter</a></td>
@@ -557,6 +557,23 @@
 
             <!-- .................................................................................................. -->
             <tr>
+                <td colspan="4" class="headerRow"><h1>javax.xml.datatype</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/DurationConverter.html">DurationConverter</a></td>
+                <td>javax.xml.datatype.Duration</td>
+                <td class="example">&lt;duration&gt;PT1H2M&lt;/duration&gt;</td>
+                <td>Registered automatically if type is available (since JDK 5 or with JAXB)</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
                 <td colspan="4" class="headerRow"><h1>Generalized Converters</h1></td>
             </tr>
             <tr>
@@ -603,6 +620,13 @@
                 <td>The Converter handles any type as Java bean. It expects the type to convert to have a public default constructor and
                 appropriate getter and setters.</td>
                 <td>Must be registered explicitly. Should be used as fallback.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/PropertyEditorCapableConverter.html">PropertyEditorCapableConverter</a></td>
+                <td>Any type with a PropertyEditor implementation</td>
+                <td>The Converter can handles any type that provides a PropertyEditor implementation. The PropertyEditor's methods getAsText() and
+                setAsText() are used to convert between object and string representation.</td>
+                <td>Must be registered explicitly for the appropriate type</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/CGLIBEnhancedConverter.html">CGLIBEnhancedConverter</a></td>
