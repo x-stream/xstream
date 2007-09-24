@@ -110,6 +110,10 @@
               <name>test.src.dir</name>
               <value>${project.build.testSourceDirectory}</value>
             </property>
+            <property>
+              <name>java.awt.headless</name>
+              <value>true</value>
+            </property>
           </systemProperties>
         </configuration>
       </plugin>
