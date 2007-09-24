@@ -13,12 +13,44 @@
     <url>http://xstream.codehaus.org</url>
   </organization>
 
-  <modules>
-    <module>xstream</module>
-    <module>xstream-builder</module>
-    <module>xstream-benchmark</module>
-    <module>xstream-distribution</module>
-  </modules>
+  <!-- xstream-builder is currently JDK 5 only -->
+  <profiles>
+    <profile>
+      <id>jdk16</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <modules>
+        <module>xstream</module>
+        <module>xstream-builder</module>
+        <module>xstream-benchmark</module>
+        <module>xstream-distribution</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>jdk15</id>
+      <activation>
+        <jdk>1.5</jdk>
+      </activation>
+      <modules>
+        <module>xstream</module>
+        <module>xstream-builder</module>
+        <module>xstream-benchmark</module>
+        <module>xstream-distribution</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>jdk14</id>
+      <activation>
+        <jdk>1.4</jdk>
+      </activation>
+      <modules>
+        <module>xstream</module>
+        <module>xstream-benchmark</module>
+        <module>xstream-distribution</module>
+      </modules>
+    </profile>
+  </profiles>
 
   <licenses>
     <license>
