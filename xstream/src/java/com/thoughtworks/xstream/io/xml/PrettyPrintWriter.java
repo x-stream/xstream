@@ -138,7 +138,13 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                     this.writer.write(SLASH_R);
                     break;
                 default:
-                    this.writer.write(c);
+                    if (Character.isDefined(c)) {
+                        this.writer.write(c);
+                    } else {
+                        this.writer.write("&#x");
+                        this.writer.write(Integer.toHexString(c));
+                        this.writer.write(';');
+                    }
             }
         }
     }

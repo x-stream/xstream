@@ -568,7 +568,7 @@ public class XStream {
         registerConverter(new DoubleConverter(), PRIORITY_NORMAL);
         registerConverter(new LongConverter(), PRIORITY_NORMAL);
         registerConverter(new ShortConverter(), PRIORITY_NORMAL);
-        registerConverter(new CharConverter(), PRIORITY_NORMAL);
+        registerConverter((Converter)new CharConverter(), PRIORITY_NORMAL);
         registerConverter(new BooleanConverter(), PRIORITY_NORMAL);
         registerConverter(new ByteConverter(), PRIORITY_NORMAL);
 
