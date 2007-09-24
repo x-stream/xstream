@@ -44,11 +44,15 @@
     	<li>JIRA:XSTR-280: JavaBeanConverter now supports aliasField and omitField (by Hinse ter Schuur).</li>
     	<li>JIRA:XSTR-280: SerializationConverter now supports aliasField and omitField.</li>
     	<li>JIRA:XSTR-429: XmlFriendlyReplacer support for SaxWriter and TraxSource (by Adrian Wilkens).</li>
+    	<li>JIRA:XSTR-421: Characters cannot be written as attribute.</li>
+    	<li>JIRA:XSTR-426: java.swt.KeyStroke not properly serialized because of a character undefined in unicode.</li>
     </ul>
 
     <h2>API changes</h2>
 
     <ul>
+    	<li>Due to JIRA:XSTR-421 null characters are no longer written as tag with an attrbute (&lt;char null=&quot;true&quot;/&gt;), 
+    	but as empty tag.  The old representation is still supported at deserialization.</li>
     </ul>
 
     <h1>Version 1.2.2</h1>
