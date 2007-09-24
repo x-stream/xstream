@@ -116,7 +116,7 @@ public class XmlFriendlyBenchmark extends TestSuite {
                 Constructor constructor = type.getConstructor(new Class[]{
                     String.class, String.class, int.class});
                 XmlFriendlyReplacer replacer = (XmlFriendlyReplacer)constructor
-                    .newInstance(new Object[]{dollar, underscore, Integer.valueOf(0)});
+                    .newInstance(new Object[]{dollar, underscore, new Integer(0)});
                 return new XStream(new XppDriver(replacer));
             } catch (NoSuchMethodException e) {
                 ex = e;
@@ -127,7 +127,7 @@ public class XmlFriendlyBenchmark extends TestSuite {
             } catch (InvocationTargetException e) {
                 ex = e;
             }
-            throw new IllegalStateException("Cannot initialize XmlFriendlyReplacer", ex);
+            throw new XStream.InitializationException("Cannot initialize XmlFriendlyReplacer", ex);
         }
     }
 
