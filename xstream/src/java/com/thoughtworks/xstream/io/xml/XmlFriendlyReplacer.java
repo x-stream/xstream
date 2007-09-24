@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 /**
- * Allows replacement of Strings in xml-friendly drivers.
+ * Allows replacement of Strings in XML-friendly drivers.
  * 
  * The default replacements are:
  * <ul>
@@ -10,6 +10,7 @@ package com.thoughtworks.xstream.io.xml;
  * </ul>
  * 
  * @author Mauro Talevi
+ * @author J&ouml;rg Schaible
  * @since 1.2
  */
 public class XmlFriendlyReplacer {
@@ -61,15 +62,17 @@ public class XmlFriendlyReplacer {
      * @return The String with unescaped name
      */
     public String unescapeName(String name) {
-        StringBuffer result = new StringBuffer();
-        int length = name.length();
-        for(int i = 0; i < length; i++) {
-            char c = name.charAt(i);
-            if ( stringFoundAt(name, i, dollarReplacement)) {
-                i += dollarReplacement.length() - 1;
+        final int underscoreReplacementInc = underscoreReplacement.length() - 1;
+        final int dollarReplacementInc = dollarReplacement.length() - 1;
+        final int length = name.length();
+        final StringBuffer result = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            final char c = name.charAt(i);
+            if (name.startsWith(dollarReplacement, i)) {
+                i += dollarReplacementInc;
                 result.append('$');
-            } else if ( stringFoundAt(name, i, underscoreReplacement)) {
-                i += underscoreReplacement.length() - 1;
+            } else if (name.startsWith(underscoreReplacement, i)) {
+                i += underscoreReplacementInc;
                 result.append('_');
             } else {
                 result.append(c);
@@ -77,13 +80,4 @@ public class XmlFriendlyReplacer {
         }
         return result.toString();
     }
-    
-    private boolean stringFoundAt(String name, int i, String replacement) {
-        if ( name.length() >= i + replacement.length() 
-          && name.substring(i, i + replacement.length()).equals(replacement) ){
-            return true;
-        }
-        return false;
-    }
-
 }
