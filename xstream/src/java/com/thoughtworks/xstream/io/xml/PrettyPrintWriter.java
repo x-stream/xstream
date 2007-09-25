@@ -137,6 +137,10 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                 case '\r':
                     this.writer.write(SLASH_R);
                     break;
+                case '\t':
+                case '\n':
+                    this.writer.write(c);
+                    break;
                 default:
                     if (Character.isDefined(c) && !Character.isISOControl(c)) {
                         this.writer.write(c);
