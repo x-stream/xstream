@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
@@ -292,5 +293,32 @@ public class AttributeTest extends AbstractAcceptanceTest {
                         "  <owner>Guilherme</owner>\n" +
                         "</camera>";
         assertBothWays(camera, expected);
+    }
+
+    public static class TransientIdField {
+        transient String id;
+        String name;
+
+        public TransientIdField(String id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public boolean equals(Object obj) {
+            return name.equals(((TransientIdField)obj).name);
+        }
+    }
+
+    public void testAttributeNamedLikeTransientFieldDoesNotAbortDeserializationOfFollowingFields() {
+        xstream.setMode(XStream.ID_REFERENCES);
+        xstream.alias("transient", TransientIdField.class);
+
+        TransientIdField field = new TransientIdField("foo", "test");
+        String xml = "" // 
+            + "<transient id=\"1\">\n" // 
+            + "  <name>test</name>\n" // 
+            + "</transient>";
+
+        assertBothWays(field, xml);
     }
 }

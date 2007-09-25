@@ -9,10 +9,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * Converts a char primitive or java.lang.Character wrapper to
- * a String. If char is \0, this will be marked as an attribute as
- * XML does not allow this.
+ * a String. If char is \0 the representing String is empty.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
 public class CharConverter implements Converter, SingleValueConverter {
 

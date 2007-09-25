@@ -151,7 +151,6 @@ public abstract class AbstractReflectionConverter implements Converter {
             if (fieldExistsInClass) {
                 Field field = reflectionProvider.getField(result.getClass(), attrName);
                 if (Modifier.isTransient(field.getModifiers())) {
-                    reader.moveUp();
                     continue;
                 }
                 SingleValueConverter converter = mapper.getConverterFromAttribute(field.getDeclaringClass(), attrName);

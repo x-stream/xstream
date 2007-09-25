@@ -36,7 +36,6 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
 
     public void testOtherPrimitives() {
         assertBothWays(new Character('z'), "<char>z</char>");
-        assertBothWays(new Character('\uffff'), "<char>&#xffff;</char>");
         assertBothWays(Boolean.TRUE, "<boolean>true</boolean>");
         assertBothWays(Boolean.FALSE, "<boolean>false</boolean>");
         assertBothWays(new Byte((byte) 44), "<byte>44</byte>");
@@ -45,6 +44,10 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     public void testNullCharacter() {
         assertEquals('\0', xstream.fromXML("<char null=\"true\"/>")); // pre XStream 1.3 
         assertBothWays(new Character('\0'), "<char></char>");
+    }
+
+    public void testNonUnicodelCharacter() {
+        assertBothWays(new Character('\uffff'), "<char>&#xffff;</char>");
     }
 
     public void testStrings() {

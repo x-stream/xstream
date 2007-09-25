@@ -80,7 +80,7 @@ public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceT
         assertSame(out.s1, out.s2);
     }
 
-    public void testReferencesNotUsedForSimpleImmutableValueTypes() {
+    public void testReferencesNotUsedForImmutableValueTypes() {
         MultRef in = new MultRef();
         in.s1 = new Integer(4);
         in.s2 = in.s1;
@@ -92,7 +92,7 @@ public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceT
         assertNotSame(out.s1, out.s2);
     }
 
-    public void testReferencesUsedForSimpleMutableValueTypes() {
+    public void testReferencesUsedForMutableValueTypes() {
         MultRef in = new MultRef();
         in.s1 = new StringBuffer("hi");
         in.s2 = in.s1;
