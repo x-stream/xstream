@@ -55,7 +55,7 @@
     <ul>
     	<li>Due to JIRA:XSTR-421 null characters are no longer written as tag with an attribute (&lt;char null=&quot;true&quot;/&gt;), 
     	but as empty tag.  The old representation is still supported at deserialization.</li>
-    	<li>Characters that are not defined in unicode or ISO control characters are written as numerical entity now.</li>
+    	<li>Characters that are not defined in unicode or ISO control characters (expect TAB and LF) are written as numerical entity now.</li>
     </ul>
 
     <h1>Version 1.2.2</h1>
