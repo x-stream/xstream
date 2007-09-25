@@ -42,7 +42,7 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testNullCharacter() {
-        assertEquals('\0', xstream.fromXML("<char null=\"true\"/>")); // pre XStream 1.3 
+        assertEquals(new Character('\0'), xstream.fromXML("<char null=\"true\"/>")); // pre XStream 1.3 
         assertBothWays(new Character('\0'), "<char></char>");
     }
 
