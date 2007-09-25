@@ -138,7 +138,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                     this.writer.write(SLASH_R);
                     break;
                 default:
-                    if (Character.isDefined(c)) {
+                    if (Character.isDefined(c) && !Character.isISOControl(c)) {
                         this.writer.write(c);
                     } else {
                         this.writer.write("&#x");

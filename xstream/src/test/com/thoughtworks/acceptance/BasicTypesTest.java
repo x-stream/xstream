@@ -46,12 +46,16 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertBothWays(new Character('\0'), "<char></char>");
     }
 
-    public void testNonUnicodelCharacter() {
+    public void testNonUnicodeCharacter() {
         assertBothWays(new Character('\uffff'), "<char>&#xffff;</char>");
     }
 
     public void testStrings() {
         assertBothWays("hello world", "<string>hello world</string>");
+    }
+
+    public void testStringsWithISOControlCharacter() {
+        assertBothWays("hello\u0004world", "<string>hello&#x4;world</string>");
     }
 
     public void testStringBuffer() {
