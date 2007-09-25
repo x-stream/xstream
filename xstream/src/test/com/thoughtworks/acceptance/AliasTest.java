@@ -1,5 +1,6 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
@@ -44,30 +45,6 @@ public class AliasTest extends AbstractAcceptanceTest {
         xstream.alias("X_alias", X.class);
         X x = new X(0);
         assertBothWays(x, xml);
-    }
-
-    final static class Software {
-        String vendor;
-        String name;
-        
-        public Software(String vendor, String name) {
-            this.name = name;
-            this.vendor = vendor;
-        }
-        
-        protected Software() {
-            // for JDK 1.3
-        }
-
-        public boolean equals(Object obj) {
-            if (obj instanceof Software) {
-                final Software software = (Software)obj;
-                return software.vendor.equals(vendor) && software.name.equals(name);
-            }
-            return false;
-        }
-        
-        
     }
     
     public void testForFieldAsAttribute() {
@@ -182,14 +159,14 @@ public class AliasTest extends AbstractAcceptanceTest {
         Object[] software = new Object[]{new Software("walness", "xstream")};
 
         xstream.alias("software", Software.class);
-        xstream.aliasField("name", Software.class, "name");
-        xstream.aliasField("vendor", Software.class, "vendor");
+        xstream.aliasField("Name", Software.class, "name");
+        xstream.aliasField("Vendor", Software.class, "vendor");
         
         String xml = ""
             + "<object-array>\n"
             + "  <software>\n"
-            + "    <vendor>walness</vendor>\n"
-            + "    <name>xstream</name>\n" 
+            + "    <Vendor>walness</Vendor>\n"
+            + "    <Name>xstream</Name>\n" 
             + "  </software>\n"
             + "</object-array>";
         

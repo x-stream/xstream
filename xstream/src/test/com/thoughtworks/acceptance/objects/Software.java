@@ -15,4 +15,11 @@ public class Software extends StandardObject {
         this.name = name;
     }
 
+    public boolean equals(Object obj) {
+        if (obj instanceof Software) {
+            final Software software = (Software)obj;
+            return software.vendor.equals(vendor) && software.name.equals(name);
+        }
+        return false;
+    }
 }
