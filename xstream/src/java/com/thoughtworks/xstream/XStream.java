@@ -507,6 +507,7 @@ public class XStream {
             alias("auth-subject", type);
         }
 
+        // since jdk 1.5 included, but available separately in JAXB ...
         type = jvm.loadClass("javax.xml.datatype.Duration");
         if (type != null) {
             alias("duration", type);
