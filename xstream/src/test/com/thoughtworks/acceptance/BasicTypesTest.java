@@ -56,6 +56,7 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
 
     public void testStringsWithISOControlCharacter() {
         assertBothWays("hello\u0004world", "<string>hello&#x4;world</string>");
+        assertBothWays("hello\u0096world", "<string>hello&#x96;world</string>");
     }
 
     public void testStringBuffer() {
