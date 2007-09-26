@@ -1,6 +1,5 @@
 package com.thoughtworks.xstream;
 
-import java.awt.font.TextAttribute;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +21,6 @@ import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Calendar;
@@ -491,13 +488,13 @@ public class XStream {
 	        // loadClass ensures a reference to the class is found but they are not instantiated.
 	        alias("awt-color", jvm.loadClass("java.awt.Color"));
 	        alias("awt-font", jvm.loadClass("java.awt.Font"));
-	        alias("awt-text-attribute", TextAttribute.class);
+	        alias("awt-text-attribute", jvm.loadClass("java.awt.font.TextAttribute"));
         }
 
         if(jvm.supportsSQL()) {
-        	alias("sql-timestamp", Timestamp.class);
-        	alias("sql-time", Time.class);
-        	alias("sql-date", java.sql.Date.class);
+        	alias("sql-timestamp", jvm.loadClass("java.sql.Timestamp"));
+        	alias("sql-time", jvm.loadClass("java.sql.Time"));
+        	alias("sql-date", jvm.loadClass("java.sql.Date"));
         }
 
         alias("file", File.class);
@@ -714,7 +711,7 @@ public class XStream {
         addImmutableType(Class.class);
 
         if(jvm.supportsAWT()) {
-        	addImmutableType(TextAttribute.class);
+            addImmutableType(jvm.loadClass("java.awt.font.TextAttribute"));
         }
 
         if (JVM.is14()) {
