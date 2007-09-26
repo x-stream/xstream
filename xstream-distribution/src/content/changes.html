@@ -27,9 +27,11 @@
     	<li>ReflectionConverter writes now the fields of the parent classes first.</li>
     	<li>JIRA:XSTR-415: JavaBeanConverter uses now BeanIntrospection (by Hinse ter Schuur).</li>
     	<li>JIRA:XSTR-424: DateConverter uses now by default SimpleDateFormat instances in non-lenient mode.</li>
-    	<li>JIRA:XSTR-386: SingleValueConverter that utilizes PropertyEditor implementations (by Jukka Lindstr&ounl;m)</li>
-    	<li>JIRA:XSTR-427: Converter for javax.xml.datatype.Duration (by John Kristian)</li>
-    	<li>JIRA:XSTR-305: Field alias inheritance (by David Blevins)</li>
+    	<li>JIRA:XSTR-386: SingleValueConverter that utilizes PropertyEditor implementations (by Jukka Lindstr&ounl;m).</li>
+    	<li>JIRA:XSTR-427: Converter for javax.xml.datatype.Duration (by John Kristian).</li>
+    	<li>JIRA:XSTR-305: Field alias inheritance (by David Blevins).</li>
+    	<li>XStream failed to initialize in environments without AWT or SQL classes.</li>
+    	<li>JIRA:XSTR-420: XPath of references are not XmlFriendly encoded.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -57,6 +59,8 @@
     	<li>Due to JIRA:XSTR-421 null characters are no longer written as tag with an attribute (&lt;char null=&quot;true&quot;/&gt;), 
     	but as empty tag.  The old representation is still supported at deserialization.</li>
     	<li>Characters that are not defined in unicode or ISO control characters (expect TAB and LF) are written as numerical entity now.</li>
+    	<li>XPath references are now also XML-friendly encoded to match the path exactly. Unencoded references will normally work anyway,
+    	but in special cases the exact behaviour of XStream 1.2.x might be necessary. See acceptance tests for XStream 1.2.x compatibility.</li>
     </ul>
 
     <h1>Version 1.2.2</h1>
