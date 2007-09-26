@@ -70,7 +70,7 @@ public class JavaBeanConverter implements Converter {
             }
 
             private void writeField(String propertyName, Class fieldType, Object newObj, Class definedIn) {
-                String serializedMember = mapper.serializedMember(definedIn, propertyName);
+                String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
 				ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, fieldType);
                 Class actualType = newObj.getClass();
 

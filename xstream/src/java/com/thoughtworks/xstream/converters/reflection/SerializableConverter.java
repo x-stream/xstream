@@ -107,7 +107,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                                 + " may not write a field named '" + name + "'");
                     }
                     if (value != null) {
-                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(currentType[0], name), field.getType());
+                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source.getClass(), name), field.getType());
                         if (field.getType() != value.getClass() && !field.getType().isPrimitive()) {
                             writer.addAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS), mapper.serializedClass(value.getClass()));
                         }
@@ -144,7 +144,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                             continue;
                         }
 
-                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(currentType[0], field.getName()), field.getType());
+                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source.getClass(), field.getName()), field.getType());
 
                         Class actualType = value.getClass();
                         Class defaultType = mapper.defaultImplementationOf(field.getType());

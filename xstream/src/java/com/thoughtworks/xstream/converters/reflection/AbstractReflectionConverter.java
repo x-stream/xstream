@@ -106,7 +106,7 @@ public abstract class AbstractReflectionConverter implements Converter {
             }
 
             private void writeField(String fieldName, String aliasName, Class fieldType, Class definedIn, Object newObj) {
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(definedIn, aliasName), fieldType); 
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source.getClass(), aliasName), fieldType); 
 
                 Class actualType = newObj.getClass();
 

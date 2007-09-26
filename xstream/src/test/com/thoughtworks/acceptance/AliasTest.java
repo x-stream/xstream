@@ -155,6 +155,22 @@ public class AliasTest extends AbstractAcceptanceTest {
         assertBothWays(object, xml);
     }
 
+    public void testCanOverwriteInheritedAlias() {
+        xstream.alias("test", TypeC.class);
+        xstream.aliasField("a", TypeA.class, "attrA");
+        xstream.aliasField("b", TypeB.class, "attrB");
+        xstream.aliasField("c", TypeC.class, "attrC");
+        xstream.aliasField("y", TypeC.class, "attrA");
+        TypeC object = new TypeC();
+        String xml = ""
+            + "<test>\n"
+            + "  <y>testA</y>\n"
+            + "  <b>testB</b>\n"
+            + "  <c>testC</c>\n"
+            + "</test>";
+        assertBothWays(object, xml);
+    }
+
     public void testCanAliasArrayElements() {
         Object[] software = new Object[]{new Software("walness", "xstream")};
 

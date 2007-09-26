@@ -35,12 +35,12 @@ public class FieldAliasingMapper extends MapperWrapper {
         aliasToFieldMap.put(key(type, alias), fieldName);
     }
 
-    private Object key(Class type, String value) {
-        return type.getName() + '.' + value;
+    private Object key(Class type, String name) {
+        return type.getName() + ':' + name;
     }
 
     public String serializedMember(Class type, String memberName) {
-        String alias = (String) fieldToAliasMap.get(key(type, memberName));
+        String alias = getMember(type, memberName, fieldToAliasMap);
         if (alias == null) {
             return super.serializedMember(type, memberName);
         } else {
@@ -49,15 +49,20 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     public String realMember(Class type, String serialized) {
-        String real = null;
-        for (Class declaringType = type; real == null && declaringType != null; declaringType = declaringType.getSuperclass()) {
-            real = (String) aliasToFieldMap.get(key(declaringType, serialized));
-        }
+        String real = getMember(type, serialized, aliasToFieldMap);
         if (real == null) {
             return super.realMember(type, serialized);
         } else {
             return real;
         }
+    }
+
+    private String getMember(Class type, String name, Map map) {
+        String member = null;
+        for (Class declaringType = type; member == null && declaringType != Object.class; declaringType = declaringType.getSuperclass()) {
+            member = (String) map.get(key(declaringType, name));
+        }
+        return member;
     }
 
     public boolean shouldSerializeMember(Class definedIn, String fieldName) {
