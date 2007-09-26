@@ -10,7 +10,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author Mauro Talevi
  * @since 1.2
  */
-public abstract class AbstractXmlWriter implements ExtendedHierarchicalStreamWriter {
+public abstract class AbstractXmlWriter implements ExtendedHierarchicalStreamWriter, XmlFriendlyWriter {
 
     private XmlFriendlyReplacer replacer;
 
@@ -32,7 +32,7 @@ public abstract class AbstractXmlWriter implements ExtendedHierarchicalStreamWri
      * @param name the unescaped XML name
      * @return An escaped name with original characters replaced
      */
-    protected String escapeXmlName(String name) {
+    public String escapeXmlName(String name) {
         return replacer.escapeName(name);
     }
 

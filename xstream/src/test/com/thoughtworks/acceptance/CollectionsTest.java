@@ -135,7 +135,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "  </java.util.Collections_-SynchronizedCollection>\n" +
                 "  <java.util.Collections_-SynchronizedList>\n" +
                 "    <default>\n" +
-                "      <list class=\"linked-list\" reference=\"../../../java.util.Collections$SynchronizedCollection/default/c\"/>\n" +
+                "      <list class=\"linked-list\" reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
                 "    </default>\n" +
                 "  </java.util.Collections_-SynchronizedList>\n" +
                 "</java.util.Collections_-SynchronizedList>";

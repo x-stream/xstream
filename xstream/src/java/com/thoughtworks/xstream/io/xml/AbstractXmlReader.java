@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
  * @author Mauro Talevi
  * @since 1.2
  */
-public abstract class AbstractXmlReader implements HierarchicalStreamReader {
+public abstract class AbstractXmlReader implements HierarchicalStreamReader, XmlFriendlyReader {
 
     private XmlFriendlyReplacer replacer;
 
@@ -27,7 +27,7 @@ public abstract class AbstractXmlReader implements HierarchicalStreamReader {
      * @param name the escaped XML-friendly name
      * @return An unescaped name with original characters
      */
-    protected String unescapeXmlName(String name) {
+    public String unescapeXmlName(String name) {
         return replacer.unescapeName(name);
     }
     

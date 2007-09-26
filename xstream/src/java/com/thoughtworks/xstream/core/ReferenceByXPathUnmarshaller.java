@@ -6,16 +6,19 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.path.Path;
 import com.thoughtworks.xstream.io.path.PathTracker;
 import com.thoughtworks.xstream.io.path.PathTrackingReader;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReferenceByXPathUnmarshaller extends AbstractReferenceUnmarshaller {
 
     private PathTracker pathTracker = new PathTracker();
+    protected boolean isXmlFriendly;
 
     public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
                                         ConverterLookup converterLookup, Mapper mapper) {
         super(root, reader, converterLookup, mapper);
         this.reader = new PathTrackingReader(reader, pathTracker);
+        isXmlFriendly = reader.underlyingReader() instanceof XmlFriendlyReader;
     }
 
     /**
@@ -27,7 +30,7 @@ public class ReferenceByXPathUnmarshaller extends AbstractReferenceUnmarshaller 
     }
 
     protected Object getReferenceKey(String reference) {
-        final Path path = new Path(reference);
+        final Path path = new Path(isXmlFriendly ? ((XmlFriendlyReader)reader.underlyingReader()).unescapeXmlName(reference) : reference);
         // We have absolute references, if path starts with '/'
         return reference.charAt(0) != '/' ? pathTracker.getPath().apply(path) : path;
     }

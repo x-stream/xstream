@@ -2,9 +2,16 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.reflection.FieldDictionary;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.XStream12FieldKeySorter;
+import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
+import com.thoughtworks.xstream.core.ReferenceByXPathUnmarshaller;
+import com.thoughtworks.xstream.core.TreeUnmarshaller;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,7 +98,7 @@ public class XStream12CompatibilityTest extends AbstractAcceptanceTest {
         assertEquals("foo", childA.getParentStuff().iterator().next());
     }
 
-    public void testCanWriteInheritanceHeirarchiesInOldOrder() {
+    public void testCanWriteInheritanceHierarchiesInOldOrder() {
         xstream = new XStream(new PureJavaReflectionProvider(new FieldDictionary(new XStream12FieldKeySorter())));
         OpenSourceSoftware openSourceSoftware = new OpenSourceSoftware("apache", "geronimo", "license");
         String xml =
@@ -103,5 +110,42 @@ public class XStream12CompatibilityTest extends AbstractAcceptanceTest {
 
         xstream.alias("oss", OpenSourceSoftware.class);
         assertEquals(xml, xstream.toXML(openSourceSoftware));
+    }
+
+    private final class XStream12ReferenceByXPathUnmarshaller extends
+        ReferenceByXPathUnmarshaller {
+        private XStream12ReferenceByXPathUnmarshaller(
+            Object root, HierarchicalStreamReader reader, ConverterLookup converterLookup,
+            Mapper mapper) {
+            super(root, reader, converterLookup, mapper);
+            isXmlFriendly = false;
+        }
+    }
+
+    public void testCanReadXmlUnfriendlyXPathReferences() {
+        xstream.setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.RELATIVE) {
+
+            protected TreeUnmarshaller createUnmarshallingContext(Object root,
+                HierarchicalStreamReader reader, ConverterLookup converterLookup, Mapper mapper) {
+                return new XStream12ReferenceByXPathUnmarshaller(root, reader, converterLookup, mapper);
+            }
+            
+        });
+        xstream.alias("foo$bar", StringBuffer.class);
+        xstream.alias("x_y", StringBuffer.class);
+        String xml =
+            "<list>\n" +
+            "  <foo_-bar>foo</foo_-bar>\n" +
+            "  <foo_-bar reference=\"../foo$bar\"/>\n" +
+            "  <x__y>bar</x__y>\n" +
+            "  <x__y reference=\"../x_y\"/>\n" +
+            "</list>";
+        
+        List list = (List)xstream.fromXML(xml);
+        assertEquals(4, list.size());
+        assertSame(list.get(0), list.get(1));
+        assertEquals("foo", list.get(0).toString());
+        assertSame(list.get(2), list.get(3));
+        assertEquals("bar", list.get(2).toString());
     }
 }
