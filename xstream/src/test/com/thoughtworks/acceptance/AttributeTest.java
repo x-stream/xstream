@@ -299,6 +299,10 @@ public class AttributeTest extends AbstractAcceptanceTest {
         transient String id;
         String name;
 
+        public TransientIdField() {
+            // for JDK 1.3
+        }
+
         public TransientIdField(String id, String name) {
             this.id = id;
             this.name = name;
