@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import com.thoughtworks.xstream.ReadOnlyXStream;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.binary.BinaryStreamWriter;
@@ -198,4 +199,20 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             .transform(new StreamSource(new StringReader(xml)), new StreamResult(writer));
         return writer.toString();
     }
+    
+    protected Object assertBothWays(ReadOnlyXStream xstream, Object root, String xml) {
+
+        // First, serialize the object to XML and check it matches the expected XML.
+        String resultXml = xstream.toXML(root);
+        assertEquals(xml, resultXml);
+
+        // Now deserialize the XML back into the object and check it equals the original object.
+        // We do not really care about arrays and so on, because the tests are related to xstreambuilder
+        Object resultRoot = xstream.fromXML(resultXml);
+        assertEquals(xml, xstream.toXML(resultRoot));
+
+        return resultRoot;
+    }
+
+
 }

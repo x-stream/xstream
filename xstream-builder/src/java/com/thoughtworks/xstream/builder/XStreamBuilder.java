@@ -5,15 +5,18 @@ import java.util.List;
 
 import com.thoughtworks.xstream.ReadOnlyXStream;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.builder.processor.AnnotatedTypeProcessor;
+import com.thoughtworks.xstream.builder.processor.AbsoluteReferencesProcessor;
+import com.thoughtworks.xstream.builder.processor.AliasFieldProcessor;
+import com.thoughtworks.xstream.builder.processor.AliasTypeProcessor;
 import com.thoughtworks.xstream.builder.processor.ConfigProcessor;
 import com.thoughtworks.xstream.builder.processor.ConverterProcessor;
-import com.thoughtworks.xstream.builder.processor.AliasFieldProcessor;
 import com.thoughtworks.xstream.builder.processor.FieldConfigProcessor;
+import com.thoughtworks.xstream.builder.processor.IdReferencesProcessor;
 import com.thoughtworks.xstream.builder.processor.IgnoreFieldProcessor;
 import com.thoughtworks.xstream.builder.processor.ImplementedByProcessor;
-import com.thoughtworks.xstream.builder.processor.AliasTypeProcessor;
+import com.thoughtworks.xstream.builder.processor.NoReferencesProcessor;
 import com.thoughtworks.xstream.builder.processor.TypeConfigProcessor;
+import com.thoughtworks.xstream.builder.processor.annotations.AnnotatedTypeProcessor;
 import com.thoughtworks.xstream.converters.Converter;
 
 /**
@@ -90,5 +93,22 @@ public class XStreamBuilder {
     protected TypeConfigProcessor annotated() {
     	return new AnnotatedTypeProcessor();
     }
+    
+    protected ConfigProcessor absoluteReferences() {
+    	return new AbsoluteReferencesProcessor();
+    }
+
+    protected ConfigProcessor idReferences() {
+    	return new IdReferencesProcessor();
+    }
+
+    protected ConfigProcessor noReferences() {
+    	return new NoReferencesProcessor();
+    }
+
+    protected void with(ConfigProcessor processor) {
+    	this.childrenNodes.add(processor);
+    }
+
 
 }

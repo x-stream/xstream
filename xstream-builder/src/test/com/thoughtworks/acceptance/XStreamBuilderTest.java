@@ -1,11 +1,10 @@
 package com.thoughtworks.acceptance;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
-import com.thoughtworks.xstream.ReadOnlyXStream;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.builder.TypeConfig;
 import com.thoughtworks.xstream.builder.XStreamBuilder;
 import com.thoughtworks.xstream.builder.processor.TypeConfigProcessor;
 import com.thoughtworks.xstream.converters.Converter;
@@ -55,20 +54,6 @@ public class XStreamBuilderTest extends AbstractAcceptanceTest {
 
     }
 
-
-    protected Object assertBothWays(ReadOnlyXStream xstream, Object root, String xml) {
-
-        // First, serialize the object to XML and check it matches the expected XML.
-        String resultXml = xstream.toXML(root);
-        assertEquals(xml, resultXml);
-
-        // Now deserialize the XML back into the object and check it equals the original object.
-        // We do not really care about arrays and so on, because the tests are related to xstreambuilder
-        Object resultRoot = xstream.fromXML(resultXml);
-        assertEquals(xml, xstream.toXML(resultRoot));
-
-        return resultRoot;
-    }
 
     public void testHandleCorrectlyFieldOmmission() {
 
@@ -153,23 +138,62 @@ public class XStreamBuilderTest extends AbstractAcceptanceTest {
 
     }
 
-    @XStreamAlias("annotated")
-    public static class Annotated {
-    }
 
-    public void testHandleCorrectlyAnnotatedClasses() {
+    static class Home {
+    }
+    
+    public void testHandleCorrectlyAbsoluteReferences() {
 
         XStreamBuilder builder = new XStreamBuilder() {
             {
-                handle(Annotated.class).with(annotated());
+            	with(absoluteReferences());
+            	handle(Home.class).with(alias("home"));
             }
         };
 
-        Annotated root = new Annotated();
-        String expected = "<annotated/>";
+        List root = new ArrayList();
+        root.add(new Home());
+        root.add(root.get(0));
+        String expected = "<list>\n  <home/>\n  <home reference=\"/list/home\"/>\n</list>";
 
         assertBothWays(builder.buildXStream(), root, expected);
 
     }
+    
+    public void testHandleCorrectlyIdReferences() {
 
+        XStreamBuilder builder = new XStreamBuilder() {
+            {
+            	with(idReferences());
+            	handle(Home.class).with(alias("home"));
+            }
+        };
+
+        List root = new ArrayList();
+        root.add(new Home());
+        root.add(root.get(0));
+        String expected = "<list id=\"1\">\n  <home id=\"2\"/>\n  <home reference=\"2\"/>\n</list>";
+
+        assertBothWays(builder.buildXStream(), root, expected);
+
+    }
+    
+    public void testHandleCorrectlyNoReferences() {
+
+        XStreamBuilder builder = new XStreamBuilder() {
+            {
+            	with(noReferences());
+            	handle(Home.class).with(alias("home"));
+            }
+        };
+
+        List root = new ArrayList();
+        root.add(new Home());
+        root.add(root.get(0));
+        String expected = "<list>\n  <home/>\n  <home/>\n</list>";
+
+        assertBothWays(builder.buildXStream(), root, expected);
+
+    }
+    
 }
