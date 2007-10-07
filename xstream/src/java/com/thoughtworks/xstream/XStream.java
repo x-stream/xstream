@@ -140,7 +140,7 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  * <p/>
  * <p>
  * To create shorter XML, you can specify aliases for classes using the <code>alias()</code>
- * method. For example, you can shorten all occurences of element
+ * method. For example, you can shorten all occurrences of element
  * <code>&lt;com.blah.MyThing&gt;</code> to <code>&lt;my-thing&gt;</code> by registering an
  * alias for the class.
  * <p>
@@ -231,7 +231,7 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  * <tr>
  * <td><code>xstream.setMode(XStream.NO_REFERENCES);</code></td>
  * <td>This disables object graph support and treats the object structure like a tree. Duplicate
- * references are treated as two seperate objects and circular references cause an exception. This
+ * references are treated as two separate objects and circular references cause an exception. This
  * is slightly faster and uses less memory than the other two modes.</td>
  * </tr>
  * </table>
@@ -255,7 +255,7 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 public class XStream {
 
     // CAUTION: The sequence of the fields is intentional for an optimal XML output of a
-    // self-serializaion!
+    // self-serialization!
     private ReflectionProvider reflectionProvider;
     private HierarchicalStreamDriver hierarchicalStreamDriver;
     private ClassLoaderReference classLoaderReference;
