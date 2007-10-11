@@ -18,6 +18,7 @@ public class JVM {
     private final boolean supportsSQL = loadClass("java.sql.Date") != null; 
 
     private static final boolean reverseFieldOrder;
+    private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
 
     static final float DEFAULT_JAVA_VERSION = 1.3f;
@@ -61,23 +62,23 @@ public class JVM {
     }
 
     private static boolean isSun() {
-        return System.getProperty("java.vm.vendor").indexOf("Sun") != -1;
+        return vendor.indexOf("Sun") != -1;
     }
 
     private static boolean isApple() {
-        return System.getProperty("java.vm.vendor").indexOf("Apple") != -1;
+        return vendor.indexOf("Apple") != -1;
     }
 
     private static boolean isHPUX() {
-        return System.getProperty("java.vm.vendor").indexOf("Hewlett-Packard Company") != -1;
+        return vendor.indexOf("Hewlett-Packard Company") != -1;
     }
 
     private static boolean isIBM() {
-    	return System.getProperty("java.vm.vendor").indexOf("IBM") != -1;
+    	return vendor.indexOf("IBM") != -1;
     }
 
     private static boolean isBlackdown() {
-        return System.getProperty("java.vm.vendor").indexOf("Blackdown") != -1;
+        return vendor.indexOf("Blackdown") != -1;
     }
     
     /*
@@ -87,7 +88,7 @@ public class JVM {
      */
     private static boolean isBEAWithUnsafeSupport() {
         // This property should be "BEA Systems, Inc."
-        if (System.getProperty("java.vm.vendor").indexOf("BEA") != -1) {
+        if (vendor.indexOf("BEA") != -1) {
 
             /*
              * Recent 1.4.2 and 5.0 versions of JRockit have a java.vm.version
@@ -120,7 +121,11 @@ public class JVM {
     }
     
     private static boolean isHitachi() {
-        return System.getProperty("java.vm.vendor").indexOf("Hitachi") != -1;
+        return vendor.indexOf("Hitachi") != -1;
+    }
+    
+    private static boolean isSAP() {
+        return vendor.indexOf("SAP AG") != -1;
     }
 
     public Class loadClass(String name) {
@@ -158,25 +163,36 @@ public class JVM {
     }
 
     private boolean canUseSun14ReflectionProvider() {
-        return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown() || isBEAWithUnsafeSupport() || isHitachi()) && is14() && loadClass("sun.misc.Unsafe") != null;
+        return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown() || isBEAWithUnsafeSupport() || isHitachi() || isSAP()) && is14() && loadClass("sun.misc.Unsafe") != null;
     }
 
     public static boolean reverseFieldDefinition() {
         return reverseFieldOrder;
     }
 
-	/**
-	 * Checks if the jvm supports awt.
-	 */
-	public boolean supportsAWT() {
-		return this.supportsAWT;
-	}
+    /**
+     * Checks if the jvm supports awt.
+     */
+    public boolean supportsAWT() {
+        return this.supportsAWT;
+    }
 
-	/**
-	 * Checks if the jvm supports sql.
-	 */
-	public boolean supportsSQL() {
-		return this.supportsSQL;
-	}
+    /**
+     * Checks if the jvm supports sql.
+     */
+    public boolean supportsSQL() {
+        return this.supportsSQL;
+    }
 
+    public static void main(String[] args) {
+        JVM jvm = new JVM();
+        System.out.println("XStream JVM diagnostics");
+        System.out.println("java.specification.version: " + System.getProperty("java.specification.version"));
+        System.out.println("java.vm.vendor: " + vendor);
+        System.out.println("Version: " + majorJavaVersion);
+        System.out.println("Reverse field order: " + reverseFieldOrder);
+        System.out.println("XStream support for enhanced Mode: " + jvm.canUseSun14ReflectionProvider());
+        System.out.println("Supports AWT: " + jvm.supportsAWT());
+        System.out.println("Supports SQL: " + jvm.supportsSQL());
+    }
 }
