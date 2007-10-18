@@ -1,13 +1,14 @@
 package com.thoughtworks.xstream.io;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.JDomDriver;
@@ -31,7 +32,17 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new XppDomDriver());
         addDriverTest(new XppDriver());
         addDriverTest(new XomDriver());
-        addDriverTest(new JettisonMappedXmlDriver());
+        if (JVM.is14()) {
+            JVM jvm = new JVM();
+            Class driverType = jvm.loadClass("com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver");
+            try {
+                addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
+            } catch (InstantiationException e) {
+                throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
+            } catch (IllegalAccessException e) {
+                throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
+            }
+        }
     }
 
     private void test(HierarchicalStreamDriver driver) {
