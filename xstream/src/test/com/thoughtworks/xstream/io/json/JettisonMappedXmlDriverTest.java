@@ -1,5 +1,10 @@
 package com.thoughtworks.xstream.io.json;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
@@ -41,7 +46,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     public void testWriteSimple() {
         Product product = new Product("Banana", "123", 23.00);
         String result = xstream.toXML(product);
-        assertEquals(result, simpleJson);
+        assertEquals(simpleJson, result);
     }
 
     public void testWriteHierarchy() {
@@ -58,16 +63,28 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         products.add(mango);
         category.setProducts(products);
         String result = xstream.toXML(category);
-        assertEquals(result, hiearchyJson);
+        assertEquals(hiearchyJson, result);
     }
 
     public void testHierarchyRead() {
         Category parsedCategory = (Category)xstream.fromXML(hiearchyJson);
         Product parsedBanana = (Product)parsedCategory.getProducts().get(0);
-        assertEquals(parsedBanana.getName(), "Banana");
-        assertEquals(parsedBanana.getTags().size(), 3);
-        assertEquals(parsedBanana.getTags().get(0), "yellow");
-        assertEquals(parsedBanana.getTags().get(2), "tasty");
+        assertEquals("Banana", parsedBanana.getName());
+        assertEquals(3, parsedBanana.getTags().size());
+        assertEquals("yellow", parsedBanana.getTags().get(0));
+        assertEquals("tasty", parsedBanana.getTags().get(2));
     }
 
+    public void testObjectStream() throws IOException, ClassNotFoundException {
+        Product product = new Product("Banana", "123", 23.00);
+        StringWriter writer = new StringWriter();
+        ObjectOutputStream oos = xstream.createObjectOutputStream(writer, "oos");
+        oos.writeObject(product);
+        oos.close();
+        String json = writer.toString();
+        assertEquals("{\"oos\":" +simpleJson + "}", json);
+        ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(json));
+        Product parsedProduct = (Product)ois.readObject();
+        assertEquals(product.toString(), parsedProduct.toString());
+    }
 }

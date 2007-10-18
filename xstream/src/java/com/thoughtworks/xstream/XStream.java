@@ -1203,7 +1203,7 @@ public class XStream {
      * @since 1.0.3
      */
     public ObjectOutputStream createObjectOutputStream(Writer writer) throws IOException {
-        return createObjectOutputStream(new PrettyPrintWriter(writer), "object-stream");
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), "object-stream");
     }
 
     /**
@@ -1233,7 +1233,7 @@ public class XStream {
      */
     public ObjectOutputStream createObjectOutputStream(Writer writer, String rootNodeName)
             throws IOException {
-        return createObjectOutputStream(new PrettyPrintWriter(writer), rootNodeName);
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), rootNodeName);
     }
 
     /**
