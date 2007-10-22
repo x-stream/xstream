@@ -53,6 +53,7 @@
     	<li>JIRA:XSTR-352: Strings with arbitrary ISO control characters are not properly serialized.</li>
     	<li>JIRA:XSTR-428: An attribute named like a transient field did abort deserialization of following fields.</li>
     	<li>JIRA:XSTR-443: XStream.createObjectOutputStream does not use the given driver to create the HierarchicalStreamWriter.</li>
+    	<li>JIRA:XSTR-440: Implicit collections can be declared for fields that are not of Collection type.</li>
     </ul>
 
     <h2>API changes</h2>
@@ -63,6 +64,9 @@
     	<li>Characters that are not defined in unicode or ISO control characters (expect TAB and LF) are written as numerical entity now.</li>
     	<li>XPath references are now also XML-friendly encoded to match the path exactly. Unencoded references will normally work anyway,
     	but in special cases the exact behaviour of XStream 1.2.x might be necessary. See acceptance tests for XStream 1.2.x compatibility.</li>
+    	<li>c.t.x.core.BaseException deprecated in favour of c.t.x.XStreamException as base exception for all exceptions XStream throws.</li>
+    	<li>c.t.x.XStream.InitializerException deprecated in favour of c.t.x.InitializerException.</li>
+    	<li>New methods get() and keys() in interface c.t.x.converter.ErrorWriter</li>
     </ul>
 
     <h1>Version 1.2.2</h1>
