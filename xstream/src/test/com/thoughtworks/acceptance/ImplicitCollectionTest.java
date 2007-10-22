@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.SampleLists;
+import com.thoughtworks.xstream.InitializationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -322,4 +323,12 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(aquarium, expected);
     }
 
+    public void testCanBeDeclaredOnlyForMatchingType() {
+        try {
+            xstream.addImplicitCollection(Animal.class, "name");
+            fail("Thrown " + InitializationException.class.getName() + " expected");
+        } catch (final InitializationException e) {
+            assertTrue(e.getMessage().indexOf("declares no collection") >= 0);
+        }
+    }
 }
