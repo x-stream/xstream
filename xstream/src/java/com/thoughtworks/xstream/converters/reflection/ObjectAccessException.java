@@ -1,8 +1,8 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.core.BaseException;
+import com.thoughtworks.xstream.XStreamException;
 
-public class ObjectAccessException extends BaseException {
+public class ObjectAccessException extends XStreamException {
     public ObjectAccessException(String message) {
         super(message);
     }

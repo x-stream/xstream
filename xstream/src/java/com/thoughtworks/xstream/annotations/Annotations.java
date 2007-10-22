@@ -7,6 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
+import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.collections.AbstractCollectionConverter;
@@ -149,8 +150,7 @@ public class Annotations {
             // Do field level implicit collection
             if (field.isAnnotationPresent(XStreamImplicit.class)) {
                 if (!Collection.class.isAssignableFrom(field.getType())) {
-                    // TODO: We need a separate exception for runtime initialization.
-                    throw new XStream.InitializationException("@XStreamImplicit must be assigned to Collection types, but \""
+                    throw new InitializationException("@XStreamImplicit must be assigned to Collection types, but \""
                         + field.getDeclaringClass().getName() + ":" + field.getName() + " is of type " + field.getType().getName());
                 }
                 XStreamImplicit implicitAnnotation =  field.getAnnotation(XStreamImplicit.class);

@@ -1,31 +1,16 @@
 package com.thoughtworks.xstream.core;
 
+import com.thoughtworks.xstream.XStreamException;
+
 /**
  * JDK1.3 friendly exception that retains cause.
+ * @deprecated since upcoming, use {@link XStreamException} instead
  */
 public abstract class BaseException extends RuntimeException {
 
-    private Throwable cause;
-
-    protected BaseException(String message, Throwable cause) {
-        super(message + (cause == null ? "" : " : " + cause.getMessage()));
-        this.cause = cause;
-    }
-
-    protected BaseException(Throwable cause) {
-        this("", cause);
-    }
-
     protected BaseException(String message) {
-        this(message, null);
+        super(message);
     }
 
-    protected BaseException() {
-        this("", null);
-    }
-
-    public Throwable getCause() {
-        return cause;
-    }
-    
+    public abstract Throwable getCause();
 }

@@ -1,7 +1,7 @@
 package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.annotations.Annotations;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
@@ -44,8 +44,8 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     public void testInvalidImplicitFieldAnnotation() {
         try {
             Annotations.configureAliases(xstream, InvalidImplicitRoot.class);
-            fail("Thrown " + XStream.InitializationException.class.getName() + " expected");
-        } catch (final XStream.InitializationException e) {
+            fail("Thrown " + InitializationException.class.getName() + " expected");
+        } catch (final InitializationException e) {
             assertTrue(e.getMessage().indexOf(InvalidImplicitRoot.class.getName() + ":value") > 0);
         }
     }

@@ -1,44 +1,5 @@
 package com.thoughtworks.xstream;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.NotActiveException;
-import java.io.ObjectInputStream;
-import java.io.ObjectInputValidation;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.Vector;
-
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -86,7 +47,6 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
-import com.thoughtworks.xstream.core.BaseException;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.MapBackedDataHolder;
@@ -101,7 +61,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StatefulWriter;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
@@ -119,6 +78,45 @@ import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
+
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.NotActiveException;
+import java.io.ObjectInputStream;
+import java.io.ObjectInputValidation;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Vector;
 
 
 /**
@@ -728,7 +726,7 @@ public class XStream {
 
     /**
      * Serialize an object to a pretty-printed XML String.
-     * @throws BaseException if the object cannot be serialized
+     * @throws XStreamException if the object cannot be serialized
      */
     public String toXML(Object obj) {
         Writer writer = new StringWriter();
@@ -738,7 +736,7 @@ public class XStream {
 
     /**
      * Serialize an object to the given Writer as pretty-printed XML.
-     * @throws BaseException if the object cannot be serialized
+     * @throws XStreamException if the object cannot be serialized
      */
     public void toXML(Object obj, Writer out) {
         HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
@@ -748,7 +746,7 @@ public class XStream {
 
     /**
      * Serialize an object to the given OutputStream as pretty-printed XML.
-     * @throws BaseException if the object cannot be serialized
+     * @throws XStreamException if the object cannot be serialized
      */
     public void toXML(Object obj, OutputStream out) {
         HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
@@ -758,7 +756,7 @@ public class XStream {
 
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
-     * @throws BaseException if the object cannot be serialized
+     * @throws XStreamException if the object cannot be serialized
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
         marshal(obj, writer, null);
@@ -769,7 +767,7 @@ public class XStream {
      *
      * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If
      *            not present, XStream shall create one lazily as needed.
-     * @throws BaseException if the object cannot be serialized
+     * @throws XStreamException if the object cannot be serialized
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer, DataHolder dataHolder) {
         marshallingStrategy.marshal(writer, obj, converterLookup, mapper, dataHolder);
@@ -777,7 +775,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML String.
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(String xml) {
         return fromXML(new StringReader(xml));
@@ -785,7 +783,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML Reader.
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(Reader xml) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), null);
@@ -793,7 +791,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML InputStream.
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(InputStream input) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), null);
@@ -802,7 +800,7 @@ public class XStream {
     /**
      * Deserialize an object from an XML String, populating the fields of the given root object
      * instead of instantiating a new one.
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(String xml, Object root) {
         return fromXML(new StringReader(xml), root);
@@ -811,7 +809,7 @@ public class XStream {
     /**
      * Deserialize an object from an XML Reader, populating the fields of the given root object
      * instead of instantiating a new one.
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(Reader xml, Object root) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
@@ -820,7 +818,7 @@ public class XStream {
     /**
      * Deserialize an object from an XML InputStream, populating the fields of the given root object
      * instead of instantiating a new one.
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(InputStream xml, Object root) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
@@ -828,7 +826,7 @@ public class XStream {
 
     /**
      * Deserialize an object from a hierarchical data structure (such as XML).
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object unmarshal(HierarchicalStreamReader reader) {
         return unmarshal(reader, null, null);
@@ -837,7 +835,7 @@ public class XStream {
     /**
      * Deserialize an object from a hierarchical data structure (such as XML), populating the fields
      * of the given root object instead of instantiating a new one.
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root) {
         return unmarshal(reader, root, null);
@@ -850,7 +848,7 @@ public class XStream {
      *            XStream creating a new instance.
      * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If
      *            not present, XStream shall create one lazily as needed.
-     * @throws BaseException if the object cannot be deserialized
+     * @throws XStreamException if the object cannot be deserialized
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root, DataHolder dataHolder) {
         return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
@@ -1385,7 +1383,10 @@ public class XStream {
         fieldAliasingMapper.omitField(type, fieldName);
     }
 
-    public static class InitializationException extends BaseException {
+    /**
+     * @deprecated since upcoming, use {@link InitializationException} instead
+     */
+    public static class InitializationException extends XStreamException {
         public InitializationException(String message, Throwable cause) {
             super(message, cause);
         }

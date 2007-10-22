@@ -18,7 +18,7 @@ public class ConversionExceptionTest extends TestCase {
         StringTokenizer tokenizer = new StringTokenizer(outerEx.getMessage(), "\n\r");
         int ends = 0;
         while(tokenizer.hasMoreTokens()) {
-            if (tokenizer.nextToken().startsWith("----------")) {
+            if (tokenizer.nextToken().startsWith("---- Debugging information ----")) {
                 ++ends;
             }
         }

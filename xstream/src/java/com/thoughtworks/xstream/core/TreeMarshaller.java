@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.core;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -100,6 +101,6 @@ public class TreeMarshaller implements MarshallingContext {
         return this.mapper;
     }
 
-    public static class CircularReferenceException extends BaseException {
+    public static class CircularReferenceException extends XStreamException {
     }
 }
