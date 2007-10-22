@@ -182,10 +182,10 @@
                 </goals>
                 <configuration>
                   <excludePackageNames>
-                    com.thoughtworks.xstream.core.*:com.thoughtworks.xstream.io.xml.xppdom.*
+                    com.thoughtworks.xstream.core:com.thoughtworks.xstream.io.xml.xppdom
                   </excludePackageNames>
                   <links>
-                    <link>http://java.sun.com/j2se/1.5/docs/api</link>
+                    <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
                   </links>
                 </configuration>
               </execution>
@@ -260,10 +260,10 @@
                 </goals>
                 <configuration>
                   <excludePackageNames>
-                    com.thoughtworks.xstream.core.*:com.thoughtworks.xstream.io.xml.xppdom.*
+                    com.thoughtworks.xstream.core:com.thoughtworks.xstream.io.xml.xppdom
                   </excludePackageNames>
                   <links>
-                    <link>http://java.sun.com/j2se/1.5/docs/api</link>
+                    <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
                   </links>
                 </configuration>
               </execution>
@@ -321,6 +321,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <excludePackageNames>
+            com.thoughtworks.xstream.core:com.thoughtworks.xstream.io.xml.xppdom
+          </excludePackageNames>
+          <links>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+          </links>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
