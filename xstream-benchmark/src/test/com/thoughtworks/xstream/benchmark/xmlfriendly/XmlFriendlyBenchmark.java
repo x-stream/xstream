@@ -3,6 +3,7 @@
  */
 package com.thoughtworks.xstream.benchmark.xmlfriendly;
 
+import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.benchmark.reflection.targets.FieldReflection;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.metric.CharacterCountMetric;
@@ -127,7 +128,7 @@ public class XmlFriendlyBenchmark extends TestSuite {
             } catch (InvocationTargetException e) {
                 ex = e;
             }
-            throw new XStream.InitializationException("Cannot initialize XmlFriendlyReplacer", ex);
+            throw new InitializationException("Cannot initialize XmlFriendlyReplacer", ex);
         }
     }
 
