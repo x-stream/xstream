@@ -43,15 +43,21 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         String expected = (
                 "{'innerMessage': {\n" +
+                "  'long1': 5,\n" +
+                "  'long2': 42,\n" +
                 "  'greeting': 'hello',\n" +
                 "  'num1': 2,\n" +
                 "  'num2': 3,\n" +
                 "  'bool': true,\n" +
                 "  'bool2': true,\n" +
+                "  'char1': 'A',\n" +
+                "  'char2': 'B',\n" +
                 "  'innerMessage': {\n" +
+                "    'long1': 0,\n" +
                 "    'greeting': 'bonjour',\n" +
                 "    'num1': 3,\n" +
-                "    'bool': false\n" +
+                "    'bool': false,\n" +
+                "    'char1': '\\u00'\n" +
                 "  }\n" +
                 "}}").replace('\'', '"');
 
@@ -60,10 +66,14 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xs.alias("innerMessage", Message.class);
 
         Message message = new Message("hello");
+        message.long1 = 5L;
+        message.long2 = new Long(42);
         message.num1 = 2;
         message.num2 = new Integer(3);
         message.bool = true;
         message.bool2 = Boolean.TRUE;
+        message.char1 = 'A';
+        message.char2 = new Character('B');
 
         Message message2 = new Message("bonjour");
         message2.num1 = 3;
@@ -74,11 +84,15 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public static class Message {
+        long long1;
+        Long long2;
         String greeting;
         int num1;
         Integer num2;
         boolean bool;
         Boolean bool2;
+        char char1;
+        Character char2;
         Message innerMessage;
 
         public Message(String greeting) {

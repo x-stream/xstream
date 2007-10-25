@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.io.json;
 
 import com.thoughtworks.xstream.core.util.FastStack;
+import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
@@ -130,14 +131,19 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         if (needsQuotes(clazz)) {
             writer.write("\"");
         }
+        if ((clazz == Character.class || clazz == Character.TYPE) && "".equals(text)) {
+            text = "\0";
+        }
 
         int i = 0;
         while(true) {
             int idxQuote = text.indexOf('"', i);
             int idxSlash = text.indexOf('\\', i);
-            int idx = Math.min(
+            int idxNull = text.indexOf('\0', i);
+            int idx = Math.min(Math.min(
                 idxQuote < 0 ? Integer.MAX_VALUE : idxQuote, 
-                idxSlash < 0 ? Integer.MAX_VALUE : idxSlash);
+                idxSlash < 0 ? Integer.MAX_VALUE : idxSlash),
+                idxNull < 0 ? Integer.MAX_VALUE : idxNull);
             if (idx == Integer.MAX_VALUE) {
                 break;
             }
@@ -146,8 +152,10 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
             }
             if (idx == idxQuote) {
                 this.writer.write("\\\"");
-            } else {
+            } else if (idx == idxSlash) {
                 this.writer.write("\\\\");
+            } else {
+                this.writer.write("\\u00");
             }
             i = idx+1;
         }
@@ -159,13 +167,8 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
     }
 
     private boolean needsQuotes(Class clazz) {
-        if (clazz == Integer.TYPE || clazz == Integer.class) {
-            return false;
-        }
-        if (clazz == Boolean.TYPE || clazz == Boolean.class) {
-            return false;
-        }
-        return true;
+        clazz = clazz != null && clazz.isPrimitive() ? clazz : Primitives.unbox(clazz);
+        return clazz == null || clazz == Character.TYPE;
     }
 
     public void endNode() {
@@ -191,7 +194,7 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
     }
 
     private boolean hasChildren(Class clazz) {
-        if (clazz == String.class) {
+        if (clazz == String.class || clazz == Character.TYPE || clazz == Character.class) {
             return false;
         } else {
             return needsQuotes(clazz);
