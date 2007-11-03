@@ -410,6 +410,10 @@
     <url>http://fisheye.codehaus.org/browse/xstream/trunk</url>
   </scm>
 
+  <!--
+  disabled on purpose, Codehaus is synched with Central and 
+  Jason called it bad practice to add repos in POM instead of settings.
+
   <repositories>
     <repository>
       <id>codehaus-repository</id>
@@ -433,5 +437,5 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
-
+  -->
 </project>
