@@ -44,7 +44,7 @@ public class DefaultMapper implements Mapper {
 
     public Class realClass(String elementName) {
         try {
-            return classLoader.loadClass(elementName);
+            return Class.forName(elementName, false, classLoader);
         } catch (ClassNotFoundException e) {
             throw new CannotResolveClassException(elementName + " : " + e.getMessage());
         }

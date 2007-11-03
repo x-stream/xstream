@@ -115,7 +115,7 @@ public class JavaMethodConverter implements Converter {
         if( primitiveClass != null ){
             return primitiveClass;
         }
-        return classLoader.loadClass(className);
+        return Class.forName(className, false, classLoader);
     }
 
     /**
