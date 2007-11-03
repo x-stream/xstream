@@ -43,11 +43,43 @@ public class JavaMethodConverterTest extends AbstractAcceptanceTest {
         assertBothWays(constructor, expected);
     }
 
+    public void testSupportsArrayOfPrimitivesAsArguments() throws NoSuchMethodException {
+        Constructor constructor = AnIntClass.class.getDeclaredConstructor(new Class[] { int[].class });
+        String expected =
+                "<constructor>\n" +
+                "  <class>com.thoughtworks.xstream.converters.extended.JavaMethodConverterTest$AnIntClass</class>\n" +
+                "  <parameter-types>\n" +
+                "    <class>[I</class>\n" +
+                "  </parameter-types>\n" +
+                "</constructor>";
+        assertBothWays(constructor, expected);
+    }
+
+    public void testSupportsArrayOfObjectsAsArguments() throws NoSuchMethodException {
+        Constructor constructor = AnIntClass.class.getDeclaredConstructor(new Class[] { Integer[].class });
+        String expected =
+                "<constructor>\n" +
+                "  <class>com.thoughtworks.xstream.converters.extended.JavaMethodConverterTest$AnIntClass</class>\n" +
+                "  <parameter-types>\n" +
+                "    <class>[Ljava.lang.Integer;</class>\n" +
+                "  </parameter-types>\n" +
+                "</constructor>";
+        assertBothWays(constructor, expected);
+    }
+
     static class AnIntClass {
         private int value = 0;
 
         protected AnIntClass(int integer) {
             this.value = integer;
+        }
+
+        protected AnIntClass(int[] integers) {
+            this.value = integers[0];
+        }
+
+        protected AnIntClass(Integer[] integers) {
+            this.value = integers[0].intValue();
         }
 
         public int getValue() {
