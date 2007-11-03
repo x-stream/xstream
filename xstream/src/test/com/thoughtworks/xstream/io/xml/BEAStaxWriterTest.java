@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2007 Joerg Schaible
+ * Created on 03.11.2007 by Joerg Schaible
+ */
+package com.thoughtworks.xstream.io.xml;
+
+import com.bea.xml.stream.XMLOutputFactoryBase;
+
+import junit.framework.Test;
+
+import javax.xml.stream.XMLOutputFactory;
+
+public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
+    public BEAStaxWriterTest() {
+        System.setProperty(XMLOutputFactory.class.getName(), XMLOutputFactoryBase.class
+            .getName());
+    }
+
+    public static Test suite() {
+        return createSuite(BEAStaxWriterTest.class, XMLOutputFactoryBase.class.getName());
+    }
+
+    protected void assertXmlProducedIs(String expected) {
+        if (outputFactory.getProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES).equals(Boolean.FALSE)) {
+            expected = perlUtil.substitute("s#<(\\w+|\\w+:\\w+) (xmlns[^\"]*\"[^\"]*\")>#<$1>#g", expected);
+        } else {
+            expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
+        }
+        expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
+        expected = replaceAll(expected, "&#x0D;", "&#13;");
+        expected = getXMLHeader() + expected;
+        assertEquals(expected, buffer.toString());
+    }
+
+    protected String getXMLHeader() {
+        return "<?xml version='1.0' encoding='utf-8'?>";
+    }
+
+    protected XMLOutputFactory getOutputFactory() {
+        return new XMLOutputFactoryBase();
+    }
+}
