@@ -22,7 +22,7 @@ public class StringConverter extends AbstractSingleValueConverter {
 
     /**
      * A Map to store strings as long as needed to map similar strings onto the same instance and conserve memory. The
-     * map can be set from the outside during construction, so it can be a LRU map or a weak map, sychronised or not.
+     * map can be set from the outside during construction, so it can be a LRU map or a weak map, synchronised or not.
      */
     private final Map cache;
 
