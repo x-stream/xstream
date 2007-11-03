@@ -9,6 +9,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * @author Aslak Helles&oslash;y
  * @author Joe Walnes
  * @author Matthew Sandoz
+ * @author J&ouml;rg Schaible
  */
 public class JavaClassConverter extends AbstractSingleValueConverter {
 
@@ -35,20 +36,46 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
 
     public Object fromString(String str) {
         try {
-            return
-                    str.equals("void") ? void.class :
-                    str.equals("byte") ? byte.class :
-                    str.equals("int") ? int.class :
-                    str.equals("long") ? long.class :
-                    str.equals("float") ? float.class :
-                    str.equals("boolean") ? boolean.class :
-                    str.equals("double") ? double.class :
-                    str.equals("char") ? char.class :
-                    str.equals("short") ? short.class :
-                    Class.forName(str, false, classLoader);
+            return loadClass(str);
         } catch (ClassNotFoundException e) {
             throw new ConversionException("Cannot load java class " + str, e);
         }
+    }
+
+    private Class loadClass(String className) throws ClassNotFoundException {
+        Class resultingClass = primitiveClassForName(className);
+        if( resultingClass != null ){
+            return resultingClass;
+        }
+        int dimension;
+        for(dimension = 0; className.charAt(dimension) == '['; ++dimension);
+        if (dimension > 0) {
+            final ClassLoader classLoaderToUse;
+            if (className.charAt(dimension) == 'L') {
+                String componentTypeName = className.substring(dimension + 1, className.length() - 1);
+                classLoaderToUse = classLoader.loadClass(componentTypeName).getClassLoader();
+            } else {
+                classLoaderToUse = void.class.getClassLoader();
+            }
+            return Class.forName(className, false, classLoaderToUse);
+        }
+        return classLoader.loadClass(className);
+    }
+
+    /**
+     * Lookup table for primitive types.
+     */
+    private Class primitiveClassForName(String name) {
+        return  name.equals("void") ? Void.TYPE :
+                name.equals("boolean") ? Boolean.TYPE :
+                name.equals("byte") ? Byte.TYPE :
+                name.equals("char") ? Character.TYPE :
+                name.equals("short") ? Short.TYPE :
+                name.equals("int") ? Integer.TYPE :
+                name.equals("long") ? Long.TYPE :
+                name.equals("float") ? Float.TYPE :
+                name.equals("double") ? Double.TYPE :
+                null;
     }
 
 }
