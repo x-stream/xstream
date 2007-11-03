@@ -29,7 +29,9 @@ public class AttributeMapper extends MapperWrapper {
     private ConverterLookup converterLookup;
     private final Set fieldToUseAsAttribute = new HashSet();
 
-    // TODO: Remove this - JS
+    /**
+     * @deprecated since upcoming
+     */
     public AttributeMapper(Mapper wrapped) {
         this(wrapped, null);
     }
@@ -39,8 +41,9 @@ public class AttributeMapper extends MapperWrapper {
         this.converterLookup = converterLookup;
     }
     
-    // TODO: Is this needed now that it injected in ctor? - MT
-    // YES, but I want to remove it. In the ctor NULL is injected!!! - JS
+    /**
+     * @deprecated since upcoming
+     */
     public void setConverterLookup(ConverterLookup converterLookup) {
         this.converterLookup = converterLookup;
     }

@@ -287,7 +287,7 @@ public class XStream {
     public static final int PRIORITY_VERY_LOW = -20;
 
     /**
-     * Constructs a default XStream. The instance will use the {@link XppDriver} as default and tries to determin the best
+     * Constructs a default XStream. The instance will use the {@link XppDriver} as default and tries to determine the best
      * match for the {@link ReflectionProvider} on its own.
      *
      * @throws InitializationException in case of an initialization problem
@@ -306,7 +306,7 @@ public class XStream {
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver}. The instance will tries to determin the best
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}. The instance will tries to determine the best
      * match for the {@link ReflectionProvider} on its own.
      *
      * @throws InitializationException in case of an initialization problem
@@ -361,8 +361,8 @@ public class XStream {
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
         this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
+        this.converterLookup = new DefaultConverterLookup();
         this.mapper = mapper == null ? buildMapper() : mapper;
-        this.converterLookup = new DefaultConverterLookup(this.mapper);
 
         setupMappers();
         setupAliases();
@@ -380,7 +380,7 @@ public class XStream {
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
-        mapper = new AttributeMapper(mapper);
+        mapper = new AttributeMapper(mapper, converterLookup);
         mapper = new ImplicitCollectionMapper(mapper);
         if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
            mapper = buildMapperDynamically(
@@ -408,7 +408,7 @@ public class XStream {
             Constructor constructor = type.getConstructor(constructorParamTypes);
             return (Mapper)constructor.newInstance(constructorParamValues);
         } catch (Exception e) {
-            throw new InitializationException("Could not instatiate mapper : " + className, e);
+            throw new InitializationException("Could not instantiate mapper : " + className, e);
         }
     }
 
@@ -434,11 +434,6 @@ public class XStream {
                 .lookupMapperOfType(DefaultImplementationsMapper.class);
         immutableTypesMapper = (ImmutableTypesMapper)this.mapper
                 .lookupMapperOfType(ImmutableTypesMapper.class);
-
-        // should use ctor, but converterLookup is not yet initialized instantiating this mapper
-        if (attributeMapper != null) {
-            attributeMapper.setConverterLookup(converterLookup);
-        }
     }
 
     protected void setupAliases() {
@@ -673,7 +668,7 @@ public class XStream {
                 registerConverter((SingleValueConverter)instance, priority);
             }
         } catch (Exception e) {
-            throw new InitializationException("Could not instatiate converter : " + className, e);
+            throw new InitializationException("Could not instantiate converter : " + className, e);
         }
     }
 

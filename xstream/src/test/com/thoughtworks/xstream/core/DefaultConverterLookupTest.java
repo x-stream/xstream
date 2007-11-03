@@ -9,19 +9,16 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
 import com.thoughtworks.xstream.converters.basic.StringConverter;
 import com.thoughtworks.xstream.converters.collections.BitSetConverter;
-import com.thoughtworks.xstream.mapper.DefaultMapper;
 
 /**
  * @author Guilherme Silveira
  */
 public class DefaultConverterLookupTest extends TestCase {
 
-	public void testConverterChange() {
+	public void testCanReplaceWithHigherPriority() {
 		
 		// this test actually depends on the keyset implementation of the corresponding cache map.
-		final DefaultConverterLookup lookup = new DefaultConverterLookup(
-				new DefaultMapper(Thread.currentThread()
-						.getContextClassLoader()));
+		final DefaultConverterLookup lookup = new DefaultConverterLookup();
 		Converter currentConverter = new SingleValueConverterWrapper(new StringConverter());
 		lookup.registerConverter(new BitSetConverter(), XStream.PRIORITY_VERY_HIGH);
 		lookup.registerConverter(currentConverter, -100);

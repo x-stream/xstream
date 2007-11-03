@@ -23,27 +23,29 @@ public class DefaultConverterLookup implements ConverterLookup {
 
     private final PrioritizedList converters = new PrioritizedList();
     private transient Map typeToConverterMap = Collections.synchronizedMap(new HashMap());
-    private final Mapper mapper;
 
-    public DefaultConverterLookup(Mapper mapper) {
-        this.mapper = mapper;
+    public DefaultConverterLookup() {
     }
 
     /**
-     * @deprecated As of 1.2, use {@link #DefaultConverterLookup(Mapper)}
+     * @deprecated since upcoming, use {@link #DefaultConverterLookup()}
+     */
+    public DefaultConverterLookup(Mapper mapper) {
+    }
+
+    /**
+     * @deprecated since 1.2, use {@link #DefaultConverterLookup(Mapper)}
      */
     public DefaultConverterLookup(ClassMapper classMapper) {
-        this((Mapper)classMapper);
     }
 
     public Converter lookupConverterForType(Class type) {
         Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
-        Class mapType = mapper.defaultImplementationOf(type);
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {
             Converter converter = (Converter) iterator.next();
-            if (converter.canConvert(mapType)) {
+            if (converter.canConvert(type)) {
                 typeToConverterMap.put(type, converter);
                 return converter;
             }

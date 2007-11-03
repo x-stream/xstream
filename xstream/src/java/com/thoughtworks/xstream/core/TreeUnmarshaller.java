@@ -42,8 +42,9 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
 
     public Object convertAnother(Object parent, Class type) {
+        type = mapper.defaultImplementationOf(type);
         Converter converter = converterLookup.lookupConverterForType(type);
-        return convert(parent, type,converter);
+        return convert(parent, type, converter);
     }
 
     public Object convertAnother(Object parent, Class type, Converter converter) {
@@ -52,7 +53,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
     protected Object convert(Object parent, Class type, Converter converter) {
         try {
-            types.push(mapper.defaultImplementationOf(type));
+            types.push(type);
             Object result = converter.unmarshal(reader, this);
             types.popSilently();
             return result;
