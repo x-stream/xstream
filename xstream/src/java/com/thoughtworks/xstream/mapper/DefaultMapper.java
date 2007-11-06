@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.mapper;
 
+import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
@@ -138,23 +139,28 @@ public class DefaultMapper implements Mapper {
         return null;
     }
 
+    public SingleValueConverter getConverterFromItemType(String fieldName, Class type,
+        Class definedIn) {
+        return null;
+    }
+
+    public Converter getLocalConverter(Class definedIn, String fieldName) {
+        return null;
+    }
+
     public Mapper lookupMapperOfType(Class type) {
         return null;
     }
 
-	public SingleValueConverter getConverterFromItemType(String fieldName, Class type, Class definedIn) {
-		return null;
-	}
+    public String aliasForAttribute(Class definedIn, String fieldName) {
+        return fieldName;
+    }
 
-	public String aliasForAttribute(Class definedIn, String fieldName) {
-		return fieldName;
-	}
+    public String attributeForAlias(Class definedIn, String alias) {
+        return alias;
+    }
 
-	public String attributeForAlias(Class definedIn, String alias) {
-		return alias;
-	}
-
-	public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
-		return null;
-	}
+    public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
+        return null;
+    }
 }

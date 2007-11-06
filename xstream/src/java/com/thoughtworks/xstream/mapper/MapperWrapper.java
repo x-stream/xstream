@@ -1,6 +1,7 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 public abstract class MapperWrapper implements Mapper {
@@ -92,6 +93,10 @@ public abstract class MapperWrapper implements Mapper {
 
     public SingleValueConverter getConverterFromAttribute(String name) {
         return wrapped.getConverterFromAttribute(name);
+    }
+
+    public Converter getLocalConverter(Class definedIn, String fieldName) {
+        return wrapped.getLocalConverter(definedIn, fieldName);
     }
 
     public Mapper lookupMapperOfType(Class type) {

@@ -129,7 +129,7 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     protected void marshallField(final MarshallingContext context, Object newObj, Field field) {
-        context.convertAnother(newObj);
+        context.convertAnother(newObj, mapper.getLocalConverter(field.getDeclaringClass(), field.getName()));
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
@@ -224,7 +224,7 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     protected Object unmarshallField(final UnmarshallingContext context, final Object result, Class type, Field field) {
-        return context.convertAnother(result, type);
+        return context.convertAnother(result, type, mapper.getLocalConverter(field.getDeclaringClass(), field.getName()));
     }
 
     private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result, String itemFieldName) {

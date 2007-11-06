@@ -11,7 +11,7 @@ import com.thoughtworks.xstream.io.path.PathTrackingWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
- * Abstract base class for a TreeMarshaller, that can build refrences.
+ * Abstract base class for a TreeMarshaller, that can build references.
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible

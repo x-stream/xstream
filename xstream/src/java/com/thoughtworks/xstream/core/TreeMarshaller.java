@@ -2,6 +2,7 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -12,6 +13,7 @@ import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.Iterator;
+
 
 public class TreeMarshaller implements MarshallingContext {
 
@@ -25,9 +27,8 @@ public class TreeMarshaller implements MarshallingContext {
     private ObjectIdDictionary parentObjects = new ObjectIdDictionary();
     private DataHolder dataHolder;
 
-    public TreeMarshaller(HierarchicalStreamWriter writer,
-                          ConverterLookup converterLookup,
-                          Mapper mapper) {
+    public TreeMarshaller(
+        HierarchicalStreamWriter writer, ConverterLookup converterLookup, Mapper mapper) {
         this.writer = writer;
         this.converterLookup = converterLookup;
         this.mapper = mapper;
@@ -38,23 +39,34 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     /**
-     * @deprecated As of 1.2, use {@link #TreeMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper)}
+     * @deprecated As of 1.2, use
+     *             {@link #TreeMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper)}
      */
-    public TreeMarshaller(HierarchicalStreamWriter writer,
-                          ConverterLookup converterLookup,
-                          ClassMapper classMapper) {
+    public TreeMarshaller(
+        HierarchicalStreamWriter writer, ConverterLookup converterLookup,
+        ClassMapper classMapper) {
         this(writer, converterLookup, (Mapper)classMapper);
     }
 
     public void convertAnother(Object item) {
-        Converter converter = converterLookup.lookupConverterForType(item.getClass());
-        convert(item, converter);
+        convertAnother(item, null);
     }
 
     public void convertAnother(Object item, Converter converter) {
-    	convert(item, converter);
+        if (converter == null) {
+            converter = converterLookup.lookupConverterForType(item.getClass());
+        } else {
+            if (!converter.canConvert(item.getClass())) {
+                ConversionException e = new ConversionException(
+                    "Explicit selected converter cannot handle item");
+                e.add("item-type", item.getClass().getName());
+                e.add("converter-type", converter.getClass().getName());
+                throw e;
+            }
+        }
+        convert(item, converter);
     }
-    
+
     protected void convert(Object item, Converter converter) {
         if (parentObjects.containsId(item)) {
             throw new CircularReferenceException();
@@ -70,7 +82,8 @@ public class TreeMarshaller implements MarshallingContext {
             writer.startNode(mapper.serializedClass(null));
             writer.endNode();
         } else {
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(item.getClass()), item.getClass());
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper
+                .serializedClass(item.getClass()), item.getClass());
             convertAnother(item);
             writer.endNode();
         }

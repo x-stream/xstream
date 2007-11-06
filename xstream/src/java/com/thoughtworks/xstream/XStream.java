@@ -74,6 +74,7 @@ import com.thoughtworks.xstream.mapper.EnumMapper;
 import com.thoughtworks.xstream.mapper.FieldAliasingMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
+import com.thoughtworks.xstream.mapper.LocalConversionMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
@@ -258,8 +259,8 @@ public class XStream {
     private HierarchicalStreamDriver hierarchicalStreamDriver;
     private ClassLoaderReference classLoaderReference;
     private MarshallingStrategy marshallingStrategy;
-    private Mapper mapper;
     private DefaultConverterLookup converterLookup;
+    private Mapper mapper;
 
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
@@ -268,6 +269,7 @@ public class XStream {
     private DefaultImplementationsMapper defaultImplementationsMapper;
     private ImmutableTypesMapper immutableTypesMapper;
     private ImplicitCollectionMapper implicitCollectionMapper;
+    private LocalConversionMapper localConversionMapper;
 
     private transient JVM jvm = new JVM();
 
@@ -393,6 +395,7 @@ public class XStream {
         }
         mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
+        mapper = new LocalConversionMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
         mapper = wrapMapper((MapperWrapper)mapper);
@@ -434,6 +437,8 @@ public class XStream {
                 .lookupMapperOfType(DefaultImplementationsMapper.class);
         immutableTypesMapper = (ImmutableTypesMapper)this.mapper
                 .lookupMapperOfType(ImmutableTypesMapper.class);
+        localConversionMapper = (LocalConversionMapper)this.mapper
+                .lookupMapperOfType(LocalConversionMapper.class);
     }
 
     protected void setupAliases() {
@@ -1042,6 +1047,35 @@ public class XStream {
 
     public void registerConverter(SingleValueConverter converter, int priority) {
         converterLookup.registerConverter(new SingleValueConverterWrapper(converter), priority);
+    }
+
+    /**
+     * Register a local {@link Converter} for a field.
+     * 
+     * @param definedIn the class type the field is defined in
+     * @param fieldName the field name
+     * @param converter the converter to use
+     * @since upcoming
+     */
+    public void registerLocalConverter(Class definedIn, String fieldName, Converter converter) {
+        if (localConversionMapper == null) {
+            throw new InitializationException("No "
+                    + LocalConversionMapper.class.getName()
+                    + " available");
+        }
+        localConversionMapper.registerLocalConverter(definedIn, fieldName, converter);
+    }
+
+    /**
+     * Register a local {@link SingleValueConverter} for a field.
+     * 
+     * @param definedIn the class type the field is defined in
+     * @param fieldName the field name
+     * @param converter the converter to use
+     * @since upcoming
+     */
+    public void registerLocalConverter(Class definedIn, String fieldName, SingleValueConverter converter) {
+        registerLocalConverter(definedIn, fieldName, (Converter)new SingleValueConverterWrapper(converter));
     }
 
     /**

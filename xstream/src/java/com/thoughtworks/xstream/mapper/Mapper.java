@@ -1,5 +1,6 @@
 package com.thoughtworks.xstream.mapper;
 
+import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 public interface Mapper {
@@ -105,7 +106,9 @@ public interface Mapper {
     SingleValueConverter getConverterFromItemType(Class type);
 
     SingleValueConverter getConverterFromAttribute(String name);
-    
+
+    Converter getLocalConverter(Class definedIn, String fieldName);
+
     Mapper lookupMapperOfType(Class type);
 
     /**
