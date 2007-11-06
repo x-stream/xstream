@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /**
- * An utility class to provide annotions from different sources
+ * An utility class to provide annotations from different sources
  *
  * @author Guilherme Silveira
  */
