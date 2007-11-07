@@ -14,15 +14,19 @@ import com.thoughtworks.xstream.alias.ClassMapper;
  * 
  * @author Joe Walnes
  * @author Mauro Talevi
+ * @deprecated since upcoming, use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
  */
 public class XmlFriendlyMapper extends AbstractXmlFriendlyMapper {
 
+    /**
+     * @deprecated since upcoming, use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
+     */
     public XmlFriendlyMapper(Mapper wrapped) {
         super(wrapped);
     }
     
     /**
-     * @deprecated As of 1.2, use {@link #XmlFriendlyMapper(Mapper)}
+     * @deprecated since 1.2, use {@link #XmlFriendlyMapper(Mapper)}
      */
     public XmlFriendlyMapper(ClassMapper wrapped) {
         this((Mapper)wrapped);

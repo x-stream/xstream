@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2006 Jörg Schaible
- * Created on 13.02.2006 by Jörg Schaible
+ * Copyright (C) 2006, 2007 XStream committers.
+ * Created on 13.02.2006 by Joerg Schaible
  */
 package com.thoughtworks.xstream.mapper;
 
