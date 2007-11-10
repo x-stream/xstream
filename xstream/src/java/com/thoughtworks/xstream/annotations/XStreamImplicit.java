@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * An annotation for marking a field as an implicit collection.
  *
  * @author Lucio Benfante
- * since 1.2.2
+ * @since 1.2.2
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

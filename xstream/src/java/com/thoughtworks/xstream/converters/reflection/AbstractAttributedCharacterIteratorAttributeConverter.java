@@ -17,7 +17,7 @@ import java.util.Map;
  * {@link AttributedCharacterIterator.Attribute} and derived types.
  * 
  * @author J&ouml;rg Schaible
- * since 1.2.2
+ * @since 1.2.2
  */
 public class AbstractAttributedCharacterIteratorAttributeConverter extends
     AbstractSingleValueConverter {

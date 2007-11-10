@@ -13,7 +13,7 @@ import java.util.WeakHashMap;
  * order to set the field order for an specific type.
  *
  * @author Guilherme Silveira
- * since 1.2.2
+ * @since 1.2.2
  */
 public class SortableFieldKeySorter implements FieldKeySorter {
 

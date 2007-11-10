@@ -99,7 +99,7 @@ public class AttributeAliasingMapper extends MapperWrapper {
      * @param definedIn the type where the field was defined
      * @param fieldName the field name
      * @param alias the alias to be used
-     * since 1.2.2
+     * @since 1.2.2
      */
     public void addAliasFor(Class definedIn, String fieldName, String alias) {
         try {

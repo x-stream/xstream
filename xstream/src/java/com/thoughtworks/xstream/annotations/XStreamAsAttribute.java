@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Defines that a field should be serialized as an attribute.
  * 
  * @author Guilherme Silveira
- * since 1.2.2
+ * @since 1.2.2
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

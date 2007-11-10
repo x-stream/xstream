@@ -112,7 +112,7 @@ public class AttributeMapper extends MapperWrapper {
      * Tells this mapper to use an attribute for this field.
      * 
      * @param field the field itself
-     * since 1.2.2
+     * @since 1.2.2
      */
     public void addAttributeFor(Field field) {
         fieldToUseAsAttribute.add(field);

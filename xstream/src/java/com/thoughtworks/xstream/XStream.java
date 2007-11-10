@@ -967,7 +967,7 @@ public class XStream {
      * @param fieldName the name of the field
      * @param definedIn the Class containing such field
      * @throws InitializationException if no {@link AttributeMapper} is available
-     * since 1.2.2
+     * @since 1.2.2
      */
     public void useAttributeFor(Class definedIn, String fieldName) {
         if (attributeMapper == null) {
