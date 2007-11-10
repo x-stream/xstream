@@ -62,6 +62,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StatefulWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.thoughtworks.xstream.mapper.AnnotationConfiguration;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.AttributeMapper;
@@ -270,6 +271,7 @@ public class XStream {
     private ImmutableTypesMapper immutableTypesMapper;
     private ImplicitCollectionMapper implicitCollectionMapper;
     private LocalConversionMapper localConversionMapper;
+    private AnnotationConfiguration annotationConfiguration;
 
     private transient JVM jvm = new JVM();
 
@@ -287,6 +289,8 @@ public class XStream {
     public static final int PRIORITY_NORMAL = 0;
     public static final int PRIORITY_LOW = -10;
     public static final int PRIORITY_VERY_LOW = -20;
+
+    private static final String ANNOTATION_MAPPER_TYPE = "com.thoughtworks.xstream.mapper.AnnotationMapper";
 
     /**
      * Constructs a default XStream. The instance will use the {@link XppDriver} as default and tries to determine the best
@@ -398,6 +402,11 @@ public class XStream {
         mapper = new LocalConversionMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
+        if (JVM.is15()) {
+            mapper = buildMapperDynamically(
+                ANNOTATION_MAPPER_TYPE,
+                new Class[]{Mapper.class}, new Object[]{mapper});
+        }
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);
         return mapper;
@@ -439,6 +448,8 @@ public class XStream {
                 .lookupMapperOfType(ImmutableTypesMapper.class);
         localConversionMapper = (LocalConversionMapper)this.mapper
                 .lookupMapperOfType(LocalConversionMapper.class);
+        annotationConfiguration = (AnnotationConfiguration)this.mapper
+                .lookupMapperOfType(AnnotationConfiguration.class);
     }
 
     protected void setupAliases() {
@@ -536,24 +547,9 @@ public class XStream {
     }
 
     protected void setupConverters() {
-        // use different ReflectionProvider depending on JDK
-        final ReflectionConverter reflectionConverter;
-        if (JVM.is15()) {
-            Class annotationProvider = jvm
-                    .loadClass("com.thoughtworks.xstream.annotations.AnnotationProvider");
-            dynamicallyRegisterConverter(
-                    "com.thoughtworks.xstream.annotations.AnnotationReflectionConverter",
-                    PRIORITY_VERY_LOW, new Class[]{
-                            Mapper.class, ReflectionProvider.class, annotationProvider},
-                    new Object[]{
-                            mapper, reflectionProvider,
-                            reflectionProvider.newInstance(annotationProvider)});
-            reflectionConverter = (ReflectionConverter)converterLookup
-                    .lookupConverterForType(Object.class);
-        } else {
-            reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
-            registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
-        }
+        final ReflectionConverter reflectionConverter = 
+            new ReflectionConverter(mapper, reflectionProvider);
+        registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
         registerConverter(new SerializableConverter(mapper, reflectionProvider), PRIORITY_LOW);
         registerConverter(new ExternalizableConverter(mapper), PRIORITY_LOW);
@@ -1410,6 +1406,21 @@ public class XStream {
                     + " available");
         }
         fieldAliasingMapper.omitField(type, fieldName);
+    }
+
+    /**
+     * Process the annotations of the given types and configure the XStream.
+     * 
+     * @param types the types with XStream annotations
+     * @since upcoming
+     */
+    public void processAnnotations(final Class[] types) {
+        if (annotationConfiguration == null) {
+            throw new InitializationException("No " + ANNOTATION_MAPPER_TYPE + " available");
+        }
+        for (int i = 0; i < types.length; i++ ) {
+            annotationConfiguration.processAnnotations(types[i]);
+        }
     }
 
     /**

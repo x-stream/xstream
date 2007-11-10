@@ -3,3 +3,4 @@
 
 com/thoughtworks/acceptance/annotations/**
 com/thoughtworks/xstream/annotations/**
+com/thoughtworks/xstream/mapper/AnnotationMapper.*

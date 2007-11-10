@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * 
  * @author Guilherme Silveira
  * @author Mauro Talevi
+ * @deprecated since upcoming
  */
 public class AnnotationReflectionConverter extends ReflectionConverter {
 

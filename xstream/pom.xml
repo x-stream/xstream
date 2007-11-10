@@ -139,6 +139,7 @@
               <target>1.3</target>
               <excludes>
                 <exclude>**/annotations/*</exclude>
+                <exclude>**/AnnotationMapper*</exclude>
                 <exclude>**/enums/*</exclude>
               </excludes>
               <testExcludes>
@@ -154,6 +155,7 @@
                   <source>1.5</source>
                   <target>1.5</target>
                   <excludes>
+                    <exclude>foo</exclude>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
                   </excludes>
@@ -217,6 +219,7 @@
               <target>1.3</target>
               <excludes>
                 <exclude>**/annotations/*</exclude>
+                <exclude>**/AnnotationMapper*</exclude>
                 <exclude>**/enums/*</exclude>
               </excludes>
               <testExcludes>
@@ -232,6 +235,7 @@
                   <source>1.5</source>
                   <target>1.5</target>
                   <excludes>
+                    <exclude>foo</exclude>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
                   </excludes>
@@ -291,6 +295,7 @@
               <target>1.3</target>
               <excludes>
                 <exclude>**/annotations/*</exclude>
+                <exclude>**/AnnotationMapper*</exclude>
                 <exclude>**/enums/*</exclude>
               </excludes>
               <testExcludes>

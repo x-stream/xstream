@@ -1,17 +1,12 @@
 package com.thoughtworks.acceptance.annotations;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 
 /**
@@ -19,124 +14,143 @@ import com.thoughtworks.xstream.testutil.TimeZoneChanger;
  * 
  * @author Guilherme Silveira
  * @author Mauro Talevi
+ * @author J&ouml;rg Schaible
  */
 public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-
-        // Ensure that this test always run as if it were in the EST timezone.
-        // This prevents failures when running the tests in different zones.
-        // Note: 'EST' has no relevance - it was just a randomly chosen zone.
-        TimeZoneChanger.change("EST");
-    }
-
-    protected void tearDown() throws Exception {
-        TimeZoneChanger.reset();
-        super.tearDown();
+        xstream.alias("annotatedTask", TaskWithAnnotations.class);
+        xstream.alias("derivedTask", DerivedTask.class);
+        xstream.alias("taskContainer", TaskContainer.class);
     }
 
     public void testDifferentConverterCanBeAnnotatedForFieldsOfSameType() {
-        TaskWithAnnotations task = new TaskWithAnnotations("1981, 9, 18", "1981, 9, 18");
-        String xml = ""
-                + "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>\n"
-                + "  <date>\n"
-                + "    <cal>1981, 9, 18</cal>\n"
-                + "  </date>\n"
-                + "  <time>_1981, 9, 18_</time>\n"
-                + "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithAnnotations>";
+        final TaskWithAnnotations task = new TaskWithAnnotations("Tom", "Dick", "Harry");
+        final String xml = ""
+                + "<annotatedTask>\n"
+                + "  <name1 str=\"Tom\"/>\n"
+                + "  <name2>_Dick_</name2>\n"
+                + "  <name3>Harry</name3>\n"
+                + "</annotatedTask>";
         assertBothWays(task, xml);
+    }
+
+    public void testConverterCanBeAnnotatedForHiddenFields() {
+        final DerivedTask task = new DerivedTask("Tom", "Dick", "Harry");
+        final String xml = ""
+                + "<derivedTask>\n"
+                + "  <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
+                + "  <name2>_Dick_</name2>\n"
+                + "  <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
+                + "  <name1>Harry</name1>\n"
+                + "  <name3 str=\"Tom\"/>\n"
+                + "</derivedTask>";
+        assertBothWays(task, xml);
+    }
+
+    public void testAnnotationsAreFoundInReferencesTypes() {
+        final TaskContainer taskContainer = new TaskContainer();
+        final String xml = ""
+                + "<taskContainer>\n"
+                + "  <task>\n"
+                + "    <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
+                + "    <name2>_Dick_</name2>\n"
+                + "    <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
+                + "    <name1>Harry</name1>\n"
+                + "    <name3 str=\"Tom\"/>\n"
+                + "  </task>\n"
+                + "</taskContainer>";
+        assertEquals(taskContainer, xstream.fromXML(xml));
     }
 
     public static class TaskWithAnnotations {
 
         @XStreamConverter(FirstConverter.class)
-        private String date;
+        private final String name1;
 
-        @XStreamConverter(SecundaryConverter.class)
-        private String time;
+        @XStreamConverter(SecondaryConverter.class)
+        private final String name2;
+        private final String name3;
 
-        public TaskWithAnnotations(String date, String time) {
-            this.date = date;
-            this.time = time;
+        public TaskWithAnnotations(final String name1, final String name2, final String name3) {
+            this.name1 = name1;
+            this.name2 = name2;
+            this.name3 = name3;
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             return obj != null
-                    && TaskWithAnnotations.class.equals(obj.getClass())
-                    && ((TaskWithAnnotations)obj).date.equals(date)
-                    && ((TaskWithAnnotations)obj).time.equals(time);
+                    && TaskWithAnnotations.class.isAssignableFrom(obj.getClass())
+                    && ((TaskWithAnnotations)obj).name1.equals(name1)
+                    && ((TaskWithAnnotations)obj).name2.equals(name2)
+                    && ((TaskWithAnnotations)obj).name3.equals(name3);
         }
     }
+    
+    public static class DerivedTask extends TaskWithAnnotations {
+        private final String name1;
 
-    public void testNonAnnotatedConvertersCanBeDefinedFieldsOfSameType() {
-        TaskWithoutAnnotations task = new TaskWithoutAnnotations("1981, 9, 18",
-				"1981, 9, 18");
-        xstream.registerConverter(new FirstConverter(), XStream.PRIORITY_VERY_HIGH);
-        String xml = ""
-                + "<com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>\n"
-                + "  <date>\n"
-                + "    <cal>1981, 9, 18</cal>\n"
-                + "  </date>\n"
-                + "  <time>\n"
-                + "    <cal>1981, 9, 18</cal>\n"
-                + "  </time>\n"
-                + "</com.thoughtworks.acceptance.annotations.AnnotationFieldConverterTest_-TaskWithoutAnnotations>";
-        assertBothWays(task, xml);
-    }
+        @XStreamConverter(FirstConverter.class)
+        private final String name3;
 
-    public static class TaskWithoutAnnotations {
-
-        private String date, time;
-
-        public TaskWithoutAnnotations(String date, String time) {
-            this.date = date;
-            this.time = time;
+        public DerivedTask(final String name1, final String name2, final String name3) {
+            super(name1, name2, name3);
+            this.name1 = name3;
+            this.name3 = name1;
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             return obj != null
-                    && TaskWithoutAnnotations.class.equals(obj.getClass())
-                    && ((TaskWithoutAnnotations)obj).date.equals(date)
-                    && ((TaskWithoutAnnotations)obj).time.equals(time);
+                    && DerivedTask.class.isAssignableFrom(obj.getClass())
+                    && ((DerivedTask)obj).name1.equals(name1)
+                    && ((DerivedTask)obj).name3.equals(name3)
+                    && super.equals(obj);
+        }
+    }
+    
+    public static class TaskContainer {
+        private final DerivedTask task = new DerivedTask("Tom", "Dick", "Harry");
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj != null
+                    && TaskContainer.class.equals(obj.getClass())
+                    && task.equals(((TaskContainer)obj).task);
         }
     }
 
     public static class FirstConverter implements Converter {
 
-        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-            String calendar = source.toString();
-            writer.startNode("cal");
-            writer.setValue(calendar);
-            writer.endNode();
+        public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+            final String str = source.toString();
+            writer.addAttribute("str", str);
         }
 
-        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-            reader.moveDown();
-            String calendar = reader.getValue();
-            reader.moveUp();
-            return calendar;
+        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
+            final String str = reader.getAttribute("str");
+            return str;
         }
 
-        public boolean canConvert(Class type) {
+        public boolean canConvert(final Class type) {
             return type.equals(String.class);
         }
     }
 
-    public static class SecundaryConverter implements Converter {
+    public static class SecondaryConverter implements Converter {
 
-        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
             writer.setValue("_"+source.toString() + "_");
         }
 
-        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        	String value = reader.getValue();
+        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
+        	final String value = reader.getValue();
             return value.substring(1,value.length()-1);
         }
 
-        public boolean canConvert(Class type) {
+        public boolean canConvert(final Class type) {
             return type.equals(String.class);
         }
     }

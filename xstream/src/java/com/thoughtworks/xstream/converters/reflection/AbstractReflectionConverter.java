@@ -191,7 +191,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                 : implicitCollectionMapping.getItemType();
             final Object value;
             if (fieldExistsInClass) {
-                Field field = reflectionProvider.getField(result.getClass(), fieldName);
+                Field field = reflectionProvider.getField(classDefiningField != null ? classDefiningField : result.getClass(), fieldName);
                 if (Modifier.isTransient(field.getModifiers())) {
                     reader.moveUp();
                     continue;
