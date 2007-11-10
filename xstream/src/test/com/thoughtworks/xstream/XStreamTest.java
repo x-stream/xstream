@@ -1,14 +1,5 @@
 package com.thoughtworks.xstream;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
-import org.dom4j.Element;
-
 import com.thoughtworks.acceptance.StandardObject;
 import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
 import com.thoughtworks.acceptance.someobjects.Handler;
@@ -18,8 +9,6 @@ import com.thoughtworks.acceptance.someobjects.U;
 import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
-import com.thoughtworks.acceptance.someobjects.Z;
-import com.thoughtworks.acceptance.someobjects.ZConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -30,6 +19,15 @@ import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.AbstractDocumentReader;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 
+import junit.framework.TestCase;
+
+import org.dom4j.Element;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+
 public class XStreamTest extends TestCase {
 
     private transient XStream xstream;
@@ -39,7 +37,6 @@ public class XStreamTest extends TestCase {
         xstream = new XStream();
         xstream.alias("x", X.class);
         xstream.alias("y", Y.class);
-        xstream.alias("z", Z.class);
         xstream.alias("funny", FunnyConstructor.class);
         xstream.alias("with-list", WithList.class);
     }
@@ -343,20 +340,6 @@ public class XStreamTest extends TestCase {
         Handler h = (Handler) hm.getHandlers().get(0);
         Protocol p = h.getProtocol();
         assertEquals("foo", p.getId());
-    }
-
-    public void testUnmarshalsObjectFromXmlWithCustomDefaultConverterXStream_1_1_1_Style() {
-
-        xstream.registerConverter(new ZConverter(), -20);
-
-        String xml =
-                "<z>" +
-                "  <any-old-suff/>" +
-                "</z>";
-
-        Z z = (Z) xstream.fromXML(xml);
-        
-        assertEquals("z", z.field);
     }
 
     public void testObjectOutputStreamCloseTwice() throws IOException {
