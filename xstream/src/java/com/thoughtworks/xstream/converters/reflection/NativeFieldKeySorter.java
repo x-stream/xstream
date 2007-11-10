@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers
+ * Copyright (C) 2007 XStream Committers.
  * Created on 17.05.2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.reflection;
@@ -14,7 +14,7 @@ import java.util.TreeMap;
  * fields of base classes first.
  * 
  * @author J&ouml;rg Schaible
- * since 1.2.2
+ * @since 1.2.2
  */
 public class NativeFieldKeySorter implements FieldKeySorter {
 
