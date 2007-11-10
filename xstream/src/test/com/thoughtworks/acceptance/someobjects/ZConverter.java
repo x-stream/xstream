@@ -1,14 +1,14 @@
 package com.thoughtworks.acceptance.someobjects;
 
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 
-public class ZConverter extends AbstractSingleValueConverter {
+public class ZConverter extends AbstractBasicConverter {
 
     public boolean canConvert(Class type) {
         return type.equals(Z.class);
     }
 
-    public Object fromString(String str) {
+    protected Object fromString(String str) {
         return new Z("z");
     }
 
