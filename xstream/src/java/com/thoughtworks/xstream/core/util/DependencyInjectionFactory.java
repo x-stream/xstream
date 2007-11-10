@@ -41,13 +41,13 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
  * A dependency injection factory.
  * 
  * @author J&ouml;rg Schaible
- * since 1.2.2
+ * @since 1.2.2
  */
 public class DependencyInjectionFactory {
 
     /**
      * Create an instance with dependency injection. The given dependencies are used to match the parameters of the
-     * constructors of the type. Constructors with most parameters are examinated first. A parameter type sequence
+     * constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
      * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
      * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
      * <code>null</code> as parameter.
