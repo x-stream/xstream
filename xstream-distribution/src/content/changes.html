@@ -63,16 +63,19 @@
     <h2>API changes</h2>
 
     <ul>
-    	<li>c.t.x.a.AnnotationReflectionConverter and c.t.x.a.AnnotationProvider deprecated. Functionality is integrated in new c.t.x.m.AnnotationMapper.</li>
+    	<li>c.t.x.annotation.AnnotationReflectionConverter and c.t.x.annotation.AnnotationProvider deprecated.  Functionality is integrated in new 
+    	c.t.x.mapper.AnnotationMapper.</li>
+    	<li>c.t.x.annotaion.@XStreamContainedType deprecated, the behaviour is now always active and the annotation therefore superfluous.</li>
     	<li>Due to JIRA:XSTR-421 null characters are no longer written as tag with an attribute (&lt;char null=&quot;true&quot;/&gt;), 
     	but as empty tag.  The old representation is still supported at deserialization.</li>
     	<li>Characters that are not defined in unicode or ISO control characters (expect TAB and LF) are written as numerical entity now.</li>
-    	<li>XPath references are now also XML-friendly encoded to match the path exactly. Unencoded references will normally work anyway,
-    	but in special cases the exact behaviour of XStream 1.2.x might be necessary. See acceptance tests for XStream 1.2.x compatibility.</li>
+    	<li>XPath references are now also XML-friendly encoded to match the path exactly.  Unencoded references will normally work anyway,
+    	but in special cases the exact behaviour of XStream 1.2.x might be necessary.  See acceptance tests for XStream 1.2.x compatibility.</li>
     	<li>c.t.x.core.BaseException deprecated in favour of c.t.x.XStreamException as base exception for all exceptions XStream throws.</li>
     	<li>c.t.x.XStream.InitializerException deprecated in favour of c.t.x.InitializerException.</li>
     	<li>New methods get() and keys() in interface c.t.x.converter.ErrorWriter.</li>
-    	<li>c.t.x.mapper.XmlFriendlyMapper deprecated, technology is replaced since version 1.2 by c.t.x.io.xml.XmlFriendlyReplacer as part of the different XmlWriter implementations.</li>
+    	<li>c.t.x.mapper.XmlFriendlyMapper deprecated, technology is replaced since version 1.2 by c.t.x.io.xml.XmlFriendlyReplacer as part of the
+    	 different XmlWriter implementations.</li>
     </ul>
 
     <h1>Version 1.2.2</h1>
