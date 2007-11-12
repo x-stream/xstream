@@ -173,7 +173,6 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     @XStreamAlias("param")
     public static class ParameterizedContainer {
 
-        @XStreamContainedType
         private ParameterizedType<InternalType> type;
 
         public ParameterizedContainer() {
@@ -185,7 +184,6 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     @XStreamAlias("param")
     public static class DoubleParameterizedContainer {
 
-        @XStreamContainedType
         private ArrayList<ArrayList<InternalType>> list;
 
         public DoubleParameterizedContainer() {
@@ -258,7 +256,7 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     @XStreamAlias("addressbookAlias")
     public static class AddressBook implements AddressBookInfo {
 
-        @XStreamContainedType
+        //@XStreamContainedType
         private List<AddressInfo> addresses;
 
         public AddressBook(){

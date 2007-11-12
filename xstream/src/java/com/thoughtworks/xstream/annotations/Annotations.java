@@ -126,10 +126,8 @@ public class Annotations {
             Class fieldType = field.getType();
 
             // recursive calls for fields
-            if(field.isAnnotationPresent(XStreamContainedType.class)){
-                configureClass(xstream, fieldType);
-                configureParameterizedTypes(field, xstream);
-            }
+            configureClass(xstream, fieldType);
+            configureParameterizedTypes(field, xstream);
 
             //Alias the member's Type
             boolean shouldAlias = field.isAnnotationPresent(XStreamAlias.class);

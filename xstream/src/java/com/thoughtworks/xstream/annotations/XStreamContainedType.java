@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
  *
  * @author Emil Kirschner
  * @author Chung-Onn Cheong
+ * @deprecated since upcoming, recursive behaviour is now always used and the annotation is therefore superfluous
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
