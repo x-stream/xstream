@@ -43,18 +43,30 @@ public abstract class MapperWrapper implements Mapper {
         return wrapped.defaultImplementationOf(type);
     }
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     public String attributeForClassDefiningField() {
         return wrapped.attributeForClassDefiningField();
     }
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     public String attributeForImplementationClass() {
         return wrapped.attributeForImplementationClass();
     }
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     public String attributeForReadResolveField() {
         return wrapped.attributeForReadResolveField();
     }
 
+    /**
+     * @deprecated since 1.2, use aliasForAttribute instead.
+     */
     public String attributeForEnumType() {
         return wrapped.attributeForEnumType();
     }
@@ -107,10 +119,16 @@ public abstract class MapperWrapper implements Mapper {
     	return wrapped.getConverterFromItemType(fieldName, type, definedIn);
     }
     
+    /**
+     * @deprecated since upcoming, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     */
     public String aliasForAttribute(Class definedIn, String fieldName) {
     	return wrapped.aliasForAttribute(definedIn, fieldName);
     }
     
+    /**
+     * @deprecated since upcoming, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     */
     public String attributeForAlias(Class definedIn, String alias) {
     	return wrapped.attributeForAlias(definedIn, alias);
     }

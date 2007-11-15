@@ -241,7 +241,6 @@ public class AttributeTest extends AbstractAcceptanceTest {
 
     public void testAllowsAnAttributeForASpecificAliasedField() {
     	xstream.alias("camera", Camera.class);
-    	xstream.useAttributeFor(Camera.class, "name");
     	xstream.aliasAttribute(Camera.class, "name", "model");
     	Camera camera = new Camera("Rebel 350");
         camera.n = new Name("foo");

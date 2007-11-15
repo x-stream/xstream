@@ -405,7 +405,8 @@ public class XStream {
         if (JVM.is15()) {
             mapper = buildMapperDynamically(
                 ANNOTATION_MAPPER_TYPE,
-                new Class[]{Mapper.class}, new Object[]{mapper});
+                new Class[]{Mapper.class, DefaultConverterLookup.class}, 
+                new Object[]{mapper, converterLookup});
         }
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);
@@ -901,17 +902,17 @@ public class XStream {
      * Create an alias for a field name.
      *
      * @param alias the alias itself
-     * @param type the type that declares the field
+     * @param definedIn the type that declares the field
      * @param fieldName the name of the field
      * @throws InitializationException if no {@link FieldAliasingMapper} is available
      */
-    public void aliasField(String alias, Class type, String fieldName) {
+    public void aliasField(String alias, Class definedIn, String fieldName) {
         if (fieldAliasingMapper == null) {
             throw new InitializationException("No "
                     + FieldAliasingMapper.class.getName()
                     + " available");
         }
-        fieldAliasingMapper.addFieldAlias(alias, type, fieldName);
+        fieldAliasingMapper.addFieldAlias(alias, definedIn, fieldName);
     }
 
     /**
@@ -932,22 +933,20 @@ public class XStream {
 
     /**
      * Create an alias for an attribute.
-     *
-     * @param configurableClass the type where the attribute is defined
+     * 
+     * @param definedIn the type where the attribute is defined
      * @param attributeName the name of the attribute
      * @param alias the alias itself
      * @throws InitializationException if no {@link AttributeAliasingMapper} is available
+     * @since 1.2.2
      */
-    public void aliasAttribute(Class configurableClass, String attributeName, String alias) {
-        if (attributeAliasingMapper == null) {
-            throw new InitializationException("No "
-					+ AttributeAliasingMapper.class.getName() + " available");
-        }
-        attributeAliasingMapper.addAliasFor(configurableClass, attributeName, alias);
-	}
+    public void aliasAttribute(Class definedIn, String attributeName, String alias) {
+        aliasField(alias, definedIn, attributeName);
+        useAttributeFor(definedIn, attributeName);
+    }
 
     /**
-     * Use an XML attribute for a field or a specific type.
+     * Use an attribute for a field or a specific type.
      *
      * @param fieldName the name of the field
      * @param type the Class of the type to be rendered as XML attribute
@@ -962,7 +961,7 @@ public class XStream {
     }
 
     /**
-     * Use an XML attribute for a field declared in a specific type.
+     * Use an attribute for a field declared in a specific type.
      *
      * @param fieldName the name of the field
      * @param definedIn the Class containing such field
@@ -984,7 +983,7 @@ public class XStream {
     }
 
     /**
-     * Use an XML attribute for an arbitrary type.
+     * Use an attribute for an arbitrary type.
      *
      * @param type the Class of the type to be rendered as XML attribute
      * @throws InitializationException if no {@link AttributeMapper} is available

@@ -19,14 +19,13 @@ public class ClassAliasingMapper extends MapperWrapper {
     protected final Map typeToName = new HashMap();
     protected final Map classToName = new HashMap();
     protected transient Map nameToType = new HashMap();
-    protected final Set knownAttributes = new HashSet();
 
     public ClassAliasingMapper(Mapper wrapped) {
         super(wrapped);
     }
 
     /**
-     * @deprecated As of 1.2, use {@link #ClassAliasingMapper(Mapper)}
+     * @deprecated since 1.2, use {@link #ClassAliasingMapper(Mapper)}
      */
     public ClassAliasingMapper(ClassMapper wrapped) {
         this((Mapper)wrapped);
@@ -37,9 +36,11 @@ public class ClassAliasingMapper extends MapperWrapper {
         classToName.put(type.getName(), name);
     }
 
+    /**
+     * @deprecated since upcoming, method was a leftover of an old implementation
+     */
     public void addClassAttributeAlias(String name, Class type) {
         addClassAlias(name, type);
-        knownAttributes.add(name);
     }
 
     public void addTypeAlias(String name, Class type) {

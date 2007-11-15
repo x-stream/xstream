@@ -72,7 +72,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                         }
                         final String str = converter.toString(value);
                         if (str != null) {
-                            writer.addAttribute(mapper.aliasForAttribute(definedIn, fieldName), str);
+                            writer.addAttribute(mapper.aliasForAttribute(mapper.serializedMember(definedIn, fieldName)), str);
                         }
                     }
                     // TODO: name is not enough, need also "definedIn"! 
@@ -145,7 +145,7 @@ public abstract class AbstractReflectionConverter implements Converter {
         // Process attributes before recursing into child elements.
         while (it.hasNext()) {
             String attrAlias = (String) it.next();
-            String attrName = mapper.attributeForAlias(result.getClass(), attrAlias);
+            String attrName = mapper.realMember(result.getClass(), mapper.attributeForAlias(attrAlias));
             Class classDefiningField = determineWhichClassDefinesField(reader);
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
             if (fieldExistsInClass) {

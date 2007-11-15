@@ -130,6 +130,7 @@ public interface Mapper {
      * @param fieldName the field name
      * @return the alias for this field or its own name if no alias was defined
      * @since 1.2.2
+     * @deprecated since upcoming, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     String aliasForAttribute(Class definedIn, String fieldName);
 
@@ -140,6 +141,7 @@ public interface Mapper {
      * @param alias the alias
      * @return the original attribute name
      * @since 1.2.2
+     * @deprecated since upcoming, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     String attributeForAlias(Class definedIn, String alias);
 
