@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
  * @author Guilherme Silveira
  * @deprecated since upcoming
  */
+@Deprecated
 public class AnnotationProvider {
 
     /**
