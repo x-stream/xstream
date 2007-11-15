@@ -1,10 +1,10 @@
 package com.thoughtworks.acceptance.annotations;
 
-import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.acceptance.AbstractBuilderAcceptanceTest;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.builder.XStreamBuilder;
 
-public class XStreamBuilderAnnotationsTest extends AbstractAcceptanceTest {
+public class XStreamBuilderAnnotationsTest extends AbstractBuilderAcceptanceTest {
 
     @XStreamAlias("annotated")
     public static class Annotated {

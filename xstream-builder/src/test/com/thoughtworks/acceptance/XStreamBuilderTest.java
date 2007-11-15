@@ -16,7 +16,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 /**
  * @author Guilherme Silveira
  */
-public class XStreamBuilderTest extends AbstractAcceptanceTest {
+public class XStreamBuilderTest extends AbstractBuilderAcceptanceTest {
 
     public void testSupportsBuildStyleWithAlias() {
         XStreamBuilder builder = new XStreamBuilder() {

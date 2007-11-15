@@ -22,7 +22,7 @@ import com.thoughtworks.xstream.io.binary.BinaryStreamWriter;
 import com.thoughtworks.xstream.io.binary.BinaryStreamReader;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
-public abstract class AbstractAcceptanceTest extends TestCase {
+public abstract class AbstractBuilderAcceptanceTest extends TestCase {
 
     protected transient XStream xstream = createXStream();
 
