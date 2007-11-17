@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * 
  * @author Guilherme Silveira
  * @author Mauro Talevi
- * @deprecated since upcoming
+ * @deprecated since upcoming, build into {@link ReflectionConverter}
  */
 @Deprecated
 public class AnnotationReflectionConverter extends ReflectionConverter {
@@ -29,6 +29,7 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
 
     private final Map<Class<? extends Converter>, Converter> cachedConverters;
 
+    @Deprecated
     public AnnotationReflectionConverter(
                                          Mapper mapper, ReflectionProvider reflectionProvider,
                                          AnnotationProvider annotationProvider) {

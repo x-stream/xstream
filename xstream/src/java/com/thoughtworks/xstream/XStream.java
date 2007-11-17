@@ -405,8 +405,8 @@ public class XStream {
         if (JVM.is15()) {
             mapper = buildMapperDynamically(
                 ANNOTATION_MAPPER_TYPE,
-                new Class[]{Mapper.class/*, DefaultConverterLookup.class*/}, 
-                new Object[]{mapper/*, converterLookup*/});
+                new Class[]{Mapper.class, DefaultConverterLookup.class}, 
+                new Object[]{mapper, converterLookup});
         }
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);

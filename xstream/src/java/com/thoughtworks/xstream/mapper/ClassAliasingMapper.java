@@ -3,10 +3,8 @@ package com.thoughtworks.xstream.mapper;
 import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Mapper that allows a fully qualified class name to be replaced with a shorter alias.

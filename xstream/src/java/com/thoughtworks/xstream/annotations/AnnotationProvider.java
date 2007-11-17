@@ -21,6 +21,7 @@ public class AnnotationProvider {
      * @return The Annotation type
      * @deprecated since upcoming
      */
+    @Deprecated
     public <T extends Annotation> T getAnnotation(Field field, Class<T> annotationClass) {
         return field.getAnnotation(annotationClass);
     }
