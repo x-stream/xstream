@@ -324,4 +324,23 @@ public class AttributeTest extends AbstractAcceptanceTest {
 
         assertBothWays(field, xml);
     }
+    
+    static class Person {
+        String _name;
+        transient int _age;
+        Person(String name, int age) {
+            this._name = name;
+            this._age = age;
+        }
+    };
+    
+    // FIXME: reader.getAttribute(name) does not escape the given name anymore
+    public void XXXtestAttributeMayHaveXmlUnfriendlyName() {
+        xstream.alias("person", Person.class);
+        xstream.useAttributeFor(Person.class, "_name");
+        xstream.useAttributeFor(Person.class, "_age");
+        Person person = new Person("joe", 25);
+        String xml = "<person __name=\"joe\" __age=\"25\"/>";
+        assertBothWays(person, xml);
+    }
 }
