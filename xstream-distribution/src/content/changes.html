@@ -58,6 +58,7 @@
     	<li>JIRA:XSTR-440: Implicit collections can be declared for fields that are not of Collection type.</li>
     	<li>JIRA:XSTR-446: Handle all primitives and their boxed counterpart for JsonHierarchicalStreamDriver.</li>
     	<li>JIRA:XSTR-447: Fix deserialization of Array class types in JDK 6 (see JDK bug 6500212).</li>
+    	<li>Fix StringConverter using a WeakHashMap with strong references in its value.</li>
     </ul>
 
     <h2>API changes</h2>
@@ -104,7 +105,7 @@
     
     <ul>
     	<li>JIRA:XSTR-387, Fix aliasing of inherited fields.</li>
-    	<li>JIRS:XSTR-395, Fix StringConverter allocating PermGen space.</li>
+    	<li>JIRA:XSTR-395, Fix StringConverter allocating PermGen space.</li>
     	<li>JIRA:XSTR-368, @XStreamConverter converters should be cached inside the AnnotationReflectionConverter.</li>
     	<li>JIRA:XSTR-392, @XStreamOmitField can be used to omit fields from the resulting XML (contributed by Chung-Onn Cheong).</li>
     	<li>JIRA:XSTR-371, Fix JSONWriter that omits a closing bracket for for fields with null value.</li>
