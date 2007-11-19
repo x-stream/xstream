@@ -38,7 +38,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
 
     // An alternative implementation is possible by using Enhancer.setCallbackType and
     // Enhancer.createClass().
-    // In this case the converter must be deived from the AbstractReflectionConverter,
+    // In this case the converter must be derived from the AbstractReflectionConverter,
     // the proxy info must be written/read in a separate structure first, then the
     // Enhancer must create the type and at last the functionality of the ReflectionConverter
     // must be used to create the instance. But let's see user feedback first.
