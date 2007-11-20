@@ -9,6 +9,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 
+/**
+ * @author Guilherme Silveira
+ * @author J&ouml;rg Schaible
+ */
 public class AnnotationReflectionConverterTest extends AbstractAcceptanceTest {
 
     public static class CustomConverter implements Converter {

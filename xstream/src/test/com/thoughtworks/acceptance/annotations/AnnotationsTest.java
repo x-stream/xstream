@@ -23,6 +23,7 @@ import java.util.Map;
  * @author Chung-Onn Cheong
  * @author Mauro Talevi
  * @author Guilherme Silveira
+ * @author J&ouml;rg Schaible
  */
 public class AnnotationsTest extends AbstractAcceptanceTest {
 

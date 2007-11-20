@@ -75,6 +75,34 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     }
 
     @Override
+    public String realMember(Class type, String serialized) {
+        if (!locked) {
+            processAnnotations(type);
+        }
+        return super.realMember(type, serialized);
+    }
+
+    @Override
+    public String serializedClass(Class type) {
+        if (!locked) {
+            processAnnotations(type);
+        }
+        return super.serializedClass(type);
+    }
+
+    @Override
+    public Class defaultImplementationOf(Class type) {
+        if (!locked) {
+            processAnnotations(type);
+        }
+        final Class defaultImplementation = super.defaultImplementationOf(type);
+        if (!locked) {
+            processAnnotations(defaultImplementation);
+        }
+        return defaultImplementation;
+    }
+
+    @Override
     public Converter getLocalConverter(final Class definedIn, final String fieldName) {
         if (!locked) {
             processAnnotations(definedIn);
@@ -82,67 +110,72 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         return super.getLocalConverter(definedIn, fieldName);
     }
 
-    public void processAnnotations(final Class initialType) {
+    // TODO: Method is currently a noop.
+    public void processAnnotations(final Class[] initialTypes) {
+//        if (initialTypes == null || initialTypes.length == 0) {
+//            return;
+//        }
+//        synchronized (annotatedTypes) {
+//            final Set<Class<?>> types = new UnprocessedTypesSet();
+//            for (Class initialType : initialTypes) {
+//                types.add(initialType);
+//            }
+//            processTypes(types);
+//        }
+    }
+
+    private void processAnnotations(final Class initialType) {
         if (initialType == null) {
             return;
         }
         synchronized (annotatedTypes) {
-            final Set<Class<?>> types = new LinkedHashSet<Class<?>>() {
+            final Set<Class<?>> types = new UnprocessedTypesSet();
+            types.add(initialType);
+            processTypes(types);
+        }
+    }
 
-                @Override
-                public boolean add(Class<?> type) {
-                    if (type == null) {
-                        return false;
-                    }
-                    while (type.isArray()) {
-                        type = type.getComponentType();
-                    }
-                    return annotatedTypes.contains(type) ? false : super.add(type);
+    private void processTypes(final Set<Class<?>> types) {
+        while (!types.isEmpty()) {
+            final Iterator<Class<?>> iter = types.iterator();
+            final Class<?> type = iter.next();
+            iter.remove();
+
+            if (annotatedTypes.add(type)) {
+                if (type.isPrimitive()) {
+                    continue;
                 }
 
-            };
-            types.add(initialType);
-            while (!types.isEmpty()) {
-                final Iterator<Class<?>> iter = types.iterator();
-                final Class<?> type = iter.next();
-                iter.remove();
+                addParametrizedTypes(type, types);
 
-                if (annotatedTypes.add(type)) {
-                    if (type.isPrimitive()) {
+                processConverterAnnotations(type);
+                processAliasAnnotation(type, types);
+
+                if (type.isInterface()) {
+                    continue;
+                }
+
+                processImplicitCollectionAnnotation(type);
+
+                final Field[] fields = type.getDeclaredFields();
+                for (int i = 0; i < fields.length; i++ ) {
+                    final Field field = fields[i];
+                    if (field.isEnumConstant()
+                        || (field.getModifiers() & (Modifier.STATIC | Modifier.TRANSIENT)) > 0) {
                         continue;
                     }
 
-                    addParametrizedTypes(type, types);
+                    addParametrizedTypes(field.getGenericType(), types);
 
-                    processConverterAnnotations(type);
-                    processAliasAnnotation(type, types);
-
-                    if (type.isInterface()) {
+                    if (field.isSynthetic()) {
                         continue;
                     }
 
-                    processImplicitCollectionAnnotation(type);
-
-                    final Field[] fields = type.getDeclaredFields();
-                    for (int i = 0; i < fields.length; i++ ) {
-                        final Field field = fields[i];
-                        if (field.isEnumConstant()
-                            || (field.getModifiers() & (Modifier.STATIC | Modifier.TRANSIENT)) > 0) {
-                            continue;
-                        }
-
-                        addParametrizedTypes(field.getGenericType(), types);
-
-                        if (field.isSynthetic()) {
-                            continue;
-                        }
-
-                        processFieldAliasAnnotation(field);
-                        processAsAttributeAnnotation(field);
-                        processImplicitAnnotation(field);
-                        processOmitFieldAnnotation(field);
-                        processLocalConverterAnnotation(field);
-                    }
+                    processFieldAliasAnnotation(field);
+                    processAsAttributeAnnotation(field);
+                    processImplicitAnnotation(field);
+                    processOmitFieldAnnotation(field);
+                    processLocalConverterAnnotation(field);
                 }
             }
         }
@@ -401,6 +434,23 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         return type;
     }
     
+    private final class UnprocessedTypesSet extends LinkedHashSet<Class<?>> {
+        @Override
+        public boolean add(Class<?> type) {
+            if (type == null) {
+                return false;
+            }
+            while (type.isArray()) {
+                type = type.getComponentType();
+            }
+            final String name = type.getName();
+            if (name.startsWith("java.") || name.startsWith("java.")) {
+                return false;
+            }
+            return annotatedTypes.contains(type) ? false : super.add(type);
+        }
+    }
+
     private static class WeakHashSet<K> implements Set<K> {
 
         private static Object NULL = new Object();

@@ -1417,9 +1417,7 @@ public class XStream {
         if (annotationConfiguration == null) {
             throw new InitializationException("No " + ANNOTATION_MAPPER_TYPE + " available");
         }
-        for (int i = 0; i < types.length; i++ ) {
-            annotationConfiguration.processAnnotations(types[i]);
-        }
+        annotationConfiguration.processAnnotations(types);
     }
 
     /**

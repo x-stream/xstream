@@ -12,6 +12,6 @@ package com.thoughtworks.xstream.mapper;
  */
 public interface AnnotationConfiguration {
 
-    void processAnnotations(Class type);
+    void processAnnotations(Class[] types);
 
 }

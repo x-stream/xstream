@@ -13,6 +13,7 @@ import java.util.List;
  * Test for annotations mapping implicit collections.
  * 
  * @author Lucio Benfante
+ * @author J&ouml;rg Schaible
  */
 public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
@@ -45,6 +46,8 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     public void testFailsForInvalidFieldType() {
         try {
             xstream.processAnnotations(InvalidImplicitRoot.class);
+            // TODO: force exception, since XStream.processAnnotations() is currently a noop.
+            xstream.getMapper().serializedClass(InvalidImplicitRoot.class);
             fail("Thrown " + InitializationException.class.getName() + " expected");
         } catch (final InitializationException e) {
             assertTrue(e.getMessage().indexOf("\"value\"") > 0);
