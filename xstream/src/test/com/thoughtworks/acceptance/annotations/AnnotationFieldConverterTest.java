@@ -25,42 +25,42 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         xstream.alias("taskContainer", TaskContainer.class);
     }
 
-    public void testDifferentConverterCanBeAnnotatedForFieldsOfSameType() {
+    public void testCanBeDefinedForForFieldsOfSameType() {
         final TaskWithAnnotations task = new TaskWithAnnotations("Tom", "Dick", "Harry");
         final String xml = ""
-                + "<annotatedTask>\n"
-                + "  <name1 str=\"Tom\"/>\n"
-                + "  <name2>_Dick_</name2>\n"
-                + "  <name3>Harry</name3>\n"
-                + "</annotatedTask>";
+            + "<annotatedTask>\n"
+            + "  <name1 str=\"Tom\"/>\n"
+            + "  <name2>_Dick_</name2>\n"
+            + "  <name3>Harry</name3>\n"
+            + "</annotatedTask>";
         assertBothWays(task, xml);
     }
 
-    public void testConverterCanBeAnnotatedForHiddenFields() {
+    public void testCanBeDefinedForHiddenFields() {
         final DerivedTask task = new DerivedTask("Tom", "Dick", "Harry");
         final String xml = ""
-                + "<derivedTask>\n"
-                + "  <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
-                + "  <name2>_Dick_</name2>\n"
-                + "  <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
-                + "  <name1>Harry</name1>\n"
-                + "  <name3 str=\"Tom\"/>\n"
-                + "</derivedTask>";
+            + "<derivedTask>\n"
+            + "  <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
+            + "  <name2>_Dick_</name2>\n"
+            + "  <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
+            + "  <name1>Harry</name1>\n"
+            + "  <name3 str=\"Tom\"/>\n"
+            + "</derivedTask>";
         assertBothWays(task, xml);
     }
 
-    public void testAnnotationsAreFoundInReferencesTypes() {
+    public void testIsFoundInReferencedTypes() {
         final TaskContainer taskContainer = new TaskContainer();
         final String xml = ""
-                + "<taskContainer>\n"
-                + "  <task>\n"
-                + "    <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
-                + "    <name2>_Dick_</name2>\n"
-                + "    <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
-                + "    <name1>Harry</name1>\n"
-                + "    <name3 str=\"Tom\"/>\n"
-                + "  </task>\n"
-                + "</taskContainer>";
+            + "<taskContainer>\n"
+            + "  <task>\n"
+            + "    <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
+            + "    <name2>_Dick_</name2>\n"
+            + "    <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
+            + "    <name1>Harry</name1>\n"
+            + "    <name3 str=\"Tom\"/>\n"
+            + "  </task>\n"
+            + "</taskContainer>";
         assertEquals(taskContainer, xstream.fromXML(xml));
     }
 
@@ -82,13 +82,13 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         @Override
         public boolean equals(final Object obj) {
             return obj != null
-                    && TaskWithAnnotations.class.isAssignableFrom(obj.getClass())
-                    && ((TaskWithAnnotations)obj).name1.equals(name1)
-                    && ((TaskWithAnnotations)obj).name2.equals(name2)
-                    && ((TaskWithAnnotations)obj).name3.equals(name3);
+                && TaskWithAnnotations.class.isAssignableFrom(obj.getClass())
+                && ((TaskWithAnnotations)obj).name1.equals(name1)
+                && ((TaskWithAnnotations)obj).name2.equals(name2)
+                && ((TaskWithAnnotations)obj).name3.equals(name3);
         }
     }
-    
+
     public static class DerivedTask extends TaskWithAnnotations {
         private final String name1;
 
@@ -104,32 +104,34 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         @Override
         public boolean equals(final Object obj) {
             return obj != null
-                    && DerivedTask.class.isAssignableFrom(obj.getClass())
-                    && ((DerivedTask)obj).name1.equals(name1)
-                    && ((DerivedTask)obj).name3.equals(name3)
-                    && super.equals(obj);
+                && DerivedTask.class.isAssignableFrom(obj.getClass())
+                && ((DerivedTask)obj).name1.equals(name1)
+                && ((DerivedTask)obj).name3.equals(name3)
+                && super.equals(obj);
         }
     }
-    
+
     public static class TaskContainer {
         private final DerivedTask task = new DerivedTask("Tom", "Dick", "Harry");
 
         @Override
         public boolean equals(final Object obj) {
             return obj != null
-                    && TaskContainer.class.equals(obj.getClass())
-                    && task.equals(((TaskContainer)obj).task);
+                && TaskContainer.class.equals(obj.getClass())
+                && task.equals(((TaskContainer)obj).task);
         }
     }
 
     public static class FirstConverter implements Converter {
 
-        public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+        public void marshal(final Object source, final HierarchicalStreamWriter writer,
+            final MarshallingContext context) {
             final String str = source.toString();
             writer.addAttribute("str", str);
         }
 
-        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
+        public Object unmarshal(final HierarchicalStreamReader reader,
+            final UnmarshallingContext context) {
             final String str = reader.getAttribute("str");
             return str;
         }
@@ -141,13 +143,15 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
 
     public static class SecondaryConverter implements Converter {
 
-        public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-            writer.setValue("_"+source.toString() + "_");
+        public void marshal(final Object source, final HierarchicalStreamWriter writer,
+            final MarshallingContext context) {
+            writer.setValue("_" + source.toString() + "_");
         }
 
-        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        	final String value = reader.getValue();
-            return value.substring(1,value.length()-1);
+        public Object unmarshal(final HierarchicalStreamReader reader,
+            final UnmarshallingContext context) {
+            final String value = reader.getValue();
+            return value.substring(1, value.length() - 1);
         }
 
         public boolean canConvert(final Class type) {

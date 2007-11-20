@@ -1423,6 +1423,16 @@ public class XStream {
     }
 
     /**
+     * Process the annotations of the given type and configure the XStream.
+     * 
+     * @param type the type with XStream annotations
+     * @since upcoming
+     */
+    public void processAnnotations(final Class type) {
+        processAnnotations(new Class[]{type});
+    }
+
+    /**
      * @deprecated since upcoming, use {@link InitializationException} instead
      */
     public static class InitializationException extends XStreamException {

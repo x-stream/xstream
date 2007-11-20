@@ -1,17 +1,20 @@
 package com.thoughtworks.acceptance.annotations;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.xstream.annotations.*;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -23,8 +26,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class AnnotationsTest extends AbstractAcceptanceTest {
 
-    public void testAnnotations() {
-        Annotations.configureAliases(xstream, Person.class, AddressBookInfo.class);
+    public void testCanDefineClassAliasAndConverter() {
+        xstream.processAnnotations(new Class[]{Person.class, AddressBookInfo.class});
         Map<String, Person> map = new HashMap<String, Person>();
         map.put("first person", new Person("john doe"));
         map.put("second person", new Person("jane doe"));
@@ -42,35 +45,31 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         assertBothWaysNormalized(map, xml, "map", "entry", "string");
     }
 
-    public void testUsesClassLevelAliasesAnnotationsUsingTwoXStreamInstances() {
-        Annotations.configureAliases(xstream, Person.class, AddressBookInfo.class);
-        Person person = new Person("john doe");
-        String xml = "<person>john doe</person>";
-        assertBothWays(person, xml);
-        xstream = createXStream();
-        Annotations.configureAliases(xstream, Person.class, AddressBookInfo.class);
-        assertBothWays(person, xml);
-    }
-
-    public void testUsesFieldLevelAliasesAnnotationCycle() {
-        Annotations.configureAliases(xstream, Cycle.class);
+    public void testHandlesFieldLevelAliasCycle() {
+        xstream.processAnnotations(Cycle.class);
         Cycle cycle = new Cycle();
-        String xml = "<com.thoughtworks.acceptance.annotations.AnnotationsTest_-Cycle/>";
+        cycle.internal = cycle;
+        String xml = "" // 
+            + "<cycle>\n" //
+            + "  <oops reference=\"..\"/>\n" //
+            + "</cycle>";
         assertBothWays(cycle, xml);
     }
 
+    @XStreamAlias("cycle")
     public static class Cycle {
         @XStreamAlias("oops")
         private Cycle internal;
     }
 
-    public void testUsesFieldAliasesAnnotations() {
-        Annotations.configureAliases(xstream, CustomPerson.class);
+    public void testSupportsFieldAlias() {
+        xstream.processAnnotations(CustomPerson.class);
         List<String> nickNames = new ArrayList<String>();
         nickNames.add("johnny");
         nickNames.add("jack");
         CustomPerson person = new CustomPerson("john", "doe", 25, nickNames);
-        String expectedXml = "<person>\n"
+        String expectedXml = ""
+            + "<person>\n"
             + "  <first-name>john</first-name>\n"
             + "  <last-name>doe</last-name>\n"
             + "  <age-in-years>25</age-in-years>\n"
@@ -121,29 +120,6 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
             return sb.toString();
         }
 
-    }
-
-    public static class House {
-        @XStreamAlias("total-number-of-rooms")
-        private int rooms;
-
-        protected House(int rooms) {
-            this.rooms = rooms;
-        }
-
-        public int getRooms() {
-            return rooms;
-        }
-    }
-
-    public void testAnnotationForFieldAliases() {
-        Annotations.configureAliases(xstream, House.class);
-        House house = new House(5);
-        String expectedXml = ""
-            + "<com.thoughtworks.acceptance.annotations.AnnotationsTest_-House>\n"
-            + "  <total-number-of-rooms>5</total-number-of-rooms>\n"
-            + "</com.thoughtworks.acceptance.annotations.AnnotationsTest_-House>";
-        assertBothWays(house, expectedXml);
     }
 
     @XStreamAlias("person")
@@ -202,41 +178,6 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
 
     }
 
-    @XStreamAlias("internal")
-    public static class InternalParameterizedType {
-        @XStreamImplicit(itemFieldName = "line")
-        private ArrayList<ArrayList<Point>> signatureLines;
-    }
-
-    @XStreamAlias("point")
-    public static class Point {
-        @XStreamAsAttribute
-        private int x;
-        @XStreamAsAttribute
-        private int y;
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    public void testHandlesInternalParameterizedTypes() {
-        Annotations.configureAliases(xstream, InternalParameterizedType.class);
-        Annotations.configureAliases(xstream, Point.class);
-        String xml = ""
-            + "<internal>\n"
-            + "  <line>\n"
-            + "    <point x=\"33\" y=\"11\"/>\n"
-            + "  </line>\n"
-            + "</internal>";
-        InternalParameterizedType root = new InternalParameterizedType();
-        root.signatureLines = new ArrayList<ArrayList<Point>>();
-        root.signatureLines.add(new ArrayList<Point>());
-        root.signatureLines.get(0).add(new Point(33, 11));
-        assertBothWays(root, xml);
-    }
-
     @XStreamAlias("second")
     public static class InternalType {
         @XStreamAlias("aliased")
@@ -252,8 +193,8 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testCrawlsWhithinAnnotatedParameterizedTypes() {
-        Annotations.configureAliases(xstream, ParameterizedContainer.class);
+    public void testAreDetectedInParameterizedTypes() {
+        xstream.processAnnotations(ParameterizedContainer.class);
         String xml = ""
             + "<param>\n"
             + "  <type>\n"
@@ -265,8 +206,8 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         assertBothWays(new ParameterizedContainer(), xml);
     }
 
-    public void testCrawlsWhithinAnnotatedDoubleParameterizedTypes() {
-        Annotations.configureAliases(xstream, DoubleParameterizedContainer.class);
+    public void testAreDetectedInNestedParameterizedTypes() {
+        xstream.processAnnotations(DoubleParameterizedContainer.class);
         String xml = ""
             + "<param>\n"
             + "  <list>\n"
@@ -368,13 +309,11 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         private String myField;
     }
 
-    public void testUsesAttributeThroughAnnotation() {
+    public void testCanDefineAttributes() {
         AnnotatedAttribute value = new AnnotatedAttribute();
         value.myField = "hello";
         String expected = "<annotated myField=\"hello\"/>";
-        Annotations.configureAliases(xstream, AnnotatedAttribute.class);
-        String xml = toXML(value);
-        AnnotatedAttribute an = (AnnotatedAttribute)xstream.fromXML(xml);
+        xstream.processAnnotations(AnnotatedAttribute.class);
         assertBothWays(value, expected);
     }
 
@@ -385,16 +324,15 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         private String myField;
     }
 
-    public void testUsesAliasedAttributeThroughAnnotation() {
+    public void testCanDefineAttributeWithAlias() {
         AnnotatedAliasedAttribute value = new AnnotatedAliasedAttribute();
         value.myField = "hello";
         String expected = "<annotated field=\"hello\"/>";
-        Annotations.configureAliases(xstream, AnnotatedAliasedAttribute.class);
-        String xml = toXML(value);
-        AnnotatedAliasedAttribute an = (AnnotatedAliasedAttribute)xstream.fromXML(xml);
+        xstream.processAnnotations(AnnotatedAliasedAttribute.class);
         assertBothWays(value, expected);
     }
 
+    @XStreamAlias("apartment")
     public static class Apartment {
 
         @XStreamOmitField
@@ -405,10 +343,10 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testIgnoresFieldWhenUsingTheOmitFieldAnnotation() {
-        Annotations.configureAliases(xstream, Apartment.class);
+    public void testCanDefineOmittedFields() {
+        xstream.processAnnotations(Apartment.class);
         Apartment ap = new Apartment(5);
-        String expectedXml = "<com.thoughtworks.acceptance.annotations.AnnotationsTest_-Apartment/>";
+        String expectedXml = "<apartment/>";
         assertBothWays(ap, expectedXml);
     }
 }

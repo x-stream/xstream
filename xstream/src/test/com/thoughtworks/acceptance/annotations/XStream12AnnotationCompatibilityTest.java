@@ -8,6 +8,7 @@ import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.AnnotationProvider;
 import com.thoughtworks.xstream.annotations.AnnotationReflectionConverter;
+import com.thoughtworks.xstream.annotations.Annotations;
 
 
 /**
@@ -35,6 +36,19 @@ public class XStream12AnnotationCompatibilityTest extends AbstractAcceptanceTest
             + "  <name3>Harry</name3>\n"
             + "</annotatedTask>";
         assertBothWays(task, xml);
+    }
+
+    public void testImplicitCollection() {
+        String expected = ""
+            + "<root>\n"
+            + "  <string>one</string>\n"
+            + "  <string>two</string>\n"
+            + "</root>";
+        Annotations.configureAliases(xstream, ImplicitCollectionTest.ImplicitRootOne.class);
+        ImplicitCollectionTest.ImplicitRootOne implicitRoot = new ImplicitCollectionTest.ImplicitRootOne();
+        implicitRoot.getValues().add("one");
+        implicitRoot.getValues().add("two");
+        assertBothWays(implicitRoot, expected);
     }
 
 }

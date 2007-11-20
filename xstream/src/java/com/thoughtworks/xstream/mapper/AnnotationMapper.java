@@ -328,15 +328,6 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     + ImplicitCollectionMapper.class.getName()
                     + " available");
             }
-            if (!Collection.class.isAssignableFrom(field.getType())) {
-                throw new InitializationException(
-                    "@XStreamImplicit must be assigned to Collection types, but \""
-                        + field.getDeclaringClass().getName()
-                        + ":"
-                        + field.getName()
-                        + " is of type "
-                        + field.getType().getName());
-            }
             String fieldName = field.getName();
             String itemFieldName = implicitAnnotation.itemFieldName();
             Class itemType = null;
