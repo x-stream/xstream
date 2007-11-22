@@ -16,7 +16,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  */
-public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
+public class FieldConverterTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -25,7 +25,7 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         xstream.alias("taskContainer", TaskContainer.class);
     }
 
-    public void testCanBeDefinedForForFieldsOfSameType() {
+    public void testAnnotationForForFieldsOfSameType() {
         final TaskWithAnnotations task = new TaskWithAnnotations("Tom", "Dick", "Harry");
         final String xml = ""
             + "<annotatedTask>\n"
@@ -36,7 +36,7 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         assertBothWays(task, xml);
     }
 
-    public void testCanBeDefinedForHiddenFields() {
+    public void testAnnotationForHiddenFields() {
         final DerivedTask task = new DerivedTask("Tom", "Dick", "Harry");
         final String xml = ""
             + "<derivedTask>\n"
@@ -157,6 +157,61 @@ public class AnnotationFieldConverterTest extends AbstractAcceptanceTest {
         public boolean canConvert(final Class type) {
             return type.equals(String.class);
         }
+    }
+
+    public static class CustomConverter implements Converter {
+
+        private static int total = 0;
+
+        public CustomConverter() {
+            total++ ;
+        }
+
+        public void marshal(Object source, HierarchicalStreamWriter writer,
+            MarshallingContext context) {
+        }
+
+        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+            return null;
+        }
+
+        public boolean canConvert(Class type) {
+            return type.equals(Double.class);
+        }
+
+    }
+
+    public static class Account {
+        @XStreamConverter(CustomConverter.class)
+        private Double value;
+
+        public Account() {
+            this.value = Math.random();
+        }
+    }
+
+    public static class Client {
+        @XStreamConverter(CustomConverter.class)
+        private Double value;
+
+        public Client() {
+            this.value = Math.random();
+        }
+    }
+
+    public void testAreCachedPerField() {
+        int before = CustomConverter.total;
+        toXML(new Account());
+        int after = CustomConverter.total;
+        assertEquals(before + 1, after);
+    }
+
+    public void testAreCachedPerFieldInDifferentContexts() {
+        int before = CustomConverter.total;
+        toXML(new Account());
+        toXML(new Client());
+        int after = CustomConverter.total;
+        assertEquals(before + 1, after);
     }
 
 }

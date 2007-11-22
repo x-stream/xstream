@@ -12,6 +12,7 @@ import com.thoughtworks.xstream.annotations.Annotations;
 
 
 /**
+ * Tests XStream 1.2.x annotation compatibility.
  * @author J&ouml;rg Schaible
  */
 public class XStream12AnnotationCompatibilityTest extends AbstractAcceptanceTest {
@@ -23,11 +24,11 @@ public class XStream12AnnotationCompatibilityTest extends AbstractAcceptanceTest
         xstream.registerConverter(
             new AnnotationReflectionConverter(xstream.getMapper(), xstream
                 .getReflectionProvider(), new AnnotationProvider()), XStream.PRIORITY_VERY_LOW);
-        xstream.alias("annotatedTask", AnnotationFieldConverterTest.TaskWithAnnotations.class);
+        xstream.alias("annotatedTask", FieldConverterTest.TaskWithAnnotations.class);
     }
 
     public void testDifferentConverterCanBeAnnotatedForFieldsOfSameType() {
-        final AnnotationFieldConverterTest.TaskWithAnnotations task = new AnnotationFieldConverterTest.TaskWithAnnotations(
+        final FieldConverterTest.TaskWithAnnotations task = new FieldConverterTest.TaskWithAnnotations(
             "Tom", "Dick", "Harry");
         final String xml = ""
             + "<annotatedTask>\n"

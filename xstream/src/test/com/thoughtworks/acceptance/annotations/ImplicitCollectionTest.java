@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
-    public void testForField() {
+    public void testAnnotation() {
         String expected = ""
             + "<root>\n"
             + "  <string>one</string>\n"
@@ -30,7 +30,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(implicitRoot, expected);
     }
 
-    public void testForFieldWithItemFieldName() {
+    public void testAnnotationWithItemFieldName() {
         String expected = ""
             + "<root>\n"
             + "  <value>one</value>\n"
@@ -43,7 +43,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(implicitRoot, expected);
     }
 
-    public void testFailsForInvalidFieldType() {
+    public void testAnnotationFailsForInvalidFieldType() {
         try {
             xstream.processAnnotations(InvalidImplicitRoot.class);
             // TODO: force exception, since XStream.processAnnotations() is currently a noop.
@@ -115,7 +115,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testWorksForParameterizedTypes() {
+    public void testAnnotationHandlesParameterizedTypes() {
         xstream.processAnnotations(new Class[]{ImplicitParameterizedType.class, Point.class});
         String xml = ""
             + "<implicit>\n"
