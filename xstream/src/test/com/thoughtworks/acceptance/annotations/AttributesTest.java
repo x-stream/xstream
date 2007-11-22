@@ -25,7 +25,6 @@ public class AttributesTest extends AbstractAcceptanceTest {
         AnnotatedAttribute value = new AnnotatedAttribute();
         value.myField = "hello";
         String expected = "<annotated myField=\"hello\"/>";
-        xstream.processAnnotations(AnnotatedAttribute.class);
         assertBothWays(value, expected);
     }
 
@@ -40,7 +39,6 @@ public class AttributesTest extends AbstractAcceptanceTest {
         AnnotatedAliasedAttribute value = new AnnotatedAliasedAttribute();
         value.myField = "hello";
         String expected = "<annotated field=\"hello\"/>";
-        xstream.processAnnotations(AnnotatedAliasedAttribute.class);
         assertBothWays(value, expected);
     }
 }

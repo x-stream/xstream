@@ -26,7 +26,6 @@ import java.util.Map;
 public class AliasTest extends AbstractAcceptanceTest {
 
     public void testAnnotationForClassWithAnnotatedConverter() {
-        xstream.processAnnotations(new Class[]{Person.class, AddressBookInfo.class});
         Map<String, Person> map = new HashMap<String, Person>();
         map.put("first person", new Person("john doe"));
         map.put("second person", new Person("jane doe"));
@@ -45,7 +44,6 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationForFieldWithAliasCycle() {
-        xstream.processAnnotations(Cycle.class);
         Cycle cycle = new Cycle();
         cycle.internal = cycle;
         String xml = "" // 
@@ -62,7 +60,6 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationForField() {
-        xstream.processAnnotations(CustomPerson.class);
         List<String> nickNames = new ArrayList<String>();
         nickNames.add("johnny");
         nickNames.add("jack");

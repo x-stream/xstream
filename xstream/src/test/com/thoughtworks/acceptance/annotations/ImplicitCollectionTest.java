@@ -23,7 +23,6 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             + "  <string>one</string>\n"
             + "  <string>two</string>\n"
             + "</root>";
-        xstream.processAnnotations(ImplicitRootOne.class);
         ImplicitRootOne implicitRoot = new ImplicitRootOne();
         implicitRoot.getValues().add("one");
         implicitRoot.getValues().add("two");
@@ -36,7 +35,6 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             + "  <value>one</value>\n"
             + "  <value>two</value>\n"
             + "</root>";
-        xstream.processAnnotations(ImplicitRootTwo.class);
         ImplicitRootTwo implicitRoot = new ImplicitRootTwo();
         implicitRoot.getValues().add("one");
         implicitRoot.getValues().add("two");
@@ -46,8 +44,6 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     public void testAnnotationFailsForInvalidFieldType() {
         try {
             xstream.processAnnotations(InvalidImplicitRoot.class);
-            // TODO: force exception, since XStream.processAnnotations() is currently a noop.
-            xstream.getMapper().serializedClass(InvalidImplicitRoot.class);
             fail("Thrown " + InitializationException.class.getName() + " expected");
         } catch (final InitializationException e) {
             assertTrue(e.getMessage().indexOf("\"value\"") > 0);
@@ -116,7 +112,6 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationHandlesParameterizedTypes() {
-        xstream.processAnnotations(new Class[]{ImplicitParameterizedType.class, Point.class});
         String xml = ""
             + "<implicit>\n"
             + "  <line>\n"

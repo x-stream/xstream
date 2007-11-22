@@ -26,7 +26,6 @@ public class OmitFieldTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotation() {
-        xstream.processAnnotations(Apartment.class);
         Apartment ap = new Apartment(5);
         String expectedXml = "<apartment/>";
         assertBothWays(ap, expectedXml);

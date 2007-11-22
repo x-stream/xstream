@@ -110,18 +110,17 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         return super.getLocalConverter(definedIn, fieldName);
     }
 
-    // TODO: Method is currently a noop.
     public void processAnnotations(final Class[] initialTypes) {
-//        if (initialTypes == null || initialTypes.length == 0) {
-//            return;
-//        }
-//        synchronized (annotatedTypes) {
-//            final Set<Class<?>> types = new UnprocessedTypesSet();
-//            for (Class initialType : initialTypes) {
-//                types.add(initialType);
-//            }
-//            processTypes(types);
-//        }
+        if (initialTypes == null || initialTypes.length == 0) {
+            return;
+        }
+        synchronized (annotatedTypes) {
+            final Set<Class<?>> types = new UnprocessedTypesSet();
+            for (Class initialType : initialTypes) {
+                types.add(initialType);
+            }
+            processTypes(types);
+        }
     }
 
     private void processAnnotations(final Class initialType) {
