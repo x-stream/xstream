@@ -26,7 +26,7 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  */
 public class AliasTest extends AbstractAcceptanceTest {
-    
+
     @Override
     protected XStream createXStream() {
         XStream xstream = super.createXStream();
@@ -240,30 +240,30 @@ public class AliasTest extends AbstractAcceptanceTest {
             return fromString(reader.getValue());
         }
     }
-    
-    static class Dash { 
-    
-        @XStreamAlias ("camel-case") 
-        int camelCase = 5; 
-    } 
-    
+
+    static class Dash {
+
+        @XStreamAlias("camel-case")
+        int camelCase = 5;
+    }
+
     public void testAnnotationForFieldWithAttributeDefinitionForFieldType() {
         xstream.alias("dash", Dash.class);
         xstream.useAttributeFor(int.class);
-        String xml = "<dash camel-case=\"5\"/>"; 
+        String xml = "<dash camel-case=\"5\"/>";
         assertBothWays(new Dash(), xml);
     }
-    
+
     public static abstract class Aged {
         @XStreamAlias("age")
         @XStreamAsAttribute
         private Integer id;
-        
+
         Aged(Integer id) {
             this.id = id;
         }
     }
-    
+
     @XStreamAlias("thing")
     public static class AgedThing extends Aged {
 
@@ -275,7 +275,7 @@ public class AliasTest extends AbstractAcceptanceTest {
             this.name = name;
         }
     }
-    
+
     public void testAnnotationIsInheritedTogetherWithAsAttribute() {
         String xml = "<thing age=\"99\" name=\"Name\"/>";
         assertBothWays(new AgedThing("Name", 99), xml);
