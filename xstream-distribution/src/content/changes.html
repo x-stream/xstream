@@ -35,6 +35,9 @@
     	<li>XStream failed to initialize in environments without AWT or SQL classes.</li>
     	<li>JIRA:XSTR-420: XPath of references are not XmlFriendly encoded.</li>
     	<li>JIRA:XSTR-431: Direct support of enhanced mode for SAP JVM (thanks to Norbert Kuck by SAP).</li>
+    	<li>JIRA:XSTR-437: Static cache in annotation processing causes failing OSGi bundles.</li>
+    	<li>JIRA:XSTR-279+JIRA:XSTR-335: Annotations are not inherited from parent class.</li>
+    	<li>Fix StringConverter using a WeakHashMap with strong references in its value.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -58,14 +61,18 @@
     	<li>JIRA:XSTR-440: Implicit collections can be declared for fields that are not of Collection type.</li>
     	<li>JIRA:XSTR-446: Handle all primitives and their boxed counterpart for JsonHierarchicalStreamDriver.</li>
     	<li>JIRA:XSTR-447: Fix deserialization of Array class types in JDK 6 (see JDK bug 6500212).</li>
-    	<li>Fix StringConverter using a WeakHashMap with strong references in its value.</li>
+    	<li>JIRA:XSTR-450: @XStreamAlias is ignored if attributes should be used for the field type.</li>
+    	<li>JIRA:XSTR-418: Inherited @XStreamAlias is ignored if field should be rendered as attribute.</li>
+    	<li>JIRA:XSTR-393: Annotation processing is not consistent.</li>
+    	<li>JIRA:XSTR-412: @XStreamImplicit throws NPE for untyped collections.</li>
     </ul>
 
     <h2>API changes</h2>
 
     <ul>
-    	<li>c.t.x.annotation.AnnotationReflectionConverter and c.t.x.annotation.AnnotationProvider deprecated.  Functionality is integrated in new 
-    	c.t.x.mapper.AnnotationMapper.</li>
+    	<li>c.t.x.annotation.Annotations, c.t.x.annotation.AnnotationReflectionConverter and c.t.x.annotation.AnnotationProvider deprecated.
+    	Functionality is integrated in new c.t.x.mapper.AnnotationMapper and accessible with new methods c.t.x.XStream.processAnnotation().</li>
+    	<li>New auto-detection mode for annotations, that can be turned on with c.t.x.XStream.autodetectAnnotations()</li>
     	<li>c.t.x.annotation.@XStreamContainedType deprecated, the behaviour is now always active and the annotation therefore superfluous.</li>
     	<li>Due to JIRA:XSTR-421 null characters are no longer written as tag with an attribute (&lt;char null=&quot;true&quot;/&gt;), 
     	but as empty tag.  The old representation is still supported at deserialization.</li>
