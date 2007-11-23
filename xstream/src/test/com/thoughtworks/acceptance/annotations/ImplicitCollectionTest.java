@@ -151,4 +151,23 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             + "</type>";
         assertBothWays(type, xml);
     }
+
+    @XStreamAlias("untyped")
+    private static class Untyped {
+        @XStreamImplicit
+        private List list = new ArrayList();
+
+        public Untyped() {
+            list.add("1");
+        }
+    }
+
+    public void testCanHandleUntypedCollections() {
+        Untyped untyped = new Untyped();
+        String xml = "" //
+            + "<untyped>\n" //
+            + "  <string>1</string>\n" //
+            + "</untyped>";
+        assertBothWays(untyped, xml);
+    }
 }

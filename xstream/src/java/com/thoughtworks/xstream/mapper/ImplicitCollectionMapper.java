@@ -181,7 +181,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
         ImplicitCollectionMappingImpl(String fieldName, Class itemType, String itemFieldName) {
             this.fieldName = fieldName;
             this.itemFieldName = itemFieldName;
-            this.itemType = itemType;
+            this.itemType = itemType == null ? Object.class : itemType;
         }
 
         public boolean equals(Object obj) {

@@ -1159,7 +1159,7 @@ public class XStream {
                     + ImplicitCollectionMapper.class.getName()
                     + " available");
         }
-        implicitCollectionMapper.add(ownerType, fieldName, null, Object.class);
+        implicitCollectionMapper.add(ownerType, fieldName, null, null);
     }
 
     /**
