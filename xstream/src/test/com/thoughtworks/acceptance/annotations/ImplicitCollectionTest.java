@@ -2,6 +2,7 @@ package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.InitializationException;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
@@ -16,6 +17,13 @@ import java.util.List;
  * @author J&ouml;rg Schaible
  */
 public class ImplicitCollectionTest extends AbstractAcceptanceTest {
+    
+    @Override
+    protected XStream createXStream() {
+        XStream xstream = super.createXStream();
+        xstream.autodetectAnnotations(true);
+        return xstream;
+    }
 
     public void testAnnotation() {
         String expected = ""

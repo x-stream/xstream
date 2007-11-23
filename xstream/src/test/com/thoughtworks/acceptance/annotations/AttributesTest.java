@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
@@ -14,6 +15,13 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
  * @author J&ouml;rg Schaible
  */
 public class AttributesTest extends AbstractAcceptanceTest {
+    
+    @Override
+    protected XStream createXStream() {
+        XStream xstream = super.createXStream();
+        xstream.autodetectAnnotations(true);
+        return xstream;
+    }
 
     @XStreamAlias("annotated")
     public static class AnnotatedAttribute {

@@ -1421,7 +1421,8 @@ public class XStream {
     }
 
     /**
-     * Process the annotations of the given type and configure the XStream.
+     * Process the annotations of the given type and configure the XStream. A call of this method
+     * will automatically turn the auto-detection mode for annotations off.
      * 
      * @param type the type with XStream annotations
      * @since upcoming
@@ -1430,6 +1431,21 @@ public class XStream {
         processAnnotations(new Class[]{type});
     }
 
+    /**
+     * Set the auto-detection mode of the AnnotationMapper. Note that auto-detection implies that 
+     * the XStream is configured while it is processing the XML steams. This is a potential concurrency
+     * problem. Also is it technically not possible to detect all class aliases at deserialization. You have 
+     * been warned! 
+     * 
+     * @param mode <code>true</code> if annotations are auto-detected
+     * @since upcoming
+     */
+    public void autodetectAnnotations(boolean mode) {
+        if (annotationConfiguration != null) {
+            annotationConfiguration.autodetectAnnotations(mode);
+        }
+    }
+    
     /**
      * @deprecated since upcoming, use {@link InitializationException} instead
      */

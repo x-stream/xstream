@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -17,6 +18,13 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author J&ouml;rg Schaible
  */
 public class FieldConverterTest extends AbstractAcceptanceTest {
+    
+    @Override
+    protected XStream createXStream() {
+        XStream xstream = super.createXStream();
+        xstream.autodetectAnnotations(true);
+        return xstream;
+    }
 
     protected void setUp() throws Exception {
         super.setUp();

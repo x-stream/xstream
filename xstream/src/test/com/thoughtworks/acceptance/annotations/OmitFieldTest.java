@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
@@ -14,6 +15,14 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
  * @author J&ouml;rg Schaible
  */
 public class OmitFieldTest extends AbstractAcceptanceTest {
+    
+    @Override
+    protected XStream createXStream() {
+        XStream xstream = super.createXStream();
+        xstream.autodetectAnnotations(true);
+        return xstream;
+    }
+
     @XStreamAlias("apartment")
     public static class Apartment {
 

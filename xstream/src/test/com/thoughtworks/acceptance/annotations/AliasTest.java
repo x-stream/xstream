@@ -1,7 +1,9 @@
 package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -24,6 +26,13 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  */
 public class AliasTest extends AbstractAcceptanceTest {
+    
+    @Override
+    protected XStream createXStream() {
+        XStream xstream = super.createXStream();
+        xstream.autodetectAnnotations(true);
+        return xstream;
+    }
 
     public void testAnnotationForClassWithAnnotatedConverter() {
         Map<String, Person> map = new HashMap<String, Person>();
@@ -230,5 +239,18 @@ public class AliasTest extends AbstractAcceptanceTest {
         public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
             return fromString(reader.getValue());
         }
+    }
+    
+    static class Dash { 
+    
+        @XStreamAlias ("camel-case") 
+        int camelCase = 5; 
+    } 
+    
+    public void testAnnotationForFieldWithAttributeDefinitionForFieldType() {
+        xstream.alias("dash", Dash.class);
+        xstream.useAttributeFor(int.class);
+        String xml = "<dash camel-case=\"5\"/>"; 
+        assertBothWays(new Dash(), xml);
     }
 }

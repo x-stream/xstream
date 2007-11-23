@@ -44,7 +44,7 @@ import java.util.WeakHashMap;
  */
 public class AnnotationMapper extends MapperWrapper implements AnnotationConfiguration {
 
-    private boolean locked; // false for now
+    private boolean locked;
     private final Object[] arguments = new Object[0]; // no args for now
     private final DefaultConverterLookup converterLookup;
     private final ClassAliasingMapper classAliasingMapper;
@@ -72,6 +72,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         fieldAliasingMapper = (FieldAliasingMapper)lookupMapperOfType(FieldAliasingMapper.class);
         attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
         localConversionMapper = (LocalConversionMapper)lookupMapperOfType(LocalConversionMapper.class);
+        locked = true;
     }
 
     @Override
@@ -110,10 +111,15 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         return super.getLocalConverter(definedIn, fieldName);
     }
 
+    public void autodetectAnnotations(boolean mode) {
+        locked = !mode;
+    }
+
     public void processAnnotations(final Class[] initialTypes) {
         if (initialTypes == null || initialTypes.length == 0) {
             return;
         }
+        locked = true;
         synchronized (annotatedTypes) {
             final Set<Class<?>> types = new UnprocessedTypesSet();
             for (Class initialType : initialTypes) {

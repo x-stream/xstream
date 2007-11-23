@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.util.ArrayList;
@@ -16,6 +17,13 @@ import java.util.List;
  * @author J&ouml;rg Schaible
  */
 public class AnnotationsTest extends AbstractAcceptanceTest {
+    
+    @Override
+    protected XStream createXStream() {
+        XStream xstream = super.createXStream();
+        xstream.autodetectAnnotations(true);
+        return xstream;
+    }
 
     @XStreamAlias("param")
     public static class ParameterizedContainer {
