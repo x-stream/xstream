@@ -7,7 +7,9 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -17,7 +19,7 @@ import java.util.List;
  * @author J&ouml;rg Schaible
  */
 public class ImplicitCollectionTest extends AbstractAcceptanceTest {
-    
+
     @Override
     protected XStream createXStream() {
         XStream xstream = super.createXStream();
@@ -133,4 +135,20 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(root, xml);
     }
 
+    @XStreamAlias("type")
+    public static class ParametrizedTypeIsInterface {
+        @XStreamImplicit()
+        private ArrayList<Map> list = new ArrayList<Map>();
+    }
+
+    public void testWorksForTypesThatAreInterfaces() {
+        ParametrizedTypeIsInterface type = new ParametrizedTypeIsInterface();
+        type.list = new ArrayList<Map>();
+        type.list.add(new HashMap());
+        String xml = "" //
+            + "<type>\n" // 
+            + "  <map/>\n" //
+            + "</type>";
+        assertBothWays(type, xml);
+    }
 }
