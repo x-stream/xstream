@@ -253,4 +253,31 @@ public class AliasTest extends AbstractAcceptanceTest {
         String xml = "<dash camel-case=\"5\"/>"; 
         assertBothWays(new Dash(), xml);
     }
+    
+    public static abstract class Aged {
+        @XStreamAlias("age")
+        @XStreamAsAttribute
+        private Integer id;
+        
+        Aged(Integer id) {
+            this.id = id;
+        }
+    }
+    
+    @XStreamAlias("thing")
+    public static class AgedThing extends Aged {
+
+        @XStreamAsAttribute
+        private String name;
+
+        AgedThing(String name, Integer id) {
+            super(id);
+            this.name = name;
+        }
+    }
+    
+    public void testAnnotationIsInheritedTogetherWithAsAttribute() {
+        String xml = "<thing age=\"99\" name=\"Name\"/>";
+        assertBothWays(new AgedThing("Name", 99), xml);
+    }
 }
