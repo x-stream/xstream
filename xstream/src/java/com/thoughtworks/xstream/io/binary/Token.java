@@ -77,7 +77,7 @@ public abstract class Token {
 
     public int hashCode() {
         int result;
-        result = (int) type;
+        result = type;
         result = 29 * result + (int) (id ^ (id >>> 32));
         result = 29 * result + (value != null ? value.hashCode() : 0);
         return result;
@@ -228,10 +228,10 @@ public abstract class Token {
             super(TYPE_END_NODE);
         }
 
-        public void writeTo(DataOutput out, byte idType) throws IOException {
+        public void writeTo(DataOutput out, byte idType) {
         }
 
-        public void readFrom(DataInput in, byte idType) throws IOException {
+        public void readFrom(DataInput in, byte idType) {
         }
 
     }

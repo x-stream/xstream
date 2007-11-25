@@ -47,11 +47,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     private static String DEFAULT_NAMING_MARKER = "$$EnhancerByCGLIB$$";
     private static String CALLBACK_MARKER = "CGLIB$CALLBACK_";
     private transient Map fieldCache;
-    private final Mapper mapper;
 
     public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider));
-        this.mapper = mapper;
         this.fieldCache = new HashMap();
     }
 

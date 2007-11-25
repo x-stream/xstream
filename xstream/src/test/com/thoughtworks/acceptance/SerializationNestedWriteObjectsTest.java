@@ -173,8 +173,7 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
             return s;
         }
 
-        private void readObject(java.io.ObjectInputStream in) throws IOException,
-                ClassNotFoundException {
+        private void readObject(java.io.ObjectInputStream in) throws IOException {
             int i = in.read();
             byte[] b = new byte[i];
             in.read(b);
