@@ -284,16 +284,26 @@
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumMapConverter.html">EnumMapConverter</a></td>
                 <td>java.util.EnumMap</td>
-                <td class="example">&lt;enum-map enum-type="simple"&gt;<br/>
-                &lt;entry&gt;<br/>&lt;simple&gt;GREEN&lt;/simple&gt;<br/>&lt;string&gt;grass&lt;/string&gt;<br/>&lt;/entry&gt;<br/>
-                &lt;entry&gt;<br/>&lt;simple&gt;BLUE&lt;/simple&gt;<br/>&lt;string&gt;sky&lt;/string&gt;<br/>&lt;/entry&gt;<br/>
+                <td class="example">
+                &lt;enum-map enum-type="simple"&gt;<br/>
+                &nbsp;&nbsp;&lt;entry&gt;<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;simple&gt;GREEN&lt;/simple&gt;<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;string&gt;grass&lt;/string&gt;<br/>
+                &nbsp;&nbsp;&lt;/entry&gt;<br/>
+                &nbsp;&nbsp;&lt;entry&gt;<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;simple&gt;BLUE&lt;/simple&gt;<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;string&gt;sky&lt;/string&gt;<br/>
+                &nbsp;&nbsp;&lt;/entry&gt;<br/>
                 &lt;/enum-map&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumSetConverter.html">EnumSetConverter</a></td>
                 <td>java.util.EnumSet</td>
-                <td class="example">&lt;enum-set enum-type=&quot;simple&quot;&gt;<br/>GREEN,BLUE<br/>&lt;/enum-set&gt;</td>
+                <td class="example">
+                &lt;enum-set enum-type=&quot;simple&quot;&gt;<br/>
+                &nbsp;&nbsp;GREEN,BLUE<br/>
+                &lt;/enum-set&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
             </tr>
             <tr>
@@ -301,8 +311,8 @@
                 <td>java.util.regex.Pattern</td>
                 <td class="example">
                 &lt;java.util.regex.Pattern&gt;<br/>
-				&lt;pattern&gt;.*&lt;/pattern&gt;<br/>
-				&lt;flags&gt;0&lt;/flags&gt;<br/>
+				&nbsp;&nbsp;&lt;pattern&gt;.*&lt;/pattern&gt;<br/>
+				&nbsp;&nbsp;&lt;flags&gt;0&lt;/flags&gt;<br/>
 				&lt;/java.util.regex.Pattern&gt;
                 </td>
                 <td>Available under Java 1.4 or greater.</td>
@@ -552,7 +562,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CharsetConverter.html">CharsetConverter</a></td>
                 <td>java.nio.charset.Charset</td>
                 <td class="example">&lt;charset&gt;US-ASCII&lt;/charset&gt;</td>
-                <td>&nbsp;</td>
+                <td>Available under Java 1.4 or greater.</td>
             </tr>
 
             <!-- .................................................................................................. -->
@@ -592,8 +602,8 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/annotations/AnnotationReflectionConverter.html">AnnotationReflectionConverter</a></td>
                 <td>Any type</td>
                 <td>The Converter is used as fallback. It uses reflection to examine the class and will serialize its fields and supports annotations for 
-                individual serialization rules.</td>
-                <td>Needs JDK 1.5, default for JDK 1.5</td>
+                local converters.</td>
+                <td>Needs JDK 1.5, default for JDK 1.5. Deprecated since XStream 1.3 and must be registered now explicitly.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/SerializableConverter.html">SerializableConverter</a></td>

@@ -3,8 +3,12 @@
     <title>Annotations Tutorial</title>
   </head>
   <body>
-<h2>The problem</h2><p>Sometimes it gets ugly to call all those XStream aliases/register converter methods or you might simply like the new trend on configuring POJOs: java annotations.</p>
-<p>This tutorial will show you how to use some of the annotations provided by XStream in order to make configuration easier. Let's start with a custom Message class:</p>
+<a name="Motivation"><!--  --></a>  
+<h2>Motivation</h2>
+<p>Sometimes it can get tedious to call all those XStream aliases/register converter methods or you might simply like
+the new trend on configuring POJOs: Java annotations.</p>
+<p>This tutorial will show you how to use some of the annotations provided by XStream in order to make configuration
+easier.  Let's start with a custom Message class:</p>
 <div class="Source Java"><pre>package com.thoughtworks.xstream;
 package com.thoughtworks.xstream;
 public class RendezvousMessage {
@@ -16,14 +20,13 @@ public class RendezvousMessage {
 	}
 	
 }</pre></div>
-<p>Let's code the xstream calls which generate the xml file:</p>
+<p>Let's code the XStream calls which generate the XML file:</p>
 <div class="Source Java"><pre>
 package com.thoughtworks.xstream;
 public class Tutorial {
 
-	
 	public static void main(String[] args) {
-		XStream stream = new XStream(new DomDriver());
+		XStream stream = new XStream();
 		RendezvousMessage msg = new RendezvousMessage(15);
 		System.out.println(stream.toXML(msg));
 	}
@@ -36,8 +39,10 @@ public class Tutorial {
   &lt;messageType&gt;15&lt;/messageType&gt;
 &lt;/com.thoughtworks.xstream.RendezvousMessage&gt;
 </pre></div>
-<h2>Aliasing annotations</h2>
-<p>The most basic annotation is the one responsible for type and field aliasing: @XStreamAlias. Let's annotate both our type and field and run the tutorial method again.</p>
+<a name="Aliasing"><!--  --></a>  
+<h2>Aliasing Annotation</h2>
+<p>The most basic annotation is the one responsible for type and field aliasing: @XStreamAlias.  Let's annotate both
+our type and field and run the tutorial method again:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
 class RendezvousMessage {
@@ -51,23 +56,31 @@ class RendezvousMessage {
 	
 }
 </pre></div>
-<p>In some strange way, the result is the same. What happened here? XStream does not read this annotation by default until now as it would be hard (impossible?) to unserialize the XML code. We need to tell XStream to read the annotations from this type:</p>
+<p>In some strange way, the result is the same.  What happened here?  XStream does not read this annotation by default
+as it would be impossible to deserialize the XML code.  Therefore we need to tell XStream to read the annotations from
+this type:</p>
 <div class="Source Java"><pre>
 	public static void main(String[] args) {
-		XStream stream = new XStream(new DomDriver());
-		Annotations.configureAliases(stream, RendezvousMessage.class);
+		XStream stream = new XStream();
+		xstream.processAnnotations(RendezvousMessage.class);
 		RendezvousMessage msg = new RendezvousMessage(15);
 		System.out.println(stream.toXML(msg));
 	}
 </pre></div>
-<p>Note that we have called the configureAliases static method in the Annotations class. This method registers all aliases annotations in the XStream instance passed as first argument. This method uses the var-args technique in order to provide a faster way to register many types. The resulting XML is what we have expected:</p>
+<p>Note that we have called the processAnnotations method of XStream.  This method registers all aliases annotations in
+the XStream instance passed as first argument. You may also use the overloaded version of this method taking an array
+of types.  The resulting XML is now what we have expected:</p>
 <div class="Source Java"><pre>
 &lt;message&gt;
   &lt;type&gt;15&lt;/type&gt;
 &lt;/message&gt;
 </pre></div>
-<h2>Implicit collections</h2>
-<p>Let's add a List of content to our RendezvousMessage. We desire the same functionality obtained with implicit collections.</p>
+<p>If you let XStream process the annotations of a type, it will also process all annotations of the related types i.e.
+all super types, implemented interfaces, the class types of the members and all their generic types.</p>
+<a name="ImplicitCollections"><!--  --></a>  
+<h2>Implicit Collections</h2>
+<p>Let's add a List of content to our RendezvousMessage.  We desire the same functionality obtained with implicit
+collections:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
 class RendezvousMessage {
@@ -86,8 +99,8 @@ class RendezvousMessage {
 </pre></div>
 <div class="Source Java"><pre>
 	public static void main(String[] args) {
-		XStream stream = new XStream(new DomDriver());
-		Annotations.configureAliases(stream, RendezvousMessage.class);
+		XStream stream = new XStream();
+		xstream.processAnnotations(RendezvousMessage.class);
 		RendezvousMessage msg = new RendezvousMessage(15, "firstPart","secondPart");
 		System.out.println(stream.toXML(msg));
 	}
@@ -104,7 +117,7 @@ class RendezvousMessage {
   &lt;/content&gt;
 &lt;/message&gt;
 </pre></div>
-<p>This is not what we desire therefore we will annotate the content list to be recalled as an implicit collection:</p>
+<p>This is not what we desire therefore we will annotate the content list to be recognized as an implicit collection:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
 class RendezvousMessage {
@@ -122,7 +135,7 @@ class RendezvousMessage {
 
 }
 </pre></div>
-<p>Resulting in an XML which ignores the field name (content):</p>
+<p>Resulting in an XML which ignores the field name (content) of the list:</p>
 <div class="Source Java"><pre>
 &lt;message&gt;
   &lt;type&gt;15&lt;/type&gt;
@@ -132,7 +145,9 @@ class RendezvousMessage {
   &lt;/a&gt;
 &lt;/message&gt;
 </pre></div>
-<p>We are almost there... we still want to remove the 'a' tag, and define each content part with the tag 'part'. In order to do so, let's add another attribute to our implicit collection annotation. The attribute field defines the name of the tag used for data contained inside this collection:
+<p>We are almost there... we still want to remove the 'a' tag, and define each content part with the tag 'part'.  In
+order to do so, let's add another attribute to our implicit collection annotation.  The attribute field defines the
+name of the tag used for data contained inside this collection:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
 class RendezvousMessage {
@@ -158,7 +173,8 @@ class RendezvousMessage {
   &lt;part&gt;secondPart&lt;/part&gt;
 &lt;/message&gt;
 </pre></div>
-<h2>Custom converters</h2>
+<a name="LocalConverters"><!--  --></a>  
+<h2>Local Converters</h2>
 <p>Let's create another attribute which defines the timestamp when the message was created:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
@@ -191,7 +207,8 @@ class RendezvousMessage {
   &lt;/created&gt;
 &lt;/message&gt;
 </pre></div>
-<p>Now we face the following problem: we want to use a custom converter for this Calendar, but only for this Calendar, this exact field in this exact type. Easy... let's annotate it with the custom converter annotation:</p>
+<p>Now we face the following problem:  We want to use a custom converter locally for this Calendar, but only for this
+Calendar, this exact field in this exact type.  Easy... let's annotate it with the custom converter annotation:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
 class RendezvousMessage {
@@ -243,8 +260,9 @@ public class SingleValueCalendarConverter implements Converter {
   &lt;created&gt;1154097812245&lt;/created&gt;
 &lt;/message&gt;
 </pre></div>
-<p>Note that the @XStreamConverter annotation on fields is automatically read, without the need for calling any Annotations static method. XStream can easily check for Java 1.5 support during runtime and load its parts accordingly.</p>
-<p>If the client asks for the type tag to be an attribute inside the message tag, as follows:</p>
+<a name="Attributes"><!--  --></a>  
+<h2>Attributes</h2>
+<p>The client may asks for the type tag to be an attribute inside the message tag, as follows:</p>
 <div class="Source Java"><pre>
 &lt;message type="15"&gt;
   &lt;part&gt;firstPart&lt;/part&gt;
@@ -271,11 +289,91 @@ class RendezvousMessage {
 		this.messageType = messageType;
 		this.content = Arrays.asList(content);
 	}
+}
+</pre></div>
+<a name="OmitField"><!--  --></a>  
+<h2>Omitting Fields</h2>
+<p>Sometimes a class may contain elements that should not be part of the resulting XML.  In our case we may now drop
+the 'messageType', since we are only interested at the content. This is easy using the @XStreamOmitField annotation:</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+class RendezvousMessage {
+
+   	@XStreamOmitField
+	private int messageType;
+
+	@XStreamImplicit(itemFieldName="part")
+	private List&lt;String&gt; content;
+
+	@XStreamConverter(SingleValueCalendarConverter.class)
+	private Calendar created = new GregorianCalendar();
+
+	public RendezvousMessage(int messageType, String... content) {
+		this.messageType = messageType;
+		this.content = Arrays.asList(content);
+	}
+}
+</pre></div>
+<p>The resulting XML does not contain the type of the message anymore:</p>
+<div class="Source Java"><pre>
+&lt;message&gt;
+  &lt;part&gt;firstPart&lt;/part&gt;
+  &lt;part&gt;secondPart&lt;/part&gt;
+  &lt;created&gt;1154097812245&lt;/created&gt;
+&lt;/message&gt;
+</pre></div>
+<a name="AutoDetect"><!--  --></a>  
+<h2>Auto-detect Annotations</h2>
+<p>Until now we have always told you, that you have to call processAnnotation to configure the XStream instance with
+the present annotations in the different classes.  However, this is only half the truth.  You can run XStream also in a
+lazy mode, where it auto-detects the annotations while processing the object graph and configure the XStream instance
+on-the-fly:</p>
+<div class="Source Java"><pre>
+package com.thoughtworks.xstream;
+public class Tutorial {
+
+	public static void main(String[] args) {
+		XStream stream = new XStream();
+		xstream.autodetectAnnotations(true);
+		RendezvousMessage msg = new RendezvousMessage(15);
+		System.out.println(stream.toXML(msg));
+	}
 
 }
 </pre></div>
+<p>The resulting XML will look as expected!  Nevertheless you have to understand the implications, therefore some words
+of warning:</p>
+<ol>
+<li><strong>Chicken-and-egg problem</strong>
+<p>An XStream instance caches all class types processed for annotations.  Every time XStream converts an object it will
+in auto-detection mode first process the object's type and all the types related (as explained
+<a href="#Aliasing">above</a>). Therefore it is no problem to serialize an object graph into XML, since XStream will
+know of all types in advance.  This is no longer true at deserialization time.  XStream has to know the alias to turn
+it into the proper type, but it can find the annotation for the alias only if it has processed the type in advance.
+Therefore deserialization will fail if the type has not already been processed either by having called XStream's
+processAnnotations method or by already having serialized this type.  However, @XStreamAlias is the only annotation
+that may fail in this case.</p></li>
+<li><strong>Concurrency</strong>
+<p>XStream is not thread-safe while it is configured, thread-safety is only guaranteed during marshalling and
+unmarshalling.  However an annotation is defining a change in configuration that is now applied while object
+marshalling is processed.  Therefore will the auto-detection mode turn XStream's marshalling process in a thread-unsafe
+operation any you may run under certain circumstances into concurrency problems.</p></li>
+<li><strong>Exceptions</strong>
+<p>XStream uses a well-defined exception hierarchy.  Normally an InitializationException is only thrown while XStream
+is configured.  If annotations are processed on the fly they can be thrown obviously also in a marshalling process.</p></li>
+<li><strong>Performance</strong>
+<p>In auto-detection mode XStream will have to examine any unknown class type for annotations.  This will slow down the
+marshalling process until all processed types have been examined once.</p></li>
+</ol>
+<p>Please note, that any call to XStream.processAnnotations will turn off the auto-detection mode.</p>
+<a name="Summary"><!--  --></a>
 <h2>Summing up</h2>
-<p>The XStream annotations support might help you configuring your class mappings in some ways, as the custom configuration will appear in your types, but might not be the solution for other problems, i.e. when you need to map the same type to two different xml 'standards'. Others might claim that the configuration should be clearly stated in a java class and not mixed with your model, its up to you to pick the best approach in your case: annotations or direct method calls to the XStream instance.</p>
+<p>The XStream annotations support might help you configuring your class mappings in some ways, as the custom
+configuration will appear in your types, but might not be the solution for other problems, i.e. when you need to map
+the same type to two different XML 'standards'.  Others might claim that the configuration should be clearly stated in
+a Java class and not mixed with your model, its up to you to pick the best approach in your case:  Annotations or
+direct method calls to the XStream instance.  Annotations do not provide more functionality, but may improve
+convenience.</p>
 
   </body>
 </html>

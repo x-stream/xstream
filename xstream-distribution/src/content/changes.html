@@ -19,14 +19,15 @@
  
     <h1>Upcoming</h1>
 
-    <p>To be released.</p>
+    <p>Not yet released</p>
 
     <h2>Major changes</h2>
 
     <ul>
     	<li>ReflectionConverter writes now the fields of the parent classes first.</li>
     	<li>Support for Converter definition at field level.</li>
-    	<li>Refactoring of Annotation support.</li>
+    	<li>Refactoring of Annotation support, invent auto-detection mode.</li>
+    	<li>Annotated converters are no longer detected automatically, all annotations are now handled in the same way.</li>
     	<li>JIRA:XSTR-415: JavaBeanConverter uses now BeanIntrospection (by Hinse ter Schuur).</li>
     	<li>JIRA:XSTR-424: DateConverter uses now by default SimpleDateFormat instances in non-lenient mode.</li>
     	<li>JIRA:XSTR-386: SingleValueConverter that utilizes PropertyEditor implementations (by Jukka Lindstr&ounl;m).</li>
@@ -65,13 +66,14 @@
     	<li>JIRA:XSTR-418: Inherited @XStreamAlias is ignored if field should be rendered as attribute.</li>
     	<li>JIRA:XSTR-393: Annotation processing is not consistent.</li>
     	<li>JIRA:XSTR-412: @XStreamImplicit throws NPE for untyped collections.</li>
+    	<li>Update annotation tutorial, explain limitations of auto-detection mode.</li>
     </ul>
 
     <h2>API changes</h2>
 
     <ul>
     	<li>c.t.x.annotation.Annotations, c.t.x.annotation.AnnotationReflectionConverter and c.t.x.annotation.AnnotationProvider deprecated.
-    	Functionality is integrated in new c.t.x.mapper.AnnotationMapper and accessible with new methods c.t.x.XStream.processAnnotation().</li>
+    	Functionality is integrated in new c.t.x.mapper.AnnotationMapper and accessible with new methods c.t.x.XStream.processAnnotations().</li>
     	<li>New auto-detection mode for annotations, that can be turned on with c.t.x.XStream.autodetectAnnotations()</li>
     	<li>c.t.x.annotation.@XStreamContainedType deprecated, the behaviour is now always active and the annotation therefore superfluous.</li>
     	<li>Due to JIRA:XSTR-421 null characters are no longer written as tag with an attribute (&lt;char null=&quot;true&quot;/&gt;), 

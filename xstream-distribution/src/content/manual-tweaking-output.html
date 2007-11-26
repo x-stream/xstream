@@ -10,6 +10,7 @@
 
         <!-- ************ -->
 
+        <a name="Configuration"><!--  --></a>
         <h1>Modification by configuration</h1>
         
         <p>A big part of the standard output of XStream can be configured. It is possible to set aliases for class types
@@ -18,6 +19,7 @@
 
         <!-- .................. -->
         
+        <a name="Configuration_Aliases"><!--  --></a>
         <h2>Aliases</h2>
 
         <p>Aliases offer a simple way to use different tag or attribute names in the XML.  The simplest and most commonly
@@ -30,7 +32,7 @@
 			<li>Internal attributes names of XStream</li>
 		</ul>        
 
-		<p>The fat elements in the following example are affected:</p>
+		<p>The bold elements in the following example are affected:</p>
 
 <div class="Source XML"><pre>&lt;<b>cat</b>&gt;
   &lt;<b>age</b>&gt;4&lt;/<b>age</b>&gt;
@@ -44,6 +46,7 @@
 
         <!-- .................. -->
 
+        <a name="Configuration_Attributes"><!--  --></a>
         <h2>Attributes</h2>
 
         <p>XML is quite clumsy to read for fields in separate tags that can represent their content in a short single
@@ -57,7 +60,8 @@
           
         <!-- .................. -->
 
-        <h2>Omitted fields</h2>
+        <a name="Configuration_OmitField"><!--  --></a>
+        <h2>Omitted Fields</h2>
 		
 		<p>For a proper deserialization XStream has to write the complete object graph into XML that is referenced by a
 		single object.  Therefore XStream has to find a representation that contains all aspects to recreate the 
@@ -69,7 +73,8 @@
           
         <!-- .................. -->
 
-        <h2>Implicit collections</h2>
+        <a name="Configuration_ImplicitCollection"><!--  --></a>
+        <h2>Implicit Collections</h2>
 		
 		<p>Another use case are collections.  If a class has a field that is a collection, by default all elements of a
 		collection are embedded in an element that represents the collection itself.  By configuring the XStream with the 
@@ -90,6 +95,7 @@
           
         <!-- .................. -->
 
+        <a name="Configuration_FieldOrder"><!--  --></a>
         <h2>Field order</h2>
         
         <p>XStream is delivered with a lot of <a href="converters.html">converters</a> for standard types.
@@ -99,6 +105,7 @@
 		
         <!-- ************ -->
         
+        <a name="Enhancing"><!--  --></a>
         <h1>Enhancing XStream</h1>
         
         <p>Sometimes customization is simply not enough to tweak the output. Depending on the use case it is fortunate to
@@ -107,6 +114,7 @@
 
         <!-- .................. -->
 
+        <a name="Enhancing_Converters"><!--  --></a>
         <h2>Custom Converters</h2>
 
         <p>Sometimes the object to serialize contains fields or elements, that have no friendly representation for 
@@ -116,6 +124,7 @@
 
         <!-- .................. -->
 
+        <a name="Enhancing_Mappers"><!--  --></a>
         <h2>Custom Mappers</h2>
 
         <p>In case of global adjustments it can be helpful to implement an own mapper.  A mapper is used to name things
@@ -127,6 +136,7 @@
 
         <!-- .................. -->
 
+        <a name="Enhancing_Writer"><!--  --></a>
         <h2>Custom Writer</h2>
 
         <p>A custom writer can be used to affect the output completely. XStream itself delivers solutions for different
@@ -141,6 +151,7 @@
 		
         <!-- ************ -->
         
+        <a name="OwnCode"><!--  --></a>
         <h1>Tweaking the own implementation</h1>
         
         <p>As shown, XStream can be configured and enhanced in multiple way, but sometimes it is easier to tweak the
@@ -154,6 +165,7 @@
 		
         <!-- ************ -->
         
+        <a name="Processing"><!--  --></a>
         <h1>Preprocessing or postprocessing</h1>
 
         <h2>XML Transformations</h2>
