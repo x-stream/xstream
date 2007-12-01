@@ -2,6 +2,8 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
+import org.jdom.Element;
+
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -87,4 +89,31 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         assertBothWays(new Locale("zh", "", ""), "<locale>zh</locale>");
         assertBothWays(new Locale("zh", "CN", ""), "<locale>zh_CN</locale>");
     }
+    
+    public void testCanHandleJDomElement() {
+        Element element = new Element("JUnit");
+
+        String expected = "" +
+                "<org.jdom.Element serialization=\"custom\">\n" + 
+                "  <org.jdom.Element>\n" + 
+                "    <default>\n" + 
+                "      <attributes>\n" + 
+                "        <size>0</size>\n" + 
+                "        <parent reference=\"../../../..\"/>\n" + 
+                "      </attributes>\n" + 
+                "      <content>\n" + 
+                "        <size>0</size>\n" + 
+                "        <parent class=\"org.jdom.Element\" reference=\"../../../..\"/>\n" + 
+                "      </content>\n" + 
+                "      <name>JUnit</name>\n" + 
+                "    </default>\n" + 
+                "    <string></string>\n" + 
+                "    <string></string>\n" + 
+                "    <byte>0</byte>\n" + 
+                "  </org.jdom.Element>\n" + 
+                "</org.jdom.Element>";
+
+        assertBothWays(element, expected);
+    }
+    
 }
