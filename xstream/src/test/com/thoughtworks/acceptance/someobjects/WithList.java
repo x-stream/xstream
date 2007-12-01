@@ -1,6 +1,6 @@
 package com.thoughtworks.acceptance.someobjects;
 
-import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.objects.StandardObject;
 
 import java.util.ArrayList;
 import java.util.List;

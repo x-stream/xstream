@@ -1,5 +1,6 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;

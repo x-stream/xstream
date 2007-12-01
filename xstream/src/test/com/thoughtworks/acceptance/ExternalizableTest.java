@@ -1,5 +1,7 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.StandardObject;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;

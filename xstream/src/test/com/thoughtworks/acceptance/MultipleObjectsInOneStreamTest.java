@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.MarshallingStrategy;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;

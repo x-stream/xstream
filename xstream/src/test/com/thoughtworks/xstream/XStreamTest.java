@@ -1,6 +1,6 @@
 package com.thoughtworks.xstream;
 
-import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
 import com.thoughtworks.acceptance.someobjects.Handler;
 import com.thoughtworks.acceptance.someobjects.HandlerManager;

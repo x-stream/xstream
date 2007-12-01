@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 
 import java.util.ArrayList;

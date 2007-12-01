@@ -1,6 +1,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.xml.DomDriver;

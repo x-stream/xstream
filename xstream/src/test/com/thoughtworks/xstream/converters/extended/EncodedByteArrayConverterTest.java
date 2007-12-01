@@ -1,7 +1,7 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.objects.StandardObject;
 
 public class EncodedByteArrayConverterTest extends AbstractAcceptanceTest {
 

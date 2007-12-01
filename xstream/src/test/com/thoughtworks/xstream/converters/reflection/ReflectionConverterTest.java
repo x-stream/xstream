@@ -1,6 +1,6 @@
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;

@@ -1,6 +1,6 @@
 package com.thoughtworks.acceptance.someobjects;
 
-import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.objects.StandardObject;
 
 public class Z extends StandardObject {
 	public String field;

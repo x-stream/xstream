@@ -1,5 +1,7 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.StandardObject;
+
 public class ArraysTest extends AbstractAcceptanceTest {
 
     public void testStringArray() {

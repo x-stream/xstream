@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import java.util.Comparator;
 
-import com.thoughtworks.acceptance.StandardObject;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 
 

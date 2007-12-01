@@ -1,5 +1,7 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.StandardObject;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;

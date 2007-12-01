@@ -1,5 +1,6 @@
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.WithNamedList;
 import com.thoughtworks.xstream.core.AbstractReferenceMarshaller;
 
