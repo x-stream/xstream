@@ -3,6 +3,7 @@ package com.thoughtworks.xstream.converters.extended;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -46,7 +47,7 @@ public class ColorConverter implements Converter {
     }
 
     private void write(String fieldName, int value, HierarchicalStreamWriter writer) {
-        writer.startNode(fieldName);
+        ExtendedHierarchicalStreamWriterHelper.startNode(writer, fieldName, int.class);
         writer.setValue(String.valueOf(value));
         writer.endNode();
     }
