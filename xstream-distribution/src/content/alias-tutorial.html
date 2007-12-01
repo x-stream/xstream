@@ -186,6 +186,8 @@ public class Test {
 &lt;/blog&gt;</pre></div>
 </div>
 
+<p class=highlight>You have to be aware, that attribute values normally have to be normalized by the XMP parser as required by the <a href="http://www.w3.org/TR/REC-xml/#AVNormalize">W3C spec</a>. Leading and trailing whitespaces are normally removed as well as sequential ones! Therefore a deserialized string might differ from the value visible in the XML representation.</p>
+
 <h2>Summing up</h2><p>Using aliases and converters gives you enough power to configure your XML in almost any way you desire.</p><p>Don't forget to read the converter tutorial to see other type of converters that you can create using XStream.</p>
 
   </body>
