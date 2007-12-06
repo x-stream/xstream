@@ -4,7 +4,7 @@
   </head>
   <body>
 
-	<h2>Modules</h2>
+	<h2 id="modules">Modules</h2>
 
 	XStream project consists of several modules:
 	<ol>
@@ -16,23 +16,28 @@
 		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk/[module]</pre></div>
 	to checkout out the single module separately.
 
-    <h2>Subversion</h2>
+	<h2 id="browser">Browser</h2>
+
+	<p>You can use the browser to navigate within the sources <a href="http://svn.xstream.codehaus.org/browse/xstream/trunk/">online</a>
+	with the help of the FishEye installation on Codehaus.</p>
+
+    <h2 id="subversion">Subversion</h2>
 
     XStream uses Subversion as the SCM.  See <a href="http://subversion.tigris.org">Subversion website</a> for details and documentation on IDE integration.
 
-	<h2>Svnserve Access</h2>
+	<h2 id="svn">Svnserve Access</h2>
 
 	Svnserve access is via a specific port (Codehaus uses the default 3690).  This is often not allowed by corporate firewalls.
   
-	<h3>Anonymous Access</h3>
+	<h3 id="svn-anon">Anonymous Access</h3>
 
 		<div class="Source"><pre>svn co svn://svn.xstream.codehaus.org/xstream/trunk</pre></div>
 
-	<h2>WebDav Access</h2>
+	<h2 id="webdav">WebDav Access</h2>
 
 	WebDav is an alternative access protocol supported by SVN and being http-based is often allowed by corporate firewalls.
 
-	<h3>Anonymous Access</h3>
+	<h3 id="webdav-anon">Anonymous Access</h3>
 
 		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk</pre></div>
 		
@@ -40,7 +45,7 @@
 		You might also use this URL to <a href="http://svn.codehaus.org/xstream/trunk">browse the repository</a> in a simple manner.
 		</p>
 
-	<h3>Committer Access</h3>
+	<h3 id="webdav-auth">Committer Access</h3>
 
 		<div class="Source"><pre>svn co https://svn.codehaus.org/xstream/trunk</pre></div>
 
@@ -62,10 +67,6 @@ svn commit --username username --password your-password --message "Testing https
 		<p>
 		<b>Note</b>: you only need to specify username and password once per client.
 		</p>
-
-	<h2>Browser</h2>
-
-	You can use the browser to navigate within the sources <a href="http://svn.xstream.codehaus.org/browse/xstream/trunk/">online</a> with the help of the FishEye installation on Codehaus.
 
   </body>
 </html>

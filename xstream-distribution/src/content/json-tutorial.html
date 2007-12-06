@@ -14,7 +14,7 @@ and the <a href="javadoc/com/thoughtworks/xstream/io/json/JettisonMappedXmlDrive
 The first one does not have an additional dependency, but can only be used to write XML, while the second one is based
 on Jettison and can also deserialize JSON to Java objects again.</p>
 
-<h1>Jettison driver</h1>
+<h1 id="jettison">Jettison driver</h1>
 
 <p>Jettison driver uses <a href="http://jettison.codehaus.org/">Jettison</a> StAX parser to read and write data in JSON format. It is available in XStream from version 1.2.2 and is implemented in <code>com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver</code> class.To successfully use this driver you need to have Jettison project and <a href="http://stax.codehaus.org/">StAX API</a> in your classpath.</p>
 
@@ -40,7 +40,7 @@ on Jettison and can also deserialize JSON to Java objects again.</p>
  
 <p>Here are a few simple examples:</p>
 
-<h2>Write to JSON</h2>
+<h2 id="jettison-write">Write to JSON</h2>
 
 <p>The following example:</p>
 
@@ -69,7 +69,7 @@ public class WriteTest {
 
 <p>As you can see, all standard XStream features (such as aliases) can be used with this driver.</p>	
 
-<h2>Read from JSON</h2>
+<h2 id="jettison-read">Read from JSON</h2>
 
 <p>The following code:</p>
 

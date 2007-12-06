@@ -270,6 +270,13 @@ ul, ol {
     font-weight: bold;
 }
 
+#content h1[id]:hover:after, #content h2[id]:hover:after {
+    content: " #" attr(id) " ";
+    font-size: 90%;
+    color: #aaa;
+    text-decoration: none;
+}
+
 /*---------------------------------------------------------------------------
  *  Side panels
  */

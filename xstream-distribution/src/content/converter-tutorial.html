@@ -4,7 +4,7 @@
   </head>
   <body>
 
-<h1>Simple Converter</h1>
+<h1 id="SimpleConverter">Simple Converter</h1>
 <h2>Setting up a simple example</h2>
 
 <p>This is the most basic converter... let's start with a simple Person:</p>
@@ -54,7 +54,7 @@ smaller):</p><div class="Source Java"><pre>&lt;person&gt;
 &lt;/person&gt;</pre></div><p>Now that we have configured a simple class to
 play with, let's see what XStream converters can do for us...</p>
 
-<h2>Creating a PersonConverter</h2>
+<h2 id="CreatingPersonConverter">Creating a PersonConverter</h2>
 <p>Let's create a simple converter capable
 of:</p><ol style="list-style-type: decimal">
 <li>telling its capable of converting Person's</li>
@@ -178,7 +178,7 @@ is:</p><div class="Source Java"><pre>&lt;person&gt;
 want to convert data!</p><p>Try using an attribute called <i>fullname</i> in
 the <i>person</i> tag instead of creating a new child node.</p>
 
-<h2>An alternative for types with String representation</h2>
+<h2 id="SingleValueConverter">An alternative for types with String representation</h2>
 
 <p>Let's enhance the Person with a String representation, that contains all necessary 
 text to recreate the instance:</p>
@@ -221,7 +221,7 @@ Person class). Since the String representation is complete, a nested element is 
 necessary anymore:</p>
 <div class="Source Java"><pre>&lt;person&gt;Guilherme&lt;/person&gt;</pre></div>
 
-<h1>Date Converter</h1>
+<h1 id="CustomConverter">Date Converter</h1>
 <p>Now that we know how the <i>Converter</i> interface works, let's create a
 simple calendar converter which uses the locale to convert the
 information.</p><p>Our converter will receive the Locale in its constructor
@@ -413,7 +413,7 @@ System.out.println(DateFormat.getDateInstance(DateFormat.SHORT).format(
 something like (if your system locale is American
 English):</p><div class="Source Java"><pre>2/10/06</pre></div>
 
-<h1>Complex Converter</h1>
+<h1 id="ComplexConverter">Complex Converter</h1>
 <h2>Setting up another example</h2>
 
 <p>We already defined some classes, so let them glue together:</p>

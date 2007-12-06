@@ -8,7 +8,7 @@
     Skim read it to get an idea of how simple it is to convert objects to XML and back again.
     I'm sure you'll have questions afterwards.</p>
 
-    <h1>Create classes to be serialized</h1>
+    <h1 id="create-classes">Create classes to be serialized</h1>
 
     <p>Here's a couple of simple classes. XStream can convert instances of these to XML and back again.</p>
 
@@ -30,7 +30,7 @@ public class PhoneNumber {
     visibility of the fields. No getters or setters are needed. Also, XStream
     does not limit you to having a default constructor.</p>
 
-    <h1>Initializing XStream</h1>
+    <h1 id="init">Initializing XStream</h1>
 
     <p>To use XStream, simply instantiate the <code>XStream</code> class:</p>
 
@@ -56,7 +56,7 @@ xstream.alias("phonenumber", PhoneNumber.class);</pre></div>
     contain the fully qualified name of each class (including package) which would bulk up the XML a bit.  See the
     <a href="alias-tutorial.html">Alias Tutorial</a> a more complete introduction.</p>
 
-    <h1>Serializing an object to XML</h1>
+    <h1 id="to-xml">Serializing an object to XML</h1>
 
     <p>Let's create an instance of Person and populate its fields:</p>
 
@@ -85,7 +85,7 @@ joe.setFax(new PhoneNumber(123, "9999-999"));</pre></div>
 
     <p>It's that simple. Look at how clean the XML is.</p>
 
-    <h1>Deserializing an object back from XML</h1>
+    <h1 id="from-xml">Deserializing an object back from XML</h1>
 
     <p>To reconstruct an object, purely from the XML:</p>
 
@@ -93,7 +93,7 @@ joe.setFax(new PhoneNumber(123, "9999-999"));</pre></div>
 
     <p>And that's how simple XStream is!</p>
 
-    <h1>Summary</h1>
+    <h1 id="summary">Summary</h1>
 
     <p>To recap:</p>
 

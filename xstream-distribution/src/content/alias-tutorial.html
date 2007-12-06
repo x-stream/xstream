@@ -3,7 +3,9 @@
     <title>Alias Tutorial</title>
   </head>
   <body>
-<h2>The problem</h2><p>Suppose that our client has defined a base XML file that we should make XStream read/write:</p><div class="Source Java"><pre>&lt;blog author=&quot;Guilherme Silveira&quot;&gt;
+<h2 id="problem">The problem</h2>
+<p>Suppose that our client has defined a base XML file that we should make XStream read/write:</p>
+<div class="Source Java"><pre>&lt;blog author=&quot;Guilherme Silveira&quot;&gt;
   &lt;entry&gt;
     &lt;title&gt;first&lt;/title&gt;
     &lt;description&gt;My first blog entry.&lt;/description&gt;
@@ -16,7 +18,11 @@
   &lt;/entry&gt;
 &lt;/blog&gt;</pre>
 
-<p>Based on the XML file above we shall create some model classes and configure XStream to write/read from this format.</p></div><div class="section"><h2>The model</h2><p>First things first, the classes which shall represent our xml files are shown next, beginning with a simple Blog:</p><div class="Source Java"><pre>package com.thoughtworks.xstream;
+<p>Based on the XML file above we shall create some model classes and configure XStream to write/read from this format.</p></div>
+<div class="section">
+<h2 id="model">The model</h2>
+<p>First things first, the classes which shall represent our xml files are shown next, beginning with a simple Blog:</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream;
 
 public class Blog {
         private Author author;
@@ -33,7 +39,9 @@ public class Blog {
         public List getContent() {
                 return entries;
         }
-}</pre></div><p>A basic author with name:</p><div class="Source Java"><pre>package com.thoughtworks.xstream;
+}</pre></div>
+<p>A basic author with name:</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream;
 
 public class Author {
         private String name;
@@ -43,7 +51,9 @@ public class Author {
         public String getName() {
                 return name;
         }
-}</pre></div><p>A blog entry contains a title and description:</p><div class="Source Java"><pre>package com.thoughtworks.xstream;
+}</pre></div>
+<p>A blog entry contains a title and description:</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream;
 
 public class Entry {
         private String title, description;
@@ -51,7 +61,12 @@ public class Entry {
                 this.title = title;
                 this.description = description;
         }
-}</pre></div><p>Although we did not create many getters/setters its up to you to create those you wish or those which make sense.</p></div><div class="section"><h2>A simple test</h2><p>We can easily instantiate a new blog and use it with xstream:</p><div class="Source Java"><pre>public static void main(String[] args) {
+}</pre></div>
+<p>Although we did not create many getters/setters its up to you to create those you wish or those which make sense.</p></div>
+<div class="section">
+<h2 id="test">A simple test</h2>
+<p>We can easily instantiate a new blog and use it with xstream:</p>
+<div class="Source Java"><pre>public static void main(String[] args) {
 
         Blog teamBlog = new Blog(new Author(&quot;Guilherme Silveira&quot;));
         teamBlog.add(new Entry(&quot;first&quot;,&quot;My first blog entry.&quot;));
@@ -61,7 +76,9 @@ public class Entry {
         XStream xstream = new XStream();
         System.out.println(xstream.toXML(teamBlog));
 
-}</pre></div><p>And the resulting XML is not so nice as we would want it to be:</p><div class="Source Java"><pre>&lt;com.thoughtworks.xstream.Blog&gt;
+}</pre></div>
+<p>And the resulting XML is not so nice as we would want it to be:</p>
+<div class="Source Java"><pre>&lt;com.thoughtworks.xstream.Blog&gt;
   &lt;author&gt;
     &lt;name&gt;Guilherme Silveira&lt;/name&gt;
   &lt;/author&gt;
@@ -77,7 +94,16 @@ public class Entry {
       &lt;/description&gt;
     &lt;/com.thoughtworks.xstream.Entry&gt;
   &lt;/entries&gt;
-&lt;/com.thoughtworks.xstream.Blog&gt;</pre></div></div><div class="section"><h2>Class aliasing</h2><p>The first thing we shall change is how XStream refers to the <b>com.thoughtworks.xstream.Blog</b> class. We shall name it simply <i>blog</i>: let's create an alias called <i>blog</i> to the desired class:</p><div class="Source Java"><pre>xstream.alias(&quot;blog&quot;, Blog.class);</pre></div><p>Using the same idea, we can alias the 'Entry' class to 'entry':</p><div class="Source Java"><pre>xstream.alias(&quot;entry&quot;, Entry.class);</pre></div><p>The result now becomes:</p><div class="Source Java"><pre>&lt;blog&gt;
+&lt;/com.thoughtworks.xstream.Blog&gt;</pre></div></div>
+<div class="section">
+<h2 id="aliasing">Class aliasing</h2>
+<p>The first thing we shall change is how XStream refers to the <b>com.thoughtworks.xstream.Blog</b> class.
+We shall name it simply <i>blog</i>: let's create an alias called <i>blog</i> to the desired class:</p>
+<div class="Source Java"><pre>xstream.alias(&quot;blog&quot;, Blog.class);</pre></div>
+<p>Using the same idea, we can alias the 'Entry' class to 'entry':</p>
+<div class="Source Java"><pre>xstream.alias(&quot;entry&quot;, Entry.class);</pre></div>
+<p>The result now becomes:</p>
+<div class="Source Java"><pre>&lt;blog&gt;
   &lt;author&gt;
     &lt;name&gt;Guilherme Silveira&lt;/name&gt;
   &lt;/author&gt;
@@ -93,7 +119,16 @@ public class Entry {
       &lt;/description&gt;
     &lt;/entry&gt;
   &lt;/entries&gt;
-&lt;/blog&gt;</pre></div></div><div class="section"><h2>Omit the 'entries' tag</h2><p>Now let's implement what was called an <b>implicit collection</b>: whenever you have a collection which doesn't need to display it's root tag, you can map it as an implicit collection.</p><p>In our example, we do not want to display the <b>entries</b> tag, but simply show the <b>entry</b> tags one after another.</p><p>A simple call to the <b>addImplicitCollection</b> method shall configure XStream and let it know that we do not want to write the <b>entries</b> tag as described above:</p><div class="Source Java"><pre>package com.thoughtworks.xstream;
+&lt;/blog&gt;</pre></div></div>
+<div class="section">
+<h2 id="omit">Omit the 'entries' tag</h2>
+<p>Now let's implement what was called an <b>implicit collection</b>: whenever you have a collection which doesn't need
+to display it's root tag, you can map it as an implicit collection.</p>
+<p>In our example, we do not want to display the <b>entries</b> tag, but simply show the <b>entry</b> tags one after
+another.</p>
+<p>A simple call to the <b>addImplicitCollection</b> method shall configure XStream and let it know that we do not want to
+write the <b>entries</b> tag as described above:</p>
+<div class="Source Java"><pre>package com.thoughtworks.xstream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +151,11 @@ public class Test {
                 System.out.println(xstream.toXML(teamBlog));
 
         }
-}</pre></div><p>Pay attention to the <b>addImplicitCollection</b> method call: it describes which class and which member variable shall assume the behaviour we described.</p><p>The result is almost what we wanted:</p><div class="Source Java"><pre>&lt;blog&gt;
+}</pre></div>
+<p>Pay attention to the <b>addImplicitCollection</b> method call: it describes which class and which member variable
+shall assume the behaviour we described.</p>
+<p>The result is almost what we wanted:</p>
+<div class="Source Java"><pre>&lt;blog&gt;
   &lt;author&gt;
     &lt;name&gt;Guilherme Silveira&lt;/name&gt;
   &lt;/author&gt;
@@ -130,14 +169,31 @@ public class Test {
         Today we have developed a nice alias tutorial. Tell your friends! NOW!
     &lt;/description&gt;
   &lt;/entry&gt;
-&lt;/blog&gt;</pre></div></div><div class="section"><h2>Attribute aliasing</h2><p>The next step is to set the <b>author</b> member variable as an XML attribute. In order to do this, we shall tell XStream to alias the <b>author</b> field of the <b>Blog</b> class as an "author" attribute.</p><div class="Source Java"><pre>                xstream.useAttributeFor(Blog.class, &quot;author&quot;);</pre></div><p>And now it leaves us with one problem: how does XStream converts an Author in a String so it can be written as a xml tag attribute?</p><p>Let's use the <b>SimpleValueConverter</b> and implement our own Author converter:</p><div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
-}</pre></div><p>The first method to implement tells XStream which types it can deal with:</p><div class="Source Java"><pre>        public boolean canConvert(Class type) {
+&lt;/blog&gt;</pre></div></div>
+<div class="section">
+<h2 id="attributes">Attribute aliasing</h2>
+<p>The next step is to set the <b>author</b> member variable as an XML attribute. In order to do this, we shall tell
+XStream to alias the <b>author</b> field of the <b>Blog</b> class as an "author" attribute.</p>
+<div class="Source Java"><pre>                xstream.useAttributeFor(Blog.class, &quot;author&quot;);</pre></div>
+<p>And now it leaves us with one problem: how does XStream converts an Author in a String so it can be written as a
+XML tag attribute?</p>
+<p>Let's use the <b>SimpleValueConverter</b> and implement our own Author converter:</p>
+<div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
+}</pre></div>
+<p>The first method to implement tells XStream which types it can deal with:</p>
+<div class="Source Java"><pre>        public boolean canConvert(Class type) {
                 return type.equals(Author.class);
-        }</pre></div><p>The second one is used to extract a String from an Author:</p><div class="Source Java"><pre>        public String toString(Object obj) {
+        }</pre></div>
+<p>The second one is used to extract a String from an Author:</p>
+<div class="Source Java"><pre>        public String toString(Object obj) {
                 return ((Author) obj).getName();
-        }</pre></div><p>And the third one does the opposite job: takes a String and returns an Author:</p><div class="Source Java"><pre>        public Object fromString(String name) {
+        }</pre></div>
+<p>And the third one does the opposite job: takes a String and returns an Author:</p>
+<div class="Source Java"><pre>        public Object fromString(String name) {
                 return new Author(name);
-        }</pre></div><p>Finally, the entire single value converter, responsible for converting Strings to Objects (Authors in this case) is:</p><div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
+        }</pre></div>
+<p>Finally, the entire single value converter, responsible for converting Strings to Objects (Authors in this case) is:</p>
+<div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
 
         public String toString(Object obj) {
                 return ((Author) obj).getName();
@@ -151,7 +207,9 @@ public class Test {
                 return type.equals(Author.class);
         }
 
-}</pre></div><p>And let's register this converter:</p><div class="Source Java"><pre>public class Test {
+}</pre></div>
+<p>And let's register this converter:</p>
+<div class="Source Java"><pre>public class Test {
 
         public static void main(String[] args) {
 
@@ -172,7 +230,9 @@ public class Test {
                 System.out.println(xstream.toXML(teamBlog));
 
         }
-}</pre></div><p>The result?</p><div class="Source Java"><pre>&lt;blog author=&quot;Guilherme Silveira&quot;&gt;
+}</pre></div>
+<p>The result?</p>
+<div class="Source Java"><pre>&lt;blog author=&quot;Guilherme Silveira&quot;&gt;
   &lt;entry&gt;
     &lt;title&gt;first&lt;/title&gt;
     &lt;description&gt;My first blog entry.&lt;/description&gt;
@@ -186,9 +246,14 @@ public class Test {
 &lt;/blog&gt;</pre></div>
 </div>
 
-<p class=highlight>You have to be aware, that attribute values normally have to be normalized by the XMP parser as required by the <a href="http://www.w3.org/TR/REC-xml/#AVNormalize">W3C spec</a>. Leading and trailing whitespaces are normally removed as well as sequential ones! Therefore a deserialized string might differ from the value visible in the XML representation.</p>
+<p class=highlight>You have to be aware, that attribute values normally have to be normalized by the XMP parser as
+required by the <a href="http://www.w3.org/TR/REC-xml/#AVNormalize">W3C spec</a>. Leading and trailing whitespaces
+are normally removed as well as sequential ones! Therefore a deserialized string might differ from the value visible in
+the XML representation.</p>
 
-<h2>Summing up</h2><p>Using aliases and converters gives you enough power to configure your XML in almost any way you desire.</p><p>Don't forget to read the converter tutorial to see other type of converters that you can create using XStream.</p>
+<h2 id="summary">Summing up</h2>
+<p>Using aliases and converters gives you enough power to configure your XML in almost any way you desire.</p>
+<p>Don't forget to read the converter tutorial to see other type of converters that you can create using XStream.</p>
 
   </body>
 </html>

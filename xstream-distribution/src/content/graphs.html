@@ -6,7 +6,7 @@
   <body>
 
     <!-- ...................................................... -->
-    <h2>How does XStream deals with duplicate and circular references?</h2>
+    <h2 id="references">How does XStream deals with duplicate and circular references?</h2>
     <p>It depends on XStream's mode, the default is uses XPath to allow serialized objects to be treated as graphs instead of simple trees (typical XML usage).</p>
     
     <p>Sometimes it's not desirable to work this way, let's take a look in a simple example in order to switch between XStream's modes and see what its capable of.</p>
@@ -82,7 +82,7 @@ xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 </pre></div>
 
     <!-- ...................................................... -->
-    <h2>Relative x Absolute</h2>
+    <h2 id="rel-abs">Relative x Absolute</h2>
     
     <p>There is an absolute mode which is easy to use and understand. It works
 using the same XPath specification and also supports all types of graphs.
@@ -108,7 +108,7 @@ xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 
 
     <!-- ...................................................... -->
-    <h2>Id mode</h2>
+    <h2 id="ids">Id mode</h2>
     
 	<p>Both modes displayed until now are not so easy to write by hand. XStream has another
 	mode which makes it is easier to read/write by a human being:
