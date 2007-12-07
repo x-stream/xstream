@@ -796,7 +796,8 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML String, populating the fields of the given root object
-     * instead of instantiating a new one.
+     * instead of instantiating a new one. Note, that this is a special use case! With the ReflectionConverter 
+     * XStream will write directly into the raw memory area of the existing object. Use with care!
      * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(String xml, Object root) {
@@ -805,7 +806,8 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML Reader, populating the fields of the given root object
-     * instead of instantiating a new one.
+     * instead of instantiating a new one. Note, that this is a special use case! With the ReflectionConverter 
+     * XStream will write directly into the raw memory area of the existing object. Use with care!
      * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(Reader xml, Object root) {
@@ -814,7 +816,8 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML InputStream, populating the fields of the given root object
-     * instead of instantiating a new one.
+     * instead of instantiating a new one. Note, that this is a special use case! With the ReflectionConverter 
+     * XStream will write directly into the raw memory area of the existing object. Use with care!
      * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(InputStream xml, Object root) {
@@ -831,7 +834,8 @@ public class XStream {
 
     /**
      * Deserialize an object from a hierarchical data structure (such as XML), populating the fields
-     * of the given root object instead of instantiating a new one.
+     * of the given root object instead of instantiating a new one. Note, that this is a special use case! With the ReflectionConverter 
+     * XStream will write directly into the raw memory area of the existing object. Use with care!
      * @throws XStreamException if the object cannot be deserialized
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root) {
@@ -842,7 +846,8 @@ public class XStream {
      * Deserialize an object from a hierarchical data structure (such as XML).
      *
      * @param root If present, the passed in object will have its fields populated, as opposed to
-     *            XStream creating a new instance.
+     *            XStream creating a new instance. Note, that this is a special use case! With the ReflectionConverter 
+     *            XStream will write directly into the raw memory area of the existing object. Use with care!
      * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If
      *            not present, XStream shall create one lazily as needed.
      * @throws XStreamException if the object cannot be deserialized
@@ -1398,13 +1403,13 @@ public class XStream {
      * @since 1.1.3
      * @throws InitializationException if no {@link FieldAliasingMapper} is available
      */
-    public void omitField(Class type, String fieldName) {
+    public void omitField(Class definedIn, String fieldName) {
         if (fieldAliasingMapper == null) {
             throw new InitializationException("No "
                     + FieldAliasingMapper.class.getName()
                     + " available");
         }
-        fieldAliasingMapper.omitField(type, fieldName);
+        fieldAliasingMapper.omitField(definedIn, fieldName);
     }
 
     /**

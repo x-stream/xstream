@@ -69,7 +69,7 @@ public class FieldAliasingMapper extends MapperWrapper {
         return !fieldsToOmit.contains(key(definedIn, fieldName));
     }
 
-    public void omitField(Class type, String fieldName) {
-        fieldsToOmit.add(key(type, fieldName));
+    public void omitField(Class definedIn, String fieldName) {
+        fieldsToOmit.add(key(definedIn, fieldName));
     }
 }
