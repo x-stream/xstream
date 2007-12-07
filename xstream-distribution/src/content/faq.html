@@ -221,7 +221,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
         <li>If a field is removed from the class, deserializing an old version that contains the field will cause an exception.
         Leaving the field in place but declaring it as transient will avoid the exception, but XStream will not try to deserialize it.</li>
         <li>If a class is renamed, aliases can be used to create an abstraction between the name used in XML and the real class name.</li>
-        <li>if a field is renamed, this should be treated as adding a field and removing a field.</li>
+        <li>If a field is renamed, this should be treated as adding a field and removing a field.</li>
     </ul>
 
     <p>For more advanced class migrations, you may</p>
@@ -230,6 +230,8 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 	    <li>declare new fields as transient</li>
 	    <li>implement your own converter, that can handle the situation</li>
 	    <li>add a readResolve() method to your class, that initializes the object accordingly</li>
+	    <li>implement a custom mapper to ignore unknown fields automatically 
+	    (see acceptance test CustomMapperTest.testCanBeUsedToOmitUnexpectedElements())</li>
     </ul>
 
     <p>Future versions of XStream will include features to make these type of migrations easier.</p>
