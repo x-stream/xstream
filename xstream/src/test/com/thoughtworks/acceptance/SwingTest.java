@@ -3,6 +3,8 @@ package com.thoughtworks.acceptance;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JTable;
+import javax.swing.LookAndFeel;
+import javax.swing.plaf.synth.SynthLookAndFeel;
 
 public class SwingTest extends AbstractAcceptanceTest {
 
@@ -34,4 +36,9 @@ public class SwingTest extends AbstractAcceptanceTest {
         list.setModel(deserialized);
     }
     
+    public void testSynthLookAndFeel() {
+        LookAndFeel plaf = new SynthLookAndFeel();
+        String originalXml = xstream.toXML(plaf);
+        assertBothWays(plaf, originalXml);
+    }
 }

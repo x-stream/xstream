@@ -15,6 +15,7 @@ public class JVM {
     private Map loaderCache = new HashMap();
     
     private final boolean supportsAWT = loadClass("java.awt.Color") != null;
+    private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel") != null;
     private final boolean supportsSQL = loadClass("java.sql.Date") != null; 
 
     private static final boolean reverseFieldOrder;
@@ -175,6 +176,13 @@ public class JVM {
      */
     public boolean supportsAWT() {
         return this.supportsAWT;
+    }
+
+    /**
+     * Checks if the jvm supports swing.
+     */
+    public boolean supportsSwing() {
+        return this.supportsSwing;
     }
 
     /**

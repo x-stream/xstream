@@ -38,6 +38,7 @@ import com.thoughtworks.xstream.converters.extended.GregorianCalendarConverter;
 import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
+import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
@@ -595,6 +596,9 @@ public class XStream {
 	        registerConverter(new FontConverter(), PRIORITY_NORMAL);
 	        registerConverter(new ColorConverter(), PRIORITY_NORMAL);
 	        registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
+        }
+        if(jvm.supportsSwing()) {
+            registerConverter(new LookAndFeelConverter(mapper, reflectionProvider), PRIORITY_NORMAL);
         }
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
