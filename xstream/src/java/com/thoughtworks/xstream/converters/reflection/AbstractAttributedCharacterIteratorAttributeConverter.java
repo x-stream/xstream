@@ -28,7 +28,7 @@ public class AbstractAttributedCharacterIteratorAttributeConverter extends
             getName = AttributedCharacterIterator.Attribute.class.getDeclaredMethod(
                 "getName", (Class[])null);
         } catch (NoSuchMethodException e) {
-            throw new InternalError("Missing AttributedCharacterIterator.Attribute.getName()");
+            throw new ExceptionInInitializerError("Missing AttributedCharacterIterator.Attribute.getName()");
         }
     }
 
