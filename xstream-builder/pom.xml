@@ -1,4 +1,14 @@
 <?xml version="1.0"?><project>
+    <!--
+     Copyright (C) 2007 XStream committers.
+     All rights reserved.
+     
+     The software in this package is published under the terms of the BSD
+     style license a copy of which has been included with this distribution in
+     the LICENSE.txt file.
+     
+     Created on 14. May 2007 by Guilherme Silveira
+     -->
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.thoughtworks.xstream</groupId>
