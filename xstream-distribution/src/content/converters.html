@@ -526,6 +526,24 @@
             
             <!-- .................................................................................................. -->
             <tr>
+                <td colspan="4" class="headerRow"><h1 id="javax.swing">javax.swing</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/LookAndFeelConverter.html">LookAndFeelConverter</a></td>
+                <td>javax.swing.LookAndFeel implementations</td>
+                <td class="example">&nbsp;</td>
+                <td>Explicit mapping to the ReflectionConverter. Although the implementations of the LookAndFeel classes are serializable, they will
+                throw an exception executing writeObject(), therefore the SerializableConverter is not used.</td>
+            </tr>
+            
+            <!-- .................................................................................................. -->
+            <tr>
                 <td colspan="4" class="headerRow"><h1 id="javax.security.auth">javax.security.auth</h1></td>
             </tr>
             <tr>
