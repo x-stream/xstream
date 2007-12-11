@@ -16,7 +16,7 @@ import com.thoughtworks.xstream.XStream;
  * A processor which sets xstream to use absolute references.
  * 
  * @author Guilherme Silveira
- * @since 1.3
+ * @since upcoming
  */
 public class NoReferencesProcessor implements ConfigProcessor {
 

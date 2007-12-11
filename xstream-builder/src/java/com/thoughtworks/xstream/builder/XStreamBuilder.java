@@ -34,7 +34,7 @@ import com.thoughtworks.xstream.converters.Converter;
  * and invoke buildXStream at the end.
  *
  * @author Guilherme Silveira
- * @since 1.3
+ * @since upcoming
  */
 public class XStreamBuilder {
 
