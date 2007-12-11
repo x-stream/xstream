@@ -1,3 +1,14 @@
+/*
+ * Copyright (C) 2005, 2006 Joe Walnes.
+ * Copyright (C) 2006, 2007 XStream Committers.
+ * All rights reserved.
+ *
+ * The software in this package is published under the terms of the BSD
+ * style license a copy of which has been included with this distribution in
+ * the LICENSE.txt file.
+ * 
+ * Created on 06. February 2005 by Joe Walnes
+ */
 package com.thoughtworks.xstream.core.util;
 
 import java.util.Iterator;
@@ -9,7 +20,7 @@ import java.util.TreeSet;
  * List that allows items to be added with a priority that will affect the order in which they are later iterated over.
  * Objects with a high priority will appear before objects with a low priority in the list. If two objects of the same
  * priority are added to the list, the most recently added one will be iterated over first. Implementation uses a
- * TreeSet, which has a garanteed add time of O(log(n)).
+ * TreeSet, which has a guaranteed add time of O(log(n)).
  * 
  * @author Joe Walnes
  * @author Guilherme Silveira
