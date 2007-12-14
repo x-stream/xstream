@@ -65,7 +65,12 @@ public abstract class AbstractReflectionConverter implements Converter {
                     return;
                 }
                 if (!defaultFieldDefinition.containsKey(fieldName)) {
-                    defaultFieldDefinition.put(fieldName, reflectionProvider.getField(source.getClass(), fieldName));
+                    Class lookupType = source.getClass();
+                    // See XSTR-457 and OmitFieldsTest
+                    // if (definedIn != source.getClass() && !mapper.shouldSerializeMember(lookupType, fieldName)) {
+                    //    lookupType = definedIn;
+                    // }
+                    defaultFieldDefinition.put(fieldName, reflectionProvider.getField(lookupType, fieldName));
                 }
                 
                 SingleValueConverter converter = mapper.getConverterFromItemType(fieldName, type, definedIn);

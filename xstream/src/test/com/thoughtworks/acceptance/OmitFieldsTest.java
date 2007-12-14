@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
+
 public class OmitFieldsTest extends AbstractAcceptanceTest {
 
     public static class Thing extends StandardObject {
@@ -30,18 +31,18 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.sometimesIgnore = "b";
         in.neverIgnore = "c";
 
-        String expectedXml = "" +
-                "<thing>\n" +
-                "  <sometimesIgnore>b</sometimesIgnore>\n" +
-                "  <neverIgnore>c</neverIgnore>\n" +
-                "</thing>";
+        String expectedXml = ""
+            + "<thing>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
 
         xstream.alias("thing", Thing.class);
 
         String actualXml = xstream.toXML(in);
         assertEquals(expectedXml, actualXml);
 
-        Thing out = (Thing) xstream.fromXML(actualXml);
+        Thing out = (Thing)xstream.fromXML(actualXml);
         assertEquals(null, out.alwaysIgnore);
         assertEquals("b", out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
@@ -53,10 +54,10 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.sometimesIgnore = "b";
         in.neverIgnore = "c";
 
-        String expectedXml = "" +
-                "<thing>\n" +
-                "  <neverIgnore>c</neverIgnore>\n" +
-                "</thing>";
+        String expectedXml = "" // 
+            + "<thing>\n" // 
+            + "  <neverIgnore>c</neverIgnore>\n" // 
+            + "</thing>";
 
         xstream.alias("thing", Thing.class);
         xstream.omitField(Thing.class, "sometimesIgnore");
@@ -64,7 +65,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         String actualXml = xstream.toXML(in);
         assertEquals(expectedXml, actualXml);
 
-        Thing out = (Thing) xstream.fromXML(actualXml);
+        Thing out = (Thing)xstream.fromXML(actualXml);
         assertEquals(null, out.alwaysIgnore);
         assertEquals(null, out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
@@ -81,11 +82,11 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.neverIgnore = "c";
         in.derived = "d";
 
-        String expectedXml = "" +
-                "<thing>\n" +
-                "  <neverIgnore>c</neverIgnore>\n" +
-                "  <derived>d</derived>\n" +
-                "</thing>";
+        String expectedXml = ""
+            + "<thing>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "  <derived>d</derived>\n"
+            + "</thing>";
 
         xstream.alias("thing", DerivedThing.class);
         xstream.omitField(Thing.class, "sometimesIgnore");
@@ -93,7 +94,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         String actualXml = xstream.toXML(in);
         assertEquals(expectedXml, actualXml);
 
-        DerivedThing out = (DerivedThing) xstream.fromXML(actualXml);
+        DerivedThing out = (DerivedThing)xstream.fromXML(actualXml);
         assertEquals(null, out.alwaysIgnore);
         assertEquals(null, out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
@@ -114,11 +115,11 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.myStuff = "c";
         in.myCheese = "d";
 
-        String expectedXml = "" +
-                "<thing>\n" +
-                "  <stuff>a</stuff>\n" +
-                "  <cheese>b</cheese>\n" +
-                "</thing>";
+        String expectedXml = ""
+            + "<thing>\n"
+            + "  <stuff>a</stuff>\n"
+            + "  <cheese>b</cheese>\n"
+            + "</thing>";
 
         class OmitFieldsWithMyPrefixMapper extends MapperWrapper {
             public OmitFieldsWithMyPrefixMapper(Mapper wrapped) {
@@ -141,44 +142,44 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         String actualXml = xstream.toXML(in);
         assertEquals(expectedXml, actualXml);
 
-        AnotherThing out = (AnotherThing) xstream.fromXML(actualXml);
+        AnotherThing out = (AnotherThing)xstream.fromXML(actualXml);
         assertEquals("a", out.stuff);
         assertEquals("b", out.cheese);
         assertEquals(null, out.myStuff);
         assertEquals(null, out.myCheese);
     }
-    
+
     public void testDeletedElementCanBeOmitted() {
-        String expectedXml = "" +
-                "<thing>\n" +
-                "  <meanwhileDeletedIgnore>c</meanwhileDeletedIgnore>\n" +
-                "  <sometimesIgnore>b</sometimesIgnore>\n" +
-                "  <neverIgnore>c</neverIgnore>\n" +
-                "</thing>";
+        String expectedXml = ""
+            + "<thing>\n"
+            + "  <meanwhileDeletedIgnore>c</meanwhileDeletedIgnore>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
 
         xstream.alias("thing", Thing.class);
         xstream.omitField(Thing.class, "meanwhileDeletedIgnore");
 
-        Thing out = (Thing) xstream.fromXML(expectedXml);
+        Thing out = (Thing)xstream.fromXML(expectedXml);
         assertEquals("b", out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
     }
-    
+
     public void testDeletedAttributeCanBeOmitted() {
-        String expectedXml = "" +
-                "<thing meanwhileDeletedIgnore='c'>\n" +
-                "  <sometimesIgnore>b</sometimesIgnore>\n" +
-                "  <neverIgnore>c</neverIgnore>\n" +
-                "</thing>";
+        String expectedXml = ""
+            + "<thing meanwhileDeletedIgnore='c'>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
 
         xstream.alias("thing", Thing.class);
         xstream.omitField(Thing.class, "meanwhileDeletedIgnore");
 
-        Thing out = (Thing) xstream.fromXML(expectedXml);
+        Thing out = (Thing)xstream.fromXML(expectedXml);
         assertEquals("b", out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
     }
-    
+
     public void testAttributeCanBeOmitted() {
         String expectedXml = "<thing neverIgnore=\"c\"/>";
 
@@ -192,8 +193,43 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.neverIgnore = "c";
         assertEquals(expectedXml, xstream.toXML(in));
 
-        Thing out = (Thing) xstream.fromXML(expectedXml);
+        Thing out = (Thing)xstream.fromXML(expectedXml);
         assertNull(out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
+    }
+
+    static class ThingAgain extends Thing {
+        String sometimesIgnore;
+
+        void setHidden(String s) {
+            super.sometimesIgnore = s;
+        }
+    }
+
+    // TODO: XSTR-457
+    public void todoTestAnOmittedFieldMakesADefinedInAttributeSuperfluous() {
+        ThingAgain in = new ThingAgain();
+        in.alwaysIgnore = "a";
+        in.setHidden("b");
+        in.neverIgnore = "c";
+        in.sometimesIgnore = "d";
+
+        xstream.alias("thing", ThingAgain.class);
+        xstream.omitField(ThingAgain.class, "sometimesIgnore");
+
+        String expectedXml = ""
+            + "<thing>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
+
+        String actualXml = xstream.toXML(in);
+        assertEquals(expectedXml, actualXml);
+
+        ThingAgain out = (ThingAgain)xstream.fromXML(expectedXml);
+        assertNull(out.sometimesIgnore);
+        out.alwaysIgnore = "a";
+        out.sometimesIgnore = "d";
+        assertEquals(in, out);
     }
 }
