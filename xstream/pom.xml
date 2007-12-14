@@ -40,12 +40,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.megginson.sax</groupId>
-      <artifactId>xml-writer</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
       <groupId>stax</groupId>
       <artifactId>stax</artifactId>
       <optional>true</optional>
@@ -95,6 +89,12 @@
     <dependency>
       <groupId>jmock</groupId>
       <artifactId>jmock</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.megginson.sax</groupId>
+      <artifactId>xml-writer</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
