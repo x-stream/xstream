@@ -43,7 +43,7 @@ public class TextReporter implements Reporter {
      * Reports to System.out.
      */
     public TextReporter() {
-        this(new PrintWriter(System.out));
+        this(new PrintWriter(System.out, true));
     }
 
     public void startBenchmark() {
