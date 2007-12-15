@@ -43,11 +43,13 @@ public class DependencyInjectionFactory {
     public static Object newInstance(final Class type, final Object[] dependencies) {
         // sort available ctors according their arity
         final Constructor[] ctors = type.getConstructors();
-        Arrays.sort(ctors, new Comparator() {
-            public int compare(final Object o1, final Object o2) {
-                return ((Constructor)o2).getParameterTypes().length - ((Constructor)o1).getParameterTypes().length;
-            }
-        });
+        if (ctors.length > 1) {
+            Arrays.sort(ctors, new Comparator() {
+                public int compare(final Object o1, final Object o2) {
+                    return ((Constructor)o2).getParameterTypes().length - ((Constructor)o1).getParameterTypes().length;
+                }
+            });
+        }
 
         final TypedValue[] typedDependencies = new TypedValue[dependencies.length];
         for (int i = 0; i < dependencies.length; i++) {
@@ -141,9 +143,13 @@ public class DependencyInjectionFactory {
         }
 
         if (bestMatchingCtor == null) {
-            throw new ObjectAccessException("Cannot construct "
-                    + type.getName()
-                    + ", none of the dependencies match any constructor's parameters");
+            if (possibleCtor == null) {
+                throw new ObjectAccessException("Cannot construct "
+                        + type.getName()
+                        + ", none of the dependencies match any constructor's parameters");
+            } else {
+                bestMatchingCtor = possibleCtor;
+            }
         }
 
         try {

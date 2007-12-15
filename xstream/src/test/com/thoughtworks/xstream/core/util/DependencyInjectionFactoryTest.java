@@ -57,4 +57,36 @@ public class DependencyInjectionFactoryTest extends TestCase {
         assertTrue(exception instanceof ObjectAccessException);
         assertEquals("The message : foo", exception.getMessage());
     }
+
+    static class Thing {
+        final TestCase testCase;
+        final int first;
+        final int second;
+
+        public Thing(int first, int second, TestCase testCase) {
+            this.first = first;
+            this.second = second;
+            this.testCase = testCase;
+        }
+
+        TestCase getTestCase() {
+            return testCase;
+        }
+
+        int getFirst() {
+            return first;
+        }
+
+        int getSecond() {
+            return second;
+        }
+    }
+
+    public void testDependencyInjectionWillMatchArbitraryOrderForOneAvailableConstructorOnly() {
+        final Thing thing = (Thing)DependencyInjectionFactory.newInstance(Thing.class, new Object[]{
+                this, new Integer(1), new Integer(2)});
+        assertSame(this, thing.getTestCase());
+        assertEquals(1, thing.getFirst());
+        assertEquals(2, thing.getSecond());
+    }
 }
