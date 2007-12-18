@@ -14,9 +14,11 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.StandardObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
-public class DefaultCollectionTest extends AbstractAcceptanceTest {
+public class DefaultImplementationTest extends AbstractAcceptanceTest {
 
     public static class Farm extends StandardObject {
         int size;
@@ -45,9 +47,10 @@ public class DefaultCollectionTest extends AbstractAcceptanceTest {
         super.setUp();
         xstream.alias("farm", Farm.class);
         xstream.alias("animal", Animal.class);
+        xstream.alias("age", Age.class);
     }
 
-    public void testWithout() {
+    public void testArrayList() {
         Farm farm = new Farm(100, "Old McDonald's");
         farm.add(new Animal("Cow"));
         farm.add(new Animal("Sheep"));
@@ -69,24 +72,27 @@ public class DefaultCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(farm, expected);
     }
 
-    public void testWith() {
-        Farm farm = new Farm(100, "Old McDonald's");
-        farm.add(new Animal("Cow"));
-        farm.add(new Animal("Sheep"));
+    public static class Age extends StandardObject {
+        java.util.Date date;
 
+        public Age(java.util.Date age) {
+            this.date = age;
+        }
+    }
+
+    public void testCustomDate() {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.clear();
+        cal.set(2007, Calendar.DECEMBER, 18);
+        Age age = new Age(new java.sql.Date(cal.getTimeInMillis()));
+
+        xstream.addDefaultImplementation(java.sql.Date.class, java.util.Date.class);
+        
         String expected = "" +
-                "<farm>\n" +
-                "  <size>100</size>\n" +
-                "  <animal>\n" +
-                "    <name>Cow</name>\n" +
-                "  </animal>\n" +
-                "  <animal>\n" +
-                "    <name>Sheep</name>\n" +
-                "  </animal>\n" +
-                "  <name>Old McDonald&apos;s</name>\n" +
-                "</farm>";
+                "<age>\n" +
+                "  <date>2007-12-18</date>\n" +
+                "</age>";
 
-        xstream.addImplicitCollection(Farm.class, "animals");
-        assertBothWays(farm, expected);
+        assertBothWays(age, expected);
     }
 }
