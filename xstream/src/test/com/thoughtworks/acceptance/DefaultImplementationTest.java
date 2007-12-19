@@ -12,6 +12,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class DefaultImplementationTest extends AbstractAcceptanceTest {
+
 
     public static class Farm extends StandardObject {
         int size;
@@ -45,9 +47,18 @@ public class DefaultImplementationTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
+        TimeZoneChanger.change("GMT");
         xstream.alias("farm", Farm.class);
         xstream.alias("animal", Animal.class);
         xstream.alias("age", Age.class);
+    }
+
+    /**
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        TimeZoneChanger.reset();
+        super.tearDown();
     }
 
     public void testArrayList() {
