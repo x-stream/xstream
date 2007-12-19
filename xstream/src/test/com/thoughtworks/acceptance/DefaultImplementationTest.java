@@ -95,7 +95,7 @@ public class DefaultImplementationTest extends AbstractAcceptanceTest {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         cal.clear();
         cal.set(2007, Calendar.DECEMBER, 18);
-        Age age = new Age(new java.sql.Date(cal.getTimeInMillis()));
+        Age age = new Age(new java.sql.Date(cal.getTime().getTime()));
 
         xstream.addDefaultImplementation(java.sql.Date.class, java.util.Date.class);
         
