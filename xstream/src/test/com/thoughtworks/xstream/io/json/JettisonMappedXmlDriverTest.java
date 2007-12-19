@@ -97,4 +97,22 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         Product parsedProduct = (Product)ois.readObject();
         assertEquals(product.toString(), parsedProduct.toString());
     }
+    
+    // TODO: See XSTR-460
+    public void todoTestArrayList() throws IOException {
+        ArrayList list1 = new ArrayList();
+        list1.clear();
+        list1.add(12);
+       
+        list1.add("string");
+        list1.add(13);
+//        StringWriter writer = new StringWriter();
+//        xstream.marshal(list1, new JsonHierarchicalStreamWriter(writer));
+//        writer.close();
+//        String json = writer.toString();
+        String json = xstream.toXML(list1);
+       
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json,xstream.toXML(list2));
+       }
 }
