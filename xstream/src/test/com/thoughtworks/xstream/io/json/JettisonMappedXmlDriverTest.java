@@ -102,10 +102,10 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     public void todoTestArrayList() throws IOException {
         ArrayList list1 = new ArrayList();
         list1.clear();
-        list1.add(12);
+        list1.add(new Integer(12));
        
         list1.add("string");
-        list1.add(13);
+        list1.add(new Integer(13));
 //        StringWriter writer = new StringWriter();
 //        xstream.marshal(list1, new JsonHierarchicalStreamWriter(writer));
 //        writer.close();
