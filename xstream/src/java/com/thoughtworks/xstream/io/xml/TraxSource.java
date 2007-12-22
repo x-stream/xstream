@@ -265,7 +265,7 @@ public class TraxSource extends SAXSource {
                 while (filter.getParent() instanceof XMLFilter) {
                     filter = (XMLFilter)(filter.getParent());
                 }
-                if (!(filterChain instanceof SaxWriter)) {
+                if (!(filter.getParent() instanceof SaxWriter)) {
                     filter.setParent(new SaxWriter());
                 }
 
