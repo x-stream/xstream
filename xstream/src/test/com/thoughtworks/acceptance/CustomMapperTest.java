@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
 public class CustomMapperTest extends AbstractAcceptanceTest {
 
     /**
-     * A sample mapper strips the underscore prefix of fieldnames in the XML
+     * A sample mapper strips the underscore prefix of field names in the XML
      */
     private static class FieldPrefixStrippingMapper extends MapperWrapper {
         public FieldPrefixStrippingMapper(Mapper wrapped) {
@@ -121,7 +121,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
     
     public void testOwnMapperChainCanBeRegistered() {
         Mapper mapper = new DefaultMapper(getClass().getClassLoader());
-        xstream = new XStream(new PureJavaReflectionProvider(), mapper, new DomDriver());
+        xstream = new XStream(new PureJavaReflectionProvider(), new DomDriver(), getClass().getClassLoader(), mapper);
         
         String expected = "" +
                 "<com.thoughtworks.acceptance.objects.Software>\n" +

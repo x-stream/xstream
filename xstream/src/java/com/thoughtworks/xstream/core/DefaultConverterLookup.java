@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.mapper.Mapper;
 
@@ -30,7 +31,7 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  * @author Guilherme Silveira
  */
-public class DefaultConverterLookup implements ConverterLookup {
+public class DefaultConverterLookup implements ConverterLookup, ConverterRegistry {
 
     private final PrioritizedList converters = new PrioritizedList();
     private transient Map typeToConverterMap = Collections.synchronizedMap(new HashMap());

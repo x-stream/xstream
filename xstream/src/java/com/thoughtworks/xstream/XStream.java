@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ package com.thoughtworks.xstream;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
@@ -272,7 +273,7 @@ public class XStream {
     private HierarchicalStreamDriver hierarchicalStreamDriver;
     private ClassLoaderReference classLoaderReference;
     private MarshallingStrategy marshallingStrategy;
-    private DefaultConverterLookup converterLookup;
+    private ConverterLookup converterLookup;
     private Mapper mapper;
 
     private ClassAliasingMapper classAliasingMapper;
@@ -369,17 +370,61 @@ public class XStream {
      * Constructs an XStream with a special {@link HierarchicalStreamDriver} and {@link ReflectionProvider} and additionally with a prepared {@link Mapper}.
      *
      * @throws InitializationException in case of an initialization problem
+     * @deprecated since upcoming, use {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, Mapper, ClassLoader)} instead
      */
     public XStream(
             ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
+        this(reflectionProvider, driver, new ClassLoaderReference(new CompositeClassLoader()), mapper, new DefaultConverterLookup());
+    }
+
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and {@link ReflectionProvider} and additionally with a prepared 
+     * {@link ClassLoader} to use.
+     *
+     * @throws InitializationException in case of an initialization problem
+     * @since upcoming
+     */
+    public XStream(
+            ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver, ClassLoader classLoader) {
+        this(reflectionProvider, driver, classLoader, null);
+    }
+
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and {@link ReflectionProvider} and additionally with a prepared {@link Mapper}
+     * and the {@link ClassLoader} in use.
+     * 
+     * <p>Note, if the class loader should be changed later again, you should provide a {@link ClassLoaderReference} as {@link ClassLoader} that is also
+     * use in the {@link Mapper} chain.</p>
+     *
+     * @throws InitializationException in case of an initialization problem
+     * @since upcoming
+     */
+    public XStream(
+            ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver, ClassLoader classLoader, Mapper mapper) {
+        this(reflectionProvider, driver, classLoader, mapper, new DefaultConverterLookup());
+    }
+
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider}, a prepared {@link Mapper}
+     * and the {@link ClassLoader} in use and an own {@link ConverterRegistry}.
+     * 
+     * <p>Note, if the class loader should be changed later again, you should provide a {@link ClassLoaderReference} as {@link ClassLoader} that is also
+     * use in the {@link Mapper} chain.</p>
+     *
+     * @throws InitializationException in case of an initialization problem
+     * @since upcoming
+     */
+    public XStream(
+            ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,   
+            ClassLoader classLoader, Mapper mapper, ConverterRegistry converterRegistry) {
         jvm = new JVM();
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
         }
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
-        this.classLoaderReference = new ClassLoaderReference(new CompositeClassLoader());
-        this.converterLookup = new DefaultConverterLookup();
+        this.classLoaderReference = classLoader instanceof ClassLoaderReference ? (ClassLoaderReference)classLoader : new ClassLoaderReference(classLoader);
+        this.converterLookup = converterRegistry;
         this.mapper = mapper == null ? buildMapper() : mapper;
 
         setupMappers();
@@ -417,7 +462,7 @@ public class XStream {
         if (JVM.is15()) {
             mapper = buildMapperDynamically(
                 ANNOTATION_MAPPER_TYPE,
-                new Class[]{Mapper.class, DefaultConverterLookup.class}, 
+                new Class[]{Mapper.class, ConverterRegistry.class}, 
                 new Object[]{mapper, converterLookup});
         }
         mapper = wrapMapper((MapperWrapper)mapper);
@@ -1053,7 +1098,7 @@ public class XStream {
     }
 
     public void registerConverter(Converter converter, int priority) {
-        converterLookup.registerConverter(converter, priority);
+        ((ConverterRegistry)converterLookup).registerConverter(converter, priority);
     }
 
     public void registerConverter(SingleValueConverter converter) {
@@ -1061,7 +1106,7 @@ public class XStream {
     }
 
     public void registerConverter(SingleValueConverter converter, int priority) {
-        converterLookup.registerConverter(new SingleValueConverterWrapper(converter), priority);
+        ((ConverterRegistry)converterLookup).registerConverter(new SingleValueConverterWrapper(converter), priority);
     }
 
     /**

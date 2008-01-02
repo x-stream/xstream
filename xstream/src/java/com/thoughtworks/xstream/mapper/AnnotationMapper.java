@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.core.DefaultConverterLookup;
+import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 
 import java.lang.reflect.Field;
@@ -52,7 +52,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
 
     private boolean locked;
     private final Object[] arguments = new Object[0]; // no args for now
-    private final DefaultConverterLookup converterLookup;
+    private final ConverterRegistry converterLookup;
     private final ClassAliasingMapper classAliasingMapper;
     private final DefaultImplementationsMapper defaultImplementationsMapper;
     private final ImplicitCollectionMapper implicitCollectionMapper;
@@ -68,7 +68,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
      * @param wrapped the next {@link Mapper} in the chain
      * @since upcoming
      */
-    public AnnotationMapper(final Mapper wrapped, final DefaultConverterLookup converterLookup) {
+    public AnnotationMapper(final Mapper wrapped, final ConverterRegistry converterLookup) {
         super(wrapped);
         this.converterLookup = converterLookup;
         annotatedTypes.add(Object.class);
