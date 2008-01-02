@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2008 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -52,6 +52,7 @@
     	<li>Fix StringConverter using a WeakHashMap with strong references in its value.</li>
     	<li>JIRA:XSTR-403: Attributes are no longer written with JSONHierarchicalStreamDriver if current object is a collection.</li>
     	<li>JIRA:XSTR-456: New LookAndFeelConverter handling LookAndFeel implementations with reflection.</li>
+    	<li>JIRA:XSTR-462: CachingMapper keeps direct class references.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -79,6 +80,8 @@
     	<li>JIRA:XSTR-418: Inherited @XStreamAlias is ignored if field should be rendered as attribute.</li>
     	<li>JIRA:XSTR-393: Annotation processing is not consistent.</li>
     	<li>JIRA:XSTR-412: @XStreamImplicit throws NPE for untyped collections.</li>
+    	<li>JIRA:XSTR-463: Cannot provide own default Mapper chain.</li>
+    	<li>JIRA:XSTR-464: Cannot provide a ClassLoader that is used in all cases.</li>
     	<li>Update annotation tutorial, explain limitations of auto-detection mode.</li>
     	<li>JSONHierarchicalStreamDriver writes attribute names with a leading '@'.</li>
     	<li>Added copyright notices to all files.</li>
@@ -103,6 +106,9 @@
     	 different XmlWriter implementations.</li>
     	<li>c.t.x.mapper.Mapper.aliasForAttribute() and c.t.x.mapper.Mapper.attributeForAlias() deprecated, since it provided in reality the combined
     	functionality of c.t.x.mapper.Mapper.serializedMember()/realMember() and c.t.x.mapper.Mapper.getConverterFromItemType().</li>
+    	<li>c.t.x.XStream(ReflectionProvider, Mapper, HierarchicalStreamDriver) deprecated, in favour of 
+    	c.t.x.XStream(ReflectionProvider, HierarchicalStreamDriver, Mapper, ClassLoader).</li>
+    	<li>New interface c.t.x.converter.ConverterRegistry to express explicit functionality managing the converters.</li>
     </ul>
 
     <h1 id="1.2.2">Version 1.2.2</h1>
