@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,9 +13,11 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Mapper that caches which names map to which classes. Prevents repetitive searching and class loading.
@@ -24,10 +26,11 @@ import java.util.Map;
  */
 public class CachingMapper extends MapperWrapper {
 
-    private transient Map cache = Collections.synchronizedMap(new HashMap());
+    private transient Map realClassCache;
 
     public CachingMapper(Mapper wrapped) {
         super(wrapped);
+        readResolve();
     }
 
     /**
@@ -35,21 +38,25 @@ public class CachingMapper extends MapperWrapper {
      */
     public CachingMapper(ClassMapper wrapped) {
         this((Mapper)wrapped);
+        readResolve();
     }
 
     public Class realClass(String elementName) {
-        Class cached = (Class) cache.get(elementName);
-        if (cached != null) {
-            return cached;
-        } else {
-            Class result = super.realClass(elementName);
-            cache.put(elementName, result);
-            return result;
+        WeakReference reference = (WeakReference) realClassCache.get(elementName);
+        if (reference != null) {
+            Class cached = (Class) reference.get();
+            if (cached != null) {
+                return cached;
+            }
         }
+        
+        Class result = super.realClass(elementName);
+        realClassCache.put(elementName, new WeakReference(result));
+        return result;
     }
-    
+
     private Object readResolve() {
-        cache = Collections.synchronizedMap(new HashMap());
+        realClassCache = Collections.synchronizedMap(new HashMap(128));
         return this;
     }
 
