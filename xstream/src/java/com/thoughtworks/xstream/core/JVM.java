@@ -23,7 +23,7 @@ import java.util.Map;
 public class JVM {
 
     private ReflectionProvider reflectionProvider;
-    private Map loaderCache = new HashMap();
+    private transient Map loaderCache = new HashMap();
     
     private final boolean supportsAWT = loadClass("java.awt.Color") != null;
     private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel") != null;
@@ -203,6 +203,11 @@ public class JVM {
         return this.supportsSQL;
     }
 
+    private Object readResolve() {
+        loaderCache = new HashMap();
+        return this;
+    }
+    
     public static void main(String[] args) {
         JVM jvm = new JVM();
         System.out.println("XStream JVM diagnostics");
