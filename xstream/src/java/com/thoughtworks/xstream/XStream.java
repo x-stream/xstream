@@ -591,6 +591,8 @@ public class XStream {
         if (JVM.is15()) {
             alias("enum-set", jvm.loadClass("java.util.EnumSet"));
             alias("enum-map", jvm.loadClass("java.util.EnumMap"));
+            alias("string-builder", jvm.loadClass("java.lang.StringBuilder"));
+            alias("uuid", jvm.loadClass("java.util.UUID"));
         }
     }
 
@@ -705,6 +707,12 @@ public class XStream {
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.enums.EnumMapConverter", PRIORITY_NORMAL,
                     new Class[]{Mapper.class}, new Object[]{mapper});
+            dynamicallyRegisterConverter(
+                "com.thoughtworks.xstream.converters.basic.StringBuilderConverter", PRIORITY_NORMAL,
+                null, null);
+            dynamicallyRegisterConverter(
+                "com.thoughtworks.xstream.converters.basic.UUIDConverter", PRIORITY_NORMAL,
+                null, null);
         }
 
         if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {

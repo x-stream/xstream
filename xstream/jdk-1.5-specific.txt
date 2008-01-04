@@ -1,5 +1,5 @@
 # Copyright (C) 2005, 2006 Joe Walnes.
-# Copyright (C) 2006, 2007 XStream Committers.
+# Copyright (C) 2006, 2007, 2008 XStream Committers.
 # All rights reserved.
 #
 # The software in this package is published under the terms of the BSD
@@ -11,6 +11,9 @@
 # The following patterns are files that should not be compiled or tested by the build, UNLESS using JDK 1.5 or greater.
 # Compiler can still use -source=1.3
 
+com/thoughtworks/xstream/converters/basic/StringBuilderConverter.*
+com/thoughtworks/xstream/converters/basic/UUIDConverter.*
 com/thoughtworks/xstream/converters/enums/**
+com/thoughtworks/acceptance/Basic15Test.*
 com/thoughtworks/xstream/converters/reflection/PureJavaReflectionProvider15Test.*
 

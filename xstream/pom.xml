@@ -308,11 +308,14 @@
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
                 <exclude>**/enums/*</exclude>
+                <exclude>**/basic/StringBuilder*</exclude>
+                <exclude>**/basic/UUID*</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
+                <exclude>**/acceptance/Basic15TypesTest*</exclude>
                 <exclude>**/acceptance/SecurityManagerTest*</exclude>
               </testExcludes>
             </configuration>
