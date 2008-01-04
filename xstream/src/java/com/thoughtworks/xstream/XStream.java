@@ -462,8 +462,8 @@ public class XStream {
         if (JVM.is15()) {
             mapper = buildMapperDynamically(
                 ANNOTATION_MAPPER_TYPE,
-                new Class[]{Mapper.class, ConverterRegistry.class}, 
-                new Object[]{mapper, converterLookup});
+                new Class[]{Mapper.class, ConverterRegistry.class, ClassLoader.class, ReflectionProvider.class, JVM.class}, 
+                new Object[]{mapper, converterLookup, classLoaderReference, reflectionProvider, jvm});
         }
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);

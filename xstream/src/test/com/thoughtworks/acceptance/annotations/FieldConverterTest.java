@@ -44,7 +44,7 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         xstream.alias("taskContainer", TaskContainer.class);
     }
 
-    public void testAnnotationForForFieldsOfSameType() {
+    public void testAnnotationForFieldsOfSameType() {
         final TaskWithAnnotations task = new TaskWithAnnotations("Tom", "Dick", "Harry");
         final String xml = ""
             + "<annotatedTask>\n"
