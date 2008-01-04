@@ -23,6 +23,8 @@ import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.ClassLoaderReference;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
+import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
+import com.thoughtworks.xstream.core.util.TypedNull;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
@@ -43,6 +45,9 @@ import com.thoughtworks.xstream.tools.benchmark.Product;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -61,7 +66,7 @@ public abstract class XStreamCache implements Product {
         DefaultConverterLookup converterLookup = new DefaultConverterLookup();
         xstream = new XStream(
             jvm.bestReflectionProvider(), new XppDriver(), classLoaderReference, buildMapper(
-                jvm, classLoaderReference, converterLookup), converterLookup);
+                getMappers(jvm), jvm, classLoaderReference, converterLookup), converterLookup);
         xstream.alias("one", One.class);
         xstream.alias("five", Five.class);
         xstream.alias("ser-one", SerializableOne.class);
@@ -76,49 +81,46 @@ public abstract class XStreamCache implements Product {
         return xstream.fromXML(input);
     }
 
-    protected abstract Mapper createCachingMapper(Mapper mapper);
-
-    private Mapper buildMapper(JVM jvm, ClassLoader classLoader, ConverterLookup converterLookup) {
-        Mapper mapper = new DefaultMapper(classLoader);
-        mapper = new ClassAliasingMapper(mapper);
-        mapper = new FieldAliasingMapper(mapper);
-        mapper = new AttributeAliasingMapper(mapper);
-        mapper = new AttributeMapper(mapper, converterLookup);
-        mapper = new ImplicitCollectionMapper(mapper);
+    protected List getMappers(JVM jvm) {
+        List mappers = new ArrayList();
+        mappers.add(DefaultMapper.class);
         if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
-            mapper = buildMapperDynamically(
-                classLoader, "com.thoughtworks.xstream.mapper.CGLIBMapper",
-                new Class[]{Mapper.class}, new Object[]{mapper});
+            mappers.add(jvm.loadClass("com.thoughtworks.xstream.mapper.CGLIBMapper"));
         }
-        mapper = new DynamicProxyMapper(mapper);
+        mappers.add(DynamicProxyMapper.class);
+        mappers.add(ClassAliasingMapper.class);
+        mappers.add(FieldAliasingMapper.class);
+        mappers.add(AttributeAliasingMapper.class);
+        mappers.add(AttributeMapper.class);
+        mappers.add(ImplicitCollectionMapper.class);
         if (JVM.is15()) {
-            mapper = new EnumMapper(mapper);
+            mappers.add(EnumMapper.class);
         }
-        mapper = new OuterClassMapper(mapper);
-        mapper = new ArrayMapper(mapper);
-        mapper = new LocalConversionMapper(mapper);
-        mapper = new DefaultImplementationsMapper(mapper);
-        mapper = new ImmutableTypesMapper(mapper);
+        mappers.add(OuterClassMapper.class);
+        mappers.add(ArrayMapper.class);
+        mappers.add(LocalConversionMapper.class);
+        mappers.add(DefaultImplementationsMapper.class);
+        mappers.add(ImmutableTypesMapper.class);
         if (JVM.is15()) {
-            mapper = buildMapperDynamically(
-                classLoader, "com.thoughtworks.xstream.mapper.AnnotationMapper", new Class[]{
-                    Mapper.class, ConverterRegistry.class, ClassLoader.class,
-                    ReflectionProvider.class, JVM.class}, new Object[]{
-                    mapper, converterLookup, classLoader, jvm.bestReflectionProvider(), jvm});
+            mappers.add(jvm.loadClass("com.thoughtworks.xstream.mapper.AnnotationMapper"));
         }
-        mapper = createCachingMapper(mapper);
-        return mapper;
+        return mappers;
     }
 
-    private Mapper buildMapperDynamically(ClassLoader classLoader, String className,
-        Class[] constructorParamTypes, Object[] constructorParamValues) {
-        try {
-            Class type = Class.forName(className, false, classLoader);
-            Constructor constructor = type.getConstructor(constructorParamTypes);
-            return (Mapper)constructor.newInstance(constructorParamValues);
-        } catch (Exception e) {
-            throw new InitializationException("Could not instantiate mapper : " + className, e);
+    private Mapper buildMapper(List mappers, JVM jvm, ClassLoader classLoader,
+        ConverterLookup converterLookup) {
+        final Object[] arguments = new Object[]{
+            new TypedNull(Mapper.class), converterLookup, classLoader,
+            jvm.bestReflectionProvider(), jvm};
+        for (final Iterator iter = mappers.iterator(); iter.hasNext();) {
+            final Class mapperType = (Class)iter.next();
+            try {
+                arguments[0] = DependencyInjectionFactory.newInstance(mapperType, arguments);
+            } catch (Exception e) {
+                throw new InitializationException("Could not instantiate mapper : "
+                    + mapperType.getName(), e);
+            }
         }
+        return (Mapper)arguments[0];
     }
-
 }

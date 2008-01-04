@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 02. January 2008 by Joerg Schaible
+ * Created on 04. January 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.benchmark.cache.products;
 
@@ -15,9 +15,9 @@ import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 
 /**
@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author J&ouml;rg Schaible
  */
-public class AliasedAttributeCache extends XStreamCache {
+public class SerializedClassCache extends XStreamCache {
 
     protected List getMappers(JVM jvm) {
         List list = super.getMappers(jvm);
@@ -34,31 +34,31 @@ public class AliasedAttributeCache extends XStreamCache {
     }
 
     public String toString() {
-        return "Aliased Attribute Cache";
+        return "Serialized Class Cache";
     }
     
     public static class CachingMapper extends MapperWrapper {
 
-        private transient Map attributeAliasCache;
+        private transient Map serializedClassCache;
 
         public CachingMapper(Mapper wrapped) {
             super(wrapped);
             readResolve();
         }
 
-        public String aliasForAttribute(String attribute) {
-            String alias = (String) attributeAliasCache.get(attribute);
+        public String serializedClass(Class type) {
+            String alias = (String) serializedClassCache.get(type);
             if (alias != null) {
                 return alias;
             }
             
-            String result = super.aliasForAttribute(attribute);
-            attributeAliasCache.put(attribute, alias);
+            String result = super.serializedClass(type);
+            serializedClassCache.put(type, alias);
             return result;
         }
 
         private Object readResolve() {
-            attributeAliasCache = Collections.synchronizedMap(new HashMap(256));
+            serializedClassCache = Collections.synchronizedMap(new WeakHashMap(128));
             return this;
         }
 

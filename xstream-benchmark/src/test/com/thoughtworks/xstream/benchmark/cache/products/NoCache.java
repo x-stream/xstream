@@ -10,7 +10,6 @@
  */
 package com.thoughtworks.xstream.benchmark.cache.products;
 
-import com.thoughtworks.xstream.mapper.Mapper;
 
 
 /**
@@ -19,10 +18,6 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * @author J&ouml;rg Schaible
  */
 public class NoCache extends XStreamCache {
-
-    protected Mapper createCachingMapper(Mapper mapper) {
-        return mapper;
-    }
 
     public String toString() {
         return "No Cache";

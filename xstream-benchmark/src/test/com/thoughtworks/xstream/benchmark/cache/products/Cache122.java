@@ -10,11 +10,14 @@
  */
 package com.thoughtworks.xstream.benchmark.cache.products;
 
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -25,8 +28,20 @@ import java.util.Map;
  */
 public class Cache122 extends XStreamCache {
 
-    protected Mapper createCachingMapper(Mapper mapper) {
-        return new CachingMapper(mapper);
+    protected List getMappers(JVM jvm) {
+        List list = super.getMappers(jvm);
+        Object cglibMapper = list.remove(1);
+        Object dynProxyMapper = null;
+        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
+            dynProxyMapper = list.remove(1);
+        }
+        int idx = list.indexOf(ImplicitCollectionMapper.class);
+        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
+            list.add(idx+1, dynProxyMapper);
+        }
+        list.add(idx+1, cglibMapper);
+        list.add(CachingMapper.class);
+        return list;
     }
 
     public String toString() {

@@ -10,12 +10,14 @@
  */
 package com.thoughtworks.xstream.benchmark.cache.products;
 
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -26,8 +28,10 @@ import java.util.Map;
  */
 public class RealClassCache extends XStreamCache {
 
-    protected Mapper createCachingMapper(Mapper mapper) {
-        return new CachingMapper(mapper);
+    protected List getMappers(JVM jvm) {
+        List list = super.getMappers(jvm);
+        list.add(CachingMapper.class);
+        return list;
     }
 
     public String toString() {

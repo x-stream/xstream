@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 02. January 2008 by Joerg Schaible
+ * Created on 04. January 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.benchmark.cache.products;
 
@@ -14,10 +14,11 @@ import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 
 /**
@@ -25,7 +26,7 @@ import java.util.Map;
  *
  * @author J&ouml;rg Schaible
  */
-public class AliasedAttributeCache extends XStreamCache {
+public class DefaultImplementationCache extends XStreamCache {
 
     protected List getMappers(JVM jvm) {
         List list = super.getMappers(jvm);
@@ -34,31 +35,34 @@ public class AliasedAttributeCache extends XStreamCache {
     }
 
     public String toString() {
-        return "Aliased Attribute Cache";
+        return "Default Implementation Cache";
     }
     
     public static class CachingMapper extends MapperWrapper {
 
-        private transient Map attributeAliasCache;
+        private transient Map defaultImplementationCache;
 
         public CachingMapper(Mapper wrapped) {
             super(wrapped);
             readResolve();
         }
 
-        public String aliasForAttribute(String attribute) {
-            String alias = (String) attributeAliasCache.get(attribute);
-            if (alias != null) {
-                return alias;
+        public Class defaultImplementationOf(Class type) {
+            WeakReference reference = (WeakReference) defaultImplementationCache.get(type);
+            if (reference != null) {
+                Class cached = (Class) reference.get();
+                if (cached != null) {
+                    return cached;
+                }
             }
             
-            String result = super.aliasForAttribute(attribute);
-            attributeAliasCache.put(attribute, alias);
+            Class result = super.defaultImplementationOf(type);
+            defaultImplementationCache.put(type, new WeakReference(result));
             return result;
         }
 
         private Object readResolve() {
-            attributeAliasCache = Collections.synchronizedMap(new HashMap(256));
+            defaultImplementationCache = Collections.synchronizedMap(new WeakHashMap(128));
             return this;
         }
 
