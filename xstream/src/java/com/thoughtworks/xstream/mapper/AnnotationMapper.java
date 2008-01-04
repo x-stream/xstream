@@ -268,7 +268,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             final Class<? extends Converter> converterType = annotation.value();
             final Converter converter = cacheConverter(converterType);
             if (converter != null) {
-                if (converter.canConvert(type)) {
+                if (converter != converterAnnotation || converter.canConvert(type)) {
                     converterRegistry.registerConverter(converter, XStream.PRIORITY_NORMAL);
                 } else {
                     throw new InitializationException("Converter "
