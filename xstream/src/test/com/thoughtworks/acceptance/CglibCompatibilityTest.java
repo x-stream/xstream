@@ -263,4 +263,29 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         final Object serialized = assertBothWays(expected, xml);
         assertTrue(serialized instanceof ClassWithProxyMember);
     }
+
+    public void testProxyTypeCanBeAliased() throws MalformedURLException {
+        final Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(HashMap.class);
+        enhancer.setCallback(new DelegatingHandler(new HashMap()));
+        enhancer.setUseFactory(true); // true by default
+        final Map orig = (Map)enhancer.create();
+        orig.put("URL", new URL("http://xstream.codehaus.org"));
+        xstream.aliasType("cglib", Map.class);
+        final String expected = ""
+            + "<cglib>\n"
+            + "  <type>java.util.HashMap</type>\n"
+            + "  <interfaces/>\n"
+            + "  <hasFactory>true</hasFactory>\n"
+            + "  <com.thoughtworks.acceptance.CglibCompatibilityTest_-DelegatingHandler>\n"
+            + "    <delegate class=\"map\">\n"
+            + "      <entry>\n"
+            + "        <string>URL</string>\n"
+            + "        <url>http://xstream.codehaus.org</url>\n"
+            + "      </entry>\n"
+            + "    </delegate>\n"
+            + "  </com.thoughtworks.acceptance.CglibCompatibilityTest_-DelegatingHandler>\n"
+            + "</cglib>";
+        assertEquals(expected, xstream.toXML(orig));
+    }
 }

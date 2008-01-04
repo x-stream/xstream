@@ -440,17 +440,17 @@ public class XStream {
         if ( useXStream11XmlFriendlyMapper() ){
             mapper = new XStream11XmlFriendlyMapper(mapper);
         }
+        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
+            mapper = buildMapperDynamically(
+                     "com.thoughtworks.xstream.mapper.CGLIBMapper",
+                     new Class[]{Mapper.class}, new Object[]{mapper});
+        }
+        mapper = new DynamicProxyMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
         mapper = new AttributeMapper(mapper, converterLookup);
         mapper = new ImplicitCollectionMapper(mapper);
-        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
-           mapper = buildMapperDynamically(
-                    "com.thoughtworks.xstream.mapper.CGLIBMapper",
-                    new Class[]{Mapper.class}, new Object[]{mapper});
-        }
-        mapper = new DynamicProxyMapper(mapper);
         if (JVM.is15()) {
             mapper = new EnumMapper(mapper);
         }

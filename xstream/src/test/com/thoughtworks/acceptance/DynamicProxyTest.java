@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,8 +20,10 @@ public class DynamicProxyTest extends AbstractAcceptanceTest {
         SampleDynamicProxy.InterfaceTwo two;
     };
 
-    public void testDynamicProxy() {
-        assertBothWays(SampleDynamicProxy.newInstance(), ""
+    public void testCanBeMarshaled() {
+        assertBothWays(
+            SampleDynamicProxy.newInstance(),
+            ""
                 + "<dynamic-proxy>\n"
                 + "  <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceOne</interface>\n"
                 + "  <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceTwo</interface>\n"
@@ -31,12 +33,14 @@ public class DynamicProxyTest extends AbstractAcceptanceTest {
                 + "</dynamic-proxy>");
     }
 
-    public void testDynamicProxyAsFieldMember() {
+    public void testAsFieldMember() {
         ClassWithProxyMember expected = new ClassWithProxyMember();
         expected.one = (SampleDynamicProxy.InterfaceOne)SampleDynamicProxy.newInstance();
         expected.two = (SampleDynamicProxy.InterfaceTwo)expected.one;
         xstream.alias("with-proxy", ClassWithProxyMember.class);
-        assertBothWays(expected, ""
+        assertBothWays(
+            expected,
+            ""
                 + "<with-proxy>\n"
                 + "  <one class=\"dynamic-proxy\">\n"
                 + "    <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceOne</interface>\n"
@@ -49,4 +53,18 @@ public class DynamicProxyTest extends AbstractAcceptanceTest {
                 + "</with-proxy>");
     }
 
+    public void testTypeCanBeAliased() {
+        xstream.aliasType("one", SampleDynamicProxy.InterfaceOne.class);
+        xstream.alias("two", SampleDynamicProxy.InterfaceTwo.class);
+        xstream.alias("handler", SampleDynamicProxy.class);
+        String expected = ""
+            + "<one>\n"
+            + "  <interface>one</interface>\n"
+            + "  <interface>two</interface>\n"
+            + "  <handler class=\"handler\">\n"
+            + "    <aField>hello</aField>\n"
+            + "  </handler>\n"
+            + "</one>";
+        assertEquals(expected, xstream.toXML(SampleDynamicProxy.newInstance()));
+    }
 }
