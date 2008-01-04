@@ -17,7 +17,6 @@ import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Mapper that caches which names map to which classes. Prevents repetitive searching and class loading.

@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.core;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
 import java.text.AttributedString;
@@ -142,11 +143,16 @@ public class JVM {
 
     public Class loadClass(String name) {
         try {
-            Class clazz = (Class)loaderCache.get(name);
-            if (clazz == null) {
-                clazz = Class.forName(name, false, getClass().getClassLoader());
-                loaderCache.put(name, clazz);
+            WeakReference reference = (WeakReference) loaderCache.get(name);
+            if (reference != null) {
+                Class cached = (Class) reference.get();
+                if (cached != null) {
+                    return cached;
+                }
             }
+            
+            Class clazz = Class.forName(name, false, getClass().getClassLoader());
+            loaderCache.put(name, new WeakReference(clazz));
             return clazz;
         } catch (ClassNotFoundException e) {
             return null;
