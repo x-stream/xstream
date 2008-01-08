@@ -63,7 +63,7 @@
 
     <target name="compile:java3" depends="compile:init" description="Compile all minimum Java 1.3 specific">
         <javac srcdir="${java.src.dir}" destdir="${java.build.dir}" debug="${java.compile.debug}" source="1.3" target="1.3">
-            <exclude name="com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider"/>
+            <exclude name="com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider.java"/>
             <excludesfile name="jdk-1.5-minimum.txt" />
             <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
             <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />

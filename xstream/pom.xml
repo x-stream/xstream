@@ -152,7 +152,7 @@
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
                 <exclude>**/enums/*</exclude>
-                <exclude>**/HarmonyReflectionProvider/*</exclude>
+                <exclude>**/HarmonyReflectionProvider*</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/annotations/*</exclude>
@@ -170,7 +170,7 @@
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
-                    <exclude>**/HarmonyReflectionProvider/*</exclude>
+                    <exclude>**/HarmonyReflectionProvider*</exclude>
                   </excludes>
                   <testExcludes>
                     <exclude>foo</exclude>
@@ -234,7 +234,7 @@
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
                 <exclude>**/enums/*</exclude>
-                <exclude>**/HarmonyReflectionProvider/*</exclude>
+                <exclude>**/HarmonyReflectionProvider*</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/annotations/*</exclude>
@@ -252,7 +252,7 @@
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
-                    <exclude>**/HarmonyReflectionProvider/*</exclude>
+                    <exclude>**/HarmonyReflectionProvider*</exclude>
                   </excludes>
                   <testExcludes>
                     <exclude>foo</exclude>
@@ -314,7 +314,7 @@
                 <exclude>**/enums/*</exclude>
                 <exclude>**/basic/StringBuilder*</exclude>
                 <exclude>**/basic/UUID*</exclude>
-                <exclude>**/HarmonyReflectionProvider/*</exclude>
+                <exclude>**/HarmonyReflectionProvider*</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/annotations/*</exclude>
