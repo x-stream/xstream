@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,6 @@ import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
 
 public class FinalFieldsTest extends AbstractAcceptanceTest {
@@ -25,7 +24,7 @@ public class FinalFieldsTest extends AbstractAcceptanceTest {
     }
 
     public void testSerializeFinalFieldsIfSupported() {
-        xstream = new XStream(new Sun14ReflectionProvider());
+        xstream = new XStream(new JVM().bestReflectionProvider());
         xstream.alias("thing", ThingWithFinalField.class);
 
         assertBothWays(new ThingWithFinalField(),
