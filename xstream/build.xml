@@ -55,7 +55,7 @@
 
     <target name="compile:java5" depends="compile:init" if="jdk1.5.available" description="Compile all minimum Java 5 specific">
 	    <javac srcdir="${java.src.dir}" destdir="${java.build.dir}" debug="${java.compile.debug}" source="1.5" target="1.5">
-            <exclude name="com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider"/>
+            <exclude name="com/thoughtworks/xstream/converters/reflection/HarmonyReflectionProvider.java"/>
 	        <includesfile name="jdk-1.5-minimum.txt" />
 	        <classpath refid="classpath"/>
 	    </javac>
@@ -63,7 +63,7 @@
 
     <target name="compile:java3" depends="compile:init" description="Compile all minimum Java 1.3 specific">
         <javac srcdir="${java.src.dir}" destdir="${java.build.dir}" debug="${java.compile.debug}" source="1.3" target="1.3">
-            <exclude name="com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider"/>
+            <exclude name="com/thoughtworks/xstream/converters/reflection/HarmonyReflectionProvider.java"/>
             <excludesfile name="jdk-1.5-minimum.txt" />
             <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
             <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
@@ -83,7 +83,7 @@
     <target name="test:compile" depends="compile, benchmark:compile">
         <mkdir dir="${test.build.dir}"/>
         <javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
-            <exclude name="com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider"/>
+            <exclude name="com/thoughtworks/xstream/converters/reflection/HarmonyReflectionProvider.java"/>
             <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
             <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
             <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
@@ -107,7 +107,7 @@
                 <fileset dir="${test.src.dir}">
                     <include name="${test.src.includes}"/>
                     <exclude name="${test.src.excludes}"/>
-                    <exclude name="com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider"/>
+                    <exclude name="com/thoughtworks/xstream/converters/reflection/HarmonyReflectionProvider.java"/>
                     <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
                     <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
                     <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
@@ -159,7 +159,7 @@
             <packageset dir="${java.src.dir}" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
                 <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
-                <exclude name="com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider"/>
+                <exclude name="com/thoughtworks/xstream/converters/reflection/HarmonyReflectionProvider.java"/>
                 <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
                 <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
                 <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
