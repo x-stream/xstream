@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,12 +14,13 @@ package com.thoughtworks.xstream.converters.reflection;
 import sun.misc.Unsafe;
 import sun.reflect.ReflectionFactory;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Instantiates a new object on the Sun JVM by bypassing the constructor (meaning code in the constructor
@@ -57,7 +58,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private transient ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-    private transient Map constructorCache = Collections.synchronizedMap(new HashMap());
+    private transient Map constructorCache = Collections.synchronizedMap(new WeakHashMap());
 
     public Sun14ReflectionProvider() {
     	super();
@@ -87,12 +88,13 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private Constructor getMungedConstructor(Class type) throws NoSuchMethodException {
-        if (!constructorCache.containsKey(type)) {
+        WeakReference ref = (WeakReference)constructorCache.get(type);
+        if (ref == null || ref.get() == null) {
             Constructor javaLangObjectConstructor = Object.class.getDeclaredConstructor(new Class[0]);
-            Constructor customConstructor = reflectionFactory.newConstructorForSerialization(type, javaLangObjectConstructor);
-            constructorCache.put(type, customConstructor);
+            ref = new WeakReference(reflectionFactory.newConstructorForSerialization(type, javaLangObjectConstructor));
+            constructorCache.put(type, ref);
         }
-        return (Constructor) constructorCache.get(type);
+        return (Constructor) ref.get();
     }
 
     public void writeField(Object object, String fieldName, Object value, Class definedIn) {
@@ -143,7 +145,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
     protected Object readResolve() {
         super.readResolve();
-        constructorCache = Collections.synchronizedMap(new HashMap());
+        constructorCache = Collections.synchronizedMap(new WeakHashMap());
         reflectionFactory = ReflectionFactory.getReflectionFactory();
         return this;
     }
