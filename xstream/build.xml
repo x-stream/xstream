@@ -155,6 +155,9 @@
             <packageset dir="${java.src.dir}" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
                 <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
+                <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
+                <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
+                <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
             </packageset>
             <doctitle><![CDATA[<h1>XStream ${version}</h1>]]></doctitle>
             <bottom><![CDATA[<i>Joe Walnes, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]></bottom>
