@@ -44,7 +44,7 @@ public class JVM {
                 reverse = i > 3;
             }
         }
-        reverseFieldOrder = reverse;
+        reverseFieldOrder = reverse || isHarmony();
     }
 
     /**
@@ -93,7 +93,11 @@ public class JVM {
     private static boolean isBlackdown() {
         return vendor.indexOf("Blackdown") != -1;
     }
-    
+
+    private static boolean isHarmony() {
+        return vendor.indexOf("Apache Software Foundation") != -1;
+    }
+
     /*
      * Support for sun.misc.Unsafe and sun.reflect.ReflectionFactory is present
      * in JRockit versions R25.1.0 and later, both 1.4.2 and 5.0 (and in future
@@ -165,7 +169,11 @@ public class JVM {
                 if ( canUseSun14ReflectionProvider() ) {
                     String cls = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
                     reflectionProvider = (ReflectionProvider) loadClass(cls).newInstance();
-                } else {
+                } else if (canUseHarmonyReflectionProvider()) {
+                    String cls = "com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider";
+                    reflectionProvider = (ReflectionProvider) loadClass(cls).newInstance();
+                } 
+                if (reflectionProvider == null) {
                     reflectionProvider = new PureJavaReflectionProvider();
                 }
             } catch (InstantiationException e) {
@@ -182,6 +190,10 @@ public class JVM {
 
     private boolean canUseSun14ReflectionProvider() {
         return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown() || isBEAWithUnsafeSupport() || isHitachi() || isSAP()) && is14() && loadClass("sun.misc.Unsafe") != null;
+    }
+
+    private boolean canUseHarmonyReflectionProvider() {
+        return isHarmony();
     }
 
     public static boolean reverseFieldDefinition() {
@@ -221,7 +233,7 @@ public class JVM {
         System.out.println("java.vm.vendor: " + vendor);
         System.out.println("Version: " + majorJavaVersion);
         System.out.println("Reverse field order: " + reverseFieldOrder);
-        System.out.println("XStream support for enhanced Mode: " + jvm.canUseSun14ReflectionProvider());
+        System.out.println("XStream support for enhanced Mode: " + (jvm.canUseSun14ReflectionProvider() || jvm.canUseHarmonyReflectionProvider()));
         System.out.println("Supports AWT: " + jvm.supportsAWT());
         System.out.println("Supports SQL: " + jvm.supportsSQL());
     }
