@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -50,5 +50,36 @@ public class AbsoluteXPathCircularReferenceTest extends AbstractCircularReferenc
 
         assertEquals(expected, xstream.toXML(bob));
     }
+    
+    static class LinkedElement {
+        String name;
+        LinkedElement next;
+        LinkedElement(String name) {
+            this.name = name;
+        }
+    }
 
+    public void testRing() {
+        LinkedElement tom = new LinkedElement("Tom");
+        LinkedElement dick = new LinkedElement("Dick");
+        LinkedElement harry = new LinkedElement("Harry");
+        tom.next = dick;
+        dick.next = harry;
+        harry.next = tom;
+        
+        xstream.alias("elem", LinkedElement.class);
+        String expected = "" +
+            "<elem>\n" +
+            "  <name>Tom</name>\n" +
+            "  <next>\n" +
+            "    <name>Dick</name>\n" +
+            "    <next>\n" +
+            "      <name>Harry</name>\n" +
+            "      <next reference=\"/elem\"/>\n" +
+            "    </next>\n" +
+            "  </next>\n" +
+            "</elem>";
+
+        assertEquals(expected, xstream.toXML(tom));
+    }
 }
