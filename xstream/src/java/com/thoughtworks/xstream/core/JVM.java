@@ -30,26 +30,15 @@ public class JVM {
     private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel") != null;
     private final boolean supportsSQL = loadClass("java.sql.Date") != null; 
 
-    private static final boolean reverseFieldOrder;
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
+    private static final boolean reverseFieldOrder = isHarmony() || (isIBM() && !is15());
 
     static final float DEFAULT_JAVA_VERSION = 1.3f;
 
-    static {
-        boolean reverse = false;
-        final Field[] fields = AttributedString.class.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].getName().equals("text")) {
-                reverse = i > 3;
-            }
-        }
-        reverseFieldOrder = reverse || isHarmony();
-    }
-
     /**
      * Parses the java version system property to determine the major java version,
-     * ie 1.x
+     * i.e. 1.x
      *
      * @return A float of the form 1.x
      */
@@ -227,14 +216,32 @@ public class JVM {
     }
     
     public static void main(String[] args) {
+        boolean reverse = false;
+        Field[] fields = AttributedString.class.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i].getName().equals("text")) {
+                reverse = i > 3;
+                break;
+            }
+        }
+        if (reverse) {
+            fields = JVM.class.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++) {
+                if (fields[i].getName().equals("reflectionProvider")) {
+                    reverse = i > 2;
+                    break;
+                }
+            }
+        }
+
         JVM jvm = new JVM();
         System.out.println("XStream JVM diagnostics");
         System.out.println("java.specification.version: " + System.getProperty("java.specification.version"));
         System.out.println("java.vm.vendor: " + vendor);
         System.out.println("Version: " + majorJavaVersion);
-        System.out.println("Reverse field order: " + reverseFieldOrder);
         System.out.println("XStream support for enhanced Mode: " + (jvm.canUseSun14ReflectionProvider() || jvm.canUseHarmonyReflectionProvider()));
         System.out.println("Supports AWT: " + jvm.supportsAWT());
         System.out.println("Supports SQL: " + jvm.supportsSQL());
+        System.out.println("Reverse field order detected (may have failed): " + reverse);
     }
 }
