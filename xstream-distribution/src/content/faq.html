@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2008 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -20,6 +20,7 @@
   		<li><a href="#Compatibility">Compatibility</a></li>
   		<li><a href="#Serialization">Serialization</a></li>
   		<li><a href="#XML">XML specifics</a></li>
+  		<li><a href="#JSON">JSON specifics</a></li>
   		<li><a href="#Other_Products">Comparison to other products</a></li>
   		<li><a href="#Scalability">Scalability</a></li>
     	<li><a href="#Uses">Uses of XStream</a></li>
@@ -296,6 +297,46 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     escape the underscore itself also. You may provide a different configured instance of the XmlFriendlyReplacer or a
     complete own implementation, but you must ensure, that the resulting names are valid for XML.</p>
 
+    <!-- ...................................................... -->
+    <h2 id="XML_unmarshalling_fails">XStream fails to unmarshal my given XML and I do not know why?</h2>
+
+    <p>By default XStream is written for persistence i.e. it will read the XML it can write. If you have to transform a given
+    XML into an object graph, you should go the other way round. Use XStream to transfer your objects into XML. If the 
+    written XML matches your schema, XStream is also able to read it. This way is much easier, since you can spot the 
+    differences in the XML much more easy than to interpret the exceptions XStream will throw if it cannot match the XML
+    into your objects.</p>
+
+
+    <!-- ****************************************************** -->
+    <h1 id="JSON">JSON specifics</h1>
+
+    <h2 id="JSON_2_drivers">Why are there two JSON driver implementations?</h2>
+
+	<p>As always, first for historical reasons! Main difference is that the 
+	<a href="javadoc/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriver.html">JettisonMappedXmlDriver</a> is a 
+	thin wrapper around <a href="http://jettison.codehaus.org">Jettison</a> in combination with the 
+	<a href="javadoc/com/thoughtworks/xstream/io/xml/StaxDriver.html">StaXDriver</a>, while the 
+	<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
+	uses an own more flexible implementation, but can be used to generate JSON.</p>
+
+    <h2 id="JSON_unmarshalling_fails">XStream fails to unmarshal my JSON string and I do not know why?</h2>
+
+    <p>Deserialization of JSON is currently done by Jettison, that transforms the JSON string into a StaX stream.
+    XStream itself does nothing know about the JSON format here. If your JSON string reaches some kind of
+    complexity and you do not know how to design your Java objects and configure XStream to match those,
+    you should have a look at the intermediate XML that is processed by XStream in the end. This might help to
+    identify the problematic spots. Also consider then <a href="#XML_unmarshalling_fails">marshalling your Java
+    objects into XML first</a>. You can use following code to generate the XML:</p>
+
+<div class="Source Java"><pre>final String json = "{string:\"foo\"}";
+final HierarchicalStreamDriver driver = new JettisonMappedXmlDriver();
+final StringReader reader = new StringReader(json);
+final HierarchicalStreamReader hsr = driver.createReader(reader);
+final StringWriter writer = new StringWriter();
+new HierarchicalStreamCopier().copy(hsr, new PrettyPrintWriter(writer));
+writer.close();
+System.out.println(writer.toString());
+</pre></div>
 
     <!-- ****************************************************** -->
     <h1 id="Other_Products">Comparison to other products</h1>
