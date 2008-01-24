@@ -317,7 +317,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 	thin wrapper around <a href="http://jettison.codehaus.org">Jettison</a> in combination with the 
 	<a href="javadoc/com/thoughtworks/xstream/io/xml/StaxDriver.html">StaXDriver</a>, while the 
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
-	uses an own more flexible implementation, but can be used to generate JSON.</p>
+	uses an own more flexible implementation, but can only be used to generate JSON, deserialization is not implemented.</p>
 
     <h2 id="JSON_unmarshalling_fails">XStream fails to unmarshal my JSON string and I do not know why?</h2>
 
