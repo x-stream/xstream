@@ -319,6 +319,12 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
 	uses an own more flexible implementation, but can only be used to generate JSON, deserialization is not implemented.</p>
 
+    <h2 id="JSON_deserialize_top_level_array">Why is it not possible to deserialize a JSON string starting with an array?</h2>
+
+	<p>XStream's implementation to deserialize JSON is based on Jettison and StaX. Jettison implements a XMLStreamReader
+	of	StaX and transforms the processed JSON virtually into XML first. However, if the JSON string starts with an array it is not
+	possible for Jettison to create a valid root element, since it has no name.</p>
+
     <h2 id="JSON_unmarshalling_fails">XStream fails to unmarshal my JSON string and I do not know why?</h2>
 
     <p>Deserialization of JSON is currently done by Jettison, that transforms the JSON string into a StaX stream.
