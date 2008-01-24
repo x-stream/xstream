@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,12 +19,15 @@ import java.awt.Color;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 
 /**
@@ -464,5 +467,46 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         window.title = "JUnit";
         window.name = null;
         assertEquals(expected, xs.toXML(window));
+    }
+    
+    static class Person {
+        String firstName;
+        String lastName;
+        Calendar dateOfBirth;
+        Map titles = new LinkedHashMap();
+    }
+    
+    public void testCanWriteEmbeddedCalendar() {
+        XStream xs = new XStream(new JsonHierarchicalStreamDriver());
+        xs.alias("person", Person.class);
+        String expected = (""
+                + "{'list': [\n"
+                + "  {\n"
+                + "    'firstName': 'Joe',\n"
+                + "    'lastName': 'Walnes',\n"
+                + "    'dateOfBirth': {\n"
+                + "      'time': -2177539200000,\n"
+                + "      'timezone': 'Europe/London'\n"
+                + "    },\n"
+                + "    'titles': {\n"
+                + "      '@class': 'linked-hash-map',\n"
+                + "      'entry': {\n"
+                + "        '1',\n"
+                + "        'Mr'\n"
+                + "      }\n"
+                + "    }\n"
+                + "  }\n"
+                + "]}").replace('\'', '"');
+
+        Person person = new Person();
+        person.firstName = "Joe";
+        person.lastName = "Walnes";
+        person.dateOfBirth = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+        person.dateOfBirth.clear();
+        person.dateOfBirth.set(1900, Calendar.DECEMBER, 31);
+        person.titles.put("1", "Mr");
+        List list = new ArrayList();
+        list.add(person);
+        assertEquals(expected, xs.toXML(list));
     }
 }

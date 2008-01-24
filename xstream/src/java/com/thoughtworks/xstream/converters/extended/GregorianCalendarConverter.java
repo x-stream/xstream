@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.converters.extended;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -36,11 +37,11 @@ public class GregorianCalendarConverter implements Converter {
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         GregorianCalendar calendar = (GregorianCalendar) source;
-        writer.startNode("time");
+        ExtendedHierarchicalStreamWriterHelper.startNode(writer, "time", long.class);
         long timeInMillis = calendar.getTime().getTime(); // calendar.getTimeInMillis() not available under JDK 1.3
         writer.setValue(String.valueOf(timeInMillis));
         writer.endNode();
-        writer.startNode("timezone");
+        ExtendedHierarchicalStreamWriterHelper.startNode(writer, "timezone", String.class);
         writer.setValue(calendar.getTimeZone().getID());
         writer.endNode();
     }
