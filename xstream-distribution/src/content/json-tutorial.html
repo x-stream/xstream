@@ -22,7 +22,9 @@ have to do is to initialize XStream object with an appropriate driver and you ar
 <a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
 and the <a href="javadoc/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriver.html">JettisonMappedXmlDriver</a>.
 The first one does not have an additional dependency, but can only be used to write XML, while the second one is based
-on Jettison and can also deserialize JSON to Java objects again.</p>
+on Jettison and can also deserialize JSON to Java objects again.  However, since the JettisonMappedXmlDriver transforms
+plain XML into JSON, you might get better JSON strings with the JsonHierarchicalStreamDriver, because this driver knows
+often about the type of the written data and can act properly.</p>
 
 <h1 id="jettison">Jettison driver</h1>
 
@@ -38,7 +40,7 @@ on Jettison and can also deserialize JSON to Java objects again.</p>
 &lt;dependency&gt;
 	&lt;groupId&gt;org.codehaus.jettison&lt;/groupId&gt;
 	&lt;artifactId&gt;jettison&lt;/artifactId&gt;
-	&lt;version&gt;1.0-RC1&lt;/version&gt;
+	&lt;version&gt;1.0-RC2&lt;/version&gt;
 &lt;/dependency&gt;	
 &lt;dependency&gt;
 	&lt;groupId&gt;stax&lt;/groupId&gt;
@@ -50,7 +52,7 @@ on Jettison and can also deserialize JSON to Java objects again.</p>
  
 <p>Here are a few simple examples:</p>
 
-<h2 id="jettison-write">Write to JSON</h2>
+<h2 id="jettison-write">Write to JSON with the Jettison-based implementation</h2>
 
 <p>The following example:</p>
 
@@ -78,6 +80,24 @@ public class WriteTest {
 <div class="Source Java"><pre>{"product":{"name":"Banana","id":"123","price":"23.0"}}</pre></div>
 
 <p>As you can see, all standard XStream features (such as aliases) can be used with this driver.</p>	
+
+<h2 id="json-write">Write to JSON with the self-contained JSON driver</h2>
+
+<p>The only difference to the example above is the line with the initialization:</p>
+
+<div class="Source Java"><pre>XStream xstream = new XStream(new JsonHierarchicalStreamDriver());</pre></div>
+
+<p>The output is as follows:</p>
+
+<div class="Source Java"><pre>{"product": {
+  "name": "Banana",
+  "id": "123",
+  "price": 23.0
+}}</pre></div>
+
+<p>While the difference because of line feeds is immediately obvious, you have to note also the value of the
+<em>price</em> element. This time the driver knew about the numeric value and therefore no quotes were
+generated.</p>
 
 <h2 id="jettison-read">Read from JSON</h2>
 
