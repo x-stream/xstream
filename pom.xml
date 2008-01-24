@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007 XStream committers.
+     Copyright (C) 2006, 2007, 2008 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -259,7 +259,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>2.1.1</version>
+          <version>2.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -306,7 +306,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.0-beta-5</version>
+          <version>2.0-beta-6</version>
           <configuration>
             <goals>deploy</goals>
             <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -320,12 +320,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>2.0-beta-5</version>
+          <version>2.0-beta-6</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.0.3</version>
+          <version>2.0.4</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -339,11 +339,11 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.4</version>
           <configuration>
             <forkMode>once</forkMode>
             <printSummary>true</printSummary>
-            <useFile>true</useFile>
+            <useFile>false</useFile>
             <systemProperties>
               <property>
                 <name>java.awt.headless</name>
@@ -355,7 +355,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-report-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.4</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
