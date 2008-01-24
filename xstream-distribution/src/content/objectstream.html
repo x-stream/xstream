@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2008 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -86,6 +86,15 @@ int    d = in.readInt();</pre></div>
 
         <p>When there are no more objects left to read in the stream, <code>ObjectInputStream.readObject()</code> (or primitive
         equivalent) will throw <code>java.io.EOFException</code>.</p>
+
+        <h2>References</h2>
+
+        <p>Normally XStream will not know about references between the different objects that are written individually in the ObjectStream.
+        Nevertheless there is an example in the acceptance tests (MultipleObjectsInOneStreamTest) where such a functionality is realized with 
+        the help of a custom MarshallingStrategy. Note, that this implementation is not for general use, since it will ignore some parameters at 
+        second invocation, but they do not matter in the demonstrated use case. Additionally those references prevent the objects from being 
+        garbage collected, which is a bit counter-productive for the use case of ObjectStreams as described above. So you have to know what 
+        you do!</p>
         
     </body>
 </html>
