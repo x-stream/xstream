@@ -53,7 +53,8 @@
     	<li>JIRA:XSTR-403: Attributes are no longer written with JSONHierarchicalStreamDriver if current object is a collection.</li>
     	<li>JIRA:XSTR-456: New LookAndFeelConverter handling LookAndFeel implementations with reflection.</li>
     	<li>JIRA:XSTR-462: CachingMapper keeps direct class references.</li>
-    	<li>StaxWriter.flush did close Stax' XMLStreamWriter instead of flushing it.</li>
+    	<li>JSONHierarchicalStreamDriver writes attribute names with a leading '@'.</li>
+    	<li>JSONHierarchicalStreamDriver supports Map implementations.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -86,7 +87,6 @@
     	<li>JIRA:XSTR-463: Cannot provide own default Mapper chain.</li>
     	<li>JIRA:XSTR-464: Cannot provide a ClassLoader that is used in all cases.</li>
     	<li>Update annotation tutorial, explain limitations of auto-detection mode.</li>
-    	<li>JSONHierarchicalStreamDriver writes attribute names with a leading '@'.</li>
     	<li>Added copyright notices to all files.</li>
     	<li>StaxWriter.flush did close Stax' XMLStreamWriter instead of flushing it.</li>
     	<li>JIRA:XSTR-471: XStream POMs do no longer declare a repository at all.</li>
