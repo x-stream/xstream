@@ -19,11 +19,12 @@ import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
 
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Map;
 
 
 /**
- * A simple writer that outputs JSON in a pretty-printed indented stream. Arrays, Lists and Sets
- * rely on you NOT using XStream.addImplicitCollection(..)
+ * A simple writer that outputs JSON in a pretty-printed indented stream. Arrays, Lists and Sets rely on you NOT using
+ * XStream.addImplicitCollection(..)
  * 
  * @author Paul Hammant
  * @author J&ouml;rg Schaible
@@ -80,12 +81,12 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         }
         tagIsEmpty = false;
         finishTag();
-        if (currNode == null || (currNode.clazz != null && !currNode.isCollection)) {
+        if (currNode == null || currNode.clazz == null || (currNode.clazz != null && !currNode.isCollection)) {
             writer.write("\"");
             writer.write(name);
             writer.write("\": ");
         }
-        if (clazz != null && (Collection.class.isAssignableFrom(clazz) || clazz.isArray())) {
+        if (isCollection(clazz)) {
             writer.write("[");
         } else if (hasChildren(clazz)) {
             writer.write("{");
@@ -94,7 +95,7 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
             currNode.fieldAlready = true;
         }
         elementStack.push(new Node(name, clazz));
-        depth++ ;
+        depth++;
         readyForNewLine = true;
         tagIsEmpty = true;
     }
@@ -108,8 +109,7 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         public Node(String name, Class clazz) {
             this.name = name;
             this.clazz = clazz;
-            isCollection = clazz != null
-                && (Collection.class.isAssignableFrom(clazz) || clazz.isArray());
+            isCollection = isCollection(clazz);
         }
     }
 
@@ -152,10 +152,9 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
             int idxQuote = text.indexOf('"', i);
             int idxSlash = text.indexOf('\\', i);
             int idxNull = text.indexOf('\0', i);
-            int idx = Math.min(Math.min(
-                idxQuote < 0 ? Integer.MAX_VALUE : idxQuote, idxSlash < 0
-                    ? Integer.MAX_VALUE
-                    : idxSlash), idxNull < 0 ? Integer.MAX_VALUE : idxNull);
+            int idx = Math.min(
+                    Math.min(idxQuote < 0 ? Integer.MAX_VALUE : idxQuote, idxSlash < 0 ? Integer.MAX_VALUE : idxSlash),
+                    idxNull < 0 ? Integer.MAX_VALUE : idxNull);
             if (idx == Integer.MAX_VALUE) {
                 break;
             }
@@ -178,21 +177,26 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         }
     }
 
+    private boolean isCollection(Class clazz) {
+        return clazz != null
+                && (Collection.class.isAssignableFrom(clazz) || clazz.isArray() || Map.class.isAssignableFrom(clazz) || Map.Entry.class
+                        .isAssignableFrom(clazz));
+    }
+
     private boolean needsQuotes(Class clazz) {
         clazz = clazz != null && clazz.isPrimitive() ? clazz : Primitives.unbox(clazz);
         return clazz == null || clazz == Character.TYPE;
     }
 
     public void endNode() {
-        depth-- ;
+        depth--;
         Node node = (Node)elementStack.pop();
         if (tagIsEmpty && !hasChildren(node.clazz)) {
             readyForNewLine = false;
             finishTag();
         } else {
             finishTag();
-            if (node.clazz != null
-                && (Collection.class.isAssignableFrom(node.clazz) || node.clazz.isArray())) {
+            if (node.clazz != null && node.isCollection) {
                 writer.write("]");
             } else if (hasChildren(node.clazz)) {
                 writer.write("}");
@@ -223,7 +227,7 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
 
     protected void endOfLine() {
         writer.write(newLine);
-        for (int i = 0; i < depth; i++ ) {
+        for (int i = 0; i < depth; i++) {
             writer.write(lineIndenter);
         }
     }

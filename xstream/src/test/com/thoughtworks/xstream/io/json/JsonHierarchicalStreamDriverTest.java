@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -31,8 +32,7 @@ import com.thoughtworks.xstream.XStream;
 
 
 /**
- * Some of these test cases are taken from example JSON listed at
- * http://www.json.org/example.html
+ * Some of these test cases are taken from example JSON listed at http://www.json.org/example.html
  * 
  * @author Paul Hammant
  * @author J&ouml;rg Schaible
@@ -60,23 +60,23 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testCanMarshalSimpleTypes() {
 
         String expected = ("{'innerMessage': {\n"
-            + "  'long1': 5,\n"
-            + "  'long2': 42,\n"
-            + "  'greeting': 'hello',\n"
-            + "  'num1': 2,\n"
-            + "  'num2': 3,\n"
-            + "  'bool': true,\n"
-            + "  'bool2': true,\n"
-            + "  'char1': 'A',\n"
-            + "  'char2': 'B',\n"
-            + "  'innerMessage': {\n"
-            + "    'long1': 0,\n"
-            + "    'greeting': 'bonjour',\n"
-            + "    'num1': 3,\n"
-            + "    'bool': false,\n"
-            + "    'char1': '\\u00'\n"
-            + "  }\n"
-            + "}}").replace('\'', '"');
+                + "  'long1': 5,\n"
+                + "  'long2': 42,\n"
+                + "  'greeting': 'hello',\n"
+                + "  'num1': 2,\n"
+                + "  'num2': 3,\n"
+                + "  'bool': true,\n"
+                + "  'bool2': true,\n"
+                + "  'char1': 'A',\n"
+                + "  'char2': 'B',\n"
+                + "  'innerMessage': {\n"
+                + "    'long1': 0,\n"
+                + "    'greeting': 'bonjour',\n"
+                + "    'num1': 3,\n"
+                + "    'bool': false,\n"
+                + "    'char1': '\\u00'\n"
+                + "  }\n"
+                + "}}").replace('\'', '"');
 
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
 
@@ -118,35 +118,29 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     String expectedMenuStart = ""
-        + "{'menu': {\n"
-        + "  'id': 'file',\n"
-        + "  'value': 'File:',\n"
-        + "  'popup': {\n"
-        + "    'menuitem': [";
+            + "{'menu': {\n"
+            + "  'id': 'file',\n"
+            + "  'value': 'File:',\n"
+            + "  'popup': {\n"
+            + "    'menuitem': [";
     String expectedNew = ""
-        + "      {\n"
-        + "        'value': 'New',\n"
-        + "        'onclick': 'CreateNewDoc()'\n"
-        + "      }";
+            + "      {\n"
+            + "        'value': 'New',\n"
+            + "        'onclick': 'CreateNewDoc()'\n"
+            + "      }";
     String expectedOpen = ""
-        + "      {\n"
-        + "        'value': 'Open',\n"
-        + "        'onclick': 'OpenDoc()'\n"
-        + "      }";
+            + "      {\n"
+            + "        'value': 'Open',\n"
+            + "        'onclick': 'OpenDoc()'\n"
+            + "      }";
     String expectedClose = ""
-        + "      {\n"
-        + "        'value': 'Close',\n"
-        + "        'onclick': 'CloseDoc()'\n"
-        + "      }";
+            + "      {\n"
+            + "        'value': 'Close',\n"
+            + "        'onclick': 'CloseDoc()'\n"
+            + "      }";
     String expectedMenuEnd = "" + "    ]\n" + "  }\n" + "}}";
-    String expected = (expectedMenuStart
-        + "\n"
-        + expectedNew
-        + ",\n"
-        + expectedOpen
-        + ",\n"
-        + expectedClose
-        + "\n" + expectedMenuEnd).replace('\'', '"');
+    String expected = (expectedMenuStart + "\n" + expectedNew + ",\n" + expectedOpen + ",\n" + expectedClose + "\n" + expectedMenuEnd)
+            .replace('\'', '"');
 
     public void testCanMarshalLists() {
 
@@ -214,8 +208,8 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
     public static class PopupWithArray {
         MenuItem[] menuitem = new MenuItem[]{
-            new MenuItem("New", "CreateNewDoc()"), new MenuItem("Open", "OpenDoc()"),
-            new MenuItem("Close", "CloseDoc()")};
+                new MenuItem("New", "CreateNewDoc()"), new MenuItem("Open", "OpenDoc()"),
+                new MenuItem("Close", "CloseDoc()")};
     }
 
     public static class MenuWithSet {
@@ -255,31 +249,31 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         // This also from http://www.expected.org/example.html
 
         String expected = ("{'widget': {\n"
-            + "  'debug': 'on',\n"
-            + "  'window': {\n"
-            + "    'title': 'Sample Konfabulator Widget',\n"
-            + "    'name': 'main_window',\n"
-            + "    'width': 500,\n"
-            + "    'height': 500\n"
-            + "  },\n"
-            + "  'image': {\n"
-            + "    'src': 'Images/Sun.png',\n"
-            + "    'name': 'sun1',\n"
-            + "    'hOffset': 250,\n"
-            + "    'vOffset': 250,\n"
-            + "    'alignment': 'center'\n"
-            + "  },\n"
-            + "  'text': {\n"
-            + "    'data': 'Click Here',\n"
-            + "    'size': 36,\n"
-            + "    'style': 'bold',\n"
-            + "    'name': 'text1',\n"
-            + "    'hOffset': 250,\n"
-            + "    'vOffset': 100,\n"
-            + "    'alignment': 'center',\n"
-            + "    'onMouseUp': 'sun1.opacity = (sun1.opacity / 100) * 90;'\n"
-            + "  }\n"
-            + "}}").replace('\'', '"');
+                + "  'debug': 'on',\n"
+                + "  'window': {\n"
+                + "    'title': 'Sample Konfabulator Widget',\n"
+                + "    'name': 'main_window',\n"
+                + "    'width': 500,\n"
+                + "    'height': 500\n"
+                + "  },\n"
+                + "  'image': {\n"
+                + "    'src': 'Images/Sun.png',\n"
+                + "    'name': 'sun1',\n"
+                + "    'hOffset': 250,\n"
+                + "    'vOffset': 250,\n"
+                + "    'alignment': 'center'\n"
+                + "  },\n"
+                + "  'text': {\n"
+                + "    'data': 'Click Here',\n"
+                + "    'size': 36,\n"
+                + "    'style': 'bold',\n"
+                + "    'name': 'text1',\n"
+                + "    'hOffset': 250,\n"
+                + "    'vOffset': 100,\n"
+                + "    'alignment': 'center',\n"
+                + "    'onMouseUp': 'sun1.opacity = (sun1.opacity / 100) * 90;'\n"
+                + "  }\n"
+                + "}}").replace('\'', '"');
 
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("widget", Widget.class);
@@ -330,26 +324,25 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         Color color = Color.black;
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         String expected = ("{'awt-color': {\n"
-            + "  'red': 0,\n"
-            + "  'green': 0,\n"
-            + "  'blue': 0,\n"
-            + "  'alpha': 255\n"
-            + "}}").replace('\'', '"');
+                + "  'red': 0,\n"
+                + "  'green': 0,\n"
+                + "  'blue': 0,\n"
+                + "  'alpha': 255\n"
+                + "}}").replace('\'', '"');
         assertEquals(expected, xs.toXML(color));
     }
 
     public void testDoesHandleQuotesAndEscapes() {
-        String[] strings = new String[]{
-            "last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
+        String[] strings = new String[]{"last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         String expected = (""
-            + "{#string-array#: [\n"
-            + "  #last\\\"#,\n"
-            + "  #\\\"first#,\n"
-            + "  #\\\"between\\\"#,\n"
-            + "  #around \\\"\\\" it#,\n"
-            + "  #back\\\\slash#\n"
-            + "]}").replace('#', '"');
+                + "{#string-array#: [\n"
+                + "  #last\\\"#,\n"
+                + "  #\\\"first#,\n"
+                + "  #\\\"between\\\"#,\n"
+                + "  #around \\\"\\\" it#,\n"
+                + "  #back\\\\slash#\n"
+                + "]}").replace('#', '"');
         assertEquals(expected, xs.toXML(strings));
     }
 
@@ -362,11 +355,11 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xs.alias("innerMessage", Msg.class);
 
         String expected = (""
-            + "{'innerMessage': {\n"
-            + "  'greeting': 'hello',\n"
-            + "  'innerMessage': {\n"
-            + "  }\n"
-            + "}}").replace('\'', '"');
+                + "{'innerMessage': {\n"
+                + "  'greeting': 'hello',\n"
+                + "  'innerMessage': {\n"
+                + "  }\n"
+                + "}}").replace('\'', '"');
         assertEquals(expected, xs.toXML(message));
     }
 
@@ -383,8 +376,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("element", ElementWithEmptyArray.class);
 
-        String expected = ("" + "{'element': {\n" + "  'array': [\n" + "  ]\n" + "}}").replace(
-            '\'', '"');
+        String expected = ("" + "{'element': {\n" + "  'array': [\n" + "  ]\n" + "}}").replace('\'', '"');
         assertEquals(expected, xs.toXML(new ElementWithEmptyArray()));
     }
 
@@ -394,17 +386,58 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
     public void testCanMarshalJavaMap() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
-        String expected = (""
-            + "{'map': {\n"
-            + "  'entry': {\n"
-            + "    'one',\n"
-            + "    1\n"
-            + "  }\n"
-            + "}}").replace('\'', '"');
+        String entry1 = "" // entry 1
+                + "  'entry': {\n"
+                + "    'string': 'one',\n"
+                + "    'int': 1\n"
+                + "  }";
+        String entry2 = "" // entry 2
+                + "  'entry': {\n"
+                + "    'string': 'two',\n"
+                + "    'int': 2\n"
+                + "  }";
 
         final Map map = new HashMap();
         map.put("one", new Integer(1));
-        assertEquals(expected, xs.toXML(map));
+        map.put("two", new Integer(2));
+        String actual = xs.toXML(map);
+        int idx1 = actual.indexOf("one");
+        int idx2 = actual.indexOf("two");
+
+        String expected = (""
+                + "{'map': {\n"
+                + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
+                + ((idx1 < idx2 ? entry2 : entry1) + "\n") // no comma
+        + "}}").replace('\'', '"');
+        assertEquals(expected, actual);
+    }
+
+    public void testCanMarshalProperties() {
+        XStream xs = new XStream(new JsonHierarchicalStreamDriver());
+        String entry1 = "" // entry 1
+                + "  'property': {\n"
+                + "    '@name': 'one',\n"
+                + "    '@value': '1'\n"
+                + "  }";
+        String entry2 = "" // entry 2
+                + "  'property': {\n"
+                + "    '@name': 'two',\n"
+                + "    '@value': '2'\n"
+                + "  }";
+
+        final Properties properties = new Properties();
+        properties.setProperty("one", "1");
+        properties.setProperty("two", "2");
+        String actual = xs.toXML(properties);
+        int idx1 = actual.indexOf("one");
+        int idx2 = actual.indexOf("two");
+
+        String expected = (""
+                + "{'properties': {\n"
+                + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
+                + ((idx1 < idx2 ? entry2 : entry1) + "\n") // no comma
+        + "}}").replace('\'', '"');
+        assertEquals(expected, actual);
     }
 
     final static class MapHolder {
@@ -414,19 +447,32 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testCanMarshalNestedMap() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("holder", MapHolder.class);
-        String expected = (""
-            + "{'holder': {\n"
-            + "  'map': {\n"
-            + "    'entry': {\n"
-            + "      'one',\n"
-            + "      1\n"
-            + "    }\n"
-            + "  }\n"
-            + "}}").replace('\'', '"');
+        String entry1 = "" // entry 1
+                + "    'entry': {\n"
+                + "      'string': 'one',\n"
+                + "      'int': 1\n"
+                + "    }";
+        String entry2 = "" // entry 2
+                + "    'entry': {\n"
+                + "      'string': 'two',\n"
+                + "      'int': 2\n"
+                + "    }";
 
         final MapHolder holder = new MapHolder();
         holder.map.put("one", new Integer(1));
-        assertEquals(expected, xs.toXML(holder));
+        holder.map.put("two", new Integer(2));
+        String actual = xs.toXML(holder);
+        int idx1 = actual.indexOf("one");
+        int idx2 = actual.indexOf("two");
+
+        String expected = (""
+                + "{'holder': {\n"
+                + "  'map': {\n"
+                + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
+                + ((idx1 < idx2 ? entry2 : entry1) + "\n")
+                + "  }\n" // no comma
+        + "}}").replace('\'', '"');
+        assertEquals(expected, actual);
     }
 
     static class CollectionKeeper {
@@ -436,20 +482,15 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testIgnoresAttributeForCollectionMember() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("keeper", CollectionKeeper.class);
-        String expected = (""
-            + "{'keeper': {\n"
-            + "  'coll': [\n"
-            + "    'one',\n"
-            + "    'two'\n"
-            + "  ]\n"
-            + "}}").replace('\'', '"');
+        String expected = ("" + "{'keeper': {\n" + "  'coll': [\n" + "    'one',\n" + "    'two'\n" + "  ]\n" + "}}")
+                .replace('\'', '"');
 
         final CollectionKeeper holder = new CollectionKeeper();
         holder.coll.add("one");
         holder.coll.add("two");
         assertEquals(expected, xs.toXML(holder));
     }
-    
+
     // Writing attributes, the writer has no clue about their original type.
     public void testDoesWriteAttributesAsStringValues() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
@@ -457,25 +498,25 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xs.useAttributeFor("width", int.class);
         xs.useAttributeFor("height", int.class);
         String expected = (""
-            + "{'window': {\n"
-            + "  '@width': '500',\n"
-            + "  '@height': '500',\n"
-            + "  'title': 'JUnit'\n"
-            + "}}").replace('\'', '"');
+                + "{'window': {\n"
+                + "  '@width': '500',\n"
+                + "  '@height': '500',\n"
+                + "  'title': 'JUnit'\n"
+                + "}}").replace('\'', '"');
 
         final Window window = new Window();
         window.title = "JUnit";
         window.name = null;
         assertEquals(expected, xs.toXML(window));
     }
-    
+
     static class Person {
         String firstName;
         String lastName;
         Calendar dateOfBirth;
         Map titles = new TreeMap();
     }
-    
+
     public void testCanWriteEmbeddedCalendar() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("person", Person.class);
@@ -493,8 +534,8 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 + "      'no-comparator': {\n"
                 + "      },\n"
                 + "      'entry': {\n"
-                + "        '1',\n"
-                + "        'Mr'\n"
+                + "        'string': '1',\n"
+                + "        'string': 'Mr'\n"
                 + "      }\n"
                 + "    }\n"
                 + "  }\n"
