@@ -387,15 +387,15 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testCanMarshalJavaMap() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         String entry1 = "" // entry 1
-                + "  'entry': {\n"
-                + "    'string': 'one',\n"
-                + "    'int': 1\n"
-                + "  }";
+                + "  [\n"
+                + "    'one',\n"
+                + "    1\n"
+                + "  ]";
         String entry2 = "" // entry 2
-                + "  'entry': {\n"
-                + "    'string': 'two',\n"
-                + "    'int': 2\n"
-                + "  }";
+                + "  [\n"
+                + "    'two',\n"
+                + "    2\n"
+                + "  ]";
 
         final Map map = new HashMap();
         map.put("one", new Integer(1));
@@ -405,22 +405,22 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         int idx2 = actual.indexOf("two");
 
         String expected = (""
-                + "{'map': {\n"
+                + "{'map': [\n"
                 + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
                 + ((idx1 < idx2 ? entry2 : entry1) + "\n") // no comma
-        + "}}").replace('\'', '"');
+        + "]}").replace('\'', '"');
         assertEquals(expected, actual);
     }
 
     public void testCanMarshalProperties() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         String entry1 = "" // entry 1
-                + "  'property': {\n"
+                + "  {\n"
                 + "    '@name': 'one',\n"
                 + "    '@value': '1'\n"
                 + "  }";
         String entry2 = "" // entry 2
-                + "  'property': {\n"
+                + "  {\n"
                 + "    '@name': 'two',\n"
                 + "    '@value': '2'\n"
                 + "  }";
@@ -433,10 +433,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         int idx2 = actual.indexOf("two");
 
         String expected = (""
-                + "{'properties': {\n"
+                + "{'properties': [\n"
                 + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
                 + ((idx1 < idx2 ? entry2 : entry1) + "\n") // no comma
-        + "}}").replace('\'', '"');
+        + "]}").replace('\'', '"');
         assertEquals(expected, actual);
     }
 
@@ -448,15 +448,15 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("holder", MapHolder.class);
         String entry1 = "" // entry 1
-                + "    'entry': {\n"
-                + "      'string': 'one',\n"
-                + "      'int': 1\n"
-                + "    }";
+                + "    [\n"
+                + "      'one',\n"
+                + "      1\n"
+                + "    ]";
         String entry2 = "" // entry 2
-                + "    'entry': {\n"
-                + "      'string': 'two',\n"
-                + "      'int': 2\n"
-                + "    }";
+                + "    [\n"
+                + "      'two',\n"
+                + "      2\n"
+                + "    ]";
 
         final MapHolder holder = new MapHolder();
         holder.map.put("one", new Integer(1));
@@ -467,10 +467,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         String expected = (""
                 + "{'holder': {\n"
-                + "  'map': {\n"
+                + "  'map': [\n"
                 + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
                 + ((idx1 < idx2 ? entry2 : entry1) + "\n")
-                + "  }\n" // no comma
+                + "  ]\n" // no comma
         + "}}").replace('\'', '"');
         assertEquals(expected, actual);
     }
@@ -482,8 +482,13 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testIgnoresAttributeForCollectionMember() {
         XStream xs = new XStream(new JsonHierarchicalStreamDriver());
         xs.alias("keeper", CollectionKeeper.class);
-        String expected = ("" + "{'keeper': {\n" + "  'coll': [\n" + "    'one',\n" + "    'two'\n" + "  ]\n" + "}}")
-                .replace('\'', '"');
+        String expected = ("" //
+                + "{'keeper': {\n"
+                + "  'coll': [\n"
+                + "    'one',\n"
+                + "    'two'\n"
+                + "  ]\n"
+                + "}}").replace('\'', '"');
 
         final CollectionKeeper holder = new CollectionKeeper();
         holder.coll.add("one");
@@ -529,15 +534,14 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 + "      'time': -2177539200000,\n"
                 + "      'timezone': 'Europe/London'\n"
                 + "    },\n"
-                + "    'titles': {\n"
-                + "      '@class': 'tree-map',\n"
-                + "      'no-comparator': {\n"
+                + "    'titles': [\n"
+                + "      {\n" // no-comparator element
                 + "      },\n"
-                + "      'entry': {\n"
-                + "        'string': '1',\n"
-                + "        'string': 'Mr'\n"
-                + "      }\n"
-                + "    }\n"
+                + "      [\n"
+                + "        '1',\n"
+                + "        'Mr'\n"
+                + "      ]\n"
+                + "    ]\n"
                 + "  }\n"
                 + "]}").replace('\'', '"');
 
