@@ -11,10 +11,6 @@
  */
 package com.thoughtworks.xstream.io.json;
 
-import com.thoughtworks.xstream.XStream;
-
-import junit.framework.TestCase;
-
 import java.awt.Color;
 import java.io.InputStream;
 import java.io.Reader;
@@ -23,11 +19,15 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeMap;
+
+import junit.framework.TestCase;
+
+import com.thoughtworks.xstream.XStream;
 
 
 /**
@@ -473,7 +473,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         String firstName;
         String lastName;
         Calendar dateOfBirth;
-        Map titles = new LinkedHashMap();
+        Map titles = new TreeMap();
     }
     
     public void testCanWriteEmbeddedCalendar() {
@@ -489,7 +489,9 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 + "      'timezone': 'Europe/London'\n"
                 + "    },\n"
                 + "    'titles': {\n"
-                + "      '@class': 'linked-hash-map',\n"
+                + "      '@class': 'tree-map',\n"
+                + "      'no-comparator': {\n"
+                + "      },\n"
                 + "      'entry': {\n"
                 + "        '1',\n"
                 + "        'Mr'\n"
