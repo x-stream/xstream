@@ -128,7 +128,10 @@ public abstract class AbstractReflectionConverter implements Converter {
 
                 Class defaultType = mapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
-                    writer.addAttribute(mapper.aliasForAttribute("class"), mapper.serializedClass(actualType));
+                    String serializedClassName = mapper.serializedClass(actualType);
+                    if (!serializedClassName.equals(mapper.serializedClass(defaultType))) {
+                        writer.addAttribute(mapper.aliasForAttribute("class"), serializedClassName);
+                    }
                 }
 
                 final Field defaultField = (Field)defaultFieldDefinition.get(fieldName);

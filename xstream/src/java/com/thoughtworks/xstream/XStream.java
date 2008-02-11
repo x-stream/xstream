@@ -451,13 +451,13 @@ public class XStream {
         mapper = new AttributeAliasingMapper(mapper);
         mapper = new AttributeMapper(mapper, converterLookup);
         mapper = new ImplicitCollectionMapper(mapper);
+        mapper = new OuterClassMapper(mapper);
+        mapper = new ArrayMapper(mapper);
+        mapper = new DefaultImplementationsMapper(mapper);
         if (JVM.is15()) {
             mapper = new EnumMapper(mapper);
         }
-        mapper = new OuterClassMapper(mapper);
-        mapper = new ArrayMapper(mapper);
         mapper = new LocalConversionMapper(mapper);
-        mapper = new DefaultImplementationsMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
         if (JVM.is15()) {
             mapper = buildMapperDynamically(

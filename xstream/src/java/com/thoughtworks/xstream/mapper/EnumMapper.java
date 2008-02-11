@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,11 +14,14 @@ package com.thoughtworks.xstream.mapper;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.core.JVM;
 
+
 /**
- * Mapper that handles the special case of polymorphic enums in Java 1.5. This renames MyEnum$1 to MyEnum making it
- * less bloaty in the XML and avoiding the need for an alias per enum value to be specified.
- *
+ * Mapper that handles the special case of polymorphic enums in Java 1.5. This renames MyEnum$1
+ * to MyEnum making it less bloaty in the XML and avoiding the need for an alias per enum value
+ * to be specified. Additionally every enum is treated automatically as immutable type.
+ * 
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
 public class EnumMapper extends MapperWrapper {
 
@@ -28,7 +31,9 @@ public class EnumMapper extends MapperWrapper {
 
     private static final boolean active = enumClass != null;
 
-    private static final Class enumSetClass = active ? jvm.loadClass("java.util.EnumSet") : null;
+    private static final Class enumSetClass = active
+        ? jvm.loadClass("java.util.EnumSet")
+        : null;
 
     public EnumMapper(Mapper wrapped) {
         super(wrapped);
@@ -42,7 +47,7 @@ public class EnumMapper extends MapperWrapper {
     }
 
     public String serializedClass(Class type) {
-        if (!active) {
+        if (!active || type == null) {
             return super.serializedClass(type);
         } else {
             if (enumClass.isAssignableFrom(type) && type.getSuperclass() != enumClass) {
@@ -55,4 +60,7 @@ public class EnumMapper extends MapperWrapper {
         }
     }
 
+    public boolean isImmutableValueType(Class type) {
+        return enumClass.isAssignableFrom(type) || super.isImmutableValueType(type);
+    }
 }
