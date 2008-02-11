@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -73,4 +73,33 @@ public class PropertiesConverterTest extends TestCase {
         assertEquals(override, out);
     }
 
+    public void testCanSortElements() {
+        Properties defaults = new Properties();
+        defaults.setProperty("host", "localhost");
+        defaults.setProperty("port", "80");
+
+        Properties override = new Properties(defaults);
+        override.setProperty("port", "999");
+        override.setProperty("domain", "codehaus.org");
+
+        String expectedXML = "" +
+                "<properties>\n" +
+                "  <property name=\"domain\" value=\"codehaus.org\"/>\n" +
+                "  <property name=\"port\" value=\"999\"/>\n" +
+                "  <defaults>\n" +
+                "    <property name=\"host\" value=\"localhost\"/>\n" +
+                "    <property name=\"port\" value=\"80\"/>\n" +
+                "  </defaults>\n" +
+                "</properties>";
+
+        XStream xstream = new XStream();
+        xstream.registerConverter(new PropertiesConverter(true));
+        String actualXML = xstream.toXML(override);
+        assertEquals(expectedXML, actualXML);
+
+        Properties out = (Properties) xstream.fromXML(actualXML);
+        assertEquals("Unexpected overriden property", "999", out.getProperty("port"));
+        assertEquals("Unexpected default property", "localhost", out.getProperty("host"));
+        assertEquals(override, out);
+    }
 }

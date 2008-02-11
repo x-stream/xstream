@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 /**
  * Special converter for java.util.Properties that stores
@@ -38,6 +39,15 @@ import java.util.Properties;
 public class PropertiesConverter implements Converter {
 
     private final static Field defaultsField = Fields.find(Properties.class, "defaults");
+    private final boolean sort;
+
+    public PropertiesConverter() {
+        this(false);
+    }
+
+    public PropertiesConverter(boolean sort) {
+        this.sort = sort;
+    }
 
     public boolean canConvert(Class type) {
         return Properties.class == type;
@@ -45,7 +55,8 @@ public class PropertiesConverter implements Converter {
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         Properties properties = (Properties) source;
-        for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext();) {
+        Map map = sort ? new TreeMap(properties) : properties;
+        for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             writer.startNode("property");
             writer.addAttribute("name", entry.getKey().toString());
