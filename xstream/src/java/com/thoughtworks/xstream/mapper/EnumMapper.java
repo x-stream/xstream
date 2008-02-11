@@ -12,6 +12,8 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.converters.enums.EnumSingleValueConverter;
 import com.thoughtworks.xstream.core.JVM;
 
 
@@ -62,5 +64,12 @@ public class EnumMapper extends MapperWrapper {
 
     public boolean isImmutableValueType(Class type) {
         return enumClass.isAssignableFrom(type) || super.isImmutableValueType(type);
+    }
+
+    public SingleValueConverter getConverterFromItemType(Class type) {
+        if (enumClass.isAssignableFrom(type)) {
+            return new EnumSingleValueConverter(type);
+        }
+        return super.getConverterFromItemType(type);
     }
 }
