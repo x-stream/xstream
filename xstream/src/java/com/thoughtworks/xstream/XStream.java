@@ -84,7 +84,6 @@ import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
-import com.thoughtworks.xstream.mapper.EnumMapper;
 import com.thoughtworks.xstream.mapper.FieldAliasingMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
@@ -455,7 +454,10 @@ public class XStream {
         mapper = new ArrayMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
         if (JVM.is15()) {
-            mapper = new EnumMapper(mapper);
+            mapper = buildMapperDynamically(
+                "com.thoughtworks.xstream.mapper.EnumMapper",
+                new Class[]{Mapper.class}, 
+                new Object[]{mapper});
         }
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);

@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 12.02.2008 by Joerg Schaible
+ * Created on 12. February 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.enums;
 

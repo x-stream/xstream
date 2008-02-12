@@ -13,7 +13,6 @@
 
 com/thoughtworks/xstream/converters/basic/StringBuilderConverter.*
 com/thoughtworks/xstream/converters/basic/UUIDConverter.*
-com/thoughtworks/xstream/converters/enums/**
 com/thoughtworks/acceptance/Basic15TypesTest.*
 com/thoughtworks/xstream/converters/reflection/PureJavaReflectionProvider15Test.*
 

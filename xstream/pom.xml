@@ -151,6 +151,7 @@
               <excludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
+                <exclude>**/EnumMapper*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/HarmonyReflectionProvider*</exclude>
               </excludes>
@@ -167,6 +168,7 @@
                   <source>1.5</source>
                   <target>1.5</target>
                   <excludes>
+                    <exclude>foo</exclude>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
@@ -233,6 +235,7 @@
               <excludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
+                <exclude>**/EnumMapper*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/HarmonyReflectionProvider*</exclude>
               </excludes>
@@ -249,6 +252,7 @@
                   <source>1.5</source>
                   <target>1.5</target>
                   <excludes>
+                    <exclude>foo</exclude>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
@@ -311,6 +315,7 @@
               <excludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
+                <exclude>**/EnumMapper*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/basic/StringBuilder*</exclude>
                 <exclude>**/basic/UUID*</exclude>

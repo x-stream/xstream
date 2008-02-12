@@ -14,7 +14,8 @@ package com.thoughtworks.xstream.mapper;
 import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSingleValueConverter;
-import com.thoughtworks.xstream.core.JVM;
+
+import java.util.EnumSet;
 
 
 /**
@@ -26,16 +27,6 @@ import com.thoughtworks.xstream.core.JVM;
  * @author J&ouml;rg Schaible
  */
 public class EnumMapper extends MapperWrapper {
-
-    // Dynamically try to load Enum class. Pre JDK1.5 will silently fail.
-    private static JVM jvm = new JVM();
-    private static final Class enumClass = jvm.loadClass("java.lang.Enum");
-
-    private static final boolean active = enumClass != null;
-
-    private static final Class enumSetClass = active
-        ? jvm.loadClass("java.util.EnumSet")
-        : null;
 
     public EnumMapper(Mapper wrapped) {
         super(wrapped);
@@ -49,13 +40,13 @@ public class EnumMapper extends MapperWrapper {
     }
 
     public String serializedClass(Class type) {
-        if (!active || type == null) {
+        if (type == null) {
             return super.serializedClass(type);
         } else {
-            if (enumClass.isAssignableFrom(type) && type.getSuperclass() != enumClass) {
+            if (Enum.class.isAssignableFrom(type) && type.getSuperclass() != Enum.class) {
                 return super.serializedClass(type.getSuperclass());
-            } else if (enumSetClass.isAssignableFrom(type)) {
-                return super.serializedClass(enumSetClass);
+            } else if (EnumSet.class.isAssignableFrom(type)) {
+                return super.serializedClass(EnumSet.class);
             } else {
                 return super.serializedClass(type);
             }
@@ -63,11 +54,11 @@ public class EnumMapper extends MapperWrapper {
     }
 
     public boolean isImmutableValueType(Class type) {
-        return (active && enumClass.isAssignableFrom(type)) || super.isImmutableValueType(type);
+        return (Enum.class.isAssignableFrom(type)) || super.isImmutableValueType(type);
     }
 
     public SingleValueConverter getConverterFromItemType(Class type) {
-        if (active && enumClass.isAssignableFrom(type)) {
+        if (Enum.class.isAssignableFrom(type)) {
             return new EnumSingleValueConverter(type);
         }
         return super.getConverterFromItemType(type);
