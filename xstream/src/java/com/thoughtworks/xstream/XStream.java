@@ -452,6 +452,7 @@ public class XStream {
         mapper = new ImplicitCollectionMapper(mapper);
         mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
+        mapper = new LocalConversionMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
         if (JVM.is15()) {
             mapper = buildMapperDynamically(
@@ -459,7 +460,6 @@ public class XStream {
                 new Class[]{Mapper.class}, 
                 new Object[]{mapper});
         }
-        mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
         if (JVM.is15()) {
             mapper = buildMapperDynamically(
