@@ -120,6 +120,13 @@
     	<li>c.t.x.XStream(ReflectionProvider, Mapper, HierarchicalStreamDriver) deprecated, in favour of 
     	c.t.x.XStream(ReflectionProvider, HierarchicalStreamDriver, Mapper, ClassLoader).</li>
     	<li>New interface c.t.x.converter.ConverterRegistry to express explicit functionality managing the converters.</li>
+    	<li>c.t.x.core.DefaultConverterLookup no longer uses a c.t.x.mapper.Mapper. Therefore the old constructor has been deprecated in favour
+    	of a default constructor.</li>
+    	<li>Overloaded methods of c.t.x.mapper.Mapper.getConverterFromItemType and c.t.x.mapper.Mapper.getConverterFromAttribute have been
+    	deprecated. Only one version has been kept, the implementation can handle all cases now at once and therefore multiple calls to the mapper chain 
+    	are avoided.</li>
+    	<li>c.t.x.mapper.EnumMapper derives now from the c.t.x.mapper.AttributeMapper to support enums as attributes. Therefore the old constructor
+    	has been deprecated in favour of one taking an additional c.t.x.converters.ConverterLookup that has to be passed to the new parent.</li>
     </ul>
 
     <h1 id="1.2.2">Version 1.2.2</h1>
