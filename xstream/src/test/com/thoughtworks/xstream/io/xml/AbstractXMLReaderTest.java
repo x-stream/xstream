@@ -219,4 +219,10 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveDown();
         assertEquals("FNARR", xmlReader.getValue());
     }
+
+    // TODO: See XSTR-473
+    public void todoTestCanReadNullValueInString() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<string>&#x0;</string>");
+        assertEquals("\u0000", xmlReader.getValue());
+    }
 }
