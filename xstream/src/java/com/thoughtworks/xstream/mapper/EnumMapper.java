@@ -63,11 +63,11 @@ public class EnumMapper extends MapperWrapper {
     }
 
     public boolean isImmutableValueType(Class type) {
-        return enumClass.isAssignableFrom(type) || super.isImmutableValueType(type);
+        return (active && enumClass.isAssignableFrom(type)) || super.isImmutableValueType(type);
     }
 
     public SingleValueConverter getConverterFromItemType(Class type) {
-        if (enumClass.isAssignableFrom(type)) {
+        if (active && enumClass.isAssignableFrom(type)) {
             return new EnumSingleValueConverter(type);
         }
         return super.getConverterFromItemType(type);
