@@ -255,26 +255,28 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     }
 
     private void processConverterAnnotations(final Class<?> type) {
-        final XStreamConverters convertersAnnotation = type
-            .getAnnotation(XStreamConverters.class);
-        final XStreamConverter converterAnnotation = type.getAnnotation(XStreamConverter.class);
-        final List<XStreamConverter> annotations = convertersAnnotation != null
-            ? new ArrayList<XStreamConverter>(Arrays.asList(convertersAnnotation.value()))
-            : new ArrayList<XStreamConverter>();
-        if (converterAnnotation != null) {
-            annotations.add(converterAnnotation);
-        }
-        for (final XStreamConverter annotation : annotations) {
-            final Class<? extends Converter> converterType = annotation.value();
-            final Converter converter = cacheConverter(converterType);
-            if (converter != null) {
-                if (converter != converterAnnotation || converter.canConvert(type)) {
-                    converterRegistry.registerConverter(converter, XStream.PRIORITY_NORMAL);
-                } else {
-                    throw new InitializationException("Converter "
-                        + converterType.getName()
-                        + " cannot handle annotated class "
-                        + type.getName());
+        if (converterRegistry != null) {
+            final XStreamConverters convertersAnnotation = type
+                .getAnnotation(XStreamConverters.class);
+            final XStreamConverter converterAnnotation = type.getAnnotation(XStreamConverter.class);
+            final List<XStreamConverter> annotations = convertersAnnotation != null
+                ? new ArrayList<XStreamConverter>(Arrays.asList(convertersAnnotation.value()))
+                : new ArrayList<XStreamConverter>();
+            if (converterAnnotation != null) {
+                annotations.add(converterAnnotation);
+            }
+            for (final XStreamConverter annotation : annotations) {
+                final Class<? extends Converter> converterType = annotation.value();
+                final Converter converter = cacheConverter(converterType);
+                if (converter != null) {
+                    if (converter != converterAnnotation || converter.canConvert(type)) {
+                        converterRegistry.registerConverter(converter, XStream.PRIORITY_NORMAL);
+                    } else {
+                        throw new InitializationException("Converter "
+                            + converterType.getName()
+                            + " cannot handle annotated class "
+                            + type.getName());
+                    }
                 }
             }
         }

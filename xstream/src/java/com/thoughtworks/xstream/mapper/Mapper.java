@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -112,10 +112,19 @@ public interface Mapper {
         Class getItemType();
     }
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     */
     SingleValueConverter getConverterFromItemType(String fieldName, Class type);
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     */
     SingleValueConverter getConverterFromItemType(Class type);
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String)}
+     */
     SingleValueConverter getConverterFromAttribute(String name);
 
     Converter getLocalConverter(Class definedIn, String fieldName);

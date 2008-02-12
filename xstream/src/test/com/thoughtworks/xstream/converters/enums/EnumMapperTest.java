@@ -57,21 +57,23 @@ public class EnumMapperTest extends TestCase {
     }
 
     static class TypeWithEnums {
-        PolymorphicEnum fruit;
+        PolymorphicEnum poly;
         @XStreamAsAttribute        
         SimpleEnum simple;
     }
 
     public void testSupportsEnumAsAttribute() {
-        xstream.alias("bowl", TypeWithEnums.class);
+        xstream.alias("type", TypeWithEnums.class);
         xstream.useAttributeFor(PolymorphicEnum.class);
-        String expectedXml = "<bowl fruit=\"B\" simple=\"GREEN\"/>";
+        xstream.autodetectAnnotations(true);
+        String expectedXml = "<type poly=\"B\" simple=\"GREEN\"/>";
         TypeWithEnums in = new TypeWithEnums();
-        in.fruit = PolymorphicEnum.B;
+        in.poly = PolymorphicEnum.B;
         in.simple = SimpleEnum.GREEN;
         assertEquals(expectedXml, xstream.toXML(in));
         TypeWithEnums out = (TypeWithEnums)xstream.fromXML(expectedXml);
-        assertSame(out.fruit, PolymorphicEnum.B);
+        assertSame(out.poly, PolymorphicEnum.B);
+        assertSame(out.simple, SimpleEnum.GREEN);
     }
 
     public void testEnumsAreImmutable() {

@@ -74,12 +74,6 @@ public abstract class AbstractReflectionConverter implements Converter {
                 }
                 
                 SingleValueConverter converter = mapper.getConverterFromItemType(fieldName, type, definedIn);
-                if(converter == null) {
-                    converter = mapper.getConverterFromItemType(fieldName, type);
-                }
-                if (converter == null) {
-                    converter = mapper.getConverterFromItemType(type);
-                }
                 if (converter != null) {
                     if (value != null) {
                         if (seenFields.contains(fieldName)) {
@@ -173,13 +167,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                     continue;
                 }
                 SingleValueConverter converter = mapper.getConverterFromAttribute(field.getDeclaringClass(), attrName);
-                if (converter == null) {
-                    converter = mapper.getConverterFromAttribute(attrName);
-                }
                 Class type = field.getType();
-                if (converter == null) {
-                    converter = mapper.getConverterFromItemType(type);
-                }
                 if (converter != null) {
                     Object value = converter.fromString(reader.getAttribute(attrAlias));
                     if (type.isPrimitive()) {

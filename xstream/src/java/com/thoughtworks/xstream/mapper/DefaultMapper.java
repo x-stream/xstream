@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -139,14 +139,23 @@ public class DefaultMapper implements Mapper {
         return serialized;
     }
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String)}
+     */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return null;
     }
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         return null;
     }
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     */
     public SingleValueConverter getConverterFromItemType(Class type) {
         return null;
     }
@@ -164,10 +173,16 @@ public class DefaultMapper implements Mapper {
         return null;
     }
 
+    /**
+     * @deprecated since upcoming, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     */
     public String aliasForAttribute(Class definedIn, String fieldName) {
         return fieldName;
     }
 
+    /**
+     * @deprecated since upcoming, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     */
     public String attributeForAlias(Class definedIn, String alias) {
         return alias;
     }

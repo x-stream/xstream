@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -106,14 +106,23 @@ public abstract class MapperWrapper implements Mapper {
         return wrapped.shouldSerializeMember(definedIn, fieldName);
     }
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         return wrapped.getConverterFromItemType(fieldName, type);
     }
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     */
     public SingleValueConverter getConverterFromItemType(Class type) {
         return wrapped.getConverterFromItemType(type);
     }
 
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String)}
+     */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return wrapped.getConverterFromAttribute(name);
     }

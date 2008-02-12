@@ -16,7 +16,7 @@ package com.thoughtworks.xstream.converters;
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
-public interface ConverterRegistry extends ConverterLookup {
+public interface ConverterRegistry {
 
     void registerConverter(Converter converter, int priority);
 

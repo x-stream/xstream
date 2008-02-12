@@ -107,7 +107,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -273,6 +272,7 @@ public class XStream {
     private ClassLoaderReference classLoaderReference;
     private MarshallingStrategy marshallingStrategy;
     private ConverterLookup converterLookup;
+    private ConverterRegistry converterRegistry;
     private Mapper mapper;
 
     private ClassAliasingMapper classAliasingMapper;
@@ -373,7 +373,7 @@ public class XStream {
      */
     public XStream(
             ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
-        this(reflectionProvider, driver, new ClassLoaderReference(new CompositeClassLoader()), mapper, new DefaultConverterLookup());
+        this(reflectionProvider, driver, new ClassLoaderReference(new CompositeClassLoader()), mapper, new DefaultConverterLookup(), null);
     }
 
     /**
@@ -400,7 +400,7 @@ public class XStream {
      */
     public XStream(
             ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver, ClassLoader classLoader, Mapper mapper) {
-        this(reflectionProvider, driver, classLoader, mapper, new DefaultConverterLookup());
+        this(reflectionProvider, driver, classLoader, mapper, new DefaultConverterLookup(), null);
     }
 
     /**
@@ -415,7 +415,8 @@ public class XStream {
      */
     public XStream(
             ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,   
-            ClassLoader classLoader, Mapper mapper, ConverterRegistry converterRegistry) {
+            ClassLoader classLoader, Mapper mapper, ConverterLookup converterLookup, 
+            ConverterRegistry converterRegistry) {
         jvm = new JVM();
         if (reflectionProvider == null) {
             reflectionProvider = jvm.bestReflectionProvider();
@@ -423,7 +424,10 @@ public class XStream {
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
         this.classLoaderReference = classLoader instanceof ClassLoaderReference ? (ClassLoaderReference)classLoader : new ClassLoaderReference(classLoader);
-        this.converterLookup = converterRegistry;
+        this.converterLookup = converterLookup;
+        this.converterRegistry = converterRegistry != null 
+            ? converterRegistry 
+            : (converterLookup instanceof ConverterRegistry ? (ConverterRegistry)converterLookup : null);
         this.mapper = mapper == null ? buildMapper() : mapper;
 
         setupMappers();
@@ -448,7 +452,6 @@ public class XStream {
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
-        mapper = new AttributeMapper(mapper, converterLookup);
         mapper = new ImplicitCollectionMapper(mapper);
         mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
@@ -457,8 +460,10 @@ public class XStream {
         if (JVM.is15()) {
             mapper = buildMapperDynamically(
                 "com.thoughtworks.xstream.mapper.EnumMapper",
-                new Class[]{Mapper.class}, 
-                new Object[]{mapper});
+                new Class[]{Mapper.class, ConverterLookup.class}, 
+                new Object[]{mapper, converterLookup});
+        } else {
+            mapper = new AttributeMapper(mapper, converterLookup);
         }
         mapper = new ImmutableTypesMapper(mapper);
         if (JVM.is15()) {
@@ -1047,14 +1052,7 @@ public class XStream {
         if (attributeMapper == null) {
             throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
         }
-        try {
-            final Field field = definedIn.getDeclaredField(fieldName);
-            attributeMapper.addAttributeFor(field);
-        } catch (SecurityException e) {
-            throw new InitializationException("Unable to access field " + fieldName + "@" + definedIn.getName());
-        } catch (NoSuchFieldException e) {
-            throw new InitializationException("Unable to find field " + fieldName + "@" + definedIn.getName());
-        }
+        attributeMapper.addAttributeFor(definedIn, fieldName);
     }
 
     /**
@@ -1108,7 +1106,9 @@ public class XStream {
     }
 
     public void registerConverter(Converter converter, int priority) {
-        ((ConverterRegistry)converterLookup).registerConverter(converter, priority);
+        if (converterRegistry != null) {
+            converterRegistry.registerConverter(converter, priority);
+        }
     }
 
     public void registerConverter(SingleValueConverter converter) {
@@ -1116,7 +1116,9 @@ public class XStream {
     }
 
     public void registerConverter(SingleValueConverter converter, int priority) {
-        ((ConverterRegistry)converterLookup).registerConverter(new SingleValueConverterWrapper(converter), priority);
+        if (converterRegistry != null) {
+            converterRegistry.registerConverter(new SingleValueConverterWrapper(converter), priority);
+        }
     }
 
     /**

@@ -12,6 +12,8 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSingleValueConverter;
 
@@ -26,30 +28,42 @@ import java.util.EnumSet;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
-public class EnumMapper extends MapperWrapper {
+public class EnumMapper extends AttributeMapper {
 
-    public EnumMapper(Mapper wrapped) {
-        super(wrapped);
+    /*
+     * TODO: Do not derive from AttributeMapper in XStream 2.x. AttributeMapper methods should return a boolean (or the type) 
+     * whether a caller might look for a SingleValueConverter or not. With this design no mapper will have to depend on a ConverterLookup. 
+     */
+    public EnumMapper(Mapper wrapped, ConverterLookup converterLookup) {
+        super(wrapped, converterLookup);
     }
 
     /**
-     * @deprecated As of 1.2, use {@link #EnumMapper(Mapper)}
+     * @deprecated since upcoming, use {@link #EnumMapper(Mapper, ConverterLookup)}
      */
+    @Deprecated
+    public EnumMapper(Mapper wrapped) {
+        super(wrapped, null);
+    }
+
+    /**
+     * @deprecated since 1.2, use {@link #EnumMapper(Mapper, ConverterLookup))}
+     */
+    @Deprecated
     public EnumMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
+        this((Mapper)wrapped, null);
     }
 
     public String serializedClass(Class type) {
         if (type == null) {
             return super.serializedClass(type);
+        }
+        if (Enum.class.isAssignableFrom(type) && type.getSuperclass() != Enum.class) {
+            return super.serializedClass(type.getSuperclass());
+        } else if (EnumSet.class.isAssignableFrom(type)) {
+            return super.serializedClass(EnumSet.class);
         } else {
-            if (Enum.class.isAssignableFrom(type) && type.getSuperclass() != Enum.class) {
-                return super.serializedClass(type.getSuperclass());
-            } else if (EnumSet.class.isAssignableFrom(type)) {
-                return super.serializedClass(EnumSet.class);
-            } else {
-                return super.serializedClass(type);
-            }
+            return super.serializedClass(type);
         }
     }
 
@@ -57,10 +71,10 @@ public class EnumMapper extends MapperWrapper {
         return (Enum.class.isAssignableFrom(type)) || super.isImmutableValueType(type);
     }
 
-    public SingleValueConverter getConverterFromItemType(Class type) {
+    protected SingleValueConverter getLocalConverterFromItemType(Class type) {
         if (Enum.class.isAssignableFrom(type)) {
             return new EnumSingleValueConverter(type);
         }
-        return super.getConverterFromItemType(type);
+        return super.getLocalConverterFromItemType(type);
     }
 }

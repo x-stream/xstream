@@ -62,7 +62,7 @@ public abstract class XStreamCache implements Product {
         DefaultConverterLookup converterLookup = new DefaultConverterLookup();
         xstream = new XStream(
             jvm.bestReflectionProvider(), new XppDriver(), classLoaderReference, buildMapper(
-                getMappers(jvm), jvm, classLoaderReference, converterLookup), converterLookup);
+                getMappers(jvm), jvm, classLoaderReference, converterLookup), converterLookup, converterLookup);
         xstream.alias("one", One.class);
         xstream.alias("five", Five.class);
         xstream.alias("ser-one", SerializableOne.class);
@@ -87,7 +87,6 @@ public abstract class XStreamCache implements Product {
         mappers.add(ClassAliasingMapper.class);
         mappers.add(FieldAliasingMapper.class);
         mappers.add(AttributeAliasingMapper.class);
-        mappers.add(AttributeMapper.class);
         mappers.add(ImplicitCollectionMapper.class);
         mappers.add(OuterClassMapper.class);
         mappers.add(ArrayMapper.class);
@@ -95,6 +94,8 @@ public abstract class XStreamCache implements Product {
         mappers.add(DefaultImplementationsMapper.class);
         if (JVM.is15()) {
             mappers.add(jvm.loadClass("com.thoughtworks.xstream.mapper.EnumMapper"));
+        } else {
+            mappers.add(AttributeMapper.class);
         }
         mappers.add(ImmutableTypesMapper.class);
         if (JVM.is15()) {
