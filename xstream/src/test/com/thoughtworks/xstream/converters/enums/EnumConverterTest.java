@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -58,11 +58,11 @@ public class EnumConverterTest extends TestCase {
 
         in = PolymorphicEnum.A;
         out = (PolymorphicEnum) xstream.fromXML(xstream.toXML(in));
-        assertEquals("apple", out.fruit());
+        assertEquals("apple", ((Fruit)out).fruit()); // see Bug ID: 6522780
 
         in = PolymorphicEnum.B;
         out = (PolymorphicEnum) xstream.fromXML(xstream.toXML(in));
-        assertEquals("banana", out.fruit());
+        assertEquals("banana", ((Fruit)out).fruit()); // see Bug ID: 6522780
     }
 
 }
