@@ -168,9 +168,9 @@ public interface Mapper {
     /**
      * Returns which converter to use for an specific attribute in a type.
      * 
-     * @param type the field type
+     * @param definedIn the field's parent
      * @param attribute the attribute name
      * @since 1.2.2
      */
-    SingleValueConverter getConverterFromAttribute(Class type, String attribute);
+    SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute);
 }

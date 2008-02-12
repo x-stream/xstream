@@ -12,28 +12,28 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSingleValueConverter;
 
 import java.util.EnumSet;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 
 /**
  * Mapper that handles the special case of polymorphic enums in Java 1.5. This renames MyEnum$1
  * to MyEnum making it less bloaty in the XML and avoiding the need for an alias per enum value
- * to be specified. Additionally every enum is treated automatically as immutable type.
+ * to be specified. Additionally every enum is treated automatically as immutable type and can
+ * be written as attribute.
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public class EnumMapper extends AttributeMapper {
 
-    /*
-     * TODO: Do not derive from AttributeMapper in XStream 2.x. AttributeMapper methods should return a boolean (or the type) 
-     * whether a caller might look for a SingleValueConverter or not. With this design no mapper will have to depend on a ConverterLookup. 
-     */
+    private transient Map enumConverterMap = new WeakHashMap();
+
     public EnumMapper(Mapper wrapped, ConverterLookup converterLookup) {
         super(wrapped, converterLookup);
     }
@@ -73,8 +73,20 @@ public class EnumMapper extends AttributeMapper {
 
     protected SingleValueConverter getLocalConverterFromItemType(Class type) {
         if (Enum.class.isAssignableFrom(type)) {
-            return new EnumSingleValueConverter(type);
+            synchronized (enumConverterMap) {
+                SingleValueConverter singleValueConverter = (SingleValueConverter)enumConverterMap.get(type);
+                if (singleValueConverter == null) {
+                    singleValueConverter = new EnumSingleValueConverter(type);
+                    enumConverterMap.put(type, singleValueConverter);
+                }
+                return singleValueConverter;
+            }
         }
         return super.getLocalConverterFromItemType(type);
+    }
+
+    private Object readResolve() {
+        this.enumConverterMap = new WeakHashMap();
+        return this;
     }
 }
