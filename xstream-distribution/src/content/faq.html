@@ -343,6 +343,14 @@ writer.close();
 System.out.println(writer.toString());
 </pre></div>
 
+    <h2 id="JSON_limitations">What limitations has JSON?</h2>
+
+	<p>JSON represents a very simple data model for easy data transfer. Especially it has no equivalent for XML
+	attributes.  Those are written with a leading &quot;@&quot; character, but this is not always possible without
+	violating the syntax (e.g. for array types).  Those may silently dropped (and makes it therefore difficult to
+	implement deserialization).  Another issue are references in the serialized object graph, since JSON has no
+	possibility to express such a construct.  You should therefore always set the NO_REFERENCES mode of XStream.</p>
+
     <!-- ****************************************************** -->
     <h1 id="Other_Products">Comparison to other products</h1>
 
