@@ -17,8 +17,6 @@ import com.thoughtworks.xstream.benchmark.cache.model.One;
 import com.thoughtworks.xstream.benchmark.cache.model.SerializableFive;
 import com.thoughtworks.xstream.benchmark.cache.model.SerializableOne;
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.ConverterRegistry;
-import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.ClassLoaderReference;
@@ -33,7 +31,6 @@ import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
-import com.thoughtworks.xstream.mapper.EnumMapper;
 import com.thoughtworks.xstream.mapper.FieldAliasingMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
@@ -44,7 +41,6 @@ import com.thoughtworks.xstream.tools.benchmark.Product;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -93,13 +89,13 @@ public abstract class XStreamCache implements Product {
         mappers.add(AttributeAliasingMapper.class);
         mappers.add(AttributeMapper.class);
         mappers.add(ImplicitCollectionMapper.class);
-        if (JVM.is15()) {
-            mappers.add(EnumMapper.class);
-        }
         mappers.add(OuterClassMapper.class);
         mappers.add(ArrayMapper.class);
         mappers.add(LocalConversionMapper.class);
         mappers.add(DefaultImplementationsMapper.class);
+        if (JVM.is15()) {
+            mappers.add(jvm.loadClass("com.thoughtworks.xstream.mapper.EnumMapper"));
+        }
         mappers.add(ImmutableTypesMapper.class);
         if (JVM.is15()) {
             mappers.add(jvm.loadClass("com.thoughtworks.xstream.mapper.AnnotationMapper"));
