@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,6 +36,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         .replace('\'', '"');
     private final static String HIERARCHY = "{'category':{'name':'fruit','id':'111','products':{'product':[{'name':'Banana','id':'123','price':'23.01','tags':{'string':['yellow','fresh','tasty']}},{'name':'Mango','id':'124','price':'34.01'}]}}}"
         .replace('\'', '"');
+
     private XStream xstream;
 
     /**
@@ -98,6 +99,24 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(json));
         Product parsedProduct = (Product)ois.readObject();
         assertEquals(product.toString(), parsedProduct.toString());
+    }
+
+    public void testDoesHandleQuotesAndEscapes() {
+        String[] strings = new String[]{"last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
+        String expected = (""
+                + "{#string-array#:{#string#:["
+                + "#last\\\"#,"
+                + "#\\\"first#,"
+                + "#\\\"between\\\"#,"
+                + "#around \\\"\\\" it#,"
+                + "#back\\\\slash#"
+                + "]}}").replace('#', '"');
+        assertEquals(expected, xstream.toXML(strings));
+    }
+    
+    public void testDoesEscapeValuesAccordingRfc4627() {
+        String expected = "{'string':'\\u0000\\u0001\\u001f \uffee'}".replace('\'', '"');
+        assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
     }
 
     // TODO: See XSTR-460

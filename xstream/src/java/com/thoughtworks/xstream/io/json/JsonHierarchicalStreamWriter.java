@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -147,31 +147,27 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
             text = "\0";
         }
 
-        int i = 0;
-        while (true) {
-            int idxQuote = text.indexOf('"', i);
-            int idxSlash = text.indexOf('\\', i);
-            int idxNull = text.indexOf('\0', i);
-            int idx = Math.min(
-                    Math.min(idxQuote < 0 ? Integer.MAX_VALUE : idxQuote, idxSlash < 0 ? Integer.MAX_VALUE : idxSlash),
-                    idxNull < 0 ? Integer.MAX_VALUE : idxNull);
-            if (idx == Integer.MAX_VALUE) {
-                break;
+        int length = text.length();
+        for (int i = 0; i < length; i++) {
+            char c = text.charAt(i);
+            switch (c) {
+                case '"':
+                    this.writer.write("\\\"");
+                    break;
+                case '\\':
+                    this.writer.write("\\\\");
+                    break;
+                default:
+                    if (c > 0x1f) {
+                        this.writer.write(c);
+                    } else {
+                        this.writer.write("\\u");
+                        String hex = "000" + Integer.toHexString(c);
+                        this.writer.write(hex.substring(hex.length()-4));
+                    }
             }
-            if (idx != 0) {
-                this.writer.write(text.substring(i, idx));
-            }
-            if (idx == idxQuote) {
-                this.writer.write("\\\"");
-            } else if (idx == idxSlash) {
-                this.writer.write("\\\\");
-            } else {
-                this.writer.write("\\u00");
-            }
-            i = idx + 1;
         }
 
-        this.writer.write(text.substring(i));
         if (needsQuotes(clazz)) {
             writer.write("\"");
         }
