@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,11 +14,13 @@ package com.thoughtworks.xstream.io.json;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 /**
@@ -39,7 +41,12 @@ public class JsonHierarchicalStreamDriver implements HierarchicalStreamDriver {
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
-        return createWriter(new OutputStreamWriter(out));
+        try {
+            // JSON spec requires UTF-8
+            return createWriter(new OutputStreamWriter(out, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new StreamException(e);
+        }
     }
 
 }
