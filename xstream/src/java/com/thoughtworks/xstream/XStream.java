@@ -1336,6 +1336,35 @@ public class XStream {
     }
 
     /**
+     * Creates an ObjectOutputStream that serializes a stream of objects to the OutputStream using
+     * XStream.
+     * <p>
+     * To change the name of the root element (from &lt;object-stream&gt;), use
+     * {@link #createObjectOutputStream(java.io.Writer, String)}.
+     * </p>
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since upcoming
+     */
+    public ObjectOutputStream createObjectOutputStream(OutputStream out) throws IOException {
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), "object-stream");
+    }
+
+    /**
+     * Creates an ObjectOutputStream that serializes a stream of objects to the OutputStream using
+     * XStream.
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since upcoming
+     */
+    public ObjectOutputStream createObjectOutputStream(OutputStream out, String rootNodeName)
+            throws IOException {
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), rootNodeName);
+    }
+
+    /**
      * Creates an ObjectOutputStream that serializes a stream of objects to the writer using
      * XStream.
      * <p>
@@ -1401,6 +1430,18 @@ public class XStream {
      */
     public ObjectInputStream createObjectInputStream(Reader xmlReader) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(xmlReader));
+    }
+
+    /**
+     * Creates an ObjectInputStream that deserializes a stream of objects from an InputStream using
+     * XStream.
+     *
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @since upcoming
+     */
+    public ObjectInputStream createObjectInputStream(InputStream in) throws IOException {
+        return createObjectInputStream(hierarchicalStreamDriver.createReader(in));
     }
 
     /**
