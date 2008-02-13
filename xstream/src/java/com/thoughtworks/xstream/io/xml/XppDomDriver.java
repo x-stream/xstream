@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,17 +11,19 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-
+import com.thoughtworks.xstream.core.util.XmlHeaderAwareReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 
 public class XppDomDriver extends AbstractXmlDriver {
     
@@ -45,7 +47,13 @@ public class XppDomDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamReader createReader(InputStream in) {
-        return createReader(new InputStreamReader(in));
+        try {
+            return createReader(new XmlHeaderAwareReader(in));
+        } catch (UnsupportedEncodingException e) {
+            throw new StreamException(e);
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {

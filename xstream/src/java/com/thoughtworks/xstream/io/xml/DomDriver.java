@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -32,15 +32,23 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
+
 public class DomDriver extends AbstractXmlDriver {
-    
+
     private final String encoding;
     private final DocumentBuilderFactory documentBuilderFactory;
 
+    /**
+     * Construct a DomDriver.
+     */
     public DomDriver() {
-        this("UTF-8");
+        this(null);
     }
 
+    /**
+     * Construct a DomDriver with a specified encoding. The created DomReader will ignore any
+     * encoding attribute of the XML header though.
+     */
     public DomDriver(String encoding) {
         this(encoding, new XmlFriendlyReplacer());
     }
@@ -53,7 +61,7 @@ public class DomDriver extends AbstractXmlDriver {
         documentBuilderFactory = DocumentBuilderFactory.newInstance();
         this.encoding = encoding;
     }
-    
+
     public HierarchicalStreamReader createReader(Reader xml) {
         return createReader(new InputSource(xml));
     }
@@ -65,7 +73,9 @@ public class DomDriver extends AbstractXmlDriver {
     private HierarchicalStreamReader createReader(InputSource source) {
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            source.setEncoding(encoding);
+            if (encoding != null) {
+                source.setEncoding(encoding);
+            }
             Document document = documentBuilder.parse(source);
             return new DomReader(document, xmlFriendlyReplacer());
         } catch (FactoryConfigurationError e) {
@@ -85,7 +95,9 @@ public class DomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
         try {
-            return createWriter(new OutputStreamWriter(out, this.encoding));
+            return createWriter(encoding != null
+                ? new OutputStreamWriter(out, encoding)
+                : new OutputStreamWriter(out));
         } catch (UnsupportedEncodingException e) {
             throw new StreamException(e);
         }
