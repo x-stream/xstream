@@ -26,11 +26,18 @@ on Jettison and can also deserialize JSON to Java objects again.  However, since
 plain XML into JSON, you might get better JSON strings with the JsonHierarchicalStreamDriver, because this driver knows
 often about the type of the written data and can act properly.</p>
 
+<p class="highlight">One word of warning. JSON is made for an easy data transfer between systems and languages.  It's 
+syntax offers much less possibilities to express certain data structures.  It supports name/value pairs of primitive data types, 
+arrays and lists and allows to nest them - but that's it! No references, no possibility for meta data (attributes), etc.  
+Therefore do not expect wonders.  XStream (and Jettison) try their best, but the procedure to convert any kind of object
+into JSON is a lossy transformation and especially deserialization will not be possible for any construct. See also
+<a href="fag.html#JSON_limitations">FAQ</a></p>.
+
 <h1 id="jettison">Jettison driver</h1>
 
 <p>Jettison driver uses <a href="http://jettison.codehaus.org/">Jettison</a> StAX parser to read and write data in JSON format. It is available in XStream from version 1.2.2 and is implemented in <code>com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver</code> class.To successfully use this driver you need to have Jettison project and <a href="http://stax.codehaus.org/">StAX API</a> in your classpath.</p>
 
-<p>The following Maven configuration snippet should get all necessary JARs for you.</p>
+<p>The following Maven configuration snippet should get all necessary JARs for you:</p>
 
 <div class="Source Java"><pre>&lt;dependency&gt;
 	&lt;groupId&gt;com.thoughtworks.xstream&lt;/groupId&gt;
@@ -56,7 +63,7 @@ often about the type of the written data and can act properly.</p>
 
 <p>The following example:</p>
 
-<div class="Source Java"><pre>package org.sensatic.json.test;
+<div class="Source Java"><pre>package com.thoughtworks.xstream.json.test;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
@@ -99,11 +106,16 @@ public class WriteTest {
 <em>price</em> element. This time the driver knew about the numeric value and therefore no quotes were
 generated.</p>
 
+<p class="highlight">Note that newer Jettison releases than 1.0-RC2 will also try to detect numerical values and
+omit the quotes.  Since Jettison cannot know about the original data type, it has to guess.  Hence it will therefore
+also write the value of the id field as numeric value in future.</p>
+
+
 <h2 id="jettison-read">Read from JSON</h2>
 
 <p>The following code:</p>
 
-<div class="Source Java"><pre>package org.sensatic.json.test;
+<div class="Source Java"><pre>package com.thoughtworks.xstream.json.test;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
