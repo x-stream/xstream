@@ -344,6 +344,14 @@
             <forkMode>once</forkMode>
             <printSummary>true</printSummary>
             <useFile>false</useFile>
+            <includes>
+                <include>**/*Test.java</include>
+                <include>**/*TestSuite.java</include>
+            </includes>
+            <excludes>
+                <exclude>**/Abstract*Test.java</exclude>
+                <exclude>**/*$*.java</exclude>
+            </excludes>
             <systemProperties>
               <property>
                 <name>java.awt.headless</name>
