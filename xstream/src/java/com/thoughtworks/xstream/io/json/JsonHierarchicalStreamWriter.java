@@ -23,8 +23,8 @@ import java.util.Map;
 
 
 /**
- * A simple writer that outputs JSON in a pretty-printed indented stream. Arrays, Lists and Sets rely on you NOT using
- * XStream.addImplicitCollection(..)
+ * A simple writer that outputs JSON in a pretty-printed indented stream. Arrays, Lists and Sets
+ * rely on you NOT using XStream.addImplicitCollection(..)
  * 
  * @author Paul Hammant
  * @author J&ouml;rg Schaible
@@ -78,25 +78,31 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         }
         if (currNode != null && currNode.fieldAlready) {
             writer.write(",");
+            readyForNewLine = true;
         }
         tagIsEmpty = false;
         finishTag();
-        if (currNode == null || currNode.clazz == null || (currNode.clazz != null && !currNode.isCollection)) {
+        if (currNode == null
+            || currNode.clazz == null
+            || (currNode.clazz != null && !currNode.isCollection)) {
+            if (currNode != null && !currNode.fieldAlready) {
+                writer.write("{");
+                readyForNewLine = true;
+                finishTag();
+            }
             writer.write("\"");
             writer.write(name);
             writer.write("\": ");
         }
         if (isCollection(clazz)) {
             writer.write("[");
-        } else if (hasChildren(clazz)) {
-            writer.write("{");
+            readyForNewLine = true;
         }
         if (currNode != null) {
             currNode.fieldAlready = true;
         }
         elementStack.push(new Node(name, clazz));
-        depth++;
-        readyForNewLine = true;
+        depth++ ;
         tagIsEmpty = true;
     }
 
@@ -124,6 +130,7 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         Node currNode = (Node)elementStack.peek();
         if (currNode == null || !currNode.isCollection) {
             startNode('@' + key, String.class);
+            tagIsEmpty = false;
             writeText(value, String.class);
             endNode();
         }
@@ -148,23 +155,23 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         }
 
         int length = text.length();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++ ) {
             char c = text.charAt(i);
             switch (c) {
-                case '"':
-                    this.writer.write("\\\"");
-                    break;
-                case '\\':
-                    this.writer.write("\\\\");
-                    break;
-                default:
-                    if (c > 0x1f) {
-                        this.writer.write(c);
-                    } else {
-                        this.writer.write("\\u");
-                        String hex = "000" + Integer.toHexString(c);
-                        this.writer.write(hex.substring(hex.length()-4));
-                    }
+            case '"':
+                this.writer.write("\\\"");
+                break;
+            case '\\':
+                this.writer.write("\\\\");
+                break;
+            default:
+                if (c > 0x1f) {
+                    this.writer.write(c);
+                } else {
+                    this.writer.write("\\u");
+                    String hex = "000" + Integer.toHexString(c);
+                    this.writer.write(hex.substring(hex.length() - 4));
+                }
             }
         }
 
@@ -175,8 +182,9 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
 
     private boolean isCollection(Class clazz) {
         return clazz != null
-                && (Collection.class.isAssignableFrom(clazz) || clazz.isArray() || Map.class.isAssignableFrom(clazz) || Map.Entry.class
-                        .isAssignableFrom(clazz));
+            && (Collection.class.isAssignableFrom(clazz)
+                || clazz.isArray()
+                || Map.class.isAssignableFrom(clazz) || Map.Entry.class.isAssignableFrom(clazz));
     }
 
     private boolean needsQuotes(Class clazz) {
@@ -185,16 +193,21 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
     }
 
     public void endNode() {
-        depth--;
+        depth-- ;
         Node node = (Node)elementStack.pop();
-        if (tagIsEmpty && !hasChildren(node.clazz)) {
+        if (node.clazz != null && node.isCollection) {
+            if (node.fieldAlready) {
+                readyForNewLine = true;
+            }
+            finishTag();
+            writer.write("]");
+        } else if (tagIsEmpty) {
             readyForNewLine = false;
+            writer.write("{}");
             finishTag();
         } else {
             finishTag();
-            if (node.clazz != null && node.isCollection) {
-                writer.write("]");
-            } else if (hasChildren(node.clazz)) {
+            if (node.fieldAlready) {
                 writer.write("}");
             }
         }
@@ -202,14 +215,6 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
         if (depth == 0) {
             writer.write("}");
             writer.flush();
-        }
-    }
-
-    private boolean hasChildren(Class clazz) {
-        if (clazz == String.class || clazz == Character.TYPE || clazz == Character.class) {
-            return false;
-        } else {
-            return needsQuotes(clazz);
         }
     }
 
@@ -223,7 +228,7 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
 
     protected void endOfLine() {
         writer.write(newLine);
-        for (int i = 0; i < depth; i++) {
+        for (int i = 0; i < depth; i++ ) {
             writer.write(lineIndenter);
         }
     }
