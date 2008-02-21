@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -110,9 +110,9 @@ public abstract class AbstractXMLWriterTest extends TestCase {
         writer.endNode();
 
         assertXmlProducedIs("<evil>one\n"
-                + "two&#x0D;three&#x0D;\n"
+                + "two&#xd;three&#xd;\n"
                 + "four\n"
-                + "&#x0D;five\tsix</evil>");
+                + "&#xd;five\tsix</evil>");
     }
 
     public void testSupportsEmptyNestedTags() {
