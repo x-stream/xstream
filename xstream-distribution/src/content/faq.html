@@ -263,7 +263,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <h1 id="XML">XML specifics</h1>
 
     <!-- ...................................................... -->
-    <h2 id="XML_respect_XML_declaration">Why does XStream not respect the encoding in the XML declaration?</h2>
+    <h2 id="XML_respect_encoding">Why does XStream not respect the encoding in the XML declaration?</h2>
 
     <p>XStream architecture is based on IO Readers and Writers, while the XML declaration is the responsibility of XML
     parsers.  XStream all <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
@@ -305,6 +305,24 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     written XML matches your schema, XStream is also able to read it. This way is much easier, since you can spot the 
     differences in the XML much more easy than to interpret the exceptions XStream will throw if it cannot match the XML
     into your objects.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="XML_null_char">My parser claims the &amp;#x0; character to be invalid, but it was written with XStream!</h2>
+
+    <p>Your parser is basically right!  A character of value 0 is not valid as part of XML according the XML specification (see 
+    version <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#charsets">1.0</a> or 
+    <a href="http://www.w3.org/TR/2006/REC-xml11-20060816/#charsets">1.1</a>), neither directly nor as character 
+    entity nor within CDATA. But not every parser respects this part of the specification (e.g. Xpp3 will ignore it and read 
+    character entities).  If you expect such characters in your strings and you do not use the Xpp3 parser, you should consider
+    to use a converter that writes the string as byte array in Base64 code.  As alternative you may force the 
+    <a href="javadoc/com/thoughtworks/xstream/io/xml/PrettyPrintWriter.html">PrettyPrintWriter</a> or derived writers
+    to be XML 1.0 or 1.1. compliant, i.e. in this mode a Stream Exception is thrown.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="XML_control_char">My parser claims a control character to be invalid, but it was written with XStream!</h2>
+
+    <p>Your parser is probably right!  Control characters are only valid as part of XML 1.1.  You should add an XML header
+    declaring this version or use a parser that does not care about this part of the specification (e.g. Xpp3 parser).</p>
 
 
     <!-- ****************************************************** -->
