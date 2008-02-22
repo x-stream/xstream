@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,17 +11,21 @@
  */
 package com.thoughtworks.xstream.mapper;
 
+import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.alias.ClassMapper;
 
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+
 /**
- * Mapper that resolves default implementations of classes. For example, mapper.lookupName(ArrayList.class) will return
- * java.util.List. Calling mapper.defaultImplementationOf(List.class) will return ArrayList.
- *
- * @author Joe Walnes 
+ * Mapper that resolves default implementations of classes. For example,
+ * mapper.serializedClass(ArrayList.class) will return java.util.List. Calling
+ * mapper.defaultImplementationOf(List.class) will return ArrayList.
+ * 
+ * @author Joe Walnes
  */
 public class DefaultImplementationsMapper extends MapperWrapper {
 
@@ -55,12 +59,17 @@ public class DefaultImplementationsMapper extends MapperWrapper {
     }
 
     public void addDefaultImplementation(Class defaultImplementation, Class ofType) {
+        if (defaultImplementation != null && defaultImplementation.isInterface()) {
+            throw new InitializationException(
+                "Default implementation is not a concrete class: "
+                    + defaultImplementation.getName());
+        }
         typeToImpl.put(ofType, defaultImplementation);
         implToType.put(defaultImplementation, ofType);
     }
 
     public String serializedClass(Class type) {
-        Class baseType = (Class) implToType.get(type);
+        Class baseType = (Class)implToType.get(type);
         return baseType == null ? super.serializedClass(type) : super.serializedClass(baseType);
     }
 
@@ -71,7 +80,7 @@ public class DefaultImplementationsMapper extends MapperWrapper {
             return super.defaultImplementationOf(type);
         }
     }
-    
+
     private Object readResolve() {
         implToType = new HashMap();
         for (final Iterator iter = typeToImpl.keySet().iterator(); iter.hasNext();) {
