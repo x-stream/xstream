@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -89,6 +89,31 @@ public class ReflectionConverterTest extends TestCase {
         String xml = xstream.toXML(fields);
         assertEquals(expected, xml);
 
+    }
+    
+    public void testCanBeOverloadedToDeserializeTransientFields() {
+        XStream xstream = new XStream(new XppDriver());
+        xstream.alias("types", TypesOfFields.class);
+        xstream.registerConverter(new ReflectionConverter(xstream.getMapper(), xstream
+            .getReflectionProvider()) {
+
+            public boolean canConvert(Class type) {
+                return type == TypesOfFields.class;
+            }
+
+            protected boolean shouldUnmarshalTransientFields() {
+                return true;
+            }
+        });
+
+        String xml = ""
+            + "<types>\n"
+            + "  <normal>normal</normal>\n"
+            + "  <trans>foo</trans>\n"
+            + "</types>";
+
+        TypesOfFields fields = (TypesOfFields)xstream.fromXML(xml);
+        assertEquals("foo", fields.trans);
     }
 
     public void testCustomConverterCanBeInstantiatedAndRegisteredWithDesiredPriority() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -163,7 +163,7 @@ public abstract class AbstractReflectionConverter implements Converter {
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
             if (fieldExistsInClass) {
                 Field field = reflectionProvider.getField(result.getClass(), attrName);
-                if (Modifier.isTransient(field.getModifiers())) {
+                if (Modifier.isTransient(field.getModifiers()) && ! shouldUnmarshalTransientFields()) {
                     continue;
                 }
                 SingleValueConverter converter = mapper.getConverterFromAttribute(field.getDeclaringClass(), attrName);
@@ -199,7 +199,7 @@ public abstract class AbstractReflectionConverter implements Converter {
             final Object value;
             if (fieldExistsInClass) {
                 Field field = reflectionProvider.getField(classDefiningField != null ? classDefiningField : result.getClass(), fieldName);
-                if (Modifier.isTransient(field.getModifiers())) {
+                if (Modifier.isTransient(field.getModifiers()) && !shouldUnmarshalTransientFields()) {
                     reader.moveUp();
                     continue;
                 }
@@ -232,6 +232,10 @@ public abstract class AbstractReflectionConverter implements Converter {
 
     protected Object unmarshallField(final UnmarshallingContext context, final Object result, Class type, Field field) {
         return context.convertAnother(result, type, mapper.getLocalConverter(field.getDeclaringClass(), field.getName()));
+    }
+    
+    protected boolean shouldUnmarshalTransientFields() {
+        return false;
     }
 
     private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result, String itemFieldName) {
