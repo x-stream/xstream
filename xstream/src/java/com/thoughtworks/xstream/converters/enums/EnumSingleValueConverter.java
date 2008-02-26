@@ -18,7 +18,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * instantiated for enum types.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public class EnumSingleValueConverter extends AbstractSingleValueConverter {
 

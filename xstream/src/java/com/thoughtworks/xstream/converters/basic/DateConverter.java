@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,7 +41,7 @@ public class DateConverter extends AbstractSingleValueConverter {
      * Construct a DateConverter with standard formats.
      * 
      * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
-     * @since upcoming
+     * @since 1.3
      */
     public DateConverter(boolean lenient) {
         this("yyyy-MM-dd HH:mm:ss.S z",
@@ -68,7 +68,7 @@ public class DateConverter extends AbstractSingleValueConverter {
      * @param defaultFormat the default format
      * @param acceptableFormats fallback formats
      * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
-     * @since upcoming
+     * @since 1.3
      */
     public DateConverter(String defaultFormat, String[] acceptableFormats, boolean lenient) {
         this.defaultFormat = new ThreadSafeSimpleDateFormat(defaultFormat, 4, 20, lenient);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * 
  * @author Guilherme Silveira
  * @author Mauro Talevi
- * @deprecated since upcoming, build into {@link ReflectionConverter}
+ * @deprecated since 1.3, build into {@link ReflectionConverter}
  */
 @Deprecated
 public class AnnotationReflectionConverter extends ReflectionConverter {

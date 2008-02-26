@@ -369,7 +369,7 @@ public class XStream {
      * Constructs an XStream with a special {@link HierarchicalStreamDriver} and {@link ReflectionProvider} and additionally with a prepared {@link Mapper}.
      *
      * @throws InitializationException in case of an initialization problem
-     * @deprecated since upcoming, use {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, Mapper, ClassLoader)} instead
+     * @deprecated since 1.3, use {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, Mapper, ClassLoader)} instead
      */
     public XStream(
             ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
@@ -381,7 +381,7 @@ public class XStream {
      * {@link ClassLoader} to use.
      *
      * @throws InitializationException in case of an initialization problem
-     * @since upcoming
+     * @since 1.3
      */
     public XStream(
             ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver, ClassLoader classLoader) {
@@ -396,7 +396,7 @@ public class XStream {
      * use in the {@link Mapper} chain.</p>
      *
      * @throws InitializationException in case of an initialization problem
-     * @since upcoming
+     * @since 1.3
      */
     public XStream(
             ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver, ClassLoader classLoader, Mapper mapper) {
@@ -411,7 +411,7 @@ public class XStream {
      * use in the {@link Mapper} chain.</p>
      *
      * @throws InitializationException in case of an initialization problem
-     * @since upcoming
+     * @since 1.3
      */
     public XStream(
             ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,   
@@ -1127,7 +1127,7 @@ public class XStream {
      * @param definedIn the class type the field is defined in
      * @param fieldName the field name
      * @param converter the converter to use
-     * @since upcoming
+     * @since 1.3
      */
     public void registerLocalConverter(Class definedIn, String fieldName, Converter converter) {
         if (localConversionMapper == null) {
@@ -1144,7 +1144,7 @@ public class XStream {
      * @param definedIn the class type the field is defined in
      * @param fieldName the field name
      * @param converter the converter to use
-     * @since upcoming
+     * @since 1.3
      */
     public void registerLocalConverter(Class definedIn, String fieldName, SingleValueConverter converter) {
         registerLocalConverter(definedIn, fieldName, (Converter)new SingleValueConverterWrapper(converter));
@@ -1345,7 +1345,7 @@ public class XStream {
      *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
-     * @since upcoming
+     * @since 1.3
      */
     public ObjectOutputStream createObjectOutputStream(OutputStream out) throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), "object-stream");
@@ -1357,7 +1357,7 @@ public class XStream {
      *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
-     * @since upcoming
+     * @since 1.3
      */
     public ObjectOutputStream createObjectOutputStream(OutputStream out, String rootNodeName)
             throws IOException {
@@ -1438,7 +1438,7 @@ public class XStream {
      *
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
-     * @since upcoming
+     * @since 1.3
      */
     public ObjectInputStream createObjectInputStream(InputStream in) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(in));
@@ -1529,7 +1529,7 @@ public class XStream {
      * Process the annotations of the given types and configure the XStream.
      * 
      * @param types the types with XStream annotations
-     * @since upcoming
+     * @since 1.3
      */
     public void processAnnotations(final Class[] types) {
         if (annotationConfiguration == null) {
@@ -1543,7 +1543,7 @@ public class XStream {
      * will automatically turn the auto-detection mode for annotations off.
      * 
      * @param type the type with XStream annotations
-     * @since upcoming
+     * @since 1.3
      */
     public void processAnnotations(final Class type) {
         processAnnotations(new Class[]{type});
@@ -1556,7 +1556,7 @@ public class XStream {
      * been warned! 
      * 
      * @param mode <code>true</code> if annotations are auto-detected
-     * @since upcoming
+     * @since 1.3
      */
     public void autodetectAnnotations(boolean mode) {
         if (annotationConfiguration != null) {
@@ -1565,7 +1565,7 @@ public class XStream {
     }
     
     /**
-     * @deprecated since upcoming, use {@link InitializationException} instead
+     * @deprecated since 1.3, use {@link InitializationException} instead
      */
     public static class InitializationException extends XStreamException {
         public InitializationException(String message, Throwable cause) {

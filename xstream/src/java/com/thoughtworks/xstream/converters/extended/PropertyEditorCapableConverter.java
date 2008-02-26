@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,7 +22,7 @@ import java.beans.PropertyEditor;
  * 
  * @author Jukka Lindstr&ouml;m
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public class PropertyEditorCapableConverter implements SingleValueConverter {
 

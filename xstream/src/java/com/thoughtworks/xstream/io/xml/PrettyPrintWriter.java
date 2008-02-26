@@ -84,7 +84,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     /**
      * @since 1.2
-     * @deprecated since upcoming
+     * @deprecated since 1.3
      */
     public PrettyPrintWriter(
         Writer writer, char[] lineIndenter, String newLine, XmlFriendlyReplacer replacer) {
@@ -92,7 +92,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.3
      */
     public PrettyPrintWriter(
         Writer writer, int mode, char[] lineIndenter, XmlFriendlyReplacer replacer) {
@@ -100,14 +100,14 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @deprecated since upcoming
+     * @deprecated since 1.3
      */
     public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine) {
         this(writer, lineIndenter, newLine, new XmlFriendlyReplacer());
     }
 
     /**
-     * @since upcoming
+     * @since 1.3
      */
     public PrettyPrintWriter(Writer writer, int mode, char[] lineIndenter) {
         this(writer, mode, lineIndenter, new XmlFriendlyReplacer());
@@ -118,14 +118,14 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @deprecated since upcoming
+     * @deprecated since 1.3
      */
     public PrettyPrintWriter(Writer writer, String lineIndenter, String newLine) {
         this(writer, lineIndenter.toCharArray(), newLine);
     }
 
     /**
-     * @since upcoming
+     * @since 1.3
      */
     public PrettyPrintWriter(Writer writer, int mode, String lineIndenter) {
         this(writer, mode, lineIndenter.toCharArray());
@@ -136,7 +136,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.3
      */
     public PrettyPrintWriter(Writer writer, int mode, XmlFriendlyReplacer replacer) {
         this(writer, mode, new char[]{' ', ' '}, replacer);
@@ -147,7 +147,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.3
      */
     public PrettyPrintWriter(Writer writer, int mode) {
         this(writer, mode, new char[]{' ', ' '});

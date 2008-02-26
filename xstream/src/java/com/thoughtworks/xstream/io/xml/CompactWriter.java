@@ -20,7 +20,7 @@ public class CompactWriter extends PrettyPrintWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.3
      */
     public CompactWriter(Writer writer, int mode) {
         super(writer, mode);
@@ -31,7 +31,7 @@ public class CompactWriter extends PrettyPrintWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.3
      */
     public CompactWriter(Writer writer, int mode, XmlFriendlyReplacer replacer) {
         super(writer, mode, replacer);

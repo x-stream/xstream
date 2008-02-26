@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 XStream Committers.
+ * Copyright (c) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,7 @@ import java.beans.PropertyEditor;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public class ThreadSafePropertyEditor {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,7 @@ import java.util.Map;
  * stream does not contain an XML header or the attributes are not set within the header.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public final class XmlHeaderAwareReader extends Reader {
 
@@ -51,7 +51,7 @@ public final class XmlHeaderAwareReader extends Reader {
      * @param in the {@link InputStream}
      * @throws UnsupportedEncodingException if the encoding is not supported
      * @throws IOException occurred while reading the XML header
-     * @since upcoming
+     * @since 1.3
      */
     public XmlHeaderAwareReader(final InputStream in) throws UnsupportedEncodingException, IOException {
         final PushbackInputStream pin = in instanceof PushbackInputStream
@@ -156,7 +156,7 @@ public final class XmlHeaderAwareReader extends Reader {
 
     /**
      * @see InputStreamReader#getEncoding()
-     * @since upcoming
+     * @since 1.3
      */
     public String getEncoding() {
         return reader.getEncoding();
@@ -164,7 +164,7 @@ public final class XmlHeaderAwareReader extends Reader {
 
     /**
      * @see InputStreamReader#getEncoding()
-     * @since upcoming
+     * @since 1.3
      */
     public double getVersion() {
         return version;

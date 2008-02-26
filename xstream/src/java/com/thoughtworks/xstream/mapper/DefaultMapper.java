@@ -140,21 +140,21 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return null;
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         return null;
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(Class type) {
         return null;
@@ -174,14 +174,14 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
-     * @deprecated since upcoming, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated since 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String aliasForAttribute(Class definedIn, String fieldName) {
         return fieldName;
     }
 
     /**
-     * @deprecated since upcoming, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated since 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String attributeForAlias(Class definedIn, String alias) {
         return alias;

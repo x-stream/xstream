@@ -41,7 +41,7 @@ public class AttributeMapper extends MapperWrapper {
     private final Set fieldToUseAsAttribute = new HashSet();
 
     /**
-     * @deprecated since upcoming
+     * @deprecated since 1.3
      */
     public AttributeMapper(Mapper wrapped) {
         this(wrapped, null);
@@ -53,7 +53,7 @@ public class AttributeMapper extends MapperWrapper {
     }
     
     /**
-     * @deprecated since upcoming
+     * @deprecated since 1.3
      */
     public void setConverterLookup(ConverterLookup converterLookup) {
         this.converterLookup = converterLookup;
@@ -77,7 +77,7 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         if (fieldNameToTypeMap.get(fieldName) == type) {
@@ -100,7 +100,7 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(Class type) {
         if (typeSet.contains(type)) {
@@ -111,7 +111,7 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
      */
     public SingleValueConverter getConverterFromAttribute(String attributeName) {
         SingleValueConverter converter = null;
@@ -150,7 +150,7 @@ public class AttributeMapper extends MapperWrapper {
      * @param definedIn the declaring class of the field
      * @param fieldName the name of the field
      * @throws IllegalArgumentException if the field does not exist
-     * @since upcoming
+     * @since 1.3
      */
     public void addAttributeFor(Class definedIn, String fieldName) {
         fieldToUseAsAttribute.add(getField(definedIn, fieldName));

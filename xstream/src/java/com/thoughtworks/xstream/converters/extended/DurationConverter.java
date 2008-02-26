@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ import javax.xml.datatype.Duration;
  * 
  * @author John Kristian
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public class DurationConverter extends AbstractSingleValueConverter {
     private final DatatypeFactory factory;

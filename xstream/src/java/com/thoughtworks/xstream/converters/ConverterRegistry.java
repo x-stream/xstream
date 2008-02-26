@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.converters;
  * An interface for the converter management.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public interface ConverterRegistry {
 

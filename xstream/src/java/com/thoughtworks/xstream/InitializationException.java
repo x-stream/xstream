@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,7 @@ package com.thoughtworks.xstream;
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public class InitializationException extends XStream.InitializationException {
     public InitializationException(String message, Throwable cause) {

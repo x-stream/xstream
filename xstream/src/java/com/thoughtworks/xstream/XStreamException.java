@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,7 +18,7 @@ import com.thoughtworks.xstream.core.BaseException;
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public class XStreamException extends BaseException {
 
@@ -27,7 +27,7 @@ public class XStreamException extends BaseException {
     /**
      * Default constructor.
      * 
-     * @since upcoming
+     * @since 1.3
      */
     protected XStreamException() {
         this("", null);
@@ -37,7 +37,7 @@ public class XStreamException extends BaseException {
      * Constructs an XStreamException with a message.
      * 
      * @param message
-     * @since upcoming
+     * @since 1.3
      */
     public XStreamException(String message) {
         this(message, null);
@@ -47,7 +47,7 @@ public class XStreamException extends BaseException {
      * Constructs an XStreamException as wrapper for a different causing {@link Throwable}.
      * 
      * @param cause
-     * @since upcoming
+     * @since 1.3
      */
     public XStreamException(Throwable cause) {
         this("", cause);
@@ -59,7 +59,7 @@ public class XStreamException extends BaseException {
      * 
      * @param message
      * @param cause
-     * @since upcoming
+     * @since 1.3
      */
     public XStreamException(String message, Throwable cause) {
         super(message + (cause == null ? "" : " : " + cause.getMessage()));

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,7 +36,7 @@ public interface ErrorWriter {
      * 
      * @param errorKey the key of the message
      * @return the value
-     * @since upcoming
+     * @since 1.3
      */
     String get(String errorKey);
 
@@ -44,7 +44,7 @@ public interface ErrorWriter {
      * Retrieve an iterator over all keys of the error message.
      * 
      * @return an Iterator
-     * @since upcoming
+     * @since 1.3
      */
     Iterator keys();
 }

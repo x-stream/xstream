@@ -48,7 +48,7 @@ import java.util.WeakHashMap;
  * A mapper that uses annotations to prepare the remaining mappers in the chain.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public class AnnotationMapper extends MapperWrapper implements AnnotationConfiguration {
 
@@ -68,7 +68,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
      * Construct an AnnotationMapper.
      * 
      * @param wrapped the next {@link Mapper} in the chain
-     * @since upcoming
+     * @since 1.3
      */
     public AnnotationMapper(
         final Mapper wrapped, final ConverterRegistry converterRegistry,

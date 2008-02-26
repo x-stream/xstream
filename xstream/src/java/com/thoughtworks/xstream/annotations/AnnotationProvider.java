@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,7 +18,7 @@ import java.lang.reflect.Field;
  * An utility class to provide annotations from different sources
  * 
  * @author Guilherme Silveira
- * @deprecated since upcoming
+ * @deprecated since 1.3
  */
 @Deprecated
 public class AnnotationProvider {
@@ -29,7 +29,7 @@ public class AnnotationProvider {
      * @param field the annotation Field
      * @param annotationClass the annotation Class
      * @return The Annotation type
-     * @deprecated since upcoming
+     * @deprecated since 1.3
      */
     @Deprecated
     public <T extends Annotation> T getAnnotation(Field field, Class<T> annotationClass) {

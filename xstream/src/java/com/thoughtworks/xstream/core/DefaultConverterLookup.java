@@ -40,7 +40,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     }
 
     /**
-     * @deprecated since upcoming, use {@link #DefaultConverterLookup()}
+     * @deprecated since 1.3, use {@link #DefaultConverterLookup()}
      */
     public DefaultConverterLookup(Mapper mapper) {
     }

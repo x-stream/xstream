@@ -107,21 +107,21 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         return wrapped.getConverterFromItemType(fieldName, type);
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(Class type) {
         return wrapped.getConverterFromItemType(type);
     }
 
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return wrapped.getConverterFromAttribute(name);
@@ -140,14 +140,14 @@ public abstract class MapperWrapper implements Mapper {
     }
     
     /**
-     * @deprecated since upcoming, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated since 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String aliasForAttribute(Class definedIn, String fieldName) {
     	return wrapped.aliasForAttribute(definedIn, fieldName);
     }
     
     /**
-     * @deprecated since upcoming, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated since 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String attributeForAlias(Class definedIn, String alias) {
     	return wrapped.attributeForAlias(definedIn, alias);

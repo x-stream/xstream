@@ -39,7 +39,7 @@ public class EnumMapper extends AttributeMapper {
     }
 
     /**
-     * @deprecated since upcoming, use {@link #EnumMapper(Mapper, ConverterLookup)}
+     * @deprecated since 1.3, use {@link #EnumMapper(Mapper, ConverterLookup)}
      */
     @Deprecated
     public EnumMapper(Mapper wrapped) {
