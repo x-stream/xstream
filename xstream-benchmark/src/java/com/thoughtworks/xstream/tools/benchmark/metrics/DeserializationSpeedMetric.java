@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -35,7 +35,7 @@ public class DeserializationSpeedMetric implements Metric {
      * Measure deserialization speed.
      * 
      * @param iterations
-     * @deprecated since upcoming, use {@link #DeserializationSpeedMetric(int, boolean)}
+     * @deprecated since 1.3, use {@link #DeserializationSpeedMetric(int, boolean)}
      */
     public DeserializationSpeedMetric(int iterations) {
         this(iterations, false);
@@ -45,7 +45,7 @@ public class DeserializationSpeedMetric implements Metric {
      * Measure deserialization speed.
      * @param iterations 
      * @param validate flag to compare result of last iteration with original data
-     * @since upcoming
+     * @since 1.3
      */
     public DeserializationSpeedMetric(int iterations, boolean validate) {
         this.iterations = iterations;
@@ -79,7 +79,7 @@ public class DeserializationSpeedMetric implements Metric {
     }
 
     /**
-     *@deprecated since upcoming
+     *@deprecated since 1.3
      */
     public double run(Product product, Object object) throws Exception {
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -32,7 +32,7 @@ public interface Metric {
      * @return The resulting metric (e.g. 12.22).
      * @throws Exception If this metric could not be obtained. This will
      *                   be reported back to the {@link Reporter}.
-     * @deprecated since upcoming
+     * @deprecated since 1.3
      */
     double run(Product product, Object object) throws Exception;
     
@@ -44,7 +44,7 @@ public interface Metric {
      * @return The resulting metric (e.g. 12.22).
      * @throws Exception If this metric could not be obtained. This will
      *                   be reported back to the {@link Reporter}.
-     * @since upcoming
+     * @since 1.3
      */
     double run(Product product, Target target) throws Exception;
 

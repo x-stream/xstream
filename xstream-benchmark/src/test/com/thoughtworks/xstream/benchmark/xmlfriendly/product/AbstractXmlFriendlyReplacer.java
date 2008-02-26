@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
  * Abstract base class for the XmlFriendlyReplacer with all kind of implementations.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
 

@@ -21,7 +21,7 @@ import java.util.List;
  * Target containing basic types.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3
  */
 public class SerializableTarget implements Target {
 
