@@ -28,9 +28,15 @@
 	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
 	</p>
  
+<!--
     <h1 id="Upcoming">Upcoming</h1>
 
     <p>Not yet released</p>
+-->
+
+    <h1 id="1.3">1.3</h1>
+
+    <p>Released 27 February 2008.</p>
 
     <h2>Major changes</h2>
 
@@ -138,6 +144,10 @@
     	<li>c.t.x.mapper.EnumMapper derives now from the c.t.x.mapper.AttributeMapper to support enums as attributes. Therefore the old constructor
     	has been deprecated in favour of one taking an additional c.t.x.converters.ConverterLookup that has to be passed to the new parent.</li>
     </ul>
+    
+    <p class="highlight">Note, to support a representation of null values in some way, it is absolutely necessary that each converter can handle a null
+    value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
+    in case XStream will provide such values with its next major version.</p>
 
     <h1 id="1.2.2">Version 1.2.2</h1>
 
