@@ -27,7 +27,7 @@
         in advance or on-the-fly (see <a href="annotation-tutorial.html#AutoDetect">Annotation tutorial</a>
         for limitations).</li>
         <li>Improved encoding support for JSON and XML (including automated  support for XML headers).
-        Enforcable check for valid XML characters in the written stream.</li>
+        Enforceable check for valid XML characters in the written stream.</li>
         <li>Dedicated converters can now be configured for individual fields also using the XStream facade.</li>
         <li>New converters for java.lang.StringBuilder, java.util.UUID, javax.xml.datatype.Duration,
          and javax.swing.LookAndFeel. New generic converter for types using a java.beans.PropertyEditor.
@@ -41,6 +41,10 @@
    	  </ul>
    	  
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+
+    <p class="highlight">Note, to support a representation of null values in some way, it is absolutely necessary that each converter can handle a null
+    value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
+    in case XStream will provide such values with its next major version.</p>
 
     <h2 id="1.2.2"><b>May 24, 2007</b> XStream 1.2.2 released</h2>
     
