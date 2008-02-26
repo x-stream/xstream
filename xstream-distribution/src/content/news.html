@@ -16,6 +16,32 @@
 
   <body>
 
+    <h2 id="1.3"><b>Feb 27, 2008</b> XStream 1.3 released</h2>
+    
+      <p>The XStream committers proudly present XStream 1.3.  This release contains some major
+      refactorings concerning Java annotations, improved XML support regarding encoding and 
+      character sets, some minor new features, deprecations and a lot of bug fixes:</p>
+      
+	  <ul>
+        <li>Annotation support is now implemented as Mapper and Annotations can either be processed
+        in advance or on-the-fly (see <a href="annotation-tutorial.html#AutoDetect">Annotation tutorial</a>
+        for limitations).</li>
+        <li>Improved encoding support for JSON and XML (including automated  support for XML headers).
+        Enforcable check for valid XML characters in the written stream.</li>
+        <li>Dedicated converters can now be configured for individual fields also using the XStream facade.</li>
+        <li>New converters for java.lang.StringBuilder, java.util.UUID, javax.xml.datatype.Duration,
+         and javax.swing.LookAndFeel. New generic converter for types using a java.beans.PropertyEditor.
+         Auto-instantiated SingleValueConverter for Java enums to support enum values as attributes.</li>
+        <li>XML elements are now sorted by default according their declaration with the fields defined in parent
+        classes first to improve support for type hierarchies in XML schemata.</li>
+        <li>A lot of bug fixes to improve JSON support for arbitrary types. Added section in 
+        <a href="faq.html#JSON">FAQ</a> for limitations and operation modes.</li>
+        <li>Native support for SAP VM.</li>
+        <li>All text-based files are now shipped with an appropriate license header to clean-up legal issues.</li>
+   	  </ul>
+   	  
+      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+
     <h2 id="1.2.2"><b>May 24, 2007</b> XStream 1.2.2 released</h2>
     
     <p>A maintenance release of XStream that contains a lot of bug fixes and has some minor highlights:
