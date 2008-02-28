@@ -28,7 +28,7 @@ public final class JDK6StaxWriterTest extends AbstractStaxWriterTest {
             expected = perlUtil.substitute("s#<(\\w+|\\w+:\\w+) (xmlns[^\"]*\"[^\"]*\")>#<$1>#g", expected);
         }
         expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
-        expected = replaceAll(expected, "&#x0D;", "\r");
+        expected = replaceAll(expected, "&#xd;", "\r");
         expected = getXMLHeader() + expected;
         assertEquals(expected, buffer.toString());
     }
