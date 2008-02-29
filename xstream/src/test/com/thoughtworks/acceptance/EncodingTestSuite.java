@@ -36,6 +36,7 @@ import com.thoughtworks.xstream.io.xml.XomDriver;
 import com.thoughtworks.xstream.io.xml.XppDomDriver;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
+
 /**
  * @author Sanjiv Jivan
  * @author Guilherme Silveira
@@ -89,30 +90,32 @@ public class EncodingTestSuite extends TestSuite {
 
     private void addDriverTest(final HierarchicalStreamDriver driver) {
         String testName = getShortName(driver);
-        final String nativeEncoding= System.getProperty("xstream.test.native.encoding");
-        if ("true".equals(nativeEncoding)) {
+        final String allEncodingTests = System.getProperty("xstream.test.encoding.all");
+        if ("true".equals(allEncodingTests)) {
             // Native encoding normally fails on most systems!!
             addTest(new TestCase(testName + "Native") {
                 protected void runTest() throws Throwable {
                     test(driver, null);
                 }
             });
+            // System encoding fails on US-ASCII systems, like Codehaus Bamboo
+            final String systemEncoding = System.getProperty("file.encoding");
+            addTest(new TestCase(testName + "With" + systemEncoding + "SystemEncoding") {
+                protected void runTest() throws Throwable {
+                    final Properties systemProperties = new Properties();
+                    systemProperties.putAll(System.getProperties());
+                    try {
+                        // Use BEA reference implementation for StAX
+                        // (Woodstox will fail on Windows because of unknown system encoding)
+                        System.setProperty(
+                            XMLInputFactory.class.getName(), MXParserFactory.class.getName());
+                        test(driver, systemEncoding);
+                    } finally {
+                        System.setProperties(systemProperties);
+                    }
+                }
+            });
         }
-        final String systemEncoding= System.getProperty("file.encoding");
-        addTest(new TestCase(testName + "With" + systemEncoding + "SystemEncoding") {
-            protected void runTest() throws Throwable {
-                final Properties systemProperties = new Properties();
-                systemProperties.putAll(System.getProperties());
-                try {
-                    // Use BEA reference implementation for StAX
-                    // (Woodstox will fail on Windows because of unknown system encoding)
-                    System.setProperty(XMLInputFactory.class.getName(), MXParserFactory.class.getName());
-                    test(driver, systemEncoding);
-                } finally {
-                    System.setProperties(systemProperties);
-                }            
-            }
-        });
         addTest(new TestCase(testName + "WithUTF_8Encoding") {
             protected void runTest() throws Throwable {
                 test(driver, "UTF-8");
