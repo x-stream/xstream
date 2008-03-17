@@ -109,6 +109,13 @@
     deprecated AnnotationReflectionConverter, that was used for XStream pre 1.3.x, but as drawback the functionality
     to register a local converter with XStream.registerLocalConverter will no longer work.</p>
 
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_element_sequence">XStream 1.3 suddenly has a different field order?</h2>
+
+    <p>Yes. This was announced with the last 1.2.x release and was done to support the type inheritance of XML schemas. However, XStream is delivered with the
+    <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">XStream12FieldKeySorter</a> that can be used to 
+    <a href="Serialization_sort_fields">sort the fields</a> according XStream 1.2.2.</p>
+
 
     <!-- ****************************************************** -->
     <h1 id="Serialization">Serialization</h1>
