@@ -11,6 +11,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
@@ -56,6 +57,51 @@ public class LocalConverterTest extends AbstractAcceptanceTest {
 
         xstream.registerLocalConverter(MultiBoolean.class, "speech", BooleanConverter.YES_NO);
         xstream.registerLocalConverter(MultiBoolean.class, "bit", BooleanConverter.BINARY);
+        assertBothWays(multiBool, xml);
+    }
+    
+        public static class SymbolParameter {
+        private int type;
+        private int color;
+        private int width;
+
+        public SymbolParameter() {
+        }
+
+        public SymbolParameter(int type, int color, int width) {
+            this.type = type;
+            this.color = color;
+            this.width = width;
+        }
+
+    }
+
+    public static class HexNumberConverter implements SingleValueConverter {
+        public boolean canConvert(Class type) {
+            return type.equals(int.class) || type.equals(Integer.class);
+        }
+
+        public Object fromString(String value) {
+            return Integer.parseInt(value, 16);
+        }
+
+        public String toString(Object obj) {
+            return Integer.toHexString((Integer)obj);
+        }
+    }
+
+    // TODO (XSTR-481)
+    public void todoTestCanBeUsedForAttributeValue() {
+        SymbolParameter multiBool = new SymbolParameter(1, 0xff00ff, 100);
+        String xml = ""
+                + "<param color=\"ff00ff\">\n"
+                + "  <type>1</type>\n"
+                + "  <width>100</width>\n"
+                + "</param>";
+
+        xstream.alias("param", SymbolParameter.class);
+        xstream.useAttributeFor("color", int.class);
+        xstream.registerLocalConverter(SymbolParameter.class, "color", new HexNumberConverter());
         assertBothWays(multiBool, xml);
     }
 }
