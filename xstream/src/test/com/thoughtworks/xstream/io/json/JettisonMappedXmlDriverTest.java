@@ -32,9 +32,9 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
  */
 public class JettisonMappedXmlDriverTest extends TestCase {
 
-    private final static String SIMPLE = "{'product':{'name':'Banana','id':'123','price':'23.0'}}"
+    private final static String SIMPLE = "{'product':{'name':'Banana','id':123,'price':23}}"
         .replace('\'', '"');
-    private final static String HIERARCHY = "{'category':{'name':'fruit','id':'111','products':{'product':[{'name':'Banana','id':'123','price':'23.01','tags':{'string':['yellow','fresh','tasty']}},{'name':'Mango','id':'124','price':'34.01'}]}}}"
+    private final static String HIERARCHY = "{'category':{'name':'fruit','id':111,'products':{'product':[{'name':'Banana','id':123,'price':23.01,'tags':{'string':['yellow','fresh','tasty']}},{'name':'Mango','id':124,'price':34.01}]}}}"
         .replace('\'', '"');
 
     private XStream xstream;
