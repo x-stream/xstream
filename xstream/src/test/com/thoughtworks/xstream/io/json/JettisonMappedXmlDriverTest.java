@@ -119,6 +119,23 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
     }
 
+    public void testOneElementList() {
+        ArrayList list1 = new ArrayList();
+        list1.add("one");
+        String json = xstream.toXML(list1);
+        assertEquals("{\"list\":{\"string\":[\"one\"]}}", json);
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+
+    public void todoTestEmptyList() {
+        ArrayList list1 = new ArrayList();
+        String json = xstream.toXML(list1);
+        assertEquals("{\"list\":[]}", json);
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+
     // TODO: See XSTR-460
     public void todoTestArrayList() throws IOException {
         ArrayList list1 = new ArrayList();

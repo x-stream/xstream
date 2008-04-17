@@ -182,4 +182,12 @@ public class StaxWriter extends AbstractXmlWriter {
         return namespaceRepairingMode;
     }
 
+    protected QNameMap getQNameMap() {
+        return this.qnameMap;
+    }
+
+    protected XMLStreamWriter getXMLStreamWriter() {
+        return this.out;
+    }
+
 }

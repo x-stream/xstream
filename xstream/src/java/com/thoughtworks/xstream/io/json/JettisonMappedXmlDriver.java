@@ -16,8 +16,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxReader;
-import com.thoughtworks.xstream.io.xml.StaxWriter;
 
+import org.codehaus.jettison.mapped.Configuration;
+import org.codehaus.jettison.mapped.MappedNamespaceConvention;
 import org.codehaus.jettison.mapped.MappedXMLInputFactory;
 import org.codehaus.jettison.mapped.MappedXMLOutputFactory;
 
@@ -40,11 +41,14 @@ public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
 
     private final MappedXMLOutputFactory mof;
     private final MappedXMLInputFactory mif;
+    private final MappedNamespaceConvention convention;
 
     public JettisonMappedXmlDriver() {
         final HashMap nstjsons = new HashMap();
-        mof = new MappedXMLOutputFactory(nstjsons);
-        mif = new MappedXMLInputFactory(nstjsons);
+        final Configuration config = new Configuration(nstjsons);
+        mof = new MappedXMLOutputFactory(config);
+        mif = new MappedXMLInputFactory(config);
+        convention = new MappedNamespaceConvention(config);
     }
 
     public HierarchicalStreamReader createReader(final Reader reader) {
@@ -65,7 +69,7 @@ public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
 
     public HierarchicalStreamWriter createWriter(final Writer writer) {
         try {
-            return new StaxWriter(new QNameMap(), mof.createXMLStreamWriter(writer));
+            return new JettisonStaxWriter(new QNameMap(), mof.createXMLStreamWriter(writer), convention);
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         }
@@ -73,7 +77,7 @@ public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
 
     public HierarchicalStreamWriter createWriter(final OutputStream output) {
         try {
-            return new StaxWriter(new QNameMap(), mof.createXMLStreamWriter(output));
+            return new JettisonStaxWriter(new QNameMap(), mof.createXMLStreamWriter(output), convention);
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         }
