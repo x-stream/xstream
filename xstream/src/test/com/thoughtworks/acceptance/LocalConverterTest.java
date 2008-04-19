@@ -82,7 +82,7 @@ public class LocalConverterTest extends AbstractAcceptanceTest {
         }
 
         public Object fromString(String value) {
-            return Integer.parseInt(value, 16);
+            return new Integer(Integer.parseInt(value, 16));
         }
 
         public String toString(Object obj) {
