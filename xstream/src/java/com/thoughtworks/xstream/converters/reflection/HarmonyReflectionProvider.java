@@ -10,10 +10,11 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
-import org.apache.harmony.awt.FieldsAccessor;
 import org.apache.harmony.misc.accessors.ObjectAccessor;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
@@ -22,9 +23,10 @@ import java.lang.reflect.Field;
  * same method used by the internals of standard Java serialization, but relies on internal Harmony
  * code.
  * 
- * Note, this is work in progress. Harmony 5.0M4 crashes after running quite some test of the test 
- * suite. Additionally it fails with a NPE processing the annotations and has a wrong offset dealing 
- * with time zone.
+ * Note, this is work in progress. Harmony 5.0M4 crashes instantiating a class derived from
+ * {@link com.thoughtworks.acceptance.objects.StandardObject}, of type 
+ * {@link javax.swing.JTable} or {@link java.awt.Font}. Additionally it fails with a NPE processing the
+ * annotations and has a wrong offset dealing with time zone. Same problems apply to 5.0M5.
  *
  * @author J&ouml;rg Schaible
  * @author Joe Walnes
@@ -35,15 +37,16 @@ public class HarmonyReflectionProvider extends PureJavaReflectionProvider {
     static {
         ObjectAccessor accessor = null;
         Exception ex = null;
-        FieldsAccessor fieldsAccessor = new FieldsAccessor(ReflectionProvider.class, null);
-        Field field;
+        Method method;
         try {
-            field = FieldsAccessor.class.getDeclaredField("accessor");
-            field.setAccessible(true);
-            accessor = (ObjectAccessor)field.get(fieldsAccessor);
-        } catch (NoSuchFieldException e) {
+            method = ObjectAccessor.class.getDeclaredMethod("getInstance");
+            method.setAccessible(true);
+            accessor = (ObjectAccessor)method.invoke(null, null);
+        } catch (NoSuchMethodException e) {
             ex = e;
         } catch (IllegalAccessException e) {
+            ex = e;
+        } catch (InvocationTargetException e) {
             ex = e;
         }
         objectAccess = accessor;
