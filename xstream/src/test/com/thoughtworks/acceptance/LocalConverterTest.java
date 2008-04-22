@@ -86,7 +86,7 @@ public class LocalConverterTest extends AbstractAcceptanceTest {
         }
 
         public String toString(Object obj) {
-            return Integer.toHexString((Integer)obj);
+            return Integer.toHexString(((Integer)obj).intValue());
         }
     }
 
