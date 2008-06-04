@@ -88,13 +88,13 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private Constructor getMungedConstructor(Class type) throws NoSuchMethodException {
-        WeakReference ref = (WeakReference)constructorCache.get(type);
-        if (ref == null || ref.get() == null) {
-            Constructor javaLangObjectConstructor = Object.class.getDeclaredConstructor(new Class[0]);
-            ref = new WeakReference(reflectionFactory.newConstructorForSerialization(type, javaLangObjectConstructor));
-            constructorCache.put(type, ref);
+        final WeakReference ref = (WeakReference)constructorCache.get(type);
+        Constructor ctor = (Constructor)(ref == null ? null : ref.get());
+        if (ctor == null) {
+            ctor = Object.class.getDeclaredConstructor(new Class[0]);
+            constructorCache.put(type, new WeakReference(reflectionFactory.newConstructorForSerialization(type, ctor)));
         }
-        return (Constructor) ref.get();
+        return ctor;
     }
 
     public void writeField(Object object, String fieldName, Object value, Class definedIn) {
