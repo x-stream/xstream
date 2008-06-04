@@ -194,10 +194,12 @@ import java.util.Vector;
  * </blockquote>
  * <hr>
  * <p>
- * The default converter, ie the converter which will be used if no other registered converter is
- * suitable, can be configured by either one of the constructors or can be changed using the
- * <code>changeDefaultConverter()</code> method. If not set, XStream uses
- * {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter} as the initial default
+ * The converters can be registered with an explicit priority. By default they are registered with 
+ * XStream.PRIORITY_NORMAL. Converters of same priority will be used in the reverse sequence
+ * they have been registered. The default converter, i.e. the converter which will be used if
+ * no other registered converter is suitable, can be registered with priority
+ * XStream.PRIORITY_VERY_LOW. XStream uses by default the
+ * {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter} as the fallback
  * converter.
  * </p>
  * <p/>
@@ -206,7 +208,7 @@ import java.util.Vector;
  * <b>Example</b><blockquote>
  *
  * <pre>
- * xstream.changeDefaultConverter(new ACustomDefaultConverter());
+ * xstream.registerConverter(new ACustomDefaultConverter(), XStream.PRIORITY_VERY_LOW);
  * </pre>
  *
  * </blockquote>
@@ -223,7 +225,8 @@ import java.util.Vector;
  * XStream can signify references in XML using either relative/absolute XPath or IDs. The mode can be changed using
  * <code>setMode()</code>:
  * </p>
- * <p/> <table border="1">
+ * <p/>
+ * <table border='1'>
  * <tr>
  * <td><code>xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);</code></td>
  * <td><i>(Default)</i> Uses XPath relative references to signify duplicate references. This produces XML
@@ -250,7 +253,9 @@ import java.util.Vector;
  * <p>
  * The XStream instance is thread-safe. That is, once the XStream instance has been created and
  * configured, it may be shared across multiple threads allowing objects to be
- * serialized/deserialized concurrently.
+ * serialized/deserialized concurrently. <em>Note, that this only applies if annotations are not 
+ * auto-detected on -the-fly.</em>
+ * </p>
  * <h3>Implicit collections</h3>
  * <p/>
  * <p>

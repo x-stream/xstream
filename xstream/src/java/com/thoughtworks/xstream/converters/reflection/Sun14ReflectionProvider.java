@@ -91,8 +91,8 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         final WeakReference ref = (WeakReference)constructorCache.get(type);
         Constructor ctor = (Constructor)(ref == null ? null : ref.get());
         if (ctor == null) {
-            ctor = Object.class.getDeclaredConstructor(new Class[0]);
-            constructorCache.put(type, new WeakReference(reflectionFactory.newConstructorForSerialization(type, ctor)));
+            ctor = reflectionFactory.newConstructorForSerialization(type, Object.class.getDeclaredConstructor(new Class[0]));
+            constructorCache.put(type, new WeakReference(ctor));
         }
         return ctor;
     }
