@@ -47,6 +47,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
             System.gc();
+            System.runFinalization();
             for (int j = 0; j < elements; ++j) {
                 final String s = new String("JUnit ") + j; // enforce new object
                 dictSizes[i * elements + j] = dict.size();
