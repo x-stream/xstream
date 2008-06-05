@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2008 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -53,6 +53,13 @@
 
         <h1 id="support">XStream Support</h1>
 
+        <h2 id="jbossesb">jBoss ESB</h2>
+
+        <p><a href="http://www.jboss.org/jbossesb">jBossESB</a> is the next generation of EAI - better and without the 
+        vendor-lockin characteristics of old. It uses a flexible architecture based on SOA principles such as loose-coupling
+        and asynchronous message passing, emphasizing an incremental approach to adopting and deploying an SOI. XStream
+        can be used as one possibility for the messaging part.</p>
+
         <h2 id="activesoap">ActiveSOAP</h2>
 
         <p><a href="http://activesoap.codehaus.org">ActiveSOAP</a> is a lightweight &amp; easily embeddable 
@@ -85,21 +92,23 @@
         <h1 id="blogs">Blogs and Articles</h1>
         
         <ul>
-        	<li>April 8th, 2008<a href="http://www.ibm.com/developerworks/java/library/x-xstream/index.html">Use XStream to serialize Java objects into XML</a> by Rajiv Bangalore
-        	<li>February 12th, 2008<a href="http://www.ibm.com/developerworks/library/x-restfulsoa/">RESTful SOA using XML</a> by Adriaan de Jonge
-        	<li>May 21th, 2006<a href="http://paulhammant.com/blog/xstream-json.html">Inversionism by Paul Hammant: <i>Using XStream to forward JSON to a browser</i></a>
-        	<li>May 21th, 2006<a href="http://paulhammant.com/blog/xstream-rss.html">Inversionism by Paul Hammant: <i>Using XStream to process standardized XML documents</i></a>
-        	<li>January 30th, 2006<a href="http://weblogs.java.net/blog/scottschram/archive/2005/09/the_xstream_lib.html">Vinny Carpenter's Blog: <i>Life is beautiful with XMLBeans and XStream</i></a>
-        	<li>September 15th, 2005<a href="http://weblogs.java.net/blog/scottschram/archive/2005/09/the_xstream_lib.html">Scott Schram's Blog: <i>The XStream library offers clean, easy XML serialization of POJOs.</i></a>
-        	<li>August 5th, 2005<a href="http://entzi.blogspot.com/2005/08/xstream-jdk15-annotations.html">Emil Kirschner: <i>xstream &amp; jsk 1.5 annotations</i></a>
-        	<li>December 18th, 2004<a href="http://jroller.com/page/rickard/20041218">Random Thoughts by Rickard &Ouml;berg: <i>XStream + Xindice = !</i></a>
-        	<li>August 19th, 2004<a href="http://www.theserverside.com/news/thread.tss?thread_id=28187">TheServerSide.com by Dion Almaer: <i>Serializing Java Objects with XStream</i></a>
-        	<li>August 18th, 2004<a href="http://www.xml.com/lpt/a/1462">XML.com by Michael Fitzgerald: <i>Serializing Java Objects with XStream</i></a>
-        	<li>June 4th, 2004<a href="http://uppertank.net/blog/?p=72">Elliot's Nonsense: <i>Deserializing with XStream</i></a>
+        	<li>April 8th, 2008: <a href="http://www.ibm.com/developerworks/java/library/x-xstream/index.html">Use XStream to serialize Java objects into XML</a> by Rajiv Bangalore
+        	<li>February 12th, 2008: <a href="http://www.ibm.com/developerworks/library/x-restfulsoa/">RESTful SOA using XML</a> by Adriaan de Jonge
+        	<li>February 7th, 2007: <a href="http://codeforfun.wordpress.com/2007/02/07/to-the-xstream/">To the XStream</a> by Cliff
+        	<li>May 21th, 2006: <a href="http://paulhammant.com/blog/xstream-json.html">Inversionism by Paul Hammant: <i>Using XStream to forward JSON to a browser</i></a>
+        	<li>May 21th, 2006: <a href="http://paulhammant.com/blog/xstream-rss.html">Inversionism by Paul Hammant: <i>Using XStream to process standardized XML documents</i></a>
+        	<li>January 30th, 2006: <a href="http://www.j2eegeek.com/blog/2006/01/30/life-is-beautiful-with-xmlbeans-and-xstream/">Vinny Carpenter's Blog: <i>Life is beautiful with XMLBeans and XStream</i></a>
+        	<li>September 15th, 2005: <a href="http://weblogs.java.net/blog/scottschram/archive/2005/09/the_xstream_lib.html">Scott Schram's Blog: <i>The XStream library offers clean, easy XML serialization of POJOs.</i></a>
+        	<li>August 5th, 2005: <a href="http://entzi.blogspot.com/2005/08/xstream-jdk15-annotations.html">Emil Kirschner: <i>xstream &amp; jdk 1.5 annotations</i></a>
+        	<li>April 27th, 2005: <a href="http://www.jroller.com/CoBraLorD/entry/net_transparent_xml_serialization_xstream">Arne Vandamme's weblog: <i>.NET: transparent XML serialization, XStream for .NET</i></a>
+        	<li>December 18th, 2004: <a href="http://jroller.com/page/rickard/20041218">Random Thoughts by Rickard &Ouml;berg: <i>XStream + Xindice = !</i></a>
+        	<li>August 19th, 2004: <a href="http://www.theserverside.com/news/thread.tss?thread_id=28187">TheServerSide.com by Dion Almaer: <i>Serializing Java Objects with XStream</i></a>
+        	<li>August 18th, 2004: <a href="http://www.xml.com/lpt/a/1462">XML.com by Michael Fitzgerald: <i>Serializing Java Objects with XStream</i></a>
         	<!-- 
-        	<li>June 4th, 2004<a href="http://blog.rossmason.com/archives/2004/06/three_reasons_why_i_like_xstream.html">Ross Mason: <i>Three Reasons why I like XStream</i></a>
+        	<li>June 4th, 2004: <a href="http://uppertank.net/blog/?p=72">Elliot's Nonsense: <i>Deserializing with XStream</i></a>
+        	<li>June 4th, 2004: <a href="http://blog.rossmason.com/archives/2004/06/three_reasons_why_i_like_xstream.html">Ross Mason: <i>Three Reasons why I like XStream</i></a>
         	-->
-        	<li>Mai 14th, 2004<a href="http://www.theserverside.com/news/thread.tss?thread_id=25923">TheServerSide.com by Joe Walnes: <i>XStream: Java to XML serialization, and back again</i></a>
+        	<li>Mai 14th, 2004: <a href="http://www.theserverside.com/news/thread.tss?thread_id=25923">TheServerSide.com by Joe Walnes: <i>XStream: Java to XML serialization, and back again</i></a>
         </ul>
         
     </body>
