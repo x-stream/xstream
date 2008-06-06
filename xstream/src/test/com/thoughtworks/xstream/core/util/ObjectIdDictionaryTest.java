@@ -40,8 +40,8 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testEnforceSameSystemHashCodeForGCedObjects() {
-        // create 100000 Strings and call GC after creation of 10000
-        final int loop = 10;
+        // create 500000 Strings and call GC after creation of 10000
+        final int loop = 50;
         final int elements = 10000;
         final int[] dictSizes = new int[loop * elements];
         ObjectIdDictionary dict = new ObjectIdDictionary();
