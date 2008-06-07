@@ -43,6 +43,10 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testEnforceSameSystemHashCodeForGCedObjects() {
+        StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
+        memInfo.append(memoryInfo());
+        memInfo.append('\n');
+        
         // create 100000 Strings and call GC after creation of 10000
         final int loop = 10;
         final int elements = 10000;
@@ -73,6 +77,8 @@ public class ObjectIdDictionaryTest extends TestCase {
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
             System.gc();
+            memInfo.append(memoryInfo());
+            memInfo.append('\n');
             for (int j = 0; j < elements; ++j) {
                 final String s = new String("JUnit ") + j; // enforce new object
                 dictSizes[i * elements + j] = dict.size();
@@ -80,11 +86,15 @@ public class ObjectIdDictionaryTest extends TestCase {
                 dict.associateId(s, "X");
             }
         }
+        memInfo.append(memoryInfo());
+        memInfo.append('\n');
+
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink (" + memoryInfo() + ")", loop * elements - 1 == dictSizes[loop * elements - 1]);
+        assertFalse("Dictionary did not shrink\n" + memInfo, loop * elements - 1 == dictSizes[loop * elements - 1]);
         
         // prevent compiler optimization
         assertEquals(-1, block[mem-1]);
+        assertNotNull(blockList);
     }
     
     private String memoryInfo() {
