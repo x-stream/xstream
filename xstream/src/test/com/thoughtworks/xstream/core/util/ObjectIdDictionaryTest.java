@@ -76,7 +76,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             memInfo.append('\n');
             for (int j = 0; j < elements; ++j) {
                 int count = i * elements + j;
-                final String s = new String("JUnit ") + count; // enforce new object
+                final String s = new String("JUnit ") + j; // enforce new object
                 dictSizes[count] = dict.size();
                 assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
                 dict.associateId(s, "X");
