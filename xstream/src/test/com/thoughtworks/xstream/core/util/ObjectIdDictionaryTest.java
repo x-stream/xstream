@@ -53,36 +53,31 @@ public class ObjectIdDictionaryTest extends TestCase {
         final int[] dictSizes = new int[loop * elements];
         
         // create memory shortage to force gc 
-        Runtime runtime = Runtime.getRuntime();
-        long maxMemory = runtime.maxMemory();
-        int mem = Integer.MAX_VALUE;
-        maxMemory -= dictSizes.length * 4;
-        mem = (int)(maxMemory > Integer.MAX_VALUE ? Integer.MAX_VALUE : maxMemory);
         List blockList = new ArrayList();
-        byte[] block = null;
-        while (block == null) {
+        while (true) {
             try {
-                block = new byte[mem];
+                blockList.add(new byte[1024 * 1024]);
             } catch(OutOfMemoryError error) {
-                mem -= 1024 * 512;
-            }
-            // This machine has huge memory reserves, consume it!
-            if (mem == Integer.MAX_VALUE) {
-                blockList.add(block);
-                block = null;
+                break;
             }
         }
-        block[mem - 1] = (byte)255;
+        
+        // free some blocks again
+        for (int i = 0; i < 5; i++ ) {
+            blockList.remove(0);
+        }
 
         // run test with memory shortage
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
             System.gc();
+            System.runFinalization();
             memInfo.append(memoryInfo());
             memInfo.append('\n');
             for (int j = 0; j < elements; ++j) {
-                final String s = new String("JUnit ") + j; // enforce new object
-                dictSizes[i * elements + j] = dict.size();
+                int count = i * elements + j;
+                final String s = new String("JUnit ") + count; // enforce new object
+                dictSizes[count] = dict.size();
                 assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
                 dict.associateId(s, "X");
             }
@@ -92,10 +87,6 @@ public class ObjectIdDictionaryTest extends TestCase {
 
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
         assertFalse("Dictionary did not shrink\n" + memInfo, loop * elements - 1 == dictSizes[loop * elements - 1]);
-        
-        // prevent compiler optimization
-        assertEquals(-1, block[mem-1]);
-        assertNotNull(blockList);
     }
     
     private String memoryInfo() {
