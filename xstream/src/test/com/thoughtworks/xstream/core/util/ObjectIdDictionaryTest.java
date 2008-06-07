@@ -40,14 +40,30 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testEnforceSameSystemHashCodeForGCedObjects() {
-        // create 500000 Strings and call GC after creation of 10000
-        final int loop = 50;
+        // create 100000 Strings and call GC after creation of 10000
+        final int loop = 10;
         final int elements = 10000;
         final int[] dictSizes = new int[loop * elements];
+        
+        // create memory shortage to force gc 
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        int mem = Integer.MAX_VALUE;
+        maxMemory -= dictSizes.length * 4;
+        mem = (int)(maxMemory > Integer.MAX_VALUE ? Integer.MAX_VALUE : maxMemory);
+        byte[] block = null;
+        while (block == null) {
+            try {
+                block = new byte[mem];
+            } catch(OutOfMemoryError error) {
+                mem -= 1024 * 512;
+            }
+        }
+        block[mem - 1] = (byte)255;
+
+        // run test with memory shortage
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
             System.gc();
-            System.runFinalization();
             for (int j = 0; j < elements; ++j) {
                 final String s = new String("JUnit ") + j; // enforce new object
                 dictSizes[i * elements + j] = dict.size();
@@ -56,6 +72,21 @@ public class ObjectIdDictionaryTest extends TestCase {
             }
         }
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink", loop * elements - 1 == dictSizes[loop * elements - 1]);
+        assertFalse("Dictionary did not shrink (" + memoryInfo() + ")", loop * elements - 1 == dictSizes[loop * elements - 1]);
+        
+        // prevent compiler optimization
+        assertEquals(-1, block[mem-1]);
+    }
+    
+    private String memoryInfo() {
+        Runtime runtime = Runtime.getRuntime();
+        StringBuffer buffer = new StringBuffer("Memory: ");
+        buffer.append(runtime.freeMemory());
+        buffer.append(" free / ");
+        buffer.append(runtime.maxMemory());
+        buffer.append(" max / ");
+        buffer.append(runtime.totalMemory());
+        buffer.append(" total");
+        return buffer.toString();
     }
 }
