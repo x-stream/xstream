@@ -53,7 +53,8 @@ public class ObjectIdDictionaryTest extends TestCase {
         final int[] dictSizes = new int[loop * elements];
         
         // create memory shortage to force gc 
-        long maxMemory = Runtime.getRuntime().maxMemory();
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
         int mem = Integer.MAX_VALUE;
         maxMemory -= dictSizes.length * 4;
         mem = (int)(maxMemory > Integer.MAX_VALUE ? Integer.MAX_VALUE : maxMemory);
@@ -66,7 +67,7 @@ public class ObjectIdDictionaryTest extends TestCase {
                 mem -= 1024 * 512;
             }
             // This machine has huge memory reserves, consume it!
-            if (maxMemory == Integer.MAX_VALUE) {
+            if (mem == Integer.MAX_VALUE) {
                 blockList.add(block);
                 block = null;
             }
