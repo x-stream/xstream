@@ -13,6 +13,9 @@ package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ObjectIdDictionaryTest extends TestCase {
 
@@ -50,12 +53,18 @@ public class ObjectIdDictionaryTest extends TestCase {
         int mem = Integer.MAX_VALUE;
         maxMemory -= dictSizes.length * 4;
         mem = (int)(maxMemory > Integer.MAX_VALUE ? Integer.MAX_VALUE : maxMemory);
+        List blockList = new ArrayList();
         byte[] block = null;
         while (block == null) {
             try {
                 block = new byte[mem];
             } catch(OutOfMemoryError error) {
                 mem -= 1024 * 512;
+            }
+            // This machine has huge memory reserves, consume it!
+            if (maxMemory == Integer.MAX_VALUE) {
+                blockList.add(block);
+                block = null;
             }
         }
         block[mem - 1] = (byte)255;
@@ -64,7 +73,6 @@ public class ObjectIdDictionaryTest extends TestCase {
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
             System.gc();
-            System.runFinalization();
             for (int j = 0; j < elements; ++j) {
                 final String s = new String("JUnit ") + j; // enforce new object
                 dictSizes[i * elements + j] = dict.size();
