@@ -184,7 +184,7 @@ public class BeanProvider {
             try {
                 beanInfo = Introspector.getBeanInfo(type, Object.class);
             } catch (IntrospectionException e) {
-                throw new ObjectAccessException("", e);
+                throw new ObjectAccessException("Cannot get BeanInfo of type " + type.getName(), e);
             }
             nameMap = new OrderRetainingMap();
             propertyNameCache.put(type, nameMap);
