@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,6 +19,7 @@ import java.lang.reflect.UndeclaredThrowableException;
  * Provide access to a bean property.
  * 
  * @author <a href="mailto:andrea.aime@aliceposta.it">Andrea Aime</a>
+ * @deprecated since upcoming, no longer in use
  */
 public class BeanProperty {
 
