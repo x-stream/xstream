@@ -1229,11 +1229,12 @@ public class XStream {
     }
 
     /**
-     * Adds a default implicit collection which is used for any unmapped xml tag.
+     * Adds a default implicit collection which is used for any unmapped XML tag.
      *
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This field must be an
-     *            <code>java.util.ArrayList</code>.
+     * @param fieldName name of the field in the ownerType. This field must be a
+     *            concrete collection type or matching the default implementation type of the 
+     *            collection type.
      */
     public void addImplicitCollection(Class ownerType, String fieldName) {
         if (implicitCollectionMapper == null) {
@@ -1248,8 +1249,9 @@ public class XStream {
      * Adds implicit collection which is used for all items of the given itemType.
      *
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This field must be an
-     *            <code>java.util.ArrayList</code>.
+     * @param fieldName name of the field in the ownerType. This field must be a
+     *            concrete collection type or matching the default implementation type of the 
+     *            collection type.
      * @param itemType type of the items to be part of this collection.
      * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
      */
@@ -1267,8 +1269,9 @@ public class XStream {
      * itemFieldName.
      *
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This field must be an
-     *            <code>java.util.ArrayList</code>.
+     * @param fieldName name of the field in the ownerType. This field must be a
+     *            concrete collection type or matching the default implementation type of the 
+     *            collection type.
      * @param itemFieldName element name of the implicit collection
      * @param itemType item type to be aliases be the itemFieldName
      * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
