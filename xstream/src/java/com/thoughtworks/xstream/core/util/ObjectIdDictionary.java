@@ -26,7 +26,7 @@ import java.util.Map;
 public class ObjectIdDictionary {
 
     private final Map map = new HashMap();
-    private int invalidCounter;
+    private volatile int invalidCounter;
 
     private static interface Wrapper {
         int hashCode();
@@ -122,6 +122,7 @@ public class ObjectIdDictionary {
 
     private void cleanup() {
         if (invalidCounter > 100) {
+            invalidCounter = 0;
             // much more efficient to remove any orphaned wrappers at once
             for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
                 final WeakIdWrapper key = (WeakIdWrapper)iterator.next();
@@ -129,7 +130,6 @@ public class ObjectIdDictionary {
                     iterator.remove();
                 }
             }
-            invalidCounter = 0;
         }
     }
 }
