@@ -13,6 +13,8 @@ package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
 
+import java.lang.reflect.Field;
+
 
 public class ObjectIdDictionaryTest extends TestCase {
 
@@ -39,8 +41,10 @@ public class ObjectIdDictionaryTest extends TestCase {
         assertEquals("id b", dict.lookupId(b));
     }
 
-    public void testEnforceSameSystemHashCodeForGCedObjects() {
-        StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
+    public void testEnforceSameSystemHashCodeForGCedObjects() throws SecurityException, NoSuchFieldException, IllegalAccessException {
+        final Field invalidCounter = ObjectIdDictionary.class.getDeclaredField("invalidCounter");
+        invalidCounter.setAccessible(true);
+        final StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
         memInfo.append(memoryInfo());
         memInfo.append('\n');
 
@@ -66,7 +70,8 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append('\n');
 
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink " + memInfo, loop * elements - 1 == dictSizes[loop * elements - 1]);
+        assertFalse("Dictionary did not shrink " + memInfo + "InvalidCounter: " + invalidCounter.getInt(dict),
+            loop * elements - 1 == dictSizes[loop * elements - 1]);
     }
     
     private String memoryInfo() {
