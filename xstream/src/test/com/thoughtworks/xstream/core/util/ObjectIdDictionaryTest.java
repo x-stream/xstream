@@ -54,10 +54,6 @@ public class ObjectIdDictionaryTest extends TestCase {
         final int[] dictSizes = new int[loop * elements];
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
-            System.gc();
-            System.runFinalization();
-            memInfo.append(memoryInfo());
-            memInfo.append('\n');
             for (int j = 0; j < elements; ++j) {
                 final int count = i * elements + j;
                 final String s = new String("JUnit ") + count; // enforce new object
@@ -65,9 +61,16 @@ public class ObjectIdDictionaryTest extends TestCase {
                 assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
                 dict.associateId(s, "X");
             }
+            System.gc();
+            System.runFinalization();
+            memInfo.append(memoryInfo());
+            memInfo.append('\n');
+            for (int j = 0; j < elements; ++j) {
+                final int count = i * elements + j;
+                final String s = "JUnit " + count;
+                dict.containsId(s); // force lookup and internal cleanup
+            }
         }
-        memInfo.append(memoryInfo());
-        memInfo.append('\n');
 
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
         assertFalse("Dictionary did not shrink " + memInfo + "InvalidCounter: " + invalidCounter.getInt(dict),
