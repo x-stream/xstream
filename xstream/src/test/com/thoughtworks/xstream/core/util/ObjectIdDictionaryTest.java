@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,9 +12,6 @@
 package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ObjectIdDictionaryTest extends TestCase {
@@ -46,28 +43,11 @@ public class ObjectIdDictionaryTest extends TestCase {
         StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
         memInfo.append(memoryInfo());
         memInfo.append('\n');
-        
+
         // create 100000 Strings and call GC after creation of 10000
         final int loop = 10;
         final int elements = 10000;
         final int[] dictSizes = new int[loop * elements];
-        
-        // create memory shortage to force gc 
-        List blockList = new ArrayList();
-        while (true) {
-            try {
-                blockList.add(new byte[1024 * 1024]);
-            } catch(OutOfMemoryError error) {
-                break;
-            }
-        }
-        
-        // free some blocks again
-        for (int i = 0; i < 5; i++ ) {
-            blockList.remove(0);
-        }
-
-        // run test with memory shortage
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
             System.gc();
@@ -75,9 +55,9 @@ public class ObjectIdDictionaryTest extends TestCase {
             memInfo.append(memoryInfo());
             memInfo.append('\n');
             for (int j = 0; j < elements; ++j) {
-                int count = i * elements + j;
-                final String s = new String("JUnit ") + j; // enforce new object
-                dictSizes[count] = dict.size();
+                final int count = i * elements + j;
+                final String s = new String("JUnit ") + count; // enforce new object
+                dictSizes[i * elements + j] = dict.size();
                 assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
                 dict.associateId(s, "X");
             }
@@ -86,9 +66,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append('\n');
 
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink\n" + memInfo, loop * elements - 1 == dictSizes[loop * elements - 1]);
-        
-        blockList.clear(); // prevents compiler optimization
+        assertFalse("Dictionary did not shrink", loop * elements - 1 == dictSizes[loop * elements - 1]);
     }
     
     private String memoryInfo() {
