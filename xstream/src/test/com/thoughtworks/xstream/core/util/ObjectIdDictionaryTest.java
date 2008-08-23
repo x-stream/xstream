@@ -66,7 +66,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append('\n');
 
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink", loop * elements - 1 == dictSizes[loop * elements - 1]);
+        assertFalse("Dictionary did not shrink " + memInfo, loop * elements - 1 == dictSizes[loop * elements - 1]);
     }
     
     private String memoryInfo() {
