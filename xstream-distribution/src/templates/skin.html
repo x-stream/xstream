@@ -47,11 +47,11 @@
                 <div class="MenuGroup">
                     <h1>${section.name}</h1>
                     <ul>
-                        <#list section.pages as otherPage>
-                            <#if otherPage = page>
-                                <li class="currentLink">${otherPage.title}</li>
+                        <#list section.entries as entry>
+                            <#if entry = page>
+                                <li class="currentLink">${entry.title}</li>
                             <#else>
-                                <li><a href="${otherPage.href}">${otherPage.title}</a></li>
+                                <li><a href="${entry.href}">${entry.title}</a></li>
                             </#if>
                         </#list>
                     </ul>
@@ -59,21 +59,5 @@
             </#list>
         </div>
 
-<!--
-    <template:when var="isindex">
-      <div class="SidePanel" id="right">
-        <div class="NewsGroup">
-          <h1>Latest Version: 1.0.2</h1>
-          <p class="NewsMore"><a href="download.html">Download page...</a></p>
-        </div>
-
-        <div class="NewsGroup">
-          <h1><a href="news.html">News...</a></h1>
-          <template:include src="../content/news.html"
-                        elements="/html/body/*[@class='NewsItem' and position()<=5]"/>
-        </div>
-      </div>
-    </template:when>
--->
   </body>
 </html>
