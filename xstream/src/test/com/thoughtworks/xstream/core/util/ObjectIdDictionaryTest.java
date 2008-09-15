@@ -53,7 +53,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         int blocks = forceGCAndGetNumberOfBlocks();
         List softMemory = new ArrayList();
         while (blocks-- > 0) {
-            softMemory.add(new SoftReference(new byte[1024*16]));
+            softMemory.add(blocks < 250 ? new SoftReference(new byte[1024*16]) : new byte[1024*16]);
         }
 
         // create 200000 Strings and call GC after creation of 50000
@@ -70,7 +70,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             }
             memInfo.append(memoryInfo());
             memInfo.append('\n');
-            System.gc();
+            forceGCAndGetNumberOfBlocks();
         }
 
         System.setProperty("xstream.debug", "false");
@@ -98,6 +98,8 @@ public class ObjectIdDictionaryTest extends TestCase {
             System.gc();
         }
 
+        System.err.println("Force GC, blocks: " + i);
+        
         assertNull("This JVM is not releasing memory!", ref.get());
         return i;
     }

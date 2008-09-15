@@ -134,7 +134,7 @@ public class ObjectIdDictionary {
                 final WeakIdWrapper key = (WeakIdWrapper)iterator.next();
                 if (key.get() == null) {
                     if (debug)
-                        System.out.println("remove");
+                        System.err.println("remove");
                     iterator.remove();
                 }
             }
