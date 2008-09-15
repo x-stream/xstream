@@ -44,17 +44,16 @@ public class ObjectIdDictionaryTest extends TestCase {
         assertEquals("id b", dict.lookupId(b));
     }
 
-    public void testEnforceSameSystemHashCodeForGCedObjects() throws InterruptedException {
+    public void testEnforceSameSystemHashCodeForGCedObjects() {
         final StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
         memInfo.append(memoryInfo());
         memInfo.append('\n');
         System.setProperty("xstream.debug", "true");
 
-        int blocks = forceGCAndGetNumberOfBlocks();
-        Thread.sleep(1000);
+        int blocks = forceGCAndGetNumberOfBlocks()/5;
         List softMemory = new ArrayList();
         while (blocks-- > 0) {
-            softMemory.add(blocks < 250 ? (Object)new SoftReference(new byte[1024*16]) : (Object)new byte[1024*16]);
+            softMemory.add(blocks < 50 ? (Object)new SoftReference(new byte[1024*80]) : (Object)new byte[1024*80]);
         }
 
         // create 200000 Strings and call GC after creation of 50000
@@ -97,6 +96,11 @@ public class ObjectIdDictionaryTest extends TestCase {
             memory.clear();
             memory = null;
             System.gc();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                // ignore
+            }
         }
 
         System.out.println("Force GC, blocks: " + i);

@@ -90,8 +90,6 @@ public class ObjectIdDictionary {
                 // it was a lot faster and more efficient simply to count the number of
                 // evidences instead of keeping the Wrapper somewhere in a remove list
                 ++ObjectIdDictionary.this.invalidCounter;
-                if (debug)
-                    System.out.println("invalid");
             }
             return obj;
         }
@@ -126,18 +124,18 @@ public class ObjectIdDictionary {
 
     private void cleanup() {
         if (invalidCounter > 100) {
-            if (debug)
-                System.out.println("cleanup");
             invalidCounter = 0;
+            long counter = 0;
             // much more efficient to remove any orphaned wrappers at once
             for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
                 final WeakIdWrapper key = (WeakIdWrapper)iterator.next();
                 if (key.get() == null) {
-                    if (debug)
-                        System.out.println("remove");
                     iterator.remove();
+                    ++counter;
                 }
             }
+            if (debug)
+                System.out.println("Cleaned up: "+ counter);
         }
     }
 }
