@@ -118,13 +118,11 @@ public class ObjectIdDictionary {
     }
     
     public int size() {
-        cleanup();
         return map.size();
     }
 
     private void cleanup() {
         if (invalidCounter > 100) {
-            invalidCounter = 0;
             long counter = 0;
             // much more efficient to remove any orphaned wrappers at once
             for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
@@ -134,6 +132,7 @@ public class ObjectIdDictionary {
                     ++counter;
                 }
             }
+            invalidCounter = 0;
             if (debug)
                 System.out.println("Cleaned up: "+ counter);
         }
