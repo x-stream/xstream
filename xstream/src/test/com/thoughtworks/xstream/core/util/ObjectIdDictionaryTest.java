@@ -46,16 +46,14 @@ public class ObjectIdDictionaryTest extends TestCase {
 
     public void testEnforceSameSystemHashCodeForGCedObjects() {
         final StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
-        memInfo.append(memoryInfo());
-        memInfo.append('\n');
         System.setProperty("xstream.debug", "true");
 
         try {
-//        int blocks = forceGCAndGetNumberOfBlocks()/5;
-//        List softMemory = new ArrayList();
-//        while (blocks-- > 0) {
-//            softMemory.add(blocks < 50 ? (Object)new SoftReference(new byte[1024*80]) : (Object)new byte[1024*80]);
-//        }
+        int blocks = forceGCAndGetNumberOfBlocks(memInfo)/5;
+        List softMemory = new ArrayList();
+        while (blocks-- > 0) {
+            softMemory.add(blocks < 50 ? (Object)new SoftReference(new byte[1024*80]) : (Object)new byte[1024*80]);
+        }
 
         // create 200000 Strings and call GC after creation of 50000
         final int loop = 4;
@@ -124,7 +122,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         buffer.append(runtime.totalMemory());
         buffer.append(" total / ");
         buffer.append(runtime.maxMemory());
-        buffer.append(" max / ");
+        buffer.append(" max");
         return buffer.toString();
     }
 }
