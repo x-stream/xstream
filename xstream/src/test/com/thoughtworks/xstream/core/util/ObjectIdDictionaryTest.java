@@ -53,7 +53,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         int blocks = forceGCAndGetNumberOfBlocks();
         List softMemory = new ArrayList();
         while (blocks-- > 0) {
-            softMemory.add(blocks < 250 ? new SoftReference(new byte[1024*16]) : new byte[1024*16]);
+            softMemory.add(blocks < 250 ? (Object)new SoftReference(new byte[1024*16]) : (Object)new byte[1024*16]);
         }
 
         // create 200000 Strings and call GC after creation of 50000
