@@ -50,11 +50,12 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append('\n');
         System.setProperty("xstream.debug", "true");
 
-        int blocks = forceGCAndGetNumberOfBlocks()/5;
-        List softMemory = new ArrayList();
-        while (blocks-- > 0) {
-            softMemory.add(blocks < 50 ? (Object)new SoftReference(new byte[1024*80]) : (Object)new byte[1024*80]);
-        }
+        try {
+//        int blocks = forceGCAndGetNumberOfBlocks()/5;
+//        List softMemory = new ArrayList();
+//        while (blocks-- > 0) {
+//            softMemory.add(blocks < 50 ? (Object)new SoftReference(new byte[1024*80]) : (Object)new byte[1024*80]);
+//        }
 
         // create 200000 Strings and call GC after creation of 50000
         final int loop = 4;
@@ -68,18 +69,23 @@ public class ObjectIdDictionaryTest extends TestCase {
                 assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
                 dict.associateId(s, "X");
             }
-            memInfo.append(memoryInfo());
-            memInfo.append('\n');
-            forceGCAndGetNumberOfBlocks();
+            forceGCAndGetNumberOfBlocks(memInfo);
         }
 
         System.setProperty("xstream.debug", "false");
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
         assertFalse("Dictionary did not shrink; " + memInfo,
             loop * elements - 1 == dictSizes[loop * elements - 1]);
+        } catch(OutOfMemoryError e) {
+            System.out.println(memInfo);
+            throw e;
+        }
     }
 
-    private int forceGCAndGetNumberOfBlocks() {
+    private int forceGCAndGetNumberOfBlocks(StringBuffer memInfo) {
+        memInfo.append(memoryInfo());
+        memInfo.append('\n');
+
         int i = 0;
         SoftReference ref = new SoftReference(new Object());
         for (int count = 0; ref.get() != null && count++ < 4; ) {
@@ -103,7 +109,8 @@ public class ObjectIdDictionaryTest extends TestCase {
             }
         }
 
-        System.out.println("Force GC, blocks: " + i);
+        memInfo.append("Force GC, blocks: " + i);
+        memInfo.append('\n');
         
         assertNull("This JVM is not releasing memory!", ref.get());
         return i;
