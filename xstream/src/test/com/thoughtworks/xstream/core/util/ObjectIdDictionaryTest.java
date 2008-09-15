@@ -14,7 +14,6 @@ package com.thoughtworks.xstream.core.util;
 import junit.framework.TestCase;
 
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +44,9 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testEnforceSameSystemHashCodeForGCedObjects() {
-        final StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
+        final StringBuffer memInfo = new StringBuffer("JVM: ");
+        memInfo.append(System.getProperty("java.version"));
+        memInfo.append("\nMemoryInfo:\n");
         System.setProperty("xstream.debug", "true");
 
         try {

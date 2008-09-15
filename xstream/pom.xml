@@ -116,7 +116,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Xmx128m</argLine>
+          <argLine>-Xmx64m</argLine>
           <systemProperties>
             <property>
               <name>test.src.dir</name>
