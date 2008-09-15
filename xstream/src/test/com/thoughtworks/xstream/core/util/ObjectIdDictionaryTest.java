@@ -51,9 +51,9 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append(memoryInfo());
         memInfo.append('\n');
 
-        // create 100000 Strings and call GC after creation of 10000
-        final int loop = 10;
-        final int elements = 10000;
+        // create 200000 Strings and call GC after creation of 50000
+        final int loop = 4;
+        final int elements = 50000;
         final int[] dictSizes = new int[loop * elements];
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
@@ -65,6 +65,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             }
             memInfo.append(memoryInfo());
             memInfo.append('\n');
+            forceGC();
         }
 
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
@@ -73,8 +74,8 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     private void forceGC() {
-        SoftReference ref = new SoftReference(new byte[1024*16]);
-        for (int count = 0; ref.get() != null && count++ < 10; ) {
+        SoftReference ref = new SoftReference(new Object());
+        for (int count = 0; ref.get() != null && count++ < 4; ) {
             List memory = new ArrayList();
             try {
                 while(ref.get() != null) {
@@ -94,7 +95,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             }
         }
 
-        assertNull("This JVM is not releasing memory!", ref.get() != null);
+        assertNull("This JVM is not releasing memory!", ref.get());
     }
     
     private String memoryInfo() {
