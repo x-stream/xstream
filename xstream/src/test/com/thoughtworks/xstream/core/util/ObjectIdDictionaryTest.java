@@ -44,13 +44,14 @@ public class ObjectIdDictionaryTest extends TestCase {
         assertEquals("id b", dict.lookupId(b));
     }
 
-    public void testEnforceSameSystemHashCodeForGCedObjects() {
+    public void testEnforceSameSystemHashCodeForGCedObjects() throws InterruptedException {
         final StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
         memInfo.append(memoryInfo());
         memInfo.append('\n');
         System.setProperty("xstream.debug", "true");
 
         int blocks = forceGCAndGetNumberOfBlocks();
+        Thread.sleep(1000);
         List softMemory = new ArrayList();
         while (blocks-- > 0) {
             softMemory.add(blocks < 250 ? (Object)new SoftReference(new byte[1024*16]) : (Object)new byte[1024*16]);
@@ -98,7 +99,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             System.gc();
         }
 
-        System.err.println("Force GC, blocks: " + i);
+        System.out.println("Force GC, blocks: " + i);
         
         assertNull("This JVM is not releasing memory!", ref.get());
         return i;
