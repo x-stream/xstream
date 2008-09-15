@@ -55,9 +55,8 @@ public class ObjectIdDictionaryTest extends TestCase {
         while (blocks-- > 0) {
             softMemory.add(blocks < 40 ? (Object)new SoftReference(new byte[1024*80]) : (Object)new byte[1024*80]);
         }
-        memInfo.append(memoryInfo());
-        memInfo.append('\n');
-
+        forceGCAndGetNumberOfBlocks(memInfo);
+        
         // create 200000 Strings and call GC after creation of 50000
         final int loop = 4;
         final int elements = 50000;
