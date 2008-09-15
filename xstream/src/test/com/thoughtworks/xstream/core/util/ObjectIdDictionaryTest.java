@@ -13,7 +13,10 @@ package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
 
+import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ObjectIdDictionaryTest extends TestCase {
@@ -55,26 +58,43 @@ public class ObjectIdDictionaryTest extends TestCase {
         ObjectIdDictionary dict = new ObjectIdDictionary();
         for (int i = 0; i < loop; ++i) {
             for (int j = 0; j < elements; ++j) {
-                final int count = i * elements + j;
-                final String s = new String("JUnit ") + count; // enforce new object
+                final String s = new String("JUnit ") + j; // enforce new object
                 dictSizes[i * elements + j] = dict.size();
                 assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
                 dict.associateId(s, "X");
             }
-            System.gc();
-            System.runFinalization();
             memInfo.append(memoryInfo());
             memInfo.append('\n');
-            for (int j = 0; j < elements; ++j) {
-                final int count = i * elements + j;
-                final String s = "JUnit " + count;
-                dict.containsId(s); // force lookup and internal cleanup
-            }
         }
 
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
         assertFalse("Dictionary did not shrink " + memInfo + "InvalidCounter: " + invalidCounter.getInt(dict),
             loop * elements - 1 == dictSizes[loop * elements - 1]);
+    }
+
+    private void forceGC() {
+        SoftReference ref = new SoftReference(new byte[1024*16]);
+        for (int count = 0; ref.get() != null && count++ < 10; ) {
+            List memory = new ArrayList();
+            try {
+                while(ref.get() != null) {
+                    memory.add(new byte[1024*16]);
+                }
+            } catch (OutOfMemoryError error) {
+                // expected
+            }
+            memory.clear();
+            memory = null;
+            System.gc();
+            System.runFinalization();
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+        }
+
+        assertNull("This JVM is not releasing memory!", ref.get() != null);
     }
     
     private String memoryInfo() {
@@ -82,10 +102,10 @@ public class ObjectIdDictionaryTest extends TestCase {
         StringBuffer buffer = new StringBuffer("Memory: ");
         buffer.append(runtime.freeMemory());
         buffer.append(" free / ");
-        buffer.append(runtime.maxMemory());
-        buffer.append(" max / ");
         buffer.append(runtime.totalMemory());
         buffer.append(" total");
+        buffer.append(runtime.maxMemory());
+        buffer.append(" max / ");
         return buffer.toString();
     }
 }
