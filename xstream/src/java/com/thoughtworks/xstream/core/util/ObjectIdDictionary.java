@@ -27,6 +27,7 @@ public class ObjectIdDictionary {
 
     private final Map map = new HashMap();
     private volatile int invalidCounter;
+    private transient boolean debug = System.getProperty("xstream.debug", "false").equals("true");
 
     private static interface Wrapper {
         int hashCode();
@@ -89,6 +90,8 @@ public class ObjectIdDictionary {
                 // it was a lot faster and more efficient simply to count the number of
                 // evidences instead of keeping the Wrapper somewhere in a remove list
                 ++ObjectIdDictionary.this.invalidCounter;
+                if (debug)
+                    System.out.println("invalid");
             }
             return obj;
         }
@@ -117,16 +120,21 @@ public class ObjectIdDictionary {
     }
     
     public int size() {
+        cleanup();
         return map.size();
     }
 
     private void cleanup() {
         if (invalidCounter > 100) {
+            if (debug)
+                System.out.println("cleanup");
             invalidCounter = 0;
             // much more efficient to remove any orphaned wrappers at once
             for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
                 final WeakIdWrapper key = (WeakIdWrapper)iterator.next();
                 if (key.get() == null) {
+                    if (debug)
+                        System.out.println("remove");
                     iterator.remove();
                 }
             }

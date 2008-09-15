@@ -14,7 +14,6 @@ package com.thoughtworks.xstream.core.util;
 import junit.framework.TestCase;
 
 import java.lang.ref.SoftReference;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +43,11 @@ public class ObjectIdDictionaryTest extends TestCase {
         assertEquals("id b", dict.lookupId(b));
     }
 
-    public void testEnforceSameSystemHashCodeForGCedObjects() throws SecurityException, NoSuchFieldException, IllegalAccessException {
-        final Field invalidCounter = ObjectIdDictionary.class.getDeclaredField("invalidCounter");
-        invalidCounter.setAccessible(true);
+    public void testEnforceSameSystemHashCodeForGCedObjects() {
         final StringBuffer memInfo = new StringBuffer("MemoryInfo:\n");
         memInfo.append(memoryInfo());
         memInfo.append('\n');
+        System.setProperty("xstream.debug", "true");
 
         // create 200000 Strings and call GC after creation of 50000
         final int loop = 4;
@@ -68,8 +66,9 @@ public class ObjectIdDictionaryTest extends TestCase {
             forceGC();
         }
 
+        System.setProperty("xstream.debug", "false");
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink " + memInfo + "InvalidCounter: " + invalidCounter.getInt(dict),
+        assertFalse("Dictionary did not shrink; " + memInfo,
             loop * elements - 1 == dictSizes[loop * elements - 1]);
     }
 
@@ -78,6 +77,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         for (int count = 0; ref.get() != null && count++ < 4; ) {
             List memory = new ArrayList();
             try {
+                // fill up memory
                 while(ref.get() != null) {
                     memory.add(new byte[1024*16]);
                 }
@@ -87,12 +87,6 @@ public class ObjectIdDictionaryTest extends TestCase {
             memory.clear();
             memory = null;
             System.gc();
-            System.runFinalization();
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                // ignore
-            }
         }
 
         assertNull("This JVM is not releasing memory!", ref.get());
@@ -104,7 +98,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         buffer.append(runtime.freeMemory());
         buffer.append(" free / ");
         buffer.append(runtime.totalMemory());
-        buffer.append(" total");
+        buffer.append(" total / ");
         buffer.append(runtime.maxMemory());
         buffer.append(" max / ");
         return buffer.toString();
