@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.core.util;
 import junit.framework.TestCase;
 
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,12 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append('\n');
         System.setProperty("xstream.debug", "true");
 
+        int blocks = forceGCAndGetNumberOfBlocks();
+        List softMemory = new ArrayList();
+        while (blocks-- > 0) {
+            softMemory.add(new SoftReference(new byte[1024*16]));
+        }
+
         // create 200000 Strings and call GC after creation of 50000
         final int loop = 4;
         final int elements = 50000;
@@ -63,7 +70,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             }
             memInfo.append(memoryInfo());
             memInfo.append('\n');
-            forceGC();
+            System.gc();
         }
 
         System.setProperty("xstream.debug", "false");
@@ -72,7 +79,8 @@ public class ObjectIdDictionaryTest extends TestCase {
             loop * elements - 1 == dictSizes[loop * elements - 1]);
     }
 
-    private void forceGC() {
+    private int forceGCAndGetNumberOfBlocks() {
+        int i = 0;
         SoftReference ref = new SoftReference(new Object());
         for (int count = 0; ref.get() != null && count++ < 4; ) {
             List memory = new ArrayList();
@@ -84,12 +92,14 @@ public class ObjectIdDictionaryTest extends TestCase {
             } catch (OutOfMemoryError error) {
                 // expected
             }
+            i = memory.size();
             memory.clear();
             memory = null;
             System.gc();
         }
 
         assertNull("This JVM is not releasing memory!", ref.get());
+        return i;
     }
     
     private String memoryInfo() {
