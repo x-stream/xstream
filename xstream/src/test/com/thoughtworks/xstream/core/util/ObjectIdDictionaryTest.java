@@ -13,11 +13,7 @@ package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
 
-import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class ObjectIdDictionaryTest extends TestCase {
@@ -47,13 +43,10 @@ public class ObjectIdDictionaryTest extends TestCase {
 
     public void testEnforceSameSystemHashCodeForGCedObjects()
         throws NoSuchFieldException, IllegalAccessException {
-        System.setProperty("xstream.debug", "true");
-
-        final Field invalidCounter = ObjectIdDictionary.class
-            .getDeclaredField("invalidCounter");
-        invalidCounter.setAccessible(true);
+        final Field actionCounter = ObjectIdDictionary.class.getDeclaredField("counter");
+        actionCounter.setAccessible(true);
         final ObjectIdDictionary dict = new ObjectIdDictionary();
-        invalidCounter.setInt(dict, 1);
+        actionCounter.setInt(dict, 1);
 
         final StringBuffer memInfo = new StringBuffer("JVM: ");
         memInfo.append(System.getProperty("java.version"));
@@ -67,86 +60,25 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append(memoryInfo());
         memInfo.append('\n');
 
-        byte[] memReserved = new byte[1024 * 512];
-        Arrays.fill(memReserved, (byte)255); // prevent JVM optimization
-        int oome = 0;
         int counter = 0;
-        try {
-            for (; invalidCounter.getInt(dict) != 0; ++counter) {
-                try {
-                    final String s = new String("JUnit ") + counter % 10000; // enforce new object
-                    assertFalse("Failed in (" + counter + ")", dict.containsId(s));
-                    dict.associateId(s, "X");
-                    if (counter % 20000 == 19999) {
-                        forceGC(memInfo);
-                    }
-                } catch (final OutOfMemoryError e) {
-                    memReserved = null;
-                    forceGC(memInfo);
-                    if ( ++oome == 5) {
-                        memInfo.append("Counter: ");
-                        memInfo.append(counter);
-                        memInfo.append("\nInvalid Counter: ");
-                        memInfo.append(invalidCounter.getInt(dict));
-                        memInfo.append('\n');
-                        System.out.println(memInfo);
-                        throw e;
-                    }
-                    memReserved = new byte[1024 * 512];
-                }
+        for (; actionCounter.getInt(dict) != 0; ++counter) {
+            final String s = new String("JUnit ") + counter; // enforce new object
+            assertFalse("Failed in (" + counter + ")", dict.containsId(s));
+            dict.associateId(s, "X");
+            if (counter % 4000 == 3999) {
+                System.gc();
+                memInfo.append("\nMemoryInfo:\n");
+                memInfo.append(memoryInfo());
             }
-            assertTrue("Dictionary did not shrink; "
-                + counter
-                + " distinct objects; "
-                + dict.size()
-                + " size; "
-                + memInfo, dict.size() < 10);
-        } catch (final ForceGCError error) {
-            memInfo.append("Counter: ");
-            memInfo.append(counter);
-            memInfo.append("\nInvalid Counter: ");
-            memInfo.append(invalidCounter.getInt(dict));
-            memInfo.append('\n');
-            System.out.println(memInfo);
-            throw error;
-        } finally {
-            System.setProperty("xstream.debug", "false");
         }
-    }
-
-    private void forceGC(final StringBuffer memInfo) {
+        memInfo.append("\nMemoryInfo:\n");
         memInfo.append(memoryInfo());
-        memInfo.append('\n');
-
-        int i = 0;
-        final SoftReference ref = new SoftReference(new Object());
-        for (int count = 0; ref.get() != null && count++ < 4;) {
-            List memory = new ArrayList();
-            try {
-                // fill up memory
-                while (ref.get() != null) {
-                    memory.add(new byte[1024 * 64]);
-                }
-            } catch (final OutOfMemoryError error) {
-                // expected
-            }
-            i = memory.size();
-            memory.clear();
-            memory = null;
-            System.gc();
-            try {
-                Thread.sleep(200);
-            } catch (final InterruptedException e) {
-                // ignore
-            }
-        }
-
-        memInfo.append("Force GC, allocated blocks of 64KB: " + i);
-        memInfo.append('\n');
-
-        if (ref.get() != null) {
-            throw new ForceGCError("This JVM is not releasing memory!");
-        }
+        assertTrue("Dictionary did not shrink; "
+            + counter
+            + " distinct objects; "
+            + dict.size()
+            + " size; "
+            + memInfo, dict.size() < 1100);
     }
 
     private String memoryInfo() {
@@ -159,11 +91,5 @@ public class ObjectIdDictionaryTest extends TestCase {
         buffer.append(runtime.maxMemory());
         buffer.append(" max");
         return buffer.toString();
-    }
-
-    private static class ForceGCError extends Error {
-        public ForceGCError(final String msg) {
-            super(msg);
-        }
     }
 }

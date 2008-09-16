@@ -16,18 +16,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+
 /**
  * Store IDs against given object references.
  * <p>
- * Behaves similar to java.util.IdentityHashMap, but in JDK1.3 as well. Additionally the implementation
- * keeps track of orphaned IDs by using a WeakReference to store the reference object.
+ * Behaves similar to java.util.IdentityHashMap, but in JDK1.3 as well. Additionally the
+ * implementation keeps track of orphaned IDs by using a WeakReference to store the reference
+ * object.
  * </p>
  */
 public class ObjectIdDictionary {
 
     private final Map map = new HashMap();
-    private volatile int invalidCounter;
-    private transient boolean debug = System.getProperty("xstream.debug", "false").equals("true");
+    private volatile int counter;
 
     private static interface Wrapper {
         int hashCode();
@@ -35,15 +36,14 @@ public class ObjectIdDictionary {
         String toString();
         Object get();
     }
-    
+
     private static class IdWrapper implements Wrapper {
 
         private final Object obj;
         private final int hashCode;
 
         public IdWrapper(Object obj) {
-            // hashCode = System.identityHashCode(obj);
-            hashCode = obj.hashCode();
+            hashCode = System.identityHashCode(obj);
             this.obj = obj;
         }
 
@@ -58,20 +58,19 @@ public class ObjectIdDictionary {
         public String toString() {
             return obj.toString();
         }
-        
+
         public Object get() {
             return obj;
         }
     }
 
-    private class WeakIdWrapper implements Wrapper {
+    private static class WeakIdWrapper implements Wrapper {
 
         private final int hashCode;
         private final WeakReference ref;
 
         public WeakIdWrapper(Object obj) {
-            // hashCode = System.identityHashCode(obj);
-            hashCode = obj.hashCode();
+            hashCode = System.identityHashCode(obj);
             ref = new WeakReference(obj);
         }
 
@@ -80,7 +79,6 @@ public class ObjectIdDictionary {
         }
 
         public boolean equals(Object other) {
-            // only called in case of a hash value clash 
             return get() == ((Wrapper)other).get();
         }
 
@@ -88,58 +86,51 @@ public class ObjectIdDictionary {
             Object obj = get();
             return obj == null ? "(null)" : obj.toString();
         }
-        
+
         public Object get() {
             Object obj = ref.get();
-            if (obj == null) {
-                // it was a lot faster and more efficient simply to count the number of
-                // evidences instead of keeping the Wrapper somewhere in a remove list
-                ++ObjectIdDictionary.this.invalidCounter;
-            }
             return obj;
         }
     }
 
     public void associateId(Object obj, Object id) {
         map.put(new WeakIdWrapper(obj), id);
+        ++counter;
         cleanup();
     }
 
     public Object lookupId(Object obj) {
         Object id = map.get(new IdWrapper(obj));
-        cleanup();
+        ++counter;
         return id;
     }
 
     public boolean containsId(Object item) {
         boolean b = map.containsKey(new IdWrapper(item));
-        cleanup();
+        ++counter;
         return b;
     }
 
     public void removeId(Object item) {
         map.remove(new IdWrapper(item));
+        ++counter;
         cleanup();
     }
-    
+
     public int size() {
         return map.size();
     }
 
     private void cleanup() {
-        if (invalidCounter > 100) {
-            long counter = 0;
+        if (counter > 10000) {
+            counter = 0;
             // much more efficient to remove any orphaned wrappers at once
             for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
                 final WeakIdWrapper key = (WeakIdWrapper)iterator.next();
                 if (key.get() == null) {
                     iterator.remove();
-                    ++counter;
                 }
             }
-            invalidCounter = 0;
-            if (debug)
-                System.out.println("Cleaned up: "+ counter);
         }
     }
 }
