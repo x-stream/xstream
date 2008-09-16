@@ -57,6 +57,12 @@ public class ObjectIdDictionaryTest extends TestCase {
 
         final StringBuffer memInfo = new StringBuffer("JVM: ");
         memInfo.append(System.getProperty("java.version"));
+        memInfo.append("\nOS: ");
+        memInfo.append(System.getProperty("os.name"));
+        memInfo.append(" / ");
+        memInfo.append(System.getProperty("os.arch"));
+        memInfo.append(" / ");
+        memInfo.append(System.getProperty("os.version"));
         memInfo.append("\nMemoryInfo:\n");
         memInfo.append(memoryInfo());
         memInfo.append('\n');
