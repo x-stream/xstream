@@ -114,7 +114,7 @@ public class ObjectIdDictionaryTest extends TestCase {
 
         int i = 0;
         final SoftReference ref = new SoftReference(new Object());
-        for (int count = 0; ref.get() != null && count++ < 4;) {
+        for (int count = 0; ref.get() != null && count++ < 10;) {
             List memory = new ArrayList();
             try {
                 // fill up memory
@@ -128,12 +128,12 @@ public class ObjectIdDictionaryTest extends TestCase {
             memory.clear();
             memory = null;
             System.gc();
-            System.runFinalization();
-            try {
-                Thread.sleep(1000);
-            } catch (final InterruptedException e) {
-                // ignore
-            }
+//            System.runFinalization();
+//            try {
+//                Thread.sleep(1000);
+//            } catch (final InterruptedException e) {
+//                // ignore
+//            }
         }
 
         memInfo.append("Force GC, allocated blocks of 16KB: " + i);
