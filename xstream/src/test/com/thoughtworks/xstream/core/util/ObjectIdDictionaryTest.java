@@ -71,7 +71,7 @@ public class ObjectIdDictionaryTest extends TestCase {
                     final String s = new String("JUnit ") + counter; // enforce new object
                     assertFalse("Failed in (" + counter + ")", dict.containsId(s));
                     dict.associateId(s, "X");
-                    if (counter % 25000 == 24999) {
+                    if (counter % 20000 == 19999) {
                         forceGC(memInfo);
                     }
                 } catch (final OutOfMemoryError e) {
