@@ -128,8 +128,9 @@ public class ObjectIdDictionaryTest extends TestCase {
             memory.clear();
             memory = null;
             System.gc();
+            System.runFinalization();
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (final InterruptedException e) {
                 // ignore
             }
