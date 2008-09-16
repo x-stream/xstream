@@ -37,7 +37,7 @@ public class SampleDynamicProxy implements InvocationHandler {
         if (method.getName().equals("equals")) {
             return equals(args[0]) ? Boolean.TRUE : Boolean.FALSE;
         } else if (method.getName().equals("hashCode")) {
-            return System.identityHashCode(proxy);
+            return new Integer(System.identityHashCode(proxy));
         } else {
             return aField;
         }
