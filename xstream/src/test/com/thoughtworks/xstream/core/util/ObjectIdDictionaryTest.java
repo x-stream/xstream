@@ -74,7 +74,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         try {
             for (; invalidCounter.getInt(dict) != 0; ++counter) {
                 try {
-                    final String s = new String("JUnit ") + counter; // enforce new object
+                    final String s = new String("JUnit ") + counter % 10000; // enforce new object
                     assertFalse("Failed in (" + counter + ")", dict.containsId(s));
                     dict.associateId(s, "X");
                     if (counter % 20000 == 19999) {
@@ -125,7 +125,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             try {
                 // fill up memory
                 while (ref.get() != null) {
-                    memory.add(new byte[1024 * 16]);
+                    memory.add(new byte[1024 * 64]);
                 }
             } catch (final OutOfMemoryError error) {
                 // expected
@@ -141,7 +141,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             }
         }
 
-        memInfo.append("Force GC, allocated blocks of 16KB: " + i);
+        memInfo.append("Force GC, allocated blocks of 64KB: " + i);
         memInfo.append('\n');
 
         if (ref.get() != null) {

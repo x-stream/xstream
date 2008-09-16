@@ -39,13 +39,16 @@ public class ObjectIdDictionary {
     private static class IdWrapper implements Wrapper {
 
         private final Object obj;
+        private final int hashCode;
 
         public IdWrapper(Object obj) {
+            // hashCode = System.identityHashCode(obj);
+            hashCode = obj.hashCode();
             this.obj = obj;
         }
 
         public int hashCode() {
-            return System.identityHashCode(obj);
+            return hashCode;
         }
 
         public boolean equals(Object other) {
@@ -67,7 +70,8 @@ public class ObjectIdDictionary {
         private final WeakReference ref;
 
         public WeakIdWrapper(Object obj) {
-            hashCode = System.identityHashCode(obj);
+            // hashCode = System.identityHashCode(obj);
+            hashCode = obj.hashCode();
             ref = new WeakReference(obj);
         }
 
@@ -76,6 +80,7 @@ public class ObjectIdDictionary {
         }
 
         public boolean equals(Object other) {
+            // only called in case of a hash value clash 
             return get() == ((Wrapper)other).get();
         }
 
