@@ -139,7 +139,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append("Force GC, allocated blocks of 16KB: " + i);
         memInfo.append('\n');
 
-        if (ref.get() == null) {
+        if (ref.get() != null) {
             throw new ForceGCError("This JVM is not releasing memory!");
         }
     }
