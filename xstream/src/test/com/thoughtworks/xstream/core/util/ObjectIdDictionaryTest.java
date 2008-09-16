@@ -15,7 +15,9 @@ import junit.framework.TestCase;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class ObjectIdDictionaryTest extends TestCase {
@@ -53,7 +55,7 @@ public class ObjectIdDictionaryTest extends TestCase {
         int blocks = forceGCAndGetNumberOfBlocks(memInfo)/5;
         List softMemory = new ArrayList();
         while (blocks-- > 0) {
-            softMemory.add(blocks < 40 ? (Object)new SoftReference(new byte[1024*80]) : (Object)new byte[1024*80]);
+            softMemory.add(blocks < 50 ? (Object)new SoftReference(new byte[1024*80]) : (Object)new byte[1024*80]);
         }
         forceGCAndGetNumberOfBlocks(memInfo);
         
@@ -62,9 +64,11 @@ public class ObjectIdDictionaryTest extends TestCase {
         final int elements = 50000;
         final int[] dictSizes = new int[loop * elements];
         ObjectIdDictionary dict = new ObjectIdDictionary();
+        final Set systemHashes = new HashSet();
         for (int i = 0; i < loop; ++i) {
             for (int j = 0; j < elements; ++j) {
                 final String s = new String("JUnit ") + j; // enforce new object
+                systemHashes.add(new Integer(System.identityHashCode(s)));
                 dictSizes[i * elements + j] = dict.size();
                 assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
                 dict.associateId(s, "X");
@@ -74,7 +78,7 @@ public class ObjectIdDictionaryTest extends TestCase {
 
         System.setProperty("xstream.debug", "false");
         assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink; " + memInfo,
+        assertFalse("Dictionary did not shrink; " + systemHashes.size() + " distinct objects; " + memInfo,
             loop * elements - 1 == dictSizes[loop * elements - 1]);
         } catch(OutOfMemoryError e) {
             System.out.println(memInfo);
