@@ -61,8 +61,8 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append(memoryInfo());
         memInfo.append('\n');
 
-        byte[] memReserve = new byte[1024 * 512];
-        Arrays.fill(memReserve, (byte)255); // prevent JVM optimization
+        byte[] memReserved = new byte[1024 * 512];
+        Arrays.fill(memReserved, (byte)255); // prevent JVM optimization
         int oome = 0;
         int counter = 0;
         try {
@@ -71,11 +71,11 @@ public class ObjectIdDictionaryTest extends TestCase {
                     final String s = new String("JUnit ") + counter; // enforce new object
                     assertFalse("Failed in (" + counter + ")", dict.containsId(s));
                     dict.associateId(s, "X");
-                    if (counter % 10000 == 9999) {
+                    if (counter % 25000 == 24999) {
                         forceGC(memInfo);
                     }
                 } catch (final OutOfMemoryError e) {
-                    memReserve = null;
+                    memReserved = null;
                     forceGC(memInfo);
                     if ( ++oome == 5) {
                         memInfo.append("Counter: ");
@@ -86,7 +86,7 @@ public class ObjectIdDictionaryTest extends TestCase {
                         System.out.println(memInfo);
                         throw e;
                     }
-                    memReserve = new byte[1024 * 512];
+                    memReserved = new byte[1024 * 512];
                 }
             }
             assertTrue("Dictionary did not shrink; "
@@ -114,7 +114,7 @@ public class ObjectIdDictionaryTest extends TestCase {
 
         int i = 0;
         final SoftReference ref = new SoftReference(new Object());
-        for (int count = 0; ref.get() != null && count++ < 10;) {
+        for (int count = 0; ref.get() != null && count++ < 4;) {
             List memory = new ArrayList();
             try {
                 // fill up memory
@@ -128,12 +128,11 @@ public class ObjectIdDictionaryTest extends TestCase {
             memory.clear();
             memory = null;
             System.gc();
-//            System.runFinalization();
-//            try {
-//                Thread.sleep(1000);
-//            } catch (final InterruptedException e) {
-//                // ignore
-//            }
+            try {
+                Thread.sleep(200);
+            } catch (final InterruptedException e) {
+                // ignore
+            }
         }
 
         memInfo.append("Force GC, allocated blocks of 16KB: " + i);
