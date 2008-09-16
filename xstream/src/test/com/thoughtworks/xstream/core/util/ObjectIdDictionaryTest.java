@@ -101,6 +101,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             memInfo.append("\nInvalid Counter: ");
             memInfo.append(invalidCounter.getInt(dict));
             memInfo.append('\n');
+            System.out.println(memInfo);
             throw error;
         } finally {
             System.setProperty("xstream.debug", "false");
