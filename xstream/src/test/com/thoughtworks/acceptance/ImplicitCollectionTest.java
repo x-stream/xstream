@@ -103,6 +103,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     }
 
     public static class MegaFarm extends Farm {
+        List names;
         public MegaFarm(int size) {
             super(size);
         }
@@ -127,6 +128,34 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 "</MEGA-farm>";
 
         xstream.addImplicitCollection(Farm.class, "animals");
+        assertBothWays(farm, expected);
+    }
+
+    public void testSupportsInheritedAndDirectDelcaredImplicitCollectionAtOnce() {
+        xstream.alias("MEGA-farm", MegaFarm.class);
+
+        MegaFarm farm = new MegaFarm(100); // subclass
+        farm.add(new Animal("Cow"));
+        farm.add(new Animal("Sheep"));
+        farm.names = new ArrayList();
+        farm.names.add("McDonald");
+        farm.names.add("Ponte Rosa");
+        
+        String expected = "" +
+                "<MEGA-farm>\n" +
+                "  <size>100</size>\n" +
+                "  <animal>\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "  <name>McDonald</name>\n" +
+                "  <name>Ponte Rosa</name>\n" +
+                "</MEGA-farm>";
+
+        xstream.addImplicitCollection(Farm.class, "animals");
+        xstream.addImplicitCollection(MegaFarm.class, "names", "name", String.class);
         assertBothWays(farm, expected);
     }
 
