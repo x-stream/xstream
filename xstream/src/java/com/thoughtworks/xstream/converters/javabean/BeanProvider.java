@@ -72,9 +72,12 @@ public class BeanProvider {
             PropertyDescriptor property = propertyDescriptors[i];
             try {
                 Method readMethod = property.getReadMethod();
-                Object value = readMethod.invoke(object, new Object[0]);
-                visitor.visit(property.getName(), property.getPropertyType(), readMethod
-                    .getDeclaringClass(), value);
+                String name = property.getName();
+                Class definedIn = readMethod.getDeclaringClass();
+                if (visitor.shouldVisit(name, definedIn)) {
+                    Object value = readMethod.invoke(object, new Object[0]);
+                    visitor.visit(name, property.getPropertyType(), definedIn, value);
+                }
             } catch (IllegalArgumentException e) {
                 throw new ObjectAccessException("Could not get property "
                     + object.getClass()
@@ -198,6 +201,7 @@ public class BeanProvider {
     }
 
     interface Visitor {
+        boolean shouldVisit(String name, Class definedIn);
         void visit(String name, Class type, Class definedIn, Object value);
     }
 }

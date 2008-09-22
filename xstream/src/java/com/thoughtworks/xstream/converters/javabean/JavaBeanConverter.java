@@ -74,8 +74,12 @@ public class JavaBeanConverter implements Converter {
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.attributeForAlias("class");
         beanProvider.visitSerializableProperties(source, new BeanProvider.Visitor() {
+            public boolean shouldVisit(String name, Class definedIn) {
+                return mapper.shouldSerializeMember(definedIn, name);
+            }
+            
             public void visit(String propertyName, Class fieldType, Class definedIn, Object newObj) {
-                if (newObj != null && mapper.shouldSerializeMember(definedIn, propertyName)) {
+                if (newObj != null) {
                     writeField(propertyName, fieldType, newObj, definedIn);
                 }
             }
@@ -84,7 +88,6 @@ public class JavaBeanConverter implements Converter {
                 String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
 				ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, fieldType);
                 Class actualType = newObj.getClass();
-
                 Class defaultType = mapper.defaultImplementationOf(fieldType);
                 if (!actualType.equals(defaultType)) {
                     writer.addAttribute(classAttributeName, mapper.serializedClass(actualType));
@@ -93,7 +96,6 @@ public class JavaBeanConverter implements Converter {
 
                 writer.endNode();
             }
-
         });
     }
 

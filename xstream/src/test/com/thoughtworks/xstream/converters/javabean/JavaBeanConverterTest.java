@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -295,16 +295,14 @@ public class JavaBeanConverterTest extends TestCase {
 
     public void testDoesNotSerializeOmittedFields() {
         TypesOfFields fields = new TypesOfFields();
-        String expected = "" 
-            + "<types>\n" 
-            + "  <normal>normal</normal>\n" 
-            + "</types>";
+        String expected = "<types/>";
 
         XStream xstream = new XStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
         xstream.alias("types", TypesOfFields.class);
         xstream.omitField(TypesOfFields.class, "trans");
         xstream.omitField(TypesOfFields.class, "foo");
+        xstream.omitField(TypesOfFields.class, "normal");
 
         String xml = xstream.toXML(fields);
         assertEquals(expected, xml);
@@ -327,7 +325,29 @@ public class JavaBeanConverterTest extends TestCase {
         assertEquals(fields, unmarshalledFields);
     }
 
-    static class Person {
+    public static class UnsafeBean {
+        public String getUnsafe() {
+            throw new RuntimeException("Do not call");
+        }
+        public void setUnsafe(String value) {
+            // ignore
+        }
+    }
+    
+    public void testDoesNotGetValueOfOmittedFields() {
+        UnsafeBean bean = new UnsafeBean();
+        String expected = "<unsafeBean/>";
+
+        XStream xstream = new XStream();
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+        xstream.alias("unsafeBean", UnsafeBean.class);
+        xstream.omitField(UnsafeBean.class, "unsafe");
+    
+        String xml = xstream.toXML(bean);
+        assertEquals(expected, xml);
+    }
+    
+    public static class Person {
         private String fName;
         private String lName;
 
@@ -357,7 +377,7 @@ public class JavaBeanConverterTest extends TestCase {
         }
     }
 
-    static class Man extends Person {
+    public static class Man extends Person {
 
         public Man() {
             // Bean constructor
