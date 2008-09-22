@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -55,6 +55,24 @@ public class AliasTest extends AbstractAcceptanceTest {
         // now change the alias
         xstream.alias("X_alias", X.class);
         X x = new X(0);
+        assertBothWays(x, xml);
+    }
+
+    public static class HasUnderscore {
+        private String _attr = "foo";
+    }
+
+    public void testWithPrefixedUnderscore(){
+        HasUnderscore x = new HasUnderscore();
+
+        xstream.alias("underscore", HasUnderscore.class);
+        xstream.aliasField("attr", HasUnderscore.class, "_attr");
+
+        String xml = "" + 
+            "<underscore>\n" + 
+            "  <attr>foo</attr>\n" + 
+            "</underscore>";
+
         assertBothWays(x, xml);
     }
     
