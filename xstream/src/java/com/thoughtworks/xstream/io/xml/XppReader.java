@@ -90,7 +90,7 @@ public class XppReader extends AbstractPullReader {
     }
 
     public String getAttribute(String name) {
-        return parser.getAttributeValue(null, name);
+        return parser.getAttributeValue(null, escapeXmlName(name));
     }
 
     public String getAttribute(int index) {

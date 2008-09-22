@@ -41,5 +41,15 @@ public abstract class AbstractXmlReader implements HierarchicalStreamReader, Xml
     public String unescapeXmlName(String name) {
         return replacer.unescapeName(name);
     }
+
+    /**
+     * Escapes XML-unfriendly name (node or attribute) 
+     * 
+     * @param name the unescaped XML-unfriendly name
+     * @return An escaped name with original characters
+     */
+    protected String escapeXmlName(String name) {
+        return replacer.escapeName(name);
+    }
     
 }

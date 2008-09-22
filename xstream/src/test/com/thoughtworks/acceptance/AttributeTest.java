@@ -338,7 +338,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
     
     static class Person {
         String _name;
-        transient int _age;
+        int _age;
         Person(String name, int age) {
             this._name = name;
             this._age = age;
@@ -346,7 +346,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
     };
     
     // FIXME: reader.getAttribute(name) does not escape the given name anymore
-    public void XXXtestAttributeMayHaveXmlUnfriendlyName() {
+    public void testAttributeMayHaveXmlUnfriendlyName() {
         xstream.alias("person", Person.class);
         xstream.useAttributeFor(Person.class, "_name");
         xstream.useAttributeFor(Person.class, "_age");
