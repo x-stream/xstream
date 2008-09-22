@@ -345,7 +345,6 @@ public class AttributeTest extends AbstractAcceptanceTest {
         }
     };
     
-    // FIXME: reader.getAttribute(name) does not escape the given name anymore
     public void testAttributeMayHaveXmlUnfriendlyName() {
         xstream.alias("person", Person.class);
         xstream.useAttributeFor(Person.class, "_name");
