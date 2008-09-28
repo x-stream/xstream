@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.json;
 
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.MalformedURLException;
@@ -29,6 +30,7 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.JVM;
 
 import junit.framework.TestCase;
 
@@ -333,14 +335,16 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public void testColor() {
-        Color color = Color.black;
-        String expected = ("{'awt-color': {\n"
-            + "  'red': 0,\n"
-            + "  'green': 0,\n"
-            + "  'blue': 0,\n"
-            + "  'alpha': 255\n"
-            + "}}").replace('\'', '"');
-        assertEquals(expected, xstream.toXML(color));
+        if (GraphicsEnvironment.isHeadless() && !JVM.is15()) {
+            Color color = Color.black;
+            String expected = ("{'awt-color': {\n"
+                + "  'red': 0,\n"
+                + "  'green': 0,\n"
+                + "  'blue': 0,\n"
+                + "  'alpha': 255\n"
+                + "}}").replace('\'', '"');
+            assertEquals(expected, xstream.toXML(color));
+        }
     }
 
     public void testDoesHandleQuotesAndEscapes() {
