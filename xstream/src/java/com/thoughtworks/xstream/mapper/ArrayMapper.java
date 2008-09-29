@@ -49,11 +49,20 @@ public class ArrayMapper extends MapperWrapper {
 
     public String serializedClass(Class type) {
         StringBuffer arraySuffix = new StringBuffer();
+        String name = null;
         while (type.isArray()) {
-            type = type.getComponentType();
-            arraySuffix.append("-array");
+            name = super.serializedClass(type);
+            if (type.getName().equals(name)) {
+                type = type.getComponentType();
+                arraySuffix.append("-array");
+                name = null;
+            } else {
+                break;
+            }
         }
-        String name = boxedTypeName(type);
+        if (name == null) {
+            name = boxedTypeName(type);
+        }
         if (name == null) {
             name = super.serializedClass(type);
         }
@@ -70,7 +79,7 @@ public class ArrayMapper extends MapperWrapper {
         // strip off "-array" suffix
         while (elementName.endsWith("-array")) {
             elementName = elementName.substring(0, elementName.length() - 6); // cut off -array
-            dimensions++;
+            ++dimensions;
         }
 
         if (dimensions > 0) {
@@ -78,27 +87,27 @@ public class ArrayMapper extends MapperWrapper {
             if (componentType == null) {
                 componentType = super.realClass(elementName);
             }
-            try {
-                return arrayType(dimensions, componentType);
-            } catch (ClassNotFoundException e) {
-                throw new CannotResolveClassException(elementName + " : " + e.getMessage());
+            while (componentType.isArray()) {
+                componentType = componentType.getComponentType();
+                ++dimensions;
             }
+            return super.realClass(arrayType(dimensions, componentType));
         } else {
             return super.realClass(elementName);
         }
     }
 
-    private Class arrayType(int dimensions, Class componentType) throws ClassNotFoundException {
+    private String arrayType(int dimensions, Class componentType) {
         StringBuffer className = new StringBuffer();
         for (int i = 0; i < dimensions; i++) {
             className.append('[');
         }
         if (componentType.isPrimitive()) {
             className.append(charThatJavaUsesToRepresentPrimitiveArrayType(componentType));
-            return Class.forName(className.toString());
+            return className.toString();
         } else {
             className.append('L').append(componentType.getName()).append(';');
-            return Class.forName(className.toString(), false, componentType.getClassLoader());
+            return className.toString();
         }
     }
 

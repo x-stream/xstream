@@ -156,7 +156,31 @@ public class AliasTest extends AbstractAcceptanceTest {
             + "</bo-array>";
         assertBothWays(object, xml);
     }
-    
+
+    public void testCanAliasArray() {
+        Object object = new boolean[]{true, false};
+        xstream.alias("boa", boolean[].class);
+        String xml = ""
+            + "<boa>\n"
+            + "  <boolean>true</boolean>\n"
+            + "  <boolean>false</boolean>\n"
+            + "</boa>";
+        assertBothWays(object, xml);
+    }
+
+    public void testCanAliasArrayInMultiDimension() {
+        Object object = new boolean[][]{{true, false}};
+        xstream.alias("boa", boolean[].class);
+        String xml = ""
+            + "<boa-array>\n"
+            + "  <boa>\n"
+            + "    <boolean>true</boolean>\n"
+            + "    <boolean>false</boolean>\n"
+            + "  </boa>\n"
+            + "</boa-array>";
+        assertBothWays(object, xml);
+    }
+
     public static class TypeA {
         private String attrA = "testA";
     }
