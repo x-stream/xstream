@@ -334,7 +334,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public void testColor() {
-        boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false"));
+        boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
         if (!isHeadless || !JVM.is15()) {
             Color color = Color.black;
             String expected = ("{'awt-color': {\n"
