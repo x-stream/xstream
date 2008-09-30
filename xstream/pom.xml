@@ -110,27 +110,6 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>test.src.dir</name>
-              <value>${project.build.testSourceDirectory}</value>
-            </property>
-            <property>
-              <name>java.awt.headless</name>
-              <value>true</value>
-            </property>
-          </systemProperties>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
   <profiles>
     <profile>
       <id>jdk15</id>
