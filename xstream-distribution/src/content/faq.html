@@ -214,9 +214,22 @@ String xml = xstream.toXML(joe);</pre></div>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_CGLIB">Can CGLIB proxies be serialized?</h2>
-    <p>Only limitedly. A proxy generated with the CGLIB Enhancer is supported, if the
-    proxy uses only one callback and the proxy instance can be generated without
-    additional constructor arguments.</p>
+    <p>Only limitedly. A proxy generated with the CGLIB Enhancer is supported, if the proxy uses only one callback
+    and the proxy instance can be generated without additional constructor arguments. Starting with XStream 1.3.1
+    CGLIB support is no longer automatically installed because of possible classloader problems and side-effects,
+    because of incompatible ASM versions. You can enable CGLIB support with:</p>
+<div class="Source Java"><pre>XStream xstream = new XStream() {
+    protected MapperWrapper wrapMapper(MapperWrapper next) {
+        return new CGLIBMapper(next);
+    }
+};
+xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstream.getReflectionProvider()));
+</pre></div>
+    <h2 id="Serialization_CGLIB_ExceptionInInitializerError">CGLIBEnhancedConverter fails at initialization with ExceptionInInitializerError</h2>
+    <p>This is not a problem of XStream. You have incompatible ASM versions in your classpath. CGLIB is based on ASM 1.5.x which is 
+    incompatible to newer versions that are used by common packages like Hibernate, Groovy or Guice. Check your dependencies and 
+    ensure that you are using cglib-nodep-2.x.jar instead of cglib-2.x.jar. The first one contains a copy of the ASM classes with private
+    packages and will therefore not raise class incompatibilities.</p>
 
     <h2 id="Serialization_CGLIB_2.0.1">Serialization fails with NoSuchMethodError: net.sf.cglib.proxy.Enhancer.isEnhanced(Ljava/lang/Class;)Z</h2>
     <p>XStream uses this method to detect a CGLIB-enhanced proxy. Unfortunately the method is not available in the 
