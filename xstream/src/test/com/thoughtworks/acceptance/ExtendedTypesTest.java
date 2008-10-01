@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import org.jdom.Element;
@@ -40,17 +41,20 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testAwtColor() {
-        Color color = new Color(0, 10, 20, 30);
-
-        String expected = "" +
-                "<awt-color>\n" +
-                "  <red>0</red>\n" +
-                "  <green>10</green>\n" +
-                "  <blue>20</blue>\n" +
-                "  <alpha>30</alpha>\n" +
-                "</awt-color>";
-
-        assertBothWays(color, expected);
+        boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
+        if (!isHeadless || JVM.is15()) {
+            Color color = new Color(0, 10, 20, 30);
+    
+            String expected = "" +
+                    "<awt-color>\n" +
+                    "  <red>0</red>\n" +
+                    "  <green>10</green>\n" +
+                    "  <blue>20</blue>\n" +
+                    "  <alpha>30</alpha>\n" +
+                    "</awt-color>";
+    
+            assertBothWays(color, expected);
+        }
     }
 
     public void testSqlTimestamp() {

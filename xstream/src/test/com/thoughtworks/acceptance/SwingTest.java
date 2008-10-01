@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,8 @@
  * Created on 30. April 2005 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
+
+import com.thoughtworks.xstream.core.JVM;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -22,29 +24,35 @@ public class SwingTest extends AbstractAcceptanceTest {
     // JTable is one of the nastiest components to serialize. If this works, we're in good shape :)
 
     public void testJTable() {
-        // Note: JTable does not have a sensible .equals() method, so we compare the XML instead.
-        JTable original = new JTable();
-        String originalXml = xstream.toXML(original);
-        
-        JTable deserialized = (JTable) xstream.fromXML(originalXml);
-        String deserializedXml = xstream.toXML(deserialized);
-
-        assertEquals(originalXml, deserializedXml);
+        boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
+        if (!isHeadless || JVM.is15()) {
+            // Note: JTable does not have a sensible .equals() method, so we compare the XML instead.
+            JTable original = new JTable();
+            String originalXml = xstream.toXML(original);
+            
+            JTable deserialized = (JTable) xstream.fromXML(originalXml);
+            String deserializedXml = xstream.toXML(deserialized);
+    
+            assertEquals(originalXml, deserializedXml);
+        }
     }
 
     public void testDefaultListModel() {
-        final DefaultListModel original = new DefaultListModel();
-        final JList list = new JList();
-        list.setModel(original);
-        
-        String originalXml = xstream.toXML(original);
-        
-        DefaultListModel deserialized = (DefaultListModel) xstream.fromXML(originalXml);
-        String deserializedXml = xstream.toXML(deserialized);
-        
-        assertEquals(originalXml, deserializedXml);
-
-        list.setModel(deserialized);
+        boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
+        if (!isHeadless || JVM.is15()) {
+            final DefaultListModel original = new DefaultListModel();
+            final JList list = new JList();
+            list.setModel(original);
+            
+            String originalXml = xstream.toXML(original);
+            
+            DefaultListModel deserialized = (DefaultListModel) xstream.fromXML(originalXml);
+            String deserializedXml = xstream.toXML(deserialized);
+            
+            assertEquals(originalXml, deserializedXml);
+    
+            list.setModel(deserialized);
+        }
     }
     
     public void testMetalLookAndFeel() {
