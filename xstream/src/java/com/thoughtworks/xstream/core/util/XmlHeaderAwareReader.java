@@ -54,15 +54,15 @@ public final class XmlHeaderAwareReader extends Reader {
      * @since 1.3
      */
     public XmlHeaderAwareReader(final InputStream in) throws UnsupportedEncodingException, IOException {
-        final PushbackInputStream pin = in instanceof PushbackInputStream
-                                                                         ? (PushbackInputStream)in
-                                                                         : new PushbackInputStream(in, 64);
+        final PushbackInputStream[] pin = new PushbackInputStream[]{in instanceof PushbackInputStream
+            ? (PushbackInputStream)in
+            : new PushbackInputStream(in, 64)};
         final Map header = getHeader(pin);
         version = Double.parseDouble((String)header.get(KEY_VERSION));
-        reader = new InputStreamReader(pin, (String)header.get(KEY_ENCODING));
+        reader = new InputStreamReader(pin[0], (String)header.get(KEY_ENCODING));
     }
 
-    private Map getHeader(final PushbackInputStream in) throws IOException {
+    private Map getHeader(final PushbackInputStream[] in) throws IOException {
         final Map header = new HashMap();
         header.put(KEY_ENCODING, "utf-8");
         header.put(KEY_VERSION, "1.0");
@@ -75,7 +75,7 @@ public final class XmlHeaderAwareReader extends Reader {
         final StringBuffer name = new StringBuffer();
         final StringBuffer value = new StringBuffer();
         boolean escape = false;
-        while (i != -1 && (i = in.read()) != -1) {
+        while (i != -1 && (i = in[0].read()) != -1) {
             out.write(i);
             ch = (char)i;
             switch (state) {
@@ -150,7 +150,15 @@ public final class XmlHeaderAwareReader extends Reader {
             }
         }
 
-        in.unread(out.toByteArray());
+        byte[] pushbackData = out.toByteArray();
+        for (i = pushbackData.length; i-- > 0;) {
+            final byte b = pushbackData[i];
+            try {
+                in[0].unread(b);
+            } catch (IOException ex) {
+                in[0] = new PushbackInputStream(in[0], ++i);
+            }
+        }
         return header;
     }
 
