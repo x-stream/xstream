@@ -208,7 +208,7 @@ import java.util.Vector;
  * <b>Example</b><blockquote>
  *
  * <pre>
- * xstream.registerConverter(new ACustomDefaultConverter(), XStream.PRIORITY_VERY_LOW);
+ * xstream.registerConverter(new CustomDefaultConverter(), XStream.PRIORITY_VERY_LOW);
  * </pre>
  *
  * </blockquote>
@@ -448,11 +448,6 @@ public class XStream {
         if ( useXStream11XmlFriendlyMapper() ){
             mapper = new XStream11XmlFriendlyMapper(mapper);
         }
-        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
-            mapper = buildMapperDynamically(
-                     "com.thoughtworks.xstream.mapper.CGLIBMapper",
-                     new Class[]{Mapper.class}, new Object[]{mapper});
-        }
         mapper = new DynamicProxyMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
@@ -562,37 +557,27 @@ public class XStream {
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
 
-        if(jvm.supportsAWT()) {
-	        // Instantiating these two classes starts the AWT system, which is undesirable. Calling
-	        // loadClass ensures a reference to the class is found but they are not instantiated.
-	        alias("awt-color", jvm.loadClass("java.awt.Color"));
-	        alias("awt-font", jvm.loadClass("java.awt.Font"));
-	        alias("awt-text-attribute", jvm.loadClass("java.awt.font.TextAttribute"));
+        if (jvm.supportsAWT()) {
+            // Instantiating these two classes starts the AWT system, which is undesirable.
+            // Calling loadClass ensures a reference to the class is found but they are not
+            // instantiated.
+            alias("awt-color", jvm.loadClass("java.awt.Color"));
+            alias("awt-font", jvm.loadClass("java.awt.Font"));
+            alias("awt-text-attribute", jvm.loadClass("java.awt.font.TextAttribute"));
         }
 
-        if(jvm.supportsSQL()) {
-        	alias("sql-timestamp", jvm.loadClass("java.sql.Timestamp"));
-        	alias("sql-time", jvm.loadClass("java.sql.Time"));
-        	alias("sql-date", jvm.loadClass("java.sql.Date"));
+        if (jvm.supportsSQL()) {
+            alias("sql-timestamp", jvm.loadClass("java.sql.Timestamp"));
+            alias("sql-time", jvm.loadClass("java.sql.Time"));
+            alias("sql-date", jvm.loadClass("java.sql.Date"));
         }
 
         alias("file", File.class);
         alias("locale", Locale.class);
         alias("gregorian-calendar", Calendar.class);
 
-        // since jdk 1.4 included, but previously available as separate package ...
-        Class type = jvm.loadClass("javax.security.auth.Subject");
-        if (type != null) {
-            alias("auth-subject", type);
-        }
-
-        // since jdk 1.5 included, but available separately in JAXB ...
-        type = jvm.loadClass("javax.xml.datatype.Duration");
-        if (type != null) {
-            alias("duration", type);
-        }
-
         if (JVM.is14()) {
+            alias("auth-subject", jvm.loadClass("javax.security.auth.Subject"));
             alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
             alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
             alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
@@ -601,6 +586,7 @@ public class XStream {
         }
 
         if (JVM.is15()) {
+            alias("duration", jvm.loadClass("javax.xml.datatype.Duration"));
             alias("enum-set", jvm.loadClass("java.util.EnumSet"));
             alias("enum-map", jvm.loadClass("java.util.EnumMap"));
             alias("string-builder", jvm.loadClass("java.lang.StringBuilder"));
@@ -673,22 +659,11 @@ public class XStream {
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
 
-        // since JDK 1.4 included, but previously available as separate package ...
-        if (jvm.loadClass("javax.security.auth.Subject") != null) {
+        if (JVM.is14()) {
+            // late bound converters - allows XStream to be compiled on earlier JDKs
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.SubjectConverter",
                     PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
-        }
-        
-        // since JDK 1.5 included, bas as part of JAXB previously available ...
-        if (jvm.loadClass("javax.xml.datatype.Duration") != null) {
-            dynamicallyRegisterConverter(
-                    "com.thoughtworks.xstream.converters.extended.DurationConverter",
-                    PRIORITY_NORMAL, null, null);
-        }
-
-        if (JVM.is14()) {
-            // late bound converters - allows XStream to be compiled on earlier JDKs
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.ThrowableConverter",
                     PRIORITY_NORMAL, new Class[]{Converter.class},
@@ -711,6 +686,9 @@ public class XStream {
         if (JVM.is15()) {
             // late bound converters - allows XStream to be compiled on earlier JDKs
             dynamicallyRegisterConverter(
+                "com.thoughtworks.xstream.converters.extended.DurationConverter",
+                PRIORITY_NORMAL, null, null);
+            dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.enums.EnumConverter", PRIORITY_NORMAL,
                     null, null);
             dynamicallyRegisterConverter(
@@ -725,13 +703,6 @@ public class XStream {
             dynamicallyRegisterConverter(
                 "com.thoughtworks.xstream.converters.basic.UUIDConverter", PRIORITY_NORMAL,
                 null, null);
-        }
-
-        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
-            dynamicallyRegisterConverter(
-                    "com.thoughtworks.xstream.converters.reflection.CGLIBEnhancedConverter",
-                    PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class},
-                    new Object[]{mapper, reflectionProvider});
         }
 
         registerConverter(new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
@@ -1501,6 +1472,11 @@ public class XStream {
 
     /**
      * Change the ClassLoader XStream uses to load classes.
+     * 
+     * Creating an XStream instance it will register for all kind of classes and types of the current JDK,
+     * but not for any 3rd party type. To ensure that all other types are loaded with your classloader,
+     * you should call this method as early as possible - or consider to provide the classloader directly
+     * in the constructor.
      *
      * @since 1.1.1
      */
@@ -1509,7 +1485,7 @@ public class XStream {
     }
 
     /**
-     * Change the ClassLoader XStream uses to load classes.
+     * Retrieve the ClassLoader XStream uses to load classes.
      *
      * @since 1.1.1
      */

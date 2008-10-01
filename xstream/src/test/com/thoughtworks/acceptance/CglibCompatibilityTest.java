@@ -10,8 +10,12 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.reflection.CGLIBEnhancedConverter;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.mapper.CGLIBMapper;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.CallbackFilter;
@@ -34,6 +38,16 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  */
 public class CglibCompatibilityTest extends AbstractAcceptanceTest {
+
+    protected XStream createXStream() {
+        XStream xstream = new XStream(createDriver()) {
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new CGLIBMapper(next);
+            }
+        };
+        xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstream.getReflectionProvider()));
+        return xstream;
+    }
 
     public static class DelegatingHandler implements InvocationHandler, Serializable {
         private Object delegate;

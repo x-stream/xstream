@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,9 +41,11 @@ public class CGLIBMapper extends MapperWrapper {
     }
 
     public String serializedClass(Class type) {
-        return type.getName().indexOf(DEFAULT_NAMING_MARKER) > 0 && Enhancer.isEnhanced(type) 
-            ? alias 
-            : super.serializedClass(type);
+        String serializedName = super.serializedClass(type);
+        String typeName = type.getName();
+        return typeName.equals(serializedName)
+            && typeName.indexOf(DEFAULT_NAMING_MARKER) > 0
+            && Enhancer.isEnhanced(type) ? alias : serializedName;
     }
 
     public Class realClass(String elementName) {
