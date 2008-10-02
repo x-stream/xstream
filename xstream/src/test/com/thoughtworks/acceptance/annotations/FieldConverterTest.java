@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -160,21 +161,18 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class SecondaryConverter implements Converter {
-
-        public void marshal(final Object source, final HierarchicalStreamWriter writer,
-            final MarshallingContext context) {
-            writer.setValue("_" + source.toString() + "_");
-        }
-
-        public Object unmarshal(final HierarchicalStreamReader reader,
-            final UnmarshallingContext context) {
-            final String value = reader.getValue();
-            return value.substring(1, value.length() - 1);
-        }
+    public static class SecondaryConverter implements SingleValueConverter {
 
         public boolean canConvert(final Class type) {
             return type.equals(String.class);
+        }
+
+        public Object fromString(String value) {
+            return value.substring(1, value.length() - 1);
+        }
+
+        public String toString(Object source) {
+            return "_" + source.toString() + "_";
         }
     }
 

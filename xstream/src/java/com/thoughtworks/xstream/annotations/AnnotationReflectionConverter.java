@@ -16,11 +16,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterMatcher;
 import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 
@@ -37,7 +41,7 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
 
     private final AnnotationProvider annotationProvider;
 
-    private final Map<Class<? extends Converter>, Converter> cachedConverters;
+    private final Map<Class<? extends ConverterMatcher>, Converter> cachedConverters;
 
     @Deprecated
     public AnnotationReflectionConverter(
@@ -45,14 +49,14 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
                                          AnnotationProvider annotationProvider) {
         super(mapper, reflectionProvider);
         this.annotationProvider = annotationProvider;
-        this.cachedConverters = new HashMap<Class<? extends Converter>, Converter>();
+        this.cachedConverters = new HashMap<Class<? extends ConverterMatcher>, Converter>();
     }
 
     protected void marshallField(final MarshallingContext context, Object newObj, Field field) {
         XStreamConverter annotation = annotationProvider.getAnnotation(
             field, XStreamConverter.class);
         if (annotation != null) {
-            Class<? extends Converter> type = annotation.value();
+            Class<? extends ConverterMatcher> type = annotation.value();
             ensureCache(type);
             context.convertAnother(newObj, cachedConverters.get(type));
         } else {
@@ -60,7 +64,7 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
         }
     }
 
-    private void ensureCache(Class<? extends Converter> type) {
+    private void ensureCache(Class<? extends ConverterMatcher> type) {
         if (!this.cachedConverters.containsKey(type)) {
             cachedConverters.put(type, newInstance(type));
         }
@@ -72,7 +76,7 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
         XStreamConverter annotation = annotationProvider.getAnnotation(
             field, XStreamConverter.class);
         if (annotation != null) {
-            Class<? extends Converter> converterType = annotation.value();
+            Class<? extends Converter> converterType = (Class<? extends Converter>)annotation.value();
             ensureCache(converterType);
             return context.convertAnother(result, type, cachedConverters.get(converterType));
         } else {
@@ -83,23 +87,28 @@ public class AnnotationReflectionConverter extends ReflectionConverter {
     /**
      * Instantiates a converter using its default constructor.
      * 
-     * @param converterType the converter type to instantiate
+     * @param type the converter type to instantiate
      * @return the new instance
      */
-    private Converter newInstance(Class<? extends Converter> converterType) {
+    private Converter newInstance(Class<? extends ConverterMatcher> type) {
         Converter converter;
         // TODO: We need a separate exception for runtime initialization.
         try {
-            converter = converterType.getConstructor().newInstance();
+            if (SingleValueConverter.class.isAssignableFrom(type)) {
+                final SingleValueConverter svc = (SingleValueConverter)type.getConstructor().newInstance();
+                converter = new SingleValueConverterWrapper(svc);
+            } else {
+                converter = (Converter)type.getConstructor().newInstance();
+            }
         } catch (InvocationTargetException e) {
-            throw new ObjectAccessException("Cannot construct " + converterType.getName(), e
+            throw new ObjectAccessException("Cannot construct " + type.getName(), e
                 .getCause());
         } catch (InstantiationException e) {
-            throw new ObjectAccessException("Cannot construct " + converterType.getName(), e);
+            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Cannot construct " + converterType.getName(), e);
+            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (NoSuchMethodException e) {
-            throw new ObjectAccessException("Cannot construct " + converterType.getName(), e);
+            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         }
         return converter;
     }

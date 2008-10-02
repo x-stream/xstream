@@ -20,7 +20,10 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterMatcher;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
@@ -258,7 +261,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (converterRegistry != null) {
             final XStreamConverters convertersAnnotation = type
                 .getAnnotation(XStreamConverters.class);
-            final XStreamConverter converterAnnotation = type.getAnnotation(XStreamConverter.class);
+            final XStreamConverter converterAnnotation = type
+                .getAnnotation(XStreamConverter.class);
             final List<XStreamConverter> annotations = convertersAnnotation != null
                 ? new ArrayList<XStreamConverter>(Arrays.asList(convertersAnnotation.value()))
                 : new ArrayList<XStreamConverter>();
@@ -266,10 +270,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 annotations.add(converterAnnotation);
             }
             for (final XStreamConverter annotation : annotations) {
-                final Class<? extends Converter> converterType = annotation.value();
+                final Class<? extends ConverterMatcher> converterType = annotation.value();
                 final Converter converter = cacheConverter(converterType);
                 if (converter != null) {
-                    if (converter != converterAnnotation || converter.canConvert(type)) {
+                    if (converterAnnotation != null || converter.canConvert(type)) {
                         converterRegistry.registerConverter(converter, XStream.PRIORITY_NORMAL);
                     } else {
                         throw new InitializationException("Converter "
@@ -413,7 +417,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private void processLocalConverterAnnotation(final Field field) {
         final XStreamConverter annotation = field.getAnnotation(XStreamConverter.class);
         if (annotation != null) {
-            final Class<? extends Converter> converterType = annotation.value();
+            final Class<? extends ConverterMatcher> converterType = annotation.value();
             final Converter converter = cacheConverter(converterType);
             if (converter != null) {
                 if (localConversionMapper == null) {
@@ -427,12 +431,18 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         }
     }
 
-    private Converter cacheConverter(final Class<? extends Converter> converterType) {
+    private Converter cacheConverter(final Class<? extends ConverterMatcher> converterType) {
         Converter converter = converterCache.get(converterType);
         if (converter == null) {
             try {
-                converter = (Converter)DependencyInjectionFactory.newInstance(
-                    converterType, arguments);
+                if (SingleValueConverter.class.isAssignableFrom(converterType)) {
+                    final SingleValueConverter svc = (SingleValueConverter)DependencyInjectionFactory
+                        .newInstance(converterType, arguments);
+                    converter = new SingleValueConverterWrapper(svc);
+                } else {
+                    converter = (Converter)DependencyInjectionFactory.newInstance(
+                        converterType, arguments);
+                }
                 converterCache.put(converterType, converter);
             } catch (final Exception e) {
                 throw new InitializationException("Cannot instantiate converter "
