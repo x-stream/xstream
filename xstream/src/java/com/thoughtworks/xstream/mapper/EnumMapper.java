@@ -54,6 +54,7 @@ public class EnumMapper extends AttributeMapper {
         this((Mapper)wrapped, null);
     }
 
+    @Override
     public String serializedClass(Class type) {
         if (type == null) {
             return super.serializedClass(type);
@@ -67,10 +68,12 @@ public class EnumMapper extends AttributeMapper {
         }
     }
 
+    @Override
     public boolean isImmutableValueType(Class type) {
         return (Enum.class.isAssignableFrom(type)) || super.isImmutableValueType(type);
     }
 
+    @Override
     protected SingleValueConverter getLocalConverterFromItemType(Class type) {
         if (Enum.class.isAssignableFrom(type)) {
             synchronized (enumConverterMap) {
