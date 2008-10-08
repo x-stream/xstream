@@ -34,17 +34,21 @@ public class EnumMapper extends MapperWrapper {
 
     private transient AttributeMapper attributeMapper;
     private transient Map enumConverterMap;
+    private final ConverterLookup converterLookup;
 
     /**
      * @deprecated since upcoming, use {@link #EnumMapper(Mapper)}
      */
     public EnumMapper(Mapper wrapped, ConverterLookup lookup) {
-        this(wrapped);
+        super(wrapped);
+        this.converterLookup = lookup;
+        readResolve();
     }
 
     @Deprecated
     public EnumMapper(Mapper wrapped) {
         super(wrapped);
+        this.converterLookup = null;
         readResolve();
     }
 
@@ -101,7 +105,10 @@ public class EnumMapper extends MapperWrapper {
                 SingleValueConverter singleValueConverter = (SingleValueConverter)enumConverterMap
                     .get(type);
                 if (singleValueConverter == null) {
-                    singleValueConverter = new EnumSingleValueConverter(type);
+                    singleValueConverter = super.getConverterFromItemType(fieldName, type, definedIn);
+                    if (singleValueConverter == null) {
+                        singleValueConverter = new EnumSingleValueConverter(type);
+                    }
                     enumConverterMap.put(type, singleValueConverter);
                 }
                 return singleValueConverter;
