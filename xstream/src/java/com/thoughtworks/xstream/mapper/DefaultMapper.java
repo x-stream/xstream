@@ -146,7 +146,7 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return null;
@@ -193,7 +193,14 @@ public class DefaultMapper implements Mapper {
         return alias;
     }
 
-    public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     */
+    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute) {
+        return null;
+    }
+
+    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type) {
         return null;
     }
 }

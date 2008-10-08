@@ -121,7 +121,7 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return wrapped.getConverterFromAttribute(name);
@@ -153,8 +153,15 @@ public abstract class MapperWrapper implements Mapper {
     	return wrapped.attributeForAlias(definedIn, alias);
     }
     
+    /**
+     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     */
     public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
     	return wrapped.getConverterFromAttribute(type, attribute);
+    }
+    
+    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type) {
+        return wrapped.getConverterFromAttribute(definedIn, attribute, type);
     }
 
 }

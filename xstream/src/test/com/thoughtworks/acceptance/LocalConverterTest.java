@@ -60,7 +60,7 @@ public class LocalConverterTest extends AbstractAcceptanceTest {
         assertBothWays(multiBool, xml);
     }
     
-        public static class SymbolParameter {
+    public static class SymbolParameter {
         private int type;
         private int color;
         private int width;

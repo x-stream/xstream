@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,7 +26,7 @@ public class Fields {
             result.setAccessible(true);
             return result;
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException("Could not access " + type.getName() + "." + name + " field");
+            throw new IllegalArgumentException("Could not access " + type.getName() + "." + name + " field", e);
         }
     }
 

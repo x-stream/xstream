@@ -123,7 +123,7 @@ public interface Mapper {
     SingleValueConverter getConverterFromItemType(Class type);
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     SingleValueConverter getConverterFromAttribute(String name);
 
@@ -170,7 +170,17 @@ public interface Mapper {
      * 
      * @param definedIn the field's parent
      * @param attribute the attribute name
-     * @since 1.2.2
+     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String, Class)} 
      */
     SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute);
+
+    /**
+     * Returns which converter to use for an specific attribute in a type.
+     * 
+     * @param definedIn the field's parent
+     * @param attribute the attribute name
+     * @param type the type the converter should create
+     * @since upcoming
+     */
+    SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type);
 }

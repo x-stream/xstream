@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -48,9 +49,8 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
     public void testAnnotationForFieldsOfSameType() {
         final TaskWithAnnotations task = new TaskWithAnnotations("Tom", "Dick", "Harry");
         final String xml = ""
-            + "<annotatedTask>\n"
+            + "<annotatedTask name2=\"_Dick_\">\n"
             + "  <name1 str=\"Tom\"/>\n"
-            + "  <name2>_Dick_</name2>\n"
             + "  <name3>Harry</name3>\n"
             + "</annotatedTask>";
         assertBothWays(task, xml);
@@ -59,9 +59,8 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
     public void testAnnotationForHiddenFields() {
         final DerivedTask task = new DerivedTask("Tom", "Dick", "Harry");
         final String xml = ""
-            + "<derivedTask>\n"
+            + "<derivedTask name2=\"_Dick_\">\n"
             + "  <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
-            + "  <name2>_Dick_</name2>\n"
             + "  <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
             + "  <name1>Harry</name1>\n"
             + "  <name3 str=\"Tom\"/>\n"
@@ -73,9 +72,8 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         final TaskContainer taskContainer = new TaskContainer();
         final String xml = ""
             + "<taskContainer>\n"
-            + "  <task>\n"
+            + "  <task name2=\"_Dick_\">\n"
             + "    <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
-            + "    <name2>_Dick_</name2>\n"
             + "    <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
             + "    <name1>Harry</name1>\n"
             + "    <name3 str=\"Tom\"/>\n"
@@ -90,6 +88,7 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         private final String name1;
 
         @XStreamConverter(SecondaryConverter.class)
+        @XStreamAsAttribute
         private final String name2;
         private final String name3;
 

@@ -166,7 +166,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                 if (Modifier.isTransient(field.getModifiers()) && ! shouldUnmarshalTransientFields()) {
                     continue;
                 }
-                SingleValueConverter converter = mapper.getConverterFromAttribute(field.getDeclaringClass(), attrName);
+                SingleValueConverter converter = mapper.getConverterFromAttribute(field.getDeclaringClass(), attrName, field.getType());
                 Class type = field.getType();
                 if (converter != null) {
                     Object value = converter.fromString(reader.getAttribute(attrAlias));

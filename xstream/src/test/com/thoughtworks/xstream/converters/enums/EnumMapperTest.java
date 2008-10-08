@@ -60,16 +60,21 @@ public class EnumMapperTest extends TestCase {
         PolymorphicEnum poly;
         @XStreamAsAttribute        
         SimpleEnum simple;
+        BigEnum big;
     }
 
     public void testSupportsEnumAsAttribute() {
         xstream.alias("type", TypeWithEnums.class);
         xstream.useAttributeFor(PolymorphicEnum.class);
         xstream.autodetectAnnotations(true);
-        String expectedXml = "<type poly=\"B\" simple=\"GREEN\"/>";
+        String expectedXml = "" // force format
+            + "<type poly=\"B\" simple=\"GREEN\">\n"
+            + "  <big>C3</big>\n"
+            + "</type>";
         TypeWithEnums in = new TypeWithEnums();
         in.poly = PolymorphicEnum.B;
         in.simple = SimpleEnum.GREEN;
+        in.big = BigEnum.C3;
         assertEquals(expectedXml, xstream.toXML(in));
         TypeWithEnums out = (TypeWithEnums)xstream.fromXML(expectedXml);
         assertSame(out.poly, PolymorphicEnum.B);

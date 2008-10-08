@@ -56,6 +56,17 @@
     	otherwise they must be registered now explicitly.</li>
     	<li>JIRA:XSTR-504: XmlHeaderAwareReader fails with improper sized PushbackInputStream.</li>
     	<li>JIRA:XSTR-489: @XStreamConverter supports now also SingleValueConverter implementations.</li>
+    	<li>JIRA:XSTR-481: @XStreamConverter and @XStreamAsAttribute can be used together (as a result of JIRA:XSTR-489).</li>
+    </ul>
+    
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>c.t.x.mapper.EnumMapper no longer derives from the c.t.x.mapper.AttributeMapper as it has been before version 1.3. Therefore the new 
+    	constructor has been deprecated in favour of the old one.</li>
+    	<li>c.t.x.mapper.Mapper.getConverterFromAttribute(Class, String) has been deprecated in favour of
+    	c.t.x.mapper.Mapper.getConverterFromAttribute(Class, String, Class) taking the type as third argument that should be handled by the
+    	converter.</li>
     </ul>
 
     <h1 id="1.3">1.3</h1>
