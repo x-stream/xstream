@@ -38,7 +38,14 @@ import java.util.TreeMap;
  */
 public class PropertiesConverter implements Converter {
 
-    private final static Field defaultsField = Fields.find(Properties.class, "defaults");
+    private final static Field defaultsField;
+    static {
+        try {
+            defaultsField = Fields.find(Properties.class, "defaults");
+        } catch (RuntimeException ex) {
+            throw new ExceptionInInitializerError("Cannot access defaults field of Properties");
+        }
+    }
     private final boolean sort;
 
     public PropertiesConverter() {
