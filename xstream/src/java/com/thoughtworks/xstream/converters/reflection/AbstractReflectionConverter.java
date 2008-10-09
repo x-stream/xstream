@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -299,7 +300,7 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     private Class determineType(HierarchicalStreamReader reader, boolean validField, Object result, String fieldName, Class definedInCls) {
-        String classAttribute = reader.getAttribute(mapper.aliasForAttribute("class"));
+        String classAttribute = HierarchicalStreams.readClassAttribute(reader, mapper);
         if (classAttribute != null) {
             return mapper.realClass(classAttribute);
         } else if (!validField) {

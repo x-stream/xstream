@@ -17,6 +17,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -92,7 +93,8 @@ public class ExternalizableConverter implements Converter {
             CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
                 public Object readFromStream() {
                     reader.moveDown();
-                    Object streamItem = context.convertAnother(externalizable, mapper.realClass(reader.getNodeName()));
+                    Class type = HierarchicalStreams.readClassType(reader, mapper);
+                    Object streamItem = context.convertAnother(externalizable, type);
                     reader.moveUp();
                     return streamItem;
                 }

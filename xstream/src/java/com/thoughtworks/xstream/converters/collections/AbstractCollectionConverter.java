@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -51,7 +52,7 @@ public abstract class AbstractCollectionConverter implements Converter {
 
 
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
-        // PUBLISHED API METHOD! If changing signature, ensure backwards compatability.
+        // PUBLISHED API METHOD! If changing signature, ensure backwards compatibility.
         if (item == null) {
             // todo: this is duplicated in TreeMarshaller.start()
             String name = mapper().serializedClass(null);
@@ -66,14 +67,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context, Object current) {
-        // PUBLISHED API METHOD! If changing signature, ensure backwards compatability.
-        String classAttribute = reader.getAttribute(mapper().aliasForAttribute("class"));
-        Class type;
-        if (classAttribute == null) {
-            type = mapper().realClass(reader.getNodeName());
-        } else {
-            type = mapper().realClass(classAttribute);
-        }
+        Class type = HierarchicalStreams.readClassType(reader, mapper());
         return context.convertAnother(current, type);
     }
 

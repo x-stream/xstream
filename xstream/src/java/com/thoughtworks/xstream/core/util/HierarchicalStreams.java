@@ -1,0 +1,44 @@
+/*
+ * Copyright (C) 2008 XStream Committers.
+ * All rights reserved.
+ *
+ * The software in this package is published under the terms of the BSD
+ * style license a copy of which has been included with this distribution in
+ * the LICENSE.txt file.
+ * 
+ * Created on 09.10.2008 by Joerg Schaible
+ */
+package com.thoughtworks.xstream.core.util;
+
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
+
+/**
+ * Helper methods for {@link HierarchicalStreamReader} and {@link HierarchicalStreamWriter}.
+ * 
+ * @author J&ouml;rg Schaible
+ * @since upcoming
+ */
+public class HierarchicalStreams {
+
+    public static Class readClassType(HierarchicalStreamReader reader, Mapper mapper) {
+        String classAttribute = readClassAttribute(reader, mapper);
+        Class type;
+        if (classAttribute == null) {
+            type = mapper.realClass(reader.getNodeName());
+        } else {
+            type = mapper.realClass(classAttribute);
+        }
+        return type;
+    }
+
+    public static String readClassAttribute(HierarchicalStreamReader reader, Mapper mapper) {
+        String classAttribute = reader.getAttribute(mapper.aliasForAttribute("resolves-to"));
+        if (classAttribute == null) {
+            classAttribute = reader.getAttribute(mapper.aliasForAttribute("class"));
+        }
+        return classAttribute;
+    }
+
+}

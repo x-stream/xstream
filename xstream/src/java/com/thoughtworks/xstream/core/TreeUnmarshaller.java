@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.FastStack;
+import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -132,13 +133,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
     public Object start(DataHolder dataHolder) {
         this.dataHolder = dataHolder;
-        String classAttribute = reader.getAttribute(mapper.aliasForAttribute("class"));
-        Class type;
-        if (classAttribute == null) {
-            type = mapper.realClass(reader.getNodeName());
-        } else {
-            type = mapper.realClass(classAttribute);
-        }
+        Class type = HierarchicalStreams.readClassType(reader, mapper);
         Object result = convertAnother(null, type);
         Iterator validations = validationList.iterator();
         while (validations.hasNext()) {
