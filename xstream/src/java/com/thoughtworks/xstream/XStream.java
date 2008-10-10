@@ -91,6 +91,7 @@ import com.thoughtworks.xstream.mapper.LocalConversionMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
+import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 
 import java.io.EOFException;
@@ -283,6 +284,7 @@ public class XStream {
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
     private AttributeAliasingMapper attributeAliasingMapper;
+    private SystemAttributeAliasingMapper systemAttributeAliasingMapper;
     private AttributeMapper attributeMapper;
     private DefaultImplementationsMapper defaultImplementationsMapper;
     private ImmutableTypesMapper immutableTypesMapper;
@@ -452,6 +454,7 @@ public class XStream {
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
+        mapper = new SystemAttributeAliasingMapper(mapper);
         mapper = new ImplicitCollectionMapper(mapper);
         mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
@@ -503,6 +506,8 @@ public class XStream {
         attributeMapper = (AttributeMapper)this.mapper.lookupMapperOfType(AttributeMapper.class);
         attributeAliasingMapper = (AttributeAliasingMapper)this.mapper
                 .lookupMapperOfType(AttributeAliasingMapper.class);
+        systemAttributeAliasingMapper = (SystemAttributeAliasingMapper)this.mapper
+                .lookupMapperOfType(SystemAttributeAliasingMapper.class);
         implicitCollectionMapper = (ImplicitCollectionMapper)this.mapper
                 .lookupMapperOfType(ImplicitCollectionMapper.class);
         defaultImplementationsMapper = (DefaultImplementationsMapper)this.mapper
@@ -983,6 +988,23 @@ public class XStream {
                     + " available");
         }
         attributeAliasingMapper.addAliasFor(attributeName, alias);
+    }
+
+    /**
+     * Create an alias for a system attribute
+     *
+     * @param alias the alias itself
+     * @param systemAttributeName the name of the system attribute
+     * @throws InitializationException if no {@link SystemAttributeAliasingMapper} is available
+     * @since upcoming
+     */
+    public void aliasSystemAttribute(String alias, String systemAttributeName) {
+        if (systemAttributeAliasingMapper == null) {
+            throw new InitializationException("No "
+                    + SystemAttributeAliasingMapper.class.getName()
+                    + " available");
+        }
+        systemAttributeAliasingMapper.addAliasFor(systemAttributeName, alias);
     }
 
     /**

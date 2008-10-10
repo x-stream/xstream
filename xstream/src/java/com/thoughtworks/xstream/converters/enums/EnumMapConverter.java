@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -63,12 +63,12 @@ public class EnumMapConverter extends MapConverter {
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         Class type = (Class) Fields.read(typeField, source);
-        writer.addAttribute(mapper().aliasForAttribute("enum-type"), mapper().serializedClass(type));
+        writer.addAttribute(mapper().aliasForSystemAttribute("enum-type"), mapper().serializedClass(type));
         super.marshal(source, writer, context);
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        Class type = mapper().realClass(reader.getAttribute(mapper().aliasForAttribute("enum-type")));
+        Class type = mapper().realClass(reader.getAttribute(mapper().aliasForSystemAttribute("enum-type")));
         EnumMap map = new EnumMap(type);
         populateMap(reader, context, map);
         return map;

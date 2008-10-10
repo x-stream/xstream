@@ -90,6 +90,14 @@ public abstract class MapperWrapper implements Mapper {
         return wrapped.attributeForAlias(alias);
     }
 
+    public String aliasForSystemAttribute(String attribute) {
+        return wrapped.aliasForSystemAttribute(attribute);
+    }
+
+    public String systemAttributeForAlias(String alias) {
+        return wrapped.systemAttributeForAlias(alias);
+    }
+
     public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {
         return wrapped.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
     }

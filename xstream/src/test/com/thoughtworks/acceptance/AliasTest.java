@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.XStream;
@@ -19,6 +20,7 @@ import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -88,7 +90,7 @@ public class AliasTest extends AbstractAcceptanceTest {
         assertBothWays(software, xml);
     }
     
-    public void testForReferenceAttribute() {
+    public void testForReferenceSystemAttribute() {
         List list = new ArrayList();
         Software software = new Software("walness", "xstream");
         list.add(software);
@@ -105,6 +107,29 @@ public class AliasTest extends AbstractAcceptanceTest {
             "</list>";
         
         assertBothWays(list, xml);
+    }
+    
+    public void testForSystemAttributes() {
+        List list = new LinkedList();
+        Category category = new Category("walness", "xstream");
+        category.setProducts(list);
+        list.add(category);
+        
+        xstream.alias("category", Category.class);
+        xstream.useAttributeFor(Category.class, "id");
+        xstream.aliasAttribute("class", "id");
+        xstream.aliasSystemAttribute("type", "class");
+        xstream.aliasSystemAttribute("refid", "reference");
+        
+        String xml = "" + 
+            "<category class=\"xstream\">\n" +
+            "  <name>walness</name>\n" +
+            "  <products type=\"linked-list\">\n" +
+            "    <category refid=\"../..\"/>\n" +
+            "  </products>\n" +
+            "</category>";
+        
+        assertBothWays(category, xml);
     }
     
     public void testIdentityForFields() {

@@ -69,7 +69,7 @@ public interface Mapper {
     String attributeForEnumType();
 
     /**
-     * Get the alias for an attrbute's name.
+     * Get the alias for an attribute's name.
      * 
      * @param attribute the attribute
      * @return the alias
@@ -78,13 +78,31 @@ public interface Mapper {
     String aliasForAttribute(String attribute);
 
     /**
-     * Get the attribut's name for an alias.
+     * Get the attribute's name for an alias.
      * 
      * @param alias the alias
      * @return the attribute's name
      * @since 1.2
      */
     String attributeForAlias(String alias);
+
+    /**
+     * Get the alias for a system attribute's name.
+     * 
+     * @param attribute the system attribute
+     * @return the alias
+     * @since upcoming
+     */
+    String aliasForSystemAttribute(String attribute);
+
+    /**
+     * Get the system attribute's name for an alias.
+     * 
+     * @param alias the alias
+     * @return the system attribute's name
+     * @since upcoming
+     */
+    String systemAttributeForAlias(String alias);
 
     /**
      * Get the name of the field that acts as the default collection for an object, or return null if there is none.

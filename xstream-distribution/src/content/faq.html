@@ -225,16 +225,33 @@ String xml = xstream.toXML(joe);</pre></div>
 };
 xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstream.getReflectionProvider()));
 </pre></div>
+
+    <!-- ...................................................... -->
     <h2 id="Serialization_CGLIB_ExceptionInInitializerError">CGLIBEnhancedConverter fails at initialization with ExceptionInInitializerError</h2>
     <p>This is not a problem of XStream. You have incompatible ASM versions in your classpath. CGLIB is based on ASM 1.5.x which is 
     incompatible to newer versions that are used by common packages like Hibernate, Groovy or Guice. Check your dependencies and 
     ensure that you are using cglib-nodep-2.x.jar instead of cglib-2.x.jar. The first one contains a copy of the ASM classes with private
     packages and will therefore not raise class incompatibilities.</p>
 
+    <!-- ...................................................... -->
     <h2 id="Serialization_CGLIB_2.0.1">Serialization fails with NoSuchMethodError: net.sf.cglib.proxy.Enhancer.isEnhanced(Ljava/lang/Class;)Z</h2>
     <p>XStream uses this method to detect a CGLIB-enhanced proxy. Unfortunately the method is not available in the 
     cglib-2.0 version. Since this version is many years old and the method is available starting with cglib-2.0.1, please 
     consider an upgrade of the dependency, it works usually smoothly.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_system_attributes">My attributes are interpreted by XStream itself and cause unexpected behavior</h2>
+    <p>XStream's generic converters and the marshalling strategies use a number of attributes on their own. Especially the attributes named
+    <em>id</em>, <em>class</em> and <em>reference</em> are likely to cause such collisions. Main reason is XStream's history, because
+    originally user defined attributes were not supported and all attribute were system generated. Starting with XStream 1.3.1 you can redefine
+    those attributes to allow the names to be used for your own ones. The following snippet defines XStream to use different system attributes
+    for <em>id</em> and <em>class</em> while the field <em>id</em> of YourClass is written into the attribute <em>class</em>:</p>
+<div class="Source Java"><pre>XStream xstream = new XStream() {
+xstream.useAttributeFor(YourClass.class, "id");
+xstream.aliasAttribute("class", "id");
+xstream.aliasSystemAttribute("type", "class");
+xstream.aliasSystemAttribute("refid", "id");
+</pre></div>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_sort_fields">Can I select the field order in which XStream serializes objects?</h2>
@@ -336,7 +353,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     character entities).  If you expect such characters in your strings and you do not use the Xpp3 parser, you should consider
     to use a converter that writes the string as byte array in Base64 code.  As alternative you may force the 
     <a href="javadoc/com/thoughtworks/xstream/io/xml/PrettyPrintWriter.html">PrettyPrintWriter</a> or derived writers
-    to be XML 1.0 or 1.1. compliant, i.e. in this mode a Stream Exception is thrown.</p>
+    to be XML 1.0 or 1.1. compliant, i.e. in this mode a StreamException is thrown.</p>
 
     <!-- ...................................................... -->
     <h2 id="XML_control_char">My parser claims a control character to be invalid, but it was written with XStream!</h2>

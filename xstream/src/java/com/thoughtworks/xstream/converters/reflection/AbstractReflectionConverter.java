@@ -49,7 +49,7 @@ public abstract class AbstractReflectionConverter implements Converter {
         final Object source = serializationMethodInvoker.callWriteReplace(original);
 
         if (source.getClass() != original.getClass()) {
-            writer.addAttribute(mapper.aliasForAttribute("resolves-to"), mapper.serializedClass(source.getClass()));
+            writer.addAttribute(mapper.aliasForSystemAttribute("resolves-to"), mapper.serializedClass(source.getClass()));
         }
 
         doMarshal(source, writer, context);
@@ -125,13 +125,13 @@ public abstract class AbstractReflectionConverter implements Converter {
                 if (!actualType.equals(defaultType)) {
                     String serializedClassName = mapper.serializedClass(actualType);
                     if (!serializedClassName.equals(mapper.serializedClass(defaultType))) {
-                        writer.addAttribute(mapper.aliasForAttribute("class"), serializedClassName);
+                        writer.addAttribute(mapper.aliasForSystemAttribute("class"), serializedClassName);
                     }
                 }
 
                 final Field defaultField = (Field)defaultFieldDefinition.get(fieldName);
                 if (defaultField.getDeclaringClass() != definedIn) {
-                    writer.addAttribute(mapper.aliasForAttribute("defined-in"), mapper.serializedClass(definedIn));
+                    writer.addAttribute(mapper.aliasForSystemAttribute("defined-in"), mapper.serializedClass(definedIn));
                 }
 
                 Field field = reflectionProvider.getField(definedIn,fieldName);
@@ -265,12 +265,12 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     private Class determineWhichClassDefinesField(HierarchicalStreamReader reader) {
-        String definedIn = reader.getAttribute(mapper.aliasForAttribute("defined-in"));
+        String definedIn = reader.getAttribute(mapper.aliasForSystemAttribute("defined-in"));
         return definedIn == null ? null : mapper.realClass(definedIn);
     }
 
     protected Object instantiateNewInstance(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        String readResolveValue = reader.getAttribute(mapper.aliasForAttribute("resolves-to"));
+        String readResolveValue = reader.getAttribute(mapper.aliasForSystemAttribute("resolves-to"));
         Object currentObject = context.currentObject();
         if (currentObject != null) {
             return currentObject;

@@ -35,12 +35,16 @@
     <p class="highlight">CGLIB support must be explicitly activated now. The decision has been made due to possible problems using an own
     classloader and because of ongoing complaints about occurring exceptions in the CGLIBEnhancedConverter at XStream initialization although
     they are caused by incompatible ASM versions on the user's classpath (JIRA:XSTR-469, JIRA:XSTR-513 and JIRA:XSTR-518).</p>
+    
+    <p class="highlight">XStream uses some attributes on its own. Until now it was possible to use XStream.aliasAttribute to use a different
+    name. This does still work but is deprecated for system attributes. Use the new call XStream.aliasSystemAttribute for such an alias.</p>
 
     <h2>Major changes</h2>
 
     <ul>
     	<li>JIRA:XSTR-515: CGLIB support is no longer activated automatically and has to be 
     	<a href="faq.html#Serialization_CGLIB">explicitly turned on</a>.</li>
+    	<li>JIRA:XSTR-448: Separate system attributes and user defined attributes for aliases.</li>
     </ul>
 
     <h2>Minor changes</h2>

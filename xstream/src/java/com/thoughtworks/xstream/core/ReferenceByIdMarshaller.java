@@ -67,6 +67,6 @@ public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
     }
 
     protected void fireValidReference(Object referenceKey) {
-        writer.addAttribute(getMapper().aliasForAttribute("id"), referenceKey.toString());
+        writer.addAttribute(getMapper().aliasForSystemAttribute("id"), referenceKey.toString());
     }
 }

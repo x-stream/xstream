@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
- * Abstract base class for a TreeUnmarshaller, that resolves refrences.
+ * Abstract base class for a TreeUnmarshaller, that resolves references.
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
@@ -46,7 +46,7 @@ public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
                 }
             }
         }
-        String reference = reader.getAttribute(getMapper().aliasForAttribute("reference"));
+        String reference = reader.getAttribute(getMapper().aliasForSystemAttribute("reference"));
         if (reference != null) {
             return values.get(getReferenceKey(reference));
         } else {

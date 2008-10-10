@@ -36,6 +36,6 @@ public class ReferenceByIdUnmarshaller extends AbstractReferenceUnmarshaller {
     }
 
     protected Object getCurrentReferenceKey() {
-        return reader.getAttribute(getMapper().aliasForAttribute("id"));
+        return reader.getAttribute(getMapper().aliasForSystemAttribute("id"));
     }
 }

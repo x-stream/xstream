@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 09.10.2008 by Joerg Schaible
+ * Created on 09. October 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.core.util;
 
@@ -34,9 +34,9 @@ public class HierarchicalStreams {
     }
 
     public static String readClassAttribute(HierarchicalStreamReader reader, Mapper mapper) {
-        String classAttribute = reader.getAttribute(mapper.aliasForAttribute("resolves-to"));
+        String classAttribute = reader.getAttribute(mapper.aliasForSystemAttribute("resolves-to"));
         if (classAttribute == null) {
-            classAttribute = reader.getAttribute(mapper.aliasForAttribute("class"));
+            classAttribute = reader.getAttribute(mapper.aliasForSystemAttribute("class"));
         }
         return classAttribute;
     }
