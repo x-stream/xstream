@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.core.util.FastField;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,11 +41,11 @@ public class LocalConversionMapper extends MapperWrapper {
     }
 
     public void registerLocalConverter(Class definedIn, String fieldName, Converter converter) {
-        localConverters.put(new Field(definedIn, fieldName), converter);
+        localConverters.put(new FastField(definedIn, fieldName), converter);
     }
 
     public Converter getLocalConverter(Class definedIn, String fieldName) {
-        return (Converter)localConverters.get(new Field(definedIn, fieldName));
+        return (Converter)localConverters.get(new FastField(definedIn, fieldName));
     }
 
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute,
@@ -80,40 +81,5 @@ public class LocalConversionMapper extends MapperWrapper {
     private Object readResolve() {
         this.attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
         return this;
-    }
-
-    private static class Field {
-        private final String name;
-        private final Class declaringClass;
-
-        private Field(Class definedIn, String name) {
-            this.name = name;
-            this.declaringClass = definedIn;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public Class getDeclaringClass() {
-            return this.declaringClass;
-        }
-
-        public boolean equals(Object obj) {
-            if (obj instanceof Field) {
-                final Field field = (Field)obj;
-                return name.equals(field.getName())
-                    && declaringClass.equals(field.getDeclaringClass());
-            }
-            return false;
-        }
-
-        public int hashCode() {
-            return name.hashCode() ^ declaringClass.hashCode();
-        }
-
-        public String toString() {
-            return declaringClass.getName() + "[" + name + "]";
-        }
     }
 }

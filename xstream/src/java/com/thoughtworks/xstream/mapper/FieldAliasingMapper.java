@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.alias.ClassMapper;
+import com.thoughtworks.xstream.core.util.FastField;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,7 +48,7 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     private Object key(Class type, String name) {
-        return type.getName() + ':' + name;
+        return new FastField(type, name);
     }
 
     public String serializedMember(Class type, String memberName) {
