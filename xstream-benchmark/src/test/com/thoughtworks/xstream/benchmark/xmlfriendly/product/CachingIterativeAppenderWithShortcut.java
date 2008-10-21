@@ -1,12 +1,12 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 13. September 2007 by Joerg Schaible
+ * Created on 20. Oktober 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.benchmark.xmlfriendly.product;
 
@@ -17,19 +17,19 @@ import com.thoughtworks.xstream.tools.benchmark.Product;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+
 /**
- * Iterates through the string and replaces characters.
- *
+ * Special handling for conforming strings, iterates otherwise through the incoming string,
+ * appends the characters and caches the result. Used in XStream [1.3.1; ).
+ * 
  * @author J&ouml;rg Schaible
  */
-public class IterativeReplacer implements Product {
+public class CachingIterativeAppenderWithShortcut implements Product {
 
     private final XStream xstream;
-    private final int bufferIncrement;
 
-    public IterativeReplacer(int bufferIncrement) {
-        this.bufferIncrement = bufferIncrement;
-        this.xstream = new XStream(new XppDriver(new XmlFriendlyReplacer(bufferIncrement)));
+    public CachingIterativeAppenderWithShortcut() {
+        this.xstream = new XStream(new XppDriver(new XmlFriendlyReplacer()));
     }
 
     public void serialize(Object object, OutputStream output) throws Exception {
@@ -41,25 +41,25 @@ public class IterativeReplacer implements Product {
     }
 
     public String toString() {
-        return "Iterative Replacer" + (bufferIncrement == 0 ? "" : (" (" + bufferIncrement + ")"));
+        return "Caching Iterative Appender with Shortcut";
     }
     
     public static class XmlFriendlyReplacer extends AbstractXmlFriendlyReplacer {
 
-        public XmlFriendlyReplacer(int bufferIncrement) {
-            super("_-", "__", bufferIncrement);
+        public XmlFriendlyReplacer() {
+            this("_-", "__", 0);
         }
-
+        
         public XmlFriendlyReplacer(String dollarReplacement, String underscoreReplacement, int bufferIncrement) {
             super(dollarReplacement, underscoreReplacement, bufferIncrement);
         }
         
         public String escapeName(String name) {
-            return super.escapeIterativelyReplacing(name);
+            return super.escapeCachingIterativelyAppendingWithShortcut(name);
         }
         
         public String unescapeName(String name) {
-            return super.unescapeIterativelyReplacing(name);
+            return super.unescapeCachingIterativelyAppendingWithShortcut(name);
         }
     }
 }

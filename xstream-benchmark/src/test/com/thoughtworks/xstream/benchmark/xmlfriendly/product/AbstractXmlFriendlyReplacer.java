@@ -12,18 +12,25 @@ package com.thoughtworks.xstream.benchmark.xmlfriendly.product;
 
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 
+import java.lang.ref.WeakReference;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 
 /**
  * Abstract base class for the XmlFriendlyReplacer with all kind of implementations.
  * 
  * @author J&ouml;rg Schaible
- * @since 1.3
+ * @author Mauro Talevi
+ * @author Tatu Saloranta
  */
 public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
 
     private final String dollarReplacement;
     private final String underscoreReplacement;
     private final int bufferIncrement;
+    private final Map escapeCache;
+    private final Map unescapeCache;
 
     /**
      * Creates an XmlFriendlyReplacer with custom replacements
@@ -38,6 +45,8 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         this.dollarReplacement = dollarReplacement;
         this.underscoreReplacement = underscoreReplacement;
         this.bufferIncrement = bufferIncrement;
+        escapeCache = new WeakHashMap();
+        unescapeCache = new WeakHashMap();
     }
 
     /**
@@ -344,4 +353,111 @@ public abstract class AbstractXmlFriendlyReplacer extends XmlFriendlyReplacer {
         return result.toString();
     }
 
+    protected String escapeIterativelyAppendingWithShortcut(String name) {
+        final int length = name.length();
+
+        // First, fast (common) case: nothing to escape
+        int i = 0;
+
+        for (; i < length; i++) {
+            char c = name.charAt(i);
+            if (c == '$' || c == '_') {
+                break;
+            }
+        }
+
+        if (i == length) {
+            return name;
+        }
+
+        // Otherwise full processing
+        final StringBuffer result = new StringBuffer(length+8);
+
+        // We know first N chars are safe
+        if (i > 0) {
+            result.append(name.substring(0, i));
+        }
+
+        for (; i < length; i++) {
+            char c = name.charAt(i);
+            if (c == '$' ) {
+                result.append(dollarReplacement);
+            } else if (c == '_') {
+                result.append(underscoreReplacement);
+            } else {
+                result.append(c);
+            }
+        }
+        return result.toString();
+    }
+
+    protected String unescapeIterativelyAppendingWithShortcut(String name) {
+        final char dollarReplacementFirstChar = dollarReplacement.charAt(0);
+        final char underscoreReplacementFirstChar = underscoreReplacement.charAt(0);
+        final int length = name.length();
+
+        // First, fast (common) case: nothing to unescape
+        int i = 0;
+
+        for (; i < length; i++) {
+            char c = name.charAt(i);
+            // We'll do a quick check for potential match
+            if (c == dollarReplacementFirstChar
+                || c == underscoreReplacementFirstChar) {
+                // and if it might be a match, just quit, will check later on
+                break;
+            }
+        }
+
+        if (i == length) {
+            return name;
+        }
+
+        // Otherwise full processing
+        final StringBuffer result = new StringBuffer(length+8);
+
+        // We know first N chars are safe
+        if (i > 0) {
+            result.append(name.substring(0, i));
+        }
+
+        for (; i < length; i++) {
+            char c = name.charAt(i);
+            if (c == dollarReplacementFirstChar
+                && name.startsWith(dollarReplacement, i)) {
+                i += dollarReplacement.length()-1;
+                result.append('$');
+            } else if (c == underscoreReplacementFirstChar
+                       && name.startsWith(underscoreReplacement, i)) {
+                i += underscoreReplacement.length()-1;
+                result.append('_');
+            } else {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
+    }
+    
+    protected String escapeCachingIterativelyAppendingWithShortcut(String name) {
+        final WeakReference ref = (WeakReference)escapeCache.get(name);
+        String s = (String)(ref == null ? null : ref.get());
+
+        if (s == null) {
+            s = escapeIterativelyAppendingWithShortcut(name);
+            escapeCache.put(name, new WeakReference(s));
+        }
+        return s;
+    }
+    
+    protected String unescapeCachingIterativelyAppendingWithShortcut(String name) {
+        final WeakReference ref = (WeakReference)unescapeCache.get(name);
+        String s = (String)(ref == null ? null : ref.get());
+    
+        if (s == null) {
+            s = unescapeIterativelyAppendingWithShortcut(name);
+            unescapeCache.put(name, new WeakReference(s));
+        }
+        return s;
+    }
 }

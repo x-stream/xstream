@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,7 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Uses a combined lookup and replaces characters.
+ * Iterates through the incoming string and appends the characters.
+ * Used in XStream [1.3; 1.2.2].
  *
  * @author J&ouml;rg Schaible
  */

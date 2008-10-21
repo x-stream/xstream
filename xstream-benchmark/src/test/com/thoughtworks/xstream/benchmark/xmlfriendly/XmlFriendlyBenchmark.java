@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,13 +14,14 @@ import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.benchmark.reflection.targets.FieldReflection;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.metric.CharacterCountMetric;
+import com.thoughtworks.xstream.benchmark.xmlfriendly.product.CachingIterativeAppenderWithShortcut;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.CombinedLookupAppender;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.CombinedLookupReplacer;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.IterativeAppender;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.IterativeReplacer;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.NoReplacer;
+import com.thoughtworks.xstream.benchmark.xmlfriendly.product.IterativeAppenderWithShortcut;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.product.SeparateLookupReplacer;
-import com.thoughtworks.xstream.benchmark.xmlfriendly.product.XStream122Replacer;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.target.Field_Reflection;
 import com.thoughtworks.xstream.benchmark.xmlfriendly.target.Field$Reflection;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
@@ -140,12 +141,13 @@ public class XmlFriendlyBenchmark extends TestSuite {
     }
 
     XmlFriendlyBenchmark() {
-        addTestSuite(XStream122Replacer.XmlFriendlyReplacer.class);
-        addTestSuite(CombinedLookupAppender.XmlFriendlyReplacer.class);
         addTestSuite(CombinedLookupReplacer.XmlFriendlyReplacer.class);
-        addTestSuite(IterativeAppender.XmlFriendlyReplacer.class);
-        addTestSuite(IterativeReplacer.XmlFriendlyReplacer.class);
+        addTestSuite(CombinedLookupAppender.XmlFriendlyReplacer.class);
         addTestSuite(SeparateLookupReplacer.XmlFriendlyReplacer.class);
+        addTestSuite(IterativeReplacer.XmlFriendlyReplacer.class);
+        addTestSuite(IterativeAppender.XmlFriendlyReplacer.class);
+        addTestSuite(IterativeAppenderWithShortcut.XmlFriendlyReplacer.class);
+        addTestSuite(CachingIterativeAppenderWithShortcut.XmlFriendlyReplacer.class);
     }
 
     public void addTestSuite(Class replacerClass) {
@@ -189,19 +191,20 @@ public class XmlFriendlyBenchmark extends TestSuite {
         });
 
         Harness harness = new Harness();
-        harness.addMetric(new SerializationSpeedMetric(50));
-        harness.addMetric(new DeserializationSpeedMetric(50, false));
-        harness.addProduct(new XStream122Replacer());
-        harness.addProduct(new CombinedLookupAppender(0));
-        harness.addProduct(new CombinedLookupAppender(16));
+        harness.addMetric(new SerializationSpeedMetric(100));
+        harness.addMetric(new DeserializationSpeedMetric(100, false));
         harness.addProduct(new CombinedLookupReplacer(0));
-        harness.addProduct(new CombinedLookupReplacer(16));
-        harness.addProduct(new IterativeAppender(0));
-        harness.addProduct(new IterativeAppender(16));
-        harness.addProduct(new IterativeReplacer(0));
-        harness.addProduct(new IterativeReplacer(16));
+        // harness.addProduct(new CombinedLookupReplacer(32));
+        harness.addProduct(new CombinedLookupAppender(0));
+        // harness.addProduct(new CombinedLookupAppender(32));
         harness.addProduct(new SeparateLookupReplacer(0));
-        harness.addProduct(new SeparateLookupReplacer(16));
+        // harness.addProduct(new SeparateLookupReplacer(32));
+        harness.addProduct(new IterativeReplacer(0));
+        // harness.addProduct(new IterativeReplacer(32));
+        harness.addProduct(new IterativeAppender(0));
+        // harness.addProduct(new IterativeAppender(32));
+        harness.addProduct(new IterativeAppenderWithShortcut());
+        harness.addProduct(new CachingIterativeAppenderWithShortcut());
         harness.addTarget(new FieldReflection());
         harness.addTarget(new Field_Reflection());
         harness.addTarget(new Field$Reflection());
