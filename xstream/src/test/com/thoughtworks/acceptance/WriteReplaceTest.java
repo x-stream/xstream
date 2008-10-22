@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.Original;
+import com.thoughtworks.acceptance.objects.Replaced;
 import com.thoughtworks.acceptance.objects.StandardObject;
 
 import java.io.Externalizable;
@@ -59,36 +61,6 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
                 + "</thing>";
 
         assertBothWays(thing, expectedXml);
-    }
-
-    public static class Original extends StandardObject {
-        String originalValue;
-
-        public Original() {
-        }
-
-        public Original(String originalValue) {
-            this.originalValue = originalValue;
-        }
-
-        private Object writeReplace() {
-            return new Replaced(originalValue.toUpperCase());
-        }
-    }
-
-    public static class Replaced extends StandardObject {
-        String replacedValue;
-
-        public Replaced() {
-        }
-
-        public Replaced(String replacedValue) {
-            this.replacedValue = replacedValue;
-        }
-
-        private Object readResolve() {
-            return new Original(replacedValue.toLowerCase());
-        }
     }
 
     public void testAllowsDifferentTypeToBeSubstituted() {

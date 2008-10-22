@@ -120,10 +120,18 @@ public class JsonHierarchicalStreamWriter implements ExtendedHierarchicalStreamW
     }
 
     public void setValue(String text) {
-        readyForNewLine = false;
-        tagIsEmpty = false;
-        finishTag();
-        writeText(writer, text);
+        Node currNode = (Node)elementStack.peek();
+        if (currNode != null && currNode.fieldAlready) {
+            startNode("$", String.class);
+            tagIsEmpty = false;
+            writeText(text, String.class);
+            endNode();
+        } else {
+            readyForNewLine = false;
+            tagIsEmpty = false;
+            finishTag();
+            writeText(writer, text);
+        }
     }
 
     public void addAttribute(String key, String value) {

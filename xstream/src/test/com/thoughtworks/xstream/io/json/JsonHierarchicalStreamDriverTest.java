@@ -28,6 +28,8 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
+import com.thoughtworks.acceptance.objects.Original;
+import com.thoughtworks.acceptance.objects.Replaced;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.JVM;
 
@@ -585,5 +587,37 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         value.l = 4711;
         value.url = new URL("http://localhost:8888");
         assertEquals(expected, xstream.toXML(value));
+    }
+    
+    static class SystemAttributes {
+        String name;
+        CharSequence charSeq;
+        Original original;
+    }
+    
+    public void testWillWriteTagValueAsDefaultValueIfNecessary() {
+        xstream.alias("sa", SystemAttributes.class);
+        xstream.alias("original", Original.class);
+        xstream.alias("replaced", Replaced.class);
+
+        SystemAttributes sa = new SystemAttributes();
+        sa.name = "joe";
+        sa.charSeq = "walnes";
+        sa.original = new Original("hello world");
+
+        String expected = (""
+                + "{'sa': {\n"
+                + "  'name': 'joe',\n"
+                + "  'charSeq': {\n"
+                + "    '@class': 'string',\n"
+                + "    '$': 'walnes'\n" 
+                +"  },\n"
+                + "  'original': {\n"
+                + "    '@resolves-to': 'replaced',\n"
+                + "    'replacedValue': 'HELLO WORLD'\n"
+                + "  }\n"
+                + "}}").replace('\'', '"');
+
+        assertEquals(expected, xstream.toXML(sa));
     }
 }
