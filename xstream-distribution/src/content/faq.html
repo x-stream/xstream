@@ -228,10 +228,11 @@ xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstrea
 
     <!-- ...................................................... -->
     <h2 id="Serialization_CGLIB_ExceptionInInitializerError">CGLIBEnhancedConverter fails at initialization with ExceptionInInitializerError</h2>
-    <p>This is not a problem of XStream. You have incompatible ASM versions in your classpath. CGLIB is based on ASM 1.5.x which is 
-    incompatible to newer versions that are used by common packages like Hibernate, Groovy or Guice. Check your dependencies and 
-    ensure that you are using cglib-nodep-2.x.jar instead of cglib-2.x.jar. The first one contains a copy of the ASM classes with private
-    packages and will therefore not raise class incompatibilities.</p>
+    <p>This is not a problem of XStream. You have incompatible ASM versions in your classpath. CGLIB 2.1.x and below is based on
+    ASM 1.5.x which is incompatible to newer versions that are used by common packages like Hibernate, Groovy or Guice. Check
+    your dependencies and ensure that you are using either using cglib-nodep-2.x.jar instead of cglib-2.x.jar or update to
+    cglib-2.2.x that depends on ASM 3.1. However, the nodep version one contains a copy of the ASM classes with private packages
+    and will therefore not raise class incompatibilities at all.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_CGLIB_2.0.1">Serialization fails with NoSuchMethodError: net.sf.cglib.proxy.Enhancer.isEnhanced(Ljava/lang/Class;)Z</h2>
