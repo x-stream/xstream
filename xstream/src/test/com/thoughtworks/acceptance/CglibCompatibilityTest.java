@@ -220,7 +220,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 + "  <interfaces/>\n"
                 + "  <hasFactory>false</hasFactory>\n"
                 + "  <com.thoughtworks.acceptance.CglibCompatibilityTest_-InterceptingHandler/>\n"
-                + "  <instance serialization=\"custom\">\n"
+                + "  <instance>\n"
                 + "    <unserializable-parents/>\n"
                 + "    <map>\n"
                 + "      <default>\n"

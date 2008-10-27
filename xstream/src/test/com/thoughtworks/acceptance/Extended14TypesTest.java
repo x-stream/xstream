@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -103,7 +103,7 @@ public class Extended14TypesTest extends AbstractAcceptanceTest {
         String expectedXml = "" +
                 "<auth-subject>\n" +
                 "  <principals>\n" +
-                "    <javax.security.auth.x500.X500Principal serialization=\"custom\">\n" +
+                "    <javax.security.auth.x500.X500Principal>\n" +
                 "      <javax.security.auth.x500.X500Principal>\n" +
                 "        <byte-array>MDYxEDAOBgNVBAsTB1hTdHJlYW0xFTATBgNVBAoTDFRob3VnaHR3b3JrczELMAkGA1UEBhMCdWs=\n</byte-array>\n" +
                 "      </javax.security.auth.x500.X500Principal>\n" +

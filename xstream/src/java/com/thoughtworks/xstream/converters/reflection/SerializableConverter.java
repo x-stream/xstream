@@ -63,8 +63,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
     private static final String ELEMENT_DEFAULT = "default";
     private static final String ELEMENT_UNSERIALIZABLE_PARENTS = "unserializable-parents";
     private static final String ATTRIBUTE_CLASS = "class";
-    private static final String ATTRIBUTE_SERIALIZATION = "serialization";
-    private static final String ATTRIBUTE_VALUE_CUSTOM = "custom";
+//    private static final String ATTRIBUTE_SERIALIZATION = "serialization";
+//    private static final String ATTRIBUTE_VALUE_CUSTOM = "custom";
     private static final String ELEMENT_FIELDS = "fields";
     private static final String ELEMENT_FIELD = "field";
     private static final String ATTRIBUTE_NAME = "name";
@@ -84,7 +84,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     public void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        writer.addAttribute(mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION), ATTRIBUTE_VALUE_CUSTOM);
+//        writer.addAttribute(mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION), ATTRIBUTE_VALUE_CUSTOM);
 
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
@@ -267,9 +267,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
 
-        if (!ATTRIBUTE_VALUE_CUSTOM.equals(reader.getAttribute(mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION)))) {
-            throw new ConversionException("Cannot deserialize object with new readObject()/writeObject() methods");
-        }
+//        if (!ATTRIBUTE_VALUE_CUSTOM.equals(reader.getAttribute(mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION)))) {
+//            throw new ConversionException("Cannot deserialize object with new readObject()/writeObject() methods");
+//        }
 
         CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
             public Object readFromStream() {

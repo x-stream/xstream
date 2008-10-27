@@ -258,7 +258,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
         OriginalSerializable in = new OriginalSerializable("hello world");
 
         String expectedXml = ""
-                + "<original-serializable-class resolves-to=\"replaced-serializable-class\" serialization=\"custom\">\n"
+                + "<original-serializable-class resolves-to=\"replaced-serializable-class\">\n"
                 + "  <replaced-serializable-class>\n"
                 + "    <default>\n"
                 + "      <replacedValue>HELLO WORLD</replacedValue>\n"

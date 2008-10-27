@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -197,7 +197,7 @@ public class MapTest extends AbstractAcceptanceTest {
         final String expected;
         if (JVM.is15()) {
             expected = "" +
-                "<java.util.Collections_-SynchronizedMap serialization=\"custom\">\n" +
+                "<java.util.Collections_-SynchronizedMap>\n" +
                 "  <java.util.Collections_-SynchronizedMap>\n" +
                 "    <default>\n" +
                 "      <m/>\n" +
