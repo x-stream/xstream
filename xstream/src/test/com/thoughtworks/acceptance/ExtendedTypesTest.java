@@ -109,7 +109,7 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         Element element = new Element("JUnit");
 
         String expected = "" +
-                "<org.jdom.Element>\n" + 
+                "<org.jdom.Element serialization=\"custom\">\n" + 
                 "  <org.jdom.Element>\n" + 
                 "    <default>\n" + 
                 "      <attributes>\n" + 

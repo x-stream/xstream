@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -120,9 +120,9 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
 
         String expectedXml = ""
                 + "<object-stream>\n"
-                + "  <parent>\n"
+                + "  <parent serialization=\"custom\">\n"
                 + "    <parent>\n"
-                + "      <child>\n"
+                + "      <child serialization=\"custom\">\n"
                 + "        <child>\n"
                 + "          <default>\n"
                 + "            <i>1</i>\n"
@@ -151,9 +151,9 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("child", Child.class);
 
         String expected = ""
-                + "<parent>\n"
+                + "<parent serialization=\"custom\">\n"
                 + "  <parent>\n"
-                + "    <child>\n"
+                + "    <child serialization=\"custom\">\n"
                 + "      <child>\n"
                 + "        <default>\n"
                 + "          <i>1</i>\n"
@@ -202,7 +202,7 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
 
         String expectedXml = ""
             + "<object-stream>\n"
-            + "  <raw>\n"
+            + "  <raw serialization=\"custom\">\n"
             + "    <raw>\n"
             + "      <byte>7</byte>\n"
             + "      <byte-array>WFN0cmVhbQ==</byte-array>\n"

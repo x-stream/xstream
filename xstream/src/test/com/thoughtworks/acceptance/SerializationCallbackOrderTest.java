@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -201,7 +201,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
         Object in = new ChildWithTransient(10, 22222);
         String expectedXml = ""
-                + "<child>\n"
+                + "<child serialization=\"custom\">\n"
                 + "  <parent>\n"
                 + "    <default>\n"
                 + "      <somethingNotTransient>10</somethingNotTransient>\n"
@@ -336,7 +336,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
         CustomSerializableChild child = new CustomSerializableChild();
         String expected = ""
-                + "<child>\n"
+                + "<child serialization=\"custom\">\n"
                 + "  <unserializable-parents>\n"
                 + "    <x>5</x>\n"
                 + "  </unserializable-parents>\n"
@@ -368,7 +368,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         
         SerializableGrandChild grandChild = new SerializableGrandChild();
         String expected = ""
-                + "<grandchild>\n"
+                + "<grandchild serialization=\"custom\">\n"
                 + "  <unserializable-parents>\n"
                 + "    <x>5</x>\n"
                 + "  </unserializable-parents>\n"

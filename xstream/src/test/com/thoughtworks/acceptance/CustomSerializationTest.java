@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -65,7 +65,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
 
         String expectedXml = ""
-                + "<custom>\n"
+                + "<custom serialization=\"custom\">\n"
                 + "  <custom>\n"
                 + "    <int>2</int>\n"
                 + "    <default>\n"
@@ -146,7 +146,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         xstream.alias("parent", Parent.class);
 
         String expectedXml = ""
-                + "<child>\n"
+                + "<child serialization=\"custom\">\n"
                 + "  <parent>\n"
                 + "    <int>1</int>\n"
                 + "    <default>\n"
@@ -183,7 +183,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         xstream.alias("parent", Parent.class);
 
         String expectedXml = ""
-                + "<child2>\n"
+                + "<child2 serialization=\"custom\">\n"
                 + "  <parent>\n"
                 + "    <int>1</int>\n"
                 + "    <default>\n"
@@ -282,7 +282,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
 
         String expectedXml = ""
-                + "<with-named-fields>\n"
+                + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
                 + "    <default>\n"
                 + "      <theName>Joe</theName>\n"
@@ -343,7 +343,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
 
         String expectedXml = ""
-                + "<with-named-fields>\n"
+                + "<with-named-fields serialization=\"custom\">\n"
                 + "  <with-named-fields>\n"
                 + "    <default>\n"
                 + "      <theName>Joe</theName>\n"
@@ -352,7 +352,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "        <vendor>tw</vendor>\n"
                 + "        <name>xs</name>\n"
                 + "      </theSoftware>\n"
-                + "      <thePolymorphic class=\"with-named-fields\">\n"
+                + "      <thePolymorphic class=\"with-named-fields\" serialization=\"custom\">\n"
                 + "        <with-named-fields>\n"
                 + "          <default>\n"
                 + "            <theName>Thing</theName>\n"
@@ -394,7 +394,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         xstream.alias("x", NoDefaultFields.class);
 
         String expectedXml = ""
-                + "<x>\n"
+                + "<x serialization=\"custom\">\n"
                 + "  <x>\n"
                 + "    <default/>\n"
                 + "    <int>77</int>\n"
@@ -471,7 +471,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         input.number = 5;
 
         String expectedXml = ""
-                + "<an-object>\n"
+                + "<an-object serialization=\"custom\">\n"
                 + "  <an-object>\n"
                 + "    <default>\n"
                 + "      <name>A NAME</name>\n"
@@ -508,7 +508,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
         input.number = 5;
 
         String expectedXml = ""
-                + "<an-object>\n"
+                + "<an-object serialization=\"custom\">\n"
                 + "  <an-object>\n"
                 + "    <default>\n"
                 + "      <number>5</number>\n"

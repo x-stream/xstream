@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -167,7 +167,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     public void testDecimalFormatSymbols() {
         final String xml;
         if (!JVM.is14()) {
-            xml = "<java.text.DecimalFormatSymbols>\n"
+            xml = "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
                 + "    <default>\n"
                 + "      <decimalSeparator>,</decimalSeparator>\n"
@@ -189,7 +189,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
         } else if (!JVM.is16()) {
-            xml = "<java.text.DecimalFormatSymbols>\n"
+            xml = "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
                 + "    <default>\n"
                 + "      <decimalSeparator>,</decimalSeparator>\n"
@@ -212,7 +212,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
         } else {
-            xml = "<java.text.DecimalFormatSymbols>\n"
+            xml = "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
                 + "    <default>\n"
                 + "      <decimalSeparator>,</decimalSeparator>\n"

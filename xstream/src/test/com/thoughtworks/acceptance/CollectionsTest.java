@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -135,7 +135,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         final String xml;
         if (JVM.is15()) {
             xml = 
-                "<java.util.Collections_-SynchronizedList>\n" +
+                "<java.util.Collections_-SynchronizedList serialization=\"custom\">\n" +
                 "  <java.util.Collections_-SynchronizedCollection>\n" +
                 "    <default>\n" +
                 "      <c class=\"linked-list\">\n" +

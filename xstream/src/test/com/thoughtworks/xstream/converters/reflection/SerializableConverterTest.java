@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -63,7 +63,7 @@ public class SerializableConverterTest extends TestCase {
         xstream.omitField(SimpleType.class, "two");
         
         String expected = ""
-            + "<simple>\n"
+            + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
             + "      <one>one</one>\n"
@@ -86,7 +86,7 @@ public class SerializableConverterTest extends TestCase {
         xstream.omitField(SimpleType.class, "x");
         
         String xml = ""
-            + "<simple>\n"
+            + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
             + "      <one>one</one>\n"
@@ -130,7 +130,7 @@ public class SerializableConverterTest extends TestCase {
         xstream.omitField(SimpleType.class, "two");
         
         String expected = ""
-            + "<extended>\n"
+            + "<extended serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
             + "      <one>one</one>\n"
@@ -160,7 +160,7 @@ public class SerializableConverterTest extends TestCase {
         xstream.omitField(SimpleType.class, "x");
         
         String xml = ""
-            + "<extended>\n"
+            + "<extended serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
             + "      <one>one</one>\n"
@@ -230,7 +230,7 @@ public class SerializableConverterTest extends TestCase {
         xstream.omitField(SimpleNamedFieldsType.class, "s2");
         
         String expected = ""
-            + "<simple>\n"
+            + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
             + "      <s1>one</s1>\n"
@@ -253,7 +253,7 @@ public class SerializableConverterTest extends TestCase {
         xstream.omitField(SimpleNamedFieldsType.class, "x");
         
         String xml = ""
-            + "<simple>\n"
+            + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
             + "      <s1>one</s1>\n"
@@ -276,7 +276,7 @@ public class SerializableConverterTest extends TestCase {
         xstream.aliasField("s2", SimpleType.class, "two");
         
         String expected = ""
-            + "<simple>\n"
+            + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
             + "      <one>one</one>\n"
@@ -301,7 +301,7 @@ public class SerializableConverterTest extends TestCase {
         xstream.aliasField("two", SimpleNamedFieldsType.class, "s2");
         
         String expected = ""
-            + "<simple>\n"
+            + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
             + "      <s1>one</s1>\n"
