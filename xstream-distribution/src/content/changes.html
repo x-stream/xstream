@@ -44,7 +44,7 @@
     <ul>
     	<li>JIRA:XSTR-515: CGLIB support is no longer activated automatically and has to be 
     	<a href="faq.html#Serialization_CGLIB">explicitly turned on</a>.</li>
-    	<li>JIRA:XSTR-448: Separate system attributes and user defined attributes for aliases.</li>
+    	<li>JIRA:XSTR-448: Separated system attributes and user defined attributes for aliases.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -65,6 +65,7 @@
     	<li>JIRA:XSTR-502: ClassNotFoundException even if writeReplace returns proper object.</li>
     	<li>JIRA:XSTR-517: Miscellaneous performance improvements (by Tatu Saloranta).</li>
     	<li>JIRA:XSTR-525: JsonHierarchicalStreamDriver writes invalid JSON in case of system attribute.</li>
+    	<li>JIRA:XSTR-507: Fix marshalling error for nested serializable objects with own writeReplace/readResolve methods.</li>
     	<li>Dependencies have been updated to latest versions of JDOM, Jettison, Joda Time, and Woodstox. Note for Maven
     	builds that the <em>groupId</em> of JDOM has changed.</li>
     </ul>

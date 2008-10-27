@@ -50,9 +50,10 @@ public abstract class AbstractReflectionConverter implements Converter {
 
         if (source.getClass() != original.getClass()) {
             writer.addAttribute(mapper.aliasForSystemAttribute("resolves-to"), mapper.serializedClass(source.getClass()));
+            context.convertAnother(source);
+        } else {
+            doMarshal(source, writer, context);
         }
-
-        doMarshal(source, writer, context);
     }
 
     protected void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
