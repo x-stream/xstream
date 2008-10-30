@@ -67,7 +67,6 @@ public class BufferedImagesTest extends AbstractAcceptanceTest {
     
             xstream.alias("image", BufferedImage.class);
             final String xml = xstream.toXML(image);
-            System.out.println(xml);
     
             final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
             ImageIO.write((RenderedImage)xstream.fromXML(xml), "png", baosSerialized);
