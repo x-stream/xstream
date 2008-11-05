@@ -66,6 +66,13 @@
     </table>
 
     <!-- ...................................................... -->
+    <h2 id="Compatibility_Android">Can I use XStream in an Android application?</h2>
+
+	<p>XStream does work in Android 1.0, but has limited capabilities. XStream does not support enhanced mode for
+	Android. Additionally Android reports itself as implementation of JDK specification 0.9, so it is not possible to write
+	into final fields. Android also does not include the java.beans package. Therefore you cannot use the JavaBeanConverter.
+
+    <!-- ...................................................... -->
     <h2 id="Compatibility_unsupported_JVM">Are there plans to provide enhanced mode support to other JVMs?</h2>
     <p>Yes. <a href="list-user.html">Let us know</a> which JVM you would like supported.</p>
 
@@ -485,7 +492,7 @@ System.out.println(writer.toString());
     <!-- ...................................................... -->
     <h2 id="Uses_No_SAX_Reader">Why is there no SaxReader?</h2>
 
-    <p>XStream works on a stream-based parser model, while SAX is event-based.  The steam based model implies, that the
+    <p>XStream works on a stream-based parser model, while SAX is event-based.  The stream based model implies, that the
     caller consumes the individual tokens from the XML parser on demand, while in an event-based model the parser
     controls the application flow on its own and will use callbacks to support client processing.  The different
     architecture makes it therefore impossible for XStream to use an event-driven XML parser.</p>
