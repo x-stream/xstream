@@ -21,6 +21,9 @@
         allowing streams of objects to be serialized or deserialized from XML.</p>
         <p>This is useful when processing large sets of objects, as only one needs to be in memory
         at a time.</p>
+        <p>Obviously you should use also a stream-based XML parser reading the XML. A DOM-based XML parser
+        will process the complete XML and build the object model before XStream is able to to handle the first
+        element.</p>
 
         <!-- ************ -->
 
