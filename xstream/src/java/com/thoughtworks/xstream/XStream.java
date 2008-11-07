@@ -787,22 +787,30 @@ public class XStream {
 
     /**
      * Serialize an object to the given Writer as pretty-printed XML.
+     * The Writer will be flushed afterwards and in case of an exception. 
      * @throws XStreamException if the object cannot be serialized
      */
     public void toXML(Object obj, Writer out) {
         HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
-        marshal(obj, writer);
-        writer.flush();
+        try {
+            marshal(obj, writer);
+        } finally {
+            writer.flush();
+        }
     }
 
     /**
      * Serialize an object to the given OutputStream as pretty-printed XML.
+     * The OutputStream will be flushed afterwards and in case of an exception. 
      * @throws XStreamException if the object cannot be serialized
      */
     public void toXML(Object obj, OutputStream out) {
         HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
-        marshal(obj, writer);
-        writer.flush();
+        try {
+            marshal(obj, writer);
+        } finally {
+            writer.flush();
+        }
     }
 
     /**
