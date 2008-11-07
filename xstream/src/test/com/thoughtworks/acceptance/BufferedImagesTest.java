@@ -12,6 +12,8 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.core.JVM;
 
+import junit.framework.TestSuite;
+
 import javax.imageio.ImageIO;
 
 import java.awt.Color;
@@ -25,9 +27,19 @@ import java.io.IOException;
 /**
  * Tests with buffered images.
  * 
+ * Note, these tests are deactivated by default. They normally work at first sight, but they are highly dangerous,
+ * since some of the serialized objects contain member variables that reference native memory. Typical result is
+ * a JVM crash somewhat later because of double freed memory. 
+ * 
  * @author J&ouml;rg Schaible
  */
 public class BufferedImagesTest extends AbstractAcceptanceTest {
+    
+    public static TestSuite suite() {
+        final TestSuite suite = new TestSuite("BufferedImagesSuite");
+        //suite.addTestSuite(BufferedImagesTest.class);
+        return suite;
+    }
 
     public void testInBWCanBeMarshalled() throws IOException {
         boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
