@@ -28,6 +28,37 @@ import java.io.Writer;
  * @since 1.2
  */
 public class JsonHierarchicalStreamDriver implements HierarchicalStreamDriver {
+    
+    final private boolean withRoot;
+
+    public JsonHierarchicalStreamDriver() {
+        this(true);
+    }
+
+    /**
+     * Creates a JsonHierarchicalStreamDriver that can turn of the root node writing JSON.
+     * 
+     * <p>The root node is the first level of the JSON object i.e.
+     * <pre>
+     * { "person": {
+     *     "name": "Joe"
+     * }}</pre>
+     * will be written without root simply as
+     * <pre>
+     * {
+     *     "name": "Joe"
+     * }</pre>
+     * However, without a root node, the top level element might now also be an array and
+     * it is no longer possible to write objects with a single value as root node.
+     * </p>
+     * 
+     * @param withRoot
+     * @since upcoming
+     */
+    public JsonHierarchicalStreamDriver(boolean withRoot) {
+        this.withRoot = withRoot;
+    }
+    
     public HierarchicalStreamReader createReader(Reader in) {
         throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");
     }
@@ -37,7 +68,7 @@ public class JsonHierarchicalStreamDriver implements HierarchicalStreamDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return new JsonHierarchicalStreamWriter(out);
+        return new JsonHierarchicalStreamWriter(out, withRoot);
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {

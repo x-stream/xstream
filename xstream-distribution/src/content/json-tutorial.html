@@ -60,6 +60,7 @@ public class WriteTest {
 
         Product product = new Product("Banana", "123", 23.00);
         XStream xstream = new XStream(new JettisonMappedXmlDriver());
+        xstream.setMode(XStream.NO_REFERENCES);
         xstream.alias("product", Product.class);
 
         System.out.println(xstream.toXML(product));		
@@ -71,6 +72,8 @@ public class WriteTest {
 <p>produces the following JSON document:</p>
 
 <div class="Source Java"><pre>{"product":{"name":"Banana","id":"123","price":"23.0"}}</pre></div>
+
+<p>Since JSON has no possibility to express references, you should always set the NO_REFERENCES mode writing JSON.</p>
 
 <p>As you can see, all standard XStream features (such as aliases) can be used with this driver.</p>	
 
