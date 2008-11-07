@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -77,7 +77,7 @@ public class ConversionException extends XStreamException implements ErrorWriter
             String k = (String) iterator.next();
             String v = get(k);
             result.append('\n').append(k);
-            result.append("                    ".substring(k.length()));
+            result.append("                    ".substring(Math.min(20, k.length())));
             result.append(": ").append(v);
         }
         result.append(SEPARATOR);
