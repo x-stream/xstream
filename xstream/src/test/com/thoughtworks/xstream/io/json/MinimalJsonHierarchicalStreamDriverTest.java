@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 22. June 2006 by Mauro Talevi
+ * Created on 06. November 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.json;
 
 import java.awt.Color;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,7 +31,9 @@ import java.util.TreeMap;
 import com.thoughtworks.acceptance.objects.Original;
 import com.thoughtworks.acceptance.objects.Replaced;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import junit.framework.TestCase;
 
@@ -43,7 +45,7 @@ import junit.framework.TestCase;
  * @author Paul Hammant
  * @author J&ouml;rg Schaible
  */
-public class JsonHierarchicalStreamDriverTest extends TestCase {
+public class MinimalJsonHierarchicalStreamDriverTest extends TestCase {
     private XStream xstream;
 
     /**
@@ -51,7 +53,13 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        xstream = new XStream(new JsonHierarchicalStreamDriver());
+        xstream = new XStream(new JsonHierarchicalStreamDriver() {
+
+            public HierarchicalStreamWriter createWriter(Writer out) {
+                return new JsonHierarchicalStreamWriter(out, true);
+            }
+            
+        });
     }
 
     public void testDoesNotSupportReader() {
@@ -74,7 +82,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
     public void testCanMarshalSimpleTypes() {
 
-        String expected = ("{'innerMessage': {\n"
+        String expected = ("{\n"
             + "  'long1': 5,\n"
             + "  'long2': 42,\n"
             + "  'greeting': 'hello',\n"
@@ -91,7 +99,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "    'bool': false,\n"
             + "    'char1': '\\u0000'\n"
             + "  }\n"
-            + "}}").replace('\'', '"');
+            + "}").replace('\'', '"');
 
         xstream.alias("innerMessage", Message.class);
 
@@ -131,7 +139,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     String expectedMenuStart = ""
-        + "{'menu': {\n"
+        + "{\n"
         + "  'id': 'file',\n"
         + "  'value': 'File:',\n"
         + "  'popup': {\n"
@@ -151,7 +159,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         + "        'value': 'Close',\n"
         + "        'onclick': 'CloseDoc()'\n"
         + "      }";
-    String expectedMenuEnd = "" + "    ]\n" + "  }\n" + "}}";
+    String expectedMenuEnd = "" + "    ]\n" + "  }\n" + "}";
     String expected = (expectedMenuStart
         + "\n"
         + expectedNew
@@ -264,7 +272,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         // This also from http://www.expected.org/example.html
 
-        String expected = ("{'widget': {\n"
+        String expected = ("{\n"
             + "  'debug': 'on',\n"
             + "  'window': {\n"
             + "    'title': 'Sample Konfabulator Widget',\n"
@@ -289,7 +297,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "    'alignment': 'center',\n"
             + "    'onMouseUp': 'sun1.opacity = (sun1.opacity / 100) * 90;'\n"
             + "  }\n"
-            + "}}").replace('\'', '"');
+            + "}").replace('\'', '"');
 
         xstream.alias("widget", Widget.class);
         xstream.alias("window", Window.class);
@@ -339,12 +347,12 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
         if (!isHeadless || JVM.is15()) {
             Color color = Color.black;
-            String expected = ("{'awt-color': {\n"
+            String expected = ("{\n"
                 + "  'red': 0,\n"
                 + "  'green': 0,\n"
                 + "  'blue': 0,\n"
                 + "  'alpha': 255\n"
-                + "}}").replace('\'', '"');
+                + "}").replace('\'', '"');
             assertEquals(expected, xstream.toXML(color));
         }
     }
@@ -353,29 +361,39 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         String[] strings = new String[]{
             "last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
         String expected = (""
-            + "{#string-array#: [\n"
+            + "[\n"
             + "  #last\\\"#,\n"
             + "  #\\\"first#,\n"
             + "  #\\\"between\\\"#,\n"
             + "  #around \\\"\\\" it#,\n"
             + "  #back\\\\slash#\n"
-            + "]}").replace('#', '"');
+            + "]").replace('#', '"');
         assertEquals(expected, xstream.toXML(strings));
     }
 
     public void testDoesEscapeValuesAccordingRfc4627() {
-        String expected = "{'string': '\\u0000\\u0001\\u001f \uffee'}".replace('\'', '"');
-        assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
+        String expected = ("" // 
+            + "[\n"
+            + "  '\\u0000\\u0001\\u001f \uffee'\n"
+            + "]").replace('\'', '"');
+        assertEquals(expected, xstream.toXML(new String[]{"\u0000\u0001\u001f\u0020\uffee"}));
     }
 
     public void testSimpleInteger() {
-        String expected = "{'int': 123}".replace('\'', '"');
-        assertEquals(expected, xstream.toXML(new Integer(123)));
+        try {
+            xstream.toXML(new Integer(123));
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            // OK
+        }
     }
 
     public void testBracesAndSquareBracketsAreNotEscaped() {
-        String expected = "{'string': '..{}[],,'}".replace('\'', '"');
-        assertEquals(expected, xstream.toXML("..{}[],,"));
+        String expected = ("" // 
+            + "[\n"
+            + "  '..{}[],,'\n"
+            + "]").replace('\'', '"');
+        assertEquals(expected, xstream.toXML(new String[]{"..{}[],,"}));
     }
 
     public void testCanMarshalSimpleTypesWithNullMembers() {
@@ -386,10 +404,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xstream.alias("innerMessage", Msg.class);
 
         String expected = (""
-            + "{'innerMessage': {\n"
+            + "{\n"
             + "  'greeting': 'hello',\n"
             + "  'innerMessage': {}\n"
-            + "}}").replace('\'', '"');
+            + "}").replace('\'', '"');
         assertEquals(expected, xstream.toXML(message));
     }
 
@@ -405,8 +423,11 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testCanMarshalElementWithEmptyArray() {
         xstream.alias("element", ElementWithEmptyArray.class);
 
-        String expected = ("" + "{'element': {\n" + "  'array': [\n" + "  ]\n" + "}}").replace(
-            '\'', '"');
+        String expected = ("" // 
+            + "{\n"
+            + "  'array': [\n"
+            + "  ]\n"
+            + "}").replace('\'', '"');
         assertEquals(expected, xstream.toXML(new ElementWithEmptyArray()));
     }
 
@@ -434,10 +455,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         int idx2 = actual.indexOf("two");
 
         String expected = (""
-            + "{'map': [\n"
+            + "[\n"
             + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
             + ((idx1 < idx2 ? entry2 : entry1) + "\n") // no comma
-        + "]}").replace('\'', '"');
+        + "]").replace('\'', '"');
         assertEquals(expected, actual);
     }
 
@@ -461,10 +482,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         int idx2 = actual.indexOf("two");
 
         String expected = (""
-            + "{'properties': [\n"
+            + "[\n"
             + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
             + ((idx1 < idx2 ? entry2 : entry1) + "\n") // no comma
-        + "]}").replace('\'', '"');
+        + "]").replace('\'', '"');
         assertEquals(expected, actual);
     }
 
@@ -493,12 +514,12 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         int idx2 = actual.indexOf("two");
 
         String expected = (""
-            + "{'holder': {\n"
+            + "{\n"
             + "  'map': [\n"
             + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
             + ((idx1 < idx2 ? entry2 : entry1) + "\n")
             + "  ]\n" // no comma
-        + "}}").replace('\'', '"');
+        + "}").replace('\'', '"');
         assertEquals(expected, actual);
     }
 
@@ -509,12 +530,12 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testIgnoresAttributeForCollectionMember() {
         xstream.alias("keeper", CollectionKeeper.class);
         String expected = ("" //
-            + "{'keeper': {\n"
+            + "{\n"
             + "  'coll': [\n"
             + "    'one',\n"
             + "    'two'\n"
             + "  ]\n"
-            + "}}").replace('\'', '"');
+            + "}").replace('\'', '"');
 
         final CollectionKeeper holder = new CollectionKeeper();
         holder.coll.add("one");
@@ -528,11 +549,11 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xstream.useAttributeFor("width", int.class);
         xstream.useAttributeFor("height", int.class);
         String expected = (""
-            + "{'window': {\n"
+            + "{\n"
             + "  '@width': '500',\n"
             + "  '@height': '500',\n"
             + "  'title': 'JUnit'\n"
-            + "}}").replace('\'', '"');
+            + "}").replace('\'', '"');
 
         final Window window = new Window();
         window.title = "JUnit";
@@ -550,7 +571,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testCanWriteEmbeddedCalendar() {
         xstream.alias("person", Person.class);
         String expected = (""
-            + "{'list': [\n"
+            + "[\n"
             + "  {\n"
             + "    'firstName': 'Joe',\n"
             + "    'lastName': 'Walnes',\n"
@@ -566,7 +587,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "      ]\n"
             + "    ]\n"
             + "  }\n"
-            + "]}").replace('\'', '"');
+            + "]").replace('\'', '"');
 
         Person person = new Person();
         person.firstName = "Joe";
@@ -588,10 +609,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testSupportsAllConvertersWithASingleValue() throws MalformedURLException {
         xstream.alias("sv", SingleValue.class);
         String expected = (""
-            + "{'sv': {\n"
+            + "{\n"
             + "  'l': 4711,\n"
             + "  'url': 'http://localhost:8888'\n"
-            + "}}").replace('\'', '"');
+            + "}").replace('\'', '"');
 
         SingleValue value = new SingleValue();
         value.l = 4711;
@@ -616,7 +637,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         sa.original = new Original("hello world");
 
         String expected = (""
-                + "{'sa': {\n"
+                + "{\n"
                 + "  'name': 'joe',\n"
                 + "  'charSeq': {\n"
                 + "    '@class': 'string',\n"
@@ -626,7 +647,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 + "    '@resolves-to': 'replaced',\n"
                 + "    'replacedValue': 'HELLO WORLD'\n"
                 + "  }\n"
-                + "}}").replace('\'', '"');
+                + "}").replace('\'', '"');
 
         assertEquals(expected, xstream.toXML(sa));
     }
