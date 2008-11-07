@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -161,7 +161,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "</java.util.Collections_-SynchronizedList>";
         }
 
-        // syncronized list has circular reference
+        // synchronized list has circular reference
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
         List list = Collections.synchronizedList(new LinkedList());
@@ -175,7 +175,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     }
 
     public void testUnmodifiableList() {
-        // unodifiable list has duplicate refs
+        // unmodifiable list has duplicate references
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
         List list = new ArrayList();
