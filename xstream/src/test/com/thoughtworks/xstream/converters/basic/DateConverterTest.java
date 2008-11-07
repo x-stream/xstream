@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,10 +19,12 @@ import junit.framework.TestCase;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 
@@ -82,7 +84,7 @@ public class DateConverterTest extends TestCase {
         assertEquals(expected, converter.fromString("2004-02-23 01:46:04.0 GMT+05:30"));
     }
 
-    public void testUnmashalsDateWithDifferentDefaultTimeZones() throws ParseException {
+    public void testUnmarshalsDateWithDifferentDefaultTimeZones() throws ParseException {
         Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2004, Calendar.FEBRUARY, 23, 1, 46, 4);
@@ -158,5 +160,30 @@ public class DateConverterTest extends TestCase {
         converter = new DateConverter("yyyy-MM-dd HH:mm:ss.S z", new String[0], true);
         Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 IST");
         assertEquals(expected, converter.fromString("2004-02-21 39:16:04.0 IST"));
+    }
+    
+    public void testDatesIn70sInTimeZoneGMT() throws ParseException {
+        final String pattern = "yyyy-MM-dd HH:mm:ss.S z";
+        final SimpleDateFormat format;
+
+        format = new SimpleDateFormat(pattern, Locale.UK);
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        final String[] expected = new String[]{
+            "1970-01-01 11:20:34.0 GMT",
+            "1971-01-01 11:20:34.0 GMT",
+            "1972-01-01 11:20:34.0 GMT",
+            "1973-01-01 11:20:34.0 GMT",
+            "1974-01-01 11:20:34.0 GMT",
+        };
+
+        final String[] actual = new String[expected.length];
+        for (int i = 0; i < actual.length; i++ ) {
+            final String converted = converter.toString(format.parseObject(expected[i]));
+            // Note, XStream's string representation of the date is in IST 
+            actual[i] = format.format(converter.fromString(converted));
+        }
+        
+        assertEquals(Arrays.asList(expected).toString(), Arrays.asList(actual).toString());
     }
 }
