@@ -128,6 +128,34 @@
     <h1 id="Serialization">Serialization</h1>
 
     <!-- ...................................................... -->
+    <h2 id="Serialization_types">Which class types can be serialized by XStream?</h2>
+    
+    <p>In contrast to the JDK XStream is not tied to a marker interface to serialize a class. XStream ships with some specialized <a href="converters.html">converters</a>,
+    but will use reflection by default for &quot;unknown&quot; classes to examine, read and write the class' data. Therefore XStream can handle quite any class, especially
+    the ones referred as POJO (Plain Old Java Object).</p>
+    
+    <p>However, some types of classes exist with typical characteristics, that cannot be handled - at least not out of the box:</p>
+    
+    <ol>
+    	<li>Objects that are based on threads or thread local data: Thread, Timer, ThreadLocal and so on. These classes keep different data for different threads and there's
+    	no possibility to recreate a thread in a generic way nor recreating thread specific data. There might be special use cases, but this will always involve a custom converter
+    	where threads can be recreated in a specific way tied to that use case.</li>
+    	<li>Class types that are based on generated classes. Such types have often names that are unique to the current process and will have no meaning
+    	in a different process. A custom converter might help to write the appropriate data into the serializing stream to be able to recreate a equivalent class at deserialization
+    	time.</li>
+    	<li>Types that keep and use system resources like file handles, sockets, pipes and so on. ClassLoader, FileInputStream, FileOutputStream, Socket and so on. To 
+    	deserialize such a class the converter must be able to claim the appropriate resource from the system again. With the help of a custom converter this might be
+    	possible, but with the reflection converter the deserialized class might refer a system resource that is no longer valid or belongs to somebody else. Behavior is
+    	undefined then.</li>
+    	<li>A very special case of such allocated system resources are those classes that keep handles to system memory directly, because they are partly implemented native.
+    	It is known to be true for the Linux version of Sun's JDK that the BufferedImage references some system specific types of the JDK that themselves have member fields
+    	with such memory handles. While it is possible at first sight to serialize and deserialize a BufferedImage, the reflection converter will also duplicate the memory handle.
+    	As a result the JVM might crash easily because of freeing unallocated memory or freeing the same memory twice. It might be possible to create a custom converter, 
+    	but the data structure is really complex in this area and nobody has been investigating so far to such an extent. However, <strong>do not use the reflection converter
+    	for these types! You have been warned!</strong></li>
+    </ol>
+
+    <!-- ...................................................... -->
     <h2 id="Serialization_omit_field">How do I specify that a field should not be serialized?</h2>
     <p>Make it <code>transient</code>, specify it with <code>XStream.omitField()</code> or
     annotate it with @XStreamOmitField</p>
