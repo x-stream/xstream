@@ -57,7 +57,7 @@ public class XppDriver extends AbstractXmlDriver {
     private void loadLibrary() {
         if (!xppLibraryPresent) {
             try {
-                Class.forName("org.xmlpull.mxp1.MXParser");
+                Class.forName("org.xmlpull.mxp1.MXParser", false, getClass().getClassLoader());
             } catch (ClassNotFoundException e) {
                 throw new IllegalArgumentException("XPP3 pull parser library not present. Specify another driver." +
                         " For example: new XStream(new DomDriver())");

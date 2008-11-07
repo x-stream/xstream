@@ -241,6 +241,7 @@ public class JVM {
         System.out.println("Version: " + majorJavaVersion);
         System.out.println("XStream support for enhanced Mode: " + (jvm.canUseSun14ReflectionProvider() || jvm.canUseHarmonyReflectionProvider()));
         System.out.println("Supports AWT: " + jvm.supportsAWT());
+        System.out.println("Supports Swing: " + jvm.supportsSwing());
         System.out.println("Supports SQL: " + jvm.supportsSQL());
         System.out.println("Reverse field order detected (may have failed): " + reverse);
     }
