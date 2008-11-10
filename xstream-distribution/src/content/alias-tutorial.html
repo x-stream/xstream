@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2006 Joe Walnes.
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2008 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -262,9 +262,50 @@ required by the <a href="http://www.w3.org/TR/REC-xml/#AVNormalize">W3C spec</a>
 are normally removed as well as sequential ones! Therefore a deserialized string might differ from the value visible in
 the XML representation.</p>
 
+<div class="section">
+<h2 id="packages">Package aliasing</h2>
+
+<p>In the example above we have so far always used class aliases for the Blog and Entry type. Sometimes it is necessary to
+map existing class types to others simply by changing the package name. Let us go back to the first attempt of our tutorial,
+but this time we alias the package name instead of the individual classes:</p>
+<div class="Source Java"><pre>public static void main(String[] args) {
+
+        Blog teamBlog = new Blog(new Author(&quot;Guilherme Silveira&quot;));
+        teamBlog.add(new Entry(&quot;first&quot;,&quot;My first blog entry.&quot;));
+        teamBlog.add(new Entry(&quot;tutorial&quot;,
+                &quot;Today we have developed a nice alias tutorial. Tell your friends! NOW!&quot;));
+
+        XStream xstream = new XStream();
+        xstream.aliasPackage("my.company", "org.thoughtworks");
+        System.out.println(xstream.toXML(teamBlog));
+
+}</pre></div>
+<p>And the resulting XML contains now the classes with the aliased package names:</p>
+<div class="Source Java"><pre>&lt;my.company.xstream.Blog&gt;
+  &lt;author&gt;
+    &lt;name&gt;Guilherme Silveira&lt;/name&gt;
+  &lt;/author&gt;
+  &lt;entries&gt;
+    &lt;my.company.xstream.Entry&gt;
+      &lt;title&gt;first&lt;/title&gt;
+      &lt;description&gt;My first blog entry.&lt;/description&gt;
+    &lt;/my.company.xstream.Entry&gt;
+    &lt;my.company.xstream.Entry&gt;
+      &lt;title&gt;tutorial&lt;/title&gt;
+      &lt;description&gt;
+        Today we have developed a nice alias tutorial. Tell your friends! NOW!
+      &lt;/description&gt;
+    &lt;/my.company.xstream.Entry&gt;
+  &lt;/entries&gt;
+&lt;/my.company.xstream.Blog&gt;</pre></div>
+<p>Please recognize that the package name alias works also for sub packages in this example.</p>
+</div>
+
+<div class="section">
 <h2 id="summary">Summing up</h2>
 <p>Using aliases and converters gives you enough power to configure your XML in almost any way you desire.</p>
 <p>Don't forget to read the converter tutorial to see other type of converters that you can create using XStream.</p>
+</div>
 
   </body>
 </html>

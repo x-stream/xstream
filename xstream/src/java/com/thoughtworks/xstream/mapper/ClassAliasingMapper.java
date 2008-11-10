@@ -18,16 +18,16 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Mapper that allows a fully qualified class name to be replaced with a shorter alias.
+ * Mapper that allows a fully qualified class name to be replaced with an alias.
  *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public class ClassAliasingMapper extends MapperWrapper {
 
-    protected final Map typeToName = new HashMap();
-    protected final Map classToName = new HashMap();
-    protected transient Map nameToType = new HashMap();
+    private final Map typeToName = new HashMap();
+    private final Map classToName = new HashMap();
+    private transient Map nameToType = new HashMap();
 
     public ClassAliasingMapper(Mapper wrapped) {
         super(wrapped);

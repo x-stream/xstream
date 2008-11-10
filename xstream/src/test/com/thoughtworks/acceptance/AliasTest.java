@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
@@ -25,6 +26,7 @@ import java.util.List;
 
 /**
  * @author Paul Hammant
+ * @author J&ouml;rg Schaible
  */
 public class AliasTest extends AbstractAcceptanceTest {
 
@@ -256,7 +258,7 @@ public class AliasTest extends AbstractAcceptanceTest {
         xstream.aliasField("Name", Software.class, "name");
         xstream.aliasField("Vendor", Software.class, "vendor");
         
-        String xml = ""
+        String xml = "" //
             + "<object-array>\n"
             + "  <software>\n"
             + "    <Vendor>walness</Vendor>\n"
@@ -265,5 +267,88 @@ public class AliasTest extends AbstractAcceptanceTest {
             + "</object-array>";
         
         assertBothWays(software, xml);
+    }
+    
+    public void testCanAliasCompletePackage() {
+        Software software = new Software("walness", "xstream");
+        xstream.aliasPackage("org.codehaus", "com.thoughtworks.acceptance.objects");
+        
+        String xml = "" //
+            + "<org.codehaus.Software>\n"
+            + "  <vendor>walness</vendor>\n"
+            + "  <name>xstream</name>\n" 
+            + "</org.codehaus.Software>";
+        
+        assertBothWays(software, xml);
+    }
+    
+    public void testCanAliasSubPackage() {
+        Software software = new Software("walness", "xstream");
+        xstream.aliasPackage("org.codehaus", "com.thoughtworks");
+        
+        String xml = "" //
+            + "<org.codehaus.acceptance.objects.Software>\n"
+            + "  <vendor>walness</vendor>\n"
+            + "  <name>xstream</name>\n" 
+            + "</org.codehaus.acceptance.objects.Software>";
+        
+        assertBothWays(software, xml);
+    }
+    
+    public void testToDefaultPackage() {
+        Software software = new Software("walness", "xstream");
+        xstream.aliasPackage("", "com.thoughtworks.acceptance.objects");
+        
+        String xml = "" //
+            + "<Software>\n"
+            + "  <vendor>walness</vendor>\n"
+            + "  <name>xstream</name>\n" 
+            + "</Software>";
+        
+        assertBothWays(software, xml);
+    }
+    
+    public void testForLongerPackageNameTakesPrecedence() {
+        WithList withList = new WithList();
+        withList.things.add(new Software("walness", "xstream"));
+        withList.things.add(new TypeA());
+        xstream.aliasPackage("model", "com.thoughtworks.acceptance.objects");
+        xstream.aliasPackage("org.codehaus", "com.thoughtworks");
+        xstream.aliasPackage("model.foo", "com.thoughtworks.acceptance.someobjects");
+        
+        String xml = "" //
+            + "<model.foo.WithList>\n"
+            + "  <things>\n"
+            + "    <model.Software>\n"
+            + "      <vendor>walness</vendor>\n"
+            + "      <name>xstream</name>\n"
+            + "    </model.Software>\n"
+            + "    <org.codehaus.acceptance.AliasTest_-TypeA>\n"
+            + "      <attrA>testA</attrA>\n"
+            + "    </org.codehaus.acceptance.AliasTest_-TypeA>\n"
+            + "  </things>\n"
+            + "</model.foo.WithList>";
+
+        assertBothWays(withList, xml);
+    }
+    
+    public void testClassTakesPrecedenceOfPackage() {
+        WithList withList = new WithList();
+        withList.things.add(new Software("walness", "xstream"));
+        xstream.alias("MySoftware", Software.class);
+        xstream.aliasPackage("org.codehaus", "com.thoughtworks");
+        xstream.aliasPackage("model.foo", "com.thoughtworks.acceptance.someobjects");
+        
+        String xml = "" //
+            + "<model.foo.WithList>\n"
+            + "  <things>\n"
+            + "    <MySoftware>\n"
+            + "      <vendor>walness</vendor>\n"
+            + "      <name>xstream</name>\n"
+            + "    </MySoftware>\n"
+            + "  </things>\n"
+            + "</model.foo.WithList>";
+
+        assertBothWays(withList, xml);
     }
 }

@@ -91,6 +91,7 @@ import com.thoughtworks.xstream.mapper.LocalConversionMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
+import com.thoughtworks.xstream.mapper.PackageAliasingMapper;
 import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 
@@ -281,6 +282,7 @@ public class XStream {
     private ConverterRegistry converterRegistry;
     private Mapper mapper;
 
+    private PackageAliasingMapper packageAliasingMapper;
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
     private AttributeAliasingMapper attributeAliasingMapper;
@@ -451,6 +453,7 @@ public class XStream {
             mapper = new XStream11XmlFriendlyMapper(mapper);
         }
         mapper = new DynamicProxyMapper(mapper);
+        mapper = new PackageAliasingMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
@@ -499,6 +502,8 @@ public class XStream {
     }
 
     private void setupMappers() {
+        packageAliasingMapper = (PackageAliasingMapper)this.mapper
+                .lookupMapperOfType(PackageAliasingMapper.class);
         classAliasingMapper = (ClassAliasingMapper)this.mapper
                 .lookupMapperOfType(ClassAliasingMapper.class);
         fieldAliasingMapper = (FieldAliasingMapper)this.mapper
@@ -963,6 +968,23 @@ public class XStream {
     public void alias(String name, Class type, Class defaultImplementation) {
         alias(name, type);
         addDefaultImplementation(defaultImplementation, type);
+    }
+
+    /**
+     * Alias a package to a shorter name to be used in XML elements.
+     *
+     * @param name Short name
+     * @param pkgName package to be aliased
+     * @throws InitializationException if no {@link DefaultImplementationsMapper} or no {@link PackageAliasingMapper} is available
+     * @since upcoming
+     */
+    public void aliasPackage(String name, String pkgName) {
+        if (packageAliasingMapper == null) {
+            throw new InitializationException("No "
+                    + PackageAliasingMapper.class.getName()
+                    + " available");
+        }
+        packageAliasingMapper.addPackageAlias(name, pkgName);
     }
 
     /**
