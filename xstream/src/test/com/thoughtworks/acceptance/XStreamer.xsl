@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2006, 2007 XStream Committers.
+Copyright (C) 2006, 2007, 2008 XStream Committers.
 All rights reserved.
 
 The software in this package is published under the terms of the BSD
@@ -17,7 +17,7 @@ Created on 30. March 2006 by Joerg Schaible
 		</xsl:apply-templates>
 	</xsl:copy>
 </xsl:template>
-<xsl:template match="typeToImpl|typeToName|classToName">
+<xsl:template match="typeToImpl|typeToName|classToName|packageToName">
 	<xsl:copy>
 	 	<xsl:apply-templates select="entry">
 			<xsl:sort select="java-class[1]|string[1]"/>
