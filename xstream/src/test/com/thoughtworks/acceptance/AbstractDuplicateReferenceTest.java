@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.WithNamedList;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.AbstractReferenceMarshaller;
 
 import java.util.ArrayList;
@@ -164,5 +165,22 @@ public abstract class AbstractDuplicateReferenceTest extends AbstractAcceptanceT
         WithNamedList[] out = (WithNamedList[]) xstream.fromXML(xml);
 
         assertSame(out[1], out[2].things.get(0));
+    }
+    
+    public void testThrowsForInvalidReference() {
+        String xml = "" // 
+            + "<list>\n"
+            + "  <thing>\n"
+            + "    <field>Hello</field>\n"
+            + "  </thing>\n"
+            + "  <thing reference=\"foo\">\n"
+            + "</list>";
+
+        try {
+            xstream.fromXML(xml);
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals("foo", e.get("reference"));
+        }
     }
 }

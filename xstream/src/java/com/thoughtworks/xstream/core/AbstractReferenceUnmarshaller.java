@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.core.util.FastStack;
@@ -46,19 +47,25 @@ public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
                 }
             }
         }
+        final Object result;
         String reference = reader.getAttribute(getMapper().aliasForSystemAttribute("reference"));
         if (reference != null) {
-            return values.get(getReferenceKey(reference));
+            result = values.get(getReferenceKey(reference));
+            if (result == null) {
+                final ConversionException ex = new ConversionException("Invalid reference");
+                ex.add("reference", reference);
+                throw ex;
+            }
         } else {
             Object currentReferenceKey = getCurrentReferenceKey();
             parentStack.push(currentReferenceKey);
-            Object result = super.convert(parent, type, converter);
-            if (currentReferenceKey != null) {
+            result = super.convert(parent, type, converter);
+            if (currentReferenceKey != null && result != null) {
                 values.put(currentReferenceKey, result);
             }
             parentStack.popSilently();
-            return result;
         }
+        return result;
     }
     
     protected abstract Object getReferenceKey(String reference);
