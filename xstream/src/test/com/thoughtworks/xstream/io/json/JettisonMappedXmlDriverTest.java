@@ -54,6 +54,11 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         xstream.alias("product", Product.class);
     }
 
+    protected void tearDown() throws Exception {
+        TimeZoneChanger.reset();
+        super.tearDown();
+    }
+
     public void testReadSimple() {
         Product product = (Product)xstream.fromXML(SIMPLE);
         assertEquals(product.getName(), "Banana");
