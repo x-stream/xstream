@@ -83,6 +83,10 @@ public class JVM {
         return vendor.indexOf("Blackdown") != -1;
     }
 
+    private static boolean isDiablo() {
+        return vendor.indexOf("FreeBSD Foundation") != -1;
+    }
+
     private static boolean isHarmony() {
         return vendor.indexOf("Apache Software Foundation") != -1;
     }
@@ -178,7 +182,17 @@ public class JVM {
     }
 
     private boolean canUseSun14ReflectionProvider() {
-        return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown() || isBEAWithUnsafeSupport() || isHitachi() || isSAP()) && is14() && loadClass("sun.misc.Unsafe") != null;
+        return (isSun()
+            || isApple()
+            || isHPUX()
+            || isIBM()
+            || isBlackdown()
+            || isBEAWithUnsafeSupport()
+            || isHitachi()
+            || isSAP() 
+            || isDiablo())
+            && is14()
+            && loadClass("sun.misc.Unsafe") != null;
     }
 
     private boolean canUseHarmonyReflectionProvider() {
