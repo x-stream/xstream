@@ -26,6 +26,7 @@ import com.thoughtworks.acceptance.objects.Product;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 
 /**
@@ -47,6 +48,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        TimeZoneChanger.change("UTC");
         xstream = new XStream(new JettisonMappedXmlDriver());
         xstream.alias("category", Category.class);
         xstream.alias("product", Product.class);
@@ -153,7 +155,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         xstream.alias("topic", Topic.class);
         String json = xstream.toXML(topic1);
         assertEquals(
-            "{\"topic\":{\"id\":4711,\"description\":\"JSON\",\"createdOn\":{\"@class\":\"sql-timestamp\",\"$\":\"1970-01-01 01:00:01.0\"}}}",
+            "{\"topic\":{\"id\":4711,\"description\":\"JSON\",\"createdOn\":{\"@class\":\"sql-timestamp\",\"$\":\"1970-01-01 00:00:01.0\"}}}",
             json);
         Topic topic2 = (Topic)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(topic2));
