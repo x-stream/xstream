@@ -68,6 +68,7 @@
     	<li>JIRA:XSTR-517: Miscellaneous performance improvements (by Tatu Saloranta).</li>
     	<li>JIRA:XSTR-525: JsonHierarchicalStreamDriver writes invalid JSON in case of system attribute.</li>
     	<li>JIRA:XSTR-508: Fix marshalling error for nested serializable objects with own writeReplace/readResolve methods.</li>
+    	<li>JIRA:XSTR-507: Advanced ReferenceByIdMarshaller uses id of the current object if available.</li>
     	<li>Fix classloader problem, Xpp3 parser cannot be loaded within a web application.</li>
     	<li>Dependencies have been updated to latest versions of JDOM, Jettison, Joda Time, and Woodstox. Note for Maven
     	builds that the <em>groupId</em> of JDOM has changed.</li>
@@ -82,6 +83,7 @@
     	<li>c.t.x.mapper.Mapper.getConverterFromAttribute(Class, String) has been deprecated in favour of
     	c.t.x.mapper.Mapper.getConverterFromAttribute(Class, String, Class) taking the type as third argument that should be handled by the
     	converter.</li>
+    	<li>c.t.x.core.ReferenceByIdMarshaller.IdGenerator.next() has now the current object as argument.</li>
     </ul>
 
     <h1 id="1.3">1.3</h1>

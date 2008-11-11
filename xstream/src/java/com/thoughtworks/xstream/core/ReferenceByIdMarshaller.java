@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,7 +22,7 @@ public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
     private final IDGenerator idGenerator;
 
     public static interface IDGenerator {
-        String next();
+        String next(Object item);
     }
 
     public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
@@ -62,8 +62,8 @@ public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
         return existingReferenceKey.toString();
     }
 
-    protected Object createReferenceKey(Path currentPath) {
-        return idGenerator.next();
+    protected Object createReferenceKey(Path currentPath, Object item) {
+        return idGenerator.next(item);
     }
 
     protected void fireValidReference(Object referenceKey) {

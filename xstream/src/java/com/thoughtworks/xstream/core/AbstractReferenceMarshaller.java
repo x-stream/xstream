@@ -54,7 +54,7 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
             } else if (implicitElements.lookupId(item) != null) {
                 throw new ReferencedImplicitElementException(item, currentPath);
             } else {
-                Object newReferenceKey = createReferenceKey(currentPath);
+                Object newReferenceKey = createReferenceKey(currentPath, item);
                 if (lastPath == null || !currentPath.isAncestor(lastPath)) {
                     fireValidReference(newReferenceKey);
                     lastPath = currentPath;
@@ -68,7 +68,7 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
     }
     
     protected abstract String createReference(Path currentPath, Object existingReferenceKey);
-    protected abstract Object createReferenceKey(Path currentPath);
+    protected abstract Object createReferenceKey(Path currentPath, Object item);
     protected abstract void fireValidReference(Object referenceKey);
     
     public static class ReferencedImplicitElementException extends ConversionException {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,7 +37,7 @@ public class ReferenceByXPathMarshaller extends AbstractReferenceMarshaller {
         return (mode == ReferenceByXPathMarshallingStrategy.RELATIVE ? currentPath.relativeTo((Path)existingReferenceKey) : existingReferenceKey).toString();
     }
 
-    protected Object createReferenceKey(Path currentPath) {
+    protected Object createReferenceKey(Path currentPath, Object item) {
         return currentPath;
     }
 
