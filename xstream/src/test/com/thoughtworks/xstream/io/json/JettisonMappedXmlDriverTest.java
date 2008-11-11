@@ -15,12 +15,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
 import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.Product;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
@@ -134,6 +137,26 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         assertEquals("{\"list\":[]}", json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
+    }
+    
+    public static class Topic extends StandardObject {
+        long id;
+        String description;
+        Date createdOn;
+    }
+    
+    public void testDefaultValue() {
+        Topic topic1 = new Topic();
+        topic1.id = 4711;
+        topic1.description = "JSON";
+        topic1.createdOn = new Timestamp(1000);
+        xstream.alias("topic", Topic.class);
+        String json = xstream.toXML(topic1);
+        assertEquals(
+            "{\"topic\":{\"id\":4711,\"description\":\"JSON\",\"createdOn\":{\"@class\":\"sql-timestamp\",\"$\":\"1970-01-01 01:00:01.0\"}}}",
+            json);
+        Topic topic2 = (Topic)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(topic2));
     }
 
     // TODO: See XSTR-460
