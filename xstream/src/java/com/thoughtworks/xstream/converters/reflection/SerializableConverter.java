@@ -84,7 +84,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     public void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        writer.addAttribute(mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION), ATTRIBUTE_VALUE_CUSTOM);
+        String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION);
+        if (attributeName != null) {
+            writer.addAttribute(attributeName, ATTRIBUTE_VALUE_CUSTOM);
+        }
 
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
@@ -121,7 +124,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     if (value != null) {
                         ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source.getClass(), name), field.getType());
                         if (field.getType() != value.getClass() && !field.getType().isPrimitive()) {
-                            writer.addAttribute(mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS), mapper.serializedClass(value.getClass()));
+                            String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
+                            if (attributeName != null) {
+                                writer.addAttribute(attributeName, mapper.serializedClass(value.getClass()));
+                            }
                         }
                         context.convertAnother(value);
                         writer.endNode();
@@ -161,7 +167,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         Class actualType = value.getClass();
                         Class defaultType = mapper.defaultImplementationOf(field.getType());
                         if (!actualType.equals(defaultType)) {
-                            writer.addAttribute(mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS), mapper.serializedClass(actualType));
+                            String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
+                            if (attributeName != null) {
+                                writer.addAttribute(attributeName, mapper.serializedClass(actualType));
+                            }
                         }
 
                         context.convertAnother(value);
@@ -267,7 +276,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
 
-        if (!ATTRIBUTE_VALUE_CUSTOM.equals(reader.getAttribute(mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION)))) {
+        String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION);
+        if (attributeName != null && !ATTRIBUTE_VALUE_CUSTOM.equals(reader.getAttribute(attributeName))) {
             throw new ConversionException("Cannot deserialize object with new readObject()/writeObject() methods");
         }
 

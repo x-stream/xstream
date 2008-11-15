@@ -25,23 +25,12 @@ public class SystemAttributeAliasingMapper extends AbstractAttributeAliasingMapp
 
     public String aliasForSystemAttribute(String attribute) {
         String alias = (String)nameToAlias.get(attribute);
-        if (alias == null) {
+        if (alias == null && !nameToAlias.containsKey(attribute)) {
             alias = super.aliasForSystemAttribute(attribute);
             if (alias == attribute) {
                 alias = super.aliasForAttribute(attribute);
             }
         }
         return alias;
-    }
-
-    public String systemAttributeForAlias(String alias) {
-        String name = (String)aliasToName.get(alias);
-        if (name == null) {
-            name = super.systemAttributeForAlias(alias);
-            if (name == alias) {
-                name = super.attributeForAlias(alias);
-            }
-        }
-        return name;
     }
 }

@@ -96,15 +96,6 @@ public interface Mapper {
     String aliasForSystemAttribute(String attribute);
 
     /**
-     * Get the system attribute's name for an alias.
-     * 
-     * @param alias the alias
-     * @return the system attribute's name
-     * @since upcoming
-     */
-    String systemAttributeForAlias(String alias);
-
-    /**
      * Get the name of the field that acts as the default collection for an object, or return null if there is none.
      *
      * @param definedIn     owning type

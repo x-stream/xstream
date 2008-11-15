@@ -1021,9 +1021,13 @@ public class XStream {
     }
 
     /**
-     * Create an alias for a system attribute
+     * Create an alias for a system attribute.
+     * 
+     * XStream will not write a system attribute if its alias is set to <code>null</code>. However, 
+     * this is not reversible, i.e. deserialization of the result is likely to fail afterwards and will not 
+     * produce an object equal to the originally written one.
      *
-     * @param alias the alias itself
+     * @param alias the alias itself (may be <code>null</code>)
      * @param systemAttributeName the name of the system attribute
      * @throws InitializationException if no {@link SystemAttributeAliasingMapper} is available
      * @since upcoming

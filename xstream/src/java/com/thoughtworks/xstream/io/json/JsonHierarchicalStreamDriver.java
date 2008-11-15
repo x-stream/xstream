@@ -24,6 +24,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 /**
+ * A driver for JSON that writes optimized JSON format, but is not able to deserialize the result.
+ * 
  * @author Paul Hammant
  * @since 1.2
  */

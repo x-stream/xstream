@@ -113,10 +113,6 @@ public class DefaultMapper implements Mapper {
         return attribute;
     }
 
-    public String systemAttributeForAlias(String alias) {
-        return alias;
-    }
-
     public boolean isImmutableValueType(Class type) {
         return false;
     }

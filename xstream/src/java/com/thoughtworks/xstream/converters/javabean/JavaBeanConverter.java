@@ -72,7 +72,7 @@ public class JavaBeanConverter implements Converter {
     }
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.systemAttributeForAlias("class");
+        final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.aliasForSystemAttribute("class");
         beanProvider.visitSerializableProperties(source, new BeanProvider.Visitor() {
             public boolean shouldVisit(String name, Class definedIn) {
                 return mapper.shouldSerializeMember(definedIn, name);
@@ -89,7 +89,7 @@ public class JavaBeanConverter implements Converter {
 				ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, fieldType);
                 Class actualType = newObj.getClass();
                 Class defaultType = mapper.defaultImplementationOf(fieldType);
-                if (!actualType.equals(defaultType)) {
+                if (!actualType.equals(defaultType) && classAttributeName != null) {
                     writer.addAttribute(classAttributeName, mapper.serializedClass(actualType));
                 }
                 context.convertAnother(newObj);
@@ -132,8 +132,8 @@ public class JavaBeanConverter implements Converter {
     }
 
     private Class determineType(HierarchicalStreamReader reader, Object result, String fieldName) {
-        final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.systemAttributeForAlias("class");
-        String classAttribute = reader.getAttribute(classAttributeName);
+        final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.aliasForSystemAttribute("class");
+        String classAttribute = classAttributeName == null ? null : reader.getAttribute(classAttributeName);
         if (classAttribute != null) {
             return mapper.realClass(classAttribute);
         } else {

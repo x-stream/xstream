@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -53,7 +53,10 @@ public class DynamicProxyConverter implements Converter {
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(source);
         addInterfacesToXml(source, writer);
         writer.startNode("handler");
-        writer.addAttribute("class", mapper.serializedClass(invocationHandler.getClass()));
+        String attributeName = mapper.aliasForSystemAttribute("class");
+        if (attributeName != null) {
+            writer.addAttribute(attributeName, mapper.serializedClass(invocationHandler.getClass()));
+        }
         context.convertAnother(invocationHandler);
         writer.endNode();
     }
@@ -77,8 +80,11 @@ public class DynamicProxyConverter implements Converter {
             if (elementName.equals("interface")) {
                 interfaces.add(mapper.realClass(reader.getValue()));
             } else if (elementName.equals("handler")) {
-                Class handlerType = mapper.realClass(reader.getAttribute("class"));
-                handler = (InvocationHandler) context.convertAnother(null, handlerType);
+                String attributeName = mapper.aliasForSystemAttribute("class");
+                if (attributeName != null) {
+                    Class handlerType = mapper.realClass(reader.getAttribute(attributeName));
+                    handler = (InvocationHandler) context.convertAnother(null, handlerType);
+                }
             }
             reader.moveUp();
         }

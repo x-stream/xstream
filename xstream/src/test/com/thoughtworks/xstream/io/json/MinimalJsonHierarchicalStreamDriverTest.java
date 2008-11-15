@@ -10,6 +10,8 @@
  */
 package com.thoughtworks.xstream.io.json;
 
+import com.thoughtworks.acceptance.objects.Original;
+import com.thoughtworks.acceptance.objects.Replaced;
 import com.thoughtworks.xstream.converters.ConversionException;
 
 
@@ -21,6 +23,13 @@ import com.thoughtworks.xstream.converters.ConversionException;
  * @author J&ouml;rg Schaible
  */
 public class MinimalJsonHierarchicalStreamDriverTest extends JsonHierarchicalStreamDriverTest {
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        xstream.aliasSystemAttribute(null, "class");
+        xstream.aliasSystemAttribute(null, "resolves-to");
+        xstream.aliasSystemAttribute(null, "defined-in");
+    }
 
     protected boolean usesRoot() {
         return false;
@@ -73,5 +82,27 @@ public class MinimalJsonHierarchicalStreamDriverTest extends JsonHierarchicalStr
             + "  '..{}[],,'\n"
             + "]").replace('\'', '"');
         assertEquals(expected, xstream.toXML(new String[]{"..{}[],,"}));
+    }
+    
+    public void testWillWriteTagValueAsDefaultValueIfNecessary() {
+        xstream.alias("sa", SystemAttributes.class);
+        xstream.alias("original", Original.class);
+        xstream.alias("replaced", Replaced.class);
+
+        SystemAttributes sa = new SystemAttributes();
+        sa.name = "joe";
+        sa.charSeq = "walnes";
+        sa.original = new Original("hello world");
+
+        String expected = normalizeExpectation(""
+                + "{'sa': {\n"
+                + "  'name': 'joe',\n"
+                + "  'charSeq': 'walnes',\n" 
+                + "  'original': {\n"
+                + "    'replacedValue': 'HELLO WORLD'\n"
+                + "  }\n"
+                + "}}");
+
+        assertEquals(expected, xstream.toXML(sa));
     }
 }

@@ -50,7 +50,10 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
             Path currentPath = pathTracker.getPath();
             Object existingReferenceKey = references.lookupId(item);
             if (existingReferenceKey != null) {
-                writer.addAttribute(getMapper().aliasForSystemAttribute("reference"), createReference(currentPath, existingReferenceKey));
+                String attributeName = getMapper().aliasForSystemAttribute("reference");
+                if (attributeName != null) {
+                    writer.addAttribute(attributeName, createReference(currentPath, existingReferenceKey));
+                }
             } else if (implicitElements.lookupId(item) != null) {
                 throw new ReferencedImplicitElementException(item, currentPath);
             } else {
