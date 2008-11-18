@@ -36,11 +36,11 @@
 <div class="Source Java"><pre>package com.thoughtworks.xstream;
 
 public class Blog {
-        private Author author;
+        private Author writer;
         private List entries = new ArrayList();
 
-        public Blog(Author author) {
-                this.author = author;
+        public Blog(Author writer) {
+                this.writer = writer;
         }
 
         public void add(Entry entry) {
@@ -90,9 +90,9 @@ public class Entry {
 }</pre></div>
 <p>And the resulting XML is not so nice as we would want it to be:</p>
 <div class="Source Java"><pre>&lt;com.thoughtworks.xstream.Blog&gt;
-  &lt;author&gt;
+  &lt;writer&gt;
     &lt;name&gt;Guilherme Silveira&lt;/name&gt;
-  &lt;/author&gt;
+  &lt;/writer&gt;
   &lt;entries&gt;
     &lt;com.thoughtworks.xstream.Entry&gt;
       &lt;title&gt;first&lt;/title&gt;
@@ -107,12 +107,34 @@ public class Entry {
   &lt;/entries&gt;
 &lt;/com.thoughtworks.xstream.Blog&gt;</pre></div></div>
 <div class="section">
-<h2 id="aliasing">Class aliasing</h2>
+<h2 id="class_aliasing">Class aliasing</h2>
 <p>The first thing we shall change is how XStream refers to the <b>com.thoughtworks.xstream.Blog</b> class.
 We shall name it simply <i>blog</i>: let's create an alias called <i>blog</i> to the desired class:</p>
 <div class="Source Java"><pre>xstream.alias(&quot;blog&quot;, Blog.class);</pre></div>
 <p>Using the same idea, we can alias the 'Entry' class to 'entry':</p>
 <div class="Source Java"><pre>xstream.alias(&quot;entry&quot;, Entry.class);</pre></div>
+<p>The result now becomes:</p>
+<div class="Source Java"><pre>&lt;blog&gt;
+  &lt;writer&gt;
+    &lt;name&gt;Guilherme Silveira&lt;/name&gt;
+  &lt;/writer&gt;
+  &lt;entries&gt;
+    &lt;entry&gt;
+      &lt;title&gt;first&lt;/title&gt;
+      &lt;description&gt;My first blog entry.&lt;/description&gt;
+    &lt;/entry&gt;
+    &lt;entry&gt;
+      &lt;title&gt;tutorial&lt;/title&gt;
+      &lt;description&gt;
+        Today we have developed a nice alias tutorial. Tell your friends! NOW!
+      &lt;/description&gt;
+    &lt;/entry&gt;
+  &lt;/entries&gt;
+&lt;/blog&gt;</pre></div></div>
+<div class="section">
+<h2 id="field_aliasing">Field aliasing</h2>
+<p>Next we will change the name of the writer tag, but this time we have to use a field alias:</p>
+<div class="Source Java"><pre>xstream.aliasField(&quot;author&quot;, Blog.class, &quot;writer&quot;);</pre></div>
 <p>The result now becomes:</p>
 <div class="Source Java"><pre>&lt;blog&gt;
   &lt;author&gt;
@@ -183,12 +205,14 @@ shall assume the behaviour we described.</p>
 &lt;/blog&gt;</pre></div></div>
 <div class="section">
 <h2 id="attributes">Attribute aliasing</h2>
-<p>The next step is to set the <b>author</b> member variable as an XML attribute. In order to do this, we shall tell
-XStream to alias the <b>author</b> field of the <b>Blog</b> class as an "author" attribute.</p>
-<div class="Source Java"><pre>                xstream.useAttributeFor(Blog.class, &quot;author&quot;);</pre></div>
+<p>The next step is to set the <b>writer</b> member variable as an XML attribute. In order to do this, we shall tell
+XStream to alias the <b>writer</b> field of the <b>Blog</b> class as an "author" attribute:</p>
+<div class="Source Java"><pre>                xstream.useAttributeFor(Blog.class, &quot;writer&quot;);
+                xstream.aliasField(&quot;author&quot;, Blog.class, &quot;writer&quot;);</pre></div>
 <p>And now it leaves us with one problem: how does XStream converts an Author in a String so it can be written as a
 XML tag attribute?</p>
-<p>Let's use the <b>SimpleValueConverter</b> and implement our own Author converter:</p>
+<p>Attributes cannot be written for types that are handled by Converter implementations, we have to use a
+<b>SingleValueConverter</b> and implement our own converter for the Author:</p>
 <div class="Source Java"><pre>class AuthorConverter implements SingleValueConverter {
 }</pre></div>
 <p>The first method to implement tells XStream which types it can deal with:</p>
@@ -257,7 +281,7 @@ XML tag attribute?</p>
 &lt;/blog&gt;</pre></div>
 </div>
 
-<p class=highlight>You have to be aware, that attribute values normally have to be normalized by the XMP parser as
+<p class=highlight>You have to be aware, that attribute values normally have to be normalized by the XML parser as
 required by the <a href="http://www.w3.org/TR/REC-xml/#AVNormalize">W3C spec</a>. Leading and trailing whitespaces
 are normally removed as well as sequential ones! Therefore a deserialized string might differ from the value visible in
 the XML representation.</p>
@@ -303,8 +327,14 @@ but this time we alias the package name instead of the individual classes:</p>
 
 <div class="section">
 <h2 id="summary">Summing up</h2>
-<p>Using aliases and converters gives you enough power to configure your XML in almost any way you desire.</p>
-<p>Don't forget to read the converter tutorial to see other type of converters that you can create using XStream.</p>
+<p>To recap:</p>
+<ul>
+<li>You can use class aliases to change tag names</li>
+<li>You can use field aliases to change tag names</li>
+<li>You can use package aliases to change tag names</li>
+<li>Fields can be written as attributes if the field type is handled by a SingleValueConverter</li>
+</ul>
+<p>Don't forget to read the <a href="converter-tutorial.html">converter tutorial</a> to see other type of converters that you can create using XStream.</p>
 </div>
 
   </body>

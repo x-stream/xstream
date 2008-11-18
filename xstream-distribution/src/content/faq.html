@@ -45,7 +45,7 @@
     <h2 id="Compatibility_enhanced_mode_jvm">Which JVMs allow XStream to operate in enhanced mode?</h2>
 
     <p>Currently on the Sun, Apple, HP, IBM and Blackdown 1.4 JVMs and onwards.
-    Also for Hitachi and SAP from 1.5 and onwards.
+    Also for Hitachi, SAP and Diablo from 1.5 and onwards.
     Support for BEA JRockit starting with R25.1.0. 
     For all other JVMs, XStream should be used in pure Java mode.</p>
 
@@ -71,6 +71,14 @@
 	<p>XStream does work in Android 1.0, but has limited capabilities. XStream does not support enhanced mode for
 	Android. Additionally Android reports itself as implementation of JDK specification 0.9, so it is not possible to write
 	into final fields. Android also does not include the java.beans package. Therefore you cannot use the JavaBeanConverter.
+	</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_Harmony">Why does XStream fail on Harmony?</h2>
+
+	<p>Since JDK 5 it is possible according the Java specification to write into final fields using reflection. This is not yet 
+	supported by Harmony and therefore the PureJavaReflectionProvider fails. We have also already investigated into
+	enhanced mode in Harmony, but the Harmony JVM currently crashes running the unit tests. It is simply not yet ready.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_unsupported_JVM">Are there plans to provide enhanced mode support to other JVMs?</h2>
@@ -396,6 +404,21 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 
     <p>Your parser is probably right!  Control characters are only valid as part of XML 1.1.  You should add an XML header
     declaring this version or use a parser that does not care about this part of the specification (e.g. Xpp3 parser).</p>
+
+    <!-- ...................................................... -->
+    <h2 id="XML_attributes">Why is my element not written as XML attribute although I have configured it?</h2>
+
+    <p>You can only write types as attributes that are represented as a single String value and are handled therefore
+    by SingleValueConverter implementations. If your type is handled by a Converter implementation, the configuration
+    of XStream to write an attribute (using XStream.useAttributeFor() or @XStreamAsAttribute) is simply ignored.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="XML_attribute_normalization">Why are whitespace characters missing in my attribute values after deserialization?</h2>
+
+    <p>This is part of the XML specification and a required functionality for any XML parser called
+    <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#AVNormalize">attribute value normalization</a>. It cannot
+    be influenced by XStream. Do not use attributes if your values contain leading or trailing whitespaces, other whitespaces
+    than blanks, or sequences of whitespaces.</p>
 
 
     <!-- ****************************************************** -->

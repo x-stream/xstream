@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2006 Joe Walnes.
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2008 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -434,6 +434,7 @@ public class Birthday {
 
         private Person person;
         private Calendar date;
+        private char gender;
 
         public Person getPerson() {
                 return person;
@@ -450,15 +451,29 @@ public class Birthday {
         public void setDate(Calendar date) {
                 this.date = date;
         }
+        
+        public char getGender() {
+                return gender;
+        }
+
+        public void setGenderMale() {
+                this.gender = 'm';
+        }
+
+        public void setGenderFemale() {
+                this.gender = 'f';
+        }
 
 }</pre></div><p>While XStream is capable of converting this class without any problem, we write our own custom converter
-just for demonstration. This time we want to reuse our already written converters for the Person and the Calendar. The 
-<code>canConvert</code> method is plain simple. We convert no derived classes this time, since they might have additional 
-fields. But we reuse the converters registered in XStream for our member fields and handle <code>null</code> values:
+just for demonstration. This time we want to reuse our already written converters for the Person and the Calendar and add an
+own attribute for the gender. The <code>canConvert</code> method is plain simple. We convert no derived classes this time,
+since they might have additional fields. But we reuse the converters registered in XStream for our member fields and handle
+<code>null</code> values:
 </p><div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
 
 import java.util.Calendar;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -474,6 +489,9 @@ public class BirthdayConverter implements Converter {
         public void marshal(Object value, HierarchicalStreamWriter writer,
                         MarshallingContext context) {
                 Birthday birthday = (Birthday)value;
+                if (birthday.getGender() != '\0') {
+                        writer.addAttribute("gender", Character.toString(birthday.getGender()));
+                }
                 if (birthday.getPerson() != null) {
                         writer.startNode("person");
                         context.convertAnother(birthday.getPerson());
@@ -489,6 +507,20 @@ public class BirthdayConverter implements Converter {
         public Object unmarshal(HierarchicalStreamReader reader,
                         UnmarshallingContext context) {
                 Birthday birthday = new Birthday();
+                String gender = reader.getAttribute("gender");
+                if (gender != null) {
+                        if (gender.length() &gt; 0) {              
+                                if (gender.char(0) == 'f') {
+                                        birthday.setGenderFemale();
+                                } else if (gender.char(0) == 'm') {
+                                        birthday.setFemale();
+                                } else {
+                                        throw new ConversionException("Invalid gender value: " + gender);
+                                }
+                        } else {
+                                throw new ConversionException("Empty string is invalid gender value");
+                        }
+                }
                 while (reader.hasMoreChildren()) {
                         reader.moveDown();
                         if ("person".equals(reader.getNodeName())) {
@@ -503,10 +535,17 @@ public class BirthdayConverter implements Converter {
                 return birthday;
         }
 
-}</pre></div><p>If the implementation of <code>Birthday</code> ensures, that none of its fields
-could hold a <code>null</code> value, then we could drop the <code>null</code> condition in
-the <code>marshal</code> method and in <code>unmarshal</code> we could omit the loop as
-well as the comparison of the tag names:</p><div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
+}</pre></div><p>The unmarshal method ensures the valid value for the gender by throwing a
+ConversionException for invalid entries.</p>
+
+<p class=highlight>Note, that attributes will always have to be written and read first. You work on a stream and
+accessing the value of a tag or its members will close the surrounding tag (that is still active when the method is
+called).</p>
+
+<p>If the implementation of <code>Birthday</code> ensures, that none of its fields
+could hold a <code>null</code> value and gender contains a valid value, then we could drop the 
+<code>null</code> condition in the <code>marshal</code> method and in <code>unmarshal</code>
+we could omit the loop as well as the comparison of the tag names:</p><div class="Source Java"><pre>package com.thoughtworks.xstream.examples;
 
 import java.util.Calendar;
 
@@ -524,6 +563,7 @@ public class BirthdayConverter implements Converter {
 
         public void marshal(Object value, HierarchicalStreamWriter writer,
                         MarshallingContext context) {
+                writer.addAttribute("gender", Character.toString(birthday.getGender()));
                 Birthday birthday = (Birthday)value;
                 writer.startNode("person");
                 context.convertAnother(birthday.getPerson());
@@ -536,6 +576,11 @@ public class BirthdayConverter implements Converter {
         public Object unmarshal(HierarchicalStreamReader reader,
                         UnmarshallingContext context) {
                 Birthday birthday = new Birthday();
+                if (reader.getAttribute("gender").charAt(0) == 'm') {
+                        birthday.setGenderMale();
+                } else {
+                        birthday.setGenderFemale();
+                }
                 reader.moveDown();
                 Person person = (Person)context.convertAnother(birthday, Person.class);
                 birthday.setPerson(person);
