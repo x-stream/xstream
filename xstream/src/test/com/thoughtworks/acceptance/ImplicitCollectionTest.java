@@ -372,4 +372,40 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             assertTrue(e.getMessage().indexOf("declares no collection") >= 0);
         }
     }
+
+    public void testWithNullElement() {
+        Farm farm = new Farm(100);
+        farm.add(null);
+        farm.add(new Animal("Cow"));
+
+        String expected = "" +
+                "<farm>\n" +
+                "  <size>100</size>\n" +
+                "  <null/>\n" +
+                "  <animal>\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "</farm>";
+
+        xstream.addImplicitCollection(Farm.class, "animals");
+        assertBothWays(farm, expected);
+    }
+
+    public void testWithAliasAndNullElement() {
+        Farm farm = new Farm(100);
+        farm.add(null);
+        farm.add(new Animal("Cow"));
+
+        String expected = "" +
+                "<farm>\n" +
+                "  <size>100</size>\n" +
+                "  <null/>\n" +
+                "  <beast>\n" +
+                "    <name>Cow</name>\n" +
+                "  </beast>\n" +
+                "</farm>";
+
+        xstream.addImplicitCollection(Farm.class, "animals", "beast", Animal.class);
+        assertBothWays(farm, expected);
+    }
 }

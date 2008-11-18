@@ -129,9 +129,12 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             ImplicitCollectionMappingImpl unnamed = null;
             for (Iterator iterator = namedItemTypeToDef.keySet().iterator(); iterator.hasNext();) {
                 NamedItemType itemTypeForFieldName = (NamedItemType)iterator.next();
-                if (itemTypeForFieldName.itemType.isAssignableFrom(itemType)) {
-                    ImplicitCollectionMappingImpl def = (ImplicitCollectionMappingImpl)namedItemTypeToDef
-                        .get(itemTypeForFieldName);
+                ImplicitCollectionMappingImpl def = (ImplicitCollectionMappingImpl)namedItemTypeToDef
+                    .get(itemTypeForFieldName);
+                if (itemType == Mapper.Null.class) {
+                    unnamed = def;
+                    break;
+                } else if (itemTypeForFieldName.itemType.isAssignableFrom(itemType)) {
                     if (def.getItemFieldName() != null) {
                         if (def.getItemFieldName().equals(itemFieldName)) {
                             return def.getFieldName();

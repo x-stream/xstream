@@ -109,43 +109,44 @@ public abstract class AbstractReflectionConverter implements Converter {
                             Collection list = (Collection) newObj;
                             for (Iterator iter = list.iterator(); iter.hasNext();) {
                                 Object obj = iter.next();
-                                writeField(fieldName, mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
+                                writeField(fieldName, obj == null ? mapper.serializedClass(null) : mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
                             }
                         } else {
                             context.convertAnother(newObj);
                         }
                     } else {
-                        writeField(fieldName, fieldName, fieldType, definedIn, newObj);
+                        writeField(fieldName, null, fieldType, definedIn, newObj);
                     }
                 }
             }
 
             private void writeField(String fieldName, String aliasName, Class fieldType, Class definedIn, Object newObj) {
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source.getClass(), aliasName), fieldType); 
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, aliasName != null ? aliasName : mapper.serializedMember(source.getClass(), fieldName), fieldType); 
 
-                Class actualType = newObj.getClass();
-
-                Class defaultType = mapper.defaultImplementationOf(fieldType);
-                if (!actualType.equals(defaultType)) {
-                    String serializedClassName = mapper.serializedClass(actualType);
-                    if (!serializedClassName.equals(mapper.serializedClass(defaultType))) {
-                        String attributeName = mapper.aliasForSystemAttribute("class");
-                        if (attributeName != null) {
-                            writer.addAttribute(attributeName, serializedClassName);
+                if (newObj != null) {
+                    Class actualType = newObj.getClass();
+                    Class defaultType = mapper.defaultImplementationOf(fieldType);
+                    if (!actualType.equals(defaultType)) {
+                        String serializedClassName = mapper.serializedClass(actualType);
+                        if (!serializedClassName.equals(mapper.serializedClass(defaultType))) {
+                            String attributeName = mapper.aliasForSystemAttribute("class");
+                            if (attributeName != null) {
+                                writer.addAttribute(attributeName, serializedClassName);
+                            }
                         }
                     }
-                }
-
-                final Field defaultField = (Field)defaultFieldDefinition.get(fieldName);
-                if (defaultField.getDeclaringClass() != definedIn) {
-                    String attributeName = mapper.aliasForSystemAttribute("defined-in");
-                    if (aliasName != null) {
-                        writer.addAttribute(attributeName, mapper.serializedClass(definedIn));
+    
+                    final Field defaultField = (Field)defaultFieldDefinition.get(fieldName);
+                    if (defaultField.getDeclaringClass() != definedIn) {
+                        String attributeName = mapper.aliasForSystemAttribute("defined-in");
+                        if (attributeName != null) {
+                            writer.addAttribute(attributeName, mapper.serializedClass(definedIn));
+                        }
                     }
+    
+                    Field field = reflectionProvider.getField(definedIn,fieldName);
+                    marshallField(context, newObj, field);
                 }
-
-                Field field = reflectionProvider.getField(definedIn,fieldName);
-                marshallField(context, newObj, field);
                 writer.endNode();
             }
 
@@ -250,7 +251,9 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result, String itemFieldName) {
-        String fieldName = mapper.getFieldNameForItemTypeAndName(context.getRequiredType(), value.getClass(), itemFieldName);
+        String fieldName = mapper.getFieldNameForItemTypeAndName(
+            context.getRequiredType(), value != null ? value.getClass() : Mapper.Null.class,
+            itemFieldName);
         if (fieldName != null) {
             if (implicitCollections == null) {
                 implicitCollections = new HashMap(); // lazy instantiation
