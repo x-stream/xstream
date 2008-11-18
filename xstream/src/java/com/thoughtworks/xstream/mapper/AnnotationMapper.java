@@ -473,7 +473,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 type = type.getComponentType();
             }
             final String name = type.getName();
-            if (name.startsWith("java.") || name.startsWith("java.")) {
+            if (name.startsWith("java.") || name.startsWith("javax.")) {
                 return false;
             }
             final boolean ret = annotatedTypes.contains(type) ? false : super.add(type);
