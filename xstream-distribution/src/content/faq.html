@@ -316,7 +316,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     change the encoding of a Reader and any encoding definition in the XML header will be ignored.</p>
 
     <!-- ...................................................... -->
-    <h2 id="XML_write_XML_declaration">Why does XStream not write a XML declaration?</h2>
+    <h2 id="XML_write_XML_declaration">Why does XStream not write an XML declaration?</h2>
 
     <p>XStream is designed to write XML snippets, so you can embed its output into an existing stream or string.
     You can write the XML declaration yourself into the Writer before using it to call XStream.toXML(writer).</p>
@@ -380,6 +380,14 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#AVNormalize">attribute value normalization</a>. It cannot
     be influenced by XStream. Do not use attributes if your values contain leading or trailing whitespaces, other whitespaces
     than blanks, or sequences of whitespaces.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="XML_namespaces">Why does XStream not have any namespace support?</h2>
+
+    <p>Not every XML parser supports namespaces and not every XML parser that supports namespaces can be configured
+    within XStream to use those. Basically namespaces must be supported individually for the different XML parsers and the
+    only support for namespaces that has currently been implemented in XStream is for the StAX paser. Therefore use and
+    configure the StaxDriver of XStream to use namespaces.</p>
 
 
     <!-- ****************************************************** -->
@@ -486,7 +494,51 @@ System.out.println(writer.toString());
 
     <p>Yes. Once the XStream instance has been created and configured, it may be shared across multiple threads
     allowing objects to be serialized/deserialized concurrently (unless you enable the auto.detection and processing of
-    annotations).</p>
+    annotations). Actually the creation and initialization of XStream is quite expensive, therefore it is recommended to
+    keep the XStream instance itself.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Scalability_Memory">How much memory does XStream consume?</h2>
+
+	<p>This cannot be answered in general, but following topics have impact on the memory:</p>
+
+	<ol>
+    <li>XML parser technology in use: You should use a streaming parser like Xpp3 or StAX. DOM-based
+    parsers process the complete XML and create their document model in memory before the first converter of XStream
+    is called.</li>
+    <li>Your object model: Is it necessary to keep the complete object graph in memory at once. As alternative you might
+    use <a href="objectstream.html">object streams</a> or write custom converters that can load and save objects of your
+    object model on the fly without adding them to the object graph physically. As example see the implementation of the
+    <a href="javadoc/com/thoughtworks/xstream/persistence/XmlArrayList.html">XmlArrayList</a> in combination with the
+    <a href="javadoc/com/thoughtworks/xstream/persistence/FileStreamStrategy.html">FileStreamStrategy</a> to keep
+    parts of the object graph separate.</li>
+    <li>References: By default XStream supports references to the same object in an object graph. This implies that XStream
+    keeps track of all serialized and deserialized objects internally. These references are kept with WeakReferences, so that the
+    memory can be freed as soon as nobody references these objects anymore.</li>
+    <li>XML values: Any tag and attribute value that is converted into a Java String in the object graph will use the same String
+    instance.</li>
+    <li>XStream caches: To increase performance XStream caches quite a lot like classes, converters to use, aliasing, tag names.
+    All those caches make usage of WeakReferences or will exist only while marshalling one object graph resp. unmarshalling one
+    input stream.</li>
+    </ol>
+
+    <!-- ...................................................... -->
+    <h2 id="Scalability_Performance">Can the performance of XStream be increased?</h2>
+
+    <p>XStream is a generalizing library, it inspects and handles your types on the fly. Therefore it will normally be slower than
+    a piece of optimized Java code generated out of a schema. However, it is possible to increase the performance anyway:</p>
+    
+    <ul>
+    <li>Write custom converters for those of your types that occur very often in your XML.</li>
+    <li>Keep a configured XStream instance for multiple usage. Creation and initialization is quite expensive compared to the
+    overhead of XStream when calling marshall or unmarshal.</li>
+    <li>Use Xpp3 or StAX parsers.</li>
+    </ul>
+    
+    <p>Note, you should never try to optimize code for performance simply because you <strong>believe</strong> that you
+    have detected a bottle neck. Always use proper tools like a profiler to verify where your hotspots are and whether your
+    optimization was really successful or not.</p>
+ 
 
     <!-- ****************************************************** -->
     <h1 id="Uses">Uses of XStream</h1>
