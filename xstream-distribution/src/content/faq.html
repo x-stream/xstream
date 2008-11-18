@@ -201,50 +201,7 @@
     <!-- ...................................................... -->
     <h2 id="Serialization_collections">What do serialized collections look like?</h2>
 
-    <p>Example:</p>
-
-<div class="Source Java"><pre>class Person {
-  private String name;
-  private List toys = new ArrayList();
-  // ...
-}
-
-class Computer {
-  String type;
-}
-
-class Car {
-  String color;
-}
-
-xstream.alias("person", Person.class);
-xstream.alias("computer", Computer.class);
-xstream.alias("car", Car.class);
-
-Person person = new Person("Joe");
-person.addToy(new Computer("apple"));
-person.addToy(new Computer("spectrum"));
-person.addToy(new Car("blue"));
-
-String xml = xstream.toXML(joe);</pre></div>
-
-    <p>Results in:</p>
-
-<div class="Source Java"><pre>&lt;person&gt;
-  &lt;name&gt;Joe&lt;/name&gt;
-  &lt;toys&gt;
-    &lt;computer&gt;
-      &lt;type&gt;apple&lt;/type&gt;
-    &lt;/computer&gt;
-    &lt;computer&gt;
-      &lt;type&gt;spectrum&lt;/type&gt;
-    &lt;/computer&gt;
-    &lt;car&gt;
-      &lt;color&gt;blue&lt;/color&gt;
-    &lt;/car&gt;
-  &lt;/toys&gt;
-&lt;/person&gt;</pre></div>
-
+	<p>See example for the <a href="converters.html#java.util">CollectionConverter</a>.</p>
 	<p>Note, that it is possible to configure XStream to omit the container element <i>toys</i> using implicit collections.</p>
 
     <!-- ...................................................... -->
@@ -339,6 +296,10 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 
 	<p>Although XStream caches a lot of type related information to gain speed, it keeps those information in
 	tables with weak references that should be cleaned by the garbage collector when the class loader is freed.</p>
+	
+	<p>Note, that this call should be made quite immediately after creating the XStream and before any other
+	configuration is done. Otherwise configuration based on special types might refer classes loaded with the wrong
+	classloader.</p>
 
     <!-- ****************************************************** -->
     <h1 id="XML">XML specifics</h1>
