@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,8 +23,8 @@ public class XmlSet extends AbstractSet {
 
 	private final XmlMap map;
 
-	public XmlSet(StreamStrategy streamStrategy) {
-		this.map = new XmlMap(streamStrategy);
+	public XmlSet(PersistenceStrategy persistenceStrategy) {
+		this.map = new XmlMap(persistenceStrategy);
 	}
 
 	public Iterator iterator() {
@@ -45,12 +45,12 @@ public class XmlSet extends AbstractSet {
 		}
 	}
 
-	private String findEmptyKey() {
+	private Long findEmptyKey() {
 		long i = System.currentTimeMillis();
-		while (map.containsKey("" + i)) {
+		while (map.containsKey(new Long(i))) {
 			i++;
 		}
-		return "" + i;
+		return new Long(i);
 	}
 
 }

@@ -47,6 +47,7 @@
     	<li>JIRA:XSTR-448: Separated system attributes and user defined attributes for aliases.</li>
     	<li>JIRA:XSTR-55: Ability to alias a package name.</li>
     	<li>Support for Diablo JDK on FreeBSD (by Reto Bachmann-Gm&uuml;r).</li>
+    	<li>JIRA:XSTR-495: New PersistenceStrategy instead of StreamStrategy (based on the code and comments by Alexander Radzin).</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -78,6 +79,7 @@
     	<li>Dependencies have been updated to latest versions of JDOM, Jettison, Joda Time, and Woodstox. Note for Maven
     	builds that the <em>groupId</em> of JDOM has changed.</li>
     	<li>Fix possible IndexOutOfBoundsException creating returning the message for a ConversionException.</li>
+    	<li>JIRA:XSTR-495: StreamStrategy cannot handle key with value <em>null</em>.</li>
     </ul>
     
     <h2>API changes</h2>
@@ -89,6 +91,8 @@
     	c.t.x.mapper.Mapper.getConverterFromAttribute(Class, String, Class) taking the type as third argument that should be handled by the
     	converter.</li>
     	<li>c.t.x.core.ReferenceByIdMarshaller.IdGenerator.next() has now the current object as argument.</li>
+    	<li>New c.t.x.persistence.PersistenceStrategy and c.t.x.persistence.FilePersistenceStrategy.</li>
+    	<li>Deprecated c.t.x.persistence.StreamStrategy and c.t.x.persistence.FileStreamStrategy.</li>
     </ul>
 
     <h1 id="1.3">1.3</h1>

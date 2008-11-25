@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,23 +11,11 @@
  */
 package com.thoughtworks.xstream.persistence;
 
-import java.util.Iterator;
-
 /**
  * A key to filename and vice-versa strategy interface.
  * 
  * @author Guilherme Silveira
+ * @deprecated since upcoming, use {@link PersistenceStrategy} instead
  */
-public interface StreamStrategy {
-
-	Iterator iterator();
-
-	int size();
-
-	Object get(Object key);
-
-	Object put(Object key, Object value);
-
-	Object remove(Object key);
-
+public interface StreamStrategy extends PersistenceStrategy {
 }

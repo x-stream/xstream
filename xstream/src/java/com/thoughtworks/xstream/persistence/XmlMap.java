@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,27 +25,27 @@ import java.util.Set;
  */
 public class XmlMap extends AbstractMap {
 
-	private final StreamStrategy streamStrategy;
+	private final PersistenceStrategy persistenceStrategy;
 
-	public XmlMap(StreamStrategy streamStrategy) {
-		this.streamStrategy = streamStrategy;
+	public XmlMap(PersistenceStrategy streamStrategy) {
+		this.persistenceStrategy = streamStrategy;
 	}
 
 	public int size() {
-		return streamStrategy.size();
+		return persistenceStrategy.size();
 	}
 
 	public Object get(Object key) {
 		// faster lookup
-		return streamStrategy.get(key);
+		return persistenceStrategy.get(key);
 	}
 
 	public Object put(Object key, Object value) {
-		return streamStrategy.put(key,value);
+		return persistenceStrategy.put(key,value);
 	}
 
 	public Object remove(Object key) {
-		return streamStrategy.remove(key);
+		return persistenceStrategy.remove(key);
 	}
 
 	public Set entrySet() {
@@ -63,7 +63,7 @@ public class XmlMap extends AbstractMap {
 		}
 
 		public Iterator iterator() {
-			return streamStrategy.iterator();
+			return persistenceStrategy.iterator();
 		}
 
 	}

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,8 +22,8 @@ public class XmlArrayList extends AbstractList {
 
 	private final XmlMap map;
 
-	public XmlArrayList(StreamStrategy streamStrategy) {
-		this.map = new XmlMap(streamStrategy);
+	public XmlArrayList(PersistenceStrategy persistenceStrategy) {
+		this.map = new XmlMap(persistenceStrategy);
 	}
 
 	public int size() {
@@ -33,7 +33,7 @@ public class XmlArrayList extends AbstractList {
 	public Object set(int index, Object element) {
 		rangeCheck(index);
 		Object value = get(index);
-		map.put(String.valueOf(index), element);
+		map.put(new Integer(index), element);
 		return value;
 	}
 
@@ -45,9 +45,9 @@ public class XmlArrayList extends AbstractList {
 		}
 		int to = index != size ? index - 1 : index;
 		for (int i = size; i > to; i--) {
-			map.put(String.valueOf(i + 1), map.get(String.valueOf(i)));
+			map.put(new Integer(i + 1), map.get(new Integer(i)));
 		}
-		map.put(String.valueOf(index), element);
+		map.put(new Integer(index), element);
 	}
 
 	private void rangeCheck(int index) {
@@ -60,17 +60,17 @@ public class XmlArrayList extends AbstractList {
 
 	public Object get(int index) {
 		rangeCheck(index);
-		return map.get(String.valueOf(index));
+		return map.get(new Integer(index));
 	}
 
 	public Object remove(int index) {
 		int size = size();
 		rangeCheck(index);
-		Object value = map.get(String.valueOf(index));
+		Object value = map.get(new Integer(index));
 		for (int i = index; i < size - 1; i++) {
-			map.put(String.valueOf(i), map.get(String.valueOf(i + 1)));
+			map.put(new Integer(i), map.get(new Integer(i + 1)));
 		}
-		map.remove(String.valueOf(size - 1));
+		map.remove(new Integer(size - 1));
 		return value;
 	}
 

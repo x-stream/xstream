@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -48,7 +48,7 @@ public class XmlArrayListTest extends TestCase {
 	public void testWritesASingleObjectInFirstPosition() {
 		XmlArrayList xmlList = new XmlArrayList(this.strategy);
 		xmlList.add("guilherme");
-		assertTrue(strategy.map.containsKey("0"));
+		assertTrue(strategy.map.containsKey(new Integer(0)));
 	}
 
 	public void testWritesTwoObjects() {
@@ -57,16 +57,16 @@ public class XmlArrayListTest extends TestCase {
 		xmlList.add("silveira");
 		assertTrue(strategy.map.containsValue("guilherme"));
 		assertTrue(strategy.map.containsValue("silveira"));
-		assertTrue(strategy.map.containsKey("0"));
-		assertTrue(strategy.map.containsKey("1"));
+		assertTrue(strategy.map.containsKey(new Integer(0)));
+		assertTrue(strategy.map.containsKey(new Integer(1)));
 	}
 
 	public void testWritesTwoObjectsGuaranteesItsEnumerationOrder() {
 		XmlArrayList xmlList = new XmlArrayList(this.strategy);
 		xmlList.add("guilherme");
 		xmlList.add("silveira");
-		assertEquals("guilherme", strategy.map.get("0"));
-		assertEquals("silveira", strategy.map.get("1"));
+		assertEquals("guilherme", strategy.map.get(new Integer(0)));
+		assertEquals("silveira", strategy.map.get(new Integer(1)));
 	}
 
 	public void testWritesASecondObjectInAPositionHigherThanTheListsSize() {
@@ -254,7 +254,7 @@ public class XmlArrayListTest extends TestCase {
 		assertFalse(xmlList.contains("guilherme"));
 	}
 
-	private static class MockedStrategy implements StreamStrategy {
+	private static class MockedStrategy implements PersistenceStrategy {
 
 		private Map map = new HashMap();
 

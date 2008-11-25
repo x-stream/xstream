@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -177,7 +177,7 @@ public class XmlSetTest extends TestCase {
 		assertFalse(set.contains("guilherme"));
 	}
 
-	private static class MockedStrategy implements StreamStrategy {
+	private static class MockedStrategy implements PersistenceStrategy {
 
 		private Map map = new HashMap();
 

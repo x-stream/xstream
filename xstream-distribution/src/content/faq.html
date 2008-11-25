@@ -417,11 +417,11 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     identify the problematic spots. Also consider then <a href="#XML_unmarshalling_fails">marshalling your Java
     objects into XML first</a>. You can use following code to generate the XML:</p>
 
-<div class="Source Java"><pre>final String json = "{string:\"foo\"}";
-final HierarchicalStreamDriver driver = new JettisonMappedXmlDriver();
-final StringReader reader = new StringReader(json);
-final HierarchicalStreamReader hsr = driver.createReader(reader);
-final StringWriter writer = new StringWriter();
+<div class="Source Java"><pre>String json = "{string:\"foo\"}";
+HierarchicalStreamDriver driver = new JettisonMappedXmlDriver();
+StringReader reader = new StringReader(json);
+HierarchicalStreamReader hsr = driver.createReader(reader);
+StringWriter writer = new StringWriter();
 new HierarchicalStreamCopier().copy(hsr, new PrettyPrintWriter(writer));
 writer.close();
 System.out.println(writer.toString());
