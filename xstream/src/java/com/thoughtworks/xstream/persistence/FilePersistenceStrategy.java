@@ -14,17 +14,18 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import java.io.File;
 
 
 /**
  * PersistenceStrategy to assign keys with single value to objects persisted in files. The
- * default naming strategy is based on the key's toString method and escapes non digit, non a-z,
- * A-Z characters. In order to change the escaping/unescaping algorithm, simply extend this
- * class and rewrite its getName/extractKey methods. Note, that this implementation silently
- * implies that the keys actually are Strings, since the keys will be turned into keys at
- * deserialization time.
+ * default naming strategy is based on the key's type and its {@link SingleValueConverter}. It
+ * escapes all characters that are normally illegal in the most common file systems. Such a
+ * character is escaped with percent escaping as it is done by URL encoding. The XStream used to
+ * marshal the values is also requested for the key's SingleValueConverter. A
+ * {@link StreamException} is thrown if no such converter is registered.
  * 
  * @author J&ouml;rg Schaible
  * @author Guilherme Silveira
@@ -34,14 +35,39 @@ public class FilePersistenceStrategy extends AbstractFilePersistenceStrategy {
 
     private final String illegalChars;
 
+    /**
+     * Create a new FilePersistenceStrategy. Use a standard XStream instance with a
+     * {@link DomDriver}.
+     * 
+     * @param baseDirectory the directory for the serialized values
+     * @since upcoming
+     */
     public FilePersistenceStrategy(final File baseDirectory) {
-        this(baseDirectory, new XStream());
+        this(baseDirectory, new XStream(new DomDriver()));
     }
 
+    /**
+     * Create a new FilePersistenceStrategy with a provided XStream instance.
+     * 
+     * @param baseDirectory the directory for the serialized values
+     * @param xstream the XStream instance to use for (de)serialization
+     * @since upcoming
+     */
     public FilePersistenceStrategy(final File baseDirectory, final XStream xstream) {
         this(baseDirectory, xstream, "utf-8", "<>?:/\\\"|*%");
     }
 
+    /**
+     * Create a new FilePersistenceStrategy with a provided XStream instance and the characters
+     * to encode.
+     * 
+     * @param baseDirectory the directory for the serialized values
+     * @param xstream the XStream instance to use for (de)serialization
+     * @param encoding encoding used to write the files
+     * @param illegalChars illegal characters for file names (should always include '%' as long
+     *            as you do not overwrite the (un)escape methods)
+     * @since upcoming
+     */
     public FilePersistenceStrategy(
         final File baseDirectory, final XStream xstream, final String encoding,
         final String illegalChars) {

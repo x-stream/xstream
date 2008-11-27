@@ -17,19 +17,18 @@ import java.io.File;
 
 
 /**
- * PersistenceStrategy to assign string based keys to objects persisted in files.
- * 
- * The file naming strategy is based on the key's toString method and escapes non digit, non
- * a-z, A-Z characters. In order to change the escaping/unescaping algorithm, simply extend this
- * class and rewrite its getName/extractKey methods.
- * 
- * Note, this implementation silently implies that the keys actually are Strings, since the keys will
- * be turned into string keys at deserialization time.
+ * PersistenceStrategy to assign string based keys to objects persisted in files. The file
+ * naming strategy is based on the key's type name and its toString method. It escapes non
+ * digit, non a-z and A-Z characters. In order to change the escaping/unescaping algorithm,
+ * simply extend this class and rewrite its getName/extractKey methods. Note, this
+ * implementation silently implies that the keys actually are Strings, since the keys will be
+ * turned into string keys at deserialization time.
  * 
  * @author Guilherme Silveira
  * @deprecated since upcoming, use FilePersistenceStrategy
  */
-public class FileStreamStrategy extends AbstractFilePersistenceStrategy implements StreamStrategy {
+public class FileStreamStrategy extends AbstractFilePersistenceStrategy implements
+    StreamStrategy {
     public FileStreamStrategy(final File baseDirectory) {
         this(baseDirectory, new XStream());
     }
