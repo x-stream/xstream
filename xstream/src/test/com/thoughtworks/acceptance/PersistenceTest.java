@@ -91,7 +91,7 @@ public class PersistenceTest extends AbstractAcceptanceTest {
 
         String expected = "" +
                 "<lists>\n" +
-                "  <good>target/test-storage</good>\n" +
+                "  <good>" + dir.getPath() + "</good>\n" +
                 "  <bad class=\"list\"/>\n" + 
                 "</lists>";
 
