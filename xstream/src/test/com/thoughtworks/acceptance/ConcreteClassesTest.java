@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.WithList;
+import com.thoughtworks.xstream.converters.ConversionException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -95,5 +96,21 @@ public class ConcreteClassesTest extends AbstractAcceptanceTest {
         assertEquals(MyImp1.class, out.field1.getClass());
         assertEquals(MyImp2.class, out.field2.getClass());
         assertEquals(2, ((MyImp2) out.field2).y);
+    }
+
+    public void testUnknownChildMatchingATypeThrowsConversionException() {
+        xstream.alias("h", MyHolder.class);
+
+        String xml = ""
+            + "<h>\n"
+            + "  <int>100</int>\n"
+            + "</h>";
+
+        try {
+            xstream.fromXML(xml);
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            // ok
+        }
     }
 }

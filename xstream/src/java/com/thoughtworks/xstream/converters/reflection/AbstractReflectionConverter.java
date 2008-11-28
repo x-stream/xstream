@@ -250,7 +250,8 @@ public abstract class AbstractReflectionConverter implements Converter {
         return false;
     }
 
-    private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result, String itemFieldName) {
+    private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value,
+        Map implicitCollections, Object result, String itemFieldName) {
         String fieldName = mapper.getFieldNameForItemTypeAndName(
             context.getRequiredType(), value != null ? value.getClass() : Mapper.Null.class,
             itemFieldName);
@@ -258,12 +259,17 @@ public abstract class AbstractReflectionConverter implements Converter {
             if (implicitCollections == null) {
                 implicitCollections = new HashMap(); // lazy instantiation
             }
-            Collection collection = (Collection) implicitCollections.get(fieldName);
+            Collection collection = (Collection)implicitCollections.get(fieldName);
             if (collection == null) {
-                Class fieldType = mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, null));
+                Class fieldType = mapper.defaultImplementationOf(reflectionProvider
+                    .getFieldType(result, fieldName, null));
                 if (!Collection.class.isAssignableFrom(fieldType)) {
-                    throw new ObjectAccessException("Field " + fieldName + " of " + result.getClass().getName() +
-                            " is configured for an implicit Collection, but field is of type " + fieldType.getName());
+                    throw new ObjectAccessException("Field "
+                        + fieldName
+                        + " of "
+                        + result.getClass().getName()
+                        + " is configured for an implicit Collection, but field is of type "
+                        + fieldType.getName());
                 }
                 if (pureJavaReflectionProvider == null) {
                     pureJavaReflectionProvider = new PureJavaReflectionProvider();
@@ -273,6 +279,13 @@ public abstract class AbstractReflectionConverter implements Converter {
                 implicitCollections.put(fieldName, collection);
             }
             collection.add(value);
+        } else {
+            throw new ConversionException("Element "
+                + itemFieldName
+                + " of type "
+                + value.getClass().getName()
+                + " is not defined as field in type "
+                + result.getClass().getName());
         }
         return implicitCollections;
     }
