@@ -46,6 +46,7 @@
     	<a href="faq.html#Serialization_CGLIB">explicitly turned on</a>.</li>
     	<li>JIRA:XSTR-448: Separated system attributes and user defined attributes for aliases.</li>
     	<li>JIRA:XSTR-55: Ability to alias a package name.</li>
+    	<li>JIRA:XSTR-434: New JsonWriter instead of JsonHierarchicalStreamWriter with mode to strip root node of generated JSON (by Paul Hammant).</li>
     	<li>Support for Diablo JDK on FreeBSD (by Reto Bachmann-Gm&uuml;r).</li>
     	<li>JIRA:XSTR-495: New PersistenceStrategy instead of StreamStrategy (based on the code and comments by Alexander Radzin).</li>
     </ul>
@@ -54,7 +55,6 @@
 
     <ul>
     	<li>Support special Jettison functionality for JSON to detect collections or arrays with one element introduced with Jettison 1.0.</li>
-    	<li>JIRA:XSTR-434: Option to strip root node of generated JSON (by Paul Hammant).</li>
     	<li>JIRA:XSTR-493: Using attributes for fields with XML-unfriendly names results in NPE at deserialization.</li>
     	<li>JIRA:XSTR-497: Unsafe operation with WeakHashMap can raise a NPE in Sun14ReflectionProvider.</li>
     	<li>JIRA:XSTR-503: Omitted properties in JavaBeans are requested at serialization (by Kevin Conaway).</li>
@@ -71,6 +71,7 @@
     	<li>JIRA:XSTR-529: NullPointerException for null elements in implicit lists.</li>
     	<li>JIRA:XSTR-517: Miscellaneous performance improvements (by Tatu Saloranta).</li>
     	<li>JIRA:XSTR-525: JsonHierarchicalStreamDriver writes invalid JSON in case of system attribute.</li>
+    	<li>JIRA:XSTR-535: Mode to allow plain values as result for JSON without root node.</li>
     	<li>JIRA:XSTR-531: Possibility to omit system attributes.</li>
     	<li>JIRA:XSTR-508: Fix marshalling error for nested serializable objects with own writeReplace/readResolve methods.</li>
     	<li>JIRA:XSTR-507: Advanced ReferenceByIdMarshaller uses id of the current object if available.</li>
@@ -85,6 +86,7 @@
     <h2>API changes</h2>
 
     <ul>
+    	<li>Deprecated c.t.x.io.json.JsonHierarchicalStreamWriter in favour of c.t.x.io.json.JsonWriter.</li>
     	<li>c.t.x.mapper.EnumMapper no longer derives from the c.t.x.mapper.AttributeMapper as it has been before version 1.3. Therefore the new 
     	constructor has been deprecated in favour of the old one.</li>
     	<li>c.t.x.mapper.Mapper.getConverterFromAttribute(Class, String) has been deprecated in favour of

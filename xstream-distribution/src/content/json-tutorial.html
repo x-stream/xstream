@@ -33,6 +33,8 @@ Therefore do not expect wonders.  XStream (and Jettison) try their best, but the
 into JSON is a lossy transformation and especially deserialization will not be possible for any construct. See also
 <a href="faq.html#JSON_limitations">FAQ</a></p>.
 
+<p>Since JSON has no possibility to express references, you should always set the NO_REFERENCES mode writing JSON.</p>
+
 <h1 id="jettison">Jettison driver</h1>
 
 <p>Jettison driver uses <a href="http://jettison.codehaus.org/">Jettison</a> StAX parser to read and write data in JSON
@@ -73,9 +75,11 @@ public class WriteTest {
 
 <div class="Source Java"><pre>{"product":{"name":"Banana","id":"123","price":"23.0"}}</pre></div>
 
-<p>Since JSON has no possibility to express references, you should always set the NO_REFERENCES mode writing JSON.</p>
-
 <p>As you can see, all standard XStream features (such as aliases) can be used with this driver.</p>	
+
+<p class="highlight">Note that newer Jettison releases than 1.0-RC2 will also try to detect numerical values and
+omit the quotes.  Since Jettison cannot know about the original data type, it has to guess.  Hence it will therefore
+also write the value of the id field as numeric value in future.</p>
 
 <h2 id="json-write">Write to JSON with the self-contained JSON driver</h2>
 
@@ -95,10 +99,32 @@ public class WriteTest {
 <em>price</em> element. This time the driver knew about the numeric value and therefore no quotes were
 generated.</p>
 
-<p class="highlight">Note that newer Jettison releases than 1.0-RC2 will also try to detect numerical values and
-omit the quotes.  Since Jettison cannot know about the original data type, it has to guess.  Hence it will therefore
-also write the value of the id field as numeric value in future.</p>
+<h2 id="json-dropping-root">Write to JSON with the self-contained JSON driver dropping the root</h2>
 
+<p>Sometimes the root node in the generated JSON is superfluous, since its name is caused by the Java type
+of the written object that has no meaning in JSON and increases only the nesting level of the structure. Therefore
+it is possible to drop this root by initializing the internally used 
+<a href="javadoc/com/thoughtworks/xstream/io/json/JsonWriter.html">JsonWriter</a> in a different mode. 
+Again, the only difference to the example above is the line with the initialization:</p>
+
+<div class="Source Java"><pre>XStream xstream = new XStream(new JsonHierarchicalStreamDriver() {
+    public HierarchicalStreamWriter createWriter(Writer writer) {
+        return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
+    }
+});</pre></div>
+
+<p>The output is as follows:</p>
+
+<div class="Source Java"><pre>{
+  "name": "Banana",
+  "id": "123",
+  "price": 23.0
+}</pre></div>
+
+<p class="highlight">Note, that it is now possible to create invalid JSON if XStream should marshal a single object
+with a single value to JSON (like String, int, URL, ...). JSON requires that the root is actually an object, but by
+dropping the root all that is generated is a single value. You can force the JsonWriter to throw a ConversionException
+in this case, see Javadoc of the JsonWriter.</p>
 
 <h2 id="jettison-read">Read from JSON</h2>
 

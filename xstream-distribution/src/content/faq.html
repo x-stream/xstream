@@ -398,26 +398,26 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 	<p>As always, first for historical reasons! Main difference is that the 
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriver.html">JettisonMappedXmlDriver</a> is a 
 	thin wrapper around <a href="http://jettison.codehaus.org">Jettison</a> in combination with the 
-	<a href="javadoc/com/thoughtworks/xstream/io/xml/StaxDriver.html">StaXDriver</a>, while the 
+	<a href="javadoc/com/thoughtworks/xstream/io/xml/StaxDriver.html">StaxDriver</a>, while the 
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
 	uses an own more flexible implementation, but can only be used to generate JSON, deserialization is not implemented.</p>
 
     <h2 id="JSON_deserialize_top_level_array">Why is it not possible to deserialize a JSON string starting with an array?</h2>
 
-	<p>XStream's implementation to deserialize JSON is based on Jettison and StaX. Jettison implements a XMLStreamReader
+	<p>XStream's implementation to deserialize JSON is based on Jettison and StAX. Jettison implements a XMLStreamReader
 	of	StaX and transforms the processed JSON virtually into XML first. However, if the JSON string starts with an array it is not
 	possible for Jettison to create a valid root element, since it has no name.</p>
 
     <h2 id="JSON_unmarshalling_fails">XStream fails to unmarshal my JSON string and I do not know why?</h2>
 
-    <p>Deserialization of JSON is currently done by Jettison, that transforms the JSON string into a StaX stream.
+    <p>Deserialization of JSON is currently done by Jettison, that transforms the JSON string into a StAX stream.
     XStream itself does nothing know about the JSON format here. If your JSON string reaches some kind of
     complexity and you do not know how to design your Java objects and configure XStream to match those,
     you should have a look at the intermediate XML that is processed by XStream in the end. This might help to
     identify the problematic spots. Also consider then <a href="#XML_unmarshalling_fails">marshalling your Java
     objects into XML first</a>. You can use following code to generate the XML:</p>
 
-<div class="Source Java"><pre>String json = "{string:\"foo\"}";
+<div class="Source Java"><pre>String json = "{\"string\": \"foo\"}";
 HierarchicalStreamDriver driver = new JettisonMappedXmlDriver();
 StringReader reader = new StringReader(json);
 HierarchicalStreamReader hsr = driver.createReader(reader);
@@ -432,7 +432,7 @@ System.out.println(writer.toString());
 	<p>JSON represents a very simple data model for easy data transfer. Especially it has no equivalent for XML
 	attributes.  Those are written with a leading &quot;@&quot; character, but this is not always possible without
 	violating the syntax (e.g. for array types).  Those may silently dropped (and makes it therefore difficult to
-	implement deserialization).  Another issue are references in the serialized object graph, since JSON has no
+	implement deserialization). References are another issue in the serialized object graph, since JSON has no
 	possibility to express such a construct.  You should therefore always set the NO_REFERENCES mode of XStream.</p>
 
     <h2 id="JSON_encoding">Why are there invalid characters in my JSON representation?</h2>
@@ -440,6 +440,34 @@ System.out.println(writer.toString());
 	<p>The JSON spec requires any JSON string to be in UTF-8 encoding. However, XStream ensures this only if you
 	provide an InputStream or an OutputStream.	If you provide a Reader or Writer you have to ensure this requirement 
 	on your own.</p>
+
+    <h2 id="JSON_dashes">The generated JSON is invalid, it contains a dash in the label!</h2>
+
+	<p>Well, no, the JSON is valid! Please check yourself with the <a href="http://www.jslint.com/">JSON syntax checker</a>.
+	However, some JavaScript libraries silently assume that the JSON labels are valid JavaScript identifiers, because JavaScript
+	supports a convenient way to address an element, <strong>if</strong> the label is a valid JavaScript identifier:</p>
+
+<div class="Source JavaScript"><pre>var json = {"label": "foo", "label-with-dash": "bar"};
+var fooVar = json.label; // works for labels that are JavaScript identifiers
+var barVar = json["label-with-dash"]; // using an array index works always
+</pre></div>
+
+	<p>As alternative you may wrap the JsonWriter and replace any dash with an underscore:</p>
+
+<div class="Source Java"><pre>HierarchicalStreamDriver driver = new JsonHierarchicalStreamDriver() {
+    public HierarchicalStreamWriter createWriter(Writer out) {
+        return new WriterWrapper(super.createWriter(out)) {
+            public void startNode(String name) {
+                startNode(name, null);
+            }
+            public void startNode(String name, Class clazz) {
+                wrapped.startNode(name.replace('-', '_'), clazz);
+            }
+        }
+    }
+};
+XStream xstream = new XStream(driver);
+</pre></div>
 
     <!-- ****************************************************** -->
     <h1 id="Other_Products">Comparison to other products</h1>

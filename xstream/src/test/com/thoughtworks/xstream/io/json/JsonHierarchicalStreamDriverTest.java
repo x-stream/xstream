@@ -51,11 +51,11 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        xstream = new XStream(new JsonHierarchicalStreamDriver(usesRoot()));
+        xstream = new XStream(createDriver());
     }
     
-    protected boolean usesRoot() {
-        return true;
+    protected JsonHierarchicalStreamDriver createDriver() {
+        return new JsonHierarchicalStreamDriver();
     }
     
     protected String normalizeExpectation(String expected) {
