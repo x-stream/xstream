@@ -18,7 +18,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * Helper methods for {@link HierarchicalStreamReader} and {@link HierarchicalStreamWriter}.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3.1
  */
 public class HierarchicalStreams {
 

@@ -25,7 +25,7 @@ import java.io.File;
  * turned into string keys at deserialization time.
  * 
  * @author Guilherme Silveira
- * @deprecated since upcoming, use FilePersistenceStrategy
+ * @deprecated since 1.3.1, use FilePersistenceStrategy
  */
 public class FileStreamStrategy extends AbstractFilePersistenceStrategy implements
     StreamStrategy {

@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
  * Annotation to force automated processing of further classes.
  * 
  * @author Steven Sparling
- * @since upcoming
+ * @since 1.3.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

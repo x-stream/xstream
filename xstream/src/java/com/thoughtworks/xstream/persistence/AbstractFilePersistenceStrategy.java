@@ -35,7 +35,7 @@ import java.util.Map.Entry;
  * 
  * @author Guilherme Silveira
  * @author Joerg Schaible
- * @since upcoming
+ * @since 1.3.1
  */
 public abstract class AbstractFilePersistenceStrategy implements PersistenceStrategy {
 

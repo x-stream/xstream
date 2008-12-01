@@ -91,7 +91,7 @@ public interface Mapper {
      * 
      * @param attribute the system attribute
      * @return the alias
-     * @since upcoming
+     * @since 1.3.1
      */
     String aliasForSystemAttribute(String attribute);
 
@@ -179,7 +179,7 @@ public interface Mapper {
      * 
      * @param definedIn the field's parent
      * @param attribute the attribute name
-     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
      */
     SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute);
 
@@ -189,7 +189,7 @@ public interface Mapper {
      * @param definedIn the field's parent
      * @param attribute the attribute name
      * @param type the type the converter should create
-     * @since upcoming
+     * @since 1.3.1
      */
     SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type);
 }

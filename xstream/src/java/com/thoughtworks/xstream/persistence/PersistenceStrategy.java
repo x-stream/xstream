@@ -17,7 +17,7 @@ import java.util.Iterator;
  * A key to a persistent storage and vice-versa strategy interface.
  * 
  * @author Guilherme Silveira
- * @since upcoming
+ * @since 1.3.1
  */
 public interface PersistenceStrategy {
 

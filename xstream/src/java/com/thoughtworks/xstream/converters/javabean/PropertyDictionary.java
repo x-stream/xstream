@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Builds the serializable properties maps for each bean and caches them.
- * @deprecated since upcoming, no longer in use
+ * @deprecated since 1.3.1, no longer in use
 */
 public class PropertyDictionary {
 

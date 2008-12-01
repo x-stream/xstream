@@ -19,7 +19,7 @@ import java.lang.reflect.UndeclaredThrowableException;
  * Provide access to a bean property.
  * 
  * @author <a href="mailto:andrea.aime@aliceposta.it">Andrea Aime</a>
- * @deprecated since upcoming, no longer in use
+ * @deprecated since 1.3.1, no longer in use
  */
 public class BeanProperty {
 

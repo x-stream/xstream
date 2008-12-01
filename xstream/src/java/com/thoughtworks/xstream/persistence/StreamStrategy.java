@@ -15,7 +15,7 @@ package com.thoughtworks.xstream.persistence;
  * A key to filename and vice-versa strategy interface.
  * 
  * @author Guilherme Silveira
- * @deprecated since upcoming, use {@link PersistenceStrategy} instead
+ * @deprecated since 1.3.1, use {@link PersistenceStrategy} instead
  */
 public interface StreamStrategy extends PersistenceStrategy {
 }

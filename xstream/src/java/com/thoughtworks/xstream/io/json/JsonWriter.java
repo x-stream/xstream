@@ -29,7 +29,7 @@ import java.util.Map;
  * 
  * @author Paul Hammant
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3.1
  */
 public class JsonWriter implements ExtendedHierarchicalStreamWriter {
 
@@ -56,7 +56,7 @@ public class JsonWriter implements ExtendedHierarchicalStreamWriter {
      * possible to generate invalid JSON unless {@link #STRICT_MODE} is also set.
      * </p>
      * 
-     * @since upcoming
+     * @since 1.3.1
      */
     public static final int DROP_ROOT_MODE = 1;
     /**
@@ -79,7 +79,7 @@ public class JsonWriter implements ExtendedHierarchicalStreamWriter {
      * and a {@link ConversionException} is thrown instead.
      * </p>
      * 
-     * @since upcoming
+     * @since 1.3.1
      */
     public static final int STRICT_MODE = 2;
 
@@ -114,7 +114,7 @@ public class JsonWriter implements ExtendedHierarchicalStreamWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.3.1
      */
     public JsonWriter(Writer writer, char[] lineIndenter, String newLine, int mode) {
         this.writer = new QuickWriter(writer);
@@ -136,7 +136,7 @@ public class JsonWriter implements ExtendedHierarchicalStreamWriter {
      * 
      * @param writer the {@link Writer} where the JSON is written to
      * @param mode the JsonWriter mode
-     * @since upcoming
+     * @since 1.3.1
      */
     public JsonWriter(Writer writer, int mode) {
         this(writer, new char[]{' ', ' '}, "\n", mode);

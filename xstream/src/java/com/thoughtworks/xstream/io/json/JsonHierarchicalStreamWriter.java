@@ -21,40 +21,40 @@ import java.io.Writer;
  * @author Paul Hammant
  * @author J&ouml;rg Schaible
  * @since 1.2
- * @deprecated since upcoming, use JsonWriter instead
+ * @deprecated since 1.3.1, use JsonWriter instead
  */
 public class JsonHierarchicalStreamWriter extends JsonWriter {
 
     /**
-     * @deprecated since upcoming, use JsonWriter instead
+     * @deprecated since 1.3.1, use JsonWriter instead
      */
     public JsonHierarchicalStreamWriter(Writer writer, char[] lineIndenter, String newLine) {
         super(writer, lineIndenter, newLine);
     }
 
     /**
-     * @deprecated since upcoming, use JsonWriter instead
+     * @deprecated since 1.3.1, use JsonWriter instead
      */
     public JsonHierarchicalStreamWriter(Writer writer, char[] lineIndenter) {
         this(writer, lineIndenter, "\n");
     }
 
     /**
-     * @deprecated since upcoming, use JsonWriter instead
+     * @deprecated since 1.3.1, use JsonWriter instead
      */
     public JsonHierarchicalStreamWriter(Writer writer, String lineIndenter, String newLine) {
         this(writer, lineIndenter.toCharArray(), newLine);
     }
 
     /**
-     * @deprecated since upcoming, use JsonWriter instead
+     * @deprecated since 1.3.1, use JsonWriter instead
      */
     public JsonHierarchicalStreamWriter(Writer writer, String lineIndenter) {
         this(writer, lineIndenter.toCharArray());
     }
 
     /**
-     * @deprecated since upcoming, use JsonWriter instead
+     * @deprecated since 1.3.1, use JsonWriter instead
      */
     public JsonHierarchicalStreamWriter(Writer writer) {
         this(writer, new char[]{' ', ' '});

@@ -18,7 +18,7 @@ import java.util.Map;
  * Abstract base class for AttributeAliassingMapper and its system version.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3.1
  */
 public abstract class AbstractAttributeAliasingMapper extends MapperWrapper {
 

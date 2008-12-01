@@ -15,7 +15,7 @@ package com.thoughtworks.xstream.mapper;
  * Mapper that allows aliasing of system attribute names.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3.1
  */
 public class SystemAttributeAliasingMapper extends AbstractAttributeAliasingMapper {
 

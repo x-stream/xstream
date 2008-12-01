@@ -37,7 +37,7 @@ public class EnumMapper extends MapperWrapper {
     private final ConverterLookup converterLookup;
 
     /**
-     * @deprecated since upcoming, use {@link #EnumMapper(Mapper)}
+     * @deprecated since 1.3.1, use {@link #EnumMapper(Mapper)}
      */
     public EnumMapper(Mapper wrapped, ConverterLookup lookup) {
         super(wrapped);

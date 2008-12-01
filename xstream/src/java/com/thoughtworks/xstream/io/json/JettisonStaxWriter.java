@@ -29,7 +29,7 @@ import java.util.Map;
  * A specialized {@link StaxWriter} that makes usage of internal functionality of Jettison.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.3.1
  */
 public class JettisonStaxWriter extends StaxWriter {
 

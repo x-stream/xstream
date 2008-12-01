@@ -158,7 +158,7 @@ public abstract class MapperWrapper implements Mapper {
     }
     
     /**
-     * @deprecated since upcoming, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
      */
     public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
     	return wrapped.getConverterFromAttribute(type, attribute);

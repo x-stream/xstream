@@ -976,7 +976,7 @@ public class XStream {
      * @param name Short name
      * @param pkgName package to be aliased
      * @throws InitializationException if no {@link DefaultImplementationsMapper} or no {@link PackageAliasingMapper} is available
-     * @since upcoming
+     * @since 1.3.1
      */
     public void aliasPackage(String name, String pkgName) {
         if (packageAliasingMapper == null) {
@@ -1030,7 +1030,7 @@ public class XStream {
      * @param alias the alias itself (may be <code>null</code>)
      * @param systemAttributeName the name of the system attribute
      * @throws InitializationException if no {@link SystemAttributeAliasingMapper} is available
-     * @since upcoming
+     * @since 1.3.1
      */
     public void aliasSystemAttribute(String alias, String systemAttributeName) {
         if (systemAttributeAliasingMapper == null) {

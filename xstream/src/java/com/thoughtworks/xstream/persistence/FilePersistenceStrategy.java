@@ -29,7 +29,7 @@ import java.io.File;
  * 
  * @author J&ouml;rg Schaible
  * @author Guilherme Silveira
- * @since upcoming
+ * @since 1.3.1
  */
 public class FilePersistenceStrategy extends AbstractFilePersistenceStrategy {
 
@@ -40,7 +40,7 @@ public class FilePersistenceStrategy extends AbstractFilePersistenceStrategy {
      * {@link DomDriver}.
      * 
      * @param baseDirectory the directory for the serialized values
-     * @since upcoming
+     * @since 1.3.1
      */
     public FilePersistenceStrategy(final File baseDirectory) {
         this(baseDirectory, new XStream(new DomDriver()));
@@ -51,7 +51,7 @@ public class FilePersistenceStrategy extends AbstractFilePersistenceStrategy {
      * 
      * @param baseDirectory the directory for the serialized values
      * @param xstream the XStream instance to use for (de)serialization
-     * @since upcoming
+     * @since 1.3.1
      */
     public FilePersistenceStrategy(final File baseDirectory, final XStream xstream) {
         this(baseDirectory, xstream, "utf-8", "<>?:/\\\"|*%");
@@ -66,7 +66,7 @@ public class FilePersistenceStrategy extends AbstractFilePersistenceStrategy {
      * @param encoding encoding used to write the files
      * @param illegalChars illegal characters for file names (should always include '%' as long
      *            as you do not overwrite the (un)escape methods)
-     * @since upcoming
+     * @since 1.3.1
      */
     public FilePersistenceStrategy(
         final File baseDirectory, final XStream xstream, final String encoding,
