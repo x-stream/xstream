@@ -26,11 +26,12 @@ public class Fields {
             result.setAccessible(true);
             return result;
         } catch (NoSuchFieldException e) {
-            throw (IllegalArgumentException)new IllegalArgumentException("Could not access "
+            throw new IllegalArgumentException("Could not access "
                 + type.getName()
                 + "."
                 + name
-                + " field").initCause(e);
+                + " field: "
+                + e.getMessage());
         }
     }
 

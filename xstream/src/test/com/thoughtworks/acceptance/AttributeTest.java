@@ -339,6 +339,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
     static class Person {
         String _name;
         int _age;
+        Person() {} // JDK 1.3
         Person(String name, int age) {
             this._name = name;
             this._age = age;

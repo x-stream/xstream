@@ -81,13 +81,13 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
 
         SystemAttributes sa = new SystemAttributes();
         sa.name = "joe";
-        sa.charSeq = "walnes";
+        sa.object = "walnes";
         sa.original = new Original("hello world");
 
         String expected = normalizeExpectation(""
             + "{'sa': {\n"
             + "  'name': 'joe',\n"
-            + "  'charSeq': 'walnes',\n"
+            + "  'object': 'walnes',\n"
             + "  'original': {\n"
             + "    'replacedValue': 'HELLO WORLD'\n"
             + "  }\n"

@@ -18,6 +18,8 @@ public class Category {
 	String id;
 	List products;
 	
+        public Category() {} // JDK 1.3
+
 	public Category(String name, String id) {
 		super();
 		this.name = name;

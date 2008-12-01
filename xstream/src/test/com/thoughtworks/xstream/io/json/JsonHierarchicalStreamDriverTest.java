@@ -616,7 +616,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     
     static class SystemAttributes {
         String name;
-        CharSequence charSeq;
+        Object object;
         Original original;
     }
     
@@ -627,13 +627,13 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         SystemAttributes sa = new SystemAttributes();
         sa.name = "joe";
-        sa.charSeq = "walnes";
+        sa.object = "walnes";
         sa.original = new Original("hello world");
 
         String expected = normalizeExpectation(""
                 + "{'sa': {\n"
                 + "  'name': 'joe',\n"
-                + "  'charSeq': {\n"
+                + "  'object': {\n"
                 + "    '@class': 'string',\n"
                 + "    '$': 'walnes'\n" 
                 +"  },\n"

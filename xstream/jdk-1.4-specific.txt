@@ -20,12 +20,14 @@ com/thoughtworks/xstream/converters/reflection/Sun14ReflectionProvider*
 com/thoughtworks/xstream/io/json/Jettison*
 
 com/thoughtworks/acceptance/AbsoluteXPathNestedCircularReferenceTest*
+com/thoughtworks/acceptance/BufferedImagesTest*
 com/thoughtworks/acceptance/CollectionsTest*
 com/thoughtworks/acceptance/CustomMapperTest*
 com/thoughtworks/acceptance/Extended14TypesTest*
 com/thoughtworks/acceptance/FinalFieldsTest*
 com/thoughtworks/acceptance/IDNestedCircularReferenceTest*
 com/thoughtworks/acceptance/InnerClassesTest*
+com/thoughtworks/acceptance/JodaTimeTypesTest*
 com/thoughtworks/acceptance/MapTest*
 com/thoughtworks/acceptance/QNameMappedConcreteClassesTest*
 com/thoughtworks/acceptance/RelativeXPathNestedCircularReferenceTest*

@@ -84,12 +84,13 @@ public class ObjectIdDictionaryTest extends TestCase {
     private String memoryInfo() {
         final Runtime runtime = Runtime.getRuntime();
         final StringBuffer buffer = new StringBuffer("Memory: ");
+        // not available in JDK 1.3
+        // buffer.append(runtime.maxMemory());
+        // buffer.append(" max / ");
         buffer.append(runtime.freeMemory());
         buffer.append(" free / ");
         buffer.append(runtime.totalMemory());
-        buffer.append(" total / ");
-        buffer.append(runtime.maxMemory());
-        buffer.append(" max");
+        buffer.append(" total");
         return buffer.toString();
     }
 }
