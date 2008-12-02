@@ -178,7 +178,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testObjectOutputStreamPropegatesCloseAndFlushEvents() throws IOException {
+    public void testObjectOutputStreamPropagatesCloseAndFlushEvents() throws IOException {
         // setup
         final CallLog log = new CallLog();
         Writer loggingWriter = new Writer() {
