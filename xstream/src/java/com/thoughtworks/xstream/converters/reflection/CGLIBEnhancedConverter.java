@@ -338,7 +338,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         enhancer.setInterfaces((Class[])interfaces.toArray(new Class[interfaces.size()]));
         reader.moveUp();
         reader.moveDown();
-        boolean useFactory = Boolean.parseBoolean(reader.getValue());
+        boolean useFactory = Boolean.valueOf(reader.getValue()).booleanValue();
         enhancer.setUseFactory(useFactory);
         reader.moveUp();
 
