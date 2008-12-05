@@ -42,6 +42,9 @@ public class CGLIBMapper extends MapperWrapper {
 
     public String serializedClass(Class type) {
         String serializedName = super.serializedClass(type);
+        if (type == null) {
+            return serializedName;
+        }
         String typeName = type.getName();
         return typeName.equals(serializedName)
             && typeName.indexOf(DEFAULT_NAMING_MARKER) > 0

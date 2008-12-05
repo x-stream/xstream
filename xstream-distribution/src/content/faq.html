@@ -214,8 +214,8 @@
 
     <!-- ...................................................... -->
     <h2 id="Serialization_CGLIB">Can CGLIB proxies be serialized?</h2>
-    <p>Only limitedly. A proxy generated with the CGLIB Enhancer is supported, if the proxy uses only one callback
-    and the proxy instance can be generated without additional constructor arguments. Starting with XStream 1.3.1
+    <p>Only limitedly. A proxy generated with the CGLIB Enhancer is supported, if the proxy uses either a factory or
+    only one callback. Then it is possible to recreate the proxy instance at unmarshalling time. Starting with XStream 1.3.1
     CGLIB support is no longer automatically installed because of possible classloader problems and side-effects,
     because of incompatible ASM versions. You can enable CGLIB support with:</p>
 <div class="Source Java"><pre>XStream xstream = new XStream() {
