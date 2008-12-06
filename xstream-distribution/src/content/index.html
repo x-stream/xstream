@@ -71,31 +71,26 @@
 
     <h1 id="news">Latest News</h1>
 
-    <h2><b>February 27, 2008</b> XStream 1.3 released</h2>
-    
-      <p>The XStream committers proudly present XStream 1.3.  This release contains some major
-      refactorings concerning Java annotations, improved XML support regarding encoding and 
-      character sets, some minor new features, deprecations and a lot of bug fixes:</p>
+    <h2 id="1.3.1"><b>Dec 6, 2008</b> XStream 1.3.1 released</h2>
+
+      <p>A new XStream maintenance version has been released.  The release contains some
+      bug fixes, some minor enhancements and support of new JDKs:</p>
       
-	  <ul>
-        <li>Annotation support is now implemented as Mapper and Annotations can either be processed
-        in advance or on-the-fly (see <a href="annotations-tutorial.html#AutoDetect">Annotations tutorial</a>
-        for limitations).</li>
-        <li>Improved encoding support for JSON and XML (including automated  support for XML headers).
-        Enforceable check for valid XML characters in the written stream.</li>
-        <li>Dedicated converters can now be configured for individual fields also using the XStream facade.</li>
-        <li>New converters for java.lang.StringBuilder, java.util.UUID, javax.xml.datatype.Duration,
-         and javax.swing.LookAndFeel. New generic converter for types using a java.beans.PropertyEditor.
-         Auto-instantiated SingleValueConverter for Java enums to support enum values as attributes.</li>
-        <li>XML elements are now sorted by default according their declaration with the fields defined in parent
-        classes first to improve support for type hierarchies in XML schemata.</li>
-        <li>A lot of bug fixes to improve JSON support for arbitrary types. Added section in 
-        <a href="faq.html#JSON">FAQ</a> for limitations and operation modes.</li>
-        <li>Native support for SAP VM.</li>
-        <li>All text-based files are now shipped with an appropriate license header to clean-up legal issues.</li>
-   	  </ul>
-   	  
+      <ul>
+      	<li>Ability to alias package names</li>
+      	<li>Converters are only registered by default for types delivered with the JDK in use preventing
+      	unexpected incompatibilities</li>
+      	<li>Separation between user defined attributes and XStream attributes</li>
+      	<li>New mode for JSONWriter to drop JSON root node</li>
+      	<li>Support for FreeBSD's Diablo JDK.</li>
+      	<li>Enhanced persistence package and extended tutorial.</li>
+      </ul>
+
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+      
+    <p class="hightlight">Note, that XStream really supports by default now only types of the JDK in use.  Especially for
+    CGLIB this means that support of those proxies will have to be <a href="faq.html#Serialization_CGLIB">explicitly activated</a>
+    first. However, support for CGLIB proxies is enhanced.</p>
 
     <p class="highlight">Note, to support a representation of null values in some way, it is absolutely necessary that each converter can handle a null
     value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
