@@ -32,7 +32,7 @@
       </activation>
       <modules>
         <module>xstream</module>
-        <module>xstream-builder</module>
+        <!--module>xstream-builder</module-->
         <module>xstream-benchmark</module>
         <module>xstream-distribution</module>
       </modules>
@@ -44,7 +44,7 @@
       </activation>
       <modules>
         <module>xstream</module>
-        <module>xstream-builder</module>
+        <!--module>xstream-builder</module-->
         <module>xstream-benchmark</module>
         <module>xstream-distribution</module>
       </modules>
