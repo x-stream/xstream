@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2008 XStream Committers.
+ * Copyright (c) 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.HashMap;
 
 
 /**
@@ -44,13 +43,15 @@ public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
     private final MappedNamespaceConvention convention;
 
     public JettisonMappedXmlDriver() {
-        final HashMap nstjsons = new HashMap();
-        final Configuration config = new Configuration(nstjsons);
+        this(new Configuration());
+    }
+
+    public JettisonMappedXmlDriver(final Configuration config) {
         mof = new MappedXMLOutputFactory(config);
         mif = new MappedXMLInputFactory(config);
         convention = new MappedNamespaceConvention(config);
     }
-
+    
     public HierarchicalStreamReader createReader(final Reader reader) {
         try {
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(reader));

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,16 @@
  */
 package com.thoughtworks.xstream.io.json;
 
+import com.thoughtworks.acceptance.objects.Category;
+import com.thoughtworks.acceptance.objects.Product;
+import com.thoughtworks.acceptance.objects.StandardObject;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
+
+import junit.framework.TestCase;
+
+import org.codehaus.jettison.mapped.Configuration;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,15 +28,6 @@ import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-
-import junit.framework.TestCase;
-
-import com.thoughtworks.acceptance.objects.Category;
-import com.thoughtworks.acceptance.objects.Product;
-import com.thoughtworks.acceptance.objects.StandardObject;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
-import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 
 /**
@@ -72,6 +73,27 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         assertEquals(SIMPLE, result);
     }
 
+    public void testReadConfigured() {
+        Configuration config = new Configuration();
+        // TODO: Configure something useful (see XSTR-540)
+        xstream = new XStream(new JettisonMappedXmlDriver(config));
+        xstream.alias("product", Product.class);
+        Product product = (Product)xstream.fromXML(SIMPLE);
+        assertEquals(product.getName(), "Banana");
+        assertEquals(product.getId(), "123");
+        assertEquals("" + product.getPrice(), "" + 23.00);
+    }
+
+    public void testWriteConfigured() {
+        Configuration config = new Configuration();
+        // TODO: Configure something useful (see XSTR-540)
+        xstream = new XStream(new JettisonMappedXmlDriver(config));
+        xstream.alias("product", Product.class);
+        Product product = new Product("Banana", "123", 23.00);
+        String result = xstream.toXML(product);
+        assertEquals(SIMPLE, result);
+    }
+
     public void testWriteHierarchy() {
         Category category = new Category("fruit", "111");
         ArrayList products = new ArrayList();
@@ -112,18 +134,19 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void testDoesHandleQuotesAndEscapes() {
-        String[] strings = new String[]{"last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
+        String[] strings = new String[]{
+            "last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
         String expected = (""
-                + "{#string-array#:{#string#:["
-                + "#last\\\"#,"
-                + "#\\\"first#,"
-                + "#\\\"between\\\"#,"
-                + "#around \\\"\\\" it#,"
-                + "#back\\\\slash#"
-                + "]}}").replace('#', '"');
+            + "{#string-array#:{#string#:["
+            + "#last\\\"#,"
+            + "#\\\"first#,"
+            + "#\\\"between\\\"#,"
+            + "#around \\\"\\\" it#,"
+            + "#back\\\\slash#"
+            + "]}}").replace('#', '"');
         assertEquals(expected, xstream.toXML(strings));
     }
-    
+
     public void testDoesEscapeValuesAccordingRfc4627() {
         String expected = "{'string':'\\u0000\\u0001\\u001f \uffee'}".replace('\'', '"');
         assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
@@ -145,13 +168,13 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
-    
+
     public static class Topic extends StandardObject {
         long id;
         String description;
         Date createdOn;
     }
-    
+
     public void testDefaultValue() {
         Topic topic1 = new Topic();
         topic1.id = 4711;
