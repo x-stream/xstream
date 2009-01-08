@@ -152,11 +152,49 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
     }
 
-    public void testOneElementList() {
+    public void testSingletonListWithSimpleObject() {
         ArrayList list1 = new ArrayList();
         list1.add("one");
         String json = xstream.toXML(list1);
-        assertEquals("{\"list\":{\"string\":[\"one\"]}}", json);
+        assertEquals("{'list':{'string':['one']}}".replace('\'', '"'), json);
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+
+    public void testListWithSimpleObjects() {
+        ArrayList list1 = new ArrayList();
+        list1.add("one");
+        list1.add("two");
+        list1.add("three");
+        String json = xstream.toXML(list1);
+        assertEquals("{'list':{'string':['one','two','three']}}".replace('\'', '"'), json);
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+
+    public void testSingletonListWithComplexObject() {
+        Product product = new Product("Banana", "123", 23.00);
+        ArrayList list1 = new ArrayList();
+        list1.add(product);
+        String json = xstream.toXML(list1);
+        assertEquals("{'list':{'product':[{'name':'Banana','id':123,'price':23}]}}".replace(
+            '\'', '"'), json);
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+
+    public void testListWithComplexNestedObjects() {
+        ArrayList list1 = new ArrayList();
+        list1.add(new Product("Banana", "123", 23.00));
+        list1.add(new Product("Apple", "47", 11.00));
+        list1.add(new Product("Orange", "100", 42.00));
+        ArrayList tags = new ArrayList();
+        ((Product)list1.get(1)).setTags(tags);
+        tags.add(new Product("Braeburn", "47.1", 10.00));
+        String json = xstream.toXML(list1);
+        assertEquals(
+            "{'list':{'product':[{'name':'Banana','id':123,'price':23},{'name':'Apple','id':47,'price':11,'tags':{'product':[{'name':'Braeburn','id':47.1,'price':10}]}},{'name':'Orange','id':100,'price':42}]}}"
+                .replace('\'', '"'), json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
@@ -164,7 +202,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     public void todoTestEmptyList() {
         ArrayList list1 = new ArrayList();
         String json = xstream.toXML(list1);
-        assertEquals("{\"list\":[]}", json);
+        assertEquals("{'list':[]}".replace('\'', '"'), json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
@@ -183,8 +221,8 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         xstream.alias("topic", Topic.class);
         String json = xstream.toXML(topic1);
         assertEquals(
-            "{\"topic\":{\"id\":4711,\"description\":\"JSON\",\"createdOn\":{\"@class\":\"sql-timestamp\",\"$\":\"1970-01-01 00:00:01.0\"}}}",
-            json);
+            "{'topic':{'id':4711,'description':'JSON','createdOn':{'@class':'sql-timestamp','$':'1970-01-01 00:00:01.0'}}}"
+                .replace('\'', '"'), json);
         Topic topic2 = (Topic)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(topic2));
     }
