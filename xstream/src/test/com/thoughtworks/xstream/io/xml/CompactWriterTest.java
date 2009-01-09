@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -61,7 +61,7 @@ public class CompactWriterTest extends AbstractXMLWriterTest {
     public void testWriteTextAsCDATA() {
         writer = new CompactWriter(buffer) {
             protected void writeText(QuickWriter writer, String text) {
-                writer.write("<[CDATA[");
+                writer.write("<![CDATA[");
                 writer.write(text);
                 writer.write("]]>");
             }
@@ -71,7 +71,7 @@ public class CompactWriterTest extends AbstractXMLWriterTest {
         writer.setValue("hello & this isn't \"really\" <good>");
         writer.endNode();
 
-        String expected = "<tag><[CDATA[hello & this isn't \"really\" <good>]]></tag>";
+        String expected = "<tag><![CDATA[hello & this isn't \"really\" <good>]]></tag>";
 
         assertXmlProducedIs(expected);
     }
