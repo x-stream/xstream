@@ -226,6 +226,15 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         Topic topic2 = (Topic)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(topic2));
     }
+    
+    public void testEmbeddedXml() {
+        ArrayList list1 = new ArrayList();
+        list1.add("<xml attribute=\"foo\"><![CDATA[&quot;\"\'<>]]></xml>");
+        String json = xstream.toXML(list1);
+        assertEquals("{\"list\":{\"string\":[\"<xml attribute=\\\"foo\\\"><![CDATA[&quot;\\\"'<>]]><\\/xml>\"]}}", json);
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
 
     // TODO: See XSTR-460
     public void todoTestArrayList() throws IOException {
