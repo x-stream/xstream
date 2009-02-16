@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -90,8 +90,7 @@ public class LocalConverterTest extends AbstractAcceptanceTest {
         }
     }
 
-    // TODO (XSTR-481)
-    public void todoTestCanBeUsedForAttributeValue() {
+    public void testCanBeUsedForAttributeValue() {
         SymbolParameter multiBool = new SymbolParameter(1, 0xff00ff, 100);
         String xml = ""
                 + "<param color=\"ff00ff\">\n"
