@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,9 +22,8 @@ import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
- * Can convert any bean with a public default constructor. BeanInfo are not
- * taken into consideration, this class looks for bean patterns for simple
- * properties
+ * Can convert any bean with a public default constructor. The {@link BeanProvider} used as
+ * default is based on {@link java.beans.BeanInfo}. Indexed properties are currently not supported.
  */
 public class JavaBeanConverter implements Converter {
 
