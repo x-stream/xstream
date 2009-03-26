@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.basic;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Wrapper around java.text.SimpleDateFormat that can
@@ -24,14 +25,24 @@ import java.util.Date;
  */
 public class ThreadSafeSimpleDateFormat extends com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat {
 
+    
+    /**
+     * @deprecated since 1.2.1 
+     */
     public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize) {
-        super(format, initialPoolSize, maxPoolSize, true);
+        super(format, TimeZone.getDefault(),  initialPoolSize, maxPoolSize, true);
     }
 
+    /**
+     * @deprecated since 1.2.1 
+     */
     public String format(Date date) {
         return super.format(date);
     }
 
+    /**
+     * @deprecated since 1.2.1 
+     */
     public Date parse(String date) throws ParseException {
         return super.parse(date);
     }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -85,6 +85,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testUnmarshalsDateWithDifferentDefaultTimeZones() throws ParseException {
+        converter = new DateConverter((TimeZone)null);
         Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2004, Calendar.FEBRUARY, 23, 1, 46, 4);
@@ -185,5 +186,22 @@ public class DateConverterTest extends TestCase {
         }
         
         assertEquals(Arrays.asList(expected).toString(), Arrays.asList(actual).toString());
+    }
+    
+    public static void main(String[] args) throws ParseException {
+        //String s = "1970-01-01 00:00:00.0 GMT+01:00";
+        //TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+        //String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSS'Z'";
+        String pattern = "yyyy-MM-dd HH:mm:ss.S z";
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Toronto"));
+        //TimeZone.setDefault(TimeZone.getTimeZone("Australia/Brisbane"));
+        Date date = new Date(0);
+        System.out.println(date.getTime());
+        SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.ENGLISH);
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String s = format.format(date);
+        System.out.println(s);
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        System.out.println(new SimpleDateFormat(pattern, Locale.ENGLISH).parse(s).getTime());
     }
 }

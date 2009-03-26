@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -139,7 +139,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
         xstream.useAttributeFor("date", Date.class);
         
         String expected =
-            "<three date=\"2006-02-19 00:00:00.0 GMT\"/>";
+            "<three date=\"2006-02-19 00:00:00.0 UTC\"/>";
         assertBothWays(three, expected);
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,9 +37,11 @@ public class ThreadSafeSimpleDateFormat {
 
     private final String formatString;
     private final Pool pool;
+    private final TimeZone timeZone;
 
-    public ThreadSafeSimpleDateFormat(String format, int initialPoolSize, int maxPoolSize, final boolean lenient) {
+    public ThreadSafeSimpleDateFormat(String format, TimeZone timeZone, int initialPoolSize, int maxPoolSize, final boolean lenient) {
         formatString = format;
+        this.timeZone = timeZone;
         pool = new Pool(initialPoolSize, maxPoolSize, new Pool.Factory() {
             public Object newInstance() {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(formatString, Locale.ENGLISH);
@@ -52,6 +54,10 @@ public class ThreadSafeSimpleDateFormat {
 
     public String format(Date date) {
         DateFormat format = fetchFromPool();
+        TimeZone tz = timeZone != null ? timeZone : TimeZone.getDefault();
+        if (!tz.equals(format.getTimeZone())) {
+            format.setTimeZone(tz);
+        }
         try {
             return format.format(date);
         } finally {
@@ -60,7 +66,11 @@ public class ThreadSafeSimpleDateFormat {
     }
 
     public Date parse(String date) throws ParseException {
+        TimeZone tz = TimeZone.getDefault();
         DateFormat format = fetchFromPool();
+        if (!tz.equals(format.getTimeZone())) {
+            format.setTimeZone(tz); // ignored, if format contains TZ info
+        }
         try {
             return format.parse(date);
         } finally {
@@ -69,11 +79,6 @@ public class ThreadSafeSimpleDateFormat {
     }
 
     private DateFormat fetchFromPool() {
-        TimeZone tz = TimeZone.getDefault();
-        DateFormat format = (DateFormat)pool.fetchFromPool();
-        if (!tz.equals(format.getTimeZone())) {
-            format.setTimeZone(tz);
-        }
-        return format;
+        return (DateFormat)pool.fetchFromPool();
     }
 }

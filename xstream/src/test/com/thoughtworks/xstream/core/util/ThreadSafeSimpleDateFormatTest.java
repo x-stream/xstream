@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * @author J&ouml;rg Schaible
@@ -23,7 +24,8 @@ import java.util.Map;
 public class ThreadSafeSimpleDateFormatTest extends TestCase {
     public void testConcurrentDateFormatting() throws InterruptedException {
 
-        final ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss,S z", 2, 4, false);
+        final ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss,S z", TimeZone.getTimeZone("UTC"), 2, 4, false);
         final Date now = new Date();
         
         final Map exceptions = new HashMap();
