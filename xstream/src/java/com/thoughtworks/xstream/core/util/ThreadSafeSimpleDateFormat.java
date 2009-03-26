@@ -54,10 +54,6 @@ public class ThreadSafeSimpleDateFormat {
 
     public String format(Date date) {
         DateFormat format = fetchFromPool();
-        TimeZone tz = timeZone != null ? timeZone : TimeZone.getDefault();
-        if (!tz.equals(format.getTimeZone())) {
-            format.setTimeZone(tz);
-        }
         try {
             return format.format(date);
         } finally {
@@ -66,11 +62,7 @@ public class ThreadSafeSimpleDateFormat {
     }
 
     public Date parse(String date) throws ParseException {
-        TimeZone tz = TimeZone.getDefault();
         DateFormat format = fetchFromPool();
-        if (!tz.equals(format.getTimeZone())) {
-            format.setTimeZone(tz); // ignored, if format contains TZ info
-        }
         try {
             return format.parse(date);
         } finally {
@@ -79,6 +71,11 @@ public class ThreadSafeSimpleDateFormat {
     }
 
     private DateFormat fetchFromPool() {
-        return (DateFormat)pool.fetchFromPool();
+        DateFormat format = (DateFormat)pool.fetchFromPool();
+        TimeZone tz = timeZone != null ? timeZone : TimeZone.getDefault();
+        if (!tz.equals(format.getTimeZone())) {
+            format.setTimeZone(tz);
+        }
+        return format;
     }
 }
