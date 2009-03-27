@@ -62,6 +62,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testUnmarshalsOldXStreamDatesThatLackMillisecond() {
+        converter = new DateConverter((TimeZone)null);
         Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
 
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
@@ -187,21 +188,10 @@ public class DateConverterTest extends TestCase {
         
         assertEquals(Arrays.asList(expected).toString(), Arrays.asList(actual).toString());
     }
-    
-    public static void main(String[] args) throws ParseException {
-        //String s = "1970-01-01 00:00:00.0 GMT+01:00";
-        //TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-        //String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSS'Z'";
-        String pattern = "yyyy-MM-dd HH:mm:ss.S z";
-        TimeZone.setDefault(TimeZone.getTimeZone("America/Toronto"));
-        //TimeZone.setDefault(TimeZone.getTimeZone("Australia/Brisbane"));
-        Date date = new Date(0);
-        System.out.println(date.getTime());
-        SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.ENGLISH);
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String s = format.format(date);
-        System.out.println(s);
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        System.out.println(new SimpleDateFormat(pattern, Locale.ENGLISH).parse(s).getTime());
+
+    public void testDatesWithAmbiguous3LetterTimeZones() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Australia/Brisbane")); // EST also used e.g. for America/Toronto
+        Date expected = new Date(0);
+        assertEquals(expected, converter.fromString(converter.toString(expected)));
     }
 }
