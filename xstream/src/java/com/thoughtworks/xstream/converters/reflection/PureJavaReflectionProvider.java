@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -152,12 +152,8 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     public boolean fieldDefinedInClass(String fieldName, Class type) {
-        try {
-            Field field = fieldDictionary.field(type, fieldName, null);
-            return fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers());
-        } catch (ObjectAccessException e) {
-            return false;
-        }
+        Field field = fieldDictionary.fieldOrNull(type, fieldName, null);
+        return field != null && (fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers()));
     }
 
     protected boolean fieldModifiersSupported(Field field) {
