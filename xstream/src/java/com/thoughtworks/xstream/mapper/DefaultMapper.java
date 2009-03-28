@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -65,7 +65,7 @@ public class DefaultMapper implements Mapper {
                 return Class.forName(elementName.toString());
             }
         } catch (ClassNotFoundException e) {
-            throw new CannotResolveClassException(elementName + " : " + e.getMessage());
+            throw new CannotResolveClassException(elementName);
         }
     }
 

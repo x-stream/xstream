@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Field;
@@ -344,7 +345,11 @@ public abstract class AbstractReflectionConverter implements Converter {
                         }
                     }
                 }
-                return mapper.realClass(originalNodeName);
+                try {
+                    return mapper.realClass(originalNodeName);
+                } catch (CannotResolveClassException e) {
+                    throw new UnknownFieldException(result.getClass().getName(), fieldName);
+                }
             }
         } else {
             return mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, definedInCls));
@@ -360,6 +365,13 @@ public abstract class AbstractReflectionConverter implements Converter {
         public DuplicateFieldException(String msg) {
             super(msg);
             add("duplicate-field", msg);
+        }
+    }
+
+    public static class UnknownFieldException extends ConversionException {
+        public UnknownFieldException(String type, String field) {
+            super("No such field " + type + "." + field);
+            add("field", field);
         }
     }
 }

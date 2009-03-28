@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -73,6 +73,24 @@ public class ErrorTest extends AbstractAcceptanceTest {
                     e.get("line number"));
         }
 
+    }
+    
+    public void testNonExistingMember() {
+        try {
+            xstream.fromXML("<thing>\n" +
+                    "  <one>string 1</one>\n" +
+                    "  <three>3</three>\n" +
+                    "</thing>");
+            fail("Error expected");
+        } catch (ConversionException e) {
+            assertEquals("three",
+                    e.get("field"));
+            assertEquals("/thing/three",
+                    e.get("path"));
+            assertEquals("3",
+                    e.get("line number"));
+        }
+        
     }
 
     private void assertContains(String expected, String actual) {
