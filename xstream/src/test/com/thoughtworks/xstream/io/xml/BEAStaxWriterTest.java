@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,11 +27,7 @@ public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
     }
 
     protected void assertXmlProducedIs(String expected) {
-        if (outputFactory.getProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES).equals(Boolean.FALSE)) {
-            expected = perlUtil.substitute("s#<(\\w+|\\w+:\\w+) (xmlns[^\"]*\"[^\"]*\")>#<$1>#g", expected);
-        } else {
-            expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
-        }
+        expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
         expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
         expected = replaceAll(expected, "&#xd;", "&#13;");
         expected = getXMLHeader() + expected;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -108,7 +108,7 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         XStream xstream = new XStream((HierarchicalStreamDriver)null);
         buffer = new StringWriter();
         XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(buffer);
-        xstream.marshal(testInput, new StaxWriter(qnameMap, xmlStreamWriter));
+        xstream.marshal(testInput, new StaxWriter(qnameMap, xmlStreamWriter, true, repairNamespaceMode));
     }
 
 }
