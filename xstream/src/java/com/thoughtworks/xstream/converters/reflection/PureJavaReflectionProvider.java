@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects
@@ -43,7 +44,7 @@ import java.util.Map;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private transient Map serializedDataCache = Collections.synchronizedMap(new HashMap());
+    private transient Map serializedDataCache = new WeakHashMap();
     protected FieldDictionary fieldDictionary;
 
 	public PureJavaReflectionProvider() {
@@ -88,28 +89,28 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     private Object instantiateUsingSerialization(Class type) {
         try {
-            byte[] data;
-            if (serializedDataCache.containsKey(type)) {
-                data = (byte[]) serializedDataCache.get(type);
-            } else {
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                DataOutputStream stream = new DataOutputStream(bytes);
-                stream.writeShort(ObjectStreamConstants.STREAM_MAGIC);
-                stream.writeShort(ObjectStreamConstants.STREAM_VERSION);
-                stream.writeByte(ObjectStreamConstants.TC_OBJECT);
-                stream.writeByte(ObjectStreamConstants.TC_CLASSDESC);
-                stream.writeUTF(type.getName());
-                stream.writeLong(ObjectStreamClass.lookup(type).getSerialVersionUID());
-                stream.writeByte(2);  // classDescFlags (2 = Serializable)
-                stream.writeShort(0); // field count
-                stream.writeByte(ObjectStreamConstants.TC_ENDBLOCKDATA);
-                stream.writeByte(ObjectStreamConstants.TC_NULL);
-                data = bytes.toByteArray();
-                serializedDataCache.put(type, data);
+            synchronized (serializedDataCache) {
+                byte[] data = (byte[]) serializedDataCache.get(type);
+                if (data ==  null) {
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    DataOutputStream stream = new DataOutputStream(bytes);
+                    stream.writeShort(ObjectStreamConstants.STREAM_MAGIC);
+                    stream.writeShort(ObjectStreamConstants.STREAM_VERSION);
+                    stream.writeByte(ObjectStreamConstants.TC_OBJECT);
+                    stream.writeByte(ObjectStreamConstants.TC_CLASSDESC);
+                    stream.writeUTF(type.getName());
+                    stream.writeLong(ObjectStreamClass.lookup(type).getSerialVersionUID());
+                    stream.writeByte(2);  // classDescFlags (2 = Serializable)
+                    stream.writeShort(0); // field count
+                    stream.writeByte(ObjectStreamConstants.TC_ENDBLOCKDATA);
+                    stream.writeByte(ObjectStreamConstants.TC_NULL);
+                    data = bytes.toByteArray();
+                    serializedDataCache.put(type, data);
+                }
+                
+                ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
+                return in.readObject();
             }
-
-            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
-            return in.readObject();
         } catch (IOException e) {
             throw new ObjectAccessException("Cannot create " + type.getName() + " by JDK serialization", e);
         } catch (ClassNotFoundException e) {
@@ -181,7 +182,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     protected Object readResolve() {
-        serializedDataCache = Collections.synchronizedMap(new HashMap());
+        serializedDataCache = new WeakHashMap();
         return this;
     }
 
