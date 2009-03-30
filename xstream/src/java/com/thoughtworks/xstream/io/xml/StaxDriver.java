@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,8 +33,6 @@ import com.thoughtworks.xstream.io.StreamException;
  * @version $Revision$
  */
 public class StaxDriver extends AbstractXmlDriver {
-
-    private static boolean libraryPresent;
 
     private QNameMap qnameMap;
     private XMLInputFactory inputFactory;
@@ -72,7 +70,6 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamReader createReader(Reader xml) {
-        loadLibrary();
         try {
             return createStaxReader(createParser(xml));
         }
@@ -82,25 +79,11 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamReader createReader(InputStream in) {
-        loadLibrary();
         try {
             return createStaxReader(createParser(in));
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
-        }
-    }
-
-    private void loadLibrary() {
-        if (!libraryPresent) {
-            try {
-                Class.forName("javax.xml.stream.XMLStreamReader");
-            }
-            catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException("StAX API is not present. Specify another driver." +
-                        " For example: new XStream(new DomDriver())");
-            }
-            libraryPresent = true;
         }
     }
 
