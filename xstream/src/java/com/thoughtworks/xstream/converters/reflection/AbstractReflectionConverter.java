@@ -200,14 +200,18 @@ public abstract class AbstractReflectionConverter implements Converter {
             reader.moveDown();
 
             String originalNodeName = reader.getNodeName();
-            String fieldName = mapper.realMember(result.getClass(), originalNodeName);
-            Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper.getImplicitCollectionDefForFieldName(result.getClass(), fieldName);
-
             Class classDefiningField = determineWhichClassDefinesField(reader);
-            boolean fieldExistsInClass = implicitCollectionMapping == null && reflectionProvider.fieldDefinedInClass(fieldName, result.getClass());
-
+            Class fieldDeclaringClass = classDefiningField == null
+                ? result.getClass()
+                : classDefiningField;
+            String fieldName = mapper.realMember(fieldDeclaringClass, originalNodeName);
+            Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
+                .getImplicitCollectionDefForFieldName(fieldDeclaringClass, fieldName);
+            boolean fieldExistsInClass = implicitCollectionMapping == null
+                && reflectionProvider.fieldDefinedInClass(fieldName, fieldDeclaringClass);
             Class type = implicitCollectionMapping == null
-                ? determineType(reader, fieldExistsInClass, result, fieldName, classDefiningField) 
+                ? determineType(
+                    reader, fieldExistsInClass, result, fieldName, classDefiningField)
                 : implicitCollectionMapping.getItemType();
             final Object value;
             if (fieldExistsInClass) {

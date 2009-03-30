@@ -32,10 +32,17 @@
 
     <p>Not yet released</p>
 
+    <h2>Major changes</h2>
+
+    <ul>
+    	<li>JIRA:XSTR-556: DateConverter uses format with 3-letter time zones that are ambiguous. Therefore it will now always use UTC to write dates.
+    	Unmarshalled dates are not affected as long as they contain a time zone.</li>
+    </ul>
+
     <h2>Minor changes</h2>
 
     <ul>
-    	<li>JIRA:XSTR-556: DateConverter uses 3-letter time zones that are ambiguous.</li>
+    	<li>JIRA:XSTR-543: Better deserialization support of the defined-in system attribute in combination with field aliases.</li>
     	<li>JIRA:XSTR-551: Deprecated XStream.InitializationException still thrown instead of InitializationException.</li>
     	<li>JIRA:XSTR-540: Support Jettison-based configuration of JettisonMappedXmlDriver (by Doug Daniels).</li>
     	<li>JIRA:XSTR-552: Improve performance of ReflectionProvider (by Keith Kowalczykowski).</li>
