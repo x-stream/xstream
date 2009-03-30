@@ -81,7 +81,7 @@ public class ThreadSafeSimpleDateFormatTest extends TestCase {
             }
         }
 
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         for (int i = 0; i < threads.length; ++i) {
             threads[i].interrupt();
