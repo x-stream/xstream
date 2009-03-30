@@ -12,6 +12,8 @@ package com.thoughtworks.xstream.benchmark.cache.targets;
 
 import com.thoughtworks.xstream.benchmark.cache.model.Five;
 import com.thoughtworks.xstream.benchmark.cache.model.One;
+import com.thoughtworks.xstream.benchmark.cache.model.SerializableFive;
+import com.thoughtworks.xstream.benchmark.cache.model.SerializableOne;
 import com.thoughtworks.xstream.tools.benchmark.Target;
 
 import java.util.ArrayList;
@@ -30,9 +32,9 @@ public class SerializableTarget implements Target {
     public SerializableTarget() {
         list = new ArrayList();
         for (int i = 0; i < 5; ++i) {
-            list.add(new One(Integer.toString(i)));
+            list.add(new SerializableOne(Integer.toString(i)));
         }
-        list.add(new Five("1", 2, true, '4', new StringBuffer("5")));
+        list.add(new SerializableFive("1", 2, true, '4', new StringBuffer("5")));
     }
     
     public boolean isEqual(Object other) {
