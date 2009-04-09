@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,13 +39,13 @@ public class EnumMapper extends MapperWrapper {
     /**
      * @deprecated since 1.3.1, use {@link #EnumMapper(Mapper)}
      */
+    @Deprecated
     public EnumMapper(Mapper wrapped, ConverterLookup lookup) {
         super(wrapped);
         this.converterLookup = lookup;
         readResolve();
     }
 
-    @Deprecated
     public EnumMapper(Mapper wrapped) {
         super(wrapped);
         this.converterLookup = null;
