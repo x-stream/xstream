@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -83,7 +83,7 @@ public class XmlArrayListTest extends TestCase {
 	public void testRemovesAWrittenObject() {
 		XmlArrayList xmlList = new XmlArrayList(this.strategy);
 		xmlList.add("guilherme");
-		boolean changed = xmlList.remove("guilherme");
+		assertTrue(xmlList.remove("guilherme"));
 		assertFalse(strategy.map.containsValue("guilherme"));
 	}
 

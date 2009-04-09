@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,15 +10,12 @@
  */
 package com.thoughtworks.xstream.persistence;
 
-import com.thoughtworks.xstream.XStream;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -208,11 +205,10 @@ public class FilePersistenceStrategyTest extends TestCase {
         assertEquals("Map should be empty", 0, strategy.size());
     }
 
-    public void testEntrySetContainsAllItems() {
+    public void testContainsAllItems() {
         Map original = new HashMap();
         original.put("guilherme", "aCuteString");
         original.put("silveira", "anotherCuteString");
-        Set originalSet = original.entrySet();
         FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");
@@ -221,7 +217,6 @@ public class FilePersistenceStrategyTest extends TestCase {
         }
     }
 
-    // actually an acceptance test?
     public void testIteratesOverEntryAndChecksItsKeyWithAnotherInstance() {
         FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
         strategy.put("guilherme", "aCuteString");

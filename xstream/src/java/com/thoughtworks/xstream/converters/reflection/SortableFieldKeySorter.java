@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -87,7 +87,6 @@ public class SortableFieldKeySorter implements FieldKeySorter {
 
 		public int compare(Object firstObject, Object secondObject) {
 			FieldKey first = (FieldKey) firstObject, second = (FieldKey) secondObject;
-			Class definedIn = first.getDeclaringClass();
 			return compare(first.getFieldName(), second.getFieldName());
 		}
 

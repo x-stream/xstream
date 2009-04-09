@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -198,11 +197,10 @@ public class FileStreamStrategyTest extends TestCase {
         assertEquals("Map should be empty", 0, strategy.size());
     }
 
-    public void testEntrySetContainsAllItems() {
+    public void testContainsAllItems() {
         Map original = new HashMap();
         original.put("guilherme", "aCuteString");
         original.put("silveira", "anotherCuteString");
-        Set originalSet = original.entrySet();
         FileStreamStrategy strategy = new FileStreamStrategy(baseDir);
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");

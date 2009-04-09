@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -111,7 +111,7 @@ public class InheritanceTest extends AbstractAcceptanceTest {
                 "  <name>PARENT</name>\n" +
                 "</child>";
 
-        StaticChildClass serialized =(StaticChildClass)assertBothWays(child, expected);
+        assertBothWays(child, expected);
         assertEquals("PARENT", child.getParentName());
         assertEquals("CHILD", StaticChildClass.name);
     }
