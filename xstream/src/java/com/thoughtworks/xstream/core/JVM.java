@@ -91,6 +91,10 @@ public class JVM {
         return vendor.indexOf("Apache Software Foundation") != -1;
     }
 
+    private static boolean isAndroid() {
+        return vendor.indexOf("Android") != -1;
+    }
+
     /*
      * Support for sun.misc.Unsafe and sun.reflect.ReflectionFactory is present
      * in JRockit versions R25.1.0 and later, both 1.4.2 and 5.0 (and in future
