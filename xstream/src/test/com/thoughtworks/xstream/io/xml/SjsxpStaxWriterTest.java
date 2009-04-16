@@ -15,12 +15,12 @@ import junit.framework.Test;
 
 import javax.xml.stream.XMLOutputFactory;
 
-public final class JDK6StaxWriterTest extends AbstractStaxWriterTest {
+public final class SjsxpStaxWriterTest extends AbstractStaxWriterTest {
     final static String className = "com.sun.xml.internal.stream.XMLOutputFactoryImpl";
     private final Class factoryClass;
 
     public static Test suite() {
-        return createSuite(JDK6StaxWriterTest.class, className);
+        return createSuite(SjsxpStaxWriterTest.class, className);
     }
 
     protected void assertXmlProducedIs(String expected) {
@@ -33,11 +33,11 @@ public final class JDK6StaxWriterTest extends AbstractStaxWriterTest {
         assertEquals(expected, buffer.toString());
     }
 
-    public JDK6StaxWriterTest() {
+    public SjsxpStaxWriterTest() {
         try {
             this.factoryClass = Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new AssertionFailedError("Cannot load JDK 6 class " + className);
+            throw new AssertionFailedError("Cannot load Sun Java Streaming XML Parser class " + className);
         }
         System.setProperty(XMLOutputFactory.class.getName(), className);
     }
