@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -459,9 +459,21 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaClassConverter.html">JavaClassConverter</a></td>
                 <td>java.lang.Class</td>
                 <td class="example">&lt;class&gt;com.foo.MyThing&lt;/class&gt;</td>
-                <td>This converter will look for the class in the context ClassLoader for the current thread. It is possible
+                <td>This converter will look for the class in the ClassLoader of the current XStream instance. It is possible
                 to use another ClassLoader by re-registering a new instance of this converter that is wrapped around another
                 ClassLoader.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaFieldConverter.html">JavaFieldConverter</a></td>
+                <td>java.lang.reflect.Field</td>
+                <td class="example">
+                    &lt;field&gt;<br/>
+                    &nbsp;&nbsp;&lt;name&gt;myField&lt;/name&gt;<br/>
+                    &nbsp;&nbsp;&lt;class&gt;com.foo.MyThing&lt;/class&gt;<br/>
+                    &lt;/field&gt;
+                </td>
+                <td>As with the JavaClassConverter, the converter will use the ClassLoader of the XStream instance to resolve classes
+                by default. This can be changed by specifying another ClassLoader when constructing this Converter.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaMethodConverter.html">JavaMethodConverter</a></td>
@@ -476,8 +488,9 @@
                     &nbsp;&nbsp;&lt;/parameter-types&gt;<br/>
                     &lt;/method&gt;
                 </td>
-                <td>The enclosing element for this tag will either by &lt;method&gt; or &lt;constructor&gt;.As with the JavaClassConverter, the converter will use the current thread's context ClassLoader to resolve classes
-                by default. This can be changed by specifying another ClassLoader when constructing this Converter.</td>
+                <td>The enclosing element for this tag will either by &lt;method&gt; or &lt;constructor&gt;. As with the JavaClassConverter, the converter
+                will use the ClassLoader of the XStream instance to resolve classes by default. This can be changed by specifying another ClassLoader when
+                constructing this Converter.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/DynamicProxyConverter.html">DynamicProxyConverter</a></td>

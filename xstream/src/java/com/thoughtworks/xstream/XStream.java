@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -48,6 +48,7 @@ import com.thoughtworks.xstream.converters.extended.FileConverter;
 import com.thoughtworks.xstream.converters.extended.FontConverter;
 import com.thoughtworks.xstream.converters.extended.GregorianCalendarConverter;
 import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
+import com.thoughtworks.xstream.converters.extended.JavaFieldConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
@@ -109,6 +110,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -570,6 +572,7 @@ public class XStream {
         alias("java-class", Class.class);
         alias("method", Method.class);
         alias("constructor", Constructor.class);
+        alias("field", Field.class);
         alias("date", Date.class);
         alias("url", URL.class);
         alias("bit-set", BitSet.class);
@@ -678,6 +681,7 @@ public class XStream {
             new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
+        registerConverter(new JavaFieldConverter(classLoaderReference), PRIORITY_NORMAL);
         if (jvm.supportsAWT()) {
             registerConverter(new FontConverter(), PRIORITY_NORMAL);
             registerConverter(new ColorConverter(), PRIORITY_NORMAL);

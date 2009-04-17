@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,10 +12,13 @@
 package com.thoughtworks.acceptance;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ReflectionClassesTest extends AbstractAcceptanceTest {
     public static class StupidObject {
+        public String aField;
+        public static int aStaticField;
         public StupidObject(String arg) {
         }
 
@@ -23,6 +26,9 @@ public class ReflectionClassesTest extends AbstractAcceptanceTest {
         }
 
         public void aMethod(int cheese) {
+        }
+
+        public static void aStaticMethod(boolean bool) {
         }
     }
 
@@ -35,6 +41,21 @@ public class ReflectionClassesTest extends AbstractAcceptanceTest {
                 "  <name>aMethod</name>\n" +
                 "  <parameter-types>\n" +
                 "    <class>java.lang.String</class>\n" +
+                "  </parameter-types>\n" +
+                "</method>";
+
+        assertBothWays(method, expected);
+    }
+
+    public void testReflectionStaticMethod() throws NoSuchMethodException {
+        Method method = StupidObject.class.getMethod("aStaticMethod", new Class[]{boolean.class});
+
+        String expected =
+                "<method>\n" +
+                "  <class>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</class>\n" +
+                "  <name>aStaticMethod</name>\n" +
+                "  <parameter-types>\n" +
+                "    <class>boolean</class>\n" +
                 "  </parameter-types>\n" +
                 "</method>";
 
@@ -57,6 +78,30 @@ public class ReflectionClassesTest extends AbstractAcceptanceTest {
 
     public void testSupportsPrimitiveTypes() {
         assertBothWays(int.class, "<java-class>int</java-class>");
+    }
+
+    public void testReflectionField() throws NoSuchFieldException {
+        Field field = StupidObject.class.getField("aField");
+
+        String expected =
+                "<field>\n" +
+                "  <name>aField</name>\n" +
+                "  <class>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</class>\n" +
+                "</field>";
+
+        assertBothWays(field, expected);
+    }
+
+    public void testReflectionStaticField() throws NoSuchFieldException {
+        Field field = StupidObject.class.getField("aStaticField");
+
+        String expected =
+                "<field>\n" +
+                "  <name>aStaticField</name>\n" +
+                "  <class>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</class>\n" +
+                "</field>";
+
+        assertBothWays(field, expected);
     }
 
 }
