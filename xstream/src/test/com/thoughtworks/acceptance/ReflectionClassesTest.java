@@ -86,7 +86,7 @@ public class ReflectionClassesTest extends AbstractAcceptanceTest {
         String expected =
                 "<field>\n" +
                 "  <name>aField</name>\n" +
-                "  <class>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</class>\n" +
+                "  <clazz>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</clazz>\n" +
                 "</field>";
 
         assertBothWays(field, expected);
@@ -98,10 +98,33 @@ public class ReflectionClassesTest extends AbstractAcceptanceTest {
         String expected =
                 "<field>\n" +
                 "  <name>aStaticField</name>\n" +
-                "  <class>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</class>\n" +
+                "  <clazz>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</clazz>\n" +
                 "</field>";
 
         assertBothWays(field, expected);
     }
 
+    public void testReflectionFieldMigrationFrom13() throws NoSuchFieldException {
+        Field field = StupidObject.class.getField("aField");
+
+        String xml =
+            "<field>\n" + 
+            "  <override>false</override>\n" + 
+            "  <clazz>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</clazz>\n" + 
+            "  <slot>0</slot>\n" + 
+            "  <name>aField</name>\n" + 
+            "  <type>java.lang.String</type>\n" + 
+            "  <modifiers>1</modifiers>\n" + 
+            "  <root>\n" + 
+            "    <override>false</override>\n" + 
+            "    <clazz>com.thoughtworks.acceptance.ReflectionClassesTest$StupidObject</clazz>\n" + 
+            "    <slot>0</slot>\n" + 
+            "    <name>aField</name>\n" + 
+            "    <type>java.lang.String</type>\n" + 
+            "    <modifiers>1</modifiers>\n" + 
+            "  </root>\n" + 
+            "</field>";
+
+        assertEquals(field, xstream.fromXML(xml));
+    }
 }

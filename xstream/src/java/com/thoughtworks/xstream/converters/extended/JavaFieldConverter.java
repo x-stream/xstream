@@ -51,21 +51,27 @@ public class JavaFieldConverter implements Converter {
         writer.setValue(field.getName());
         writer.endNode();
 
-        writer.startNode("class");
+        writer.startNode("clazz");
         writer.setValue(javaClassConverter.toString(field.getDeclaringClass()));
         writer.endNode();
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        reader.moveDown();
-        String methodName = reader.getValue();
-        reader.moveUp();
-
-        reader.moveDown();
-        String declaringClassName = reader.getValue();
+        String methodName = null;
+        String declaringClassName = null;
+        
+        while((methodName == null || declaringClassName == null) && reader.hasMoreChildren()) {
+            reader.moveDown();
+            
+            if (reader.getNodeName().equals("name")) {
+                methodName = reader.getValue();
+            } else if (reader.getNodeName().equals("clazz")) {
+                declaringClassName = reader.getValue();
+            }
+            reader.moveUp();
+        }
+        
         Class declaringClass = (Class)javaClassConverter.fromString(declaringClassName);
-        reader.moveUp();
-
         try {
             return declaringClass.getDeclaredField(methodName);
         } catch (NoSuchFieldException e) {
