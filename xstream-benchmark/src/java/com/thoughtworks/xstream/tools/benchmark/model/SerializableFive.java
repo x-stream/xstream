@@ -10,13 +10,15 @@
  */
 package com.thoughtworks.xstream.tools.benchmark.model;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * Serializable class containing 5 basic types.
+ * 
+ * @since upcoming
+ */
 public class SerializableFive extends SerializableOne {
     
     private static final long serialVersionUID = 1L;
@@ -43,10 +45,11 @@ public class SerializableFive extends SerializableOne {
     }
 
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        SerializableFive five = (SerializableFive)obj;
+        return super.equals(obj) && two == five.two && three == five.three && four == five.four && this.five.toString().equals(five.five.toString());
     }
 
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return super.hashCode() + two + new Boolean(three).hashCode() + five.toString().hashCode();
     }
 }

@@ -24,7 +24,7 @@ import java.util.Locale;
  * Target containing basic types.
  * 
  * @author J&ouml;rg Schaible
- * @since 1.3
+ * @since upcoming
  */
 public class BasicTarget implements Target {
 

@@ -13,7 +13,7 @@ package com.thoughtworks.xstream.tools.benchmark.model;
 /**
  * Class with 100 fields.
  * 
- * @author J&ouml;rg Schaible
+ * @since upcoming
  */
 public class A100Fields {
 

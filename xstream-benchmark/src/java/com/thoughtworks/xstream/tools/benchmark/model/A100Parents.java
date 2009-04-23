@@ -12,6 +12,8 @@ package com.thoughtworks.xstream.tools.benchmark.model;
 
 /**
  * Class with 100 parents.
+ * 
+ * @since upcoming
  */
 public class A100Parents {
 

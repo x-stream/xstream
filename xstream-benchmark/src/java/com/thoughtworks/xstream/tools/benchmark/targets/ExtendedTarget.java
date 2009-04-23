@@ -23,7 +23,7 @@ import java.util.List;
  * Target containing extended types.
  * 
  * @author J&ouml;rg Schaible
- * @since 1.3
+ * @since upcoming
  */
 public class ExtendedTarget implements Target {
 

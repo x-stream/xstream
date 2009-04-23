@@ -11,6 +11,11 @@
 package com.thoughtworks.xstream.tools.benchmark.model;
 
 
+/**
+ * Class containing 5 basic types.
+ * 
+ * @since upcoming
+ */
 public class Five extends One {
     
     private int two;

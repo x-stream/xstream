@@ -23,9 +23,6 @@ import com.thoughtworks.xstream.tools.benchmark.metrics.SizeMetric;
 import com.thoughtworks.xstream.tools.benchmark.reporters.HtmlReporter;
 import com.thoughtworks.xstream.tools.benchmark.reporters.MultiReporter;
 import com.thoughtworks.xstream.tools.benchmark.reporters.TextReporter;
-import com.thoughtworks.xstream.tools.benchmark.targets.Field$Reflection;
-import com.thoughtworks.xstream.tools.benchmark.targets.FieldReflection;
-import com.thoughtworks.xstream.tools.benchmark.targets.Field_Reflection;
 import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.CachingIterativeAppenderWithShortcut;
 import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.CombinedLookupAppender;
 import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.CombinedLookupReplacer;
@@ -34,6 +31,9 @@ import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.IterativeAp
 import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.IterativeReplacer;
 import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.NoReplacer;
 import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.SeparateLookupReplacer;
+import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.targets.Field$Reflection;
+import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.targets.Field_Reflection;
+import com.thoughtworks.xstream.tools.model.targets.FieldReflection;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

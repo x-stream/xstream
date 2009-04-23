@@ -6,37 +6,37 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 13. September 2007 by Joerg Schaible
+ * Created on 26. June 2007 by Joerg Schaible
  */
-package com.thoughtworks.xstream.tools.benchmark.targets;
+package com.thoughtworks.xstream.tools.model.targets;
 
 import com.thoughtworks.xstream.tools.benchmark.Target;
-import com.thoughtworks.xstream.tools.benchmark.model.A100$Fields;
+import com.thoughtworks.xstream.tools.benchmark.model.A100Fields;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Target for a 100 fields class with each field name containing 5 dollars.
+ * A Target for a 100 fields class.
  * 
  * @author J&ouml;rg Schaible
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Target
  */
-public class Field$Reflection extends AbstractReflectionTarget {
+public class FieldReflection extends AbstractReflectionTarget {
 
-    public Field$Reflection() {
+    public FieldReflection() {
         super(new ArrayList());
         List list = (List)target();
         for(int i = 0; i < 100; ++i) {
-            Object o = new A100$Fields();
+            Object o = new A100Fields();
             fill(o);
             list.add(o);
         }
     }
 
     public String toString() {
-        return "Field with dollars Target";
+        return "Field Target";
     }
 
 }

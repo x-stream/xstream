@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
  * Determines the amount of a special characters.
  *
  * @author J&ouml;rg Schaible
+ * @since upcoming
  */
 public class CharacterCountMetric implements Metric {
     

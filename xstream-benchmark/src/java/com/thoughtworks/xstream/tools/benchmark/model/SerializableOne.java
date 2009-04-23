@@ -10,14 +10,16 @@
  */
 package com.thoughtworks.xstream.tools.benchmark.model;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ * Serializable class containing one basic types.
+ * 
+ * @since upcoming
+ */
 public class SerializableOne implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -36,12 +38,12 @@ public class SerializableOne implements Serializable {
         throws IOException, ClassNotFoundException {
         in.defaultReadObject();
     }
-    
+
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        return one.equals(((SerializableOne)obj).one);
     }
 
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return one.hashCode() >>> 1;
     }
 }

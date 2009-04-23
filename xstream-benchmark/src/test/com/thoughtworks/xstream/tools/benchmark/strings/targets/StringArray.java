@@ -8,7 +8,7 @@
  * 
  * Created on 26. June 2007 by Joerg Schaible
  */
-package com.thoughtworks.xstream.tools.benchmark.targets;
+package com.thoughtworks.xstream.tools.benchmark.strings.targets;
 
 import com.thoughtworks.xstream.tools.benchmark.Target;
 

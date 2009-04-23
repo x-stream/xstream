@@ -8,35 +8,36 @@
  * 
  * Created on 13. September 2007 by Joerg Schaible
  */
-package com.thoughtworks.xstream.tools.benchmark.targets;
+package com.thoughtworks.xstream.tools.benchmark.xmlfriendly.targets;
 
 import com.thoughtworks.xstream.tools.benchmark.Target;
-import com.thoughtworks.xstream.tools.benchmark.model.A100_Fields;
+import com.thoughtworks.xstream.tools.benchmark.xmlfriendly.model.A100$Fields;
+import com.thoughtworks.xstream.tools.model.targets.AbstractReflectionTarget;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Target for a 100 fields class with each field name containing 5 underscores.
+ * A Target for a 100 fields class with each field name containing 5 dollars.
  * 
  * @author J&ouml;rg Schaible
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Target
  */
-public class Field_Reflection extends AbstractReflectionTarget {
+public class Field$Reflection extends AbstractReflectionTarget {
 
-    public Field_Reflection() {
+    public Field$Reflection() {
         super(new ArrayList());
         List list = (List)target();
         for(int i = 0; i < 100; ++i) {
-            Object o = new A100_Fields();
+            Object o = new A100$Fields();
             fill(o);
             list.add(o);
         }
     }
 
     public String toString() {
-        return "Field with underscores Target";
+        return "Field with dollars Target";
     }
 
 }

@@ -8,13 +8,11 @@
  * 
  * Created on 06. September 2007 by Joerg Schaible
  */
-package com.thoughtworks.xstream.tools.benchmark.targets;
+package com.thoughtworks.xstream.tools.model.targets;
 
 import com.thoughtworks.xstream.tools.benchmark.Target;
-import com.thoughtworks.xstream.tools.benchmark.model.A50InnerClasses;
+import com.thoughtworks.xstream.tools.benchmark.model.A50StaticInnerClasses;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,24 +24,20 @@ import java.util.List;
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Target
  */
-public class InnerClassesReflection extends AbstractReflectionTarget {
+public class StaticInnerClassesReflection extends AbstractReflectionTarget {
 
-    public InnerClassesReflection() {
+    public StaticInnerClassesReflection() {
         super(new ArrayList());
+        List list = (List)target();
         for (int i = 0; i < 10; ++i) {
-            List list = new ArrayList();
-            list.add(new A50InnerClasses());
-            StringBuffer name = new StringBuffer(A50InnerClasses.class.getName());
+            StringBuffer name = new StringBuffer(A50StaticInnerClasses.class.getName());
             for (int j = 0; j < 50; ++j) {
                 String no = "0" + j;
-                Object parent = list.get(j);
-                name.append("$L");
-                name.append(no.substring(no.length() - 2));
                 try {
+                    name.append("$L");
+                    name.append(no.substring(no.length() - 2));
                     Class cls = Class.forName(name.toString());
-                    Constructor ctor = cls
-                        .getDeclaredConstructor(new Class[]{parent.getClass()});
-                    Object o = ctor.newInstance(new Object[]{parent});
+                    Object o = cls.newInstance();
                     fill(o);
                     list.add(o);
                 } catch (ClassNotFoundException e) {
@@ -52,19 +46,13 @@ public class InnerClassesReflection extends AbstractReflectionTarget {
                     throw new RuntimeException(e);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
-                } catch (NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
                 }
             }
-            list.remove(0);
-            ((List)target()).addAll(list);
         }
     }
 
     public String toString() {
-        return "InnerClasses Target";
+        return "StaticInnerClasses Target";
     }
 
 }

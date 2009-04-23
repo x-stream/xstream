@@ -12,6 +12,8 @@ package com.thoughtworks.xstream.tools.benchmark.model;
 
 /**
  * Class with static inner classes 50 levels deep.
+ * 
+ * @since upcoming
  */
 public class A50StaticInnerClasses {
 

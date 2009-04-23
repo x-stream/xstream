@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Target containing basic types.
+ * Target containing basic types using the SerializableConverter.
  * 
  * @author J&ouml;rg Schaible
- * @since 1.3
+ * @since upcoming
  */
 public class SerializableTarget implements Target {
 

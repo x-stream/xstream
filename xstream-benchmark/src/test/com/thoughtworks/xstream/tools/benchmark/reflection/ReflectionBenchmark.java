@@ -18,10 +18,10 @@ import com.thoughtworks.xstream.tools.benchmark.reflection.products.XStreamField
 import com.thoughtworks.xstream.tools.benchmark.reflection.products.XStreamLocalAttributeAliases;
 import com.thoughtworks.xstream.tools.benchmark.reflection.products.XStreamPlain;
 import com.thoughtworks.xstream.tools.benchmark.reporters.TextReporter;
-import com.thoughtworks.xstream.tools.benchmark.targets.FieldReflection;
-import com.thoughtworks.xstream.tools.benchmark.targets.HierarchyLevelReflection;
-import com.thoughtworks.xstream.tools.benchmark.targets.InnerClassesReflection;
-import com.thoughtworks.xstream.tools.benchmark.targets.StaticInnerClassesReflection;
+import com.thoughtworks.xstream.tools.model.targets.FieldReflection;
+import com.thoughtworks.xstream.tools.model.targets.HierarchyLevelReflection;
+import com.thoughtworks.xstream.tools.model.targets.InnerClassesReflection;
+import com.thoughtworks.xstream.tools.model.targets.StaticInnerClassesReflection;
 
 
 /**

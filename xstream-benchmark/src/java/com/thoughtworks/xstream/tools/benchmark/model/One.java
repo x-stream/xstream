@@ -11,6 +11,11 @@
 package com.thoughtworks.xstream.tools.benchmark.model;
 
 
+/**
+ * Class containing one basic type.
+ * 
+ * @since upcoming
+ */
 public class One {
     
     private String one;

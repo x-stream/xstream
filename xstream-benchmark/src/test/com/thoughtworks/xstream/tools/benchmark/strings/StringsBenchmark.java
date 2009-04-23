@@ -17,8 +17,8 @@ import com.thoughtworks.xstream.tools.benchmark.strings.products.StringInternCon
 import com.thoughtworks.xstream.tools.benchmark.strings.products.StringNonCachingConverter;
 import com.thoughtworks.xstream.tools.benchmark.strings.products.StringWithSynchronizedWeakHashMapConverter;
 import com.thoughtworks.xstream.tools.benchmark.strings.products.StringWithWeakHashMapConverter;
-import com.thoughtworks.xstream.tools.benchmark.targets.BigString;
-import com.thoughtworks.xstream.tools.benchmark.targets.StringArray;
+import com.thoughtworks.xstream.tools.benchmark.strings.targets.BigString;
+import com.thoughtworks.xstream.tools.benchmark.strings.targets.StringArray;
 
 
 /**

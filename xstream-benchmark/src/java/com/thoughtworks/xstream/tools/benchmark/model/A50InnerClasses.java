@@ -12,6 +12,8 @@ package com.thoughtworks.xstream.tools.benchmark.model;
 
 /**
  * Class with inner classes 50 levels deep.
+ * 
+ * @since upcoming
  */
 public class A50InnerClasses {
 

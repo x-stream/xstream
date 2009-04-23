@@ -8,7 +8,7 @@
  * 
  * Created on 14. September 2007 by Joerg Schaible
  */
-package com.thoughtworks.xstream.tools.benchmark.model;
+package com.thoughtworks.xstream.tools.benchmark.xmlfriendly.model;
 
 /**
  * Class with 100 fields containing each 5 dollars in the name.
