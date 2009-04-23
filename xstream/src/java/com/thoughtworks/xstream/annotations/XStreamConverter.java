@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Annotation to declare a converter.
  * <p>
  * Note, the annotation matches a {@link ConverterMatcher}.
- * {@link com.thoughtworks.xstream.converters.ConverterMatche} as well as
+ * {@link com.thoughtworks.xstream.converters.ConverterMatcher} as well as
  * {@link com.thoughtworks.xstream.converters.SingleValueConverter} extend this interface. The
  * {@link com.thoughtworks.xstream.mapper.AnnotationMapper} can only handle these two
  * <strong>known</strong> types.
