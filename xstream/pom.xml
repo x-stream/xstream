@@ -69,6 +69,18 @@
     </dependency>
 
     <dependency>
+      <groupId>net.sf.kxml</groupId>
+      <artifactId>kxml2-min</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>xmlpull</groupId>
+      <artifactId>xmlpull</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib-nodep</artifactId>
       <optional>true</optional>
