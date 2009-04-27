@@ -21,7 +21,19 @@ import java.lang.annotation.Target;
 
 
 /**
- * Annotation to declare a converter.
+ * Annotation to declare a converter. The annotation supports additionally the injection of
+ * various constructor arguments provided by XStream:
+ * <ul>
+ * <li>{@link com.thoughtworks.xstream.mapper.Mapper}: The current mapper chain of the XStream
+ * instance.</li>
+ * <li>{@link ClassLoader}: The class loader used by the XStream instance to deserialize the
+ * objects.</li>
+ * <li>{@link com.thoughtworks.xstream.converters.reflection.ReflectionProvider}: The reflection
+ * provider used by the reflection based converters of the current XStream instance.</li>
+ * <li>{@link Class}: The type of the element where the annotation is declared. Note, that this
+ * argument is not supported when using {@link
+ * com.thoughtworks.xstream.annotations.@XStreamConverters}.</li>
+ * </ul>
  * <p>
  * Note, the annotation matches a {@link ConverterMatcher}.
  * {@link com.thoughtworks.xstream.converters.ConverterMatcher} as well as

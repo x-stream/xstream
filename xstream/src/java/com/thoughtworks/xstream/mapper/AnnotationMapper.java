@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,6 +37,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,7 +66,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final FieldAliasingMapper fieldAliasingMapper;
     private final AttributeMapper attributeMapper;
     private final LocalConversionMapper localConversionMapper;
-    private final Map<Class<?>, Converter> converterCache = new HashMap<Class<?>, Converter>();
+    private final Map<Class<?>, Map<Object, Converter>> converterCache = 
+        new HashMap<Class<?>, Map<Object, Converter>>();
     private final Set<Class<?>> annotatedTypes = new WeakHashSet<Class<?>>();
 
     /**
@@ -272,7 +274,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             }
             for (final XStreamConverter annotation : annotations) {
                 final Class<? extends ConverterMatcher> converterType = annotation.value();
-                final Converter converter = cacheConverter(converterType);
+                final Converter converter = cacheConverter(
+                    converterType, converterAnnotation != null ? type : null);
                 if (converter != null) {
                     if (converterAnnotation != null || converter.canConvert(type)) {
                         converterRegistry.registerConverter(converter, XStream.PRIORITY_NORMAL);
@@ -419,7 +422,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         final XStreamConverter annotation = field.getAnnotation(XStreamConverter.class);
         if (annotation != null) {
             final Class<? extends ConverterMatcher> converterType = annotation.value();
-            final Converter converter = cacheConverter(converterType);
+            final Converter converter = cacheConverter(converterType, field.getType());
             if (converter != null) {
                 if (localConversionMapper == null) {
                     throw new InitializationException("No "
@@ -432,25 +435,55 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         }
     }
 
-    private Converter cacheConverter(final Class<? extends ConverterMatcher> converterType) {
-        Converter converter = converterCache.get(converterType);
-        if (converter == null) {
+    private Converter cacheConverter(final Class<? extends ConverterMatcher> converterType,
+        final Class targetType) {
+        Converter result = null;
+        final Object[] args;
+        Map<Object, Converter> converterMapping = converterCache.get(converterType);
+        if (converterMapping != null) {
+            result = converterMapping.get(targetType.getName());
+            if (result == null) {
+                result = converterMapping.get(null);
+            }
+        }
+        if (result == null) {
+            if (targetType != null) {
+                args = new Object[arguments.length + 1];
+                System.arraycopy(arguments, 0, args, 1, arguments.length);
+                args[0] = targetType;
+            } else {
+                args = arguments;
+            }
+            
+            final BitSet usedArgs = new BitSet();
+            final Converter converter;
             try {
-                if (SingleValueConverter.class.isAssignableFrom(converterType)) {
+                if (SingleValueConverter.class.isAssignableFrom(converterType)
+                    && !Converter.class.isAssignableFrom(converterType)) {
                     final SingleValueConverter svc = (SingleValueConverter)DependencyInjectionFactory
-                        .newInstance(converterType, arguments);
+                        .newInstance(converterType, args, usedArgs);
                     converter = new SingleValueConverterWrapper(svc);
                 } else {
                     converter = (Converter)DependencyInjectionFactory.newInstance(
-                        converterType, arguments);
+                        converterType, args, usedArgs);
                 }
-                converterCache.put(converterType, converter);
             } catch (final Exception e) {
                 throw new InitializationException("Cannot instantiate converter "
-                    + converterType.getName(), e);
+                    + converterType.getName()
+                    + (targetType != null ? " for type " + targetType.getName() : ""), e);
             }
+            if (converterMapping == null) {
+                converterMapping = new HashMap<Object, Converter>();
+                converterCache.put(converterType, converterMapping);
+            }
+            if (targetType != null && usedArgs.get(0)) {
+                converterMapping.put(targetType.getName(), converter);
+            } else {
+                converterMapping.put(null, converter);
+            }
+            result = converter;
         }
-        return converter;
+        return result;
     }
 
     private Class<?> getClass(final Type typeArgument) {
@@ -564,6 +597,5 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         public <T> T[] toArray(final T[] a) {
             return map.keySet().toArray(a);
         }
-
     }
 }

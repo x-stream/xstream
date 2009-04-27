@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 XStream Committers.
+ * Copyright (c) 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Comparator;
 import java.util.List;
 
@@ -39,8 +40,27 @@ public class DependencyInjectionFactory {
      * @param dependencies the possible dependencies
      * @return the instantiated object
      * @throws ObjectAccessException if no instance can be generated
+     * @since 1.2.2
      */
     public static Object newInstance(final Class type, final Object[] dependencies) {
+        return newInstance(type, dependencies, new BitSet());
+    }
+    
+    /**
+     * Create an instance with dependency injection. The given dependencies are used to match the parameters of the
+     * constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
+     * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
+     * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
+     * <code>null</code> as parameter.
+     * 
+     * @param type the type to create an instance of
+     * @param dependencies the possible dependencies
+     * @param usedDependencies bit mask set by the method for all used dependencies (may be <code>null</code>)
+     * @return the instantiated object
+     * @throws ObjectAccessException if no instance can be generated
+     * @since upcoming
+     */
+    public static Object newInstance(final Class type, final Object[] dependencies, final BitSet usedDependencies) {
         // sort available ctors according their arity
         final Constructor[] ctors = type.getConstructors();
         if (ctors.length > 1) {
@@ -95,10 +115,12 @@ public class DependencyInjectionFactory {
             // first approach: test the ctor params against the dependencies in the sequence of the parameter
             // declaration
             matchingDependencies.clear();
+            usedDependencies.clear();
             for (int j = 0, k = 0; j < parameterTypes.length
                     && parameterTypes.length + k - j <= typedDependencies.length; k++) {
                 if (parameterTypes[j].isAssignableFrom(typedDependencies[k].type)) {
                     matchingDependencies.add(typedDependencies[k].value);
+                    usedDependencies.set(k);
                     if (++j == parameterTypes.length) {
                         bestMatchingCtor = constructor;
                         break;
@@ -113,6 +135,7 @@ public class DependencyInjectionFactory {
                 final TypedValue[] deps = new TypedValue[typedDependencies.length];
                 System.arraycopy(typedDependencies, 0, deps, 0, deps.length);
                 matchingDependencies.clear();
+                usedDependencies.clear();
                 for (int j = 0; j < parameterTypes.length; j++) {
                     int assignable = -1;
                     for (int k = 0; k < deps.length; k++) {
@@ -133,6 +156,7 @@ public class DependencyInjectionFactory {
 
                     if (assignable >= 0) {
                         matchingDependencies.add(deps[assignable].value);
+                        usedDependencies.set(assignable);
                         deps[assignable] = null; // do not match same dep twice
                     } else {
                         possibleCtor = null;
@@ -144,6 +168,7 @@ public class DependencyInjectionFactory {
 
         if (bestMatchingCtor == null) {
             if (possibleCtor == null) {
+                usedDependencies.clear();
                 throw new ObjectAccessException("Cannot construct "
                         + type.getName()
                         + ", none of the dependencies match any constructor's parameters");
