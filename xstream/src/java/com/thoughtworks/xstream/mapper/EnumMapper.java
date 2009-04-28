@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSingleValueConverter;
@@ -33,8 +32,7 @@ import java.util.WeakHashMap;
 public class EnumMapper extends MapperWrapper {
 
     private transient AttributeMapper attributeMapper;
-    private transient Map enumConverterMap;
-    private final ConverterLookup converterLookup;
+    private transient Map<Class, SingleValueConverter> enumConverterMap;
 
     /**
      * @deprecated since 1.3.1, use {@link #EnumMapper(Mapper)}
@@ -42,22 +40,12 @@ public class EnumMapper extends MapperWrapper {
     @Deprecated
     public EnumMapper(Mapper wrapped, ConverterLookup lookup) {
         super(wrapped);
-        this.converterLookup = lookup;
         readResolve();
     }
 
     public EnumMapper(Mapper wrapped) {
         super(wrapped);
-        this.converterLookup = null;
         readResolve();
-    }
-
-    /**
-     * @deprecated since 1.2, use {@link #EnumMapper(Mapper))}
-     */
-    @Deprecated
-    public EnumMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
     }
 
     @Override
@@ -102,8 +90,7 @@ public class EnumMapper extends MapperWrapper {
             && Enum.class.isAssignableFrom(type)
             && attributeMapper.shouldLookForSingleValueConverter(fieldName, type, definedIn)) {
             synchronized (enumConverterMap) {
-                SingleValueConverter singleValueConverter = (SingleValueConverter)enumConverterMap
-                    .get(type);
+                SingleValueConverter singleValueConverter = enumConverterMap.get(type);
                 if (singleValueConverter == null) {
                     singleValueConverter = super.getConverterFromItemType(fieldName, type, definedIn);
                     if (singleValueConverter == null) {
@@ -118,7 +105,7 @@ public class EnumMapper extends MapperWrapper {
     }
 
     private Object readResolve() {
-        this.enumConverterMap = new WeakHashMap();
+        this.enumConverterMap = new WeakHashMap<Class, SingleValueConverter>();
         this.attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
         return this;
     }

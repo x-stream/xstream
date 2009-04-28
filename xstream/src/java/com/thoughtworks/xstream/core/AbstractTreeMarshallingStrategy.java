@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.MarshallingStrategy;
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -43,19 +42,4 @@ public abstract class AbstractTreeMarshallingStrategy implements MarshallingStra
 
     protected abstract TreeMarshaller createMarshallingContext(
         HierarchicalStreamWriter writer, ConverterLookup converterLookup, Mapper mapper);
-
-    /**
-     * @deprecated As of 1.2, use {@link #unmarshal(Object, HierarchicalStreamReader, DataHolder, ConverterLookup, Mapper)}
-     */
-    public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder, DefaultConverterLookup converterLookup, ClassMapper classMapper) {
-        return unmarshal(root, reader, dataHolder, (ConverterLookup)converterLookup, (Mapper)classMapper);
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #marshal(HierarchicalStreamWriter, Object, ConverterLookup, Mapper, DataHolder)}
-     */
-    public void marshal(HierarchicalStreamWriter writer, Object obj, DefaultConverterLookup converterLookup, ClassMapper classMapper, DataHolder dataHolder) {
-        marshal(writer, obj, converterLookup, (Mapper)classMapper, dataHolder);
-    }
-
 }

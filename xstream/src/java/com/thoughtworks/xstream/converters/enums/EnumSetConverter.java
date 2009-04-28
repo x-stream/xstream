@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -91,6 +91,7 @@ public class EnumSetConverter implements Converter {
         return result.toString();
     }
 
+    @SuppressWarnings("unchecked")
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         String attributeName = mapper.aliasForSystemAttribute("enum-type");
         if (attributeName == null) {

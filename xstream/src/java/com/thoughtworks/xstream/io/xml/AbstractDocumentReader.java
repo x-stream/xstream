@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -77,13 +77,6 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
     }
 
     public void appendErrors(ErrorWriter errorWriter) {
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #getCurrent() }
-     */
-    public Object peekUnderlyingNode() {
-        return current;
     }
     
     public Object getCurrent() {

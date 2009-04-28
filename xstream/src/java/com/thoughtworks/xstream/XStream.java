@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
@@ -111,9 +110,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -302,11 +299,6 @@ public class XStream {
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_RELATIVE_REFERENCES = 1003;
     public static final int XPATH_ABSOLUTE_REFERENCES = 1004;
-    /**
-     * @deprecated since 1.2, use {@link #XPATH_RELATIVE_REFERENCES} or
-     *             {@link #XPATH_ABSOLUTE_REFERENCES} instead.
-     */
-    public static final int XPATH_REFERENCES = XPATH_RELATIVE_REFERENCES;
 
     public static final int PRIORITY_VERY_HIGH = 10000;
     public static final int PRIORITY_NORMAL = 0;
@@ -354,28 +346,6 @@ public class XStream {
     public XStream(
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(reflectionProvider, (Mapper)null, hierarchicalStreamDriver);
-    }
-
-    /**
-     * @deprecated As of 1.2, use
-     *             {@link #XStream(ReflectionProvider, Mapper, HierarchicalStreamDriver)}
-     */
-    public XStream(
-        ReflectionProvider reflectionProvider, ClassMapper classMapper,
-        HierarchicalStreamDriver driver) {
-        this(reflectionProvider, (Mapper)classMapper, driver);
-    }
-
-    /**
-     * @deprecated As of 1.2, use
-     *             {@link #XStream(ReflectionProvider, Mapper, HierarchicalStreamDriver)} and
-     *             register classAttributeIdentifier as alias
-     */
-    public XStream(
-        ReflectionProvider reflectionProvider, ClassMapper classMapper,
-        HierarchicalStreamDriver driver, String classAttributeIdentifier) {
-        this(reflectionProvider, (Mapper)classMapper, driver);
-        aliasAttribute(classAttributeIdentifier, "class");
     }
 
     /**
@@ -1235,25 +1205,6 @@ public class XStream {
         SingleValueConverter converter) {
         registerLocalConverter(
             definedIn, fieldName, (Converter)new SingleValueConverterWrapper(converter));
-    }
-
-    /**
-     * @throws ClassCastException if mapper is not really a deprecated {@link ClassMapper}
-     *             instance
-     * @deprecated As of 1.2, use {@link #getMapper}
-     */
-    public ClassMapper getClassMapper() {
-        if (mapper instanceof ClassMapper) {
-            return (ClassMapper)mapper;
-        } else {
-            return (ClassMapper)Proxy.newProxyInstance(
-                getClassLoader(), new Class[]{ClassMapper.class}, new InvocationHandler() {
-                    public Object invoke(Object proxy, Method method, Object[] args)
-                        throws Throwable {
-                        return method.invoke(mapper, args);
-                    }
-                });
-        }
     }
 
     /**

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.path.Path;
@@ -37,25 +36,6 @@ public class ReferenceByIdMarshaller extends AbstractReferenceMarshaller {
                                    ConverterLookup converterLookup,
                                    Mapper mapper) {
         this(writer, converterLookup, mapper, new SequenceGenerator(1));
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #ReferenceByIdMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper, IDGenerator)}
-     */
-    public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
-                                   ConverterLookup converterLookup,
-                                   ClassMapper classMapper,
-                                   IDGenerator idGenerator) {
-        this(writer, converterLookup, (Mapper)classMapper, idGenerator);
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #ReferenceByIdMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper)}
-     */
-    public ReferenceByIdMarshaller(HierarchicalStreamWriter writer,
-                                   ConverterLookup converterLookup,
-                                   ClassMapper classMapper) {
-        this(writer, converterLookup, (Mapper)classMapper);
     }
 
     protected String createReference(Path currentPath, Object existingReferenceKey) {

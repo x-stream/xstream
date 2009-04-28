@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -43,12 +42,6 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
      * @deprecated since 1.3, use {@link #DefaultConverterLookup()}
      */
     public DefaultConverterLookup(Mapper mapper) {
-    }
-
-    /**
-     * @deprecated since 1.2, use {@link #DefaultConverterLookup(Mapper)}
-     */
-    public DefaultConverterLookup(ClassMapper classMapper) {
     }
 
     public Converter lookupConverterForType(Class type) {

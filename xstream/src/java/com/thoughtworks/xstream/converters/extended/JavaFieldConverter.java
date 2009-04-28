@@ -29,13 +29,6 @@ public class JavaFieldConverter implements Converter {
 
     private final SingleValueConverter javaClassConverter;
 
-    /**
-     * @deprecated As of 1.2 - use other constructor and explicitly supply a ClassLoader.
-     */
-    public JavaFieldConverter() {
-        this(JavaFieldConverter.class.getClassLoader());
-    }
-
     public JavaFieldConverter(ClassLoader classLoader) {
         this.javaClassConverter = new JavaClassConverter(classLoader);
     }

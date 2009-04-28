@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,8 +10,6 @@
  * Created on 22. January 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
-
-import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
@@ -29,14 +27,6 @@ public class CachingMapper extends MapperWrapper {
 
     public CachingMapper(Mapper wrapped) {
         super(wrapped);
-        readResolve();
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #CachingMapper(Mapper)}
-     */
-    public CachingMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
         readResolve();
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -21,14 +20,6 @@ public class ReferenceByIdUnmarshaller extends AbstractReferenceUnmarshaller {
     public ReferenceByIdUnmarshaller(Object root, HierarchicalStreamReader reader,
                                      ConverterLookup converterLookup, Mapper mapper) {
         super(root, reader, converterLookup, mapper);
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #ReferenceByIdUnmarshaller(Object, HierarchicalStreamReader, ConverterLookup, Mapper)}
-     */
-    public ReferenceByIdUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                     ConverterLookup converterLookup, ClassMapper classMapper) {
-        this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
     protected Object getReferenceKey(String reference) {

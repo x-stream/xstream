@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,13 +25,6 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 public class JavaClassConverter extends AbstractSingleValueConverter {
 
     private ClassLoader classLoader;
-
-    /**
-     * @deprecated As of 1.1.1 - use other constructor and explicitly supply a ClassLoader.
-     */
-    public JavaClassConverter() {
-        this(Thread.currentThread().getContextClassLoader());
-    }
 
     public JavaClassConverter(ClassLoader classLoader) {
         this.classLoader = classLoader;

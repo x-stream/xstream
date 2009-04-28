@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.converters.javabean;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -34,7 +33,7 @@ public class JavaBeanConverter implements Converter {
     private Mapper mapper;
     private BeanProvider beanProvider;
     /**
-     * @deprecated since 1.2, no necessity for field anymore.
+     * @deprecated since 1.3, no necessity for field anymore.
      */
     private String classAttributeIdentifier;
 
@@ -53,13 +52,6 @@ public class JavaBeanConverter implements Converter {
     public JavaBeanConverter(Mapper mapper, String classAttributeIdentifier) {
         this(mapper, new BeanProvider());
         this.classAttributeIdentifier = classAttributeIdentifier;
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #JavaBeanConverter(Mapper)} and {@link com.thoughtworks.xstream.XStream#aliasAttribute(String, String)}
-     */
-    public JavaBeanConverter(ClassMapper classMapper, String classAttributeIdentifier) {
-        this((Mapper)classMapper, classAttributeIdentifier);
     }
 
     /**

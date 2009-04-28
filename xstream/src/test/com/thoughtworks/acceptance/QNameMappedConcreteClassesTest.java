@@ -134,7 +134,9 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
         System.setProperty(XMLOutputFactory.class.getName(), XMLOutputFactoryBase.class.getName());
         // careful, called from inside base class constructor
         qnameMap = new QNameMap();
-        return new StaxDriver(qnameMap);
+        StaxDriver driver = new StaxDriver(qnameMap);
+        driver.setRepairingNamespace(false);
+        return driver;
     }
 
     protected String getDefaultNS(Class type) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.core.util.FastField;
 
 import java.util.HashMap;
@@ -33,13 +32,6 @@ public class FieldAliasingMapper extends MapperWrapper {
 
     public FieldAliasingMapper(Mapper wrapped) {
         super(wrapped);
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #FieldAliasingMapper(Mapper)}
-     */
-    public FieldAliasingMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
     }
 
     public void addFieldAlias(String alias, Class type, String fieldName) {

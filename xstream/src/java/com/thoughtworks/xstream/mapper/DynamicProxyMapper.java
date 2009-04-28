@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,8 +10,6 @@
  * Created on 22. January 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
-
-import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.lang.reflect.Proxy;
 
@@ -32,20 +30,6 @@ public class DynamicProxyMapper extends MapperWrapper {
     public DynamicProxyMapper(Mapper wrapped, String alias) {
         super(wrapped);
         this.alias = alias;
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #DynamicProxyMapper(Mapper)}
-     */
-    public DynamicProxyMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #DynamicProxyMapper(Mapper, String)}
-     */
-    public DynamicProxyMapper(ClassMapper wrapped, String alias) {
-        this((Mapper)wrapped, alias);
     }
 
     public String getAlias() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,8 +10,6 @@
  * Created on 22. January 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
-
-import com.thoughtworks.xstream.alias.ClassMapper;
 
 /**
  * Mapper that ensures that all names in the serialization stream are XML friendly.
@@ -34,13 +32,6 @@ public class XmlFriendlyMapper extends AbstractXmlFriendlyMapper {
      */
     public XmlFriendlyMapper(Mapper wrapped) {
         super(wrapped);
-    }
-    
-    /**
-     * @deprecated since 1.2, use {@link #XmlFriendlyMapper(Mapper)}
-     */
-    public XmlFriendlyMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
     }
 
     public String serializedClass(Class type) {

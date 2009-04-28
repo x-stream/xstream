@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,8 +10,6 @@
  * Created on 31. January 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
-
-import com.thoughtworks.xstream.alias.ClassMapper;
 
 /**
  * Mapper that uses a more meaningful alias for the field in an inner class (this$0) that refers to the outer class.
@@ -29,20 +27,6 @@ public class OuterClassMapper extends MapperWrapper {
     public OuterClassMapper(Mapper wrapped, String alias) {
         super(wrapped);
         this.alias = alias;
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #OuterClassMapper(Mapper)}
-     */
-    public OuterClassMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #OuterClassMapper(Mapper, String)}
-     */
-    public OuterClassMapper(ClassMapper wrapped, String alias) {
-        this((Mapper)wrapped, alias);
     }
 
     public String serializedMember(Class type, String memberName) {

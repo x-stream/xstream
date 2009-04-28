@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -44,16 +43,6 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         this.reader = reader;
         this.converterLookup = converterLookup;
         this.mapper = mapper;
-    }
-
-    /**
-     * @deprecated As of 1.2, use
-     *             {@link #TreeUnmarshaller(Object, HierarchicalStreamReader, ConverterLookup, Mapper)}
-     */
-    public TreeUnmarshaller(
-        Object root, HierarchicalStreamReader reader, ConverterLookup converterLookup,
-        ClassMapper classMapper) {
-        this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
     public Object convertAnother(Object parent, Class type) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,10 +31,12 @@ public class EnumSingleValueConverter extends AbstractSingleValueConverter {
         enumType = type;
     }
 
+    @SuppressWarnings("unchecked")
     public boolean canConvert(Class type) {
         return enumType.isAssignableFrom(type);
     }
 
+    @SuppressWarnings("unchecked")
     public Object fromString(String str) {
         return Enum.valueOf(enumType, str);
     }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,10 +14,8 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.MarshallingStrategy;
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
-import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshaller;
 import com.thoughtworks.xstream.core.ReferenceByIdUnmarshaller;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -269,12 +267,6 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             marshaller.start(obj, dataHolder);
         }
 
-        public void marshal(HierarchicalStreamWriter writer, Object obj,
-            DefaultConverterLookup converterLookup, ClassMapper classMapper,
-            DataHolder dataHolder) {
-            throw new UnsupportedOperationException();
-        }
-
         public Object unmarshal(Object root, HierarchicalStreamReader reader,
             DataHolder dataHolder, ConverterLookup converterLookup, Mapper mapper) {
             if (unmarshaller == null) {
@@ -283,13 +275,6 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             }
             return unmarshaller.start(dataHolder);
         }
-
-        public Object unmarshal(Object root, HierarchicalStreamReader reader,
-            DataHolder dataHolder, DefaultConverterLookup converterLookup,
-            ClassMapper classMapper) {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
     public void testSupportsOptionToPreserveReferencesAcrossDifferentObjectsInStream()

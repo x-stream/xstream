@@ -12,7 +12,6 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.InitializationException;
-import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,13 +33,6 @@ public class DefaultImplementationsMapper extends MapperWrapper {
     public DefaultImplementationsMapper(Mapper wrapped) {
         super(wrapped);
         addDefaults();
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #DefaultImplementationsMapper(Mapper)}
-     */
-    public DefaultImplementationsMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
     }
 
     protected void addDefaults() {
@@ -88,5 +80,4 @@ public class DefaultImplementationsMapper extends MapperWrapper {
         }
         return this;
     }
-
 }

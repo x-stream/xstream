@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,8 +14,6 @@ package com.thoughtworks.xstream.io.xml;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
-
-import java.util.List;
 
 
 /**
@@ -84,12 +82,5 @@ public class JDomWriter extends AbstractDocumentWriter {
 
     private Element top() {
         return (Element)getCurrent();
-    }
-
-    /**
-     * @deprecated since 1.2.1, use {@link #getTopLevelNodes()} instead
-     */
-    public List getResult() {
-        return getTopLevelNodes();
     }
 }

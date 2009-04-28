@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,10 +17,9 @@ import java.util.Map;
 /**
  * Maintains the current {@link Path} as a stream is moved through.
  *
- * <p>Can be linked to a <a href="../HierarchicalStreamWriter.html">HierarchicalStreamWriter</a> or
- * <a href="../HierarchicalStreamReader.html">HierarchicalStreamReader</a> by wrapping them with a
- * <a href="PathTrackingWriter.html">PathTrackingWriter</a> or
- * <a href="PathTrackingReader.html">PathTrackingReader</a>.</p>
+ * <p>Can be linked to a {@link com.thoughtworks.xstream.io.HierarchicalStreamWriter} or
+ * {@link com.thoughtworks.xstream.io.HierarchicalStreamReader} by wrapping them with a
+ * {@link PathTrackingWriter} or {@link PathTrackingReader}.</p>
  *
  * <h3>Example</h3>
  *
@@ -99,13 +98,6 @@ public class PathTracker {
         indexMapStack[pointer] = null;
         currentPath = null;
         pointer--;
-    }
-
-    /**
-     * @deprecated Use {@link #getPath()} instead.
-     */
-    public String getCurrentPath() {
-        return getPath().toString();
     }
 
     private void resizeStacks(int newCapacity) {

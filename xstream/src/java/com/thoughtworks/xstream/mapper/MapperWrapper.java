@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
@@ -21,13 +20,6 @@ public abstract class MapperWrapper implements Mapper {
 
     public MapperWrapper(Mapper wrapped) {
         this.wrapped = wrapped;
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #MapperWrapper(Mapper)}
-     */
-    public MapperWrapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
     }
 
     public String serializedClass(Class type) {
@@ -52,34 +44,6 @@ public abstract class MapperWrapper implements Mapper {
 
     public Class defaultImplementationOf(Class type) {
         return wrapped.defaultImplementationOf(type);
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForClassDefiningField() {
-        return wrapped.attributeForClassDefiningField();
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForImplementationClass() {
-        return wrapped.attributeForImplementationClass();
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForReadResolveField() {
-        return wrapped.attributeForReadResolveField();
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForEnumType() {
-        return wrapped.attributeForEnumType();
     }
 
     public String aliasForAttribute(String attribute) {

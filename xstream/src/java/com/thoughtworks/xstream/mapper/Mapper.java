@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -47,26 +47,6 @@ public interface Mapper {
     boolean isImmutableValueType(Class type);
 
     Class defaultImplementationOf(Class type);
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    String attributeForImplementationClass();
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    String attributeForClassDefiningField();
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    String attributeForReadResolveField();
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    String attributeForEnumType();
 
     /**
      * Get the alias for an attribute's name.

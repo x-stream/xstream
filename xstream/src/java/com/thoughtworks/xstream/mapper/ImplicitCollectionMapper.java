@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,7 +12,6 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.InitializationException;
-import com.thoughtworks.xstream.alias.ClassMapper;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -25,13 +24,6 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     public ImplicitCollectionMapper(Mapper wrapped) {
         super(wrapped);
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #ImplicitCollectionMapper(Mapper)}
-     */
-    public ImplicitCollectionMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
     }
 
     // { definedIn (Class) -> (ImplicitCollectionMapperForClass) }

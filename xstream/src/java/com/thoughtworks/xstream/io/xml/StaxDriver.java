@@ -27,7 +27,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
 /**
- * A driver using the StAX API
+ * A driver using the StAX API.
  *
  * @author James Strachan
  * @version $Revision$
@@ -43,15 +43,7 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     public StaxDriver(QNameMap qnameMap) {
-        this(qnameMap, false);
-    }
-
-    /**
-     * @deprecated since 1.2, use an explicit call to {@link #setRepairingNamespace(boolean)}
-     */
-    public StaxDriver(QNameMap qnameMap, boolean repairingNamespace) {
         this(qnameMap, new XmlFriendlyReplacer());
-        setRepairingNamespace(repairingNamespace);
     }
 
     /**

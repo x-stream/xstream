@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -38,9 +38,9 @@ public class EnumConverter implements Converter {
         writer.setValue(((Enum) source).name());
     }
 
+    @SuppressWarnings("unchecked")
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Class type = context.getRequiredType();
-        // TODO: There's no test case for polymorphic enums.
         if (type.getSuperclass() != Enum.class) {
             type = type.getSuperclass(); // polymorphic enums
         }

@@ -25,30 +25,9 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 public class DefaultMapper implements Mapper {
 
     private final ClassLoader classLoader;
-    /**
-     * @deprecated since 1.2, no necessity for field anymore.
-     */
-    private transient String classAttributeIdentifier;
 
     public DefaultMapper(ClassLoader classLoader) {
         this.classLoader = classLoader;
-        this.classAttributeIdentifier = "class";
-    }
-
-    /**
-     * @deprecated since 1.2, use XStream.aliasAttrbute() for a different attribute name.
-     */
-    public DefaultMapper(ClassLoader classLoader, String classAttributeIdentifier) {
-        this(classLoader);
-        this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
-    }
-
-    /**
-     * @deprecated since 1.2, no necessity for method anymore.
-     */
-    private Object readResolve() {
-        classAttributeIdentifier = "class";
-        return this;
     }
 
     public String serializedClass(Class type) {
@@ -71,34 +50,6 @@ public class DefaultMapper implements Mapper {
 
     public Class defaultImplementationOf(Class type) {
         return type;
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForClassDefiningField() {
-        return "defined-in";
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForReadResolveField() {
-        return "resolves-to";
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForEnumType() {
-        return "enum-type";
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForImplementationClass() {
-        return classAttributeIdentifier;
     }
 
     public String aliasForAttribute(String attribute) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.path.Path;
@@ -30,14 +29,6 @@ public class ReferenceByXPathUnmarshaller extends AbstractReferenceUnmarshaller 
         super(root, reader, converterLookup, mapper);
         this.reader = new PathTrackingReader(reader, pathTracker);
         isXmlFriendly = reader.underlyingReader() instanceof XmlFriendlyReader;
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #ReferenceByXPathUnmarshaller(Object, HierarchicalStreamReader, ConverterLookup, Mapper)}
-     */
-    public ReferenceByXPathUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                        ConverterLookup converterLookup, ClassMapper classMapper) {
-        this(root, reader, converterLookup, (Mapper)classMapper);
     }
 
     protected Object getReferenceKey(String reference) {

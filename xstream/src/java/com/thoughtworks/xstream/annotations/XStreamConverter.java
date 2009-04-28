@@ -31,8 +31,8 @@ import java.lang.annotation.Target;
  * <li>{@link com.thoughtworks.xstream.converters.reflection.ReflectionProvider}: The reflection
  * provider used by the reflection based converters of the current XStream instance.</li>
  * <li>{@link Class}: The type of the element where the annotation is declared. Note, that this
- * argument is not supported when using {@link
- * com.thoughtworks.xstream.annotations.@XStreamConverters}.</li>
+ * argument is not supported when using
+ * {@link com.thoughtworks.xstream.annotations.XStreamConverters}.</li>
  * </ul>
  * <p>
  * Note, the annotation matches a {@link ConverterMatcher}.
