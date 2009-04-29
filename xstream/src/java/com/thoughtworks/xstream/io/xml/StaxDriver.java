@@ -27,9 +27,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 
 /**
- * A driver using the StAX API.
+ * A driver using the StAX API to create XML reader and writer.
  *
  * @author James Strachan
+ * @author J&ouml;rg Schaible
  * @version $Revision$
  */
 public class StaxDriver extends AbstractXmlDriver {
@@ -39,7 +40,7 @@ public class StaxDriver extends AbstractXmlDriver {
     private XMLOutputFactory outputFactory;
 
     public StaxDriver() {
-        this.qnameMap = new QNameMap();
+        this(new QNameMap());
     }
 
     public StaxDriver(QNameMap qnameMap) {
@@ -122,14 +123,14 @@ public class StaxDriver extends AbstractXmlDriver {
 
     public XMLInputFactory getInputFactory() {
         if (inputFactory == null) {
-            inputFactory = XMLInputFactory.newInstance();
+            inputFactory = createInputFactory();
         }
         return inputFactory;
     }
 
     public XMLOutputFactory getOutputFactory() {
         if (outputFactory == null) {
-            outputFactory = XMLOutputFactory.newInstance();
+            outputFactory = createOutputFactory();
         }
         return outputFactory;
     }
@@ -156,5 +157,19 @@ public class StaxDriver extends AbstractXmlDriver {
 
     protected XMLStreamReader createParser(InputStream xml) throws XMLStreamException {
         return getInputFactory().createXMLStreamReader(xml);
+    }
+
+    /**
+     * @since upcoming
+     */
+    protected XMLInputFactory createInputFactory() {
+        return XMLInputFactory.newInstance();
+    }
+
+    /**
+     * @since upcoming
+     */
+    protected XMLOutputFactory createOutputFactory() {
+        return XMLOutputFactory.newInstance();
     }
 }

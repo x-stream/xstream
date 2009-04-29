@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.xmlpull.mxp1.MXParser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -26,18 +25,54 @@ import com.thoughtworks.xstream.io.StreamException;
  * XStream reader that pulls directly from the stream using the XmlPullParser API.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
 public class XppReader extends AbstractPullReader {
 
     private final XmlPullParser parser;
     private final BufferedReader reader;
 
+    /**
+     * Construct an XppReader.
+     * 
+     * @param reader the reader with the input data
+     * @param parser the XPP parser to use
+     * @since upcoming
+     */
+    public XppReader(Reader reader, XmlPullParser parser) {
+        this(reader, new XmlFriendlyReplacer());
+    }
+
+    /**
+     * Construct an XppReader.
+     * 
+     * @param reader the reader with the input data
+     * @param parser the XPP parser to use
+     * @param replacer the replacer for XML friendly tag and attribute names
+     * @since upcoming
+     */
+    public XppReader(Reader reader, XmlPullParser parser, XmlFriendlyReplacer replacer) {
+        super(replacer);
+        this.parser = parser;
+        this.reader = new BufferedReader(reader);
+        try {
+            parser.setInput(this.reader);
+        } catch (XmlPullParserException e) {
+            throw new StreamException(e);
+        }
+        moveDown();
+    }
+
+    /**
+     * @deprecated As of upcoming, use {@link #XppReader(Reader, XmlPullParser)}  instead
+     */
     public XppReader(Reader reader) {
         this(reader, new XmlFriendlyReplacer());
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link #XppReader(Reader, XmlPullParser, XmlFriendlyReplacer)}  instead
      */
     public XppReader(Reader reader, XmlFriendlyReplacer replacer) {
         super(replacer);
@@ -53,9 +88,20 @@ public class XppReader extends AbstractPullReader {
     
     /**
      * To use another implementation of org.xmlpull.v1.XmlPullParser, override this method.
+     * @deprecated As of upcoming, use {@link #XppReader(Reader, XmlPullParser)}  instead
      */
     protected XmlPullParser createParser() {
-        return new MXParser();
+        Exception exception = null;
+        try {
+            return (XmlPullParser)Class.forName("org.xmlpull.mxp1.MXParser", true, XmlPullParser.class.getClassLoader()).newInstance();
+        } catch (InstantiationException e) {
+            exception = e;
+        } catch (IllegalAccessException e) {
+            exception = e;
+        } catch (ClassNotFoundException e) {
+            exception = e;
+        }
+        throw new StreamException("Cannot create Xpp3 parser instance.", exception);
     }
 
     protected int pullNextEvent() {

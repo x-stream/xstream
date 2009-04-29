@@ -17,19 +17,42 @@ import java.io.Reader;
 import java.io.Writer;
 
 /**
- * Provides implementation of XML parsers and writers to XStream.
+ * Provides implementation of stream parsers and writers to XStream.
  *
  * @author Joe Walnes
  * @author James Strachan
  */
 public interface HierarchicalStreamDriver {
 
+    /**
+     * Create the HierarchicalStreamReader with the stream parser reading from the IO reader.
+     * 
+     * @param in the {@link Reader} with the data to parse 
+     * @return the HierarchicalStreamReader
+     */
     HierarchicalStreamReader createReader(Reader in);
-    /** @since 1.1.3 */
+    /** 
+     * Create the HierarchicalStreamReader with the stream parser reading from the input stream.
+     * 
+     * @param in the {@link InputStream} with the data to parse 
+     * @since 1.1.3 
+     */
     HierarchicalStreamReader createReader(InputStream in);
 
+    /**
+     * Create the HierarchicalStreamWriter with the formatted writer.
+     * 
+     * @param out the {@link Writer} to receive the formatted data 
+     * @return the HierarchicalStreamWriter
+     */
     HierarchicalStreamWriter createWriter(Writer out);
-    /** @since 1.1.3 */
+    /** 
+     * Create the HierarchicalStreamWriter with the formatted writer.
+     * 
+     * @param out the {@link OutputStream} to receive the formatted data 
+     * @return the HierarchicalStreamWriter
+     * @since 1.1.3
+     */
     HierarchicalStreamWriter createWriter(OutputStream out);
 
 }

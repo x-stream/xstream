@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,22 +11,23 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.core.util.XmlHeaderAwareReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 
-public class XppDriver extends AbstractXmlDriver {
-    
-    private static boolean xppLibraryPresent;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+
+/**
+ * A {@link HierarchicalStreamDriver} using the XmlPullParserFactory to locate an XPP parser.
+ *
+ * @author Joe Walnes
+ * @author J&ouml;rg Schaible
+ */
+public class XppDriver extends AbstractXppDriver {
+
+    private static XmlPullParserFactory factory;
 
     public XppDriver() {
         super(new XmlFriendlyReplacer());
@@ -39,38 +40,13 @@ public class XppDriver extends AbstractXmlDriver {
         super(replacer);
     }
 
-    public HierarchicalStreamReader createReader(Reader xml) {
-        loadLibrary();
-        return new XppReader(xml, xmlFriendlyReplacer());
-    }
-
-    public HierarchicalStreamReader createReader(InputStream in) {
-        try {
-            return createReader(new XmlHeaderAwareReader(in));
-        } catch (UnsupportedEncodingException e) {
-            throw new StreamException(e);
-        } catch (IOException e) {
-            throw new StreamException(e);
+    /**
+     * {@inheritDoc}
+     */
+    protected synchronized XmlPullParser createParser() throws XmlPullParserException {
+        if (factory == null) {
+            factory = XmlPullParserFactory.newInstance(null, XppDriver.class);
         }
-    }
-
-    private void loadLibrary() {
-        if (!xppLibraryPresent) {
-            try {
-                Class.forName("org.xmlpull.mxp1.MXParser", false, getClass().getClassLoader());
-            } catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException("XPP3 pull parser library not present. Specify another driver." +
-                        " For example: new XStream(new DomDriver())");
-            }
-            xppLibraryPresent = true;
-        }
-    }
-
-    public HierarchicalStreamWriter createWriter(Writer out) {
-        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
-    }
-
-    public HierarchicalStreamWriter createWriter(OutputStream out) {
-        return createWriter(new OutputStreamWriter(out));
+        return factory.newPullParser();
     }
 }

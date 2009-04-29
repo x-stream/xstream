@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,5 +20,12 @@ public class StreamException extends XStreamException {
 
     public StreamException(String message) {
         super(message);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public StreamException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
