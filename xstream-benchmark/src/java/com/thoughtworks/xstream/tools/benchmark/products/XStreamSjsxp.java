@@ -1,32 +1,30 @@
 /*
- * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 15. July 2006 by Joe Walnes
+ * Created on 30. April 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.tools.benchmark.products;
 
-import com.thoughtworks.xstream.io.xml.XppDriver;
-
+import com.thoughtworks.xstream.io.xml.SjsxpDriver;
 
 /**
- * Uses XStream with the default XPP driver for parsing XML.
+ * Uses XStream with the SJSXP StAX driver for parsing XML.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see com.thoughtworks.xstream.tools.benchmark.Product
  * @see com.thoughtworks.xstream.XStream
- * @see XppDriver
+ * @see SjsxpDriver
  */
-public class XStreamXpp extends XStreamDriver {
+public class XStreamSjsxp extends XStreamDriver {
 
-    public XStreamXpp() {
-        super(new XppDriver(), "XML with default XPP parser");
+    public XStreamSjsxp() {
+        super(new SjsxpDriver(), "XML with SJSXP StAX parser");
     }
-
 }

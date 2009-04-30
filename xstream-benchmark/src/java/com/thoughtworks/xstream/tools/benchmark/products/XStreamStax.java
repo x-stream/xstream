@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.tools.benchmark.products;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
- * Uses XStream with the Stax driver for parsing XML.
+ * Uses XStream with the default StAX driver for parsing XML.
  *
  * @author Joe Walnes
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
@@ -25,6 +25,6 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 public class XStreamStax extends XStreamDriver {
 
     public XStreamStax() {
-        super(new StaxDriver(), "XML with StAX parser");
+        super(new StaxDriver(), "XML with default StAX parser");
     }
 }
