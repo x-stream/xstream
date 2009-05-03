@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Builds the serializable properties maps for each bean and caches them.
- * @deprecated since 1.3.1, no longer in use
+ * @deprecated As of 1.3.1, no longer in use
 */
 public class PropertyDictionary {
 

@@ -35,7 +35,7 @@ public class EnumMapper extends MapperWrapper {
     private transient Map<Class, SingleValueConverter> enumConverterMap;
 
     /**
-     * @deprecated since 1.3.1, use {@link #EnumMapper(Mapper)}
+     * @deprecated As of 1.3.1, use {@link #EnumMapper(Mapper)}
      */
     @Deprecated
     public EnumMapper(Mapper wrapped, ConverterLookup lookup) {

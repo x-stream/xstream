@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,7 +42,7 @@ public class AttributeMapper extends MapperWrapper {
     private final Set fieldToUseAsAttribute = new HashSet();
 
     /**
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public AttributeMapper(Mapper wrapped) {
         this(wrapped, null);
@@ -54,7 +54,7 @@ public class AttributeMapper extends MapperWrapper {
     }
     
     /**
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public void setConverterLookup(ConverterLookup converterLookup) {
         this.converterLookup = converterLookup;
@@ -78,7 +78,7 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         if (fieldNameToTypeMap.get(fieldName) == type) {
@@ -105,7 +105,7 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(Class type) {
         if (typeSet.contains(type)) {
@@ -116,7 +116,7 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String attributeName) {
         SingleValueConverter converter = null;
@@ -128,7 +128,7 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
+     * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute) {
         Field field = getField(definedIn, attribute);

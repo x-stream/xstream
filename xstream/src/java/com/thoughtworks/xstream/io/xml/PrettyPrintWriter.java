@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -84,7 +84,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     /**
      * @since 1.2
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public PrettyPrintWriter(
         Writer writer, char[] lineIndenter, String newLine, XmlFriendlyReplacer replacer) {
@@ -100,7 +100,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine) {
         this(writer, lineIndenter, newLine, new XmlFriendlyReplacer());
@@ -118,7 +118,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public PrettyPrintWriter(Writer writer, String lineIndenter, String newLine) {
         this(writer, lineIndenter.toCharArray(), newLine);

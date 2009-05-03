@@ -59,7 +59,7 @@ public class FieldDictionary {
      * 
      * @param cls the class you are interested on
      * @return an iterator for its fields
-     * @deprecated since 1.3, use {@link #fieldsFor(Class)} instead
+     * @deprecated As of 1.3, use {@link #fieldsFor(Class)} instead
      */
     public Iterator serializableFieldsFor(Class cls) {
         return fieldsFor(cls);

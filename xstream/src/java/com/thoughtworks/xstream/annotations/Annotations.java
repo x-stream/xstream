@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,7 +22,7 @@ import com.thoughtworks.xstream.XStream;
  * @author Chung-Onn Cheong
  * @author Guilherme Silveira
  * @author J&ouml;rg Schaible
- * @deprecated since 1.3, use {@link XStream#processAnnotations(Class[])}
+ * @deprecated As of 1.3, use {@link XStream#processAnnotations(Class[])}
  */
 @Deprecated
 public class Annotations {
@@ -40,7 +40,7 @@ public class Annotations {
      * @param topLevelClasses the class for which the XStream object is configured. This class
      *                is expected to be decorated with annotations defined in this package.
      * @param xstream the XStream object that will be configured
-     * @deprecated since 1.3, use {@link XStream#processAnnotations(Class[])}
+     * @deprecated As of 1.3, use {@link XStream#processAnnotations(Class[])}
      */
     @Deprecated
     public static synchronized void configureAliases(XStream xstream,

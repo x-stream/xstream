@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
  *
  * @author Emil Kirschner
  * @author Chung-Onn Cheong
- * @deprecated since 1.3, recursive behaviour is now always used and the annotation is therefore superfluous
+ * @deprecated As of 1.3, recursive behaviour is now always used and the annotation is therefore superfluous
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

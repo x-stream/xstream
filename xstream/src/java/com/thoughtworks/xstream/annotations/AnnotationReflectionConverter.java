@@ -33,7 +33,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * 
  * @author Guilherme Silveira
  * @author Mauro Talevi
- * @deprecated since 1.3, build into {@link ReflectionConverter}
+ * @deprecated As of 1.3, build into {@link ReflectionConverter}
  */
 @Deprecated
 public class AnnotationReflectionConverter extends ReflectionConverter {

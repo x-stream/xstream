@@ -37,7 +37,7 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated since 1.3, method was a leftover of an old implementation
+     * @deprecated As of 1.3, method was a leftover of an old implementation
      */
     public void addClassAttributeAlias(String name, Class type) {
         addClassAlias(name, type);

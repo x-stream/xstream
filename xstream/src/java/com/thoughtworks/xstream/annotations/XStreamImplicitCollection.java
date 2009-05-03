@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 /**
  * 
  * @author Chung-Onn Cheong
- * @deprecated since 1.3, use @XStreamImplicit at field level
+ * @deprecated As of 1.3, use @XStreamImplicit at field level
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

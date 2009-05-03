@@ -33,7 +33,7 @@ public class JavaBeanConverter implements Converter {
     private Mapper mapper;
     private BeanProvider beanProvider;
     /**
-     * @deprecated since 1.3, no necessity for field anymore.
+     * @deprecated As of 1.3, no necessity for field anymore.
      */
     private String classAttributeIdentifier;
 
@@ -133,7 +133,7 @@ public class JavaBeanConverter implements Converter {
     }
 
     /**
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public static class DuplicateFieldException extends ConversionException {
         public DuplicateFieldException(String msg) {

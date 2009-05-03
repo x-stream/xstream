@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,7 +25,7 @@ import java.io.File;
  * turned into string keys at deserialization time.
  * 
  * @author Guilherme Silveira
- * @deprecated since 1.3.1, use FilePersistenceStrategy
+ * @deprecated As of 1.3.1, use FilePersistenceStrategy
  */
 public class FileStreamStrategy extends AbstractFilePersistenceStrategy implements
     StreamStrategy {

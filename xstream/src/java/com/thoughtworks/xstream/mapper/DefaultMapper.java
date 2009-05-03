@@ -101,21 +101,21 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return null;
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         return null;
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(Class type) {
         return null;
@@ -135,21 +135,21 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated As of 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String aliasForAttribute(Class definedIn, String fieldName) {
         return fieldName;
     }
 
     /**
-     * @deprecated since 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated As of 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String attributeForAlias(Class definedIn, String alias) {
         return alias;
     }
 
     /**
-     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
      */
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute) {
         return null;

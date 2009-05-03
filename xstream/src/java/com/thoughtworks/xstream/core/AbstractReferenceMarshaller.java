@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -76,7 +76,7 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
     
     public static class ReferencedImplicitElementException extends ConversionException {
         /**
-         * @deprecated since 1.2.1
+         * @deprecated As of 1.2.1
          */
         public ReferencedImplicitElementException(final String msg) {
             super(msg);

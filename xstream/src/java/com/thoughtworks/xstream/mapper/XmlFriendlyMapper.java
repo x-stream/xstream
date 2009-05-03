@@ -23,12 +23,12 @@ package com.thoughtworks.xstream.mapper;
  * 
  * @author Joe Walnes
  * @author Mauro Talevi
- * @deprecated since 1.3, use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
+ * @deprecated As of 1.3, use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
  */
 public class XmlFriendlyMapper extends AbstractXmlFriendlyMapper {
 
     /**
-     * @deprecated since 1.3, use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
+     * @deprecated As of 1.3, use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
      */
     public XmlFriendlyMapper(Mapper wrapped) {
         super(wrapped);

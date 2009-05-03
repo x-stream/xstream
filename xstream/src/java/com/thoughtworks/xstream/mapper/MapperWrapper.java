@@ -75,21 +75,21 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         return wrapped.getConverterFromItemType(fieldName, type);
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(Class type) {
         return wrapped.getConverterFromItemType(type);
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return wrapped.getConverterFromAttribute(name);
@@ -108,21 +108,21 @@ public abstract class MapperWrapper implements Mapper {
     }
     
     /**
-     * @deprecated since 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated As of 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String aliasForAttribute(Class definedIn, String fieldName) {
     	return wrapped.aliasForAttribute(definedIn, fieldName);
     }
     
     /**
-     * @deprecated since 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated As of 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String attributeForAlias(Class definedIn, String alias) {
     	return wrapped.attributeForAlias(definedIn, alias);
     }
     
     /**
-     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
      */
     public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
     	return wrapped.getConverterFromAttribute(type, attribute);

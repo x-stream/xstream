@@ -353,7 +353,7 @@ public class XStream {
      * {@link ReflectionProvider} and additionally with a prepared {@link Mapper}.
      * 
      * @throws InitializationException in case of an initialization problem
-     * @deprecated since 1.3, use
+     * @deprecated As of 1.3, use
      *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoader, Mapper)}
      *             instead
      */
@@ -1626,18 +1626,18 @@ public class XStream {
     }
 
     /**
-     * @deprecated since 1.3, use {@link InitializationException} instead
+     * @deprecated As of 1.3, use {@link InitializationException} instead
      */
     public static class InitializationException extends XStreamException {
         /**
-         * @deprecated since 1.3, use {@link InitializationException} instead
+         * @deprecated As of 1.3, use {@link InitializationException} instead
          */
         public InitializationException(String message, Throwable cause) {
             super(message, cause);
         }
 
         /**
-         * @deprecated since 1.3, use {@link InitializationException} instead
+         * @deprecated As of 1.3, use {@link InitializationException} instead
          */
         public InitializationException(String message) {
             super(message);
