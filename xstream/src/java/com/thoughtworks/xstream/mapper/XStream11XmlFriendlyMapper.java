@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,13 +23,20 @@ package com.thoughtworks.xstream.mapper;
  * 
  * @author Joe Walnes
  * @author Mauro Talevi
+ * @deprecated As of upcoming
  */
 public class XStream11XmlFriendlyMapper extends AbstractXmlFriendlyMapper {
 
+    /**
+     * @deprecated As of upcoming
+     */
     public XStream11XmlFriendlyMapper(Mapper wrapped) {
         super(wrapped);
     }
 
+    /**
+     * @deprecated As of upcoming
+     */
     public Class realClass(String elementName) {
         return super.realClass(unescapeClassName(elementName));
     }

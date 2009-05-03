@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
