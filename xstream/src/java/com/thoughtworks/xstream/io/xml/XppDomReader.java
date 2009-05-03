@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,25 +11,25 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
+import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 /**
- * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
+ * @author Jason van Zyl
  * @version $Id$
  */
 public class XppDomReader extends AbstractDocumentReader {
 
-    private Xpp3Dom currentElement;
+    private XppDom currentElement;
 
-    public XppDomReader(Xpp3Dom xpp3Dom) {
-        super(xpp3Dom);
+    public XppDomReader(XppDom xppDom) {
+        super(xppDom);
     }
 
     /**
      * @since 1.2
      */
-    public XppDomReader(Xpp3Dom xpp3Dom, XmlFriendlyReplacer replacer) {
-        super(xpp3Dom, replacer);
+    public XppDomReader(XppDom xppDom, XmlFriendlyReplacer replacer) {
+        super(xppDom, replacer);
     }
     
     public String getNodeName() {
@@ -77,7 +77,7 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     protected void reassignCurrentElement(Object current) {
-        this.currentElement = (Xpp3Dom) current;
+        this.currentElement = (XppDom) current;
     }
 
 }

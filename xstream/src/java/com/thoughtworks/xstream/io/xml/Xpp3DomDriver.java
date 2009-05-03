@@ -6,41 +6,39 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 29. April 2009 by Joerg Schaible
+ * Created on 03. May 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml;
-
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 
 import org.xmlpull.mxp1.MXParser;
 import org.xmlpull.v1.XmlPullParser;
 
-
 /**
- * A {@link HierarchicalStreamDriver} using the Xpp3 parser.
+ * A {@link HierarchicalStreamDriver} for XPP DOM using the Xpp3 parser.
  * 
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
-public class Xpp3Driver extends AbstractXppDriver {
+public class Xpp3DomDriver extends AbstractXppDomDriver {
 
     /**
-     * Construct an Xpp3Driver.
+     * Construct an Xpp3DomDriver.
      * 
      * @since upcoming
      */
-    public Xpp3Driver() {
+    public Xpp3DomDriver() {
         super(new XmlFriendlyReplacer());
     }
 
     /**
-     * Construct an Xpp3Driver.
+     * Construct an Xpp3DomDriver.
      * 
      * @param replacer the replacer for XML friendly names
      * @since upcoming
      */
-    public Xpp3Driver(XmlFriendlyReplacer replacer) {
+    public Xpp3DomDriver(XmlFriendlyReplacer replacer) {
         super(replacer);
     }
 

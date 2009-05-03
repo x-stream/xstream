@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.io.StreamException;
 public class XppReader extends AbstractPullReader {
 
     private final XmlPullParser parser;
-    private final BufferedReader reader;
+    private final Reader reader;
 
     /**
      * Construct an XppReader.
@@ -54,7 +54,7 @@ public class XppReader extends AbstractPullReader {
     public XppReader(Reader reader, XmlPullParser parser, XmlFriendlyReplacer replacer) {
         super(replacer);
         this.parser = parser;
-        this.reader = new BufferedReader(reader);
+        this.reader = reader;
         try {
             parser.setInput(this.reader);
         } catch (XmlPullParserException e) {
@@ -78,7 +78,7 @@ public class XppReader extends AbstractPullReader {
         super(replacer);
         try {
             parser = createParser();
-            this.reader = new BufferedReader(reader);
+            this.reader = reader;
             parser.setInput(this.reader);
             moveDown();
         } catch (XmlPullParserException e) {

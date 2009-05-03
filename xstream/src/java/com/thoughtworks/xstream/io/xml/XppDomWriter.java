@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,7 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
+import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 
 public class XppDomWriter extends AbstractDocumentWriter {
@@ -22,7 +22,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
     /**
      * @since 1.2.1
      */
-    public XppDomWriter(final Xpp3Dom parent) {
+    public XppDomWriter(final XppDom parent) {
         this(parent, new XmlFriendlyReplacer());
     }
 
@@ -36,17 +36,17 @@ public class XppDomWriter extends AbstractDocumentWriter {
     /**
      * @since 1.2.1
      */
-    public XppDomWriter(final Xpp3Dom parent, final XmlFriendlyReplacer replacer) {
+    public XppDomWriter(final XppDom parent, final XmlFriendlyReplacer replacer) {
         super(parent, replacer);
     }
 
-    public Xpp3Dom getConfiguration() {
-        return (Xpp3Dom)getTopLevelNodes().get(0);
+    public XppDom getConfiguration() {
+        return (XppDom)getTopLevelNodes().get(0);
     }
 
     protected Object createNode(final String name) {
-        final Xpp3Dom newNode = new Xpp3Dom(escapeXmlName(name));
-        final Xpp3Dom top = top();
+        final XppDom newNode = new XppDom(escapeXmlName(name));
+        final XppDom top = top();
         if (top != null) {
             top().addChild(newNode);
         }
@@ -61,7 +61,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
         top().setAttribute(escapeXmlName(key), value);
     }
 
-    private Xpp3Dom top() {
-        return (Xpp3Dom)getCurrent();
+    private XppDom top() {
+        return (XppDom)getCurrent();
     }
 }

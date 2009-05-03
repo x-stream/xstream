@@ -25,11 +25,19 @@ import org.xmlpull.v1.XmlPullParser;
  */
 public class KXml2Driver extends AbstractXppDriver {
 
+    /**
+     * Construct a KXml2Driver.
+     * 
+     * @since upcoming
+     */
     public KXml2Driver() {
         super(new XmlFriendlyReplacer());
     }
 
     /**
+     * Construct a KXml2Driver.
+     * 
+     * @param replacer the replacer for XML friendly names
      * @since upcoming
      */
     public KXml2Driver(XmlFriendlyReplacer replacer) {
@@ -37,7 +45,7 @@ public class KXml2Driver extends AbstractXppDriver {
     }
 
     /**
-     * @since upcoming
+     * {@inheritDoc}
      */
     protected XmlPullParser createParser() {
         return new KXmlParser();

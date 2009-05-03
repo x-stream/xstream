@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 29. April 2009 by Joerg Schaible
+ * Created on 03. May 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml;
 
@@ -14,11 +14,11 @@ import com.thoughtworks.xstream.core.util.XmlHeaderAwareReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,21 +28,21 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 /**
- * An abstract base class for a driver using an XPP implementation. 
+ * An abstract base class for a driver using an XPP DOM implementation. 
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
-public abstract class AbstractXppDriver extends AbstractXmlDriver {
+public abstract class AbstractXppDomDriver extends AbstractXmlDriver {
 
     /**
-     * Construct an AbstractXppDriver.
+     * Construct an AbstractXppDomDriver.
      * 
-     * @param replacer the replacer for XML friendly tag and attribute names
+     * @param replacer the replacer for XML friendly names
      * @since upcoming
      */
-    public AbstractXppDriver(XmlFriendlyReplacer replacer) {
+    public AbstractXppDomDriver(XmlFriendlyReplacer replacer) {
         super(replacer);
     }
 
@@ -50,11 +50,14 @@ public abstract class AbstractXppDriver extends AbstractXmlDriver {
      * {@inheritDoc}
      */
     public HierarchicalStreamReader createReader(Reader in) {
-        in = in instanceof BufferedReader ? in : new BufferedReader(in);
         try {
-            return new XppReader(in, createParser(), xmlFriendlyReplacer());
+            XmlPullParser parser = createParser();
+            parser.setInput(in);
+            return new XppDomReader(XppDom.build(parser), xmlFriendlyReplacer());
         } catch (XmlPullParserException e) {
-            throw new StreamException("Cannot create XmlPullParser");
+            throw new StreamException(e);
+        } catch (IOException e) {
+            throw new StreamException(e);
         }
     }
 

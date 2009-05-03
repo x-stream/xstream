@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.copy.HierarchicalStreamCopier;
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
+import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 import junit.framework.TestCase;
 
@@ -27,11 +27,11 @@ public abstract class AbstractDocumentWriterTest extends TestCase {
 
     protected abstract DocumentReader createDocumentReaderFor(Object node);
 
-    protected void assertDocumentProducedIs(final Xpp3Dom expected) {
-        assertDocumentProducedIs(new Xpp3Dom[]{expected});
+    protected void assertDocumentProducedIs(final XppDom expected) {
+        assertDocumentProducedIs(new XppDom[]{expected});
     }
 
-    protected boolean equals(final Xpp3Dom node1, final Xpp3Dom node2) {
+    protected boolean equals(final XppDom node1, final XppDom node2) {
         if (node1.getName().equals(node2.getName())) {
             final String value1 = node1.getValue();
             final String value2 = node2.getValue();
@@ -39,8 +39,8 @@ public abstract class AbstractDocumentWriterTest extends TestCase {
                 final Set set1 = new HashSet(Arrays.asList(node1.getAttributeNames()));
                 final Set set2 = new HashSet(Arrays.asList(node2.getAttributeNames()));
                 if (set1.equals(set2)) {
-                    final Xpp3Dom[] children1 = node1.getChildren();
-                    final Xpp3Dom[] children2 = node2.getChildren();
+                    final XppDom[] children1 = node1.getChildren();
+                    final XppDom[] children2 = node2.getChildren();
                     if (children1.length == children2.length) {
                         for (int i = 0; i < children1.length; i++) {
                             if (!equals(children1[i], children2[i])) {
@@ -55,7 +55,7 @@ public abstract class AbstractDocumentWriterTest extends TestCase {
         return false;
     }
 
-    protected void assertDocumentProducedIs(final Xpp3Dom[] expected) {
+    protected void assertDocumentProducedIs(final XppDom[] expected) {
         for (int i = 0; i < expected.length; i++) {
             copier.copy(new XppDomReader(expected[i]), writer);
         }
@@ -69,25 +69,25 @@ public abstract class AbstractDocumentWriterTest extends TestCase {
     }
 
     public void testProducesDomElements() {
-        final Xpp3Dom root = new Xpp3Dom("hello");
+        final XppDom root = new XppDom("hello");
         root.setValue("world");
         assertDocumentProducedIs(root);
     }
 
     public void testSupportsNestedElements() {
-        final Xpp3Dom a = new Xpp3Dom("a");
+        final XppDom a = new XppDom("a");
 
-        Xpp3Dom b = new Xpp3Dom("b");
+        XppDom b = new XppDom("b");
         b.setValue("one");
         a.addChild(b);
 
-        b = new Xpp3Dom("b");
+        b = new XppDom("b");
         b.setValue("two");
         a.addChild(b);
 
-        final Xpp3Dom c = new Xpp3Dom("c");
+        final XppDom c = new XppDom("c");
         a.addChild(c);
-        final Xpp3Dom d = new Xpp3Dom("d");
+        final XppDom d = new XppDom("d");
         d.setValue("three");
         c.addChild(d);
 
@@ -95,31 +95,31 @@ public abstract class AbstractDocumentWriterTest extends TestCase {
     }
 
     public void testSupportsAttributes() {
-        final Xpp3Dom person = new Xpp3Dom("person");
+        final XppDom person = new XppDom("person");
         person.setAttribute("firstname", "Joe");
         person.setAttribute("lastname", "Walnes");
         assertDocumentProducedIs(person);
     }
 
     public void testAttributesAreResettedForNewNode() {
-        final Xpp3Dom[] roots = new Xpp3Dom[2];
-        final Xpp3Dom person = roots[0] = new Xpp3Dom("person");
+        final XppDom[] roots = new XppDom[2];
+        final XppDom person = roots[0] = new XppDom("person");
         person.setAttribute("firstname", "Joe");
         person.setAttribute("lastname", "Walnes");
-        final Xpp3Dom project = roots[1] = new Xpp3Dom("project");
+        final XppDom project = roots[1] = new XppDom("project");
         project.setAttribute("XStream", "Codehaus");
 
         assertDocumentProducedIs(roots);
     }
 
     public void testSupportsEmptyNestedTags() {
-        final Xpp3Dom parent = new Xpp3Dom("parent");
-        parent.addChild(new Xpp3Dom("child"));
+        final XppDom parent = new XppDom("parent");
+        parent.addChild(new XppDom("child"));
 
         assertDocumentProducedIs(parent);
     }
 
-    protected void assertDocumentProducedIs(final Xpp3Dom expected, final Xpp3Dom tree)
+    protected void assertDocumentProducedIs(final XppDom expected, final XppDom tree)
     {
             copier.copy(new XppDomReader(tree), writer);
 

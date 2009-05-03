@@ -1,7 +1,7 @@
 <project name="xstream" default="library">
     <!--
      Copyright (C) 2004, 2005, 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -158,14 +158,13 @@
             <classpath refid="classpath"/>
             <packageset dir="${java.src.dir}" defaultexcludes="yes">
                 <exclude name="com/thoughtworks/xstream/core/**"/>
-                <exclude name="com/thoughtworks/xstream/io/xml/xppdom/**"/>
                 <exclude name="com/thoughtworks/xstream/converters/reflection/HarmonyReflectionProvider.java"/>
                 <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
                 <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
                 <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
             </packageset>
             <doctitle><![CDATA[<h1>XStream ${version}</h1>]]></doctitle>
-            <bottom><![CDATA[<i>Joe Walnes, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]></bottom>
+            <bottom><![CDATA[<i>XStream Committers, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]></bottom>
         </javadoc>
     </target>
 

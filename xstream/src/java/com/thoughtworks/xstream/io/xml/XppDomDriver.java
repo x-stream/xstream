@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,21 +11,21 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.core.util.XmlHeaderAwareReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
-public class XppDomDriver extends AbstractXmlDriver {
+/**
+ * A {@link HierarchicalStreamDriver} for XPP DOM using the XmlPullParserFactory to locate an parser.
+ *
+ * @author Joe Walnes
+ * @author J&ouml;rg Schaible
+ */
+public class XppDomDriver extends AbstractXppDomDriver {
+
+    private static XmlPullParserFactory factory;
     
     public XppDomDriver() {
         super(new XmlFriendlyReplacer());
@@ -37,30 +37,14 @@ public class XppDomDriver extends AbstractXmlDriver {
     public XppDomDriver(XmlFriendlyReplacer replacer) {
         super(replacer);
     }
-    
-    public HierarchicalStreamReader createReader(Reader xml) {
-        try {
-            return new XppDomReader(Xpp3DomBuilder.build(xml), xmlFriendlyReplacer());
-        } catch (Exception e) {
-            throw new StreamException(e);
+
+    /**
+     * {@inheritDoc}
+     */
+    protected synchronized XmlPullParser createParser() throws XmlPullParserException {
+        if (factory == null) {
+            factory = XmlPullParserFactory.newInstance(null, XppDriver.class);
         }
-    }
-
-    public HierarchicalStreamReader createReader(InputStream in) {
-        try {
-            return createReader(new XmlHeaderAwareReader(in));
-        } catch (UnsupportedEncodingException e) {
-            throw new StreamException(e);
-        } catch (IOException e) {
-            throw new StreamException(e);
-        }
-    }
-
-    public HierarchicalStreamWriter createWriter(Writer out) {
-        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
-    }
-
-    public HierarchicalStreamWriter createWriter(OutputStream out) {
-        return createWriter(new OutputStreamWriter(out));
+        return factory.newPullParser();
     }
 }

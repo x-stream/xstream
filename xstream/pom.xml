@@ -190,7 +190,7 @@
                 </goals>
                 <configuration>
                   <excludePackageNames>
-                    com.thoughtworks.xstream.core:com.thoughtworks.xstream.io.xml.xppdom
+                    com.thoughtworks.xstream.core
                   </excludePackageNames>
                   <links>
                     <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
@@ -274,7 +274,7 @@
                 </goals>
                 <configuration>
                   <excludePackageNames>
-                    com.thoughtworks.xstream.core:com.thoughtworks.xstream.io.xml.xppdom
+                    com.thoughtworks.xstream.core
                   </excludePackageNames>
                   <links>
                     <link>http://java.sun.com/javase/6/docs/api</link>
@@ -343,7 +343,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <excludePackageNames>
-            com.thoughtworks.xstream.core:com.thoughtworks.xstream.io.xml.xppdom
+            com.thoughtworks.xstream.core
           </excludePackageNames>
           <links>
             <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
