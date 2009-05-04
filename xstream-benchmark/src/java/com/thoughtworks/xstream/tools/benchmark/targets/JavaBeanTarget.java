@@ -1,38 +1,46 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 01. January 2008 by Joerg Schaible
+ * Created on 05. May 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.tools.benchmark.targets;
 
 import com.thoughtworks.xstream.tools.benchmark.Target;
-import com.thoughtworks.xstream.tools.benchmark.model.Five;
-import com.thoughtworks.xstream.tools.benchmark.model.One;
+import com.thoughtworks.xstream.tools.benchmark.model.FiveBean;
+import com.thoughtworks.xstream.tools.benchmark.model.OneBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Target containing basic types using the ReflectionConverter.
+ * Target containing basic types using the JavaBeanConverter.
  * 
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
-public class ReflectionTarget implements Target {
+public class JavaBeanTarget implements Target {
 
     private List list;
     
-    public ReflectionTarget() {
+    public JavaBeanTarget() {
         list = new ArrayList();
         for (int i = 0; i < 5; ++i) {
-            list.add(new One(Integer.toString(i)));
+            OneBean one = new OneBean();
+            one.setOne(Integer.toString(i));
+            list.add(one);
         }
-        list.add(new Five("1", 2, true, '4', new StringBuffer("5")));
+        FiveBean five = new FiveBean();
+        five.setOne("1");
+        five.setTwo(2);
+        five.setThree(true);
+        five.setFour('4');
+        five.setFive(new StringBuffer("5"));
+        list.add(five);
     }
     
     public boolean isEqual(Object other) {
@@ -44,6 +52,6 @@ public class ReflectionTarget implements Target {
     }
 
     public String toString() {
-        return "Reflection Converter";
+        return "JavaBean Converter";
     }
 }

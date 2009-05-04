@@ -25,7 +25,8 @@
         <page>license.html</page>
         <page>download.html</page>
         <page>references.html</page>
-        <link title="Statistics">http://www.ohloh.net/projects/3459</link>
+        <page>parser-benchmarks.html</page>
+        <link title="Code Statistics">http://www.ohloh.net/projects/3459</link>
     </section>
     <section>
         <name>Using XStream</name>

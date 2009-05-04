@@ -18,13 +18,16 @@ import com.thoughtworks.xstream.tools.benchmark.products.XStreamDom4J;
 import com.thoughtworks.xstream.tools.benchmark.products.XStreamBEAStax;
 import com.thoughtworks.xstream.tools.benchmark.products.XStreamJDom;
 import com.thoughtworks.xstream.tools.benchmark.products.XStreamKXml2;
+import com.thoughtworks.xstream.tools.benchmark.products.XStreamKXml2DOM;
 import com.thoughtworks.xstream.tools.benchmark.products.XStreamSjsxp;
 import com.thoughtworks.xstream.tools.benchmark.products.XStreamWoodstox;
 import com.thoughtworks.xstream.tools.benchmark.products.XStreamXom;
 import com.thoughtworks.xstream.tools.benchmark.products.XStreamXpp3;
+import com.thoughtworks.xstream.tools.benchmark.products.XStreamXpp3DOM;
 import com.thoughtworks.xstream.tools.benchmark.reporters.TextReporter;
 import com.thoughtworks.xstream.tools.benchmark.targets.BasicTarget;
 import com.thoughtworks.xstream.tools.benchmark.targets.ExtendedTarget;
+import com.thoughtworks.xstream.tools.benchmark.targets.JavaBeanTarget;
 import com.thoughtworks.xstream.tools.benchmark.targets.ReflectionTarget;
 import com.thoughtworks.xstream.tools.benchmark.targets.SerializableTarget;
 import com.thoughtworks.xstream.tools.model.targets.FieldReflection;
@@ -95,6 +98,12 @@ public class ParserBenchmark {
             if (name == null || name.equals("kXML2")) {
                 harness.addProduct(new XStreamKXml2());
             }
+            if (name == null || name.equals("Xpp3DOM")) {
+                harness.addProduct(new XStreamXpp3DOM());
+            } 
+            if (name == null || name.equals("kXML2DOM")) {
+                harness.addProduct(new XStreamKXml2DOM());
+            }
             if (commandLine.hasOption('n')) {
                 counter = Integer.parseInt(commandLine.getOptionValue('n'));
             }
@@ -107,6 +116,7 @@ public class ParserBenchmark {
         harness.addTarget(new ExtendedTarget());
         harness.addTarget(new ReflectionTarget());
         harness.addTarget(new SerializableTarget());
+        harness.addTarget(new JavaBeanTarget());
         if (false) {
         harness.addTarget(new FieldReflection());
         harness.addTarget(new HierarchyLevelReflection());

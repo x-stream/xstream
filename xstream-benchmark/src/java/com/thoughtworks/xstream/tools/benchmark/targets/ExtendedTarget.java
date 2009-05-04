@@ -13,11 +13,14 @@ package com.thoughtworks.xstream.tools.benchmark.targets;
 import com.thoughtworks.xstream.tools.benchmark.Target;
 
 import java.awt.Color;
+import java.io.Externalizable;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Target containing extended types.
@@ -28,14 +31,20 @@ import java.util.List;
 public class ExtendedTarget implements Target {
 
     private final static Method EQUALS;
+    private final static Field LIST;
     static {
         Method method;
+        Field field;
         try {
             method = Object.class.getMethod("equals", new Class[]{Object.class});
+            field = ExtendedTarget.class.getDeclaredField("list");
         } catch (NoSuchMethodException e) {
+            throw new ExceptionInInitializerError(e);
+        } catch (NoSuchFieldException e) {
             throw new ExceptionInInitializerError(e);
         } 
         EQUALS = method;
+        LIST = field;
     }
     
     private List list;
@@ -43,10 +52,20 @@ public class ExtendedTarget implements Target {
     public ExtendedTarget() {
         list = new ArrayList();
         list.add(new Color(128, 0, 255));
-        Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Runnable.class}, new RunnableInvocationHandler());
+        Object proxy = Proxy
+            .newProxyInstance(
+                getClass().getClassLoader(), new Class[]{
+                    Runnable.class, Cloneable.class, Comparable.class},
+                new RunnableInvocationHandler());
         list.add(proxy);
         list.add(ExtendedTarget.class);
         list.add(EQUALS);
+        list.add(LIST);
+        Properties properties = new Properties();
+        properties.put("1", "one");
+        properties.put("2", "two");
+        properties.put("3", "three");
+        list.add(properties);
     }
     
     public boolean isEqual(Object other) {
@@ -58,7 +77,7 @@ public class ExtendedTarget implements Target {
     }
 
     public String toString() {
-        return "Extended types";
+        return "Standard Converters";
     }
     
     static class RunnableInvocationHandler implements InvocationHandler {

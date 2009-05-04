@@ -11,8 +11,11 @@
 package com.thoughtworks.xstream.tools.benchmark.products;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.tools.benchmark.Product;
+import com.thoughtworks.xstream.tools.benchmark.model.FiveBean;
+import com.thoughtworks.xstream.tools.benchmark.model.OneBean;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,6 +46,13 @@ public class XStreamDriver implements Product {
      */
     public XStreamDriver(HierarchicalStreamDriver driver, String desc) {
         this.xstream = new XStream(driver);
+        this.xstream.registerConverter(new JavaBeanConverter(this.xstream.getMapper()) {
+
+            public boolean canConvert(Class type) {
+                return type == OneBean.class || type == FiveBean.class;
+            }
+            
+        });
         this.desc = desc;
     }
 

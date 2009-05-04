@@ -13,9 +13,6 @@ package com.thoughtworks.xstream.tools.benchmark.targets;
 import com.thoughtworks.xstream.tools.benchmark.Target;
 
 import java.io.File;
-import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,16 +33,10 @@ public class BasicTarget implements Target {
         list.add(new Byte((byte)2));
         list.add(new Short((short)3));
         list.add(new Long(4));
-        list.add(new BigInteger("5"));
         list.add("Profile");
         list.add(Boolean.TRUE);
         list.add(new Float(1.2f));
         list.add(new Double(1.2f));
-        try {
-            list.add(new URL("http://xstream.codehaus.org"));
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
         list.add(new File("profile.txt"));
         list.add(Locale.ENGLISH);
     }
@@ -59,6 +50,6 @@ public class BasicTarget implements Target {
     }
 
     public String toString() {
-        return "Basic types";
+        return "SingleValue Converters";
     }
 }
