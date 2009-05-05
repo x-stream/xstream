@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -46,9 +47,13 @@ public abstract class AbstractReflectionConverter implements Converter {
         serializationMethodInvoker = new SerializationMethodInvoker();
     }
 
-    public void marshal(Object original, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+    public void marshal(Object original, final HierarchicalStreamWriter writer,
+        final MarshallingContext context) {
         final Object source = serializationMethodInvoker.callWriteReplace(original);
 
+        if (source != original && context instanceof ReferencingMarshallingContext) {
+            ((ReferencingMarshallingContext)context).replace(original, source);
+        }
         if (source.getClass() != original.getClass()) {
             String attributeName = mapper.aliasForSystemAttribute("resolves-to");
             if (attributeName != null) {

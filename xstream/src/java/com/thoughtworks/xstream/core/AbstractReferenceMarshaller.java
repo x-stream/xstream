@@ -28,12 +28,13 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * @author Mauro Talevi
  * @since 1.2
  */
-public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
+public abstract class AbstractReferenceMarshaller extends TreeMarshaller implements ReferencingMarshallingContext {
 
     private ObjectIdDictionary references = new ObjectIdDictionary();
     private ObjectIdDictionary implicitElements = new ObjectIdDictionary();
     private PathTracker pathTracker = new PathTracker();
     private Path lastPath;
+    private Object replaced;
 
     public AbstractReferenceMarshaller(HierarchicalStreamWriter writer,
                                    ConverterLookup converterLookup,
@@ -42,13 +43,17 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
         this.writer = new PathTrackingWriter(writer, pathTracker);
     }
 
+    public void replace(Object original, Object replacement) {
+        this.replaced = original;
+    }
+
     public void convert(Object item, Converter converter) {
         if (getMapper().isImmutableValueType(item.getClass())) {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {
             Path currentPath = pathTracker.getPath();
-            Object existingReferenceKey = references.lookupId(item);
+            Object existingReferenceKey = lookupReference(item);
             if (existingReferenceKey != null) {
                 String attributeName = getMapper().aliasForSystemAttribute("reference");
                 if (attributeName != null) {
@@ -58,16 +63,28 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller {
                 throw new ReferencedImplicitElementException(item, currentPath);
             } else {
                 Object newReferenceKey = createReferenceKey(currentPath, item);
-                if (lastPath == null || !currentPath.isAncestor(lastPath)) {
+                if (lastPath == null || !currentPath.isAncestor(lastPath) || replaced != null) {
                     fireValidReference(newReferenceKey);
                     lastPath = currentPath;
                     references.associateId(item, newReferenceKey);
+                    if (replaced != null) {
+                        references.associateId(replaced, newReferenceKey);
+                        replaced = null;
+                    }
                 } else {
                     implicitElements.associateId(item, newReferenceKey);
                 }
                 converter.marshal(item, writer, this);
             }
         }
+    }
+
+    public Object lookupReference(Object item) {
+        return references.lookupId(item);
+    }
+
+    public Path currentPath() {
+        return pathTracker.getPath();
     }
     
     protected abstract String createReference(Path currentPath, Object existingReferenceKey);

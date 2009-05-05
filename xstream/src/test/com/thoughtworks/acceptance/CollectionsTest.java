@@ -170,6 +170,45 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         assertBothWays(list, xml);
     }
 
+    public void testSyncronizedArrayList() {
+        final String xml;
+        if (JVM.is15()) {
+            xml = 
+                "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\" serialization=\"custom\">\n" +
+                "  <java.util.Collections_-SynchronizedCollection>\n" +
+                "    <default>\n" +
+                "      <c class=\"list\">\n" +
+                "        <string>hi</string>\n" +
+                "      </c>\n" +
+                "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
+                "    </default>\n" +
+                "  </java.util.Collections_-SynchronizedCollection>\n" +
+                "  <java.util.Collections_-SynchronizedList>\n" +
+                "    <default>\n" +
+                "      <list reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
+                "    </default>\n" +
+                "  </java.util.Collections_-SynchronizedList>\n" +
+                "</java.util.Collections_-SynchronizedRandomAccessList>";
+        } else {
+            xml = 
+                "<java.util.Collections_-SynchronizedList>\n" +
+                "  <c class=\"list\">\n" +
+                "    <string>hi</string>\n" +
+                "  </c>\n" +
+                "  <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"..\"/>\n" +
+                "  <list reference=\"../c\"/>\n" +
+                "</java.util.Collections_-SynchronizedList>";
+        }
+
+        // synchronized list has circular reference
+        xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
+
+        List list = Collections.synchronizedList(new ArrayList());
+        list.add("hi");
+
+        assertBothWays(list, xml);
+    }
+
     public void testEmptyList() {
         assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections_-EmptyList/>");
     }
