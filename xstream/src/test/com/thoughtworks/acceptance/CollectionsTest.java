@@ -191,13 +191,13 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "</java.util.Collections_-SynchronizedRandomAccessList>";
         } else {
             xml = 
-                "<java.util.Collections_-SynchronizedList>\n" +
+                "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\">\n" +
                 "  <c class=\"list\">\n" +
                 "    <string>hi</string>\n" +
                 "  </c>\n" +
                 "  <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"..\"/>\n" +
                 "  <list reference=\"../c\"/>\n" +
-                "</java.util.Collections_-SynchronizedList>";
+                "</java.util.Collections_-SynchronizedRandomAccessList>";
         }
 
         // synchronized list has circular reference
