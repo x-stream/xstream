@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,11 +15,14 @@ import com.thoughtworks.acceptance.objects.Original;
 import com.thoughtworks.acceptance.objects.Replaced;
 import com.thoughtworks.acceptance.objects.StandardObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +52,22 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
 
     }
 
-    public void testReplacesAndResolves() {
-        xstream.alias("thing", Thing.class);
-
+    public void testReplacesAndResolves() throws IOException, ClassNotFoundException {
         Thing thing = new Thing(3, 6);
+
+        // ensure that Java serialization does not cause endless loop for a Thing
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(thing);
+        oos.close();
+        
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        ObjectInputStream ios = new ObjectInputStream(bais);
+        assertEquals(thing, ios.readObject());
+        ios.close();
+        
+        // ensure that XStream does not cause endless loop for a Thing
+        xstream.alias("thing", Thing.class);
 
         String expectedXml = ""
                 + "<thing>\n"
