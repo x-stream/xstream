@@ -115,7 +115,9 @@ public class DependencyInjectionFactory {
             // first approach: test the ctor params against the dependencies in the sequence of the parameter
             // declaration
             matchingDependencies.clear();
-            usedDependencies.clear();
+            for(int j = usedDependencies.length(); j-- > 0; ) {
+                usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
+            }
             for (int j = 0, k = 0; j < parameterTypes.length
                     && parameterTypes.length + k - j <= typedDependencies.length; k++) {
                 if (parameterTypes[j].isAssignableFrom(typedDependencies[k].type)) {
@@ -135,7 +137,9 @@ public class DependencyInjectionFactory {
                 final TypedValue[] deps = new TypedValue[typedDependencies.length];
                 System.arraycopy(typedDependencies, 0, deps, 0, deps.length);
                 matchingDependencies.clear();
-                usedDependencies.clear();
+                for(int j = usedDependencies.length(); j-- > 0; ) {
+                    usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
+                }
                 for (int j = 0; j < parameterTypes.length; j++) {
                     int assignable = -1;
                     for (int k = 0; k < deps.length; k++) {
@@ -168,7 +172,9 @@ public class DependencyInjectionFactory {
 
         if (bestMatchingCtor == null) {
             if (possibleCtor == null) {
-                usedDependencies.clear();
+                for(int j = usedDependencies.length(); j-- > 0; ) {
+                    usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
+                }
                 throw new ObjectAccessException("Cannot construct "
                         + type.getName()
                         + ", none of the dependencies match any constructor's parameters");

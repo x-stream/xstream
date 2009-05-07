@@ -156,13 +156,13 @@
         <mkdir dir="${build.dir}/javadoc"/>
         <javadoc destdir="${build.dir}/javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
             <classpath refid="classpath"/>
-            <packageset dir="${java.src.dir}" defaultexcludes="yes">
-                <exclude name="com/thoughtworks/xstream/core/**"/>
+            <fileset dir="${java.src.dir}">
+                <exclude name="com/thoughtworks/xstream/core/util/**"/>
                 <exclude name="com/thoughtworks/xstream/converters/reflection/HarmonyReflectionProvider.java"/>
-                <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
-                <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
-                <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
-            </packageset>
+	            <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
+	            <excludesfile name="jdk-1.5-specific.txt" unless="jdk1.5.available" />
+	            <excludesfile name="jdk-1.4-specific.txt" unless="jdk1.4.available" />
+            </fileset>
             <doctitle><![CDATA[<h1>XStream ${version}</h1>]]></doctitle>
             <bottom><![CDATA[<i>XStream Committers, <a href="http://xstream.codehaus.org">http://xstream.codehaus.org/</a></i>]]></bottom>
         </javadoc>

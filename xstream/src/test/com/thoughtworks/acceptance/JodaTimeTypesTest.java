@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -9,6 +9,8 @@
  * Created on 23. October 2008 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
+
+import com.thoughtworks.xstream.core.JVM;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
@@ -21,6 +23,10 @@ import org.joda.time.LocalDate;
 public class JodaTimeTypesTest extends AbstractAcceptanceTest {
     
     public void testCanHandleLocateDate() {
+        if (!JVM.is14()) {
+            // inner class, must use enhanced mode for this test
+            return;
+        }
         DateTimeZone.setDefault(DateTimeZone.forID("America/Los_Angeles"));
         final LocalDate localDate = new LocalDate(2008, 07, 03);
         final String expected = "" +
