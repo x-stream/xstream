@@ -157,6 +157,7 @@
         <javadoc destdir="${build.dir}/javadoc" author="true" version="true" use="true" windowtitle="XStream ${version} API">
             <classpath refid="classpath"/>
             <fileset dir="${java.src.dir}">
+                <exclude name="**/package.html"/><!-- Those generate errors using fileset task -->
                 <exclude name="com/thoughtworks/xstream/core/util/**"/>
                 <exclude name="com/thoughtworks/xstream/converters/reflection/HarmonyReflectionProvider.java"/>
 	            <excludesfile name="jdk-1.5-minimum.txt" unless="jdk1.5.available" />
