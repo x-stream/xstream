@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
@@ -213,6 +214,25 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections_-EmptyList/>");
     }
 
+    public void testPropertiesWithDefaults() {
+        Properties defaults = new Properties();
+        defaults.setProperty("1", "one");
+        defaults.setProperty("2", "two");
+        Properties properties = new Properties(defaults);
+        properties.setProperty("1", "I");
+        properties.setProperty("3", "III");
+
+        assertBothWays(properties,
+                "<properties>\n" +
+                "  <property name=\"3\" value=\"III\"/>\n" + 
+                "  <property name=\"1\" value=\"I\"/>\n" + 
+                "  <defaults>\n" + 
+                "    <property name=\"2\" value=\"two\"/>\n" + 
+                "    <property name=\"1\" value=\"one\"/>\n" + 
+                "  </defaults>\n" +
+                "</properties>");
+    }
+    
     public void testUnmodifiableList() {
         // unmodifiable list has duplicate references
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);

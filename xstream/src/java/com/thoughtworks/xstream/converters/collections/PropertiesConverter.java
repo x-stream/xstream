@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,15 +24,21 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 
+
 /**
- * Special converter for java.util.Properties that stores
- * properties in a more compact form than java.util.Map.
- * <p/>
- * <p>Because all entries of a Properties instance
- * are Strings, a single element is used for each property
- * with two attributes; one for key and one for value.</p>
- * <p>Additionally, default properties are also serialized, if they are present.</p>
- *
+ * Special converter for java.util.Properties that stores properties in a more compact form than
+ * java.util.Map.
+ * <p>
+ * Because all entries of a Properties instance are Strings, a single element is used for each
+ * property with two attributes; one for key and one for value.
+ * </p>
+ * <p>
+ * Additionally, default properties are also serialized, if they are present or if a
+ * SecurityManager is set, and it has permissions for SecurityManager.checkPackageAccess,
+ * SecurityManager.checkMemberAccess(this, EnumSet.MEMBER) and
+ * ReflectPermission("suppressAccessChecks").
+ * </p>
+ * 
  * @author Joe Walnes
  * @author Kevin Ring
  */
@@ -40,11 +46,15 @@ public class PropertiesConverter implements Converter {
 
     private final static Field defaultsField;
     static {
+        Field field = null;
         try {
-            defaultsField = Fields.find(Properties.class, "defaults");
+            field = Fields.find(Properties.class, "defaults");
+        } catch (SecurityException ex) {
+            // ignore, no access possible with current SecurityManager
         } catch (RuntimeException ex) {
-            throw new ExceptionInInitializerError("Cannot access defaults field of Properties");
+            throw new ExceptionInInitializerError("No field 'defaults' in type Properties found");
         }
+        defaultsField = field;
     }
     private final boolean sort;
 
@@ -61,7 +71,7 @@ public class PropertiesConverter implements Converter {
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        Properties properties = (Properties) source;
+        final Properties properties = (Properties) source;
         Map map = sort ? (Map)new TreeMap(properties) : (Map)properties;
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
@@ -70,21 +80,23 @@ public class PropertiesConverter implements Converter {
             writer.addAttribute("value", entry.getValue().toString());
             writer.endNode();
         }
-        Properties defaults = (Properties) Fields.read(defaultsField, properties);
-        if (defaults != null) {
-            writer.startNode("defaults");
-            marshal(defaults, writer, context);
-            writer.endNode();
+        if (defaultsField != null) {
+            Properties defaults = (Properties)Fields.read(defaultsField, properties);
+            if (defaults != null) {
+                writer.startNode("defaults");
+                marshal(defaults, writer, context);
+                writer.endNode();
+            }
         }
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         Properties properties = new Properties();
+        Properties defaults = null;
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             if (reader.getNodeName().equals("defaults")) {
-                Properties defaults = (Properties) unmarshal(reader, context);
-                Fields.write(defaultsField, properties, defaults);
+                defaults = (Properties) unmarshal(reader, context);
             } else {
                 String name = reader.getAttribute("name");
                 String value = reader.getAttribute("value");
@@ -92,7 +104,13 @@ public class PropertiesConverter implements Converter {
             }
             reader.moveUp();
         }
-        return properties;
+        if (defaults == null) {
+            return properties;
+        } else {
+            Properties propertiesWithDefaults = new Properties(defaults);
+            propertiesWithDefaults.putAll(properties);
+            return propertiesWithDefaults;
+        }
     }
 
 }
