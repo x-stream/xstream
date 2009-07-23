@@ -45,6 +45,7 @@
     	<li>The type java.lang.reflect.Field is now handled by an own converter, that can still read the old format.</li>
     	<li>The XppReader no longer uses a BufferedReader. This is added now by the XppDriver implementations creating the HierarchicalStreamReader
     	to allow overriding the creation method.</li>
+    	<li>JIRA:XSTR-490: Provide path in Converter for contexts that track the path.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -58,6 +59,7 @@
     	<li>JIRA:XSTR-555: StAX driver tests do not honor repairing mode.</li>
     	<li>JIRA:XSTR-570: The @XStreamConverter provides now also the current type as possible constructor argument.</li>
     	<li>JIRA:XSTR-571: Cannot serialize synchronized RandomAccessList types.</li>
+    	<li>JIRA:XSTR-583: BinaryDriver fails to handle Strings with more than 64K bytes.</li>
     </ul>
 
     <h2>API changes</h2>

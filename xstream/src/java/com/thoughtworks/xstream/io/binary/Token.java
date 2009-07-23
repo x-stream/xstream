@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -49,6 +49,9 @@ public abstract class Token {
     private static final byte ID_FOUR_BYTES = 0x18;
     private static final byte ID_EIGHT_BYTES = 0x20;
 
+    private static final String ID_SPLITTED = "\u0000\u2021\u0000"; 
+    private static final int MAX_UTF8_LENGTH = 0xffff;
+
     private final byte type;
 
     protected long id = -1;
@@ -83,7 +86,6 @@ public abstract class Token {
         if (id != token.id) return false;
         if (type != token.type) return false;
         return !(value != null ? !value.equals(token.value) : token.value != null);
-
     }
 
     public int hashCode() {
@@ -121,7 +123,15 @@ public abstract class Token {
     }
 
     protected void writeString(DataOutput out, String string) throws IOException {
-        out.writeUTF(string);
+        final byte[] bytes = (string.length() > MAX_UTF8_LENGTH / 4) ? string.getBytes("utf-8") : new byte[0];
+        int length = bytes.length;
+        if (length <= MAX_UTF8_LENGTH) {
+            out.writeUTF(string);
+        } else {
+            out.writeUTF(ID_SPLITTED);
+            out.writeInt(bytes.length);
+            out.write(bytes);
+        }
     }
 
     protected long readId(DataInput in, byte idType) throws IOException {
@@ -140,7 +150,14 @@ public abstract class Token {
     }
 
     protected String readString(DataInput in) throws IOException {
-        return in.readUTF();
+        final String string = in.readUTF();
+        if (!ID_SPLITTED.equals(string)) {
+            return string;
+        }
+        final int size = in.readInt();
+        final byte[] bytes = new byte[size];
+        in.readFully(bytes);
+        return new String(bytes, "utf-8");
     }
 
     public static class Formatter {
@@ -152,7 +169,7 @@ public abstract class Token {
                 idType = ID_ONE_BYTE;
             } else if (id <= Short.MAX_VALUE - Short.MIN_VALUE) {
                 idType = ID_TWO_BYTES;
-            } else if (id <= (long) Integer.MAX_VALUE - (long) Integer.MIN_VALUE) { // cast to long to prevent overflo
+            } else if (id <= (long) Integer.MAX_VALUE - (long) Integer.MIN_VALUE) { // cast to long to prevent overflow
                 idType = ID_FOUR_BYTES;
             } else {
                 idType = ID_EIGHT_BYTES;

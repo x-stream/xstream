@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,7 +33,7 @@ public class TokenTest extends TestCase {
         out = new DataOutputStream(buffer);
     }
 
-    public void testDoesNotSupportNegativeIds() throws IOException {
+    public void testDoesNotSupportNegativeIds() {
         Token.StartNode token = new Token.StartNode(-5);
         try {
             writeOneToken(token);
@@ -70,12 +70,39 @@ public class TokenTest extends TestCase {
         assertEquals(9, buffer.size()); // One byte already written for token type.
         assertEquals(token, readOneToken());
     }
+    
+    public void testUsesOneExtraByteForUtf8StringsWith1ByteCharacters() throws IOException {
+        Token.Value token = new Token.Value("12345");
+        writeOneToken(token);
+        assertEquals(8, buffer.size()); // One byte already written for token type and two for the length.
+        assertEquals(token, readOneToken());
+    }
+    
+    public void testUsesOneExtraByteForUtf8StringsWith2ByteCharacters() throws IOException {
+        Token.Value token = new Token.Value("\u0391\u03b8\u03ae\u03bd\u03b1"); // Athens
+        writeOneToken(token);
+        assertEquals(13, buffer.size()); // One byte already written for token type and two for the length.
+        assertEquals(token, readOneToken());
+    }
+    
+    public void testUsesIdForStringsWithMoreThen64KBytes() throws IOException {
+        StringBuffer builder = new StringBuffer();
+        for(int i = 0; i++ < 8000;) {
+            builder.append("\u0391\u03b8\u03ae\u03bd\u03b1"); // Athens
+        }
+        String string = builder.toString();
+        assertEquals(40000, string.length()); // 5 chars, but each char 2 bytes in UTF-8
+        Token.Value token = new Token.Value(string);
+        writeOneToken(token);
+        assertEquals(80014, buffer.size()); // > 65k
+        assertEquals(token, readOneToken());
+    }
 
     private Token readOneToken() throws IOException {
         return tokenFormatter.read(new DataInputStream(new ByteArrayInputStream(buffer.toByteArray())));
     }
 
-    private void writeOneToken(Token.StartNode token) throws IOException {
+    private void writeOneToken(Token token) throws IOException {
         tokenFormatter.write(out, token);
     }
 
