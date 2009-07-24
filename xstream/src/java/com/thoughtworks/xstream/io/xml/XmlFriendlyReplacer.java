@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -53,8 +54,7 @@ public class XmlFriendlyReplacer {
     public XmlFriendlyReplacer(String dollarReplacement, String underscoreReplacement) {
         this.dollarReplacement = dollarReplacement;
         this.underscoreReplacement = underscoreReplacement;
-        escapeCache = new WeakHashMap();
-        unescapeCache = new WeakHashMap();
+        readResolve();
     }
 
     /**
@@ -168,8 +168,8 @@ public class XmlFriendlyReplacer {
     }
 
     private Object readResolve() {
-        escapeCache = new WeakHashMap();
-        unescapeCache = new WeakHashMap();
+        escapeCache = Collections.synchronizedMap(new WeakHashMap());
+        unescapeCache = Collections.synchronizedMap(new WeakHashMap());
         return this;
     }
 }
