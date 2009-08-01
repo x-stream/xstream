@@ -29,10 +29,11 @@ public class ErrorTest extends AbstractAcceptanceTest {
 
     public void testUnmarshallerThrowsExceptionWithDebuggingInfo() {
         try {
-            xstream.fromXML("<thing>\n" +
-                    "  <one>string 1</one>\n" +
-                    "  <two>another string</two>\n" +
-                    "</thing>");
+            xstream.fromXML(""
+                + "<thing>\n" 
+                + "  <one>string 1</one>\n" 
+                + "  <two>another string</two>\n" 
+                + "</thing>");
             fail("Error expected");
         } catch (ConversionException e) {
             assertEquals("java.lang.NumberFormatException",
@@ -57,10 +58,11 @@ public class ErrorTest extends AbstractAcceptanceTest {
 
     public void testInvalidXml() {
         try {
-            xstream.fromXML("<thing>\n" +
-                    "  <one>string 1</one>\n" +
-                    "  <two><<\n" +
-                    "</thing>");
+            xstream.fromXML(""
+                + "<thing>\n" 
+                + "  <one>string 1</one>\n" 
+                + "  <two><<\n" 
+                + "</thing>");
             fail("Error expected");
         } catch (ConversionException e) {
             assertEquals(StreamException.class.getName(),
@@ -77,10 +79,11 @@ public class ErrorTest extends AbstractAcceptanceTest {
     
     public void testNonExistingMember() {
         try {
-            xstream.fromXML("<thing>\n" +
-                    "  <one>string 1</one>\n" +
-                    "  <three>3</three>\n" +
-                    "</thing>");
+            xstream.fromXML("" 
+                + "<thing>\n" 
+                + "  <one>string 1</one>\n" 
+                + "  <three>3</three>\n" 
+                + "</thing>");
             fail("Error expected");
         } catch (ConversionException e) {
             assertEquals("three",
