@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -51,14 +51,6 @@ public class RelativeXPathCircularReferenceTest extends AbstractCircularReferenc
 
         assertEquals(expected, xstream.toXML(bob));
     }
-    
-    static class LinkedElement {
-        String name;
-        LinkedElement next;
-        LinkedElement(String name) {
-            this.name = name;
-        }
-    }
 
     public void testRing() {
         LinkedElement tom = new LinkedElement("Tom");
@@ -83,5 +75,36 @@ public class RelativeXPathCircularReferenceTest extends AbstractCircularReferenc
 
         assertEquals(expected, xstream.toXML(tom));
     }
-
+    
+    public void testTree() {
+        TreeElement root = new TreeElement("X");
+        TreeElement left = new TreeElement("Y");
+        TreeElement right = new TreeElement("Z");
+        root.left = left;
+        root.right = right;
+        left.left = new TreeElement(root.name);
+        right.right = new TreeElement(left.name);
+        right.left = left.left;
+    
+        xstream.alias("elem", TreeElement.class);
+        String expected = "" +
+            "<elem>\n" +
+            "  <name>X</name>\n" +
+            "  <left>\n" +
+            "    <name>Y</name>\n" +
+            "    <left>\n" +
+            "      <name reference=\"../../../name\"/>\n" +
+            "    </left>\n" +
+            "  </left>\n" +
+            "  <right>\n" +
+            "    <name>Z</name>\n" +
+            "    <left reference=\"../../left/left\"/>\n" +
+            "    <right>\n" +
+            "      <name reference=\"../../../left/name\"/>\n" +
+            "    </right>\n" +
+            "  </right>\n" +
+            "</elem>";
+    
+        assertEquals(expected, xstream.toXML(root));
+    }
 }

@@ -239,6 +239,16 @@ import java.util.Vector;
  * references. This produces XML with the least clutter.</td>
  * </tr>
  * <tr>
+ * <td><code>xstream.setMode(XStream.SINGLE_NODE_XPATH_RELATIVE_REFERENCES);</code></td>
+ * <td>Uses XPath relative references to signify duplicate references. The XPath expression ensures that
+ * a single node only is selected always.</td>
+ * </tr>
+ * <tr>
+ * <td><code>xstream.setMode(XStream.SINGLE_NODE_XPATH_ABSOLUTE_REFERENCES);</code></td>
+ * <td>Uses XPath absolute references to signify duplicate references.  The XPath expression ensures that
+ * a single node only is selected always.</td>
+ * </tr>
+ * <tr>
  * <td><code>xstream.setMode(XStream.ID_REFERENCES);</code></td>
  * <td>Uses ID references to signify duplicate references. In some scenarios, such as when using
  * hand-written XML, this is easier to work with.</td>
@@ -299,6 +309,8 @@ public class XStream {
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_RELATIVE_REFERENCES = 1003;
     public static final int XPATH_ABSOLUTE_REFERENCES = 1004;
+    public static final int SINGLE_NODE_XPATH_RELATIVE_REFERENCES = 1005;
+    public static final int SINGLE_NODE_XPATH_ABSOLUTE_REFERENCES = 1006;
 
     public static final int PRIORITY_VERY_HIGH = 10000;
     public static final int PRIORITY_NORMAL = 0;
@@ -1258,6 +1270,16 @@ public class XStream {
         case XPATH_ABSOLUTE_REFERENCES:
             setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
                 ReferenceByXPathMarshallingStrategy.ABSOLUTE));
+            break;
+        case SINGLE_NODE_XPATH_RELATIVE_REFERENCES:
+            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
+                  ReferenceByXPathMarshallingStrategy.RELATIVE 
+                | ReferenceByXPathMarshallingStrategy.SINGLE_NODE));
+            break;
+        case SINGLE_NODE_XPATH_ABSOLUTE_REFERENCES:
+            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
+                  ReferenceByXPathMarshallingStrategy.ABSOLUTE 
+                | ReferenceByXPathMarshallingStrategy.SINGLE_NODE));
             break;
         default:
             throw new IllegalArgumentException("Unknown mode : " + mode);

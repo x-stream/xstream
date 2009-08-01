@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,17 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a path (subset of XPath) to a single node in the tree.
+ * Represents a path to a single node in the tree.
  *
  * <p>Two absolute paths can also be compared to calculate the relative path between them.
  * A relative path can be applied to an absolute path to calculate another absolute path.</p>
+ * 
+ * <p>Note that the paths are normally XPath compliant, so can be read by other XPath engines.
+ * However, {@link #toString()} will select a node list while {@link #explicit()} will always select 
+ * an individual node. If the return type of the XPath evaluation is a node, the result will be the same,
+ * because XPath will then use the first element of the list. The following are examples of path 
+ * expressions that the Path object supports:</p>
  *
- * <p>Note that the paths produced are XPath compliant, so can be read by other XPath engines.
- * The following are examples of path expressions that the Path object supports:</p>
+ * <p>Note that the implementation does not take care if the paths are XPath compliant, it simply
+ * manages the values between the path separator. However, it normalizes the path if a path element
+ * ends with a selector for the first element (i.e. "[1]"). Those will be handled transparent i.e. two Paths
+ * are treated equal if one was created with path elements containing this selector and the other one 
+ * without.</p>
+ * 
+ * <p>The following are examples of path expressions that the Path object supports:</p>
  * <ul>
  *     <li>/</li>
  *     <li>/some/node</li>
  *     <li>/a/b/c/b/a</li>
+ *     <li>/a/b[1]/c[1]/b[1]/a[1]</li>
  *     <li>/some[3]/node[2]/a</li>
  *     <li>../../../another[3]/node</li>
  * </ul>
@@ -35,7 +47,7 @@ import java.util.List;
  * <h3>Example<h3>
  *
  * <pre>
- * Path a = new Path("/html/body/div/table[2]/tr[3]/td/div");
+ * Path a = new Path("/html/body/div[1]/table[2]/tr[3]/td/div");
  * Path b = new Path("/html/body/div/table[2]/tr[6]/td/form");
  *
  * Path relativePath = a.relativeTo(b); // produces: "../../../tr[6]/td/form"
@@ -50,22 +62,37 @@ public class Path {
 
     private final String[] chunks;
     private transient String pathAsString;
+    private transient String pathExplicit;
     private static final Path DOT = new Path(new String[] {"."});
 
     public Path(String pathAsString) {
         // String.split() too slow. StringTokenizer too crappy.
         List result = new ArrayList();
         int currentIndex = 0;
-        int nextSeperator;
-        while ((nextSeperator = pathAsString.indexOf('/', currentIndex)) != -1) {
-            result.add(pathAsString.substring(currentIndex, nextSeperator));
-            currentIndex = nextSeperator + 1;
+        int nextSeparator;
+        this.pathAsString = pathAsString;
+        while ((nextSeparator = pathAsString.indexOf('/', currentIndex)) != -1) {
+            // normalize explicit paths
+            result.add(normalize(pathAsString, currentIndex, nextSeparator));
+            currentIndex = nextSeparator + 1;
         }
-        result.add(pathAsString.substring(currentIndex));
+        result.add(normalize(pathAsString,currentIndex,pathAsString.length()));
         String[] arr = new String[result.size()];
         result.toArray(arr);
         chunks = arr;
-        this.pathAsString = pathAsString;
+    }
+    
+    private String normalize(String s, int start, int end) {
+        if (end - start > 3 
+                && s.charAt(end-3) == '['
+                && s.charAt(end-2) == '1'
+                && s.charAt(end-1) == ']') {
+            this.pathAsString = null;
+            return s.substring(start, end-3);
+        } else {
+            return s.substring(start, end);
+        }
+        
     }
 
     public Path(String[] chunks) {
@@ -82,6 +109,26 @@ public class Path {
             pathAsString = buffer.toString();
         }
         return pathAsString;
+    }
+
+    public String explicit() {
+        if (pathExplicit == null) {
+            StringBuffer buffer = new StringBuffer();
+            for (int i = 0; i < chunks.length; i++) {
+                if (i > 0) buffer.append('/');
+                String chunk = chunks[i];
+                buffer.append(chunk);
+                int length = chunk.length();
+                if (length > 0) {
+                    char c = chunk.charAt(length-1);
+                    if (c != ']' && c != '.') {
+                        buffer.append("[1]");
+                    }
+                }
+            }
+            pathExplicit = buffer.toString();
+        }
+        return pathExplicit;
     }
 
     public boolean equals(Object o) {

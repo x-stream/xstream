@@ -26,7 +26,9 @@ public class ReferenceByXPathMarshaller extends AbstractReferenceMarshaller {
     }
 
     protected String createReference(Path currentPath, Object existingReferenceKey) {
-        return (mode == ReferenceByXPathMarshallingStrategy.RELATIVE ? currentPath.relativeTo((Path)existingReferenceKey) : existingReferenceKey).toString();
+        Path existingPath = (Path)existingReferenceKey;
+        Path referencePath = (mode & ReferenceByXPathMarshallingStrategy.ABSOLUTE) > 0 ? existingPath : currentPath.relativeTo(existingPath);
+        return (mode & ReferenceByXPathMarshallingStrategy.SINGLE_NODE) > 0 ? referencePath.explicit() : referencePath.toString();
     }
 
     protected Object createReferenceKey(Path currentPath, Object item) {

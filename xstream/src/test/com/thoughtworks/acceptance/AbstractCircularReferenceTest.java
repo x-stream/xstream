@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,6 +29,26 @@ public abstract class AbstractCircularReferenceTest extends AbstractAcceptanceTe
 
         public Person(String name) {
             this.firstname = name;
+        }
+    }
+    
+    static class LinkedElement {
+        String name;
+        LinkedElement next;
+        LinkedElement(String name) {
+            this.name = name;
+        }
+    }
+    
+    static class TreeElement {
+        StringBuffer name;
+        TreeElement left;
+        TreeElement right;
+        TreeElement(StringBuffer name) {
+            this.name = name;
+        }
+        TreeElement(String name) {
+            this.name = new StringBuffer(name);
         }
     }
 
