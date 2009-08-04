@@ -49,4 +49,12 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
      * @since upcoming
      */
     void replace(Object original, Object replacement);
+
+    /**
+     * Register an implicit element. This is typically some kind of collection.
+     * 
+     * @param item the object that is implicit
+     * @since upcoming
+     */
+    void registerImplicit(Object item);
 }

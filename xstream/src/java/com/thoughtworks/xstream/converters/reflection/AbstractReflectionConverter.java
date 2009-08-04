@@ -19,9 +19,9 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.Mapper;
 
@@ -111,14 +111,26 @@ public abstract class AbstractReflectionConverter implements Converter {
                 if (!seenFields.contains(fieldName) && newObj != null) {
                     Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(source.getClass(), fieldName);
                     if (mapping != null) {
-                        if (mapping.getItemFieldName() != null) {
-                            Collection list = (Collection) newObj;
-                            for (Iterator iter = list.iterator(); iter.hasNext();) {
-                                Object obj = iter.next();
-                                writeField(fieldName, obj == null ? mapper.serializedClass(null) : mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
+                        if (context instanceof ReferencingMarshallingContext) {
+                            ReferencingMarshallingContext refContext = (ReferencingMarshallingContext)context;
+                            refContext.registerImplicit(newObj);
+                        }
+                        Collection collection = (Collection) newObj;
+                        for (Iterator iter = collection.iterator(); iter.hasNext();) {
+                            Object obj = iter.next();
+                            final String itemName;
+                            final Class itemType; 
+                            if (obj == null) {
+                                itemType = Object.class;
+                                itemName = mapper.serializedClass(null);
+                            } else if (mapping.getItemFieldName() != null) {
+                                itemType = mapping.getItemType();
+                                itemName = mapping.getItemFieldName();
+                            } else {
+                                itemType = obj.getClass();
+                                itemName = mapper.serializedClass(itemType);
                             }
-                        } else {
-                            context.convertAnother(newObj);
+                            writeField(fieldName, itemName, itemType, definedIn, obj);
                         }
                     } else {
                         writeField(fieldName, null, fieldType, definedIn, newObj);

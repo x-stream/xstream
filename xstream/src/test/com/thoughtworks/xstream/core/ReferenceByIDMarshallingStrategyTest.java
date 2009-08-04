@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,7 +31,8 @@ public class ReferenceByIDMarshallingStrategyTest extends AbstractAcceptanceTest
         wl.things.add("Hello");
         wl.things.add("Daniel");
 
-        final String expected = "<strings id=\"1\">\n"
+        final String expected = "" 
+                + "<strings id=\"1\">\n"
                 + "  <string>Hello</string>\n"
                 + "  <string>Daniel</string>\n"
                 + "  <name>foo</name>\n"
@@ -52,9 +53,10 @@ public class ReferenceByIDMarshallingStrategyTest extends AbstractAcceptanceTest
         xstream.addImplicitCollection(List.class, "list"); 
         xstream.alias("list", List.class);
         
-        final String expected = "<list id=\"1\">\n"
+        final String expected = "" 
+            + "<list id=\"1\">\n"
             + "  <o id=\"2\"/>\n"
-            + "  <object id=\"4\"/>\n"
+            + "  <object id=\"3\"/>\n"
             + "</list>";
         
         assertBothWays(another, expected);

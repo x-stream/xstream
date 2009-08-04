@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -268,7 +268,13 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     }
 
     public static class Zoo extends StandardObject {
-        private Set animals = new HashSet();
+        private Set animals;
+        public Zoo() {
+            this(new HashSet());
+        }
+        public Zoo(Set set) {
+            animals = set;
+        }
         public void add(Animal animal) {
             animals.add(animal);
         }
@@ -308,6 +314,26 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.addDefaultImplementation(TreeSet.class, Set.class);
         Zoo zoo = (Zoo)xstream.fromXML(xml);
         assertTrue("Collection was a " + zoo.animals.getClass().getName(), zoo.animals instanceof TreeSet);
+    }
+
+    public void testWithSortedSet() {
+        Zoo zoo = new Zoo(new TreeSet());
+        zoo.add(new Animal("Lion"));
+        zoo.add(new Animal("Ape"));
+
+        String expected = "" +
+                "<zoo>\n" +
+                "  <animal>\n" +
+                "    <name>Ape</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Lion</name>\n" +
+                "  </animal>\n" +
+                "</zoo>";
+
+        xstream.addImplicitCollection(Zoo.class, "animals");
+        xstream.addDefaultImplementation(TreeSet.class, Set.class);
+        assertBothWays(zoo, expected);
     }
 
     public static class Aquarium extends StandardObject {
