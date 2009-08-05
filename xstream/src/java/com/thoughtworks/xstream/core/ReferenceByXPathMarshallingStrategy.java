@@ -23,13 +23,6 @@ public class ReferenceByXPathMarshallingStrategy extends AbstractTreeMarshalling
     public static int SINGLE_NODE = 2;
     private final int mode;
 
-    /**
-     * @deprecated As of 1.2, use {@link #ReferenceByXPathMarshallingStrategy(int)}
-     */
-    public ReferenceByXPathMarshallingStrategy() {
-        this(RELATIVE);
-    }
-
     public ReferenceByXPathMarshallingStrategy(int mode) {
         this.mode = mode;
     }

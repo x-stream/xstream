@@ -114,12 +114,6 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller impleme
     protected abstract void fireValidReference(Object referenceKey);
     
     public static class ReferencedImplicitElementException extends ConversionException {
-        /**
-         * @deprecated As of 1.2.1
-         */
-        public ReferencedImplicitElementException(final String msg) {
-            super(msg);
-        }
         public ReferencedImplicitElementException(final Object item, final Path path) {
             super("Cannot reference implicit element");
             add("implicit-element", item.toString());
