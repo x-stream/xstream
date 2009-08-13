@@ -64,13 +64,14 @@
     	<li>JIRA:XSTR-571: Cannot serialize synchronized RandomAccessList types.</li>
     	<li>JIRA:XSTR-583: BinaryDriver fails to handle Strings with more than 64K bytes.</li>
     	<li>JIRA:XSTR-584: Race condition in XmlFriendlyReplacer.</li>
+    	<li>The ConversionException hides information if its ErrorWriter contains the added key already.</li>
     </ul>
 
     <h2>API changes</h2>
 
     <ul>
     	<li>Any deprecated stuff of the 1.2.x releases has been removed.</li>
-    	<li>Deprecated constructors of c.t.x.io.xml.XppReader, new verions take an additional argument for the XmlPullParser.</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.XppReader, new versions take an additional argument for the XmlPullParser.</li>
     	<li>Deprecated c.t.x.io.xml.XppReader.createParser(), the XPP parser is now created by the driver.</li>
     	<li>Package c.t.x.io.xml.xppdom is now part of the official API.</li>
     	<li>c.t.x.io.xml.xppdom.Xpp3Dom and c.t.x.io.xmlxpp.dom.Xpp3DomBuilder have been deprecated. Functionality is

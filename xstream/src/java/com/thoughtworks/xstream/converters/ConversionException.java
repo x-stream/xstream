@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -58,7 +58,27 @@ public class ConversionException extends XStreamException implements ErrorWriter
     }
 
     public void add(String name, String information) {
-        stuff.put(name, information);
+        String key = name;
+        int i = 0;
+        while (stuff.containsKey(key)) {
+            String value = (String)stuff.get(key);
+            if (information.equals(value))
+                return;
+            key = name + "[" + ++i +"]";
+        }
+        stuff.put(key, information);
+    }
+
+    public void set(String name, String information) {
+        String key = name;
+        int i = 0;
+        stuff.put(key, information); // keep order
+        while (stuff.containsKey(key)) {
+            if (i != 0) {
+                stuff.remove(key);
+            }
+            key = name + "[" + ++i +"]";
+        }
     }
 
     public Iterator keys() {

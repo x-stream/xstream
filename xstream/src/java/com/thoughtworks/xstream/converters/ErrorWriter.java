@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,12 +24,23 @@ import java.util.Iterator;
 public interface ErrorWriter {
 
     /**
-     * Add some information to the error message.
+     * Add some information to the error message. The information will be added even
+     * if the identifier is already in use.
      *
      * @param name        something to identify the type of information (e.g. 'XPath').
      * @param information detail of the message (e.g. '/blah/moo[3]'
      */
     void add(String name, String information);
+
+    /**
+     * Set some information to the error message. If the identifier is already in use, the
+     * new information will replace the old one.
+     *
+     * @param name        something to identify the type of information (e.g. 'XPath').
+     * @param information detail of the message (e.g. '/blah/moo[3]'
+     * @since upcoming
+     */
+    void set(String name, String information);
 
     /**
      * Retrieve information of the error message.
