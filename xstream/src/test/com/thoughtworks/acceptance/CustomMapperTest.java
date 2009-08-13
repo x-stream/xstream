@@ -11,6 +11,10 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.WithList;
@@ -21,10 +25,6 @@ import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 public class CustomMapperTest extends AbstractAcceptanceTest {
 
@@ -190,8 +190,14 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
 
         };
         xstream.alias("wl", WithList.class);
-        WithList wl = (WithList)xstream.fromXML("<wl><things class='UnknownList'><foo>1</foo><cocoo>2</cocoo></things></wl>");
-        assertEquals(new ArrayList(Arrays.asList(1,2)), wl.things);
+        WithList wl = (WithList)xstream.fromXML("" 
+                + "<wl>\n" 
+                + "  <things class='UnknownList'>\n" 
+                + "    <foo>1</foo>\n" 
+                + "    <cocoo>2</cocoo>\n" 
+                + "  </things>\n" 
+                + "</wl>");
+        assertEquals(new ArrayList(Arrays.asList(new Integer[]{new Integer(1), new Integer(2)})), wl.things);
         assertTrue(wl.things instanceof LinkedList);
     }
 }
