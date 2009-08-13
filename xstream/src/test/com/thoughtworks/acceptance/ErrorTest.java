@@ -45,7 +45,7 @@ public class ErrorTest extends AbstractAcceptanceTest {
                 assertEquals("another string",
                         e.get("cause-message"));
             }
-            assertEquals(Thing.class.getName(),
+            assertEquals(Integer.class.getName(),
                     e.get("class"));
             assertEquals("/thing/two",
                     e.get("path"));
@@ -53,6 +53,8 @@ public class ErrorTest extends AbstractAcceptanceTest {
                     e.get("line number"));
             assertEquals("java.lang.Integer",
                     e.get("required-type"));
+            assertEquals(Thing.class.getName(),
+                e.get("class[1]"));
         }
     }
 
