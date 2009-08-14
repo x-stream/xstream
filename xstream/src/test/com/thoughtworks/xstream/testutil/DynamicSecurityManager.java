@@ -83,7 +83,7 @@ public class DynamicSecurityManager extends SecurityManager {
             // Ughhh. Eclipse class path leak :-/
             if (perm instanceof FilePermission && "read".equals(perm.getActions())) {
                 String name = perm.getName();
-                if (name.contains("org.eclipse.osgi") 
+                if (name.indexOf("org.eclipse.osgi") > 0 
                         && name.endsWith("javax.xml.parsers.DocumentBuilderFactory")) {
                     return;
                 }
