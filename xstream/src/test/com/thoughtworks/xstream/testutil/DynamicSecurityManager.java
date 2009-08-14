@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.testutil;
 
+import java.io.FilePermission;
 import java.security.AccessControlContext;
 import java.security.CodeSource;
 import java.security.Permission;
@@ -79,6 +80,14 @@ public class DynamicSecurityManager extends SecurityManager {
 
     public void checkPermission(Permission perm) {
         if (acc != null) {
+            // Ughhh. Eclipse class path leak :-/
+            if (perm instanceof FilePermission && "read".equals(perm.getActions())) {
+                String name = perm.getName();
+                if (name.contains("org.eclipse.osgi") 
+                        && name.endsWith("javax.xml.parsers.DocumentBuilderFactory")) {
+                    return;
+                }
+            }
             try {
                 checkPermission(perm, acc);
             } catch (final SecurityException e) {

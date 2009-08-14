@@ -149,7 +149,6 @@
               <testExcludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/enums/*</exclude>
-                <exclude>**/acceptance/SecurityManagerTest*</exclude>
               </testExcludes>
             </configuration>
             <executions>
@@ -168,7 +167,6 @@
                   <testExcludes>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
-                    <exclude>**/acceptance/SecurityManagerTest*</exclude>
                   </testExcludes>
                 </configuration>
                 <goals>
@@ -233,7 +231,6 @@
               <testExcludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/enums/*</exclude>
-                <exclude>**/acceptance/SecurityManagerTest*</exclude>
               </testExcludes>
             </configuration>
             <executions>
@@ -252,7 +249,6 @@
                   <testExcludes>
                     <exclude>foo</exclude>
                     <exclude>foo</exclude>
-                    <exclude>**/acceptance/SecurityManagerTest*</exclude>
                   </testExcludes>
                 </configuration>
                 <goals>
@@ -317,7 +313,6 @@
                 <exclude>**/enums/*</exclude>
                 <exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
                 <exclude>**/acceptance/Basic15TypesTest*</exclude>
-                <exclude>**/acceptance/SecurityManagerTest*</exclude>
               </testExcludes>
             </configuration>
           </plugin>
