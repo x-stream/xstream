@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,6 +25,7 @@ import org.jdom.input.SAXBuilder;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
  * @author Laurent Bihanic
@@ -32,21 +33,29 @@ import com.thoughtworks.xstream.io.StreamException;
 public class JDomDriver extends AbstractXmlDriver {
 
     public JDomDriver() {
-        super(new XmlFriendlyReplacer());
+        super(new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public JDomDriver(NameCoder nameCoder) {
+        super(nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link JDomDriver#JDomDriver(NameCoder)} instead.
      */
     public JDomDriver(XmlFriendlyReplacer replacer) {
-        super(replacer);
+        this((NameCoder)replacer);
     }
 
     public HierarchicalStreamReader createReader(Reader reader) {
         try {
             SAXBuilder builder = new SAXBuilder();
             Document document = builder.build(reader);
-            return new JDomReader(document, xmlFriendlyReplacer());
+            return new JDomReader(document, getNameCoder());
         } catch (IOException e) {
             throw new StreamException(e);
         } catch (JDOMException e) {
@@ -58,7 +67,7 @@ public class JDomDriver extends AbstractXmlDriver {
         try {
             SAXBuilder builder = new SAXBuilder();
             Document document = builder.build(in);
-            return new JDomReader(document, xmlFriendlyReplacer());
+            return new JDomReader(document, getNameCoder());
         } catch (IOException e) {
             throw new StreamException(e);
         } catch (JDOMException e) {
@@ -67,7 +76,7 @@ public class JDomDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
+        return new PrettyPrintWriter(out, getNameCoder());
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {

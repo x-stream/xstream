@@ -19,6 +19,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
  * XStream reader that pulls directly from the stream using the XmlPullParser API.
@@ -39,7 +40,7 @@ public class XppReader extends AbstractPullReader {
      * @since upcoming
      */
     public XppReader(Reader reader, XmlPullParser parser) {
-        this(reader, new XmlFriendlyReplacer());
+        this(reader, parser, new XmlFriendlyNameCoder());
     }
 
     /**
@@ -47,11 +48,11 @@ public class XppReader extends AbstractPullReader {
      * 
      * @param reader the reader with the input data
      * @param parser the XPP parser to use
-     * @param replacer the replacer for XML friendly tag and attribute names
+     * @param nameCoder the coder for XML friendly tag and attribute names
      * @since upcoming
      */
-    public XppReader(Reader reader, XmlPullParser parser, XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public XppReader(Reader reader, XmlPullParser parser, NameCoder nameCoder) {
+        super(nameCoder);
         this.parser = parser;
         this.reader = reader;
         try {
@@ -135,7 +136,7 @@ public class XppReader extends AbstractPullReader {
     }
 
     public String getAttribute(String name) {
-        return parser.getAttributeValue(null, escapeXmlName(name));
+        return parser.getAttributeValue(null, encodeAttribute(name));
     }
 
     public String getAttribute(int index) {
@@ -147,7 +148,7 @@ public class XppReader extends AbstractPullReader {
     }
 
     public String getAttributeName(int index) {
-        return unescapeXmlName(parser.getAttributeName(index));
+        return decodeAttribute(parser.getAttributeName(index));
     }
 
     public void appendErrors(ErrorWriter errorWriter) {

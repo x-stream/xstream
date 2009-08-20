@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.io.xml;
 
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -30,14 +31,22 @@ public class XppDriver extends AbstractXppDriver {
     private static XmlPullParserFactory factory;
 
     public XppDriver() {
-        super(new XmlFriendlyReplacer());
+        super(new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public XppDriver(NameCoder nameCoder) {
+        super(nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link XppDriver#XppDriver(NameCoder)} instead.
      */
     public XppDriver(XmlFriendlyReplacer replacer) {
-        super(replacer);
+        this((NameCoder)replacer);
     }
 
     /**

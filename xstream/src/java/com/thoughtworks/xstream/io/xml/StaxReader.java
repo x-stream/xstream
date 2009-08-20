@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
@@ -31,17 +32,25 @@ public class StaxReader extends AbstractPullReader {
     private final XMLStreamReader in;
 
     public StaxReader(QNameMap qnameMap, XMLStreamReader in) {
-        this(qnameMap, in, new XmlFriendlyReplacer());
+        this(qnameMap, in, new XmlFriendlyNameCoder());
     }
 
     /**
-     * @since 1.2
+     * @since upcoming
      */
-    public StaxReader(QNameMap qnameMap, XMLStreamReader in, XmlFriendlyReplacer replacer) {
+    public StaxReader(QNameMap qnameMap, XMLStreamReader in, NameCoder replacer) {
         super(replacer);
         this.qnameMap = qnameMap;
         this.in = in;
         moveDown();
+    }
+
+    /**
+     * @since 1.2
+     * @deprecated As of upcoming use {@link StaxReader#StaxReader(QNameMap, XMLStreamReader, NameCoder)} instead.
+     */
+    public StaxReader(QNameMap qnameMap, XMLStreamReader in, XmlFriendlyReplacer replacer) {
+        this(qnameMap, in, (NameCoder)replacer);
     }
     
     protected int pullNextEvent() {
@@ -76,7 +85,7 @@ public class StaxReader extends AbstractPullReader {
     }
 
     public String getAttribute(String name) {
-        return in.getAttributeValue(null, name);
+        return in.getAttributeValue(null, encodeAttribute(name));
     }
 
     public String getAttribute(int index) {
@@ -88,7 +97,7 @@ public class StaxReader extends AbstractPullReader {
     }
 
     public String getAttributeName(int index) {
-        return unescapeXmlName(in.getAttributeLocalName(index));
+        return decodeAttribute(in.getAttributeLocalName(index));
     }
 
     public void appendErrors(ErrorWriter errorWriter) {

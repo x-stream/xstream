@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -42,10 +43,33 @@ public class StaxWriter extends AbstractXmlWriter {
      * @param qnameMap               is the mapper of Java class names to QNames
      * @param out                    the stream to output to
      * @param writeEnclosingDocument a flag to indicate whether or not the start/end document events should be written
+     * @param nameCoder              the xml-friendly replacer to escape Java names
+     * @throws XMLStreamException if the events could not be written to the output
+     * @since upcoming
+     */
+    public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, 
+            boolean writeEnclosingDocument, boolean namespaceRepairingMode,
+            NameCoder nameCoder) throws XMLStreamException {
+        super(nameCoder);
+        this.qnameMap = qnameMap;
+        this.out = out;
+        this.writeEnclosingDocument = writeEnclosingDocument;
+        this.namespaceRepairingMode = namespaceRepairingMode;
+        if (writeEnclosingDocument) {
+            out.writeStartDocument();
+        }
+    }
+
+    /**
+     * Allows a StaxWriter to be created for partial XML output
+     *
+     * @param qnameMap               is the mapper of Java class names to QNames
+     * @param out                    the stream to output to
+     * @param writeEnclosingDocument a flag to indicate whether or not the start/end document events should be written
      * @throws XMLStreamException if the events could not be written to the output
      */
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument, boolean namespaceRepairingMode) throws XMLStreamException {
-        this(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, new XmlFriendlyReplacer());
+        this(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, new XmlFriendlyNameCoder());
     }
 
     /**
@@ -57,18 +81,12 @@ public class StaxWriter extends AbstractXmlWriter {
      * @param replacer              the xml-friendly replacer to escape Java names
      * @throws XMLStreamException if the events could not be written to the output
      * @since 1.2
+     * @deprecated As of upcoming use {@link StaxWriter#StaxWriter(QNameMap, XMLStreamWriter, boolean, boolean, NameCoder)} instead
      */
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, 
             boolean writeEnclosingDocument, boolean namespaceRepairingMode,
             XmlFriendlyReplacer replacer) throws XMLStreamException {
-        super(replacer);
-        this.qnameMap = qnameMap;
-        this.out = out;
-        this.writeEnclosingDocument = writeEnclosingDocument;
-        this.namespaceRepairingMode = namespaceRepairingMode;
-        if (writeEnclosingDocument) {
-            out.writeStartDocument();
-        }
+        this(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, (NameCoder)replacer);
     }
     
     public void flush() {
@@ -94,7 +112,7 @@ public class StaxWriter extends AbstractXmlWriter {
 
     public void addAttribute(String name, String value) {
         try {
-            out.writeAttribute(escapeXmlName(name), value);
+            out.writeAttribute(encodeAttribute(name), value);
         }
         catch (XMLStreamException e) {
             throw new StreamException(e);
@@ -125,7 +143,7 @@ public class StaxWriter extends AbstractXmlWriter {
 
     public void startNode(String name) {
         try {
-            QName qname = qnameMap.getQName(escapeXmlName(name));
+            QName qname = qnameMap.getQName(encodeNode(name));
             String prefix = qname.getPrefix();
             String uri = qname.getNamespaceURI();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008 XStream Committers.
+ * Copyright (c) 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.io.json;
 
+import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxWriter;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
@@ -35,12 +36,27 @@ public class JettisonStaxWriter extends StaxWriter {
 
     private final MappedNamespaceConvention convention;
 
+    /**
+     * @since upcoming
+     */
+    public JettisonStaxWriter(
+        QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument,
+        boolean namespaceRepairingMode, NameCoder nameCoder,
+        MappedNamespaceConvention convention) throws XMLStreamException {
+        super(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, nameCoder);
+        this.convention = convention;
+    }
+
+    /**
+     * @deprecated As of upcoming use
+     *             {@link JettisonStaxWriter#JettisonStaxWriter(QNameMap, XMLStreamWriter, boolean, boolean, NameCoder, MappedNamespaceConvention)}
+     *             instead
+     */
     public JettisonStaxWriter(
         QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument,
         boolean namespaceRepairingMode, XmlFriendlyReplacer replacer,
         MappedNamespaceConvention convention) throws XMLStreamException {
-        super(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, replacer);
-        this.convention = convention;
+        this(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, (NameCoder) replacer, convention);
     }
 
     public JettisonStaxWriter(
@@ -64,7 +80,7 @@ public class JettisonStaxWriter extends StaxWriter {
             if (Collection.class.isAssignableFrom(clazz)
                 || Map.class.isAssignableFrom(clazz)
                 || clazz.isArray()) {
-                QName qname = getQNameMap().getQName(escapeXmlName(name));
+                QName qname = getQNameMap().getQName(encodeNode(name));
                 String prefix = qname.getPrefix();
                 String uri = qname.getNamespaceURI();
                 String key = convention.createKey(prefix, uri, qname.getLocalPart());

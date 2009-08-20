@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -116,19 +117,41 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     private final boolean includeEnclosingDocument;
 
+    /**
+     * @since upcoming
+     */
+    public SaxWriter(NameCoder nameCoder)
+    {
+        this(true, nameCoder);
+    }
+    
+    /**
+     * @since upcoming
+     */
+    public SaxWriter(boolean includeEnclosingDocument, NameCoder nameCoder)
+    {
+        super(nameCoder);
+        this.includeEnclosingDocument = includeEnclosingDocument;
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link SaxWriter#SaxWriter(NameCoder)} instead.
+     */
     public SaxWriter(XmlFriendlyReplacer replacer)
     {
     	this(true, replacer);
     }
     
+    /**
+     * @deprecated As of upcoming use {@link SaxWriter#SaxWriter(boolean, NameCoder)} instead.
+     */
     public SaxWriter(boolean includeEnclosingDocument, XmlFriendlyReplacer replacer)
     {
-    	super(replacer);
-    	this.includeEnclosingDocument = includeEnclosingDocument;
+    	this(includeEnclosingDocument, (NameCoder)replacer);
     }
     
     public SaxWriter(boolean includeEnclosingDocument) {
-        this(includeEnclosingDocument, new XmlFriendlyReplacer());
+        this(includeEnclosingDocument, new XmlFriendlyNameCoder());
     }
 
     public SaxWriter() {

@@ -28,16 +28,16 @@ public class WstxDriver extends StaxDriver {
         super();
     }
 
-    public WstxDriver(QNameMap qnameMap, XmlFriendlyReplacer replacer) {
-        super(qnameMap, replacer);
+    public WstxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+        super(qnameMap, nameCoder);
     }
 
     public WstxDriver(QNameMap qnameMap) {
         super(qnameMap);
     }
 
-    public WstxDriver(XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public WstxDriver(XmlFriendlyNameCoder nameCoder) {
+        super(nameCoder);
     }
 
     protected XMLInputFactory createInputFactory() {

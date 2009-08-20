@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,7 @@ import nu.xom.ValidityException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 public class XomDriver extends AbstractXmlDriver {
 
@@ -36,11 +37,27 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     public XomDriver(Builder builder) {
-        this(builder, new XmlFriendlyReplacer());
+        this(builder, new XmlFriendlyNameCoder());
+    }
+    
+    /**
+     * @since upcoming
+     */
+    public XomDriver(NameCoder nameCoder) {
+        this(new Builder(), nameCoder);    
+    }
+    
+    /**
+     * @since upcoming
+     */
+    public XomDriver(Builder builder, NameCoder nameCoder) {
+        super(nameCoder);    
+        this.builder = builder;
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link #XomDriver(Builder, NameCoder)} instead
      */
     public XomDriver(XmlFriendlyReplacer replacer) {
         this(new Builder(), replacer);        
@@ -48,10 +65,10 @@ public class XomDriver extends AbstractXmlDriver {
     
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link #XomDriver(Builder, NameCoder)} instead
      */
     public XomDriver(Builder builder, XmlFriendlyReplacer replacer) {
-        super(replacer);    
-        this.builder = builder;
+        this((NameCoder)replacer);    
     }
 
     protected Builder getBuilder() {
@@ -61,7 +78,7 @@ public class XomDriver extends AbstractXmlDriver {
     public HierarchicalStreamReader createReader(Reader text) {
         try {
             Document document = builder.build(text);
-            return new XomReader(document, xmlFriendlyReplacer());
+            return new XomReader(document, getNameCoder());
         } catch (ValidityException e) {
             throw new StreamException(e);
         } catch (ParsingException e) {
@@ -74,7 +91,7 @@ public class XomDriver extends AbstractXmlDriver {
     public HierarchicalStreamReader createReader(InputStream in) {
         try {
             Document document = builder.build(in);
-            return new XomReader(document, xmlFriendlyReplacer());
+            return new XomReader(document, getNameCoder());
         } catch (ValidityException e) {
             throw new StreamException(e);
         } catch (ParsingException e) {
@@ -85,10 +102,10 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamWriter createWriter(final Writer out) {
-        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
+        return new PrettyPrintWriter(out, getNameCoder());
     }
 
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
-        return new PrettyPrintWriter(new OutputStreamWriter(out), xmlFriendlyReplacer());
+        return new PrettyPrintWriter(new OutputStreamWriter(out), getNameCoder());
     }
 }

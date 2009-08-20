@@ -28,16 +28,16 @@ public class BEAStaxDriver extends StaxDriver {
         super();
     }
 
-    public BEAStaxDriver(QNameMap qnameMap, XmlFriendlyReplacer replacer) {
-        super(qnameMap, replacer);
+    public BEAStaxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+        super(qnameMap, nameCoder);
     }
 
     public BEAStaxDriver(QNameMap qnameMap) {
         super(qnameMap);
     }
 
-    public BEAStaxDriver(XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public BEAStaxDriver(XmlFriendlyNameCoder nameCoder) {
+        super(nameCoder);
     }
 
     protected XMLInputFactory createInputFactory() {

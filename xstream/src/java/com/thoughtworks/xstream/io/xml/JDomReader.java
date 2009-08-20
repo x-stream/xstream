@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,8 @@
  * Created on 03. September 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
+
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -31,17 +33,33 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     /**
-     * @since 1.2
+     * @since upcoming
      */
-    public JDomReader(Element root, XmlFriendlyReplacer replacer) {
-        super(root, replacer);
+    public JDomReader(Element root, NameCoder nameCoder) {
+        super(root, nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public JDomReader(Document document, NameCoder nameCoder) {
+        super(document.getRootElement(), nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link JDomReader#JDomReader(Element, NameCoder)} instead.
+     */
+    public JDomReader(Element root, XmlFriendlyReplacer replacer) {
+        this(root, (NameCoder)replacer);
+    }
+
+    /**
+     * @since 1.2
+     * @deprecated As of upcoming, use {@link JDomReader#JDomReader(Document, NameCoder)} instead.
      */
     public JDomReader(Document document, XmlFriendlyReplacer replacer) {
-        super(document.getRootElement(), replacer);
+        this(document.getRootElement(), (NameCoder)replacer);
     }
     
     protected void reassignCurrentElement(Object current) {
@@ -69,7 +87,7 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     public String getNodeName() {
-        return unescapeXmlName(currentElement.getName());
+        return decodeNode(currentElement.getName());
     }
 
     public String getValue() {
@@ -77,7 +95,7 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     public String getAttribute(String name) {
-        return currentElement.getAttributeValue(name);
+        return currentElement.getAttributeValue(encodeAttribute(name));
     }
 
     public String getAttribute(int index) {
@@ -89,7 +107,7 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return unescapeXmlName(((Attribute) currentElement.getAttributes().get(index)).getQualifiedName());
+        return decodeAttribute(((Attribute) currentElement.getAttributes().get(index)).getQualifiedName());
     }
 
 }

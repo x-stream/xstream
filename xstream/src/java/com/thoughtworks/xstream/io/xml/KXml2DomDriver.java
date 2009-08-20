@@ -11,6 +11,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.kxml2.io.KXmlParser;
 import org.xmlpull.v1.XmlPullParser;
@@ -29,17 +30,17 @@ public class KXml2DomDriver extends AbstractXppDomDriver {
      * @since upcoming
      */
     public KXml2DomDriver() {
-        super(new XmlFriendlyReplacer());
+        super(new XmlFriendlyNameCoder());
     }
 
     /**
      * Construct a KXml2DomDriver.
      * 
-     * @param replacer the replacer for XML friendly names
+     * @param nameCoder the replacer for XML friendly names
      * @since upcoming
      */
-    public KXml2DomDriver(XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public KXml2DomDriver(NameCoder nameCoder) {
+        super(nameCoder);
     }
 
     /**

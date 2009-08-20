@@ -25,6 +25,7 @@ import javax.xml.stream.XMLStreamWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
  * A driver using the StAX API to create XML reader and writer.
@@ -44,22 +45,38 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     public StaxDriver(QNameMap qnameMap) {
-        this(qnameMap, new XmlFriendlyReplacer());
+        this(qnameMap, new XmlFriendlyNameCoder());
     }
 
     /**
-     * @since 1.2
+     * @since upcoming
      */
-    public StaxDriver(QNameMap qnameMap, XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public StaxDriver(QNameMap qnameMap, NameCoder nameCoder) {
+        super(nameCoder);
         this.qnameMap = qnameMap;
     }
     
     /**
+     * @since upcoming
+     */
+    public StaxDriver(NameCoder nameCoder) {
+        this(new QNameMap(), nameCoder);
+    }
+
+    /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link StaxDriver#StaxDriver(QNameMap, NameCoder)} instead.
+     */
+    public StaxDriver(QNameMap qnameMap, XmlFriendlyReplacer replacer) {
+        this(qnameMap, (NameCoder)replacer);
+    }
+    
+    /**
+     * @since 1.2
+     * @deprecated As of upcoming, use {@link StaxDriver#StaxDriver(NameCoder)} instead.
      */
     public StaxDriver(XmlFriendlyReplacer replacer) {
-        this(new QNameMap(), replacer);
+        this(new QNameMap(), (NameCoder)replacer);
     }
 
     public HierarchicalStreamReader createReader(Reader xml) {
@@ -99,11 +116,11 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     public AbstractPullReader createStaxReader(XMLStreamReader in) {
-        return new StaxReader(qnameMap, in, xmlFriendlyReplacer());
+        return new StaxReader(qnameMap, in, getNameCoder());
     }
 
     public StaxWriter createStaxWriter(XMLStreamWriter out, boolean writeStartEndDocument) throws XMLStreamException {
-        return new StaxWriter(qnameMap, out, writeStartEndDocument, isRepairingNamespace(), xmlFriendlyReplacer());
+        return new StaxWriter(qnameMap, out, writeStartEndDocument, isRepairingNamespace(), getNameCoder());
     }
 
     public StaxWriter createStaxWriter(XMLStreamWriter out) throws XMLStreamException {

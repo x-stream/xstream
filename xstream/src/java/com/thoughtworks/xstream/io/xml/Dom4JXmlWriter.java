@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.dom4j.Element;
 import org.dom4j.io.XMLWriter;
@@ -32,14 +33,14 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
     private boolean children;
 
     public Dom4JXmlWriter(XMLWriter writer) {
-        this(writer, new XmlFriendlyReplacer());
+        this(writer, new XmlFriendlyNameCoder());
     }
 
     /**
-     * @since 1.2
+     * @since upcoming
      */
-    public Dom4JXmlWriter(XMLWriter writer, XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public Dom4JXmlWriter(XMLWriter writer, NameCoder nameCoder) {
+        super(nameCoder);
         this.writer = writer;
         this.elementStack = new FastStack(16);
         this.attributes = new AttributesImpl();
@@ -48,6 +49,14 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
         } catch (SAXException e) {
             throw new StreamException(e);
         }
+    }
+
+    /**
+     * @since 1.2
+     * @deprecated As of upcoming use {@link Dom4JXmlWriter#Dom4JXmlWriter(XMLWriter, NameCoder)} instead.
+     */
+    public Dom4JXmlWriter(XMLWriter writer, XmlFriendlyReplacer replacer) {
+        this(writer, (NameCoder)replacer);
     }
 
     public void startNode(String name) {
@@ -59,7 +68,7 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
             }
             started = false;
         }
-        elementStack.push(escapeXmlName(name));
+        elementStack.push(encodeNode(name));
         children = false;
     }
 
@@ -77,7 +86,7 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
     }
 
     public void addAttribute(String key, String value) {
-        attributes.addAttribute("", "", escapeXmlName(key), "string", value);
+        attributes.addAttribute("", "", encodeAttribute(key), "string", value);
     }
 
     public void endNode() {

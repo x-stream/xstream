@@ -11,23 +11,39 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 
 public class XppDomWriter extends AbstractDocumentWriter {
     public XppDomWriter() {
-        this(null, new XmlFriendlyReplacer());
+        this(null, new XmlFriendlyNameCoder());
     }
 
     /**
      * @since 1.2.1
      */
     public XppDomWriter(final XppDom parent) {
-        this(parent, new XmlFriendlyReplacer());
+        this(parent, new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public XppDomWriter(final NameCoder nameCoder) {
+        this(null, nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public XppDomWriter(final XppDom parent, final NameCoder nameCoder) {
+        super(parent, nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming use {@link XppDomWriter#XppDomWriter(NameCoder)} instead
      */
     public XppDomWriter(final XmlFriendlyReplacer replacer) {
         this(null, replacer);
@@ -35,9 +51,10 @@ public class XppDomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2.1
+     * @deprecated As of upcoming use {@link XppDomWriter#XppDomWriter(XppDom, NameCoder)} instead.
      */
     public XppDomWriter(final XppDom parent, final XmlFriendlyReplacer replacer) {
-        super(parent, replacer);
+        this(parent, (NameCoder)replacer);
     }
 
     public XppDom getConfiguration() {
@@ -45,7 +62,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
     }
 
     protected Object createNode(final String name) {
-        final XppDom newNode = new XppDom(escapeXmlName(name));
+        final XppDom newNode = new XppDom(encodeNode(name));
         final XppDom top = top();
         if (top != null) {
             top().addChild(newNode);
@@ -58,7 +75,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
     }
 
     public void addAttribute(final String key, final String value) {
-        top().setAttribute(escapeXmlName(key), value);
+        top().setAttribute(encodeAttribute(key), value);
     }
 
     private XppDom top() {

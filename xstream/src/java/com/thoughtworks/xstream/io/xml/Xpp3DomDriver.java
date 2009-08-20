@@ -11,6 +11,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.xmlpull.mxp1.MXParser;
 import org.xmlpull.v1.XmlPullParser;
@@ -29,17 +30,17 @@ public class Xpp3DomDriver extends AbstractXppDomDriver {
      * @since upcoming
      */
     public Xpp3DomDriver() {
-        super(new XmlFriendlyReplacer());
+        super(new XmlFriendlyNameCoder());
     }
 
     /**
      * Construct an Xpp3DomDriver.
      * 
-     * @param replacer the replacer for XML friendly names
+     * @param nameCoder the replacer for XML friendly names
      * @since upcoming
      */
-    public Xpp3DomDriver(XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public Xpp3DomDriver(NameCoder nameCoder) {
+        super(nameCoder);
     }
 
     /**

@@ -27,16 +27,16 @@ public class SjsxpDriver extends StaxDriver {
         super();
     }
 
-    public SjsxpDriver(QNameMap qnameMap, XmlFriendlyReplacer replacer) {
-        super(qnameMap, replacer);
+    public SjsxpDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+        super(qnameMap, nameCoder);
     }
 
     public SjsxpDriver(QNameMap qnameMap) {
         super(qnameMap);
     }
 
-    public SjsxpDriver(XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public SjsxpDriver(XmlFriendlyNameCoder nameCoder) {
+        super(nameCoder);
     }
 
     protected XMLInputFactory createInputFactory() {

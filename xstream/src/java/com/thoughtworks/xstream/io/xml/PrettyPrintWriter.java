@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.io.xml;
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import java.io.Writer;
 
@@ -70,9 +71,9 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     private static final char[] CLOSE = "</".toCharArray();
 
     private PrettyPrintWriter(
-        Writer writer, int mode, char[] lineIndenter, XmlFriendlyReplacer replacer,
+        Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder,
         String newLine) {
-        super(replacer);
+        super(nameCoder);
         this.writer = new QuickWriter(writer);
         this.lineIndenter = lineIndenter;
         this.newLine = newLine;
@@ -92,7 +93,16 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+     * @since upcoming
+     */
+    public PrettyPrintWriter(
+        Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder) {
+        this(writer, mode, lineIndenter, nameCoder, "\n");
+    }
+
+    /**
      * @since 1.3
+     * @deprecated As of upcoming use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, int, char[], NameCoder)} instead
      */
     public PrettyPrintWriter(
         Writer writer, int mode, char[] lineIndenter, XmlFriendlyReplacer replacer) {
@@ -110,11 +120,11 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @since 1.3
      */
     public PrettyPrintWriter(Writer writer, int mode, char[] lineIndenter) {
-        this(writer, mode, lineIndenter, new XmlFriendlyReplacer());
+        this(writer, mode, lineIndenter, new XmlFriendlyNameCoder());
     }
 
     public PrettyPrintWriter(Writer writer, char[] lineIndenter) {
-        this(writer, lineIndenter, "\n");
+        this(writer, XML_QUIRKS, lineIndenter);
     }
 
     /**
@@ -136,12 +146,30 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+     * @since upcoming
+     */
+    public PrettyPrintWriter(Writer writer, int mode, NameCoder nameCoder) {
+        this(writer, mode, new char[]{' ', ' '}, nameCoder);
+    }
+
+    /**
      * @since 1.3
+     * @deprecated As of upcoming use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, int, NameCoder)} instead
      */
     public PrettyPrintWriter(Writer writer, int mode, XmlFriendlyReplacer replacer) {
         this(writer, mode, new char[]{' ', ' '}, replacer);
     }
 
+    /**
+     * @since upcoming
+     */
+    public PrettyPrintWriter(Writer writer, NameCoder nameCoder) {
+        this(writer, XML_QUIRKS, new char[]{' ', ' '}, nameCoder, "\n");
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, NameCoder)} instead.
+     */
     public PrettyPrintWriter(Writer writer, XmlFriendlyReplacer replacer) {
         this(writer, new char[]{' ', ' '}, "\n", replacer);
     }
@@ -158,7 +186,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     public void startNode(String name) {
-        String escapedName = escapeXmlName(name);
+        String escapedName = encodeNode(name);
         tagIsEmpty = false;
         finishTag();
         writer.write('<');
@@ -184,7 +212,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     public void addAttribute(String key, String value) {
         writer.write(' ');
-        writer.write(escapeXmlName(key));
+        writer.write(encodeAttribute(key));
         writer.write('=');
         writer.write('\"');
         writeAttributeValue(writer, value);

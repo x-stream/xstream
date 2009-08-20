@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,30 +11,33 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.AbstractWriter;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
  * Abstract base implementation of HierarchicalStreamWriter that provides common functionality
  * to all XML-based writers.
  * 
  * @author Mauro Talevi
+ * @author J&ouml;rg Schaible
  * @since 1.2
+ * @deprecated As of upcoming use {@link AbstractWriter} instead
  */
-public abstract class AbstractXmlWriter implements ExtendedHierarchicalStreamWriter, XmlFriendlyWriter {
-
-    private XmlFriendlyReplacer replacer;
+public abstract class AbstractXmlWriter extends AbstractWriter implements XmlFriendlyWriter {
 
     protected AbstractXmlWriter(){
-        this(new XmlFriendlyReplacer());
+        this(new XmlFriendlyNameCoder());
     }
 
+    /**
+     * @deprecated As of upcoming
+     */
     protected AbstractXmlWriter(XmlFriendlyReplacer replacer) {
-        this.replacer = replacer;
+        this((NameCoder)replacer);
     }
 
-    public void startNode(String name, Class clazz) {
-        startNode(name);
+    protected AbstractXmlWriter(NameCoder nameCoder) {
+        super(nameCoder);
     }
 
     /**
@@ -42,13 +45,10 @@ public abstract class AbstractXmlWriter implements ExtendedHierarchicalStreamWri
      * 
      * @param name the unescaped XML name
      * @return An escaped name with original characters replaced
+     * @deprecated As of upcoming use {@link #encodeNode(String)} or {@link #encodeAttribute(String)} instead
      */
     public String escapeXmlName(String name) {
-        return replacer.escapeName(name);
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
+        return super.encodeNode(name);
     }
 
 }

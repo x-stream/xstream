@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.core.util.FastStack;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,8 @@ import java.util.List;
  * @author J&ouml;rg Schaible
  * @since 1.2.1
  */
-public abstract class AbstractDocumentWriter extends AbstractXmlWriter implements DocumentWriter {
+public abstract class AbstractDocumentWriter extends AbstractXmlWriter implements
+    DocumentWriter {
 
     private final List result = new ArrayList();
     private final FastStack nodeStack = new FastStack(16);
@@ -36,15 +38,30 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
      * 
      * @param container the top level container for the nodes to create (may be
      *            <code>null</code>)
-     * @param replacer the object that creates XML-friendly names
-     * @since 1.2.1
+     * @param nameCoder the object that creates XML-friendly names
+     * @since upcoming
      */
-    public AbstractDocumentWriter(final Object container, final XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public AbstractDocumentWriter(final Object container, final NameCoder nameCoder) {
+        super(nameCoder);
         if (container != null) {
             nodeStack.push(container);
             result.add(container);
         }
+    }
+
+    /**
+     * Constructs an AbstractDocumentWriter.
+     * 
+     * @param container the top level container for the nodes to create (may be
+     *            <code>null</code>)
+     * @param replacer the object that creates XML-friendly names
+     * @since 1.2.1
+     * @deprecated As of upcoming use
+     *             {@link AbstractDocumentWriter#AbstractDocumentWriter(Object, NameCoder)}
+     *             instead.
+     */
+    public AbstractDocumentWriter(final Object container, final XmlFriendlyReplacer replacer) {
+        this(container, (NameCoder)replacer);
     }
 
     public final void startNode(final String name) {

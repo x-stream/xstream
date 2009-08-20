@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,6 +28,7 @@ import org.dom4j.io.XMLWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 public class Dom4JDriver extends AbstractXmlDriver {
 
@@ -40,16 +41,24 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat) {
-        this(documentFactory, outputFormat, new XmlFriendlyReplacer());
+        this(documentFactory, outputFormat, new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, NameCoder nameCoder) {
+        super(nameCoder);
+        this.documentFactory = documentFactory;
+        this.outputFormat = outputFormat;
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link Dom4JDriver#Dom4JDriver(DocumentFactory, OutputFormat, NameCoder)} instead.
      */
     public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, XmlFriendlyReplacer replacer) {
-        super(replacer);
-        this.documentFactory = documentFactory;
-        this.outputFormat = outputFormat;
+        this(documentFactory, outputFormat, (NameCoder)replacer);
     }
 
 
@@ -73,7 +82,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(text);
-            return new Dom4JReader(document, xmlFriendlyReplacer());
+            return new Dom4JReader(document, getNameCoder());
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -83,7 +92,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(in);
-            return new Dom4JReader(document, xmlFriendlyReplacer());
+            return new Dom4JReader(document, getNameCoder());
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -96,7 +105,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
                 writer[0].close();
             }
         };
-        writer[0] = new Dom4JXmlWriter(new XMLWriter(filter,  outputFormat), xmlFriendlyReplacer());
+        writer[0] = new Dom4JXmlWriter(new XMLWriter(filter,  outputFormat), getNameCoder());
         return writer[0];
     }
 

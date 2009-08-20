@@ -23,20 +23,13 @@ package com.thoughtworks.xstream.mapper;
  * 
  * @author Joe Walnes
  * @author Mauro Talevi
- * @deprecated As of upcoming
  */
 public class XStream11XmlFriendlyMapper extends AbstractXmlFriendlyMapper {
 
-    /**
-     * @deprecated As of upcoming
-     */
     public XStream11XmlFriendlyMapper(Mapper wrapped) {
         super(wrapped);
     }
 
-    /**
-     * @deprecated As of upcoming
-     */
     public Class realClass(String elementName) {
         return super.realClass(unescapeClassName(elementName));
     }

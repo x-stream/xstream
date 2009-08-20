@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,8 @@
  * Created on 02. September 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
+
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import nu.xom.Document;
 import nu.xom.Element;
@@ -29,21 +31,37 @@ public class XomReader extends AbstractDocumentReader {
     }
 
     /**
-     * @since 1.2
+     * @since upcoming
      */
-    public XomReader(Element rootElement, XmlFriendlyReplacer replacer) {
-        super(rootElement, replacer);
+    public XomReader(Element rootElement, NameCoder nameCoder) {
+        super(rootElement, nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public XomReader(Document document, NameCoder nameCoder) {
+        super(document.getRootElement(), nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming use {@link XomReader#XomReader(Element, NameCoder)} instead.
+     */
+    public XomReader(Element rootElement, XmlFriendlyReplacer replacer) {
+        this(rootElement, (NameCoder)replacer);
+    }
+
+    /**
+     * @since 1.2
+     * @deprecated As of upcoming use {@link XomReader#XomReader(Element, NameCoder)} instead.
      */
     public XomReader(Document document, XmlFriendlyReplacer replacer) {
-        super(document.getRootElement(), replacer);
+       this(document.getRootElement(), (NameCoder)replacer);
     }
     
     public String getNodeName() {
-        return unescapeXmlName(currentElement.getLocalName());
+        return decodeNode(currentElement.getLocalName());
     }
 
     public String getValue() {
@@ -61,7 +79,7 @@ public class XomReader extends AbstractDocumentReader {
     }
 
     public String getAttribute(String name) {
-        return currentElement.getAttributeValue(name);
+        return currentElement.getAttributeValue(encodeAttribute(name));
     }
 
     public String getAttribute(int index) {
@@ -73,7 +91,7 @@ public class XomReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return unescapeXmlName(currentElement.getAttribute(index).getQualifiedName());
+        return decodeAttribute(currentElement.getAttribute(index).getQualifiedName());
     }
 
     protected int getChildCount() {

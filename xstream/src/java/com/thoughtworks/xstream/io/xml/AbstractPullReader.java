@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.AttributeNameIterator;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
  * Base class that contains common functionality across HierarchicalStreamReader implementations
@@ -44,10 +44,18 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
     }
 
     /**
+     * @since upcoming
+     */
+    protected AbstractPullReader(NameCoder nameCoder) {
+        super(nameCoder);
+    }
+
+    /**
      * @since 1.2
+     * @deprecated As of upcoming use {@link AbstractPullReader#AbstractPullReader(NameCoder)} instead
      */
     protected AbstractPullReader(XmlFriendlyReplacer replacer) {
-        super(replacer);
+        this((NameCoder)replacer);
     }
     
 
@@ -197,10 +205,6 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
 
     public String getNodeName() {
         return unescapeXmlName((String) elementStack.peek());
-    }
-
-    public HierarchicalStreamReader underlyingReader() {
-        return this;
     }
 
 }

@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -28,11 +29,19 @@ public class XppDomDriver extends AbstractXppDomDriver {
     private static XmlPullParserFactory factory;
     
     public XppDomDriver() {
-        super(new XmlFriendlyReplacer());
+        super(new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public XppDomDriver(NameCoder nameCoder) {
+        super(nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link XppDomDriver#XppDomDriver(NameCoder)} instead.
      */
     public XppDomDriver(XmlFriendlyReplacer replacer) {
         super(replacer);

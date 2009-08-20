@@ -11,11 +11,11 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 /**
  * @author Jason van Zyl
- * @version $Id$
  */
 public class XppDomReader extends AbstractDocumentReader {
 
@@ -26,14 +26,22 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     /**
+     * @since upcoming
+     */
+    public XppDomReader(XppDom xppDom, NameCoder nameCoder) {
+        super(xppDom, nameCoder);
+    }
+
+    /**
      * @since 1.2
+     * @deprecated As of upcoming use {@link XppDomReader#XppDomReader(XppDom, NameCoder)} instead.
      */
     public XppDomReader(XppDom xppDom, XmlFriendlyReplacer replacer) {
-        super(xppDom, replacer);
+        this(xppDom, (NameCoder)replacer);
     }
     
     public String getNodeName() {
-        return unescapeXmlName(currentElement.getName());
+        return decodeNode(currentElement.getName());
     }
 
     public String getValue() {
@@ -49,7 +57,7 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     public String getAttribute(String attributeName) {
-        return currentElement.getAttribute(attributeName);
+        return currentElement.getAttribute(encodeAttribute(attributeName));
     }
 
     public String getAttribute(int index) {
@@ -61,7 +69,7 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return unescapeXmlName(currentElement.getAttributeNames()[index]);
+        return decodeAttribute(currentElement.getAttributeNames()[index]);
     }
 
     protected Object getParent() {

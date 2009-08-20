@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -21,7 +22,7 @@ public class Dom4JReader extends AbstractDocumentReader {
     private Element currentElement;
 
     public Dom4JReader(Element rootElement) {
-        this(rootElement, new XmlFriendlyReplacer());
+        this(rootElement, new XmlFriendlyNameCoder());
     }
 
     public Dom4JReader(Document document) {
@@ -29,21 +30,37 @@ public class Dom4JReader extends AbstractDocumentReader {
     }
 
     /**
-     * @since 1.2
+     * @since upcoming
      */
-    public Dom4JReader(Element rootElement, XmlFriendlyReplacer replacer) {
-        super(rootElement, replacer);
+    public Dom4JReader(Element rootElement, NameCoder nameCoder) {
+        super(rootElement, nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public Dom4JReader(Document document, NameCoder nameCoder) {
+        this(document.getRootElement(), nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link Dom4JReader#Dom4JReader(Element, NameCoder)} instead
+     */
+    public Dom4JReader(Element rootElement, XmlFriendlyReplacer replacer) {
+        this(rootElement, (NameCoder)replacer);
+    }
+
+    /**
+     * @since 1.2
+     * @deprecated As of upcoming, use {@link Dom4JReader#Dom4JReader(Document, NameCoder)} instead
      */
     public Dom4JReader(Document document, XmlFriendlyReplacer replacer) {
-        this(document.getRootElement(), replacer);
+        this(document.getRootElement(), (NameCoder)replacer);
     }
     
     public String getNodeName() {
-        return unescapeXmlName(currentElement.getName());
+        return decodeNode(currentElement.getName());
     }
 
     public String getValue() {
@@ -63,7 +80,7 @@ public class Dom4JReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return unescapeXmlName(currentElement.attribute(index).getQualifiedName());
+        return decodeAttribute(currentElement.attribute(index).getQualifiedName());
     }
 
     protected Object getParent() {

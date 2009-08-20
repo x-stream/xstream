@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,12 +10,6 @@
  * Created on 17. April 2006 by Mauro Talevi
  */
 package com.thoughtworks.xstream.io.xml;
-
-import java.lang.ref.WeakReference;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 
 /**
  * Allows replacement of Strings in XML-friendly drivers. The default replacements are:
@@ -30,16 +24,14 @@ import java.util.WeakHashMap;
  * @author J&ouml;rg Schaible
  * @author Tatu Saloranta
  * @since 1.2
+ * @deprecated As of upcoming, use {@link XmlFriendlyNameCoder} instead
  */
-public class XmlFriendlyReplacer {
-
-    private String dollarReplacement;
-    private String underscoreReplacement;
-    private transient Map escapeCache;
-    private transient Map unescapeCache;
+public class XmlFriendlyReplacer extends XmlFriendlyNameCoder {
 
     /**
      * Default constructor.
+     * 
+     * @deprecated As of upcoming, use {@link XmlFriendlyNameCoder} instead
      */
     public XmlFriendlyReplacer() {
         this("_-", "__");
@@ -50,11 +42,10 @@ public class XmlFriendlyReplacer {
      * 
      * @param dollarReplacement the replacement for '$'
      * @param underscoreReplacement the replacement for '_'
+     * @deprecated As of upcoming, use {@link XmlFriendlyNameCoder} instead
      */
     public XmlFriendlyReplacer(String dollarReplacement, String underscoreReplacement) {
-        this.dollarReplacement = dollarReplacement;
-        this.underscoreReplacement = underscoreReplacement;
-        readResolve();
+        super(dollarReplacement, underscoreReplacement);
     }
 
     /**
@@ -62,50 +53,10 @@ public class XmlFriendlyReplacer {
      * 
      * @param name the name of attribute or node
      * @return The String with the escaped name
+     * @deprecated As of upcoming, use {@link XmlFriendlyNameCoder} instead
      */
     public String escapeName(String name) {
-        final WeakReference ref = (WeakReference)escapeCache.get(name);
-        String s = (String)(ref == null ? null : ref.get());
-
-        if (s == null) {
-            final int length = name.length();
-
-            // First, fast (common) case: nothing to escape
-            int i = 0;
-
-            for (; i < length; i++ ) {
-                char c = name.charAt(i);
-                if (c == '$' || c == '_') {
-                    break;
-                }
-            }
-
-            if (i == length) {
-                return name;
-            }
-
-            // Otherwise full processing
-            final StringBuffer result = new StringBuffer(length + 8);
-
-            // We know first N chars are safe
-            if (i > 0) {
-                result.append(name.substring(0, i));
-            }
-
-            for (; i < length; i++ ) {
-                char c = name.charAt(i);
-                if (c == '$') {
-                    result.append(dollarReplacement);
-                } else if (c == '_') {
-                    result.append(underscoreReplacement);
-                } else {
-                    result.append(c);
-                }
-            }
-            s = result.toString();
-            escapeCache.put(name, new WeakReference(s));
-        }
-        return s;
+        return super.encodeNode(name);
     }
 
     /**
@@ -113,63 +64,10 @@ public class XmlFriendlyReplacer {
      * 
      * @param name the name of attribute or node
      * @return The String with unescaped name
+     * @deprecated As of upcoming, use {@link XmlFriendlyNameCoder} instead
      */
     public String unescapeName(String name) {
-        final WeakReference ref = (WeakReference)unescapeCache.get(name);
-        String s = (String)(ref == null ? null : ref.get());
-
-        if (s == null) {
-            final char dollarReplacementFirstChar = dollarReplacement.charAt(0);
-            final char underscoreReplacementFirstChar = underscoreReplacement.charAt(0);
-            final int length = name.length();
-
-            // First, fast (common) case: nothing to unescape
-            int i = 0;
-
-            for (; i < length; i++ ) {
-                char c = name.charAt(i);
-                // We'll do a quick check for potential match
-                if (c == dollarReplacementFirstChar || c == underscoreReplacementFirstChar) {
-                    // and if it might be a match, just quit, will check later on
-                    break;
-                }
-            }
-
-            if (i == length) {
-                return name;
-            }
-
-            // Otherwise full processing
-            final StringBuffer result = new StringBuffer(length + 8);
-
-            // We know first N chars are safe
-            if (i > 0) {
-                result.append(name.substring(0, i));
-            }
-
-            for (; i < length; i++ ) {
-                char c = name.charAt(i);
-                if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) {
-                    i += dollarReplacement.length() - 1;
-                    result.append('$');
-                } else if (c == underscoreReplacementFirstChar
-                    && name.startsWith(underscoreReplacement, i)) {
-                    i += underscoreReplacement.length() - 1;
-                    result.append('_');
-                } else {
-                    result.append(c);
-                }
-            }
-
-            s = result.toString();
-            unescapeCache.put(name, new WeakReference(s));
-        }
-        return s;
+        return super.decodeNode(name);
     }
 
-    private Object readResolve() {
-        escapeCache = Collections.synchronizedMap(new WeakHashMap());
-        unescapeCache = Collections.synchronizedMap(new WeakHashMap());
-        return this;
-    }
 }

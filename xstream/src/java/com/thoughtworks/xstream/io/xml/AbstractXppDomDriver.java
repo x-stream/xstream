@@ -14,6 +14,7 @@ import com.thoughtworks.xstream.core.util.XmlHeaderAwareReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -39,11 +40,11 @@ public abstract class AbstractXppDomDriver extends AbstractXmlDriver {
     /**
      * Construct an AbstractXppDomDriver.
      * 
-     * @param replacer the replacer for XML friendly names
+     * @param nameCoder the replacer for XML friendly names
      * @since upcoming
      */
-    public AbstractXppDomDriver(XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public AbstractXppDomDriver(NameCoder nameCoder) {
+        super(nameCoder);
     }
 
     /**
@@ -53,7 +54,7 @@ public abstract class AbstractXppDomDriver extends AbstractXmlDriver {
         try {
             XmlPullParser parser = createParser();
             parser.setInput(in);
-            return new XppDomReader(XppDom.build(parser), xmlFriendlyReplacer());
+            return new XppDomReader(XppDom.build(parser), getNameCoder());
         } catch (XmlPullParserException e) {
             throw new StreamException(e);
         } catch (IOException e) {
@@ -78,7 +79,7 @@ public abstract class AbstractXppDomDriver extends AbstractXmlDriver {
      * {@inheritDoc}
      */
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
+        return new PrettyPrintWriter(out, getNameCoder());
     }
 
     /**

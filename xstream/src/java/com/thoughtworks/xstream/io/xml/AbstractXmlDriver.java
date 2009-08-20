@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,36 +11,54 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.AbstractDriver;
+import com.thoughtworks.xstream.io.naming.NameCoder;
+
 
 /**
- * Base class for HierarchicalStreamDrivers to use xml-based HierarchicalStreamReader
- * and HierarchicalStreamWriter.
+ * Base class for HierarchicalStreamDrivers to use xml-based HierarchicalStreamReader and
+ * HierarchicalStreamWriter.
  * 
  * @author Mauro Talevi
+ * @author J&ouml;rg Schaible
  * @since 1.2
+ * @deprecated As of upcoming
  */
-public abstract class AbstractXmlDriver implements HierarchicalStreamDriver {
-    
-    private XmlFriendlyReplacer replacer;
-        
+public abstract class AbstractXmlDriver extends AbstractDriver {
+
     /**
      * Creates a AbstractXmlFriendlyDriver with default XmlFriendlyReplacer
+     * 
+     * @deprecated As of upcoming
      */
     public AbstractXmlDriver() {
-        this(new XmlFriendlyReplacer());
+        this(new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * Creates a AbstractXmlFriendlyDriver with default XmlFriendlyReplacer
+     * @since upcoming
+     */
+    public AbstractXmlDriver(NameCoder nameCoder) {
+        super(nameCoder);
     }
 
     /**
      * Creates a AbstractXmlFriendlyDriver with custom XmlFriendlyReplacer
+     * 
      * @param replacer the XmlFriendlyReplacer
+     * @deprecated As of upcoming
      */
     public AbstractXmlDriver(XmlFriendlyReplacer replacer) {
-        this.replacer = replacer;
+        this((NameCoder)replacer);
     }
 
-    protected XmlFriendlyReplacer xmlFriendlyReplacer(){
-        return replacer;
+    /**
+     * @deprecated As of upcoming
+     */
+    protected XmlFriendlyReplacer xmlFriendlyReplacer() {
+        NameCoder nameCoder = getNameCoder(); 
+        return nameCoder instanceof XmlFriendlyReplacer ? (XmlFriendlyReplacer)nameCoder : null;
     }
-    
+
 }

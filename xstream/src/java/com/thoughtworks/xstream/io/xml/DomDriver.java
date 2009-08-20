@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
 public class DomDriver extends AbstractXmlDriver {
@@ -50,16 +51,24 @@ public class DomDriver extends AbstractXmlDriver {
      * encoding attribute of the XML header though.
      */
     public DomDriver(String encoding) {
-        this(encoding, new XmlFriendlyReplacer());
+        this(encoding, new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public DomDriver(String encoding, NameCoder nameCoder) {
+        super(nameCoder);
+        documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        this.encoding = encoding;
     }
 
     /**
      * @since 1.2
+     * @deprecated As of upcoming, use {@link #DomDriver(String, NameCoder)} instead.
      */
     public DomDriver(String encoding, XmlFriendlyReplacer replacer) {
-        super(replacer);
-        documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        this.encoding = encoding;
+        this(encoding, (NameCoder)replacer);
     }
 
     public HierarchicalStreamReader createReader(Reader xml) {
@@ -77,7 +86,7 @@ public class DomDriver extends AbstractXmlDriver {
                 source.setEncoding(encoding);
             }
             Document document = documentBuilder.parse(source);
-            return new DomReader(document, xmlFriendlyReplacer());
+            return new DomReader(document, getNameCoder());
         } catch (FactoryConfigurationError e) {
             throw new StreamException(e);
         } catch (ParserConfigurationException e) {
@@ -90,7 +99,7 @@ public class DomDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
+        return new PrettyPrintWriter(out, getNameCoder());
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
