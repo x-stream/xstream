@@ -79,8 +79,10 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     // TODO: Javadoc
     public static final int EXPLICIT_MODE = 4;
 
-    public enum Type {
-        STRING, NUMBER, BOOLEAN
+    public static class Type {
+        public static Type STRING = new Type();
+        public static Type NUMBER = new Type();
+        public static Type BOOLEAN = new Type();
     }
 
     private static class Status {
@@ -98,7 +100,6 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
             this.name = name;
         }
 
-        @Override
         public String toString() {
             return name;
         }
@@ -152,7 +153,9 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
         this.mode = mode;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public void startNode(String name, Class clazz) {
         if (statusStack.size() == 0) {
             statusStack.push(Status.OBJECT);
