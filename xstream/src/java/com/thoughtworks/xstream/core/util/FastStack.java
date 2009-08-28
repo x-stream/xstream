@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -46,6 +46,16 @@ public final class FastStack {
 
     public Object peek() {
         return pointer == 0 ? null : stack[pointer - 1];
+    }
+
+    public Object replace(Object value) {
+        final Object result = stack[pointer - 1];
+        stack[pointer - 1] = value;
+        return result;
+    }
+
+    public void replaceSilently(Object value) {
+        stack[pointer - 1] = value;
     }
 
     public int size() {
