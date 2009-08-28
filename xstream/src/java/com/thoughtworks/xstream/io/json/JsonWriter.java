@@ -12,15 +12,10 @@
 package com.thoughtworks.xstream.io.json;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.core.util.FastStack;
-import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
 
 import java.io.Writer;
-import java.util.Collection;
-import java.util.Map;
 
 
 /**
@@ -31,67 +26,12 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  * @since 1.3.1
  */
-public class JsonWriter implements ExtendedHierarchicalStreamWriter {
+public class JsonWriter extends AbstractJsonWriter {
 
-    /**
-     * DROP_ROOT_MODE drops the JSON root node.
-     * <p>
-     * The root node is the first level of the JSON object i.e.
-     * 
-     * <pre>
-     * { &quot;person&quot;: {
-     *     &quot;name&quot;: &quot;Joe&quot;
-     * }}
-     * </pre>
-     * 
-     * will be written without root simply as
-     * 
-     * <pre>
-     * {
-     *     &quot;name&quot;: &quot;Joe&quot;
-     * }
-     * </pre>
-     * 
-     * Without a root node, the top level element might now also be an array. However, it is
-     * possible to generate invalid JSON unless {@link #STRICT_MODE} is also set.
-     * </p>
-     * 
-     * @since 1.3.1
-     */
-    public static final int DROP_ROOT_MODE = 1;
-    /**
-     * STRICT_MODE prevents invalid JSON for single value objects when dropping the root.
-     * <p>
-     * The mode is only useful in combination with the {@link #DROP_ROOT_MODE}. An object with a
-     * single value as first node i.e.
-     * 
-     * <pre>
-     * { &quot;name&quot;: &quot;Joe&quot; }
-     * </pre>
-     * 
-     * is simply written as
-     * 
-     * <pre>
-     * &quot;Joe&quot;
-     * </pre>
-     * 
-     * However, this is no longer valid JSON. Therefore you can activate {@link #STRICT_MODE}
-     * and a {@link ConversionException} is thrown instead.
-     * </p>
-     * 
-     * @since 1.3.1
-     */
-    public static final int STRICT_MODE = 2;
-
-    private final QuickWriter writer;
-    private final FastStack elementStack = new FastStack(16);
-    private final char[] lineIndenter;
-
+    protected final QuickWriter writer;
+    protected final Formatter formatter;
     private int depth;
-    private boolean readyForNewLine;
-    private boolean tagIsEmpty;
-    private final String newLine;
-    private int mode;
+    private boolean newLineProposed;
 
     public JsonWriter(Writer writer, char[] lineIndenter, String newLine) {
         this(writer, lineIndenter, newLine, 0);
@@ -117,10 +57,10 @@ public class JsonWriter implements ExtendedHierarchicalStreamWriter {
      * @since 1.3.1
      */
     public JsonWriter(Writer writer, char[] lineIndenter, String newLine, int mode) {
+        super(mode);
         this.writer = new QuickWriter(writer);
-        this.lineIndenter = lineIndenter;
-        this.newLine = newLine;
-        this.mode = mode;
+        this.formatter = new Formatter(lineIndenter, newLine, true);
+        depth = (mode & DROP_ROOT_MODE) == 0 ? -1 : 0;
     }
 
     /**
@@ -142,108 +82,128 @@ public class JsonWriter implements ExtendedHierarchicalStreamWriter {
         this(writer, new char[]{' ', ' '}, "\n", mode);
     }
 
-    public void startNode(String name) {
-        startNode(name, null);
+    public void flush() {
+        writer.flush();
     }
 
-    public void startNode(String name, Class clazz) {
-        Node currNode = (Node)elementStack.peek();
-        if (currNode == null
-            && ((mode & DROP_ROOT_MODE) == 0 || (depth > 0 && !isCollection(clazz)))) {
-            writer.write("{");
+    public void close() {
+        writer.close();
+    }
+
+    public HierarchicalStreamWriter underlyingWriter() {
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void startObject(String name) {
+        if (newLineProposed) {
+            writeNewLine();
         }
-        if (currNode != null && currNode.fieldAlready) {
-            writer.write(",");
-            readyForNewLine = true;
+        writer.write('{');
+        startNewLine();
+        if (name != null) {
+            addLabel(name);
         }
-        tagIsEmpty = false;
-        finishTag();
-        if (currNode == null
-            || currNode.clazz == null
-            || (currNode.clazz != null && !currNode.isCollection)) {
-            if (currNode != null && !currNode.fieldAlready) {
-                writer.write("{");
-                readyForNewLine = true;
-                finishTag();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void addLabel(String name) {
+        if (newLineProposed) {
+            writeNewLine();
+        }
+        writer.write('"');
+        writeText(name);
+        writer.write("\":");
+        if (formatter.insertSpaceAfterLabel()) {
+            writer.write(' ');
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void addValue(String value, Type type) {
+        if (newLineProposed) {
+            writeNewLine();
+        }
+        if (type == Type.STRING) {
+            writer.write('"');
+        }
+        writeText(value);
+        if (type == Type.STRING) {
+            writer.write('"');
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void startArray() {
+        if (newLineProposed) {
+            writeNewLine();
+        }
+        writer.write("[");
+        startNewLine();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void nextElement() {
+        writer.write(",");
+        writeNewLine();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void endArray() {
+        endNewLine();
+        writer.write("]");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void endObject() {
+        endNewLine();
+        writer.write("}");
+    }
+
+    private void startNewLine() {
+        if ( ++depth > 0) {
+            if (newLineProposed) {
+                writeNewLine();
+            } else {
+                newLineProposed = true;
             }
-            if ((mode & DROP_ROOT_MODE) == 0 || depth > 0) {
-                writer.write("\"");
-                writer.write(name);
-                writer.write("\": ");
+        }
+    }
+
+    private void endNewLine() {
+        if (depth-- > 0) {
+            if (newLineProposed) {
+                newLineProposed = false;
+            } else {
+                writeNewLine();
             }
         }
-        if (isCollection(clazz)) {
-            writer.write("[");
-            readyForNewLine = true;
-        }
-        if (currNode != null) {
-            currNode.fieldAlready = true;
-        }
-        elementStack.push(new Node(name, clazz));
-        depth++ ;
-        tagIsEmpty = true;
     }
 
-    public class Node {
-        public final String name;
-        public final Class clazz;
-        public boolean fieldAlready;
-        public boolean isCollection;
-
-        public Node(String name, Class clazz) {
-            this.name = name;
-            this.clazz = clazz;
-            isCollection = isCollection(clazz);
+    private void writeNewLine() {
+        int depth = this.depth;
+        writer.write(formatter.getNewLine());
+        while (depth-- > 0) {
+            writer.write(formatter.getLineIndenter());
         }
+        newLineProposed = false;
     }
 
-    public void setValue(String text) {
-        Node currNode = (Node)elementStack.peek();
-        if (currNode != null && currNode.fieldAlready) {
-            startNode("$", String.class);
-            tagIsEmpty = false;
-            writeText(text, String.class);
-            endNode();
-        } else {
-            if ((mode & (DROP_ROOT_MODE | STRICT_MODE)) == (DROP_ROOT_MODE | STRICT_MODE)
-                && depth == 1) {
-                throw new ConversionException("Single value cannot be JSON root element");
-            }
-            readyForNewLine = false;
-            tagIsEmpty = false;
-            finishTag();
-            writeText(writer, text);
-        }
-    }
-
-    public void addAttribute(String key, String value) {
-        Node currNode = (Node)elementStack.peek();
-        if (currNode == null || !currNode.isCollection) {
-            startNode('@' + key, String.class);
-            tagIsEmpty = false;
-            writeText(value, String.class);
-            endNode();
-        }
-    }
-
-    protected void writeAttributeValue(QuickWriter writer, String text) {
-        writeText(text, null);
-    }
-
-    protected void writeText(QuickWriter writer, String text) {
-        Node foo = (Node)elementStack.peek();
-
-        writeText(text, foo.clazz);
-    }
-
-    private void writeText(String text, Class clazz) {
-        if (needsQuotes(clazz)) {
-            writer.write("\"");
-        }
-        if ((clazz == Character.class || clazz == Character.TYPE) && "".equals(text)) {
-            text = "\0";
-        }
-
+    private void writeText(String text) {
         int length = text.length();
         for (int i = 0; i < length; i++ ) {
             char c = text.charAt(i);
@@ -264,74 +224,54 @@ public class JsonWriter implements ExtendedHierarchicalStreamWriter {
                 }
             }
         }
+    }
 
-        if (needsQuotes(clazz)) {
-            writer.write("\"");
+    /**
+     * Formatter definition for JSON.
+     * 
+     * @author J&ouml;rg Schaible
+     * @since upcoming
+     */
+    public static class Formatter {
+        private char[] lineIndenter;
+        private String newLine;
+        private final boolean spaceAfterLabel;
+
+        /**
+         * Create a new Formatter.
+         * 
+         * @param lineIndenter
+         * @param newLine
+         * @since upcoming
+         */
+        public Formatter(char[] lineIndenter, String newLine, boolean spaceAfterLabel) {
+            this.lineIndenter = lineIndenter;
+            this.newLine = newLine;
+            this.spaceAfterLabel = spaceAfterLabel;
         }
-    }
 
-    private boolean isCollection(Class clazz) {
-        return clazz != null
-            && (Collection.class.isAssignableFrom(clazz)
-                || clazz.isArray()
-                || Map.class.isAssignableFrom(clazz) || Map.Entry.class.isAssignableFrom(clazz));
-    }
-
-    private boolean needsQuotes(Class clazz) {
-        clazz = clazz != null && clazz.isPrimitive() ? clazz : Primitives.unbox(clazz);
-        return clazz == null || clazz == Character.TYPE;
-    }
-
-    public void endNode() {
-        depth-- ;
-        Node node = (Node)elementStack.pop();
-        if (node.clazz != null && node.isCollection) {
-            if (node.fieldAlready) {
-                readyForNewLine = true;
-            }
-            finishTag();
-            writer.write("]");
-        } else if (tagIsEmpty) {
-            readyForNewLine = false;
-            writer.write("{}");
-            finishTag();
-        } else {
-            finishTag();
-            if (node.fieldAlready) {
-                writer.write("}");
-            }
+        /**
+         * Retrieve the lineIndenter.
+         * 
+         * @return the lineIndenter
+         * @since upcoming
+         */
+        public char[] getLineIndenter() {
+            return this.lineIndenter;
         }
-        readyForNewLine = true;
-        if (depth == 0 && ((mode & DROP_ROOT_MODE) == 0 || (depth > 0 && !node.isCollection))) {
-            writer.write("}");
-            writer.flush();
+
+        /**
+         * Retrieve the newLine.
+         * 
+         * @return the newLine
+         * @since upcoming
+         */
+        public String getNewLine() {
+            return this.newLine;
         }
-    }
 
-    private void finishTag() {
-        if (readyForNewLine) {
-            endOfLine();
+        public boolean insertSpaceAfterLabel() {
+            return this.spaceAfterLabel;
         }
-        readyForNewLine = false;
-        tagIsEmpty = false;
-    }
-
-    protected void endOfLine() {
-        writer.write(newLine);
-        for (int i = 0; i < depth; i++ ) {
-            writer.write(lineIndenter);
-        }
-    }
-
-    public void flush() {
-        writer.flush();
-    }
-
-    public void close() {
-        writer.close();
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
     }
 }
