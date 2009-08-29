@@ -105,7 +105,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
         }
     }
 
-    private static final List<Class> NUMBER_TYPES = Arrays.asList(new Class[]{
+    private static final List NUMBER_TYPES = Arrays.asList(new Class[]{
         byte.class, Byte.class, short.class, Short.class, int.class, Integer.class, long.class,
         Long.class, float.class, Float.class, double.class, Double.class});
     private int mode;
