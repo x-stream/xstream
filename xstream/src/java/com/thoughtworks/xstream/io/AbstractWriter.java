@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.io;
 
+import com.thoughtworks.xstream.core.util.Cloneables;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.naming.NoNameCoder;
 
@@ -42,7 +43,7 @@ public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter
      * @since upcoming
      */
     protected AbstractWriter(NameCoder nameCoder) {
-        this.nameCoder = nameCoder;
+        this.nameCoder = (NameCoder)Cloneables.cloneIfPossible(nameCoder);
     }
 
     /**

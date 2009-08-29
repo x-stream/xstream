@@ -3,14 +3,18 @@
  * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
+ * The software in this package is published under the terms of the BSD
+ * style license a copy of which has been included with this distribution in
+ * the LICENSE.txt file.
+ *
  * Created on 15. August 2009 by Joerg Schaible, copied from XmlFriendlyReplacer.
  */
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import java.lang.ref.WeakReference;
-import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -36,7 +40,7 @@ import java.util.WeakHashMap;
  * @author Tatu Saloranta
  * @since upcoming
  */
-public class XmlFriendlyNameCoder implements NameCoder {
+public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
 
     private final String dollarReplacement;
     private final String escapeCharReplacement;
@@ -53,7 +57,8 @@ public class XmlFriendlyNameCoder implements NameCoder {
     }
 
     /**
-     * Construct a new XmlFriendlyNameCoder with custom replacement strings for dollar and the escape character.
+     * Construct a new XmlFriendlyNameCoder with custom replacement strings for dollar and the
+     * escape character.
      * 
      * @param dollarReplacement
      * @param escapeCharReplacement
@@ -191,9 +196,20 @@ public class XmlFriendlyNameCoder implements NameCoder {
         return s;
     }
 
+    public Object clone() {
+        try {
+            XmlFriendlyNameCoder coder = (XmlFriendlyNameCoder)super.clone();
+            coder.readResolve();
+            return coder;
+
+        } catch (CloneNotSupportedException e) {
+            throw new ObjectAccessException("Cannot clone myself", e);
+        }
+    }
+
     private Object readResolve() {
-        escapeCache = Collections.synchronizedMap(new WeakHashMap());
-        unescapeCache = Collections.synchronizedMap(new WeakHashMap());
+        escapeCache = new WeakHashMap();
+        unescapeCache = new WeakHashMap();
         return this;
     }
 }

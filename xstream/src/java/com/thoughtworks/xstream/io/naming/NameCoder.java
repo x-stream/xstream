@@ -2,6 +2,10 @@
  * Copyright (C) 2009 XStream Committers.
  * All rights reserved.
  *
+ * The software in this package is published under the terms of the BSD
+ * style license a copy of which has been included with this distribution in
+ * the LICENSE.txt file.
+ *
  * Created on 14. August 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.naming;
@@ -27,7 +31,7 @@ package com.thoughtworks.xstream.io.naming;
  * XStream can be easily configured to write also object data as attributes.
  * </p>
  * <p>
- * Note that the instance of a NameCoder should be thread-safe.
+ * Note that the instance of a NameCoder should be either thread-safe or implement {@link Cloneable}.
  * </p>
  * 
  * @author J&ouml;rg Schaible
