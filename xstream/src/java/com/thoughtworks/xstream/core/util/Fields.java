@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,9 +13,11 @@ package com.thoughtworks.xstream.core.util;
 
 import java.lang.reflect.Field;
 
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+
 /**
  * Slightly nicer way to find, get and set fields in classes. Wraps standard java.lang.reflect.Field calls but wraps
- * wraps exception in RuntimeExceptions.
+ * wraps exception in XStreamExceptions.
  *
  * @author Joe Walnes
  */
@@ -39,7 +41,7 @@ public class Fields {
         try {
             field.set(instance, value);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Could not write " + field.getType().getName() + "." + field.getName() + " field");
+            throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field");
         }
     }
 
@@ -47,7 +49,7 @@ public class Fields {
         try {
             return field.get(instance);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Could not read " + field.getType().getName() + "." + field.getName() + " field");
+            throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field");
         }
     }
 }
