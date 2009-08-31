@@ -203,7 +203,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
             return coder;
 
         } catch (CloneNotSupportedException e) {
-            throw new ObjectAccessException("Cannot clone myself", e);
+            throw new ObjectAccessException("Cannot clone XmlFriendlyNameCoder", e);
         }
     }
 
