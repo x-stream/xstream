@@ -2,6 +2,10 @@
  * Copyright (C) 2009 XStream Committers.
  * All rights reserved.
  *
+ * The software in this package is published under the terms of the BSD
+ * style license a copy of which has been included with this distribution in
+ * the LICENSE.txt file.
+ *
  * Created on 20. August 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.json;
@@ -76,7 +80,26 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * @since 1.3.1
      */
     public static final int STRICT_MODE = 2;
-    // TODO: Javadoc
+    /**
+     * EXPLICIT_MODE assures that all data has its explicit equivalent in the resulting JSON.
+     * <p>
+     * XStream is normally using attributes in XML that have no real equivalent in JSON. While
+     * attributes for objects are written by default in JSON as a member with a name that is
+     * prepended with an '@' symbol, this is not possible for arrays or members itself.
+     * Additionally arrays will normally have only values, not members. The JSON writer will
+     * insert in EXPLICIT_MODE additional objects where the attributes can be added normally and
+     * the content (resp. the array or the elemen's value) is available in a member with name
+     * '$'. Here an example of an string array with one member, where the array and the string
+     * has an additional attribute 'id':
+     * 
+     * <pre>
+     * {&quot;string-array&quot;:{&quot;@id&quot;:&quot;1&quot;,&quot;$&quot;:[{&quot;string&quot;:{&quot;@id&quot;:&quot;2&quot;,&quot;$&quot;:&quot;Joe&quot;}}]}}
+     * </pre>
+     * However, this format can be used to deserialize into Java again.
+     * </p>
+     * 
+     * @since upcoming
+     */
     public static final int EXPLICIT_MODE = 4;
 
     public static class Type {
