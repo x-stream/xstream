@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -47,6 +47,10 @@ public class QuickWriter {
     public void write(char c) {
         if (pointer + 1 >= buffer.length) {
             flush();
+            if (buffer.length == 0) {
+                raw(c);
+                return;
+            }
         }
         buffer[pointer++] = c;
     }
@@ -85,6 +89,15 @@ public class QuickWriter {
     }
 
     private void raw(char[] c) {
+        try {
+            writer.write(c);
+            writer.flush();
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    private void raw(char c) {
         try {
             writer.write(c);
             writer.flush();
