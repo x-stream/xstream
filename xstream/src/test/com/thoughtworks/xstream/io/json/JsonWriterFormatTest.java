@@ -10,13 +10,12 @@
  */
 package com.thoughtworks.xstream.io.json;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
@@ -84,10 +83,13 @@ public class JsonWriterFormatTest extends TestCase {
             "  ".toCharArray(), "\n".toCharArray(), JsonWriter.Format.SPACE_AFTER_LABEL
                 | JsonWriter.Format.COMPACT_EMPTY_ELEMENT));
 
+        final Properties properties = new Properties();
+        properties.put("one", "1");
         final Map targets = new OrderRetainingMap();
         targets.put("String", "text");
         targets.put("StringArray", new String[]{"text", null});
         targets.put("EmptyStringArray", new String[][]{new String[0]});
+        targets.put("Properties", properties);
 
         final Map results = new HashMap();
         results.put("optimizedMinimalString", "{'string':'text'}");
@@ -124,14 +126,38 @@ public class JsonWriterFormatTest extends TestCase {
         results.put("noRootCompactEmptyStringArray", "[\n  []\n]");
         results.put(
             "explicitMinimalEmptyStringArray", "{'string-array-array':[{'string-array':[]}]}");
+        results.put(
+            "explicitPrettyEmptyStringArray",
+            "{'string-array-array': [\n  {\n    'string-array': [\n      \n    ]\n  }\n]}");
+        results.put(
+            "explicitCompactEmptyStringArray",
+            "{'string-array-array': [\n  {\n    'string-array': []\n  }\n]}");
+        results.put(
+            "optimizedMinimalProperties", "{'properties':[{'@name':'one','@value':'1'}]}");
+        results.put(
+            "optimizedPrettyProperties",
+            "{'properties': [\n  {\n    '@name': 'one',\n    '@value': '1'\n  }\n]}");
+        results.put(
+            "optimizedCompactProperties",
+            "{'properties': [\n  {\n    '@name': 'one',\n    '@value': '1'\n  }\n]}");
+        results.put("noRootMinimalProperties", "[{'@name':'one','@value':'1'}]");
+        results.put(
+            "noRootPrettyProperties", "[\n  {\n    '@name': 'one',\n    '@value': '1'\n  }\n]");
         results
             .put(
-                "explicitPrettyEmptyStringArray",
-                "{'string-array-array': [\n  {\n    'string-array': [\n      \n    ]\n  }\n]}");
+                "noRootCompactProperties",
+                "[\n  {\n    '@name': 'one',\n    '@value': '1'\n  }\n]");
+        results.put(
+            "explicitMinimalProperties",
+            "{'properties':[{'property':{'@name':'one','@value':'1','$':{}}}]}");
         results
             .put(
-                "explicitCompactEmptyStringArray",
-                "{'string-array-array': [\n  {\n    'string-array': []\n  }\n]}");
+                "explicitPrettyProperties",
+                "{'properties': [\n  {\n    'property': {\n      '@name': 'one',\n      '@value': '1',\n      '$': {\n        \n      }\n    }\n  }\n]}");
+        results
+            .put(
+                "explicitCompactProperties",
+                "{'properties': [\n  {\n    'property': {\n      '@name': 'one',\n      '@value': '1',\n      '$': {}\n    }\n  }\n]}");
 
         TestSuite suite = new TestSuite(JsonWriterFormatTest.class.getName());
         for (final Iterator iterMode = modes.entrySet().iterator(); iterMode.hasNext();) {
