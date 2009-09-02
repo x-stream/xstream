@@ -16,12 +16,14 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JsonWriter.Format;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,7 +82,62 @@ public class JsonWriterModeTest extends TestCase {
 
     private static void assertValidJSON(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
-        assertEquals(jsonObject.toString(), new JSONObject(jsonObject.toString()).toString());
+        assertTrue(equals(jsonObject, new JSONObject(jsonObject.toString())));
+    }
+    
+    private static boolean equals(JSONObject object1, JSONObject object2) {
+        String[] names = JSONObject.getNames(object1);
+        try {
+            if (names == null) {
+                return JSONObject.getNames(object2) == null;
+            }
+            if (new HashSet(Arrays.asList(names)).equals(new HashSet(Arrays.asList(JSONObject.getNames(object2))))) {
+                for (int i = 0; i < names.length; i++) {
+                    if (!equals(object1.get(names[i]), object2.get(names[i]))) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        } catch (JSONException e) {
+            // ignore - return false
+        }
+        return false;
+    }
+
+    private static boolean equals(JSONArray array1, JSONArray array2) {
+        int length = array1.length();
+        if (length == array2.length()) {
+            try {
+                while (length-- > 0) {
+                    if (!equals(array1.get(length), array2.get(length))) {
+                        return false;
+                    }
+                }
+                return true;
+            } catch (JSONException e) {
+                // ignore - return false
+            }
+        }
+        return false;
+    }
+
+    private static boolean equals(Object o1, Object o2) {
+        if (o1 == null && o2 == null) {
+            return true;
+        } else if ((o1 == null && o2 != null) || (o1 != null && o2 == null)) {
+            return false;
+        }
+        Class type = o1.getClass();
+        if (type != o2.getClass()) {
+            return false;
+        }
+        if (type == JSONObject.class) {
+            return equals((JSONObject)o1, (JSONObject)o2);
+        } else if (type == JSONArray.class) {
+            return equals((JSONArray)o1, (JSONArray)o2);
+        }
+        return o1.equals(o2);
     }
 
     private String toJSON(int mode, JsonWriter.Format format) {
