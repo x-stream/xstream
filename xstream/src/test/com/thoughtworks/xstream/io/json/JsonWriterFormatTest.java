@@ -118,17 +118,17 @@ public class JsonWriterFormatTest extends TestCase {
                 "explicitCompactStringArray",
                 "{'string-array': [\n  {\n    'string': 'text'\n  },\n  {\n    'null': null\n  }\n]}");
         results.put("optimizedMinimalEmptyStringArray", "{'string-array-array':[[]]}");
-        results.put(
-            "optimizedPrettyEmptyStringArray", "{'string-array-array': [\n  [\n    \n  ]\n]}");
+        results
+            .put("optimizedPrettyEmptyStringArray", "{'string-array-array': [\n  [\n  ]\n]}");
         results.put("optimizedCompactEmptyStringArray", "{'string-array-array': [\n  []\n]}");
         results.put("noRootMinimalEmptyStringArray", "[[]]");
-        results.put("noRootPrettyEmptyStringArray", "[\n  [\n    \n  ]\n]");
+        results.put("noRootPrettyEmptyStringArray", "[\n  [\n  ]\n]");
         results.put("noRootCompactEmptyStringArray", "[\n  []\n]");
         results.put(
             "explicitMinimalEmptyStringArray", "{'string-array-array':[{'string-array':[]}]}");
         results.put(
             "explicitPrettyEmptyStringArray",
-            "{'string-array-array': [\n  {\n    'string-array': [\n      \n    ]\n  }\n]}");
+            "{'string-array-array': [\n  {\n    'string-array': [\n    ]\n  }\n]}");
         results.put(
             "explicitCompactEmptyStringArray",
             "{'string-array-array': [\n  {\n    'string-array': []\n  }\n]}");
@@ -153,7 +153,7 @@ public class JsonWriterFormatTest extends TestCase {
         results
             .put(
                 "explicitPrettyProperties",
-                "{'properties': [\n  {\n    'property': {\n      '@name': 'one',\n      '@value': '1',\n      '$': {\n        \n      }\n    }\n  }\n]}");
+                "{'properties': [\n  {\n    'property': {\n      '@name': 'one',\n      '@value': '1',\n      '$': {\n      }\n    }\n  }\n]}");
         results
             .put(
                 "explicitCompactProperties",

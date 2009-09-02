@@ -11,11 +11,11 @@
  */
 package com.thoughtworks.xstream.io.json;
 
+import java.io.Writer;
+
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-
-import java.io.Writer;
 
 
 /**
@@ -132,7 +132,7 @@ public class JsonWriter extends AbstractJsonWriter {
     public JsonWriter(Writer writer, int mode, Format format) {
         this(writer, mode, format, 1024);
     }
-    
+
     /**
      * Create a JsonWriter.
      * 
@@ -166,7 +166,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * {@inheritDoc}
      */
     protected void startObject(String name) {
-        if (newLineProposed && ((format.mode() & Format.COMPACT_EMPTY_ELEMENT) != 0)) {
+        if (newLineProposed) {
             writeNewLine();
         }
         writer.write('{');
@@ -180,7 +180,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * {@inheritDoc}
      */
     protected void addLabel(String name) {
-        if (newLineProposed && ((format.mode() & Format.COMPACT_EMPTY_ELEMENT) != 0)) {
+        if (newLineProposed) {
             writeNewLine();
         }
         writer.write('"');
@@ -195,7 +195,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * {@inheritDoc}
      */
     protected void addValue(String value, Type type) {
-        if (newLineProposed && ((format.mode() & Format.COMPACT_EMPTY_ELEMENT) != 0)) {
+        if (newLineProposed) {
             writeNewLine();
         }
         if (type == Type.STRING) {
@@ -211,7 +211,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * {@inheritDoc}
      */
     protected void startArray() {
-        if (newLineProposed && ((format.mode() & Format.COMPACT_EMPTY_ELEMENT) != 0)) {
+        if (newLineProposed) {
             writeNewLine();
         }
         writer.write("[");
@@ -244,11 +244,7 @@ public class JsonWriter extends AbstractJsonWriter {
 
     private void startNewLine() {
         if ( ++depth > 0) {
-            if (((format.mode() & Format.COMPACT_EMPTY_ELEMENT) == 0) || newLineProposed) {
-                writeNewLine();
-            } else {
-                newLineProposed = true;
-            }
+            newLineProposed = true;
         }
     }
 
