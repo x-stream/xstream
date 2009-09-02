@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -56,7 +56,7 @@ public abstract class AbstractCollectionConverter implements Converter {
         if (item == null) {
             // todo: this is duplicated in TreeMarshaller.start()
             String name = mapper().serializedClass(null);
-            writer.startNode(name);
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, Mapper.Null.class);
             writer.endNode();
         } else {
             String name = mapper().serializedClass(item.getClass());

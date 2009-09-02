@@ -130,8 +130,22 @@ public class JsonWriter extends AbstractJsonWriter {
      * @since upcoming
      */
     public JsonWriter(Writer writer, int mode, Format format) {
+        this(writer, mode, format, 1024);
+    }
+    
+    /**
+     * Create a JsonWriter.
+     * 
+     * @param writer the {@link Writer} where the JSON is written to
+     * @param mode the JsonWriter mode
+     * @param format the JSON format definition
+     * @param bufferSize the buffer size of the internally used QuickWriter
+     * @see JsonWriter#JsonWriter(Writer, int, Format)
+     * @since upcoming
+     */
+    public JsonWriter(Writer writer, int mode, Format format, int bufferSize) {
         super(mode);
-        this.writer = new QuickWriter(writer);
+        this.writer = new QuickWriter(writer, bufferSize);
         this.format = format;
         depth = (mode & DROP_ROOT_MODE) == 0 ? -1 : 0;
     }

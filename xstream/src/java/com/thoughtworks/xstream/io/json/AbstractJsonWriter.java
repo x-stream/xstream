@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.AbstractWriter;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.naming.NoNameCoder;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 
 /**
@@ -95,6 +96,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * <pre>
      * {&quot;string-array&quot;:{&quot;@id&quot;:&quot;1&quot;,&quot;$&quot;:[{&quot;string&quot;:{&quot;@id&quot;:&quot;2&quot;,&quot;$&quot;:&quot;Joe&quot;}}]}}
      * </pre>
+     * 
      * However, this format can be used to deserialize into Java again.
      * </p>
      * 
@@ -103,6 +105,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     public static final int EXPLICIT_MODE = 4;
 
     public static class Type {
+        public static Type NULL = new Type();
         public static Type STRING = new Type();
         public static Type NUMBER = new Type();
         public static Type BOOLEAN = new Type();
@@ -200,7 +203,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
                     if (status == Status.VALUE) {
                         statusStack.replaceSilently(Status.ARRAY);
                     } else {
-                        statusStack.replaceSilently(Status.ARRAY);
+                        statusStack.push(Status.ARRAY);
                     }
                     startArray();
                     statusStack.push(Status.OBJECT);
@@ -327,7 +330,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
             }
         } else if (status == Status.VALUE || status == Status.VIRTUAL) {
             statusStack.popSilently();
-            Class type = (Class)typeStack.pop();
+            final Class type = (Class)typeStack.pop();
             if (status == Status.VIRTUAL && (mode & EXPLICIT_MODE) != 0) {
                 nextElement();
                 addLabel("$");
@@ -336,8 +339,13 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
                 startArray();
                 endArray();
             } else if ((mode & EXPLICIT_MODE) != 0 || status == Status.VALUE) {
-                startObject(null);
-                endObject();
+                Type jsonType = getType(type);
+                if (jsonType != Type.NULL) {
+                    startObject(null);
+                    endObject();
+                } else {
+                    addValue("null", jsonType);
+                }
             }
             if (status == Status.VIRTUAL) {
                 endObject();
@@ -362,9 +370,10 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     }
 
     private Type getType(Class clazz) {
-        return NUMBER_TYPES.contains(clazz)
-            ? Type.NUMBER
-            : (clazz == Boolean.class || clazz == Boolean.TYPE) ? Type.BOOLEAN : Type.STRING;
+        return (clazz == Mapper.Null.class || clazz == null)
+            ? Type.NULL
+            : (clazz == Boolean.class || clazz == Boolean.TYPE) ? Type.BOOLEAN : NUMBER_TYPES
+                .contains(clazz) ? Type.NUMBER : Type.STRING;
     }
 
     private boolean isArray(Class clazz) {
