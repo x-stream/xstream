@@ -29,11 +29,11 @@ public class Cloneables {
                 Method clone = o.getClass().getMethod("clone", (Class[])null);
                 return clone.invoke(o, (Object[])null);
             } catch (NoSuchMethodException e) {
-                new ObjectAccessException("Cloneable type has no clone method", e);
+                throw new ObjectAccessException("Cloneable type has no clone method", e);
             } catch (IllegalAccessException e) {
-                new ObjectAccessException("Cannot clone Cloneable type", e);
+                throw new ObjectAccessException("Cannot clone Cloneable type", e);
             } catch (InvocationTargetException e) {
-                new ObjectAccessException("Exception cloning Cloneable type", e.getCause());
+                throw new ObjectAccessException("Exception cloning Cloneable type", e.getCause());
             } 
         }
         return null;
