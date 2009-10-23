@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.xstream.core;
 
+import java.util.Iterator;
+
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -22,8 +24,6 @@ import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
-
-import java.util.Iterator;
 
 
 public class TreeUnmarshaller implements UnmarshallingContext {
@@ -72,18 +72,19 @@ public class TreeUnmarshaller implements UnmarshallingContext {
             types.popSilently();
             return result;
         } catch (ConversionException conversionException) {
-            addInformationTo(conversionException, type);
+            addInformationTo(conversionException, type, converter);
             throw conversionException;
         } catch (RuntimeException e) {
             ConversionException conversionException = new ConversionException(e);
-            addInformationTo(conversionException, type);
+            addInformationTo(conversionException, type, converter);
             throw conversionException;
         }
     }
 
-    private void addInformationTo(ErrorWriter errorWriter, Class type) {
+    private void addInformationTo(ErrorWriter errorWriter, Class type, Converter converter) {
         errorWriter.add("class", type.getName());
         errorWriter.add("required-type", getRequiredType().getName());
+        errorWriter.add("converter-type", converter.getClass().getName());
         reader.appendErrors(errorWriter);
     }
 
