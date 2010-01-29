@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.Product;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import junit.framework.TestCase;
@@ -39,7 +40,9 @@ public class JettisonMappedXmlDriverTest extends TestCase {
 
     private final static String SIMPLE = "{'product':{'name':'Banana','id':123,'price':23}}"
         .replace('\'', '"');
-    private final static String HIERARCHY = "{'category':{'name':'fruit','id':111,'products':{'product':[{'name':'Banana','id':123,'price':23.01,'tags':{'string':['yellow','fresh','tasty']}},{'name':'Mango','id':124,'price':34.01}]}}}"
+    private final static String HIERARCHY = (JVM.is15()
+        ? "{'category':{'name':'fruit','id':111,'products':[{'product':[{'name':'Banana','id':123,'price':23.01,'tags':[{'string':['yellow','fresh','tasty']}]},{'name':'Mango','id':124,'price':34.01}]}]}}"
+        : "{'category':{'name':'fruit','id':111,'products':{'product':[{'name':'Banana','id':123,'price':23.01,'tags':{'string':['yellow','fresh','tasty']}},{'name':'Mango','id':124,'price':34.01}]}}}")
         .replace('\'', '"');
 
     private XStream xstream;
@@ -135,15 +138,16 @@ public class JettisonMappedXmlDriverTest extends TestCase {
 
     public void testDoesHandleQuotesAndEscapes() {
         String[] strings = new String[]{
-            "last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
+            "last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",
+            "forward/slash"};
         String expected = (""
-            + "{#string-array#:{#string#:["
+            + (JVM.is15() ? "{#string-array#:[{#string#:[" : "{#string-array#:{#string#:[")
             + "#last\\\"#,"
             + "#\\\"first#,"
             + "#\\\"between\\\"#,"
             + "#around \\\"\\\" it#,"
-            + "#back\\\\slash#"
-            + "]}}").replace('#', '"');
+            + "#back\\\\slash#,"
+            + "#forward\\/slash#" + (JVM.is15() ? "]}]}" : "]}}")).replace('#', '"');
         assertEquals(expected, xstream.toXML(strings));
     }
 
@@ -156,7 +160,9 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         ArrayList list1 = new ArrayList();
         list1.add("one");
         String json = xstream.toXML(list1);
-        assertEquals("{'list':{'string':['one']}}".replace('\'', '"'), json);
+        assertEquals((JVM.is15()
+            ? "{'list':[{'string':'one'}]}"
+            : "{'list':{'string':['one']}}").replace('\'', '"'), json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
@@ -167,7 +173,9 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         list1.add("two");
         list1.add("three");
         String json = xstream.toXML(list1);
-        assertEquals("{'list':{'string':['one','two','three']}}".replace('\'', '"'), json);
+        assertEquals((JVM.is15()
+            ? "{'list':[{'string':['one','two','three']}]}"
+            : "{'list':{'string':['one','two','three']}}").replace('\'', '"'), json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
@@ -177,8 +185,10 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         ArrayList list1 = new ArrayList();
         list1.add(product);
         String json = xstream.toXML(list1);
-        assertEquals("{'list':{'product':[{'name':'Banana','id':123,'price':23}]}}".replace(
-            '\'', '"'), json);
+        assertEquals((JVM.is15()
+            ? "{'list':[{'product':{'name':'Banana','id':123,'price':23}}]}"
+            : "{'list':{'product':[{'name':'Banana','id':123,'price':23}]}}")
+            .replace('\'', '"'), json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
@@ -193,7 +203,9 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         tags.add(new Product("Braeburn", "47.1", 10.00));
         String json = xstream.toXML(list1);
         assertEquals(
-            "{'list':{'product':[{'name':'Banana','id':123,'price':23},{'name':'Apple','id':47,'price':11,'tags':{'product':[{'name':'Braeburn','id':47.1,'price':10}]}},{'name':'Orange','id':100,'price':42}]}}"
+            (JVM.is15()
+                ? "{'list':[{'product':[{'name':'Banana','id':123,'price':23},{'name':'Apple','id':47,'price':11,'tags':[{'product':{'name':'Braeburn','id':47.1,'price':10}}]},{'name':'Orange','id':100,'price':42}]}]}"
+                : "{'list':{'product':[{'name':'Banana','id':123,'price':23},{'name':'Apple','id':47,'price':11,'tags':{'product':[{'name':'Braeburn','id':47.1,'price':10}]}},{'name':'Orange','id':100,'price':42}]}}")
                 .replace('\'', '"'), json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
@@ -226,31 +238,32 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         Topic topic2 = (Topic)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(topic2));
     }
-    
+
     public void testEmbeddedXml() {
         ArrayList list1 = new ArrayList();
         list1.add("<xml attribute=\"foo\"><![CDATA[&quot;\"\'<>]]></xml>");
         String json = xstream.toXML(list1);
-        assertEquals("{\"list\":{\"string\":[\"<xml attribute=\\\"foo\\\"><![CDATA[&quot;\\\"'<>]]><\\/xml>\"]}}", json);
+        assertEquals(
+            (JVM.is15()
+                ? "{\"list\":[{\"string\":\"<xml attribute=\\\"foo\\\"><![CDATA[&quot;\\\"'<>]]><\\/xml>\"}]}"
+                : "{\"list\":{\"string\":[\"<xml attribute=\\\"foo\\\"><![CDATA[&quot;\\\"'<>]]><\\/xml>\"]}}"),
+            json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
 
-    // TODO: See XSTR-460
-    public void todoTestArrayList() throws IOException {
-        ArrayList list1 = new ArrayList();
-        list1.clear();
-        list1.add(new Integer(12));
+    public void testArrayList() {
+        if (JVM.is15()) {
+            ArrayList list1 = new ArrayList();
+            list1.clear();
+            list1.add(new Integer(12));
 
-        list1.add("string");
-        list1.add(new Integer(13));
-        // StringWriter writer = new StringWriter();
-        // xstream.marshal(list1, new JsonHierarchicalStreamWriter(writer));
-        // writer.close();
-        // String json = writer.toString();
-        String json = xstream.toXML(list1);
+            list1.add("string");
+            list1.add(new Integer(13));
+            String json = xstream.toXML(list1);
 
-        ArrayList list2 = (ArrayList)xstream.fromXML(json);
-        assertEquals(json, xstream.toXML(list2));
+            ArrayList list2 = (ArrayList)xstream.fromXML(json);
+            assertEquals(json, xstream.toXML(list2));
+        }
     }
 }
