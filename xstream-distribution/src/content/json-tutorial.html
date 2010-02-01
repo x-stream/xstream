@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2007, 2008 XStream committers.
+ Copyright (C) 2007, 2008, 2010 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -27,10 +27,11 @@ plain XML into JSON, you might get better JSON strings with the JsonHierarchical
 often about the type of the written data and can act properly.</p>
 
 <p class="highlight">One word of warning. JSON is made for an easy data transfer between systems and languages.  It's 
-syntax offers much less possibilities to express certain data structures.  It supports name/value pairs of primitive data types, 
-arrays and lists and allows to nest them - but that's it! No references, no possibility for meta data (attributes), etc.  
-Therefore do not expect wonders.  XStream (and Jettison) try their best, but the procedure to convert any kind of object
-into JSON is a lossy transformation and especially deserialization will not be possible for any construct. See also
+syntax offers much less possibilities to express certain data structures.  It supports name/value pairs of primitive
+data types, arrays and lists and allows to nest them - but that's it! No references, no possibility for meta data
+(attributes), no properties with same names (as generated for implicit collections), etc. Therefore do not expect
+wonders.  XStream (and Jettison) try their best, but the procedure to convert any kind of object into JSON is a lossy
+transformation and especially deserialization will not be possible for any construct. See also
 <a href="faq.html#JSON_limitations">FAQ</a></p>.
 
 <p>Since JSON has no possibility to express references, you should always set the NO_REFERENCES mode writing JSON.</p>
