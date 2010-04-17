@@ -141,7 +141,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         } catch (NoSuchFieldException e) {
             // OK, ignore
         } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Access to serialverionUID of "
+            throw new ObjectAccessException("Access to serialVersionUID of "
                 + type.getName()
                 + " not allowed");
         }
