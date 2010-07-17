@@ -149,7 +149,7 @@ public class BeanProvider {
         return null;
     }
 
-    private PropertyDescriptor[] getSerializableProperties(Object object) {
+    protected PropertyDescriptor[] getSerializableProperties(Object object) {
         Map nameMap = getNameMap(object.getClass());
         List result = new ArrayList(nameMap.size());
         Set names = nameMap.keySet();
@@ -176,7 +176,7 @@ public class BeanProvider {
         return property.getWriteMethod() != null;
     }
 
-    private PropertyDescriptor getProperty(String name, Class type) {
+    protected PropertyDescriptor getProperty(String name, Class type) {
         return (PropertyDescriptor)getNameMap(type).get(name);
     }
 
