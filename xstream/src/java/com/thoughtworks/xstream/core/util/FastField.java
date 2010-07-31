@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,17 +36,21 @@ public final class FastField {
         }
         if (obj.getClass() == FastField.class) {
             final FastField field = (FastField)obj;
+            if ((declaringClass == null && field.declaringClass != null)
+                || (declaringClass != null && field.declaringClass == null)) {
+                return false;
+            }
             return name.equals(field.getName())
-                && declaringClass.equals(field.getDeclaringClass());
+                && (declaringClass == null || declaringClass.equals(field.getDeclaringClass()));
         }
         return false;
     }
 
     public int hashCode() {
-        return name.hashCode() ^ declaringClass.hashCode();
+        return name.hashCode() ^ (declaringClass == null ? 0 : declaringClass.hashCode());
     }
 
     public String toString() {
-        return declaringClass.getName() + "[" + name + "]";
+        return (declaringClass == null ? "" : declaringClass.getName() + ".") + name;
     }
 }
