@@ -121,7 +121,7 @@
         <executions>
           <execution>
             <id>unpack-core</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>unpack</goal>
             </goals>
@@ -141,7 +141,7 @@
           </execution>
           <execution>
             <id>unpack-benchmark</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>unpack</goal>
             </goals>
@@ -173,7 +173,7 @@
         </configuration>
         <executions>
           <execution>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>run</goal>
             </goals>
@@ -185,7 +185,7 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>run</goal>
             </goals>
@@ -216,7 +216,7 @@
         <executions>
           <execution>
             <id>bin</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
