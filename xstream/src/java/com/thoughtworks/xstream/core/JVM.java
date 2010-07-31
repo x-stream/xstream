@@ -67,6 +67,10 @@ public class JVM {
         return vendor.indexOf("Sun") != -1;
     }
 
+    private static boolean isOracle() {
+        return vendor.indexOf("Oracle") != -1;
+    }
+
     private static boolean isApple() {
         return vendor.indexOf("Apple") != -1;
     }
@@ -187,6 +191,7 @@ public class JVM {
 
     private boolean canUseSun14ReflectionProvider() {
         return (isSun()
+            || isOracle()
             || isApple()
             || isHPUX()
             || isIBM()
