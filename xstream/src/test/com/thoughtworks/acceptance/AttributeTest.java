@@ -56,6 +56,10 @@ public class AttributeTest extends AbstractAcceptanceTest {
     public static class Three {
         public Date date;
     }
+    
+    public static class Four extends One {
+        public ID id;
+    }
 
     public static class ID {
         public ID(String value) {
@@ -128,6 +132,25 @@ public class AttributeTest extends AbstractAcceptanceTest {
                 "  <two/>\n" +
                 "</one>";
         assertBothWays(one, expected);
+    }
+
+    // TODO: Currently not possible, see comment in AbstractReflectionProvider.doUnmarshal 
+    public void todoTestHidingMemberCanBeWrittenIfAliasDiffers() {
+        Four four = new Four();
+        four.two = new Two();
+        four.id  = new ID("4");
+        four.setID(new ID("1"));
+
+        xstream.alias("four", Four.class);
+        xstream.aliasField("id4", Four.class, "id");
+        xstream.useAttributeFor(ID.class);
+        xstream.registerConverter(new MyIDConverter());
+
+        String expected =
+                "<four id=\"1\" id4=\"4\">\n" +
+                "  <two/>\n" +
+                "</four>";
+        assertBothWays(four, expected);
     }
 
     public void testAllowsAttributeWithKnownConverterAndFieldName() throws Exception {
