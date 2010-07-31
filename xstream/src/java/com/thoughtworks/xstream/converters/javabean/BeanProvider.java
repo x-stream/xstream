@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -200,7 +200,7 @@ public class BeanProvider {
         return nameMap;
     }
 
-    interface Visitor {
+    public interface Visitor {
         boolean shouldVisit(String name, Class definedIn);
         void visit(String name, Class type, Class definedIn, Object value);
     }
