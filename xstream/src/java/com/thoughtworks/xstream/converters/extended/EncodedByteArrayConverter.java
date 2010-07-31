@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.basic.ByteConverter;
 import com.thoughtworks.xstream.core.util.Base64Encoder;
@@ -27,8 +28,9 @@ import java.util.List;
  * Converts a byte array to a single Base64 encoding string.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
-public class EncodedByteArrayConverter implements Converter {
+public class EncodedByteArrayConverter implements Converter, SingleValueConverter {
 
     private static final Base64Encoder base64 = new Base64Encoder();
     private static final ByteConverter byteConverter = new ByteConverter();
@@ -38,15 +40,15 @@ public class EncodedByteArrayConverter implements Converter {
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        writer.setValue(base64.encode((byte[]) source));
+        writer.setValue(toString(source));
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         String data = reader.getValue(); // needs to be called before hasMoreChildren.
         if (!reader.hasMoreChildren()) {
-            return base64.decode(data);
+            return fromString(data);
         } else {
-            // backwards compatability ... try to unmarshal byte arrays that haven't been encoded
+            // backwards compatibility ... try to unmarshal byte arrays that haven't been encoded
             return unmarshalIndividualByteElements(reader, context);
         }
     }
@@ -56,7 +58,6 @@ public class EncodedByteArrayConverter implements Converter {
         boolean firstIteration = true;
         while (firstIteration || reader.hasMoreChildren()) { // hangover from previous hasMoreChildren
             reader.moveDown();
-            //bytes.add(byteConverter.unmarshal(reader, context));
             bytes.add(byteConverter.fromString(reader.getValue()));
             reader.moveUp();
             firstIteration = false;
@@ -72,4 +73,11 @@ public class EncodedByteArrayConverter implements Converter {
         return result;
     }
 
+    public String toString(Object obj) {
+        return base64.encode((byte[]) obj);
+    }
+
+    public Object fromString(String str) {
+        return base64.decode(str);
+    }
 }

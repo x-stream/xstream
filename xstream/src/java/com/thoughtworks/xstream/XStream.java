@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -652,7 +652,7 @@ public class XStream {
         registerConverter(new TreeMapConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new TreeSetConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
-        registerConverter(new EncodedByteArrayConverter(), PRIORITY_NORMAL);
+        registerConverter((Converter)new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
         if (jvm.supportsSQL()) {
