@@ -89,7 +89,7 @@ public class SecurityManagerTest extends TestCase {
         }
     }
 
-    public void testSerializeWithXpp3DriverAndSun14ReflectionProviderAndActiveSecurityManager() {
+    public void testSerializeWithXppDriverAndSun14ReflectionProviderAndActiveSecurityManager() {
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.reflect"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
@@ -112,7 +112,7 @@ public class SecurityManagerTest extends TestCase {
         assertBothWays();
     }
 
-    public void testSerializeWithXpp3DriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+    public void testSerializeWithXppDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
@@ -131,15 +131,18 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
-        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.reflect"));
-        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
+        sm.addPermission(source, new PropertyPermission("com.sun.org.apache.xerces.internal.xni.parser.XMLParserConfiguration", "read"));
+        sm.addPermission(source, new PropertyPermission("elementAttributeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("entityExpansionLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.parsers.DocumentBuilderFactory", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
         sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
         sm.addPermission(source, new NetPermission("specifyStreamHandler"));
@@ -147,8 +150,7 @@ public class SecurityManagerTest extends TestCase {
         sm.setReadOnly();
         System.setSecurityManager(sm);
 
-        // uses implicit PureJavaReflectionProvider, since Sun14ReflectionProvider cannot be loaded
-        xstream = new XStream(new DomDriver());
+        xstream = new XStream(new PureJavaReflectionProvider(), new DomDriver());
 
         assertBothWays();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -84,7 +84,8 @@ public class DynamicSecurityManager extends SecurityManager {
             if (perm instanceof FilePermission && "read".equals(perm.getActions())) {
                 String name = perm.getName();
                 if (name.indexOf("org.eclipse.osgi") > 0 
-                        && name.endsWith("javax.xml.parsers.DocumentBuilderFactory")) {
+                        && (name.endsWith("javax.xml.parsers.DocumentBuilderFactory")
+                                || name.endsWith("javax.xml.datatype.DatatypeFactory"))) {
                     return;
                 }
             }
