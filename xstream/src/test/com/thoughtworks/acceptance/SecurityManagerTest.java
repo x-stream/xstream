@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,6 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
 
@@ -132,8 +131,11 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.reflect"));
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.parsers.DocumentBuilderFactory", "read"));
