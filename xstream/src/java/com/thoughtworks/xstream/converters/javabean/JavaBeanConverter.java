@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,6 +29,8 @@ public class JavaBeanConverter implements Converter {
     /*
      * TODO:
      *  - support indexed properties
+     *  - support attributes (XSTR-620)
+     *  - support local converters (XSTR-601)
      */
     private Mapper mapper;
     private BeanProvider beanProvider;
@@ -98,16 +100,17 @@ public class JavaBeanConverter implements Converter {
 
             String propertyName = mapper.realMember(result.getClass(), reader.getNodeName());
 
-            boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName, result.getClass());
-
-            if (propertyExistsInClass) {
-                Class type = determineType(reader, result, propertyName);
-                Object value = context.convertAnother(result, type);
-                beanProvider.writeProperty(result, propertyName, value);
-            } else if (mapper.shouldSerializeMember(result.getClass(), propertyName)) {
-                throw new ConversionException("Property '" + propertyName + "' not defined in class " + result.getClass().getName());
+            if (mapper.shouldSerializeMember(result.getClass(), propertyName)) {
+                boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName, result.getClass());
+    
+                if (propertyExistsInClass) {
+                    Class type = determineType(reader, result, propertyName);
+                    Object value = context.convertAnother(result, type);
+                    beanProvider.writeProperty(result, propertyName, value);
+                } else {
+                    throw new ConversionException("Property '" + propertyName + "' not defined in class " + result.getClass().getName());
+                }
             }
-
             reader.moveUp();
         }
 
