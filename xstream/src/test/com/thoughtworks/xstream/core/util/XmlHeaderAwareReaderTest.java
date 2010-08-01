@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -61,5 +61,17 @@ public class XmlHeaderAwareReaderTest extends TestCase {
         InputStream in = new ByteArrayInputStream("<?xml version='1.\\1' ?>".getBytes("us-ascii"));
         XmlHeaderAwareReader reader = new XmlHeaderAwareReader(new PushbackInputStream(in, 1));
         assertEquals(1.1, reader.getVersion(), 0.001);
+    }
+
+    public void testSkipsUtf8BOM() throws IOException {
+        byte[] bytes = "<?xml encoding=\"utf-8\" ?>".getBytes("us-ascii");
+        byte[] inBytes = new byte[bytes.length+3];
+        inBytes[0] = (byte)0xEF;
+        inBytes[1] = (byte)0xBB;
+        inBytes[2] = (byte)0xBF;
+        System.arraycopy(bytes, 0, inBytes, 3, bytes.length);
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        XmlHeaderAwareReader reader = new XmlHeaderAwareReader(in);
+        assertEquals(new InputStreamReader(in, "utf-8").getEncoding(), reader.getEncoding());
     }
 }

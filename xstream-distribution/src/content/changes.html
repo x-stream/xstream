@@ -48,13 +48,14 @@
     	<li>The XppReader no longer uses a BufferedReader. This is added now by the XppDriver implementations creating the HierarchicalStreamReader
     	to allow overriding the creation method.</li>
     	<li>JIRA:XSTR-490: Provide path in Converter for contexts that track the path.</li>
-    	<li>JIRA:XSTR-592+JIRA:XSTR-579: OmitField respected at deserialization even for existing fields.</li>
+    	<li>JIRA:XSTR-592+JIRA:XSTR-579: OmitField respected at deserialization time even for existing fields.</li>
     </ul>
 
     <h2>Minor changes</h2>
 
     <ul>
     	<li>JIRA:XSTR-618: Add Oracle as vendor used for recent JRockit versions and former Sun JDK.</li>
+    	<li>JIRA:XSTR-577: Skip UTF-8 BOM in XmlHeaderAwareReader.</li>
     	<li>JIRA:XSTR-543: Better deserialization support of the defined-in system attribute in combination with field aliases.</li>
     	<li>JIRA:XSTR-551: Deprecated XStream.InitializationException still thrown instead of InitializationException.</li>
     	<li>JIRA:XSTR-540: Support Jettison-based configuration of JettisonMappedXmlDriver (by Doug Daniels).</li>

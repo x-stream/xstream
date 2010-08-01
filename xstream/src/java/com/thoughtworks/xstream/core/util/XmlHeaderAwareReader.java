@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -40,10 +40,11 @@ public final class XmlHeaderAwareReader extends Reader {
 
     private static final String XML_TOKEN = "?xml";
 
-    private static final int STATE_START = 0;
-    private static final int STATE_AWAIT_XML_HEADER = 1;
-    private static final int STATE_ATTR_NAME = 2;
-    private static final int STATE_ATTR_VALUE = 3;
+    private static final int STATE_BOM = 0;
+    private static final int STATE_START = 1;
+    private static final int STATE_AWAIT_XML_HEADER = 2;
+    private static final int STATE_ATTR_NAME = 3;
+    private static final int STATE_ATTR_VALUE = 4;
 
     /**
      * Constructs an XmlHeaderAwareReader.
@@ -67,7 +68,7 @@ public final class XmlHeaderAwareReader extends Reader {
         header.put(KEY_ENCODING, "utf-8");
         header.put(KEY_VERSION, "1.0");
 
-        int state = STATE_START;
+        int state = STATE_BOM;
         final ByteArrayOutputStream out = new ByteArrayOutputStream(64);
         int i = 0;
         char ch = 0;
@@ -79,6 +80,22 @@ public final class XmlHeaderAwareReader extends Reader {
             out.write(i);
             ch = (char)i;
             switch (state) {
+            case STATE_BOM:
+                if ((ch == 0xEF && out.size() == 1)
+                        || (ch == 0xBB && out.size() == 2)
+                        || (ch == 0xBF && out.size() == 3)) {
+                    if (ch == 0xBF) {
+                        out.reset();
+                        state = STATE_START;
+                    }
+                    break;
+                } else if (out.size() > 1) {
+                    i = -1;
+                    break;
+                } else {
+                    state = STATE_START;
+                }
+                // fall through
             case STATE_START:
                 if (!Character.isWhitespace(ch)) {
                     if (ch == '<') {
