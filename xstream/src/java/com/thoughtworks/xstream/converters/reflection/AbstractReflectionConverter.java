@@ -214,10 +214,13 @@ public abstract class AbstractReflectionConverter implements Converter {
             boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
             if (fieldExistsInClass) {
                 Field field = reflectionProvider.getField(result.getClass(), attrName);
-                if (Modifier.isTransient(field.getModifiers()) && ! shouldUnmarshalTransientFields()) {
+                if (Modifier.isTransient(field.getModifiers()) && !shouldUnmarshalTransientFields()) {
                     continue;
                 }
                 Class classDefiningField = field.getDeclaringClass();
+                if (!mapper.shouldSerializeMember(classDefiningField, attrName)) {
+                    continue;
+                }
                 SingleValueConverter converter = mapper.getConverterFromAttribute(classDefiningField, attrName, field.getType());
                 Class type = field.getType();
                 if (converter != null) {
@@ -255,7 +258,8 @@ public abstract class AbstractReflectionConverter implements Converter {
             final Object value;
             if (fieldExistsInClass) {
                 Field field = reflectionProvider.getField(classDefiningField != null ? classDefiningField : result.getClass(), fieldName);
-                if (Modifier.isTransient(field.getModifiers()) && !shouldUnmarshalTransientFields()) {
+                if ((Modifier.isTransient(field.getModifiers()) && !shouldUnmarshalTransientFields()) 
+                        || !mapper.shouldSerializeMember(classDefiningField != null ? classDefiningField : result.getClass(), fieldName)) {
                     reader.moveUp();
                     continue;
                 }
