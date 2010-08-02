@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,22 +22,29 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  */
 public class EnumSingleValueConverter extends AbstractSingleValueConverter {
 
-    private final Class enumType;
+    private final Class<? extends Enum> enumType;
 
-    public EnumSingleValueConverter(Class type) {
+    public EnumSingleValueConverter(Class<? extends Enum> type) {
         if (!Enum.class.isAssignableFrom(type) && type != Enum.class) {
             throw new IllegalArgumentException("Converter can only handle defined enums");
         }
         enumType = type;
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
     public boolean canConvert(Class type) {
         return enumType.isAssignableFrom(type);
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+    public String toString(Object obj) {
+        return Enum.class.cast(obj).name();
+    }
+
+    @Override
     public Object fromString(String str) {
-        return Enum.valueOf(enumType, str);
+        @SuppressWarnings("unchecked")
+        Enum result = Enum.valueOf(enumType, str);
+        return result;
     }
 }
