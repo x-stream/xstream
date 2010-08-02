@@ -29,6 +29,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -69,6 +70,7 @@ import com.thoughtworks.xstream.converters.basic.NullConverter;
 import com.thoughtworks.xstream.converters.basic.ShortConverter;
 import com.thoughtworks.xstream.converters.basic.StringBufferConverter;
 import com.thoughtworks.xstream.converters.basic.StringConverter;
+import com.thoughtworks.xstream.converters.basic.URIConverter;
 import com.thoughtworks.xstream.converters.basic.URLConverter;
 import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.collections.BitSetConverter;
@@ -557,6 +559,7 @@ public class XStream {
         alias("constructor", Constructor.class);
         alias("field", Field.class);
         alias("date", Date.class);
+        alias("uri", URI.class);
         alias("url", URL.class);
         alias("bit-set", BitSet.class);
 
@@ -641,6 +644,7 @@ public class XStream {
         registerConverter(new StringBufferConverter(), PRIORITY_NORMAL);
         registerConverter(new DateConverter(), PRIORITY_NORMAL);
         registerConverter(new BitSetConverter(), PRIORITY_NORMAL);
+        registerConverter(new URIConverter(), PRIORITY_NORMAL);
         registerConverter(new URLConverter(), PRIORITY_NORMAL);
         registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
         registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
@@ -772,6 +776,7 @@ public class XStream {
         addImmutableType(BigDecimal.class);
         addImmutableType(BigInteger.class);
         addImmutableType(String.class);
+        addImmutableType(URI.class);
         addImmutableType(URL.class);
         addImmutableType(File.class);
         addImmutableType(Class.class);
