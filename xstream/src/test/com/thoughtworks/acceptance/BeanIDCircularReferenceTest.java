@@ -72,30 +72,31 @@ public class BeanIDCircularReferenceTest extends AbstractCircularReferenceTest {
         assertEquals(expected, xstream.toXML(bob));
     }
 
-    public void testCanAvoidMemberIfUsedAsId() throws Exception
-	{
-		xstream.omitField(Person.class, "firstname");
+    public void testCanAvoidMemberIfUsedAsId() throws Exception {
+        xstream.omitField(Person.class, "firstname");
 
         Person bob = new Person("bob");
         Person jane = new Person("jane");
         bob.likes = jane;
         jane.likes = bob;
 
-        String expected = "" +
-                "<person id=\"bob\">\n" +
-                "  <likes id=\"jane\">\n" +
-                "    <likes reference=\"bob\"/>\n" +
-                "  </likes>\n" +
-                "</person>";
+        String expected = ""
+            + "<person id=\"bob\">\n"
+            + "  <likes id=\"jane\">\n"
+            + "    <likes reference=\"bob\"/>\n"
+            + "  </likes>\n"
+            + "</person>";
 
         assertEquals(expected, xstream.toXML(bob));
-        
-        setUp(); // new XStream instance, since marshal and unmarshal is asymmetric
+
+        // new XStream instance, since marshal and unmarshal is asymmetric
+        xstream = createXStream();
+        setUp();
         xstream.useAttributeFor("firstname", String.class);
         xstream.aliasField("id", Person.class, "firstname");
-        
+
         Person bobAgain = (Person)xstream.fromXML(expected);
         assertEquals("bob", bobAgain.firstname);
         assertEquals("jane", bobAgain.likes.firstname);
-	}
+    }
 }
