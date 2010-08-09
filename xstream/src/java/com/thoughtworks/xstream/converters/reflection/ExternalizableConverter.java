@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,8 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.NotActiveException;
 import java.io.ObjectInputValidation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -88,8 +90,13 @@ public class ExternalizableConverter implements Converter {
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final Class type = context.getRequiredType();
+        final Constructor defaultConstructor;
         try {
-            final Externalizable externalizable = (Externalizable) type.newInstance();
+            defaultConstructor = type.getDeclaredConstructor((Class[]) null);
+            if (!defaultConstructor.isAccessible()) {
+                defaultConstructor.setAccessible(true);
+            }
+            final Externalizable externalizable = (Externalizable) defaultConstructor.newInstance();
             CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
                 public Object readFromStream() {
                     reader.moveDown();
@@ -119,6 +126,10 @@ public class ExternalizableConverter implements Converter {
             externalizable.readExternal(objectInput);
             objectInput.popCallback();
             return externalizable;
+        } catch (NoSuchMethodException e) {
+            throw new ConversionException("Cannot construct " + type.getClass() + ", missing default constructor", e);
+        } catch (InvocationTargetException e) {
+            throw new ConversionException("Cannot construct " + type.getClass(), e);
         } catch (InstantiationException e) {
             throw new ConversionException("Cannot construct " + type.getClass(), e);
         } catch (IllegalAccessException e) {

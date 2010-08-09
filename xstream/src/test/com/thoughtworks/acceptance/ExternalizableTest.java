@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -148,5 +148,74 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
             + "</elem>";
 
         assertBothWays(parent, expected);
+    }
+    
+    public static class OtherOwner extends StandardObject {
+        Object member1;
+        Object member2;
+        public OtherOwner(int i) {
+            member1 = new InnerExternalizable1(i);
+            member2 = new InnerExternalizable2(i);
+        }
+        
+        private static class InnerExternalizable1 extends StandardObject implements Externalizable {
+            private int i;
+
+            public InnerExternalizable1() {
+            }
+
+            InnerExternalizable1(int i) {
+                this.i = i;
+            }
+            
+            public void writeExternal(ObjectOutput out) throws IOException {
+                out.writeInt(i);
+            }
+
+            public void readExternal(ObjectInput in)
+                throws IOException {
+                this.i = in.readInt();
+            }
+        };
+        
+        private static class InnerExternalizable2 extends StandardObject implements Externalizable {
+            private int i;
+
+            private InnerExternalizable2() {
+            }
+
+            InnerExternalizable2(int i) {
+                this.i = i;
+            }
+            
+            public void writeExternal(ObjectOutput out) throws IOException {
+                out.writeInt(i);
+            }
+
+            public void readExternal(ObjectInput in)
+                throws IOException {
+                this.i = in.readInt();
+            }
+        };
+    }
+    
+    public void testWithPrivateDefaultConstructor() {
+        OtherOwner owner = new OtherOwner(42);
+
+        xstream.alias("owner", OtherOwner.class);
+        xstream.alias("inner1", OtherOwner.class.getDeclaredClasses()[0]);
+        xstream.alias("inner2", OtherOwner.class.getDeclaredClasses()[1]);
+
+        String expected = ""
+            + "<owner>\n"
+            + "  <member1 class=\"inner1\">\n"
+            + "    <int>42</int>\n"
+            + "  </member1>\n"
+            + "  <member2 class=\"inner2\">\n"
+            + "    <int>42</int>\n"
+            + "  </member2>\n"
+            + "</owner>";
+
+        assertBothWays(owner, expected);
     }
 }
