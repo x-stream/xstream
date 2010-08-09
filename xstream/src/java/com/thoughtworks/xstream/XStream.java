@@ -469,7 +469,7 @@ public class XStream {
         mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
-        mapper = new AttributeMapper(mapper, converterLookup);
+        mapper = new AttributeMapper(mapper, converterLookup, reflectionProvider);
         if (JVM.is15()) {
             mapper = buildMapperDynamically(
                 "com.thoughtworks.xstream.mapper.EnumMapper", new Class[]{Mapper.class},

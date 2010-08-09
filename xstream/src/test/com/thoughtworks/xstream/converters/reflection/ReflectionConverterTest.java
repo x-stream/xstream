@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -121,7 +121,7 @@ public class ReflectionConverterTest extends TestCase {
         // using default mapper instead of XStream#buildMapper()
         Mapper mapper = new DefaultMapper(new CompositeClassLoader());
         // AttributeMapper required by ReflectionConverter
-        mapper = new AttributeMapper(mapper, xstream.getConverterLookup());
+        mapper = new AttributeMapper(mapper, xstream.getConverterLookup(), xstream.getReflectionProvider());
         Converter converter = new CustomReflectionConverter(mapper, new PureJavaReflectionProvider());
         xstream.registerConverter(converter, -20);
         xstream.alias("world", World.class);

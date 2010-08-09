@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ import java.util.Set;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
-import com.thoughtworks.xstream.core.util.Fields;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
 /**
  * Mapper that allows the usage of attributes for fields and corresponding 
@@ -39,18 +39,20 @@ public class AttributeMapper extends MapperWrapper {
     private final Map fieldNameToTypeMap = new HashMap();
     private final Set typeSet = new HashSet();
     private ConverterLookup converterLookup;
+    private ReflectionProvider reflectionProvider;
     private final Set fieldToUseAsAttribute = new HashSet();
 
     /**
      * @deprecated As of 1.3
      */
     public AttributeMapper(Mapper wrapped) {
-        this(wrapped, null);
+        this(wrapped, null, null);
     }
 
-    public AttributeMapper(Mapper wrapped, ConverterLookup converterLookup) {
+    public AttributeMapper(Mapper wrapped, ConverterLookup converterLookup, ReflectionProvider refProvider) {
         super(wrapped);
         this.converterLookup = converterLookup;
+        this.reflectionProvider = refProvider;
     }
     
     /**
@@ -100,7 +102,7 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     public boolean shouldLookForSingleValueConverter(String fieldName, Class type, Class definedIn) {
-        Field field = getField(definedIn, fieldName);
+        Field field = reflectionProvider.getField(definedIn, fieldName);
         return fieldToUseAsAttribute.contains(field) || fieldNameToTypeMap.get(fieldName) == type || typeSet.contains(type);
     }
 
@@ -131,7 +133,7 @@ public class AttributeMapper extends MapperWrapper {
      * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute) {
-        Field field = getField(definedIn, attribute);
+        Field field = reflectionProvider.getField(definedIn, attribute);
         return getConverterFromAttribute(definedIn, attribute, field.getType());
     }
 
@@ -164,11 +166,6 @@ public class AttributeMapper extends MapperWrapper {
      * @since 1.3
      */
     public void addAttributeFor(Class definedIn, String fieldName) {
-        fieldToUseAsAttribute.add(getField(definedIn, fieldName));
+        fieldToUseAsAttribute.add(reflectionProvider.getField(definedIn, fieldName));
     }
-
-    private Field getField(Class definedIn, String fieldName) {
-        return Fields.find(definedIn, fieldName);
-    }
-
 }
