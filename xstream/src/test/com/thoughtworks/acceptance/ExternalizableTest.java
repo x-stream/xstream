@@ -200,11 +200,15 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
     }
     
     public void testWithPrivateDefaultConstructor() {
-        OtherOwner owner = new OtherOwner(42);
-
+        String simpleName1 = OtherOwner.class.getDeclaredClasses()[0].getSimpleName();
+        String simpleName2 = OtherOwner.class.getDeclaredClasses()[1].getSimpleName();
         xstream.alias("owner", OtherOwner.class);
-        xstream.alias("inner1", OtherOwner.class.getDeclaredClasses()[0]);
-        xstream.alias("inner2", OtherOwner.class.getDeclaredClasses()[1]);
+        xstream.alias("inner" + simpleName1.charAt(simpleName1.length() - 1), 
+            OtherOwner.class.getDeclaredClasses()[0]);
+        xstream.alias("inner" + simpleName2.charAt(simpleName2.length() - 1),
+            OtherOwner.class.getDeclaredClasses()[1]);
+
+        OtherOwner owner = new OtherOwner(42);
 
         String expected = ""
             + "<owner>\n"

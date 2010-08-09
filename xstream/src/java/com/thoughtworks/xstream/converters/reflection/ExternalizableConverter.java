@@ -96,7 +96,7 @@ public class ExternalizableConverter implements Converter {
             if (!defaultConstructor.isAccessible()) {
                 defaultConstructor.setAccessible(true);
             }
-            final Externalizable externalizable = (Externalizable) defaultConstructor.newInstance();
+            final Externalizable externalizable = (Externalizable) defaultConstructor.newInstance((Object[]) null);
             CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
                 public Object readFromStream() {
                     reader.moveDown();
