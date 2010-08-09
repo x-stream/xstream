@@ -52,11 +52,11 @@ public class JVM {
     }
 
     public static boolean is14() {
-        return majorJavaVersion >= 1.4f;
+        return majorJavaVersion >= 1.4f || isAndroid();
     }
 
     public static boolean is15() {
-        return majorJavaVersion >= 1.5f;
+        return majorJavaVersion >= 1.5f || isAndroid();
     }
 
     public static boolean is16() {

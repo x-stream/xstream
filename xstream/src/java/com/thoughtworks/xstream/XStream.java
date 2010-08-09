@@ -707,9 +707,13 @@ public class XStream {
 
         if (JVM.is15()) {
             // late bound converters - allows XStream to be compiled on earlier JDKs
-            dynamicallyRegisterConverter(
-                "com.thoughtworks.xstream.converters.extended.DurationConverter",
-                PRIORITY_NORMAL, null, null);
+            try {
+                dynamicallyRegisterConverter(
+                    "com.thoughtworks.xstream.converters.extended.DurationConverter",
+                    PRIORITY_NORMAL, null, null);
+            } catch (com.thoughtworks.xstream.InitializationException e) {
+                // Android does not deliver javax.xml.datatype.Duration in earlier versions
+            }
             dynamicallyRegisterConverter(
                 "com.thoughtworks.xstream.converters.enums.EnumConverter", PRIORITY_NORMAL,
                 null, null);
