@@ -791,9 +791,8 @@ public class XStream {
 
         if (JVM.is14()) {
             // late bound types - allows XStream to be compiled on earlier JDKs
-            Class type = jvm
-                .loadClass("com.thoughtworks.xstream.converters.extended.CharsetConverter");
-            addImmutableType(type);
+            addImmutableType(jvm.loadClass("java.nio.charset.Charset"));
+            addImmutableType(jvm.loadClass("java.util.Currency"));
         }
     }
 
