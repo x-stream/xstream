@@ -44,7 +44,7 @@ public class JVM {
      */
     private static final float getMajorJavaVersion() {
         try {
-            return Float.parseFloat(System.getProperty("java.specification.version"));
+            return isAndroid() ? 1.5f : Float.parseFloat(System.getProperty("java.specification.version"));
         } catch ( NumberFormatException e ){
             // Some JVMs may not conform to the x.y.z java.version format
             return DEFAULT_JAVA_VERSION;
@@ -52,11 +52,11 @@ public class JVM {
     }
 
     public static boolean is14() {
-        return majorJavaVersion >= 1.4f || isAndroid();
+        return majorJavaVersion >= 1.4f;
     }
 
     public static boolean is15() {
-        return majorJavaVersion >= 1.5f || isAndroid();
+        return majorJavaVersion >= 1.5f;
     }
 
     public static boolean is16() {
@@ -167,7 +167,7 @@ public class JVM {
     public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
             try {
-                if ( canUseSun14ReflectionProvider() ) {
+                if (canUseSun14ReflectionProvider()) {
                     String cls = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
                     reflectionProvider = (ReflectionProvider) loadClass(cls).newInstance();
                 } else if (canUseHarmonyReflectionProvider()) {
