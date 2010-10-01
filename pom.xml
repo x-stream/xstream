@@ -11,6 +11,12 @@
      Created on 29. July 2006 by Mauro Talevi
      -->
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.codehaus</groupId>
+    <artifactId>codehaus-parent</artifactId>
+    <version>3</version>
+    <relativePath/>
+  </parent>
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
   <packaging>pom</packaging>
@@ -316,7 +322,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.2</version>
+          <version>2.7</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -340,13 +346,13 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.0.4</version>
+          <version>2.1.2</version>
           <executions>
             <execution>
               <id>attach-sources</id>
               <phase>package</phase>
               <goals>
-                <goal>jar</goal>
+                <goal>jar-no-fork</goal>
               </goals>
             </execution>
           </executions>
@@ -400,7 +406,7 @@
         <plugin>
           <groupId>org.codehaus.xsite</groupId>
           <artifactId>xsite-maven-plugin</artifactId>
-          <version>1.0</version>
+          <version>1.1.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -424,19 +430,10 @@
 
   <distributionManagement>
     <!--  
-      The server id here defined must also appear in ~/.m2/settings.xml
-      cf. settings-template.xml
+      The server id codehaus-nexus-snapshots, codehaus-nexus-staging, and
+      codehaus.org must appear ~/.m2/settings.xml cf. settings-template.xml.
+      http://hausmates.codehaus.org/Codehaus+Maven+Repository+Usage+Guide
     -->
-    <repository>
-      <id>codehaus.org</id>
-      <name>Codehaus XStream Repository</name>
-      <url>dav:https://dav.codehaus.org/repository/xstream</url>
-    </repository>
-    <snapshotRepository>
-      <id>codehaus.org</id>
-      <name>Codehaus XStream Snapshot Repository</name>
-      <url>dav:https://dav.codehaus.org/snapshots.repository/xstream</url>
-    </snapshotRepository>
     <site>
       <id>codehaus.org</id>
       <name>Codehaus XStream Site</name>
