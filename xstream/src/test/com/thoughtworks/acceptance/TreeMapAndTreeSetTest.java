@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@
 package com.thoughtworks.acceptance;
 
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -99,6 +100,7 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
 
     public void testTreeMapDoesNotUseComparatorAtDeserialization() {
         TreeMap map = new TreeMap(new UnusedComparator());
+        map.put("john", "doe");
         map.put("benny", "hill");
         map.put("joe", "walnes");
 
@@ -113,14 +115,16 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
                 "    <string>joe</string>\n" +
                 "    <string>walnes</string>\n" +
                 "  </entry>\n" +
+                "  <entry>\n" +
+                "    <string>john</string>\n" +
+                "    <string>doe</string>\n" +
+                "  </entry>\n" +
                 "</tree-map>";
 
         assertEquals(expected, xstream.toXML(map));
         TreeMap result = (TreeMap) xstream.fromXML(expected);
         assertSame(UnusedComparator.THROWING_COMPARATOR, result.comparator());
-        TreeMap compareMap = new TreeMap(new UnusedComparator());
-        compareMap.putAll(result);
-        assertEquals(map, compareMap);
+        assertEquals(new ArrayList(map.entrySet()), new ArrayList(result.entrySet()));
     }
 
     public void testTreeSetWithComparator() {
@@ -158,6 +162,7 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
 
     public void testTreeSetDoesNotUseComparatorAtDeserialization() {
         TreeSet set = new TreeSet(new UnusedComparator());
+        set.add("guy");
         set.add("hi");
         set.add("bye");
 
@@ -165,14 +170,13 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
                 "<tree-set>\n" +
                 "  <comparator class=\"unused-comparator\"/>\n" +
                 "  <string>bye</string>\n" +
+                "  <string>guy</string>\n" +
                 "  <string>hi</string>\n" +
                 "</tree-set>";
 
         assertEquals(expected, xstream.toXML(set));
         TreeSet result = (TreeSet) xstream.fromXML(expected);
         assertSame(UnusedComparator.THROWING_COMPARATOR, result.comparator());
-        TreeSet compareSet = new TreeSet(new UnusedComparator());
-        compareSet.addAll(result);
-        assertEquals(set, compareSet);
+        assertEquals(new ArrayList(set), new ArrayList(result));
     }
 }
