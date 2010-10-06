@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,25 +17,34 @@ import java.lang.reflect.Proxy;
 
 public class SampleDynamicProxy implements InvocationHandler {
 
-    private String aField = "hello";
+    private Object aField;
+    private transient boolean recursion;
 
+    private SampleDynamicProxy(Object value) {
+        aField = value;
+    }
+    
     public static interface InterfaceOne {
-        String doSomething();
+        Object doSomething();
     }
 
     public static interface InterfaceTwo {
-        String doSomething();
+        Object doSomething();
     }
 
     public static Object newInstance() {
+        return newInstance("hello");
+    }
+
+    public static Object newInstance(Object value) {
         return Proxy.newProxyInstance(InterfaceOne.class.getClassLoader(),
                 new Class[]{InterfaceOne.class, InterfaceTwo.class},
-                new SampleDynamicProxy());
+                new SampleDynamicProxy(value));
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (method.getName().equals("equals")) {
-            return equals(args[0]) ? Boolean.TRUE : Boolean.FALSE;
+            return (recursion || equals(args[0])) ? Boolean.TRUE : Boolean.FALSE;
         } else if (method.getName().equals("hashCode")) {
             return new Integer(System.identityHashCode(proxy));
         } else {
@@ -44,7 +53,12 @@ public class SampleDynamicProxy implements InvocationHandler {
     }
 
     public boolean equals(Object obj) {
-        return equalsInterfaceOne(obj) && equalsInterfaceTwo(obj);
+        try {
+            recursion = true;
+            return equalsInterfaceOne(obj) && equalsInterfaceTwo(obj);
+        } finally {
+            recursion = false;
+        }
     }
 
     private boolean equalsInterfaceOne(Object o) {
@@ -64,5 +78,4 @@ public class SampleDynamicProxy implements InvocationHandler {
             return false;
         }
     }
-
 }

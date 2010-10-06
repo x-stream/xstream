@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,12 +15,15 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,23 @@ public class DynamicProxyConverter implements Converter {
 
     private ClassLoader classLoader;
     private Mapper mapper;
+    private static final Field HANDLER;
+    private static final InvocationHandler DUMMY = new InvocationHandler() {
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            return null;
+        }
+    };
+    
+    static {
+        Field field = null; 
+        try {
+            field = Proxy.class.getDeclaredField("h");
+            field.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+        HANDLER = field;
+    }
 
     public DynamicProxyConverter(Mapper mapper) {
         this(mapper, DynamicProxyConverter.class.getClassLoader());
@@ -74,6 +94,7 @@ public class DynamicProxyConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         List interfaces = new ArrayList();
         InvocationHandler handler = null;
+        Class handlerType = null;
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             String elementName = reader.getNodeName();
@@ -82,17 +103,21 @@ public class DynamicProxyConverter implements Converter {
             } else if (elementName.equals("handler")) {
                 String attributeName = mapper.aliasForSystemAttribute("class");
                 if (attributeName != null) {
-                    Class handlerType = mapper.realClass(reader.getAttribute(attributeName));
-                    handler = (InvocationHandler) context.convertAnother(null, handlerType);
+                    handlerType = mapper.realClass(reader.getAttribute(attributeName));
+                    break;
                 }
             }
             reader.moveUp();
         }
-        if (handler == null) {
+        if (handlerType == null) {
             throw new ConversionException("No InvocationHandler specified for dynamic proxy");
         }
         Class[] interfacesAsArray = new Class[interfaces.size()];
         interfaces.toArray(interfacesAsArray);
-        return Proxy.newProxyInstance(classLoader, interfacesAsArray, handler);
+        Object proxy = Proxy.newProxyInstance(classLoader, interfacesAsArray, DUMMY);
+        handler = (InvocationHandler) context.convertAnother(proxy, handlerType);
+        reader.moveUp();
+        Fields.write(HANDLER, proxy, handler);
+        return proxy;
     }
 }

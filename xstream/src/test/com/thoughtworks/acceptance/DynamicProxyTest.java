@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,9 @@
  * Created on 25. March 2004 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
 
@@ -28,7 +31,7 @@ public class DynamicProxyTest extends AbstractAcceptanceTest {
                 + "  <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceOne</interface>\n"
                 + "  <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceTwo</interface>\n"
                 + "  <handler class=\"com.thoughtworks.acceptance.objects.SampleDynamicProxy\">\n"
-                + "    <aField>hello</aField>\n"
+                + "    <aField class=\"string\">hello</aField>\n"
                 + "  </handler>\n"
                 + "</dynamic-proxy>");
     }
@@ -46,7 +49,7 @@ public class DynamicProxyTest extends AbstractAcceptanceTest {
                 + "    <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceOne</interface>\n"
                 + "    <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceTwo</interface>\n"
                 + "    <handler class=\"com.thoughtworks.acceptance.objects.SampleDynamicProxy\">\n"
-                + "      <aField>hello</aField>\n"
+                + "      <aField class=\"string\">hello</aField>\n"
                 + "    </handler>\n"
                 + "  </one>\n"
                 + "  <two class=\"dynamic-proxy\" reference=\"../one\"/>\n"
@@ -62,9 +65,27 @@ public class DynamicProxyTest extends AbstractAcceptanceTest {
             + "  <interface>one</interface>\n"
             + "  <interface>two</interface>\n"
             + "  <handler class=\"handler\">\n"
-            + "    <aField>hello</aField>\n"
+            + "    <aField class=\"string\">hello</aField>\n"
             + "  </handler>\n"
             + "</one>";
         assertEquals(expected, xstream.toXML(SampleDynamicProxy.newInstance()));
+    }
+    
+    public void testCanBeReferenced() {
+        List list = new ArrayList();
+        Object proxy = SampleDynamicProxy.newInstance(list);
+        list.add(proxy);
+        assertBothWays(
+            proxy,
+            ""
+                + "<dynamic-proxy>\n"
+                + "  <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceOne</interface>\n"
+                + "  <interface>com.thoughtworks.acceptance.objects.SampleDynamicProxy$InterfaceTwo</interface>\n"
+                + "  <handler class=\"com.thoughtworks.acceptance.objects.SampleDynamicProxy\">\n"
+                + "    <aField class=\"list\">\n"
+                + "      <dynamic-proxy reference=\"../../..\"/>\n"
+                + "    </aField>\n"
+                + "  </handler>\n"
+                + "</dynamic-proxy>");
     }
 }
