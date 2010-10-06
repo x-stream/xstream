@@ -213,6 +213,28 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     public void testEmptyList() {
         assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections_-EmptyList/>");
     }
+    
+    public void testSingletonList() {
+        assertBothWays(Collections.singletonList("XStream"), 
+            "<java.util.Collections_-SingletonList>\n" +
+            "  <element class=\"string\">XStream</element>\n" +
+            "</java.util.Collections_-SingletonList>");
+    }
+    
+    public void testSingletonMap() {
+        assertBothWays(Collections.singletonMap("1", "one"), 
+            "<java.util.Collections_-SingletonMap>\n" +
+            "  <k class=\"string\">1</k>\n" +
+            "  <v class=\"string\">one</v>\n" +
+            "</java.util.Collections_-SingletonMap>");
+    }
+    
+    public void testSingletonSet() {
+        assertBothWays(Collections.singleton("XStream"), 
+            "<java.util.Collections_-SingletonSet>\n" +
+            "  <element class=\"string\">XStream</element>\n" +
+            "</java.util.Collections_-SingletonSet>");
+    }
 
     public void testPropertiesWithDefaults() {
         Properties defaults = new Properties();
