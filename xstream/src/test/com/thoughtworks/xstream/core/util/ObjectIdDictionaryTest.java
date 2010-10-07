@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,9 +12,6 @@
 package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
-
-import java.lang.reflect.Field;
-
 
 public class ObjectIdDictionaryTest extends TestCase {
 
@@ -41,12 +38,8 @@ public class ObjectIdDictionaryTest extends TestCase {
         assertEquals("id b", dict.lookupId(b));
     }
 
-    public void testEnforceSameSystemHashCodeForGCedObjects()
-        throws NoSuchFieldException, IllegalAccessException {
-        final Field actionCounter = ObjectIdDictionary.class.getDeclaredField("counter");
-        actionCounter.setAccessible(true);
+    public void testEnforceSameSystemHashCodeForGCedObjects() {
         final ObjectIdDictionary dict = new ObjectIdDictionary();
-        actionCounter.setInt(dict, 1);
 
         final StringBuffer memInfo = new StringBuffer("JVM: ");
         memInfo.append(System.getProperty("java.version"));
@@ -61,11 +54,11 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append('\n');
 
         int counter = 0;
-        for (; actionCounter.getInt(dict) != 0; ++counter) {
+        for (; counter <= 10000; ++counter) {
             final String s = new String("JUnit ") + counter; // enforce new object
             assertFalse("Failed in (" + counter + ")", dict.containsId(s));
             dict.associateId(s, "X");
-            if (counter % 4000 == 3999) {
+            if (counter % 100 == 0) {
                 System.gc();
                 memInfo.append("\nMemoryInfo:\n");
                 memInfo.append(memoryInfo());

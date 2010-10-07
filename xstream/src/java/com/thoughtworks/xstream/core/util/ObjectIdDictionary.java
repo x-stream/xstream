@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,9 +11,9 @@
  */
 package com.thoughtworks.xstream.core.util;
 
+import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 
@@ -28,7 +28,7 @@ import java.util.Map;
 public class ObjectIdDictionary {
 
     private final Map map = new HashMap();
-    private volatile int counter;
+    private final ReferenceQueue queue = new ReferenceQueue();
 
     private static interface Wrapper {
         int hashCode();
@@ -64,14 +64,13 @@ public class ObjectIdDictionary {
         }
     }
 
-    private static class WeakIdWrapper implements Wrapper {
+    private class WeakIdWrapper extends WeakReference implements Wrapper {
 
         private final int hashCode;
-        private final WeakReference ref;
 
         public WeakIdWrapper(Object obj) {
+            super(obj, queue);
             hashCode = System.identityHashCode(obj);
-            ref = new WeakReference(obj);
         }
 
         public int hashCode() {
@@ -86,34 +85,25 @@ public class ObjectIdDictionary {
             Object obj = get();
             return obj == null ? "(null)" : obj.toString();
         }
-
-        public Object get() {
-            Object obj = ref.get();
-            return obj;
-        }
     }
 
     public void associateId(Object obj, Object id) {
         map.put(new WeakIdWrapper(obj), id);
-        ++counter;
         cleanup();
     }
 
     public Object lookupId(Object obj) {
         Object id = map.get(new IdWrapper(obj));
-        ++counter;
         return id;
     }
 
     public boolean containsId(Object item) {
         boolean b = map.containsKey(new IdWrapper(item));
-        ++counter;
         return b;
     }
 
     public void removeId(Object item) {
         map.remove(new IdWrapper(item));
-        ++counter;
         cleanup();
     }
 
@@ -122,15 +112,10 @@ public class ObjectIdDictionary {
     }
 
     private void cleanup() {
-        if (counter > 10000) {
-            counter = 0;
-            // much more efficient to remove any orphaned wrappers at once
-            for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-                final WeakIdWrapper key = (WeakIdWrapper)iterator.next();
-                if (key.get() == null) {
-                    iterator.remove();
-                }
-            }
+        WeakIdWrapper wrapper;
+        while ((wrapper = (WeakIdWrapper)queue.poll()) != null)
+        {
+            map.remove(wrapper);
         }
     }
 }
