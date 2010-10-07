@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009 XStream Committers.
+ * Copyright (C) 2007, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -87,6 +87,21 @@ public class DependencyInjectionFactoryTest extends TestCase {
         assertTrue(used.get(1));
         assertFalse(used.get(2));
         assertTrue(used.get(3));
+    }
+
+    public void testWillMatchFirstMatchingDependency() {
+        final BitSet used = new BitSet();
+        final Exception exception = (Exception)DependencyInjectionFactory.newInstance(
+            ObjectAccessException.class, new Object[]{
+                new RuntimeException("JUnit"), "The message", "bar",
+                new IllegalArgumentException("foo"), this}, used);
+        assertTrue(exception instanceof ObjectAccessException);
+        assertEquals("The message : foo", exception.getMessage());
+        assertFalse(used.get(0));
+        assertTrue(used.get(1));
+        assertFalse(used.get(2));
+        assertTrue(used.get(3));
+        assertFalse(used.get(4));
     }
 
     static class Thing {
