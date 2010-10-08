@@ -54,14 +54,16 @@ public class ObjectIdDictionaryTest extends TestCase {
         memInfo.append('\n');
 
         int counter = 0;
-        for (; counter <= 10000; ++counter) {
+        for (; counter < 10000; ++counter) {
             final String s = new String("JUnit ") + counter; // enforce new object
             assertFalse("Failed in (" + counter + ")", dict.containsId(s));
             dict.associateId(s, "X");
-            if (counter % 100 == 0) {
+            if (counter % 10 == 9) {
                 System.gc();
-                memInfo.append("\nMemoryInfo:\n");
-                memInfo.append(memoryInfo());
+                if (counter % 2000 == 1999) {
+                    memInfo.append("\nMemoryInfo:\n");
+                    memInfo.append(memoryInfo());
+                }
             }
         }
         memInfo.append("\nMemoryInfo:\n");
