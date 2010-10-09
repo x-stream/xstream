@@ -58,7 +58,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             final String s = new String("JUnit ") + counter; // enforce new object
             assertFalse("Failed in (" + counter + ")", dict.containsId(s));
             dict.associateId(s, "X");
-            if (counter % 10 == 9) {
+            if (counter % 50 == 49) {
                 System.gc();
                 if (counter % 2000 == 1999) {
                     memInfo.append("\nMemoryInfo:\n");
