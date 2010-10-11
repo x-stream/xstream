@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,16 +14,13 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.lang.reflect.Field;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -37,6 +34,29 @@ import java.util.TreeMap;
  * @author J&ouml;rg Schaible
  */
 public class TreeMapConverter extends MapConverter {
+    
+    private final static Field comparatorField;
+    static {
+        Field cmpField = null;
+        try {
+            Field[] fields = TreeMap.class.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++ ) {
+                if (fields[i].getType() == Comparator.class) {
+                    // take the fist member of type "Comparator"
+                    cmpField = fields[i];
+                    cmpField.setAccessible(true);
+                    break;
+                }
+            }
+            if (cmpField == null) {
+                throw new ExceptionInInitializerError("Cannot detect comparator field of TreeMap");
+            }
+
+        } catch (SecurityException ex) {
+            // ignore, no access possible with current SecurityManager
+        }
+        comparatorField = cmpField;
+    }
 
     public TreeMapConverter(Mapper mapper) {
         super(mapper);
@@ -65,135 +85,34 @@ public class TreeMapConverter extends MapConverter {
         reader.moveDown();
         SortedMap sortedMap;
         TreeMap result;
+        final Comparator comparator;
         if (reader.getNodeName().equals("comparator")) {
             String comparatorClass = reader.getAttribute("class");
-            Comparator comparator = (Comparator) context.convertAnother(null, mapper().realClass(comparatorClass));
-            sortedMap = new PresortedMap(comparator);
-            result = new TreeMap(comparator);
+            sortedMap = comparatorField != null ? new PresortedMap() :  null;
+            comparator = (Comparator) context.convertAnother(sortedMap, mapper().realClass(comparatorClass));
+            if (sortedMap == null) {
+                sortedMap = new PresortedMap(comparator);
+            }
         } else if (reader.getNodeName().equals("no-comparator")) {
+            comparator = null;
             sortedMap = new PresortedMap();
-            result = new TreeMap();
         } else {
             throw new ConversionException("TreeMap does not contain <comparator> element");
         }
         reader.moveUp();
-        super.populateMap(reader, context, sortedMap);
-        result.putAll(sortedMap); //  // internal optimization will not call comparator
+        populateMap(reader, context, sortedMap);
+        if (comparator == null || comparator == sortedMap.comparator()) {
+            result = comparator == null ? new TreeMap() : new TreeMap(comparator);
+            result.putAll(sortedMap); // internal optimization in *Sun* JDK will not call comparator
+        } else {
+            result = new TreeMap(sortedMap.comparator());
+            result.putAll(sortedMap); // "sort" by index
+            try {
+                comparatorField.set(result, comparator); 
+            } catch (final IllegalAccessException e) {
+                throw new ConversionException("Cannot set comparator of TreeMap", e);
+            }
+        }
         return result;
-    }
-    
-    private static class PresortedMap implements SortedMap {
-
-        private static class ArraySet extends ArrayList implements Set {
-        }
-
-        private final ArraySet set = new ArraySet();
-        private final Comparator comparator;
-        
-        PresortedMap() {
-            this(null);
-        }
-
-        PresortedMap(Comparator comparator) {
-            this.comparator = comparator;
-        }
-
-        public Comparator comparator() {
-            return comparator;
-        }
-
-        public Set entrySet() {
-            return set;
-        }
-
-        public Object firstKey() {
-            throw new UnsupportedOperationException();
-        }
-
-        public SortedMap headMap(Object toKey) {
-            throw new UnsupportedOperationException();
-        }
-
-        public Set keySet() {
-            Set keySet = new ArraySet();
-            for (final Iterator iterator = set.iterator(); iterator.hasNext();) {
-                final Entry entry = (Entry)iterator.next();
-                keySet.add(entry.getKey());
-            }
-            return keySet;
-        }
-
-        public Object lastKey() {
-            throw new UnsupportedOperationException();
-        }
-
-        public SortedMap subMap(Object fromKey, Object toKey) {
-            throw new UnsupportedOperationException();
-        }
-
-        public SortedMap tailMap(Object fromKey) {
-            throw new UnsupportedOperationException();
-        }
-
-        public Collection values() {
-            Set values = new ArraySet();
-            for (final Iterator iterator = set.iterator(); iterator.hasNext();) {
-                final Entry entry = (Entry)iterator.next();
-                values.add(entry.getValue());
-            }
-            return values;
-        }
-
-        public void clear() {
-            throw new UnsupportedOperationException();
-        }
-
-        public boolean containsKey(Object key) {
-            return false;
-        }
-
-        public boolean containsValue(Object value) {
-            throw new UnsupportedOperationException();
-        }
-
-        public Object get(Object key) {
-            throw new UnsupportedOperationException();
-        }
-
-        public boolean isEmpty() {
-            return set.isEmpty();
-        }
-
-        public Object put(final Object key, final Object value) {
-            set.add(new Entry(){
-
-                public Object getKey() {
-                    return key;
-                }
-
-                public Object getValue() {
-                    return value;
-                }
-
-                public Object setValue(Object value) {
-                    throw new UnsupportedOperationException();
-                }});
-            return null;
-        }
-
-        public void putAll(Map m) {
-            for (final Iterator iter = m.entrySet().iterator(); iter.hasNext();) {
-                set.add(iter.next());
-            }
-        }
-
-        public Object remove(Object key) {
-            throw new UnsupportedOperationException();
-        }
-
-        public int size() {
-            return set.size();
-        }
-        
     }
 }

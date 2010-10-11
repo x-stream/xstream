@@ -67,7 +67,6 @@ public class SecurityManagerTest extends TestCase {
         for (int i = 0; i < javaClassPath.length; ++i) {
             if (javaClassPath[i].endsWith(".jar")) {
                 sm.addPermission(source, new FilePermission(javaClassPath[i], "read"));
-
             }
         }
     }
@@ -94,8 +93,11 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
+        sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
@@ -115,7 +117,10 @@ public class SecurityManagerTest extends TestCase {
     public void testSerializeWithXppDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
+        sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
@@ -133,12 +138,15 @@ public class SecurityManagerTest extends TestCase {
     public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
         sm.addPermission(source, new PropertyPermission("com.sun.org.apache.xerces.internal.xni.parser.XMLParserConfiguration", "read"));
         sm.addPermission(source, new PropertyPermission("elementAttributeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("entityExpansionLimit", "read"));
         sm.addPermission(source, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check", "read"));
+        sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.parsers.DocumentBuilderFactory", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));

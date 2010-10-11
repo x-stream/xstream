@@ -162,6 +162,9 @@
     	As a result the JVM might crash easily because of freeing unallocated memory or freeing the same memory twice. It might be possible to create a custom converter, 
     	but the data structure is really complex in this area and nobody has been investigating so far to such an extent. However, <strong>do not use the reflection converter
     	for these types! You have been warned!</strong></li>
+    	<li>Inner class types of the JDK can often vary in implementation details between JDK versions and vendors and are therefore only compatible for the same JDK. This
+    	includes	collection types returned by the methods of the Collections class that wrap another one (like unmodifiableList) or the collections that are returned by the
+    	different Map implementations for the keySet(), entrySet() and values() methods.</li>
     </ol>
 
     <!-- ...................................................... -->

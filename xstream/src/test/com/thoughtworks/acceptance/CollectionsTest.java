@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -308,46 +308,62 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         map.put("JUnit", null);
         final Collection set = map.keySet();
 
+        xstream.alias("key-set", set.getClass());
+
         assertBothWays(set,
-                "<java.util.HashMap_-KeySet>\n" +
+                "<key-set>\n" +
                 "  <outer-class>\n" +
                 "    <entry>\n" +
                 "      <string>JUnit</string>\n" +
                 "      <null/>\n" +
                 "    </entry>\n" +
                 "  </outer-class>\n" +
-                "</java.util.HashMap_-KeySet>");
+                "</key-set>");
     }
 
     public void testValueSetOfHashMapCanBeSerialized() {
         final Map map = new HashMap();
         map.put(Boolean.TRUE, "JUnit");
         final Collection set = map.values();
+        xstream.alias("value-set", set.getClass());
 
         assertBothWays(set,
-                "<java.util.HashMap_-Values>\n" +
+                "<value-set>\n" +
                 "  <outer-class>\n" +
                 "    <entry>\n" +
                 "      <boolean>true</boolean>\n" +
                 "      <string>JUnit</string>\n" +
                 "    </entry>\n" +
                 "  </outer-class>\n" +
-                "</java.util.HashMap_-Values>");
+                "</value-set>");
     }
 
     public void testEntrySetOfHashMapCanBeSerialized() {
         final Map map = new HashMap();
         map.put(Boolean.TRUE, "JUnit");
         final Collection set = map.entrySet();
+        xstream.alias("entry-set", set.getClass());
 
-        assertBothWays(set,
-                "<java.util.HashMap_-EntrySet>\n" +
-                "  <outer-class>\n" +
+        if (JVM.is16() && System.getProperty("java.vm.vendor").indexOf("IBM") >= 0) {
+            assertBothWays(set,
+                "<entry-set>\n" +
+                "  <associatedMap>\n" +
                 "    <entry>\n" +
                 "      <boolean>true</boolean>\n" +
                 "      <string>JUnit</string>\n" +
                 "    </entry>\n" +
-                "  </outer-class>\n" +
-                "</java.util.HashMap_-EntrySet>");
+                "  </associatedMap>\n" +
+                "</entry-set>");
+        } else {
+            assertBothWays(set,
+                    "<entry-set>\n" +
+                    "  <outer-class>\n" +
+                    "    <entry>\n" +
+                    "      <boolean>true</boolean>\n" +
+                    "      <string>JUnit</string>\n" +
+                    "    </entry>\n" +
+                    "  </outer-class>\n" +
+                    "</entry-set>");
+        }
     }
 }
