@@ -73,7 +73,7 @@ public class ObjectIdDictionaryTest extends TestCase {
             + " distinct objects; "
             + dict.size()
             + " size; "
-            + memInfo, dict.size() < 1100);
+            + memInfo, dict.size() < 2500);
     }
 
     private String memoryInfo() {
