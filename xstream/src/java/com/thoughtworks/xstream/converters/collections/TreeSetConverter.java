@@ -14,15 +14,21 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Field;
 import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -40,22 +46,24 @@ public class TreeSetConverter extends CollectionConverter {
     private final static Field sortedMapField;
     static {
         Field smField = null;
-        try {
-            Field[] fields = TreeSet.class.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++ ) {
-                if (SortedMap.class.isAssignableFrom(fields[i].getType())) {
-                    // take the fist member assignable to type "SortedMap"
-                    smField = fields[i];
-                    smField.setAccessible(true);
-                    break;
+        if (JVM.is16()) {
+            try {
+                Field[] fields = TreeSet.class.getDeclaredFields();
+                for (int i = 0; i < fields.length; i++ ) {
+                    if (SortedMap.class.isAssignableFrom(fields[i].getType())) {
+                        // take the fist member assignable to type "SortedMap"
+                        smField = fields[i];
+                        smField.setAccessible(true);
+                        break;
+                    }
                 }
+                if (smField == null) {
+                    throw new ExceptionInInitializerError("Cannot detect field of backing map of TreeSet");
+                }
+    
+            } catch (SecurityException ex) {
+                // ignore, no access possible with current SecurityManager
             }
-            if (smField == null) {
-                throw new ExceptionInInitializerError("Cannot detect field of backing map of TreeSet");
-            }
-
-        } catch (SecurityException ex) {
-            // ignore, no access possible with current SecurityManager
         }
         sortedMapField = smField;
     }
@@ -90,7 +98,10 @@ public class TreeSetConverter extends CollectionConverter {
         if (sortedMapField == null) {
             final Comparator comparator = treeMap.comparator();
             result = comparator == null ? new TreeSet() : new TreeSet(comparator);
-            result.addAll(treeMap.keySet()); // internal optimization of *Sun* JDK will not call comparator
+            if (treeMap.size() > 0) {
+                PresortedSet set = new PresortedSet(comparator, treeMap.keySet());
+                result.addAll(set); // internal optimization of *Sun* JDK will not call comparator
+            }
         } else {
             result = new TreeSet();
             try {
@@ -124,5 +135,113 @@ public class TreeSetConverter extends CollectionConverter {
             
         };
         return this;
+    }
+    
+    private static class PresortedSet implements SortedSet {
+        private final List list = new ArrayList();
+        private final Comparator comparator;
+
+        PresortedSet() {
+            this(null);
+        }
+
+        PresortedSet(Comparator comparator) {
+            this(comparator, null);
+        }
+
+        PresortedSet(Comparator comparator, Collection c) {
+            this.comparator = comparator;
+            if (c != null) {
+                addAll(c);
+            }
+        }
+
+        public boolean add(Object e) {
+            return this.list.add(e);
+        }
+
+        public boolean addAll(Collection c) {
+            return this.list.addAll(c);
+        }
+
+        public void clear() {
+            this.list.clear();
+        }
+
+        public boolean contains(Object o) {
+            return this.list.contains(o);
+        }
+
+        public boolean containsAll(Collection c) {
+            return this.list.containsAll(c);
+        }
+
+        public boolean equals(Object o) {
+            return this.list.equals(o);
+        }
+
+        public int hashCode() {
+            return this.list.hashCode();
+        }
+
+        public boolean isEmpty() {
+            return this.list.isEmpty();
+        }
+
+        public Iterator iterator() {
+            return this.list.iterator();
+        }
+
+        public boolean remove(Object o) {
+            return this.list.remove(o);
+        }
+
+        public boolean removeAll(Collection c) {
+            return this.list.removeAll(c);
+        }
+
+        public boolean retainAll(Collection c) {
+            return this.list.retainAll(c);
+        }
+
+        public int size() {
+            return this.list.size();
+        }
+
+        public List subList(int fromIndex, int toIndex) {
+            return this.list.subList(fromIndex, toIndex);
+        }
+
+        public Object[] toArray() {
+            return this.list.toArray();
+        }
+
+        public Object[] toArray(Object[] a) {
+            return this.list.toArray(a);
+        }
+
+        public Comparator comparator() {
+            return comparator;
+        }
+
+        public Object first() {
+            return list.isEmpty() ? null : list.get(0);
+        }
+
+        public SortedSet headSet(Object toElement) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Object last() {
+            return list.isEmpty() ? null : list.get(list.size() - 1);
+        }
+
+        public SortedSet subSet(Object fromElement, Object toElement) {
+            throw new UnsupportedOperationException();
+        }
+
+        public SortedSet tailSet(Object fromElement) {
+            throw new UnsupportedOperationException();
+        }
     }
 }
