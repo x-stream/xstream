@@ -13,13 +13,20 @@ package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.util.PresortedMap;
+import com.thoughtworks.xstream.core.util.PresortedSet;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
 import java.text.AttributedString;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class JVM {
 
@@ -28,7 +35,10 @@ public class JVM {
     
     private final boolean supportsAWT = loadClass("java.awt.Color") != null;
     private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel") != null;
-    private final boolean supportsSQL = loadClass("java.sql.Date") != null; 
+    private final boolean supportsSQL = loadClass("java.sql.Date") != null;
+    
+    private static final boolean optimizedTreeSetAddAll;
+    private static final boolean optimizedTreeMapPutAll;
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
@@ -36,6 +46,33 @@ public class JVM {
 
     static final float DEFAULT_JAVA_VERSION = 1.3f;
 
+    static {
+        Comparator comparator = new Comparator() {
+            public int compare(Object o1, Object o2) {
+                throw new RuntimeException();
+            }
+        };
+        boolean optimized = true;
+        SortedMap map = new PresortedMap(comparator);
+        map.put("one", null);
+        map.put("two", null);
+        try {
+            new TreeMap(comparator).putAll(map);
+        } catch (RuntimeException e) {
+            optimized = false;
+        }
+        optimizedTreeMapPutAll = optimized;
+        SortedSet set = new PresortedSet(comparator);
+        set.addAll(map.keySet());
+        try {
+            new TreeSet(comparator).addAll(set);
+            optimized = true;
+        } catch (RuntimeException e) {
+            optimized = false;
+        }
+        optimizedTreeSetAddAll = optimized;
+    }
+    
     /**
      * Parses the java version system property to determine the major java version,
      * i.e. 1.x
@@ -232,6 +269,24 @@ public class JVM {
     public boolean supportsSQL() {
         return this.supportsSQL;
     }
+    
+    /**
+     * Checks if TreeSet.addAll is optimized for SortedSet argument.
+     * 
+     * @since upcoming
+     */
+    public static boolean hasOptimizedTreeSetAddAll() {
+        return optimizedTreeSetAddAll;
+    }
+    
+    /**
+     * Checks if TreeMap.putAll is optimized for SortedMap argument.
+     * 
+     * @since upcoming
+     */
+    public static boolean hasOptimizedTreeMapPutAll() {
+        return optimizedTreeMapPutAll;
+    }
 
     private Object readResolve() {
         loaderCache = new HashMap();
@@ -266,6 +321,8 @@ public class JVM {
         System.out.println("Supports AWT: " + jvm.supportsAWT());
         System.out.println("Supports Swing: " + jvm.supportsSwing());
         System.out.println("Supports SQL: " + jvm.supportsSQL());
+        System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
+        System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Reverse field order detected (may have failed): " + reverse);
     }
 }

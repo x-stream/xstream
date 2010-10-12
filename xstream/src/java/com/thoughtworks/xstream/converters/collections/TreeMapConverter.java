@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -82,37 +83,50 @@ public class TreeMapConverter extends MapConverter {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        TreeMap result = comparatorField != null ? new TreeMap() :  null;
+        final Comparator comparator = unmarshalComparator(reader, context, result);
+        if (result == null) {
+            result = comparator == null ? new TreeMap() : new TreeMap(comparator);
+        }
+        populateTreeMap(reader, context, result, comparator);
+        return result;
+    }
+
+    protected Comparator unmarshalComparator(HierarchicalStreamReader reader,
+        UnmarshallingContext context, TreeMap result) {
         reader.moveDown();
-        SortedMap sortedMap;
-        TreeMap result;
         final Comparator comparator;
         if (reader.getNodeName().equals("comparator")) {
             String comparatorClass = reader.getAttribute("class");
-            sortedMap = comparatorField != null ? new PresortedMap() :  null;
-            comparator = (Comparator) context.convertAnother(sortedMap, mapper().realClass(comparatorClass));
-            if (sortedMap == null) {
-                sortedMap = new PresortedMap(comparator);
-            }
+            comparator = (Comparator) context.convertAnother(result, mapper().realClass(comparatorClass));
         } else if (reader.getNodeName().equals("no-comparator")) {
             comparator = null;
-            sortedMap = new PresortedMap();
         } else {
             throw new ConversionException("TreeMap does not contain <comparator> element");
         }
         reader.moveUp();
-        populateMap(reader, context, sortedMap);
-        if (comparator == null || comparator == sortedMap.comparator()) {
-            result = comparator == null ? new TreeMap() : new TreeMap(comparator);
-            result.putAll(sortedMap); // internal optimization in *Sun* JDK will not call comparator
-        } else {
-            result = new TreeMap(sortedMap.comparator());
-            result.putAll(sortedMap); // "sort" by index
-            try {
+        return comparator;
+    }
+
+    protected void populateTreeMap(HierarchicalStreamReader reader, UnmarshallingContext context,
+        TreeMap result, final Comparator comparator) {
+        SortedMap sortedMap = new PresortedMap(comparator != null && JVM.hasOptimizedTreeMapPutAll() ? comparator : null);
+        populateMap(reader, context, result, sortedMap);
+        try {
+            if (JVM.hasOptimizedTreeMapPutAll()) {
+                if (comparator != null && comparatorField != null) {
+                    comparatorField.set(result, comparator); 
+                }
+                result.putAll(sortedMap); // internal optimization will not call comparator
+            } else if (comparatorField != null) {
+                comparatorField.set(result, sortedMap.comparator());
+                result.putAll(sortedMap); // "sort" by index
                 comparatorField.set(result, comparator); 
-            } catch (final IllegalAccessException e) {
-                throw new ConversionException("Cannot set comparator of TreeMap", e);
+            } else {
+                result.putAll(sortedMap); // will use comparator for already sorted map
             }
+        } catch (final IllegalAccessException e) {
+            throw new ConversionException("Cannot set comparator of TreeMap", e);
         }
-        return result;
     }
 }

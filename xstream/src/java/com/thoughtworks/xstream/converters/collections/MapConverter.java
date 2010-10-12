@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -68,6 +68,10 @@ public class MapConverter extends AbstractCollectionConverter {
     }
 
     protected void populateMap(HierarchicalStreamReader reader, UnmarshallingContext context, Map map) {
+        populateMap(reader, context, map, map);
+    }
+
+    protected void populateMap(HierarchicalStreamReader reader, UnmarshallingContext context, Map map, Map target) {
         while (reader.hasMoreChildren()) {
             reader.moveDown();
 
@@ -79,7 +83,7 @@ public class MapConverter extends AbstractCollectionConverter {
             Object value = readItem(reader, context, map);
             reader.moveUp();
 
-            map.put(key, value);
+            target.put(key, value);
 
             reader.moveUp();
         }
