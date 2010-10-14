@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,12 +37,27 @@ public class StaxWriter extends AbstractXmlWriter {
         this(qnameMap, out, true, true);
     }
 
+
+    /**
+     * Allows a StaxWriter to be created for partial XML output
+     *
+     * @param qnameMap               is the mapper of Java class names to QNames
+     * @param out                    the stream to output to
+     * @param nameCoder              the xml-friendly replacer to escape Java names
+     * @throws XMLStreamException if the events could not be written to the output
+     * @since upcoming
+     */
+    public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, NameCoder nameCoder) throws XMLStreamException {
+        this(qnameMap, out, true, true, nameCoder);
+    }
+
     /**
      * Allows a StaxWriter to be created for partial XML output
      *
      * @param qnameMap               is the mapper of Java class names to QNames
      * @param out                    the stream to output to
      * @param writeEnclosingDocument a flag to indicate whether or not the start/end document events should be written
+     * @param namespaceRepairingMode a flag to enable StAX' namespace repairing mode
      * @param nameCoder              the xml-friendly replacer to escape Java names
      * @throws XMLStreamException if the events could not be written to the output
      * @since upcoming

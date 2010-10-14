@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2009 XStream Committers.
+ * Copyright (c) 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -71,6 +71,16 @@ public class JettisonStaxWriter extends StaxWriter {
         QNameMap qnameMap, XMLStreamWriter out, MappedNamespaceConvention convention)
         throws XMLStreamException {
         super(qnameMap, out);
+        this.convention = convention;
+    }
+
+    /**
+     * @since upcoming
+     */
+    public JettisonStaxWriter(
+        QNameMap qnameMap, XMLStreamWriter out, NameCoder nameCoder, MappedNamespaceConvention convention)
+        throws XMLStreamException {
+        super(qnameMap, out, nameCoder);
         this.convention = convention;
     }
 

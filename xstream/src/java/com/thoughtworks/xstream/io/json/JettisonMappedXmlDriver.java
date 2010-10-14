@@ -10,7 +10,7 @@
  */
 package com.thoughtworks.xstream.io.json;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.AbstractDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
@@ -37,7 +37,7 @@ import java.io.Writer;
  * 
  * @author Dejan Bosanac
  */
-public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
+public class JettisonMappedXmlDriver extends AbstractDriver {
 
     private final MappedXMLOutputFactory mof;
     private final MappedXMLInputFactory mif;
@@ -78,7 +78,7 @@ public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
     
     public HierarchicalStreamReader createReader(final Reader reader) {
         try {
-            return new StaxReader(new QNameMap(), mif.createXMLStreamReader(reader));
+            return new StaxReader(new QNameMap(), mif.createXMLStreamReader(reader), getNameCoder());
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         }
@@ -86,7 +86,7 @@ public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
 
     public HierarchicalStreamReader createReader(final InputStream input) {
         try {
-            return new StaxReader(new QNameMap(), mif.createXMLStreamReader(input));
+            return new StaxReader(new QNameMap(), mif.createXMLStreamReader(input), getNameCoder());
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         }
@@ -95,9 +95,9 @@ public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
     public HierarchicalStreamWriter createWriter(final Writer writer) {
         try {
             if (useSerializeAsArray) {
-                return new JettisonStaxWriter(new QNameMap(), mof.createXMLStreamWriter(writer), convention);
+                return new JettisonStaxWriter(new QNameMap(), mof.createXMLStreamWriter(writer), getNameCoder(), convention);
             } else {
-                return new StaxWriter(new QNameMap(), mof.createXMLStreamWriter(writer));
+                return new StaxWriter(new QNameMap(), mof.createXMLStreamWriter(writer), getNameCoder());
             }
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
@@ -107,9 +107,9 @@ public class JettisonMappedXmlDriver implements HierarchicalStreamDriver {
     public HierarchicalStreamWriter createWriter(final OutputStream output) {
         try {
             if (useSerializeAsArray) {
-                return new JettisonStaxWriter(new QNameMap(), mof.createXMLStreamWriter(output), convention);
+                return new JettisonStaxWriter(new QNameMap(), mof.createXMLStreamWriter(output), getNameCoder(), convention);
             } else {
-                return new StaxWriter(new QNameMap(), mof.createXMLStreamWriter(output));
+                return new StaxWriter(new QNameMap(), mof.createXMLStreamWriter(output), getNameCoder());
             }
         } catch (final XMLStreamException e) {
             throw new StreamException(e);

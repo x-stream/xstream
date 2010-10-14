@@ -266,4 +266,19 @@ public class JettisonMappedXmlDriverTest extends TestCase {
             assertEquals(json, xstream.toXML(list2));
         }
     }
+    
+    private static class SpecialCharacters extends StandardObject {
+        String _foo__$_;
+    }
+
+    public void testSpecialNames() {
+        SpecialCharacters sc = new SpecialCharacters();
+        sc._foo__$_ = "bar";
+        String json = xstream.toXML(sc);
+        assertEquals(
+            "{'com.thoughtworks.xstream.io.json.JettisonMappedXmlDriverTest$SpecialCharacters':{'_foo__$_':'bar'}}"
+                .replace('\'', '"'), json);
+        SpecialCharacters sc2 = (SpecialCharacters)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(sc2));
+    }
 }
