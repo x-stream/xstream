@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -116,6 +116,7 @@ public class FieldDictionary {
     }
 
     private Map buildMap(final Class type, boolean tupleKeyed) {
+        final Map result;
         Class cls = type;
         synchronized (this) {
             if (!keyedByFieldNameCache.containsKey(type)) {
@@ -140,10 +141,10 @@ public class FieldDictionary {
                                 fields[idx] = field;
                             }
                         }
-                        for (int i = 0; i < fields.length; i++) {
+                        for (int i = 0; i < fields.length; i++ ) {
                             Field field = fields[i];
-                            FieldKey fieldKey = new FieldKey(field.getName(), field
-                                .getDeclaringClass(), i);
+                            FieldKey fieldKey = new FieldKey(
+                                field.getName(), field.getDeclaringClass(), i);
                             field.setAccessible(true);
                             Field existent = (Field)keyedByFieldName.get(field.getName());
                             if (existent == null
@@ -162,9 +163,11 @@ public class FieldDictionary {
                     lastKeyedByFieldKey = (Map)keyedByFieldKeyCache.get(cls);
                 }
             }
+            result = (Map)(tupleKeyed 
+                ? keyedByFieldKeyCache.get(type) 
+                : keyedByFieldNameCache.get(type));
         }
-        return (Map)(tupleKeyed ? keyedByFieldKeyCache.get(type) : keyedByFieldNameCache
-            .get(type));
+        return result;
     }
 
     protected Object readResolve() {
