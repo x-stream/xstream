@@ -149,10 +149,10 @@ public class FieldDictionary {
                             }
                             FieldKey fieldKey = new FieldKey(
                                 field.getName(), field.getDeclaringClass(), i);
-                            Map existent = (Map)keyedByFieldName.get(field.getName());
+                            Field existent = (Field)keyedByFieldName.get(field.getName());
                             if (existent == null
                             // do overwrite statics
-                                || ((((Field)((WeakReference)existent).get()).getModifiers() & Modifier.STATIC) != 0)
+                                || ((existent.getModifiers() & Modifier.STATIC) != 0)
                                 // overwrite non-statics with non-statics only
                                 || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
                                 keyedByFieldName.put(field.getName(), field);
