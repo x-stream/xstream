@@ -20,7 +20,7 @@ public final class FastField {
     }
 
     public FastField(Class definedIn, String name) {
-        this(name, definedIn == null ? null : definedIn.getName());
+        this(definedIn == null ? null : definedIn.getName(), name);
     }
 
     public String getName() {
