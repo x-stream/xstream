@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
@@ -48,8 +48,8 @@ public class FieldDictionary {
     }
 
     private void init() {
-        keyedByFieldNameCache = new WeakHashMap();
-        keyedByFieldKeyCache = new WeakHashMap();
+        keyedByFieldNameCache = new HashMap();
+        keyedByFieldKeyCache = new HashMap();
         keyedByFieldNameCache.put(Object.class, Collections.EMPTY_MAP);
         keyedByFieldKeyCache.put(Object.class, Collections.EMPTY_MAP);
     }
@@ -71,7 +71,7 @@ public class FieldDictionary {
      * @param cls the class you are interested on
      * @return an iterator for its fields
      */
-    public Iterator fieldsFor(Class cls) {
+    public Iterator fieldsFor(final Class cls) {
         return buildMap(cls, true).values().iterator();
     }
 
@@ -110,8 +110,9 @@ public class FieldDictionary {
      */
     public Field fieldOrNull(Class cls, String name, Class definedIn) {
         Map fields = buildMap(cls, definedIn != null);
-        Field field = (Field)fields.get(definedIn != null ? (Object)new FieldKey(
-            name, definedIn, 0) : (Object)name);
+        Field field = (Field)fields.get(definedIn != null
+            ? (Object)new FieldKey(name, definedIn, 0)
+            : (Object)name);
         return field;
     }
 
@@ -143,29 +144,37 @@ public class FieldDictionary {
                         }
                         for (int i = 0; i < fields.length; i++ ) {
                             Field field = fields[i];
+                            if (!field.isAccessible()) {
+                                field.setAccessible(true);
+                            }
                             FieldKey fieldKey = new FieldKey(
                                 field.getName(), field.getDeclaringClass(), i);
-                            field.setAccessible(true);
-                            Field existent = (Field)keyedByFieldName.get(field.getName());
+                            Map existent = (Map)keyedByFieldName.get(field.getName());
                             if (existent == null
                             // do overwrite statics
-                                || ((existent.getModifiers() & Modifier.STATIC) != 0)
+                                || ((((Field)((WeakReference)existent).get()).getModifiers() & Modifier.STATIC) != 0)
                                 // overwrite non-statics with non-statics only
                                 || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
                                 keyedByFieldName.put(field.getName(), field);
                             }
                             keyedByFieldKey.put(fieldKey, field);
                         }
+                        final Map sortedFieldKeys = sorter.sort(type, keyedByFieldKey);
                         keyedByFieldNameCache.put(cls, keyedByFieldName);
-                        keyedByFieldKeyCache.put(cls, sorter.sort(type, keyedByFieldKey));
+                        keyedByFieldKeyCache.put(cls, sortedFieldKeys);
+                        lastKeyedByFieldName = keyedByFieldName;
+                        lastKeyedByFieldKey = sortedFieldKeys;
+                    } else {
+                        lastKeyedByFieldName = (Map)keyedByFieldNameCache.get(cls);
+                        lastKeyedByFieldKey = (Map)keyedByFieldKeyCache.get(cls);
                     }
-                    lastKeyedByFieldName = (Map)keyedByFieldNameCache.get(cls);
-                    lastKeyedByFieldKey = (Map)keyedByFieldKeyCache.get(cls);
                 }
+                result = tupleKeyed ? lastKeyedByFieldKey : lastKeyedByFieldName;
+            } else {
+                result = (Map)(tupleKeyed
+                    ? keyedByFieldKeyCache.get(type)
+                    : keyedByFieldNameCache.get(type));
             }
-            result = (Map)(tupleKeyed 
-                ? keyedByFieldKeyCache.get(type) 
-                : keyedByFieldNameCache.get(type));
         }
         return result;
     }
@@ -174,5 +183,4 @@ public class FieldDictionary {
         init();
         return this;
     }
-
 }

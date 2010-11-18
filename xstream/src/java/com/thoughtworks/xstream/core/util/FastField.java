@@ -12,18 +12,22 @@ package com.thoughtworks.xstream.core.util;
 
 public final class FastField {
     private final String name;
-    private final Class declaringClass;
+    private final String declaringClass;
 
-    public FastField(Class definedIn, String name) {
+    public FastField(String definedIn, String name) {
         this.name = name;
         this.declaringClass = definedIn;
+    }
+
+    public FastField(Class definedIn, String name) {
+        this(name, definedIn == null ? null : definedIn.getName());
     }
 
     public String getName() {
         return this.name;
     }
 
-    public Class getDeclaringClass() {
+    public String getDeclaringClass() {
         return this.declaringClass;
     }
 
@@ -31,10 +35,10 @@ public final class FastField {
         if (this == obj) {
             return true;
         }
-        if (this == null) {
+        if (obj == null) {
             return false;
         }
-        if (obj.getClass() == FastField.class) {
+        if (obj instanceof FastField) {
             final FastField field = (FastField)obj;
             if ((declaringClass == null && field.declaringClass != null)
                 || (declaringClass != null && field.declaringClass == null)) {
@@ -51,6 +55,6 @@ public final class FastField {
     }
 
     public String toString() {
-        return (declaringClass == null ? "" : declaringClass.getName() + ".") + name;
+        return (declaringClass == null ? "" : declaringClass + ".") + name;
     }
 }
