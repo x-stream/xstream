@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -68,9 +68,18 @@ public class SerializableConverter extends AbstractReflectionConverter {
     private static final String ELEMENT_FIELDS = "fields";
     private static final String ELEMENT_FIELD = "field";
     private static final String ATTRIBUTE_NAME = "name";
+    private final ClassLoader classLoader;
 
-    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
+    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoader classLoader) {
         super(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
+        this.classLoader = classLoader;
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoader)}
+     */
+    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
+        this(mapper, new UnserializableParentsReflectionProvider(reflectionProvider), null);
     }
 
     public boolean canConvert(Class type) {
@@ -398,7 +407,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     currentType[0] = mapper.realClass(classAttribute);
                 }
                 if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
-                    CustomObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
+                    CustomObjectInputStream objectInputStream = 
+                        CustomObjectInputStream.getInstance(context, callback, classLoader);
                     serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);
                     objectInputStream.popCallback();
                 } else {

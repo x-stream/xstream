@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,7 @@ import com.thoughtworks.xstream.converters.DataHolder;
 public class CustomObjectInputStream extends ObjectInputStream {
 
     private FastStack callbacks = new FastStack(1);
+    private final ClassLoader classLoader;
 
     private static final String DATA_HOLDER_KEY = CustomObjectInputStream.class.getName();
 
@@ -37,11 +38,11 @@ public class CustomObjectInputStream extends ObjectInputStream {
         void close() throws IOException;
     }
 
-    public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback) {
+    public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback, ClassLoader classLoaderReference) {
         try {
             CustomObjectInputStream result = (CustomObjectInputStream) whereFrom.get(DATA_HOLDER_KEY);
             if (result == null) {
-                result = new CustomObjectInputStream(callback);
+                result = new CustomObjectInputStream(callback, classLoaderReference);
                 whereFrom.put(DATA_HOLDER_KEY, result);
             } else {
                 result.pushCallback(callback);
@@ -56,11 +57,12 @@ public class CustomObjectInputStream extends ObjectInputStream {
      * Warning, this object is expensive to create (due to functionality inherited from superclass).
      * Use the static fetch() method instead, wherever possible.
      *
-     * @see #getInstance(com.thoughtworks.xstream.converters.DataHolder, com.thoughtworks.xstream.core.util.CustomObjectInputStream.StreamCallback)
+     * @see #getInstance(DataHolder, StreamCallback, ClassLoader)
      */
-    public CustomObjectInputStream(StreamCallback callback) throws IOException, SecurityException {
+    public CustomObjectInputStream(StreamCallback callback, ClassLoader classLoader) throws IOException, SecurityException {
         super();
         this.callbacks.push(callback);
+        this.classLoader = classLoader;
     }
 
     /**
@@ -78,6 +80,15 @@ public class CustomObjectInputStream extends ObjectInputStream {
         return (StreamCallback) this.callbacks.peek();
     }
     
+    protected Class resolveClass(ObjectStreamClass desc)
+        throws IOException, ClassNotFoundException {
+        if (classLoader == null) {
+            return super.resolveClass(desc);
+        } else {
+            return Class.forName(desc.getName(), false, classLoader);
+        }
+    }
+
     public void defaultReadObject() throws IOException {
         peekCallback().defaultReadObject();
     }

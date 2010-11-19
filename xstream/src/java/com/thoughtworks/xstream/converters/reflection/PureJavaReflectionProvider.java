@@ -85,7 +85,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         }
     }
 
-    private Object instantiateUsingSerialization(Class type) {
+    private Object instantiateUsingSerialization(final Class type) {
         try {
             synchronized (serializedDataCache) {
                 byte[] data = (byte[]) serializedDataCache.get(type);
@@ -106,7 +106,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                     serializedDataCache.put(type, data);
                 }
                 
-                ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
+                ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data)) {
+                    protected Class resolveClass(ObjectStreamClass desc)
+                        throws IOException, ClassNotFoundException {
+                        return Class.forName(desc.getName(), false, type.getClassLoader());
+                    }
+                };
                 return in.readObject();
             }
         } catch (IOException e) {

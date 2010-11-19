@@ -627,8 +627,9 @@ public class XStream {
             mapper, reflectionProvider);
         registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
-        registerConverter(new SerializableConverter(mapper, reflectionProvider), PRIORITY_LOW);
-        registerConverter(new ExternalizableConverter(mapper), PRIORITY_LOW);
+        registerConverter(
+            new SerializableConverter(mapper, reflectionProvider, classLoaderReference), PRIORITY_LOW);
+        registerConverter(new ExternalizableConverter(mapper, classLoaderReference), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
         registerConverter(new IntConverter(), PRIORITY_NORMAL);
@@ -1582,7 +1583,7 @@ public class XStream {
             public void close() {
                 reader.close();
             }
-        });
+        }, classLoaderReference);
     }
 
     /**

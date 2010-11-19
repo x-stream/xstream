@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -60,9 +60,16 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     private static String CALLBACK_MARKER = "CGLIB$CALLBACK_";
     private transient Map fieldCache;
 
-    public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
-        super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider));
+    public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoader classLoader) {
+        super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), classLoader);
         this.fieldCache = new HashMap();
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoader)}
+     */
+    public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
+        this(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), null);
     }
 
     public boolean canConvert(Class type) {

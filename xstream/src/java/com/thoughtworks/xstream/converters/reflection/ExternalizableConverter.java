@@ -40,9 +40,18 @@ import java.util.Map;
 public class ExternalizableConverter implements Converter {
 
     private Mapper mapper;
+    private final ClassLoader classLoader;
 
-    public ExternalizableConverter(Mapper mapper) {
+    public ExternalizableConverter(Mapper mapper, ClassLoader classLoader) {
         this.mapper = mapper;
+        this.classLoader = classLoader;
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #ExternalizableConverter(Mapper, ClassLoader)}
+     */
+    public ExternalizableConverter(Mapper mapper) {
+        this(mapper, null);
     }
 
     public boolean canConvert(Class type) {
@@ -122,7 +131,7 @@ public class ExternalizableConverter implements Converter {
                     throw new UnsupportedOperationException("Objects are not allowed to call ObjectInput.close() from readExternal()");
                 }
             };
-            CustomObjectInputStream objectInput = CustomObjectInputStream.getInstance(context, callback);
+            CustomObjectInputStream objectInput = CustomObjectInputStream.getInstance(context, callback, classLoader);
             externalizable.readExternal(objectInput);
             objectInput.popCallback();
             return externalizable;

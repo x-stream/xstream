@@ -52,6 +52,7 @@
     	<li>JIRA:XSTR-592+JIRA:XSTR-579: OmitField respected at deserialization time even for existing fields.</li>
     	<li>JIRA:XSTR-593: Direct support for java.net.URI instances (by Carlos Roman).</li>
     	<li>JIRA:XSTR-615+JIRA:XSTR-580: Dynamic proxies cannot be referenced recursively.</li>
+    	<li>JIRA:XSTR-547: Wrong class loader used for Serializable types deserialized with an ObjectInputStream.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -95,6 +96,9 @@
 
     <ul>
     	<li>Any deprecated stuff of the 1.2.x releases has been removed.</li>
+    	<li>Deprecated constructors of c.t.x.converters.reflection.SerializableConverter, c.t.x.converters.reflection.ExternalizableConverter
+    	 and c.t.x.converters.reflection.CGLIBEnhancedConverter; new versions take an additional argument for class loader (as a result
+    	 for JIRA:XSTR-547).</li>
     	<li>Deprecated constructors of c.t.x.io.xml.XppReader, new versions take an additional argument for the XmlPullParser.</li>
     	<li>Deprecated c.t.x.io.xml.XppReader.createParser(), the XPP parser is now created by the driver.</li>
     	<li>Package c.t.x.io.xml.xppdom is now part of the official API.</li>
