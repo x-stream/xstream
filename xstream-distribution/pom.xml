@@ -22,15 +22,15 @@
 
   <dependencies>
     <dependency>
-      <groupId>${pom.groupId}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>xstream</artifactId>
-      <version>${pom.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>${pom.groupId}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>xstream-benchmark</artifactId>
-      <version>${pom.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -131,9 +131,9 @@
               <overWriteSnapshots>true</overWriteSnapshots>
               <artifactItems>
                 <artifactItem>
-                  <groupId>${pom.groupId}</groupId>
+                  <groupId>${project.groupId}</groupId>
                   <artifactId>xstream</artifactId>
-                  <version>${pom.version}</version>
+                  <version>${project.version}</version>
                   <classifier>javadoc</classifier>
                 </artifactItem>
               </artifactItems>
@@ -151,9 +151,9 @@
               <overWriteSnapshots>true</overWriteSnapshots>
               <artifactItems>
                 <artifactItem>
-                  <groupId>${pom.groupId}</groupId>
+                  <groupId>${project.groupId}</groupId>
                   <artifactId>xstream-benchmark</artifactId>
-                  <version>${pom.version}</version>
+                  <version>${project.version}</version>
                   <classifier>javadoc</classifier>
                 </artifactItem>
               </artifactItems>
@@ -224,7 +224,7 @@
               <descriptors>
                 <descriptor>${basedir}/src/assembly/assembly-bin.xml</descriptor>
               </descriptors>
-              <finalName>xstream-${pom.version}</finalName>
+              <finalName>xstream-${project.version}</finalName>
               <workDirectory>${project.build.directory}/assembly/bin</workDirectory>
             </configuration>
           </execution>
@@ -238,7 +238,7 @@
               <descriptors>
                 <descriptor>${basedir}/src/assembly/assembly-src.xml</descriptor>
               </descriptors>
-              <finalName>xstream-${pom.version}</finalName>
+              <finalName>xstream-${project.version}</finalName>
               <workDirectory>${project.build.directory}/assembly/src</workDirectory>
             </configuration>
           </execution>
