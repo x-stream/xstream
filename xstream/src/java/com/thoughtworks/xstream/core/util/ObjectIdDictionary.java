@@ -108,6 +108,7 @@ public class ObjectIdDictionary {
     }
 
     public int size() {
+        cleanup();
         return map.size();
     }
 
