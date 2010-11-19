@@ -67,7 +67,6 @@ public class CloneablesTest extends TestCase {
             super(type);
         }
 
-        @Override
         public CloneableTypedNull clone() throws CloneNotSupportedException {
             return (CloneableTypedNull)super.clone();
         }
