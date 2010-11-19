@@ -66,12 +66,13 @@ public class ObjectIdDictionaryTest extends TestCase {
                 }
             }
         }
+        int size = dict.size();
         memInfo.append("\nMemoryInfo:\n");
         memInfo.append(memoryInfo());
         assertTrue("Dictionary did not shrink; "
             + counter
             + " distinct objects; "
-            + dict.size()
+            + size
             + " size; "
             + memInfo, dict.size() < 2500);
     }
