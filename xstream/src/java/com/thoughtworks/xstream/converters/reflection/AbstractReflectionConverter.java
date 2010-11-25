@@ -359,9 +359,7 @@ public abstract class AbstractReflectionConverter implements Converter {
 
     private Class determineType(HierarchicalStreamReader reader, boolean validField, Object result, String fieldName, Class definedInCls) {
         String classAttribute = HierarchicalStreams.readClassAttribute(reader, mapper);
-        if (classAttribute != null) {
-            return mapper.realClass(classAttribute);
-        } else if (!validField) {
+        if (!validField) {
             Class itemType = mapper.getItemTypeForItemFieldName(result.getClass(), fieldName);
             if (itemType != null) {
                 return itemType;
@@ -381,6 +379,9 @@ public abstract class AbstractReflectionConverter implements Converter {
                 }
             }
         } else {
+            if (classAttribute != null) {
+                return mapper.realClass(classAttribute);
+            } 
             return mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, definedInCls));
         }
     }
