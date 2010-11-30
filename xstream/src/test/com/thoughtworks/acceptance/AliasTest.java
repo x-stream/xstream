@@ -16,7 +16,7 @@ import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 
@@ -50,7 +50,7 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
     
     public void testWithUnderscore() {
-        xstream = new XStream(new XppDriver(new XmlFriendlyReplacer("_-", "_")));
+        xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
         String xml = "" +
                 "<X_alias>\n" +
                 "  <anInt>0</anInt>\n" +

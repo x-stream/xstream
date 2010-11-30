@@ -43,7 +43,7 @@ public class DomWriterTest extends AbstractDocumentWriterTest {
         document.appendChild(root);
         Element a = document.createElement("a");
         root.appendChild(a);
-        writer = new DomWriter(a, document, new XmlFriendlyReplacer());
+        writer = new DomWriter(a, document, new XmlFriendlyNameCoder());
         
         final XppDom xppRoot = new XppDom("root");
         XppDom xppA = new XppDom("a");

@@ -11,14 +11,14 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
 
 public class XmlFriendlyDollarOnlyTest extends XmlFriendlyTest {
 
     protected XStream createXStream() {
-        return new XStream(new XppDriver(new XmlFriendlyReplacer("_-", "_")));
+        return new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
     }
 
     protected Object assertBothWays(Object root, String xml) {
