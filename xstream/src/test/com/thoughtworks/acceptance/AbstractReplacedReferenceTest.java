@@ -50,7 +50,6 @@ public abstract class AbstractReplacedReferenceTest extends AbstractAcceptanceTe
             children.add(child);
         }
         
-        @Override
         public int hashCode() {
             final int prime = 31;
             int result = 1;
@@ -59,7 +58,6 @@ public abstract class AbstractReplacedReferenceTest extends AbstractAcceptanceTe
             return result;
         }
 
-        @Override
         public boolean equals(Object obj) {
             if (this == obj) return true;
             if (obj == null) return false;
