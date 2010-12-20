@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -50,19 +50,21 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller impleme
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {
-            Path currentPath = pathTracker.getPath();
-            Object existingReferenceKey = references.lookupId(item);
-            if (existingReferenceKey != null && existingReferenceKey != currentPath) {
+            final Path currentPath = pathTracker.getPath();
+            Id existingReference = (Id)references.lookupId(item);
+            if (existingReference != null && existingReference.getPath() != currentPath) {
                 String attributeName = getMapper().aliasForSystemAttribute("reference");
                 if (attributeName != null) {
-                    writer.addAttribute(attributeName, createReference(currentPath, existingReferenceKey));
+                    writer.addAttribute(attributeName, createReference(currentPath, existingReference.getItem()));
                 }
             } else {
-                final Object newReferenceKey = existingReferenceKey == null ? createReferenceKey(currentPath, item) : existingReferenceKey;
+                final Object newReferenceKey = existingReference == null 
+                    ? createReferenceKey(currentPath, item) 
+                    : existingReference.getItem();
                 if (lastPath == null || !currentPath.isAncestor(lastPath)) {
                     fireValidReference(newReferenceKey);
                     lastPath = currentPath;
-                    references.associateId(item, newReferenceKey);
+                    references.associateId(item, new Id(newReferenceKey, currentPath));
                 }
                 converter.marshal(item, writer, new ReferencingMarshallingContext() {
                     
@@ -87,11 +89,12 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller impleme
                     }
                     
                     public void replace(Object original, Object replacement) {
-                        references.associateId(replacement, newReferenceKey);
+                        references.associateId(replacement, new Id(newReferenceKey, currentPath));
                     }
                     
                     public Object lookupReference(Object item) {
-                        return references.lookupId(item);
+                        Id id = (Id)references.lookupId(item);
+                        return id.getItem();
                     }
                     
                     public Path currentPath() {
@@ -112,6 +115,21 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller impleme
     protected abstract String createReference(Path currentPath, Object existingReferenceKey);
     protected abstract Object createReferenceKey(Path currentPath, Object item);
     protected abstract void fireValidReference(Object referenceKey);
+    
+    private static class Id {
+        private Object item;
+        private Path path;
+        public Id(Object item, Path path) {
+            this.item = item;
+            this.path = path;
+        }
+        protected Object getItem() {
+            return this.item;
+        }
+        protected Path getPath() {
+            return this.path;
+        }
+    }
     
     public static class ReferencedImplicitElementException extends ConversionException {
         public ReferencedImplicitElementException(final Object item, final Path path) {
