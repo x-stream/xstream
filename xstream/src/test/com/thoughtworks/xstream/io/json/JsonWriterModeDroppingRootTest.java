@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -100,7 +100,7 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
         xstream = new XStream(new JsonHierarchicalStreamDriver() {
 
             public HierarchicalStreamWriter createWriter(Writer out) {
-                // do not alow invalid JSON
+                // do not allow invalid JSON
                 return new JsonWriter(out, JsonWriter.DROP_ROOT_MODE | JsonWriter.STRICT_MODE);
             }
         });
