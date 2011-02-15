@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,6 +17,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.converters.ErrorReporter;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.FastStack;
@@ -72,19 +73,25 @@ public class TreeUnmarshaller implements UnmarshallingContext {
             types.popSilently();
             return result;
         } catch (ConversionException conversionException) {
-            addInformationTo(conversionException, type, converter);
+            addInformationTo(conversionException, type, converter, parent);
             throw conversionException;
         } catch (RuntimeException e) {
             ConversionException conversionException = new ConversionException(e);
-            addInformationTo(conversionException, type, converter);
+            addInformationTo(conversionException, type, converter, parent);
             throw conversionException;
         }
     }
 
-    private void addInformationTo(ErrorWriter errorWriter, Class type, Converter converter) {
+    private void addInformationTo(ErrorWriter errorWriter, Class type, Converter converter, Object parent) {
         errorWriter.add("class", type.getName());
         errorWriter.add("required-type", getRequiredType().getName());
         errorWriter.add("converter-type", converter.getClass().getName());
+        if (converter instanceof ErrorReporter) {
+            ((ErrorReporter)converter).appendErrors(errorWriter);
+        }
+        if (parent instanceof ErrorReporter) {
+            ((ErrorReporter)parent).appendErrors(errorWriter);
+        }
         reader.appendErrors(errorWriter);
     }
 

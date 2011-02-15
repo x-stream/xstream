@@ -115,6 +115,9 @@
     	c.t.x.io.AbstractDriver, c.t.x.io.AbstractReader and c.t.x.io.AbstractWriter instead.</li>
     	<li>Deprecated all constructors of Driver, Reader and Writer implementations that take a XmlFriendlyReplacer as argument,
     	added constructors taking a NameCoder instead.</li>
+    	<li>Added interface com.thoughtworks.xstream.converters.ErrorReporter to allow other types to report
+    	also errors (apart from a HierarchicalStreamReader). Any converter and the parent object of the currently deserialized
+    	element may provide additional error information now.</li>
     </ul>
 
     <h1 id="1.3.1">1.3.1</h1>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see com.thoughtworks.xstream.converters.Converter
  * @see com.thoughtworks.xstream.converters.SingleValueConverter
  */
-public class SingleValueConverterWrapper implements Converter, SingleValueConverter {
+public class SingleValueConverterWrapper implements Converter, SingleValueConverter, ErrorReporter {
 
     private final SingleValueConverter wrapped;
 
@@ -49,4 +49,10 @@ public class SingleValueConverterWrapper implements Converter, SingleValueConver
         return fromString(reader.getValue());
     }
 
+    public void appendErrors(ErrorWriter errorWriter) {
+        errorWriter.add("wrapped-converter", wrapped.getClass().getName());
+        if (wrapped instanceof ErrorReporter) {
+            ((ErrorReporter)wrapped).appendErrors(errorWriter);
+        }
+    }
 }
