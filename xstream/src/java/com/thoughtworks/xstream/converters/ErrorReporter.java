@@ -19,5 +19,11 @@ package com.thoughtworks.xstream.converters;
  * @since upcoming
  */
 public interface ErrorReporter {
-    void appendErrors(ErrorWriter erroWriter);
+    /**
+     * Append context information to an {@link ErrorWriter}.
+     * 
+     * @param errorWriter the error writer
+     * @since upcoming
+     */
+    void appendErrors(ErrorWriter errorWriter);
 }
