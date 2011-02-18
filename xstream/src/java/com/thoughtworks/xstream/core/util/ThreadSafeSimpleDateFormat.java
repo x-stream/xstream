@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -77,5 +77,9 @@ public class ThreadSafeSimpleDateFormat {
             format.setTimeZone(tz);
         }
         return format;
+    }
+
+    public String toString() {
+        return formatString;
     }
 }

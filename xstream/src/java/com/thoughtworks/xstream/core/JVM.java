@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,6 +20,8 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
 import java.text.AttributedString;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +41,7 @@ public class JVM {
     
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
+    private static final boolean canParseUTCDateFormat;
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
@@ -52,25 +55,32 @@ public class JVM {
                 throw new RuntimeException();
             }
         };
-        boolean optimized = true;
+        boolean test = true;
         SortedMap map = new PresortedMap(comparator);
         map.put("one", null);
         map.put("two", null);
         try {
             new TreeMap(comparator).putAll(map);
         } catch (RuntimeException e) {
-            optimized = false;
+            test = false;
         }
-        optimizedTreeMapPutAll = optimized;
+        optimizedTreeMapPutAll = test;
         SortedSet set = new PresortedSet(comparator);
         set.addAll(map.keySet());
         try {
             new TreeSet(comparator).addAll(set);
-            optimized = true;
+            test = true;
         } catch (RuntimeException e) {
-            optimized = false;
+            test = false;
         }
-        optimizedTreeSetAddAll = optimized;
+        optimizedTreeSetAddAll = test;
+        try {
+            new SimpleDateFormat("z").parse("UTC");
+            test = true;
+        } catch (ParseException e) {
+            test = false;
+        }
+        canParseUTCDateFormat = test;
     }
     
     /**
@@ -288,6 +298,10 @@ public class JVM {
         return optimizedTreeMapPutAll;
     }
 
+    public static boolean canParseUTCDateFormat() {
+        return canParseUTCDateFormat;
+    }
+    
     private Object readResolve() {
         loaderCache = new HashMap();
         return this;
@@ -323,6 +337,7 @@ public class JVM {
         System.out.println("Supports SQL: " + jvm.supportsSQL());
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
+        System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());
         System.out.println("Reverse field order detected (may have failed): " + reverse);
     }
 }

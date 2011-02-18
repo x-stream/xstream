@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,12 +12,17 @@
 package com.thoughtworks.xstream.converters.basic;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorReporter;
+import com.thoughtworks.xstream.converters.ErrorWriter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
 
 
@@ -31,16 +36,30 @@ import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
-public class DateConverter extends AbstractSingleValueConverter {
+public class DateConverter extends AbstractSingleValueConverter implements ErrorReporter {
 
-    private static final String[] DEFAULT_ACCEPTABLE_FORMATS = new String[]{
-        "yyyy-MM-dd HH:mm:ss.S a", "yyyy-MM-dd HH:mm:ssz", "yyyy-MM-dd HH:mm:ss z", // JDK 1.3
-                                                                                    // needs
-                                                                                    // both
-                                                                                    // versions
-        "yyyy-MM-dd HH:mm:ssa"};// backwards compatibility
-    private static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss.S z";
+    private static final String[] DEFAULT_ACCEPTABLE_FORMATS;
+    private static final String DEFAULT_PATTERN;
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+    static {
+        final String defaultPattern = "yyyy-MM-dd HH:mm:ss.S z";
+        final List acceptablePatterns = new ArrayList();
+        final boolean utcSupported = JVM.canParseUTCDateFormat();
+        DEFAULT_PATTERN = utcSupported ? defaultPattern : "yyyy-MM-dd HH:mm:ss.S 'UTC'";
+        if (!utcSupported) {
+            acceptablePatterns.add(defaultPattern);
+        }
+        acceptablePatterns.add("yyyy-MM-dd HH:mm:ss.S a");
+        // JDK 1.3 needs both versions
+        acceptablePatterns.add("yyyy-MM-dd HH:mm:ssz");
+        acceptablePatterns.add("yyyy-MM-dd HH:mm:ss z");
+        if (!utcSupported) {
+            acceptablePatterns.add("yyyy-MM-dd HH:mm:ss 'UTC'");
+        }
+        // backwards compatibility
+        acceptablePatterns.add("yyyy-MM-dd HH:mm:ssa");
+        DEFAULT_ACCEPTABLE_FORMATS = (String[]) acceptablePatterns.toArray(new String[acceptablePatterns.size()]);
+    }
     private final ThreadSafeSimpleDateFormat defaultFormat;
     private final ThreadSafeSimpleDateFormat[] acceptableFormats;
 
@@ -151,4 +170,10 @@ public class DateConverter extends AbstractSingleValueConverter {
         return defaultFormat.format((Date)obj);
     }
 
+    public void appendErrors(ErrorWriter errorWriter) {
+        errorWriter.add("Default date pattern", defaultFormat.toString());
+        for (int i = 0; i < acceptableFormats.length; i++ ) {
+            errorWriter.add("Alternative date pattern", acceptableFormats[i].toString());
+        }
+    }
 }
