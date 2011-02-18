@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,6 +24,13 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
  */
 public class DefaultMapper implements Mapper {
 
+    private static String XSTREAM_PACKAGE_ROOT;
+    static {
+        String packageName = DefaultMapper.class.getName();
+        int idx = packageName.indexOf(".xstream.");
+        XSTREAM_PACKAGE_ROOT = idx > 0 ? packageName.substring(0, idx+9) : null;
+    }
+    
     private final ClassLoader classLoader;
 
     public DefaultMapper(ClassLoader classLoader) {
@@ -36,7 +43,9 @@ public class DefaultMapper implements Mapper {
 
     public Class realClass(String elementName) {
         try {
-            if (elementName.charAt(0) != '[') {
+            if (elementName.startsWith(XSTREAM_PACKAGE_ROOT)) {
+                return DefaultMapper.class.getClassLoader().loadClass(elementName);
+            } else if (elementName.charAt(0) != '[') {
                 return classLoader.loadClass(elementName);
             } else if (elementName.endsWith(";")) {
                 return Class.forName(elementName.toString(), false, classLoader);
