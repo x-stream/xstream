@@ -214,13 +214,18 @@ public class JVM {
     public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
             try {
+                String className = null;
                 if (canUseSun14ReflectionProvider()) {
-                    String cls = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
-                    reflectionProvider = (ReflectionProvider) loadClass(cls).newInstance();
+                    className = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
                 } else if (canUseHarmonyReflectionProvider()) {
-                    String cls = "com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider";
-                    reflectionProvider = (ReflectionProvider) loadClass(cls).newInstance();
-                } 
+                    className = "com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider";
+                }
+                if (className != null) {
+                    Class cls = loadClass(className);
+                    if (cls != null) {
+                        reflectionProvider = (ReflectionProvider) cls.newInstance();
+                    }
+                }
                 if (reflectionProvider == null) {
                     reflectionProvider = new PureJavaReflectionProvider();
                 }

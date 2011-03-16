@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -595,7 +595,7 @@ public class XStream {
         alias("gregorian-calendar", Calendar.class);
 
         if (JVM.is14()) {
-            alias("auth-subject", jvm.loadClass("javax.security.auth.Subject"));
+            aliasDynamically("auth-subject", "javax.security.auth.Subject");
             alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
             alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
             alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
@@ -604,11 +604,18 @@ public class XStream {
         }
 
         if (JVM.is15()) {
-            alias("duration", jvm.loadClass("javax.xml.datatype.Duration"));
+            aliasDynamically("duration", "javax.xml.datatype.Duration");
             alias("enum-set", jvm.loadClass("java.util.EnumSet"));
             alias("enum-map", jvm.loadClass("java.util.EnumMap"));
             alias("string-builder", jvm.loadClass("java.lang.StringBuilder"));
             alias("uuid", jvm.loadClass("java.util.UUID"));
+        }
+    }
+
+    private void aliasDynamically(String alias, String className) {
+        Class type = jvm.loadClass(className);
+        if (type != null) {
+            alias(alias, type);
         }
     }
 
@@ -684,50 +691,48 @@ public class XStream {
 
         if (JVM.is14()) {
             // late bound converters - allows XStream to be compiled on earlier JDKs
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.SubjectConverter",
                 PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.ThrowableConverter",
                 PRIORITY_NORMAL, new Class[]{Converter.class},
                 new Object[]{reflectionConverter});
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.StackTraceElementConverter",
                 PRIORITY_NORMAL, null, null);
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.CurrencyConverter",
                 PRIORITY_NORMAL, null, null);
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.RegexPatternConverter",
                 PRIORITY_NORMAL, new Class[]{Converter.class},
                 new Object[]{reflectionConverter});
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.CharsetConverter",
                 PRIORITY_NORMAL, null, null);
         }
 
         if (JVM.is15()) {
             // late bound converters - allows XStream to be compiled on earlier JDKs
-            try {
-                dynamicallyRegisterConverter(
+            if (jvm.loadClass("javax.xml.datatype.Duration") != null) {
+                registerConverterDynamically(
                     "com.thoughtworks.xstream.converters.extended.DurationConverter",
                     PRIORITY_NORMAL, null, null);
-            } catch (com.thoughtworks.xstream.InitializationException e) {
-                // Android does not deliver javax.xml.datatype.Duration in earlier versions
             }
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.enums.EnumConverter", PRIORITY_NORMAL,
                 null, null);
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.enums.EnumSetConverter", PRIORITY_NORMAL,
                 new Class[]{Mapper.class}, new Object[]{mapper});
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.enums.EnumMapConverter", PRIORITY_NORMAL,
                 new Class[]{Mapper.class}, new Object[]{mapper});
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.basic.StringBuilderConverter",
                 PRIORITY_NORMAL, null, null);
-            dynamicallyRegisterConverter(
+            registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.basic.UUIDConverter", PRIORITY_NORMAL,
                 null, null);
         }
@@ -736,7 +741,7 @@ public class XStream {
             new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
     }
 
-    private void dynamicallyRegisterConverter(String className, int priority,
+    private void registerConverterDynamically(String className, int priority,
         Class[] constructorParamTypes, Object[] constructorParamValues) {
         try {
             Class type = Class.forName(className, false, classLoaderReference.getReference());
@@ -787,13 +792,20 @@ public class XStream {
         addImmutableType(Class.class);
 
         if (jvm.supportsAWT()) {
-            addImmutableType(jvm.loadClass("java.awt.font.TextAttribute"));
+            addImmutableTypeDynamically("java.awt.font.TextAttribute");
         }
 
         if (JVM.is14()) {
             // late bound types - allows XStream to be compiled on earlier JDKs
-            addImmutableType(jvm.loadClass("java.nio.charset.Charset"));
-            addImmutableType(jvm.loadClass("java.util.Currency"));
+            addImmutableTypeDynamically("java.nio.charset.Charset");
+            addImmutableTypeDynamically("java.util.Currency");
+        }
+    }
+
+    private void addImmutableTypeDynamically(String className) {
+        Class type = jvm.loadClass(className);
+        if (type != null) {
+            addImmutableType(type);
         }
     }
 
