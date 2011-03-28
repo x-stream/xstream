@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,10 @@ import javax.xml.datatype.Duration;
 /**
  * A Converter for the XML Schema datatype <a
  * href="http://www.w3.org/TR/xmlschema-2/#duration">duration</a> and the Java type
- * {@link javax.xml.datatype.Duration Duration}.
+ * {@link Duration}. The implementation uses a {@link DatatypeFactory} to create Duration
+ * objects. If no factory is provided and the instantiation of the internal factory fails with a
+ * {@link DatatypeConfigurationException}, the converter will not claim the responsibility for
+ * Duration objects.
  * 
  * @author John Kristian
  * @author J&ouml;rg Schaible
@@ -29,8 +32,16 @@ import javax.xml.datatype.Duration;
 public class DurationConverter extends AbstractSingleValueConverter {
     private final DatatypeFactory factory;
 
-    public DurationConverter() throws DatatypeConfigurationException {
-        this(DatatypeFactory.newInstance());
+    public DurationConverter() {
+        this(new Object() {
+            DatatypeFactory getFactory() {
+                try {
+                    return DatatypeFactory.newInstance();
+                } catch (final DatatypeConfigurationException e) {
+                    return null;
+                }
+            }
+        }.getFactory());
     }
 
     public DurationConverter(DatatypeFactory factory) {
