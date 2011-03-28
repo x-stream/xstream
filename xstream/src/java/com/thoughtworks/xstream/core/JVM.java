@@ -110,6 +110,10 @@ public class JVM {
         return majorJavaVersion >= 1.6f;
     }
 
+    public static boolean is17() {
+        return majorJavaVersion >= 1.7f;
+    }
+
     private static boolean isSun() {
         return vendor.indexOf("Sun") != -1;
     }
