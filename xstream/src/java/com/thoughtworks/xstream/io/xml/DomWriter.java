@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -53,7 +53,7 @@ public class DomWriter extends AbstractDocumentWriter {
      * @since upcoming
      */
     public DomWriter(final Element rootElement, final NameCoder nameCoder) {
-        this(rootElement.getOwnerDocument(), nameCoder);
+        this(rootElement, rootElement.getOwnerDocument(), nameCoder);
     }
 
     /**
@@ -77,7 +77,7 @@ public class DomWriter extends AbstractDocumentWriter {
      * @deprecated As of upcoming use {@link DomWriter#DomWriter(Element, NameCoder)} instead.
      */
     public DomWriter(final Element rootElement, final XmlFriendlyReplacer replacer) {
-        this(rootElement.getOwnerDocument(), (NameCoder)replacer);
+        this(rootElement, rootElement.getOwnerDocument(), (NameCoder)replacer);
     }
 
     protected Object createNode(final String name) {

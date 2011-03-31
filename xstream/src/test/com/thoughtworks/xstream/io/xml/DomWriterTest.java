@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,6 +44,26 @@ public class DomWriterTest extends AbstractDocumentWriterTest {
         Element a = document.createElement("a");
         root.appendChild(a);
         writer = new DomWriter(a, document, new XmlFriendlyNameCoder());
+        
+        final XppDom xppRoot = new XppDom("root");
+        XppDom xppA = new XppDom("a");
+        xppRoot.addChild(xppA);
+        XppDom xppB = new XppDom("b");
+        xppA.addChild(xppB);
+        xppB.setAttribute("attr", "foo");
+        
+        assertDocumentProducedIs(xppA, xppB);
+        XppDomWriter xppDomWriter = new XppDomWriter();
+        new HierarchicalStreamCopier().copy(createDocumentReaderFor(document.getDocumentElement()), xppDomWriter);
+        assertTrue(equals(xppRoot, xppDomWriter.getConfiguration()));
+    }
+
+    public void testCanWriteIntoArbitraryNodeAgain() {
+        Element root = document.createElement("root"); 
+        document.appendChild(root);
+        Element a = document.createElement("a");
+        root.appendChild(a);
+        writer = new DomWriter(a);
         
         final XppDom xppRoot = new XppDom("root");
         XppDom xppA = new XppDom("a");
