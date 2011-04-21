@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -39,6 +39,7 @@
       <modules>
         <module>xstream</module>
         <!--module>xstream-builder</module-->
+        <module>xstream-hibernate</module>
         <module>xstream-benchmark</module>
         <module>xstream-distribution</module>
       </modules>
@@ -51,6 +52,7 @@
       <modules>
         <module>xstream</module>
         <!--module>xstream-builder</module-->
+        <module>xstream-hibernate</module>
         <module>xstream-benchmark</module>
         <module>xstream-distribution</module>
       </modules>
@@ -62,6 +64,7 @@
       </activation>
       <modules>
         <module>xstream</module>
+        <module>xstream-hibernate</module>
         <module>xstream-benchmark</module>
         <module>xstream-distribution</module>
       </modules>
@@ -100,6 +103,11 @@
         <groupId>cglib</groupId>
         <artifactId>cglib-nodep</artifactId>
         <version>2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.12.1.GA</version>
       </dependency>
 
       <dependency>
@@ -226,6 +234,29 @@
         <version>2.8.1</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>3.5.6-Final</version>
+      </dependency>
+      <dependency>
+        <groupId>hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>1.8.0.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.6.1</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.6.1</version>
+        <scope>runtime</scope>
+      </dependency>
+
       <!-- always test-scoped -->
       <dependency>
         <groupId>junit</groupId>
@@ -260,6 +291,7 @@
       <testResource>
         <directory>${basedir}/src/test</directory>
         <includes>
+          <include>**/*.xml</include>
           <include>**/*.xsl</include>
           <include>**/*.txt</include>
         </includes>
@@ -285,12 +317,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.0.2</version>
+          <version>2.1</version><!-- JVM 1.4 -->
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>2.0-alpha-4</version>
+          <version>2.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -300,9 +332,9 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-eclipse-plugin</artifactId>
-		  <configuration>
+          <configuration>
             <downloadSources>true</downloadSources>
-		  </configuration>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -317,7 +349,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.1</version>
+          <version>2.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+    <!--
+    Copyright (C) 2011 XStream Committers
+    All rights reserved.
+     
+    The software in this package is published under the terms of the BSD
+    style license a copy of which has been included with this distribution in
+    the LICENSE.txt file.
+     
+    Created on 25. March 2011 by Jaime Metcher 
+    -->
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+        <property name="connection.url">jdbc:hsqldb:mem:testdb</property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password"></property>
+
+        <!-- JDBC connection pool (use the built-in) -->
+        <property name="connection.pool_size">1</property>
+
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
+
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="current_session_context_class">thread</property>
+
+        <!-- Disable the second-level cache  -->
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">false</property>
+
+        <!-- Drop and re-create the database schema on startup -->
+        <property name="hbm2ddl.auto">update</property>
+
+        <mapping resource="acceptance/hibernate/reference/Department.hbm.xml"/>
+        <mapping resource="acceptance/hibernate/reference/Division.hbm.xml"/>
+        <mapping resource="acceptance/hibernate/reference/Site.hbm.xml"/>
+        <mapping resource="acceptance/hibernate/reference/Person.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>
+

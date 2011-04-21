@@ -1,0 +1,64 @@
+<?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!--
+     Copyright (C) 2011 XStream committers.
+     All rights reserved.
+     
+     The software in this package is published under the terms of the BSD
+     style license a copy of which has been included with this distribution in
+     the LICENSE.txt file.
+     
+     Created on 5. April 2011 by Joerg Schaible
+     -->
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.thoughtworks.xstream</groupId>
+    <artifactId>xstream-parent</artifactId>
+    <version>1.4-SNAPSHOT</version>
+  </parent>
+  <artifactId>xstream-hibernate</artifactId>
+  <packaging>jar</packaging>
+  <name>XStream Hibernate Extension</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>xstream</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>xstream</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>cglib</groupId>
+        <artifactId>cglib-nodep</artifactId>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+    </dependency>
+  </dependencies>
+</project>
