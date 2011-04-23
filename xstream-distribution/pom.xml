@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -25,93 +25,26 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>xstream</artifactId>
       <version>${project.version}</version>
+      <classifier>javadoc</classifier>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>xstream-hibernate</artifactId>
+      <version>${project.version}</version>
+      <classifier>javadoc</classifier>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>xstream-benchmark</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jdom</groupId>
-      <artifactId>jdom</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>com.megginson.sax</groupId>
-      <artifactId>xml-writer</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>stax</groupId>
-      <artifactId>stax</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.woodstox</groupId>
-      <artifactId>wstx-asl</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>stax</groupId>
-      <artifactId>stax-api</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>xom</groupId>
-      <artifactId>xom</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.jettison</groupId>
-      <artifactId>jettison</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib-nodep</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>oro</groupId>
-      <artifactId>oro</artifactId>
-      <scope>test</scope>
+      <classifier>javadoc</classifier>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
-
 
   <build>
     <plugins>
@@ -123,40 +56,45 @@
             <id>unpack-core</id>
             <phase>package</phase>
             <goals>
-              <goal>unpack</goal>
+              <goal>unpack-dependencies</goal>
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/xsite/javadoc</outputDirectory>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>xstream</artifactId>
-                  <version>${project.version}</version>
-                  <classifier>javadoc</classifier>
-                </artifactItem>
-              </artifactItems>
+              <includeArtifactIds>xstream</includeArtifactIds>
+              <includeClassifiers>javadoc</includeClassifiers>
+              <includeScope>provided</includeScope>
+            </configuration>
+          </execution>
+          <execution>
+            <id>unpack-hibernate</id>
+            <phase>package</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/xsite/hibernate-javadoc</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+              <includeArtifactIds>xstream-hibernate</includeArtifactIds>
+              <includeClassifiers>javadoc</includeClassifiers>
+              <includeScope>provided</includeScope>
             </configuration>
           </execution>
           <execution>
             <id>unpack-benchmark</id>
             <phase>package</phase>
             <goals>
-              <goal>unpack</goal>
+              <goal>unpack-dependencies</goal>
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/xsite/benchmark-javadoc</outputDirectory>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>xstream-benchmark</artifactId>
-                  <version>${project.version}</version>
-                  <classifier>javadoc</classifier>
-                </artifactItem>
-              </artifactItems>
+              <includeArtifactIds>xstream-benchmark</includeArtifactIds>
+              <includeClassifiers>javadoc</includeClassifiers>
+              <includeScope>provided</includeScope>
             </configuration>
           </execution>
         </executions>
@@ -218,7 +156,7 @@
             <id>bin</id>
             <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>attached</goal>
             </goals>
             <configuration>
               <descriptors>
@@ -232,7 +170,7 @@
             <id>src</id>
             <phase>install</phase>
             <goals>
-              <goal>single</goal>
+              <goal>attached</goal>
             </goals>
             <configuration>
               <descriptors>
