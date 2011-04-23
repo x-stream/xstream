@@ -237,7 +237,8 @@
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
-        <version>3.5.6-Final</version>
+        <version>3.3.2.GA</version><!-- last version on central -->
+        <!--version>3.5.6-Final</version-->
       </dependency>
       <dependency>
         <groupId>hsqldb</groupId>
