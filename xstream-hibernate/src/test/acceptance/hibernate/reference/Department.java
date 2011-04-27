@@ -21,7 +21,7 @@ public class Department extends BaseDomainObject {
 
     private Division division;
 
-    private final Set people = new HashSet(0);
+    private Set people = new HashSet(0);
 
     protected Department() {
     }

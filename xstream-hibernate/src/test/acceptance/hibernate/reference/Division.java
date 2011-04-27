@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class Division extends BaseDomainObject {
 
-    private final Set departments = new HashSet(0);
+    private Set departments = new HashSet(0);
 
     protected Division() {
     }

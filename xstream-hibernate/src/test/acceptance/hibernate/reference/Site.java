@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class Site extends BaseDomainObject {
 
-    private final Set people = new HashSet(0);
+    private Set people = new HashSet(0);
 
     protected Site() {
     }
