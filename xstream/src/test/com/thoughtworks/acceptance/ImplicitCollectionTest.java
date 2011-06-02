@@ -14,6 +14,7 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.InitializationException;
+import com.thoughtworks.xstream.converters.extended.ToStringConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -433,5 +434,37 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitCollection(Farm.class, "animals", "beast", Animal.class);
         assertBothWays(farm, expected);
+    }
+    
+    public static class Notes {
+        List info = new ArrayList();
+    }
+    
+    public static class Info {
+        private String info;
+        public Info(String info) {
+            this.info = info;
+        }
+        public String toString() {
+            return info;
+        }
+    }
+    
+    public void testCanNameImplicitElementsLikeField() throws NoSuchMethodException {
+        xstream.alias("notes", Notes.class);
+        xstream.addImplicitCollection(Notes.class, "info", "info", Info.class);
+        xstream.registerConverter(new ToStringConverter(Info.class));
+        
+        Notes notes = new Notes();
+        notes.info.add(new Info( "joe did it"));
+        notes.info.add(new Info("joehni did it"));
+        
+        String expected = "" +
+        "<notes>\n" +
+        "  <info>joe did it</info>\n" +
+        "  <info>joehni did it</info>\n" +
+        "</notes>";
+
+        assertBothWays(notes, expected);
     }
 }
