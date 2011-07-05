@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,9 @@
 package com.thoughtworks.xstream.io.json;
 
 import com.thoughtworks.acceptance.objects.Category;
+import com.thoughtworks.acceptance.objects.OwnerOfExternalizable;
 import com.thoughtworks.acceptance.objects.Product;
+import com.thoughtworks.acceptance.objects.SomethingExternalizable;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.JVM;
@@ -280,5 +282,18 @@ public class JettisonMappedXmlDriverTest extends TestCase {
                 .replace('\'', '"'), json);
         SpecialCharacters sc2 = (SpecialCharacters)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(sc2));
+    }
+
+    public void todoTestCanMarshalEmbeddedExternalizable() {
+        xstream.alias("owner", OwnerOfExternalizable.class);
+        
+        OwnerOfExternalizable in = new OwnerOfExternalizable();
+        in.target = new SomethingExternalizable("Joe", "Walnes");
+        String json = xstream.toXML(in);
+        // already wrong, Jettison reorders elements ...
+        assertEquals("{'owner':{'target':{'int':3,'string':['JoeWalnes','XStream'],'null':''}}}".replace('\'', '"'), json);
+        OwnerOfExternalizable owner = (OwnerOfExternalizable)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(owner));
+        assertEquals(in.target, owner.target);
     }
 }

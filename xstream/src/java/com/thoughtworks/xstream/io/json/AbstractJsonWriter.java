@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.io.json;
 
+import java.io.Externalizable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -549,9 +550,17 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
                     : Type.STRING;
     }
 
-    private boolean isArray(Class clazz) {
+    /**
+     * Method to declare various Java types to be handles as JSON array.
+     * 
+     * @param clazz the type
+     * @return <code>true</code> if handles as array
+     * @since upcoming
+     */
+    protected boolean isArray(Class clazz) {
         return clazz != null && (clazz.isArray()
             || Collection.class.isAssignableFrom(clazz)
+            || Externalizable.class.isAssignableFrom(clazz)
             || Map.class.isAssignableFrom(clazz)
             || Map.Entry.class.isAssignableFrom(clazz));
     }

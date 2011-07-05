@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.OwnerOfExternalizable;
+import com.thoughtworks.acceptance.objects.SomethingExternalizable;
 import com.thoughtworks.acceptance.objects.StandardObject;
 
 import java.io.Externalizable;
@@ -19,32 +21,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public class ExternalizableTest extends AbstractAcceptanceTest {
-
-    public static class SomethingExternalizable extends StandardObject implements Externalizable {
-
-        private String first;
-        private String last;
-
-        public SomethingExternalizable() {
-        }
-
-        public SomethingExternalizable(String first, String last) {
-            this.first = first;
-            this.last = last;
-        }
-
-        public void writeExternal(ObjectOutput out) throws IOException {
-            out.writeInt(first.length());
-            out.writeObject(first + last);
-        }
-
-        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-            int offset = in.readInt();
-            String full = (String) in.readObject();
-            first = full.substring(0, offset);
-            last = full.substring(offset);
-        }
-    }
 
     public void testExternalizable() {
         xstream.alias("something", SomethingExternalizable.class);
@@ -55,20 +31,18 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
                 + "<something>\n"
                 + "  <int>3</int>\n"
                 + "  <string>JoeWalnes</string>\n"
+                + "  <null/>\n"
+                + "  <string>XStream</string>\n"
                 + "</something>";
 
         assertBothWays(in, expected);
     }
 
-    static class Owner extends StandardObject {
-        SomethingExternalizable target;
-    }
-
     public void testExternalizableAsFieldOfAnotherObject() {
         xstream.alias("something", SomethingExternalizable.class);
-        xstream.alias("owner", Owner.class);
+        xstream.alias("owner", OwnerOfExternalizable.class);
 
-        Owner in = new Owner();
+        OwnerOfExternalizable in = new OwnerOfExternalizable();
         in.target = new SomethingExternalizable("Joe", "Walnes");
 
         String expected = ""
@@ -76,6 +50,8 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
                 + "  <target>\n"
                 + "    <int>3</int>\n"
                 + "    <string>JoeWalnes</string>\n"
+                + "    <null/>\n"
+                + "    <string>XStream</string>\n"
                 + "  </target>\n"
                 + "</owner>";
 

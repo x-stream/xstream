@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,7 +29,9 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 import com.thoughtworks.acceptance.objects.Original;
+import com.thoughtworks.acceptance.objects.OwnerOfExternalizable;
 import com.thoughtworks.acceptance.objects.Replaced;
+import com.thoughtworks.acceptance.objects.SomethingExternalizable;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.JVM;
 
@@ -643,5 +645,38 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 + "}}");
 
         assertEquals(expected, xstream.toXML(sa));
+    }
+
+    public void testCanMarshalExternalizable() {
+        xstream.alias("ext", SomethingExternalizable.class);
+        
+        SomethingExternalizable in = new SomethingExternalizable("Joe", "Walnes");
+        String expected = normalizeExpectation(""
+            + "{'ext': [\n"
+            + "  3,\n"
+            + "  'JoeWalnes',\n"
+            + "  {},\n"
+            + "  'XStream'\n"
+            + "]}");
+
+        assertEquals(expected, xstream.toXML(in));
+    }
+
+    public void testCanMarshalEmbeddedExternalizable() {
+        xstream.alias("owner", OwnerOfExternalizable.class);
+        
+        OwnerOfExternalizable in = new OwnerOfExternalizable();
+        in.target = new SomethingExternalizable("Joe", "Walnes");
+        String expected = normalizeExpectation(""
+            + "{'owner': {\n"
+            + "  'target': [\n"
+            + "    3,\n"
+            + "    'JoeWalnes',\n"
+            + "    {},\n"
+            + "    'XStream'\n"
+            + "  ]\n"
+            + "}}");
+
+        assertEquals(expected, xstream.toXML(in));
     }
 }
