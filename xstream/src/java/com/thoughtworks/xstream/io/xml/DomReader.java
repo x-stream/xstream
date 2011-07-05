@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -87,7 +87,7 @@ public class DomReader extends AbstractDocumentReader {
     }
 
     public String getAttribute(String name) {
-        Attr attribute = currentElement.getAttributeNode(name);
+        Attr attribute = currentElement.getAttributeNode(encodeAttribute(name));
         return attribute == null ? null : attribute.getValue();
     }
 
