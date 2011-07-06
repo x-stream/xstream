@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -450,9 +450,28 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         }
     }
     
-    public void testCanNameImplicitElementsLikeField() throws NoSuchMethodException {
+    public void testCanNameImplicitElementsLikeFieldWithExplicitDeclaration() throws NoSuchMethodException {
         xstream.alias("notes", Notes.class);
         xstream.addImplicitCollection(Notes.class, "info", "info", Info.class);
+        xstream.registerConverter(new ToStringConverter(Info.class));
+        
+        Notes notes = new Notes();
+        notes.info.add(new Info( "joe did it"));
+        notes.info.add(new Info("joehni did it"));
+        
+        String expected = "" +
+        "<notes>\n" +
+        "  <info>joe did it</info>\n" +
+        "  <info>joehni did it</info>\n" +
+        "</notes>";
+
+        assertBothWays(notes, expected);
+    }
+    
+    public void testCanNameImplicitElementsLikeField() throws NoSuchMethodException {
+        xstream.alias("notes", Notes.class);
+        xstream.alias("info", Info.class);
+        xstream.addImplicitCollection(Notes.class, "info");
         xstream.registerConverter(new ToStringConverter(Info.class));
         
         Notes notes = new Notes();

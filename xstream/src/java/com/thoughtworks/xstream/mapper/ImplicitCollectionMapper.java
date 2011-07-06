@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -160,11 +160,6 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             }
         }
 
-        public ImplicitCollectionMappingImpl getImplicitCollectionDefByFieldName(
-            String fieldName) {
-            return (ImplicitCollectionMappingImpl)fieldNameToDef.get(fieldName);
-        }
-
         public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(String fieldName) {
             return (ImplicitCollectionMapping)fieldNameToDef.get(fieldName);
         }
@@ -187,7 +182,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
         ImplicitCollectionMappingImpl(String fieldName, Class itemType, String itemFieldName) {
             this.fieldName = fieldName;
             this.itemFieldName = itemFieldName;
-            this.itemType = itemType == null ? Object.class : itemType;
+            this.itemType = itemType;
         }
 
         public boolean equals(Object obj) {
@@ -238,7 +233,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
         String itemFieldName;
 
         NamedItemType(Class itemType, String itemFieldName) {
-            this.itemType = itemType;
+            this.itemType = itemType ==  null ? Object.class : itemType;
             this.itemFieldName = itemFieldName;
         }
 

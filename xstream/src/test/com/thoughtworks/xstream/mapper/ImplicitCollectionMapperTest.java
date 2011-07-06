@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,7 +23,7 @@ public class ImplicitCollectionMapperTest extends TestCase {
     private ImplicitCollectionMapper implicitCollections = new ImplicitCollectionMapper(new DefaultMapper(null));
 
     public void testAllowsFieldsToBeMarkedAsImplicitCollectionsToBeAdded() {
-        implicitCollections.add(SampleLists.class, "good", Object.class);
+        implicitCollections.add(SampleLists.class, "good", null);
         assertNotNull(implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good"));
         assertEquals("good", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, null));
     }
@@ -50,7 +50,7 @@ public class ImplicitCollectionMapperTest extends TestCase {
 
     public void testAllowsFieldsToBeMarkedAsNamedImplicitCollectionsToBeAdded() {
         implicitCollections.add(SampleLists.class, "good", "good-item", Object.class);
-        implicitCollections.add(SampleLists.class, "bad", Object.class);
+        implicitCollections.add(SampleLists.class, "bad", null);
         Mapper.ImplicitCollectionMapping mappingGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
         assertNotNull(mappingGood);
         assertEquals("good-item", mappingGood.getItemFieldName());
@@ -60,6 +60,7 @@ public class ImplicitCollectionMapperTest extends TestCase {
         Mapper.ImplicitCollectionMapping mappingBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
         assertNotNull(mappingBad);
         assertNull(mappingBad.getItemFieldName());
+        assertNull(mappingBad.getItemType());
 
         assertEquals("good", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, "good-item"));
         assertEquals("bad", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, null));
