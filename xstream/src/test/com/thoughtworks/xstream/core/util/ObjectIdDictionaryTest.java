@@ -38,55 +38,24 @@ public class ObjectIdDictionaryTest extends TestCase {
         assertEquals("id b", dict.lookupId(b));
     }
 
-    public void todoTestEnforceSameSystemHashCodeForGCedObjects() {
+    public void testEntriesAreGarbageCollected() throws InterruptedException {
         final ObjectIdDictionary dict = new ObjectIdDictionary();
 
-        final StringBuffer memInfo = new StringBuffer("JVM: ");
-        memInfo.append(System.getProperty("java.version"));
-        memInfo.append("\nOS: ");
-        memInfo.append(System.getProperty("os.name"));
-        memInfo.append(" / ");
-        memInfo.append(System.getProperty("os.arch"));
-        memInfo.append(" / ");
-        memInfo.append(System.getProperty("os.version"));
-        memInfo.append("\nMemoryInfo:\n");
-        memInfo.append(memoryInfo());
-        memInfo.append('\n');
-
         int counter = 0;
-        for (; counter < 10000; ++counter) {
-            final String s = new String("JUnit ") + counter; // enforce new object
+        for (; counter < 1000; ++counter) {
+            final String s = new String("JUnit " + counter); // enforce new object
             assertFalse("Failed in (" + counter + ")", dict.containsId(s));
             dict.associateId(s, "X");
             if (counter % 50 == 49) {
                 System.gc();
-                if (counter % 2000 == 1999) {
-                    memInfo.append("\nMemoryInfo:\n");
-                    memInfo.append(memoryInfo());
-                }
+                Thread.sleep(10);
             }
         }
         int size = dict.size();
-        memInfo.append("\nMemoryInfo:\n");
-        memInfo.append(memoryInfo());
         assertTrue("Dictionary did not shrink; "
             + counter
             + " distinct objects; "
             + size
-            + " size; "
-            + memInfo, dict.size() < 2500);
-    }
-
-    private String memoryInfo() {
-        final Runtime runtime = Runtime.getRuntime();
-        final StringBuffer buffer = new StringBuffer("Memory: ");
-        // not available in JDK 1.3
-        // buffer.append(runtime.maxMemory());
-        // buffer.append(" max / ");
-        buffer.append(runtime.freeMemory());
-        buffer.append(" free / ");
-        buffer.append(runtime.totalMemory());
-        buffer.append(" total");
-        return buffer.toString();
+            + " size", dict.size() < 250);
     }
 }
