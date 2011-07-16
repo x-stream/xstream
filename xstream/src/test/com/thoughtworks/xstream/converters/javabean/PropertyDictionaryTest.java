@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.javabean;
 
 import junit.framework.TestCase;
 
+import java.beans.PropertyDescriptor;
 import java.util.Iterator;
 
 public class PropertyDictionaryTest extends TestCase {
@@ -81,6 +82,14 @@ public class PropertyDictionaryTest extends TestCase {
         assertEquals("a", ((BeanProperty) properties.next()).getName());
         assertEquals("c", ((BeanProperty) properties.next()).getName());
         assertFalse("No more fields should be present", properties.hasNext());
+        
+        properties = propertyDictionary.propertiesFor(SomeClass.class);
+        assertEquals("URL", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("a", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("c", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("d", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("e", ((PropertyDescriptor) properties.next()).getName());
+        assertFalse("No more fields should be present", properties.hasNext());
     }
 
     /**
@@ -112,6 +121,16 @@ public class PropertyDictionaryTest extends TestCase {
         assertEquals("a", ((BeanProperty) properties.next()).getName());
         assertEquals("brilliant", ((BeanProperty) properties.next()).getName());
         assertEquals("c", ((BeanProperty) properties.next()).getName());
+        assertFalse("No more fields should be present", properties.hasNext());
+
+        properties = propertyDictionary.propertiesFor(SpecialClass.class);
+        assertEquals("URL", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("a", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("brilliant", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("c", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("d", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("e", ((PropertyDescriptor) properties.next()).getName());
+        assertEquals("private", ((PropertyDescriptor) properties.next()).getName());
         assertFalse("No more fields should be present", properties.hasNext());
     }
 }

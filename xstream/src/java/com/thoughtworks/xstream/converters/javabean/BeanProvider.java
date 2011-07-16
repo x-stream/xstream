@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,12 +11,6 @@
  */
 package com.thoughtworks.xstream.converters.javabean;
 
-import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
-import com.thoughtworks.xstream.core.util.OrderRetainingMap;
-
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,26 +20,42 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.WeakHashMap;
+
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 
-public class BeanProvider {
+public class BeanProvider implements JavaBeanProvider {
 
     protected static final Object[] NO_PARAMS = new Object[0];
-    private final Comparator propertyNameComparator;
-    private final transient Map propertyNameCache = new WeakHashMap();
+    protected PropertyDictionary propertyDictionary;
 
+    /**
+     * Construct a BeanProvider that will process the bean properties in their natural order.
+     */
     public BeanProvider() {
-        this(null);
+        this(new PropertyDictionary(new NativePropertySorter()));
     }
 
+    /**
+     * Construct a BeanProvider with a comparator to sort the bean properties by name in the
+     * dictionary.
+     * 
+     * @param propertyNameComparator the comparator
+     */
     public BeanProvider(final Comparator propertyNameComparator) {
-        this.propertyNameComparator = propertyNameComparator;
+        this(new PropertyDictionary(new ComparingPropertySorter(propertyNameComparator)));
     }
-    
+
+    /**
+     * Construct a BeanProvider with a provided property dictionary.
+     * 
+     * @param propertyDictionary the property dictionary to use
+     * @since upcoming
+     */
+    public BeanProvider(final PropertyDictionary propertyDictionary) {
+        this.propertyDictionary = propertyDictionary;
+    }
+
     public Object newInstance(Class type) {
         try {
             return getDefaultConstrutor(type).newInstance(NO_PARAMS);
@@ -66,9 +76,9 @@ public class BeanProvider {
         }
     }
 
-    public void visitSerializableProperties(Object object, Visitor visitor) {
+    public void visitSerializableProperties(Object object, JavaBeanProvider.Visitor visitor) {
         PropertyDescriptor[] propertyDescriptors = getSerializableProperties(object);
-        for (int i = 0; i < propertyDescriptors.length; i++) {
+        for (int i = 0; i < propertyDescriptors.length; i++ ) {
             PropertyDescriptor property = propertyDescriptors[i];
             try {
                 Method readMethod = property.getReadMethod();
@@ -141,7 +151,7 @@ public class BeanProvider {
      */
     protected Constructor getDefaultConstrutor(Class type) {
         Constructor[] constructors = type.getConstructors();
-        for (int i = 0; i < constructors.length; i++) {
+        for (int i = 0; i < constructors.length; i++ ) {
             Constructor c = constructors[i];
             if (c.getParameterTypes().length == 0 && Modifier.isPublic(c.getModifiers()))
                 return c;
@@ -150,16 +160,9 @@ public class BeanProvider {
     }
 
     protected PropertyDescriptor[] getSerializableProperties(Object object) {
-        Map nameMap = getNameMap(object.getClass());
-        List result = new ArrayList(nameMap.size());
-        Set names = nameMap.keySet();
-        if (propertyNameComparator != null) {
-            Set sortedSet = new TreeSet(propertyNameComparator);
-            sortedSet.addAll(names);
-            names = sortedSet;
-        }
-        for (final Iterator iter = names.iterator(); iter.hasNext();) {
-            final PropertyDescriptor descriptor = (PropertyDescriptor)nameMap.get(iter.next());
+        List result = new ArrayList();
+        for (final Iterator iter = propertyDictionary.propertiesFor(object.getClass()); iter.hasNext();) {
+            final PropertyDescriptor descriptor = (PropertyDescriptor)iter.next();
             if (canStreamProperty(descriptor)) {
                 result.add(descriptor);
             }
@@ -177,31 +180,12 @@ public class BeanProvider {
     }
 
     protected PropertyDescriptor getProperty(String name, Class type) {
-        return (PropertyDescriptor)getNameMap(type).get(name);
+        return (PropertyDescriptor)propertyDictionary.propertyDescriptor(type, name);
     }
 
-    private Map getNameMap(Class type) {
-        Map nameMap = (Map)propertyNameCache.get(type);
-        if (nameMap == null) {
-            BeanInfo beanInfo;
-            try {
-                beanInfo = Introspector.getBeanInfo(type, Object.class);
-            } catch (IntrospectionException e) {
-                throw new ObjectAccessException("Cannot get BeanInfo of type " + type.getName(), e);
-            }
-            nameMap = new OrderRetainingMap();
-            propertyNameCache.put(type, nameMap);
-            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            for (int i = 0; i < propertyDescriptors.length; i++) {
-                PropertyDescriptor descriptor = propertyDescriptors[i];
-                nameMap.put(descriptor.getName(), descriptor);
-            }
-        }
-        return nameMap;
-    }
-
-    public interface Visitor {
-        boolean shouldVisit(String name, Class definedIn);
-        void visit(String name, Class type, Class definedIn, Object value);
+    /**
+     * @deprecated As of upcoming use {@link JavaBeanProvider.Visitor}
+     */
+    public interface Visitor extends JavaBeanProvider.Visitor {
     }
 }

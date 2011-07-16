@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,7 +33,7 @@ public class JavaBeanConverter implements Converter {
      *  - support local converters (XSTR-601)
      */
     private Mapper mapper;
-    private BeanProvider beanProvider;
+    private JavaBeanProvider beanProvider;
     /**
      * @deprecated As of 1.3, no necessity for field anymore.
      */
@@ -43,7 +43,7 @@ public class JavaBeanConverter implements Converter {
         this(mapper, new BeanProvider());
     }
 
-    public JavaBeanConverter(Mapper mapper, BeanProvider beanProvider) {
+    public JavaBeanConverter(Mapper mapper, JavaBeanProvider beanProvider) {
         this.mapper = mapper;
         this.beanProvider = beanProvider;
     }
@@ -66,7 +66,7 @@ public class JavaBeanConverter implements Converter {
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.aliasForSystemAttribute("class");
-        beanProvider.visitSerializableProperties(source, new BeanProvider.Visitor() {
+        beanProvider.visitSerializableProperties(source, new JavaBeanProvider.Visitor() {
             public boolean shouldVisit(String name, Class definedIn) {
                 return mapper.shouldSerializeMember(definedIn, name);
             }
