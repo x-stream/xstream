@@ -32,13 +32,11 @@ public class WeakCache extends AbstractMap {
 
     private final Map map = new WeakHashMap();
 
-    @Override
     public Object get(Object key) {
         Reference reference = (Reference)map.get(key);
         return reference != null ? reference.get() : null;
     }
 
-    @Override
     public Object put(Object key, Object value) {
         return map.put(key, createReference(value));
     }
@@ -47,7 +45,6 @@ public class WeakCache extends AbstractMap {
         return new WeakReference(value);
     }
 
-    @Override
     public boolean containsValue(final Object value) {
         Boolean result = (Boolean)iterate(new Visitor() {
 
@@ -59,7 +56,6 @@ public class WeakCache extends AbstractMap {
         return result == Boolean.TRUE;
     }
 
-    @Override
     public int size() {
         if (map.size() == 0) {
             return 0;
@@ -77,7 +73,6 @@ public class WeakCache extends AbstractMap {
         return i[0];
     }
 
-    @Override
     public Collection values() {
         final Collection collection = new ArrayList();
         if (map.size() != 0) {
@@ -93,7 +88,6 @@ public class WeakCache extends AbstractMap {
         return collection;
     }
 
-    @Override
     public Set entrySet() {
         final Set set = new HashSet();
         if (map.size() != 0) {
@@ -154,37 +148,30 @@ public class WeakCache extends AbstractMap {
         Object visit(Object element);
     }
 
-    @Override
     public boolean containsKey(Object key) {
         return map.containsKey(key);
     }
 
-    @Override
     public Object remove(Object key) {
         return map.remove(key);
     }
 
-    @Override
     public void clear() {
         map.clear();
     }
 
-    @Override
     public Set keySet() {
         return map.keySet();
     }
 
-    @Override
     public boolean equals(Object o) {
         return map.equals(o);
     }
 
-    @Override
     public int hashCode() {
         return map.hashCode();
     }
 
-    @Override
     public String toString() {
         return map.toString();
     }
