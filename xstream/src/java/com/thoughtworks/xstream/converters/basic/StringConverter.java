@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,19 +11,19 @@
  */
 package com.thoughtworks.xstream.converters.basic;
 
-import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Map;
-import java.util.WeakHashMap;
+
+import com.thoughtworks.xstream.core.util.WeakCache;
 
 
 /**
  * Converts a String to a String ;).
  * <p>
- * Well ok, it doesn't <i>actually</i> do any conversion. The converter uses a map to reuse instances. This map is by
- * default a synchronized {@link WeakHashMap}.
+ * Well ok, it doesn't <i>actually</i> do any conversion. The converter uses by default a map
+ * with weak references to reuse instances.
  * </p>
- *
+ * 
  * @author Joe Walnes
  * @author Rene Schwietzke
  * @author J&ouml;rg Schaible
@@ -32,17 +32,26 @@ import java.util.WeakHashMap;
 public class StringConverter extends AbstractSingleValueConverter {
 
     /**
-     * A Map to store strings as long as needed to map similar strings onto the same instance and conserve memory. The
-     * map can be set from the outside during construction, so it can be a LRU map or a weak map, synchronised or not.
+     * A Map to store strings as long as needed to map similar strings onto the same instance
+     * and conserve memory. The map can be set from the outside during construction, so it can
+     * be a LRU map or a weak map, synchronised or not.
      */
     private final Map cache;
 
+    /**
+     * Construct a StringConverter using a cache with weak references.
+     * 
+     * @param map the map to use for the instances to reuse (may be null to not cache at all)
+     */
     public StringConverter(final Map map) {
         cache = map;
     }
 
+    /**
+     * Construct a StringConverter using a cache with weak references.
+     */
     public StringConverter() {
-        this(Collections.synchronizedMap(new WeakHashMap()));
+        this(Collections.synchronizedMap(new WeakCache()));
     }
 
     public boolean canConvert(final Class type) {
@@ -50,16 +59,19 @@ public class StringConverter extends AbstractSingleValueConverter {
     }
 
     public Object fromString(final String str) {
-        final WeakReference ref = (WeakReference)cache.get(str);
-        String s = (String)(ref == null ? null : ref.get());
+        if (cache != null) {
+            String s = (String)cache.get(str);
 
-        if (s == null) {
-            // fill cache
-            cache.put(str, new WeakReference(str));
+            if (s == null) {
+                // fill cache
+                cache.put(str, str);
 
-            s = str;
+                s = str;
+            }
+
+            return s;
+        } else {
+            return str;
         }
-
-        return s;
     }
 }
