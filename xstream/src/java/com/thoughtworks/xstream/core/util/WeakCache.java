@@ -23,14 +23,35 @@ import java.util.WeakHashMap;
 
 
 /**
- * A HashMap implementation with weak references for key and value.
+ * A HashMap implementation with weak references values and by default for the key. WHen the
+ * value is garbage collected, the key will also vanish from the map.
  * 
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
 public class WeakCache extends AbstractMap {
 
-    private final Map map = new WeakHashMap();
+    private final Map map;
+
+    /**
+     * Construct a WeakCache with weak keys.
+     * 
+     * @param map the map to use
+     * @since upcoming
+     */
+    public WeakCache() {
+        this(new WeakHashMap());
+    }
+
+    /**
+     * Construct a WeakCache.
+     * 
+     * @param map the map to use
+     * @since upcoming
+     */
+    public WeakCache(Map map) {
+        this.map = map;
+    }
 
     public Object get(Object key) {
         Reference reference = (Reference)map.get(key);
@@ -38,7 +59,8 @@ public class WeakCache extends AbstractMap {
     }
 
     public Object put(Object key, Object value) {
-        return map.put(key, createReference(value));
+        Reference ref = (Reference)map.put(key, createReference(value));
+        return ref == null ? null : ref.get();
     }
 
     protected Reference createReference(Object value) {

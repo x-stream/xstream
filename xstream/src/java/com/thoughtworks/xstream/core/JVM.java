@@ -15,8 +15,8 @@ import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.core.util.PresortedSet;
+import com.thoughtworks.xstream.core.util.WeakCache;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
 import java.text.AttributedString;
@@ -33,7 +33,7 @@ import java.util.TreeSet;
 public class JVM {
 
     private ReflectionProvider reflectionProvider;
-    private transient Map loaderCache = new HashMap();
+    private transient Map loaderCache = new WeakCache(new HashMap());
     
     private final boolean supportsAWT = loadClass("java.awt.Color") != null;
     private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel") != null;
@@ -199,16 +199,13 @@ public class JVM {
 
     public Class loadClass(String name) {
         try {
-            WeakReference reference = (WeakReference) loaderCache.get(name);
-            if (reference != null) {
-                Class cached = (Class) reference.get();
-                if (cached != null) {
-                    return cached;
-                }
+            Class cached = (Class) loaderCache.get(name);
+            if (cached != null) {
+                return cached;
             }
             
             Class clazz = Class.forName(name, false, getClass().getClassLoader());
-            loaderCache.put(name, new WeakReference(clazz));
+            loaderCache.put(name, clazz);
             return clazz;
         } catch (ClassNotFoundException e) {
             return null;
@@ -312,7 +309,7 @@ public class JVM {
     }
     
     private Object readResolve() {
-        loaderCache = new HashMap();
+        loaderCache = new WeakCache(new HashMap());
         return this;
     }
     

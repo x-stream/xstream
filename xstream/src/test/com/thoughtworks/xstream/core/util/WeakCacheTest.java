@@ -21,6 +21,7 @@ import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import junit.framework.TestCase;
 
@@ -32,7 +33,7 @@ public class WeakCacheTest extends TestCase {
     public void testIsAMap() {
         Map map = new WeakCache();
         assertEquals(0, map.size());
-        map.put("key", "value");
+        assertNull(map.put("key", "value"));
         assertEquals(1, map.size());
         assertEquals("value", map.get("key"));
         assertTrue(map.containsKey(new String("key")));
@@ -41,6 +42,9 @@ public class WeakCacheTest extends TestCase {
         assertEquals("key", map.keySet().iterator().next());
         assertEquals("value", ((Map.Entry)map.entrySet().iterator().next()).getValue());
         assertEquals("key", ((Map.Entry)map.entrySet().iterator().next()).getKey());
+        assertEquals("value", map.put("key", "test"));
+        map.clear();
+        assertEquals(0, map.size());
     }
     
     public void testEntriesAreRemovedIfKeyIsGarbageCollected() throws InterruptedException {
@@ -147,6 +151,25 @@ public class WeakCacheTest extends TestCase {
         }
         // wanted is 1 :-/
         //assertEquals(1, map.size());
+        assertEquals(0, map.size());
+    }
+    
+    public void testCanUseDifferentMapImplementation() throws InterruptedException {
+        String value = new String("value");
+        ReferenceQueue refQueue = new ReferenceQueue();
+        Reference ref = new PhantomReference(value, refQueue);
+        
+        Map map = new WeakCache(new TreeMap());
+        map.put("key", value);
+        value = null;
+
+        int i = 0;
+        while (refQueue.poll() == null) {
+            ref.get(); // always null
+            assertTrue("Value still alive even after "+i+" forced garbage collections", i++ < 5);
+            Thread.sleep(10);
+            System.gc();
+        }
         assertEquals(0, map.size());
     }
 }
