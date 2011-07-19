@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -43,6 +44,12 @@ public class WeakCacheTest extends TestCase {
         assertEquals("value", ((Map.Entry)map.entrySet().iterator().next()).getValue());
         assertEquals("key", ((Map.Entry)map.entrySet().iterator().next()).getKey());
         assertEquals("value", map.put("key", "test"));
+        Map copy = new HashMap(map);
+        assertEquals("test", map.remove("key"));
+        assertEquals(0, map.size());
+        map.putAll(copy);
+        assertEquals(1, map.size());
+        assertEquals("test", map.get("key"));
         map.clear();
         assertEquals(0, map.size());
     }

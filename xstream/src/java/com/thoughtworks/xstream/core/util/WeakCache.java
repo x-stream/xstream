@@ -63,6 +63,11 @@ public class WeakCache extends AbstractMap {
         return ref == null ? null : ref.get();
     }
 
+    public Object remove(Object key) {
+        Reference ref = (Reference)map.remove(key);
+        return ref == null ? null : ref.get();
+    }
+
     protected Reference createReference(Object value) {
         return new WeakReference(value);
     }
@@ -172,10 +177,6 @@ public class WeakCache extends AbstractMap {
 
     public boolean containsKey(Object key) {
         return map.containsKey(key);
-    }
-
-    public Object remove(Object key) {
-        return map.remove(key);
     }
 
     public void clear() {
