@@ -11,8 +11,7 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import java.util.Arrays;
-import java.util.Collection;
+import com.thoughtworks.xstream.core.util.Primitives;
 
 /**
  * Mapper that detects arrays and changes the name so it can identified as an array
@@ -21,18 +20,6 @@ import java.util.Collection;
  * @author Joe Walnes 
  */
 public class ArrayMapper extends MapperWrapper {
-
-    private final static Collection BOXED_TYPES = Arrays.asList(
-            new Class[] {
-                    Boolean.class,
-                    Byte.class,
-                    Character.class,
-                    Short.class,
-                    Integer.class,
-                    Long.class,
-                    Float.class,
-                    Double.class
-            });
 
     public ArrayMapper(Mapper wrapped) {
         super(wrapped);
@@ -130,6 +117,6 @@ public class ArrayMapper extends MapperWrapper {
     }
     
     private String boxedTypeName(Class type) {
-        return BOXED_TYPES.contains(type) ? type.getName() : null;
+        return Primitives.isBoxed(type) ? type.getName() : null;
     }
 }

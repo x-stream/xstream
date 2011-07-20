@@ -48,4 +48,15 @@ public final class Primitives {
     static public Class unbox(final Class type) {
         return (Class)UNBOX.get(type);
     }
+
+    /**
+     * Check for a boxed type.
+     * 
+     * @param type the type to check
+     * @return <code>true</code> if the type is boxed
+     * @since upcoming
+     */
+    static public boolean isBoxed(final Class type) {
+        return UNBOX.containsKey(type);
+    }
 }
