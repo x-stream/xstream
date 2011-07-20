@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2007 XStream Committers.
+ * Copyright (c) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,25 +22,42 @@ import java.util.Map;
 public final class Primitives {
     private final static Map BOX = new HashMap();
     private final static Map UNBOX = new HashMap();
+    private final static Map NAMED_PRIMITIVE = new HashMap();
+    private final static Map REPRESENTING_CHAR = new HashMap();
     
     static {
         final Class[][] boxing = new Class[][]{
-            { byte.class, Byte.class},
-            { char.class, Character.class},
-            { short.class, Short.class},
-            { int.class, Integer.class},
-            { long.class, Long.class},
-            { float.class, Float.class},
-            { double.class, Double.class},
-            { boolean.class, Boolean.class},
-            { void.class, Void.class},
+            { Byte.TYPE, Byte.class},
+            { Character.TYPE, Character.class},
+            { Short.TYPE, Short.class},
+            { Integer.TYPE, Integer.class},
+            { Long.TYPE, Long.class},
+            { Float.TYPE, Float.class},
+            { Double.TYPE, Double.class},
+            { Boolean.TYPE, Boolean.class},
+            { Void.TYPE, Void.class},
         };
+        final Character[] representingChars = { 
+            Character.valueOf('B'), 
+            Character.valueOf('C'), 
+            Character.valueOf('S'), 
+            Character.valueOf('I'), 
+            Character.valueOf('J'), 
+            Character.valueOf('F'), 
+            Character.valueOf('D'), 
+            Character.valueOf('Z'),
+            null
+         };
         for (int i = 0; i < boxing.length; i++) {
-            BOX.put(boxing[i][0], boxing[i][1]);
-            UNBOX.put(boxing[i][1], boxing[i][0]);
+            final Class primitiveType = boxing[i][0];
+            final Class boxedType = boxing[i][1];
+            BOX.put(primitiveType, boxedType);
+            UNBOX.put(boxedType, primitiveType);
+            NAMED_PRIMITIVE.put(primitiveType.getName(), primitiveType);
+            REPRESENTING_CHAR.put(primitiveType, representingChars[i]);
         }
     }
-    
+
     static public Class box(final Class type) {
         return (Class)BOX.get(type);
     }
@@ -58,5 +75,28 @@ public final class Primitives {
      */
     static public boolean isBoxed(final Class type) {
         return UNBOX.containsKey(type);
+    }
+
+    /**
+     * Get the primitive type by name.
+     * 
+     * @param name the name of the type
+     * @return the Java type or <code>null</code>
+     * @since upcoming
+     */
+    static public Class primitiveType(final String name) {
+        return (Class)NAMED_PRIMITIVE.get(name);
+    }
+
+    /**
+     * Get the representing character of a primitive type.
+     * 
+     * @param type the primitive type
+     * @return the representing character or 0
+     * @since upcoming
+     */
+    static public char representingChar(final Class type) {
+        Character ch = (Character)REPRESENTING_CHAR.get(type);
+        return ch == null ? 0 : ch.charValue();
     }
 }
