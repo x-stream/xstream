@@ -90,7 +90,7 @@ public class CompositeClassLoader extends ClassLoader {
             public boolean addAll(Collection c) {
                 boolean result = false;
                 for(Iterator iter = c.iterator(); iter.hasNext(); ) {
-                    result |= super.add(iter.next());
+                    result |= add(iter.next());
                 }
                 return result;
             }
