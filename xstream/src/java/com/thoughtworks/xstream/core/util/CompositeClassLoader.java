@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.core.util;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -84,7 +85,15 @@ public class CompositeClassLoader extends ClassLoader {
     }
 
     public Class loadClass(String name) throws ClassNotFoundException {
-        List copy = new ArrayList() {
+        List copy = new ArrayList(classLoaders.size()) {
+
+            public boolean addAll(Collection c) {
+                boolean result = false;
+                for(Iterator iter = c.iterator(); iter.hasNext(); ) {
+                    result |= super.add(iter.next());
+                }
+                return result;
+            }
 
             public boolean add(Object ref) {
                 Object classLoader = ((WeakReference)ref).get();
