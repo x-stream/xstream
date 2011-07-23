@@ -38,14 +38,14 @@ public final class Primitives {
             { Void.TYPE, Void.class},
         };
         final Character[] representingChars = { 
-            Character.valueOf('B'), 
-            Character.valueOf('C'), 
-            Character.valueOf('S'), 
-            Character.valueOf('I'), 
-            Character.valueOf('J'), 
-            Character.valueOf('F'), 
-            Character.valueOf('D'), 
-            Character.valueOf('Z'),
+            new Character('B'), 
+            new Character('C'), 
+            new Character('S'), 
+            new Character('I'), 
+            new Character('J'), 
+            new Character('F'), 
+            new Character('D'), 
+            new Character('Z'),
             null
          };
         for (int i = 0; i < boxing.length; i++) {
