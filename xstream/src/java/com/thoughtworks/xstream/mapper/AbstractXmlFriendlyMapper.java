@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,8 +22,12 @@ package com.thoughtworks.xstream.mapper;
  * <li><b>default</b> as the prefix for class names with no package.</li>
  * </ul>
  * 
+ * Note, this class is no longer in regular use for current XStream versions. It exists to provide backward compatibility
+ * to existing XML data written with older XStream versions.
+ *  
  * @author Joe Walnes
  * @author Mauro Talevi
+ * @deprecated As of upcoming use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
  */
 public class AbstractXmlFriendlyMapper extends MapperWrapper {
 

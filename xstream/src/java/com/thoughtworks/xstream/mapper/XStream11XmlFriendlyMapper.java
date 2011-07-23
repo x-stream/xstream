@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,14 +15,18 @@ package com.thoughtworks.xstream.mapper;
 /**
  * Mapper that ensures that all names in the serialization stream are read in an XML friendly way.
  * <ul>
- * <li><b>_</b> (underscore) chars appearing in class names are replaced with <b>$<br> (dollar)</li>
- * <li><b>_DOLLAR_</b> string appearing in field names are replaced with <b>$<br> (dollar)</li>
- * <li><b>__</b> string appearing in field names are replaced with <b>_<br> (underscore)</li>
+ * <li><b>_</b> (underscore) chars appearing in class names are replaced with <b>$</b> (dollar)</li>
+ * <li><b>_DOLLAR_</b> string appearing in field names are replaced with <b>$</b> (dollar)</li>
+ * <li><b>__</b> string appearing in field names are replaced with <b>_</b> (underscore)</li>
  * <li><b>default</b> is the prefix for class names with no package.</li>
  * </ul>
  * 
+ * Note, this class is no longer in regular use for current XStream versions. It exists to provide backward compatibility
+ * to existing XML data written with older XStream versions (&lt;= 1.1).
+ * 
  * @author Joe Walnes
  * @author Mauro Talevi
+ * @deprecated As of upcoming use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
  */
 public class XStream11XmlFriendlyMapper extends AbstractXmlFriendlyMapper {
 
@@ -41,6 +45,4 @@ public class XStream11XmlFriendlyMapper extends AbstractXmlFriendlyMapper {
     public String mapNameFromXML(String xmlName) {
         return unescapeFieldName(xmlName);
     }
-
-    
 }

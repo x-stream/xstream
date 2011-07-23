@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,12 +23,12 @@ package com.thoughtworks.xstream.mapper;
  * 
  * @author Joe Walnes
  * @author Mauro Talevi
- * @deprecated As of 1.3, use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
+ * @deprecated As of 1.3 use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
  */
 public class XmlFriendlyMapper extends AbstractXmlFriendlyMapper {
 
     /**
-     * @deprecated As of 1.3, use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
+     * @deprecated As of 1.3 use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
      */
     public XmlFriendlyMapper(Mapper wrapped) {
         super(wrapped);
