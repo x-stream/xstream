@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,11 +12,10 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+import com.thoughtworks.xstream.core.util.WeakCache;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
-import java.lang.ref.WeakReference;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 
 /**
@@ -99,9 +98,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
     }
 
     private String encodeName(String name) {
-        final WeakReference ref = (WeakReference)escapeCache.get(name);
-        String s = (String)(ref == null ? null : ref.get());
-
+        String s = (String)escapeCache.get(name);
         if (s == null) {
             final int length = name.length();
 
@@ -138,15 +135,13 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
                 }
             }
             s = result.toString();
-            escapeCache.put(name, new WeakReference(s));
+            escapeCache.put(name, s);
         }
         return s;
     }
 
     private String decodeName(String name) {
-        final WeakReference ref = (WeakReference)unescapeCache.get(name);
-        String s = (String)(ref == null ? null : ref.get());
-
+        String s = (String)unescapeCache.get(name);
         if (s == null) {
             final char dollarReplacementFirstChar = dollarReplacement.charAt(0);
             final char escapeReplacementFirstChar = escapeCharReplacement.charAt(0);
@@ -191,7 +186,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
             }
 
             s = result.toString();
-            unescapeCache.put(name, new WeakReference(s));
+            unescapeCache.put(name, s);
         }
         return s;
     }
@@ -208,8 +203,8 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
     }
 
     private Object readResolve() {
-        escapeCache = new WeakHashMap();
-        unescapeCache = new WeakHashMap();
+        escapeCache = new WeakCache();
+        unescapeCache = new WeakCache();
         return this;
     }
 }
