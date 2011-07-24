@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.core.util.Primitives;
 
 /**
  * Converts a java.lang.Class to XML.
@@ -47,7 +48,7 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
     }
 
     private Class loadClass(String className) throws ClassNotFoundException {
-        Class resultingClass = primitiveClassForName(className);
+        Class resultingClass = Primitives.primitiveType(className);
         if( resultingClass != null ){
             return resultingClass;
         }
@@ -65,21 +66,4 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
         }
         return classLoader.loadClass(className);
     }
-
-    /**
-     * Lookup table for primitive types.
-     */
-    private Class primitiveClassForName(String name) {
-        return  name.equals("void") ? Void.TYPE :
-                name.equals("boolean") ? Boolean.TYPE :
-                name.equals("byte") ? Byte.TYPE :
-                name.equals("char") ? Character.TYPE :
-                name.equals("short") ? Short.TYPE :
-                name.equals("int") ? Integer.TYPE :
-                name.equals("long") ? Long.TYPE :
-                name.equals("float") ? Float.TYPE :
-                name.equals("double") ? Double.TYPE :
-                null;
-    }
-
 }
