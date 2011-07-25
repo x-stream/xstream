@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
 import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractReflectionConverter implements Converter {
+public abstract class AbstractReflectionConverter implements Converter, Caching {
 
     protected final ReflectionProvider reflectionProvider;
     protected final Mapper mapper;
@@ -386,6 +387,10 @@ public abstract class AbstractReflectionConverter implements Converter {
         }
     }
     
+    public void flushCache() {
+        serializationMethodInvoker.flushCache();
+    }
+
     private Object readResolve() {
         serializationMethodInvoker = new SerializationMethodInvoker();
         return this;

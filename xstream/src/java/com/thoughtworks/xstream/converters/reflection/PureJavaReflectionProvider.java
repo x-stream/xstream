@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -57,11 +57,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         try {
             Constructor[] constructors = type.getDeclaredConstructors();
             for (int i = 0; i < constructors.length; i++) {
-                if (constructors[i].getParameterTypes().length == 0) {
-                    if (!Modifier.isPublic(constructors[i].getModifiers())) {
-                        constructors[i].setAccessible(true);
+                final Constructor constructor = constructors[i];
+                if (constructor.getParameterTypes().length == 0) {
+                    if (!constructor.isAccessible()) {
+                        constructor.setAccessible(true);
                     }
-                    return constructors[i].newInstance(new Object[0]);
+                    return constructor.newInstance(new Object[0]);
                 }
             }
             if (Serializable.class.isAssignableFrom(type)) {
@@ -161,8 +162,8 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     protected boolean fieldModifiersSupported(Field field) {
-        return !(Modifier.isStatic(field.getModifiers())
-                || Modifier.isTransient(field.getModifiers()));
+        int modifiers = field.getModifiers();
+        return !(Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers));
     }
 
     protected void validateFieldAccess(Field field) {

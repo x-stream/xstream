@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,12 +12,14 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.util.FastField;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,20 +30,26 @@ import java.util.Map;
  * reflection caching).
  * 
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
-public class SerializationMethodInvoker {
+public class SerializationMethodInvoker implements Caching {
 
     private static final Method NO_METHOD = (new Object() {
         private void noMethod() {
         }
     }).getClass().getDeclaredMethods()[0];
     private static final Object[] EMPTY_ARGS = new Object[0];
+    private static final FastField[] OBJECT_TYPE_FIELDS = new FastField[]{
+        new FastField(Object.class, "readResolve"), 
+        new FastField(Object.class, "writeReplace"), 
+        new FastField(Object.class, "readObject"), 
+        new FastField(Object.class, "writeObject")
+    };
     private Map cache = Collections.synchronizedMap(new HashMap());
     {
-        cache.put(new FastField(Object.class, "readResolve"), NO_METHOD);
-        cache.put(new FastField(Object.class, "writeReplace"), NO_METHOD);
-        cache.put(new FastField(Object.class, "readObject"), NO_METHOD);
-        cache.put(new FastField(Object.class, "writeObject"), NO_METHOD);
+        for(int i = 0; i < OBJECT_TYPE_FIELDS.length; ++i) {
+            cache.put(OBJECT_TYPE_FIELDS[i], NO_METHOD);
+        }
     }
 
     /**
@@ -160,5 +168,9 @@ public class SerializationMethodInvoker {
             cache.put(method, result);
         }
         return result;
+    }
+
+    public void flushCache() {
+        cache.keySet().retainAll(Arrays.asList(OBJECT_TYPE_FIELDS));
     }
 }

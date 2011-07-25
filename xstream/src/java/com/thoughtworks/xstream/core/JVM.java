@@ -30,7 +30,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class JVM {
+public class JVM implements Caching {
 
     private ReflectionProvider reflectionProvider;
     private transient Map loaderCache = new WeakCache(new HashMap());
@@ -112,6 +112,10 @@ public class JVM {
 
     public static boolean is17() {
         return majorJavaVersion >= 1.7f;
+    }
+
+    public static boolean is18() {
+        return majorJavaVersion >= 1.8f;
     }
 
     private static boolean isSun() {
@@ -306,6 +310,10 @@ public class JVM {
 
     public static boolean canParseUTCDateFormat() {
         return canParseUTCDateFormat;
+    }
+
+    public void flushCache() {
+        loaderCache.clear();
     }
     
     private Object readResolve() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,10 +14,11 @@ package com.thoughtworks.xstream.mapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSingleValueConverter;
+import com.thoughtworks.xstream.core.Caching;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 
 /**
@@ -29,7 +30,7 @@ import java.util.WeakHashMap;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
-public class EnumMapper extends MapperWrapper {
+public class EnumMapper extends MapperWrapper implements Caching {
 
     private transient AttributeMapper attributeMapper;
     private transient Map<Class, SingleValueConverter> enumConverterMap;
@@ -94,7 +95,9 @@ public class EnumMapper extends MapperWrapper {
                 if (singleValueConverter == null) {
                     singleValueConverter = super.getConverterFromItemType(fieldName, type, definedIn);
                     if (singleValueConverter == null) {
-                        singleValueConverter = new EnumSingleValueConverter(type);
+                        @SuppressWarnings("unchecked")
+                        Class<? extends Enum> enumType = type;
+                        singleValueConverter = new EnumSingleValueConverter(enumType);
                     }
                     enumConverterMap.put(type, singleValueConverter);
                 }
@@ -104,8 +107,16 @@ public class EnumMapper extends MapperWrapper {
         return null;
     }
 
+    public void flushCache() {
+        if (enumConverterMap.size() > 0) {
+            synchronized (enumConverterMap) {
+                enumConverterMap.clear();
+            }
+        }
+    }
+
     private Object readResolve() {
-        this.enumConverterMap = new WeakHashMap<Class, SingleValueConverter>();
+        this.enumConverterMap = new HashMap<Class, SingleValueConverter>();
         this.attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
         return this;
     }

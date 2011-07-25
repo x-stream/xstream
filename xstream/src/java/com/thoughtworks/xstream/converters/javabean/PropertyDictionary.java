@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
 
@@ -32,7 +33,7 @@ import com.thoughtworks.xstream.core.util.OrderRetainingMap;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
-public class PropertyDictionary {
+public class PropertyDictionary implements Caching {
     private transient Map propertyNameCache = Collections.synchronizedMap(new HashMap());
     private final PropertySorter sorter;
 
@@ -111,5 +112,9 @@ public class PropertyDictionary {
             propertyNameCache.put(type, nameMap);
         }
         return nameMap;
+    }
+
+    public void flushCache() {
+        propertyNameCache.clear();
     }
 }

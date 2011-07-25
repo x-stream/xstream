@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -20,7 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
@@ -32,7 +33,7 @@ import com.thoughtworks.xstream.core.util.OrderRetainingMap;
  * @author J&ouml;rg Schaible
  * @author Guilherme Silveira
  */
-public class FieldDictionary {
+public class FieldDictionary implements Caching {
 
     private transient Map keyedByFieldNameCache;
     private transient Map keyedByFieldKeyCache;
@@ -177,6 +178,15 @@ public class FieldDictionary {
             }
         }
         return result;
+    }
+
+    public synchronized void flushCache() {
+        Set objectTypeSet = Collections.singleton(Object.class);
+        keyedByFieldNameCache.keySet().retainAll(objectTypeSet);
+        keyedByFieldKeyCache.keySet().retainAll(objectTypeSet);
+        if (sorter instanceof Caching) {
+            ((Caching)sorter).flushCache();
+        }
     }
 
     protected Object readResolve() {
