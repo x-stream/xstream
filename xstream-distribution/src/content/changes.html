@@ -35,15 +35,17 @@
     <h2>Major changes</h2>
 
     <ul>
-    	<li>JIRA:XSTR-377+JIRA:XSTR-226: New artifact xstream-hibernate with converters and mapper to process Hibernate
-    	object graphs (by Costin Leau, Konstantin Pribluda and in special Jaime Metcher).</li>
-    	<li>New NameCoder interface and implementations to support a generic name translation between names from the
-    	object graph and a target format. The new XmlFriendlyNameCoder replaces the XmlFriendlyReplacer used for XML.</li>
     	<li>JIRA:XSTR-542: The XppDriver uses now the official XmlPullParser API to locate an available parser using
     	the XmlPullParserFactory. This allows the usage of XPP technology with XStream in Android.</li>
     	<li>Additional explicit XPP drivers for the Xpp3 and kXML2 implementations.</li>
     	<li>Additional explicit XPP DOM drivers for the Xpp3 and kXML2 implementations.</li>
+    	<li>kXML2 is now the preferred parser implementation, Xpp3 is optional.</li>
     	<li>Additional explicit StAX drivers for Woodstox, BEA StAX and SJSXP of the JDK 6 implementations.</li>
+    	<li>JDK 1.3 is no longer officially supported.</li>
+    	<li>JIRA:XSTR-377+JIRA:XSTR-226: New artifact xstream-hibernate with converters and mapper to process Hibernate
+    	object graphs (by Costin Leau, Konstantin Pribluda and in special Jaime Metcher).</li>
+    	<li>New NameCoder interface and implementations to support a generic name translation between names from the
+    	object graph and a target format. The new XmlFriendlyNameCoder replaces the XmlFriendlyReplacer used for XML.</li>
     	<li>JIRA:XSTR-553: Support annotations in Android.</li>
     	<li>New JsonWriter.EXPLICIT_MODE generating JSON that can always be deserialized.</li>
     	<li>JIRA:XSTR-556: DateConverter uses format with 3-letter time zones that are ambiguous. Therefore it will now

@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -31,7 +31,7 @@
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_JDK">Which JDK is required to use XStream?</h2>
-    <p>1.3 or later.</p>
+    <p>1.4 or later.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_JVMs">Does XStream behave differently across different JVMs?</h2>
@@ -47,7 +47,7 @@
     <p>Currently on the Sun, Apple, HP, IBM and Blackdown 1.4 JVMs and onwards.
     Also for Hitachi, SAP and Diablo from 1.5 and onwards.
     Support for BEA JRockit starting with R25.1.0.
-    IcedTea6 is also supported. 
+    OpenJDK 6 is also supported. 
     For all other JVMs, XStream should be used in pure Java mode.</p>
 
     <!-- ...................................................... -->
@@ -67,12 +67,20 @@
     </table>
 
     <!-- ...................................................... -->
+    <h2 id="Compatibility_XPP">Why does my application fail with the XppDriver since XStream 1.4?</h2>
+    
+    <p>The XppDriver will since XStream 1.4 no longer use automatically an instance of the Xpp3 parser. It relies now
+    directly on the <a href="http://www.xmlpull.org/">XML Pull Parser API</a> to detect the available XML Pull Parser
+    implementation. Therefore it requires the classes of the API to be in the classpath. The artifact of kXML2 already
+    contains these classes while for Xpp3 the additional dependency <i>xmlpull:xmlpull:1.1.3.1</i> has to be added.</p>
+
+    <!-- ...................................................... -->
     <h2 id="Compatibility_Android">Can I use XStream in an Android application?</h2>
 
-	<p>XStream does work in Android 1.0, but has limited capabilities. XStream does not support enhanced mode for
-	Android. Additionally Android reports itself as implementation of JDK specification 0.9, so it is not possible to write
-	into final fields. Android also does not include the java.beans package. Therefore you cannot use the JavaBeanConverter.
-	</p>
+	<p>XStream does work in Android 1.0, but is reported to have limited capabilities. Since XStream 1.4 Android is 
+	treated at least as JD 5 platform, but it e.g. does not include the java.beans package. Therefore you cannot use
+	the JavaBeanConverter. Note, that Android provided an XML Pull Parser, therefore XStream can work without
+	additional dependencies.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_Harmony">Why does XStream fail on Harmony?</h2>
