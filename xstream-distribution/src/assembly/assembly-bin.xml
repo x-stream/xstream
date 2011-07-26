@@ -1,6 +1,6 @@
 <!--
  Copyright (C) 2006 Joe Walnes.
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2011 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -24,26 +24,20 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>../xstream/lib</directory>
-			<outputDirectory>/lib</outputDirectory>
-			<includes>
-				<include>*license.txt</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>../xstream/lib/jdk1.3</directory>
-			<outputDirectory>/lib/jdk1.3</outputDirectory>
-		</fileSet>
-		<fileSet>
 			<directory>target/docs</directory>
 			<outputDirectory>docs</outputDirectory>
 		</fileSet>
+        <fileSet>
+            <directory>target/libs</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../xstream/target/dependencies</directory>
+            <outputDirectory>lib/xstream</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../xstream-hibernate/target/dependencies</directory>
+            <outputDirectory>lib/xstream-hibernate</outputDirectory>
+        </fileSet>
 	</fileSets>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory>/lib</outputDirectory>
-			<unpack>false</unpack>
-			<scope>runtime</scope>
-		</dependencySet>
-	</dependencySets>
 </assembly>

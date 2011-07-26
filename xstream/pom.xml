@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -151,6 +151,17 @@
               </artifactItems>
             </configuration>
           </execution>
+          <execution>
+            <id>collect-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>target/dependencies</outputDirectory>
+              <includeScope>runtime</includeScope>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -237,9 +248,7 @@
                   <goal>jar</goal>
                 </goals>
                 <configuration>
-                  <excludePackageNames>
-                    com.thoughtworks.xstream.core
-                  </excludePackageNames>
+                  <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
                   <links>
                     <link>http://download.oracle.com/javase/1.5.0/docs/api</link>
                   </links>
@@ -319,9 +328,7 @@
                   <goal>jar</goal>
                 </goals>
                 <configuration>
-                  <excludePackageNames>
-                    com.thoughtworks.xstream.core
-                  </excludePackageNames>
+                  <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
                   <links>
                     <link>http://download.oracle.com/javase/6/docs/api</link>
                   </links>
@@ -396,11 +403,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <excludePackageNames>
-            com.thoughtworks.xstream.core
-          </excludePackageNames>
+          <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
           <links>
-            <link>http://download.oracle.com/javase/1.5.0/docs/api</link>
+            <link>http://download.oracle.com/javase/6/docs/api/</link>
           </links>
         </configuration>
       </plugin>

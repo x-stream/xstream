@@ -28,7 +28,6 @@
       <classifier>javadoc</classifier>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>xstream-hibernate</artifactId>
@@ -36,7 +35,6 @@
       <classifier>javadoc</classifier>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>xstream-benchmark</artifactId>
@@ -44,14 +42,44 @@
       <classifier>javadoc</classifier>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>xstream</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>xstream-hibernate</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>xstream-benchmark</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
+    	<groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
+          <execution>
+            <id>collect-xstream-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>target/libs</outputDirectory>
+              <includeScope>runtime</includeScope>
+              <excludeTransitive>true</excludeTransitive>
+            </configuration>
+          </execution>
           <execution>
             <id>unpack-core</id>
             <phase>package</phase>
@@ -168,7 +196,7 @@
           </execution>
           <execution>
             <id>src</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>attached</goal>
             </goals>

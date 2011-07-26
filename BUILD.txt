@@ -1,6 +1,6 @@
-Building with Maven 2
+Building with Maven 2 or 3
 
-Requires maven 2.0.4
+Requires at least Maven 2.0.11
 
 Before building:
 
