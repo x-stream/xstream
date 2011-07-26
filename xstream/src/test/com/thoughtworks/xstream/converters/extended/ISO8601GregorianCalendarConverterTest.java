@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -32,10 +32,10 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
         super.setUp();
         converter = new ISO8601GregorianCalendarConverter();
         
-        // Ensure that this test always run as if it were in the EST timezone.
+        // Ensure that this test always run as if it were in the timezone of Panama.
         // This prevents failures when running the tests in different zones.
-        // Note: 'EST' has no relevance - it was just a randomly chosen zone.
-        TimeZoneChanger.change("EST");
+        // Note: 'America/Panama' has no relevance - it was just a randomly chosen zone.
+        TimeZoneChanger.change("America/Panama");
     }
 
     protected void tearDown() throws Exception {
@@ -70,11 +70,24 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
         Calendar in = Calendar.getInstance();
         String converterXML =  converter.toString(in);
 
-        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
-        Calendar timeInBerlin = Calendar.getInstance();
-        timeInBerlin.setTime(in.getTime());
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Moscow"));
+        Calendar timeInMoscow = Calendar.getInstance();
+        timeInMoscow.setTime(in.getTime());
         Calendar out = (Calendar) converter.fromString(converterXML);
-        assertEquals(timeInBerlin, out);
+        assertEquals(timeInMoscow, out);
+    }
+    
+    public void testCalendarWithExplicitTimeZone() {
+        Calendar timeInMoscow = Calendar.getInstance();
+        timeInMoscow.set(2010, 6, 3, 10, 20, 36);
+        timeInMoscow.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+        
+        String converterXML =  converter.toString(timeInMoscow);
+        Calendar out = (Calendar) converter.fromString(converterXML);
+        assertEquals(timeInMoscow.getTimeInMillis(), out.getTimeInMillis());
+        
+        out.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+        assertEquals(timeInMoscow, out);
     }
 
     public void testIsThreadSafe() throws InterruptedException {
