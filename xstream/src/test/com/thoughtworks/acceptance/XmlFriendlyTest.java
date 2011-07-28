@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -118,6 +118,29 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
             + "  <fi___-_-__eld>d</fi___-_-__eld>\n"
             + "  <fi_-_____-eld>e</fi_-_____-eld>\n"
             + "</dollar>";
+        assertBothWays(in, expected);
+    }
+
+    public static class WithUnusualCharacters extends StandardObject {
+        String µ_;
+        String _µ;
+        String ¢¥€£äöüß;
+    }
+    
+    public void testSupportsFieldsWithUnusualChars() {
+        xstream.alias("unusual", WithUnusualCharacters.class);
+
+        WithUnusualCharacters in = new WithUnusualCharacters();
+        in.µ_ = "a";
+        in._µ = "b";
+        in.¢¥€£äöüß = "c";
+
+        String expected = ""
+            + "<unusual>\n"
+            + "  <_.00b5__>a</_.00b5__>\n"
+            + "  <___.00b5>b</___.00b5>\n"
+            + "  <_.00a2_.00a5€_.00a3äöüß>c</_.00a2_.00a5€_.00a3äöüß>\n"
+            + "</unusual>";
         assertBothWays(in, expected);
     }
 
