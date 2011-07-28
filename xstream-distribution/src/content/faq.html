@@ -69,17 +69,29 @@
     <!-- ...................................................... -->
     <h2 id="Compatibility_XPP">Why does my application fail with the XppDriver since XStream 1.4?</h2>
     
-    <p>The XppDriver will since XStream 1.4 no longer use automatically an instance of the Xpp3 parser. It relies now
-    directly on the <a href="http://www.xmlpull.org/">XML Pull Parser API</a> to detect the available XML Pull Parser
-    implementation. Therefore it requires the classes of the API to be in the classpath. The artifact of kXML2 already
-    contains these classes while for Xpp3 the additional dependency <i>xmlpull:xmlpull:1.1.3.1</i> has to be added.</p>
+    <p>The <a href="http://www.xmlpull.org/">XML Pull Parser API</a> defines an own mechanism to load the factory for
+    the available XPP implementation. XStream's XppDriver never used this lookup mechanism automatically before version
+    1.4, now it will. Therefore you will have to add a <a href="download.html#optional-deps">dependency to xmlpull</a>
+    if the XPP implementation does not deliver the classes on its own. This dependency is necessary for Xpp3 in
+    contrast to kXML2 that contains the classes. Use the Xpp3Driver if you want to select the XPP implementation
+    directly on your own.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_kXML2">Why did XStream change its default XML parser from Xpp3 to kXML2?</h2>
+    
+    <p>The kXML2 parser has 3 minor advantages over Xpp3:</p>
+    <ol>
+    <li>The artifact contains already the XML Pull Parser API, so that the parser is found by the XppDriver.</li>
+    <li>The kXML2 parser was slightly faster in <a href="parser-benchmarks.html"></a>benchmarks</a>.</li>
+    <li>The artifact is nevertheless smaller.</li>
+    </ol>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_Android">Can I use XStream in an Android application?</h2>
 
 	<p>XStream does work in Android 1.0, but is reported to have limited capabilities. Since XStream 1.4 Android is 
 	treated at least as JD 5 platform, but it e.g. does not include the java.beans package. Therefore you cannot use
-	the JavaBeanConverter. Note, that Android provided an XML Pull Parser, therefore XStream can work without
+	the JavaBeanConverter. Note, that Android provides an XML Pull Parser, therefore XStream can work without
 	additional dependencies.</p>
 
     <!-- ...................................................... -->
@@ -344,21 +356,25 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <!-- ...................................................... -->
     <h2 id="XML_double_underscores">Why do field names suddenly have double underscores in the generated XML?</h2>
 
-    <p>XStream maps Java class names and field names to XML tags or attributes. Unfortunately this mapping cannot
-    be 1:1, since some identifiers of Java contain a dollar sign which is invalid in XML names. Therefore XStream uses an
-    <a href="javadoc/com/thoughtworks/xstream/io/xml/XmlFriendlyReplacer.html">XmlFriendlyReplacer</a> to replace
-    this character with a replacement. By default this replacement uses an underscore and therefore the replacer must
-    escape the underscore itself also. You may provide a different configured instance of the XmlFriendlyReplacer or a
-    complete own implementation, but you must ensure, that the resulting names are valid for XML.</p>
+    <p>XStream maps Java class names and field names to XML tags or attributes.  Unfortunately this mapping cannot
+    be 1:1, since some characters used for <a href="http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#3.8">
+    identifiers in Java</a> are invalid in <a href="http://www.w3.org/TR/REC-xml/#dt-name">XML names</a>.  Therefore
+    XStream uses an <a href="javadoc/com/thoughtworks/xstream/io/xml/XmlFriendlyNameCoder.html">XmlFriendlyNameCoder</a>
+    to replace these characters with a replacement.  By default this
+    <a href="javadoc/com/thoughtworks/xstream/io/naming/NameCoder.html">NameCoder</a> uses an underscore as escape
+    character and has therefore to escape the underscore itself also.  You may provide a different configured instance
+    of the XmlFriendlyNameCoder or a complete different implementation like the 
+    <a href="javadoc/com/thoughtworks/xstream/io/xml/XmlFriendlyNameCoder.html">NoNameCoder</a> to prevent name coding
+    at all.  However it is your responsibility then to ensure, that the resulting names are valid for XML.</p>
 
     <!-- ...................................................... -->
     <h2 id="XML_unmarshalling_fails">XStream fails to unmarshal my given XML and I do not know why?</h2>
 
-    <p>By default XStream is written for persistence i.e. it will read the XML it can write. If you have to transform a given
-    XML into an object graph, you should go the other way round. Use XStream to transfer your objects into XML. If the 
-    written XML matches your schema, XStream is also able to read it. This way is much easier, since you can spot the 
-    differences in the XML much more easy than to interpret the exceptions XStream will throw if it cannot match the XML
-    into your objects.</p>
+    <p>By default XStream is written for persistence i.e. it will read the XML it can write.  If you have to transform
+    a given XML into an object graph, you should go the other way round. Use XStream to transfer your objects into XML.
+    If the written XML matches your schema, XStream is also able to read it.  This way is much easier, since you can
+    spot the differences in the XML much more easy than to interpret the exceptions XStream will throw if it cannot
+    match the XML into your objects.</p>
 
     <!-- ...................................................... -->
     <h2 id="XML_null_char">My parser claims the &amp;#x0; character to be invalid, but it was written with XStream!</h2>
