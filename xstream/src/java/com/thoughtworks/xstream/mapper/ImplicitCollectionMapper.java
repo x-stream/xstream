@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.InitializationException;
+import com.thoughtworks.xstream.core.util.Primitives;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -101,9 +102,26 @@ public class ImplicitCollectionMapper extends MapperWrapper {
                 + fieldName
                 + "\" for implicit collection");
         } else if (!Collection.class.isAssignableFrom(field.getType())) {
-            throw new InitializationException("Field \""
-                + fieldName
-                + "\" declares no collection");
+            Class fieldType = field.getType();
+            if (!fieldType.isArray()) {
+                throw new InitializationException("Field \""
+                    + fieldName
+                    + "\" declares no collection or array");
+            } else {
+                Class componentType = fieldType.getComponentType();
+                componentType = componentType.isPrimitive() ? Primitives.box(componentType) : componentType;
+                if (itemType == null) {
+                    itemType = componentType;
+                } else {
+                    itemType = itemType.isPrimitive() ? Primitives.box(itemType) : itemType;
+                    if (!componentType.isAssignableFrom(itemType)) {
+                        throw new InitializationException("Field \""
+                                + fieldName
+                                + "\" declares an array, but the array type is not compatible with " + itemType.getName());
+                        
+                    }
+                }
+            }
         }
         ImplicitCollectionMapperForClass mapper = getOrCreateMapper(definedIn);
         mapper.add(new ImplicitCollectionMappingImpl(fieldName, itemType, itemFieldName));

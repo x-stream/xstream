@@ -58,10 +58,22 @@ public final class Primitives {
         }
     }
 
+    /**
+     * Get the boxed type for a primitive.
+     * 
+     * @param type the primitive type
+     * @return the boxed type or null
+     */
     static public Class box(final Class type) {
         return (Class)BOX.get(type);
     }
     
+    /**
+     * Get the primitive type for a boxed one.
+     * 
+     * @param type the boxed type
+     * @return the primitive type or null
+     */
     static public Class unbox(final Class type) {
         return (Class)UNBOX.get(type);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -390,11 +390,13 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             final String fieldName = field.getName();
             final String itemFieldName = implicitAnnotation.itemFieldName();
             Class itemType = null;
-            final Type genericType = field.getGenericType();
-            if (genericType instanceof ParameterizedType) {
-                final Type typeArgument = ((ParameterizedType)genericType)
-                    .getActualTypeArguments()[0];
-                itemType = getClass(typeArgument);
+            if (!field.getType().isArray()) {
+                final Type genericType = field.getGenericType();
+                if (genericType instanceof ParameterizedType) {
+                    final Type typeArgument = ((ParameterizedType)genericType)
+                        .getActualTypeArguments()[0];
+                    itemType = getClass(typeArgument);
+                }
             }
             if (itemFieldName != null && !"".equals(itemFieldName)) {
                 implicitCollectionMapper.add(

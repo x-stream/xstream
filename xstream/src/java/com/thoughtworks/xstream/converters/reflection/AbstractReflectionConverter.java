@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
+import com.thoughtworks.xstream.core.util.ArrayIterator;
 import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
@@ -27,9 +28,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -122,8 +125,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                                 ReferencingMarshallingContext refContext = (ReferencingMarshallingContext)context;
                                 refContext.registerImplicit(info.value);
                             }
-                            Collection collection = (Collection)info.value;
-                            for (Iterator iter = collection.iterator(); iter.hasNext();) {
+                            for (Iterator iter = info.value instanceof Collection 
+                                    ? ((Collection)info.value).iterator() 
+                                        : new ArrayIterator(info.value); iter.hasNext();) {
                                 Object obj = iter.next();
                                 final String itemName;
                                 final Class itemType;
@@ -287,6 +291,17 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
             reader.moveUp();
         }
+        
+        if (implicitCollectionsForCurrentObject != null) {
+            for(Iterator iter = implicitCollectionsForCurrentObject.entrySet().iterator(); iter.hasNext();) {
+                Map.Entry entry = (Map.Entry)iter.next();
+                Object value = entry.getValue();
+                if (value instanceof ArraysList) {
+                    Object array = ((ArraysList)value).toPhysicalArray();
+                    reflectionProvider.writeField(result, (String)entry.getKey(), array, null);
+                }
+            }
+        }
 
         return result;
     }
@@ -310,21 +325,25 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             }
             Collection collection = (Collection)implicitCollections.get(fieldName);
             if (collection == null) {
-                Class fieldType = mapper.defaultImplementationOf(reflectionProvider
-                    .getFieldType(result, fieldName, null));
-                if (!Collection.class.isAssignableFrom(fieldType)) {
-                    throw new ObjectAccessException("Field "
-                        + fieldName
-                        + " of "
-                        + result.getClass().getName()
-                        + " is configured for an implicit Collection, but field is of type "
-                        + fieldType.getName());
+                Class physicalFieldType = reflectionProvider.getFieldType(result, fieldName, null);
+                if (physicalFieldType.isArray()) {
+                    collection = new ArraysList(physicalFieldType);
+                } else {
+                    Class fieldType = mapper.defaultImplementationOf(physicalFieldType);
+                    if (!Collection.class.isAssignableFrom(fieldType)) {
+                        throw new ObjectAccessException("Field "
+                            + fieldName
+                            + " of "
+                            + result.getClass().getName()
+                            + " is configured for an implicit Collection, but field is of type "
+                            + fieldType.getName());
+                    }
+                    if (pureJavaReflectionProvider == null) {
+                        pureJavaReflectionProvider = new PureJavaReflectionProvider();
+                    }
+                    collection = (Collection)pureJavaReflectionProvider.newInstance(fieldType);
+                    reflectionProvider.writeField(result, fieldName, collection, null);
                 }
-                if (pureJavaReflectionProvider == null) {
-                    pureJavaReflectionProvider = new PureJavaReflectionProvider();
-                }
-                collection = (Collection)pureJavaReflectionProvider.newInstance(fieldType);
-                reflectionProvider.writeField(result, fieldName, collection, null);
                 implicitCollections.put(fieldName, collection);
             }
             collection.add(value);
@@ -363,6 +382,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         if (!validField) {
             Class itemType = mapper.getItemTypeForItemFieldName(result.getClass(), fieldName);
             if (itemType != null) {
+                if (classAttribute != null) {
+                    return mapper.realClass(classAttribute);
+                } 
                 return itemType;
             } else {
                 String originalNodeName = reader.getNodeName();
@@ -421,6 +443,25 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             this.type = type;
             this.definedIn = definedIn;
             this.value = value;
+        }
+    }
+    
+    private static class ArraysList extends ArrayList {
+        final Class physicalFieldType;
+        ArraysList(Class physicalFieldType) {
+            this.physicalFieldType = physicalFieldType;
+        }
+        Object toPhysicalArray() {
+            Object[] objects = toArray();
+            Object array = Array.newInstance(physicalFieldType.getComponentType(), objects.length);
+            if (physicalFieldType.getComponentType().isPrimitive()) {
+                for (int i = 0; i < objects.length; ++i) {
+                    Array.set(array, i, Array.get(objects, i));
+                }
+            } else {
+                System.arraycopy(objects, 0, array, 0, objects.length);
+            }
+            return array;
         }
     }
 }
