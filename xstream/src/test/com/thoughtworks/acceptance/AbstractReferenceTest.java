@@ -420,4 +420,55 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         assertEquals(parent, clone);
     }
 
+    static class Email extends StandardObject {
+        String email;
+        private final Email alias;
+
+        Email(String email) {
+            this(email, null);
+        }
+        Email(String email, Email alias) {
+            this.email = email;
+            this.alias = alias;
+        }
+    }
+
+    static class EmailList extends StandardObject {
+        List addresses = new ArrayList();
+        Email main;
+    }
+
+    public void testReferenceElementInImplicitCollection() {
+        EmailList emails = new EmailList();
+        emails.addresses.add(new Email("private@joewalnes.com"));
+        emails.addresses.add(new Email("joe@joewalnes.com"));
+        emails.addresses.add(new Email("joe.walnes@thoughtworks.com"));
+        emails.addresses.add(new Email("joe@thoughtworks.com", (Email)emails.addresses.get(2)));
+        emails.main = (Email)emails.addresses.get(1);
+
+        xstream.addImplicitCollection(EmailList.class, "addresses", "address", Email.class);
+        String xml = xstream.toXML(emails);
+        assertEquals(emails, xstream.fromXML(xml));
+    }
+
+    static class EmailArray extends StandardObject {
+        Email[] addresses;
+        Email main;
+    }
+
+    public void testReferenceElementInImplicitArrays() {
+        EmailArray emails = new EmailArray();
+        Email alias = new Email("joe.walnes@thoughtworks.com");
+        emails.addresses = new Email[]{
+            new Email("private@joewalnes.com"),
+            new Email("joe@joewalnes.com"),
+            alias,
+            new Email("joe@thoughtworks.com", alias)
+        };
+        emails.main = emails.addresses[1];
+
+        xstream.addImplicitArray(EmailArray.class, "addresses", "address");
+        String xml = xstream.toXML(emails);
+        assertEquals(emails, xstream.fromXML(xml));
+    }
 }
