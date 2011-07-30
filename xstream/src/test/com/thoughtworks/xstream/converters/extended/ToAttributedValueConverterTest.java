@@ -28,7 +28,6 @@ import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.TreeMarshaller;
 import com.thoughtworks.xstream.core.TreeUnmarshaller;
-import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
