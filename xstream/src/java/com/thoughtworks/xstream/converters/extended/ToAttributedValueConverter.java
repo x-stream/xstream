@@ -182,10 +182,10 @@ public class ToAttributedValueConverter implements Converter {
         final Object result = reflectionProvider.newInstance(context.getRequiredType());
         final Class resultType = result.getClass();
 
-        final Set seenFields = new HashSet<FastField>();
+        final Set seenFields = new HashSet();
         final Iterator it = reader.getAttributeNames();
 
-        final Set systemAttributes = new HashSet<String>();
+        final Set systemAttributes = new HashSet();
         systemAttributes.add(mapper.aliasForSystemAttribute("class"));
 
         // Process attributes before recursing into child elements.
