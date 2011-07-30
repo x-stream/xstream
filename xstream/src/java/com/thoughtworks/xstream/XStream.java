@@ -45,6 +45,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -568,6 +569,7 @@ public class XStream {
         alias("properties", Properties.class);
         alias("list", List.class);
         alias("set", Set.class);
+        alias("sorted-set", SortedSet.class);
 
         alias("linked-list", LinkedList.class);
         alias("vector", Vector.class);
@@ -626,6 +628,7 @@ public class XStream {
         addDefaultImplementation(HashMap.class, Map.class);
         addDefaultImplementation(ArrayList.class, List.class);
         addDefaultImplementation(HashSet.class, Set.class);
+        addDefaultImplementation(TreeSet.class, SortedSet.class);
         addDefaultImplementation(GregorianCalendar.class, Calendar.class);
     }
 

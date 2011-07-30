@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -133,13 +133,13 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
         set.add("bye");
 
         String expected = "" +
-                "<tree-set>\n" +
+                "<sorted-set>\n" +
                 "  <comparator class=\"my-comparator\">\n" +
                 "    <something>stuff</something>\n" +
                 "  </comparator>\n" +
                 "  <string>bye</string>\n" +
                 "  <string>hi</string>\n" +
-                "</tree-set>";
+                "</sorted-set>";
 
         TreeSet result = (TreeSet) assertBothWays(set, expected);
         assertEquals(MyComparator.class, result.comparator().getClass());
@@ -151,11 +151,11 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
         set.add("bye");
 
         String expected = "" +
-                "<tree-set>\n" +
+                "<sorted-set>\n" +
                 "  <no-comparator/>\n" +
                 "  <string>bye</string>\n" +
                 "  <string>hi</string>\n" +
-                "</tree-set>";
+                "</sorted-set>";
 
         assertBothWays(set, expected);
     }
@@ -167,12 +167,12 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
         set.add("bye");
 
         String expected = "" +
-                "<tree-set>\n" +
+                "<sorted-set>\n" +
                 "  <comparator class=\"unused-comparator\"/>\n" +
                 "  <string>bye</string>\n" +
                 "  <string>guy</string>\n" +
                 "  <string>hi</string>\n" +
-                "</tree-set>";
+                "</sorted-set>";
 
         assertEquals(expected, xstream.toXML(set));
         TreeSet result = (TreeSet) xstream.fromXML(expected);
