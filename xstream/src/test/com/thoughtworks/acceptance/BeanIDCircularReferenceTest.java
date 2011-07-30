@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2010 XStream Committers.
+ * Copyright (C) 2008, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,28 +17,39 @@ import com.thoughtworks.xstream.core.TreeMarshaller;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-public class BeanIDCircularReferenceTest extends AbstractCircularReferenceTest {
+
+public class BeanIDCircularReferenceTest extends AbstractReferenceTest {
 
     private ReferenceByFirstnameMarshallingStrategy marshallingStrategy;
 
-	private static final class ReferenceByFirstnameMarshallingStrategy extends ReferenceByIdMarshallingStrategy
-	{
-		protected TreeMarshaller createMarshallingContext(HierarchicalStreamWriter writer,
-		    ConverterLookup converterLookup, Mapper mapper) {
-		    return new ReferenceByIdMarshaller(writer, converterLookup, mapper, new ReferenceByIdMarshaller.IDGenerator(){
+    private static final class ReferenceByFirstnameMarshallingStrategy extends
+        ReferenceByIdMarshallingStrategy {
+        protected TreeMarshaller createMarshallingContext(HierarchicalStreamWriter writer,
+            ConverterLookup converterLookup, Mapper mapper) {
+            return new ReferenceByIdMarshaller(
+                writer, converterLookup, mapper, new ReferenceByIdMarshaller.IDGenerator() {
+                    int id = 0;
 
-		        public String next(Object item) {
-		            // we have only persons here
-		            return ((Person)item).firstname;
-		        }});
-		}
-	}
+                    public String next(Object item) {
+                        final String id;
+                        if (item instanceof Person) {
+                            id = ((Person)item).firstname;
+                        } else if (item instanceof TreeData) {
+                            id = ((TreeData)item).data;
+                        } else {
+                            id = String.valueOf(this.id++ );
+                        }
+                        return id;
+                    }
+                });
+        }
+    }
 
-	// inherits test from superclass
+    // inherits test from superclass
     protected void setUp() throws Exception {
         super.setUp();
         marshallingStrategy = new ReferenceByFirstnameMarshallingStrategy();
-		xstream.setMarshallingStrategy(marshallingStrategy);
+        xstream.setMarshallingStrategy(marshallingStrategy);
     }
 
     public void testCircularReferenceXml() {
@@ -47,14 +58,14 @@ public class BeanIDCircularReferenceTest extends AbstractCircularReferenceTest {
         bob.likes = jane;
         jane.likes = bob;
 
-        String expected = "" +
-                "<person id=\"bob\">\n" +
-                "  <firstname>bob</firstname>\n" +
-                "  <likes id=\"jane\">\n" +
-                "    <firstname>jane</firstname>\n" +
-                "    <likes reference=\"bob\"/>\n" +
-                "  </likes>\n" +
-                "</person>";
+        String expected = ""
+            + "<person id=\"bob\">\n"
+            + "  <firstname>bob</firstname>\n"
+            + "  <likes id=\"jane\">\n"
+            + "    <firstname>jane</firstname>\n"
+            + "    <likes reference=\"bob\"/>\n"
+            + "  </likes>\n"
+            + "</person>";
 
         assertEquals(expected, xstream.toXML(bob));
     }
@@ -63,11 +74,11 @@ public class BeanIDCircularReferenceTest extends AbstractCircularReferenceTest {
         Person bob = new Person("bob");
         bob.likes = bob;
 
-        String expected = "" +
-                "<person id=\"bob\">\n" +
-                "  <firstname>bob</firstname>\n" +
-                "  <likes reference=\"bob\"/>\n" +
-                "</person>";
+        String expected = ""
+            + "<person id=\"bob\">\n"
+            + "  <firstname>bob</firstname>\n"
+            + "  <likes reference=\"bob\"/>\n"
+            + "</person>";
 
         assertEquals(expected, xstream.toXML(bob));
     }
@@ -98,5 +109,21 @@ public class BeanIDCircularReferenceTest extends AbstractCircularReferenceTest {
         Person bobAgain = (Person)xstream.fromXML(expected);
         assertEquals("bob", bobAgain.firstname);
         assertEquals("jane", bobAgain.likes.firstname);
+    }
+
+    public void testReplacedReference() {
+        String expectedXml = ""
+            + "<element id=\"parent\">\n"
+            + "  <data>parent</data>\n"
+            + "  <children id=\"0\">\n"
+            + "    <anonymous-element id=\"child\" resolves-to=\"element\">\n"
+            + "      <data>child</data>\n"
+            + "      <parent reference=\"parent\"/>\n"
+            + "      <children id=\"1\"/>\n"
+            + "    </anonymous-element>\n"
+            + "  </children>\n"
+            + "</element>";
+
+        replacedReference(expectedXml);
     }
 }
