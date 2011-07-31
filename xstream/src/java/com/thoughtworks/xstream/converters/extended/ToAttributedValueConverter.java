@@ -95,7 +95,7 @@ public class ToAttributedValueConverter implements Converter {
                     field.setAccessible(true);
                 }
             } catch (NoSuchFieldException e) {
-                throw new IllegalArgumentException(valueFieldName, e);
+                throw new IllegalArgumentException(e.getMessage() + ": " + valueFieldName);
             }
             this.valueField = field;
         }
