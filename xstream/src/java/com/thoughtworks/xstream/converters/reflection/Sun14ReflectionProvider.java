@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Instantiates a new object on the Sun JVM by bypassing the constructor (meaning code in the constructor
@@ -32,6 +33,8 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
     private final static Unsafe unsafe;
     private final static Exception exception;
+    // references to the Field key are kept in the FieldDictionary
+    private transient Map fieldOffsetCache = new WeakHashMap();
     static {
         Unsafe u = null;
         Exception ex = null;
@@ -105,7 +108,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
             throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), exception);
         }
         try {
-            long offset = unsafe.objectFieldOffset(field);
+            long offset = getFieldOffset(field);
             Class type = field.getType();
             if (type.isPrimitive()) {
                 if (type.equals(Integer.TYPE)) {
@@ -137,6 +140,18 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
             throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
         }
     }
+    
+    private synchronized long  getFieldOffset(Field f)
+    {
+        Long l = (Long)fieldOffsetCache.get(f);
+        if (l == null)
+        {
+            l = Long.valueOf(unsafe.objectFieldOffset(f));
+            fieldOffsetCache.put(f, l);
+        }
+        
+        return l.longValue();
+    }
 
     protected void validateFieldAccess(Field field) {
         // (overriden) don't mind final fields.
@@ -146,6 +161,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         super.readResolve();
         constructorCache = new HashMap();
         reflectionFactory = ReflectionFactory.getReflectionFactory();
+        fieldOffsetCache = new WeakHashMap();
         return this;
     }
 }
