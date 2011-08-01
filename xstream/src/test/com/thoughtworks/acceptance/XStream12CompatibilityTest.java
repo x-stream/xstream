@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -128,7 +128,7 @@ public class XStream12CompatibilityTest extends AbstractAcceptanceTest {
             Object root, HierarchicalStreamReader reader, ConverterLookup converterLookup,
             Mapper mapper) {
             super(root, reader, converterLookup, mapper);
-            isXmlFriendly = false;
+            isNameEncoding = false;
         }
     }
 

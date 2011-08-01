@@ -24,7 +24,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * @since 1.2
  * @deprecated As of upcoming, use {@link AbstractReader} instead.
  */
-public abstract class AbstractXmlReader extends AbstractReader implements XmlFriendlyReader {
+public abstract class AbstractXmlReader extends AbstractReader /* implements XmlFriendlyReader */ {
 
     protected AbstractXmlReader() {
         this(new XmlFriendlyNameCoder());
