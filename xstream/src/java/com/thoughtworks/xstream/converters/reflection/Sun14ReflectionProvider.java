@@ -146,7 +146,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         Long l = (Long)fieldOffsetCache.get(f);
         if (l == null)
         {
-            l = Long.valueOf(unsafe.objectFieldOffset(f));
+            l = new Long(unsafe.objectFieldOffset(f));
             fieldOffsetCache.put(f, l);
         }
         
