@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,12 +11,14 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.File;
 import java.io.FilterWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -36,7 +38,14 @@ public class Dom4JDriver extends AbstractXmlDriver {
     private OutputFormat outputFormat;
 
     public Dom4JDriver() {
-        this(new DocumentFactory(), OutputFormat.createPrettyPrint());
+        this(new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public Dom4JDriver(NameCoder nameCoder) {
+        this(new DocumentFactory(), OutputFormat.createPrettyPrint(), nameCoder);
         outputFormat.setTrimText(false);
     }
 
@@ -89,6 +98,32 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamReader createReader(InputStream in) {
+        try {
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(in);
+            return new Dom4JReader(document, getNameCoder());
+        } catch (DocumentException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    /**
+     * @since upcoming
+     */
+    public HierarchicalStreamReader createReader(URL in) {
+        try {
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(in);
+            return new Dom4JReader(document, getNameCoder());
+        } catch (DocumentException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    /**
+     * @since upcoming
+     */
+    public HierarchicalStreamReader createReader(File in) {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(in);

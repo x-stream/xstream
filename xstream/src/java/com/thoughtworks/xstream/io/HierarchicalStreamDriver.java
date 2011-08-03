@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,10 +11,12 @@
  */
 package com.thoughtworks.xstream.io;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 
 /**
  * Provides implementation of stream parsers and writers to XStream.
@@ -31,6 +33,7 @@ public interface HierarchicalStreamDriver {
      * @return the HierarchicalStreamReader
      */
     HierarchicalStreamReader createReader(Reader in);
+    
     /** 
      * Create the HierarchicalStreamReader with the stream parser reading from the input stream.
      * 
@@ -38,6 +41,30 @@ public interface HierarchicalStreamDriver {
      * @since 1.1.3 
      */
     HierarchicalStreamReader createReader(InputStream in);
+
+    /**
+     * Create the HierarchicalStreamReader with the stream parser reading from a URL.
+     * 
+     * Depending on the parser implementation, some might take the URL as SystemId to resolve
+     * additional references.
+     * 
+     * @param in the {@link URL} defining the location with the data to parse 
+     * @return the HierarchicalStreamReader
+     * @since upcoming
+     */
+    HierarchicalStreamReader createReader(URL in);
+
+    /**
+     * Create the HierarchicalStreamReader with the stream parser reading from a File.
+     * 
+     * Depending on the parser implementation, some might take the file path as SystemId to
+     * resolve additional references.
+     * 
+     * @param in the {@link URL} defining the location with the data to parse 
+     * @return the HierarchicalStreamReader
+     * @since upcoming
+     */
+    HierarchicalStreamReader createReader(File in);
 
     /**
      * Create the HierarchicalStreamWriter with the formatted writer.

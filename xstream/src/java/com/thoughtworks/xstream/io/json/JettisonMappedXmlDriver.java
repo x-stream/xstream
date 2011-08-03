@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (c) 2007, 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,10 +25,14 @@ import org.codehaus.jettison.mapped.MappedXMLOutputFactory;
 
 import javax.xml.stream.XMLStreamException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 
 
 /**
@@ -88,6 +92,29 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
         try {
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(input), getNameCoder());
         } catch (final XMLStreamException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    public HierarchicalStreamReader createReader(URL in) {
+        try {
+            return new StaxReader(new QNameMap(), mif.createXMLStreamReader(
+                in.toExternalForm(), in.openStream()), getNameCoder());
+        } catch (final XMLStreamException e) {
+            throw new StreamException(e);
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    public HierarchicalStreamReader createReader(File in) {
+        try {
+            return new StaxReader(new QNameMap(), mif.createXMLStreamReader(in
+                .toURI()
+                .toASCIIString(), new FileInputStream(in)), getNameCoder());
+        } catch (final XMLStreamException e) {
+            throw new StreamException(e);
+        } catch (IOException e) {
             throw new StreamException(e);
         }
     }

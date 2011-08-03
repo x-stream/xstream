@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,12 +11,14 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -89,6 +91,32 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamReader createReader(InputStream in) {
+        try {
+            Document document = builder.build(in);
+            return new XomReader(document, getNameCoder());
+        } catch (ValidityException e) {
+            throw new StreamException(e);
+        } catch (ParsingException e) {
+            throw new StreamException(e);
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    public HierarchicalStreamReader createReader(URL in) {
+        try {
+            Document document = builder.build(in.toExternalForm());
+            return new XomReader(document, getNameCoder());
+        } catch (ValidityException e) {
+            throw new StreamException(e);
+        } catch (ParsingException e) {
+            throw new StreamException(e);
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    public HierarchicalStreamReader createReader(File in) {
         try {
             Document document = builder.build(in);
             return new XomReader(document, getNameCoder());

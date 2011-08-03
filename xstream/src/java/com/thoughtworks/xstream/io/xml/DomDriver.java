@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -71,12 +73,20 @@ public class DomDriver extends AbstractXmlDriver {
         this(encoding, (NameCoder)replacer);
     }
 
-    public HierarchicalStreamReader createReader(Reader xml) {
-        return createReader(new InputSource(xml));
+    public HierarchicalStreamReader createReader(Reader in) {
+        return createReader(new InputSource(in));
     }
 
-    public HierarchicalStreamReader createReader(InputStream xml) {
-        return createReader(new InputSource(xml));
+    public HierarchicalStreamReader createReader(InputStream in) {
+        return createReader(new InputSource(in));
+    }
+
+    public HierarchicalStreamReader createReader(URL in) {
+        return createReader(new InputSource(in.toExternalForm()));
+    }
+
+    public HierarchicalStreamReader createReader(File in) {
+        return createReader(new InputSource(in.toURI().toASCIIString()));
     }
 
     private HierarchicalStreamReader createReader(InputSource source) {

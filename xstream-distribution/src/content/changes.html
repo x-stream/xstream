@@ -232,6 +232,9 @@
     	<li>Support for Converter definition at field level.</li>
     	<li>Refactoring of Annotation support, invent auto-detection mode.</li>
     	<li>Annotated converters are no longer detected automatically, all annotations are now handled in the same way.</li>
+    	<li>JIRA:XSTR-334: XStream will deserialize directly from a file or URL. Some parser take advantage of these objects to
+    	define a SystemId used to resolve further references in XML, schema or DTD. Appropriate createReader methods have been
+    	added to c.t.x.io.HierarchicalStreamDriver.</li>
     	<li>JIRA:XSTR-261: All c.t.x.io.HierarchicalStreamDriver implementations respect now the encoding of an XML header
     	if read from an InputStream.</li>
     	<li>DomDriver does no longer use explicitly UTF-8 by default, DomReader will therefore respect the encoding defined 

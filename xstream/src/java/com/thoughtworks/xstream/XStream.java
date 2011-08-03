@@ -891,8 +891,8 @@ public class XStream {
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object fromXML(Reader xml) {
-        return unmarshal(hierarchicalStreamDriver.createReader(xml), null);
+    public Object fromXML(Reader reader) {
+        return unmarshal(hierarchicalStreamDriver.createReader(reader), null);
     }
 
     /**
@@ -902,6 +902,32 @@ public class XStream {
      */
     public Object fromXML(InputStream input) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), null);
+    }
+
+    /**
+     * Deserialize an object from a URL.
+     * 
+     * Depending on the parser implementation, some might take the file path as SystemId to
+     * resolve additional references.
+     * 
+     * @throws XStreamException if the object cannot be deserialized
+     * @since upcoming
+     */
+    public Object fromXML(URL url) {
+        return unmarshal(hierarchicalStreamDriver.createReader(url), null);
+    }
+
+    /**
+     * Deserialize an object from a file.
+     * 
+     * Depending on the parser implementation, some might take the file path as SystemId to
+     * resolve additional references.
+     * 
+     * @throws XStreamException if the object cannot be deserialized
+     * @since upcoming
+     */
+    public Object fromXML(File file) {
+        return unmarshal(hierarchicalStreamDriver.createReader(file), null);
     }
 
     /**
@@ -929,6 +955,38 @@ public class XStream {
     }
 
     /**
+     * Deserialize an object from a URL, populating the fields of the given root
+     * object instead of instantiating a new one. Note, that this is a special use case! With
+     * the ReflectionConverter XStream will write directly into the raw memory area of the
+     * existing object. Use with care!
+     * 
+     * Depending on the parser implementation, some might take the file path as SystemId to
+     * resolve additional references.
+     * 
+     * @throws XStreamException if the object cannot be deserialized
+     * @since upcoming
+     */
+    public Object fromXML(URL url, Object root) {
+        return unmarshal(hierarchicalStreamDriver.createReader(url), root);
+    }
+
+    /**
+     * Deserialize an object from a file, populating the fields of the given root
+     * object instead of instantiating a new one. Note, that this is a special use case! With
+     * the ReflectionConverter XStream will write directly into the raw memory area of the
+     * existing object. Use with care!
+     * 
+     * Depending on the parser implementation, some might take the file path as SystemId to
+     * resolve additional references.
+     * 
+     * @throws XStreamException if the object cannot be deserialized
+     * @since upcoming
+     */
+    public Object fromXML(File file, Object root) {
+        return unmarshal(hierarchicalStreamDriver.createReader(file), root);
+    }
+
+    /**
      * Deserialize an object from an XML InputStream, populating the fields of the given root
      * object instead of instantiating a new one. Note, that this is a special use case! With
      * the ReflectionConverter XStream will write directly into the raw memory area of the
@@ -936,8 +994,8 @@ public class XStream {
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object fromXML(InputStream xml, Object root) {
-        return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
+    public Object fromXML(InputStream input, Object root) {
+        return unmarshal(hierarchicalStreamDriver.createReader(input), root);
     }
 
     /**

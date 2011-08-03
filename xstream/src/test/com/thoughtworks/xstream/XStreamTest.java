@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -34,10 +34,14 @@ import junit.framework.TestCase;
 
 import org.dom4j.Element;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 
 public class XStreamTest extends TestCase {
 
@@ -68,7 +72,7 @@ public class XStreamTest extends TestCase {
         assertEquals("_foo", u.a_Str);
     }
 
-    public void testUnmarshalsObjectFromXmlWhichClassContainsUnderscores() {
+    public void testUnmarshalsObjectFromXmlWithClassContainingUnderscores() {
         String xml =
                 "<com.thoughtworks.xstream.XStreamTest_-U_U>" +
                 "  <aStr>custom value</aStr>" +
@@ -354,35 +358,65 @@ public class XStreamTest extends TestCase {
     }
 
     public void testObjectOutputStreamCloseTwice() throws IOException {
-		ObjectOutputStream oout = xstream.createObjectOutputStream( new StringWriter() );
-		oout.writeObject( new Integer( 1 ) );
-		oout.close();
-		oout.close();
+        ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
+        oout.writeObject(new Integer(1));
+        oout.close();
+        oout.close();
     }
 
     public void testObjectOutputStreamCloseAndFlush() throws IOException {
-		ObjectOutputStream oout = xstream.createObjectOutputStream( new StringWriter() );
-		oout.writeObject( new Integer( 1 ) );
-		oout.close();
-		try {
-			oout.flush();
-			fail( "Closing and flushing should throw a StreamException" );
-		} catch (StreamException e) {
-			// ok
-		}		
+        ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
+        oout.writeObject(new Integer(1));
+        oout.close();
+        try {
+            oout.flush();
+            fail("Closing and flushing should throw a StreamException");
+        } catch (StreamException e) {
+            // ok
+        }
     }
 
     public void testObjectOutputStreamCloseAndWrite() throws IOException {
-		ObjectOutputStream oout = xstream.createObjectOutputStream( new StringWriter() );
-		oout.writeObject( new Integer( 1 ) );
-		oout.close();
-		try {
-			oout.writeObject( new Integer( 2 ) );
-	    	fail( "Closing and writing should throw a StreamException" );
-		} catch (StreamException e) {
-			// ok
-		}		
+        ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
+        oout.writeObject(new Integer(1));
+        oout.close();
+        try {
+            oout.writeObject(new Integer(2));
+            fail("Closing and writing should throw a StreamException");
+        } catch (StreamException e) {
+            // ok
+        }
     }
 
+    public void testUnmarshalsFromFile() throws IOException {
+        File file = createTestFile();
+        xstream.registerConverter(new ElementConverter());
+        xstream.alias("component", Component.class);
+        Component person = (Component)xstream.fromXML(file);
+        assertEquals(8000, person.port);
+    }
 
+    public void testUnmarshalsFromURL() throws IOException {
+        File file = createTestFile();
+        xstream.alias("component", Component.class);
+        Component person = (Component)xstream.fromXML(file);
+        assertEquals(8000, person.port);
+    }
+
+    private File createTestFile()
+        throws FileNotFoundException, IOException, UnsupportedEncodingException {
+        String xml =""
+                + "<component>\n"
+                + "  <host>host</host>\n"
+                + "  <port>8000</port>\n"
+                + "</component>";
+
+        File dir = new File("target/test-data");
+        dir.mkdirs();
+        File file = new File(dir, "test.xml");
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(xml.getBytes("UTF-8"));
+        fos.close();
+        return file;
+    }
 }

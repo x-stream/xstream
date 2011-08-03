@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,16 +11,20 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -82,8 +86,7 @@ public class StaxDriver extends AbstractXmlDriver {
     public HierarchicalStreamReader createReader(Reader xml) {
         try {
             return createStaxReader(createParser(xml));
-        }
-        catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             throw new StreamException(e);
         }
     }
@@ -91,8 +94,23 @@ public class StaxDriver extends AbstractXmlDriver {
     public HierarchicalStreamReader createReader(InputStream in) {
         try {
             return createStaxReader(createParser(in));
+        } catch (XMLStreamException e) {
+            throw new StreamException(e);
         }
-        catch (XMLStreamException e) {
+    }
+
+    public HierarchicalStreamReader createReader(URL in) {
+        try {
+            return createStaxReader(createParser(new StreamSource(in.toExternalForm())));
+        } catch (XMLStreamException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    public HierarchicalStreamReader createReader(File in) {
+        try {
+            return createStaxReader(createParser(new StreamSource(in)));
+        } catch (XMLStreamException e) {
             throw new StreamException(e);
         }
     }
@@ -174,6 +192,10 @@ public class StaxDriver extends AbstractXmlDriver {
 
     protected XMLStreamReader createParser(InputStream xml) throws XMLStreamException {
         return getInputFactory().createXMLStreamReader(xml);
+    }
+
+    protected XMLStreamReader createParser(Source source) throws XMLStreamException {
+        return getInputFactory().createXMLStreamReader(source);
     }
 
     /**
