@@ -37,7 +37,7 @@
     <ul>
     	<li>JIRA:XSTR-542: The XppDriver uses now the official XmlPullParser API to locate an available parser using
     	the XmlPullParserFactory. This allows the usage of XPP technology with XStream in Android.</li>
-    	<li>Additional explicit XPP drivers and readers for the Xpp3 and kXML2 implementations.</li>
+    	<li>Additional explicit XPP drivers for the Xpp3 and kXML2 implementations.</li>
     	<li>Additional explicit XPP DOM drivers for the Xpp3 and kXML2 implementations.</li>
     	<li>kXML2 is now the preferred parser implementation, Xpp3 is optional.</li>
     	<li>Additional explicit StAX drivers for Woodstox, BEA StAX and SJSXP of the JDK 6 implementations.</li>
@@ -52,7 +52,7 @@
     	<li>JIRA:XSTR-556: DateConverter uses format with 3-letter time zones that are ambiguous. Therefore it will now
     	always use UTC to write dates. Unmarshalled dates are not affected as long as they contain a time zone.</li>
     	<li>The type java.lang.reflect.Field is now handled by an own converter, that can still read the old format.</li>
-    	<li>The XppReader no longer uses a BufferedReader, the client has to provide it if required.</li>
+    	<li>The XppReader no longer uses a BufferedReader.</li>
     	<li>JIRA:XSTR-490: Provide path in Converter for contexts that track the path.</li>
     	<li>JIRA:XSTR-592+JIRA:XSTR-579: OmitField respected at deserialization time even for existing fields.</li>
     	<li>JIRA:XSTR-593: Direct support for java.net.URI instances (by Carlos Roman).</li>
@@ -134,6 +134,8 @@
     	<li>Deprecated constructors of c.t.x.converters.reflection.SerializableConverter, c.t.x.converters.reflection.ExternalizableConverter
     	 and c.t.x.converters.reflection.CGLIBEnhancedConverter; new versions take an additional argument for class loader (as a result
     	 for JIRA:XSTR-547).</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.XppReader, new versions take an additional argument for the XmlPullParser.</li>
+    	<li>Deprecated c.t.x.io.xml.XppReader.createParser(), the XPP parser is now created by the driver.</li>
     	<li>Package c.t.x.io.xml.xppdom is now part of the official API.</li>
     	<li>c.t.x.io.xml.xppdom.Xpp3Dom and c.t.x.io.xmlxpp.dom.Xpp3DomBuilder have been deprecated. Functionality is
     	merged in c.t.x.io.xml.xppdom.XppDom.</li>

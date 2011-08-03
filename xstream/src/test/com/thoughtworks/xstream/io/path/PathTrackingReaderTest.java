@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,8 @@ import com.thoughtworks.xstream.io.xml.XppReader;
 
 import junit.framework.TestCase;
 
+import org.xmlpull.mxp1.MXParser;
+
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -28,7 +30,7 @@ public class PathTrackingReaderTest extends TestCase {
                 "  <b/>" +
                 "  <d/>" +
                 "</a>");
-        HierarchicalStreamReader reader = new XppReader(input);
+        HierarchicalStreamReader reader = new XppReader(input, new MXParser());
         PathTracker pathTracker = new PathTracker();
 
         reader = new PathTrackingReader(reader, pathTracker);

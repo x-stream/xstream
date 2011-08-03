@@ -1,13 +1,12 @@
 /*
- * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 02. May 2009 by Joerg Schaible, copied from Xpp3Dom and Xpp3DomBuilder
+ * Created on 02. May 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml.xppdom;
 
