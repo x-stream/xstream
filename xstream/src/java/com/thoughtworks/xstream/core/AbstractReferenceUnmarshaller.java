@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,6 +30,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
 
+    private static final Object NULL = new Object();
     private Map values = new HashMap();
     private FastStack parentStack = new FastStack(16);
 
@@ -51,18 +52,19 @@ public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
         String attributeName = getMapper().aliasForSystemAttribute("reference");
         String reference = attributeName == null ? null : reader.getAttribute(attributeName);
         if (reference != null) {
-            result = values.get(getReferenceKey(reference));
-            if (result == null) {
+            Object cache = values.get(getReferenceKey(reference));
+            if (cache == null) {
                 final ConversionException ex = new ConversionException("Invalid reference");
                 ex.add("reference", reference);
                 throw ex;
-            }
+            } 
+            result = cache == NULL ? null : cache;
         } else {
             Object currentReferenceKey = getCurrentReferenceKey();
             parentStack.push(currentReferenceKey);
             result = super.convert(parent, type, converter);
-            if (currentReferenceKey != null && result != null) {
-                values.put(currentReferenceKey, result);
+            if (currentReferenceKey != null) {
+                values.put(currentReferenceKey, result == null ? NULL : result);
             }
             parentStack.popSilently();
         }

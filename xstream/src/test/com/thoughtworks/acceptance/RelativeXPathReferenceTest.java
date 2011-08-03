@@ -14,6 +14,7 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,5 +154,18 @@ public class RelativeXPathReferenceTest extends AbstractReferenceTest {
             + "</element>";
 
         replacedReference(expectedXml);
+    }
+    
+    public void testCanReferenceDeserializedNullValues() {
+        xstream.alias("test", Mapper.Null.class);
+        String xml = ""
+                + "<list>\n"
+                + "  <test/>\n"
+                + "  <test reference=\"../test\"/>\n"
+                + "</list>";
+        List list = (List)xstream.fromXML(xml);
+        assertEquals(2, list.size());
+        assertNull(list.get(0));
+        assertNull(list.get(1));
     }
 }
