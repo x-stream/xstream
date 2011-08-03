@@ -12,23 +12,20 @@
 package com.thoughtworks.xstream.io.xml;
 
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.naming.NameCoder;
+import java.io.Reader;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
 /**
- * A {@link HierarchicalStreamDriver} using the XmlPullParserFactory to locate an XPP parser.
+ * A {@link HierarchicalStreamDriver} using the XmlPullParserFactory to locate an XML Pull Parser.
  *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public class XppDriver extends AbstractXppDriver {
-
-    private static XmlPullParserFactory factory;
 
     public XppDriver() {
         super(new XmlFriendlyNameCoder());
@@ -52,10 +49,7 @@ public class XppDriver extends AbstractXppDriver {
     /**
      * {@inheritDoc}
      */
-    protected synchronized XmlPullParser createParser() throws XmlPullParserException {
-        if (factory == null) {
-            factory = XmlPullParserFactory.newInstance(null, XppDriver.class);
-        }
-        return factory.newPullParser();
+    public HierarchicalStreamReader createReader(Reader in) {
+        return new XppReader(in, getNameCoder());
     }
 }
