@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -50,9 +50,9 @@ public class PrioritizedList {
         final int priority;
         final int id;
 
-        public PrioritizedItem(Object value, int Prioritized, int id) {
+        public PrioritizedItem(Object value, int priority, int id) {
             this.value = value;
-            this.priority = Prioritized;
+            this.priority = priority;
             this.id = id;
         }
 
