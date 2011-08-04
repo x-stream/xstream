@@ -575,7 +575,6 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "      'timezone': 'Europe/London'\n"
             + "    },\n"
             + "    'titles': [\n"
-            + "      {},\n" // no-comparator element
             + "      [\n"
             + "        '1',\n"
             + "        'Mr'\n"

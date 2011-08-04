@@ -83,7 +83,6 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
 
         String expected = "" +
                 "<tree-map>\n" +
-                "  <no-comparator/>\n" +
                 "  <entry>\n" +
                 "    <string>benny</string>\n" +
                 "    <string>hill</string>\n" +
@@ -94,6 +93,14 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
                 "  </entry>\n" +
                 "</tree-map>";
 
+        TreeMap result = (TreeMap) assertBothWays(map, expected);
+        assertNull(result.comparator());
+    }
+
+    public void testEmptyTreeMap() {
+        TreeMap map = new TreeMap();
+
+        String expected = "<tree-map/>";
         TreeMap result = (TreeMap) assertBothWays(map, expected);
         assertNull(result.comparator());
     }
@@ -152,12 +159,20 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
 
         String expected = "" +
                 "<sorted-set>\n" +
-                "  <no-comparator/>\n" +
                 "  <string>bye</string>\n" +
                 "  <string>hi</string>\n" +
                 "</sorted-set>";
 
-        assertBothWays(set, expected);
+        TreeSet result = (TreeSet)assertBothWays(set, expected);
+        assertNull(result.comparator());
+    }
+
+    public void testEmptyTreeSet() {
+        TreeSet set = new TreeSet();
+
+        String expected = "<sorted-set/>";
+        TreeSet result = (TreeSet)assertBothWays(set, expected);
+        assertNull(result.comparator());
     }
 
     public void testTreeSetDoesNotUseComparatorAtDeserialization() {

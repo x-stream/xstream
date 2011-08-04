@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -75,25 +75,17 @@ public class TreeSetConverter extends CollectionConverter {
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         TreeSet treeSet = (TreeSet) source;
-        Comparator comparator = treeSet.comparator();
-        if (comparator == null) {
-            writer.startNode("no-comparator");
-            writer.endNode();
-        } else {
-            writer.startNode("comparator");
-            writer.addAttribute("class", mapper().serializedClass(comparator.getClass()));
-            context.convertAnother(comparator);
-            writer.endNode();
-        }
+        treeMapConverter.marshalComparator(treeSet.comparator(), writer, context);
         super.marshal(source, writer, context);
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         TreeSet result = null;
         final TreeMap treeMap;
-        final Comparator comparator = treeMapConverter.unmarshalComparator(reader, context, null);
+        Comparator comparator = treeMapConverter.unmarshalComparator(reader, context, null);
+        boolean inFirstElement = comparator == treeMapConverter.NULL_MARKER;
         if (sortedMapField != null) {
-            TreeSet possibleResult = comparator == null ? new TreeSet() : new TreeSet(comparator);
+            TreeSet possibleResult = comparator == null && !inFirstElement ? new TreeSet() : new TreeSet(comparator);
             Object backingMap = null;
             try {
                 backingMap = sortedMapField.get(possibleResult);
@@ -110,8 +102,16 @@ public class TreeSetConverter extends CollectionConverter {
             treeMap = null;
         }
         if (treeMap == null) {
+            if (inFirstElement) {
+                comparator = null;
+            }
             final PresortedSet set = new PresortedSet(comparator);
             result = comparator == null ? new TreeSet() : new TreeSet(comparator);
+            if (inFirstElement) {
+                // we are already within the first element
+                addCurrentElementToCollection(reader, context, result, set);
+                reader.moveUp();
+            }
             populateCollection(reader, context, result, set);
             if (set.size() > 0) {
                 result.addAll(set); // comparator will not be called if internally optimized
@@ -141,7 +141,6 @@ public class TreeSetConverter extends CollectionConverter {
                     }
                 });
             }
-            
         };
         return this;
     }

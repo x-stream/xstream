@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -35,6 +36,14 @@ import java.util.TreeMap;
  * @author J&ouml;rg Schaible
  */
 public class TreeMapConverter extends MapConverter {
+    
+    protected final static Comparator NULL_MARKER = new Comparator() {
+        public int compare(Object o1, Object o2) {
+            Comparable c1 = (Comparable)o1;
+            Comparable c2 = (Comparable)o2;
+            return c1.compareTo(o2);
+        }
+    };
     
     private final static Field comparatorField;
     static {
@@ -69,17 +78,19 @@ public class TreeMapConverter extends MapConverter {
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         TreeMap treeMap = (TreeMap) source;
-        Comparator comparator = treeMap.comparator();
-        if (comparator == null) {
-            writer.startNode("no-comparator");
-            writer.endNode();
-        } else {
+        marshalComparator(treeMap.comparator(), writer, context);
+        super.marshal(source, writer, context);
+    }
+
+    protected void marshalComparator(Comparator comparator, HierarchicalStreamWriter writer,
+        MarshallingContext context) {
+        if (comparator != null) {
             writer.startNode("comparator");
-            writer.addAttribute("class", mapper().serializedClass(comparator.getClass()));
+            writer.addAttribute(mapper().aliasForSystemAttribute("class"), 
+                mapper().serializedClass(comparator.getClass()));
             context.convertAnother(comparator);
             writer.endNode();
         }
-        super.marshal(source, writer, context);
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
@@ -94,23 +105,37 @@ public class TreeMapConverter extends MapConverter {
 
     protected Comparator unmarshalComparator(HierarchicalStreamReader reader,
         UnmarshallingContext context, TreeMap result) {
-        reader.moveDown();
         final Comparator comparator;
-        if (reader.getNodeName().equals("comparator")) {
-            String comparatorClass = reader.getAttribute("class");
-            comparator = (Comparator) context.convertAnother(result, mapper().realClass(comparatorClass));
-        } else if (reader.getNodeName().equals("no-comparator")) {
-            comparator = null;
+        if (reader.hasMoreChildren()) {
+            reader.moveDown();
+            if (reader.getNodeName().equals("comparator")) {
+                Class comparatorClass = HierarchicalStreams.readClassType(reader, mapper());
+                comparator = (Comparator) context.convertAnother(result, comparatorClass);
+            } else if (reader.getNodeName().equals("no-comparator")) { // pre 1.4 format
+                comparator = null;
+            } else {
+                // we are already within the first entry
+                return NULL_MARKER;
+            }
+            reader.moveUp();
         } else {
-            throw new ConversionException("TreeMap does not contain <comparator> element");
+            comparator = null;
         }
-        reader.moveUp();
         return comparator;
     }
 
     protected void populateTreeMap(HierarchicalStreamReader reader, UnmarshallingContext context,
-        TreeMap result, final Comparator comparator) {
+        TreeMap result, Comparator comparator) {
+        boolean inFirstElement = comparator == NULL_MARKER;
+        if (inFirstElement) {
+            comparator = null;
+        }
         SortedMap sortedMap = new PresortedMap(comparator != null && JVM.hasOptimizedTreeMapPutAll() ? comparator : null);
+        if (inFirstElement) {
+            // we are already within the first entry
+            putCurrentEntryIntoMap(reader, context, result, sortedMap);
+            reader.moveUp();
+        }
         populateMap(reader, context, result, sortedMap);
         try {
             if (JVM.hasOptimizedTreeMapPutAll()) {
