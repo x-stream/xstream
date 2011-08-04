@@ -1468,8 +1468,7 @@ public class XStream {
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field in the ownerType
      * @param itemName alias name of the items
-     * @throws InitializationException if no {@link ImplicitCollectionMapper} is available or the
-     * array type does not match the itemType
+     * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
      * @since upcoming 
      */
     public void addImplicitArray(Class ownerType, String fieldName, String itemName) {
