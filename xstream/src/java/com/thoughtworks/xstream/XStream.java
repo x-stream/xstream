@@ -1386,12 +1386,7 @@ public class XStream {
      *            type.
      */
     public void addImplicitCollection(Class ownerType, String fieldName) {
-        if (implicitCollectionMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + ImplicitCollectionMapper.class.getName()
-                + " available");
-        }
-        implicitCollectionMapper.add(ownerType, fieldName, null, null);
+        addImplicitCollection(ownerType, fieldName, null, null);
     }
 
     /**
@@ -1401,16 +1396,11 @@ public class XStream {
      * @param fieldName name of the field in the ownerType. This field must be a concrete
      *            collection type or matching the default implementation type of the collection
      *            type.
-     * @param itemType type of the items to be part of this collection.
+     * @param itemType type of the items to be part of this collection
      * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
      */
     public void addImplicitCollection(Class ownerType, String fieldName, Class itemType) {
-        if (implicitCollectionMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + ImplicitCollectionMapper.class.getName()
-                + " available");
-        }
-        implicitCollectionMapper.add(ownerType, fieldName, null, itemType);
+        addImplicitCollection(ownerType, fieldName, null, itemType);
     }
 
     /**
@@ -1427,12 +1417,7 @@ public class XStream {
      */
     public void addImplicitCollection(Class ownerType, String fieldName, String itemFieldName,
         Class itemType) {
-        if (implicitCollectionMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + ImplicitCollectionMapper.class.getName()
-                + " available");
-        }
-        implicitCollectionMapper.add(ownerType, fieldName, itemFieldName, itemType);
+        addImplicitMap(ownerType, fieldName, itemFieldName, itemType, null);
     }
 
     /**
@@ -1473,6 +1458,42 @@ public class XStream {
      */
     public void addImplicitArray(Class ownerType, String fieldName, String itemName) {
         addImplicitCollection(ownerType, fieldName, itemName, null);
+    }
+
+    /**
+     * Adds an implicit map.
+     * 
+     * @param ownerType class owning the implicit map
+     * @param fieldName name of the field in the ownerType. This field must be a concrete
+     *            map type or matching the default implementation type of the map
+     *            type.
+     * @param itemType type of the items to be part of this map as value
+     * @param keyFieldName the name of the filed of the itemType that is used for the key in the map
+     * @since upcoming 
+     */
+    public void addImplicitMap(Class ownerType, String fieldName, Class itemType, String keyFieldName) {
+        addImplicitMap(ownerType, fieldName, null, itemType, keyFieldName);
+    }
+
+    /**
+     * Adds an implicit map.
+     * 
+     * @param ownerType class owning the implicit map
+     * @param fieldName name of the field in the ownerType. This field must be a concrete
+     *            map type or matching the default implementation type of the map
+     *            type.
+     * @param itemType type of the items to be part of this map as value
+     * @param keyFieldName the name of the filed of the itemType that is used for the key in the map
+     * @since upcoming 
+     */
+    public void addImplicitMap(Class ownerType, String fieldName, String itemFieldName, 
+        Class itemType, String keyFieldName) {
+        if (implicitCollectionMapper == null) {
+            throw new com.thoughtworks.xstream.InitializationException("No "
+                + ImplicitCollectionMapper.class.getName()
+                + " available");
+        }
+        implicitCollectionMapper.add(ownerType, fieldName, itemFieldName, itemType, keyFieldName);
     }
 
     /**

@@ -22,7 +22,6 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Field;
 import java.util.AbstractList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedMap;

@@ -85,6 +85,10 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     }
 
     public void add(Class definedIn, String fieldName, String itemFieldName, Class itemType) {
+        add(definedIn, fieldName, itemFieldName, itemType, null);
+    }
+
+    public void add(Class definedIn, String fieldName, String itemFieldName, Class itemType, String keyFieldName) {
         Field field = null;
         while (definedIn != Object.class) {
             try {
@@ -101,6 +105,10 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             throw new InitializationException("No field \""
                 + fieldName
                 + "\" for implicit collection");
+        } else if (Map.class.isAssignableFrom(field.getType())) {
+            if (itemFieldName == null && keyFieldName == null) {
+                itemType = Map.Entry.class;
+            }
         } else if (!Collection.class.isAssignableFrom(field.getType())) {
             Class fieldType = field.getType();
             if (!fieldType.isArray()) {
@@ -124,7 +132,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             }
         }
         ImplicitCollectionMapperForClass mapper = getOrCreateMapper(definedIn);
-        mapper.add(new ImplicitCollectionMappingImpl(fieldName, itemType, itemFieldName));
+        mapper.add(new ImplicitCollectionMappingImpl(fieldName, itemType, itemFieldName, keyFieldName));
     }
 
     private static class ImplicitCollectionMapperForClass {
@@ -193,14 +201,16 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     }
 
     private static class ImplicitCollectionMappingImpl implements ImplicitCollectionMapping {
-        private String fieldName;
-        private String itemFieldName;
-        private Class itemType;
+        private final String fieldName;
+        private final String itemFieldName;
+        private final Class itemType;
+        private final String keyFieldName;
 
-        ImplicitCollectionMappingImpl(String fieldName, Class itemType, String itemFieldName) {
+        ImplicitCollectionMappingImpl(String fieldName, Class itemType, String itemFieldName, String keyFieldName) {
             this.fieldName = fieldName;
             this.itemFieldName = itemFieldName;
             this.itemType = itemType;
+            this.keyFieldName = keyFieldName;
         }
 
         public boolean equals(Object obj) {
@@ -243,6 +253,10 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
         public Class getItemType() {
             return itemType;
+        }
+
+        public String getKeyFieldName() {
+            return keyFieldName;
         }
     }
 

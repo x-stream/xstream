@@ -48,7 +48,6 @@
     	object graph and a target format. The new XmlFriendlyNameCoder replaces the XmlFriendlyReplacer used for XML
     	only.</li>
     	<li>JIRA:XSTR-553: Support annotations in Android.</li>
-    	<li>New JsonWriter.EXPLICIT_MODE generating JSON that can always be deserialized.</li>
     	<li>JIRA:XSTR-556: DateConverter uses format with 3-letter time zones that are ambiguous. Therefore it will now
     	always use UTC to write dates. Unmarshalled dates are not affected as long as they contain a time zone.</li>
     	<li>The type java.lang.reflect.Field is now handled by an own converter, that can still read the old format.</li>
@@ -58,13 +57,20 @@
     	<li>JIRA:XSTR-593: Direct support for java.net.URI instances (by Carlos Roman).</li>
     	<li>JIRA:XSTR-615+JIRA:XSTR-580: Dynamic proxies cannot be referenced recursively.</li>
     	<li>JIRA:XSTR-547: Wrong class loader used for Serializable types deserialized with an ObjectInputStream.</li>
-    	<li>JIRA:XSTR-612: Improve extensibility of c.t.x.javabean.* package by reintroducing a PropertyDictionary with
-    	the additional interface PropertySorter.</li>
+    	<li>JIRA:XSTR-341: Support of implicit arrays.</li>
+    	<li>JIRA:XSTR-306+JIRA:XSTR-406: Support of implicit maps.</li>
+    	<li>JIRA:XSTR-344: New ToAttributedValueConverter to allow conversion of an element with string body and
+    	attributes.</li>
+    	<li>JIRA:XSTR-573: SortedSet added with TreeSet as the default implementation.</li>
+    	<li>JIRA:XSTR-576: TreeMap and TreeSet no longer add an element without comparator (by Jason Greanya),
+    	solves also invalid format with JSON for such objects (JIRA:XSTR-640).</li>
     </ul>
 
     <h2>Minor changes</h2>
 
     <ul>
+    	<li>JIRA:XSTR-612: Improve extensibility of c.t.x.javabean.* package by reintroducing a PropertyDictionary with
+    	the additional interface PropertySorter.</li>
     	<li>JIRA:XSTR-591: EnumSingleValueConverter did use toString() instead of name() to create the String
     	representation of an enum value.</li>
     	<li>JIRA:XSTR-618: Add Oracle as vendor used for recent JRockit versions and former Sun JDK.</li>
@@ -73,18 +79,13 @@
     	<li>JIRA:XSTR-577: Skip UTF-8 BOM in XmlHeaderAwareReader.</li>
     	<li>JIRA:XSTR-543: Better deserialization support of the defined-in system attribute in combination with field
     	aliases.</li>
-    	<li>JIRA:XSTR-341: Support of implicit arrays.</li>
-    	<li>JIRA:XSTR-344: New ToAttributedValueConverter to allow conversion of an element with string body and
-    	attributes.</li>
-    	<li>JIRA:XSTR-573: SortedSet added with TreeSet as the default implementation.</li>
-    	<li>JIRA:XSTR-576: TreeMap and TreeSet no longer add an element without comparator (by Jason Greanya),
-    	solves also invalid format with JSON for such objects (JIRA:XSTR-640).</li>
     	<li>JIRA:XSTR-551: Deprecated XStream.InitializationException still thrown instead of InitializationException.</li>
     	<li>JIRA:XSTR-655: JsonWriter generates invalid JSON for Externalizable types.</li>
     	<li>JIRA:XSTR-540: Support Jettison-based configuration of JettisonMappedXmlDriver (by Doug Daniels).</li>
     	<li>JIRA:XSTR-633: JettisonMappedXmlDriver escaped property names according escape rules for XML tag names.</li>
     	<li>JIRA:XSTR-625: Optionally ignore XStream's hints for Jettison to generate JSON arrays (by Dejan Bosanac).</li>
     	<li>JIRA:XSTR-605: Upgrade to Jettison 1.2 (for Java 5 or higher).</li>
+    	<li>New JsonWriter.EXPLICIT_MODE generating JSON that enforces property sequence.</li>
     	<li>JIRA:XSTR-552: Improve performance of ReflectionProvider (by Keith Kowalczykowski).</li>
     	<li>JIRA:XSTR-559: Improve performance of Sun14ReflectionProvider (by Keith Kowalczykowski).</li>
     	<li>JIRA:XSTR-564: Improve performance of AnnotationMapper (by Keith Kowalczykowski).</li>

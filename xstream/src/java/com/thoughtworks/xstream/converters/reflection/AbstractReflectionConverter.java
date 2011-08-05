@@ -31,9 +31,10 @@ import com.thoughtworks.xstream.mapper.Mapper;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -125,15 +126,33 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                                 ReferencingMarshallingContext refContext = (ReferencingMarshallingContext)context;
                                 refContext.registerImplicit(info.value);
                             }
-                            for (Iterator iter = info.value instanceof Collection 
-                                    ? ((Collection)info.value).iterator() 
-                                        : new ArrayIterator(info.value); iter.hasNext();) {
+                            final boolean isCollection = info.value instanceof Collection;
+                            final boolean isMap = info.value instanceof Map;
+                            final boolean isEntry = isMap && mapping.getKeyFieldName() == null;
+                            final boolean isArray = info.value.getClass().isArray();
+                            for (Iterator iter = isArray 
+                                    ? new ArrayIterator(info.value)  
+                                    : isCollection 
+                                        ? ((Collection)info.value).iterator() 
+                                        : isEntry
+                                            ? ((Map)info.value).entrySet().iterator()
+                                            : ((Map)info.value).values().iterator(); iter.hasNext();) {
                                 Object obj = iter.next();
                                 final String itemName;
                                 final Class itemType;
                                 if (obj == null) {
                                     itemType = Object.class;
                                     itemName = mapper.serializedClass(null);
+                                } else if (isEntry) {
+                                    final String entryName = mapping.getItemFieldName() != null
+                                            ? mapping.getItemFieldName()
+                                            : mapper.serializedClass(Map.Entry.class);
+                                    Map.Entry entry = (Map.Entry) obj;
+                                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, entryName, Map.Entry.class);
+                                    writeItem(entry.getKey(), context, writer);
+                                    writeItem(entry.getValue(), context, writer);
+                                    writer.endNode();
+                                    continue;
                                 } else if (mapping.getItemFieldName() != null) {
                                     itemType = mapping.getItemType();
                                     itemName = mapping.getItemFieldName();
@@ -186,7 +205,19 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 }
                 writer.endNode();
             }
-
+            
+            void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
+                if (item == null) {
+                    String name = mapper.serializedClass(null);
+                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, Mapper.Null.class);
+                    writer.endNode();
+                } else {
+                    String name = mapper.serializedClass(item.getClass());
+                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, item.getClass());
+                    context.convertAnother(item);
+                    writer.endNode();
+                }
+            }
         };
     }
 
@@ -275,7 +306,17 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     type = definedType;
                 }
             } else {
-                value = type != null ? context.convertAnother(result, type) : null;
+                if (Map.Entry.class.equals(type)) {
+                    reader.moveDown();
+                    final Object key = context.convertAnother(result, HierarchicalStreams.readClassType(reader, mapper));
+                    reader.moveUp();
+                    reader.moveDown();
+                    final Object v = context.convertAnother(result, HierarchicalStreams.readClassType(reader, mapper));
+                    reader.moveUp();
+                    value = Collections.singletonMap(key, v).entrySet().iterator().next();
+                } else {
+                    value = type != null ? context.convertAnother(result, type) : null;
+                }
             }
             
             if (value != null && !type.isAssignableFrom(value.getClass())) {
@@ -330,19 +371,26 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     collection = new ArraysList(physicalFieldType);
                 } else {
                     Class fieldType = mapper.defaultImplementationOf(physicalFieldType);
-                    if (!Collection.class.isAssignableFrom(fieldType)) {
+                    if (!(Collection.class.isAssignableFrom(fieldType) || Map.class.isAssignableFrom(fieldType))) {
                         throw new ObjectAccessException("Field "
                             + fieldName
                             + " of "
                             + result.getClass().getName()
-                            + " is configured for an implicit Collection, but field is of type "
+                            + " is configured for an implicit Collection or Map, but field is of type "
                             + fieldType.getName());
                     }
                     if (pureJavaReflectionProvider == null) {
                         pureJavaReflectionProvider = new PureJavaReflectionProvider();
                     }
-                    collection = (Collection)pureJavaReflectionProvider.newInstance(fieldType);
-                    reflectionProvider.writeField(result, fieldName, collection, null);
+                    Object instance = pureJavaReflectionProvider.newInstance(fieldType);
+                    if (instance instanceof Collection) {
+                        collection = (Collection)instance;
+                    } else {
+                        Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
+                                .getImplicitCollectionDefForFieldName(result.getClass(), fieldName);
+                        collection = new MappingList((Map)instance, implicitCollectionMapping.getKeyFieldName());
+                    }
+                    reflectionProvider.writeField(result, fieldName, instance, null);
                 }
                 implicitCollections.put(fieldName, collection);
             }
@@ -462,6 +510,61 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 System.arraycopy(objects, 0, array, 0, objects.length);
             }
             return array;
+        }
+    }
+    
+    private class MappingList extends AbstractList {
+
+        private final Map map;
+        private final String keyFieldName;
+        private final Map fieldCache = new HashMap();
+        
+        public MappingList(Map map, String keyFieldName) {
+            this.map = map;
+            this.keyFieldName = keyFieldName;
+        }
+
+        public boolean add(Object object) {
+            if (object == null) {
+                boolean containsNull = !map.containsKey(null);
+                map.put(null, null);
+                return containsNull;
+            }
+            Class itemType = object.getClass();
+            
+            if (keyFieldName != null) {
+                Field field = (Field)fieldCache.get(itemType);
+                if (field == null) {
+                    field = reflectionProvider.getField(itemType, keyFieldName);
+                    fieldCache.put(itemType, field);
+                }
+                if (field != null) {
+                    try {
+                        Object key = field.get(object);
+                        return map.put(key, object) == null;
+                    } catch (IllegalArgumentException e) {
+                        throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
+                    } catch (IllegalAccessException e) {
+                        throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
+                    }
+                }
+            } else if (object instanceof Map.Entry) {
+                final Map.Entry entry = (Map.Entry)object;
+                return map.put(entry.getKey(), entry.getValue()) == null;
+            }
+            
+            throw new ConversionException("Element of type "
+                    + object.getClass().getName()
+                    + " is not defined as entry for map of type "
+                    + map.getClass().getName());
+        }
+
+        public Object get(int index) {
+            throw new UnsupportedOperationException();
+        }
+
+        public int size() {
+            return map.size();
         }
     }
 }

@@ -10,25 +10,6 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.InitializationException;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
-import com.thoughtworks.xstream.annotations.XStreamConverters;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
-import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
-import com.thoughtworks.xstream.annotations.XStreamInclude;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.ConverterMatcher;
-import com.thoughtworks.xstream.converters.ConverterRegistry;
-import com.thoughtworks.xstream.converters.SingleValueConverter;
-import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
-import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.core.JVM;
-import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
@@ -48,6 +29,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import com.thoughtworks.xstream.InitializationException;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamConverters;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
+import com.thoughtworks.xstream.annotations.XStreamInclude;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterMatcher;
+import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
+
 
 /**
  * A mapper that uses annotations to prepare the remaining mappers in the chain.
@@ -66,8 +66,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final FieldAliasingMapper fieldAliasingMapper;
     private final AttributeMapper attributeMapper;
     private final LocalConversionMapper localConversionMapper;
-    private final Map<Class<?>, Map<Object, Converter>> converterCache = 
-        new HashMap<Class<?>, Map<Object, Converter>>();
+    private final Map<Class<?>, Map<Object, Converter>> converterCache = new HashMap<Class<?>, Map<Object, Converter>>();
     private final Set<Class<?>> annotatedTypes = new WeakHashSet<Class<?>>();
 
     /**
@@ -361,8 +360,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     + FieldAliasingMapper.class.getName()
                     + " available");
             }
-            fieldAliasingMapper.addFieldAlias(aliasAnnotation.value(), field
-                .getDeclaringClass(), field.getName());
+            fieldAliasingMapper.addFieldAlias(
+                aliasAnnotation.value(), field.getDeclaringClass(), field.getName());
         }
     }
 
@@ -389,20 +388,33 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             }
             final String fieldName = field.getName();
             final String itemFieldName = implicitAnnotation.itemFieldName();
+            final String keyFieldName = implicitAnnotation.keyFieldName();
+            boolean isMap = Map.class.isAssignableFrom(field.getType());
             Class itemType = null;
             if (!field.getType().isArray()) {
                 final Type genericType = field.getGenericType();
                 if (genericType instanceof ParameterizedType) {
-                    final Type typeArgument = ((ParameterizedType)genericType)
-                        .getActualTypeArguments()[0];
+                    final Type[] actualTypeArguments = ((ParameterizedType)genericType)
+                        .getActualTypeArguments();
+                    final Type typeArgument = actualTypeArguments[isMap ? 1 : 0];
                     itemType = getClass(typeArgument);
                 }
             }
-            if (itemFieldName != null && !"".equals(itemFieldName)) {
+            if (isMap) {
                 implicitCollectionMapper.add(
-                    field.getDeclaringClass(), fieldName, itemFieldName, itemType);
+                    field.getDeclaringClass(), fieldName,
+                    itemFieldName != null && !"".equals(itemFieldName) ? itemFieldName : null,
+                    itemType, keyFieldName != null && !"".equals(keyFieldName)
+                        ? keyFieldName
+                        : null);
             } else {
-                implicitCollectionMapper.add(field.getDeclaringClass(), fieldName, itemType);
+                if (itemFieldName != null && !"".equals(itemFieldName)) {
+                    implicitCollectionMapper.add(
+                        field.getDeclaringClass(), fieldName, itemFieldName, itemType);
+                } else {
+                    implicitCollectionMapper
+                        .add(field.getDeclaringClass(), fieldName, itemType);
+                }
             }
         }
     }
@@ -431,8 +443,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                         + LocalConversionMapper.class.getName()
                         + " available");
                 }
-                localConversionMapper.registerLocalConverter(field.getDeclaringClass(), field
-                    .getName(), converter);
+                localConversionMapper.registerLocalConverter(
+                    field.getDeclaringClass(), field.getName(), converter);
             }
         }
     }
@@ -456,7 +468,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             } else {
                 args = arguments;
             }
-            
+
             final BitSet usedArgs = new BitSet();
             final Converter converter;
             try {

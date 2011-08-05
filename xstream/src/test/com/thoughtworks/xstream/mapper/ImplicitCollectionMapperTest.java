@@ -11,9 +11,13 @@
  */
 package com.thoughtworks.xstream.mapper;
 
+import java.util.Map;
+
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
+import com.thoughtworks.acceptance.objects.Product;
 import com.thoughtworks.acceptance.objects.SampleLists;
+import com.thoughtworks.acceptance.objects.SampleMaps;
 import com.thoughtworks.acceptance.objects.Software;
 
 import junit.framework.TestCase;
@@ -93,8 +97,23 @@ public class ImplicitCollectionMapperTest extends TestCase {
 
     public void testGetItemTypeForItemFieldName() {
         implicitCollections.add(SampleLists.class, "good", "good-item", Software.class);
-        implicitCollections.add(SampleLists.class, "bad", "bad-item", Software.class);
+        implicitCollections.add(SampleLists.class, "bad", "bad-item", Product.class);
 
         assertEquals(Software.class, implicitCollections.getItemTypeForItemFieldName(SampleLists.class, "good-item"));
+        assertEquals(Product.class, implicitCollections.getItemTypeForItemFieldName(SampleLists.class, "bad-item"));
+    }
+
+    public void testAllowsFieldsToBeMarkedAsImplicitMapsToBeAdded() {
+        implicitCollections.add(SampleMaps.class, "good", null);
+        assertNotNull(implicitCollections.getImplicitCollectionDefForFieldName(SampleMaps.class, "good"));
+        assertEquals("good", implicitCollections.getFieldNameForItemTypeAndName(SampleMaps.class, Map.Entry.class, null));
+    }
+
+    public void testGetKeyFieldNameForItemFieldName() {
+        implicitCollections.add(SampleMaps.class, "good", "good-item", Software.class, "name");
+        implicitCollections.add(SampleMaps.class, "bad", "bad-item", Software.class, "vendor");
+
+        assertEquals("name", implicitCollections.getImplicitCollectionDefForFieldName(SampleMaps.class, "good").getKeyFieldName());
+        assertEquals("vendor", implicitCollections.getImplicitCollectionDefForFieldName(SampleMaps.class, "bad").getKeyFieldName());
     }
 }
