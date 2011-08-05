@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2011 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -47,12 +47,12 @@ public class PhoneNumber {
 
 <div class="Source Java"><pre>XStream xstream = new XStream();</pre></div>
 
-    <p>You require <code>xstream-[version].jar</code> and <code>xpp3-[version].jar</code> in the classpath.
-    <a href="http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/index.html">XPP3</a>
-    is a very fast XML pull-parser implementation. If you do not want to include this
-    dependency, you can use a standard JAXP DOM parser instead:</p>
+    <p>You require <code>xstream-[version].jar</code> and <code>kxml2-min-[version].jar</code> in the classpath.
+    <a href="http://kxml.sourceforge.net/">kXML2</a> is a very fast XML pull-parser implementation. If you do not want
+    to include this dependency, you can use a standard JAXP DOM parser or since Java 6 the integrated StAX parser instead:</p>
 
 <div class="Source Java"><pre>XStream xstream = new XStream(new DomDriver()); // does not require XPP3 library</pre></div>
+<div class="Source Java"><pre>XStream xstream = new XStream(new StaxDriver()); // does not require XPP3 library</pre></div>
 
     <p><b>Note:</b> This class is a simple facade designed for common operations. For more flexibility you
     may choose to create your own facade that behaves differently.</p>
@@ -113,6 +113,9 @@ joe.setFax(new PhoneNumber(123, "9999-999"));</pre></div>
         <li>Convert an object to XML using <code style="white-space: nowrap">xstream.toXML(Object obj);</code></li>
         <li>Convert XML back to an object using <code style="white-space: nowrap">xstream.fromXML(String xml);</code></li>
     </ul>
+
+	<p>maybe you like to read the <a href="alias-tutorial.html">alias tutorial</a> to see more possibilities how you can rename things using XStream.
+Or look into the condensed overview how to configure XStream to <a href="manual-tweaking-output.html">tweak the output</a>.</p>
 
   </body>
 </html>

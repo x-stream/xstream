@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2011 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -154,7 +154,7 @@ We shall name it simply <i>blog</i>: let's create an alias called <i>blog</i> to
   &lt;/entries&gt;
 &lt;/blog&gt;</pre></div></div>
 <div class="section">
-<h2 id="omit">Omit the 'entries' tag</h2>
+<h2 id="implicit">Implicit Collections</h2>
 <p>Now let's implement what was called an <b>implicit collection</b>: whenever you have a collection which doesn't need
 to display it's root tag, you can map it as an implicit collection.</p>
 <p>In our example, we do not want to display the <b>entries</b> tag, but simply show the <b>entry</b> tags one after
@@ -203,6 +203,7 @@ shall assume the behaviour we described.</p>
     &lt;/description&gt;
   &lt;/entry&gt;
 &lt;/blog&gt;</pre></div></div>
+<p>Just as a side note: An array or a map can also be declared as implicit.</p>
 <div class="section">
 <h2 id="attributes">Attribute aliasing</h2>
 <p>The next step is to set the <b>writer</b> member variable as an XML attribute. In order to do this, we shall tell
@@ -334,7 +335,8 @@ but this time we alias the package name instead of the individual classes:</p>
 <li>You can use package aliases to change tag names</li>
 <li>Fields can be written as attributes if the field type is handled by a SingleValueConverter</li>
 </ul>
-<p>Don't forget to read the <a href="converter-tutorial.html">converter tutorial</a> to see other type of converters that you can create using XStream.</p>
+<p>Don't forget to read the <a href="converter-tutorial.html">converter tutorial</a> to see other type of converters that you can create using XStream.
+Or look into the condensed overview how to configure XStream to <a href="manual-tweaking-output.html">tweak the output</a>.</p>
 </div>
 
   </body>

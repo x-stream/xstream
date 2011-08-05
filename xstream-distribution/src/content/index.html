@@ -71,26 +71,27 @@
 
     <h1 id="news">Latest News</h1>
 
-    <h2 id="1.3.1"><b>Dec 6, 2008</b> XStream 1.3.1 released</h2>
+    <h2 id="1.4"><b>Aug 5, 2011</b> XStream 1.4 released</h2>
 
-      <p>A new XStream maintenance version has been released.  The release contains some
-      bug fixes, some minor enhancements and support of new JDKs:</p>
+      <p>Finally - XStream 1.4 is ready for delivery.  A lot of things have changed and improved, new features added.
+      Nevertheless we have maintain compatibility to the old versions:</p>
       
       <ul>
-      	<li>Ability to alias package names</li>
-      	<li>Converters are only registered by default for types delivered with the JDK in use preventing
-      	unexpected incompatibilities</li>
-      	<li>Separation between user defined attributes and XStream attributes</li>
-      	<li>New mode for JSONWriter to drop JSON root node</li>
-      	<li>Support for FreeBSD's Diablo JDK.</li>
-      	<li>Enhanced persistence package and extended tutorial.</li>
+      	<li>Detection of Java 7 and Android i.e. enabled enhanced mode and annotations for both environments out of the box</li>
+      	<li>Direct support of XmlPullParser factory and alternate kXML2 implementation</li>
+      	<li>Explicit drivers to select the StAX implementation</li>
+      	<li>New separate Hibernate module to support those managed instances</li>
+      	<li>Support of implicit arrays and maps additionally to already existing implicit collection support</li>
+      	<li>A lot of other enhancements and bug fixes</li>
       </ul>
 
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
       
-    <p class="hightlight">Note, that XStream really supports by default now only types of the JDK in use.  Especially for
-    CGLIB this means that support of those proxies will have to be <a href="faq.html#Serialization_CGLIB">explicitly activated</a>
-    first. However, support for CGLIB proxies is enhanced.</p>
+    <p class="hightlight">Note, that with version 1.4 the default parser has been changed from
+    <a href="faq.html#Compatibility_kXML2">Xpp3 to kXML2</a>.</p>
+      
+    <p class="hightlight">Note, that JDK 1.3 support has been officially dropped.  Nothing special has been done to
+    enforce this, but there is no longer any support.</p>
 
     <p class="highlight">Note, to support a representation of null values in some way, it is absolutely necessary that each converter can handle a null
     value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities

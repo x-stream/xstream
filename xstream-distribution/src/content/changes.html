@@ -35,6 +35,7 @@
     <h2>Major changes</h2>
 
     <ul>
+    	<li>Java 7 is detected and supported.</li>
     	<li>JIRA:XSTR-542: The XppDriver uses now the official XmlPullParser API to locate an available parser using
     	the XmlPullParserFactory. This allows the usage of XPP technology with XStream in Android.</li>
     	<li>Additional explicit XPP drivers for the Xpp3 and kXML2 implementations.</li>
@@ -51,7 +52,6 @@
     	<li>JIRA:XSTR-556: DateConverter uses format with 3-letter time zones that are ambiguous. Therefore it will now
     	always use UTC to write dates. Unmarshalled dates are not affected as long as they contain a time zone.</li>
     	<li>The type java.lang.reflect.Field is now handled by an own converter, that can still read the old format.</li>
-    	<li>The XppReader no longer uses a BufferedReader.</li>
     	<li>JIRA:XSTR-490: Provide path in Converter for contexts that track the path.</li>
     	<li>JIRA:XSTR-592+JIRA:XSTR-579: OmitField respected at deserialization time even for existing fields.</li>
     	<li>JIRA:XSTR-593: Direct support for java.net.URI instances (by Carlos Roman).</li>
@@ -77,6 +77,7 @@
     	<li>JIRA:XSTR-656: DomReader and Dom4JReader do not escape attribute names retrieving their values.</li>
     	<li>JIRA:XSTR-604: StringConverter's cache may cause an OutOfMemoryException.</li>
     	<li>JIRA:XSTR-577: Skip UTF-8 BOM in XmlHeaderAwareReader.</li>
+    	<li>The XppReader no longer uses a BufferedReader.</li>
     	<li>JIRA:XSTR-543: Better deserialization support of the defined-in system attribute in combination with field
     	aliases.</li>
     	<li>JIRA:XSTR-551: Deprecated XStream.InitializationException still thrown instead of InitializationException.</li>
