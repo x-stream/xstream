@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Field;
 import java.util.AbstractList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -82,10 +83,11 @@ public class TreeSetConverter extends CollectionConverter {
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         TreeSet result = null;
         final TreeMap treeMap;
-        Comparator comparator = treeMapConverter.unmarshalComparator(reader, context, null);
-        boolean inFirstElement = comparator == treeMapConverter.NULL_MARKER;
+        Comparator unmarshalledComparator = treeMapConverter.unmarshalComparator(reader, context, null);
+        boolean inFirstElement = unmarshalledComparator instanceof Mapper.Null;
+        Comparator comparator = inFirstElement ? null : unmarshalledComparator;
         if (sortedMapField != null) {
-            TreeSet possibleResult = comparator == null && !inFirstElement ? new TreeSet() : new TreeSet(comparator);
+            TreeSet possibleResult = comparator == null ? new TreeSet() : new TreeSet(comparator);
             Object backingMap = null;
             try {
                 backingMap = sortedMapField.get(possibleResult);
@@ -102,9 +104,6 @@ public class TreeSetConverter extends CollectionConverter {
             treeMap = null;
         }
         if (treeMap == null) {
-            if (inFirstElement) {
-                comparator = null;
-            }
             final PresortedSet set = new PresortedSet(comparator);
             result = comparator == null ? new TreeSet() : new TreeSet(comparator);
             if (inFirstElement) {
@@ -117,7 +116,7 @@ public class TreeSetConverter extends CollectionConverter {
                 result.addAll(set); // comparator will not be called if internally optimized
             }
         } else {
-            treeMapConverter.populateTreeMap(reader, context, treeMap, comparator);
+            treeMapConverter.populateTreeMap(reader, context, treeMap, unmarshalledComparator);
         }
         return result;
     }
@@ -140,6 +139,12 @@ public class TreeSetConverter extends CollectionConverter {
                         return target.size();
                     }
                 });
+            }
+
+            protected void putCurrentEntryIntoMap(HierarchicalStreamReader reader, UnmarshallingContext context,
+                Map map, Map target) {
+                Object key = readItem(reader, context, map);
+                target.put(key, key);
             }
         };
         return this;

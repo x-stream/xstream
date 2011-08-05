@@ -37,13 +37,15 @@ import java.util.TreeMap;
  */
 public class TreeMapConverter extends MapConverter {
     
-    protected final static Comparator NULL_MARKER = new Comparator() {
+    private static final class NullComparator extends Mapper.Null implements Comparator {
         public int compare(Object o1, Object o2) {
             Comparable c1 = (Comparable)o1;
             Comparable c2 = (Comparable)o2;
             return c1.compareTo(o2);
         }
-    };
+    }
+
+    private final static Comparator NULL_MARKER = new NullComparator();
     
     private final static Field comparatorField;
     static {
