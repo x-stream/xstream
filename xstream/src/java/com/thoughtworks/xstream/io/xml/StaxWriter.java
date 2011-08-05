@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 201, 20110 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -45,7 +45,7 @@ public class StaxWriter extends AbstractXmlWriter {
      * @param out                    the stream to output to
      * @param nameCoder              the xml-friendly replacer to escape Java names
      * @throws XMLStreamException if the events could not be written to the output
-     * @since upcoming
+     * @since 1.4
      */
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, NameCoder nameCoder) throws XMLStreamException {
         this(qnameMap, out, true, true, nameCoder);
@@ -60,7 +60,7 @@ public class StaxWriter extends AbstractXmlWriter {
      * @param namespaceRepairingMode a flag to enable StAX' namespace repairing mode
      * @param nameCoder              the xml-friendly replacer to escape Java names
      * @throws XMLStreamException if the events could not be written to the output
-     * @since upcoming
+     * @since 1.4
      */
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, 
             boolean writeEnclosingDocument, boolean namespaceRepairingMode,
@@ -96,7 +96,7 @@ public class StaxWriter extends AbstractXmlWriter {
      * @param replacer              the xml-friendly replacer to escape Java names
      * @throws XMLStreamException if the events could not be written to the output
      * @since 1.2
-     * @deprecated As of upcoming use {@link StaxWriter#StaxWriter(QNameMap, XMLStreamWriter, boolean, boolean, NameCoder)} instead
+     * @deprecated As of 1.4 use {@link StaxWriter#StaxWriter(QNameMap, XMLStreamWriter, boolean, boolean, NameCoder)} instead
      */
     public StaxWriter(QNameMap qnameMap, XMLStreamWriter out, 
             boolean writeEnclosingDocument, boolean namespaceRepairingMode,

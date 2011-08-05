@@ -27,7 +27,7 @@ import java.util.WeakHashMap;
  * value is garbage collected, the key will also vanish from the map.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class WeakCache extends AbstractMap {
 
@@ -37,7 +37,7 @@ public class WeakCache extends AbstractMap {
      * Construct a WeakCache with weak keys.
      * 
      * @param map the map to use
-     * @since upcoming
+     * @since 1.4
      */
     public WeakCache() {
         this(new WeakHashMap());
@@ -47,7 +47,7 @@ public class WeakCache extends AbstractMap {
      * Construct a WeakCache.
      * 
      * @param map the map to use
-     * @since upcoming
+     * @since 1.4
      */
     public WeakCache(Map map) {
         this.map = map;

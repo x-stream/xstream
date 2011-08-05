@@ -38,7 +38,7 @@ public interface ErrorWriter {
      *
      * @param name        something to identify the type of information (e.g. 'XPath').
      * @param information detail of the message (e.g. '/blah/moo[3]'
-     * @since upcoming
+     * @since 1.4
      */
     void set(String name, String information);
 

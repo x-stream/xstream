@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,7 +26,7 @@ public class JDomWriter extends AbstractDocumentWriter {
     private final JDOMFactory documentFactory;
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public JDomWriter(
                       final Element container, final JDOMFactory factory,
@@ -37,7 +37,7 @@ public class JDomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming use {@link JDomWriter#JDomWriter(Element, JDOMFactory, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(Element, JDOMFactory, NameCoder)} instead.
      */
     public JDomWriter(
                       final Element container, final JDOMFactory factory,
@@ -50,7 +50,7 @@ public class JDomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public JDomWriter(final JDOMFactory factory, final NameCoder nameCoder) {
         this(null, factory, nameCoder);
@@ -58,7 +58,7 @@ public class JDomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2.1
-     * @deprecated As of upcoming use {@link JDomWriter#JDomWriter(JDOMFactory, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(JDOMFactory, NameCoder)} instead.
      */
     public JDomWriter(final JDOMFactory factory, final XmlFriendlyReplacer replacer) {
         this(null, factory, (NameCoder)replacer);
@@ -69,7 +69,7 @@ public class JDomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public JDomWriter(final Element container, final NameCoder nameCoder) {
         this(container, new DefaultJDOMFactory(), nameCoder);
@@ -77,7 +77,7 @@ public class JDomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2.1
-     * @deprecated As of upcoming use {@link JDomWriter#JDomWriter(Element, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(Element, NameCoder)} instead.
      */
     public JDomWriter(final Element container, final XmlFriendlyReplacer replacer) {
         this(container, new DefaultJDOMFactory(), (NameCoder)replacer);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,7 @@ import javax.xml.stream.XMLOutputFactory;
  * A driver using the JDK 6 StAX implementation of Sun.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class SjsxpDriver extends StaxDriver {
 

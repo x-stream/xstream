@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.naming.NoNameCoder;
  * the interface directly.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter {
 
@@ -30,7 +30,7 @@ public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter
     /**
      * Creates an AbstractWriter with a NameCoder that does nothing.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     protected AbstractWriter() {
         this(new NoNameCoder());
@@ -40,7 +40,7 @@ public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter
      * Creates an AbstractWriter with a provided {@link NameCoder}.
      * 
      * @param nameCoder the name coder used to write names in the target format
-     * @since upcoming
+     * @since 1.4
      */
     protected AbstractWriter(NameCoder nameCoder) {
         this.nameCoder = (NameCoder)Cloneables.cloneIfPossible(nameCoder);
@@ -65,7 +65,7 @@ public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter
      * 
      * @param name the original name
      * @return the name in the target format
-     * @since upcoming
+     * @since 1.4
      */
     public String encodeNode(String name) {
         return nameCoder.encodeNode(name);
@@ -76,7 +76,7 @@ public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter
      * 
      * @param name the original name
      * @return the name in the target format
-     * @since upcoming
+     * @since 1.4
      */
     public String encodeAttribute(String name) {
         return nameCoder.encodeAttribute(name);

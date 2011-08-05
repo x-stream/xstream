@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,7 +17,7 @@ package com.thoughtworks.xstream.io.xml;
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
  * @since 1.3
- * @deprecated As of upcoming
+ * @deprecated As of 1.4
  */
 public interface XmlFriendlyWriter {
 
@@ -26,7 +26,7 @@ public interface XmlFriendlyWriter {
      * 
      * @param name the unescaped XML name
      * @return An escaped name with original characters replaced
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4
      */
     String escapeXmlName(String name);
 }

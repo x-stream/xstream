@@ -25,7 +25,7 @@ import org.hibernate.collection.PersistentSortedSet;
  * collection instead.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class HibernatePersistentSortedSetConverter extends TreeSetConverter {
 
@@ -33,7 +33,7 @@ public class HibernatePersistentSortedSetConverter extends TreeSetConverter {
      * Construct a HibernatePersistentSortedSetConverter.
      * 
      * @param mapper
-     * @since upcoming
+     * @since 1.4
      */
     public HibernatePersistentSortedSetConverter(final Mapper mapper) {
         super(mapper);

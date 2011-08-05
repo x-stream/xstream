@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,6 @@ package com.thoughtworks.xstream.tools.benchmark.targets;
 import com.thoughtworks.xstream.tools.benchmark.Target;
 
 import java.awt.Color;
-import java.io.Externalizable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -26,7 +25,7 @@ import java.util.Properties;
  * Target containing extended types.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class ExtendedTarget implements Target {
 

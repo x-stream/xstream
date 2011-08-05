@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,14 +22,14 @@ import org.xmlpull.v1.XmlPullParser;
  * A {@link HierarchicalStreamDriver} using the kXML2 parser.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class KXml2Driver extends AbstractXppDriver {
 
     /**
      * Construct a KXml2Driver.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     public KXml2Driver() {
         super(new XmlFriendlyNameCoder());
@@ -39,7 +39,7 @@ public class KXml2Driver extends AbstractXppDriver {
      * Construct a KXml2Driver.
      * 
      * @param nameCoder the replacer for XML friendly names
-     * @since upcoming
+     * @since 1.4
      */
     public KXml2Driver(NameCoder nameCoder) {
         super(nameCoder);

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,7 +37,7 @@ public class XppReader extends AbstractPullReader {
      * 
      * @param reader the reader with the input data
      * @param parser the XPP parser to use
-     * @since upcoming
+     * @since 1.4
      */
     public XppReader(Reader reader, XmlPullParser parser) {
         this(reader, parser, new XmlFriendlyNameCoder());
@@ -49,7 +49,7 @@ public class XppReader extends AbstractPullReader {
      * @param reader the reader with the input data
      * @param parser the XPP parser to use
      * @param nameCoder the coder for XML friendly tag and attribute names
-     * @since upcoming
+     * @since 1.4
      */
     public XppReader(Reader reader, XmlPullParser parser, NameCoder nameCoder) {
         super(nameCoder);
@@ -64,7 +64,7 @@ public class XppReader extends AbstractPullReader {
     }
 
     /**
-     * @deprecated As of upcoming, use {@link #XppReader(Reader, XmlPullParser)}  instead
+     * @deprecated As of 1.4, use {@link #XppReader(Reader, XmlPullParser)}  instead
      */
     public XppReader(Reader reader) {
         this(reader, new XmlFriendlyReplacer());
@@ -72,7 +72,7 @@ public class XppReader extends AbstractPullReader {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link #XppReader(Reader, XmlPullParser, XmlFriendlyReplacer)}  instead
+     * @deprecated As of 1.4, use {@link #XppReader(Reader, XmlPullParser, XmlFriendlyReplacer)}  instead
      */
     public XppReader(Reader reader, XmlFriendlyReplacer replacer) {
         super(replacer);
@@ -88,7 +88,7 @@ public class XppReader extends AbstractPullReader {
     
     /**
      * To use another implementation of org.xmlpull.v1.XmlPullParser, override this method.
-     * @deprecated As of upcoming, use {@link #XppReader(Reader, XmlPullParser)}  instead
+     * @deprecated As of 1.4, use {@link #XppReader(Reader, XmlPullParser)}  instead
      */
     protected XmlPullParser createParser() {
         Exception exception = null;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,7 @@ package com.thoughtworks.xstream.tools.benchmark.model;
 /**
  * Class with 100 parents.
  * 
- * @since upcoming
+ * @since 1.4
  */
 public class A100Parents {
 

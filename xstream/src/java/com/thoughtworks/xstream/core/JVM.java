@@ -110,10 +110,16 @@ public class JVM implements Caching {
         return majorJavaVersion >= 1.6f;
     }
 
+    /**
+     * @since 1.4
+     */
     public static boolean is17() {
         return majorJavaVersion >= 1.7f;
     }
 
+    /**
+     * @since 1.4
+     */
     public static boolean is18() {
         return majorJavaVersion >= 1.8f;
     }
@@ -150,6 +156,9 @@ public class JVM implements Caching {
         return vendor.indexOf("Apache Software Foundation") != -1;
     }
 
+    /**
+     * @since 1.4
+     */
     private static boolean isAndroid() {
         return vendor.indexOf("Android") != -1;
     }
@@ -293,7 +302,7 @@ public class JVM implements Caching {
     /**
      * Checks if TreeSet.addAll is optimized for SortedSet argument.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     public static boolean hasOptimizedTreeSetAddAll() {
         return optimizedTreeSetAddAll;
@@ -302,7 +311,7 @@ public class JVM implements Caching {
     /**
      * Checks if TreeMap.putAll is optimized for SortedMap argument.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     public static boolean hasOptimizedTreeMapPutAll() {
         return optimizedTreeMapPutAll;

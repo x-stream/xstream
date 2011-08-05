@@ -35,7 +35,7 @@ import org.hibernate.proxy.HibernateProxy;
  * 
  * @author Konstantin Pribluda
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class HibernateMapper extends MapperWrapper {
 

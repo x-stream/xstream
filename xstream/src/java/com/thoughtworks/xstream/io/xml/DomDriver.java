@@ -57,7 +57,7 @@ public class DomDriver extends AbstractXmlDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public DomDriver(String encoding, NameCoder nameCoder) {
         super(nameCoder);
@@ -67,7 +67,7 @@ public class DomDriver extends AbstractXmlDriver {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link #DomDriver(String, NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link #DomDriver(String, NameCoder)} instead.
      */
     public DomDriver(String encoding, XmlFriendlyReplacer replacer) {
         this(encoding, (NameCoder)replacer);

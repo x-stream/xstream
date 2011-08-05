@@ -71,7 +71,7 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
      * 
      * @param config the Jettison configuration
      * @param useSerializeAsArray flag to use XStream's hints for collections and arrays
-     * @since upcoming
+     * @since 1.4
      */
     public JettisonMappedXmlDriver(final Configuration config, final boolean useSerializeAsArray) {
         mof = new MappedXMLOutputFactory(config);

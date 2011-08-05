@@ -25,7 +25,7 @@ import org.hibernate.collection.PersistentSortedMap;
  * collection instead.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class HibernatePersistentSortedMapConverter extends TreeMapConverter {
 
@@ -33,7 +33,7 @@ public class HibernatePersistentSortedMapConverter extends TreeMapConverter {
      * Construct a HibernatePersistentSortedMapConverter.
      * 
      * @param mapper
-     * @since upcoming
+     * @since 1.4
      */
     public HibernatePersistentSortedMapConverter(final Mapper mapper) {
         super(mapper);

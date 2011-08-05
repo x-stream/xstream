@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * {@link #EXPLICIT_MODE}.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public abstract class AbstractJsonWriter extends AbstractWriter {
     /**
@@ -111,7 +111,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * This mode cannot be combined with one of the other modes.
      * </p>
      * 
-     * @since upcoming
+     * @since 1.4
      */
     public static final int EXPLICIT_MODE = 4;
 
@@ -175,7 +175,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     /**
      * Construct a JSON writer.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     public AbstractJsonWriter() {
         this(new NoNameCoder());
@@ -185,7 +185,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * Construct a JSON writer with a special mode.
      * 
      * @param mode a bit mask of the mode constants
-     * @since upcoming
+     * @since 1.4
      */
     public AbstractJsonWriter(int mode) {
         this(mode, new NoNameCoder());
@@ -195,7 +195,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * Construct a JSON writer with a special name coder.
      * 
      * @param nameCoder the name coder to use
-     * @since upcoming
+     * @since 1.4
      */
     public AbstractJsonWriter(NameCoder nameCoder) {
         this(0, nameCoder);
@@ -206,7 +206,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * 
      * @param mode a bit mask of the mode constants
      * @param nameCoder the name coder to use
-     * @since upcoming
+     * @since 1.4
      */
     public AbstractJsonWriter(int mode, NameCoder nameCoder) {
         super(nameCoder);
@@ -555,7 +555,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * 
      * @param clazz the type
      * @return <code>true</code> if handles as array
-     * @since upcoming
+     * @since 1.4
      */
     protected boolean isArray(Class clazz) {
         return clazz != null && (clazz.isArray()
@@ -568,7 +568,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     /**
      * Start a JSON object.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     protected abstract void startObject();
 
@@ -576,7 +576,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * Add a label to a JSON object.
      * 
      * @param name the label's name
-     * @since upcoming
+     * @since 1.4
      */
     protected abstract void addLabel(String name);
 
@@ -585,35 +585,35 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * 
      * @param value the value itself
      * @param type the JSON type
-     * @since upcoming
+     * @since 1.4
      */
     protected abstract void addValue(String value, Type type);
 
     /**
      * Start a JSON array.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     protected abstract void startArray();
 
     /**
      * Prepare a JSON object or array for another element.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     protected abstract void nextElement();
 
     /**
      * End the JSON array.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     protected abstract void endArray();
 
     /**
      * End the JSON object.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     protected abstract void endObject();
 }

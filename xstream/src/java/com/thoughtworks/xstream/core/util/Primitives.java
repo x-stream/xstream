@@ -83,7 +83,7 @@ public final class Primitives {
      * 
      * @param type the type to check
      * @return <code>true</code> if the type is boxed
-     * @since upcoming
+     * @since 1.4
      */
     static public boolean isBoxed(final Class type) {
         return UNBOX.containsKey(type);
@@ -94,7 +94,7 @@ public final class Primitives {
      * 
      * @param name the name of the type
      * @return the Java type or <code>null</code>
-     * @since upcoming
+     * @since 1.4
      */
     static public Class primitiveType(final String name) {
         return (Class)NAMED_PRIMITIVE.get(name);
@@ -105,7 +105,7 @@ public final class Primitives {
      * 
      * @param type the primitive type
      * @return the representing character or 0
-     * @since upcoming
+     * @since 1.4
      */
     static public char representingChar(final Class type) {
         Character ch = (Character)REPRESENTING_CHAR.get(type);

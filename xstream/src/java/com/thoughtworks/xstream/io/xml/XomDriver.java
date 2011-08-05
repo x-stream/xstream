@@ -43,14 +43,14 @@ public class XomDriver extends AbstractXmlDriver {
     }
     
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public XomDriver(NameCoder nameCoder) {
         this(new Builder(), nameCoder);    
     }
     
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public XomDriver(Builder builder, NameCoder nameCoder) {
         super(nameCoder);    
@@ -59,7 +59,7 @@ public class XomDriver extends AbstractXmlDriver {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link #XomDriver(Builder, NameCoder)} instead
+     * @deprecated As of 1.4, use {@link #XomDriver(Builder, NameCoder)} instead
      */
     public XomDriver(XmlFriendlyReplacer replacer) {
         this(new Builder(), replacer);        
@@ -67,7 +67,7 @@ public class XomDriver extends AbstractXmlDriver {
     
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link #XomDriver(Builder, NameCoder)} instead
+     * @deprecated As of 1.4, use {@link #XomDriver(Builder, NameCoder)} instead
      */
     public XomDriver(Builder builder, XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);    

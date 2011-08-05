@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,7 +37,7 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public Dom4JXmlWriter(XMLWriter writer, NameCoder nameCoder) {
         super(nameCoder);
@@ -53,7 +53,7 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming use {@link Dom4JXmlWriter#Dom4JXmlWriter(XMLWriter, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link Dom4JXmlWriter#Dom4JXmlWriter(XMLWriter, NameCoder)} instead.
      */
     public Dom4JXmlWriter(XMLWriter writer, XmlFriendlyReplacer replacer) {
         this(writer, (NameCoder)replacer);

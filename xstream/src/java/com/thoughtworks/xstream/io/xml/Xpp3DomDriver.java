@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,14 +20,14 @@ import org.xmlpull.v1.XmlPullParser;
  * A {@link HierarchicalStreamDriver} for XPP DOM using the Xpp3 parser.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class Xpp3DomDriver extends AbstractXppDomDriver {
 
     /**
      * Construct an Xpp3DomDriver.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     public Xpp3DomDriver() {
         super(new XmlFriendlyNameCoder());
@@ -37,7 +37,7 @@ public class Xpp3DomDriver extends AbstractXppDomDriver {
      * Construct an Xpp3DomDriver.
      * 
      * @param nameCoder the replacer for XML friendly names
-     * @since upcoming
+     * @since 1.4
      */
     public Xpp3DomDriver(NameCoder nameCoder) {
         super(nameCoder);

@@ -42,7 +42,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public Dom4JDriver(NameCoder nameCoder) {
         this(new DocumentFactory(), OutputFormat.createPrettyPrint(), nameCoder);
@@ -54,7 +54,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, NameCoder nameCoder) {
         super(nameCoder);
@@ -64,7 +64,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link Dom4JDriver#Dom4JDriver(DocumentFactory, OutputFormat, NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link Dom4JDriver#Dom4JDriver(DocumentFactory, OutputFormat, NameCoder)} instead.
      */
     public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, XmlFriendlyReplacer replacer) {
         this(documentFactory, outputFormat, (NameCoder)replacer);
@@ -108,7 +108,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public HierarchicalStreamReader createReader(URL in) {
         try {
@@ -121,7 +121,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public HierarchicalStreamReader createReader(File in) {
         try {

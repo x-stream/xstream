@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.converters.javabean;
 /**
  * @author J&ouml;rg Schaible
  *
- * @since upcoming
+ * @since 1.4
  */
 public interface JavaBeanProvider {
 

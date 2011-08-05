@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,7 +36,7 @@ import java.net.URL;
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public abstract class AbstractXppDriver extends AbstractXmlDriver {
 
@@ -44,7 +44,7 @@ public abstract class AbstractXppDriver extends AbstractXmlDriver {
      * Construct an AbstractXppDriver.
      * 
      * @param nameCoder the replacer for XML friendly tag and attribute names
-     * @since upcoming
+     * @since 1.4
      */
     public AbstractXppDriver(NameCoder nameCoder) {
         super(nameCoder);
@@ -116,7 +116,7 @@ public abstract class AbstractXppDriver extends AbstractXmlDriver {
      * Create the parser of the XPP implementation.
 
      * @throws XmlPullParserException if the parser cannot be created
-     * @since upcoming
+     * @since 1.4
      */
     protected abstract XmlPullParser createParser() throws XmlPullParserException;
 }

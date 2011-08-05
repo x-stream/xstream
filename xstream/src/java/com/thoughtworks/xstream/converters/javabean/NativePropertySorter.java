@@ -18,7 +18,7 @@ import java.util.Map;
  * JavaBean introspection.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class NativePropertySorter implements PropertySorter {
 

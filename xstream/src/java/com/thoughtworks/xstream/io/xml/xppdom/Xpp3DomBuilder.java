@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,11 +21,11 @@ import java.io.Reader;
  * @author Jason van Zyl
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
- * @deprecated As of upcoming, use {@link XppDom#build(XmlPullParser)} instead
+ * @deprecated As of 1.4, use {@link XppDom#build(XmlPullParser)} instead
  */
 public class Xpp3DomBuilder {
     /**
-     * @deprecated As of upcoming, use {@link XppDom#build(XmlPullParser)} instead
+     * @deprecated As of 1.4, use {@link XppDom#build(XmlPullParser)} instead
      */
     public static Xpp3Dom build(Reader reader) throws Exception {
         XmlPullParser parser = new MXParser();

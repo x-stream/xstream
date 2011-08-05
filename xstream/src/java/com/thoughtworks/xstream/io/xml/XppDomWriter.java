@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,14 +28,14 @@ public class XppDomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public XppDomWriter(final NameCoder nameCoder) {
         this(null, nameCoder);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public XppDomWriter(final XppDom parent, final NameCoder nameCoder) {
         super(parent, nameCoder);
@@ -43,7 +43,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming use {@link XppDomWriter#XppDomWriter(NameCoder)} instead
+     * @deprecated As of 1.4 use {@link XppDomWriter#XppDomWriter(NameCoder)} instead
      */
     public XppDomWriter(final XmlFriendlyReplacer replacer) {
         this(null, replacer);
@@ -51,7 +51,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2.1
-     * @deprecated As of upcoming use {@link XppDomWriter#XppDomWriter(XppDom, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link XppDomWriter#XppDomWriter(XppDom, NameCoder)} instead.
      */
     public XppDomWriter(final XppDom parent, final XmlFriendlyReplacer replacer) {
         this(parent, (NameCoder)replacer);

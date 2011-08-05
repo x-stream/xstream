@@ -31,7 +31,7 @@ public @interface XStreamImplicit {
     String itemFieldName() default "";
     /**
      * Field name of map entries that are used as key for the element in the implicit map.
-     * @since upcoming
+     * @since 1.4
      */
     String keyFieldName() default "";
 }

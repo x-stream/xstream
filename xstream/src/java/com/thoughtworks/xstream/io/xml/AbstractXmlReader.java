@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,7 +22,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  * @since 1.2
- * @deprecated As of upcoming, use {@link AbstractReader} instead.
+ * @deprecated As of 1.4, use {@link AbstractReader} instead.
  */
 public abstract class AbstractXmlReader extends AbstractReader /* implements XmlFriendlyReader */ {
 
@@ -31,7 +31,7 @@ public abstract class AbstractXmlReader extends AbstractReader /* implements Xml
     }
 
     /**
-    * @deprecated As of upcoming, use {@link AbstractReader} instead.
+    * @deprecated As of 1.4, use {@link AbstractReader} instead.
     */
     protected AbstractXmlReader(XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);
@@ -46,7 +46,7 @@ public abstract class AbstractXmlReader extends AbstractReader /* implements Xml
      * 
      * @param name the escaped XML-friendly name
      * @return An unescaped name with original characters
-     * @deprecated As of upcoming, use {@link #decodeNode(String)} or {@link #decodeAttribute(String)} instead.
+     * @deprecated As of 1.4, use {@link #decodeNode(String)} or {@link #decodeAttribute(String)} instead.
      */
     public String unescapeXmlName(String name) {
         return decodeNode(name);
@@ -57,7 +57,7 @@ public abstract class AbstractXmlReader extends AbstractReader /* implements Xml
      * 
      * @param name the unescaped XML-unfriendly name
      * @return An escaped name with original characters
-     * @deprecated As of upcoming, use {@link AbstractReader} instead.
+     * @deprecated As of 1.4, use {@link AbstractReader} instead.
      */
     protected String escapeXmlName(String name) {
         return encodeNode(name);

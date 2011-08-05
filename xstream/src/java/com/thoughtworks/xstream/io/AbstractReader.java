@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.naming.NoNameCoder;
  * the interface directly.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public abstract class AbstractReader implements HierarchicalStreamReader {
 
@@ -30,7 +30,7 @@ public abstract class AbstractReader implements HierarchicalStreamReader {
     /**
      * Creates an AbstractReader with a NameCoder that does nothing.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     protected AbstractReader() {
         this(new NoNameCoder());
@@ -40,7 +40,7 @@ public abstract class AbstractReader implements HierarchicalStreamReader {
      * Creates an AbstractReader with a provided {@link NameCoder}.
      * 
      * @param nameCoder the name coder used to read names from the incoming format
-     * @since upcoming
+     * @since 1.4
      */
     protected AbstractReader(NameCoder nameCoder) {
         this.nameCoder = (NameCoder)Cloneables.cloneIfPossible(nameCoder);
@@ -58,7 +58,7 @@ public abstract class AbstractReader implements HierarchicalStreamReader {
      * 
      * @param name the name in the target format
      * @return the original name
-     * @since upcoming
+     * @since 1.4
      */
     public String decodeNode(String name) {
         return nameCoder.decodeNode(name);
@@ -69,7 +69,7 @@ public abstract class AbstractReader implements HierarchicalStreamReader {
      * 
      * @param name the name in the target format
      * @return the original name
-     * @since upcoming
+     * @since 1.4
      */
     public String decodeAttribute(String name) {
         return nameCoder.decodeAttribute(name);
@@ -80,7 +80,7 @@ public abstract class AbstractReader implements HierarchicalStreamReader {
      * 
      * @param name the original name
      * @return the name in the target format
-     * @since upcoming
+     * @since 1.4
      */
     protected String encodeNode(String name) {
         return nameCoder.encodeNode(name);
@@ -91,7 +91,7 @@ public abstract class AbstractReader implements HierarchicalStreamReader {
      * 
      * @param name the original name
      * @return the name in the target format
-     * @since upcoming
+     * @since 1.4
      */
     protected String encodeAttribute(String name) {
         return nameCoder.encodeAttribute(name);

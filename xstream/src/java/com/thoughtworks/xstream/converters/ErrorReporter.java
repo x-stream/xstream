@@ -16,14 +16,14 @@ package com.thoughtworks.xstream.converters;
  * 
  * @author Joerg Schaible
  *
- * @since upcoming
+ * @since 1.4
  */
 public interface ErrorReporter {
     /**
      * Append context information to an {@link ErrorWriter}.
      * 
      * @param errorWriter the error writer
-     * @since upcoming
+     * @since 1.4
      */
     void appendErrors(ErrorWriter errorWriter);
 }

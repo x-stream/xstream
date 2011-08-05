@@ -30,14 +30,14 @@ public class Dom4JReader extends AbstractDocumentReader {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public Dom4JReader(Element rootElement, NameCoder nameCoder) {
         super(rootElement, nameCoder);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public Dom4JReader(Document document, NameCoder nameCoder) {
         this(document.getRootElement(), nameCoder);
@@ -45,7 +45,7 @@ public class Dom4JReader extends AbstractDocumentReader {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link Dom4JReader#Dom4JReader(Element, NameCoder)} instead
+     * @deprecated As of 1.4, use {@link Dom4JReader#Dom4JReader(Element, NameCoder)} instead
      */
     public Dom4JReader(Element rootElement, XmlFriendlyReplacer replacer) {
         this(rootElement, (NameCoder)replacer);
@@ -53,7 +53,7 @@ public class Dom4JReader extends AbstractDocumentReader {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link Dom4JReader#Dom4JReader(Document, NameCoder)} instead
+     * @deprecated As of 1.4, use {@link Dom4JReader#Dom4JReader(Document, NameCoder)} instead
      */
     public Dom4JReader(Document document, XmlFriendlyReplacer replacer) {
         this(document.getRootElement(), (NameCoder)replacer);

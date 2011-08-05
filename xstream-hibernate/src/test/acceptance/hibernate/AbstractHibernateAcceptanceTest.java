@@ -44,8 +44,6 @@ public abstract class AbstractHibernateAcceptanceTest extends AbstractAcceptance
 
     /**
      * Construct a AbstractHibernateAcceptanceTest.
-     * 
-     * @since upcoming
      */
     public AbstractHibernateAcceptanceTest() {
         super();

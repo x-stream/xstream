@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2009, 2010 XStream Committers.
+ * Copyright (c) 2007, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -58,7 +58,7 @@ public class DependencyInjectionFactory {
      * @param usedDependencies bit mask set by the method for all used dependencies (may be <code>null</code>)
      * @return the instantiated object
      * @throws ObjectAccessException if no instance can be generated
-     * @since upcoming
+     * @since 1.4
      */
     public static Object newInstance(final Class type, final Object[] dependencies, final BitSet usedDependencies) {
         Constructor bestMatchingCtor = null;

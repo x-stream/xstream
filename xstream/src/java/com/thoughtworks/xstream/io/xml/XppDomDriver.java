@@ -33,7 +33,7 @@ public class XppDomDriver extends AbstractXppDomDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public XppDomDriver(NameCoder nameCoder) {
         super(nameCoder);
@@ -41,7 +41,7 @@ public class XppDomDriver extends AbstractXppDomDriver {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link XppDomDriver#XppDomDriver(NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link XppDomDriver#XppDomDriver(NameCoder)} instead.
      */
     public XppDomDriver(XmlFriendlyReplacer replacer) {
         super(replacer);

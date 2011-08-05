@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -45,7 +45,7 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     protected AbstractPullReader(NameCoder nameCoder) {
         super(nameCoder);
@@ -53,7 +53,7 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming use {@link AbstractPullReader#AbstractPullReader(NameCoder)} instead
+     * @deprecated As of 1.4 use {@link AbstractPullReader#AbstractPullReader(NameCoder)} instead
      */
     protected AbstractPullReader(XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);

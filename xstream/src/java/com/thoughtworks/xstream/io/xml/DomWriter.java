@@ -34,14 +34,14 @@ public class DomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public DomWriter(final Document document, final NameCoder nameCoder) {
         this(document.getDocumentElement(), document, nameCoder);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public DomWriter(final Element element, final Document document, final NameCoder nameCoder) {
         super(element, nameCoder);
@@ -50,7 +50,7 @@ public class DomWriter extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public DomWriter(final Element rootElement, final NameCoder nameCoder) {
         this(rootElement, rootElement.getOwnerDocument(), nameCoder);
@@ -58,7 +58,7 @@ public class DomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming use {@link DomWriter#DomWriter(Document, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Document, NameCoder)} instead.
      */
     public DomWriter(final Document document, final XmlFriendlyReplacer replacer) {
         this(document.getDocumentElement(), document, (NameCoder)replacer);
@@ -66,7 +66,7 @@ public class DomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2.1
-     * @deprecated As of upcoming use {@link DomWriter#DomWriter(Element, Document, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Element, Document, NameCoder)} instead.
      */
     public DomWriter(final Element element, final Document document, final XmlFriendlyReplacer replacer) {
         this(element, document, (NameCoder)replacer);
@@ -74,7 +74,7 @@ public class DomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming use {@link DomWriter#DomWriter(Element, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Element, NameCoder)} instead.
      */
     public DomWriter(final Element rootElement, final XmlFriendlyReplacer replacer) {
         this(rootElement, rootElement.getOwnerDocument(), (NameCoder)replacer);

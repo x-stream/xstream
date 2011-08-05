@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2010 XStream Committers.
+ * Copyright (C) 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
  * Utility functions for {@link Cloneable} objects.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class Cloneables {
     

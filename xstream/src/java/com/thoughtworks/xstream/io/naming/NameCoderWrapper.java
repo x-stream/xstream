@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.io.naming;
  * A wrapper for another NameCoder.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class NameCoderWrapper implements NameCoder {
 
@@ -24,7 +24,7 @@ public class NameCoderWrapper implements NameCoder {
      * Construct a new wrapper for a NameCoder.
      * 
      * @param inner the wrapped NameCoder
-     * @since upcoming
+     * @since 1.4
      */
     public NameCoderWrapper(NameCoder inner) {
         this.wrapped = inner;

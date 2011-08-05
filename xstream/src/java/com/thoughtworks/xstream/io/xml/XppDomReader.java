@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,7 +26,7 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public XppDomReader(XppDom xppDom, NameCoder nameCoder) {
         super(xppDom, nameCoder);
@@ -34,7 +34,7 @@ public class XppDomReader extends AbstractDocumentReader {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming use {@link XppDomReader#XppDomReader(XppDom, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link XppDomReader#XppDomReader(XppDom, NameCoder)} instead.
      */
     public XppDomReader(XppDom xppDom, XmlFriendlyReplacer replacer) {
         this(xppDom, (NameCoder)replacer);

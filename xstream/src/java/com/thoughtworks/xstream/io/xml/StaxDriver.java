@@ -53,7 +53,7 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public StaxDriver(QNameMap qnameMap, NameCoder nameCoder) {
         super(nameCoder);
@@ -61,7 +61,7 @@ public class StaxDriver extends AbstractXmlDriver {
     }
     
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public StaxDriver(NameCoder nameCoder) {
         this(new QNameMap(), nameCoder);
@@ -69,7 +69,7 @@ public class StaxDriver extends AbstractXmlDriver {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link StaxDriver#StaxDriver(QNameMap, NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link StaxDriver#StaxDriver(QNameMap, NameCoder)} instead.
      */
     public StaxDriver(QNameMap qnameMap, XmlFriendlyReplacer replacer) {
         this(qnameMap, (NameCoder)replacer);
@@ -77,7 +77,7 @@ public class StaxDriver extends AbstractXmlDriver {
     
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link StaxDriver#StaxDriver(NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link StaxDriver#StaxDriver(NameCoder)} instead.
      */
     public StaxDriver(XmlFriendlyReplacer replacer) {
         this(new QNameMap(), (NameCoder)replacer);
@@ -199,14 +199,14 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     protected XMLInputFactory createInputFactory() {
         return XMLInputFactory.newInstance();
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     protected XMLOutputFactory createOutputFactory() {
         return XMLOutputFactory.newInstance();

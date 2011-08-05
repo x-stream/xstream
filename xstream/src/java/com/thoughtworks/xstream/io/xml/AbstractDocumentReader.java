@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,7 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
     }
 
     /**
-    * @since upcoming
+    * @since 1.4
     */ 
     protected AbstractDocumentReader(Object rootElement, NameCoder nameCoder) {
         super(nameCoder);
@@ -39,7 +39,7 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
 
     /**
     * @since 1.2
-    * @deprecated As of upcoming, use {@link AbstractDocumentReader#AbstractDocumentReader(Object, NameCoder)} instead.
+    * @deprecated As of 1.4, use {@link AbstractDocumentReader#AbstractDocumentReader(Object, NameCoder)} instead.
     */ 
     protected AbstractDocumentReader(Object rootElement, XmlFriendlyReplacer replacer) {
         this(rootElement, (NameCoder)replacer);

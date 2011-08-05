@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.core;
  * Marker interface for caching implementations.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public interface Caching {
     void flushCache();

@@ -18,7 +18,7 @@ import java.util.Map;
  * want to customize the order in which XStream serializes the properties of a bean.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public interface PropertySorter {
 
@@ -34,7 +34,7 @@ public interface PropertySorter {
      * @param nameMap the map to sort, key is the property name, value the
      *            {@link PropertyDescriptor}
      * @return the sorted nameMap
-     * @since upcoming
+     * @since 1.4
      */
     Map sort(Class type, Map nameMap);
 

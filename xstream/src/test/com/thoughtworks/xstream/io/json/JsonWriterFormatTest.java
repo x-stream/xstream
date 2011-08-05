@@ -38,7 +38,6 @@ import junit.framework.TestSuite;
  * Tests the {@link JsonWriter} formats.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
  */
 public class JsonWriterFormatTest extends TestCase {
 

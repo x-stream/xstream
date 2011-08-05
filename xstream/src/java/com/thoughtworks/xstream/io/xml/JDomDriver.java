@@ -39,7 +39,7 @@ public class JDomDriver extends AbstractXmlDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public JDomDriver(NameCoder nameCoder) {
         super(nameCoder);
@@ -47,7 +47,7 @@ public class JDomDriver extends AbstractXmlDriver {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link JDomDriver#JDomDriver(NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link JDomDriver#JDomDriver(NameCoder)} instead.
      */
     public JDomDriver(XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);

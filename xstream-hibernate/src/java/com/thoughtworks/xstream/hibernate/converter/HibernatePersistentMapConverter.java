@@ -24,7 +24,7 @@ import org.hibernate.collection.PersistentMap;
  * the Hibernate collection and emit at serialization time an equivalent JDK collection instead.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class HibernatePersistentMapConverter extends MapConverter {
 
@@ -32,7 +32,7 @@ public class HibernatePersistentMapConverter extends MapConverter {
      * Construct a HibernatePersistentMapConverter.
      * 
      * @param mapper
-     * @since upcoming
+     * @since 1.4
      */
     public HibernatePersistentMapConverter(final Mapper mapper) {
         super(mapper);

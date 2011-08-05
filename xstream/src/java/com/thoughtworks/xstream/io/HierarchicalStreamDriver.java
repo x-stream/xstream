@@ -50,7 +50,7 @@ public interface HierarchicalStreamDriver {
      * 
      * @param in the {@link URL} defining the location with the data to parse 
      * @return the HierarchicalStreamReader
-     * @since upcoming
+     * @since 1.4
      */
     HierarchicalStreamReader createReader(URL in);
 
@@ -62,7 +62,7 @@ public interface HierarchicalStreamDriver {
      * 
      * @param in the {@link URL} defining the location with the data to parse 
      * @return the HierarchicalStreamReader
-     * @since upcoming
+     * @since 1.4
      */
     HierarchicalStreamReader createReader(File in);
 

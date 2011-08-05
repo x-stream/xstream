@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -35,7 +35,7 @@ public class XppDriver extends AbstractXppDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public XppDriver(NameCoder nameCoder) {
         super(nameCoder);
@@ -43,7 +43,7 @@ public class XppDriver extends AbstractXppDriver {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link XppDriver#XppDriver(NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link XppDriver#XppDriver(NameCoder)} instead.
      */
     public XppDriver(XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);

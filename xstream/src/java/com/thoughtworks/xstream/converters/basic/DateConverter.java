@@ -75,7 +75,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * TimeZone for serialization.
      * 
      * @param timeZone the TimeZone used to serialize the Date
-     * @since upcoming
+     * @since 1.4
      */
     public DateConverter(TimeZone timeZone) {
         this(DEFAULT_PATTERN, DEFAULT_ACCEPTABLE_FORMATS, timeZone);
@@ -106,7 +106,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * 
      * @param defaultFormat the default format
      * @param acceptableFormats fallback formats
-     * @since upcoming
+     * @since 1.4
      */
     public DateConverter(String defaultFormat, String[] acceptableFormats, TimeZone timeZone) {
         this(defaultFormat, acceptableFormats, timeZone, false);
@@ -131,7 +131,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @param acceptableFormats fallback formats
      * @param timeZone the TimeZone used to serialize the Date
      * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
-     * @since upcoming
+     * @since 1.4
      */
     public DateConverter(
         String defaultFormat, String[] acceptableFormats, TimeZone timeZone, boolean lenient) {

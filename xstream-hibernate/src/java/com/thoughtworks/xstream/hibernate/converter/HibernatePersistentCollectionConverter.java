@@ -27,7 +27,7 @@ import org.hibernate.collection.PersistentSet;
  * emit at serialization time an equivalent JDK collection instead.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class HibernatePersistentCollectionConverter extends CollectionConverter {
 
@@ -35,7 +35,7 @@ public class HibernatePersistentCollectionConverter extends CollectionConverter 
      * Construct a HibernatePersistentCollectionConverter.
      * 
      * @param mapper
-     * @since upcoming
+     * @since 1.4
      */
     public HibernatePersistentCollectionConverter(final Mapper mapper) {
         super(mapper);

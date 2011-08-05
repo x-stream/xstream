@@ -43,7 +43,7 @@ import java.util.Map;
  * @see <a href="http://www.w3.org/TR/xml11/#dt-name">XML 1.1 name definition</a>
  * @see <a href="http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#3.8">Java
  *      identifier definition</a>
- * @since upcoming
+ * @since 1.4
  */
 public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
     private static final IntPair[] XML_NAME_START_CHAR_BOUNDS;
@@ -102,7 +102,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
     /**
      * Construct a new XmlFriendlyNameCoder.
      * 
-     * @since upcoming
+     * @since 1.4
      */
     public XmlFriendlyNameCoder() {
         this("_-", "__");
@@ -114,7 +114,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
      * 
      * @param dollarReplacement
      * @param escapeCharReplacement
-     * @since upcoming
+     * @since 1.4
      */
     public XmlFriendlyNameCoder(String dollarReplacement, String escapeCharReplacement) {
         this(dollarReplacement, escapeCharReplacement, "_.");
@@ -127,7 +127,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
      * 
      * @param dollarReplacement
      * @param escapeCharReplacement
-     * @since upcoming
+     * @since 1.4
      */
     public XmlFriendlyNameCoder(
         String dollarReplacement, String escapeCharReplacement, String hexPrefix) {

@@ -18,7 +18,7 @@ import java.util.TreeMap;
  * A sorter that uses a comparator to determine the order of the bean properties.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class ComparingPropertySorter implements PropertySorter {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Jason van Zyl
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class XppDom implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,14 +22,14 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  * @since 1.2
- * @deprecated As of upcoming
+ * @deprecated As of 1.4
  */
 public abstract class AbstractXmlDriver extends AbstractDriver {
 
     /**
      * Creates a AbstractXmlFriendlyDriver with default XmlFriendlyReplacer
      * 
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4
      */
     public AbstractXmlDriver() {
         this(new XmlFriendlyNameCoder());
@@ -37,7 +37,7 @@ public abstract class AbstractXmlDriver extends AbstractDriver {
 
     /**
      * Creates a AbstractXmlFriendlyDriver with default XmlFriendlyReplacer
-     * @since upcoming
+     * @since 1.4
      */
     public AbstractXmlDriver(NameCoder nameCoder) {
         super(nameCoder);
@@ -47,14 +47,14 @@ public abstract class AbstractXmlDriver extends AbstractDriver {
      * Creates a AbstractXmlFriendlyDriver with custom XmlFriendlyReplacer
      * 
      * @param replacer the XmlFriendlyReplacer
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4
      */
     public AbstractXmlDriver(XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);
     }
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4
      */
     protected XmlFriendlyReplacer xmlFriendlyReplacer() {
         NameCoder nameCoder = getNameCoder(); 

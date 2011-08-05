@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2009, 2010 XStream Committers.
+ * Copyright (c) 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,7 +37,7 @@ public class JettisonStaxWriter extends StaxWriter {
     private final MappedNamespaceConvention convention;
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public JettisonStaxWriter(
         QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument,
@@ -48,7 +48,7 @@ public class JettisonStaxWriter extends StaxWriter {
     }
 
     /**
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4 use
      *             {@link JettisonStaxWriter#JettisonStaxWriter(QNameMap, XMLStreamWriter, boolean, boolean, NameCoder, MappedNamespaceConvention)}
      *             instead
      */
@@ -75,7 +75,7 @@ public class JettisonStaxWriter extends StaxWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public JettisonStaxWriter(
         QNameMap qnameMap, XMLStreamWriter out, NameCoder nameCoder, MappedNamespaceConvention convention)

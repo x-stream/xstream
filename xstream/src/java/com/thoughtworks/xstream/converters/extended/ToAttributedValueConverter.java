@@ -44,7 +44,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * to provide no value field at all, so that all fields are written as attributes.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class ToAttributedValueConverter implements Converter {
     private final Class type;

@@ -34,7 +34,7 @@ public class JsonWriter extends AbstractJsonWriter {
     private boolean newLineProposed;
 
     /**
-     * @deprecated As of upcoming use {@link JsonWriter#JsonWriter(Writer, Format) instead}
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
      */
     public JsonWriter(Writer writer, char[] lineIndenter, String newLine) {
         this(writer, 0, new Format(
@@ -43,7 +43,7 @@ public class JsonWriter extends AbstractJsonWriter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link JsonWriter#JsonWriter(Writer, Format) instead}
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
      */
     public JsonWriter(Writer writer, char[] lineIndenter) {
         this(writer, 0, new Format(lineIndenter, new char[]{'\n'}, Format.SPACE_AFTER_LABEL
@@ -51,7 +51,7 @@ public class JsonWriter extends AbstractJsonWriter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link JsonWriter#JsonWriter(Writer, Format) instead}
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
      */
     public JsonWriter(Writer writer, String lineIndenter, String newLine) {
         this(writer, 0, new Format(
@@ -60,7 +60,7 @@ public class JsonWriter extends AbstractJsonWriter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link JsonWriter#JsonWriter(Writer, Format) instead}
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
      */
     public JsonWriter(Writer writer, String lineIndenter) {
         this(writer, 0, new Format(
@@ -76,7 +76,7 @@ public class JsonWriter extends AbstractJsonWriter {
 
     /**
      * @since 1.3.1
-     * @deprecated As of upcoming use {@link JsonWriter#JsonWriter(Writer, int, Format) instead}
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, int, Format) instead}
      */
     public JsonWriter(Writer writer, char[] lineIndenter, String newLine, int mode) {
         this(writer, mode, new Format(
@@ -103,7 +103,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * 
      * @param writer the {@link Writer} where the JSON is written to
      * @param format the JSON format definition
-     * @since upcoming
+     * @since 1.4
      * @see #JsonWriter(Writer, int, Format)
      */
     public JsonWriter(Writer writer, Format format) {
@@ -127,7 +127,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * @param writer the {@link Writer} where the JSON is written to
      * @param mode the JsonWriter mode
      * @param format the JSON format definition
-     * @since upcoming
+     * @since 1.4
      */
     public JsonWriter(Writer writer, int mode, Format format) {
         this(writer, mode, format, 1024);
@@ -141,7 +141,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * @param format the JSON format definition
      * @param bufferSize the buffer size of the internally used QuickWriter
      * @see JsonWriter#JsonWriter(Writer, int, Format)
-     * @since upcoming
+     * @since 1.4
      */
     public JsonWriter(Writer writer, int mode, Format format, int bufferSize) {
         super(mode);
@@ -291,7 +291,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * Format definition for JSON.
      * 
      * @author J&ouml;rg Schaible
-     * @since upcoming
+     * @since 1.4
      */
     public static class Format {
 
@@ -308,7 +308,7 @@ public class JsonWriter extends AbstractJsonWriter {
          * @param lineIndenter the characters used for indenting the line
          * @param newLine the characters used to create a new line
          * @param mode the flags for the format modes
-         * @since upcoming
+         * @since 1.4
          */
         public Format(char[] lineIndenter, char[] newLine, int mode) {
             this.lineIndenter = lineIndenter;
@@ -320,7 +320,7 @@ public class JsonWriter extends AbstractJsonWriter {
          * Retrieve the lineIndenter.
          * 
          * @return the lineIndenter
-         * @since upcoming
+         * @since 1.4
          */
         public char[] getLineIndenter() {
             return this.lineIndenter;
@@ -330,7 +330,7 @@ public class JsonWriter extends AbstractJsonWriter {
          * Retrieve the newLine.
          * 
          * @return the newLine
-         * @since upcoming
+         * @since 1.4
          */
         public char[] getNewLine() {
             return this.newLine;
@@ -340,7 +340,7 @@ public class JsonWriter extends AbstractJsonWriter {
          * Retrieve the mode flags of the formatter.
          * 
          * @return the mode
-         * @since upcoming
+         * @since 1.4
          */
         public int mode() {
             return this.mode;

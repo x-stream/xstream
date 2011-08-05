@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -35,7 +35,7 @@ package com.thoughtworks.xstream.io.naming;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public interface NameCoder {
     /**
@@ -43,7 +43,7 @@ public interface NameCoder {
      * 
      * @param name the name of the object data
      * @return the node name in the target format
-     * @since upcoming
+     * @since 1.4
      */
     String encodeNode(String name);
 
@@ -52,7 +52,7 @@ public interface NameCoder {
      * 
      * @param name the name of the meta-data
      * @return the attribute name in the target format
-     * @since upcoming
+     * @since 1.4
      */
     String encodeAttribute(String name);
 
@@ -61,7 +61,7 @@ public interface NameCoder {
      * 
      * @param nodeName the name of the node
      * @return the name of the object
-     * @since upcoming
+     * @since 1.4
      */
     String decodeNode(String nodeName);
 
@@ -70,7 +70,7 @@ public interface NameCoder {
      * 
      * @param attributeName the name of the attribute
      * @return the name of the meta-data
-     * @since upcoming
+     * @since 1.4
      */
     String decodeAttribute(String attributeName);
 }

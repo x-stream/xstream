@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -107,7 +107,7 @@ public class FieldDictionary implements Caching {
      * @param name the field name
      * @param definedIn the superclass (or the class itself) of cls where the field was defined
      * @return the field itself or <code>null</code>
-     * @since upcoming
+     * @since 1.4
      */
     public Field fieldOrNull(Class cls, String name, Class definedIn) {
         Map fields = buildMap(cls, definedIn != null);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,7 +25,7 @@ import java.util.Map;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class StaticNameCoder implements NameCoder {
 
@@ -40,7 +40,7 @@ public class StaticNameCoder implements NameCoder {
      * 
      * @param java2Node mapping of Java names to nodes
      * @param java2Attribute mapping of Java names to attributes
-     * @since upcoming
+     * @since 1.4
      */
     public StaticNameCoder(Map java2Node, Map java2Attribute) {
         this.java2Node = new HashMap(java2Node);

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -118,7 +118,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     private final boolean includeEnclosingDocument;
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public SaxWriter(NameCoder nameCoder)
     {
@@ -126,7 +126,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     }
     
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public SaxWriter(boolean includeEnclosingDocument, NameCoder nameCoder)
     {
@@ -135,7 +135,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     }
 
     /**
-     * @deprecated As of upcoming use {@link SaxWriter#SaxWriter(NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link SaxWriter#SaxWriter(NameCoder)} instead.
      */
     public SaxWriter(XmlFriendlyReplacer replacer)
     {
@@ -143,7 +143,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     }
     
     /**
-     * @deprecated As of upcoming use {@link SaxWriter#SaxWriter(boolean, NameCoder)} instead.
+     * @deprecated As of 1.4 use {@link SaxWriter#SaxWriter(boolean, NameCoder)} instead.
      */
     public SaxWriter(boolean includeEnclosingDocument, XmlFriendlyReplacer replacer)
     {

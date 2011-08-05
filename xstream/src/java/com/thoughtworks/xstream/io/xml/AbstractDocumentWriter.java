@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,7 +39,7 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
      * @param container the top level container for the nodes to create (may be
      *            <code>null</code>)
      * @param nameCoder the object that creates XML-friendly names
-     * @since upcoming
+     * @since 1.4
      */
     public AbstractDocumentWriter(final Object container, final NameCoder nameCoder) {
         super(nameCoder);
@@ -56,7 +56,7 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
      *            <code>null</code>)
      * @param replacer the object that creates XML-friendly names
      * @since 1.2.1
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4 use
      *             {@link AbstractDocumentWriter#AbstractDocumentWriter(Object, NameCoder)}
      *             instead.
      */

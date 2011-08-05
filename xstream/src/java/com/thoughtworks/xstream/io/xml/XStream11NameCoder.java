@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,7 @@ package com.thoughtworks.xstream.io.xml;
  * A XmlFriendlyNameCoder to support backward compatibility with XStream 1.1.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class XStream11NameCoder extends XmlFriendlyNameCoder {
 

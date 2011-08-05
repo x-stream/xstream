@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,7 +29,7 @@ import java.io.OutputStream;
  * @see HierarchicalStreamDriver
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public class XStreamDriver implements Product {
 
@@ -42,7 +42,7 @@ public class XStreamDriver implements Product {
      * @param driver the driver to use for serialization/deserialization 
      * @param desc the driver description
      * 
-     * @since upcoming
+     * @since 1.4
      */
     public XStreamDriver(HierarchicalStreamDriver driver, String desc) {
         this.xstream = new XStream(driver);

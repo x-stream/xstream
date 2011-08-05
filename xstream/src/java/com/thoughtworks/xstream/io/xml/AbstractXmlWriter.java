@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  * @since 1.2
- * @deprecated As of upcoming use {@link AbstractWriter} instead
+ * @deprecated As of 1.4 use {@link AbstractWriter} instead
  */
 public abstract class AbstractXmlWriter extends AbstractWriter implements XmlFriendlyWriter {
 
@@ -30,7 +30,7 @@ public abstract class AbstractXmlWriter extends AbstractWriter implements XmlFri
     }
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4
      */
     protected AbstractXmlWriter(XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);
@@ -45,7 +45,7 @@ public abstract class AbstractXmlWriter extends AbstractWriter implements XmlFri
      * 
      * @param name the unescaped XML name
      * @return An escaped name with original characters replaced
-     * @deprecated As of upcoming use {@link #encodeNode(String)} or {@link #encodeAttribute(String)} instead
+     * @deprecated As of 1.4 use {@link #encodeNode(String)} or {@link #encodeAttribute(String)} instead
      */
     public String escapeXmlName(String name) {
         return super.encodeNode(name);

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,14 +33,14 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public JDomReader(Element root, NameCoder nameCoder) {
         super(root, nameCoder);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4
      */
     public JDomReader(Document document, NameCoder nameCoder) {
         super(document.getRootElement(), nameCoder);
@@ -48,7 +48,7 @@ public class JDomReader extends AbstractDocumentReader {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link JDomReader#JDomReader(Element, NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link JDomReader#JDomReader(Element, NameCoder)} instead.
      */
     public JDomReader(Element root, XmlFriendlyReplacer replacer) {
         this(root, (NameCoder)replacer);
@@ -56,7 +56,7 @@ public class JDomReader extends AbstractDocumentReader {
 
     /**
      * @since 1.2
-     * @deprecated As of upcoming, use {@link JDomReader#JDomReader(Document, NameCoder)} instead.
+     * @deprecated As of 1.4, use {@link JDomReader#JDomReader(Document, NameCoder)} instead.
      */
     public JDomReader(Document document, XmlFriendlyReplacer replacer) {
         this(document.getRootElement(), (NameCoder)replacer);

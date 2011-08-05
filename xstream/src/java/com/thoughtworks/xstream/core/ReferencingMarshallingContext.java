@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.io.path.Path;
  * A {@link MarshallingContext} that manages references. 
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4
  */
 public interface ReferencingMarshallingContext extends MarshallingContext {
     
@@ -25,7 +25,7 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
      * Retrieve the current path.
      * 
      * @return the current path
-     * @since upcoming
+     * @since 1.4
      */
     Path currentPath();
     
@@ -34,7 +34,7 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
      * 
      * @param item the item to lookup
      * @return the reference key or <code>null</code>
-     * @since upcoming
+     * @since 1.4
      */
     Object lookupReference(Object item);
     
@@ -46,7 +46,7 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
      * 
      * @param original the original item to convert
      * @param replacement the replacement item that is converted instead
-     * @since upcoming
+     * @since 1.4
      */
     void replace(Object original, Object replacement);
 
@@ -54,7 +54,7 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
      * Register an implicit element. This is typically some kind of collection.
      * 
      * @param item the object that is implicit
-     * @since upcoming
+     * @since 1.4
      */
     void registerImplicit(Object item);
 }

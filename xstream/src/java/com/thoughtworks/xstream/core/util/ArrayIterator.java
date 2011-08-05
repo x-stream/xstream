@@ -16,7 +16,7 @@ import java.util.Iterator;
 /**
  * @author J&ouml;rg Schaible
  *
- * @since upcoming
+ * @since 1.4
  */
 public class ArrayIterator implements Iterator {
     private final Object array;

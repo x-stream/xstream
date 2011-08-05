@@ -50,7 +50,7 @@ public class BeanProvider implements JavaBeanProvider {
      * Construct a BeanProvider with a provided property dictionary.
      * 
      * @param propertyDictionary the property dictionary to use
-     * @since upcoming
+     * @since 1.4
      */
     public BeanProvider(final PropertyDictionary propertyDictionary) {
         this.propertyDictionary = propertyDictionary;
@@ -184,7 +184,7 @@ public class BeanProvider implements JavaBeanProvider {
     }
 
     /**
-     * @deprecated As of upcoming use {@link JavaBeanProvider.Visitor}
+     * @deprecated As of 1.4 use {@link JavaBeanProvider.Visitor}
      */
     public interface Visitor extends JavaBeanProvider.Visitor {
     }

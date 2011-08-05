@@ -911,7 +911,7 @@ public class XStream {
      * resolve additional references.
      * 
      * @throws XStreamException if the object cannot be deserialized
-     * @since upcoming
+     * @since 1.4
      */
     public Object fromXML(URL url) {
         return unmarshal(hierarchicalStreamDriver.createReader(url), null);
@@ -924,7 +924,7 @@ public class XStream {
      * resolve additional references.
      * 
      * @throws XStreamException if the object cannot be deserialized
-     * @since upcoming
+     * @since 1.4
      */
     public Object fromXML(File file) {
         return unmarshal(hierarchicalStreamDriver.createReader(file), null);
@@ -964,7 +964,7 @@ public class XStream {
      * resolve additional references.
      * 
      * @throws XStreamException if the object cannot be deserialized
-     * @since upcoming
+     * @since 1.4
      */
     public Object fromXML(URL url, Object root) {
         return unmarshal(hierarchicalStreamDriver.createReader(url), root);
@@ -980,7 +980,7 @@ public class XStream {
      * resolve additional references.
      * 
      * @throws XStreamException if the object cannot be deserialized
-     * @since upcoming
+     * @since 1.4
      */
     public Object fromXML(File file, Object root) {
         return unmarshal(hierarchicalStreamDriver.createReader(file), root);
@@ -1425,7 +1425,7 @@ public class XStream {
      * 
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field
-     * @since upcoming 
+     * @since 1.4 
      */
     public void addImplicitArray(Class ownerType, String fieldName) {
         addImplicitCollection(ownerType, fieldName);
@@ -1440,7 +1440,7 @@ public class XStream {
      * @param itemType type of the items to be part of this array
      * @throws InitializationException if no {@link ImplicitCollectionMapper} is available or the
      * array type does not match the itemType
-     * @since upcoming 
+     * @since 1.4 
      */
     public void addImplicitArray(Class ownerType, String fieldName, Class itemType) {
         addImplicitCollection(ownerType, fieldName, itemType);
@@ -1454,7 +1454,7 @@ public class XStream {
      * @param fieldName name of the array field in the ownerType
      * @param itemName alias name of the items
      * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
-     * @since upcoming 
+     * @since 1.4 
      */
     public void addImplicitArray(Class ownerType, String fieldName, String itemName) {
         addImplicitCollection(ownerType, fieldName, itemName, null);
@@ -1469,7 +1469,7 @@ public class XStream {
      *            type.
      * @param itemType type of the items to be part of this map as value
      * @param keyFieldName the name of the filed of the itemType that is used for the key in the map
-     * @since upcoming 
+     * @since 1.4 
      */
     public void addImplicitMap(Class ownerType, String fieldName, Class itemType, String keyFieldName) {
         addImplicitMap(ownerType, fieldName, null, itemType, keyFieldName);
@@ -1484,7 +1484,7 @@ public class XStream {
      *            type.
      * @param itemType type of the items to be part of this map as value
      * @param keyFieldName the name of the filed of the itemType that is used for the key in the map
-     * @since upcoming 
+     * @since 1.4 
      */
     public void addImplicitMap(Class ownerType, String fieldName, String itemFieldName, 
         Class itemType, String keyFieldName) {

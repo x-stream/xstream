@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -76,7 +76,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoader)}
+     * @deprecated As of 1.4 use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoader)}
      */
     public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         this(mapper, new UnserializableParentsReflectionProvider(reflectionProvider), null);
