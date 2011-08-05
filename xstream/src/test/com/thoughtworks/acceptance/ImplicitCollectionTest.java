@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.InitializationException;
 
@@ -58,7 +57,6 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.alias("room", Room.class);
         xstream.alias("house", House.class);
         xstream.alias("person", Person.class);
-        xstream.alias("sample", SampleLists.class);
     }
 
     public void testWithout() {
