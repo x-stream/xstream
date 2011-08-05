@@ -15,12 +15,12 @@
     <groupId>org.codehaus</groupId>
     <artifactId>codehaus-parent</artifactId>
     <version>3</version>
-    <relativePath/>
+    <relativePath />
   </parent>
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.4</version>
   <name>XStream Parent</name>
 
   <inceptionYear>2004</inceptionYear>
@@ -475,8 +475,8 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/xstream/trunk</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/trunk</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/xstream/trunk</url>
+    <connection>scm:svn:http://svn.codehaus.org/xstream/tags/XSTREAM_1_4</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/tags/XSTREAM_1_4</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/xstream/tags/XSTREAM_1_4</url>
   </scm>
 </project>
