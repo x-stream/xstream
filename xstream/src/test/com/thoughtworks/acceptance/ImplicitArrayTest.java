@@ -91,7 +91,7 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         assertBothWays(farm, expected);
     }
 
-    public void testSupportsInheritedAndDirectDelcaredImplicitArraysAtOnce() {
+    public void testSupportsInheritedAndDirectDeclaredImplicitArraysAtOnce() {
         MegaFarm farm = new MegaFarm(); // subclass
         farm.animals = new Animal[] {
             new Animal("Cow"),

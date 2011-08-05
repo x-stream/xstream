@@ -131,7 +131,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(farm, expected);
     }
 
-    public void testSupportsInheritedAndDirectDelcaredImplicitCollectionAtOnce() {
+    public void testSupportsInheritedAndDirectDeclaredImplicitCollectionAtOnce() {
         xstream.alias("MEGA-farm", MegaFarm.class);
 
         MegaFarm farm = new MegaFarm(100); // subclass
