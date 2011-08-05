@@ -12,24 +12,16 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Product;
-import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.SampleMaps;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
-import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class ImplicitMapTest extends AbstractAcceptanceTest {
 
@@ -484,7 +476,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     public void testCanUsePrimitiveAsKey() {
         SampleMaps sample = new SampleMaps();
         sample.good = new OrderRetainingMap();
-        sample.good.put(399.99, new Product("iPhone", "i", 399.99));
+        sample.good.put(new Double(399.99), new Product("iPhone", "i", 399.99));
 
         String expected = "" +
                 "<sample>\n" +

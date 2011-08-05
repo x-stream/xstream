@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     protected XStream createXStream() {
         XStream xstream = super.createXStream();
         xstream.autodetectAnnotations(true);
+        xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
         return xstream;
     }
 
