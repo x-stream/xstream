@@ -19,6 +19,7 @@
 			<directory>..</directory>
 			<outputDirectory>/</outputDirectory>
 			<excludes>
+                <exclude>xstream-builder/**</exclude>
             	<exclude>**/build/**</exclude>
             	<exclude>**/target/**</exclude>
             	<exclude>**/.*/**</exclude>
