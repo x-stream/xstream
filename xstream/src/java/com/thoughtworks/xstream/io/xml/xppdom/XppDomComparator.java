@@ -48,7 +48,7 @@ public class XppDomComparator implements Comparator {
 
         final StringBuffer xpath = new StringBuffer("/");
         final int s = compareInternal((XppDom)dom1, (XppDom)dom2, xpath, -1);
-        if (xpath != null) {
+        if (this.xpath != null) {
             if (s != 0) {
                 this.xpath.set(xpath.toString());
             } else {

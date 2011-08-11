@@ -234,4 +234,18 @@ public class XppDomComparatorTest extends TestCase {
         assertEquals(1, comparator.compare(dom2, dom1));
         assertEquals("/dom/c[0][@x]", xpath.get());
     }
+
+    /**
+     * Tests comparison of empty document.
+     * 
+     * @throws Exception unexpected
+     */
+    public void testCompareWithoutReference() throws Exception {
+        comparator = new XppDomComparator(); 
+        final String xml = "<dom/>";
+        XppDom dom1 = XppFactory.buildDom(xml);
+        XppDom dom2 = XppFactory.buildDom(xml);
+        assertEquals(comparator, dom1, dom2);
+        assertNull(xpath.get());
+    }
 }
