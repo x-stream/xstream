@@ -96,9 +96,4 @@ public class ErrorTest extends AbstractAcceptanceTest {
         }
         
     }
-
-    private void assertContains(String expected, String actual) {
-        assertTrue("Substring not found. Expected <" + expected + "> but got <" + actual + ">",
-                actual.indexOf(expected) > -1);
-    }
 }
