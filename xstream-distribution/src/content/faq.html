@@ -256,6 +256,22 @@ xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstrea
     consider an upgrade of the dependency, it works usually smoothly.</p>
 
     <!-- ...................................................... -->
+    <h2 id="Serialization_Hibernate">How do I use XStream's Hibernate package to serialize my objects?</h2>
+    <p>Support of Hibernate enhanced collections and proxied types. To drop the internals of Hibernate when marshalling
+    such objects to XStream, all converters and the mapper has to be registered for the XStream instance:</p>
+<div class="Source Java"><pre>final XStream xstream = new XStream() {
+  protected MapperWrapper wrapMapper(final MapperWrapper next) {
+    return new HibernateMapper(next);
+  }
+};
+xstream.registerConverter(new HibernateProxyConverter());
+xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+</pre></div>
+
+    <!-- ...................................................... -->
     <h2 id="Serialization_system_attributes">My attributes are interpreted by XStream itself and cause unexpected behavior</h2>
     <p>XStream's generic converters and the marshalling strategies use a number of attributes on their own. Especially the attributes named
     <em>id</em>, <em>class</em> and <em>reference</em> are likely to cause such collisions. Main reason is XStream's history, because

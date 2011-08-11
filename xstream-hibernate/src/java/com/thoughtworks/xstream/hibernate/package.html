@@ -1,0 +1,26 @@
+<!--
+ Copyright (C) 2011 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 11. August 2011 by Joerg Schaible
+ -->
+<body>
+<p>Support of Hibernate enhanced collections and proxied types.
+To drop the internals of Hibernate when marshalling such objects to XStream,
+all converters and the mapper has to be registered for the XStream instance:</p>
+<p><code><pre>final XStream xstream = new XStream() {
+  protected MapperWrapper wrapMapper(final MapperWrapper next) {
+    return new HibernateMapper(next);
+  }
+};
+xstream.registerConverter(new HibernateProxyConverter());
+xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+</pre></code></p>
+</body>
