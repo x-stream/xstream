@@ -67,24 +67,15 @@
     </table>
 
     <!-- ...................................................... -->
-    <h2 id="Compatibility_XPP">Why does my application fail with the XppDriver since XStream 1.4?</h2>
+    <h2 id="Compatibility_XPP">Why is my application not able to create a XmlPullParser with the XppDriver since XStream 1.4?</h2>
     
     <p>The <a href="http://www.xmlpull.org/">XML Pull Parser API</a> defines an own mechanism to load the factory for
     the available XPP implementation. XStream's XppDriver never used this lookup mechanism automatically before version
     1.4, now it will. Therefore you will have to add a <a href="download.html#optional-deps">dependency to xmlpull</a>
     if the XPP implementation does not deliver the classes on its own. This dependency is necessary for Xpp3 in
-    contrast to kXML2 that contains the classes. Use the Xpp3Driver if you want to select the XPP implementation
-    directly on your own.</p>
-
-    <!-- ...................................................... -->
-    <h2 id="Compatibility_kXML2">Why did XStream change its default XML parser from Xpp3 to kXML2?</h2>
-    
-    <p>The kXML2 parser has 3 minor advantages over Xpp3:</p>
-    <ol>
-    <li>The artifact contains already the XML Pull Parser API, so that the parser is found by the XppDriver.</li>
-    <li>The kXML2 parser was slightly faster in <a href="parser-benchmarks.html"></a>benchmarks</a>.</li>
-    <li>The artifact is nevertheless smaller.</li>
-    </ol>
+    contrast to kXML2 that contains the classes. Use the Xpp3Driver or the KXml2Driver if you want to select one of the
+    directly supported XPP implementation on your own without using the XPP factory. Note, that the minimal version of
+    kXML2 does not support the XPP factory, but can be used by the KXml2Driver.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_Android">Can I use XStream in an Android application?</h2>

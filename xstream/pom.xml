@@ -66,18 +66,23 @@
     <dependency>
       <groupId>xmlpull</groupId>
       <artifactId>xmlpull</artifactId>
-      <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>net.sf.kxml</groupId>
       <artifactId>kxml2-min</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.kxml</groupId>
+      <artifactId>kxml2</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>xpp3</groupId>
       <artifactId>xpp3_min</artifactId>
-      <optional>true</optional>
     </dependency>
 
     <dependency>
