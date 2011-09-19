@@ -17,7 +17,7 @@ import org.kxml2.io.KXmlParser;
 import org.xmlpull.v1.XmlPullParser;
 
 /**
- * A {@link HierarchicalStreamDriver} for XPP DOM using the Xpp3 parser.
+ * A {@link HierarchicalStreamDriver} for XPP DOM using the kXML2 parser.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
