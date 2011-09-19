@@ -300,6 +300,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
             switch(requiredState) {
             case STATE_SET_VALUE:
             case STATE_START_OBJECT:
+            case STATE_ROOT:
             case STATE_NEXT_ELEMENT:
                 if (!isArrayElement || (mode & EXPLICIT_MODE) != 0) {
                     currentState = handleStateTransition(currentState, STATE_START_ATTRIBUTES, null, null);
@@ -314,9 +315,10 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
                 case STATE_START_OBJECT:
                     currentState = handleStateTransition(currentState, STATE_START_OBJECT, elementToAdd, null);
                     break;
+                case STATE_ROOT:
                 case STATE_NEXT_ELEMENT:
                     currentState = handleStateTransition(currentState, STATE_SET_VALUE, null, null);
-                    currentState = handleStateTransition(currentState, STATE_NEXT_ELEMENT, null, null);
+                    currentState = handleStateTransition(currentState, requiredState, null, null);
                     break;
                 }
                 return requiredState;

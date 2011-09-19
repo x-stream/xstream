@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.io.json;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -142,6 +143,7 @@ public class JsonWriterFormatTest extends TestCase {
         targets.put("X", x);
         targets.put("EmptyX", emptyX);
         targets.put("Collections", lists);
+        targets.put("EmptyList", new ArrayList());
 
         final Map results = new HashMap();
         results.put("optimizedMinimalString", "{'string':'text'}");
@@ -243,6 +245,15 @@ public class JsonWriterFormatTest extends TestCase {
         results.put("explicitMinimalCollections", "{'collections':[[],[{'good':[[{'class':'linked-list'}],[{'string':[[],['XStream']]}]]},{'bad':[[{'class':'sorted-set'}],[{'x':[[],[{'anInt':[[],[0]]}]]}]]}]]}");
         results.put("explicitPrettyCollections", "{'collections': [\n  [\n  ],\n  [\n    {\n      'good': [\n        [\n          {\n            'class': 'linked-list'\n          }\n        ],\n        [\n          {\n            'string': [\n              [\n              ],\n              [\n                'XStream'\n              ]\n            ]\n          }\n        ]\n      ]\n    },\n    {\n      'bad': [\n        [\n          {\n            'class': 'sorted-set'\n          }\n        ],\n        [\n          {\n            'x': [\n              [\n              ],\n              [\n                {\n                  'anInt': [\n                    [\n                    ],\n                    [\n                      0\n                    ]\n                  ]\n                }\n              ]\n            ]\n          }\n        ]\n      ]\n    }\n  ]\n]}");
         results.put("explicitCompactCollections", "{'collections': [\n  [],\n  [\n    {\n      'good': [\n        [\n          {\n            'class': 'linked-list'\n          }\n        ],\n        [\n          {\n            'string': [\n              [],\n              [\n                'XStream'\n              ]\n            ]\n          }\n        ]\n      ]\n    },\n    {\n      'bad': [\n        [\n          {\n            'class': 'sorted-set'\n          }\n        ],\n        [\n          {\n            'x': [\n              [],\n              [\n                {\n                  'anInt': [\n                    [],\n                    [\n                      0\n                    ]\n                  ]\n                }\n              ]\n            ]\n          }\n        ]\n      ]\n    }\n  ]\n]}");
+        results.put("optimizedMinimalEmptyList", "{'list':[]}");
+        results.put("optimizedPrettyEmptyList", "{'list': [\n]}");
+        results.put("optimizedCompactEmptyList", "{'list': []}");
+        results.put("noRootMinimalEmptyList", "[]");
+        results.put("noRootPrettyEmptyList", "[\n]");
+        results.put("noRootCompactEmptyList", "[]");
+        results.put("explicitMinimalEmptyList", "{'list':[[],[]]}");
+        results.put("explicitPrettyEmptyList", "{'list': [\n  [\n  ],\n  [\n  ]\n]}");
+        results.put("explicitCompactEmptyList", "{'list': [\n  [],\n  []\n]}");
         
         TestSuite suite = new TestSuite(JsonWriterFormatTest.class.getName());
         for (final Iterator iterMode = modes.entrySet().iterator(); iterMode.hasNext();) {
