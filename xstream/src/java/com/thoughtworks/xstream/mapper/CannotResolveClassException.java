@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,5 +23,11 @@ import com.thoughtworks.xstream.XStreamException;
 public class CannotResolveClassException extends XStreamException {
     public CannotResolveClassException(String className) {
         super(className);
+    }
+    /**
+     * @since upcoming
+     */
+    public CannotResolveClassException(String className, Throwable cause) {
+        super(className, cause);
     }
 }
