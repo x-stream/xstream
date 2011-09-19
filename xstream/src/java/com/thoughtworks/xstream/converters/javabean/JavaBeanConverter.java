@@ -32,8 +32,8 @@ public class JavaBeanConverter implements Converter {
      *  - support attributes (XSTR-620)
      *  - support local converters (XSTR-601)
      */
-    private Mapper mapper;
-    private JavaBeanProvider beanProvider;
+    protected final Mapper mapper;
+    protected final JavaBeanProvider beanProvider;
     /**
      * @deprecated As of 1.3, no necessity for field anymore.
      */
