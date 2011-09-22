@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -576,6 +577,10 @@ public class XStream {
         alias("tree-map", TreeMap.class);
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
+        
+        alias("empty-list", Collections.EMPTY_LIST.getClass());
+        alias("empty-map", Collections.EMPTY_MAP.getClass());
+        alias("empty-set", Collections.EMPTY_SET.getClass());
 
         if (jvm.supportsAWT()) {
             // Instantiating these two classes starts the AWT system, which is undesirable.
@@ -793,6 +798,10 @@ public class XStream {
         addImmutableType(URL.class);
         addImmutableType(File.class);
         addImmutableType(Class.class);
+
+        addImmutableType(Collections.EMPTY_LIST.getClass());
+        addImmutableType(Collections.EMPTY_SET.getClass());
+        addImmutableType(Collections.EMPTY_MAP.getClass());
 
         if (jvm.supportsAWT()) {
             addImmutableTypeDynamically("java.awt.font.TextAttribute");

@@ -123,8 +123,12 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                                 source.getClass(), info.fieldName);
                         if (mapping != null) {
                             if (context instanceof ReferencingMarshallingContext) {
-                                ReferencingMarshallingContext refContext = (ReferencingMarshallingContext)context;
-                                refContext.registerImplicit(info.value);
+                                if (info.value != Collections.EMPTY_LIST 
+                                        && info.value != Collections.EMPTY_SET 
+                                        && info.value != Collections.EMPTY_MAP) {
+                                    ReferencingMarshallingContext refContext = (ReferencingMarshallingContext)context;
+                                    refContext.registerImplicit(info.value);
+                                }
                             }
                             final boolean isCollection = info.value instanceof Collection;
                             final boolean isMap = info.value instanceof Map;

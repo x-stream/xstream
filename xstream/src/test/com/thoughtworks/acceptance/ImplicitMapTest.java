@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -249,6 +250,16 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         xstream.addImplicitMap(SampleMaps.class, "bad", Product.class, "name");
         xstream.addImplicitMap(MegaSampleMaps.class, "other", Hardware.class, "name");
         assertBothWays(sample, expected);
+    }
+
+    public void testWithEMPTY_MAP() {
+        SampleMaps sample = new SampleMaps();
+        sample.good = Collections.EMPTY_MAP;
+        sample.bad = Collections.EMPTY_MAP;
+
+        xstream.addImplicitMap(SampleMaps.class, "good", Software.class, "name");
+        xstream.addImplicitMap(SampleMaps.class, "bad", Software.class, "name");
+        assertEquals("<sample/>", xstream.toXML(sample));
     }
 
     public void testWithSortedMap() {

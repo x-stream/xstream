@@ -32,12 +32,21 @@
 
     <p>Not yet released.</p>
 
+    <h2>Major changes</h2>
+
+    <ul>
+    	<li>JIRA:XSTR-673: Collections.EMPTY_LIST, Collections.EMPTY_SET and Collections.EMPTY_MAP supported with own alias and
+    	 defined as immutable.</li>
+    </ul>
+
     <h2>Minor changes</h2>
 
     <ul>
     	<li>JIRA:XSTR-667: Cannot serialize empty list with JsonHierarchicalStreamDriver.</li>
     	<li>JIRA:XSTR-661: TreeMarshaller.CircularReference is not a ConversionException.</li>
     	<li>JIRA:XSTR-671: CannotResolveClassException should accept cause.</li>
+    	<li>JIRA:XSTR-672: Collections.EMPTY_LIST, Collections.EMPTY_SET and Collections.EMPTY_MAP used for in implicit
+    	collection should not throw ReferencedImplicitElementException.</li>
     	<li>NPE in XppDomComparator.</li>
     	<li>Allow access to Mapper and JavaBeanProvider in derived instances of JavaBeanConverter.</li>
     </ul>

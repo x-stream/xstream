@@ -264,6 +264,15 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertEquals(house.getPeople(), serializedHouse.getPeople());
         assertEquals(house.getRooms(), serializedHouse.getRooms());
     }
+    
+    public void testWithEMPTY_LIST() {
+        House house = new House();
+        house.people = Collections.EMPTY_LIST;
+        house.rooms = Collections.EMPTY_LIST;
+        xstream.addImplicitCollection(House.class, "rooms", Room.class);
+        xstream.addImplicitCollection(House.class, "people", Person.class);
+        assertEquals("<house/>", xstream.toXML(house));
+    }
 
     public static class Zoo extends StandardObject {
         private Set animals;

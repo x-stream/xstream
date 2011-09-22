@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -211,7 +211,60 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     }
 
     public void testEmptyList() {
-        assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections_-EmptyList/>");
+        assertBothWays(Collections.EMPTY_LIST, "<empty-list/>");
+    }
+
+    public void testEmptySet() {
+        assertBothWays(Collections.EMPTY_SET, "<empty-set/>");
+    }
+
+    public void testEmptyMap() {
+        assertBothWays(Collections.EMPTY_MAP, "<empty-map/>");
+    }
+
+    public void testEmptyListIsImmutable() {
+        List list = new ArrayList();
+        list.add(Collections.EMPTY_LIST);
+        list.add(Collections.EMPTY_LIST);
+        assertBothWays(list, 
+            "<list>\n" +
+            "  <empty-list/>\n" +
+            "  <empty-list/>\n" +
+            "</list>");
+    }
+
+    public void testEmptySetIsImmutable() {
+        List list = new ArrayList();
+        list.add(Collections.EMPTY_SET);
+        list.add(Collections.EMPTY_SET);
+        assertBothWays(list, 
+            "<list>\n" +
+            "  <empty-set/>\n" +
+            "  <empty-set/>\n" +
+            "</list>");
+    }
+
+    public void testEmptyMapIsImmutable() {
+        List list = new ArrayList();
+        list.add(Collections.EMPTY_MAP);
+        list.add(Collections.EMPTY_MAP);
+        assertBothWays(list, 
+            "<list>\n" +
+            "  <empty-map/>\n" +
+            "  <empty-map/>\n" +
+            "</list>");
+    }
+
+    public void testEmptyListIsSingleton() {
+        assertSame(Collections.EMPTY_LIST, xstream.fromXML("<empty-list/>"));
+    }
+
+    public void testEmptySetIsSingleton() {
+        assertSame(Collections.EMPTY_SET, xstream.fromXML("<empty-set/>"));
+    }
+
+    public void testEmptyMapIsSingleton() {
+        assertSame(Collections.EMPTY_MAP, xstream.fromXML("<empty-map/>"));
     }
     
     public void testSingletonList() {
