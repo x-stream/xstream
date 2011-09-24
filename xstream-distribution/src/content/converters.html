@@ -716,6 +716,36 @@
                 A proxy with multiple callbacks can currently not be handled at all.</td>
                 <td>Must be registered explicitly in combination with the CGLIBMapper. See <a href="faq.html#Serialization_CGLIB">FAQ</a>.</td>
             </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentCollectionConverter.html">HibernatePersistentCollectionConverter</a></td>
+                <td>org.hibernate.collection.PersistentBag org.hibernate.collection.PersistentList org.hibernate.collection.PersistentSet</td>
+                <td>The Converter handles Hibernate collections that are not handled by the other Hibernate converters. It will handle any element of the collection.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentMapConverter.html">HibernatePersistentMapConverter</a></td>
+                <td>org.hibernate.collection.PersistentMap</td>
+                <td>The Converter handles unsorted Hibernate maps. It will handle any key and value of the map.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentSortedMapConverter.html">HibernatePersistentSortedMapConverter</a></td>
+                <td>org.hibernate.collection.PersistentSortedMap</td>
+                <td>The Converter handles sorted Hibernate maps. It will handle any key and value of the map.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentSortedSetConverter.html">HibernatePersistentSortedSetConverter</a></td>
+                <td>org.hibernate.collection.PersistentSortedSet</td>
+                <td>The Converter handles sorted Hibernate sets. It will handle any element of the set.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernateProxyConverter.html">HibernateProxyConverter</a></td>
+                <td>org.hibernate.proxy.HibernateProxy</td>
+                <td>The Converter handle any element that is wrapped by a Hibernate proxy.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
 
         </table>
 
