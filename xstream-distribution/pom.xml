@@ -134,6 +134,7 @@
           <sourceDirectoryPath>${basedir}/src</sourceDirectoryPath>
           <sitemapPath>content/website.xml</sitemapPath>
           <skinPath>templates/skin.html</skinPath>
+          <compositionFilePath>xsite/xsite.xml</compositionFilePath>
           <resourcePaths>resources</resourcePaths>
           <outputDirectoryPath>${project.build.directory}/xsite</outputDirectoryPath>
         </configuration>

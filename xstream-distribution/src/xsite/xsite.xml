@@ -1,0 +1,54 @@
+<!--
+ Copyright (C) 2006, 2007, 2008, 2010 XSite committers.
+ Copyright (C) 2011 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 28. September 2011 by Joerg Schaible, copied from XSite project
+ -->
+<container component-instance-factory='org.picocontainer.script.xml.XStreamComponentInstanceFactory'>
+    <component-instance key="org.codehaus.xsite.XSiteConfiguration">
+        <org.codehaus.xsite.XSiteConfiguration>
+            <validateLinks>true</validateLinks>
+        </org.codehaus.xsite.XSiteConfiguration>
+    </component-instance>
+	<component-implementation class="org.codehaus.xsite.XSite"/>
+	<component-implementation class="com.thoughtworks.xstream.io.xml.DomDriver"/>
+	<component-implementation class="com.thoughtworks.xstream.XStream"/>
+    <component-implementation key="org.codehaus.xsite.FileSystem" class="org.codehaus.xsite.io.CommonsFileSystem"/>
+	<component-implementation key="org.codehaus.xsite.SitemapLoader" class="org.codehaus.xsite.loaders.XStreamSitemapLoader"/>
+    <component-implementation key="org.codehaus.xsite.Skin" class="org.codehaus.xsite.skins.FreemarkerSkin"/>
+	<component-implementation key="org.codehaus.xsite.PageExtractor" class="org.codehaus.xsite.extractors.SiteMeshPageExtractor"/>
+	<component-implementation class="org.codehaus.xsite.extractors.sitemesh.rules.AddFirstChildClassToHeader"/>
+	<component-implementation class="com.opensymphony.module.sitemesh.html.rules.RegexReplacementTextFilter">
+		<parameter><string>JIRA:([A-Z]+)-([0-9]+)</string></parameter>
+		<parameter><string><![CDATA[<a href=\"http://jira.codehaus.org/browse/$1-$2\">$1-$2</a>]]></string></parameter>
+	</component-implementation>
+	<component-implementation key="email-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+		<parameter><string>mailto:</string></parameter>
+	</component-implementation>
+	<component-implementation key="javascript-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+		<parameter><string>javascript:</string></parameter>
+	</component-implementation>
+	<component-implementation key="http-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+		<parameter><string>http://</string></parameter>
+	</component-implementation>
+    <component-implementation key="https-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+      <parameter><string>https://</string></parameter>
+    </component-implementation>
+	<component-implementation key="news-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+		<parameter><string>nntp://</string></parameter>
+	</component-implementation>
+	<component-implementation key="apidocs-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+		<parameter><string>hibernate-javadoc/</string></parameter>
+	</component-implementation>
+	<component-implementation key="javadoc-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+		<parameter><string>javadoc/</string></parameter>
+	</component-implementation>
+    <component-implementation key="code-coverage-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+        <parameter><string>code-coverage/</string></parameter>
+    </component-implementation>
+</container>
