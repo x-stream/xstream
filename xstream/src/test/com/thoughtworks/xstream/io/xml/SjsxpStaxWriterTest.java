@@ -15,26 +15,20 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-import javax.xml.stream.XMLOutputFactory;
-
 public final class SjsxpStaxWriterTest extends AbstractStaxWriterTest {
     final static String className = "com.sun.xml.internal.stream.XMLOutputFactoryImpl";
 
     public static Test suite() {
-        return createSuite(SjsxpStaxWriterTest.class, className);
-    }
-
-    protected static Test createSuite(Class test, String staxClassName) {
         try {
-            Class.forName(staxClassName);
-            return new TestSuite(test);
+            Class.forName(className);
+            return new TestSuite(SjsxpStaxWriterTest.class);
         } catch (ClassNotFoundException e) {
-            return new TestCase(test.getName() + ": not available") {
-
+            return new TestCase(SjsxpStaxWriterTest.class.getName() + ": not available") {
+        
                 public int countTestCases() {
                     return 1;
                 }
-
+        
                 public void run(TestResult result) {
                 }
             };
