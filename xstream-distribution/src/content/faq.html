@@ -409,12 +409,12 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     of XStream to write an attribute (using XStream.useAttributeFor() or @XStreamAsAttribute) is simply ignored.</p>
 
     <!-- ...................................................... -->
-    <h2 id="XML_attribute_normalization">Why are whitespace characters missing in my attribute values after deserialization?</h2>
+    <h2 id="XML_attribute_normalization">Why are whitespace characters wrong in my attribute values after deserialization?</h2>
 
     <p>This is part of the XML specification and a required functionality for any XML parser called
     <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#AVNormalize">attribute value normalization</a>. It cannot
-    be influenced by XStream. Do not use attributes if your values contain leading or trailing whitespaces, other whitespaces
-    than blanks, or sequences of whitespaces.</p>
+    be influenced by XStream.  A compliant XML parser will replace by default real tab, carriage return and line feed
+    characters with normal spaces.  If you want to keep these characters you will have to encode them with entities.</p>
 
     <!-- ...................................................... -->
     <h2 id="XML_namespaces">Why does XStream not have any namespace support?</h2>

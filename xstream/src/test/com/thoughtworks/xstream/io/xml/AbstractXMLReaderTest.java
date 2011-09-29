@@ -229,6 +229,11 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         HierarchicalStreamReader xmlReader = createReader("<string __attr='value'/>");
         assertEquals("value", xmlReader.getAttribute("_attr"));
     }
+
+    public void testCanReadAttributeWithEncodedWhitespace() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<string attr='  A\r\t\nB  C&#x9;&#xa;&#xd;  '/>");
+        assertEquals("  A   B  C\t\n\r  ", xmlReader.getAttribute("attr"));
+    }
     
     // TODO: See XSTR-473
     public void todoTestCanReadNullValueInString() throws Exception {
