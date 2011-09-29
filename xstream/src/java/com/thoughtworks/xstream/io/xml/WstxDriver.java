@@ -10,8 +10,8 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.bea.xml.stream.MXParserFactory;
-import com.bea.xml.stream.XMLOutputFactoryBase;
+import com.ctc.wstx.stax.WstxInputFactory;
+import com.ctc.wstx.stax.WstxOutputFactory;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -41,11 +41,11 @@ public class WstxDriver extends StaxDriver {
     }
 
     protected XMLInputFactory createInputFactory() {
-        return new MXParserFactory();
+        return new WstxInputFactory();
     }
 
     protected XMLOutputFactory createOutputFactory() {
-        return new XMLOutputFactoryBase();
+        return new WstxOutputFactory();
     }
 
 }
