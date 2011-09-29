@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ public abstract class AbstractXMLWriterTest extends TestCase {
     protected HierarchicalStreamWriter writer;
 
     protected abstract void assertXmlProducedIs(String expected);
-    
+
     // String.replaceAll is JDK 1.4
     protected String replaceAll(String s, final String occurance, final String replacement) {
         final int len = occurance.length();
@@ -104,15 +104,23 @@ public abstract class AbstractXMLWriterTest extends TestCase {
         assertXmlProducedIs("<evil attr=\"w0000 $ &lt;x&quot;x&gt; &amp;!;\">w0000 $ &lt;xx&gt; &amp;!;</evil>");
     }
 
-    public void testEscapesWhitespaceCharacters() {
+    public void testEscapesWhitespaceCharactersInValue() {
         writer.startNode("evil");
-        writer.setValue("one\ntwo\rthree\r\nfour\n\rfive\tsix");
+        writer.setValue("  one\ntwo\rthree\r\nfour\n\r  five\tsix  ");
         writer.endNode();
 
-        assertXmlProducedIs("<evil>one\n"
+        assertXmlProducedIs("<evil>  one\n"
                 + "two&#xd;three&#xd;\n"
                 + "four\n"
-                + "&#xd;five\tsix</evil>");
+                + "&#xd;  five\tsix  </evil>");
+    }
+
+    public void testEscapesWhitespaceCharactersInAttribute() {
+        writer.startNode("evil");
+        writer.addAttribute("attr", "  one\ntwo\rthree\r\nfour\n\r  five\tsix  ");
+        writer.endNode();
+
+        assertXmlProducedIs("<evil attr=\"  one&#xa;two&#xd;three&#xd;&#xa;four&#xa;&#xd;  five&#x9;six  \"/>");
     }
 
     public void testSupportsEmptyNestedTags() {

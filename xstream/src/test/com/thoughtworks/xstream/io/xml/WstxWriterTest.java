@@ -1,34 +1,22 @@
 /*
- * Copyright (C) 2007, 2009 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 03. November 2007 by Joerg Schaible
+ * Created on 29. September 2011 by Joerg Schaible, renamed from WoodstoxStaxWriterTest
  */
 package com.thoughtworks.xstream.io.xml;
 
 import com.ctc.wstx.stax.WstxOutputFactory;
 
-import junit.framework.Test;
-
 import javax.xml.stream.XMLOutputFactory;
 
-public final class WoodstoxStaxWriterTest extends AbstractStaxWriterTest {
-    public WoodstoxStaxWriterTest() {
-        System.setProperty(XMLOutputFactory.class.getName(), WstxOutputFactory.class
-            .getName());
-    }
-
-    public static Test suite() {
-        return createSuite(WoodstoxStaxWriterTest.class, WstxOutputFactory.class.getName());
-    }
-
+public final class WstxWriterTest extends AbstractStaxWriterTest {
     protected void assertXmlProducedIs(String expected) {
-        if (outputFactory.getProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES).equals(Boolean.FALSE)
-            || perlUtil.match("#<\\w+:\\w+(>| xmlns:\\w+=)#", expected)) {
+        if (!staxDriver.isRepairingNamespace() || perlUtil.match("#<\\w+:\\w+(>| xmlns:\\w+=)#", expected)) {
             expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
         }
         expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2 />#g", expected);
@@ -44,5 +32,9 @@ public final class WoodstoxStaxWriterTest extends AbstractStaxWriterTest {
 
     protected XMLOutputFactory getOutputFactory() {
         return new WstxOutputFactory();
+    }
+
+    protected StaxDriver getStaxDriver() {
+        return new WstxDriver();
     }
 }

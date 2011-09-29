@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,19 +13,10 @@ package com.thoughtworks.xstream.io.xml;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestResult;
-import junit.framework.TestSuite;
 
 import org.apache.oro.text.perl.Perl5Util;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 import java.io.StringWriter;
 
@@ -33,36 +24,19 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
 
     protected StringWriter buffer;
     protected Perl5Util perlUtil;
-    protected XMLOutputFactory outputFactory;
+    protected StaxDriver staxDriver;
     private X testInput;
-
-    protected static Test createSuite(Class test, String staxClassName) {
-        try {
-            Class.forName(staxClassName);
-            return new TestSuite(test);
-        } catch (ClassNotFoundException e) {
-            return new TestCase(test.getName() + ": not available") {
-
-                public int countTestCases() {
-                    return 1;
-                }
-
-                public void run(TestResult result) {
-                }
-            };
-        }
-    }
     
     protected abstract String getXMLHeader();
 
-    protected abstract XMLOutputFactory getOutputFactory();
+    protected abstract StaxDriver getStaxDriver();
 
     protected void setUp() throws Exception {
         super.setUp();
-        outputFactory = getOutputFactory();
-        outputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, Boolean.FALSE);
+        staxDriver = getStaxDriver();
+        staxDriver.setRepairingNamespace(false);
         buffer = new StringWriter();
-        writer = new StaxWriter(new QNameMap(), outputFactory.createXMLStreamWriter(buffer));
+        writer = staxDriver.createWriter(buffer);
         perlUtil = new Perl5Util();
 
         testInput = new X();
@@ -90,8 +64,7 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         marshalWithBothRepairingModes(qnameMap, expected);
     }
 
-    protected void marshalWithBothRepairingModes(QNameMap qnameMap, String expected)
-                                                                                    throws XMLStreamException {
+    protected void marshalWithBothRepairingModes(QNameMap qnameMap, String expected) {
         marshall(qnameMap, true);
         assertXmlProducedIs(expected);
 
@@ -99,16 +72,12 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs(expected);
     }
 
-    protected void marshall(QNameMap qnameMap, boolean repairNamespaceMode)
-                                                                             throws XMLStreamException {
-        outputFactory.setProperty(
-            XMLOutputFactory.IS_REPAIRING_NAMESPACES, repairNamespaceMode
-                ? Boolean.TRUE
-                : Boolean.FALSE);
-        XStream xstream = new XStream((HierarchicalStreamDriver)null);
+    protected void marshall(QNameMap qnameMap, boolean repairNamespaceMode) {
+        staxDriver.setRepairingNamespace(repairNamespaceMode);
+        staxDriver.setQnameMap(qnameMap);
+        XStream xstream = new XStream(staxDriver);
         buffer = new StringWriter();
-        XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(buffer);
-        xstream.marshal(testInput, new StaxWriter(qnameMap, xmlStreamWriter, true, repairNamespaceMode));
+        xstream.toXML(testInput, buffer);
     }
 
 }

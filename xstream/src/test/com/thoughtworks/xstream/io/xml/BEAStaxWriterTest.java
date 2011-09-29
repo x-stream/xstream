@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,26 +10,13 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.bea.xml.stream.XMLOutputFactoryBase;
-
-import junit.framework.Test;
-
-import javax.xml.stream.XMLOutputFactory;
-
 public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
-    public BEAStaxWriterTest() {
-        System.setProperty(XMLOutputFactory.class.getName(), XMLOutputFactoryBase.class
-            .getName());
-    }
-
-    public static Test suite() {
-        return createSuite(BEAStaxWriterTest.class, XMLOutputFactoryBase.class.getName());
-    }
-
     protected void assertXmlProducedIs(String expected) {
         expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
         expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
         expected = replaceAll(expected, "&#xd;", "&#13;");
+        expected = replaceAll(expected, "&#xa;", "&#10;");
+        expected = replaceAll(expected, "&#x9;", "&#9;");
         expected = getXMLHeader() + expected;
         assertEquals(expected, buffer.toString());
     }
@@ -38,7 +25,7 @@ public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
         return "<?xml version='1.0' encoding='utf-8'?>";
     }
 
-    protected XMLOutputFactory getOutputFactory() {
-        return new XMLOutputFactoryBase();
+    protected StaxDriver getStaxDriver() {
+        return new BEAStaxDriver();
     }
 }

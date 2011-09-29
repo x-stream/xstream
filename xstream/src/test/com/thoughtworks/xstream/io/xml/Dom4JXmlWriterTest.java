@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -35,22 +35,10 @@ public class Dom4JXmlWriterTest extends AbstractXMLWriterTest {
 
     protected void assertXmlProducedIs(String expected) {
         writer.close();
-        String actual = out.toString().trim();
-        assertEquals(expected, actual);
-    }
-
-    // inherits tests from superclass
-
-    public void testEscapesWhitespaceCharacters() {
-        // This method overrides a test in the superclass to prevent it from being run, since the 
-        // OutputFormat will not encode \r.
-        writer.startNode("evil");
-        writer.setValue("one\ntwo\rthree\r\nfour\n\rfive\tsix");
-        writer.endNode();
-
-        assertXmlProducedIs("<evil>one\n"
-                + "two\rthree\r\n"
-                + "four\n"
-                + "\rfive\tsix</evil>");
+        expected = replaceAll(expected, "&#xd;", "\r");
+        // attributes are not properly escaped
+        expected = replaceAll(expected, "&#xa;", "\n");
+        expected = replaceAll(expected, "&#x9;", "\t");
+        assertEquals(expected, out.toString());
     }
 }

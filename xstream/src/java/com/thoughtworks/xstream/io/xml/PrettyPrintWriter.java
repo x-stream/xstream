@@ -220,14 +220,14 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     protected void writeAttributeValue(QuickWriter writer, String text) {
-        writeText(text);
+        writeText(text, true);
     }
 
     protected void writeText(QuickWriter writer, String text) {
-        writeText(text);
+        writeText(text, false);
     }
 
-    private void writeText(String text) {
+    private void writeText(String text, boolean isAttribute) {
         int length = text.length();
         for (int i = 0; i < length; i++ ) {
             char c = text.charAt(i);
@@ -259,8 +259,10 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                 break;
             case '\t':
             case '\n':
-                this.writer.write(c);
-                break;
+                if (!isAttribute) {
+                    this.writer.write(c);
+                    break;
+                }
             default:
                 if (Character.isDefined(c) && !Character.isISOControl(c)) {
                     if (mode != XML_QUIRKS) {
