@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.AbstractXMLReaderTest;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import com.thoughtworks.xstream.io.xml.XppReader;
+import com.thoughtworks.xstream.io.xml.xppdom.XppFactory;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -29,20 +32,22 @@ public class HierarchicalStreamCopierTest extends AbstractXMLReaderTest {
 
     // factory method - overriding base class.
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        HierarchicalStreamReader sourceReader = new XppReader(new StringReader(xml));
+        HierarchicalStreamReader sourceReader = new XppReader(
+            new StringReader(xml), XppFactory.createDefaultParser());
 
         StringWriter buffer = new StringWriter();
         HierarchicalStreamWriter destinationWriter = new CompactWriter(buffer);
 
         copier.copy(sourceReader, destinationWriter);
 
-        return new XppReader(new StringReader(buffer.toString()));
+        return new XppReader(new StringReader(buffer.toString()), XppFactory.createDefaultParser());
     }
 
-    public void testSkipsValueIfEmpty() {
+    public void testSkipsValueIfEmpty() throws XmlPullParserException {
         String input = "<root><empty1/><empty2></empty2><not-empty>blah</not-empty></root>";
         String expected = "<root><empty1/><empty2/><not-empty>blah</not-empty></root>";
-        HierarchicalStreamReader sourceReader = new XppReader(new StringReader(input));
+        HierarchicalStreamReader sourceReader = new XppReader(
+            new StringReader(input), XppFactory.createDefaultParser());
 
         StringWriter buffer = new StringWriter();
         HierarchicalStreamWriter destinationWriter = new CompactWriter(buffer);
