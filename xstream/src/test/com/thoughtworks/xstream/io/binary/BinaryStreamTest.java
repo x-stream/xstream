@@ -34,8 +34,8 @@ public class BinaryStreamTest extends AbstractXMLReaderTest {
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
         // Transmogrify XML input into binary format.
-        HierarchicalStreamReader xmlReader = new XppReader(new StringReader(xml), 
-            XppFactory.createDefaultParser(), new NoNameCoder());
+        HierarchicalStreamReader xmlReader = new XppReader(
+            new StringReader(xml), XppFactory.createDefaultParser());
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         HierarchicalStreamWriter binaryWriter = new BinaryStreamWriter(buffer);
