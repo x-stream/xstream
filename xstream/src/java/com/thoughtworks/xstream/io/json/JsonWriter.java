@@ -275,6 +275,25 @@ public class JsonWriter extends AbstractJsonWriter {
             case '\\':
                 this.writer.write("\\\\");
                 break;
+// turn this off - it is no CTRL char anyway                
+//            case '/':
+//                this.writer.write("\\/");
+//                break;
+            case '\b':
+                this.writer.write("\\b");
+                break;
+            case '\f':
+                this.writer.write("\\f");
+                break;
+            case '\n':
+                this.writer.write("\\n");
+                break;
+            case '\r':
+                this.writer.write("\\r");
+                break;
+            case '\t':
+                this.writer.write("\\t");
+                break;
             default:
                 if (c > 0x1f) {
                     this.writer.write(c);
