@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2004, 2005      Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2004, 2005 Joe Walnes.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,8 +19,10 @@ import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.WstxDriver;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -130,11 +132,9 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
     }
 
     protected HierarchicalStreamDriver createDriver() {
-        System.setProperty(XMLInputFactory.class.getName(), MXParserFactory.class.getName());
-        System.setProperty(XMLOutputFactory.class.getName(), XMLOutputFactoryBase.class.getName());
         // careful, called from inside base class constructor
         qnameMap = new QNameMap();
-        StaxDriver driver = new StaxDriver(qnameMap);
+        StaxDriver driver = new BEAStaxDriver(qnameMap);
         driver.setRepairingNamespace(false);
         return driver;
     }
