@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.AbstractXMLReaderTest;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
+import com.thoughtworks.xstream.io.xml.KXml2Driver;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import com.thoughtworks.xstream.io.xml.xppdom.XppFactory;
 
@@ -32,8 +33,8 @@ public class HierarchicalStreamCopierTest extends AbstractXMLReaderTest {
 
     // factory method - overriding base class.
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        HierarchicalStreamReader sourceReader = new XppReader(
-            new StringReader(xml), XppFactory.createDefaultParser());
+        HierarchicalStreamReader sourceReader = 
+                new KXml2Driver().createReader(new StringReader(xml));
 
         StringWriter buffer = new StringWriter();
         HierarchicalStreamWriter destinationWriter = new CompactWriter(buffer);

@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class XppDomReaderTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        return new XppDomDriver().createReader(new StringReader(xml));
+        return new KXml2DomDriver().createReader(new StringReader(xml));
     }
 
     public void testCanReadFromElementOfLargerDocument()
