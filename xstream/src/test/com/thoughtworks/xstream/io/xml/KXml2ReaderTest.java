@@ -17,10 +17,14 @@ import java.io.StringReader;
 
 public class KXml2ReaderTest extends AbstractXMLReaderTest {
     
-    private HierarchicalStreamDriver driver = new Xpp3Driver();
+    private HierarchicalStreamDriver driver = new KXml2Driver();
 
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
+        // fails to replace tab characters in attributes to space as required by XML spec
+        if(xml.indexOf('\t')>=0) {
+            xml = xml.replace('\t', ' ');
+        }
         return driver.createReader(new StringReader(xml));
     }
 

@@ -15,7 +15,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.copy.HierarchicalStreamCopier;
 import com.thoughtworks.xstream.io.xml.AbstractXMLReaderTest;
-import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
@@ -33,7 +33,7 @@ public class BinaryStreamTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
         // Transmogrify XML input into binary format.
         HierarchicalStreamReader xmlReader = 
-                new KXml2Driver().createReader(new StringReader(xml));
+                new Xpp3Driver().createReader(new StringReader(xml));
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         HierarchicalStreamWriter binaryWriter = new BinaryStreamWriter(buffer);
