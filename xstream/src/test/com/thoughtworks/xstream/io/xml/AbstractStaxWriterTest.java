@@ -64,10 +64,32 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         marshalWithBothRepairingModes(qnameMap, expected);
     }
 
+    public void testNamespacedXmlWithPrefixTwice() throws Exception {
+        QNameMap qnameMap = new QNameMap();
+        QName qname = new QName("http://foo.com", "alias", "foo");
+        qnameMap.registerMapping(qname, X.class);
+
+        qname = new QName("http://bar.com", "alias1", "bar");
+        qnameMap.registerMapping(qname, "aStr");
+
+        qname = new QName("http://bar.com", "alias2", "bar");
+        qnameMap.registerMapping(qname, "anInt");
+
+        String expected = "<foo:alias xmlns:foo=\"http://foo.com\"><bar:alias1 xmlns:bar=\"http://bar.com\">zzz</bar:alias1><bar:alias2 xmlns:bar=\"http://bar.com\">9</bar:alias2><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></foo:alias>";
+        marshalWithBothRepairingModes(qnameMap, expected);
+    }
+
     protected void marshalWithBothRepairingModes(QNameMap qnameMap, String expected) {
+        marshalNonRepairing(qnameMap, expected);
+        marshalRepairing(qnameMap, expected);
+    }
+
+    protected void marshalRepairing(QNameMap qnameMap, String expected) {
         marshall(qnameMap, true);
         assertXmlProducedIs(expected);
+    }
 
+    protected void marshalNonRepairing(QNameMap qnameMap, String expected) {
         marshall(qnameMap, false);
         assertXmlProducedIs(expected);
     }

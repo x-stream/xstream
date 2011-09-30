@@ -28,4 +28,10 @@ public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
     protected StaxDriver getStaxDriver() {
         return new BEAStaxDriver();
     }
+
+    protected void marshalRepairing(QNameMap qnameMap, String expected) {
+        // repairing mode fails for BEA's reference implementation in this case
+        if (!getName().equals("testNamespacedXmlWithPrefixTwice"))
+            super.marshalRepairing(qnameMap, expected);
+    }
 }

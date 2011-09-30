@@ -188,6 +188,7 @@ public class StaxWriter extends AbstractXmlWriter {
                 }
             }
 
+            out.writeStartElement(prefix, qname.getLocalPart(), uri);
             if (hasPrefix) {
                 out.setPrefix(prefix, uri);
             } else if (hasURI) {
@@ -195,7 +196,6 @@ public class StaxWriter extends AbstractXmlWriter {
                     out.setDefaultNamespace(uri);
                 }
             }
-            out.writeStartElement(prefix, qname.getLocalPart(), uri);
             if (hasURI && writeNamespace && !isNamespaceRepairingMode()) {
                 if (hasPrefix) {
                     out.writeNamespace(prefix, uri);
