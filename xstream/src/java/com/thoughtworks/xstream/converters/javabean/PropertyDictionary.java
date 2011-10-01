@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
@@ -71,6 +72,9 @@ public class PropertyDictionary implements Caching {
     public BeanProperty property(Class cls, String name) {
         BeanProperty beanProperty = null;
         PropertyDescriptor descriptor = (PropertyDescriptor)buildMap(cls).get(name);
+        if (descriptor == null) {
+            throw new MissingFieldException(cls.getName(), name);
+        }
         if (descriptor.getReadMethod() != null && descriptor.getWriteMethod() != null) {
             beanProperty = new BeanProperty(
                 cls, descriptor.getName(), descriptor.getPropertyType());
@@ -89,7 +93,11 @@ public class PropertyDictionary implements Caching {
      * @param name
      */
     public PropertyDescriptor propertyDescriptor(Class type, String name) {
-        return (PropertyDescriptor)buildMap(type).get(name);
+        PropertyDescriptor descriptor = (PropertyDescriptor)buildMap(type).get(name);
+        if (descriptor == null) {
+            throw new MissingFieldException(type.getName(), name);
+        }
+        return descriptor;
     }
 
     private Map buildMap(Class type) {

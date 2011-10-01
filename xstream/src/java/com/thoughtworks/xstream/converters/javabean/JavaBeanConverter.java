@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -108,7 +109,7 @@ public class JavaBeanConverter implements Converter {
                     Object value = context.convertAnother(result, type);
                     beanProvider.writeProperty(result, propertyName, value);
                 } else {
-                    throw new ConversionException("Property '" + propertyName + "' not defined in class " + result.getClass().getName());
+                    throw new MissingFieldException(result.getClass().getName(), propertyName);
                 }
             }
             reader.moveUp();

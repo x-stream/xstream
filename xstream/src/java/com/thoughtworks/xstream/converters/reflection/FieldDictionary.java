@@ -91,7 +91,7 @@ public class FieldDictionary implements Caching {
     public Field field(Class cls, String name, Class definedIn) {
         Field field = fieldOrNull(cls, name, definedIn);
         if (field == null) {
-            throw new ObjectAccessException("No such field " + cls.getName() + "." + name);
+            throw new MissingFieldException(cls.getName(), name);
         } else {
             return field;
         }
