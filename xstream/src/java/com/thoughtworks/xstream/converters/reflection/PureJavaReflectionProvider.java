@@ -118,7 +118,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         } catch (IOException e) {
             throw new ObjectAccessException("Cannot create " + type.getName() + " by JDK serialization", e);
         } catch (ClassNotFoundException e) {
-            throw new ObjectAccessException("Cannot find class " + e.getMessage());
+            throw new ObjectAccessException("Cannot find class " + e.getMessage(), e);
         }
     }
 

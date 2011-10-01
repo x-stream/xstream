@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,7 +25,9 @@ public class Fields {
     public static Field find(Class type, String name) {
         try {
             Field result = type.getDeclaredField(name);
-            result.setAccessible(true);
+            if (!result.isAccessible()) {
+                result.setAccessible(true);
+            }
             return result;
         } catch (NoSuchFieldException e) {
             throw new IllegalArgumentException("Could not access "
@@ -41,7 +43,7 @@ public class Fields {
         try {
             field.set(instance, value);
         } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field");
+            throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field", e);
         }
     }
 
@@ -49,7 +51,7 @@ public class Fields {
         try {
             return field.get(instance);
         } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field");
+            throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field", e);
         }
     }
 }

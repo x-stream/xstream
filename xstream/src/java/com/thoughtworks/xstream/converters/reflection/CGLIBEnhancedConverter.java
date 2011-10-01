@@ -150,7 +150,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         } catch (IllegalAccessException e) {
             throw new ObjectAccessException("Access to serialVersionUID of "
                 + type.getName()
-                + " not allowed");
+                + " not allowed", e);
         }
         if (hasInterceptor) {
             writer.startNode("instance");
@@ -187,7 +187,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                     + "."
                     + CALLBACK_MARKER
                     + i
-                    + " not allowed");
+                    + " not allowed", e);
             }
         }
         return (Callback[])list.toArray(new Callback[list.size()]);
@@ -249,7 +249,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 } catch (IllegalAccessException e) {
                     throw new ObjectAccessException("Access to "
                         + calledMethod
-                        + " not allowed");
+                        + " not allowed", e);
                 } catch (InvocationTargetException e) {
                     // OK, ignore
                 } catch (NoSuchMethodException e) {
