@@ -58,6 +58,15 @@
     	<li>Allow access to Mapper and JavaBeanProvider in derived instances of JavaBeanConverter.</li>
     </ul>
 
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>Added c.t.x.converters.reflection.MissingFieldException derived from
+    	c.t.x.converters.reflection.ObjectAccessException and used instead when the unmarshalling process should write
+    	a field or property that is missing and does not exist.</li>
+    	<li>Deprecated method c.t.x.core.ReferencingMarshallingContext.currentPath(). Wrong approach.</li>
+    </ul>
+
     <h1 id="1.4.1">1.4.1</h1>
 
     <p>Released 11. August 2011.</p>

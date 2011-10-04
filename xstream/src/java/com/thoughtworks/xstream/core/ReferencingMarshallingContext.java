@@ -26,6 +26,7 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
      * 
      * @return the current path
      * @since 1.4
+     * @deprecated As of upcoming
      */
     Path currentPath();
     
@@ -51,7 +52,8 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
     void replace(Object original, Object replacement);
 
     /**
-     * Register an implicit element. This is typically some kind of collection.
+     * Register an implicit element. This is typically some kind of collection. Note, that this object may not be
+     * referenced anywhere else in the object stream.
      * 
      * @param item the object that is implicit
      * @since 1.4

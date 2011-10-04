@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -97,13 +97,16 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller impleme
                         return id.getItem();
                     }
                     
+                    /**
+                     * @deprecated As of upcoming 
+                     */
                     public Path currentPath() {
                         return pathTracker.getPath();
                     }
 
                     public void registerImplicit(Object item) {
                         if (implicitElements.containsId(item)) {
-                            throw new ReferencedImplicitElementException(item, currentPath());
+                            throw new ReferencedImplicitElementException(item, currentPath);
                         }
                         implicitElements.associateId(item, newReferenceKey);
                     }
