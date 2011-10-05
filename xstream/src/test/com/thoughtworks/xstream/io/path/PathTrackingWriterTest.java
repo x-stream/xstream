@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -57,7 +57,22 @@ public class PathTrackingWriterTest extends TestCase {
 
         writer.endNode();
         assertEquals(new Path(""), pathTracker.getPath());
-
     }
 
+    public void testEncodesPathInTracker() {
+        assertEquals(new Path(""), pathTracker.getPath());
+
+        writer.startNode("foo");
+        assertEquals(new Path("/foo"), pathTracker.getPath());
+
+        writer.startNode("b_1");
+        assertEquals(new Path("/foo/b__1"), pathTracker.getPath());
+        assertEquals("b__1", pathTracker.peekElement());
+
+        writer.endNode();
+        assertEquals(new Path("/foo"), pathTracker.getPath());
+
+        writer.endNode();
+        assertEquals(new Path(""), pathTracker.getPath());
+    }
 }

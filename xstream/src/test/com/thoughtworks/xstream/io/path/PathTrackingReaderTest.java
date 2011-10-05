@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -52,6 +52,25 @@ public class PathTrackingReaderTest extends TestCase {
         reader.moveUp();
         reader.moveDown();
         assertEquals(new Path("/a/d"), pathTracker.getPath());
+
+        reader.moveUp();
+        assertEquals(new Path("/a"), pathTracker.getPath());
+    }
+    
+    public void testPathsAreDecodedInTracker() {
+        Reader input = new StringReader("" +
+                "<a>" +
+                "  <b__1/>" +
+                "</a>");
+        HierarchicalStreamReader reader = new XppReader(input, new MXParser());
+        PathTracker pathTracker = new PathTracker();
+
+        reader = new PathTrackingReader(reader, pathTracker);
+        assertEquals(new Path("/a"), pathTracker.getPath());
+
+        reader.moveDown();
+        assertEquals(new Path("/a/b_1"), pathTracker.getPath());
+        assertEquals("b_1", pathTracker.peekElement());
 
         reader.moveUp();
         assertEquals(new Path("/a"), pathTracker.getPath());

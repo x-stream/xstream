@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,36 +26,54 @@ public class PathTrackerTest extends TestCase {
     public void testExposesXpathLikeExpressionOfLocationInWriter() {
 
         assertEquals(new Path(""), pathTracker.getPath());
+        assertEquals(0, pathTracker.depth());
 
         // <root>
         pathTracker.pushElement("root");
         assertEquals(new Path("/root"), pathTracker.getPath());
+        assertEquals(1, pathTracker.depth());
+        assertEquals("root", pathTracker.peekElement());
 
         //   <childA>
         pathTracker.pushElement("childA");
         assertEquals(new Path("/root/childA"), pathTracker.getPath());
+        assertEquals(2, pathTracker.depth());
+        assertEquals("childA", pathTracker.peekElement());
         //   </childA>
         pathTracker.popElement();
         assertEquals(new Path("/root"), pathTracker.getPath());
+        assertEquals(1, pathTracker.depth());
+        assertEquals("root", pathTracker.peekElement());
 
         //   <childB>
         pathTracker.pushElement("childB");
         assertEquals(new Path("/root/childB"), pathTracker.getPath());
+        assertEquals(2, pathTracker.depth());
+        assertEquals("childB", pathTracker.peekElement());
 
         //     <grandchild>
         pathTracker.pushElement("grandchild");
         assertEquals(new Path("/root/childB/grandchild"), pathTracker.getPath());
+        assertEquals(3, pathTracker.depth());
+        assertEquals("grandchild", pathTracker.peekElement(0));
+        assertEquals("childB", pathTracker.peekElement(-1));
+        assertEquals("root", pathTracker.peekElement(-2));
         //     </grandchild>
         pathTracker.popElement();
         assertEquals(new Path("/root/childB"), pathTracker.getPath());
+        assertEquals(2, pathTracker.depth());
+        assertEquals("childB", pathTracker.peekElement());
 
         //   </childB>
         pathTracker.popElement();
         assertEquals(new Path("/root"), pathTracker.getPath());
+        assertEquals(1, pathTracker.depth());
+        assertEquals("root", pathTracker.peekElement());
 
         // </root>
         pathTracker.popElement();
         assertEquals(new Path(""), pathTracker.getPath());
+        assertEquals(0, pathTracker.depth());
 
     }
 
@@ -73,6 +91,7 @@ public class PathTrackerTest extends TestCase {
         //   <child>
         pathTracker.pushElement("child");
         assertEquals(new Path("/root/child[2]"), pathTracker.getPath());
+        assertEquals("child[2]", pathTracker.peekElement());
         //   </child>
         pathTracker.popElement();
 
@@ -85,6 +104,7 @@ public class PathTrackerTest extends TestCase {
         //   <child>
         pathTracker.pushElement("child");
         assertEquals(new Path("/root/child[3]"), pathTracker.getPath());
+        assertEquals("child[3]", pathTracker.peekElement());
         //   </child>
         pathTracker.popElement();
 
