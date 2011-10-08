@@ -98,7 +98,9 @@ public class DependencyInjectionFactory {
                 if (parameterTypes.length > dependencies.length) {
                     continue;
                 } else if (parameterTypes.length == 0) {
-                    bestMatchingCtor = constructor;
+                    if (possibleCtor == null) {
+                        bestMatchingCtor = constructor;
+                    }
                     break;
                 }
                 if (arity > parameterTypes.length) {

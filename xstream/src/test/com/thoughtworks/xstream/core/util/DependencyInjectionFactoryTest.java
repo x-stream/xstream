@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009, 2010 XStream Committers.
+ * Copyright (C) 2007, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -108,6 +108,10 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final TestCase testCase;
         final int first;
         final int second;
+
+        public Thing() {
+            this(1, 2, null);
+        }
 
         public Thing(int first, int second, TestCase testCase) {
             this.first = first;
