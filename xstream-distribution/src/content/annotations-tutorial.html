@@ -193,7 +193,8 @@ of the values that are used as key of the map.</p>
 
 <!-- ...................................................... -->
 <h2 id="LocalConverters">Local Converters</h2>
-<p>Let's create another attribute which defines the timestamp when the message was created:</p>
+<p>Let's create another attribute which defines the timestamp when the message was created and one to flag special
+importance of the message:</p>
 <div class="Source Java"><pre>
 @XStreamAlias("message")
 class RendezvousMessage {
@@ -204,10 +205,13 @@ class RendezvousMessage {
 	@XStreamImplicit(itemFieldName="part")
 	private List&lt;String&gt; content;
 	
+	private boolean important;
+	
 	private Calendar created = new GregorianCalendar();
 
-	public RendezvousMessage(int messageType, String... content) {
+	public RendezvousMessage(int messageType, boolean important, String... content) {
 		this.messageType = messageType;
+		this.important = important;
 		this.content = Arrays.asList(content);
 	}
 
@@ -219,6 +223,7 @@ class RendezvousMessage {
   &lt;type&gt;15&lt;/type&gt;
   &lt;part&gt;firstPart&lt;/part&gt;
   &lt;part&gt;secondPart&lt;/part&gt;
+  &lt;important&gt;false&lt;/important&gt;
   &lt;created&gt;
     &lt;time&gt;1154097812245&lt;/time&gt;
     &lt;timezone&gt;America/Sao_Paulo&lt;/timezone&gt;
@@ -236,6 +241,8 @@ class RendezvousMessage {
 
 	@XStreamImplicit(itemFieldName="part")
 	private List&lt;String&gt; content;
+	
+	private boolean important;
 
 	@XStreamConverter(SingleValueCalendarConverter.class)
 	private Calendar created = new GregorianCalendar();
@@ -275,15 +282,60 @@ public class SingleValueCalendarConverter implements Converter {
   &lt;type&gt;15&lt;/type&gt;
   &lt;part&gt;firstPart&lt;/part&gt;
   &lt;part&gt;secondPart&lt;/part&gt;
+  &lt;important&gt;false&lt;/important&gt;
   &lt;created&gt;1154097812245&lt;/created&gt;
 &lt;/message&gt;
 </pre></div>
 
+<p>Additionally we want to format the importance flag not with a technical <em>true</em> or <em>false</em>, but with a
+natural <em>yes</em> or <em>no</em>.  Fortunately the BooleanConverter supports alternate format styles, but how can we
+use an annotation to register a new instance locally?  The XStreamConverter annotation uses some lightweight dependency
+injection mechanism to match given arguments with the parameters of available constructors.  That way we can write now:</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;
+
+	@XStreamImplicit(itemFieldName="part")
+	private List&lt;String&gt; content;
+	
+	@XStreamConverter(value=BooleanConverter.class, booleans={false}, strings={"yes", "no"})
+	private boolean important;
+	
+	@XStreamConverter(SingleValueCalendarConverter.class)
+	private Calendar created = new GregorianCalendar();
+
+	public RendezvousMessage(int messageType, boolean important, String... content) {
+		this.messageType = messageType;
+		this.important = important;
+		this.content = Arrays.asList(content);
+	}
+
+}
+</pre></div>
+
+<p>The BooleanConverter has an additional constructor with two string values expressing <em>true</em> and
+<em>false</em> and a third argument to ignore case of these values.  Therefore we have added all 3 arguments to the
+annotation.  The sequence of the arguments is only important for same types.  As result we have now:</p>
+<div class="Source Java"><pre>
+&lt;message&gt;
+  &lt;type&gt;15&lt;/type&gt;
+  &lt;part&gt;firstPart&lt;/part&gt;
+  &lt;part&gt;secondPart&lt;/part&gt;
+  &lt;important&gt;no&lt;/important&gt;
+  &lt;created&gt;1154097812245&lt;/created&gt;
+&lt;/message&gt;
+</pre></div>
+
+<p>See the Javadoc of the XStreamConverter annotation what more arguments are provided implicitly.</p>
+
 <!-- ...................................................... -->
 <h2 id="Attributes">Attributes</h2>
-<p>The client may asks for the type tag to be an attribute inside the message tag, as follows:</p>
+<p>The client may asks for the type tag and the importance flag to be an attribute inside the message tag, as follows:</p>
 <div class="Source Java"><pre>
-&lt;message type="15"&gt;
+&lt;message type="15" important="no"&gt;
   &lt;part&gt;firstPart&lt;/part&gt;
   &lt;part&gt;secondPart&lt;/part&gt;
   &lt;created&gt;1154097812245&lt;/created&gt;
@@ -300,16 +352,87 @@ class RendezvousMessage {
 
 	@XStreamImplicit(itemFieldName="part")
 	private List&lt;String&gt; content;
+	
+   	@XStreamAsAttribute
+	@XStreamConverter(value=BooleanConverter.class, booleans={false}, strings={"yes", "no"})
+	private boolean important;
 
 	@XStreamConverter(SingleValueCalendarConverter.class)
 	private Calendar created = new GregorianCalendar();
 
-	public RendezvousMessage(int messageType, String... content) {
+	public RendezvousMessage(int messageType, boolean important, String... content) {
 		this.messageType = messageType;
+		this.important = important;
 		this.content = Arrays.asList(content);
 	}
 }
 </pre></div>
+
+<!-- ...................................................... -->
+<h2 id="FieldAsText">Field as Text Value</h2>
+
+<p>Sometimes it is desirable to use a single field as text value for a XML element and all other fields should be
+written as attributes.  XStream delivers the ToAttributedValueConverter, that will write a type with this form:</p> 
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+@XStreamConverter(value=ToAttributedValueConverter.class, strings={"content"})
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;
+
+	private List&lt;String&gt; content;
+	
+	@XStreamConverter(value=BooleanConverter.class, booleans={false}, strings={"yes", "no"})
+	private boolean important;
+
+	@XStreamConverter(SingleValueCalendarConverter.class)
+	private Calendar created = new GregorianCalendar();
+
+	public RendezvousMessage(int messageType, boolean important, String... content) {
+		this.messageType = messageType;
+		this.important = important;
+		this.content = Arrays.asList(content);
+	}
+}
+</pre></div>
+
+<p>Unfortunately our little example <strong>does not work</strong>!  Although we register the converter with the
+XStreamConverter annotation and provide with its arguments the field name, the conversion will fail later on.  To use
+this converter you have to respect the implicit requirement:  Any field (derived or not) has to be expressed as a
+single string i.e. technically XStream has to use a SingleValueConverter.  In our case we have a list of strings that
+prevent the conversion.  Therefore we have to use either a custom converter that transforms this list into a single
+string or we use for simplicity a simple string here:</p>
+<div class="Source Java"><pre>
+@XStreamAlias("message")
+@XStreamConverter(value=ToAttributedValueConverter.class, strings={"content"})
+class RendezvousMessage {
+
+	@XStreamAlias("type")
+	private int messageType;
+
+	private String content;
+	
+	@XStreamConverter(value=BooleanConverter.class, booleans={false}, strings={"yes", "no"})
+	private boolean important;
+
+	@XStreamConverter(SingleValueCalendarConverter.class)
+	private Calendar created = new GregorianCalendar();
+
+	public RendezvousMessage(int messageType, boolean important, String content) {
+		this.messageType = messageType;
+		this.important = important;
+		this.content = content;
+	}
+}
+</pre></div>
+
+<p>Now it is possible to generate this XML:</p>
+<div class="Source Java"><pre>
+&lt;message type="15" important="no" created="1154097812245"&gt;This is the message content.&lt;/message&gt;
+</pre></div>
+
+<p>Note, that no XStreamAsAttribute annotations were necessary.  The converter assumes it implicitly.</p>
 
 <!-- ...................................................... -->
 <h2 id="OmitField">Omitting Fields</h2>
@@ -325,11 +448,15 @@ class RendezvousMessage {
 	@XStreamImplicit(itemFieldName="part")
 	private List&lt;String&gt; content;
 
+	@XStreamConverter(value=BooleanConverter.class, booleans={false}, strings={"yes", "no"})
+	private boolean important;
+
 	@XStreamConverter(SingleValueCalendarConverter.class)
 	private Calendar created = new GregorianCalendar();
 
-	public RendezvousMessage(int messageType, String... content) {
+	public RendezvousMessage(int messageType, boolean important, String... content) {
 		this.messageType = messageType;
+		this.important = important;
 		this.content = Arrays.asList(content);
 	}
 }
@@ -339,6 +466,7 @@ class RendezvousMessage {
 &lt;message&gt;
   &lt;part&gt;firstPart&lt;/part&gt;
   &lt;part&gt;secondPart&lt;/part&gt;
+  &lt;important&gt;no&lt;/important&gt;
   &lt;created&gt;1154097812245&lt;/created&gt;
 &lt;/message&gt;
 </pre></div>

@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.mapper;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
@@ -19,7 +20,6 @@ import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,10 +27,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import com.thoughtworks.xstream.InitializationException;
-import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
@@ -40,6 +38,7 @@ import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterMatcher;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
@@ -66,8 +65,9 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final FieldAliasingMapper fieldAliasingMapper;
     private final AttributeMapper attributeMapper;
     private final LocalConversionMapper localConversionMapper;
-    private final Map<Class<?>, Map<Object, Converter>> converterCache = new HashMap<Class<?>, Map<Object, Converter>>();
-    private final Set<Class<?>> annotatedTypes = new WeakHashSet<Class<?>>();
+    private final Map<Class<?>, Map<List<Object>, Converter>> converterCache = 
+            new HashMap<Class<?>, Map<List<Object>, Converter>>();
+    private final Set<Class<?>> annotatedTypes = new HashSet<Class<?>>();
 
     /**
      * Construct an AnnotationMapper.
@@ -76,7 +76,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
      * @since 1.3
      */
     public AnnotationMapper(
-        final Mapper wrapped, final ConverterRegistry converterRegistry,
+        final Mapper wrapped, final ConverterRegistry converterRegistry, final ConverterLookup converterLookup,
         final ClassLoader classLoader, final ReflectionProvider reflectionProvider,
         final JVM jvm) {
         super(wrapped);
@@ -89,7 +89,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
         localConversionMapper = (LocalConversionMapper)lookupMapperOfType(LocalConversionMapper.class);
         locked = true;
-        arguments = new Object[]{this, classLoader, reflectionProvider, jvm};
+        arguments = new Object[]{this, classLoader, reflectionProvider, jvm, converterLookup};
     }
 
     @Override
@@ -272,15 +272,14 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 annotations.add(converterAnnotation);
             }
             for (final XStreamConverter annotation : annotations) {
-                final Class<? extends ConverterMatcher> converterType = annotation.value();
                 final Converter converter = cacheConverter(
-                    converterType, converterAnnotation != null ? type : null);
+                    annotation, converterAnnotation != null ? type : null);
                 if (converter != null) {
                     if (converterAnnotation != null || converter.canConvert(type)) {
-                        converterRegistry.registerConverter(converter, XStream.PRIORITY_NORMAL);
+                        converterRegistry.registerConverter(converter, annotation.priority());
                     } else {
                         throw new InitializationException("Converter "
-                            + converterType.getName()
+                            + annotation.value().getName()
                             + " cannot handle annotated class "
                             + type.getName());
                     }
@@ -435,8 +434,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private void processLocalConverterAnnotation(final Field field) {
         final XStreamConverter annotation = field.getAnnotation(XStreamConverter.class);
         if (annotation != null) {
-            final Class<? extends ConverterMatcher> converterType = annotation.value();
-            final Converter converter = cacheConverter(converterType, field.getType());
+            final Converter converter = cacheConverter(annotation, field.getType());
             if (converter != null) {
                 if (localConversionMapper == null) {
                     throw new InitializationException("No "
@@ -449,22 +447,47 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         }
     }
 
-    private Converter cacheConverter(final Class<? extends ConverterMatcher> converterType,
+    private Converter cacheConverter(final XStreamConverter annotation,
         final Class targetType) {
         Converter result = null;
         final Object[] args;
-        Map<Object, Converter> converterMapping = converterCache.get(converterType);
-        if (converterMapping != null) {
-            result = converterMapping.get(targetType.getName());
-            if (result == null) {
-                result = converterMapping.get(null);
+        final List<Object> parameter = new ArrayList<Object>();
+        if (targetType != null) {
+            parameter.add(targetType);
+        }
+        final List<Object> arrays = new ArrayList<Object>();
+        arrays.add(annotation.booleans());
+        arrays.add(annotation.bytes());
+        arrays.add(annotation.chars());
+        arrays.add(annotation.doubles());
+        arrays.add(annotation.floats());
+        arrays.add(annotation.ints());
+        arrays.add(annotation.longs());
+        arrays.add(annotation.shorts());
+        arrays.add(annotation.strings());
+        arrays.add(annotation.types());
+        for(Object array : arrays) {
+            if (array != null) {
+                int length = Array.getLength(array);
+                for (int i = 0; i < length; i++ ) {
+                    Object object = Array.get(array, i);
+                    if (!parameter.contains(object)) {
+                        parameter.add(object);
+                    }
+                }
             }
         }
+        final Class<? extends ConverterMatcher> converterType = annotation.value();
+        Map<List<Object>, Converter> converterMapping = converterCache.get(converterType);
+        if (converterMapping != null) {
+            result = converterMapping.get(parameter);
+        }
         if (result == null) {
-            if (targetType != null) {
-                args = new Object[arguments.length + 1];
-                System.arraycopy(arguments, 0, args, 1, arguments.length);
-                args[0] = targetType;
+            int size = parameter.size();
+            if (size > 0) {
+                args = new Object[arguments.length + size];
+                System.arraycopy(arguments, 0, args, size, arguments.length);
+                System.arraycopy(parameter.toArray(new Object[size]), 0, args, 0, size);
             } else {
                 args = arguments;
             }
@@ -487,14 +510,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     + (targetType != null ? " for type " + targetType.getName() : ""), e);
             }
             if (converterMapping == null) {
-                converterMapping = new HashMap<Object, Converter>();
+                converterMapping = new HashMap<List<Object>, Converter>();
                 converterCache.put(converterType, converterMapping);
             }
-            if (targetType != null && usedArgs.get(0)) {
-                converterMapping.put(targetType.getName(), converter);
-            } else {
-                converterMapping.put(null, converter);
-            }
+            converterMapping.put(parameter, converter);
             result = converter;
         }
         return result;
@@ -536,80 +555,6 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 }
             }
             return ret;
-        }
-    }
-
-    private static class WeakHashSet<K> implements Set<K> {
-
-        private static Object NULL = new Object();
-        private final WeakHashMap<K, Object> map = new WeakHashMap<K, Object>();
-
-        public boolean add(final K o) {
-            return map.put(o, NULL) == null;
-        }
-
-        public boolean addAll(final Collection<? extends K> c) {
-            boolean ret = false;
-            for (final K k : c) {
-                ret = add(k) | false;
-            }
-            return ret;
-        }
-
-        public void clear() {
-            map.clear();
-        }
-
-        public boolean contains(final Object o) {
-            return map.containsKey(o);
-        }
-
-        public boolean containsAll(final Collection<?> c) {
-            return map.keySet().containsAll(c);
-        }
-
-        public boolean isEmpty() {
-            return map.isEmpty();
-        }
-
-        public Iterator<K> iterator() {
-            return map.keySet().iterator();
-        }
-
-        public boolean remove(final Object o) {
-            return map.remove(o) != null;
-        }
-
-        public boolean removeAll(final Collection<?> c) {
-            boolean ret = false;
-            for (final Object object : c) {
-                ret = remove(object) | false;
-            }
-            return ret;
-        }
-
-        public boolean retainAll(final Collection<?> c) {
-            boolean ret = false;
-            for (final Iterator<K> iter = iterator(); iter.hasNext();) {
-                final K element = iter.next();
-                if (!c.contains(element)) {
-                    iter.remove();
-                    ret = true;
-                }
-            }
-            return ret;
-        }
-
-        public int size() {
-            return map.size();
-        }
-
-        public Object[] toArray() {
-            return map.keySet().toArray();
-        }
-
-        public <T> T[] toArray(final T[] a) {
-            return map.keySet().toArray(a);
         }
     }
 }

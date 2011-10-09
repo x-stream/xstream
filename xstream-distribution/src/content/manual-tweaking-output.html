@@ -133,7 +133,15 @@
         <p>Not all converters that are part of the XStream package are automatically registered.  Some will only make
         sense for special types, others have parameters to tweak the behaviour.  Most useful in the table of 
         <a href="converters.html">converters</a> are the JavaBeanConverter, ToStringConverter, and
-        ToAttributesValueConverter.  Not to mention the separate Hibernate package of XStream.</p>
+        ToAttributedValueConverter.  Not to mention the separate Hibernate package of XStream.</p>
+
+        <p>As example can the ToAttributedValueConverter be used to define the owner's name directly as text value:</p>
+
+<div class="Source XML"><pre>&lt;cat age="4" name="Garfield"&gt;
+  &lt;owner class="StandardPerson"&gt;<b>Jon Arbuckle</b>&lt;/&gt;
+&lt;/cat&gt;</pre></div>
+
+        <p>Attributes are also presented in the <a href="alias-tutorial.html">Alias Tutorial</a>.</p>
 
         <!-- .................. -->
 

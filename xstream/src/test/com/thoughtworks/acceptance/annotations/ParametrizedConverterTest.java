@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,9 +15,12 @@ import java.util.HashMap;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
+import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import com.thoughtworks.xstream.converters.extended.ToStringConverter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
@@ -42,9 +45,9 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         super.setUp();
         xstream.alias("my-map", MyMap.class);
         xstream.alias("decimal", Decimal.class);
-        xstream.alias("pair", Pair.class);
+        xstream.alias("type", Type.class);
         xstream.processAnnotations(MyMap.class);
-        xstream.processAnnotations(Pair.class);
+        xstream.processAnnotations(DerivedType.class);
     }
 
     public void testAnnotationForConvertersWithParameters() {
@@ -60,19 +63,23 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         assertBothWays(value, expected);
     }
 
-    @XStreamConverters({@XStreamConverter(MyMapConverter.class)})
+    @XStreamConverters({
+        @XStreamConverter(value = MyMapConverter.class, priority = XStream.PRIORITY_NORMAL + 1, types = {MyMap.class})
+    })
     public static class MyMap extends HashMap<String, Object> {
-
     }
 
     public static class MyMapConverter extends MapConverter {
 
-        public MyMapConverter(Mapper classMapper) {
+        private final Class<?> myType;
+
+        public MyMapConverter(Mapper classMapper, Class<?> myType) {
             super(classMapper);
+            this.myType = myType;
         }
 
         public boolean canConvert(Class type) {
-            return type.equals(MyMap.class);
+            return type.equals(myType);
         }
 
     }
@@ -88,16 +95,17 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
 
     /**
-     * Tests two field-level XStreamConverter annotations for different types, which guarantees
+     * Tests three field-level XStreamConverter annotations for different types, which guarantees
      * the internal converterCache on AnnotationMapper is functioning properly.
      */
-    public void testSameConvertrWithDifferentType() {
-        final Pair value = new Pair(new Decimal("1.5"), new Boolean(true));
+    public void testSameConverterWithDifferentType() {
+        final Type value = new Type(new Decimal("1.5"), new Boolean(true));
         String expected = ""
-            + "<pair>\n"
+            + "<type>\n"
             + "  <decimal>1.5</decimal>\n"
             + "  <bool>true</bool>\n"
-            + "</pair>";
+            + "  <agreement>yes</agreement>\n"
+            + "</type>";
 
         assertBothWays(value, expected);
     }
@@ -109,15 +117,34 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class Pair {
+    public static class Type {
         @XStreamConverter(ToStringConverter.class)
         private Decimal decimal = null;
         @XStreamConverter(ToStringConverter.class)
         private Boolean bool = null;
+        @XStreamConverter(value=BooleanConverter.class, booleans={true}, strings={"yes", "no"})
+        private Boolean agreement = null;
 
-        public Pair(Decimal decimal, Boolean bool) {
+        public Type(Decimal decimal, Boolean bool) {
             this.decimal = decimal;
             this.bool = bool;
+            this.agreement = bool;
         }
+    }
+
+    public void testConverterWithSecondTypeParameter() {
+        final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true));
+        String expected = "<dtype bool='true' agreement='yes'>1.5</dtype>".replace('\'', '"');
+        assertBothWays(value, expected);
+    }
+    
+    @XStreamAlias("dtype")
+    @XStreamConverter(value=ToAttributedValueConverter.class, types={Type.class}, strings={"decimal"})
+    public static class DerivedType extends Type {
+
+        public DerivedType(Decimal decimal, Boolean bool) {
+            super(decimal, bool);
+        }
+        
     }
 }

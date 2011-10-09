@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.annotations;
 
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConverterMatcher;
 
 import java.lang.annotation.Documented;
@@ -30,6 +31,10 @@ import java.lang.annotation.Target;
  * objects.</li>
  * <li>{@link com.thoughtworks.xstream.converters.reflection.ReflectionProvider}: The reflection
  * provider used by the reflection based converters of the current XStream instance.</li>
+ * <li>{@link com.thoughtworks.xstream.converters.ConverterLookup}: The lookup for converters
+ * handling a special type.</li>
+ * <li>{@link com.thoughtworks.xstream.core.JVM}: Utility e.g. to load classes.</li>
+ * <li>All elements provided with the individual arrays of this annotation.</li>
  * <li>{@link Class}: The type of the element where the annotation is declared. Note, that this
  * argument is not supported when using
  * {@link com.thoughtworks.xstream.annotations.XStreamConverters}.</li>
@@ -50,4 +55,15 @@ import java.lang.annotation.Target;
 @Documented
 public @interface XStreamConverter {
     Class<? extends ConverterMatcher> value();
+    int priority() default XStream.PRIORITY_NORMAL;
+    Class<?>[] types() default {};
+    String[] strings() default {};
+    byte[] bytes() default {};
+    char[] chars() default {};
+    short[] shorts() default {};
+    int[] ints() default {};
+    long[] longs() default {};
+    float[] floats() default {};
+    double[] doubles() default {};
+    boolean[] booleans() default {};
 }
