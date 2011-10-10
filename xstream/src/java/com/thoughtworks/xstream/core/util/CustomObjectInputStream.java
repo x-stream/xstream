@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,6 +36,13 @@ public class CustomObjectInputStream extends ObjectInputStream {
         void defaultReadObject() throws IOException;
         void registerValidation(ObjectInputValidation validation, int priority) throws NotActiveException, InvalidObjectException;
         void close() throws IOException;
+    }
+
+    /**
+     * @deprecated As of 1.4 use {@link #getInstance(DataHolder, StreamCallback, ClassLoader)}
+     */
+    public static CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback) {
+        return getInstance(whereFrom, callback, null);
     }
 
     public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback, ClassLoader classLoaderReference) {
