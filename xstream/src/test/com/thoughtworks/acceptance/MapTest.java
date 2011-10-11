@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,10 +16,12 @@ import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.core.JVM;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapTest extends AbstractAcceptanceTest {
@@ -224,19 +226,40 @@ public class MapTest extends AbstractAcceptanceTest {
 
         assertBothWays(Collections.unmodifiableMap(new HashMap()), expected);
     }
+
+    public void testEmptyMap() {
+        assertBothWays(Collections.EMPTY_MAP, "<empty-map/>");
+    }
+
+    public void testEmptyMapIsImmutable() {
+        List list = new ArrayList();
+        list.add(Collections.EMPTY_MAP);
+        list.add(Collections.EMPTY_MAP);
+        assertBothWays(list, 
+            "<list>\n" +
+            "  <empty-map/>\n" +
+            "  <empty-map/>\n" +
+            "</list>");
+    }
+
+    public void testEmptyMapIsSingleton() {
+        assertSame(Collections.EMPTY_MAP, xstream.fromXML("<empty-map/>"));
+    }
     
     public void testSingletonMap() {
         String expected =""+
-            "<java.util.Collections_-SingletonMap>\n" + 
-            "  <k class=\"com.thoughtworks.acceptance.objects.Software\">\n" + 
-            "    <vendor>microsoft</vendor>\n" + 
-            "    <name>windows</name>\n" + 
-            "  </k>\n" + 
-            "  <v class=\"com.thoughtworks.acceptance.objects.Hardware\">\n" + 
-            "    <arch>x86</arch>\n" + 
-            "    <name>p4</name>\n" + 
-            "  </v>\n" + 
-            "</java.util.Collections_-SingletonMap>";
+            "<singleton-map>\n" +
+            "  <entry>\n" +
+            "    <com.thoughtworks.acceptance.objects.Software>\n" + 
+            "      <vendor>microsoft</vendor>\n" + 
+            "      <name>windows</name>\n" + 
+            "    </com.thoughtworks.acceptance.objects.Software>\n" + 
+            "    <com.thoughtworks.acceptance.objects.Hardware>\n" + 
+            "      <arch>x86</arch>\n" + 
+            "      <name>p4</name>\n" + 
+            "    </com.thoughtworks.acceptance.objects.Hardware>\n" + 
+            "  </entry>\n" +
+            "</singleton-map>";
 
         assertBothWays(Collections.singletonMap(new Software("microsoft", "windows"), new Hardware("x86", "p4")), expected);
     }

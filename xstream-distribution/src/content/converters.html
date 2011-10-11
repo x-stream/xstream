@@ -216,6 +216,29 @@
                 If the Properties instance includes a set of default Properties, these are serialized in a nested <code>&lt;defaults&gt;</code> element.</td>
             </tr>
             <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/SingletonCollectionConverter.html">SingletonCollectionConverter</a></td>
+                <td>java.util.Collections.singletonList().getClass()<br/>java.util.Collections.singleton().getClass()</td>
+                <td class="example">
+                    &lt;singleton-set&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
+                    &lt;/singleton-set&gt;
+                </td>
+                <td>The objects inside the singleton collection can be any type of objects, including nested collections.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/SingletonMapConverter.html">SingletonMapConverter</a></td>
+                <td>java.util.Collections.singletonMap().getClass()</td>
+                <td class="example">
+                    &lt;singleton-map&gt;<br/>
+                    &nbsp;&nbsp;&lt;entry&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;float&gt;123.553&lt;/float&gt;<br/>
+                    &nbsp;&nbsp;&lt;/entry&gt;<br/>
+                    &lt;/singleton-map&gt;
+                </td>
+                <td>The objects inside the singleton collection can be any type of objects, including nested collections.</td>
+            </tr>
+            <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/TreeMapConverter.html">TreeMapConverter</a></td>
                 <td>java.util.TreeMap</td>
                 <td class="example">

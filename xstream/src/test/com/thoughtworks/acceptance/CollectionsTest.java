@@ -218,10 +218,6 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         assertBothWays(Collections.EMPTY_SET, "<empty-set/>");
     }
 
-    public void testEmptyMap() {
-        assertBothWays(Collections.EMPTY_MAP, "<empty-map/>");
-    }
-
     public void testEmptyListIsImmutable() {
         List list = new ArrayList();
         list.add(Collections.EMPTY_LIST);
@@ -244,17 +240,6 @@ public class CollectionsTest extends AbstractAcceptanceTest {
             "</list>");
     }
 
-    public void testEmptyMapIsImmutable() {
-        List list = new ArrayList();
-        list.add(Collections.EMPTY_MAP);
-        list.add(Collections.EMPTY_MAP);
-        assertBothWays(list, 
-            "<list>\n" +
-            "  <empty-map/>\n" +
-            "  <empty-map/>\n" +
-            "</list>");
-    }
-
     public void testEmptyListIsSingleton() {
         assertSame(Collections.EMPTY_LIST, xstream.fromXML("<empty-list/>"));
     }
@@ -262,31 +247,19 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     public void testEmptySetIsSingleton() {
         assertSame(Collections.EMPTY_SET, xstream.fromXML("<empty-set/>"));
     }
-
-    public void testEmptyMapIsSingleton() {
-        assertSame(Collections.EMPTY_MAP, xstream.fromXML("<empty-map/>"));
-    }
     
     public void testSingletonList() {
         assertBothWays(Collections.singletonList("XStream"), 
-            "<java.util.Collections_-SingletonList>\n" +
-            "  <element class=\"string\">XStream</element>\n" +
-            "</java.util.Collections_-SingletonList>");
-    }
-    
-    public void testSingletonMap() {
-        assertBothWays(Collections.singletonMap("1", "one"), 
-            "<java.util.Collections_-SingletonMap>\n" +
-            "  <k class=\"string\">1</k>\n" +
-            "  <v class=\"string\">one</v>\n" +
-            "</java.util.Collections_-SingletonMap>");
+            "<singleton-list>\n" +
+            "  <string>XStream</string>\n" +
+            "</singleton-list>");
     }
     
     public void testSingletonSet() {
         assertBothWays(Collections.singleton("XStream"), 
-            "<java.util.Collections_-SingletonSet>\n" +
-            "  <element class=\"string\">XStream</element>\n" +
-            "</java.util.Collections_-SingletonSet>");
+            "<singleton-set>\n" +
+            "  <string>XStream</string>\n" +
+            "</singleton-set>");
     }
 
     public void testPropertiesWithDefaults() {

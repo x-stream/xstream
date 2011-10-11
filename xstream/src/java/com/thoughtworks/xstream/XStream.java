@@ -80,6 +80,8 @@ import com.thoughtworks.xstream.converters.collections.CharArrayConverter;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.collections.PropertiesConverter;
+import com.thoughtworks.xstream.converters.collections.SingletonCollectionConverter;
+import com.thoughtworks.xstream.converters.collections.SingletonMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
 import com.thoughtworks.xstream.converters.extended.ColorConverter;
@@ -582,6 +584,9 @@ public class XStream {
         alias("empty-list", Collections.EMPTY_LIST.getClass());
         alias("empty-map", Collections.EMPTY_MAP.getClass());
         alias("empty-set", Collections.EMPTY_SET.getClass());
+        alias("singleton-list", Collections.singletonList(this).getClass());
+        alias("singleton-map", Collections.singletonMap(this, null).getClass());
+        alias("singleton-set", Collections.singleton(this).getClass());
 
         if (jvm.supportsAWT()) {
             // Instantiating these two classes starts the AWT system, which is undesirable.
@@ -672,6 +677,8 @@ public class XStream {
         registerConverter(new MapConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new TreeMapConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new TreeSetConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new SingletonCollectionConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new SingletonMapConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
