@@ -25,6 +25,7 @@ import java.util.AbstractList;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -74,8 +75,8 @@ public class TreeSetConverter extends CollectionConverter {
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        TreeSet treeSet = (TreeSet) source;
-        treeMapConverter.marshalComparator(treeSet.comparator(), writer, context);
+        SortedSet sortedSet = (SortedSet) source;
+        treeMapConverter.marshalComparator(sortedSet.comparator(), writer, context);
         super.marshal(source, writer, context);
     }
 

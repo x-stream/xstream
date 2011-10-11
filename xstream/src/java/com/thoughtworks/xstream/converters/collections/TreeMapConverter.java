@@ -79,8 +79,8 @@ public class TreeMapConverter extends MapConverter {
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        TreeMap treeMap = (TreeMap) source;
-        marshalComparator(treeMap.comparator(), writer, context);
+        SortedMap sortedMap = (SortedMap) source;
+        marshalComparator(sortedMap.comparator(), writer, context);
         super.marshal(source, writer, context);
     }
 
