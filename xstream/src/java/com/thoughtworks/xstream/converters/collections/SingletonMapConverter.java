@@ -44,7 +44,6 @@ public class SingletonMapConverter extends MapConverter {
         return MAP == type;
     }
 
-    @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         reader.moveDown();
         reader.moveDown();
