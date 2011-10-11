@@ -51,7 +51,7 @@ public class SingletonCollectionConverter extends CollectionConverter {
         Object item = readItem(reader, context, null);
         reader.moveUp();
         return context.getRequiredType() == LIST
-            ? Collections.singletonList(item)
-            : Collections.singleton(item);
+            ? (Object)Collections.singletonList(item)
+            : (Object)Collections.singleton(item);
     }
 }
