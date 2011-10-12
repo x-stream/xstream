@@ -112,7 +112,11 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
     }
 
     public void flush() {
-        // nothing to do
+        try {
+            writer.flush();
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
     }
 
     public void close() {
