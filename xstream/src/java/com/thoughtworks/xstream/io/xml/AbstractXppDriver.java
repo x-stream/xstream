@@ -19,9 +19,6 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,7 +26,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.URL;
 
 /**
  * An abstract base class for a driver using an XPP implementation. 
@@ -70,30 +66,6 @@ public abstract class AbstractXppDriver extends AbstractXmlDriver {
         } catch (UnsupportedEncodingException e) {
             throw new StreamException(e);
         } catch (IOException e) {
-            throw new StreamException(e);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public HierarchicalStreamReader createReader(URL in) {
-        InputStream stream = null;
-        try {
-            stream = in.openStream();
-        } catch (IOException e) {
-            throw new StreamException(e);
-        }
-        return createReader(stream);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public HierarchicalStreamReader createReader(File in) {
-        try {
-            return createReader(new FileInputStream(in));
-        } catch (FileNotFoundException e) {
             throw new StreamException(e);
         }
     }

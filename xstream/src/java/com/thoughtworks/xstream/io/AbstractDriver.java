@@ -10,6 +10,13 @@
  */
 package com.thoughtworks.xstream.io;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.naming.NoNameCoder;
 
@@ -44,5 +51,29 @@ public abstract class AbstractDriver implements HierarchicalStreamDriver {
 
     protected NameCoder getNameCoder() {
         return replacer;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public HierarchicalStreamReader createReader(URL in) {
+        InputStream stream = null;
+        try {
+            stream = in.openStream();
+        } catch (IOException e) {
+            throw new StreamException(e);
+        }
+        return createReader(stream);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public HierarchicalStreamReader createReader(File in) {
+        try {
+            return createReader(new FileInputStream(in));
+        } catch (FileNotFoundException e) {
+            throw new StreamException(e);
+        }
     }
 }
