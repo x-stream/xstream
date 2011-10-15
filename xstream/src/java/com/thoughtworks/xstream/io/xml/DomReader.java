@@ -127,4 +127,14 @@ public class DomReader extends AbstractDocumentReader {
         }
     }
 
+    public String peekNextChild() {
+        NodeList childNodes = currentElement.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node node = childNodes.item(i);
+            if (node instanceof Element) {
+                return decodeNode(((Element) node).getTagName());
+            }
+        }
+        return null;
+    }
 }

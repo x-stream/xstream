@@ -12,9 +12,9 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.naming.NameCoder;
-
 import nu.xom.Document;
 import nu.xom.Element;
+import nu.xom.Elements;
 import nu.xom.Node;
 import nu.xom.Text;
 
@@ -108,5 +108,13 @@ public class XomReader extends AbstractDocumentReader {
 
     protected void reassignCurrentElement(Object current) {
         currentElement = (Element) current;
+    }
+
+    public String peekNextChild() {
+        Elements children = currentElement.getChildElements();
+        if (null == children || children.size() == 0) {
+            return null;
+        }
+        return decodeNode(children.get(0).getLocalName());
     }
 }

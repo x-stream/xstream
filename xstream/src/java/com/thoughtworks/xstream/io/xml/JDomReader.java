@@ -12,7 +12,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.naming.NameCoder;
-
+import java.util.List;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -108,6 +108,14 @@ public class JDomReader extends AbstractDocumentReader {
 
     public String getAttributeName(int index) {
         return decodeAttribute(((Attribute) currentElement.getAttributes().get(index)).getQualifiedName());
+    }
+
+    public String peekNextChild() {
+        List list = currentElement.getChildren();
+        if (null == list || list.isEmpty()) {
+            return null;
+        }
+        return decodeNode(((Element) list.get(0)).getName());
     }
 
 }

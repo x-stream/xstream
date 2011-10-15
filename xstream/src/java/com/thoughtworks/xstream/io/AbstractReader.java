@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.io.naming.NoNameCoder;
  * @author J&ouml;rg Schaible
  * @since 1.4
  */
-public abstract class AbstractReader implements HierarchicalStreamReader {
+public abstract class AbstractReader implements ExtendedHierarchicalStreamReader {
 
     private NameCoder nameCoder;
 
@@ -95,5 +95,9 @@ public abstract class AbstractReader implements HierarchicalStreamReader {
      */
     protected String encodeAttribute(String name) {
         return nameCoder.encodeAttribute(name);
+    }
+
+    public String peekNextChild() {
+        throw new UnsupportedOperationException("peekNextChild");
     }
 }

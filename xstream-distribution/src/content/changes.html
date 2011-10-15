@@ -35,6 +35,8 @@
     <h2>Major changes</h2>
 
     <ul>
+    	<li>JIRA.XSTR-675: New extended HierarchicalStreamReader interface with peekNextChild method. All XStream
+    	readers implement the new interface (by Nikita Levyankov).</li>
     	<li>WstxDriver did not trigger Woodstox, but BEA StAX implementation.</li>
     	<li>JIRA:XSTR-673: Collections.EMPTY_LIST, Collections.EMPTY_SET and Collections.EMPTY_MAP supported with own
     	alias and defined as immutable.</li>
@@ -73,6 +75,8 @@
     <h2>API changes</h2>
 
     <ul>
+    	<li>Added interface c.t.x.io.ExtendedHierarchicalStreamReader extending c.t.x.io.HierarchicalStreamReader. All
+    	implementations of c.t.x.io.HierarchicalStreamReader will implement also the extended interface.</li>
     	<li>Added c.t.x.converters.reflection.MissingFieldException derived from
     	c.t.x.converters.reflection.ObjectAccessException and used instead when the unmarshalling process should write
     	a field or property that is missing and does not exist.</li>

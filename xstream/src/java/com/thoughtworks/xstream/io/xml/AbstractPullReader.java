@@ -212,4 +212,20 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
         return unescapeXmlName((String) elementStack.peek());
     }
 
+    public String peekNextChild() {
+        mark();
+        while (true) {
+            Event ev = readEvent();
+            switch (ev.type) {
+                case START_NODE:
+                    reset();
+                    return ev.value;
+                case END_NODE:
+                    reset();
+                    return null;
+                default:
+                    continue;
+            }
+        }
+    }
 }

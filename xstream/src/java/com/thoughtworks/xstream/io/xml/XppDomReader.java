@@ -88,4 +88,11 @@ public class XppDomReader extends AbstractDocumentReader {
         this.currentElement = (XppDom) current;
     }
 
+    public String peekNextChild() {
+        if (currentElement.getChildCount() == 0) {
+            return null;
+        }
+        return decodeNode(currentElement.getChild(0).getName());
+    }
+
 }

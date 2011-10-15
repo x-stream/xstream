@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.binary;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
 
@@ -32,7 +33,7 @@ import java.util.Map;
  * @see BinaryStreamReader
  * @since 1.2
  */
-public class BinaryStreamReader implements HierarchicalStreamReader {
+public class BinaryStreamReader implements ExtendedHierarchicalStreamReader {
 
     private final DataInputStream in;
     private final ReaderDepthState depthState = new ReaderDepthState();
@@ -184,6 +185,13 @@ public class BinaryStreamReader implements HierarchicalStreamReader {
         } catch (IOException e) {
             throw new StreamException(e);
         }
+    }
+
+    public String peekNextChild() {
+        if (depthState.hasMoreChildren()) {
+            return idRegistry.get(pushback.getId());
+        }
+        return null;
     }
 
     public HierarchicalStreamReader underlyingReader() {

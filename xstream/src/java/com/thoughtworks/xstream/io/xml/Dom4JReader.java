@@ -13,7 +13,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.naming.NameCoder;
-
+import java.util.List;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -97,6 +97,14 @@ public class Dom4JReader extends AbstractDocumentReader {
 
     protected void reassignCurrentElement(Object current) {
         currentElement = (Element) current;
+    }
+
+    public String peekNextChild() {
+        List list = currentElement.elements();
+        if (null == list || list.isEmpty()) {
+            return null;
+        }
+        return decodeNode(((Element) list.get(0)).getName());
     }
 
     public void appendErrors(ErrorWriter errorWriter) {
