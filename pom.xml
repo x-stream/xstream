@@ -32,44 +32,21 @@
   <!-- xstream-builder is currently JDK 5 only -->
   <profiles>
     <profile>
-      <id>jdk16</id>
+      <id>jdk15-ge</id>
       <activation>
-        <jdk>1.6</jdk>
+        <jdk>[1.5,)</jdk>
       </activation>
       <modules>
-        <module>xstream</module>
         <!--module>xstream-builder</module-->
-        <module>xstream-hibernate</module>
-        <module>xstream-benchmark</module>
-        <module>xstream-distribution</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>jdk15</id>
-      <activation>
-        <jdk>1.5</jdk>
-      </activation>
-      <modules>
-        <module>xstream</module>
-        <!--module>xstream-builder</module-->
-        <module>xstream-hibernate</module>
-        <module>xstream-benchmark</module>
-        <module>xstream-distribution</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>jdk14</id>
-      <activation>
-        <jdk>1.4</jdk>
-      </activation>
-      <modules>
-        <module>xstream</module>
-        <module>xstream-hibernate</module>
-        <module>xstream-benchmark</module>
-        <module>xstream-distribution</module>
       </modules>
     </profile>
   </profiles>
+  <modules>
+    <module>xstream</module>
+    <module>xstream-hibernate</module>
+    <module>xstream-benchmark</module>
+    <module>xstream-distribution</module>
+  </modules>
 
   <licenses>
     <license>
