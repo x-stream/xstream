@@ -72,7 +72,7 @@ public class XppReader extends AbstractPullReader {
 
     /**
      * @since 1.2
-     * @deprecated As of 1.4, use {@link #XppReader(Reader, XmlPullParser, XmlFriendlyReplacer)}  instead
+     * @deprecated As of 1.4, use {@link #XppReader(Reader, XmlPullParser, NameCoder)}  instead
      */
     public XppReader(Reader reader, XmlFriendlyReplacer replacer) {
         super(replacer);
