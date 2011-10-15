@@ -11,10 +11,11 @@
  */
 package com.thoughtworks.xstream.io.json;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.AbstractDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import java.io.File;
 import java.io.InputStream;
@@ -31,8 +32,25 @@ import java.net.URL;
  * @author Paul Hammant
  * @since 1.2
  */
-public class JsonHierarchicalStreamDriver implements HierarchicalStreamDriver {
-    
+public class JsonHierarchicalStreamDriver extends AbstractDriver {
+
+    /**
+     * Construct a JsonHierarchicalStreamDriver.
+     */
+    public JsonHierarchicalStreamDriver() {
+        super();
+    }
+
+    /**
+     * Construct a JsonHierarchicalStreamDriver with name coding.
+     * 
+     * @param nameCoder the coder to encode and decode the JSON labels.
+     * @since upcoming
+     */
+    public JsonHierarchicalStreamDriver(NameCoder nameCoder) {
+        super(nameCoder);
+    }
+
     public HierarchicalStreamReader createReader(Reader in) {
         throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");
     }
