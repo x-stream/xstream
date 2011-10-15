@@ -380,15 +380,6 @@
           </plugin>
         </plugins>
       </build>
-      <dependencyManagement>
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.jettison</groupId>
-            <artifactId>jettison</artifactId>
-            <version>1.0.1</version>
-          </dependency>
-        </dependencies>
-      </dependencyManagement>
       <dependencies>
         <dependency>
           <groupId>xml-apis</groupId>
@@ -399,6 +390,9 @@
           <artifactId>xercesImpl</artifactId>
         </dependency>
       </dependencies>
+      <properties>
+        <version.org.codehaus.jettison>1.0.1</version.org.codehaus.jettison>
+      </properties>
     </profile>
   </profiles>
 

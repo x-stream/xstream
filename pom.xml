@@ -84,36 +84,36 @@
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>1.4</version>
+        <version>${version.commons.io}</version>
       </dependency>
 
       <dependency>
         <groupId>commons-cli</groupId>
         <artifactId>commons-cli</artifactId>
-        <version>1.1</version>
+        <version>${version.commons.cli}</version>
       </dependency>
 
       <dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
-        <version>2.4</version>
+        <version>${version.commons.lang}</version>
       </dependency>
 
       <dependency>
         <groupId>cglib</groupId>
         <artifactId>cglib-nodep</artifactId>
-        <version>2.2</version>
+        <version>${version.cglib.nodep}</version>
       </dependency>
       <dependency>
         <groupId>javassist</groupId>
         <artifactId>javassist</artifactId>
-        <version>3.12.1.GA</version>
+        <version>${version.javaassist}</version>
       </dependency>
 
       <dependency>
         <groupId>dom4j</groupId>
         <artifactId>dom4j</artifactId>
-        <version>1.6.1</version>
+        <version>${version.dom4j}</version>
         <exclusions>
           <exclusion>
             <groupId>xml-apis</groupId>
@@ -125,19 +125,19 @@
       <dependency>
         <groupId>org.jdom</groupId>
         <artifactId>jdom</artifactId>
-        <version>1.1</version>
+        <version>${version.org.jdom}</version>
       </dependency>
 
       <dependency>
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
-        <version>1.6</version>
+        <version>${version.joda-time}</version>
       </dependency>
 
       <dependency>
         <groupId>com.megginson.sax</groupId>
         <artifactId>xml-writer</artifactId>
-        <version>0.2</version>
+        <version>${version.com.megginson.sax.xml-writer}</version>
         <exclusions>
           <exclusion>
             <groupId>xml-apis</groupId>
@@ -149,25 +149,24 @@
       <dependency>
         <groupId>stax</groupId>
         <artifactId>stax</artifactId>
-        <version>1.2.0</version>
+        <version>${version.stax}</version>
       </dependency>
-
       <dependency>
         <groupId>stax</groupId>
         <artifactId>stax-api</artifactId>
-        <version>1.0.1</version>
+        <version>${version.stax.api}</version>
       </dependency>
 
       <dependency>
         <groupId>org.codehaus.woodstox</groupId>
         <artifactId>wstx-asl</artifactId>
-        <version>3.2.7</version>
+        <version>${version.org.codehaus.woodstox.asl}</version>
       </dependency>
 
       <dependency>
         <groupId>xom</groupId>
         <artifactId>xom</artifactId>
-        <version>1.1</version>
+        <version>${version.xom}</version>
         <exclusions>
           <exclusion>
             <groupId>xerces</groupId>
@@ -191,75 +190,74 @@
       <dependency>
         <groupId>xpp3</groupId>
         <artifactId>xpp3_min</artifactId>
-        <version>1.1.4c</version>
+        <version>${version.xpp3}</version>
       </dependency>
       <dependency>
         <groupId>net.sf.kxml</groupId>
         <artifactId>kxml2-min</artifactId>
-        <version>2.3.0</version>
+        <version>${version.net.sf.kxml.kxml2}</version>
       </dependency>
       <dependency>
         <groupId>net.sf.kxml</groupId>
         <artifactId>kxml2</artifactId>
-        <version>2.3.0</version>
+        <version>${version.net.sf.kxml.kxml2}</version>
       </dependency>
       <dependency>
         <groupId>xmlpull</groupId>
         <artifactId>xmlpull</artifactId>
-        <version>1.1.3.1</version>
+        <version>${version.xmlpull}</version>
       </dependency>
 
       <dependency>
         <groupId>oro</groupId>
         <artifactId>oro</artifactId>
-        <version>2.0.8</version>
+        <version>${version.oro}</version>
       </dependency>
 
       <dependency>
         <groupId>org.json</groupId>
         <artifactId>json</artifactId>
-        <version>20080701</version>
+        <version>${version.org.json}</version>
       </dependency>
 
       <dependency>
         <groupId>org.codehaus.jettison</groupId>
         <artifactId>jettison</artifactId>
-        <version>1.2</version>
+        <version>${version.org.codehaus.jettison}</version>
       </dependency>
 
       <dependency>
         <groupId>xml-apis</groupId>
         <artifactId>xml-apis</artifactId>
-        <version>1.3.04</version>
+        <version>${version.xml-apis}</version>
       </dependency>
 
       <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
-        <version>2.8.1</version>
+        <version>${version.xerces.impl}</version>
       </dependency>
 
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
-        <version>3.3.2.GA</version><!-- last version on central -->
-        <!--version>3.5.6-Final</version-->
+        <version>${version.org.hibernate.core}</version>
       </dependency>
       <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
-        <version>1.8.0.7</version>
+        <version>${version.hsqldb}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.6.1</version>
+        <version>${version.org.slf4j}</version>
         <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-simple</artifactId>
-        <version>1.6.1</version>
+        <version>${version.org.slf4j}</version>
         <scope>runtime</scope>
       </dependency>
 
@@ -267,14 +265,14 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>3.8.1</version>
+        <version>${version.junit}</version>
         <scope>test</scope>
       </dependency>
 
       <dependency>
         <groupId>jmock</groupId>
         <artifactId>jmock</artifactId>
-        <version>1.0.1</version>
+        <version>${version.jmock}</version>
         <scope>test</scope>
       </dependency>
 
@@ -308,32 +306,32 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.1</version>
+          <version>${version.plugin.maven.antrun}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.1</version>
+          <version>${version.plugin.maven.assembly}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>2.2</version>
+          <version>${version.plugin.maven.clean}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.1</version><!-- JVM 1.4 -->
+          <version>${version.plugin.maven.compiler}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>2.1</version>
+          <version>${version.plugin.maven.dependency}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.3</version>
+          <version>${version.plugin.maven.deploy}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -345,27 +343,27 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.0-alpha-2</version>
+          <version>${version.plugin.maven.enforcer}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
-          <version>2.2</version>
+          <version>${version.plugin.maven.install}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.2</version>
+          <version>${version.plugin.maven.jar}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.7</version>
+          <version>${version.plugin.maven.javadoc}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.1</version>
+          <version>${version.plugin.maven.release}</version>
           <configuration>
             <goals>deploy</goals>
             <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -374,17 +372,17 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.2</version>
+          <version>${version.plugin.maven.resources}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>2.0-beta-6</version>
+          <version>${version.plugin.maven.site}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.1.2</version>
+          <version>${version.plugin.maven.source}</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -398,7 +396,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.4.3</version>
+          <version>${version.plugin.maven.surefire}</version>
           <configuration>
             <forkMode>once</forkMode>
             <printSummary>true</printSummary>
@@ -422,12 +420,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-report-plugin</artifactId>
-          <version>2.4.3</version>
+          <version>${version.plugin.maven.surefire}</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>cobertura-maven-plugin</artifactId>
-          <version>2.0</version>
+          <version>${version.plugin.mojo.cobertura}</version>
           <executions>
             <execution>
               <goals>
@@ -439,12 +437,12 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jxr-maven-plugin</artifactId>
-          <version>2.0-beta-1</version>
+          <version>${version.plugin.mojo.jxr}</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.xsite</groupId>
           <artifactId>xsite-maven-plugin</artifactId>
-          <version>1.2</version>
+          <version>${version.plugin.codehaus.xsite}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -461,7 +459,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-webdav</artifactId>
-        <version>1.0-beta-2</version>
+        <version>${version.org.apache.maven.wagon.webdev}</version>
       </extension>
     </extensions>
   </build>
@@ -484,4 +482,55 @@
     <developerConnection>scm:svn:https://svn.codehaus.org/xstream/trunk</developerConnection>
     <url>http://fisheye.codehaus.org/browse/xstream/trunk</url>
   </scm>
+  
+  <properties>
+    <version.plugin.codehaus.xsite>1.2</version.plugin.codehaus.xsite>
+    <version.plugin.maven.antrun>1.1</version.plugin.maven.antrun>
+    <version.plugin.maven.assembly>2.1</version.plugin.maven.assembly>
+    <version.plugin.maven.clean>2.2</version.plugin.maven.clean>
+    <version.plugin.maven.compiler>2.1</version.plugin.maven.compiler><!-- JDK 1.4 compatible -->
+    <version.plugin.maven.dependency>2.1</version.plugin.maven.dependency>
+    <version.plugin.maven.deploy>2.3</version.plugin.maven.deploy>
+    <version.plugin.maven.enforcer>1.0-alpha-2</version.plugin.maven.enforcer>
+    <version.plugin.maven.install>2.2</version.plugin.maven.install>
+    <version.plugin.maven.jar>2.2</version.plugin.maven.jar>
+    <version.plugin.maven.javadoc>2.7</version.plugin.maven.javadoc>
+    <version.plugin.maven.release>2.1</version.plugin.maven.release>
+    <version.plugin.maven.resources>2.2</version.plugin.maven.resources>
+    <version.plugin.maven.site>2.0-beta-6</version.plugin.maven.site>
+    <version.plugin.maven.source>2.1.2</version.plugin.maven.source>
+    <version.plugin.maven.surefire>2.4.3</version.plugin.maven.surefire>
+    <version.plugin.mojo.cobertura>2.0</version.plugin.mojo.cobertura>
+    <version.plugin.mojo.jxr>2.0-beta-1</version.plugin.mojo.jxr>
+
+    <version.org.apache.maven.wagon.webdev>1.0-beta-2</version.org.apache.maven.wagon.webdev>
+
+    <version.cglib.nodep>2.2</version.cglib.nodep>
+    <version.com.megginson.sax.xml-writer>0.2</version.com.megginson.sax.xml-writer>
+    <version.commons.cli>1.1</version.commons.cli>
+    <version.commons.io>1.4</version.commons.io>
+    <version.commons.lang>2.4</version.commons.lang>
+    <version.dom4j>1.6.1</version.dom4j>
+    <version.hsqldb>1.8.0.7</version.hsqldb>
+    <version.javaassist>3.12.1.GA</version.javaassist>
+    <version.jmock>1.0.1</version.jmock>
+    <version.joda-time>1.6</version.joda-time>
+    <version.junit>3.8.1</version.junit>
+    <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
+    <version.org.codehaus.jettison>1.2</version.org.codehaus.jettison>
+    <version.org.codehaus.woodstox.asl>3.2.7</version.org.codehaus.woodstox.asl>
+    <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core><!-- last version on central -->
+    <!-- version.org.hibernate.core>3.5.6-Final</version.org.hibernate.core -->
+    <version.org.jdom>1.1</version.org.jdom>
+    <version.org.json>20080701</version.org.json>
+    <version.org.slf4j>1.6.1</version.org.slf4j>
+    <version.oro>2.0.8</version.oro>
+    <version.stax>1.2.0</version.stax>
+    <version.stax.api>1.0.1</version.stax.api>
+    <version.xerces.impl>2.8.1</version.xerces.impl>
+    <version.xml-apis>1.3.04</version.xml-apis>
+    <version.xmlpull>1.1.3.1</version.xmlpull>
+    <version.xom>1.1</version.xom>
+    <version.xpp3>1.1.4c</version.xpp3>
+  </properties>
 </project>
