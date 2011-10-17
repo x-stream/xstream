@@ -117,6 +117,18 @@
         <a href="javadoc/com/thoughtworks/xstream/converters/reflection/FieldKeySorter.html">FieldKeySorter</a>.
         Similar functionality exists for Java Beans with the
         <a href="javadoc/com/thoughtworks/xstream/converters/javabean/PropertySorter.html">PropertySorter</a>.</p>
+
+        <!-- .................. -->
+        
+        <h2 id="Configuration_Format">Output Format</h2>
+        
+        <p>XStream writes and reads XML by default.  However, the I/O layer is separated from the model and you can
+        use implementations for other formats as well.  A reader/writer pair is typically managed by a <a
+        href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>. XStream
+        is delivering additional drivers for <a href="json-tutorial">JSON</a> and a compact binary format (see <a
+        href="javadoc/com/thoughtworks/xstream/io/binary/BinaryStreamDriver.html">BinaryStreamDriver</a>).  There are
+        also drivers to write an object graph into a DOM structure instead of a text based stream (available for W3C
+        DOM, DOM4J, JDOM, XOM, and XPP DOM).</p>
 		
         <!-- ************ -->
         
@@ -166,15 +178,26 @@
 
         <!-- .................. -->
 
+        <h2 id="Enhancing_Name_Coder">Custom Name Coders</h2>
+
+        <p>Names used e.g. in XML for attributes and element tags might contain characters or character sequences that
+        violate the syntax of the output format.  Instead of using different aliases for such names that depend on the
+        output format, you may use a NameCoder implementation that transforms an internally used name to an external
+        form.  For XML we use e.g. a NameCoder that encodes '$' characters, while the one used in JSON performs no
+        operation at all.</p>
+        
+        <p class="highlight">Again, keep in mind that the algorithm of the name coder must support encoding and
+        decoding of the names.</p>
+
+        <!-- .................. -->
+
         <h2 id="Enhancing_Writer">Custom Writer</h2>
 
-        <p>A custom writer can be used to affect the output completely. XStream itself delivers solutions for different
+        <p>A custom writer can be used to affect the output completely.  XStream itself delivers solutions for different
         use cases like the <a href="javadoc/com/thoughtworks/xstream/io/xml/CompactWriter.html">CompactWriter</a>
-        that does not insert any white spaces between the XML tags or the 
-        <a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamWriter.html">JSON writer</a> that
-        produces a complete different output format.</p>
+        that does not insert any white spaces between the XML tags.</p>
         
-        <p>Another use case for such a writer is to drop unwanted XML elements that XStream omits on its own. 
+        <p>Another use case for such a writer is a wrapper to drop unwanted XML elements that XStream omits on its own. 
         Especially if the written XML is not used for deserialization it can be useful to ignore internal attributes by
         a custom writer</p>
 		
