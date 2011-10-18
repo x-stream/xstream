@@ -218,7 +218,7 @@
         
         <h1 id="Processing">Preprocessing or postprocessing</h1>
 
-        <h2>XML Transformations</h2>
+        <h2 id="Processing_XSLT">XML Transformations</h2>
 
 		<p>Never forget, you're dealing with XML! It is easy to transform XML with an XSLT. XStream is delivered with a SAXSource
 		implementation, that allows an XStream instance to be the source of a XML transformer.</p>
@@ -253,6 +253,33 @@ transformer.transform(<b>traxSource</b>, new StreamResult(buffer));</pre></div>
 <div class="Source XML"><pre>&lt;cat&gt;
   &lt;mName&gt;Garfield&lt;/mName&gt;
 &lt;/cat&gt;</pre></div>
+
+        <h2 id="Processing_Copier">Format Conversion</h2>
+
+		<p>XStream is designed to transform Java objects into a specific format and recreate these objects again.
+		However, XStream's readers and writers are based on an event model that can be used easily to convert the pure
+		data between formats.  XStream contains the <a href="javadoc/com/thoughtworks/xstream/io/copy/HierarchicalStreamCopier.html">HierarchicalStreamCopier</a>
+		tool that utilizes a reader and a writer of XStream to perform the conversion:</p>
+
+<div class="Source Java"><pre>
+HierarchicalStreamCopier copier = new HierarchicalStreramCopier();
+HierarchicalStreamDriver binaryDriver = new BinaryDriver();
+HierarchicalStreamDriver jsonDriver = new JettisonMappedXmlDriver();
+
+// transform a org.dom4j.Document into a binary stream of XStream
+ByteArrayOutputStream baos = new ByteArrayOutputStream();
+copier.copy(new Dom4JDriver.createReader(dom4JDocument), binaryDriver.createWriter(baos));
+byte[] data = baos.getBytes();
+
+// transform binary XStream data into JSON
+StringWriter strWriter = new StringWriter();
+copier.copy(binaryDriver.createReader(data), jsonDriver.createWriter(strWriter));
+String json = strWriter.toString();
+
+// transform JSON into XML:
+strWriter = new StringWriter();
+copier.copy(jsonDriver.createReader(new StringReader(json)), new PrettyPrintWriter(strWriter));
+String xml = strWriter.toString();</pre></div>
 
     </body>
 </html>
