@@ -68,6 +68,8 @@
     	<li>NPE in XppDomComparator.</li>
     	<li>Dom4JXmlWriter fails to flush the underlying writer.</li>
     	<li>Known control characters are not encoded with JsonWriter as proposed at json.org.</li>
+    	<li>Detect duplicate property processing in JavaBeanConverter and throw DuplicatePropertyException instead	of
+    	clobbering silently.</li>
     	<li>Allow access to Mapper and JavaBeanProvider in derived instances of JavaBeanConverter.</li>
     	<li>DependencyInjectionFactory failed to create instance when a matching constructor was found, but a default
     	constructor was also present.</li>

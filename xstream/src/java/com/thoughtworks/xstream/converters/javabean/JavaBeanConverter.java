@@ -11,11 +11,15 @@
  */
 package com.thoughtworks.xstream.converters.javabean;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
+import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -95,21 +99,31 @@ public class JavaBeanConverter implements Converter {
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final Object result = instantiateNewInstance(context);
+        final Set seenProperties = new HashSet() {
+            public boolean add(Object e) {
+                if (!super.add(e)) {
+                    throw new DuplicatePropertyException(((FastField)e).getName());
+                }
+                return true;
+            }
+        };
 
+        Class resultType = result.getClass();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
 
-            String propertyName = mapper.realMember(result.getClass(), reader.getNodeName());
+            String propertyName = mapper.realMember(resultType, reader.getNodeName());
 
-            if (mapper.shouldSerializeMember(result.getClass(), propertyName)) {
-                boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName, result.getClass());
+            if (mapper.shouldSerializeMember(resultType, propertyName)) {
+                boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName, resultType);
     
                 if (propertyExistsInClass) {
                     Class type = determineType(reader, result, propertyName);
                     Object value = context.convertAnother(result, type);
                     beanProvider.writeProperty(result, propertyName, value);
+                    seenProperties.add(new FastField(resultType, propertyName));
                 } else {
-                    throw new MissingFieldException(result.getClass().getName(), propertyName);
+                    throw new MissingFieldException(resultType.getName(), propertyName);
                 }
             }
             reader.moveUp();
@@ -142,6 +156,19 @@ public class JavaBeanConverter implements Converter {
     public static class DuplicateFieldException extends ConversionException {
         public DuplicateFieldException(String msg) {
             super(msg);
+        }
+    }
+
+    /**
+     * Exception to indicate double processing of a property to avoid silent clobbering.
+     * 
+     * @author J&ouml;rg Schaible
+     * @since upcoming
+     */
+    public static class DuplicatePropertyException extends ConversionException {
+        public DuplicatePropertyException(String msg) {
+            super("Duplicate property " + msg);
+            add("property", msg);
         }
     }
 }
