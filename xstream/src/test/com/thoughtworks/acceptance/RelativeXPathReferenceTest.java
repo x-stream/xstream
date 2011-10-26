@@ -17,7 +17,9 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class RelativeXPathReferenceTest extends AbstractReferenceTest {
@@ -167,5 +169,38 @@ public class RelativeXPathReferenceTest extends AbstractReferenceTest {
         assertEquals(2, list.size());
         assertNull(list.get(0));
         assertNull(list.get(1));
+    }
+    
+    static class RecursiveThing {
+        final Map map = new HashMap();
+        final String name; // wrong definition order for HashMap!
+        public RecursiveThing(String name) {
+            this.name = name;
+        }
+        public int hashCode() {
+            return name.hashCode();
+        }
+        public boolean equals(Object obj) {
+            return obj.getClass().equals(RecursiveThing.class)  && name.equals(((RecursiveThing)obj).name);
+        }
+    }
+
+    public void todoTestRecursiveMap() {
+        RecursiveThing thing = new RecursiveThing("joe");
+        thing.map.put(thing, "walnes");
+        
+        xstream.alias("rec-thing", RecursiveThing.class);
+
+        String expected = ""
+                + "<rec-thing>\n"
+                + "  <map>\n"
+                + "    <entry>\n"
+                + "      <rec-thing reference=\"../../..\"/>\n"
+                + "      <string>walnes</string>\n"
+                + "    </entry>\n"
+                + "  </map>\n"
+                + "  <name>joe</name>\n"
+                + "</rec-thing>";
+        assertBothWays(thing, expected);
     }
 }
