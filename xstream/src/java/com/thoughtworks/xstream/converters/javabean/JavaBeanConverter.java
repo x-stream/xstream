@@ -36,6 +36,7 @@ public class JavaBeanConverter implements Converter {
      *  - support indexed properties
      *  - support attributes (XSTR-620)
      *  - support local converters (XSTR-601)
+     *  Problem: Mappers take definitions based on reflection, they don't know about bean info
      */
     protected final Mapper mapper;
     protected final JavaBeanProvider beanProvider;
