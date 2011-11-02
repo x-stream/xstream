@@ -25,27 +25,6 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>xstream</artifactId>
       <version>${project.version}</version>
-      <classifier>javadoc</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>xstream-hibernate</artifactId>
-      <version>${project.version}</version>
-      <classifier>javadoc</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>xstream-benchmark</artifactId>
-      <version>${project.version}</version>
-      <classifier>javadoc</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>xstream</artifactId>
-      <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -61,6 +40,92 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>jdk15-ge</id>
+      <activation>
+        <jdk>[1.5,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.xsite</groupId>
+            <artifactId>xsite-maven-plugin</artifactId>
+            <configuration>
+              <sourceDirectoryPath>${basedir}/src</sourceDirectoryPath>
+              <sitemapPath>content/website.xml</sitemapPath>
+              <skinPath>templates/skin.html</skinPath>
+              <compositionFilePath>xsite/xsite.xml</compositionFilePath>
+              <resourcePaths>resources</resourcePaths>
+              <outputDirectoryPath>${project.build.directory}/xsite</outputDirectoryPath>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                   <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <delete includeEmptyDirs="true">
+                      <fileset dir="${project.build.directory}/xsite" includes="**/META-INF/*" />
+                      <fileset dir="${project.build.directory}/xsite" includes="**/META-INF" />
+                    </delete>
+                    <mkdir dir="${project.build.directory}/docs" />
+                    <copy todir="${project.build.directory}/docs" overwrite="true" failonerror="false">
+                      <fileset dir="${basedir}">
+                        <include name="target/xsite/**" />
+                        <exclude name="target/xsite" />
+                      </fileset>
+                      <filtermapper>
+                        <replacestring from="target${file.separator}xsite${file.separator}" to="${file.separator}" />
+                      </filtermapper>
+                    </copy>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>xstream</artifactId>
+          <version>${project.version}</version>
+          <classifier>javadoc</classifier>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>xstream-hibernate</artifactId>
+          <version>${project.version}</version>
+          <classifier>javadoc</classifier>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>xstream-benchmark</artifactId>
+          <version>${project.version}</version>
+          <classifier>javadoc</classifier>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 
   <build>
     <plugins>
@@ -123,56 +188,6 @@
               <includeArtifactIds>xstream-benchmark</includeArtifactIds>
               <includeClassifiers>javadoc</includeClassifiers>
               <includeScope>provided</includeScope>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.xsite</groupId>
-        <artifactId>xsite-maven-plugin</artifactId>
-        <configuration>
-          <sourceDirectoryPath>${basedir}/src</sourceDirectoryPath>
-          <sitemapPath>content/website.xml</sitemapPath>
-          <skinPath>templates/skin.html</skinPath>
-          <compositionFilePath>xsite/xsite.xml</compositionFilePath>
-          <resourcePaths>resources</resourcePaths>
-          <outputDirectoryPath>${project.build.directory}/xsite</outputDirectoryPath>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <delete includeEmptyDirs="true">
-                  <fileset dir="${project.build.directory}/xsite" includes="**/META-INF/*" />
-                  <fileset dir="${project.build.directory}/xsite" includes="**/META-INF" />
-                </delete>
-                <mkdir dir="${project.build.directory}/docs" />
-                <copy todir="${project.build.directory}/docs" overwrite="true" failonerror="false">
-                  <fileset dir="${basedir}">
-                    <include name="target/xsite/**" />
-                    <exclude name="target/xsite" />
-                  </fileset>
-                  <filtermapper>
-                    <replacestring from="target${file.separator}xsite${file.separator}" to="${file.separator}" />
-                  </filtermapper>
-                </copy>
-              </tasks>
             </configuration>
           </execution>
         </executions>

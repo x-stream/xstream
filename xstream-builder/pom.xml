@@ -1,6 +1,6 @@
 <?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
-     Copyright (C) 2007, 2009 XStream committers.
+     Copyright (C) 2007, 2009, 2011 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -18,17 +18,6 @@
   <artifactId>xstream-builder</artifactId>
   <packaging>jar</packaging>
   <name>XStream Builder</name>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
   <dependencies>
     <dependency>

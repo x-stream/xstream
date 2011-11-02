@@ -35,6 +35,8 @@
     <h2>Major changes</h2>
 
     <ul>
+    	<li>XStream libraries can be used now directly in Android, therefore support of Java 1.4.2 has been stopped with the delivery.
+    	Anyone who needs a version for Java 1.4.2 can build it easily from source, this build is still supported and part of CI.</li>
     	<li>JIRA.XSTR-675: New extended HierarchicalStreamReader interface with peekNextChild method. All XStream
     	readers implement the new interface (by Nikita Levyankov).</li>
     	<li>WstxDriver did not trigger Woodstox, but BEA StAX implementation.</li>

@@ -20,27 +20,37 @@
   <packaging>jar</packaging>
   <name>XStream Benchmark</name>
 
+  <profiles>
+    <profile>
+      <id>jdk15-ge</id>
+      <activation>
+        <jdk>[1.5,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadoc</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-javadoc</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
-              <links>
-                <link>http://download.oracle.com/javase/6/docs/api/</link>
-              </links>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -48,12 +58,30 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-		<configuration>
-			<skip>true</skip>
-		</configuration>
+        <configuration>
+	  <skip>true</skip>
+        </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${version.plugin.maven.javadoc}</version>
+        <configuration>
+          <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
+          <source>${version.java.source}</source>
+          <links>
+            <link>${link.javadoc.javase}</link>
+          </links>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
 
   <dependencies>
     <dependency>
