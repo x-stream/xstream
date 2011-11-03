@@ -47,7 +47,7 @@ public class StringConverter extends AbstractSingleValueConverter {
      * 
      * @param map the map to use for the instances to reuse (may be null to not cache at all)
      * @param lengthLimit maximum string length of a cached string, -1 to cache all, 0 to turn off the cache
-     * @since upcoming
+     * @since 1.4.2
      */
     public StringConverter(final Map map, int lengthLimit) {
         cache = map;
@@ -67,7 +67,7 @@ public class StringConverter extends AbstractSingleValueConverter {
      * Construct a StringConverter using a cache with weak references for strings not exceeding the length limit.
      * 
      * @param lengthLimit maximum string length of a cached string, -1 to cache all, 0 to turn off the cache
-     * @since upcoming
+     * @since 1.4.2
      */
     public StringConverter(int lengthLimit) {
         this(Collections.synchronizedMap(new WeakCache()), lengthLimit);

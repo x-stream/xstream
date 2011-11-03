@@ -105,7 +105,7 @@ public class PathTracker {
      * Get the last path element from the stack.
      * 
      * @return the name of the path element
-     * @since upcoming
+     * @since 1.4.2
      */
     public String peekElement() {
         return peekElement(0);
@@ -116,7 +116,7 @@ public class PathTracker {
      * 
      * @param i path index
      * @return the name of the path element
-     * @since upcoming
+     * @since 1.4.2
      * @throws ArrayIndexOutOfBoundsException if the index is &gt;= 0 or &lt;= -depth() 
      */
     public String peekElement(int i) {
@@ -141,7 +141,7 @@ public class PathTracker {
      * Get the depth of the stack.
      * 
      * @return the stack depth
-     * @since upcoming
+     * @since 1.4.2
      */
     public int depth() {
         return pointer; 

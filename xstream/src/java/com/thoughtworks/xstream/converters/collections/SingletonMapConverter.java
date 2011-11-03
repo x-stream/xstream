@@ -25,7 +25,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * <p>Supports Collections.singletonMap.</p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.2
  */
 public class SingletonMapConverter extends MapConverter {
 
@@ -34,7 +34,7 @@ public class SingletonMapConverter extends MapConverter {
     /**
      * Construct a SingletonMapConverter.
      * @param mapper
-     * @since upcoming
+     * @since 1.4.2
      */
     public SingletonMapConverter(Mapper mapper) {
         super(mapper);

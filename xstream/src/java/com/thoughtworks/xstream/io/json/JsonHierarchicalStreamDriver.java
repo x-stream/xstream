@@ -45,7 +45,7 @@ public class JsonHierarchicalStreamDriver extends AbstractDriver {
      * Construct a JsonHierarchicalStreamDriver with name coding.
      * 
      * @param nameCoder the coder to encode and decode the JSON labels.
-     * @since upcoming
+     * @since 1.4.2
      */
     public JsonHierarchicalStreamDriver(NameCoder nameCoder) {
         super(nameCoder);

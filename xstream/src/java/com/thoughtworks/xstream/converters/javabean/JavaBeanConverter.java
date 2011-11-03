@@ -164,7 +164,7 @@ public class JavaBeanConverter implements Converter {
      * Exception to indicate double processing of a property to avoid silent clobbering.
      * 
      * @author J&ouml;rg Schaible
-     * @since upcoming
+     * @since 1.4.2
      */
     public static class DuplicatePropertyException extends ConversionException {
         public DuplicatePropertyException(String msg) {

@@ -15,7 +15,7 @@ package com.thoughtworks.xstream.converters.reflection;
  *
  * @author Nikita Levyankov
  * @author Joerg Schaible
- * @since upcoming
+ * @since 1.4.2
  */
 public class MissingFieldException extends ObjectAccessException {
 
@@ -26,7 +26,7 @@ public class MissingFieldException extends ObjectAccessException {
      * Construct a MissingFieldException.
      * @param className the name of the class missing the field
      * @param fieldName the name of the missed field
-     * @since upcoming
+     * @since 1.4.2
      */
     public MissingFieldException(final String className, final String fieldName) {
         super("No field '" + fieldName + "' found in class '" + className + "'");
@@ -37,7 +37,7 @@ public class MissingFieldException extends ObjectAccessException {
     /**
      * Retrieve the name of the missing field.
      * @return the field name
-     * @since upcoming
+     * @since 1.4.2
      */
     public String getFieldName() {
         return fieldName;
@@ -46,7 +46,7 @@ public class MissingFieldException extends ObjectAccessException {
     /**
      * Retrieve the name of the class with the missing field.
      * @return the class name
-     * @since upcoming
+     * @since 1.4.2
      */
     protected String getClassName() {
         return className;

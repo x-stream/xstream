@@ -326,7 +326,7 @@ public class JsonWriter extends AbstractJsonWriter {
          * Create a new default Formatter. The formatter uses two spaces, normal line feed
          * character, adds a space after the label and will try to compact the output.
          * 
-         * @since upcoming
+         * @since 1.4.2
          */
         public Format() {
             this(new char[]{' ', ' '}, new char[]{'\n'}, Format.SPACE_AFTER_LABEL
@@ -353,7 +353,7 @@ public class JsonWriter extends AbstractJsonWriter {
          * @param newLine the characters used to create a new line
          * @param mode the flags for the format modes
          * @param nameCoder the name encoder and decoder
-         * @since upcoming
+         * @since 1.4.2
          */
         public Format(char[] lineIndenter, char[] newLine, int mode, NameCoder nameCoder) {
             this.lineIndenter = lineIndenter;
@@ -397,7 +397,7 @@ public class JsonWriter extends AbstractJsonWriter {
          * Retrieve the NameCoder.
          * 
          * @return the name coder
-         * @since upcoming
+         * @since 1.4.2
          */
         public NameCoder getNameCoder() {
             return nameCoder;

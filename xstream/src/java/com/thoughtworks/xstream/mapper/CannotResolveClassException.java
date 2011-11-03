@@ -25,7 +25,7 @@ public class CannotResolveClassException extends XStreamException {
         super(className);
     }
     /**
-     * @since upcoming
+     * @since 1.4.2
      */
     public CannotResolveClassException(String className, Throwable cause) {
         super(className, cause);

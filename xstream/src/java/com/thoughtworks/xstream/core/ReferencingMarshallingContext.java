@@ -26,7 +26,7 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
      * 
      * @return the current path
      * @since 1.4
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.2
      */
     Path currentPath();
     

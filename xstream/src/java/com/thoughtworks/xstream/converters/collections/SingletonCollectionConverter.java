@@ -25,7 +25,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.2
  */
 public class SingletonCollectionConverter extends CollectionConverter {
 
@@ -36,7 +36,7 @@ public class SingletonCollectionConverter extends CollectionConverter {
      * Construct a SingletonCollectionConverter.
      * 
      * @param mapper the mapper
-     * @since upcoming
+     * @since 1.4.2
      */
     public SingletonCollectionConverter(Mapper mapper) {
         super(mapper);

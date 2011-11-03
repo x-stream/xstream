@@ -98,7 +98,7 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller impleme
                     }
                     
                     /**
-                     * @deprecated As of upcoming 
+                     * @deprecated As of 1.4.2 
                      */
                     public Path currentPath() {
                         return pathTracker.getPath();

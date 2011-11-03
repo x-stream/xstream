@@ -27,7 +27,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * {@link Reader} for input or a {@link Writer} for output.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.2
  */
 public class BinaryStreamDriver extends AbstractDriver {
 

@@ -12,7 +12,7 @@ package com.thoughtworks.xstream.io;
 
 /**
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.2
  */
 public interface ExtendedHierarchicalStreamReader extends HierarchicalStreamReader {
 
@@ -20,7 +20,7 @@ public interface ExtendedHierarchicalStreamReader extends HierarchicalStreamRead
      * Peek the name of the next child. In situation where {@link #hasMoreChildren()} returns
      * true, peek the tag name of the child.
      * 
-     * @since upcoming
+     * @since 1.4.2
      */
     String peekNextChild();
 }
