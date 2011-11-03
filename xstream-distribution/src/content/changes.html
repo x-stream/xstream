@@ -28,9 +28,15 @@
 	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
 	</p>
 
+<!--
     <h1 id="upcoming">Upcoming</h1>
 
     <p>Not yet released.</p>
+-->
+
+    <h1 id="1.4.2">1.4.2</h1>
+
+    <p>Released 3. November 2011.</p>
 
     <h2>Major changes</h2>
 
@@ -39,24 +45,24 @@
     	Anyone who needs a version for Java 1.4.2 can build it easily from source, this build is still supported and part of CI.</li>
     	<li>JIRA.XSTR-675: New extended HierarchicalStreamReader interface with peekNextChild method. All XStream
     	readers implement the new interface (by Nikita Levyankov).</li>
-    	<li>WstxDriver did not trigger Woodstox, but BEA StAX implementation.</li>
     	<li>JIRA:XSTR-673: Collections.EMPTY_LIST, Collections.EMPTY_SET and Collections.EMPTY_MAP supported with own
     	alias and defined as immutable.</li>
     	<li>JIRA:XSTR-631: Collections.singletonList(), Collections.singletonSet() and Collections.singletonMap()
     	supported with own alias and own converters.</li>
     	<li>JIRA:XSTR-406 + JIRA:XSTR-663: Support additional parameters for XStreamConverter annotation (e.g. to declare a
     	ToAttributedValueConverter).</li>
-    	<li>JIRA:XSTR-664: ClassCastException in HibernatePersistentSortedSetConverter and
-    	HibernatePersistentSortedMapConverter.</li>
     </ul>
 
     <h2>Minor changes</h2>
 
     <ul>
+    	<li>WstxDriver did not trigger Woodstox, but BEA StAX implementation.</li>
     	<li>JIRA:XSTR-260: PrettyPrintWriter does not handle tab and new line characters in attributes.</li>
     	<li>JIRA:XSTR-667: Cannot serialize empty list with JsonHierarchicalStreamDriver.</li>
     	<li>JIRA:XSTR-661: TreeMarshaller.CircularReference is not a ConversionException.</li>
     	<li>JIRA:XSTR-562: StAX: Namespace attribute is not written in non-repairing mode for second sibling.<li>
+    	<li>JIRA:XSTR-664: ClassCastException in HibernatePersistentSortedSetConverter and
+    	HibernatePersistentSortedMapConverter.</li>
     	<li>JIRA:XSTR-674: Recreate binary compatibility with 1.3.x series for method
     	CustomObjectInputStream.getInstance(...).</li>
     	<li>JIRA:XSTR-671: CannotResolveClassException should accept cause.</li>
