@@ -71,43 +71,23 @@
 
     <h1 id="news">Latest News</h1>
 
-    <h2 id="1.4.1"><b>Aug 11, 2011</b> XStream 1.4.1 released</h2>
+    <h2 id="1.4.2"><b>Nov 3, 2011</b> XStream 1.4.2 released</h2>
 
-      <p>Maintenance release 1.4.1 of XStream after turning out that it did not work in 1.4 with the new default
-      dependencies.  Therefore XStream is back with Xpp3 as default parser and refers additionally the XmlPullParser
-      API to enable the XppDriver that is used by default.</p>
+      <p>Maintenance release 1.4.2 of XStream with bug fixes and small improvements. Main changes:</p>
 
-      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
-
-    <h2 id="1.4"><b>Aug 6, 2011</b> XStream 1.4 released</h2>
-
-      <p>Finally - XStream 1.4 is ready for delivery.  A lot of things have changed and improved, new features added.
-      Nevertheless we have maintain compatibility to the old versions:</p>
-      
       <ul>
-      	<li>Detection of Java 7 and Android i.e. enabled enhanced mode and annotations for both environments out of the box</li>
-      	<li>Direct support of XmlPullParser factory and alternate kXML2 implementation</li>
-      	<li>Explicit drivers to select the StAX implementation</li>
-      	<li>New separate Hibernate module to support those managed instances (special thanks to Jaime Metcher)</li>
-      	<li>Support of implicit arrays and maps additionally to already existing implicit collection support</li>
-      	<li>Performance improvements (special thanks to Keith Kowalczykowski)</li>
-      	<li>Some new converters (for URI and one to write all fields but one as attributes)</li>
-      	<li>A lot of other enhancements and bug fixes</li>
+    	<li>XStream libraries can be used now directly in Android, therefore support of Java 1.4.2 has been stopped with the delivery.
+    	Anyone who needs a version for Java 1.4.2 can build it easily from source, this build is still supported and part of CI.</li>
+    	<li>New extended HierarchicalStreamReader interface with peekNextChild method. All XStream	readers implement the new
+    	interface (by Nikita Levyankov).</li>
+    	<li>Special support for Collections.EMPTY_LIST, Collections.EMPTY_SET and Collections.EMPTY_MAP and collections created
+    	with Collections.singletonList(), Collections.singletonSet() and Collections.singletonMap().</li>
+    	<li>Support additional parameters for XStreamConverter annotation (e.g. to declare a ToAttributedValueConverter).</li>
       </ul>
 
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
 
 	<p>Thanks to this impressive list of <a href="team.html#contributors">contributors</a>.</p>
-      
-    <p class="hightlight">Note, that with version 1.4 the default parser has been changed from
-    <a href="faq.html#Compatibility_kXML2">Xpp3 to kXML2</a>.</p>
-      
-    <p class="hightlight">Note, that JDK 1.3 support has been officially dropped.  Nothing special has been done to
-    enforce this, but there is no longer any support.</p>
-
-    <p class="highlight">Note, to support a representation of null values in some way, it is absolutely necessary that each converter can handle a null
-    value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
-    in case XStream will provide such values with its next major version.</p>
 
   </body>
 </html>
