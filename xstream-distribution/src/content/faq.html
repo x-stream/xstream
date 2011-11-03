@@ -612,8 +612,8 @@ XStream xstream = new XStream(driver);
     <li>References: By default XStream supports references to the same object in an object graph. This implies that XStream
     keeps track of all serialized and deserialized objects internally. These references are kept with WeakReferences, so that the
     memory can be freed as soon as nobody references these objects anymore.</li>
-    <li>XML values: Any tag and attribute value that is converted into a Java String in the object graph will use the same String
-    instance.</li>
+    <li>XML values: Any tag and attribute value that is converted into a Java String in the object graph will use by default the
+    same String instance unless it exceeds 38 characters (length of a UUID string representation).</li>
     <li>XStream caches: To increase performance XStream caches quite a lot like classes, converters to use, aliasing, tag names.
     All those caches make usage of WeakReferences or will exist only while marshalling one object graph resp. unmarshalling one
     input stream.</li>
