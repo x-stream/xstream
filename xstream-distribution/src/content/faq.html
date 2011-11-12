@@ -590,9 +590,10 @@ XStream xstream = new XStream(driver);
     <h2 id="Scalability_Thread_safety">Is XStream thread safe?</h2>
 
     <p>Yes. Once the XStream instance has been created and configured, it may be shared across multiple threads
-    allowing objects to be serialized/deserialized concurrently (unless you enable the auto.detection and processing of
-    annotations). Actually the creation and initialization of XStream is quite expensive, therefore it is recommended to
-    keep the XStream instance itself.</p>
+    allowing objects to be serialized/deserialized concurrently (unless you enable the
+    <a href="annotations-tutorial.html#AutoDetect">auto-detection</a> to process annotations on-the-fly).  Actually the
+    creation and initialization of XStream is quite expensive, therefore it is recommended to keep the XStream instance
+    itself.</p>
 
     <!-- ...................................................... -->
     <h2 id="Scalability_Memory">How much memory does XStream consume?</h2>

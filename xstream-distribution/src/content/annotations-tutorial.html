@@ -504,9 +504,10 @@ processAnnotations method or by already having serialized this type.  However, @
 that may fail in this case.</p></li>
 <li><strong>Concurrency</strong>
 <p>XStream is not thread-safe while it is configured, thread-safety is only guaranteed during marshalling and
-unmarshalling.  However an annotation is defining a change in configuration that is now applied while object
+unmarshalling.  Unfortunately an annotation is defining a change in configuration that is now applied while object
 marshalling is processed.  Therefore will the auto-detection mode turn XStream's marshalling process in a thread-unsafe
-operation any you may run under certain circumstances into concurrency problems.</p></li>
+operation.  While XStream synchronizes the configuration modification, it cannot guard concurrent reads and you may run
+under certain circumstances into concurrency problems.</p></li>
 <li><strong>Exceptions</strong>
 <p>XStream uses a well-defined exception hierarchy.  Normally an InitializationException is only thrown while XStream
 is configured.  If annotations are processed on the fly they can be thrown obviously also in a marshalling process.</p></li>
