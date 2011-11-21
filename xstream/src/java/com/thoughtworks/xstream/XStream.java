@@ -1500,7 +1500,7 @@ public class XStream {
      *            map type or matching the default implementation type of the map
      *            type.
      * @param itemType type of the items to be part of this map as value
-     * @param keyFieldName the name of the filed of the itemType that is used for the key in the map
+     * @param keyFieldName the name of the field of the itemType that is used for the key in the map
      * @since 1.4 
      */
     public void addImplicitMap(Class ownerType, String fieldName, String itemFieldName, 
