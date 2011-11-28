@@ -279,7 +279,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                             || c == '\u000b'
                             || c == '\u000c'
                             || c == '\u000e'
-                            || c == '\u000f') {
+                            || (c >= '\u000f' && c <= '\u001f')) {
                             throw new StreamException("Invalid character 0x"
                                 + Integer.toHexString(c)
                                 + " in XML 1.0 stream");

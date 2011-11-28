@@ -162,6 +162,8 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         String ctrl = ""
             + "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007"
             + "\u0008\u0009\n\u000b\u000c\r\u000e\u000f"
+            + "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017"
+            + "\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f"
             + "\u007f"
             + "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087"
             + "\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f"
@@ -193,6 +195,8 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         String ctrl = ""
             + "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007"
             + "\u0008\u0009\n\u000b\u000c\r\u000e\u000f"
+            + "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017"
+            + "\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f"
             + "\u007f"
             + "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087"
             + "\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f"
@@ -212,7 +216,9 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         }
         writer.endNode();
         assertXmlProducedIs("<tag>&#x1;&#x2;&#x3;&#x4;&#x5;&#x6;&#x7;"
-            + "&#x8;\t\n&#xb;&#xc;&#xd;&#xe;&#xf;&#x7f;"
+            + "&#x8;\t\n&#xb;&#xc;&#xd;&#xe;&#xf;"
+            + "&#x10;&#x11;&#x12;&#x13;&#x14;&#x15;&#x16;&#x17;"
+            + "&#x18;&#x19;&#x1a;&#x1b;&#x1c;&#x1d;&#x1e;&#x1f;&#x7f;"
             + "&#x80;&#x81;&#x82;&#x83;&#x84;&#x85;&#x86;&#x87;"
             + "&#x88;&#x89;&#x8a;&#x8b;&#x8c;&#x8d;&#x8e;&#x8f;"
             + "&#x90;&#x91;&#x92;&#x93;&#x94;&#x95;&#x96;&#x97;"
