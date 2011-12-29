@@ -931,7 +931,7 @@ public class XStream {
      * @since 1.4
      */
     public Object fromXML(URL url) {
-        return unmarshal(hierarchicalStreamDriver.createReader(url), null);
+        return fromXML(url, null);
     }
 
     /**
@@ -944,7 +944,7 @@ public class XStream {
      * @since 1.4
      */
     public Object fromXML(File file) {
-        return unmarshal(hierarchicalStreamDriver.createReader(file), null);
+        return fromXML(file, null);
     }
 
     /**
@@ -1000,7 +1000,12 @@ public class XStream {
      * @since 1.4
      */
     public Object fromXML(File file, Object root) {
-        return unmarshal(hierarchicalStreamDriver.createReader(file), root);
+        HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file);
+        try {
+            return unmarshal(reader, root);
+        } finally {
+            reader.close();
+        }
     }
 
     /**
