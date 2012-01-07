@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -1504,18 +1504,19 @@ public class XStream {
      * @param fieldName name of the field in the ownerType. This field must be a concrete
      *            map type or matching the default implementation type of the map
      *            type.
+     * @param itemName alias name of the items
      * @param itemType type of the items to be part of this map as value
      * @param keyFieldName the name of the field of the itemType that is used for the key in the map
      * @since 1.4 
      */
-    public void addImplicitMap(Class ownerType, String fieldName, String itemFieldName, 
+    public void addImplicitMap(Class ownerType, String fieldName, String itemName, 
         Class itemType, String keyFieldName) {
         if (implicitCollectionMapper == null) {
             throw new com.thoughtworks.xstream.InitializationException("No "
                 + ImplicitCollectionMapper.class.getName()
                 + " available");
         }
-        implicitCollectionMapper.add(ownerType, fieldName, itemFieldName, itemType, keyFieldName);
+        implicitCollectionMapper.add(ownerType, fieldName, itemName, itemType, keyFieldName);
     }
 
     /**
