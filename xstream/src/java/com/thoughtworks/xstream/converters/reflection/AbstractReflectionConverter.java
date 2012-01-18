@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -299,7 +299,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             if (fieldExistsInClass) {
                 Field field = reflectionProvider.getField(classDefiningField != null ? classDefiningField : result.getClass(), fieldName);
                 if ((Modifier.isTransient(field.getModifiers()) && !shouldUnmarshalTransientFields()) 
-                        || !mapper.shouldSerializeMember(classDefiningField != null ? classDefiningField : result.getClass(), fieldName)) {
+                        || !mapper.shouldSerializeMember(field.getDeclaringClass(), fieldName)) {
                     reader.moveUp();
                     continue;
                 }
