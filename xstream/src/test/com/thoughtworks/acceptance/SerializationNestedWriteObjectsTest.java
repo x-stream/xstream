@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,8 +17,11 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
@@ -292,4 +295,19 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         
         assertBothWays(stores, expectedXml);
     }
+
+	static class MoscowCalendar extends GregorianCalendar {
+		public MoscowCalendar() {
+			super(TimeZone.getTimeZone("Europe/Moscow"));
+		}
+	}
+
+	public void todoTestNestedSerializationOfDefaultType() {
+	    Calendar in = new MoscowCalendar();
+	    in.setTimeInMillis(44444);
+	    String xml = xstream.toXML(in);
+	    System.out.println(xml);
+	    Calendar out = (Calendar) xstream.fromXML(xml);
+	    assertEquals(in.getTime(), out.getTime());
+	}
 }
