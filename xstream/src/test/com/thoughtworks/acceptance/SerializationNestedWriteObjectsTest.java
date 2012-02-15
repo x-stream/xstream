@@ -302,11 +302,10 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
 		}
 	}
 
-	public void todoTestNestedSerializationOfDefaultType() {
+	public void testNestedSerializationOfDefaultType() {
 	    Calendar in = new MoscowCalendar();
 	    in.setTimeInMillis(44444);
 	    String xml = xstream.toXML(in);
-	    System.out.println(xml);
 	    Calendar out = (Calendar) xstream.fromXML(xml);
 	    assertEquals(in.getTime(), out.getTime());
 	}

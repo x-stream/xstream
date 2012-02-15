@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -220,6 +220,12 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     if (serializationMethodInvoker.supportsWriteObject(currentType[0], false)) {
                         writtenClassWrapper[0] = true;
                         writer.startNode(mapper.serializedClass(currentType[0]));
+                        if (currentType[0] != mapper.defaultImplementationOf(currentType[0])) { 
+                            String classAttributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
+                            if (classAttributeName != null) {
+                                writer.addAttribute(classAttributeName, currentType[0].getName());
+                            }
+                        }
                         CustomObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(context, callback);
                         serializationMethodInvoker.callWriteObject(currentType[0], source, objectOutputStream);
                         objectOutputStream.popCallback();
@@ -230,6 +236,12 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         // serializable fields. This guarantees that readObject() will be called upon deserialization.
                         writtenClassWrapper[0] = true;
                         writer.startNode(mapper.serializedClass(currentType[0]));
+                        if (currentType[0] != mapper.defaultImplementationOf(currentType[0])) { 
+                            String classAttributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
+                            if (classAttributeName != null) {
+                                writer.addAttribute(classAttributeName, currentType[0].getName());
+                            }
+                        }
                         callback.defaultWriteObject();
                         writer.endNode();
                     } else {
