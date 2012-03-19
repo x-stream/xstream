@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -119,6 +120,34 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         assertBothWays(farm, expected);
     }
 
+    public void testInheritedAndDirectDeclaredImplicitArraysAtOnceIsNotDeclarationSequenceDependent() {
+        MegaFarm farm = new MegaFarm(); // subclass
+        farm.animals = new Animal[] {
+            new Animal("Cow"),
+            new Animal("Sheep")
+        };
+        farm.names = new String[] {
+            "McDonald",
+            "Ponte Rosa"
+        };
+        
+        String expected = "" +
+                "<MEGA-farm>\n" +
+                "  <animal>\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "  <name>McDonald</name>\n" +
+                "  <name>Ponte Rosa</name>\n" +
+                "</MEGA-farm>";
+
+        xstream.addImplicitArray(MegaFarm.class, "names", "name");
+        xstream.addImplicitArray(Farm.class, "animals");
+        assertBothWays(farm, expected);
+    }
+
     public void testAllowsSubclassToOverrideImplicitCollectionInSuperclass() {
         Farm farm = new MegaFarm(); // subclass
         farm.animals = new Animal[] {
@@ -138,6 +167,53 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitCollection(MegaFarm.class, "animals");
         assertBothWays(farm, expected);
+    }
+
+    public void testAllowDifferentImplicitArrayDefinitionsInSubclass() {
+        Farm farm = new Farm();
+        farm.animals = new Animal[] {
+           new Animal("Cod"), 
+           new Animal("Salmon") 
+        };
+        MegaFarm megaFarm = new MegaFarm(); // subclass
+        megaFarm.animals = new Animal[] {
+            new Animal("Cow"),
+            new Animal("Sheep")
+        };
+        megaFarm.names = new String[] {
+            "McDonald",
+            "Ponte Rosa"
+        };
+        
+        List list = new ArrayList();
+        list.add(farm);
+        list.add(megaFarm);
+        String expected = "" +
+                "<list>\n" +
+                "  <farm>\n" +
+                "    <fish>\n" +
+                "      <name>Cod</name>\n" +
+                "    </fish>\n" +
+                "    <fish>\n" +
+                "      <name>Salmon</name>\n" +
+                "    </fish>\n" +
+                "  </farm>\n" +
+                "  <MEGA-farm>\n" +
+                "    <animal>\n" +
+                "      <name>Cow</name>\n" +
+                "    </animal>\n" +
+                "    <animal>\n" +
+                "      <name>Sheep</name>\n" +
+                "    </animal>\n" +
+                "    <name>McDonald</name>\n" +
+                "    <name>Ponte Rosa</name>\n" +
+                "  </MEGA-farm>\n" +
+                "</list>";
+
+        xstream.addImplicitArray(Farm.class, "animals", "fish");
+        xstream.addImplicitArray(MegaFarm.class, "animals");
+        xstream.addImplicitArray(MegaFarm.class, "names", "name");
+        assertBothWays(list, expected);
     }
 
     public static class House extends StandardObject {

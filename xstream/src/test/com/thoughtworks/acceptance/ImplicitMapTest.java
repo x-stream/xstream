@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -181,6 +181,36 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         assertBothWays(sample, expected);
     }
 
+    public void testInheritedAndDirectDeclaredImplicitMapAtOnceIsNotDeclarationSequenceDependent() {
+        xstream.alias("MEGA-sample", MegaSampleMaps.class);
+
+        MegaSampleMaps sample = new MegaSampleMaps(); // subclass
+        sample.good.put("Windows", new Software("Microsoft", "Windows"));
+        sample.good.put("Linux", new Software("Red Hat", "Linux"));
+        sample.other.put("i386", new Hardware("i386", "Intel"));
+        
+        String expected = "" +
+                "<MEGA-sample>\n" +
+                "  <software>\n" +
+                "    <vendor>Microsoft</vendor>\n" +
+                "    <name>Windows</name>\n" +
+                "  </software>\n" +
+                "  <software>\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
+                "  </software>\n" +
+                "  <bad/>\n" +
+                "  <hardware>\n" +
+                "    <arch>i386</arch>\n" +
+                "    <name>Intel</name>\n" +
+                "  </hardware>\n" +
+                "</MEGA-sample>";
+
+        xstream.addImplicitMap(MegaSampleMaps.class, "other", Hardware.class, "arch");
+        xstream.addImplicitMap(SampleMaps.class, "good", Software.class, "name");
+        assertBothWays(sample, expected);
+    }
+
     public void testAllowsSubclassToOverrideImplicitMapInSuperclass() {
         xstream.alias("MEGA-sample", MegaSampleMaps.class);
 
@@ -204,6 +234,51 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitMap(MegaSampleMaps.class, "good", Software.class, "name");
         assertBothWays(sample, expected);
+    }
+
+    public void testAllowDifferentImplicitMapDefinitionsInSubclass() {
+        xstream.alias("MEGA-sample", MegaSampleMaps.class);
+
+        SampleMaps sample = new SampleMaps();
+        sample.good.put("Google", new Software("Google", "Android"));
+        MegaSampleMaps megaSample = new MegaSampleMaps(); // subclass
+        megaSample.good.put("Windows", new Software("Microsoft", "Windows"));
+        megaSample.good.put("Linux", new Software("Red Hat", "Linux"));
+        megaSample.other.put("i386", new Hardware("i386", "Intel"));
+        
+        List list = new ArrayList();
+        list.add(sample);
+        list.add(megaSample);
+        String expected = "" +
+                "<list>\n" +
+                "  <sample>\n" +
+                "    <mobile>\n" +
+                "      <vendor>Google</vendor>\n" +
+                "      <name>Android</name>\n" +
+                "    </mobile>\n" +
+                "    <bad/>\n" +
+                "  </sample>\n" +
+                "  <MEGA-sample>\n" +
+                "    <software>\n" +
+                "      <vendor>Microsoft</vendor>\n" +
+                "      <name>Windows</name>\n" +
+                "    </software>\n" +
+                "    <software>\n" +
+                "      <vendor>Red Hat</vendor>\n" +
+                "      <name>Linux</name>\n" +
+                "    </software>\n" +
+                "    <bad/>\n" +
+                "    <hardware>\n" +
+                "      <arch>i386</arch>\n" +
+                "      <name>Intel</name>\n" +
+                "    </hardware>\n" +
+                "  </MEGA-sample>\n" +
+                "</list>";
+
+        xstream.addImplicitMap(SampleMaps.class, "good", "mobile", Software.class, "vendor");
+        xstream.addImplicitMap(MegaSampleMaps.class, "good", Software.class, "name");
+        xstream.addImplicitMap(MegaSampleMaps.class, "other", Hardware.class, "arch");
+        assertBothWays(list, expected);
     }
 
     public void testDefaultMapBasedOnType() {

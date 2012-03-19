@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -43,9 +43,10 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     }
 
     private ImplicitCollectionMapperForClass getOrCreateMapper(Class definedIn) {
-        ImplicitCollectionMapperForClass mapper = getMapper(definedIn);
+        ImplicitCollectionMapperForClass mapper = (ImplicitCollectionMapperForClass)classNameToMapper
+            .get(definedIn);
         if (mapper == null) {
-            mapper = new ImplicitCollectionMapperForClass();
+            mapper = new ImplicitCollectionMapperForClass(definedIn);
             classNameToMapper.put(definedIn, mapper);
         }
         return mapper;
@@ -90,15 +91,16 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     public void add(Class definedIn, String fieldName, String itemFieldName, Class itemType, String keyFieldName) {
         Field field = null;
-        while (definedIn != Object.class) {
+        Class declaredIn = definedIn;
+        while (declaredIn != Object.class) {
             try {
-                field = definedIn.getDeclaredField(fieldName);
+                field = declaredIn.getDeclaredField(fieldName);
                 break;
             } catch (SecurityException e) {
                 throw new InitializationException(
                     "Access denied for field with implicit collection", e);
             } catch (NoSuchFieldException e) {
-                definedIn = definedIn.getSuperclass();
+                declaredIn = declaredIn.getSuperclass();
             }
         }
         if (field == null) {
@@ -135,13 +137,18 @@ public class ImplicitCollectionMapper extends MapperWrapper {
         mapper.add(new ImplicitCollectionMappingImpl(fieldName, itemType, itemFieldName, keyFieldName));
     }
 
-    private static class ImplicitCollectionMapperForClass {
+    private class ImplicitCollectionMapperForClass {
+        private Class definedIn;
         // { (NamedItemType) -> (ImplicitCollectionDefImpl) }
         private Map namedItemTypeToDef = new HashMap();
         // { itemFieldName (String) -> (ImplicitCollectionDefImpl) }
         private Map itemFieldNameToDef = new HashMap();
         // { fieldName (String) -> (ImplicitCollectionDefImpl) }
         private Map fieldNameToDef = new HashMap();
+
+        ImplicitCollectionMapperForClass(Class definedIn) {
+            this.definedIn = definedIn;
+        }
 
         public String getFieldNameForItemTypeAndName(Class itemType, String itemFieldName) {
             ImplicitCollectionMappingImpl unnamed = null;
@@ -165,7 +172,12 @@ public class ImplicitCollectionMapper extends MapperWrapper {
                     }
                 }
             }
-            return unnamed != null ? unnamed.getFieldName() : null;
+            if (unnamed != null) {
+                return unnamed.getFieldName();
+            } else {
+                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass());
+                return mapper != null ? mapper.getFieldNameForItemTypeAndName(itemType, itemFieldName) : null;
+            }
         }
 
         public Class getItemTypeForItemFieldName(String itemFieldName) {
@@ -173,7 +185,8 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             if (def != null) {
                 return def.getItemType();
             } else {
-                return null;
+                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass());
+                return mapper != null ? mapper.getItemTypeForItemFieldName(itemFieldName) : null;
             }
         }
 
@@ -182,12 +195,24 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             if (itemFieldName == null) {
                 return null;
             } else {
-                return (ImplicitCollectionMappingImpl)itemFieldNameToDef.get(itemFieldName);
+                ImplicitCollectionMappingImpl mapping = (ImplicitCollectionMappingImpl)itemFieldNameToDef.get(itemFieldName);
+                if (mapping != null) {
+                    return mapping;
+                } else {
+                    ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass());
+                    return mapper != null ? mapper.getImplicitCollectionDefByItemFieldName(itemFieldName) : null;
+                }
             }
         }
 
         public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(String fieldName) {
-            return (ImplicitCollectionMapping)fieldNameToDef.get(fieldName);
+            ImplicitCollectionMapping mapping = (ImplicitCollectionMapping)fieldNameToDef.get(fieldName);
+            if (mapping != null) {
+                return mapping;
+            } else {
+                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass());
+                return mapper != null ? mapper.getImplicitCollectionDefForFieldName(fieldName) : null;
+            }
         }
 
         public void add(ImplicitCollectionMappingImpl def) {
@@ -213,34 +238,8 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             this.keyFieldName = keyFieldName;
         }
 
-        public boolean equals(Object obj) {
-            if (obj instanceof ImplicitCollectionMappingImpl) {
-                ImplicitCollectionMappingImpl b = (ImplicitCollectionMappingImpl)obj;
-                return fieldName.equals(b.fieldName)
-                    && isEquals(itemFieldName, b.itemFieldName);
-            } else {
-                return false;
-            }
-        }
-
         public NamedItemType createNamedItemType() {
             return new NamedItemType(itemType, itemFieldName);
-        }
-
-        private static boolean isEquals(Object a, Object b) {
-            if (a == null) {
-                return b == null;
-            } else {
-                return a.equals(b);
-            }
-        }
-
-        public int hashCode() {
-            int hash = fieldName.hashCode();
-            if (itemFieldName != null) {
-                hash += itemFieldName.hashCode() << 7;
-            }
-            return hash;
         }
 
         public String getFieldName() {
