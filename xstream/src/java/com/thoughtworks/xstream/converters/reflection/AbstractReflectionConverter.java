@@ -152,7 +152,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                                             ? mapping.getItemFieldName()
                                             : mapper.serializedClass(Map.Entry.class);
                                     Map.Entry entry = (Map.Entry) obj;
-                                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, entryName, Map.Entry.class);
+                                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, entryName, entry.getClass());
                                     writeItem(entry.getKey(), context, writer);
                                     writeItem(entry.getValue(), context, writer);
                                     writer.endNode();
@@ -178,12 +178,12 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
             void writeField(String fieldName, String aliasName, Class fieldType,
                 Class definedIn, Object newObj) {
+                Class actualType = newObj != null ? newObj.getClass() : fieldType;
                 ExtendedHierarchicalStreamWriterHelper.startNode(writer, aliasName != null
                     ? aliasName
-                    : mapper.serializedMember(source.getClass(), fieldName), fieldType);
+                    : mapper.serializedMember(source.getClass(), fieldName), actualType);
 
                 if (newObj != null) {
-                    Class actualType = newObj.getClass();
                     Class defaultType = mapper.defaultImplementationOf(fieldType);
                     if (!actualType.equals(defaultType)) {
                         String serializedClassName = mapper.serializedClass(actualType);

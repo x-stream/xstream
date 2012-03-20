@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -52,7 +52,7 @@ public class MapConverter extends AbstractCollectionConverter {
         Map map = (Map) source;
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper().serializedClass(Map.Entry.class), Map.Entry.class);
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper().serializedClass(Map.Entry.class), entry.getClass());
 
             writeItem(entry.getKey(), context, writer);
             writeItem(entry.getValue(), context, writer);

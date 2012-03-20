@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -642,6 +642,41 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 + "    'replacedValue': 'HELLO WORLD'\n"
                 + "  }\n"
                 + "}}");
+
+        assertEquals(expected, xstream.toXML(sa));
+    }
+    
+    public void testRealTypeIsHonoredWhenWritingTheValue() {
+        xstream.alias("sa", SystemAttributes.class);
+
+        List list = new ArrayList();
+        list.add("joe");
+        list.add("mauro");
+        SystemAttributes[] sa = new SystemAttributes[2];
+        sa[0] = new SystemAttributes();
+        sa[0].name = "year";
+        sa[0].object = new Integer(2000);
+        sa[1] = new SystemAttributes();
+        sa[1].name = "names";
+        sa[1].object = list;
+
+        String expected = normalizeExpectation(""
+                + "{'sa-array': [\n"
+                + "  {\n"
+                + "    'name': 'year',\n"
+                + "    'object': {\n"
+                + "      '@class': 'int',\n"
+                + "      '$': 2000\n" 
+                + "    }\n"
+                + "  },\n"
+                + "  {\n"
+                + "    'name': 'names',\n"
+                + "    'object': [\n"
+                + "      'joe',\n" 
+                + "      'mauro'\n" 
+                + "    ]\n"
+                + "  }\n"
+                + "]}");
 
         assertEquals(expected, xstream.toXML(sa));
     }

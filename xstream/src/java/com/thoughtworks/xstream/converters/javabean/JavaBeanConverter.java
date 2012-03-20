@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -84,10 +84,10 @@ public class JavaBeanConverter implements Converter {
             }
 
             private void writeField(String propertyName, Class fieldType, Object newObj, Class definedIn) {
-                String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
-				ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, fieldType);
                 Class actualType = newObj.getClass();
                 Class defaultType = mapper.defaultImplementationOf(fieldType);
+                String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
+				ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, actualType);
                 if (!actualType.equals(defaultType) && classAttributeName != null) {
                     writer.addAttribute(classAttributeName, mapper.serializedClass(actualType));
                 }
