@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2007, 2008, 2010 XStream committers.
+ Copyright (C) 2007, 2008, 2010, 2012 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -32,16 +32,16 @@ data types, arrays and lists and allows to nest them - but that's it! No referen
 (attributes), no properties with same names (as generated for implicit collections), etc. Therefore do not expect
 wonders.  XStream (and Jettison) try their best, but the procedure to convert any kind of object into JSON is a lossy
 transformation and especially deserialization will not be possible for any construct. See also
-<a href="faq.html#JSON_limitations">FAQ</a></p>.
+<a href="faq.html#JSON_limitations">FAQ</a>.</p>
 
 <p>Since JSON has no possibility to express references, you should always set the NO_REFERENCES mode writing JSON.</p>
 
 <h1 id="jettison">Jettison driver</h1>
 
 <p>Jettison driver uses <a href="http://jettison.codehaus.org/">Jettison</a> StAX parser to read and write data in JSON
-format. It is available in XStream from version 1.2.2 and is implemented in 
+format. It is available in XStream since version 1.2.2 and is implemented in 
 <code>com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver</code> class.  To successfully use this driver you need
-to have Jettison project and <a href="http://stax.codehaus.org/">StAX API</a> in your classpath (see reference for 
+to have the Jettison project and <a href="http://stax.codehaus.org/">StAX API</a> in your classpath (see reference for 
 <a href="download.html#optional-deps">optional dependencies</a>).</p>
 		
 <p>Alternatively you can download JARs manually.</p>
@@ -74,13 +74,13 @@ public class WriteTest {
 
 <p>produces the following JSON document:</p>
 
-<div class="Source Java"><pre>{"product":{"name":"Banana","id":"123","price":"23.0"}}</pre></div>
+<div class="Source Java"><pre>{"product":{"name":"Banana","id":123,"price":23.0}}</pre></div>
 
 <p>As you can see, all standard XStream features (such as aliases) can be used with this driver.</p>	
 
-<p class="highlight">Note that newer Jettison releases than 1.0-RC2 will also try to detect numerical values and
-omit the quotes.  Since Jettison cannot know about the original data type, it has to guess.  Hence it will therefore
-also write the value of the id field as numeric value in future.</p>
+<p class="highlight">Note that Jettison will  try to detect numerical values and omit the quotes.  Since Jettison
+cannot know about the original data type, it has to guess.  Hence it will therefore also write the value of the id
+field as numeric value in future.</p>
 
 <h2 id="json-write">Write to JSON with the self-contained JSON driver</h2>
 
@@ -97,8 +97,7 @@ also write the value of the id field as numeric value in future.</p>
 }}</pre></div>
 
 <p>While the difference because of line feeds is immediately obvious, you have to note also the value of the
-<em>price</em> element. This time the driver knew about the numeric value and therefore no quotes were
-generated.</p>
+<em>id</em> element.  This time the driver knew about the string value and therefore quotes were generated.</p>
 
 <h2 id="json-dropping-root">Write to JSON with the self-contained JSON driver dropping the root</h2>
 
@@ -138,10 +137,9 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
 public class ReadTest {
 
-
 	public static void main(String[] args) {
-		String json = "{\"product\":{\"name\":\"Banana\",\"id\":\"123\""
-		    + ",\"price\":\"23.0\"}}";
+		String json = "{\"product\":{\"name\":\"Banana\",\"id\":123"
+		    + ",\"price\":23.0}}";
 		    
 		XStream xstream = new XStream(new JettisonMappedXmlDriver());
 		xstream.alias("product", Product.class);
