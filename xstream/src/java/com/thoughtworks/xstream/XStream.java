@@ -618,7 +618,7 @@ public class XStream {
 
         if (JVM.is15()) {
             aliasDynamically("duration", "javax.xml.datatype.Duration");
-            aliasDynamically("concurrent-hash-map", "java.util.concurrent.ConcurrentHashMap");
+            alias("concurrent-hash-map", jvm.loadClass("java.util.concurrent.ConcurrentHashMap"));
             alias("enum-set", jvm.loadClass("java.util.EnumSet"));
             alias("enum-map", jvm.loadClass("java.util.EnumMap"));
             alias("string-builder", jvm.loadClass("java.lang.StringBuilder"));
