@@ -40,6 +40,8 @@
     <h2>Minor changes</h2>
     
     <ul>
+    	<li>Support java.util.concurrent.ConcurrentHashMap with the MapConverter. This will also avoid a bug in JRockit
+    	JDK reported in JIRA:XSTR-608.</li>
     	<li>JVM.loadClass will now also initialize the loaded class and ignore any occurring LinkageError.</li>
     	<li>JIRA:XSTR-596: SubjectConverter will be no longer registered if initialization of javax.security.auth.Subject fails.</li>
     	<li>JIRA:XSTR-683: Inheritance of implicit collections, arrays or maps is dependent on declaration sequence.</li>

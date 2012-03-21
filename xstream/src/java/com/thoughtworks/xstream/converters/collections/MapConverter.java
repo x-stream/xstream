@@ -29,8 +29,8 @@ import java.util.Map;
  * <p>Note: 'key' and 'value' is not the name of the generated tag. The
  * children are serialized as normal elements and the implementation expects
  * them in the order 'key'/'value'.</p>
- * <p>Supports java.util.HashMap, java.util.Hashtable and
- * java.util.LinkedHashMap.</p>
+ * <p>Supports java.util.HashMap, java.util.Hashtable,
+ * java.util.LinkedHashMap and java.util.concurrent.ConcurrentHashMap.</p>
  *
  * @author Joe Walnes
  */
@@ -44,6 +44,7 @@ public class MapConverter extends AbstractCollectionConverter {
         return type.equals(HashMap.class)
                 || type.equals(Hashtable.class)
                 || type.getName().equals("java.util.LinkedHashMap")
+                || type.getName().equals("java.util.concurrent.ConcurrentHashMap")
                 || type.getName().equals("sun.font.AttributeMap") // Used by java.awt.Font in JDK 6
                 ;
     }
