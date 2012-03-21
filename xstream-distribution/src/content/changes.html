@@ -40,6 +40,8 @@
     <h2>Minor changes</h2>
     
     <ul>
+    	<li>JVM.loadClass will now also initialize the loaded class and ignore any occurring LinkageError.</li>
+    	<li>JIRA:XSTR-596: SubjectConverter will be no longer registered if initialization of javax.security.auth.Subject fails.</li>
     	<li>JIRA:XSTR-683: Inheritance of implicit collections, arrays or maps is dependent on declaration sequence.</li>
     	<li>Inherited implicit collections, arrays or maps can be overwritten with own definition in subtype.</li>
     	<li>JIRA:XSTR-688: Cannot omit XML elements from derived fields.</li>

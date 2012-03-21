@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,11 +15,11 @@ import junit.framework.TestCase;
 
 public class JVMTest extends TestCase {
 
-    public void testDoesNotInsantiateStaticBlocksWhenLoadingClasses() {
+    public void testDoesIgnoreLinkageErrors() {
         try {
-            new JVM().loadClass("com.thoughtworks.xstream.core.EvilClass");
-        } catch (ExceptionInInitializerError error) {
-            fail("Static block was called");
+            assertNull(new JVM().loadClass("com.thoughtworks.xstream.core.EvilClass"));
+        } catch (LinkageError error) {
+            fail("Error thrown");
         }
     }
 }
