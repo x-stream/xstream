@@ -260,7 +260,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
         }
     }
 
-    private void marshalUnserializableParent(final HierarchicalStreamWriter writer, final MarshallingContext context, final Object replacedSource) {
+    protected void marshalUnserializableParent(final HierarchicalStreamWriter writer, final MarshallingContext context, final Object replacedSource) {
         writer.startNode(ELEMENT_UNSERIALIZABLE_PARENTS);
         super.doMarshal(replacedSource, writer, context);
         writer.endNode();

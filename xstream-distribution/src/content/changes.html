@@ -52,6 +52,9 @@
     	<li>JIRA:XSTR-685: Deserialization from file or URL keeps stream open.</li>
     	<li>JIRA:XSTR-684: XML 1.0 character validation fails for characters from 0x10 to 0x1f.</li>
     	<li>SerializableConverter is broken if the serialized type is the default implementation.</li>
+    	<li>Method marshalUnserializableParent of SerializableConverter is protected now to skip the default mechanism
+    	in a derived converter that uses the default constructor to create the original type (as an alternative for
+    	JIRA:XSTR-695).</li>
     	<li>FieldDictionary may call sort of FieldKeySorter implementation with wrong type as key.</li>
     </ul>
 
