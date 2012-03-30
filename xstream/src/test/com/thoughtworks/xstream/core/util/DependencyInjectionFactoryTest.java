@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2007, 2009, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -113,6 +113,18 @@ public class DependencyInjectionFactoryTest extends TestCase {
             this(1, 2, null);
         }
 
+        public Thing(Number num) {
+            this(num.intValue(), 8 * num.intValue(), null);
+        }
+
+        public Thing(String str, TestCase testCase) {
+            this(str.length(), 4 * str.length(), testCase);
+        }
+
+        public Thing(Number num, TestCase testCase) {
+            this(num.intValue(), 4 * num.intValue(), testCase);
+        }
+
         public Thing(int first, int second, TestCase testCase) {
             this.first = first;
             this.second = second;
@@ -142,5 +154,25 @@ public class DependencyInjectionFactoryTest extends TestCase {
         assertTrue(used.get(0));
         assertTrue(used.get(1));
         assertTrue(used.get(2));
+    }
+    
+    public void testWillSelectMatchingConstructor() {
+        BitSet used = new BitSet();
+        Thing thing = (Thing)DependencyInjectionFactory.newInstance(
+            Thing.class, new Object[]{this, new Integer(1)}, used);
+        assertSame(this, thing.getTestCase());
+        assertEquals(1, thing.getFirst());
+        assertEquals(4, thing.getSecond());
+        assertTrue(used.get(0));
+        assertTrue(used.get(1));
+        
+        used = new BitSet();
+        thing = (Thing)DependencyInjectionFactory.newInstance(
+            Thing.class, new Object[]{this, "a"}, used);
+        assertSame(this, thing.getTestCase());
+        assertEquals(1, thing.getFirst());
+        assertEquals(4, thing.getSecond());
+        assertTrue(used.get(0));
+        assertTrue(used.get(1));
     }
 }

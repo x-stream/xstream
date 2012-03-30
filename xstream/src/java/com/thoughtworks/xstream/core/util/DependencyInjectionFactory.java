@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2009, 2010, 2011 XStream Committers.
+ * Copyright (c) 2007, 2009, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -43,7 +43,7 @@ public class DependencyInjectionFactory {
      * @since 1.2.2
      */
     public static Object newInstance(final Class type, final Object[] dependencies) {
-        return newInstance(type, dependencies, new BitSet());
+        return newInstance(type, dependencies, null);
     }
     
     /**
@@ -62,7 +62,9 @@ public class DependencyInjectionFactory {
      */
     public static Object newInstance(final Class type, final Object[] dependencies, final BitSet usedDependencies) {
         Constructor bestMatchingCtor = null;
-        final List matchingDependencies = new ArrayList();
+        final ArrayList matchingDependencies = new ArrayList();
+        List possibleMatchingDependencies = null;
+        BitSet possibleUsedDependencies = null;
 
         if (dependencies != null && dependencies.length > 0) {
             // sort available ctors according their arity
@@ -105,7 +107,6 @@ public class DependencyInjectionFactory {
                 }
                 if (arity > parameterTypes.length) {
                     if (possibleCtor != null) {
-                        bestMatchingCtor = possibleCtor;
                         continue;
                     }
                     arity = parameterTypes.length;
@@ -121,14 +122,14 @@ public class DependencyInjectionFactory {
                 // of the parameter
                 // declaration
                 matchingDependencies.clear();
-                for (int j = usedDependencies.length(); j-- > 0;) {
-                    usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
-                }
+                clear(usedDependencies);
                 for (int j = 0, k = 0; j < parameterTypes.length
                     && parameterTypes.length + k - j <= typedDependencies.length; k++ ) {
                     if (parameterTypes[j].isAssignableFrom(typedDependencies[k].type)) {
                         matchingDependencies.add(typedDependencies[k].value);
-                        usedDependencies.set(k);
+                        if (usedDependencies != null) {
+                            usedDependencies.set(k);
+                        }
                         if ( ++j == parameterTypes.length) {
                             bestMatchingCtor = constructor;
                             break;
@@ -144,9 +145,7 @@ public class DependencyInjectionFactory {
                     final TypedValue[] deps = new TypedValue[typedDependencies.length];
                     System.arraycopy(typedDependencies, 0, deps, 0, deps.length);
                     matchingDependencies.clear();
-                    for (int j = usedDependencies.length(); j-- > 0;) {
-                        usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
-                    }
+                    clear(usedDependencies);
                     for (int j = 0; j < parameterTypes.length; j++ ) {
                         int assignable = -1;
                         for (int k = 0; k < deps.length; k++ ) {
@@ -169,11 +168,20 @@ public class DependencyInjectionFactory {
 
                         if (assignable >= 0) {
                             matchingDependencies.add(deps[assignable].value);
-                            usedDependencies.set(assignable);
+                            if (usedDependencies != null) {
+                                usedDependencies.set(assignable);
+                            }
                             deps[assignable] = null; // do not match same dep twice
                         } else {
                             possibleCtor = null;
                             break;
+                        }
+                    }
+                    
+                    if (possibleCtor != null) {
+                        possibleMatchingDependencies = (List)matchingDependencies.clone();
+                        if (usedDependencies != null) {
+                            possibleUsedDependencies = (BitSet)usedDependencies.clone();
                         }
                     }
                 }
@@ -181,14 +189,18 @@ public class DependencyInjectionFactory {
 
             if (bestMatchingCtor == null) {
                 if (possibleCtor == null) {
-                    for (int j = usedDependencies.length(); j-- > 0;) {
-                        usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
-                    }
+                    clear(usedDependencies);
                     throw new ObjectAccessException("Cannot construct "
                         + type.getName()
                         + ", none of the dependencies match any constructor's parameters");
                 } else {
                     bestMatchingCtor = possibleCtor;
+                    matchingDependencies.clear();
+                    matchingDependencies.addAll(possibleMatchingDependencies);
+                    if (usedDependencies != null) {
+                        clear(usedDependencies);
+                        usedDependencies.or(possibleUsedDependencies);
+                    }
                 }
             }
         }
@@ -210,6 +222,14 @@ public class DependencyInjectionFactory {
         }
     }
 
+    private static void clear(final BitSet usedDependencies) {
+        if (usedDependencies != null) {
+            for (int j = usedDependencies.length(); j-- > 0;) {
+                usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
+            }
+        }
+    }
+
     private static class TypedValue {
         final Class type;
         final Object value;
@@ -222,7 +242,7 @@ public class DependencyInjectionFactory {
 
         public String toString()
         {
-                return type.getName() + ":" + value;
+            return type.getName() + ":" + value;
         }
     }
 

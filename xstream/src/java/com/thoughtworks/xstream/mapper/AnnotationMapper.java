@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -492,17 +492,16 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 args = arguments;
             }
 
-            final BitSet usedArgs = new BitSet();
             final Converter converter;
             try {
                 if (SingleValueConverter.class.isAssignableFrom(converterType)
                     && !Converter.class.isAssignableFrom(converterType)) {
                     final SingleValueConverter svc = (SingleValueConverter)DependencyInjectionFactory
-                        .newInstance(converterType, args, usedArgs);
+                        .newInstance(converterType, args);
                     converter = new SingleValueConverterWrapper(svc);
                 } else {
                     converter = (Converter)DependencyInjectionFactory.newInstance(
-                        converterType, args, usedArgs);
+                        converterType, args);
                 }
             } catch (final Exception e) {
                 throw new InitializationException("Cannot instantiate converter "
