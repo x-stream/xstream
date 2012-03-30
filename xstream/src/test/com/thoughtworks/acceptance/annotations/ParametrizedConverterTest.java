@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
@@ -22,6 +23,7 @@ import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import com.thoughtworks.xstream.converters.extended.ToStringConverter;
+import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 
@@ -48,6 +50,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         xstream.alias("type", Type.class);
         xstream.processAnnotations(MyMap.class);
         xstream.processAnnotations(DerivedType.class);
+        xstream.processAnnotations(SimpleBean.class);
     }
 
     public void testAnnotationForConvertersWithParameters() {
@@ -87,7 +90,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     /**
      * Tests a class-level XStreamConverter annotation subclassed from BigDecimal
      */
-    public void testCanUseCurrentTypAsParameter() {
+    public void testCanUseCurrentTypeAsParameter() {
         final Decimal value = new Decimal("5.5");
         String expected = "<decimal>5.5</decimal>";
 
@@ -146,5 +149,30 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
             super(decimal, bool);
         }
         
+    }
+
+    public void testAnnotatedJavaBeanConverter() {
+        final SimpleBean value = new SimpleBean();
+        value.setName("joe");
+        String expected = ""
+                + "<bean>\n"
+                + "  <name>joe</name>\n"
+                + "</bean>";
+        assertBothWays(value, expected);
+    }
+    
+    
+    @XStreamAlias("bean")
+    @XStreamConverter(JavaBeanConverter.class)
+    public static class SimpleBean extends StandardObject {
+        private String myName;
+
+        public String getName() {
+            return myName;
+        }
+
+        public void setName(String name) {
+            myName = name;
+        }
     }
 }

@@ -40,18 +40,29 @@ public class JavaBeanConverter implements Converter {
      */
     protected final Mapper mapper;
     protected final JavaBeanProvider beanProvider;
+    private final Class type;
+    
     /**
      * @deprecated As of 1.3, no necessity for field anymore.
      */
     private String classAttributeIdentifier;
 
     public JavaBeanConverter(Mapper mapper) {
-        this(mapper, new BeanProvider());
+        this(mapper, (Class)null);
+    }
+
+    public JavaBeanConverter(Mapper mapper, Class type) {
+        this(mapper, new BeanProvider(), type);
     }
 
     public JavaBeanConverter(Mapper mapper, JavaBeanProvider beanProvider) {
+        this(mapper,beanProvider, null);
+    }
+
+    public JavaBeanConverter(Mapper mapper, JavaBeanProvider beanProvider, Class type) {
         this.mapper = mapper;
         this.beanProvider = beanProvider;
+        this.type = type;
     }
 
     /**
@@ -67,7 +78,7 @@ public class JavaBeanConverter implements Converter {
      * If you need stricter checks, subclass JavaBeanConverter
      */
     public boolean canConvert(Class type) {
-        return beanProvider.canInstantiate(type);
+        return (this.type == null || this.type==type) &&  beanProvider.canInstantiate(type);
     }
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
