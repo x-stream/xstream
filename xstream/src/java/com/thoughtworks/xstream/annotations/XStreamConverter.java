@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -34,18 +34,19 @@ import java.lang.annotation.Target;
  * <li>{@link com.thoughtworks.xstream.converters.ConverterLookup}: The lookup for converters
  * handling a special type.</li>
  * <li>{@link com.thoughtworks.xstream.core.JVM}: Utility e.g. to load classes.</li>
- * <li>All elements provided with the individual arrays of this annotation.</li>
+ * <li>All elements provided with the individual arrays of this annotation. The provided values
+ * follow the declaration sequence if a constructor requires multiple arguments of the same
+ * type.</li>
  * <li>{@link Class}: The type of the element where the annotation is declared. Note, that this
  * argument is not supported when using
  * {@link com.thoughtworks.xstream.annotations.XStreamConverters}.</li>
  * </ul>
- * <p>
- * Note, the annotation matches a {@link ConverterMatcher}.
+ * <p>The algorithm will try the converter's constructor with the most arguments first.</p>
+ * <p>Note, the annotation matches a {@link ConverterMatcher}.
  * {@link com.thoughtworks.xstream.converters.ConverterMatcher} as well as
  * {@link com.thoughtworks.xstream.converters.SingleValueConverter} extend this interface. The
  * {@link com.thoughtworks.xstream.mapper.AnnotationMapper} can only handle these two
- * <strong>known</strong> types.
- * </p>
+ * <strong>known</strong> types.</p>
  * 
  * @author Chung-Onn Cheong
  * @author J&ouml;rg Schaible
@@ -56,6 +57,17 @@ import java.lang.annotation.Target;
 public @interface XStreamConverter {
     Class<? extends ConverterMatcher> value();
     int priority() default XStream.PRIORITY_NORMAL;
+    /**
+     * Provide class types as arguments for the converter's constructor arguments.
+     * 
+     * <p>Note, that XStream itself provides the current class type as first Class argument to
+     * a constructor, if the annotation is added directly to a class type (and not as part of a
+     * parameter declaration of a {@link XStreamConverters} annotation). The current type has
+     * precedence over any type provided with this method.
+     * 
+     * @return the types
+     * @since 1.4.2
+     */
     Class<?>[] types() default {};
     String[] strings() default {};
     byte[] bytes() default {};
