@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -93,11 +93,12 @@
 	additional dependencies.</p>
 
     <!-- ...................................................... -->
-    <h2 id="Compatibility_Harmony">Why does XStream fail on Harmony?</h2>
+    <h2 id="Compatibility_Harmony">Why does XStream fail on Apache Harmony?</h2>
 
 	<p>Since JDK 5 it is possible according the Java specification to write into final fields using reflection. This is not yet 
 	supported by Harmony and therefore the PureJavaReflectionProvider fails. We have also already investigated into
-	enhanced mode in Harmony, but the Harmony JVM currently crashes running the unit tests. It is simply not yet ready.</p>
+	enhanced mode in Harmony, but the Harmony JVM crashed running the unit tests. However, Harmony has been retired,
+	we will no longer make any efforts in this direction.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_unsupported_JVM">Are there plans to provide enhanced mode support to other JVMs?</h2>

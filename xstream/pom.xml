@@ -198,15 +198,6 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>**/HarmonyReflectionProvider*</exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <executions>
               <execution>
@@ -246,7 +237,6 @@
                 <exclude>**/enums/*</exclude>
                 <exclude>**/basic/StringBuilder*</exclude>
                 <exclude>**/basic/UUID*</exclude>
-                <exclude>**/HarmonyReflectionProvider*</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/annotations/*</exclude>
