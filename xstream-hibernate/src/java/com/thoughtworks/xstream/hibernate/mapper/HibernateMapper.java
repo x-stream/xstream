@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2011 XStream Committers.
+ * Copyright (C) 2007, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,14 +17,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.thoughtworks.xstream.hibernate.util.Hibernate;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
-import org.hibernate.collection.PersistentBag;
-import org.hibernate.collection.PersistentList;
-import org.hibernate.collection.PersistentMap;
-import org.hibernate.collection.PersistentSet;
-import org.hibernate.collection.PersistentSortedMap;
-import org.hibernate.collection.PersistentSortedSet;
 import org.hibernate.proxy.HibernateProxy;
 
 
@@ -43,12 +38,12 @@ public class HibernateMapper extends MapperWrapper {
 
     public HibernateMapper(final MapperWrapper mapper) {
         super(mapper);
-        collectionMap.put(PersistentBag.class, ArrayList.class);
-        collectionMap.put(PersistentList.class, ArrayList.class);
-        collectionMap.put(PersistentMap.class, HashMap.class);
-        collectionMap.put(PersistentSet.class, HashSet.class);
-        collectionMap.put(PersistentSortedMap.class, TreeMap.class);
-        collectionMap.put(PersistentSortedSet.class, TreeSet.class);
+        collectionMap.put(Hibernate.PersistentBag, ArrayList.class);
+        collectionMap.put(Hibernate.PersistentList, ArrayList.class);
+        collectionMap.put(Hibernate.PersistentMap, HashMap.class);
+        collectionMap.put(Hibernate.PersistentSet, HashSet.class);
+        collectionMap.put(Hibernate.PersistentSortedMap, TreeMap.class);
+        collectionMap.put(Hibernate.PersistentSortedSet, TreeSet.class);
     }
 
     public Class defaultImplementationOf(final Class clazz) {

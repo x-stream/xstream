@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -29,8 +29,17 @@
     <url>http://xstream.codehaus.org</url>
   </organization>
 
-  <!-- xstream-builder is currently JDK 5 only -->
   <profiles>
+    <profile>
+      <id>jdk15-le</id>
+      <activation>
+        <jdk>[,1.5]</jdk>
+      </activation>
+      <properties>
+        <version.hsqldb>1.8.0.10</version.hsqldb>
+        <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core>
+      </properties>
+    </profile>
     <profile>
       <id>jdk15-ge</id>
       <activation>
@@ -52,6 +61,7 @@
       </properties>
     </profile>
   </profiles>
+
   <modules>
     <module>xstream</module>
     <module>xstream-hibernate</module>
@@ -232,7 +242,7 @@
         <version>${version.org.hibernate.core}</version>
       </dependency>
       <dependency>
-        <groupId>hsqldb</groupId>
+        <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>${version.hsqldb}</version>
       </dependency>
@@ -512,7 +522,7 @@
     <version.commons.io>1.4</version.commons.io>
     <version.commons.lang>2.4</version.commons.lang>
     <version.dom4j>1.6.1</version.dom4j>
-    <version.hsqldb>1.8.0.7</version.hsqldb>
+    <version.hsqldb>2.2.8</version.hsqldb>
     <version.javaassist>3.12.1.GA</version.javaassist>
     <version.jmock>1.0.1</version.jmock>
     <version.joda-time>1.6</version.joda-time>
@@ -520,8 +530,7 @@
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
     <version.org.codehaus.jettison>1.2</version.org.codehaus.jettison>
     <version.org.codehaus.woodstox.asl>3.2.7</version.org.codehaus.woodstox.asl>
-    <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core><!-- last version on central -->
-    <!-- version.org.hibernate.core>3.5.6-Final</version.org.hibernate.core -->
+    <version.org.hibernate.core>4.1.4.Final</version.org.hibernate.core>
     <version.org.jdom>1.1</version.org.jdom>
     <version.org.json>20080701</version.org.json>
     <version.org.slf4j>1.6.1</version.org.slf4j>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -38,11 +38,15 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
     }
 
     protected void tearDown() {
-        final Session session = getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        final Division div = (Division)session.createQuery("from Division").uniqueResult();
-        session.delete(div);
-        session.getTransaction().commit();
+        try {
+            final Session session = getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            final Division div = (Division)session.createQuery("from Division").uniqueResult();
+            session.delete(div);
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
     public void testObjectGraphWithReferences() {
@@ -56,6 +60,7 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
         session.beginTransaction();
         final Division loaded = (Division)session.createQuery("from Division").uniqueResult();
         final String loadedXml = xstream.toXML(loaded);
+        session.flush();
         session.getTransaction().commit();
         assertEquals(expectedXml, persistedXml);
         assertEquals(expectedXml, loadedXml);
@@ -72,6 +77,7 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
         final Site site = person.getSite();
         assertTrue(HibernateProxy.class.isAssignableFrom(site.getClass()));
         final String loadedXml = xstream.toXML(site);
+        session.flush();
         session.getTransaction().commit();
 
         final String expectedXml = ""
@@ -117,6 +123,7 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
         session.save(site);
         new Person("Tom", dep, site);
         session.save(div);
+        session.flush();
         session.getTransaction().commit();
         return div;
     }

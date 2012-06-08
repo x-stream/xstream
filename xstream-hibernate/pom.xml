@@ -1,6 +1,6 @@
 <?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
-     Copyright (C) 2011 XStream committers.
+     Copyright (C) 2011, 2012 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -21,9 +21,9 @@
 
   <profiles>
     <profile>
-      <id>jdk15-ge</id>
+      <id>jdk16-ge</id>
       <activation>
-        <jdk>[1.5,)</jdk>
+        <jdk>[1.6,)</jdk>
       </activation>
       <build>
         <plugins>
@@ -121,8 +121,9 @@
         <artifactId>hibernate-core</artifactId>
     </dependency>
     <dependency>
-        <groupId>hsqldb</groupId>
+        <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
+        <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.slf4j</groupId>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,15 +13,14 @@ package com.thoughtworks.xstream.hibernate.converter;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.hibernate.util.Hibernate;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import org.hibernate.collection.PersistentMap;
-
 
 /**
- * A converter for Hibernate's {@link PersistentMap}. The converter will drop any reference to
- * the Hibernate collection and emit at serialization time an equivalent JDK collection instead.
+ * A converter for Hibernate's PersistentMap. The converter will drop any reference to the
+ * Hibernate collection and emit at serialization time an equivalent JDK collection instead.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
@@ -39,7 +38,7 @@ public class HibernatePersistentMapConverter extends MapConverter {
     }
 
     public boolean canConvert(final Class type) {
-        return type == PersistentMap.class;
+        return type == Hibernate.PersistentMap;
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader,

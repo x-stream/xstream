@@ -37,6 +37,7 @@
     <ul>
     	<li>Support java.util.concurrent.ConcurrentHashMap with the MapConverter. This will also avoid a bug in JRockit
     	JDK reported in JIRA:XSTR-608.</li>
+    	<li>JIRA:XSTR-699: Support for Hibernate 4 with XStream's Hibernate module as default for Java 6 or higher.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -59,6 +60,7 @@
     	JIRA:XSTR-695).</li>
     	<li>FieldDictionary may call sort of FieldKeySorter implementation with wrong type as key.</li>
     	<li>Sometimes DependencyInjectionFactory tries to instantiate objects with mismatching constructor arguments.</li>
+    	<li>HSQLDB has to be a test dependency only for XStream's Hibernate module.</li>
     </ul>
 
     <h1 id="1.4.2">1.4.2</h1>
