@@ -31,16 +31,6 @@
 
   <profiles>
     <profile>
-      <id>jdk15-le</id>
-      <activation>
-        <jdk>[,1.5]</jdk>
-      </activation>
-      <properties>
-        <version.hsqldb>1.8.0.10</version.hsqldb>
-        <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core>
-      </properties>
-    </profile>
-    <profile>
       <id>jdk15-ge</id>
       <activation>
         <jdk>[1.5,)</jdk>
@@ -50,6 +40,17 @@
       </modules>
     </profile>
     <profile>
+      <id>jdk15</id>
+      <activation>
+        <jdk>1.5</jdk>
+      </activation>
+      <properties>
+        <version.hsqldb>1.8.0.10</version.hsqldb>
+        <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core>
+      </properties>
+    </profile>
+    <profile>
+      <!-- build with Maven 2.0.10 !!! -->
       <id>jdk14</id>
       <activation>
         <jdk>1.4</jdk>
@@ -58,6 +59,9 @@
         <version.java.source>1.3</version.java.source>
         <version.java.target>1.3</version.java.target>
         <link.javadoc.javase>http://download.oracle.com/javase/1.4.2/docs/api/</link.javadoc.javase>
+        <!-- repeat Hibernate version dependencies, JDK intervals in activation is not supported with M2.0.x -->
+        <version.hsqldb>1.8.0.10</version.hsqldb>
+        <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core>
       </properties>
     </profile>
   </profiles>

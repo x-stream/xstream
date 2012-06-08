@@ -1,6 +1,5 @@
-Building with Maven 2 or 3
-
-Requires at least Maven 2.0.11
+For Java 5 or higher build with Maven 2.2 or 3
+For Java 1.4 build with Maven 2.0.11
 
 Before building:
 
