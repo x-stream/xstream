@@ -13,7 +13,7 @@ import org.hibernate.proxy.HibernateProxy;
  * Utility class for Hibernate support.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.3
  */
 public class Hibernate {
     public final static Class PersistentBag = loadHibernateType("org.hibernate.collection.internal.PersistentBag");
