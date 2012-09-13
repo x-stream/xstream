@@ -118,7 +118,6 @@ public class FieldDictionary implements Caching {
     }
 
     private Map buildMap(final Class type, boolean tupleKeyed) {
-        final Map result;
         Class cls = type;
         synchronized (this) {
             if (!keyedByFieldNameCache.containsKey(type)) {
@@ -170,14 +169,12 @@ public class FieldDictionary implements Caching {
                         lastKeyedByFieldKey = (Map)keyedByFieldKeyCache.get(cls);
                     }
                 }
-                result = tupleKeyed ? lastKeyedByFieldKey : lastKeyedByFieldName;
-            } else {
-                result = (Map)(tupleKeyed
-                    ? keyedByFieldKeyCache.get(type)
-                    : keyedByFieldNameCache.get(type));
+                return tupleKeyed ? lastKeyedByFieldKey : lastKeyedByFieldName;
             }
         }
-        return result;
+        return (Map)(tupleKeyed
+                ? keyedByFieldKeyCache.get(type)
+                : keyedByFieldNameCache.get(type));
     }
 
     public synchronized void flushCache() {
