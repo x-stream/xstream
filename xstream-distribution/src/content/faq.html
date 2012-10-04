@@ -204,22 +204,23 @@
     return this;
   }
 }</pre></div>
+<p>or</p>
+<div class="Source Java"><pre>class ThreadAwareComponent {
+  private transient ThreadLocal component;
+  // ...
+  private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    in.defaultReadObject();
+    component = new ThreadLocal();
+  }
+}</pre></div>
+<p>Use the latter in class hierarchies, readResolve is not called for base classes.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_no_ctor_running">XStream is not calling the default constructor during deserialization.</h2>
 
     <p>This is, in fact, the same case as above. XStream uses the same mechanism as the JDK serialization. When using
     the enhanced mode with the optimized reflection API, it does not invoke the default constructor. The solution is to
-    implement the readResolve method as above:</p>
-
-<div class="Source Java"><pre>class MyExecutor {
-  private Object readResolve() {
-    // do what you need to do here
-    System.out.println("After instantiating MyExecutor");
-    // at the end returns itself
-    return this;
-  }
-}</pre></div>
+    implement the readResolve or readObject as demonstrated with the last question.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_collections">What do serialized collections look like?</h2>
@@ -228,8 +229,28 @@
 	<p>Note, that it is possible to configure XStream to omit the container element <i>toys</i> using implicit collections.</p>
 
     <!-- ...................................................... -->
+    <h2 id="Serialization_implicit_null">My implicit collection is suddenly null after deserialization instead of empty!</h2>
+
+	<p>By declaring a collection as implicit, the result will have no direct representation of the collection container
+	itself anymore. Therefore, if the collection was empty at serialization time, the serialized result does not
+	contain a trace of the collection anymore. At deserialization time it will therefore not know anything about the
+	collection and will not initialize it. XStream cannot decide anyway at deserialization time, if the collection was
+	empty or null.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_implicit_different_type">The type of my implicit collection is different after deserialization.</h2>
+
+	<p>By declaring a collection as implicit, the result will have no direct representation of the collection container
+	itself anymore. Therefore XStream cannot track the original type of the collection. At deserialization time it will
+	therefore look at the declaration type of the field that holds the collection and use this type's default
+	implementation, e.g. for a List this is by default an ArrayList.</p>
+
+	<p>Beware, that this also means that collections with additional information (e.g. a TreeSet with a Comparator)
+	cannot be restored, since the comparator was already omitted at serialization time.</p>
+
+    <!-- ...................................................... -->
     <h2 id="Serialization_Serializable">Do my classes have to implement Serializable if XStream is to serialize them?</h2>
-    <p>No.</p>
+    <p>No, but XStream respects the Java serialization methods even for types not declared as Serializable.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_proxies">Can dynamic proxies be serialized?</h2>
