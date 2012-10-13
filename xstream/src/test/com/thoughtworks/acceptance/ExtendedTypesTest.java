@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -58,8 +58,10 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testSqlTimestamp() {
-        assertBothWays(new Timestamp(1234),
-                "<sql-timestamp>1969-12-31 19:00:01.234</sql-timestamp>");
+        Timestamp timestamp = new Timestamp(1234);
+        timestamp.setNanos(78900);
+        assertBothWays(timestamp,
+                "<sql-timestamp>1970-01-01 00:00:01.0000789</sql-timestamp>");
     }
 
     public void testSqlTime() {
