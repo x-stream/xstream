@@ -34,7 +34,6 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
         return type.equals(Timestamp.class);
     }
 
-    @Override
     public String toString(Object obj) {
         Timestamp timestamp = (Timestamp)obj;
         StringBuffer buffer = new StringBuffer(format.format(timestamp)).append('.');
