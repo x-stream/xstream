@@ -35,8 +35,8 @@ public class JVM implements Caching {
     private ReflectionProvider reflectionProvider;
     private transient Map loaderCache = new WeakCache(new HashMap());
     
-    private final boolean supportsAWT = testClass("java.awt.Color");
-    private final boolean supportsSwing = testClass("javax.swing.LookAndFeel");
+    private final boolean supportsAWT = loadClass("java.awt.Color") != null;
+    private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel") != null;
     private final boolean supportsSQL = loadClass("java.sql.Date") != null;
     
     private static final boolean optimizedTreeSetAddAll;
@@ -224,21 +224,6 @@ public class JVM implements Caching {
         } catch (ClassNotFoundException e) {
             return null;
         }
-    }
-
-    public boolean testClass(String name) {
-        Class cached = (Class) loaderCache.get(name);
-        if (cached != null) {
-            return true;
-        }
-        try {
-            return Class.forName(name, false, getClass().getClassLoader()) != null;
-        } catch (LinkageError e) {
-            // fail
-        } catch (ClassNotFoundException e) {
-            // fail
-        }
-        return false;
     }
 
     public synchronized ReflectionProvider bestReflectionProvider() {
