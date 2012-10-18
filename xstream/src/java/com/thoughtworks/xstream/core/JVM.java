@@ -232,8 +232,7 @@ public class JVM implements Caching {
             return true;
         }
         try {
-            Class clazz = Class.forName(name, false, getClass().getClassLoader());
-            return true;
+            return Class.forName(name, false, getClass().getClassLoader()) != null;
         } catch (LinkageError e) {
             // fail
         } catch (ClassNotFoundException e) {
