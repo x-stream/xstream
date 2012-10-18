@@ -35,7 +35,7 @@ public class JVM implements Caching {
     private ReflectionProvider reflectionProvider;
     private transient Map loaderCache = new WeakCache(new HashMap());
     
-    private final boolean supportsAWT = loadClass("java.awt.Color") != null;
+    private final boolean supportsAWT = loadClass("java.awt.AWTError") != null;
     private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel") != null;
     private final boolean supportsSQL = loadClass("java.sql.Date") != null;
     
