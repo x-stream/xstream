@@ -139,8 +139,9 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         message.float2 = new Float(1.2f);
         message.double1 = 2.1;
         message.double2 = new Double(2.2);
-        message.bigInt = new BigInteger(new byte[]{(byte)1,(byte)0xFF});
-        message.bigDec = new BigDecimal(314).divide(new BigDecimal(100));
+        message.bigInt = new BigInteger(new byte[]{(byte)1, (byte)0xFF});
+        message.bigDec = new BigDecimal(314).divide(
+            new BigDecimal(100), 2, BigDecimal.ROUND_FLOOR);
 
         Message message2 = new Message("bonjour");
         message2.int1 = 3;
