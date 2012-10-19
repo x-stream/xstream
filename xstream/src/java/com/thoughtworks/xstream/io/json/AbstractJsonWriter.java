@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2009, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,10 +11,13 @@
 package com.thoughtworks.xstream.io.json;
 
 import java.io.Externalizable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.util.FastStack;
@@ -165,9 +168,10 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     private static final int STATE_END_ELEMENTS = 1 << 8;
     private static final int STATE_SET_VALUE = 1 << 9;
 
-    private static final List NUMBER_TYPES = Arrays.asList(new Class[]{
+    private static final Set NUMBER_TYPES = new HashSet(Arrays.asList(new Class[]{
         byte.class, Byte.class, short.class, Short.class, int.class, Integer.class, long.class,
-        Long.class, float.class, Float.class, double.class, Double.class});
+        Long.class, float.class, Float.class, double.class, Double.class, BigInteger.class,
+        BigDecimal.class}));
     private int mode;
     private FastStack stack = new FastStack(16);
     private int expectedStates;
@@ -542,7 +546,14 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
         throw new IllegalWriterStateException(currentState, requiredState, elementToAdd);
     }
 
-    private Type getType(Class clazz) {
+    /**
+     * Method to return the appropriate JSON type for a Java type.
+     * 
+     * @param clazz the type
+     * @return One of the {@link Type} instances
+     * @since upcoming
+     */
+    protected Type getType(Class clazz) {
         return (clazz == Mapper.Null.class || clazz == null)
             ? Type.NULL
             : (clazz == Boolean.class || clazz == Boolean.TYPE) 
