@@ -101,6 +101,40 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         };
         assertBothWays(root, xml);
     }
+    
+    @XStreamAlias("point3d")
+    public static class Point3D extends Point {
+        @XStreamAsAttribute
+    	private int z;
+
+		public Point3D(int x, int y, int z) {
+    		super(x,y);
+			this.z = z;
+    	}
+    }
+    
+    @XStreamAlias("root")
+    public static class VariantArray {
+        @XStreamImplicit
+    	private Point[] points;
+    }
+    
+    public void testCanHandleVariantArrays()
+	{
+		VariantArray array = new VariantArray();
+		array.points = new Point[] {
+			new Point(1, 2), 
+			new Point3D(3, 4, 5), 
+			new Point(6, 7)
+		};
+        String xml = "" //
+            + "<root>\n" // 
+            + "  <point x=\"1\" y=\"2\"/>\n"
+            + "  <point3d x=\"3\" y=\"4\" z=\"5\"/>\n"
+            + "  <point x=\"6\" y=\"7\"/>\n"
+            + "</root>";
+        assertBothWays(array, xml);
+	}
 
     @XStreamAlias("primitives")
     public static class PrimitiveArrays {
