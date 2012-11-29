@@ -35,9 +35,9 @@ public class JVM implements Caching {
     private ReflectionProvider reflectionProvider;
     private transient Map loaderCache = new WeakCache(new HashMap());
     
-    private final boolean supportsAWT = loadClass("java.awt.Color") != null;
-    private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel") != null;
-    private final boolean supportsSQL = loadClass("java.sql.Date") != null;
+    private final boolean supportsAWT = existsClass("java.awt.Color");
+    private final boolean supportsSwing = existsClass("javax.swing.LookAndFeel");
+    private final boolean supportsSQL = existsClass("java.sql.Date");
     
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
@@ -208,6 +208,19 @@ public class JVM implements Caching {
     
     private static boolean isSAP() {
         return vendor.indexOf("SAP AG") != -1;
+    }
+
+    public boolean existsClass(String name) {
+        if (loaderCache.get(name) != null) {
+            return true;
+        }
+        try {
+            return Class.forName(name, false, getClass().getClassLoader()) != null;
+        } catch (LinkageError e) {
+            return false;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     public Class loadClass(String name) {
