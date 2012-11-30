@@ -36,8 +36,8 @@ public class JVM implements Caching {
     private ReflectionProvider reflectionProvider;
     private transient Map loaderCache = new WeakCache(new HashMap());
     
-    private final boolean supportsAWT = existsClass("java.awt.Color");
-    private final boolean supportsSwing = existsClass("javax.swing.LookAndFeel");
+    private final boolean supportsAWT = existsClass("java.awt.Color") && (is15() || !GraphicsEnvironment.isHeadless());
+    private final boolean supportsSwing = existsClass("javax.swing.LookAndFeel") && (is15() || !GraphicsEnvironment.isHeadless());
     private final boolean supportsSQL = existsClass("java.sql.Date");
     
     private static final boolean optimizedTreeSetAddAll;
