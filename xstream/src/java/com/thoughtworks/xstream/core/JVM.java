@@ -17,6 +17,7 @@ import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.core.util.PresortedSet;
 import com.thoughtworks.xstream.core.util.WeakCache;
 
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
 import java.text.AttributedString;
@@ -219,6 +220,8 @@ public class JVM implements Caching {
         } catch (LinkageError e) {
             return false;
         } catch (ClassNotFoundException e) {
+            return false;
+        } catch (RuntimeException e) {
             return false;
         }
     }
