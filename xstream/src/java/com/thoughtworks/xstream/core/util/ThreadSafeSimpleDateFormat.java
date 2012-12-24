@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,16 +39,24 @@ public class ThreadSafeSimpleDateFormat {
     private final Pool pool;
     private final TimeZone timeZone;
 
-    public ThreadSafeSimpleDateFormat(String format, TimeZone timeZone, int initialPoolSize, int maxPoolSize, final boolean lenient) {
+    public ThreadSafeSimpleDateFormat(
+        String format, TimeZone timeZone, int initialPoolSize, int maxPoolSize,
+        final boolean lenient) {
+        this(format, timeZone, Locale.ENGLISH, initialPoolSize, maxPoolSize, lenient);
+    }
+
+    public ThreadSafeSimpleDateFormat(
+        String format, TimeZone timeZone, final Locale locale, int initialPoolSize,
+        int maxPoolSize, final boolean lenient) {
         formatString = format;
         this.timeZone = timeZone;
         pool = new Pool(initialPoolSize, maxPoolSize, new Pool.Factory() {
             public Object newInstance() {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(formatString, Locale.ENGLISH);
+                SimpleDateFormat dateFormat = new SimpleDateFormat(formatString, locale);
                 dateFormat.setLenient(lenient);
                 return dateFormat;
             }
-            
+
         });
     }
 

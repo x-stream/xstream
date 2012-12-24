@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,8 +18,10 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import com.thoughtworks.xstream.core.JVM;
@@ -28,10 +30,15 @@ import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
 
 /**
  * Converts a java.util.Date to a String as a date format, retaining precision down to
- * milliseconds. The formatted string is by default in UTC. You can provide a different
- * {@link TimeZone} that is used for serialization or <code>null</code> to use always the
- * current TimeZone. Note, that the default format uses 3-letter time zones that can be
- * ambiguous and may cause wrong results at deserialization.
+ * milliseconds.
+ * 
+ * <p>The formatted string is by default in UTC and English locale. You can provide
+ * a different {@link Locale} and {@link TimeZone} that are used for serialization or
+ * <code>null</code> to use always the current TimeZone. Note, that the default format uses
+ * 3-letter time zones that can be ambiguous and may cause wrong results at deserialization and
+ * is localized since Java 6.</p>
+ * 
+ * <p>Dates in a different era are using a special default pattern that contains the era itself.</p> 
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
@@ -40,12 +47,19 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
 
     private static final String[] DEFAULT_ACCEPTABLE_FORMATS;
     private static final String DEFAULT_PATTERN;
-    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+    private static final String DEFAULT_ERA_PATTERN;
+    private static final TimeZone UTC;
+    private static final long ERA_START;
     static {
+        UTC = TimeZone.getTimeZone("UTC");
+        
         final String defaultPattern = "yyyy-MM-dd HH:mm:ss.S z";
+        final String defaultEraPattern = "yyyy-MM-dd G HH:mm:ss.S z";
         final List acceptablePatterns = new ArrayList();
         final boolean utcSupported = JVM.canParseUTCDateFormat();
         DEFAULT_PATTERN = utcSupported ? defaultPattern : "yyyy-MM-dd HH:mm:ss.S 'UTC'";
+        DEFAULT_ERA_PATTERN = utcSupported ? defaultEraPattern : "yyyy-MM-dd G HH:mm:ss.S 'UTC'";
+        acceptablePatterns.add("yyyy-MM-dd HH:mm:ss.S z");
         if (!utcSupported) {
             acceptablePatterns.add(defaultPattern);
         }
@@ -59,9 +73,17 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
         // backwards compatibility
         acceptablePatterns.add("yyyy-MM-dd HH:mm:ssa");
         DEFAULT_ACCEPTABLE_FORMATS = (String[]) acceptablePatterns.toArray(new String[acceptablePatterns.size()]);
+        
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(UTC);
+        cal.clear();
+        cal.set(1, Calendar.JANUARY, 1);
+        ERA_START = cal.getTime().getTime(); // calendar.getTimeInMillis() not available under JDK 1.3
     }
     private final ThreadSafeSimpleDateFormat defaultFormat;
+    private final ThreadSafeSimpleDateFormat defaultEraFormat;
     private final ThreadSafeSimpleDateFormat[] acceptableFormats;
+    private final Locale locale;
 
     /**
      * Construct a DateConverter with standard formats and lenient set off.
@@ -135,8 +157,33 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      */
     public DateConverter(
         String defaultFormat, String[] acceptableFormats, TimeZone timeZone, boolean lenient) {
+        this(DEFAULT_ERA_PATTERN, defaultFormat, acceptableFormats, Locale.ENGLISH, timeZone, lenient);
+    }
+
+    /**
+     * Construct a DateConverter.
+     * 
+     * @param defaultEraFormat the default format for dates in a different era (may be
+     *            <code>null</code> to drop era support)
+     * @param defaultFormat the default format
+     * @param acceptableFormats fallback formats
+     * @param locale locale to use for the format
+     * @param timeZone the TimeZone used to serialize the Date
+     * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
+     * @since upcoming
+     */
+    public DateConverter(
+        String defaultEraFormat, String defaultFormat, String[] acceptableFormats,
+        Locale locale, TimeZone timeZone, boolean lenient) {
+        this.locale = locale;
+        if (defaultEraFormat != null) {
+            this.defaultEraFormat = new ThreadSafeSimpleDateFormat(
+                defaultEraFormat, timeZone, locale, 4, 20, lenient);
+        } else {
+            this.defaultEraFormat = null;
+        }
         this.defaultFormat = new ThreadSafeSimpleDateFormat(
-            defaultFormat, timeZone, 4, 20, lenient);
+            defaultFormat, timeZone, locale, 4, 20, lenient);
         this.acceptableFormats = acceptableFormats != null
             ? new ThreadSafeSimpleDateFormat[acceptableFormats.length]
             : new ThreadSafeSimpleDateFormat[0];
@@ -151,27 +198,45 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
     }
 
     public Object fromString(String str) {
-        try {
-            return defaultFormat.parse(str);
-        } catch (ParseException e) {
-            for (int i = 0; i < acceptableFormats.length; i++ ) {
-                try {
-                    return acceptableFormats[i].parse(str);
-                } catch (ParseException e2) {
-                    // no worries, let's try the next format.
-                }
+        if (defaultEraFormat != null) {
+            try {
+                return defaultEraFormat.parse(str);
+            } catch (ParseException e) {
+                // try next ...
             }
-            // no dateFormats left to try
-            throw new ConversionException("Cannot parse date " + str);
         }
+        if (defaultEraFormat != defaultFormat) {
+            try {
+                return defaultFormat.parse(str);
+            } catch (ParseException e) {
+                // try next ...
+            }
+        }
+        for (int i = 0; i < acceptableFormats.length; i++ ) {
+            try {
+                return acceptableFormats[i].parse(str);
+            } catch (ParseException e3) {
+                // no worries, let's try the next format.
+            }
+        }
+        // no dateFormats left to try
+        throw new ConversionException("Cannot parse date " + str);
     }
 
     public String toString(Object obj) {
-        return defaultFormat.format((Date)obj);
+        final Date date = (Date)obj;
+        if (date.getTime() < ERA_START && defaultEraFormat != null) {
+            return defaultEraFormat.format(date);
+        } else {
+            return defaultFormat.format(date);
+        }
     }
 
     public void appendErrors(ErrorWriter errorWriter) {
         errorWriter.add("Default date pattern", defaultFormat.toString());
+        if (defaultEraFormat != null) {
+            errorWriter.add("Default era date pattern", defaultEraFormat.toString());
+        }
         for (int i = 0; i < acceptableFormats.length; i++ ) {
             errorWriter.add("Alternative date pattern", acceptableFormats[i].toString());
         }

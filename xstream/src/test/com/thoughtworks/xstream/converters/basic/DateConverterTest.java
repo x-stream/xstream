@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -101,7 +102,7 @@ public class DateConverterTest extends TestCase {
         Date simpleDate = f.parse(strIST);
         assertEquals(simpleDate, dateRetrieved);
         // DateConverter does not get influenced by change of current TZ ...
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
         dateRetrieved = (Date)converter.fromString(strIST);
         assertEquals(simpleDate, dateRetrieved);
         // ... as well as the SimpleDateFormat
@@ -109,7 +110,11 @@ public class DateConverterTest extends TestCase {
         simpleDate = f.parse(strIST);
         assertEquals(simpleDate, dateRetrieved);
         assertEquals(date, f.parse("2004-02-22 20:16:04.0 UTC"));
-        // assertEquals(date, simpleDate); off by +03:30 ... but why ??
+        // 'date' was created for IST time zone, so let parser return in IST
+        f.setTimeZone(TimeZone.getTimeZone("IST"));
+        simpleDate = f.parse(strIST);
+        assertEquals(date, simpleDate);
+        assertEquals(date, f.parse("2004-02-22 20:16:04.0 UTC"));
     }
 
     public void testIsThreadSafe() throws InterruptedException {
@@ -195,5 +200,19 @@ public class DateConverterTest extends TestCase {
         TimeZone.setDefault(TimeZone.getTimeZone("Australia/Brisbane")); // EST also used e.g. for America/Toronto
         Date expected = new Date(0);
         assertEquals(expected, converter.fromString(converter.toString(expected)));
+    }
+
+    public void testDatesWithEpoche() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        assertEquals(GregorianCalendar.AD, cal.get(Calendar.ERA));
+        cal.clear();
+        cal.set(1, Calendar.JANUARY, 1);
+        cal.add(Calendar.MILLISECOND, -1);
+        Date date = cal.getTime();
+        assertEquals("0001-12-31 BC 23:59:59.999 UTC", converter.toString(date));
+        assertEquals(date, converter.fromString("0001-12-31 BC 23:59:59.999 UTC"));
+        cal.add(Calendar.MILLISECOND, 1);
+        assertEquals(cal.getTime(), converter.fromString("0001-01-01 AD 00:00:00.000 UTC"));
     }
 }
