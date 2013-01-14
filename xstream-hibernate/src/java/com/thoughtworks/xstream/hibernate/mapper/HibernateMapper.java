@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2011, 2012 XStream Committers.
+ * Copyright (C) 2007, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -55,16 +55,17 @@ public class HibernateMapper extends MapperWrapper {
     }
 
     public String serializedClass(final Class clazz) {
-        // check whether we are Hibernate proxy and substitute real name
-        if (HibernateProxy.class.isAssignableFrom(clazz)) {
-            return super.serializedClass(clazz.getSuperclass());
+        if (clazz != null) {
+            // check whether we are Hibernate proxy and substitute real name
+            if (HibernateProxy.class.isAssignableFrom(clazz)) {
+                return super.serializedClass(clazz.getSuperclass());
+            }
+    
+            if (collectionMap.containsKey(clazz)) {
+                // Pretend this is the underlying collection class and map that instead
+                return super.serializedClass((Class)collectionMap.get(clazz));
+            }
         }
-
-        if (collectionMap.containsKey(clazz)) {
-            // Pretend this is the underlying collection class and map that instead
-            return super.serializedClass((Class)collectionMap.get(clazz));
-        }
-
         return super.serializedClass(clazz);
     }
 }
