@@ -17,7 +17,6 @@ import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.core.util.PresortedSet;
 import com.thoughtworks.xstream.core.util.WeakCache;
 
-import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Field;
 import java.security.AccessControlException;
 import java.text.AttributedString;
@@ -36,9 +35,9 @@ public class JVM implements Caching {
     private ReflectionProvider reflectionProvider;
     private transient Map loaderCache = new WeakCache(new HashMap());
     
-    private final boolean supportsAWT = existsClass("java.awt.Color") && (is15() || !GraphicsEnvironment.isHeadless());
-    private final boolean supportsSwing = existsClass("javax.swing.LookAndFeel") && (is15() || !GraphicsEnvironment.isHeadless());
-    private final boolean supportsSQL = existsClass("java.sql.Date");
+    private final boolean supportsAWT = loadClass("java.awt.Color", false) != null;
+    private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel", false) != null;
+    private final boolean supportsSQL = loadClass("java.sql.Date") != null;
     
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
@@ -213,28 +212,20 @@ public class JVM implements Caching {
         return vendor.indexOf("SAP AG") != -1;
     }
 
-    public boolean existsClass(String name) {
-        if (loaderCache.get(name) != null) {
-            return true;
-        }
-        try {
-            return Class.forName(name, false, getClass().getClassLoader()) != null;
-        } catch (LinkageError e) {
-            return false;
-        } catch (ClassNotFoundException e) {
-            return false;
-        } catch (RuntimeException e) {
-            return false;
-        }
+    public Class loadClass(String name) {
+        return loadClass(name, true);
     }
 
-    public Class loadClass(String name) {
+    /**
+     * @since upcoming
+     */
+    public Class loadClass(String name, boolean initialize) {
         Class cached = (Class) loaderCache.get(name);
         if (cached != null) {
             return cached;
         }
         try {
-            Class clazz = Class.forName(name, true, getClass().getClassLoader());
+            Class clazz = Class.forName(name, initialize, getClass().getClassLoader());
             loaderCache.put(name, clazz);
             return clazz;
         } catch (LinkageError e) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -592,8 +592,8 @@ public class XStream {
             // Instantiating these two classes starts the AWT system, which is undesirable.
             // Calling loadClass ensures a reference to the class is found but they are not
             // instantiated.
-            alias("awt-color", jvm.loadClass("java.awt.Color"));
-            alias("awt-font", jvm.loadClass("java.awt.Font"));
+            alias("awt-color", jvm.loadClass("java.awt.Color", false));
+            alias("awt-font", jvm.loadClass("java.awt.Font", false));
             alias("awt-text-attribute", jvm.loadClass("java.awt.font.TextAttribute"));
         }
 
