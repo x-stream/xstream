@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -46,9 +46,9 @@ public class JVM implements Caching {
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
-    private static final boolean reverseFieldOrder = isHarmony() || (isIBM() && !is15());
+    private static final boolean reverseFieldOrder = isIBM() && !is15();
 
-    static final float DEFAULT_JAVA_VERSION = 1.3f;
+    private static final float DEFAULT_JAVA_VERSION = 1.4f;
 
     static {
         Comparator comparator = new Comparator() {
@@ -99,10 +99,16 @@ public class JVM implements Caching {
         }
     }
 
+    /**
+     * @deprecated As of upcoming, minimal JDK version is 1.4 already
+     */
     public static boolean is14() {
         return majorJavaVersion >= 1.4f;
     }
 
+    /**
+     * @deprecated As of upcoming, minimal JDK version will be 1.5 for next major release
+     */
     public static boolean is15() {
         return majorJavaVersion >= 1.5f;
     }
@@ -151,10 +157,6 @@ public class JVM implements Caching {
 
     private static boolean isDiablo() {
         return vendor.indexOf("FreeBSD Foundation") != -1;
-    }
-
-    private static boolean isHarmony() {
-        return vendor.indexOf("Apache Software Foundation") != -1;
     }
 
     /**
@@ -248,8 +250,6 @@ public class JVM implements Caching {
                 String className = null;
                 if (canUseSun14ReflectionProvider()) {
                     className = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
-                } else if (canUseHarmonyReflectionProvider()) {
-                    className = "com.thoughtworks.xstream.converters.reflection.HarmonyReflectionProvider";
                 }
                 if (className != null) {
                     Class cls = loadClass(className);
@@ -285,10 +285,6 @@ public class JVM implements Caching {
             || isDiablo())
             && is14()
             && loadClass("sun.misc.Unsafe") != null;
-    }
-
-    private boolean canUseHarmonyReflectionProvider() {
-        return isHarmony();
     }
 
     public static boolean reverseFieldDefinition() {
@@ -371,13 +367,13 @@ public class JVM implements Caching {
         System.out.println("java.specification.version: " + System.getProperty("java.specification.version"));
         System.out.println("java.vm.vendor: " + vendor);
         System.out.println("Version: " + majorJavaVersion);
-        System.out.println("XStream support for enhanced Mode: " + (jvm.canUseSun14ReflectionProvider() || jvm.canUseHarmonyReflectionProvider()));
+        System.out.println("XStream support for enhanced Mode: " + jvm.canUseSun14ReflectionProvider());
         System.out.println("Supports AWT: " + jvm.supportsAWT());
         System.out.println("Supports Swing: " + jvm.supportsSwing());
         System.out.println("Supports SQL: " + jvm.supportsSQL());
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());
-        System.out.println("Reverse field order detected (may have failed): " + reverse);
+        System.out.println("Reverse field order detected (only if JVM class itself has been compiled): " + reverse);
     }
 }
