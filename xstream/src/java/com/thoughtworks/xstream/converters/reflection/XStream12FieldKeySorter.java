@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -38,7 +38,9 @@ public class XStream12FieldKeySorter implements FieldKeySorter {
             }
         });
         map.putAll(keyedByFieldKey);
-        return map;
+        keyedByFieldKey.clear();
+        keyedByFieldKey.putAll(map);
+        return keyedByFieldKey;
     }
 
 }
