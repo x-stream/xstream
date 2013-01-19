@@ -20,7 +20,7 @@
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.4.4</version>
+  <version>1.5.0-SNAPSHOT</version>
   <name>XStream Parent</name>
 
   <inceptionYear>2004</inceptionYear>
@@ -490,9 +490,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/xstream/tags/v-1.4.4</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/tags/v-1.4.4</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/xstream/tags/v-1.4.4</url>
+    <connection>scm:svn:http://svn.codehaus.org/xstream/trunk</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/trunk</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/xstream/trunk</url>
   </scm>
   
   <properties>
