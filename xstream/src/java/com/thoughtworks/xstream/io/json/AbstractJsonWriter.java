@@ -551,7 +551,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * 
      * @param clazz the type
      * @return One of the {@link Type} instances
-     * @since upcoming
+     * @since 1.4.4
      */
     protected Type getType(Class clazz) {
         return (clazz == Mapper.Null.class || clazz == null)

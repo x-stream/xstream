@@ -99,19 +99,22 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming, minimal JDK version is 1.4 already
+     * @deprecated As of 1.4.4, minimal JDK version is 1.4 already
      */
     public static boolean is14() {
         return majorJavaVersion >= 1.4f;
     }
 
     /**
-     * @deprecated As of upcoming, minimal JDK version will be 1.5 for next major release
+     * @deprecated As of 1.4.4, minimal JDK version will be 1.6 for next major release
      */
     public static boolean is15() {
         return majorJavaVersion >= 1.5f;
     }
 
+    /**
+     * @deprecated As of 1.4.4, minimal JDK version will be 1.6 for next major release
+     */
     public static boolean is16() {
         return majorJavaVersion >= 1.6f;
     }
@@ -217,7 +220,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.4
      */
     public Class loadClass(String name, boolean initialize) {
         Class cached = (Class) loaderCache.get(name);
