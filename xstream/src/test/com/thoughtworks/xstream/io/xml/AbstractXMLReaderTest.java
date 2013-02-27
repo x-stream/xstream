@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -234,6 +234,12 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     public void testCanReadAttributeWithEncodedWhitespace() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<string attr='  A\r\t\nB  C&#x9;&#xa;&#xd;  '/>");
         assertEquals("  A   B  C\t\n\r  ", xmlReader.getAttribute("attr"));
+    }
+
+    public void testCanReadCDATAWithEmbeddedTags() throws Exception {
+        String content = "<tag>the content</tag>";
+        HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
+        assertEquals(content, xmlReader.getValue());
     }
     
     // TODO: See XSTR-473
