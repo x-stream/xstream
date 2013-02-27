@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -77,4 +77,23 @@ public class Sun14ReflectionProviderTest extends AbstractReflectionProviderTest 
 
     }
 
+    public void testCanInstantiateWithoutInitializer() {
+        assertCanCreate(Unistantiatable.class);
+    }
+    
+    static class Unistantiatable {
+        {
+            if (true) {
+                throw new IllegalStateException("<init>");
+            }
+        }
+        
+        public Unistantiatable() {
+            throw new IllegalStateException("ctor");
+        }
+        
+        public Unistantiatable(String s) {
+            throw new IllegalStateException("ctor(String)");
+        }
+    }
 }
