@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.core.util.PresortedSet;
 import com.thoughtworks.xstream.core.util.WeakCache;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.security.AccessControlException;
 import java.text.AttributedString;
 import java.text.ParseException;
@@ -39,6 +40,7 @@ public class JVM implements Caching {
     private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel", false) != null;
     private final boolean supportsSQL = loadClass("java.sql.Date") != null;
     
+    private static final boolean canAllocateWithUnsafe;
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
     private static final boolean canParseUTCDateFormat;
@@ -49,13 +51,33 @@ public class JVM implements Caching {
 
     private static final float DEFAULT_JAVA_VERSION = 1.4f;
 
+    static class Broken {
+        Broken() {
+           throw new UnsupportedOperationException(); 
+        }
+    }
+    
     static {
+        boolean test = true;
+        try {
+            Class unsafeClass = Class.forName("sun.misc.Unsafe");
+            Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            Object unsafe = unsafeField.get(null);
+            Method allocateInstance = unsafeClass.getDeclaredMethod("allocateInstance", new Class[]{Class.class});
+            allocateInstance.setAccessible(true);
+            test = allocateInstance.invoke(unsafe, new Object[]{Broken.class}) != null;
+        } catch (Exception e) {
+            test = false;
+        } catch (Error e) {
+            test = false;
+        }
+        canAllocateWithUnsafe = test;
         Comparator comparator = new Comparator() {
             public int compare(Object o1, Object o2) {
                 throw new RuntimeException();
             }
         };
-        boolean test = true;
         SortedMap map = new PresortedMap(comparator);
         map.put("one", null);
         map.put("two", null);
@@ -133,32 +155,8 @@ public class JVM implements Caching {
         return majorJavaVersion >= 1.8f;
     }
 
-    private static boolean isSun() {
-        return vendor.indexOf("Sun") != -1;
-    }
-
-    private static boolean isOracle() {
-        return vendor.indexOf("Oracle") != -1;
-    }
-
-    private static boolean isApple() {
-        return vendor.indexOf("Apple") != -1;
-    }
-
-    private static boolean isHPUX() {
-        return vendor.indexOf("Hewlett-Packard Company") != -1;
-    }
-
     private static boolean isIBM() {
     	return vendor.indexOf("IBM") != -1;
-    }
-
-    private static boolean isBlackdown() {
-        return vendor.indexOf("Blackdown") != -1;
-    }
-
-    private static boolean isDiablo() {
-        return vendor.indexOf("FreeBSD Foundation") != -1;
     }
 
     /**
@@ -166,53 +164,6 @@ public class JVM implements Caching {
      */
     private static boolean isAndroid() {
         return vendor.indexOf("Android") != -1;
-    }
-
-    /*
-     * Support for sun.misc.Unsafe and sun.reflect.ReflectionFactory is present
-     * in JRockit versions R25.1.0 and later, both 1.4.2 and 5.0 (and in future
-     * 6.0 builds).
-     */
-    private static boolean isBEAWithUnsafeSupport() {
-        // This property should be "BEA Systems, Inc."
-        if (vendor.indexOf("BEA") != -1) {
-
-            /*
-             * Recent 1.4.2 and 5.0 versions of JRockit have a java.vm.version
-             * string starting with the "R" JVM version number, i.e.
-             * "R26.2.0-38-57237-1.5.0_06-20060209..."
-             */
-            String vmVersion = System.getProperty("java.vm.version");
-            if (vmVersion.startsWith("R")) {
-                /*
-                 * We *could* also check that it's R26 or later, but that is
-                 * implicitly true
-                 */
-                return true;
-            }
-
-            /*
-             * For older JRockit versions we can check java.vm.info. JRockit
-             * 1.4.2 R24 -> "Native Threads, GC strategy: parallel" and JRockit
-             * 5.0 R25 -> "R25.2.0-28".
-             */
-            String vmInfo = System.getProperty("java.vm.info");
-            if (vmInfo != null) {
-                // R25.1 or R25.2 supports Unsafe, other versions do not
-                return (vmInfo.startsWith("R25.1") || vmInfo
-                        .startsWith("R25.2"));
-            }
-        }
-        // If non-BEA, or possibly some very old JRockit version
-        return false;
-    }
-    
-    private static boolean isHitachi() {
-        return vendor.indexOf("Hitachi") != -1;
-    }
-    
-    private static boolean isSAP() {
-        return vendor.indexOf("SAP AG") != -1;
     }
 
     public Class loadClass(String name) {
@@ -251,15 +202,12 @@ public class JVM implements Caching {
                         reflectionProvider = (ReflectionProvider) cls.newInstance();
                     }
                 }
-                if (reflectionProvider == null) {
-                    reflectionProvider = new PureJavaReflectionProvider();
-                }
             } catch (InstantiationException e) {
-                reflectionProvider = new PureJavaReflectionProvider();
             } catch (IllegalAccessException e) {
-                reflectionProvider = new PureJavaReflectionProvider();
             } catch (AccessControlException e) {
                 // thrown when trying to access sun.misc package in Applet context.
+            }
+            if (reflectionProvider == null) {
                 reflectionProvider = new PureJavaReflectionProvider();
             }
         }
@@ -267,18 +215,7 @@ public class JVM implements Caching {
     }
 
     private boolean canUseSun14ReflectionProvider() {
-        return (isSun()
-            || isOracle()
-            || isApple()
-            || isHPUX()
-            || isIBM()
-            || isBlackdown()
-            || isBEAWithUnsafeSupport()
-            || isHitachi()
-            || isSAP() 
-            || isDiablo())
-            && is14()
-            && loadClass("sun.misc.Unsafe") != null;
+        return canAllocateWithUnsafe && is14();
     }
 
     public static boolean reverseFieldDefinition() {
@@ -359,7 +296,11 @@ public class JVM implements Caching {
         JVM jvm = new JVM();
         System.out.println("XStream JVM diagnostics");
         System.out.println("java.specification.version: " + System.getProperty("java.specification.version"));
+        System.out.println("java.specification.vendor: " + System.getProperty("java.specification.vendor"));
+        System.out.println("java.specification.name: " + System.getProperty("java.specification.name"));
         System.out.println("java.vm.vendor: " + vendor);
+        System.out.println("java.vendor: " + System.getProperty("java.vendor"));
+        System.out.println("java.vm.name: " + System.getProperty("java.vm.name"));
         System.out.println("Version: " + majorJavaVersion);
         System.out.println("XStream support for enhanced Mode: " + jvm.canUseSun14ReflectionProvider());
         System.out.println("Supports AWT: " + jvm.supportsAWT());

@@ -51,11 +51,10 @@
     <!-- ...................................................... -->
     <h2 id="Compatibility_enhanced_mode_jvm">Which JVMs allow XStream to operate in enhanced mode?</h2>
 
-    <p>Currently on the Sun, Apple, HP, IBM and Blackdown 1.4 JVMs and onwards.
-    Also for Hitachi, SAP and Diablo from 1.5 and onwards.
-    Support for BEA JRockit starting with R25.1.0.
-    OpenJDK 6 is also supported. 
-    For all other JVMs, XStream should be used in pure Java mode.</p>
+    <p>Since XStream 1.4.5 XStream will check a working enhanced mode dynamically. However, enhanced mode is known to
+    be working on the Sun, Apple, HP, IBM and Blackdown 1.4 JVMs and onwards, for Hitachi, SAP and Diablo from 1.5 and
+    onwards, for BEA JRockit starting with R25.1.0 and for OpenJDK. Note, that an active SecurityManager might prevent
+    the usage of the enhanced mode also.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_enhanced_mode_advantage">What are the advantages of using enhanced mode over pure Java mode?</h2>
