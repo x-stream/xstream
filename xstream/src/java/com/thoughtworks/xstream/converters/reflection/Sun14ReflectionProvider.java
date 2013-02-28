@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,12 +12,8 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import sun.misc.Unsafe;
-import sun.reflect.ReflectionFactory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -39,8 +35,8 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         Unsafe u = null;
         Exception ex = null;
         try {
-            Class objectStreamClass = Class.forName("sun.misc.Unsafe");
-            Field unsafeField = objectStreamClass.getDeclaredField("theUnsafe");
+            Class unsafeClass = Class.forName("sun.misc.Unsafe");
+            Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
             u = (Unsafe) unsafeField.get(null);
         } catch (ClassNotFoundException e) {
@@ -58,44 +54,24 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         unsafe = u;
     }
 
-    private transient ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-    private transient Map constructorCache =new HashMap();
-
     public Sun14ReflectionProvider() {
-    	super();
-	}
+    }
 
     public Sun14ReflectionProvider(FieldDictionary dic) {
-    	super(dic);
-	}
+    }
 
     public Object newInstance(Class type) {
+        if (exception != null) {
+            throw new ObjectAccessException("Cannot construct " + type.getName(), exception);
+        }
         try {
-            Constructor customConstructor = getMungedConstructor(type);
-            return customConstructor.newInstance(new Object[0]);
-        } catch (NoSuchMethodException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            return unsafe.allocateInstance(type);
         } catch (SecurityException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (InstantiationException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
-        } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (IllegalArgumentException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
-        } catch (InvocationTargetException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
-        }
-    }
-
-    private Constructor getMungedConstructor(Class type) throws NoSuchMethodException {
-        synchronized (constructorCache) {
-            Constructor ctor = (Constructor)constructorCache.get(type);
-            if (ctor == null) {
-                ctor = reflectionFactory.newConstructorForSerialization(type, Object.class.getDeclaredConstructor(new Class[0]));
-                constructorCache.put(type, ctor);
-            }
-            return ctor;
         }
     }
 
@@ -159,8 +135,6 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
     protected Object readResolve() {
         super.readResolve();
-        constructorCache = new HashMap();
-        reflectionFactory = ReflectionFactory.getReflectionFactory();
         fieldOffsetCache = new WeakHashMap();
         return this;
     }
