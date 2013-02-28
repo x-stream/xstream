@@ -47,7 +47,7 @@ public class JVM implements Caching {
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
-    private static final boolean reverseFieldOrder = isIBM() && !is15();
+    private static final boolean reverseFieldOrder = false;
 
     private static final float DEFAULT_JAVA_VERSION = 1.4f;
 
