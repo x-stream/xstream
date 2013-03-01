@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,13 +21,22 @@ import java.util.regex.Pattern;
 
 /**
  * Ensures java.util.regex.Pattern is compiled upon deserialization.
+ * 
+ * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
 public class RegexPatternConverter implements Converter {
 
-    private Converter defaultConverter;
+    /**
+     * @since upcoming
+     */
+    public RegexPatternConverter() {
+    }
 
+    /**
+     * @deprecated As of upcoming, use {@link #RegexPatternConverter()} instead
+     */
     public RegexPatternConverter(Converter defaultConverter) {
-        this.defaultConverter = defaultConverter;
     }
 
     public boolean canConvert(final Class type) {
@@ -35,12 +44,23 @@ public class RegexPatternConverter implements Converter {
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        defaultConverter.marshal(source, writer, context);
+        Pattern pattern = (Pattern)source;
+        writer.startNode("pattern");
+        writer.setValue(pattern.pattern());
+        writer.endNode();
+        writer.startNode("flags");
+        writer.setValue(String.valueOf(pattern.flags()));
+        writer.endNode();
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        Pattern notCompiled = (Pattern) defaultConverter.unmarshal(reader, context);
-        return Pattern.compile(notCompiled.pattern(), notCompiled.flags());
+        reader.moveDown();
+        String pattern = reader.getValue();
+        reader.moveUp();
+        reader.moveDown();
+        int flags = Integer.parseInt(reader.getValue());
+        reader.moveUp();
+        return Pattern.compile(pattern, flags);
     }
 
 }

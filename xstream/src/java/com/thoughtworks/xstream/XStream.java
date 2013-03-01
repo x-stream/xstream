@@ -102,7 +102,6 @@ import com.thoughtworks.xstream.converters.extended.TextAttributeConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
@@ -114,6 +113,7 @@ import com.thoughtworks.xstream.core.util.ClassLoaderReference;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -645,9 +645,8 @@ public class XStream {
     }
 
     protected void setupConverters() {
-        final ReflectionConverter reflectionConverter = new ReflectionConverter(
-            mapper, reflectionProvider);
-        registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
+        registerConverter(
+            new ReflectionConverter(mapper, reflectionProvider), PRIORITY_VERY_LOW);
 
         registerConverter(
             new SerializableConverter(mapper, reflectionProvider, classLoaderReference), PRIORITY_LOW);
@@ -713,8 +712,8 @@ public class XStream {
                 PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
             registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.ThrowableConverter",
-                PRIORITY_NORMAL, new Class[]{Converter.class},
-                new Object[]{reflectionConverter});
+                PRIORITY_NORMAL, new Class[]{ConverterLookup.class},
+                new Object[]{converterLookup});
             registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.StackTraceElementConverter",
                 PRIORITY_NORMAL, null, null);
@@ -723,8 +722,7 @@ public class XStream {
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.RegexPatternConverter",
-                PRIORITY_NORMAL, new Class[]{Converter.class},
-                new Object[]{reflectionConverter});
+                PRIORITY_NORMAL, null, null);
             registerConverterDynamically(
                 "com.thoughtworks.xstream.converters.extended.CharsetConverter",
                 PRIORITY_NORMAL, null, null);
@@ -755,7 +753,7 @@ public class XStream {
         }
 
         registerConverter(
-            new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
+            new SelfStreamingInstanceChecker(converterLookup, this), PRIORITY_NORMAL);
     }
 
     private void registerConverterDynamically(String className, int priority,
