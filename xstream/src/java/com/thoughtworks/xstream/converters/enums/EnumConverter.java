@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,7 +44,17 @@ public class EnumConverter implements Converter {
         if (type.getSuperclass() != Enum.class) {
             type = type.getSuperclass(); // polymorphic enums
         }
-        return Enum.valueOf(type, reader.getValue());
+        String name = reader.getValue();
+        try {
+            return Enum.valueOf(type, name);
+        } catch (IllegalArgumentException e) {
+            // failed to find it, do a case insensitive match
+            for (Enum c : (Enum[])type.getEnumConstants())
+                if (c.name().equalsIgnoreCase(name))
+                    return c;
+            // all else failed
+            throw e;
+        }
     }
 
 }
