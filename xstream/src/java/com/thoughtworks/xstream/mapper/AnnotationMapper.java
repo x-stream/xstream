@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011, 2012 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -66,7 +67,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final LocalConversionMapper localConversionMapper;
     private final Map<Class<?>, Map<List<Object>, Converter>> converterCache = 
             new HashMap<Class<?>, Map<List<Object>, Converter>>();
-    private final Set<Class<?>> annotatedTypes = new HashSet<Class<?>>();
+    private final Set<Class<?>> annotatedTypes = 
+            Collections.synchronizedSet(new HashSet<Class<?>>());
 
     /**
      * Construct an AnnotationMapper.
@@ -136,24 +138,22 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             return;
         }
         locked = true;
-        synchronized (annotatedTypes) {
-            final Set<Class<?>> types = new UnprocessedTypesSet();
-            for (final Class initialType : initialTypes) {
-                types.add(initialType);
-            }
-            processTypes(types);
+        
+        final Set<Class<?>> types = new UnprocessedTypesSet();
+        for (final Class initialType : initialTypes) {
+            types.add(initialType);
         }
+        processTypes(types);
     }
 
     private void processAnnotations(final Class initialType) {
         if (initialType == null) {
             return;
         }
-        synchronized (annotatedTypes) {
-            final Set<Class<?>> types = new UnprocessedTypesSet();
-            types.add(initialType);
-            processTypes(types);
-        }
+        
+        final Set<Class<?>> types = new UnprocessedTypesSet();
+        types.add(initialType);
+        processTypes(types);
     }
 
     private void processTypes(final Set<Class<?>> types) {
@@ -162,41 +162,48 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             final Class<?> type = iter.next();
             iter.remove();
 
-            if (annotatedTypes.add(type)) {
-                if (type.isPrimitive()) {
+            synchronized(type) {
+                if (annotatedTypes.contains(type)) {
                     continue;
                 }
-
-                addParametrizedTypes(type, types);
-
-                processConverterAnnotations(type);
-                processAliasAnnotation(type, types);
-
-                if (type.isInterface()) {
-                    continue;
-                }
-
-                processImplicitCollectionAnnotation(type);
-
-                final Field[] fields = type.getDeclaredFields();
-                for (int i = 0; i < fields.length; i++ ) {
-                    final Field field = fields[i];
-                    if (field.isEnumConstant()
-                        || (field.getModifiers() & (Modifier.STATIC | Modifier.TRANSIENT)) > 0) {
+                try {
+                    if (type.isPrimitive()) {
                         continue;
                     }
-
-                    addParametrizedTypes(field.getGenericType(), types);
-
-                    if (field.isSynthetic()) {
+    
+                    addParametrizedTypes(type, types);
+    
+                    processConverterAnnotations(type);
+                    processAliasAnnotation(type, types);
+    
+                    if (type.isInterface()) {
                         continue;
                     }
-
-                    processFieldAliasAnnotation(field);
-                    processAsAttributeAnnotation(field);
-                    processImplicitAnnotation(field);
-                    processOmitFieldAnnotation(field);
-                    processLocalConverterAnnotation(field);
+    
+                    processImplicitCollectionAnnotation(type);
+    
+                    final Field[] fields = type.getDeclaredFields();
+                    for (int i = 0; i < fields.length; i++ ) {
+                        final Field field = fields[i];
+                        if (field.isEnumConstant()
+                            || (field.getModifiers() & (Modifier.STATIC | Modifier.TRANSIENT)) > 0) {
+                            continue;
+                        }
+    
+                        addParametrizedTypes(field.getGenericType(), types);
+    
+                        if (field.isSynthetic()) {
+                            continue;
+                        }
+    
+                        processFieldAliasAnnotation(field);
+                        processAsAttributeAnnotation(field);
+                        processImplicitAnnotation(field);
+                        processOmitFieldAnnotation(field);
+                        processLocalConverterAnnotation(field);
+                    }
+                } finally {
+                    annotatedTypes.add(type);
                 }
             }
         }
