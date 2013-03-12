@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2010, 2011, 2012 XStream Committers.
+ * Copyright (C) 2009, 2010, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -554,7 +554,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * @since 1.4.4
      */
     protected Type getType(Class clazz) {
-        return (clazz == Mapper.Null.class || clazz == null)
+        return clazz == Mapper.Null.class
             ? Type.NULL
             : (clazz == Boolean.class || clazz == Boolean.TYPE) 
                 ? Type.BOOLEAN 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2009, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,11 +22,19 @@ import java.util.TreeSet;
 
 import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 import com.thoughtworks.acceptance.objects.SampleLists;
+import com.thoughtworks.acceptance.someobjects.Handler;
+import com.thoughtworks.acceptance.someobjects.Protocol;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.extended.ToStringConverter;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.json.JsonWriter.Format;
 
 import junit.framework.AssertionFailedError;
@@ -57,6 +65,36 @@ public class JsonWriterFormatTest extends TestCase {
         }
     }
     
+    private final static class HandlerConverter implements Converter {
+        public boolean canConvert(Class type) {
+            return type == Handler.class;
+        }
+    
+        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+            Handler h = (Handler)source;
+            writer.startNode("str");
+            writer.setValue("test");
+            writer.endNode();
+            writer.startNode("protocol");
+            context.convertAnother(h.getProtocol());
+            writer.endNode();
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, "i", int.class);
+            writer.setValue("42");
+            writer.endNode();
+        }
+    
+        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+            reader.moveDown();
+            reader.moveUp();
+            reader.moveDown();
+            Protocol p = (Protocol)context.convertAnother(null, Protocol.class); 
+            reader.moveUp();
+            reader.moveDown();
+            reader.moveUp();
+            return new Handler(p);
+        }
+    }
+
     public JsonWriterFormatTest(
         String name, Object target, String json, int writerMode, JsonWriter.Format format) {
         super(name);
@@ -72,12 +110,14 @@ public class JsonWriterFormatTest extends TestCase {
         xstream.alias("collections", SampleLists.class);
         xstream.alias("x", X.class);
         xstream.alias("ys", YString.class);
+        xstream.alias("h", Handler.class);
         xstream.useAttributeFor(OpenSourceSoftware.class, "license");
         try {
             xstream.registerConverter(new ToStringConverter(YString.class));
         } catch (NoSuchMethodException e) {
             throw new AssertionFailedError(e.getMessage());
         }
+        xstream.registerConverter(new HandlerConverter());
     }
 
     protected void runTest() throws Throwable {
@@ -144,6 +184,7 @@ public class JsonWriterFormatTest extends TestCase {
         targets.put("EmptyX", emptyX);
         targets.put("Collections", lists);
         targets.put("EmptyList", new ArrayList());
+        targets.put("CustomConverter", new Handler(new Protocol("ldap")));
 
         final Map results = new HashMap();
         results.put("optimizedMinimalString", "{'string':'text'}");
@@ -254,6 +295,15 @@ public class JsonWriterFormatTest extends TestCase {
         results.put("explicitMinimalEmptyList", "{'list':[[],[]]}");
         results.put("explicitPrettyEmptyList", "{'list': [\n  [\n  ],\n  [\n  ]\n]}");
         results.put("explicitCompactEmptyList", "{'list': [\n  [],\n  []\n]}");
+        results.put("optimizedMinimalCustomConverter", "{'h':{'str':'test','protocol':{'id':'ldap'},'i':42}}");
+        results.put("optimizedPrettyCustomConverter", "{'h': {\n  'str': 'test',\n  'protocol': {\n    'id': 'ldap'\n  },\n  'i': 42\n}}");
+        results.put("optimizedCompactCustomConverter", "{'h': {\n  'str': 'test',\n  'protocol': {\n    'id': 'ldap'\n  },\n  'i': 42\n}}");
+        results.put("noRootMinimalCustomConverter", "{'str':'test','protocol':{'id':'ldap'},'i':42}");
+        results.put("noRootPrettyCustomConverter", "{\n  'str': 'test',\n  'protocol': {\n    'id': 'ldap'\n  },\n  'i': 42\n}");
+        results.put("noRootCompactCustomConverter", "{\n  'str': 'test',\n  'protocol': {\n    'id': 'ldap'\n  },\n  'i': 42\n}");
+        results.put("explicitMinimalCustomConverter", "{'h':[[],[{'str':[[],['test']]},{'protocol':[[],[{'id':[[],['ldap']]}]]},{'i':[[],[42]]}]]}");
+        results.put("explicitPrettyCustomConverter", "{'h': [\n  [\n  ],\n  [\n    {\n      'str': [\n        [\n        ],\n        [\n          'test'\n        ]\n      ]\n    },\n    {\n      'protocol': [\n        [\n        ],\n        [\n          {\n            'id': [\n              [\n              ],\n              [\n                'ldap'\n              ]\n            ]\n          }\n        ]\n      ]\n    },\n    {\n      'i': [\n        [\n        ],\n        [\n          42\n        ]\n      ]\n    }\n  ]\n]}");
+        results.put("explicitCompactCustomConverter", "{'h': [\n  [],\n  [\n    {\n      'str': [\n        [],\n        [\n          'test'\n        ]\n      ]\n    },\n    {\n      'protocol': [\n        [],\n        [\n          {\n            'id': [\n              [],\n              [\n                'ldap'\n              ]\n            ]\n          }\n        ]\n      ]\n    },\n    {\n      'i': [\n        [],\n        [\n          42\n        ]\n      ]\n    }\n  ]\n]}");
         
         TestSuite suite = new TestSuite(JsonWriterFormatTest.class.getName());
         for (final Iterator iterMode = modes.entrySet().iterator(); iterMode.hasNext();) {
