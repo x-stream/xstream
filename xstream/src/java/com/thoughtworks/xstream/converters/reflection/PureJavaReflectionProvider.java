@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -45,15 +45,15 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     private transient Map serializedDataCache = new WeakHashMap();
     protected FieldDictionary fieldDictionary;
 
-	public PureJavaReflectionProvider() {
-		this(new FieldDictionary(new ImmutableFieldKeySorter()));
-	}
+    public PureJavaReflectionProvider() {
+        this(new FieldDictionary(new ImmutableFieldKeySorter()));
+    }
 
-	public PureJavaReflectionProvider(FieldDictionary fieldDictionary) {
-		this.fieldDictionary = fieldDictionary;
-	}
+    public PureJavaReflectionProvider(FieldDictionary fieldDictionary) {
+        this.fieldDictionary = fieldDictionary;
+    }
 
-	public Object newInstance(Class type) {
+    public Object newInstance(Class type) {
         try {
             Constructor[] constructors = type.getDeclaredConstructors();
             for (int i = 0; i < constructors.length; i++) {
@@ -125,7 +125,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     public void visitSerializableFields(Object object, ReflectionProvider.Visitor visitor) {
         for (Iterator iterator = fieldDictionary.fieldsFor(object.getClass()); iterator.hasNext();) {
             Field field = (Field) iterator.next();
-            if (!fieldModifiersSupported(field)) {
+            if (!fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
             validateFieldAccess(field);
@@ -158,12 +158,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public boolean fieldDefinedInClass(String fieldName, Class type) {
         Field field = fieldDictionary.fieldOrNull(type, fieldName, null);
-        return field != null && (fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers()));
+        return field != null && fieldModifiersSupported(field);
     }
 
     protected boolean fieldModifiersSupported(Field field) {
         int modifiers = field.getModifiers();
-        return !(Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers));
+        return !Modifier.isStatic(modifiers);
     }
 
     protected void validateFieldAccess(Field field) {
