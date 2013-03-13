@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2008, 2009, 2010, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,7 +14,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
 /**
- * A single value converter for arbitrary enums. Converter is internally automatically
+ * A single value converter for a special enum type. Converter is internally automatically
  * instantiated for enum types.
  * 
  * @author J&ouml;rg Schaible
