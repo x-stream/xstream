@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.enums;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -47,9 +48,7 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
     }
 
     private static <T extends Enum<T>> Map<String, T> extractStringMap(Class<T> type) {
-        if (!Enum.class.isAssignableFrom(type) && type != Enum.class) {
-            throw new IllegalArgumentException("Converter can only handle enum types");
-        }
+        checkType(type);
         EnumSet<T> values = EnumSet.allOf(type);
         Map<String, T> strings = new HashMap<String, T>(values.size());
         for (T value : values) {
@@ -60,6 +59,12 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
             }
         }
         return strings;
+    }
+
+    private static <T> void checkType(Class<T> type) {
+        if (!Enum.class.isAssignableFrom(type) && type != Enum.class) {
+            throw new IllegalArgumentException("Converter can only handle enum types");
+        }
     }
 
     private static <T extends Enum<T>> EnumMap<T, String> buildValueMap(Class<T> type,
