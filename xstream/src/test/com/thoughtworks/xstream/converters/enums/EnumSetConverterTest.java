@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -53,7 +53,7 @@ public class EnumSetConverterTest extends TestCase {
         xstream.alias("poly", PolymorphicEnum.class);
         EnumSet<PolymorphicEnum> set = EnumSet.allOf(PolymorphicEnum.class);
 
-        String expectedXml = "<enum-set enum-type=\"poly\">A,B</enum-set>";
+        String expectedXml = "<enum-set enum-type=\"poly\">A,B,C</enum-set>";
 
         assertEquals(expectedXml, xstream.toXML(set));
         assertEquals(set, xstream.fromXML(expectedXml));
