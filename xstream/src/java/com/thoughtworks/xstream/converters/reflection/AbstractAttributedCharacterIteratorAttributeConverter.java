@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * An abstract converter implementation for constants of
- * {@link AttributedCharacterIterator.Attribute} and derived types.
+ * {@link java.text.AttributedCharacterIterator.Attribute} and derived types.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.2.2
