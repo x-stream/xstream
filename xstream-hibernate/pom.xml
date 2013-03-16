@@ -40,6 +40,28 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+              <archive combine.children="append">
+                <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
+              </archive>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>maven-bundle-plugin</artifactId>
+            <configuration>
+              <instructions combine.children="append">
+                <Export-Package>!com.thoughtworks.xstream.hibernate.util,com.thoughtworks.xstream.hibernate.*;-noimport:=true</Export-Package>
+              </instructions>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -52,14 +74,13 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <configuration>
-            <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
             <source>${version.java.source}</source>
             <links>
               <link>${link.javadoc.javase}</link>
             </links>
           </configuration>
-          </plugin>
-        </plugins>
+        </plugin>
+      </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
@@ -119,17 +140,17 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>${project.version}</version>
+      <version>1.4.5-SNAPSHOT</version>
       <classifier>tests</classifier>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>${project.version}</version>
+      <version>1.4.5-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>org.hibernate</groupId>

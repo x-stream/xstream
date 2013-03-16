@@ -22,30 +22,30 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>${project.version}</version>
+      <version>1.4.5-SNAPSHOT</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream-hibernate</artifactId>
-      <version>${project.version}</version>
+      <version>1.4.5-SNAPSHOT</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream-benchmark</artifactId>
-      <version>${project.version}</version>
+      <version>1.4.5-SNAPSHOT</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
 
   <profiles>
     <profile>
-      <id>jdk15-ge</id>
+      <id>jdk16-ge</id>
       <activation>
-        <jdk>[1.5,)</jdk>
+        <jdk>[1.6,)</jdk>
       </activation>
       <build>
         <plugins>
@@ -103,23 +103,23 @@
       </build>
       <dependencies>
         <dependency>
-          <groupId>${project.groupId}</groupId>
+          <groupId>com.thoughtworks.xstream</groupId>
           <artifactId>xstream</artifactId>
-          <version>${project.version}</version>
+          <version>1.4.5-SNAPSHOT</version>
           <classifier>javadoc</classifier>
           <scope>provided</scope>
         </dependency>
         <dependency>
-          <groupId>${project.groupId}</groupId>
+          <groupId>com.thoughtworks.xstream</groupId>
           <artifactId>xstream-hibernate</artifactId>
-          <version>${project.version}</version>
+          <version>1.4.5-SNAPSHOT</version>
           <classifier>javadoc</classifier>
           <scope>provided</scope>
         </dependency>
         <dependency>
-          <groupId>${project.groupId}</groupId>
+          <groupId>com.thoughtworks.xstream</groupId>
           <artifactId>xstream-benchmark</artifactId>
-          <version>${project.version}</version>
+          <version>1.4.5-SNAPSHOT</version>
           <classifier>javadoc</classifier>
           <scope>provided</scope>
         </dependency>

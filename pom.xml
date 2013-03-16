@@ -35,6 +35,23 @@
       <activation>
         <jdk>[1.5,)</jdk>
       </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>maven-bundle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>bundle-manifest</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>manifest</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
       <modules>
         <!--module>xstream-builder</module-->
       </modules>
@@ -477,6 +494,24 @@
           <artifactId>xsite-maven-plugin</artifactId>
           <version>${version.plugin.codehaus.xsite}</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>${version.plugin.felix.bundle}</version>
+          <configuration>
+            <manifestLocation>${project.build.directory}/OSGi</manifestLocation>
+            <instructions>
+              <_nouses>true</_nouses>
+              <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+              <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version><!-- FELIX-3392 -->
+            </instructions>
+            <archive>
+              <manifest>
+                <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries><!-- FELIX-3392 -->
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -538,6 +573,7 @@
     <version.java.target>1.5</version.java.target>
 
     <version.plugin.codehaus.xsite>1.2.1</version.plugin.codehaus.xsite>
+    <version.plugin.felix.bundle>2.3.7</version.plugin.felix.bundle>
     <version.plugin.maven.antrun>1.1</version.plugin.maven.antrun>
     <version.plugin.maven.assembly>2.1</version.plugin.maven.assembly>
     <version.plugin.maven.clean>2.2</version.plugin.maven.clean>
