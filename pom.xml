@@ -14,7 +14,7 @@
   <parent>
     <groupId>org.codehaus</groupId>
     <artifactId>codehaus-parent</artifactId>
-    <version>4</version>
+    <version>3</version><!-- 4 required Java 5 -->
     <relativePath />
   </parent>
   <groupId>com.thoughtworks.xstream</groupId>
@@ -365,11 +365,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>${version.plugin.maven.enforcer}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
           <version>${version.plugin.maven.install}</version>
         </plugin>
@@ -580,7 +575,6 @@
     <version.plugin.maven.compiler>2.1</version.plugin.maven.compiler><!-- JDK 1.4 compatible -->
     <version.plugin.maven.dependency>2.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>2.3</version.plugin.maven.deploy>
-    <version.plugin.maven.enforcer>1.0</version.plugin.maven.enforcer>
     <version.plugin.maven.install>2.2</version.plugin.maven.install>
     <version.plugin.maven.jar>2.2</version.plugin.maven.jar>
     <version.plugin.maven.javadoc>2.7</version.plugin.maven.javadoc>
