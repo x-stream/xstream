@@ -14,7 +14,7 @@
   <parent>
     <groupId>org.codehaus</groupId>
     <artifactId>codehaus-parent</artifactId>
-    <version>3</version>
+    <version>4</version>
     <relativePath />
   </parent>
   <groupId>com.thoughtworks.xstream</groupId>
