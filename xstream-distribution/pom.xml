@@ -19,6 +19,9 @@
   <artifactId>xstream-distribution</artifactId>
   <packaging>pom</packaging>
   <name>XStream Distribution</name>
+  <description>
+    Distribution project for XStream to build distributables and documentation.
+  </description>
 
   <dependencies>
     <dependency>

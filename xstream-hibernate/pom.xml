@@ -18,6 +18,9 @@
   <artifactId>xstream-hibernate</artifactId>
   <packaging>jar</packaging>
   <name>XStream Hibernate Extension</name>
+  <description>
+    XStream extension for Hibernate 3/4 to untie Java objects from Hibernate.
+  </description>
 
   <profiles>
     <profile>

@@ -227,11 +227,19 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <configuration>
-              <archive combine.children="append">
-                <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
-              </archive>
-            </configuration>
+            <executions>
+              <execution>
+                <id>default-jar</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <archive combine.children="append">
+                    <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
+                  </archive>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>

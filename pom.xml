@@ -22,6 +22,9 @@
   <packaging>pom</packaging>
   <version>1.4.5-SNAPSHOT</version>
   <name>XStream Parent</name>
+  <description>
+    XStream is a serialization library from Java objects to XML and back.
+  </description>
 
   <inceptionYear>2004</inceptionYear>
   <organization>

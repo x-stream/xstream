@@ -19,6 +19,7 @@
   <artifactId>xstream-benchmark</artifactId>
   <packaging>jar</packaging>
   <name>XStream Benchmark</name>
+  <description>Benchmark suite of XStream.</description>
 
   <profiles>
     <profile>
