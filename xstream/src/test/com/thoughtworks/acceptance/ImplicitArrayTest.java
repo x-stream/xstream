@@ -27,7 +27,7 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         xstream.alias("farm", Farm.class);
         xstream.alias("animal", Animal.class);
         xstream.alias("MEGA-farm", MegaFarm.class);
-        xstream.ignoreUnknownFields();
+        xstream.ignoreUnknownElements();
     }
 
     public static class Farm extends StandardObject {

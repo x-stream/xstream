@@ -57,7 +57,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.alias("room", Room.class);
         xstream.alias("house", House.class);
         xstream.alias("person", Person.class);
-        xstream.ignoreUnknownFields();
+        xstream.ignoreUnknownElements();
     }
 
     public void testWithout() {

@@ -1783,31 +1783,31 @@ public class XStream {
     }
     
     /**
-     * Ignore all unknown fields.
+     * Ignore all unknown elements.
      * 
      * @since upcoming
      */
-    public void ignoreUnknownFields() {
-        ignoreUnknownFields(IGNORE_ALL);
+    public void ignoreUnknownElements() {
+        ignoreUnknownElements(IGNORE_ALL);
     }
 
     /**
-     * Add pattern for unknown field names to ignore.
+     * Add pattern for unknown element names to ignore.
      * 
      * @param pattern the name pattern as regular expression
      * @since upcoming
      */
-    public void ignoreUnknownFields(String pattern) {
-        ignoreUnknownFields(Pattern.compile(pattern));
+    public void ignoreUnknownElements(String pattern) {
+        ignoreUnknownElements(Pattern.compile(pattern));
     }
 
     /**
-     * Add pattern for unknown field names to ignore.
+     * Add pattern for unknown element names to ignore.
      * 
      * @param pattern the name pattern as regular expression
      * @since upcoming
      */
-    private void ignoreUnknownFields(Pattern pattern) {
+    private void ignoreUnknownElements(Pattern pattern) {
         if (fieldAliasingMapper == null) {
             throw new com.thoughtworks.xstream.InitializationException("No "
                 + FieldAliasingMapper.class.getName()

@@ -309,7 +309,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("d", out.derived);
     }
 
-    public void testIgnoreUnknownFieldsMatchingPattern() {
+    public void testIgnoreUnknownElementsMatchingPattern() {
         String actualXml = ""
             + "<thing>\n"
             + "  <sometimesIgnore>foo</sometimesIgnore>\n" 
@@ -320,7 +320,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
 
         xstream.alias("thing", DerivedThing.class);
         xstream.omitField(Thing.class, "sometimesIgnore");
-        xstream.ignoreUnknownFields("foo.*");
+        xstream.ignoreUnknownElements("foo.*");
 
         DerivedThing out = (DerivedThing)xstream.fromXML(actualXml);
         assertEquals(null, out.alwaysIgnore);

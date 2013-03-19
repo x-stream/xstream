@@ -63,7 +63,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
         xstream.alias("hardware", Hardware.class);
         xstream.alias("product", Product.class);
-        xstream.ignoreUnknownFields();
+        xstream.ignoreUnknownElements();
     }
 
     public void testWithout() {
