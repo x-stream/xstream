@@ -329,7 +329,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("d", out.derived);
         
         try {
-            xstream.fromXML(actualXml.replace("foobar", "unknown"));
+            xstream.fromXML(actualXml.replaceAll("foobar", "unknown"));
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
             String message = e.getMessage();
