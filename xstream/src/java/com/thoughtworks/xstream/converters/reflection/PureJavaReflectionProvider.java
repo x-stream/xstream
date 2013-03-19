@@ -181,6 +181,10 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return fieldDictionary.field(definedIn, fieldName, null);
     }
 
+    public Field getFieldOrNull(Class definedIn, String fieldName) {
+        return fieldDictionary.fieldOrNull(definedIn, fieldName,  null);
+    }
+
     public void setFieldDictionary(FieldDictionary dictionary) {
         this.fieldDictionary = dictionary;
     }
