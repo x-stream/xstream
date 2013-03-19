@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,7 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         xstream.alias("farm", Farm.class);
         xstream.alias("animal", Animal.class);
         xstream.alias("MEGA-farm", MegaFarm.class);
+        xstream.ignoreUnknownFields();
     }
 
     public static class Farm extends StandardObject {

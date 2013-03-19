@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -57,6 +57,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.alias("room", Room.class);
         xstream.alias("house", House.class);
         xstream.alias("person", Person.class);
+        xstream.ignoreUnknownFields();
     }
 
     public void testWithout() {

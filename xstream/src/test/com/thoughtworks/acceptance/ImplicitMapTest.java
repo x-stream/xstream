@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -63,6 +63,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
         xstream.alias("hardware", Hardware.class);
         xstream.alias("product", Product.class);
+        xstream.ignoreUnknownFields();
     }
 
     public void testWithout() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,8 +15,11 @@ import com.thoughtworks.xstream.core.util.FastField;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Mapper that allows a field of a specific class to be replaced with a shorter alias, or omitted
@@ -29,6 +32,7 @@ public class FieldAliasingMapper extends MapperWrapper {
     protected final Map fieldToAliasMap = new HashMap();
     protected final Map aliasToFieldMap = new HashMap();
     protected final Set fieldsToOmit = new HashSet();
+    protected final Set unknownFieldsToIgnore = new LinkedHashSet();
 
     public FieldAliasingMapper(Mapper wrapped) {
         super(wrapped);
@@ -37,6 +41,10 @@ public class FieldAliasingMapper extends MapperWrapper {
     public void addFieldAlias(String alias, Class type, String fieldName) {
         fieldToAliasMap.put(key(type, fieldName), alias);
         aliasToFieldMap.put(key(type, alias), fieldName);
+    }
+    
+    public void addFieldsToIgnore(final Pattern pattern) {
+        unknownFieldsToIgnore.add(pattern);
     }
 
     private Object key(Class type, String name) {
@@ -70,7 +78,17 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     public boolean shouldSerializeMember(Class definedIn, String fieldName) {
-        return !fieldsToOmit.contains(key(definedIn, fieldName));
+        if (fieldsToOmit.contains(key(definedIn, fieldName))) {
+            return false;
+        } else if (definedIn == Object.class && !unknownFieldsToIgnore.isEmpty()) {
+            for(Iterator iter = unknownFieldsToIgnore.iterator(); iter.hasNext();) {
+                Pattern pattern = (Pattern)iter.next();
+                if (pattern.matcher(fieldName).matches()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void omitField(Class definedIn, String fieldName) {

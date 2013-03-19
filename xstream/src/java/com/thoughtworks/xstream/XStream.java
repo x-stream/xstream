@@ -50,6 +50,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
@@ -325,6 +326,7 @@ public class XStream {
     public static final int PRIORITY_VERY_LOW = -20;
 
     private static final String ANNOTATION_MAPPER_TYPE = "com.thoughtworks.xstream.mapper.AnnotationMapper";
+    private static final Pattern IGNORE_ALL = Pattern.compile(".*");
 
     /**
      * Constructs a default XStream. The instance will use the {@link XppDriver} as default and
@@ -1778,6 +1780,40 @@ public class XStream {
                 + " available");
         }
         fieldAliasingMapper.omitField(definedIn, fieldName);
+    }
+    
+    /**
+     * Ignore all unknown fields.
+     * 
+     * @since upcoming
+     */
+    public void ignoreUnknownFields() {
+        ignoreUnknownFields(IGNORE_ALL);
+    }
+
+    /**
+     * Add pattern for unknown field names to ignore.
+     * 
+     * @param pattern the name pattern as regular expression
+     * @since upcoming
+     */
+    public void ignoreUnknownFields(String pattern) {
+        ignoreUnknownFields(Pattern.compile(pattern));
+    }
+
+    /**
+     * Add pattern for unknown field names to ignore.
+     * 
+     * @param pattern the name pattern as regular expression
+     * @since upcoming
+     */
+    private void ignoreUnknownFields(Pattern pattern) {
+        if (fieldAliasingMapper == null) {
+            throw new com.thoughtworks.xstream.InitializationException("No "
+                + FieldAliasingMapper.class.getName()
+                + " available");
+        }
+        fieldAliasingMapper.addFieldsToIgnore(pattern);
     }
 
     /**

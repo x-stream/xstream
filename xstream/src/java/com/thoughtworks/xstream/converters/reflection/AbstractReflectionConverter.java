@@ -440,16 +440,16 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 return itemType;
             } else {
                 String originalNodeName = reader.getNodeName();
-                if (definedInCls == null) {
-                    for(definedInCls = result.getClass(); definedInCls != null; definedInCls = definedInCls.getSuperclass()) {
-                        if (!mapper.shouldSerializeMember(definedInCls, originalNodeName)) {
-                            return null;
-                        }
-                    }
-                }
                 try {
                     return mapper.realClass(originalNodeName);
                 } catch (CannotResolveClassException e) {
+                    if (definedInCls == null) {
+                        for(definedInCls = result.getClass(); definedInCls != null; definedInCls = definedInCls.getSuperclass()) {
+                            if (!mapper.shouldSerializeMember(definedInCls, originalNodeName)) {
+                                return null;
+                            }
+                        }
+                    }
                     throw new UnknownFieldException(result.getClass().getName(), fieldName);
                 }
             }
