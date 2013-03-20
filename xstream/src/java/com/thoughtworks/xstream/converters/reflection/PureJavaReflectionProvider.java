@@ -156,6 +156,9 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return fieldDictionary.field(object.getClass(), fieldName, definedIn).getType();
     }
 
+    /**
+     * @deprecated As of upcoming, use {@link #getFieldOrNull(Class, String)} instead
+     */
     public boolean fieldDefinedInClass(String fieldName, Class type) {
         Field field = fieldDictionary.fieldOrNull(type, fieldName, null);
         return field != null && fieldModifiersSupported(field);

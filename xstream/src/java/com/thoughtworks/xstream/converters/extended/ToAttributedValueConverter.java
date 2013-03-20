@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -196,10 +196,8 @@ public class ToAttributedValueConverter implements Converter {
             }
 
             final String fieldName = mapper.realMember(resultType, attrName);
-            final boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(
-                fieldName, resultType);
-            if (fieldExistsInClass) {
-                final Field field = reflectionProvider.getField(resultType, fieldName);
+            final Field field = reflectionProvider.getFieldOrNull(resultType, fieldName);
+            if (field != null) {
                 if (Modifier.isTransient(field.getModifiers())) {
                     continue;
                 }
@@ -248,8 +246,9 @@ public class ToAttributedValueConverter implements Converter {
         if (valueField != null) {
             final Class classDefiningField = valueField.getDeclaringClass();
             final String fieldName = valueField.getName();
-            if (fieldName == null
-                || !reflectionProvider.fieldDefinedInClass(fieldName, resultType)) {
+            final Field field = fieldName == null ? null : reflectionProvider.getField(
+                classDefiningField, fieldName);
+            if (fieldName == null || field == null) {
                 final ConversionException exception = new ConversionException(
                     "Cannot assign value to field of type");
                 exception.add("element", reader.getNodeName());
@@ -268,7 +267,6 @@ public class ToAttributedValueConverter implements Converter {
                     result, fieldName, classDefiningField));
             }
 
-            final Field field = reflectionProvider.getField(classDefiningField, fieldName);
             final Object value = context.convertAnother(
                 result, type,
                 mapper.getLocalConverter(field.getDeclaringClass(), field.getName()));

@@ -36,6 +36,9 @@ public interface ReflectionProvider {
 
     Class getFieldType(Object object, String fieldName, Class definedIn);
 
+    /**
+     * @deprecated As of upcoming, use {@link #getFieldOrNull(Class, String)} instead
+     */
     boolean fieldDefinedInClass(String fieldName, Class type);
 
     /**

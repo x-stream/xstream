@@ -69,7 +69,12 @@
     <h2>API changes</h2>
 
     <ul>
-    	<li>JIRA:XSTR-722: Add ReflectionProvider.getFieldOrNull(Class, String).</li>
+    	<li>JIRA:XSTR-722: Added 
+    	c.t.x.converters.reflection.ReflectionProvider.getFieldOrNull(Class, String).</li>
+    	<li>Deprecated 
+    	c.t.x.converters.reflection.ReflectionProvider.fieldDefinedInClass(Class, String) in
+    	favor of new c.t.x.converters.reflection.ReflectionProvider.getFieldOrNull(Class,
+    	String).</li>
     	<li>Deprecated constructor c.t.x.converters.extended.RegexPatternConverter(Converter)
     	in favor of c.t.x.converters.extended.RegexPatternConverter().</li>
     	<li>Deprecated constructor c.t.x.converters.extended.ThrowableConverter(Converter)

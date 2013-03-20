@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -251,9 +251,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             String attrAlias = (String) it.next();
             // TODO: realMember should return FastField
             String attrName = mapper.realMember(result.getClass(), mapper.attributeForAlias(attrAlias));
-            boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(attrName, result.getClass());
-            if (fieldExistsInClass) {
-                Field field = reflectionProvider.getField(result.getClass(), attrName);
+            Field field = reflectionProvider.getFieldOrNull(result.getClass(), attrName);
+            if (field != null) {
                 if (Modifier.isTransient(field.getModifiers()) && !shouldUnmarshalTransientFields()) {
                     continue;
                 }
@@ -282,22 +281,21 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             reader.moveDown();
 
             String originalNodeName = reader.getNodeName();
-            Class classDefiningField = determineWhichClassDefinesField(reader);
+            Class classDefiningField = readDefiningClass(reader);
             Class fieldDeclaringClass = classDefiningField == null
                 ? result.getClass()
                 : classDefiningField;
             String fieldName = mapper.realMember(fieldDeclaringClass, originalNodeName);
             Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
                 .getImplicitCollectionDefForFieldName(fieldDeclaringClass, fieldName);
-            boolean fieldExistsInClass = implicitCollectionMapping == null
-                && reflectionProvider.fieldDefinedInClass(fieldName, fieldDeclaringClass);
+            Field field = implicitCollectionMapping != null ? null
+                : reflectionProvider.getFieldOrNull(fieldDeclaringClass, fieldName);
             Class type = implicitCollectionMapping == null || implicitCollectionMapping.getItemType() == null
                 ? determineType(
-                    reader, fieldExistsInClass, result, fieldName, classDefiningField)
+                    reader, field != null, result, fieldName, classDefiningField)
                 : implicitCollectionMapping.getItemType();
             final Object value;
-            if (fieldExistsInClass) {
-                Field field = reflectionProvider.getField(classDefiningField != null ? classDefiningField : result.getClass(), fieldName);
+            if (field != null) {
                 if ((Modifier.isTransient(field.getModifiers()) && !shouldUnmarshalTransientFields()) 
                         || !mapper.shouldSerializeMember(field.getDeclaringClass(), fieldName)) {
                     reader.moveUp();
@@ -327,7 +325,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 throw new ConversionException("Cannot convert type " + value.getClass().getName() + " to type " + type.getName());
             }
 
-            if (fieldExistsInClass) {
+            if (field != null) {
                 reflectionProvider.writeField(result, fieldName, value, classDefiningField);
                 seenFields.add(new FastField(classDefiningField, fieldName));
             } else if (type != null) {
@@ -410,7 +408,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         return implicitCollections;
     }
 
-    private Class determineWhichClassDefinesField(HierarchicalStreamReader reader) {
+    private Class readDefiningClass(HierarchicalStreamReader reader) {
         String attributeName = mapper.aliasForSystemAttribute("defined-in");
         String definedIn = attributeName == null ? null : reader.getAttribute(attributeName);
         return definedIn == null ? null : mapper.realClass(definedIn);
