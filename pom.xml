@@ -401,6 +401,15 @@
             <links>
               <link>${link.javadoc.javase}</link>
             </links>
+            <archive>
+              <manifest>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+              <manifestEntries>
+                <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version>
+              </manifestEntries>
+            </archive>
           </configuration>
         </plugin>
         <plugin>
@@ -435,6 +444,28 @@
               </goals>
             </execution>
           </executions>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+              <manifestEntries>
+                <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version>
+                <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                <Bundle-Name>${project.name} Sources</Bundle-Name>
+                <Bundle-SymbolicName>${project.artifactId}.sources</Bundle-SymbolicName>
+                <Bundle-Vendor>${project.organization.name} Sources</Bundle-Vendor>
+                <Bundle-Version>${project.info.osgiVersion} Sources</Bundle-Version>
+                <Eclipse-SourceBundle>${project.artifactId};version=${project.info.osgiVersion}</Eclipse-SourceBundle>
+                <X-Compile-Source>${version.java.source}</X-Compile-Source>
+                <X-Compile-Target>${version.java.target}</X-Compile-Target>
+                <X-Builder>Maven ${maven.version}</X-Builder>
+                <X-Build-Time>${maven.build.timestamp}</X-Build-Time>
+                <X-Build-Os>${os.name}</X-Build-Os>
+              </manifestEntries>
+            </archive>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

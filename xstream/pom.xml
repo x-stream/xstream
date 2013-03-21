@@ -196,6 +196,13 @@
               <includes>
                 <include>**/AbstractAcceptanceTest.*</include>
               </includes>
+              <archive combine.children="append">
+                <manifestEntries>
+                  <Specification-Title>${project.name} Test</Specification-Title>
+                  <Implementation-Title>${project.name} Test</Implementation-Title>
+                  <Implementation-Vendor-Id>${project.artifactId}.test</Implementation-Vendor-Id>
+                </manifestEntries>
+              </archive>
             </configuration>
           </execution>
         </executions>
