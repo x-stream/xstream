@@ -351,8 +351,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         }
     }
 
-    // TODO: XSTR-457
-    public void todoTestAnOmittedFieldMakesADefinedInAttributeSuperfluous() {
+    public void testAnOmittedFieldMakesADefinedInAttributeSuperfluous() {
         ThingAgain in = new ThingAgain();
         in.alwaysIgnore = "a";
         in.setHidden("b");
