@@ -38,7 +38,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
     }
     
     public void testAllImplicitTypesAtOnce()
-	{
+    {
         xstream.alias("implicits", AllImplicitTypes.class);
         xstream.alias("a", AllImplicitTypes.A.class);
         xstream.alias("b", AllImplicitTypes.B.class);
@@ -47,27 +47,27 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         xstream.addImplicitArray(AllImplicitTypes.class, "aArray");
         xstream.addImplicitCollection(AllImplicitTypes.class, "bList");
         xstream.addImplicitMap(AllImplicitTypes.class, "cMap", AllImplicitTypes.C.class, "val");
-        String expected = "" +
-    		"<implicits>\n" + 
-    		"  <a>\n" + 
-    		"    <val>1</val>\n" + 
-    		"  </a>\n" + 
-    		"  <a>\n" + 
-    		"    <val>2</val>\n" + 
-    		"  </a>\n" + 
-    		"  <b>\n" + 
-    		"    <val>3</val>\n" + 
-    		"  </b>\n" + 
-    		"  <b>\n" + 
-    		"    <val>4</val>\n" + 
-    		"  </b>\n" + 
-    		"  <c>\n" + 
-    		"    <val>5</val>\n" + 
-    		"  </c>\n" + 
-    		"  <c>\n" + 
-    		"    <val>6</val>\n" + 
-    		"  </c>\n" + 
-    		"</implicits>";
+        String expected = ""
+            + "<implicits>\n"
+            + "  <a>\n"
+            + "    <val>1</val>\n"
+            + "  </a>\n"
+            + "  <a>\n"
+            + "    <val>2</val>\n"
+            + "  </a>\n"
+            + "  <b>\n"
+            + "    <val>3</val>\n"
+            + "  </b>\n"
+            + "  <b>\n"
+            + "    <val>4</val>\n"
+            + "  </b>\n"
+            + "  <c>\n"
+            + "    <val>5</val>\n"
+            + "  </c>\n"
+            + "  <c>\n"
+            + "    <val>6</val>\n"
+            + "  </c>\n"
+            + "</implicits>";
 
         AllImplicitTypes implicits = new AllImplicitTypes();
         implicits.aArray[0] = new AllImplicitTypes.A();
@@ -85,5 +85,5 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         c.val = new Integer(6);
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
-	}
+    }
 }
