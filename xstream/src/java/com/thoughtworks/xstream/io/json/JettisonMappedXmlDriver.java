@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (c) 2007, 2008, 2009, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -43,10 +43,10 @@ import java.net.URL;
  */
 public class JettisonMappedXmlDriver extends AbstractDriver {
 
-    private final MappedXMLOutputFactory mof;
-    private final MappedXMLInputFactory mif;
-    private final MappedNamespaceConvention convention;
-    private boolean useSerializeAsArray = true;
+    protected final MappedXMLOutputFactory mof;
+    protected final MappedXMLInputFactory mif;
+    protected final MappedNamespaceConvention convention;
+    protected final boolean useSerializeAsArray;
 
     /**
      * Construct a JettisonMappedXmlDriver.
