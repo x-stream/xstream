@@ -1060,7 +1060,8 @@ public class XStream {
 
         } catch (ConversionException e) {
             Package pkg = getClass().getPackage();
-            e.add("version", pkg != null ? pkg.getImplementationVersion() : "not available");
+            String version = pkg != null ? pkg.getImplementationVersion() : null;
+            e.add("version", version != null ? version : "not available");
             throw e;
         }
     }
