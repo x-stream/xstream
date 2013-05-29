@@ -455,7 +455,7 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         assertBothWays(farm, expected);
     }
 
-    public void testWithNullElementAnsAlias() {
+    public void testWithAliasAndNullElement() {
         Farm farm = new Farm();
         farm.animals = new Animal[] {
             null,
