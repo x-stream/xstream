@@ -102,6 +102,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     }
 
     public static class MegaFarm extends Farm {
+        String separator = "---";
         List names;
         public MegaFarm(int size) {
             super(size);
@@ -124,6 +125,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 "  <animal>\n" +
                 "    <name>Sheep</name>\n" +
                 "  </animal>\n" +
+                "  <separator>---</separator>\n" +
                 "</MEGA-farm>";
 
         xstream.addImplicitCollection(Farm.class, "animals");
@@ -149,6 +151,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 "  <animal>\n" +
                 "    <name>Sheep</name>\n" +
                 "  </animal>\n" +
+                "  <separator>---</separator>\n" +
                 "  <name>McDonald</name>\n" +
                 "  <name>Ponte Rosa</name>\n" +
                 "</MEGA-farm>";
@@ -177,6 +180,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 "  <animal>\n" +
                 "    <name>Sheep</name>\n" +
                 "  </animal>\n" +
+                "  <separator>---</separator>\n" +
                 "  <name>McDonald</name>\n" +
                 "  <name>Ponte Rosa</name>\n" +
                 "</MEGA-farm>";
@@ -202,6 +206,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 "  <animal>\n" +
                 "    <name>Sheep</name>\n" +
                 "  </animal>\n" +
+                "  <separator>---</separator>\n" +
                 "</MEGA-farm>";
 
         xstream.addImplicitCollection(MegaFarm.class, "animals");
@@ -243,6 +248,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 "    <animal>\n" +
                 "      <name>Sheep</name>\n" +
                 "    </animal>\n" +
+                "    <separator>---</separator>\n" +
                 "    <name>McDonald</name>\n" +
                 "    <name>Ponte Rosa</name>\n" +
                 "  </MEGA-farm>\n" +
@@ -256,6 +262,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
     public static class House extends StandardObject {
         private List rooms = new ArrayList();
+        private String separator = "---";
         private List people = new ArrayList();
 
         public void add(Room room) {
@@ -318,6 +325,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
                 + "  <room>\n"
                 + "    <name>bathroom</name>\n"
                 + "  </room>\n"
+                + "  <separator>---</separator>\n"
                 + "  <person>\n"
                 + "    <name>joe</name>\n"
                 + "    <email>joe@house.org</email>\n"
@@ -339,14 +347,18 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertEquals(house.getPeople(), serializedHouse.getPeople());
         assertEquals(house.getRooms(), serializedHouse.getRooms());
     }
-    
+
     public void testWithEMPTY_LIST() {
         House house = new House();
         house.people = Collections.EMPTY_LIST;
         house.rooms = Collections.EMPTY_LIST;
         xstream.addImplicitCollection(House.class, "rooms", Room.class);
         xstream.addImplicitCollection(House.class, "people", Person.class);
-        assertEquals("<house/>", xstream.toXML(house));
+        String expected = "" 
+                + "<house>\n" 
+                + "  <separator>---</separator>\n" 
+                + "</house>";
+        assertEquals(expected, xstream.toXML(house));
     }
 
     public static class Zoo extends StandardObject {

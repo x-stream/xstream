@@ -120,6 +120,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     }
 
     public static class MegaSampleMaps extends SampleMaps {
+        String separator = "---";
         Map other = new OrderRetainingMap();
         {
             good = new OrderRetainingMap();
@@ -145,6 +146,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <bad/>\n" +
+                "  <separator>---</separator>\n" +
                 "  <other/>\n" +
                 "</MEGA-sample>";
 
@@ -171,6 +173,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <bad/>\n" +
+                "  <separator>---</separator>\n" +
                 "  <hardware>\n" +
                 "    <arch>i386</arch>\n" +
                 "    <name>Intel</name>\n" +
@@ -201,6 +204,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <bad/>\n" +
+                "  <separator>---</separator>\n" +
                 "  <hardware>\n" +
                 "    <arch>i386</arch>\n" +
                 "    <name>Intel</name>\n" +
@@ -230,6 +234,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <bad/>\n" +
+                "  <separator>---</separator>\n" +
                 "  <other/>\n" +
                 "</MEGA-sample>";
 
@@ -269,6 +274,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "      <name>Linux</name>\n" +
                 "    </software>\n" +
                 "    <bad/>\n" +
+                "    <separator>---</separator>\n" +
                 "    <hardware>\n" +
                 "      <arch>i386</arch>\n" +
                 "      <name>Intel</name>\n" +
@@ -312,6 +318,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <id>i</id>\n" +
                 "    <price>399.99</price>\n" +
                 "  </product>\n" +
+                "  <separator>---</separator>\n" +
                 "  <hardware>\n" +
                 "    <arch>i386</arch>\n" +
                 "    <name>Intel</name>\n" +

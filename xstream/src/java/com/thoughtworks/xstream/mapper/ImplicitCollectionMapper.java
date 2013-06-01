@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -165,9 +165,11 @@ public class ImplicitCollectionMapper extends MapperWrapper {
                             return def.getFieldName();
                         }
                     } else {
-                        unnamed = def;
-                        if (itemFieldName == null) {
-                            break;
+                        if (unnamed == null
+                            || unnamed.getItemType() == null
+                            || (def.getItemType() != null 
+                                && unnamed.getItemType().isAssignableFrom(def.getItemType()))) {
+                            unnamed = def;
                         }
                     }
                 }
