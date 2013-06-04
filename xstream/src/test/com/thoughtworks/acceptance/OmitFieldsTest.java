@@ -338,6 +338,30 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
                     DerivedThing.class.getName() + ".unknown"));
         }
     }
+    
+    public void testIgnoreNonExistingElementsMatchingTypeAlias() {
+        xstream.alias("thing", Thing.class);
+        xstream.ignoreUnknownElements("string");
+        Thing thing = new Thing();
+        String provided = "" 
+            + "<thing>\n" 
+            + "  <string>string 1</string>\n" 
+            + "</thing>";
+        String expected = "<thing/>";
+        assertWithAsymmetricalXml(thing, provided, expected);
+    }
+    
+    public void testIgnoredElementIsNotInstantiated() {
+        xstream.alias("thing", Thing.class);
+        xstream.ignoreUnknownElements("int");
+        Thing thing = new Thing();
+        String provided = "" 
+            + "<thing>\n" 
+            + "  <int>invalid</int>\n" 
+            + "</thing>";
+        String expected = "<thing/>";
+        assertWithAsymmetricalXml(thing, provided, expected);
+    }
 
     static class ThingAgain extends Thing {
         String sometimesIgnore;

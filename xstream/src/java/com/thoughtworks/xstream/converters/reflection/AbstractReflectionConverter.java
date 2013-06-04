@@ -308,6 +308,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
                 .getImplicitCollectionDefForFieldName(fieldDeclaringClass, fieldName);
             final Object value;
+            String implicitFieldName = null;
             Field field = null;
             Class type = null;
             if (implicitCollectionMapping == null) {
@@ -329,26 +330,42 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         // collection based on type only?
                         try {
                             type = mapper.realClass(originalNodeName);
+                            implicitFieldName = mapper.getFieldNameForItemTypeAndName(
+                                context.getRequiredType(), type, originalNodeName);
                         } catch (CannotResolveClassException e) {
+                            // type stays null ...
+                        }
+                        if (type == null || (type != null && implicitFieldName == null)) {
+                            // either not a type or element is a type alias, but does not
+                            // belong to an implicit field
                             handleUnknownField(
                                 explicitDeclaringClass, fieldName, resultType, originalNodeName);
+                            
+                            // element is unknown in declaring class, ignore it now
+                            type = null;
                         }
                     }
-                    if (Map.Entry.class.equals(type)) {
-                        // it is an element of an implicit map with two elements now for key
-                        // and value 
-                        reader.moveDown();
-                        final Object key = context.convertAnother(
-                            result, HierarchicalStreams.readClassType(reader, mapper));
-                        reader.moveUp();
-                        reader.moveDown();
-                        final Object v = context.convertAnother(
-                            result, HierarchicalStreams.readClassType(reader, mapper));
-                        reader.moveUp();
-                        value = Collections.singletonMap(key, v).entrySet().iterator().next();
+                    if (type == null) {
+                        // no type, no value
+                        value = null;
                     } else {
-                        // if we have a type, recurse info hierarchy
-                        value = type != null ? context.convertAnother(result, type) : null;
+                        if (Map.Entry.class.equals(type)) {
+                            // it is an element of an implicit map with two elements now for
+                            // key and value 
+                            reader.moveDown();
+                            final Object key = context.convertAnother(
+                                result, HierarchicalStreams.readClassType(reader, mapper));
+                            reader.moveUp();
+                            reader.moveDown();
+                            final Object v = context.convertAnother(
+                                result, HierarchicalStreams.readClassType(reader, mapper));
+                            reader.moveUp();
+                            value = Collections.singletonMap(key, v)
+                                .entrySet().iterator().next();
+                        } else {
+                            // recurse info hierarchy
+                            value = context.convertAnother(result, type);
+                        }
                     }
                 } else {
                     boolean fieldAlreadyChecked = false;
@@ -386,7 +403,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     }
                 }
             } else {
-                // we have an implicit collection with defined names 
+                // we have an implicit collection with defined names
+               // implicitFieldName = implicitCollectionMapping.getItemFieldName();
                 type = implicitCollectionMapping.getItemType();
                 if (type == null) {
                     String classAttribute = HierarchicalStreams.readClassAttribute(
@@ -409,9 +427,15 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 reflectionProvider.writeField(result, fieldName, value, field.getDeclaringClass());
                 seenFields.add(new FastField(field.getDeclaringClass(), fieldName));
             } else if (type != null) {
-                implicitCollectionsForCurrentObject = writeValueToImplicitCollection(
-                    context, value, implicitCollectionsForCurrentObject, result,
-                    originalNodeName);
+                if (implicitFieldName == null) {
+                    // look for implicit field
+                    implicitFieldName = mapper.getFieldNameForItemTypeAndName(
+                        context.getRequiredType(), 
+                        value != null ? value.getClass() : Mapper.Null.class,
+                        originalNodeName);
+                }
+                implicitCollectionsForCurrentObject = writeValueToImplicitCollection(value,
+                    implicitCollectionsForCurrentObject, result, implicitFieldName);
             }
 
             reader.moveUp();
@@ -458,58 +482,45 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         throw new UnknownFieldException(resultType.getName(), fieldName);
     }
 
-    private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value,
-        Map implicitCollections, Object result, String itemFieldName) {
-        String fieldName = mapper.getFieldNameForItemTypeAndName(
-            context.getRequiredType(), value != null ? value.getClass() : Mapper.Null.class,
-            itemFieldName);
-        if (fieldName != null) {
-            if (implicitCollections == null) {
-                implicitCollections = new HashMap(); // lazy instantiation
-            }
-            Collection collection = (Collection)implicitCollections.get(fieldName);
-            if (collection == null) {
-                Class physicalFieldType = reflectionProvider.getFieldType(
-                    result, fieldName, null);
-                if (physicalFieldType.isArray()) {
-                    collection = new ArraysList(physicalFieldType);
-                } else {
-                    Class fieldType = mapper.defaultImplementationOf(physicalFieldType);
-                    if (!(Collection.class.isAssignableFrom(fieldType) || Map.class
-                        .isAssignableFrom(fieldType))) {
-                        throw new ObjectAccessException(
-                            "Field "
-                                + fieldName
-                                + " of "
-                                + result.getClass().getName()
-                                + " is configured for an implicit Collection or Map, but field is of type "
-                                + fieldType.getName());
-                    }
-                    if (pureJavaReflectionProvider == null) {
-                        pureJavaReflectionProvider = new PureJavaReflectionProvider();
-                    }
-                    Object instance = pureJavaReflectionProvider.newInstance(fieldType);
-                    if (instance instanceof Collection) {
-                        collection = (Collection)instance;
-                    } else {
-                        Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
-                            .getImplicitCollectionDefForFieldName(result.getClass(), fieldName);
-                        collection = new MappingList(
-                            (Map)instance, implicitCollectionMapping.getKeyFieldName());
-                    }
-                    reflectionProvider.writeField(result, fieldName, instance, null);
-                }
-                implicitCollections.put(fieldName, collection);
-            }
-            collection.add(value);
-        } else {
-            throw new ConversionException("Element "
-                + itemFieldName
-                + " of type "
-                + value.getClass().getName()
-                + " is not defined as field in type "
-                + result.getClass().getName());
+    private Map writeValueToImplicitCollection(Object value, Map implicitCollections, Object result, String implicitFieldName) {
+        if (implicitCollections == null) {
+            implicitCollections = new HashMap(); // lazy instantiation
         }
+        Collection collection = (Collection)implicitCollections.get(implicitFieldName);
+        if (collection == null) {
+            Class physicalFieldType = reflectionProvider.getFieldType(
+                result, implicitFieldName, null);
+            if (physicalFieldType.isArray()) {
+                collection = new ArraysList(physicalFieldType);
+            } else {
+                Class fieldType = mapper.defaultImplementationOf(physicalFieldType);
+                if (!(Collection.class.isAssignableFrom(fieldType) || Map.class
+                    .isAssignableFrom(fieldType))) {
+                    throw new ObjectAccessException(
+                        "Field "
+                            + implicitFieldName
+                            + " of "
+                            + result.getClass().getName()
+                            + " is configured for an implicit Collection or Map, but field is of type "
+                            + fieldType.getName());
+                }
+                if (pureJavaReflectionProvider == null) {
+                    pureJavaReflectionProvider = new PureJavaReflectionProvider();
+                }
+                Object instance = pureJavaReflectionProvider.newInstance(fieldType);
+                if (instance instanceof Collection) {
+                    collection = (Collection)instance;
+                } else {
+                    Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
+                        .getImplicitCollectionDefForFieldName(result.getClass(), implicitFieldName);
+                    collection = new MappingList(
+                        (Map)instance, implicitCollectionMapping.getKeyFieldName());
+                }
+                reflectionProvider.writeField(result, implicitFieldName, instance, null);
+            }
+            implicitCollections.put(implicitFieldName, collection);
+        }
+        collection.add(value);
         return implicitCollections;
     }
 
