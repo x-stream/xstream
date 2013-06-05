@@ -404,7 +404,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 }
             } else {
                 // we have an implicit collection with defined names
-               // implicitFieldName = implicitCollectionMapping.getItemFieldName();
+                implicitFieldName = implicitCollectionMapping.getFieldName();
                 type = implicitCollectionMapping.getItemType();
                 if (type == null) {
                     String classAttribute = HierarchicalStreams.readClassAttribute(
@@ -434,8 +434,11 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         value != null ? value.getClass() : Mapper.Null.class,
                         originalNodeName);
                 }
-                implicitCollectionsForCurrentObject = writeValueToImplicitCollection(value,
-                    implicitCollectionsForCurrentObject, result, implicitFieldName);
+                if (implicitCollectionsForCurrentObject == null) {
+                    implicitCollectionsForCurrentObject = new HashMap();
+                }
+                writeValueToImplicitCollection(
+                    value, implicitCollectionsForCurrentObject, result, implicitFieldName);
             }
 
             reader.moveUp();
@@ -482,10 +485,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         throw new UnknownFieldException(resultType.getName(), fieldName);
     }
 
-    private Map writeValueToImplicitCollection(Object value, Map implicitCollections, Object result, String implicitFieldName) {
-        if (implicitCollections == null) {
-            implicitCollections = new HashMap(); // lazy instantiation
-        }
+    private void writeValueToImplicitCollection(Object value, Map implicitCollections, Object result, String implicitFieldName) {
         Collection collection = (Collection)implicitCollections.get(implicitFieldName);
         if (collection == null) {
             Class physicalFieldType = reflectionProvider.getFieldType(
@@ -521,7 +521,6 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             implicitCollections.put(implicitFieldName, collection);
         }
         collection.add(value);
-        return implicitCollections;
     }
 
     private Class readDeclaringClass(HierarchicalStreamReader reader) {
