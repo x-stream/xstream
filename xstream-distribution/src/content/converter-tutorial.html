@@ -232,6 +232,9 @@ Person class). Since the String representation is complete, a nested element is 
 necessary anymore:</p>
 <div class="Source Java"><pre>&lt;person&gt;Guilherme&lt;/person&gt;</pre></div>
 
+<p class=highlight>Note, that in implementation of a SingleValueConverter is required for
+attributes, since these objects have to be represented by a single string only.</p>
+
 <h1 id="CustomConverter">Date Converter</h1>
 <p>Now that we know how the <i>Converter</i> interface works, let's create a
 simple calendar converter which uses the locale to convert the
