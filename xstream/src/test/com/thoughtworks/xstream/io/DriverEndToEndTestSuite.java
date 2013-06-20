@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -59,13 +59,15 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new StaxDriver());
         if (JVM.is16()) {
             JVM jvm = new JVM();
-            Class driverType = jvm.loadClass("com.thoughtworks.xstream.io.xml.SjsxpDriver");
-            try {
-                addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
-            } catch (InstantiationException e) {
-                throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
-            } catch (IllegalAccessException e) {
-                throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
+            if (jvm.supportsSunStAX()) {
+                Class driverType = jvm.loadClass("com.thoughtworks.xstream.io.xml.SjsxpDriver");
+                try {
+                    addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
+                } catch (InstantiationException e) {
+                    throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
+                } catch (IllegalAccessException e) {
+                    throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
+                }
             }
         }
         addDriverTest(new WstxDriver());

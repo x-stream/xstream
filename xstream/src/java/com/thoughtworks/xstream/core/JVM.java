@@ -39,6 +39,7 @@ public class JVM implements Caching {
     private final boolean supportsAWT = loadClass("java.awt.Color", false) != null;
     private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel", false) != null;
     private final boolean supportsSQL = loadClass("java.sql.Date") != null;
+    private final boolean supportsSunStAX = loadClass("com.sun.xml.internal.stream.XMLInputFactoryImpl") != null;
     
     private static final boolean canAllocateWithUnsafe;
     private static final boolean optimizedTreeSetAddAll;
@@ -242,6 +243,15 @@ public class JVM implements Caching {
     public boolean supportsSQL() {
         return this.supportsSQL;
     }
+
+    /**
+     * Checks if the jvm supports StAX implementation by Sun.
+     * 
+     * @since upcoiming
+     */
+    public boolean supportsSunStAX() {
+        return this.supportsSunStAX;
+    }
     
     /**
      * Checks if TreeSet.addAll is optimized for SortedSet argument.
@@ -305,7 +315,7 @@ public class JVM implements Caching {
         System.out.println("XStream support for enhanced Mode: " + jvm.canUseSun14ReflectionProvider());
         System.out.println("Supports AWT: " + jvm.supportsAWT());
         System.out.println("Supports Swing: " + jvm.supportsSwing());
-        System.out.println("Supports SQL: " + jvm.supportsSQL());
+        System.out.println("Supports SQL: " + jvm.supportsSunStAX());
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());
