@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,6 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 
@@ -81,7 +80,7 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
         ISODateTimeFormat.weekyearWeek(),
         ISODateTimeFormat.weekyearWeekDay()
     };
-
+    
     public boolean canConvert(Class type) {
         return type.equals(GregorianCalendar.class);
     }
@@ -91,7 +90,7 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
             DateTimeFormatter formatter = formattersUTC[i];
             try {
                 DateTime dt = formatter.parseDateTime(str);
-                Calendar calendar = dt.toCalendar(Locale.getDefault());
+                Calendar calendar = dt.toGregorianCalendar();
                 calendar.setTimeZone(TimeZone.getDefault());
                 return calendar;
             } catch (IllegalArgumentException e) {
@@ -103,7 +102,7 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
             try {
                 DateTimeFormatter formatter = formattersNoUTC[i].withZone(DateTimeZone.forID(timeZoneID));
                 DateTime dt = formatter.parseDateTime(str);
-                Calendar calendar = dt.toCalendar(Locale.getDefault());
+                Calendar calendar = dt.toGregorianCalendar();
                 calendar.setTimeZone(TimeZone.getDefault());
                 return calendar;
             } catch (IllegalArgumentException e) {
