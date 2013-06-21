@@ -304,6 +304,7 @@
               <testExcludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/enums/*</exclude>
+                <exclude>**/extended/*17Test*</exclude>
                 <exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
                 <exclude>**/acceptance/Basic15TypesTest*</exclude>
                 <exclude>**/acceptance/Concurrent15TypesTest*</exclude>
