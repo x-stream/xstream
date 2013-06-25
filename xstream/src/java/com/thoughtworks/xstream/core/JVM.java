@@ -247,7 +247,7 @@ public class JVM implements Caching {
     /**
      * Checks if the jvm supports StAX implementation by Sun.
      * 
-     * @since upcoiming
+     * @since upcoming
      */
     public boolean supportsSunStAX() {
         return this.supportsSunStAX;
