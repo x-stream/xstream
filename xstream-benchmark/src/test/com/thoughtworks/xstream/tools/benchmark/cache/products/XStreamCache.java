@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2008, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,9 +13,9 @@ package com.thoughtworks.xstream.tools.benchmark.cache.products;
 import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
-import com.thoughtworks.xstream.core.util.ClassLoaderReference;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 import com.thoughtworks.xstream.core.util.TypedNull;
@@ -104,10 +104,10 @@ public abstract class XStreamCache implements Product {
         return mappers;
     }
 
-    private Mapper buildMapper(List mappers, JVM jvm, ClassLoader classLoader,
+    private Mapper buildMapper(List mappers, JVM jvm, ClassLoaderReference classLoaderReference,
         ConverterLookup converterLookup) {
         final Object[] arguments = new Object[]{
-            new TypedNull(Mapper.class), converterLookup, classLoader,
+            new TypedNull(Mapper.class), converterLookup, classLoaderReference,
             jvm.bestReflectionProvider(), jvm};
         for (final Iterator iter = mappers.iterator(); iter.hasNext();) {
             final Class mapperType = (Class)iter.next();

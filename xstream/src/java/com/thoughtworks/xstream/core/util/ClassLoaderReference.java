@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,23 +18,44 @@ package com.thoughtworks.xstream.core.util;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @since 1.1.1
+ * @deprecated As of upcoming use {@link com.thoughtworks.xstream.core.ClassLoaderReference} instead
  */
 public class ClassLoaderReference extends ClassLoader {
 
     private transient ClassLoader reference;
 
+    /**
+     * @deprecated As of upcoming use
+     *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#ClassLoaderReference(ClassLoader)}
+     *             instead
+     */
     public ClassLoaderReference(ClassLoader reference) {
         this.reference = reference;
     }
 
+    /**
+     * @deprecated As of upcoming use
+     *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#getReference()}
+     *             .loadClass(String) instead
+     */
     public Class loadClass(String name) throws ClassNotFoundException {
         return reference.loadClass(name);
     }
 
+    /**
+     * @deprecated As of upcoming use
+     *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#getReference()}
+     *             instead
+     */
     public ClassLoader getReference() {
         return reference;
     }
 
+    /**
+     * @deprecated As of upcoming use
+     *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#setReference(ClassLoader)}
+     *             instead
+     */
     public void setReference(ClassLoader reference) {
         this.reference = reference;
     }

@@ -104,13 +104,13 @@ import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.MapBackedDataHolder;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
-import com.thoughtworks.xstream.core.util.ClassLoaderReference;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
@@ -329,8 +329,11 @@ public class XStream {
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
 
     /**
-     * Constructs a default XStream. The instance will use the {@link XppDriver} as default and
-     * tries to determine the best match for the {@link ReflectionProvider} on its own.
+     * Constructs a default XStream.
+     * <p>
+     * The instance will use the {@link XppDriver} as default and tries to determine the best
+     * match for the {@link ReflectionProvider} on its own.
+     * </p>
      * 
      * @throws InitializationException in case of an initialization problem
      */
@@ -339,9 +342,13 @@ public class XStream {
     }
 
     /**
-     * Constructs an XStream with a special {@link ReflectionProvider}. The instance will use
-     * the {@link XppDriver} as default.
+     * Constructs an XStream with a special {@link ReflectionProvider}.
+     * <p>
+     * The instance will use the {@link XppDriver} as default.
+     * </p>
      * 
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
+     *            matching reflection provider
      * @throws InitializationException in case of an initialization problem
      */
     public XStream(ReflectionProvider reflectionProvider) {
@@ -349,9 +356,13 @@ public class XStream {
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver}. The instance will
-     * tries to determine the best match for the {@link ReflectionProvider} on its own.
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}.
+     * <p>
+     * The instance will tries to determine the best match for the {@link ReflectionProvider} on
+     * its own.
+     * </p>
      * 
+     * @param hierarchicalStreamDriver the driver instance
      * @throws InitializationException in case of an initialization problem
      */
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
@@ -362,6 +373,9 @@ public class XStream {
      * Constructs an XStream with a special {@link HierarchicalStreamDriver} and
      * {@link ReflectionProvider}.
      * 
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
+     *            matching Provider
+     * @param hierarchicalStreamDriver the driver instance
      * @throws InitializationException in case of an initialization problem
      */
     public XStream(
@@ -370,9 +384,14 @@ public class XStream {
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and
-     * {@link ReflectionProvider} and additionally with a prepared {@link Mapper}.
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
+     * {@link ReflectionProvider} and a prepared {@link Mapper} chain.
      * 
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
+     *            matching Provider
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
+     *            chain
+     * @param driver the driver instance
      * @throws InitializationException in case of an initialization problem
      * @deprecated As of 1.3, use
      *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoader, Mapper)}
@@ -380,17 +399,34 @@ public class XStream {
      */
     public XStream(
         ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
-        this(
-            reflectionProvider, driver, new ClassLoaderReference(new CompositeClassLoader()),
-            mapper, new DefaultConverterLookup(), null);
+        this(reflectionProvider, driver, new CompositeClassLoader(), mapper);
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and
-     * {@link ReflectionProvider} and additionally with a prepared {@link ClassLoader} to use.
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
+     * {@link ReflectionProvider} and a {@link ClassLoaderReference}.
+     * 
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
+     *            matching Provider
+     * @param driver the driver instance
+     * @param classLoaderReference the reference to the {@link ClassLoader} to use
+     * @throws InitializationException in case of an initialization problem
+     * @since upcoming
+     */
+    public XStream(
+        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
+        ClassLoaderReference classLoaderReference) {
+        this(reflectionProvider, driver, classLoaderReference, null);
+    }
+
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
+     * {@link ReflectionProvider} and the {@link ClassLoader} to use.
      * 
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
+     * @deprecated As of upcoming use
+     *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference)}
      */
     public XStream(
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
@@ -399,41 +435,109 @@ public class XStream {
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and
-     * {@link ReflectionProvider} and additionally with a prepared {@link Mapper} and the
-     * {@link ClassLoader} in use.
-     * <p>
-     * Note, if the class loader should be changed later again, you should provide a
-     * {@link ClassLoaderReference} as {@link ClassLoader} that is also use in the
-     * {@link Mapper} chain.
-     * </p>
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
+     * {@link ReflectionProvider}, a prepared {@link Mapper} chain and the {@link ClassLoader}
+     * to use.
      * 
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
+     *            matching Provider
+     * @param driver the driver instance
+     * @param classLoader the {@link ClassLoader} to use
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
+     *            chain
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
+     * @deprecated As of upcoming use
+     *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference, Mapper)}
      */
     public XStream(
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
         ClassLoader classLoader, Mapper mapper) {
         this(
-            reflectionProvider, driver, classLoader, mapper, new DefaultConverterLookup(), null);
+            reflectionProvider, driver, new ClassLoaderReference(classLoader), mapper, new DefaultConverterLookup());
     }
 
     /**
      * Constructs an XStream with a special {@link HierarchicalStreamDriver},
-     * {@link ReflectionProvider}, a prepared {@link Mapper} and the {@link ClassLoader} in use
-     * and an own {@link ConverterRegistry}.
+     * {@link ReflectionProvider}, a prepared {@link Mapper} chain and the
+     * {@link ClassLoaderReference}.
      * <p>
-     * Note, if the class loader should be changed later again, you should provide a
-     * {@link ClassLoaderReference} as {@link ClassLoader} that is also use in the
-     * {@link Mapper} chain.
+     * The {@link ClassLoaderReference} should also be used for the {@link Mapper} chain.
      * </p>
      * 
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
+     *            matching Provider
+     * @param driver the driver instance
+     * @param classLoaderReference the reference to the {@link ClassLoader} to use
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
+     *            chain
+     * @throws InitializationException in case of an initialization problem
+     * @since upcoming
+     */
+    public XStream(
+        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
+        ClassLoaderReference classLoaderReference, Mapper mapper) {
+        this(
+            reflectionProvider, driver, classLoaderReference, mapper, new DefaultConverterLookup());
+    }
+    
+    private XStream(
+        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
+        ClassLoaderReference classLoader, Mapper mapper, DefaultConverterLookup defaultConverterLookup) {
+        this(
+            reflectionProvider, driver, classLoader, mapper, defaultConverterLookup,
+            defaultConverterLookup);
+    }
+
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
+     * {@link ReflectionProvider}, a prepared {@link Mapper} chain, the
+     * {@link ClassLoaderReference} and an own {@link ConverterLookup} and
+     * {@link ConverterRegistry}.
+     * 
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
+     *            matching Provider
+     * @param driver the driver instance
+     * @param classLoader the {@link ClassLoader} to use
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
+     *            chain
+     * @param converterLookup the instance that is used to lookup the converters
+     * @param converterRegistry an instance to manage the converter instances
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
+     * @deprecated As of upcoming use
+     *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference, Mapper, ConverterLookup, ConverterRegistry)}
      */
     public XStream(
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
         ClassLoader classLoader, Mapper mapper, ConverterLookup converterLookup,
+        ConverterRegistry converterRegistry) {
+        this(reflectionProvider, driver, new ClassLoaderReference(classLoader), mapper, converterLookup, converterRegistry);
+    }
+
+    /**
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
+     * {@link ReflectionProvider}, a prepared {@link Mapper} chain, the
+     * {@link ClassLoaderReference} and an own {@link ConverterLookup} and
+     * {@link ConverterRegistry}.
+     * <p>
+     * The {@link ClassLoaderReference} should also be used for the {@link Mapper} chain.
+     * </p>
+     * 
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
+     *            matching Provider
+     * @param driver the driver instance
+     * @param classLoaderReference the reference to the {@link ClassLoader} to use
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
+     *            chain
+     * @param converterLookup the instance that is used to lookup the converters
+     * @param converterRegistry an instance to manage the converter instances
+     * @throws InitializationException in case of an initialization problem
+     * @since upcoming
+     */
+    public XStream(
+        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
+        ClassLoaderReference classLoaderReference, Mapper mapper, ConverterLookup converterLookup,
         ConverterRegistry converterRegistry) {
         jvm = new JVM();
         if (reflectionProvider == null) {
@@ -441,15 +545,9 @@ public class XStream {
         }
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
-        this.classLoaderReference = classLoader instanceof ClassLoaderReference
-            ? (ClassLoaderReference)classLoader
-            : new ClassLoaderReference(classLoader);
+        this.classLoaderReference = classLoaderReference;
         this.converterLookup = converterLookup;
-        this.converterRegistry = converterRegistry != null
-            ? converterRegistry
-            : (converterLookup instanceof ConverterRegistry
-                ? (ConverterRegistry)converterLookup
-                : null);
+        this.converterRegistry = converterRegistry;
         this.mapper = mapper == null ? buildMapper() : mapper;
 
         setupMappers();
@@ -486,9 +584,9 @@ public class XStream {
         if (JVM.is15()) {
             mapper = buildMapperDynamically(ANNOTATION_MAPPER_TYPE, new Class[]{
                 Mapper.class, ConverterRegistry.class, ConverterLookup.class,
-                ClassLoader.class, ReflectionProvider.class, JVM.class}, new Object[]{
+                ClassLoaderReference.class, ReflectionProvider.class}, new Object[]{
                 mapper, converterLookup, converterLookup, classLoaderReference,
-                reflectionProvider, jvm});
+                reflectionProvider});
         }
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);
@@ -1766,6 +1864,18 @@ public class XStream {
     public ClassLoader getClassLoader() {
         return classLoaderReference.getReference();
     }
+    
+    /**
+     * Retrieve the reference to this instance' ClassLoader. Use this reference for other
+     * XStream components (like converters) to ensure that they will use a changed ClassLoader
+     * instance automatically.
+     * 
+     * @return the reference
+     * @since upcoming
+     */
+    public ClassLoaderReference getClassLoaderReference() {
+        return classLoaderReference;
+    }
 
     /**
      * Prevents a field from being serialized. To omit a field you must always provide the
@@ -1859,18 +1969,23 @@ public class XStream {
     }
 
     /**
-     * @deprecated As of 1.3, use {@link InitializationException} instead
+     * @deprecated As of 1.3, use {@link com.thoughtworks.xstream.InitializationException}
+     *             instead
      */
     public static class InitializationException extends XStreamException {
         /**
-         * @deprecated As of 1.3, use {@link InitializationException} instead
+         * @deprecated As of 1.3, use
+         *             {@link com.thoughtworks.xstream.InitializationException#InitializationException(String, Throwable)}
+         *             instead
          */
         public InitializationException(String message, Throwable cause) {
             super(message, cause);
         }
 
         /**
-         * @deprecated As of 1.3, use {@link InitializationException} instead
+         * @deprecated As of 1.3, use
+         *             {@link com.thoughtworks.xstream.InitializationException#InitializationException(String)}
+         *             instead
          */
         public InitializationException(String message) {
             super(message);

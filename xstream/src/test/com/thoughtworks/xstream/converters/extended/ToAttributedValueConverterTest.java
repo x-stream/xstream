@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,6 +25,7 @@ import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.TreeMarshaller;
 import com.thoughtworks.xstream.core.TreeUnmarshaller;
@@ -55,7 +56,7 @@ public class ToAttributedValueConverterTest extends TestCase {
         super.setUp();
 
         final ClassAliasingMapper classAliasingMapper = new ClassAliasingMapper(
-            new DefaultMapper(getClass().getClassLoader()));
+            new DefaultMapper(new ClassLoaderReference(getClass().getClassLoader())));
         classAliasingMapper.addClassAlias("x", X.class);
         classAliasingMapper.addClassAlias("software", Software.class);
         classAliasingMapper.addClassAlias("open-source", OpenSourceSoftware.class);

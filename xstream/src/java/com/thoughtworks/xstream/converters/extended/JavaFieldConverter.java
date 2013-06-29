@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -29,8 +30,20 @@ public class JavaFieldConverter implements Converter {
 
     private final SingleValueConverter javaClassConverter;
 
+    /**
+     * Construct a JavaFieldConverter.
+     * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
+     * @since upcoming
+     */
+    public JavaFieldConverter(ClassLoaderReference classLoaderReference) {
+        this.javaClassConverter = new JavaClassConverter(classLoaderReference);
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #JavaFieldConverter(ClassLoaderReference)}
+     */
     public JavaFieldConverter(ClassLoader classLoader) {
-        this.javaClassConverter = new JavaClassConverter(classLoader);
+        this(new ClassLoaderReference(classLoader));
     }
 
     public boolean canConvert(Class type) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.util.Primitives;
 
 /**
@@ -25,10 +26,22 @@ import com.thoughtworks.xstream.core.util.Primitives;
  */
 public class JavaClassConverter extends AbstractSingleValueConverter {
 
-    private ClassLoader classLoader;
+    private ClassLoaderReference classLoaderReference;
 
+    /**
+     * Construct a JavaClassConverter.
+     * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
+     * @since upcoming
+     */
+    public JavaClassConverter(ClassLoaderReference classLoaderReference) {
+        this.classLoaderReference = classLoaderReference;
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #JavaClassConverter(ClassLoaderReference)}
+     */
     public JavaClassConverter(ClassLoader classLoader) {
-        this.classLoader = classLoader;
+        this(new ClassLoaderReference(classLoader));
     }
 
     public boolean canConvert(Class clazz) {
@@ -58,12 +71,15 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
             final ClassLoader classLoaderToUse;
             if (className.charAt(dimension) == 'L') {
                 String componentTypeName = className.substring(dimension + 1, className.length() - 1);
-                classLoaderToUse = classLoader.loadClass(componentTypeName).getClassLoader();
+                classLoaderToUse = classLoaderReference
+                    .getReference()
+                    .loadClass(componentTypeName)
+                    .getClassLoader();
             } else {
                 classLoaderToUse = null;
             }
             return Class.forName(className, false, classLoaderToUse);
         }
-        return classLoader.loadClass(className);
+        return classLoaderReference.getReference().loadClass(className);
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -34,8 +35,20 @@ public class JavaMethodConverter implements Converter {
 
     private final SingleValueConverter javaClassConverter;
 
+    /**
+     * Construct a JavaMethodConverter.
+     * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
+     * @since upcoming
+     */
+    public JavaMethodConverter(ClassLoaderReference classLoaderReference) {
+        this.javaClassConverter = new JavaClassConverter(classLoaderReference);
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #JavaMethodConverter(ClassLoaderReference)}
+     */
     public JavaMethodConverter(ClassLoader classLoader) {
-        this.javaClassConverter = new JavaClassConverter(classLoader);
+        this(new ClassLoaderReference(classLoader));
     }
 
     public boolean canConvert(Class type) {

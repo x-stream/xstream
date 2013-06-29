@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,13 +27,12 @@ import java.lang.annotation.Target;
  * <ul>
  * <li>{@link com.thoughtworks.xstream.mapper.Mapper}: The current mapper chain of the XStream
  * instance.</li>
- * <li>{@link ClassLoader}: The class loader used by the XStream instance to deserialize the
- * objects.</li>
+ * <li>{@link com.thoughtworks.xstream.core.ClassLoaderReference}: The reference to the class
+ * loader used by the XStream instance to deserialize the objects.</li>
  * <li>{@link com.thoughtworks.xstream.converters.reflection.ReflectionProvider}: The reflection
  * provider used by the reflection based converters of the current XStream instance.</li>
  * <li>{@link com.thoughtworks.xstream.converters.ConverterLookup}: The lookup for converters
  * handling a special type.</li>
- * <li>{@link com.thoughtworks.xstream.core.JVM}: Utility e.g. to load classes.</li>
  * <li>All elements provided with the individual arrays of this annotation. The provided values
  * follow the declaration sequence if a constructor requires multiple arguments of the same
  * type.</li>
@@ -41,12 +40,19 @@ import java.lang.annotation.Target;
  * argument is not supported when using
  * {@link com.thoughtworks.xstream.annotations.XStreamConverters}.</li>
  * </ul>
- * <p>The algorithm will try the converter's constructor with the most arguments first.</p>
- * <p>Note, the annotation matches a {@link ConverterMatcher}.
+ * <li>{@link com.thoughtworks.xstream.core.JVM}: Utility e.g. to load classes.</li> <li>
+ * {@link ClassLoader} (deprecated since upcoming): The class loader used by the XStream
+ * instance to deserialize the objects. Use ClassLoaderReference as argument</li>
+ * <p>
+ * The algorithm will try the converter's constructor with the most arguments first.
+ * </p>
+ * <p>
+ * Note, the annotation matches a {@link ConverterMatcher}.
  * {@link com.thoughtworks.xstream.converters.ConverterMatcher} as well as
  * {@link com.thoughtworks.xstream.converters.SingleValueConverter} extend this interface. The
  * {@link com.thoughtworks.xstream.mapper.AnnotationMapper} can only handle these two
- * <strong>known</strong> types.</p>
+ * <strong>known</strong> types.
+ * </p>
  * 
  * @author Chung-Onn Cheong
  * @author J&ouml;rg Schaible

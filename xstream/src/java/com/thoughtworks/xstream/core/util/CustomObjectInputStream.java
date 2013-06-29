@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,11 +22,12 @@ import java.util.Map;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 
 public class CustomObjectInputStream extends ObjectInputStream {
 
     private FastStack callbacks = new FastStack(1);
-    private final ClassLoader classLoader;
+    private final ClassLoaderReference classLoaderReference;
 
     private static final String DATA_HOLDER_KEY = CustomObjectInputStream.class.getName();
 
@@ -42,10 +43,17 @@ public class CustomObjectInputStream extends ObjectInputStream {
      * @deprecated As of 1.4 use {@link #getInstance(DataHolder, StreamCallback, ClassLoader)}
      */
     public static CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback) {
-        return getInstance(whereFrom, callback, null);
+        return getInstance(whereFrom, callback, (ClassLoader)null);
     }
 
-    public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback, ClassLoader classLoaderReference) {
+    /**
+     * @deprecated As of upcoming use {@link #getInstance(DataHolder, StreamCallback, ClassLoaderReference)}
+     */
+    public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback, ClassLoader classLoader) {
+        return getInstance(whereFrom, callback, new ClassLoaderReference(classLoader));
+    }
+
+    public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback, ClassLoaderReference classLoaderReference) {
         try {
             CustomObjectInputStream result = (CustomObjectInputStream) whereFrom.get(DATA_HOLDER_KEY);
             if (result == null) {
@@ -64,12 +72,19 @@ public class CustomObjectInputStream extends ObjectInputStream {
      * Warning, this object is expensive to create (due to functionality inherited from superclass).
      * Use the static fetch() method instead, wherever possible.
      *
-     * @see #getInstance(DataHolder, StreamCallback, ClassLoader)
+     * @see #getInstance(DataHolder, StreamCallback, ClassLoaderReference)
      */
-    public CustomObjectInputStream(StreamCallback callback, ClassLoader classLoader) throws IOException, SecurityException {
+    public CustomObjectInputStream(StreamCallback callback, ClassLoaderReference classLoaderReference) throws IOException, SecurityException {
         super();
         this.callbacks.push(callback);
-        this.classLoader = classLoader;
+        this.classLoaderReference = classLoaderReference;
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #CustomObjectInputStream(StreamCallback, ClassLoaderReference)}
+     */
+    public CustomObjectInputStream(StreamCallback callback, ClassLoader classLoader) throws IOException, SecurityException {
+        this(callback, new ClassLoaderReference(classLoader));
     }
 
     /**
@@ -89,6 +104,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
     
     protected Class resolveClass(ObjectStreamClass desc)
         throws IOException, ClassNotFoundException {
+        ClassLoader classLoader = classLoaderReference.getReference();
         if (classLoader == null) {
             return super.resolveClass(desc);
         } else {

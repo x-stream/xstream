@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 
 
 /**
@@ -31,10 +32,27 @@ public class DefaultMapper implements Mapper {
         XSTREAM_PACKAGE_ROOT = idx > 0 ? packageName.substring(0, idx+9) : null;
     }
     
-    private final ClassLoader classLoader;
+    private final ClassLoaderReference classLoaderReference;
 
+    
+    /**
+     * Construct a DefaultMapper.
+     * 
+     * @param classLoaderReference the reference to the classloader used by the XStream instance.
+     * @since upcoming
+     */
+    public DefaultMapper(ClassLoaderReference classLoaderReference) {
+        this.classLoaderReference = classLoaderReference;
+    }
+
+    /**
+     * Construct a DefaultMapper.
+     * 
+     * @param classLoader the classloader used by the XStream instance.
+     * @deprecated As of upcoming use {@link #DefaultMapper(ClassLoaderReference)}
+     */
     public DefaultMapper(ClassLoader classLoader) {
-        this.classLoader = classLoader;
+        this(new ClassLoaderReference(classLoader));
     }
 
     public String serializedClass(Class type) {
@@ -46,9 +64,9 @@ public class DefaultMapper implements Mapper {
             if (elementName.startsWith(XSTREAM_PACKAGE_ROOT)) {
                 return DefaultMapper.class.getClassLoader().loadClass(elementName);
             } else if (elementName.charAt(0) != '[') {
-                return classLoader.loadClass(elementName);
+                return classLoaderReference.getReference().loadClass(elementName);
             } else if (elementName.endsWith(";")) {
-                return Class.forName(elementName.toString(), false, classLoader);
+                return Class.forName(elementName.toString(), false, classLoaderReference.getReference());
             } else { 
                 return Class.forName(elementName.toString());
             }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.converters.reflection;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.AttributeMapper;
@@ -119,7 +120,7 @@ public class ReflectionConverterTest extends TestCase {
     public void testCustomConverterCanBeInstantiatedAndRegisteredWithDesiredPriority() {
         XStream xstream = new XStream(new XppDriver());
         // using default mapper instead of XStream#buildMapper()
-        Mapper mapper = new DefaultMapper(new CompositeClassLoader());
+        Mapper mapper = new DefaultMapper(new ClassLoaderReference(new CompositeClassLoader()));
         // AttributeMapper required by ReflectionConverter
         mapper = new AttributeMapper(mapper, xstream.getConverterLookup(), xstream.getReflectionProvider());
         Converter converter = new CustomReflectionConverter(mapper, new PureJavaReflectionProvider());
