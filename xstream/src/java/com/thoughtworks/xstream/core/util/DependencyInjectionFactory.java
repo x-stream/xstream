@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2009, 2010, 2011, 2012 XStream Committers.
+ * Copyright (c) 2007, 2009, 2010, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -119,8 +119,7 @@ public class DependencyInjectionFactory {
                 }
 
                 // first approach: test the ctor params against the dependencies in the sequence
-                // of the parameter
-                // declaration
+                // of the parameter declaration
                 matchingDependencies.clear();
                 clear(usedDependencies);
                 for (int j = 0, k = 0; j < parameterTypes.length
@@ -137,8 +136,8 @@ public class DependencyInjectionFactory {
                     }
                 }
 
-                if (bestMatchingCtor == null && possibleCtor == null) {
-                    possibleCtor = constructor; // assumption
+                if (bestMatchingCtor == null) {
+                    boolean possible = true; // assumption
 
                     // try to match all dependencies in the sequence of the parameter
                     // declaration
@@ -173,12 +172,29 @@ public class DependencyInjectionFactory {
                             }
                             deps[assignable] = null; // do not match same dep twice
                         } else {
-                            possibleCtor = null;
+                            possible = false;
                             break;
                         }
                     }
                     
-                    if (possibleCtor != null) {
+                    if (possible) {
+                        if (possibleCtor != null) {
+                            int j = 0;
+                            for(; j < parameterTypes.length; ++j) {
+                                boolean a = possibleUsedDependencies.get(j);
+                                boolean b = usedDependencies.get(j);
+                                if ((a && !b) ||(b && !a)) {
+                                    if (b) {
+                                        j = parameterTypes.length; 
+                                    }
+                                    break;
+                                }
+                            }
+                            if (j < parameterTypes.length) {
+                                continue;
+                            }
+                        }
+                        possibleCtor = constructor;
                         possibleMatchingDependencies = (List)matchingDependencies.clone();
                         if (usedDependencies != null) {
                             possibleUsedDependencies = (BitSet)usedDependencies.clone();

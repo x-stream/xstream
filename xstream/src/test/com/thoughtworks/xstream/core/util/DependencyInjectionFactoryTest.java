@@ -175,4 +175,26 @@ public class DependencyInjectionFactoryTest extends TestCase {
         assertTrue(used.get(0));
         assertTrue(used.get(1));
     }
+    
+    public void testWillSelectMatchingConstructorForFirstMatchingArguments() {
+        BitSet used = new BitSet();
+        Thing thing = (Thing)DependencyInjectionFactory.newInstance(
+            Thing.class, new Object[]{this, new Integer(1), "foo"}, used);
+        assertSame(this, thing.getTestCase());
+        assertEquals(1, thing.getFirst());
+        assertEquals(4, thing.getSecond());
+        assertTrue(used.get(0));
+        assertTrue(used.get(1));
+        assertFalse(used.get(2));
+        
+        used = new BitSet();
+        thing = (Thing)DependencyInjectionFactory.newInstance(
+            Thing.class, new Object[]{this, "foo", new Integer(1)}, used);
+        assertSame(this, thing.getTestCase());
+        assertEquals(3, thing.getFirst());
+        assertEquals(12, thing.getSecond());
+        assertTrue(used.get(0));
+        assertTrue(used.get(1));
+        assertFalse(used.get(2));
+    }
 }
