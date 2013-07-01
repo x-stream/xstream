@@ -47,6 +47,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * @since 1.4
  */
 public class ToAttributedValueConverter implements Converter {
+    private static final String STRUCTURE_MARKER = "";
     private final Class type;
     private final Mapper mapper;
     private final ReflectionProvider reflectionProvider;
@@ -140,13 +141,17 @@ public class ToAttributedValueConverter implements Converter {
                 }
 
                 if (value != null) {
+                    boolean isValueField = valueField != null && fieldIsEqual(field);
+                    if (isValueField) {
+                        definingType[0] = definedIn;
+                        fieldType[0] = type;
+                        realValue[0] = value;
+                        tagValue[0] = STRUCTURE_MARKER;
+                    }
                     if (converter instanceof SingleValueConverter) {
                         final String str = ((SingleValueConverter)converter).toString(value);
 
-                        if (valueField != null && fieldIsEqual(field)) {
-                            definingType[0] = definedIn;
-                            fieldType[0] = type;
-                            realValue[0] = value;
+                        if (isValueField) {
                             tagValue[0] = str;
                         } else {
                             if (str != null) {
@@ -154,7 +159,13 @@ public class ToAttributedValueConverter implements Converter {
                             }
                         }
                     } else {
-                        context.convertAnother(value);
+                        if (!isValueField) {
+                            final ConversionException exception = new ConversionException(
+                                    "Cannot write element as attribute");
+                                exception.add("alias", alias);
+                                exception.add("type", sourceType.getName());
+                                throw exception;
+                        }
                     }
                 }
             }
@@ -173,7 +184,11 @@ public class ToAttributedValueConverter implements Converter {
                 }
             }
 
-            writer.setValue(tagValue[0]);
+            if (tagValue[0] == STRUCTURE_MARKER) {
+                context.convertAnother(realValue[0]);
+            } else { 
+                writer.setValue(tagValue[0]);
+            }
         }
     }
 
