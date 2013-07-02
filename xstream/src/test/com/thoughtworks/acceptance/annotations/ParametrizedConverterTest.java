@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011, 2012 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.converters.enums.SimpleEnum;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import com.thoughtworks.xstream.converters.extended.ToStringConverter;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
@@ -106,7 +107,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         String expected = ""
             + "<type>\n"
             + "  <decimal>1.5</decimal>\n"
-            + "  <bool>true</bool>\n"
+            + "  <boolean>true</boolean>\n"
             + "  <agreement>yes</agreement>\n"
             + "</type>";
 
@@ -124,6 +125,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         @XStreamConverter(ToStringConverter.class)
         private Decimal decimal = null;
         @XStreamConverter(ToStringConverter.class)
+        @XStreamAlias("boolean")
         private Boolean bool = null;
         @XStreamConverter(value=BooleanConverter.class, booleans={true}, strings={"yes", "no"})
         private Boolean agreement = null;
@@ -136,19 +138,22 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testConverterWithSecondTypeParameter() {
-        final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true));
-        String expected = "<dtype bool='true' agreement='yes'>1.5</dtype>".replace('\'', '"');
+        final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true), DerivedType.E.FOO);
+        String expected = "<dtype boolean='true' agreement='yes' enum='FOO'>1.5</dtype>".replace('\'', '"');
         assertBothWays(value, expected);
     }
     
     @XStreamAlias("dtype")
     @XStreamConverter(value=ToAttributedValueConverter.class, types={Type.class}, strings={"decimal"})
     public static class DerivedType extends Type {
+        public enum E { FOO, BAR };
+        @XStreamAlias("enum")
+        private E e;
 
-        public DerivedType(Decimal decimal, Boolean bool) {
+        public DerivedType(Decimal decimal, Boolean bool, E e) {
             super(decimal, bool);
+            this.e = e;
         }
-        
     }
 
     public void testAnnotatedJavaBeanConverter() {
