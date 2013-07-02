@@ -342,7 +342,7 @@ public class ToAttributedValueConverter implements Converter {
     }
     
     private static boolean isEnum(Class type) {
-        while(type != Object.class) {
+        while(type != null && type != Object.class) {
             if (type.getName().equals("java.lang.Enum")) {
                 return true;
             }
