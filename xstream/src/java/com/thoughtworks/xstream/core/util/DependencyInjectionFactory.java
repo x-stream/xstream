@@ -40,6 +40,7 @@ public class DependencyInjectionFactory {
      * @param dependencies the possible dependencies
      * @return the instantiated object
      * @throws ObjectAccessException if no instance can be generated
+     * @throws IllegalArgumentException if more than 63 dependencies have been provided
      * @since 1.2.2
      */
     public static Object newInstance(final Class type, final Object[] dependencies) {
@@ -58,13 +59,18 @@ public class DependencyInjectionFactory {
      * @param usedDependencies bit mask set by the method for all used dependencies (may be <code>null</code>)
      * @return the instantiated object
      * @throws ObjectAccessException if no instance can be generated
+     * @throws IllegalArgumentException if more than 63 dependencies have been provided
      * @since 1.4
      */
     public static Object newInstance(final Class type, final Object[] dependencies, final BitSet usedDependencies) {
+        if (dependencies != null && dependencies.length > 63) {
+            throw new IllegalArgumentException("More than 63 arguments are not supported");
+        }
         Constructor bestMatchingCtor = null;
         final ArrayList matchingDependencies = new ArrayList();
         List possibleMatchingDependencies = null;
-        BitSet possibleUsedDependencies = null;
+        long usedDeps = 0;
+        long possibleUsedDeps = 0;
 
         if (dependencies != null && dependencies.length > 0) {
             // sort available ctors according their arity
@@ -121,14 +127,12 @@ public class DependencyInjectionFactory {
                 // first approach: test the ctor params against the dependencies in the sequence
                 // of the parameter declaration
                 matchingDependencies.clear();
-                clear(usedDependencies);
+                usedDeps = 0;
                 for (int j = 0, k = 0; j < parameterTypes.length
                     && parameterTypes.length + k - j <= typedDependencies.length; k++ ) {
                     if (parameterTypes[j].isAssignableFrom(typedDependencies[k].type)) {
                         matchingDependencies.add(typedDependencies[k].value);
-                        if (usedDependencies != null) {
-                            usedDependencies.set(k);
-                        }
+                        usedDeps |= 1L << k; 
                         if ( ++j == parameterTypes.length) {
                             bestMatchingCtor = constructor;
                             break;
@@ -144,7 +148,7 @@ public class DependencyInjectionFactory {
                     final TypedValue[] deps = new TypedValue[typedDependencies.length];
                     System.arraycopy(typedDependencies, 0, deps, 0, deps.length);
                     matchingDependencies.clear();
-                    clear(usedDependencies);
+                    usedDeps = 0;
                     for (int j = 0; j < parameterTypes.length; j++ ) {
                         int assignable = -1;
                         for (int k = 0; k < deps.length; k++ ) {
@@ -167,9 +171,7 @@ public class DependencyInjectionFactory {
 
                         if (assignable >= 0) {
                             matchingDependencies.add(deps[assignable].value);
-                            if (usedDependencies != null) {
-                                usedDependencies.set(assignable);
-                            }
+                            usedDeps |= 1L << assignable;
                             deps[assignable] = null; // do not match same dep twice
                         } else {
                             possible = false;
@@ -181,8 +183,8 @@ public class DependencyInjectionFactory {
                         if (possibleCtor != null) {
                             int j = 0;
                             for(; j < parameterTypes.length; ++j) {
-                                boolean a = possibleUsedDependencies.get(j);
-                                boolean b = usedDependencies.get(j);
+                                boolean a = (possibleUsedDeps & (1L << j)) > 0;
+                                boolean b = (usedDeps & (1L << j)) > 0;
                                 if ((a && !b) ||(b && !a)) {
                                     if (b) {
                                         j = parameterTypes.length; 
@@ -196,16 +198,14 @@ public class DependencyInjectionFactory {
                         }
                         possibleCtor = constructor;
                         possibleMatchingDependencies = (List)matchingDependencies.clone();
-                        if (usedDependencies != null) {
-                            possibleUsedDependencies = (BitSet)usedDependencies.clone();
-                        }
+                        possibleUsedDeps = usedDeps;
                     }
                 }
             }
 
             if (bestMatchingCtor == null) {
                 if (possibleCtor == null) {
-                    clear(usedDependencies);
+                    usedDeps = 0;
                     throw new ObjectAccessException("Cannot construct "
                         + type.getName()
                         + ", none of the dependencies match any constructor's parameters");
@@ -213,10 +213,7 @@ public class DependencyInjectionFactory {
                     bestMatchingCtor = possibleCtor;
                     matchingDependencies.clear();
                     matchingDependencies.addAll(possibleMatchingDependencies);
-                    if (usedDependencies != null) {
-                        clear(usedDependencies);
-                        usedDependencies.or(possibleUsedDependencies);
-                    }
+                    usedDeps = possibleUsedDeps;
                 }
             }
         }
@@ -228,6 +225,10 @@ public class DependencyInjectionFactory {
             } else {
                 instance = bestMatchingCtor.newInstance(matchingDependencies.toArray());
             }
+            if (usedDependencies != null) {
+                usedDependencies.clear();
+                usedDependencies.or(BitSet.valueOf(new long[]{usedDeps}));
+            }
             return instance;
         } catch (final InstantiationException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
@@ -235,14 +236,6 @@ public class DependencyInjectionFactory {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (final InvocationTargetException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
-        }
-    }
-
-    private static void clear(final BitSet usedDependencies) {
-        if (usedDependencies != null) {
-            for (int j = usedDependencies.length(); j-- > 0;) {
-                usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
-            }
         }
     }
 
