@@ -357,19 +357,16 @@ public class ToAttributedValueConverter implements Converter {
             super(wrapped, null, null);
         }
 
-        @Override
         public boolean shouldLookForSingleValueConverter(String fieldName, Class type,
             Class definedIn) {
             return isEnum(type);
         }
 
-        @Override
         public SingleValueConverter getConverterFromItemType(String fieldName, Class type,
             Class definedIn) {
             return null;
         }
 
-        @Override
         public SingleValueConverter getConverterFromAttribute(Class definedIn,
             String attribute, Class type) {
             return null;
