@@ -180,21 +180,9 @@ public class DependencyInjectionFactory {
                     }
                     
                     if (possible) {
-                        if (possibleCtor != null) {
-                            int j = 0;
-                            for(; j < parameterTypes.length; ++j) {
-                                boolean a = (possibleUsedDeps & (1L << j)) > 0;
-                                boolean b = (usedDeps & (1L << j)) > 0;
-                                if ((a && !b) ||(b && !a)) {
-                                    if (b) {
-                                        j = parameterTypes.length; 
-                                    }
-                                    break;
-                                }
-                            }
-                            if (j < parameterTypes.length) {
-                                continue;
-                            }
+                        // the smaller the value, the smaller the indices in the deps array
+                        if (possibleCtor != null && usedDeps >= possibleUsedDeps) {
+                            continue;
                         }
                         possibleCtor = constructor;
                         possibleMatchingDependencies = (List)matchingDependencies.clone();
