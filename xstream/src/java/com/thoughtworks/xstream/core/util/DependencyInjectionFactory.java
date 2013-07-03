@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.core.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -215,7 +216,12 @@ public class DependencyInjectionFactory {
             }
             if (usedDependencies != null) {
                 usedDependencies.clear();
-                usedDependencies.or(BitSet.valueOf(new long[]{usedDeps}));
+                int i = 0;
+                for(long l = 1; l < usedDeps; l <<= 1, ++i) {
+                    if ((usedDeps & l) > 0) {
+                        usedDependencies.set(i);
+                    }
+                }
             }
             return instance;
         } catch (final InstantiationException e) {
