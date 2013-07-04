@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,8 @@
 package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.core.JVM;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -38,7 +40,7 @@ public class FontConverterTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream = new XStream();
+        xstream = new XStream(new PureJavaReflectionProvider());
         in = new Font("Arial", Font.BOLD, 20);
     }
 
@@ -59,8 +61,10 @@ public class FontConverterTest extends TestCase {
         Map outAttributes = out.getAttributes();
 
         // these attributes don't have a valid .equals() method (bad Sun!), so we can't use them in the test.
-        inAttributes.remove(TextAttribute.TRANSFORM);
-        outAttributes.remove(TextAttribute.TRANSFORM);
+        if (!JVM.is15()) {
+            inAttributes.remove(TextAttribute.TRANSFORM);
+            outAttributes.remove(TextAttribute.TRANSFORM);
+        }
 
         assertEquals(inAttributes, outAttributes);
     }
