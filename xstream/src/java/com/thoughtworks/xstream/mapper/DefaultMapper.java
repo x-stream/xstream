@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.mapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.util.Primitives;
 
 
 /**
@@ -29,7 +30,7 @@ public class DefaultMapper implements Mapper {
     static {
         String packageName = DefaultMapper.class.getName();
         int idx = packageName.indexOf(".xstream.");
-        XSTREAM_PACKAGE_ROOT = idx > 0 ? packageName.substring(0, idx+9) : null;
+        XSTREAM_PACKAGE_ROOT = idx > 0 ? packageName.substring(0, idx+9) : ".N/A";
     }
     
     private final ClassLoaderReference classLoaderReference;
@@ -48,7 +49,7 @@ public class DefaultMapper implements Mapper {
     /**
      * Construct a DefaultMapper.
      * 
-     * @param classLoader the classloader used by the XStream instance.
+     * @param classLoader the ClassLoader used by the XStream instance.
      * @deprecated As of upcoming use {@link #DefaultMapper(ClassLoaderReference)}
      */
     public DefaultMapper(ClassLoader classLoader) {
@@ -60,16 +61,20 @@ public class DefaultMapper implements Mapper {
     }
 
     public Class realClass(String elementName) {
+        Class resultingClass = Primitives.primitiveType(elementName);
+        if( resultingClass != null ){
+            return resultingClass;
+        }
         try {
+            boolean initialize = true;
+            final ClassLoader classLoader;
             if (elementName.startsWith(XSTREAM_PACKAGE_ROOT)) {
-                return DefaultMapper.class.getClassLoader().loadClass(elementName);
-            } else if (elementName.charAt(0) != '[') {
-                return classLoaderReference.getReference().loadClass(elementName);
-            } else if (elementName.endsWith(";")) {
-                return Class.forName(elementName.toString(), false, classLoaderReference.getReference());
-            } else { 
-                return Class.forName(elementName.toString());
+                classLoader = DefaultMapper.class.getClassLoader();
+            } else {
+                classLoader = classLoaderReference.getReference();
+                initialize = elementName.charAt(0) == '[';
             }
+            return Class.forName(elementName, initialize, classLoader);
         } catch (ClassNotFoundException e) {
             throw new CannotResolveClassException(elementName);
         }

@@ -50,6 +50,7 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
+import com.thoughtworks.xstream.core.util.TypedNull;
 
 
 /**
@@ -88,9 +89,11 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         annotatedTypes.add(Object.class);
         setupMappers();
         locked = true;
+        
+        final ClassLoader classLoader = classLoaderReference.getReference();
         arguments = new Object[]{
             this, classLoaderReference, reflectionProvider, converterLookup, new JVM(),
-            classLoaderReference.getReference()};
+            classLoader != null ? classLoader : new TypedNull(ClassLoader.class)};
     }
 
     /**

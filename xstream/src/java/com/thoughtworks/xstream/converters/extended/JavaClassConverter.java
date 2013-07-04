@@ -14,7 +14,9 @@ package com.thoughtworks.xstream.converters.extended;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
-import com.thoughtworks.xstream.core.util.Primitives;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+import com.thoughtworks.xstream.mapper.DefaultMapper;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Converts a java.lang.Class to XML.
@@ -26,7 +28,7 @@ import com.thoughtworks.xstream.core.util.Primitives;
  */
 public class JavaClassConverter extends AbstractSingleValueConverter {
 
-    private ClassLoaderReference classLoaderReference;
+    private Mapper mapper;
 
     /**
      * Construct a JavaClassConverter.
@@ -34,7 +36,7 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
      * @since upcoming
      */
     public JavaClassConverter(ClassLoaderReference classLoaderReference) {
-        this.classLoaderReference = classLoaderReference;
+        mapper = new DefaultMapper(classLoaderReference);
     }
 
     /**
@@ -54,32 +56,9 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
 
     public Object fromString(String str) {
         try {
-            return loadClass(str);
-        } catch (ClassNotFoundException e) {
-            throw new ConversionException("Cannot load java class " + str, e);
+            return mapper.realClass(str);
+        } catch (CannotResolveClassException e) {
+            throw new ConversionException("Cannot load java class " + str, e.getCause());
         }
-    }
-
-    private Class loadClass(String className) throws ClassNotFoundException {
-        Class resultingClass = Primitives.primitiveType(className);
-        if( resultingClass != null ){
-            return resultingClass;
-        }
-        int dimension;
-        for(dimension = 0; className.charAt(dimension) == '['; ++dimension);
-        if (dimension > 0) {
-            final ClassLoader classLoaderToUse;
-            if (className.charAt(dimension) == 'L') {
-                String componentTypeName = className.substring(dimension + 1, className.length() - 1);
-                classLoaderToUse = classLoaderReference
-                    .getReference()
-                    .loadClass(componentTypeName)
-                    .getClassLoader();
-            } else {
-                classLoaderToUse = null;
-            }
-            return Class.forName(className, false, classLoaderToUse);
-        }
-        return classLoaderReference.getReference().loadClass(className);
     }
 }
