@@ -62,7 +62,7 @@ public class FontConverterTest extends TestCase {
         Map outAttributes = out.getAttributes();
 
         // these attributes don't have a valid .equals() method (bad Sun!), so we can't use them in the test.
-        if (!JVM.is15()) {
+        if (!JVM.is16()) { // it seems even old 1.5 JDKs fail here (Codehaus Bamboo)
             inAttributes.remove(TextAttribute.TRANSFORM);
             outAttributes.remove(TextAttribute.TRANSFORM);
         }
