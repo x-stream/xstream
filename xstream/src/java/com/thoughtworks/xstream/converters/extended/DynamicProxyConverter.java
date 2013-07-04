@@ -39,23 +39,12 @@ public class DynamicProxyConverter implements Converter {
 
     private ClassLoaderReference classLoaderReference;
     private Mapper mapper;
-    private static final Field HANDLER;
+    private static final Field HANDLER = Fields.locate(Proxy.class, InvocationHandler.class, false);
     private static final InvocationHandler DUMMY = new InvocationHandler() {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             return null;
         }
     };
-    
-    static {
-        Field field = null; 
-        try {
-            field = Proxy.class.getDeclaredField("h");
-            field.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-        HANDLER = field;
-    }
 
     /**
      * @deprecated As of upcoming use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
@@ -131,10 +120,17 @@ public class DynamicProxyConverter implements Converter {
         }
         Class[] interfacesAsArray = new Class[interfaces.size()];
         interfaces.toArray(interfacesAsArray);
-        Object proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, DUMMY);
+        Object proxy = null;
+        if (HANDLER != null) { // we will not be able to resolve references to the proxy
+            proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, DUMMY);
+        }
         handler = (InvocationHandler) context.convertAnother(proxy, handlerType);
         reader.moveUp();
-        Fields.write(HANDLER, proxy, handler);
+        if (HANDLER != null) {
+            Fields.write(HANDLER, proxy, handler);
+        } else {
+            proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, handler);
+        }
         return proxy;
     }
 }

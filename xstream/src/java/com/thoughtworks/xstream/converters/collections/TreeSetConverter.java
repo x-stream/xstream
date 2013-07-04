@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.PresortedSet;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -40,30 +41,8 @@ import java.util.TreeSet;
  */
 public class TreeSetConverter extends CollectionConverter {
     private transient TreeMapConverter treeMapConverter;  
-    private final static Field sortedMapField;
-    static {
-        Field smField = null;
-        if (!JVM.hasOptimizedTreeSetAddAll()) {
-            try {
-                Field[] fields = TreeSet.class.getDeclaredFields();
-                for (int i = 0; i < fields.length; i++ ) {
-                    if (SortedMap.class.isAssignableFrom(fields[i].getType())) {
-                        // take the fist member assignable to type "SortedMap"
-                        smField = fields[i];
-                        smField.setAccessible(true);
-                        break;
-                    }
-                }
-                if (smField == null) {
-                    throw new ExceptionInInitializerError("Cannot detect field of backing map of TreeSet");
-                }
-    
-            } catch (SecurityException ex) {
-                // ignore, no access possible with current SecurityManager
-            }
-        }
-        sortedMapField = smField;
-    }
+    private final static Field sortedMapField = 
+       JVM.hasOptimizedTreeSetAddAll() ? Fields.locate(TreeSet.class, SortedMap.class, false) : null;
 
     public TreeSetConverter(Mapper mapper) {
         super(mapper);

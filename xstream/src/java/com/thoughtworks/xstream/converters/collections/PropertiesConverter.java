@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,18 +44,7 @@ import java.util.TreeMap;
  */
 public class PropertiesConverter implements Converter {
 
-    private final static Field defaultsField;
-    static {
-        Field field = null;
-        try {
-            field = Fields.find(Properties.class, "defaults");
-        } catch (SecurityException ex) {
-            // ignore, no access possible with current SecurityManager
-        } catch (RuntimeException ex) {
-            throw new ExceptionInInitializerError("No field 'defaults' in type Properties found");
-        }
-        defaultsField = field;
-    }
+    private final static Field defaultsField = Fields.locate(Properties.class, Properties.class, false);
     private final boolean sort;
 
     public PropertiesConverter() {

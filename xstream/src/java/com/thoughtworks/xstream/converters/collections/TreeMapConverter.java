@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -46,29 +47,7 @@ public class TreeMapConverter extends MapConverter {
     }
 
     private final static Comparator NULL_MARKER = new NullComparator();
-    
-    private final static Field comparatorField;
-    static {
-        Field cmpField = null;
-        try {
-            Field[] fields = TreeMap.class.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++ ) {
-                if (fields[i].getType() == Comparator.class) {
-                    // take the fist member of type "Comparator"
-                    cmpField = fields[i];
-                    cmpField.setAccessible(true);
-                    break;
-                }
-            }
-            if (cmpField == null) {
-                throw new ExceptionInInitializerError("Cannot detect comparator field of TreeMap");
-            }
-
-        } catch (SecurityException ex) {
-            // ignore, no access possible with current SecurityManager
-        }
-        comparatorField = cmpField;
-    }
+    private final static Field comparatorField = Fields.locate(TreeMap.class, Comparator.class, false);
 
     public TreeMapConverter(Mapper mapper) {
         super(mapper);

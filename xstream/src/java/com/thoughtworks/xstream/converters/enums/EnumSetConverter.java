@@ -39,29 +39,7 @@ import java.util.Iterator;
  */
 public class EnumSetConverter implements Converter {
 
-    private final static Field typeField;
-    static {
-        // field name is "elementType" in Sun JDK, but different in Harmony
-        Field assumedTypeField = null;
-        try {
-            Field[] fields = EnumSet.class.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++ ) {
-                if (fields[i].getType() == Class.class) {
-                    // take the fist member of type "Class"
-                    assumedTypeField = fields[i];
-                    assumedTypeField.setAccessible(true);
-                    break;
-                }
-            }
-            if (assumedTypeField == null) {
-                throw new ExceptionInInitializerError("Cannot detect element type of EnumSet");
-            }
-        } catch (SecurityException ex) {
-            // ignore, no access possible with current SecurityManager
-        }
-        typeField = assumedTypeField;
-    }
-    
+    private final static Field typeField = Fields.locate(EnumSet.class, Class.class, false);
     private final Mapper mapper;
 
     public EnumSetConverter(Mapper mapper) {

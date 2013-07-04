@@ -10,7 +10,9 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.core.util.Fields;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -32,22 +34,33 @@ import java.util.Map;
 public class AbstractAttributedCharacterIteratorAttributeConverter extends
     AbstractSingleValueConverter {
 
+    private static final Map instanceMaps = new HashMap();
     private static final Method getName;
     static {
+        Method method = null;
         try {
-            getName = AttributedCharacterIterator.Attribute.class.getDeclaredMethod(
+            method = AttributedCharacterIterator.Attribute.class.getDeclaredMethod(
                 "getName", (Class[])null);
+            if (!method.isAccessible()) {
+                method.setAccessible(true);
+            }
+        } catch (SecurityException e) {
+            // ignore for now
         } catch (NoSuchMethodException e) {
-            throw new ExceptionInInitializerError("Missing AttributedCharacterIterator.Attribute.getName()");
+            // ignore for now
         }
+        getName = method;
     }
 
     private final Class type;
     private transient Map attributeMap;
-    private transient FieldDictionary fieldDictionary;
 
     public AbstractAttributedCharacterIteratorAttributeConverter(final Class type) {
         super();
+        if (!AttributedCharacterIterator.Attribute.class.isAssignableFrom(type)) {
+            throw new IllegalArgumentException(type.getName()
+                + " is not a " + AttributedCharacterIterator.Attribute.class.getName());
+        }
         this.type = type;
         readResolve();
     }
@@ -57,38 +70,70 @@ public class AbstractAttributedCharacterIteratorAttributeConverter extends
     }
 
     public String toString(final Object source) {
-        AttributedCharacterIterator.Attribute attribute = (AttributedCharacterIterator.Attribute)source;
-        try {
-            if (!getName.isAccessible()) {
-                getName.setAccessible(true);
+        return getName((AttributedCharacterIterator.Attribute)source);
+    }
+
+    private String getName(AttributedCharacterIterator.Attribute attribute) {
+        Exception ex = null;
+        if (getName != null) {
+            try {
+                return (String)getName.invoke(attribute, (Object[])null);
+            } catch (IllegalAccessException e) {
+                ex = e;
+            } catch (InvocationTargetException e) {
+                ex = e;
             }
-            return (String)getName.invoke(attribute, (Object[])null);
-        } catch (IllegalAccessException e) {
-            throw new ObjectAccessException(
-                "Cannot get name of AttributedCharacterIterator.Attribute", e);
-        } catch (InvocationTargetException e) {
-            throw new ObjectAccessException(
-                "Cannot get name of AttributedCharacterIterator.Attribute", e
-                    .getTargetException());
         }
+        String s = attribute.toString();
+        String className = attribute.getClass().getName();
+        if (s.startsWith(className)) {
+            return s.substring(className.length()+1, s.length()-1);
+        }
+        throw new ConversionException("Cannot find name of attribute of type " + className, ex);
     }
 
     public Object fromString(final String str) {
-        return attributeMap.get(str);
+        if (attributeMap.containsKey(str)) {
+            return attributeMap.get(str);
+        }
+        throw new ConversionException("Cannot find attribute of type " + type.getName() + " with name " + str);
     }
 
     private Object readResolve() {
-        fieldDictionary = new FieldDictionary();
-        attributeMap = new HashMap();
-        for (final Iterator iterator = fieldDictionary.fieldsFor(type); iterator
-            .hasNext();) {
-            final Field field = (Field)iterator.next();
-            if (field.getType() == type && Modifier.isStatic(field.getModifiers())) {
+        attributeMap = (Map)instanceMaps.get(type.getName());
+        if (attributeMap == null) {
+            attributeMap = new HashMap();
+            Field instanceMap = Fields.locate(type, Map.class, true);
+            if (instanceMap != null) {
                 try {
-                    final Object attribute = field.get(null);
-                    attributeMap.put(toString(attribute), attribute);
-                } catch (IllegalAccessException e) {
-                    throw new ObjectAccessException("Cannot get object of " + field, e);
+                    Map map = (Map)Fields.read(instanceMap, null);
+                    if (map != null) {
+                        boolean valid = true;
+                        for (Iterator iter = map.entrySet().iterator(); valid && iter.hasNext(); ) {
+                            Map.Entry entry = (Map.Entry)iter.next(); 
+                            valid = entry.getKey().getClass() == String.class && entry.getValue().getClass() == type;
+                        }
+                        if (valid) {
+                            attributeMap.putAll(map);
+                        }
+                    }
+                } catch (ObjectAccessException e) {
+                }
+            }
+            if (attributeMap.isEmpty()) {
+                try {
+                    Field[] fields = type.getDeclaredFields();
+                    for(int i = 0; i < fields.length; ++i) {
+                        if(fields[i].getType() == type == Modifier.isStatic(fields[i].getModifiers())) {
+                            AttributedCharacterIterator.Attribute attribute =
+                                    (AttributedCharacterIterator.Attribute)Fields.read(fields[i], null);
+                            attributeMap.put(toString(attribute), attribute);
+                        }
+                    }
+                } catch (SecurityException e) {
+                    attributeMap.clear();
+                } catch (ObjectAccessException e) {
+                    attributeMap.clear();
                 }
             }
         }

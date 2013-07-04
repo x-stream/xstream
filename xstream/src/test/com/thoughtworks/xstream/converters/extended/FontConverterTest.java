@@ -40,6 +40,7 @@ public class FontConverterTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        // fonts should be serializable also with pure Java
         xstream = new XStream(new PureJavaReflectionProvider());
         in = new Font("Arial", Font.BOLD, 20);
     }
