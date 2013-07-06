@@ -134,7 +134,7 @@ public class WeakCacheTest extends TestCase {
     public void testSelfReferencingEntriesWithObjectsFromPermSpace() throws MalformedURLException, ClassNotFoundException, SecurityException, NoSuchFieldException, InterruptedException {
         File proxyToys = new File("target/lib/proxytoys-0.2.1.jar");
         ClassLoader classLoader = new URLClassLoader(new URL[]{proxyToys.toURI().toURL()}, getClass().getClassLoader());
-        Class simpleReferenceType = classLoader.loadClass("com.thoughtworks.proxy.kit.SimpleReference");
+        Class simpleReferenceType = Class.forName("com.thoughtworks.proxy.kit.SimpleReference", true, classLoader);
         Field instance = simpleReferenceType.getDeclaredField("instance");
         
         ReferenceQueue refQueue = new ReferenceQueue();
