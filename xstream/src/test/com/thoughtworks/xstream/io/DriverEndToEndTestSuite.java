@@ -56,7 +56,7 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new JDomDriver());
         if (JVM.is15()) {
             JVM jvm = new JVM();
-            Class driverType = jvm.loadClass("com.thoughtworks.xstream.io.xml.JDom2Driver");
+            Class driverType = jvm.loadClassForName("com.thoughtworks.xstream.io.xml.JDom2Driver");
             try {
                 addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
             } catch (InstantiationException e) {
@@ -69,9 +69,8 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new KXml2Driver());
         addDriverTest(new StaxDriver());
         if (JVM.is16()) {
-            JVM jvm = new JVM();
-            if (jvm.supportsSunStAX()) {
-                Class driverType = jvm.loadClass("com.thoughtworks.xstream.io.xml.SjsxpDriver");
+            if (JVM.isSunStAXAvilable()) {
+                Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.SjsxpDriver");
                 try {
                     addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
                 } catch (InstantiationException e) {
@@ -88,8 +87,7 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new XppDomDriver());
         addDriverTest(new XppDriver());
         if (JVM.is14()) {
-            JVM jvm = new JVM();
-            Class driverType = jvm.loadClass("com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver");
+            Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver");
             try {
                 addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
             } catch (InstantiationException e) {

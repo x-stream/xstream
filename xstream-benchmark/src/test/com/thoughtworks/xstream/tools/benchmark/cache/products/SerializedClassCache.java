@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2008, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,7 +10,6 @@
  */
 package com.thoughtworks.xstream.tools.benchmark.cache.products;
 
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
@@ -27,8 +26,8 @@ import java.util.WeakHashMap;
  */
 public class SerializedClassCache extends XStreamCache {
 
-    protected List getMappers(JVM jvm) {
-        List list = super.getMappers(jvm);
+    protected List getMappers() {
+        List list = super.getMappers();
         list.add(CachingMapper.class);
         return list;
     }

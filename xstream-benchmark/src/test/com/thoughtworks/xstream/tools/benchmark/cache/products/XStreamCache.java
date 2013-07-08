@@ -56,13 +56,12 @@ public abstract class XStreamCache implements Product {
     private final XStream xstream;
 
     public XStreamCache() {
-        JVM jvm = new JVM();
         ClassLoaderReference classLoaderReference = new ClassLoaderReference(
             new CompositeClassLoader());
         DefaultConverterLookup converterLookup = new DefaultConverterLookup();
         xstream = new XStream(
-            jvm.bestReflectionProvider(), new XppDriver(), classLoaderReference, buildMapper(
-                getMappers(jvm), jvm, classLoaderReference, converterLookup), converterLookup, converterLookup);
+            JVM.newReflectionProvider(), new XppDriver(), classLoaderReference, buildMapper(
+                getMappers(), classLoaderReference, converterLookup), converterLookup, converterLookup);
         xstream.alias("one", One.class);
         xstream.alias("five", Five.class);
         xstream.alias("ser-one", SerializableOne.class);
@@ -77,11 +76,11 @@ public abstract class XStreamCache implements Product {
         return xstream.fromXML(input);
     }
 
-    protected List getMappers(JVM jvm) {
+    protected List getMappers() {
         List mappers = new ArrayList();
         mappers.add(DefaultMapper.class);
-        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
-            mappers.add(jvm.loadClass("com.thoughtworks.xstream.mapper.CGLIBMapper"));
+        if (JVM.loadClassForName("net.sf.cglib.proxy.Enhancer") != null) {
+            mappers.add(JVM.loadClassForName("com.thoughtworks.xstream.mapper.CGLIBMapper"));
         }
         mappers.add(DynamicProxyMapper.class);
         mappers.add(ClassAliasingMapper.class);
@@ -93,22 +92,22 @@ public abstract class XStreamCache implements Product {
         mappers.add(LocalConversionMapper.class);
         mappers.add(DefaultImplementationsMapper.class);
         if (JVM.is15()) {
-            mappers.add(jvm.loadClass("com.thoughtworks.xstream.mapper.EnumMapper"));
+            mappers.add(JVM.loadClassForName("com.thoughtworks.xstream.mapper.EnumMapper"));
         } else {
             mappers.add(AttributeMapper.class);
         }
         mappers.add(ImmutableTypesMapper.class);
         if (JVM.is15()) {
-            mappers.add(jvm.loadClass("com.thoughtworks.xstream.mapper.AnnotationMapper"));
+            mappers.add(JVM.loadClassForName("com.thoughtworks.xstream.mapper.AnnotationMapper"));
         }
         return mappers;
     }
 
-    private Mapper buildMapper(List mappers, JVM jvm, ClassLoaderReference classLoaderReference,
+    private Mapper buildMapper(List mappers, ClassLoaderReference classLoaderReference,
         ConverterLookup converterLookup) {
         final Object[] arguments = new Object[]{
             new TypedNull(Mapper.class), converterLookup, classLoaderReference,
-            jvm.bestReflectionProvider(), jvm};
+            JVM.newReflectionProvider()};
         for (final Iterator iter = mappers.iterator(); iter.hasNext();) {
             final Class mapperType = (Class)iter.next();
             try {

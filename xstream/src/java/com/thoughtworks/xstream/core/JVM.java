@@ -11,11 +11,13 @@
  */
 package com.thoughtworks.xstream.core;
 
+import com.thoughtworks.xstream.converters.reflection.FieldDictionary;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.core.util.PresortedSet;
-import com.thoughtworks.xstream.core.util.WeakCache;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -24,8 +26,6 @@ import java.text.AttributedString;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -34,13 +34,11 @@ import java.util.TreeSet;
 public class JVM implements Caching {
 
     private ReflectionProvider reflectionProvider;
-    private transient Map loaderCache = new WeakCache(new HashMap());
     
-    private final boolean supportsAWT = loadClass("java.awt.Color", false) != null;
-    private final boolean supportsSwing = loadClass("javax.swing.LookAndFeel", false) != null;
-    private final boolean supportsSQL = loadClass("java.sql.Date") != null;
-    private final boolean supportsSunStAX = loadClass("com.sun.xml.internal.stream.XMLInputFactoryImpl") != null;
-    
+    private static final boolean isAWTAvailable;
+    private static final boolean isSwingAvailable;
+    private static final boolean isSQLAvailable;
+    private static final boolean isSunStAXAvailable;
     private static final boolean canAllocateWithUnsafe;
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
@@ -48,9 +46,9 @@ public class JVM implements Caching {
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
-    private static final boolean reverseFieldOrder = false;
-
     private static final float DEFAULT_JAVA_VERSION = 1.4f;
+    private static final boolean reverseFieldOrder = false;
+    private static final Class reflectionProviderType;
 
     static class Broken {
         Broken() {
@@ -104,6 +102,33 @@ public class JVM implements Caching {
             test = false;
         }
         canParseUTCDateFormat = test;
+        
+        isAWTAvailable = loadClassForName("java.awt.Color", false) != null;
+        isSwingAvailable = loadClassForName("javax.swing.LookAndFeel", false) != null;
+        isSQLAvailable = loadClassForName("java.sql.Date") != null;
+        isSunStAXAvailable = loadClassForName("com.sun.xml.internal.stream.XMLInputFactoryImpl") != null;
+        
+        Class type = null;
+        if (canUseSun14ReflectionProvider()) {
+            type = loadClassForName("com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider");
+            if (type != null) {
+                try {
+                    DependencyInjectionFactory.newInstance(type, null);
+                } catch (ObjectAccessException e) {
+                    type = null;
+                }
+            }
+        }
+        if (type == null) {
+            type = PureJavaReflectionProvider.class;
+        }
+        reflectionProviderType = type;
+    }
+    
+    /**
+     * @deprecated As of upcoming use the static methods of JVM.
+     */
+    public JVM() {
     }
     
     /**
@@ -167,21 +192,36 @@ public class JVM implements Caching {
         return vendor.indexOf("Android") != -1;
     }
 
-    public Class loadClass(String name) {
-        return loadClass(name, true);
+    /**
+     * Load a XStream class for the given name.
+     * 
+     * <p>This method is not meant to use loading arbitrary classes. It is used by XStream bootstrap
+     * until it is able to use the user provided or the default {@link ClassLoader}.</p>
+     * 
+     * @since upcoming
+     */
+    public static Class loadClassForName(String name) {
+        return loadClassForName(name, true);
     }
 
     /**
-     * @since 1.4.4
+     * @deprecated As of upcoming use {@link #loadClassForName(String)}
      */
-    public Class loadClass(String name, boolean initialize) {
-        Class cached = (Class) loaderCache.get(name);
-        if (cached != null) {
-            return cached;
-        }
+    public Class loadClass(String name) {
+        return loadClassForName(name, true);
+    }
+
+    /**
+     * Load a XStream class for the given name.
+     * 
+     * <p>This method is not meant to use loading arbitrary classes. It is used by XStream bootstrap
+     * until it is able to use the user provided or the default {@link ClassLoader}.</p>
+     * 
+     * @since upcoming
+     */
+    public static Class loadClassForName(String name, boolean initialize) {
         try {
-            Class clazz = Class.forName(name, initialize, getClass().getClassLoader());
-            loaderCache.put(name, clazz);
+            Class clazz = Class.forName(name, initialize, JVM.class.getClassLoader());
             return clazz;
         } catch (LinkageError e) {
             return null;
@@ -190,6 +230,38 @@ public class JVM implements Caching {
         }
     }
 
+    /**
+     * @since 1.4.4
+     * @deprecated As of upcoming use {@link #loadClassForName(String, boolean)}
+     */
+    public Class loadClass(String name, boolean initialize) {
+        return loadClassForName(name, initialize);
+    }
+    
+    /**
+     * Create the best matching ReflectionProvider.
+     * 
+     * @return a new instance
+     * @since upcoming
+     */
+    public static ReflectionProvider newReflectionProvider() {
+        return (ReflectionProvider)DependencyInjectionFactory.newInstance(reflectionProviderType, null);
+    }
+    
+    /**
+     * Create the best matching ReflectionProvider.
+     *
+     * @param dictionary the FieldDictionary to use by the ReflectionProvider
+     * @return a new instance
+     * @since upcoming
+     */
+    public static ReflectionProvider newReflectionProvider(FieldDictionary dictionary) {
+        return (ReflectionProvider)DependencyInjectionFactory.newInstance(reflectionProviderType, new Object[]{ dictionary });
+    }
+    
+    /**
+     * @deprecated As of upcoming use {@link #newReflectionProvider()}
+     */
     public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
             try {
@@ -198,7 +270,7 @@ public class JVM implements Caching {
                     className = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
                 }
                 if (className != null) {
-                    Class cls = loadClass(className);
+                    Class cls = loadClassForName(className);
                     if (cls != null) {
                         reflectionProvider = (ReflectionProvider) cls.newInstance();
                     }
@@ -206,7 +278,7 @@ public class JVM implements Caching {
             } catch (InstantiationException e) {
             } catch (IllegalAccessException e) {
             } catch (AccessControlException e) {
-                // thrown when trying to access sun.misc package in Applet context.
+                // thrown when trying to access sun.misc package in Applet context
             }
             if (reflectionProvider == null) {
                 reflectionProvider = new PureJavaReflectionProvider();
@@ -215,33 +287,63 @@ public class JVM implements Caching {
         return reflectionProvider;
     }
 
-    private boolean canUseSun14ReflectionProvider() {
+    private static boolean canUseSun14ReflectionProvider() {
         return canAllocateWithUnsafe && is14();
     }
 
+    /**
+     * @deprecated As of upcoming
+     */
     public static boolean reverseFieldDefinition() {
         return reverseFieldOrder;
     }
 
     /**
+     * Checks if AWT is available.
+     * @since upcoming
+     */
+    public static boolean isAWTAvailable() {
+        return isAWTAvailable;
+    }
+
+    /**
      * Checks if the jvm supports awt.
+     * @deprecated As of upcoming use {@link #isAWTAvailable()}
      */
     public boolean supportsAWT() {
-        return this.supportsAWT;
+        return this.isAWTAvailable;
+    }
+
+    /**
+     * Checks if Swing is available.
+     * @since upcoming
+     */
+    public static boolean isSwingAvailable() {
+        return isSwingAvailable;
     }
 
     /**
      * Checks if the jvm supports swing.
+     * @deprecated As of upcoming use {@link #isSwingAvailable()}
      */
     public boolean supportsSwing() {
-        return this.supportsSwing;
+        return this.isSwingAvailable;
+    }
+
+    /**
+     * Checks if SQL is available.
+     * @since upcoming
+     */
+    public static boolean isSQLAvailable() {
+        return isSQLAvailable;
     }
 
     /**
      * Checks if the jvm supports sql.
+     * @deprecated As of upcoming use {@link #isSQLAvailable()}
      */
     public boolean supportsSQL() {
-        return this.supportsSQL;
+        return this.isSQLAvailable;
     }
 
     /**
@@ -249,8 +351,8 @@ public class JVM implements Caching {
      * 
      * @since upcoming
      */
-    public boolean supportsSunStAX() {
-        return this.supportsSunStAX;
+    public static boolean isSunStAXAvilable() {
+        return isSunStAXAvailable;
     }
     
     /**
@@ -275,13 +377,10 @@ public class JVM implements Caching {
         return canParseUTCDateFormat;
     }
 
+    /**
+     * @deprecated As of upcoming no functionality
+     */
     public void flushCache() {
-        loaderCache.clear();
-    }
-    
-    private Object readResolve() {
-        loaderCache = new WeakCache(new HashMap());
-        return this;
     }
     
     public static void main(String[] args) {
@@ -303,7 +402,6 @@ public class JVM implements Caching {
             }
         }
 
-        JVM jvm = new JVM();
         System.out.println("XStream JVM diagnostics");
         System.out.println("java.specification.version: " + System.getProperty("java.specification.version"));
         System.out.println("java.specification.vendor: " + System.getProperty("java.specification.vendor"));
@@ -312,10 +410,10 @@ public class JVM implements Caching {
         System.out.println("java.vendor: " + System.getProperty("java.vendor"));
         System.out.println("java.vm.name: " + System.getProperty("java.vm.name"));
         System.out.println("Version: " + majorJavaVersion);
-        System.out.println("XStream support for enhanced Mode: " + jvm.canUseSun14ReflectionProvider());
-        System.out.println("Supports AWT: " + jvm.supportsAWT());
-        System.out.println("Supports Swing: " + jvm.supportsSwing());
-        System.out.println("Supports SQL: " + jvm.supportsSunStAX());
+        System.out.println("XStream support for enhanced Mode: " + canUseSun14ReflectionProvider());
+        System.out.println("Supports AWT: " + isAWTAvailable());
+        System.out.println("Supports Swing: " + isSwingAvailable());
+        System.out.println("Supports SQL: " + isSunStAXAvilable());
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2008, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,15 +28,15 @@ import java.util.Map;
  */
 public class Cache122 extends XStreamCache {
 
-    protected List getMappers(JVM jvm) {
-        List list = super.getMappers(jvm);
+    protected List getMappers() {
+        List list = super.getMappers();
         Object cglibMapper = list.remove(1);
         Object dynProxyMapper = null;
-        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
+        if (JVM.loadClassForName("net.sf.cglib.proxy.Enhancer") != null) {
             dynProxyMapper = list.remove(1);
         }
         int idx = list.indexOf(ImplicitCollectionMapper.class);
-        if (jvm.loadClass("net.sf.cglib.proxy.Enhancer") != null) {
+        if (JVM.loadClassForName("net.sf.cglib.proxy.Enhancer") != null) {
             list.add(idx+1, dynProxyMapper);
         }
         list.add(idx+1, cglibMapper);

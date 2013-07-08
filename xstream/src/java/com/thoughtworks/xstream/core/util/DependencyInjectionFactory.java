@@ -229,6 +229,10 @@ public class DependencyInjectionFactory {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (final InvocationTargetException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+        } catch (final SecurityException e) {
+            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+        } catch (final ExceptionInInitializerError e) {
+            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         }
     }
 

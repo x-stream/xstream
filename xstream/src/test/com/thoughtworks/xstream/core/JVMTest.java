@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,7 +17,7 @@ public class JVMTest extends TestCase {
 
     public void testDoesIgnoreLinkageErrors() {
         try {
-            assertNull(new JVM().loadClass("com.thoughtworks.xstream.core.EvilClass"));
+            assertNull(JVM.loadClassForName("com.thoughtworks.xstream.core.EvilClass"));
         } catch (LinkageError error) {
             fail("Error thrown");
         }

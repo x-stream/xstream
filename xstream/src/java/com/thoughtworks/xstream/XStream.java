@@ -311,8 +311,6 @@ public class XStream {
     private LocalConversionMapper localConversionMapper;
     private AnnotationConfiguration annotationConfiguration;
 
-    private transient JVM jvm = new JVM();
-
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_RELATIVE_REFERENCES = 1003;
@@ -539,9 +537,8 @@ public class XStream {
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
         ClassLoaderReference classLoaderReference, Mapper mapper, ConverterLookup converterLookup,
         ConverterRegistry converterRegistry) {
-        jvm = new JVM();
         if (reflectionProvider == null) {
-            reflectionProvider = jvm.bestReflectionProvider();
+            reflectionProvider = JVM.newReflectionProvider();
         }
         this.reflectionProvider = reflectionProvider;
         this.hierarchicalStreamDriver = driver;
@@ -688,19 +685,19 @@ public class XStream {
         alias("singleton-map", Collections.singletonMap(this, null).getClass());
         alias("singleton-set", Collections.singleton(this).getClass());
 
-        if (jvm.supportsAWT()) {
+        if (JVM.isAWTAvailable()) {
             // Instantiating these two classes starts the AWT system, which is undesirable.
             // Calling loadClass ensures a reference to the class is found but they are not
             // instantiated.
-            alias("awt-color", jvm.loadClass("java.awt.Color", false));
-            alias("awt-font", jvm.loadClass("java.awt.Font", false));
-            alias("awt-text-attribute", jvm.loadClass("java.awt.font.TextAttribute"));
+            alias("awt-color", JVM.loadClassForName("java.awt.Color", false));
+            alias("awt-font", JVM.loadClassForName("java.awt.Font", false));
+            alias("awt-text-attribute", JVM.loadClassForName("java.awt.font.TextAttribute"));
         }
 
-        if (jvm.supportsSQL()) {
-            alias("sql-timestamp", jvm.loadClass("java.sql.Timestamp"));
-            alias("sql-time", jvm.loadClass("java.sql.Time"));
-            alias("sql-date", jvm.loadClass("java.sql.Date"));
+        if (JVM.isSQLAvailable()) {
+            alias("sql-timestamp", JVM.loadClassForName("java.sql.Timestamp"));
+            alias("sql-time", JVM.loadClassForName("java.sql.Time"));
+            alias("sql-date", JVM.loadClassForName("java.sql.Date"));
         }
 
         alias("file", File.class);
@@ -709,25 +706,25 @@ public class XStream {
 
         if (JVM.is14()) {
             aliasDynamically("auth-subject", "javax.security.auth.Subject");
-            alias("linked-hash-map", jvm.loadClass("java.util.LinkedHashMap"));
-            alias("linked-hash-set", jvm.loadClass("java.util.LinkedHashSet"));
-            alias("trace", jvm.loadClass("java.lang.StackTraceElement"));
-            alias("currency", jvm.loadClass("java.util.Currency"));
-            aliasType("charset", jvm.loadClass("java.nio.charset.Charset"));
+            alias("linked-hash-map", JVM.loadClassForName("java.util.LinkedHashMap"));
+            alias("linked-hash-set", JVM.loadClassForName("java.util.LinkedHashSet"));
+            alias("trace", JVM.loadClassForName("java.lang.StackTraceElement"));
+            alias("currency", JVM.loadClassForName("java.util.Currency"));
+            aliasType("charset", JVM.loadClassForName("java.nio.charset.Charset"));
         }
 
         if (JVM.is15()) {
             aliasDynamically("duration", "javax.xml.datatype.Duration");
-            alias("concurrent-hash-map", jvm.loadClass("java.util.concurrent.ConcurrentHashMap"));
-            alias("enum-set", jvm.loadClass("java.util.EnumSet"));
-            alias("enum-map", jvm.loadClass("java.util.EnumMap"));
-            alias("string-builder", jvm.loadClass("java.lang.StringBuilder"));
-            alias("uuid", jvm.loadClass("java.util.UUID"));
+            alias("concurrent-hash-map", JVM.loadClassForName("java.util.concurrent.ConcurrentHashMap"));
+            alias("enum-set", JVM.loadClassForName("java.util.EnumSet"));
+            alias("enum-map", JVM.loadClassForName("java.util.EnumMap"));
+            alias("string-builder", JVM.loadClassForName("java.lang.StringBuilder"));
+            alias("uuid", JVM.loadClassForName("java.util.UUID"));
         }
     }
 
     private void aliasDynamically(String alias, String className) {
-        Class type = jvm.loadClass(className);
+        Class type = JVM.loadClassForName(className);
         if (type != null) {
             alias(alias, type);
         }
@@ -783,7 +780,7 @@ public class XStream {
         registerConverter((Converter)new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
-        if (jvm.supportsSQL()) {
+        if (JVM.isSQLAvailable()) {
             registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
@@ -793,12 +790,12 @@ public class XStream {
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaFieldConverter(classLoaderReference), PRIORITY_NORMAL);
-        if (jvm.supportsAWT()) {
+        if (JVM.isAWTAvailable()) {
             registerConverter(new FontConverter(), PRIORITY_NORMAL);
             registerConverter(new ColorConverter(), PRIORITY_NORMAL);
             registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
         }
-        if (jvm.supportsSwing()) {
+        if (JVM.isSwingAvailable()) {
             registerConverter(
                 new LookAndFeelConverter(mapper, reflectionProvider), PRIORITY_NORMAL);
         }
@@ -830,7 +827,7 @@ public class XStream {
 
         if (JVM.is15()) {
             // late bound converters - allows XStream to be compiled on earlier JDKs
-            if (jvm.loadClass("javax.xml.datatype.Duration") != null) {
+            if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
                 registerConverterDynamically(
                     "com.thoughtworks.xstream.converters.extended.DurationConverter",
                     PRIORITY_NORMAL, null, null);
@@ -910,7 +907,7 @@ public class XStream {
         addImmutableType(Collections.EMPTY_SET.getClass());
         addImmutableType(Collections.EMPTY_MAP.getClass());
 
-        if (jvm.supportsAWT()) {
+        if (JVM.isAWTAvailable()) {
             addImmutableTypeDynamically("java.awt.font.TextAttribute");
         }
 
@@ -922,7 +919,7 @@ public class XStream {
     }
 
     private void addImmutableTypeDynamically(String className) {
-        Class type = jvm.loadClass(className);
+        Class type = JVM.loadClassForName(className);
         if (type != null) {
             addImmutableType(type);
         }
@@ -1991,10 +1988,4 @@ public class XStream {
             super(message);
         }
     }
-
-    private Object readResolve() {
-        jvm = new JVM();
-        return this;
-    }
-
 }
