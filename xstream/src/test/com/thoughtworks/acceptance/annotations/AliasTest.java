@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,13 +13,17 @@ package com.thoughtworks.acceptance.annotations;
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAliasType;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -289,5 +293,48 @@ public class AliasTest extends AbstractAcceptanceTest {
     public void testAnnotationIsInheritedTogetherWithAsAttribute() {
         String xml = "<thing age=\"99\" name=\"Name\"/>";
         assertBothWays(new AgedThing("Name", 99), xml);
+    }
+    
+    @XStreamAliasType("any")
+    public static abstract class Base {
+        String type = getClass().getName();
+    }
+    public static class A extends Base {
+    }
+    public static class B extends Base {
+    }
+    public static class BB extends B {
+    }
+    
+    public void testAnnotationForATypeAlias() {
+        xstream.registerConverter(new SingleValueConverter() {
+            Mapper mapper = xstream.getMapper();
+            public boolean canConvert(Class type) {
+                return Base.class.isAssignableFrom(type);
+            }
+            public String toString(Object obj) {
+                return ((Base)obj).type;
+            }
+            public Object fromString(String str) {
+                Class realClass = mapper.realClass(str);
+                try {
+                    return realClass.newInstance();
+                } catch (InstantiationException e) {
+                    throw new ConversionException(e);
+                } catch (IllegalAccessException e) {
+                    throw new ConversionException(e);
+                }
+            }
+        });
+
+        Base[] array = new Base[]{ new A(), new B(), new BB()};
+
+        String expectedXml = ""
+                + "<any-array>\n"
+                + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$A</any>\n"
+                + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$B</any>\n"
+                + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$BB</any>\n"
+                + "</any-array>";
+        assertBothWays(array, expectedXml);
     }
 }

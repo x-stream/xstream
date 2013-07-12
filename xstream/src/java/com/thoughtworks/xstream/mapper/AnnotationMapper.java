@@ -33,6 +33,7 @@ import java.util.Set;
 
 import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAliasType;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
@@ -192,6 +193,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     
                     processConverterAnnotations(type);
                     processAliasAnnotation(type, types);
+                    processAliasTypeAnnotation(type);
     
                     if (type.isInterface()) {
                         continue;
@@ -319,17 +321,27 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     + ClassAliasingMapper.class.getName()
                     + " available");
             }
+            classAliasingMapper.addClassAlias(aliasAnnotation.value(), type);
             if (aliasAnnotation.impl() != Void.class) {
                 // Alias for Interface/Class with an impl
-                classAliasingMapper.addClassAlias(aliasAnnotation.value(), type);
                 defaultImplementationsMapper.addDefaultImplementation(
                     aliasAnnotation.impl(), type);
                 if (type.isInterface()) {
                     types.add(aliasAnnotation.impl()); // alias Interface's impl
                 }
-            } else {
-                classAliasingMapper.addClassAlias(aliasAnnotation.value(), type);
             }
+        }
+    }
+
+    private void processAliasTypeAnnotation(final Class<?> type) {
+        final XStreamAliasType aliasAnnotation = type.getAnnotation(XStreamAliasType.class);
+        if (aliasAnnotation != null) {
+            if (classAliasingMapper == null) {
+                throw new InitializationException("No "
+                    + ClassAliasingMapper.class.getName()
+                    + " available");
+            }
+            classAliasingMapper.addTypeAlias(aliasAnnotation.value(), type);
         }
     }
 
