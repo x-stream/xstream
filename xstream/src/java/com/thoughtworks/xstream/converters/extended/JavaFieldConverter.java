@@ -18,6 +18,8 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.DefaultMapper;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Field;
 
@@ -29,6 +31,7 @@ import java.lang.reflect.Field;
 public class JavaFieldConverter implements Converter {
 
     private final SingleValueConverter javaClassConverter;
+    private final Mapper mapper;
 
     /**
      * Construct a JavaFieldConverter.
@@ -36,7 +39,7 @@ public class JavaFieldConverter implements Converter {
      * @since upcoming
      */
     public JavaFieldConverter(ClassLoaderReference classLoaderReference) {
-        this.javaClassConverter = new JavaClassConverter(classLoaderReference);
+        this(new JavaClassConverter(classLoaderReference), new DefaultMapper(classLoaderReference));
     }
 
     /**
@@ -46,19 +49,31 @@ public class JavaFieldConverter implements Converter {
         this(new ClassLoaderReference(classLoader));
     }
 
+    /**
+     * Construct a JavaFieldConverter. Depending on the mapper chain the converter will also respect aliases.
+     * @param javaClassConverter the converter to use 
+     * @param mapper to use
+     * @since upcoming
+     */
+    protected JavaFieldConverter(SingleValueConverter javaClassConverter, Mapper mapper) {
+        this.javaClassConverter = javaClassConverter;
+        this.mapper = mapper;
+    }
+
     public boolean canConvert(Class type) {
         return type.equals(Field.class);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         Field field = (Field) source;
+        Class type = field.getDeclaringClass();
 
         writer.startNode("name");
-        writer.setValue(field.getName());
+        writer.setValue(mapper.serializedMember(type, field.getName()));
         writer.endNode();
 
         writer.startNode("clazz");
-        writer.setValue(javaClassConverter.toString(field.getDeclaringClass()));
+        writer.setValue(javaClassConverter.toString(type));
         writer.endNode();
     }
 
@@ -79,7 +94,7 @@ public class JavaFieldConverter implements Converter {
         
         Class declaringClass = (Class)javaClassConverter.fromString(declaringClassName);
         try {
-            return declaringClass.getDeclaredField(methodName);
+            return declaringClass.getDeclaredField(mapper.realMember(declaringClass, methodName));
         } catch (NoSuchFieldException e) {
             throw new ConversionException(e);
         }

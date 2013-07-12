@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -226,6 +226,26 @@
 
 	<p>See example for the <a href="converters.html#java.util">CollectionConverter</a>.</p>
 	<p>Note, that it is possible to configure XStream to omit the container element <i>toys</i> using implicit collections.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_reflection_types">Why do serialized types, fields or methods do not use aliasing for the names?</h2>
+
+	<p>XStream normally has no to separate between a primitive and its boxed type. The complete reflection API works
+	always with the boxed types and converts to primitives types on the fly. However, for method and field type
+	signatures the difference is essential. Nevertheless it is possible to register derived versions of the converters
+	that are able to respect the aliasing with some minor effort. Following lines are taken from the AliasTest in the
+	acceptence tests:</p>
+<div class="Source Java"><pre>XStream xstream = new XStream();
+Mapper mapper = new MapperWrapper(xstream.getMapper().lookupMapperOfType(ArrayMapper.class)) {
+  public Class realClass(String elementName) {
+    Class primitiveType = Primitives.primitiveType(elementName);
+    return primitiveType != null ? primitiveType : super.realClass(elementName);
+  }
+};
+SingleValueConverter javaClassConverter = new JavaClassConverter(mapper) {};
+xstream.registerConverter(javaClassConverter);
+xstream.registerConverter(new JavaMethodConverter(javaClassConverter){});
+xstream.registerConverter(new JavaFieldConverter(javaClassConverter, mapper){});</pre></div>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_implicit_null">My implicit collection is suddenly null after deserialization instead of empty!</h2>

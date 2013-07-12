@@ -41,7 +41,7 @@ public class JavaMethodConverter implements Converter {
      * @since upcoming
      */
     public JavaMethodConverter(ClassLoaderReference classLoaderReference) {
-        this.javaClassConverter = new JavaClassConverter(classLoaderReference);
+        this(new JavaClassConverter(classLoaderReference));
     }
 
     /**
@@ -49,6 +49,15 @@ public class JavaMethodConverter implements Converter {
      */
     public JavaMethodConverter(ClassLoader classLoader) {
         this(new ClassLoaderReference(classLoader));
+    }
+
+    /**
+     * Construct a JavaMethodConverter.
+     * @param javaClassConverter the converter to use 
+     * @since upcoming
+     */
+    protected JavaMethodConverter(SingleValueConverter javaClassConverter) {
+        this.javaClassConverter = javaClassConverter;
     }
 
     public boolean canConvert(Class type) {

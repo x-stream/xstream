@@ -36,7 +36,7 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
      * @since upcoming
      */
     public JavaClassConverter(ClassLoaderReference classLoaderReference) {
-        mapper = new DefaultMapper(classLoaderReference);
+        this(new DefaultMapper(classLoaderReference));
     }
 
     /**
@@ -46,12 +46,22 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
         this(new ClassLoaderReference(classLoader));
     }
 
+    /**
+     * Construct a JavaClassConverter that uses a provided mapper. Depending on the mapper
+     * chain it will not only be used to load classes, but also to support type aliases.
+     * @param mapper to use
+     * @since upcoming
+     */
+    protected JavaClassConverter(Mapper mapper) {
+        this.mapper = mapper;
+    }
+
     public boolean canConvert(Class clazz) {
         return Class.class.equals(clazz); // :)
     }
 
     public String toString(Object obj) {
-        return ((Class) obj).getName();
+        return mapper.serializedClass(((Class) obj));
     }
 
     public Object fromString(String str) {
