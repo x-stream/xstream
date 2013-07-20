@@ -125,7 +125,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     public void visitSerializableFields(Object object, ReflectionProvider.Visitor visitor) {
         for (Iterator iterator = fieldDictionary.fieldsFor(object.getClass()); iterator.hasNext();) {
             Field field = (Field) iterator.next();
-            if (!fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers())) {
+            if (!fieldModifiersSupported(field)) {
                 continue;
             }
             validateFieldAccess(field);
@@ -166,7 +166,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     protected boolean fieldModifiersSupported(Field field) {
         int modifiers = field.getModifiers();
-        return !Modifier.isStatic(modifiers);
+        return !(Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers));
     }
 
     protected void validateFieldAccess(Field field) {
