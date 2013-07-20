@@ -519,7 +519,9 @@ public class XStream {
      * {@link ClassLoaderReference} and an own {@link ConverterLookup} and
      * {@link ConverterRegistry}.
      * <p>
-     * The {@link ClassLoaderReference} should also be used for the {@link Mapper} chain.
+     * The ClassLoaderReference should also be used for the Mapper chain. The ConverterLookup
+     * should access the ConverterRegistry if you intent to register {@link Converter} instances
+     * with XStream facade or you are using annotations.
      * </p>
      * 
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best
@@ -529,7 +531,8 @@ public class XStream {
      * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
      *            chain
      * @param converterLookup the instance that is used to lookup the converters
-     * @param converterRegistry an instance to manage the converter instances
+     * @param converterRegistry an instance to manage the converter instances or <em>null</em>
+     *            to prevent any further registry (including annotations)
      * @throws InitializationException in case of an initialization problem
      * @since upcoming
      */
