@@ -38,7 +38,6 @@ public class JVM implements Caching {
     private static final boolean isAWTAvailable;
     private static final boolean isSwingAvailable;
     private static final boolean isSQLAvailable;
-    private static final boolean isSunStAXAvailable;
     private static final boolean canAllocateWithUnsafe;
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
@@ -106,7 +105,6 @@ public class JVM implements Caching {
         isAWTAvailable = loadClassForName("java.awt.Color", false) != null;
         isSwingAvailable = loadClassForName("javax.swing.LookAndFeel", false) != null;
         isSQLAvailable = loadClassForName("java.sql.Date") != null;
-        isSunStAXAvailable = loadClassForName("com.sun.xml.internal.stream.XMLInputFactoryImpl") != null;
         
         Class type = null;
         if (canUseSun14ReflectionProvider()) {
@@ -260,6 +258,56 @@ public class JVM implements Caching {
     }
     
     /**
+     * Get the XMLInputFactory implementation used normally by the current Java runtime as
+     * standard.
+     * <p>
+     * In contrast to XMLInputFactory.newFactory() this method will ignore any implementations
+     * provided with the system property <em>javax.xml.stream.XMLInputFactory</em>,
+     * implementations configured in <em>lib/stax.properties</em> or registered with the Service
+     * API.
+     * </p>
+     * 
+     * @return the XMLInputFactory implementation or null
+     * @throws ClassNotFoundException if the standard class cannot be found
+     * @since upcoming
+     */
+    public static Class getStaxInputFactory() throws ClassNotFoundException {
+        if (is16()) {
+            if (isIBM()) {
+                return Class.forName("com.ibm.xml.xlxp.api.stax.XMLInputFactoryImpl");
+            } else {
+                return Class.forName("com.sun.xml.internal.stream.XMLInputFactoryImpl");
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Get the XMLOutputFactory implementation used normally by the current Java runtime as
+     * standard.
+     * <p>
+     * In contrast to XMLOutputFactory.newFactory() this method will ignore any implementations
+     * provided with the system property <em>javax.xml.stream.XMLOutputFactory</em>,
+     * implementations configured in <em>lib/stax.properties</em> or registered with the Service
+     * API.
+     * </p>
+     * 
+     * @return the XMLOutputFactory implementation or null
+     * @throws ClassNotFoundException if the standard class cannot be found
+     * @since upcoming
+     */
+    public static Class getStaxOutputFactory() throws ClassNotFoundException {
+        if (is16()) {
+            if (isIBM()) {
+                return Class.forName("com.ibm.xml.xlxp.api.stax.XMLOutputFactoryImpl");
+            } else {
+                return Class.forName("com.sun.xml.internal.stream.XMLOutputFactoryImpl");
+            }
+        }
+        return null;
+    }
+    
+    /**
      * @deprecated As of upcoming use {@link #newReflectionProvider()}
      */
     public synchronized ReflectionProvider bestReflectionProvider() {
@@ -347,15 +395,6 @@ public class JVM implements Caching {
     }
 
     /**
-     * Checks if the jvm supports StAX implementation by Sun.
-     * 
-     * @since upcoming
-     */
-    public static boolean isSunStAXAvilable() {
-        return isSunStAXAvailable;
-    }
-    
-    /**
      * Checks if TreeSet.addAll is optimized for SortedSet argument.
      * 
      * @since 1.4
@@ -402,6 +441,22 @@ public class JVM implements Caching {
             }
         }
 
+        String staxInputFactory = null;
+        try {
+            staxInputFactory = getStaxInputFactory().getName();
+        } catch (ClassNotFoundException e) {
+            staxInputFactory = e.getMessage();
+        } catch (NullPointerException e) {
+        }
+        
+        String staxOutputFactory = null;
+        try {
+            staxOutputFactory = getStaxOutputFactory().getName();
+        } catch (ClassNotFoundException e) {
+            staxOutputFactory = e.getMessage();
+        } catch (NullPointerException e) {
+        }
+        
         System.out.println("XStream JVM diagnostics");
         System.out.println("java.specification.version: " + System.getProperty("java.specification.version"));
         System.out.println("java.specification.vendor: " + System.getProperty("java.specification.vendor"));
@@ -413,7 +468,9 @@ public class JVM implements Caching {
         System.out.println("XStream support for enhanced Mode: " + canUseSun14ReflectionProvider());
         System.out.println("Supports AWT: " + isAWTAvailable());
         System.out.println("Supports Swing: " + isSwingAvailable());
-        System.out.println("Supports SQL: " + isSunStAXAvilable());
+        System.out.println("Supports SQL: " + isSQLAvailable());
+        System.out.println("Standard StAX XMLInputFactory: " + staxInputFactory);
+        System.out.println("Standard StAX XMLOutputFactory: " + staxOutputFactory);
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());

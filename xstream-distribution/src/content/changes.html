@@ -84,6 +84,11 @@
     <h2>API changes</h2>
 
     <ul>
+    	<li>Added c.t.x.io.xml.StandardStaxDriver to use the StAX implementation delivered with the Java 6 runtime.</li>
+    	<li>Deprecated c.t.x.io.xml.SjsxpStaxDriver to select the internal StAX implementation of Oracle.</li>
+    	<li>Added static methods getStaxInputFactory and getStaxOutputFactory to 	c.t.x.core.JVM as returning the
+    	implementations of javax.xml.stream.XMLInputFactory (resp. javax.xml.stream.XMLOutputFactory) delivered with
+    	the Java Runtime since Java 6.</li>
     	<li>Added c.t.x.core.ClassLoaderReference.</li>
     	<li>Added constructors taking a ClassLoaderReference instead of a ClassLoader and deprecated the ones taking the ClassLoader:
     		<ul>

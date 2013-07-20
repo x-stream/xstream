@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,25 +20,41 @@ import javax.xml.stream.XMLOutputFactory;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
+ * @deprecated As of upcoming use {@link StandardStaxDriver}
  */
 public class SjsxpDriver extends StaxDriver {
 
+    /**
+     * @deprecated As of upcoming use {@link StandardStaxDriver#StandardStaxDriver()}
+     */
     public SjsxpDriver() {
         super();
     }
 
+    /**
+     * @deprecated As of upcoming use {@link StandardStaxDriver#StandardStaxDriver(QNameMap, XmlFriendlyNameCoder)}
+     */
     public SjsxpDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
+    /**
+     * @deprecated As of upcoming use {@link StandardStaxDriver#StandardStaxDriver(QNameMap)}
+     */
     public SjsxpDriver(QNameMap qnameMap) {
         super(qnameMap);
     }
 
+    /**
+     * @deprecated As of upcoming use {@link StandardStaxDriver#StandardStaxDriver(XmlFriendlyNameCoder)}
+     */
     public SjsxpDriver(XmlFriendlyNameCoder nameCoder) {
         super(nameCoder);
     }
 
+    /**
+     * @deprecated As of upcoming use {@link StandardStaxDriver#createInputFactory()}
+     */
     protected XMLInputFactory createInputFactory() {
         Exception exception = null;
         try {
@@ -53,6 +69,9 @@ public class SjsxpDriver extends StaxDriver {
         throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLInputFaqctory instance.", exception);
     }
 
+    /**
+     * @deprecated As of upcoming use {@link StandardStaxDriver#createOutputFactory()}
+     */
     protected XMLOutputFactory createOutputFactory() {
         Exception exception = null;
         try {

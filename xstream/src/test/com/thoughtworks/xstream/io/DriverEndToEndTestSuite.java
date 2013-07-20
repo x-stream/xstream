@@ -55,8 +55,7 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new DomDriver());
         addDriverTest(new JDomDriver());
         if (JVM.is15()) {
-            JVM jvm = new JVM();
-            Class driverType = jvm.loadClassForName("com.thoughtworks.xstream.io.xml.JDom2Driver");
+            Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.JDom2Driver");
             try {
                 addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
             } catch (InstantiationException e) {
@@ -69,15 +68,13 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new KXml2Driver());
         addDriverTest(new StaxDriver());
         if (JVM.is16()) {
-            if (JVM.isSunStAXAvilable()) {
-                Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.SjsxpDriver");
-                try {
-                    addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
-                } catch (InstantiationException e) {
-                    throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
-                } catch (IllegalAccessException e) {
-                    throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
-                }
+            Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.StandardStaxDriver");
+            try {
+                addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
+            } catch (InstantiationException e) {
+                throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
+            } catch (IllegalAccessException e) {
+                throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
             }
         }
         addDriverTest(new WstxDriver());
