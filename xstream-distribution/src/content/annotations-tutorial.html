@@ -507,7 +507,9 @@ that may fail in this case.</p></li>
 unmarshalling.  Unfortunately an annotation is defining a change in configuration that is now applied while object
 marshalling is processed.  Therefore will the auto-detection mode turn XStream's marshalling process in a thread-unsafe
 operation.  While XStream synchronizes the configuration modification, it cannot guard concurrent reads and you may run
-under certain circumstances into concurrency problems.</p></li>
+under certain circumstances into concurrency problems.  If you abolutely have to rely on annotation processing on the
+fly, you will have to use separate XStream instances for each thread - either by using everytime a new instance or by a
+shared pool.</p></li>
 <li><strong>Exceptions</strong>
 <p>XStream uses a well-defined exception hierarchy.  Normally an InitializationException is only thrown while XStream
 is configured.  If annotations are processed on the fly they can be thrown obviously also in a marshalling process.</p></li>
