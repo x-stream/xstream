@@ -646,12 +646,12 @@ XStream xstream = new XStream(driver);
     <li>XML parser technology in use: You should use a streaming parser like Xpp3 or StAX. DOM-based
     parsers process the complete XML and create their document model in memory before the first converter of XStream
     is called.</li>
-    <li>Your object model: Is it necessary to keep the complete object graph in memory at once. As alternative you might
+    <li>Your object model: Is it necessary to keep the complete object graph in memory at once? As alternative you might
     use <a href="objectstream.html">object streams</a> or write custom converters that can load and save objects of your
     object model on the fly without adding them to the object graph physically. As example see the implementation of the
     <a href="javadoc/com/thoughtworks/xstream/persistence/XmlArrayList.html">XmlArrayList</a> in combination with the
-    <a href="javadoc/com/thoughtworks/xstream/persistence/FileStreamStrategy.html">FileStreamStrategy</a> to keep
-    parts of the object graph separate.</li>
+    <a href="javadoc/com/thoughtworks/xstream/persistence/FileStreamStrategy.html">FileStreamStrategy</a> from
+    XStream's persistence package to keep parts of the object graph separate.</li>
     <li>References: By default XStream supports references to the same object in an object graph. This implies that XStream
     keeps track of all serialized and deserialized objects internally. These references are kept with WeakReferences, so that the
     memory can be freed as soon as nobody references these objects anymore.</li>
