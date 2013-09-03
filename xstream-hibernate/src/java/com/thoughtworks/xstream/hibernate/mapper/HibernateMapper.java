@@ -24,9 +24,9 @@ import org.hibernate.proxy.HibernateProxy;
 
 
 /**
- * Mapper for Hibernate types. It will map the class names of the Hibernate collections with
- * equivalents of the JDK at serialization time. It will also map the names of the proxy types
- * to the names of the proxies element's type.
+ * Mapper for Hibernate types. It will map the class names of the Hibernate collections and
+ * Envers collection proxies with equivalents of the JDK at serialization time. It will also map
+ * the names of the proxy types to the names of the proxies element's type.
  * 
  * @author Konstantin Pribluda
  * @author J&ouml;rg Schaible
@@ -44,6 +44,12 @@ public class HibernateMapper extends MapperWrapper {
         collectionMap.put(Hibernate.PersistentSet, HashSet.class);
         collectionMap.put(Hibernate.PersistentSortedMap, TreeMap.class);
         collectionMap.put(Hibernate.PersistentSortedSet, TreeSet.class);
+        collectionMap.put(Hibernate.EnversList, ArrayList.class);
+        collectionMap.put(Hibernate.EnversMap, HashMap.class);
+        collectionMap.put(Hibernate.EnversSet, HashSet.class);
+        collectionMap.put(Hibernate.EnversSortedMap, TreeMap.class);
+        collectionMap.put(Hibernate.EnversSortedSet, TreeSet.class);
+        collectionMap.remove(null);
     }
 
     public Class defaultImplementationOf(final Class clazz) {
@@ -56,14 +62,13 @@ public class HibernateMapper extends MapperWrapper {
 
     public String serializedClass(final Class clazz) {
         if (clazz != null) {
-            // check whether we are Hibernate proxy and substitute real name
-            if (HibernateProxy.class.isAssignableFrom(clazz)) {
-                return super.serializedClass(clazz.getSuperclass());
-            }
-    
             if (collectionMap.containsKey(clazz)) {
                 // Pretend this is the underlying collection class and map that instead
                 return super.serializedClass((Class)collectionMap.get(clazz));
+            }
+            // check whether we are Hibernate proxy and substitute real name
+            if (HibernateProxy.class.isAssignableFrom(clazz)) {
+                return super.serializedClass(clazz.getSuperclass());
             }
         }
         return super.serializedClass(clazz);

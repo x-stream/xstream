@@ -1,10 +1,12 @@
 /*
- * Copyright (C) 2012 Joerg Schaible.
+ * Copyright (C) 2012, 2013 Joerg Schaible.
  * All rights reserved.
  *
  * Created on 08.06.2012 by Joerg Schaible
  */
 package com.thoughtworks.xstream.hibernate.util;
+
+import com.thoughtworks.xstream.core.JVM;
 
 import org.hibernate.proxy.HibernateProxy;
 
@@ -22,6 +24,11 @@ public class Hibernate {
     public final static Class PersistentSet = loadHibernateType("org.hibernate.collection.internal.PersistentSet");
     public final static Class PersistentSortedMap = loadHibernateType("org.hibernate.collection.internal.PersistentSortedMap");
     public final static Class PersistentSortedSet = loadHibernateType("org.hibernate.collection.internal.PersistentSortedSet");
+    public final static Class EnversList = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.ListProxy");
+    public final static Class EnversMap = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.MapProxy");
+    public final static Class EnversSet = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.SetProxy");
+    public final static Class EnversSortedMap = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedMapProxy");
+    public final static Class EnversSortedSet = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedSetProxy");
 
     private static Class loadHibernateType(String name) {
         Class type = null;
@@ -34,6 +41,18 @@ public class Hibernate {
             }
         } catch (ClassNotFoundException e) {
             // not available
+        }
+        return type;
+    }
+
+    private static Class loadHibernateEnversType(String name) {
+        Class type = null;
+        if (JVM.is15()) {
+            try {
+                type = HibernateProxy.class.getClassLoader().loadClass(name);
+            } catch (ClassNotFoundException e) {
+                // not available
+            }
         }
         return type;
     }

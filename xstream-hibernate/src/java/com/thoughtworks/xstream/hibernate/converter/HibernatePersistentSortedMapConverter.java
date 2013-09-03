@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,8 +19,9 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 
 /**
- * A converter for Hibernate's PersistentSortedMap. The converter will drop any reference to the
- * Hibernate collection and emit at serialization time an equivalent JDK collection instead.
+ * A converter for Hibernate's PersistentSortedMap and for the SortedMapProxy from Hibernate's
+ * Envers add-on. The converter will drop any reference to the Hibernate collection and emit at
+ * serialization time an equivalent JDK collection instead.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
@@ -38,7 +39,7 @@ public class HibernatePersistentSortedMapConverter extends TreeMapConverter {
     }
 
     public boolean canConvert(final Class type) {
-        return type == Hibernate.PersistentSortedMap;
+        return type != null && (type == Hibernate.PersistentSortedMap || type == Hibernate.EnversSortedMap);
     }
 
     public Object unmarshal(final HierarchicalStreamReader reader,

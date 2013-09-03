@@ -320,6 +320,11 @@ xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.get
 </pre></div>
 
     <!-- ...................................................... -->
+    <h2 id="Serialization_Hibernate_Envers">Does XStream's Hibernate package support Envers?</h2>
+    <p>Yes. Hibernate Envers is an optional dependency for XStream and it is automatically supported by XStream's
+    Hibernate package when the proxy collection types of Envers are available on the classpath.</p>
+
+    <!-- ...................................................... -->
     <h2 id="Serialization_system_attributes">My attributes are interpreted by XStream itself and cause unexpected behavior</h2>
     <p>XStream's generic converters and the marshalling strategies use a number of attributes on their own. Especially the attributes named
     <em>id</em>, <em>class</em> and <em>reference</em> are likely to cause such collisions. Main reason is XStream's history, because

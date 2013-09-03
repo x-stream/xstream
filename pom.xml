@@ -66,7 +66,7 @@
       </activation>
       <properties>
         <version.hsqldb>1.8.0.10</version.hsqldb>
-        <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core>
+        <version.org.hibernate.core>3.6.6.Final</version.org.hibernate.core>
       </properties>
     </profile>
     <profile>
@@ -82,6 +82,7 @@
         <!-- repeat Hibernate version dependencies, JDK intervals in activation is not supported with M2.0.x -->
         <version.hsqldb>1.8.0.10</version.hsqldb>
         <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core>
+        <version.org.hibernate.envers>3.6.6.Final</version.org.hibernate.envers><!-- not usable with JDK 1.4 -->
       </properties>
     </profile>
   </profiles>
@@ -269,6 +270,17 @@
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>${version.org.hibernate.core}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-envers</artifactId>
+        <version>${version.org.hibernate.envers}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.hsqldb</groupId>
@@ -642,7 +654,8 @@
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
     <version.org.codehaus.jettison>1.2</version.org.codehaus.jettison>
     <version.org.codehaus.woodstox.asl>3.2.7</version.org.codehaus.woodstox.asl>
-    <version.org.hibernate.core>4.1.4.Final</version.org.hibernate.core>
+    <version.org.hibernate.core>4.2.5.Final</version.org.hibernate.core>
+    <version.org.hibernate.envers>${version.org.hibernate.core}</version.org.hibernate.envers>
     <version.org.jdom>1.1.3</version.org.jdom>
     <version.org.jdom2>2.0.5</version.org.jdom2>
     <version.org.json>20080701</version.org.json>
