@@ -159,13 +159,11 @@
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
     </dependency>
-    <!-- -->
     <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-envers</artifactId>
         <optional>true</optional>
     </dependency>
-     <!-- -->
     <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
