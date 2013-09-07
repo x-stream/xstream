@@ -56,7 +56,7 @@ public class CompositeClassLoader extends ClassLoader {
         if (JVM.is17()) {
             // see http://www.cs.duke.edu/csed/java/jdk1.7/technotes/guides/lang/cl-mt.html
             try {
-                Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
+                Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable", (Class[])null);
                 m.setAccessible(true);
                 m.invoke(null);
             } catch (Exception e) {
