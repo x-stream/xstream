@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,10 +13,13 @@ package com.thoughtworks.xstream.core.util;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import com.thoughtworks.xstream.core.JVM;
 
 /**
  * ClassLoader that is composed of other classloaders. Each loader will be used to try to load the particular class, until
@@ -49,6 +52,18 @@ import java.util.List;
  * @since 1.0.3
  */
 public class CompositeClassLoader extends ClassLoader {
+    static {
+        if (JVM.is17()) {
+            // see http://www.cs.duke.edu/csed/java/jdk1.7/technotes/guides/lang/cl-mt.html
+            try {
+                Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
+                m.setAccessible(true);
+                m.invoke(null);
+            } catch (Exception e) {
+                // ignore errors, JVM will synchronize class for Java 7 or higher
+            }
+        }
+    }
 
     private final ReferenceQueue queue = new ReferenceQueue();
     private final List classLoaders = new ArrayList();
