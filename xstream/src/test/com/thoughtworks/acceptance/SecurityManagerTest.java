@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -149,6 +149,8 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.parsers.DocumentBuilderFactory", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalDTD", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalSchema", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
         sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
