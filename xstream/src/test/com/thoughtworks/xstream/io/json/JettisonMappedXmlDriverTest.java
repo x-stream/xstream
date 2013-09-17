@@ -28,6 +28,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,25 +80,25 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         assertEquals(SIMPLE, result);
     }
 
-    public void testReadConfigured() {
-        Configuration config = new Configuration();
-        // TODO: Configure something useful (see XSTR-540)
-        xstream = new XStream(new JettisonMappedXmlDriver(config));
-        xstream.alias("product", Product.class);
-        Product product = (Product)xstream.fromXML(SIMPLE);
-        assertEquals(product.getName(), "Banana");
-        assertEquals(product.getId(), "123");
-        assertEquals("" + product.getPrice(), "" + 23.00);
-    }
-
-    public void testWriteConfigured() {
-        Configuration config = new Configuration();
-        // TODO: Configure something useful (see XSTR-540)
-        xstream = new XStream(new JettisonMappedXmlDriver(config));
-        xstream.alias("product", Product.class);
-        Product product = new Product("Banana", "123", 23.00);
-        String result = xstream.toXML(product);
-        assertEquals(SIMPLE, result);
+    public void testJettisonConfigured()
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+        NoSuchMethodException, InvocationTargetException {
+        if (JVM.is15()) {
+            Object typeConverter = Class.class.forName(
+                "org.codehaus.jettison.mapped.SimpleConverter").newInstance();
+            Method setTypeConverter = Configuration.class.getMethod(
+                "setTypeConverter", new Class[]{typeConverter.getClass().getInterfaces()[0]});
+            Configuration config = new Configuration();
+            setTypeConverter.invoke(config, typeConverter);
+            xstream = new XStream(new JettisonMappedXmlDriver(config));
+            xstream.alias("product", Product.class);
+            Product product = new Product("Banana", "123", 23.00);
+            String result = xstream.toXML(product);
+            assertEquals(
+                "{'product':{'name':'Banana','id':'123','price':'23.0'}}".replace('\'', '"'),
+                result);
+            assertEquals(product, xstream.fromXML(result));
+        }
     }
 
     public void testWriteHierarchy() {
