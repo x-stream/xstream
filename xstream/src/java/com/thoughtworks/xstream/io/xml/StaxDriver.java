@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,9 @@
 package com.thoughtworks.xstream.io.xml;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -28,6 +31,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ReaderWrapper;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
@@ -100,17 +104,49 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamReader createReader(URL in) {
+        final InputStream stream;
         try {
-            return createStaxReader(createParser(new StreamSource(in.toExternalForm())));
+            stream = in.openStream();
+            HierarchicalStreamReader reader = createStaxReader(createParser(new StreamSource(
+                stream, in.toExternalForm())));
+            return new ReaderWrapper(reader) {
+
+                public void close() {
+                    super.close();
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
+            };
         } catch (XMLStreamException e) {
+            throw new StreamException(e);
+        } catch (IOException e) {
             throw new StreamException(e);
         }
     }
 
     public HierarchicalStreamReader createReader(File in) {
+        final InputStream stream;
         try {
-            return createStaxReader(createParser(new StreamSource(in)));
+            stream = new FileInputStream(in);
+            HierarchicalStreamReader reader = createStaxReader(createParser(new StreamSource(
+                stream, in.toURI().toASCIIString())));
+            return new ReaderWrapper(reader) {
+
+                public void close() {
+                    super.close();
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
+            };
         } catch (XMLStreamException e) {
+            throw new StreamException(e);
+        } catch (FileNotFoundException e) {
             throw new StreamException(e);
         }
     }

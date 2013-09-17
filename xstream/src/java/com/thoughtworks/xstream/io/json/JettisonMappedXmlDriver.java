@@ -97,25 +97,45 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
     }
 
     public HierarchicalStreamReader createReader(URL in) {
+        InputStream instream = null;
         try {
+            instream = in.openStream();
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(
-                in.toExternalForm(), in.openStream()), getNameCoder());
+                in.toExternalForm(), instream), getNameCoder());
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         } catch (IOException e) {
             throw new StreamException(e);
+        } finally {
+            if (instream != null) {
+                try {
+                    instream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
     }
 
     public HierarchicalStreamReader createReader(File in) {
+        InputStream instream = null;
         try {
+            instream = new FileInputStream(in);
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(in
                 .toURI()
-                .toASCIIString(), new FileInputStream(in)), getNameCoder());
+                .toASCIIString(), instream), getNameCoder());
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         } catch (IOException e) {
             throw new StreamException(e);
+        } finally {
+            if (instream != null) {
+                try {
+                    instream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
     }
 
