@@ -89,7 +89,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
             Method setTypeConverter = Configuration.class.getMethod(
                 "setTypeConverter", new Class[]{typeConverter.getClass().getInterfaces()[0]});
             Configuration config = new Configuration();
-            setTypeConverter.invoke(config, typeConverter);
+            setTypeConverter.invoke(config, new Object[]{typeConverter});
             xstream = new XStream(new JettisonMappedXmlDriver(config));
             xstream.alias("product", Product.class);
             Product product = new Product("Banana", "123", 23.00);
