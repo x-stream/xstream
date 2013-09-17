@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -236,6 +236,19 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         String json = xstream.toXML(topic1);
         assertEquals(
             "{'topic':{'id':4711,'description':'JSON','createdOn':{'@class':'sql-timestamp','$':'1970-01-01 00:00:01.0'}}}"
+                .replace('\'', '"'), json);
+        Topic topic2 = (Topic)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(topic2));
+    }
+
+    public void testLongValueWithHighPrecision() {
+        Topic topic1 = new Topic();
+        topic1.id = Long.MAX_VALUE;
+        topic1.description = "JSON";
+        xstream.alias("topic", Topic.class);
+        String json = xstream.toXML(topic1);
+        assertEquals(
+            "{'topic':{'id':9223372036854775807,'description':'JSON'}}"
                 .replace('\'', '"'), json);
         Topic topic2 = (Topic)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(topic2));
