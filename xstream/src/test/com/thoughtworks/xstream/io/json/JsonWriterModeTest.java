@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -59,6 +59,8 @@ public class JsonWriterModeTest extends TestCase {
             .asList(new Object[]{
                 new Object[][]{new Object[0]},
                 null,
+                new Integer(42),
+                new Long(Long.MAX_VALUE),
                 new Y(),
                 x.innerObj,
                 new ArrayList(),
@@ -173,8 +175,14 @@ public class JsonWriterModeTest extends TestCase {
         suite.addTest(new JsonWriterModeTest(
             "optimizedPretty", XStream.NO_REFERENCES, 0, prettyFormat));
         suite.addTest(new JsonWriterModeTest(
+            "optimizedCompactIEEE754", XStream.NO_REFERENCES, AbstractJsonWriter.IEEE_754_MODE,
+            compactFormat));
+        suite.addTest(new JsonWriterModeTest(
             "explicitCompact", XStream.NO_REFERENCES, AbstractJsonWriter.EXPLICIT_MODE,
             compactFormat));
+        suite.addTest(new JsonWriterModeTest(
+            "explicitCompactIEEE754", XStream.NO_REFERENCES, AbstractJsonWriter.EXPLICIT_MODE
+                | AbstractJsonWriter.IEEE_754_MODE, compactFormat));
         suite.addTest(new JsonWriterModeTest(
             "explicitPretty", XStream.NO_REFERENCES, AbstractJsonWriter.EXPLICIT_MODE,
             prettyFormat));

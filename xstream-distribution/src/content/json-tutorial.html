@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2007, 2008, 2010, 2012 XStream committers.
+ Copyright (C) 2007, 2008, 2010, 2012, 2013 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -32,7 +32,10 @@ data types, arrays and lists and allows to nest them - but that's it! No referen
 (attributes), no properties with same names (as generated for implicit collections), etc. Therefore do not expect
 wonders.  XStream (and Jettison) try their best, but the procedure to convert any kind of object into JSON is a lossy
 transformation and especially deserialization will not be possible for any construct. See also
-<a href="faq.html#JSON_limitations">FAQ</a>.</p>
+<a href="faq.html#JSON_limitations">FAQ for JSON limitations</a>.  Also note that any number value in JavaScript is a
+64-bit double precision float value according IEEE 754 standard.  In consequence it is not possible to represent all
+values of a Java long type without loss of precision. See again <a href="faq.html#JSON_JavaScript_Long">FAQ for JSON
+and JavaScript</a>.</p>
 
 <p>Since JSON has no possibility to express references, you should always set the NO_REFERENCES mode writing JSON.</p>
 

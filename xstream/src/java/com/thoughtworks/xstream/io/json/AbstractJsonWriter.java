@@ -111,12 +111,29 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * This format can be used to always deserialize into Java again.
      * </p>
      * <p>
-     * This mode cannot be combined with one of the other modes.
+     * This mode cannot combined with {@link #STRICT_MODE} or {@link #DROP_ROOT_MODE}.
      * </p>
      * 
      * @since 1.4
      */
     public static final int EXPLICIT_MODE = 4;
+    /**
+     * IEEE_754_MODE keeps precision of 64-bit integer values.
+     * <p>
+     * In JavaScript every number is expressed as 64-bit double value with a precision of 53
+     * bits following IEEE 754.  Therefore it is not possible to represent the complete value
+     * range of 64-bit integer values.  Any integer value &gt; 2<sup>53</sup>
+     * (9007199254740992) or &lt; -2<sup>53</sup> (-9007199254740992) will therefore be
+     * written as string value.
+     * </p>
+     * <p>
+     * CAUTION: A client must be aware that the element may contain a number or a string value.
+     * </p>
+     * 
+     * @since upcoming
+     * @see <a href="http://ecma262-5.com/ELS5_HTML.htm#Section_8.5">ECMA Specification: The Number Type</a>
+     */
+    public static final int IEEE_754_MODE = 8;
 
     public static class Type {
         public static Type NULL = new Type();
@@ -408,7 +425,18 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
                         endObject();
                     }
                 } else {
-                    addValue(valueToAdd, getType(currentType));
+                    if (((mode & IEEE_754_MODE) != 0)
+                        && (currentType == long.class || currentType == Long.class)) {
+                        long longValue = Long.parseLong(valueToAdd);
+                        // JavaScript supports a maximum of 2^53
+                        if (longValue > 9007199254740992L || longValue < -9007199254740992L) {
+                            addValue(valueToAdd, Type.STRING);
+                        } else {
+                            addValue(valueToAdd, getType(currentType));
+                        }
+                    } else {
+                        addValue(valueToAdd, getType(currentType));
+                    }
                 }
                 return requiredState;
             case STATE_END_ELEMENTS:

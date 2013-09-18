@@ -513,8 +513,8 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 
     <h2 id="JSON_Jettison_version">Which versions of Jettison are supported?</h2>
 
-	<p>Users of Java 5 or higher can use Jettison 1.2 or higher, users of Java 1.4.2 have to use Jettison 1.0.1.  Java
-	1.3 and Jettison 1.1 is not supported.</p>
+	<p>Users of Java 5 or higher can use Jettison 1.2, users of Java 1.4.2 have to use Jettison 1.0.1.  Jettison 1.1
+	nor Jettison 1.3 or higher is supported.</p>
 
     <h2 id="JSON_deserialize_top_level_array">Why is it not possible to deserialize a JSON string starting with an array?</h2>
 
@@ -549,6 +549,18 @@ System.out.println(writer.toString());
 	implement deserialization).  References are another issue in the serialized object graph, since JSON has no
 	possibility to express such a construct.  You should therefore always set the NO_REFERENCES mode of XStream.
 	Additionally you cannot use implicit collections, since the properties in a JSON object must have unique names.</p>
+
+    <h2 id="JSON_JavaScript_Long">Why are my Long values incorrect in JavaScript?</h2>
+
+	<p>JavaScript does not know about integer values. All numbers are represented with double precition floats using
+	64 bits (IEEE 754).  These types cannot represent technically the complete value range of 64-bit integers like
+	Java's Long.  With the JsonWriter you have the possibility since XStream 1.4.5 to set
+	<a href="javadoc/com/thoughtworks/xstream/io/json/AbstractJsonWriter.html#IEEE_754_MODE">IEEE_754_MODE</a> to force
+	any long value that is not representable as JavaScript number to be written as string value in JSON.  With the
+	Jettison-based JettisonMappedXmlDriver you may either set a different TypeConverter or force the default converter
+	to write integer values out of the range of 32-bit always as string setting the system property
+	<strong>jettison.mapped.typeconverter.enforce_32bit_integer</strong> to <strong>true</strong> (not available for
+	Jettison 1.0.1 and Java 1.4).</p>
 
     <h2 id="JSON_encoding">Why are there invalid characters in my JSON representation?</h2>
 
