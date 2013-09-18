@@ -81,6 +81,7 @@ public class JVM implements Caching {
         map.put("two", null);
         try {
             new TreeMap(comparator).putAll(map);
+            test = true;
         } catch (RuntimeException e) {
             test = false;
         }
@@ -106,19 +107,16 @@ public class JVM implements Caching {
         isSwingAvailable = loadClassForName("javax.swing.LookAndFeel", false) != null;
         isSQLAvailable = loadClassForName("java.sql.Date") != null;
         
-        Class type = null;
+        Class type = PureJavaReflectionProvider.class;
         if (canUseSun14ReflectionProvider()) {
-            type = loadClassForName("com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider");
-            if (type != null) {
+            Class cls = loadClassForName("com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider");
+            if (cls != null) {
                 try {
-                    DependencyInjectionFactory.newInstance(type, null);
+                    DependencyInjectionFactory.newInstance(cls, null);
+                    type = cls;
                 } catch (ObjectAccessException e) {
-                    type = null;
                 }
             }
-        }
-        if (type == null) {
-            type = PureJavaReflectionProvider.class;
         }
         reflectionProviderType = type;
     }
