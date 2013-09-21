@@ -21,23 +21,26 @@
     <body>
 
         <p>The core of XStream consists of a registry of
-        <a href="javadoc/com/thoughtworks/xstream/converters/Converter.html"><b>Converters</b></a>. The responsibility of a Converter is to
-        provide a strategy for converting particular types of objects found in the object graph, to and from XML.</p>
+        <a href="javadoc/com/thoughtworks/xstream/converters/Converter.html"><b>Converters</b></a>. The responsibility
+        of a Converter is to provide a strategy for converting particular types of objects found in the object graph,
+        to and from XML.</p>
 
         <p>XStream is provided with Converters for common types such as primitives, String, File, Collections, arrays,
-        and Dates.</p>
+        and Dates.  The following table lists any converter delivered with XStream and documents, if they are
+        registered by default with which priority.</p>
 
 		
         <table class="examplesTable" summary="Overview over all Converters delivered with XStream">
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.lang">java.lang (and core special types)</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.lang">java.lang (and core special types)</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/NullConverter.html">NullConverter</a></td>
@@ -45,99 +48,112 @@
                 <td class="example">&lt;null/&gt;</td>
                 <td>Usually, null fields are left out of the XML, however when used in arrays or the root object they
                 have to be explicitly marked.</td>
+                <td>very high</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/ArrayConverter.html">ArrayConverter</a></td>
                 <td>Any kind of array</td>
                 <td class="example">
-                    &lt;string-array&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;banana&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;cabbage&lt;/string&gt;<br/>
-                    &lt;/string-array&gt;
+                    &lt;<i>string</i>-array&gt;<br/>
+                    &nbsp;&nbsp;&lt;<i>string</i>&gt;apple&lt;/<i>string</i>&gt;<br/>
+                    &nbsp;&nbsp;&lt;<i>string</i>&gt;banana&lt;/<i>string</i>&gt;<br/>
+                    &nbsp;&nbsp;&lt;<i>string</i>&gt;cabbage&lt;/<i>string</i>&gt;<br/>
+                    &lt;<i>string</i>-array&gt;
                 </td>
                 <td>This supports arrays of primitives as well as objects. It also supports multi-dimensional arrays, even if
                 they are non-rectangular.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/BooleanConverter.html">BooleanConverter</a></td>
                 <td>boolean<br/>java.lang.Boolean</td>
                 <td class="example">&lt;boolean&gt;true&lt;/boolean&gt;</td>
-                <td>&nbsp;</td>
+                <td>Can also be registered locally using different values.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/ByteConverter.html">ByteConverter</a></td>
                 <td>byte<br/>java.lang.Byte</td>
                 <td class="example">&lt;byte&gt;22&lt;/byte&gt;</td>
                 <td>The byte is represented as an integer.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/EncodedByteArrayConverter.html">EncodedByteArrayConverter</a></td>
                 <td>byte[]</td>
                 <td class="example">&lt;byte-array&gt;AHiEFiEABQ==&lt;/byte-array&gt;</td>
-                <td>Uses Base64 encoding to store binary data in XML. Converter is not automatically registered.</td>
+                <td>Uses Base64 encoding to store binary data in XML. Converter can be registered globally or locally.</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/CharConverter.html">CharConverter</a></td>
                 <td>char<br/>java.lang.Character</td>
-                <td class="example">&lt;char&gt;X&lt;/char&gt;</td>
-                <td>&nbsp;</td>
+                <td class="example">&lt;char&gt;X&lt;/char&gt;</br>&lt;char null=&quot;true&quot;/&gt;</td>
+                <td>The '\0' character is invalid in XML.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/CharArrayConverter.html">CharArrayConverter</a></td>
                 <td>char[]</td>
-                <td class="example">
-                    &lt;char-array&gt;hello&lt;char-array&gt;
-                </td>
+                <td class="example">&lt;char-array&gt;hello&lt;char-array&gt;</td>
                 <td>Joins all characters into a single String.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/DoubleConverter.html">DoubleConverter</a></td>
                 <td>double<br/>java.lang.Double</td>
                 <td class="example">&lt;double&gt;456774543443.4553435&lt;/double&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/FloatConverter.html">FloatConverter</a></td>
                 <td>float<br/>java.lang.Float</td>
                 <td class="example">&lt;float&gt;4563443.435&lt;/float&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/IntConverter.html">IntConverter</a></td>
                 <td>int<br/>java.lang.Integer</td>
                 <td class="example">&lt;int&gt;12345678&lt;/int&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/LongConverter.html">LongConverter</a></td>
                 <td>long<br/>java.lang.Long</td>
                 <td class="example">&lt;long&gt;2344556678888786&lt;/long&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/ShortConverter.html">ShortConverter</a></td>
                 <td>short<br/>java.lang.Short</td>
                 <td class="example">&lt;short&gt;1445&lt;/short&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/StringConverter.html">StringConverter</a></td>
                 <td>java.lang.String</td>
                 <td class="example">&lt;string&gt;hello world&lt;/string&gt;</td>
-                <td>&nbsp;</td>
+                <td>This converter can be registered with different caching strategies.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/StringBufferConverter.html">StringBufferConverter</a></td>
                 <td>java.lang.StringBuffer</td>
                 <td class="example">&lt;string-buffer&gt;hello world&lt;/string-buffer&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/StringBuildererConverter.html">StringBuilderConverter</a></td>
                 <td>java.lang.StringBuilder</td>
                 <td class="example">&lt;string-builder&gt;hello world&lt;/string-builder&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ThrowableConverter.html">ThrowableConverter</a></td>
@@ -156,30 +172,34 @@
                 <td>This is only available under Java 1.4 or greater. It retains the full stack trace, including that of any
                 nested exceptions. The stack trace elements are handled by the
                 <a href="javadoc/com/thoughtworks/xstream/converters/extended/StackTraceElementConverter.html">StackTraceElementConverter</a>.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumConverter.html">EnumConverter</a></td>
                 <td>java.lang.Enum</td>
                 <td class="example">&lt;java.lang.annotation.RetentionPolicy&gt;<br/>CLASS<br/>&lt;/java.lang.annotation.RetentionPolicy&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumToStringConverter.html">EnumToStringConverter</a></td>
                 <td>java.lang.Enum</td>
                 <td>The Converter must be initialized with an Enum type and an optional mapping between strings and enum values. By default
                 it will use the Enum's string representation as value.</td>
-                <td>Available under Java 1.5 or greater. Must be registered explicitly for the Enum type.</td>
+                <td>Available under Java 1.5 or greater. Must be registered explicitly for the Enum type or locally.</td>
+                <td>&nbsp;</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.util">java.util</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.util">java.util</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/CollectionConverter.html">CollectionConverter</a></td>
@@ -192,6 +212,7 @@
                     &lt;/linked-list&gt;
                 </td>
                 <td>The objects inside the collection can be any type of objects, including nested collections.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/MapConverter.html">MapConverter</a></td>
@@ -209,6 +230,7 @@
                     &lt;/map&gt;
                 </td>
                 <td>Both key and values can be any type of objects.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/PropertiesConverter.html">PropertiesConverter</a></td>
@@ -221,6 +243,7 @@
                 </td>
                 <td>Because the Properties class only accepts Strings for keys and values, the XML can be more concise. 
                 If the Properties instance includes a set of default Properties, these are serialized in a nested <code>&lt;defaults&gt;</code> element.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/SingletonCollectionConverter.html">SingletonCollectionConverter</a></td>
@@ -231,6 +254,7 @@
                     &lt;/singleton-set&gt;
                 </td>
                 <td>The objects inside the singleton collection can be any type of objects, including nested collections.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/SingletonMapConverter.html">SingletonMapConverter</a></td>
@@ -244,6 +268,7 @@
                     &lt;/singleton-map&gt;
                 </td>
                 <td>The objects inside the singleton collection can be any type of objects, including nested collections.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/TreeMapConverter.html">TreeMapConverter</a></td>
@@ -262,6 +287,7 @@
                     &lt;/tree-map&gt;
                 </td>
                 <td>This is similar to MapConverter with an additional field for storing the java.util.Comparator associated with the TreeMap.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/TreeSetConverter.html">TreeSetConverter</a></td>
@@ -275,6 +301,7 @@
                     &lt;/tree-set&gt;
                 </td>
                 <td>This is similar to CollectionConverter with an additional field for storing the java.util.Comparator associated with the TreeSet.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/BitSetConverter.html">BitSetConverter</a></td>
@@ -283,12 +310,14 @@
                     &lt;bit-set&gt;0,1,3,5,6,8,10&lt;/bit-set&gt;
                 </td>
                 <td>Stores a comma separated list of which bits are set. Designed to be readable without taking up too much space.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/DateConverter.html">DateConverter</a></td>
                 <td>java.util.Date</td>
-                <td class="example">&lt;date&gt;2004-02-22 15:16:04.0 EST&lt;/date&gt;</td>
-                <td></td>
+                <td class="example">&lt;date&gt;2004-02-22 15:16:04.0 UTC&lt;/date&gt;</td>
+                <td>Can be registered with different formats, locales or time zone globally or locally.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/GregorianCalendarConverter.html">GregorianCalendarConverter</a></td>
@@ -299,12 +328,14 @@
                     &lt;/gregorian-calendar&gt;
                 </td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ISO8601DateConverter.html">ISO8601DateConverter</a></td>
                 <td>java.util.Date</td>
                 <td class="example">&lt;date&gt;2006-07-28T12:06:17.654-03:00&lt;/date&gt;</td>
-                <td>Not automatically registered, needs joda-time</td>
+                <td>Not automatically registered, can be used globally or locally. Implementation needs joda-time.</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ISO8601GregorianCalendarConverter.html">ISO8601GregorianCalendarConverter</a></td>
@@ -314,25 +345,29 @@
                     2006-07-28T12:07:02.788-03:00<br/>
                     &lt;/gregorian-calendar&gt;
                 </td>
-                <td>Not automatically registered, needs joda-time</td>
+                <td>Not automatically registered, can be used globally or locally. Implementation needs joda-time.</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/LocaleConverter.html">LocaleConverter</a></td>
                 <td>java.util.Locale</td>
                 <td class="example">&lt;locale&gt;en_GB&lt;/locale&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CurrencyConverter.html">CurrencyConverter</a></td>
                 <td>java.util.Currency</td>
                 <td class="example">&lt;currency&gt;USD&lt;/currency&gt;</td>
                 <td>Available under Java 1.4 or greater.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/UUIDConverter.html">UUIDConverter</a></td>
                 <td>java.util.UUID</td>
                 <td class="example">&lt;uuid&gt;ca05f023-e07f-4956-a6ef-14ddd23df47b&lt;/uuid&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumMapConverter.html">EnumMapConverter</a></td>
@@ -349,6 +384,7 @@
                 &nbsp;&nbsp;&lt;/entry&gt;<br/>
                 &lt;/enum-map&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumSetConverter.html">EnumSetConverter</a></td>
@@ -358,6 +394,7 @@
                 &nbsp;&nbsp;GREEN,BLUE<br/>
                 &lt;/enum-set&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/RegexPatternConverter.html">RegexPatternConverter</a></td>
@@ -369,129 +406,177 @@
 				&lt;/java.util.regex.Pattern&gt;
                 </td>
                 <td>Available under Java 1.4 or greater.</td>
+                <td>normal</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.sql">java.sql</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.sql">java.sql</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/SqlDateConverter.html">SqlDateConverter</a></td>
                 <td>java.sql.Date</td>
                 <td class="example">&lt;sql-date&gt;1978-08-25&lt;/sql-date&gt;</td>
-                <td>&nbsp;</td>
+                <td>Only automatically registered if runtime has JDBC support.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/SqlTimeConverter.html">SqlTimeConverter</a></td>
                 <td>java.sql.Time</td>
                 <td class="example">&lt;sql-time&gt;14:07:33&lt;/sql-time&gt;</td>
-                <td>&nbsp;</td>
+                <td>Only automatically registered if runtime has JDBC support.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/SqlTimestampConverter.html">SqlTimestampConverter</a></td>
                 <td>java.sql.Timestamp</td>
                 <td class="example">&lt;sql-timestamp&gt;1970-01-01 00:00:01.234&lt;/sql-timestamp&gt;</td>
-                <td>&nbsp;</td>
+                <td>Only automatically registered if runtime has JDBC support.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ISO8601SqlTimestampConverter.html">ISO8601SqlTimestampConverter</a></td>
                 <td>java.sql.Timestamp</td>
                 <td class="example">&lt;sql-timestamp&gt;2006-07-28T12:06:17.654000000-03:00&lt;/sql-timestamp&gt;</td>
-                <td>Not automatically registered, needs joda-time</td>
+                <td>Not automatically registered, can be used globally or locally. Implementation needs joda-time.</td>
+                <td>&nbsp;</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.math">java.math</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.math">java.math</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/BigDecimalConverter.html">BigDecimalConverter</a></td>
                 <td>java.math.BigDecimal</td>
                 <td class="example">&lt;big-decimal&gt;342346.445332&lt;/big-decimal&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/BigIntegerConverter.html">BigIntegerConverter</a></td>
                 <td>java.math.BigInteger</td>
                 <td class="example">&lt;big-int&gt;23434224556&lt;/big-int&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.net">java.net</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.net">java.net</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/URIConverter.html">URIConverter</a></td>
+                <td>java.net.URI</td>
+                <td class="example">&lt;uri&gt;mailto:xstream-user.codehaus.org&lt;/uri&gt;</td>
+                <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/URLConverter.html">URLConverter</a></td>
-                <td>java.net.Url</td>
+                <td>java.net.URL</td>
                 <td class="example">&lt;url&gt;http://codehaus.org/blah&lt;/url&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.io">java.io</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.io">java.io</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/FileConverter.html">FileConverter</a></td>
                 <td>java.io.File</td>
                 <td class="example">&lt;file&gt;/stuff/hello.txt&lt;/file&gt;</td>
                 <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/SerializableConverter.html">SerializableConverter</a></td>
                 <td>java.io.Serializable</td>
                 <td>&nbsp;</td>
-                <td>See description at Generalized Converters</td>
+                <td>See description at Generalized Converters.</td>
+                <td>low</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/ExternalizableConverter.html">ExternalizableConverter</a></td>
                 <td>java.io.Externalizable</td>
-                <td>&nbsp;</td>
-                <td>See description at Generalized Converters</td>
+                <td class="example">
+                    &lt;<i>externalizable-type</i>&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&lt;int&gt;42&lt;/int&gt;<br/>
+                    &nbsp;&nbsp;&lt;big-decimal&gt;12345.4555&lt;/big-decimal&gt;<br/>
+                    &lt;/<i>externalizable-type</i>&gt;
+                </td>
+                <td>See description at Generalized Converters.</td>
+                <td>low</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.lang.reflect">java.lang.reflect</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.nio">java.nio</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CharsetConverter.html">CharsetConverter</a></td>
+                <td>java.nio.charset.Charset</td>
+                <td class="example">&lt;charset&gt;US-ASCII&lt;/charset&gt;</td>
+                <td>Available under Java 1.4 or greater.</td>
+                <td>normal</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="5" class="headerRow"><h1 id="java.lang.reflect">java.lang.reflect</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaClassConverter.html">JavaClassConverter</a></td>
                 <td>java.lang.Class</td>
                 <td class="example">&lt;class&gt;com.foo.MyThing&lt;/class&gt;</td>
-                <td>This converter will look for the class in the ClassLoader of the current XStream instance. It is possible
-                to use another ClassLoader by re-registering a new instance of this converter that is wrapped around another
-                ClassLoader.</td>
+                <td>This converter uses the ClassLoaderReference of the XStream insatance. Can be regisreted with
+                Mapper globally or locally to respect type aliases.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaFieldConverter.html">JavaFieldConverter</a></td>
@@ -502,8 +587,9 @@
                     &nbsp;&nbsp;&lt;class&gt;com.foo.MyThing&lt;/class&gt;<br/>
                     &lt;/field&gt;
                 </td>
-                <td>As with the JavaClassConverter, the converter will use the ClassLoader of the XStream instance to resolve classes
-                by default. This can be changed by specifying another ClassLoader when constructing this Converter.</td>
+                <td>This converter uses the ClassLoaderReference of the XStream insatance. Can be regisreted with
+                Mapper globally or locally to respect type aliases.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaMethodConverter.html">JavaMethodConverter</a></td>
@@ -518,9 +604,9 @@
                     &nbsp;&nbsp;&lt;/parameter-types&gt;<br/>
                     &lt;/method&gt;
                 </td>
-                <td>The enclosing element for this tag will either by &lt;method&gt; or &lt;constructor&gt;. As with the JavaClassConverter, the converter
-                will use the ClassLoader of the XStream instance to resolve classes by default. This can be changed by specifying another ClassLoader when
-                constructing this Converter.</td>
+                <td>The enclosing element for this tag will either by &lt;method&gt; or &lt;constructor&gt;. This converter uses the ClassLoaderReference of the XStream insatance. Can be regisreted with
+                Mapper globally or locally to respect type aliases.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/DynamicProxyConverter.html">DynamicProxyConverter</a></td>
@@ -536,17 +622,19 @@
                 </td>
                 <td>The dynamic proxy itself is not serialized, however the interfaces it implements and the actual InvocationHandler
                 instance are serialized. This allows the proxy to be reconstructed after deserialization.</td>
+                <td>normal</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.awt">java.awt</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.awt">java.awt</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ColorConverter.html">ColorConverter</a></td>
@@ -559,26 +647,30 @@
                     &nbsp;&nbsp;&lt;alpha&gt;255&lt;/alpha&gt;<br/>
                     &lt;/awt-color&gt;
                 </td>
-                <td><b>Warning:</b> The AWT toolkit is initialized when a Color is deserialized due to the internals of the Color class.
-                This should only be an issue if deserializing a Color on a headless server process.</td>
+                <td>Only automatically registered if runtime has AWT support.<br/>
+                <b>Warning:</b> The AWT toolkit is definitely initialized when a Color is deserialized.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/FontConverter.html">FontConverter</a></td>
-                <td>java.awt.Font</td>
-                <td class="example">&nbsp;</td>
-                <td><b>Warning:</b> The AWT toolkit is initialized when a Font is deserialized due to the internals of the Font class.
-                This should only be an issue if deserializing a Font on a headless server process.</td>
+                <td>java.awt.Font<br/>
+                javax.swing.plaf.FontUIResource</td>
+                <td class="example">&lt;font&gt;Arial&lt;/font&gt;</td>
+                <td>Only automatically registered if runtime has AWT support.<br/>
+                <b>Warning:</b> The AWT toolkit is definitely initialized when a Font is deserialized.</td>
+                <td>normal</td>
             </tr>
-
+            
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.awt.font">java.awt.font</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="java.awt.font">java.awt.font</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/TextAttributeConverter.html">TextAttributeConverter</a></td>
@@ -586,37 +678,40 @@
                 <td class="example">
                     &lt;awt-text-attribute&gt;family&lt;/awt-text-attribute&gt;
                 </td>
-                <td><b>Warning:</b> The AWT toolkit is initialized when a TextAttribute is deserialized due to the internals of the TextAttribute class.
-                This should only be an issue if deserializing a TextAttribute on a headless server process.</td>
+                <td>Only automatically registered if runtime has AWT support.<br/>
+                <b>Warning:</b> The AWT toolkit is definitely initialized when a TextAttribute is deserialized.</td>
+                <td>normal</td>
             </tr>
             
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="javax.swing">javax.swing</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="javax.swing">javax.swing</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/LookAndFeelConverter.html">LookAndFeelConverter</a></td>
                 <td>javax.swing.LookAndFeel implementations</td>
                 <td class="example">&nbsp;</td>
-                <td>Explicit mapping to the ReflectionConverter. Although the implementations of the LookAndFeel classes are serializable, they will
-                throw an exception executing writeObject(), therefore the SerializableConverter is not used.</td>
+                <td>Only automatically registered if runtime has Swing support.</td>
+                <td>normal</td>
             </tr>
             
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="javax.security.auth">javax.security.auth</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="javax.security.auth">javax.security.auth</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/SubjectConverter.html">SubjectConverter</a></td>
@@ -630,57 +725,45 @@
 				&lt;/auth-subject&gt;<br/>
                 </td>
                 <td>Available under Java 1.4 or greater. This converter does not serialize any credentials but only the principals.</td>
+                <td>normal</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="java.nio">java.nio</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="javax.xml.datatype">javax.xml.datatype</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Example</th>
                 <th>Notes</th>
-            </tr>
-            <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CharsetConverter.html">CharsetConverter</a></td>
-                <td>java.nio.charset.Charset</td>
-                <td class="example">&lt;charset&gt;US-ASCII&lt;/charset&gt;</td>
-                <td>Available under Java 1.4 or greater.</td>
-            </tr>
-
-            <!-- .................................................................................................. -->
-            <tr>
-                <td colspan="4" class="headerRow"><h1 id="javax.xml.datatype">javax.xml.datatype</h1></td>
-            </tr>
-            <tr>
-                <th>Converter</th>
-                <th>Supported types</th>
-                <th>Example</th>
-                <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/DurationConverter.html">DurationConverter</a></td>
                 <td>javax.xml.datatype.Duration</td>
                 <td class="example">&lt;duration&gt;PT1H2M&lt;/duration&gt;</td>
                 <td>Available under Java 1.5 or greater.</td>
+                <td>normal</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="generic">Generalized Converters</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="generic">Generalized Converters</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Explanation</th>
                 <th>Notes</th>
+                <th>Prio</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/ReflectionConverter.html">ReflectionConverter</a></td>
                 <td>Any type</td>
                 <td>The Converter is used as fallback. It uses reflection to examine the class and will serialize its fields.</td>
                 <td>&nbsp;</td>
+                <td>very low</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/annotations/AnnotationReflectionConverter.html">AnnotationReflectionConverter</a></td>
@@ -688,93 +771,114 @@
                 <td>The Converter is used as fallback. It uses reflection to examine the class and will serialize its fields and supports annotations for 
                 local converters.</td>
                 <td>Needs JDK 1.5, default for JDK 1.5. Deprecated since XStream 1.3 and must be registered now explicitly.</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/SerializableConverter.html">SerializableConverter</a></td>
                 <td>java.io.Serializable or types with one of the serializable methods readObject or writeObject</td>
                 <td>The Converter is used for any JDK-serializable types, if not handled by a specialized Converter.</td>
                 <td>&nbsp;</td>
+                <td>low</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/ExternalizableConverter.html">ExternalizableConverter</a></td>
                 <td>java.io.Externalizable</td>
                 <td>The Converter is used for any JDK-externalizable types, if not handled by a specialized Converter.</td>
                 <td>&nbsp;</td>
+                <td>low</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ToAttributedValueConverter.html">ToAttributedValueConverter</a></td>
-                <td>Any type with all but one fields to be represented by a single string</td>
+                <td>Any type with all fields to be represented by a single string but one.</td>
                 <td>The Converter is used to write all but one fields of the type as attributes. The left over field is then used as current value.</td>
-                <td>Must be registered explicitly for the appropriate type</td>
+                <td>Must be registered globally or locally for the appropriate type.</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ToStringConverter.html">ToStringConverter</a></td>
                 <td>Any type with natural String representation</td>
                 <td>The Converter must be initialized with a type, that provides a complete String representation with its toString() method
                 and is able to be recreated by a constructor taking a single String argument.</td>
-                <td>Must be registered explicitly for the appropriate type</td>
+                <td>Must be registered globally or locally for the appropriate type.</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/javabean/JavaBeanConverter.html">JavaBeanConverter</a></td>
                 <td>Java beans</td>
                 <td>The Converter handles any type as Java bean. It expects the type to convert to have a public default constructor and
                 appropriate getter and setters.</td>
-                <td>Must be registered explicitly. Should be used as fallback.</td>
+                <td>Must be registered globally or locally. Can be used as fallback with priority <b>very low</b>.</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/PropertyEditorCapableConverter.html">PropertyEditorCapableConverter</a></td>
                 <td>Any type with a PropertyEditor implementation</td>
                 <td>The Converter can handles any type that provides a PropertyEditor implementation. The PropertyEditor's methods getAsText() and
                 setAsText() are used to convert between object and string representation.</td>
-                <td>Must be registered explicitly for the appropriate type.</td>
+                <td>Must be registered globally or locally for the appropriate type.</td>
+                <td>&nbsp;</td>
             </tr>
 
             <!-- .................................................................................................. -->
             <tr>
-                <td colspan="4" class="headerRow"><h1 id="3rdParty">Converters for 3rd party classes</h1></td>
+                <td colspan="5" class="headerRow"><h1 id="3rdParty">Converters for 3rd party classes</h1></td>
             </tr>
             <tr>
                 <th>Converter</th>
                 <th>Supported types</th>
                 <th>Explanation</th>
                 <th>Notes</th>
+                <th>Add-On</th>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/CGLIBEnhancedConverter.html">CGLIBEnhancedConverter</a></td>
                 <td>Proxies generated by the CGLIB Enhancer</td>
                 <td>The Converter handles proxies generated by the CGLIB Enhancer, if there were not multiple callbacks registered.
                 A proxy with multiple callbacks can currently not be handled at all.</td>
-                <td>Must be registered explicitly in combination with the CGLIBMapper. See <a href="faq.html#Serialization_CGLIB">FAQ</a>.</td>
+                <td>Must be registered globally and in combination with the CGLIBMapper. See <a href="faq.html#Serialization_CGLIB">FAQ</a>.</td>
+                <td>xstream</td>
             </tr>
             <tr>
                 <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentCollectionConverter.html">HibernatePersistentCollectionConverter</a></td>
-                <td>org.hibernate.collection.PersistentBag org.hibernate.collection.PersistentList org.hibernate.collection.PersistentSet</td>
-                <td>The Converter handles Hibernate collections that are not handled by the other Hibernate converters. It will handle any element of the collection.</td>
+                <td>org.hibernate.collection.internal.PersistentBag<br/>
+                org.hibernate.collection.internal.PersistentList<br/>
+                org.hibernate.collection.internal.PersistentSet<br/>
+                org.hibernate.envers.entities.mapper.relation.lazy.proxy.ListProxy<br/>
+                org.hibernate.envers.entities.mapper.relation.lazy.proxy.SetProxy</td>
+                <td>The Converter handles Hibernate 4 (or 3) standard collections and Envers proxies. It will handle any element of the collection.</td>
                 <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+                <td>xstream-hibernate</td>
             </tr>
             <tr>
                 <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentMapConverter.html">HibernatePersistentMapConverter</a></td>
-                <td>org.hibernate.collection.PersistentMap</td>
-                <td>The Converter handles unsorted Hibernate maps. It will handle any key and value of the map.</td>
+                <td>org.hibernate.collection.internal.PersistentMap<br/>
+                org.hibernate.envers.entities.mapper.relation.lazy.proxy.MapProxy</td>
+                <td>The Converter handles unsorted Hibernate 4 (or 3) maps or Envers proxy. It will handle any key and value of the map.</td>
                 <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+                <td>xstream-hibernate</td>
             </tr>
             <tr>
                 <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentSortedMapConverter.html">HibernatePersistentSortedMapConverter</a></td>
-                <td>org.hibernate.collection.PersistentSortedMap</td>
-                <td>The Converter handles sorted Hibernate maps. It will handle any key and value of the map.</td>
+                <td>org.hibernate.collection.internal.PersistentSortedMap<br/>
+                org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedMapProxy</td>
+                <td>The Converter handles sorted Hibernate 4 (or 3) maps or Envers proxy. It will handle any key and value of the map.</td>
                 <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+                <td>xstream-hibernate</td>
             </tr>
             <tr>
                 <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentSortedSetConverter.html">HibernatePersistentSortedSetConverter</a></td>
-                <td>org.hibernate.collection.PersistentSortedSet</td>
-                <td>The Converter handles sorted Hibernate sets. It will handle any element of the set.</td>
+                <td>org.hibernate.collection.intrernal.PersistentSortedSet<br/>
+                org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedSetProxy</td>
+                <td>The Converter handles sorted Hibernate 4 (or 3) sets or Envers proxy. It will handle any element of the set.</td>
                 <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+                <td>xstream-hibernate</td>
             </tr>
             <tr>
                 <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernateProxyConverter.html">HibernateProxyConverter</a></td>
                 <td>org.hibernate.proxy.HibernateProxy</td>
                 <td>The Converter handle any element that is wrapped by a Hibernate proxy.</td>
                 <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+                <td>xstream-hibernate</td>
             </tr>
 
         </table>
