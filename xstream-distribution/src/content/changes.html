@@ -54,6 +54,8 @@
     	<li>JIRA:XSTR-728: XStream creates invalid JSON with JsonHierarchicalStreamDriver for custom converters since
     	XStream 1.4.</li>
     	<li>JIRA:XSTR-300: New EnumToStringConverter to support custom string representations of Enum values.</li>
+    	<li>JIRA:XSTR-292 and JIRA:XSTR-405: New NamedMapConverter and NamedCollectionConverter to define names of
+    	inner elements.</li>
     	<li>JIRA:XSTR-726: New annotation XStreamAliasType to support declarative definition of XStream.aliasType().</li>
     	<li>JIRA:XSTR-735: Support for JDOM2 with JDom2Driver, JDom2Reader and JDom2Writer.</li>
     	<li>Fix: ToAttributedValueConverter silently appends fields without attribute support to the value.</li>
@@ -92,6 +94,8 @@
     <h2>API changes</h2>
 
     <ul>
+    	<li>Added c.t.x.converter.extended.NamedCollectionConverter for free element names in collections.</li>
+    	<li>Added c.t.x.converter.extended.NamedMapConverter for free element names in maps.</li>
     	<li>Added c.t.x.io.xml.StandardStaxDriver to use the StAX implementation delivered with the Java 6 runtime.</li>
     	<li>Deprecated c.t.x.io.xml.SjsxpStaxDriver to select the internal StAX implementation of Oracle.</li>
     	<li>Added static methods getStaxInputFactory and getStaxOutputFactory to 	c.t.x.core.JVM as returning the

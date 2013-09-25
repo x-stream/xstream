@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2011 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2011, 2013 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -143,8 +143,9 @@
         <h2 id="Specialized_Converters">Specialized Converters</h2>
 
         <p>Not all converters that are part of the XStream package are automatically registered.  Some will only make
-        sense for special types, others have parameters to tweak the behaviour.  Most useful in the table of 
-        <a href="converters.html">converters</a> are the JavaBeanConverter, ToStringConverter, and
+        sense for special types, others have parameters to tweak the behaviour and are often most effective if
+        registered as local converter only.  Most useful in the table of <a href="converters.html">converters</a> are
+        the JavaBeanConverter, NamedCollectionConverter, NamedMapConverter, ToStringConverter, and
         ToAttributedValueConverter.  Not to mention the separate Hibernate package of XStream.</p>
 
         <p>As example can the ToAttributedValueConverter be used to define the owner's name directly as text value:</p>

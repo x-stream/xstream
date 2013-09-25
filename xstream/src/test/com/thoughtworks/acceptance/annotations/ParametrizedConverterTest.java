@@ -12,6 +12,8 @@ package com.thoughtworks.acceptance.annotations;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.acceptance.objects.StandardObject;
@@ -21,6 +23,7 @@ import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.converters.extended.NamedMapConverter;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import com.thoughtworks.xstream.converters.extended.ToStringConverter;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
@@ -51,6 +54,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         xstream.processAnnotations(MyMap.class);
         xstream.processAnnotations(DerivedType.class);
         xstream.processAnnotations(SimpleBean.class);
+        xstream.processAnnotations(ContainsMap.class);
     }
 
     public void testAnnotationForConvertersWithParameters() {
@@ -165,7 +169,6 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         assertBothWays(value, expected);
     }
     
-    
     @XStreamAlias("bean")
     @XStreamConverter(JavaBeanConverter.class)
     public static class SimpleBean extends StandardObject {
@@ -177,6 +180,36 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
 
         public void setName(String name) {
             myName = name;
+        }
+    }
+    
+    public void testAnnotatedNamedMapConverter() {
+        Map<ContainsMap.E, String> map = new LinkedHashMap<ContainsMap.E, String>();
+        map.put(ContainsMap.E.FOO, "foo");
+        map.put(ContainsMap.E.BAR, "bar");
+        final ContainsMap value = new ContainsMap(map);
+        String expected = (""
+                + "<container>\n"
+                + "  <map class='linked-hash-map'>\n"
+                + "    <issue key='FOO'>foo</issue>\n"
+                + "    <issue key='BAR'>bar</issue>\n"
+                + "  </map>\n"
+                + "</container>").replace('\'', '"');
+        assertBothWays(value, expected);
+    }
+    
+    @XStreamAlias("container")
+    public static class ContainsMap extends StandardObject {
+        public enum E {
+            FOO, BAR
+        };
+
+        @XStreamConverter(value = NamedMapConverter.class, strings = {"issue", "key", ""}, types = {
+            E.class, String.class}, booleans = {true, false}, useImplicitType = false)
+        private Map<E, String> map;
+
+        public ContainsMap(Map<E, String> map) {
+            this.map = map;
         }
     }
 }
