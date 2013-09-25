@@ -50,11 +50,7 @@ public class TreeMapConverter extends MapConverter {
     private final static Field comparatorField = Fields.locate(TreeMap.class, Comparator.class, false);
 
     public TreeMapConverter(Mapper mapper) {
-        super(mapper);
-    }
-
-    public boolean canConvert(Class type) {
-        return type.equals(TreeMap.class);
+        super(mapper, TreeMap.class);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

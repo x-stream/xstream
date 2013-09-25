@@ -211,7 +211,9 @@
                     &nbsp;&nbsp;&lt;big-decimal&gt;12345.4555&lt;/big-decimal&gt;<br/>
                     &lt;/linked-list&gt;
                 </td>
-                <td>The objects inside the collection can be any type of objects, including nested collections.</td>
+                <td>The objects inside the collection can be any type of objects, including nested collections.  Can be
+                registered for an individual Collection type or locally, suppression of implicit type might be
+                necessary.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -229,20 +231,8 @@
                     &nbsp;&nbsp;&lt;/entry&gt;<br/>
                     &lt;/map&gt;
                 </td>
-                <td>Both key and values can be any type of objects.</td>
-                <td>normal</td>
-            </tr>
-            <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/CollectionConverter.html">CollectionConverter</a></td>
-                <td>java.util.ArrayList<br/>java.util.LinkedList<br/>java.util.HashSet<br/>java.util.Vector<br/>java.util.LinkedHashSet</td>
-                <td class="example">
-                    &lt;linked-list&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;banana&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;big-decimal&gt;12345.4555&lt;/big-decimal&gt;<br/>
-                    &lt;/linked-list&gt;
-                </td>
-                <td>The objects inside the collection can be any type of objects, including nested collections.</td>
+                <td>Both key and values can be any type of objects.  Can be registered for an individual Map type or
+                locally, suppression of implicit type might be necessary.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -256,7 +246,7 @@
                     &lt;/linked-list&gt;
                 </td>
                 <td>The objects inside the collection can be any type of objects, including nested collections.  Should
-                be registered locally.</td>
+                be registered locally or for an individual Collection type.</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
@@ -275,8 +265,8 @@
                     &lt;/map&gt;
                 </td>
                 <td>Both key and values can be any type of objects.  If key or value are written as attributes or if
-                the value is written as text of the entry element, those types must be hjandled by a
-                SingleValueConverter.  Should be registered locally.</td>
+                the value is written as text of the entry element, those types must be handled by a
+                SingleValueConverter.  Should be registered locally or for an individual Map type.</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>

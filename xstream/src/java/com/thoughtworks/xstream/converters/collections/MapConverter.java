@@ -36,17 +36,36 @@ import java.util.Map;
  */
 public class MapConverter extends AbstractCollectionConverter {
 
+    private final Class type;
+
     public MapConverter(Mapper mapper) {
+        this(mapper, null);
+    }
+
+    /**
+     * Construct a MapConverter for a special Map type.
+     * @param mapper the mapper
+     * @param type the type to handle
+     * @since upcoming
+     */
+    public MapConverter(Mapper mapper, Class type) {
         super(mapper);
+        this.type = type;
+        if (type != null && !Map.class.isAssignableFrom(type)) {
+            throw new IllegalArgumentException(type + " not of type " + Map.class);
+        }
     }
 
     public boolean canConvert(Class type) {
+        if (this.type != null) {
+            return type.equals(this.type);
+        }
         return type.equals(HashMap.class)
-                || type.equals(Hashtable.class)
-                || type.getName().equals("java.util.LinkedHashMap")
-                || type.getName().equals("java.util.concurrent.ConcurrentHashMap")
-                || type.getName().equals("sun.font.AttributeMap") // Used by java.awt.Font in JDK 6
-                ;
+            || type.equals(Hashtable.class)
+            || type.getName().equals("java.util.LinkedHashMap")
+            || type.getName().equals("java.util.concurrent.ConcurrentHashMap")
+            || type.getName().equals("sun.font.AttributeMap") // Used by java.awt.Font in JDK 6
+            ;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
@@ -94,4 +113,7 @@ public class MapConverter extends AbstractCollectionConverter {
         target.put(key, value);
     }
 
+    protected Object createCollection(Class type) {
+        return super.createCollection(this.type != null ? this.type : type);
+    }
 }

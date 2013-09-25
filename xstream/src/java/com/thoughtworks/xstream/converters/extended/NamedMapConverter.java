@@ -139,7 +139,26 @@ public class NamedMapConverter extends MapConverter {
     }
 
     /**
-     * Constructs a NamedMapConverter.
+     * Constructs a NamedMapConverter handling an explicit Map type.
+     * 
+     * @param type the Map type this instance will handle
+     * @param mapper the mapper
+     * @param entryName the name of the entry elements
+     * @param keyName the name of the key elements
+     * @param keyType the base type of key elements
+     * @param valueName the name of the value elements
+     * @param valueType the base type of value elements
+     * @since upcoming
+     */
+    public NamedMapConverter(
+        Class type, Mapper mapper, String entryName, String keyName, Class keyType,
+        String valueName, Class valueType) {
+        this(
+            type, mapper, entryName, keyName, keyType, valueName, valueType, false, false, null);
+    }
+
+    /**
+     * Constructs a NamedMapConverter with attribute support.
      * 
      * @param mapper the mapper
      * @param entryName the name of the entry elements
@@ -156,7 +175,31 @@ public class NamedMapConverter extends MapConverter {
         Mapper mapper, String entryName, String keyName, Class keyType, String valueName,
         Class valueType, boolean keyAsAttribute, boolean valueAsAttribute,
         ConverterLookup lookup) {
-        super(mapper);
+        this(
+            null, mapper, entryName, keyName, keyType, valueName, valueType, keyAsAttribute,
+            valueAsAttribute, lookup);
+    }
+
+    /**
+     * Constructs a NamedMapConverter with attribute support handling an explicit Map type.
+     * 
+     * @param type the Map type this instance will handle
+     * @param mapper the mapper
+     * @param entryName the name of the entry elements
+     * @param keyName the name of the key elements
+     * @param keyType the base type of key elements
+     * @param valueName the name of the value elements
+     * @param valueType the base type of value elements
+     * @param keyAsAttribute flag to write key as attribute of entry element
+     * @param valueAsAttribute flag to write value as attribute of entry element
+     * @param lookup used to lookup SingleValueConverter for attributes
+     * @since upcoming
+     */
+    public NamedMapConverter(
+        Class type, Mapper mapper, String entryName, String keyName, Class keyType,
+        String valueName, Class valueType, boolean keyAsAttribute, boolean valueAsAttribute,
+        ConverterLookup lookup) {
+        super(mapper, type);
         this.entryName = entryName != null && entryName.length() == 0 ? null : entryName;
         this.keyName = keyName != null && keyName.length() == 0 ? null : keyName;
         this.keyType = keyType;

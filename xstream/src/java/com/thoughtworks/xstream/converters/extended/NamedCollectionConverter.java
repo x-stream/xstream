@@ -44,7 +44,20 @@ public class NamedCollectionConverter extends CollectionConverter {
      * @since upcoming
      */
     public NamedCollectionConverter(Mapper mapper, String itemName, Class itemType) {
-        super(mapper);
+        this(null, mapper, itemName, itemType);
+    }
+
+    /**
+     * Constructs a NamedCollectionConverter handling an explicit Collection type.
+     * 
+     * @param type the Collection type to handle
+     * @param mapper the mapper
+     * @param itemName the name of the items
+     * @param itemType the base type of the items
+     * @since upcoming
+     */
+    public NamedCollectionConverter(Class type, Mapper mapper, String itemName, Class itemType) {
+        super(mapper, type);
         this.name = itemName;
         this.type = itemType;
     }

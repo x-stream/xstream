@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,16 +36,35 @@ import java.util.Vector;
  */
 public class CollectionConverter extends AbstractCollectionConverter {
 
+    private final Class type;
+
     public CollectionConverter(Mapper mapper) {
+        this(mapper, null);
+    }
+
+    /**
+     * Construct a CollectionConverter for a special Collection type.
+     * @param mapper the mapper
+     * @param type the Collection type to handle
+     * @since upcoming
+     */
+    public CollectionConverter(Mapper mapper, Class type) {
         super(mapper);
+        this.type = type;
+        if (type != null && !Collection.class.isAssignableFrom(type)) {
+            throw new IllegalArgumentException(type + " not of type " + Collection.class);
+        }
     }
 
     public boolean canConvert(Class type) {
+        if (this.type != null) {
+            return type.equals(this.type);
+        }
         return type.equals(ArrayList.class)
-                || type.equals(HashSet.class)
-                || type.equals(LinkedList.class)
-                || type.equals(Vector.class)
-                || (JVM.is14() && type.getName().equals("java.util.LinkedHashSet"));
+            || type.equals(HashSet.class)
+            || type.equals(LinkedList.class)
+            || type.equals(Vector.class) 
+            || (JVM.is14() && type.getName().equals("java.util.LinkedHashSet"));
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
@@ -78,5 +97,9 @@ public class CollectionConverter extends AbstractCollectionConverter {
         Collection collection, Collection target) {
         Object item = readItem(reader, context, collection);
         target.add(item);
+    }
+
+    protected Object createCollection(Class type) {
+        return super.createCollection(this.type != null ? this.type : type);
     }
 }

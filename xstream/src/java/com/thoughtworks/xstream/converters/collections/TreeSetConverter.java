@@ -45,12 +45,8 @@ public class TreeSetConverter extends CollectionConverter {
        JVM.hasOptimizedTreeSetAddAll() ? Fields.locate(TreeSet.class, SortedMap.class, false) : null;
 
     public TreeSetConverter(Mapper mapper) {
-        super(mapper);
+        super(mapper, TreeSet.class);
         readResolve();
-    }
-
-    public boolean canConvert(Class type) {
-        return type.equals(TreeSet.class);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

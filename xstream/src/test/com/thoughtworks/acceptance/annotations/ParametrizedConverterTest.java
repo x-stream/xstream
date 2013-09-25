@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
+import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.extended.NamedMapConverter;
@@ -184,13 +185,13 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
     
     public void testAnnotatedNamedMapConverter() {
-        Map<ContainsMap.E, String> map = new LinkedHashMap<ContainsMap.E, String>();
+        Map<ContainsMap.E, String> map = new MyEnumMap();
         map.put(ContainsMap.E.FOO, "foo");
         map.put(ContainsMap.E.BAR, "bar");
         final ContainsMap value = new ContainsMap(map);
         String expected = (""
                 + "<container>\n"
-                + "  <map class='linked-hash-map'>\n"
+                + "  <map class='my-enums'>\n"
                 + "    <issue key='FOO'>foo</issue>\n"
                 + "    <issue key='BAR'>bar</issue>\n"
                 + "  </map>\n"
@@ -198,6 +199,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         assertBothWays(value, expected);
     }
     
+    @XStreamInclude({MyEnumMap.class})
     @XStreamAlias("container")
     public static class ContainsMap extends StandardObject {
         public enum E {
@@ -205,11 +207,15 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         };
 
         @XStreamConverter(value = NamedMapConverter.class, strings = {"issue", "key", ""}, types = {
-            E.class, String.class}, booleans = {true, false}, useImplicitType = false)
+            MyEnumMap.class, E.class, String.class}, booleans = {true, false}, useImplicitType = false)
         private Map<E, String> map;
 
         public ContainsMap(Map<E, String> map) {
             this.map = map;
         }
+    }
+    
+    @XStreamAlias("my-enums")
+    public static class MyEnumMap extends LinkedHashMap<ContainsMap.E, String> {
     }
 }

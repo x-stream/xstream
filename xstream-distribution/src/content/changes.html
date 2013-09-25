@@ -71,6 +71,7 @@
     	<li>JIRA:XSTR-719: Support replacement of default converter in any case.</li>
     	<li>JIRA:XSTR-725: processAnnotation performance improvement in concurrent situation.</li>
     	<li>JIRA:XSTR-721: EnumConverter is more lenient while parsing constants.</li>
+    	<li>New constructors for CollectionConverter and MapConverter to allow registration for an individual type.</li>
     	<li>JIRA:XSTR-724: Cache class name lookup failures.</li>
     	<li>Current IBM JDK for Java 1.4.2 no longer has a reverse field ordering.</li>
     	<li>JIRA:XSTR-457: Do not write 'defined-in' attribute it not needed.</li>
@@ -102,6 +103,8 @@
     	implementations of javax.xml.stream.XMLInputFactory (resp. javax.xml.stream.XMLOutputFactory) delivered with
     	the Java Runtime since Java 6.</li>
     	<li>Added c.t.x.core.ClassLoaderReference.</li>
+    	<li>Added constructors taking an additional type argument for c.t.x.converter.collections.CollectionConverter
+    	and c.t.x.converter.collections.MapConverter.</li>
     	<li>Added constructors taking a ClassLoaderReference instead of a ClassLoader and deprecated the ones taking the ClassLoader:
     		<ul>
     		<li>c.t.x.XStream</li>
