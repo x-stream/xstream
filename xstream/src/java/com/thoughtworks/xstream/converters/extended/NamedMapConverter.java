@@ -239,7 +239,6 @@ public class NamedMapConverter extends MapConverter {
         }
     }
 
-    @Override
     protected void populateMap(HierarchicalStreamReader reader, UnmarshallingContext context,
         Map map, Map target) {
         SingleValueConverter keyConverter = null;
