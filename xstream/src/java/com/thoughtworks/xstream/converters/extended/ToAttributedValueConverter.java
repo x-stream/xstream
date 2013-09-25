@@ -29,14 +29,11 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter.DuplicateFieldException;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
-import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.mapper.AttributeMapper;
-import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 
@@ -63,6 +60,7 @@ public class ToAttributedValueConverter implements Converter {
     /**
      * Creates a new ToAttributedValueConverter instance.
      * 
+     * @param type the type that is handled by this converter instance
      * @param mapper the mapper in use
      * @param reflectionProvider the reflection provider in use
      * @param lookup the converter lookup in use
@@ -77,6 +75,7 @@ public class ToAttributedValueConverter implements Converter {
     /**
      * Creates a new ToAttributedValueConverter instance.
      * 
+     * @param type the type that is handled by this converter instance
      * @param mapper the mapper in use
      * @param reflectionProvider the reflection provider in use
      * @param lookup the converter lookup in use
@@ -106,21 +105,7 @@ public class ToAttributedValueConverter implements Converter {
             }
             this.valueField = field;
         }
-        enumMapper = JVM.is15() ? createEnumMapper(mapper) : null;
-    }
-
-    private Mapper createEnumMapper(final Mapper mapper) {
-        try {
-            Class enumMapperClass = Class.forName(
-                "com.thoughtworks.xstream.mapper.EnumMapper", true,
-                Mapper.class.getClassLoader());
-            return (Mapper)DependencyInjectionFactory.newInstance(
-                enumMapperClass,
-                new Object[]{new UseAttributeForEnumMapper(mapper
-                    .lookupMapperOfType(DefaultMapper.class))});
-        } catch (Exception e) {
-            return null;
-        }
+        enumMapper = JVM.is15() ? UseAttributeForEnumMapper.createEnumMapper(mapper) : null;
     }
 
     public boolean canConvert(final Class type) {
@@ -156,7 +141,7 @@ public class ToAttributedValueConverter implements Converter {
                     throw exception;
                 }
 
-                ConverterMatcher converter = isEnum(type)
+                ConverterMatcher converter = UseAttributeForEnumMapper.isEnum(type)
                     ? (ConverterMatcher)enumMapper.getConverterFromItemType(null, type, null)
                     : (ConverterMatcher)mapper.getLocalConverter(definedIn, fieldName);
                 if (converter == null) {
@@ -242,7 +227,7 @@ public class ToAttributedValueConverter implements Converter {
 
                 Class type = field.getType();
                 final Class declaringClass = field.getDeclaringClass();
-                ConverterMatcher converter = isEnum(type)
+                ConverterMatcher converter = UseAttributeForEnumMapper.isEnum(type)
                     ? (ConverterMatcher)enumMapper.getConverterFromItemType(null, type, null)
                     : (ConverterMatcher)mapper.getLocalConverter(declaringClass, fieldName);
                 if (converter == null) {
@@ -339,37 +324,5 @@ public class ToAttributedValueConverter implements Converter {
     private boolean fieldIsEqual(FastField field) {
         return valueField.getName().equals(field.getName())
             && valueField.getDeclaringClass().getName().equals(field.getDeclaringClass());
-    }
-    
-    private static boolean isEnum(Class type) {
-        while(type != null && type != Object.class) {
-            if (type.getName().equals("java.lang.Enum")) {
-                return true;
-            }
-            type = type.getSuperclass();
-        }
-        return false;
-    }
-    
-    private static class UseAttributeForEnumMapper extends AttributeMapper {
-
-        public UseAttributeForEnumMapper(Mapper wrapped) {
-            super(wrapped, null, null);
-        }
-
-        public boolean shouldLookForSingleValueConverter(String fieldName, Class type,
-            Class definedIn) {
-            return isEnum(type);
-        }
-
-        public SingleValueConverter getConverterFromItemType(String fieldName, Class type,
-            Class definedIn) {
-            return null;
-        }
-
-        public SingleValueConverter getConverterFromAttribute(Class definedIn,
-            String attribute, Class type) {
-            return null;
-        }
     }
 }
