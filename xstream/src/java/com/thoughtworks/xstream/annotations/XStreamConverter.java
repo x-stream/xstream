@@ -38,7 +38,8 @@ import java.lang.annotation.Target;
  * type.</li>
  * <li>{@link Class}: The type of the element where the annotation is declared. Note, that this
  * argument is not supported when using
- * {@link com.thoughtworks.xstream.annotations.XStreamConverters}.</li>
+ * {@link com.thoughtworks.xstream.annotations.XStreamConverters} or {@link #useImplicitType()}
+ * == false.</li>
  * </ul>
  * <li>{@link com.thoughtworks.xstream.core.JVM}: Utility e.g. to load classes.</li> <li>
  * {@link ClassLoader} (deprecated since upcoming): The class loader used by the XStream
@@ -62,26 +63,47 @@ import java.lang.annotation.Target;
 @Documented
 public @interface XStreamConverter {
     Class<? extends ConverterMatcher> value();
+
     int priority() default XStream.PRIORITY_NORMAL;
+
+    /**
+     * Flag to provide the current type as implicit first Class argument to a converter's
+     * constructor.
+     * 
+     * @return true if the current type is provided
+     * @since upcoming
+     */
+    boolean useImplicitType() default true;
+
     /**
      * Provide class types as arguments for the converter's constructor arguments.
-     * 
-     * <p>Note, that XStream itself provides the current class type as first Class argument to
-     * a constructor, if the annotation is added directly to a class type (and not as part of a
+     * <p>
+     * Note, that XStream itself provides the current class type as first Class argument to a
+     * constructor, if the annotation is added directly to a class type (and not as part of a
      * parameter declaration of a {@link XStreamConverters} annotation). The current type has
-     * precedence over any type provided with this method.
+     * precedence over any type provided with this method. This behavior can be overridden
+     * setting {@link #useImplicitType()} to false.
      * 
      * @return the types
      * @since 1.4.2
      */
     Class<?>[] types() default {};
+
     String[] strings() default {};
+
     byte[] bytes() default {};
+
     char[] chars() default {};
+
     short[] shorts() default {};
+
     int[] ints() default {};
+
     long[] longs() default {};
+
     float[] floats() default {};
+
     double[] doubles() default {};
+
     boolean[] booleans() default {};
 }

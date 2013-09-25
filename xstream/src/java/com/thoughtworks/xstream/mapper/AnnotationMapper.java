@@ -487,7 +487,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         Converter result = null;
         final Object[] args;
         final List<Object> parameter = new ArrayList<Object>();
-        if (targetType != null) {
+        if (targetType != null && annotation.useImplicitType()) {
             parameter.add(targetType);
         }
         final List<Object> arrays = new ArrayList<Object>();

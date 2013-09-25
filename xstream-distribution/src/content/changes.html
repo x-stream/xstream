@@ -86,6 +86,7 @@
     	<li>JIRA:XSTR-742: Register CompositeClassLoader in Java 7 as parallel capable.</li>
     	<li>JIRA:XSTR-743: Support proxy collections of Hibernate Envers.</li>
     	<li>Fix NPE in AttributeMapper.shouldLookForSingleValueConverter if parameters fieldName and definedIn are null.</li>
+    	<li>Implicit type argument can be omitted when registering converters with @XStreamConverter annotation.</li>
     </ul>
 
     <h2>API changes</h2>
@@ -114,6 +115,7 @@
     	<li>Added static methods newReflectionProvider, isAWTAvailable, isSQLAvailable and isSwingAvailable to
     	c.t.x.core.JVM as replacement for the deprecated non-static methods.</li>
     	<li>Deprecated c.t.x.core.JVM() and all non-static methods.</li>
+    	<li>Added method useImplicitType to c.t.x.annotations.XStreamConverter.</li>
     	<li>JIRA:XSTR-722: Added 
     	c.t.x.converters.reflection.ReflectionProvider.getFieldOrNull(Class, String).</li>
     	<li>Deprecated 
