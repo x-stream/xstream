@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -102,8 +102,15 @@ public class AttributeMapper extends MapperWrapper {
     }
 
     public boolean shouldLookForSingleValueConverter(String fieldName, Class type, Class definedIn) {
-        Field field = reflectionProvider.getField(definedIn, fieldName);
-        return fieldToUseAsAttribute.contains(field) || fieldNameToTypeMap.get(fieldName) == type || typeSet.contains(type);
+        if (typeSet.contains(type)) {
+            return true;
+        } else if (fieldNameToTypeMap.get(fieldName) == type) {
+            return true;
+        } else if (fieldName != null && definedIn != null) {
+            Field field = reflectionProvider.getField(definedIn, fieldName);
+            return fieldToUseAsAttribute.contains(field);
+        }
+        return false;
     }
 
     /**
