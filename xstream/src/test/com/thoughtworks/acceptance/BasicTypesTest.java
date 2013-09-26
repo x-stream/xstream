@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ package com.thoughtworks.acceptance;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+
 public class BasicTypesTest extends AbstractAcceptanceTest {
 
     public void testPrimitiveNumbers() {
@@ -23,33 +24,36 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertBothWays(new Float(-123.45f), "<float>-123.45</float>");
         assertBothWays(new Double(-1234567890.12345), "<double>-1.23456789012345E9</double>");
         assertBothWays(new Long(123456789123456L), "<long>123456789123456</long>");
-        assertBothWays(new Short((short) 123), "<short>123</short>");
+        assertBothWays(new Short((short)123), "<short>123</short>");
     }
 
     public void testDifferentBaseIntegers() {
         assertEquals(new Integer(255), xstream.fromXML("<int>0xFF</int>"));
+        assertEquals(new Integer(255), xstream.fromXML("<int>#FF</int>"));
         assertEquals(new Integer(8), xstream.fromXML("<int>010</int>"));
+        assertEquals(
+            01777777773427777777773L, xstream.fromXML("<long>01777777773427777777773</long>"));
     }
 
     public void testNegativeIntegersInHex() {
         assertEquals(new Byte((byte)-1), xstream.fromXML("<byte>0xFF</byte>"));
         assertEquals(new Short((short)-1), xstream.fromXML("<short>0xFFFF</short>"));
         assertEquals(new Integer(-1), xstream.fromXML("<int>0xFFFFFFFF</int>"));
-        assertEquals(new Long(Long.MAX_VALUE), xstream.fromXML("<long>0x7FFFFFFFFFFFFFFF</long>"));
+        assertEquals(new Long(-1), xstream.fromXML("<long>0xFFFFFFFFFFFFFFFF</long>"));
     }
 
     public void testNegativeIntegersInOctal() {
         assertEquals(new Byte((byte)-1), xstream.fromXML("<byte>0377</byte>"));
         assertEquals(new Short((short)-1), xstream.fromXML("<short>0177777</short>"));
         assertEquals(new Integer(-1), xstream.fromXML("<int>037777777777</int>"));
-        assertEquals(new Long(Long.MAX_VALUE), xstream.fromXML("<long>0777777777777777777777</long>"));
+        assertEquals(new Long(-1), xstream.fromXML("<long>01777777777777777777777</long>"));
     }
 
     public void testOtherPrimitives() {
         assertBothWays(new Character('z'), "<char>z</char>");
         assertBothWays(Boolean.TRUE, "<boolean>true</boolean>");
         assertBothWays(Boolean.FALSE, "<boolean>false</boolean>");
-        assertBothWays(new Byte((byte) 44), "<byte>44</byte>");
+        assertBothWays(new Byte((byte)44), "<byte>44</byte>");
     }
 
     public void testNullCharacter() {
@@ -76,7 +80,7 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         buffer.append("woo");
         String xml = xstream.toXML(buffer);
         assertEquals(xml, "<string-buffer>woo</string-buffer>");
-        StringBuffer out = (StringBuffer) xstream.fromXML(xml);
+        StringBuffer out = (StringBuffer)xstream.fromXML(xml);
         assertEquals("woo", out.toString());
     }
 
@@ -89,7 +93,7 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         BigDecimal bigDecimal = new BigDecimal("1234567890123456.987654321");
         assertBothWays(bigDecimal, "<big-decimal>1234567890123456.987654321</big-decimal>");
     }
-    
+
     public void testNull() {
         assertBothWays(null, "<null/>");
     }
