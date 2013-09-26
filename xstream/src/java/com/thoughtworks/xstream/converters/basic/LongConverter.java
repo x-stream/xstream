@@ -50,7 +50,7 @@ public class LongConverter extends AbstractSingleValueConverter {
             return Long.decode(str);
         }
         final long num = high | low;
-        return num;
+        return new Long(num);
     }
 
 }
