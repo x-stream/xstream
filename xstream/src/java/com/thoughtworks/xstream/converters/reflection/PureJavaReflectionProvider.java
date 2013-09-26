@@ -42,7 +42,7 @@ import java.util.WeakHashMap;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private transient Map serializedDataCache = new WeakHashMap();
+    private transient Map serializedDataCache;
     protected FieldDictionary fieldDictionary;
 
     public PureJavaReflectionProvider() {
@@ -51,6 +51,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public PureJavaReflectionProvider(FieldDictionary fieldDictionary) {
         this.fieldDictionary = fieldDictionary;
+        init();
     }
 
     public Object newInstance(Class type) {
@@ -192,9 +193,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         this.fieldDictionary = dictionary;
     }
 
-    protected Object readResolve() {
-        serializedDataCache = new WeakHashMap();
+    private Object readResolve() {
+        init();
         return this;
     }
 
+    protected void init() {
+        serializedDataCache = new WeakHashMap();
+    }
 }

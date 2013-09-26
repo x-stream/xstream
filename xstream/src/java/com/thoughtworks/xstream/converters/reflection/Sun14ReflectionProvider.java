@@ -30,7 +30,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     private final static Unsafe unsafe;
     private final static Exception exception;
     // references to the Field key are kept in the FieldDictionary
-    private transient Map fieldOffsetCache = new WeakHashMap();
+    private transient Map fieldOffsetCache;
     static {
         Unsafe u = null;
         Exception ex = null;
@@ -132,9 +132,13 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
         // (overriden) don't mind final fields.
     }
 
-    protected Object readResolve() {
-        super.readResolve();
-        fieldOffsetCache = new WeakHashMap();
+    private Object readResolve() {
+        init();
         return this;
+    }
+
+    protected void init() {
+        super.init();
+        fieldOffsetCache = new WeakHashMap();
     }
 }
