@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -111,6 +112,13 @@ public class FontConverter implements Converter {
             }
         } else {
             attributes = Collections.EMPTY_MAP;
+        }
+        if (!JVM.is16()) {
+            for (Iterator iter = attributes.values().iterator(); iter.hasNext(); ) {
+                if (iter.next() == null) {
+                    iter.remove();
+                }
+            }
         }
         Font font = Font.getFont(attributes);
         if (context.getRequiredType() == FontUIResource.class) {
