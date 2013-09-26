@@ -31,8 +31,7 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertEquals(new Integer(255), xstream.fromXML("<int>0xFF</int>"));
         assertEquals(new Integer(255), xstream.fromXML("<int>#FF</int>"));
         assertEquals(new Integer(8), xstream.fromXML("<int>010</int>"));
-        assertEquals(
-            01777777773427777777773L, xstream.fromXML("<long>01777777773427777777773</long>"));
+        assertEquals(new Long(01777777773427777777773L), xstream.fromXML("<long>01777777773427777777773</long>"));
     }
 
     public void testNegativeIntegersInHex() {
