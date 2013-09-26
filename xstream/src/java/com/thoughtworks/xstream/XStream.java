@@ -794,7 +794,7 @@ public class XStream {
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaFieldConverter(classLoaderReference), PRIORITY_NORMAL);
         if (JVM.isAWTAvailable()) {
-            registerConverter(new FontConverter(), PRIORITY_NORMAL);
+            registerConverter(new FontConverter(mapper), PRIORITY_NORMAL);
             registerConverter(new ColorConverter(), PRIORITY_NORMAL);
             registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
         }

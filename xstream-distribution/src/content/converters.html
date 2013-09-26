@@ -692,7 +692,16 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/FontConverter.html">FontConverter</a></td>
                 <td>java.awt.Font<br/>
                 javax.swing.plaf.FontUIResource</td>
-                <td class="example">&lt;font&gt;Arial&lt;/font&gt;</td>
+                <td class="example">
+                    &lt;awt-font&gt;<br/>
+                    &nbsp;&nbsp;&lt;family class=&quot;string&quot;&gt;Arial&lt;/family&gt;<br/>
+                    &nbsp;&nbsp;&lt;size class=&quot;float&quot;&gt;20.0&lt;/size&gt;<br/>
+                    &nbsp;&nbsp;&lt;width class=&quot;null&quot;/&gt;<br/>
+                    &nbsp;&nbsp;&lt;posture class=&quot;null&quot;/&gt;<br/>
+                    &nbsp;&nbsp;&lt;weight class=&quot;float&quot;&gt;2.0&lt;/weight&gt;<br/>
+                    &nbsp;&nbsp;&lt;superscript class=&quot;null&quot;/&gt;<br/>
+                    &lt;/awt-font&gt;
+                </td>
                 <td>Only automatically registered if runtime has AWT support.<br/>
                 <b>Warning:</b> The AWT toolkit is definitely initialized when a Font is deserialized.</td>
                 <td>normal</td>

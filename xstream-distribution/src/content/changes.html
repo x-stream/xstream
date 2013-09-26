@@ -58,7 +58,8 @@
     	inner elements.</li>
     	<li>JIRA:XSTR-726: New annotation XStreamAliasType to support declarative definition of XStream.aliasType().</li>
     	<li>JIRA:XSTR-735: Support for JDOM2 with JDom2Driver, JDom2Reader and JDom2Writer.</li>
-    	<li>Fix: ToAttributedValueConverter silently appends fields without attribute support to the value.</li>
+    	<li>Optimized XML structure for java.awt.Font.</li>
+    	<li>Fix: ToAttributedValueConverter silently appends fields without attribute support to the value producing mixed-mode XML.</li>
     	<li>JIRA:XSTR-566 and JIRA:XSTR-249: Better compatibility with Google AppEngine and J2ME, setup no longer fails for unavailable converters.</li>
     </ul>
 
@@ -96,26 +97,26 @@
     <h2>API changes</h2>
 
     <ul>
-    	<li>Added c.t.x.converter.extended.NamedCollectionConverter for free element names in collections.</li>
-    	<li>Added c.t.x.converter.extended.NamedMapConverter for free element names in maps.</li>
+    	<li>Added c.t.x.convertesr.extended.NamedCollectionConverter for free element names in collections.</li>
+    	<li>Added c.t.x.converters.extended.NamedMapConverter for free element names in maps.</li>
     	<li>Added c.t.x.io.xml.StandardStaxDriver to use the StAX implementation delivered with the Java 6 runtime.</li>
     	<li>Deprecated c.t.x.io.xml.SjsxpStaxDriver to select the internal StAX implementation of Oracle.</li>
     	<li>Added static methods getStaxInputFactory and getStaxOutputFactory to 	c.t.x.core.JVM as returning the
     	implementations of javax.xml.stream.XMLInputFactory (resp. javax.xml.stream.XMLOutputFactory) delivered with
     	the Java Runtime since Java 6.</li>
     	<li>Added c.t.x.core.ClassLoaderReference.</li>
-    	<li>Added constructors taking an additional type argument for c.t.x.converter.collections.CollectionConverter
-    	and c.t.x.converter.collections.MapConverter.</li>
+    	<li>Added constructors taking an additional Class argument for c.t.x.converters.collections.CollectionConverter
+    	and c.t.x.converters.collections.MapConverter.</li>
     	<li>Added constructors taking a ClassLoaderReference instead of a ClassLoader and deprecated the ones taking the ClassLoader:
     		<ul>
     		<li>c.t.x.XStream</li>
-    		<li>c.t.x.converter.extended.DynamicProxyConverter</li>
-    		<li>c.t.x.converter.extended.JavaClassConverter</li>
-    		<li>c.t.x.converter.extended.JavaFieldConverter</li>
-    		<li>c.t.x.converter.extended.JavaMethodConverter</li>
-    		<li>c.t.x.converter.reflection.CGLIBEnhancedConverter</li>
-    		<li>c.t.x.converter.reflection.ExternalizableConverter</li>
-    		<li>c.t.x.converter.reflection.SerializableConverter</li>
+    		<li>c.t.x.converters.extended.DynamicProxyConverter</li>
+    		<li>c.t.x.converters.extended.JavaClassConverter</li>
+    		<li>c.t.x.converters.extended.JavaFieldConverter</li>
+    		<li>c.t.x.converters.extended.JavaMethodConverter</li>
+    		<li>c.t.x.converters.reflection.CGLIBEnhancedConverter</li>
+    		<li>c.t.x.converters.reflection.ExternalizableConverter</li>
+    		<li>c.t.x.converters.reflection.SerializableConverter</li>
     		<li>c.t.x.mapper.AnnotationMapper</li>
     		<li>c.t.x.mapper.DefaultMapper</li>
     		</ul>
@@ -132,6 +133,8 @@
     	String).</li>
     	<li>Deprecated constructor c.t.x.converters.extended.RegexPatternConverter(Converter)
     	in favor of c.t.x.converters.extended.RegexPatternConverter().</li>
+    	<li>Deprecated default constructor of c.t.x.converters.extended.FontConverter in favor of
+    	c.t.x.converters.extended.FontConverter(Mapper).</li>
     	<li>Deprecated constructor c.t.x.converters.extended.ThrowableConverter(Converter)
     	in favor of c.t.x.converters.extended.ThrowableConverter(ConverterLookup).</li>
     	<li>Deprecated class c.t.x.converters.reflection.SelfStreamingInstanceChecker and moved

@@ -69,6 +69,70 @@ public class FontConverterTest extends TestCase {
 
         assertEquals(inAttributes, outAttributes);
     }
+    
+    public void testUnmarshalsCurrentFormat() {
+        // XML representation since 1.4.5
+        String xml= (""
+                + "<awt-font>\n"
+                + "  <posture class='null'/>\n"
+                + "  <weight class='float'>2.0</weight>\n"
+                + "  <superscript class='null'/>\n"
+                + "  <transform class='null'/>\n"
+                + "  <size class='float'>20.0</size>\n"
+                + "  <width class='null'/>\n"
+                + "  <family class='string'>Arial</family>\n"
+                + "  <tracking class='null'/>\n"
+                + "</awt-font>").replace('\'', '"');
+        Font out = (Font) xstream.fromXML(xml);
+        
+        // assert
+        assertEquals(in, out);
+    }
+    
+    public void testUnmarshalsOldFormat() {
+        // XML representation pre 1.4.5
+        String xml = ""
+            + "<awt-font>\n"
+            + "  <attributes>\n"
+            + "    <entry>\n"
+            + "      <awt-text-attribute>posture</awt-text-attribute>\n"
+            + "      <null/>\n"
+            + "    </entry>\n"
+            + "    <entry>\n"
+            + "      <awt-text-attribute>weight</awt-text-attribute>\n"
+            + "      <float>2.0</float>\n"
+            + "    </entry>\n"
+            + "    <entry>\n"
+            + "      <awt-text-attribute>superscript</awt-text-attribute>\n"
+            + "      <null/>\n"
+            + "    </entry>\n"
+            + "    <entry>\n"
+            + "      <awt-text-attribute>transform</awt-text-attribute>\n"
+            + "      <null/>\n"
+            + "    </entry>\n"
+            + "    <entry>\n"
+            + "      <awt-text-attribute>size</awt-text-attribute>\n"
+            + "      <float>20.0</float>\n"
+            + "    </entry>\n"
+            + "    <entry>\n"
+            + "      <awt-text-attribute>width</awt-text-attribute>\n"
+            + "      <null/>\n"
+            + "    </entry>\n"
+            + "    <entry>\n"
+            + "      <awt-text-attribute>family</awt-text-attribute>\n"
+            + "      <string>Arial</string>\n"
+            + "    </entry>\n"
+            + "    <entry>\n"
+            + "      <awt-text-attribute>tracking</awt-text-attribute>\n"
+            + "      <null/>\n"
+            + "    </entry>\n"
+            + "  </attributes>\n"
+            + "</awt-font>";
+        Font out = (Font) xstream.fromXML(xml);
+        
+        // assert
+        assertEquals(in, out);
+    }
 
     public void testCorrectlyInitializesFontToPreventJvmCrash() {
         // If a font has not been constructed in the correct way, the JVM crashes horribly through some internal
@@ -79,6 +143,5 @@ public class FontConverterTest extends TestCase {
 
         Toolkit.getDefaultToolkit().getFontMetrics(out);
         // if the JVM hasn't crashed yet, we're good.
-
     }
 }
