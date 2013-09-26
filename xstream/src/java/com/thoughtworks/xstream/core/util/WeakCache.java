@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,7 +23,7 @@ import java.util.WeakHashMap;
 
 
 /**
- * A HashMap implementation with weak references values and by default for the key. WHen the
+ * A HashMap implementation with weak references values and by default for the key. When the
  * value is garbage collected, the key will also vanish from the map.
  * 
  * @author J&ouml;rg Schaible
@@ -35,6 +35,8 @@ public class WeakCache extends AbstractMap {
 
     /**
      * Construct a WeakCache with weak keys.
+     * 
+     * <p>Note, that the internally used WeakHashMap is <b>not</b> thread-safe.</p>
      * 
      * @param map the map to use
      * @since 1.4
