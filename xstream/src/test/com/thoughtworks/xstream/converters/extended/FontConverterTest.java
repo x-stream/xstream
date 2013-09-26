@@ -81,7 +81,6 @@ public class FontConverterTest extends TestCase {
                 + "  <size class='float'>20.0</size>\n"
                 + "  <width class='null'/>\n"
                 + "  <family class='string'>Arial</family>\n"
-                + "  <tracking class='null'/>\n"
                 + "</awt-font>").replace('\'', '"');
         Font out = (Font) xstream.fromXML(xml);
         
@@ -121,10 +120,6 @@ public class FontConverterTest extends TestCase {
             + "    <entry>\n"
             + "      <awt-text-attribute>family</awt-text-attribute>\n"
             + "      <string>Arial</string>\n"
-            + "    </entry>\n"
-            + "    <entry>\n"
-            + "      <awt-text-attribute>tracking</awt-text-attribute>\n"
-            + "      <null/>\n"
             + "    </entry>\n"
             + "  </attributes>\n"
             + "</awt-font>";
