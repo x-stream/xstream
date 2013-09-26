@@ -52,9 +52,11 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     public Sun14ReflectionProvider() {
+        super();
     }
 
     public Sun14ReflectionProvider(FieldDictionary dic) {
+        super(dic);
     }
 
     public Object newInstance(Class type) {
