@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,10 +12,10 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
-import com.thoughtworks.xstream.core.util.WeakCache;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -285,9 +285,13 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
     }
 
     private Object readResolve() {
-        escapeCache = new WeakCache();
-        unescapeCache = new WeakCache();
+        escapeCache = createCacheMap();
+        unescapeCache = createCacheMap();
         return this;
+    }
+
+    protected Map createCacheMap() {
+        return new HashMap();
     }
 
     private static class IntPair {
