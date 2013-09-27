@@ -76,7 +76,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
      * @param mapper the mapper chain instance
      * @param reflectionProvider the reflection provider
      * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoaderReference classLoaderReference) {
         super(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
@@ -84,7 +84,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
      */
     public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoader classLoader) {
         this(mapper, reflectionProvider, new ClassLoaderReference(classLoader));

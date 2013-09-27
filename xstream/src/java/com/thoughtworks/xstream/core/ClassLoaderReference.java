@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.core.util.CompositeClassLoader;
  * can later have its destination changed.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.5
  */
 public final class ClassLoaderReference {
 

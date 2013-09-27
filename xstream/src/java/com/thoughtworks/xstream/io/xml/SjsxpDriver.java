@@ -20,40 +20,40 @@ import javax.xml.stream.XMLOutputFactory;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
- * @deprecated As of upcoming use {@link StandardStaxDriver}
+ * @deprecated As of 1.4.5 use {@link StandardStaxDriver}
  */
 public class SjsxpDriver extends StaxDriver {
 
     /**
-     * @deprecated As of upcoming use {@link StandardStaxDriver#StandardStaxDriver()}
+     * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver()}
      */
     public SjsxpDriver() {
         super();
     }
 
     /**
-     * @deprecated As of upcoming use {@link StandardStaxDriver#StandardStaxDriver(QNameMap, XmlFriendlyNameCoder)}
+     * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(QNameMap, XmlFriendlyNameCoder)}
      */
     public SjsxpDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
     /**
-     * @deprecated As of upcoming use {@link StandardStaxDriver#StandardStaxDriver(QNameMap)}
+     * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(QNameMap)}
      */
     public SjsxpDriver(QNameMap qnameMap) {
         super(qnameMap);
     }
 
     /**
-     * @deprecated As of upcoming use {@link StandardStaxDriver#StandardStaxDriver(XmlFriendlyNameCoder)}
+     * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(XmlFriendlyNameCoder)}
      */
     public SjsxpDriver(XmlFriendlyNameCoder nameCoder) {
         super(nameCoder);
     }
 
     /**
-     * @deprecated As of upcoming use {@link StandardStaxDriver#createInputFactory()}
+     * @deprecated As of 1.4.5 use {@link StandardStaxDriver#createInputFactory()}
      */
     protected XMLInputFactory createInputFactory() {
         Exception exception = null;
@@ -70,7 +70,7 @@ public class SjsxpDriver extends StaxDriver {
     }
 
     /**
-     * @deprecated As of upcoming use {@link StandardStaxDriver#createOutputFactory()}
+     * @deprecated As of 1.4.5 use {@link StandardStaxDriver#createOutputFactory()}
      */
     protected XMLOutputFactory createOutputFactory() {
         Exception exception = null;

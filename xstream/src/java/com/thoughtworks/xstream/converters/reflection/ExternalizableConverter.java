@@ -47,7 +47,7 @@ public class ExternalizableConverter implements Converter {
      * Construct an ExternalizableConverter.
      * @param mapper the Mapper chain
      * @param classLoaderReference the reference to XStream's {@link ClassLoader} instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public ExternalizableConverter(Mapper mapper, ClassLoaderReference classLoaderReference) {
         this.mapper = mapper;
@@ -55,7 +55,7 @@ public class ExternalizableConverter implements Converter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #ExternalizableConverter(Mapper, ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #ExternalizableConverter(Mapper, ClassLoaderReference)}
      */
     public ExternalizableConverter(Mapper mapper, ClassLoader classLoader) {
         this(mapper, new ClassLoaderReference(classLoader));

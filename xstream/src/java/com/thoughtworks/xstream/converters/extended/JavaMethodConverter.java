@@ -38,14 +38,14 @@ public class JavaMethodConverter implements Converter {
     /**
      * Construct a JavaMethodConverter.
      * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public JavaMethodConverter(ClassLoaderReference classLoaderReference) {
         this(new JavaClassConverter(classLoaderReference));
     }
 
     /**
-     * @deprecated As of upcoming use {@link #JavaMethodConverter(ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #JavaMethodConverter(ClassLoaderReference)}
      */
     public JavaMethodConverter(ClassLoader classLoader) {
         this(new ClassLoaderReference(classLoader));
@@ -54,7 +54,7 @@ public class JavaMethodConverter implements Converter {
     /**
      * Construct a JavaMethodConverter.
      * @param javaClassConverter the converter to use 
-     * @since upcoming
+     * @since 1.4.5
      */
     protected JavaMethodConverter(SingleValueConverter javaClassConverter) {
         this.javaClassConverter = javaClassConverter;

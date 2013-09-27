@@ -18,14 +18,14 @@ import org.jdom2.JDOMFactory;
 
 
 /**
- * @since upcoming
+ * @since 1.4.5
  */
 public class JDom2Writer extends AbstractDocumentWriter {
 
     private final JDOMFactory documentFactory;
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Writer(
                       final Element container, final JDOMFactory factory,
@@ -35,42 +35,42 @@ public class JDom2Writer extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Writer(final Element container, final JDOMFactory factory) {
         this(container, factory, new XmlFriendlyNameCoder());
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Writer(final JDOMFactory factory, final NameCoder nameCoder) {
         this(null, factory, nameCoder);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Writer(final JDOMFactory factory) {
         this(null, factory);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Writer(final Element container, final NameCoder nameCoder) {
         this(container, new DefaultJDOMFactory(), nameCoder);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Writer(final Element container) {
         this(container, new DefaultJDOMFactory());
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Writer() {
         this(new DefaultJDOMFactory());
@@ -94,7 +94,7 @@ public class JDom2Writer extends AbstractDocumentWriter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     private Element top() {
         return (Element)getCurrent();

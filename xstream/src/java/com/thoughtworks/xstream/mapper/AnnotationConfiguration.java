@@ -15,7 +15,7 @@ package com.thoughtworks.xstream.mapper;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.3
- * @deprecated As of upcoming, minimal JDK version will be 1.6 for next major release
+ * @deprecated As of 1.4.5, minimal JDK version will be 1.6 for next major release
  */
 public interface AnnotationConfiguration {
 

@@ -122,7 +122,7 @@ public class JVM implements Caching {
     }
     
     /**
-     * @deprecated As of upcoming use the static methods of JVM.
+     * @deprecated As of 1.4.5 use the static methods of JVM.
      */
     public JVM() {
     }
@@ -194,14 +194,14 @@ public class JVM implements Caching {
      * <p>This method is not meant to use loading arbitrary classes. It is used by XStream bootstrap
      * until it is able to use the user provided or the default {@link ClassLoader}.</p>
      * 
-     * @since upcoming
+     * @since 1.4.5
      */
     public static Class loadClassForName(String name) {
         return loadClassForName(name, true);
     }
 
     /**
-     * @deprecated As of upcoming use {@link #loadClassForName(String)}
+     * @deprecated As of 1.4.5 use {@link #loadClassForName(String)}
      */
     public Class loadClass(String name) {
         return loadClassForName(name, true);
@@ -213,7 +213,7 @@ public class JVM implements Caching {
      * <p>This method is not meant to use loading arbitrary classes. It is used by XStream bootstrap
      * until it is able to use the user provided or the default {@link ClassLoader}.</p>
      * 
-     * @since upcoming
+     * @since 1.4.5
      */
     public static Class loadClassForName(String name, boolean initialize) {
         try {
@@ -228,7 +228,7 @@ public class JVM implements Caching {
 
     /**
      * @since 1.4.4
-     * @deprecated As of upcoming use {@link #loadClassForName(String, boolean)}
+     * @deprecated As of 1.4.5 use {@link #loadClassForName(String, boolean)}
      */
     public Class loadClass(String name, boolean initialize) {
         return loadClassForName(name, initialize);
@@ -238,7 +238,7 @@ public class JVM implements Caching {
      * Create the best matching ReflectionProvider.
      * 
      * @return a new instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public static ReflectionProvider newReflectionProvider() {
         return (ReflectionProvider)DependencyInjectionFactory.newInstance(reflectionProviderType, null);
@@ -249,7 +249,7 @@ public class JVM implements Caching {
      *
      * @param dictionary the FieldDictionary to use by the ReflectionProvider
      * @return a new instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public static ReflectionProvider newReflectionProvider(FieldDictionary dictionary) {
         return (ReflectionProvider)DependencyInjectionFactory.newInstance(reflectionProviderType, new Object[]{ dictionary });
@@ -267,7 +267,7 @@ public class JVM implements Caching {
      * 
      * @return the XMLInputFactory implementation or null
      * @throws ClassNotFoundException if the standard class cannot be found
-     * @since upcoming
+     * @since 1.4.5
      */
     public static Class getStaxInputFactory() throws ClassNotFoundException {
         if (is16()) {
@@ -292,7 +292,7 @@ public class JVM implements Caching {
      * 
      * @return the XMLOutputFactory implementation or null
      * @throws ClassNotFoundException if the standard class cannot be found
-     * @since upcoming
+     * @since 1.4.5
      */
     public static Class getStaxOutputFactory() throws ClassNotFoundException {
         if (is16()) {
@@ -306,7 +306,7 @@ public class JVM implements Caching {
     }
     
     /**
-     * @deprecated As of upcoming use {@link #newReflectionProvider()}
+     * @deprecated As of 1.4.5 use {@link #newReflectionProvider()}
      */
     public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
@@ -338,7 +338,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.5
      */
     public static boolean reverseFieldDefinition() {
         return reverseFieldOrder;
@@ -346,7 +346,7 @@ public class JVM implements Caching {
 
     /**
      * Checks if AWT is available.
-     * @since upcoming
+     * @since 1.4.5
      */
     public static boolean isAWTAvailable() {
         return isAWTAvailable;
@@ -354,7 +354,7 @@ public class JVM implements Caching {
 
     /**
      * Checks if the jvm supports awt.
-     * @deprecated As of upcoming use {@link #isAWTAvailable()}
+     * @deprecated As of 1.4.5 use {@link #isAWTAvailable()}
      */
     public boolean supportsAWT() {
         return this.isAWTAvailable;
@@ -362,7 +362,7 @@ public class JVM implements Caching {
 
     /**
      * Checks if Swing is available.
-     * @since upcoming
+     * @since 1.4.5
      */
     public static boolean isSwingAvailable() {
         return isSwingAvailable;
@@ -370,7 +370,7 @@ public class JVM implements Caching {
 
     /**
      * Checks if the jvm supports swing.
-     * @deprecated As of upcoming use {@link #isSwingAvailable()}
+     * @deprecated As of 1.4.5 use {@link #isSwingAvailable()}
      */
     public boolean supportsSwing() {
         return this.isSwingAvailable;
@@ -378,7 +378,7 @@ public class JVM implements Caching {
 
     /**
      * Checks if SQL is available.
-     * @since upcoming
+     * @since 1.4.5
      */
     public static boolean isSQLAvailable() {
         return isSQLAvailable;
@@ -386,7 +386,7 @@ public class JVM implements Caching {
 
     /**
      * Checks if the jvm supports sql.
-     * @deprecated As of upcoming use {@link #isSQLAvailable()}
+     * @deprecated As of 1.4.5 use {@link #isSQLAvailable()}
      */
     public boolean supportsSQL() {
         return this.isSQLAvailable;
@@ -415,7 +415,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming no functionality
+     * @deprecated As of 1.4.5 no functionality
      */
     public void flushCache() {
     }

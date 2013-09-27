@@ -66,7 +66,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
      * @param mapper the mapper chain instance
      * @param reflectionProvider the reflection provider
      * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoaderReference classLoaderReference) {
         super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), classLoaderReference);
@@ -74,7 +74,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
      */
     public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoader classLoader) {
         super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), classLoader);

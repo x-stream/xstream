@@ -27,7 +27,7 @@ public class ReflectionProviderWrapper implements ReflectionProvider {
     }
 
     /**
-     * @deprecated As of upcoming, use {@link #getFieldOrNull(Class, String)} instead
+     * @deprecated As of 1.4.5, use {@link #getFieldOrNull(Class, String)} instead
      */
     public boolean fieldDefinedInClass(String fieldName, Class type) {
         return this.wrapped.fieldDefinedInClass(fieldName, type);

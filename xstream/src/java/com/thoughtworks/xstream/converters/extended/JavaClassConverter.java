@@ -33,14 +33,14 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
     /**
      * Construct a JavaClassConverter.
      * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public JavaClassConverter(ClassLoaderReference classLoaderReference) {
         this(new DefaultMapper(classLoaderReference));
     }
 
     /**
-     * @deprecated As of upcoming use {@link #JavaClassConverter(ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #JavaClassConverter(ClassLoaderReference)}
      */
     public JavaClassConverter(ClassLoader classLoader) {
         this(new ClassLoaderReference(classLoader));
@@ -50,7 +50,7 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
      * Construct a JavaClassConverter that uses a provided mapper. Depending on the mapper
      * chain it will not only be used to load classes, but also to support type aliases.
      * @param mapper to use
-     * @since upcoming
+     * @since 1.4.5
      */
     protected JavaClassConverter(Mapper mapper) {
         this.mapper = mapper;

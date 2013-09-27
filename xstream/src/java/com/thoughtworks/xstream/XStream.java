@@ -409,7 +409,7 @@ public class XStream {
      * @param driver the driver instance
      * @param classLoaderReference the reference to the {@link ClassLoader} to use
      * @throws InitializationException in case of an initialization problem
-     * @since upcoming
+     * @since 1.4.5
      */
     public XStream(
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
@@ -423,7 +423,7 @@ public class XStream {
      * 
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4.5 use
      *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference)}
      */
     public XStream(
@@ -445,7 +445,7 @@ public class XStream {
      *            chain
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4.5 use
      *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference, Mapper)}
      */
     public XStream(
@@ -470,7 +470,7 @@ public class XStream {
      * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
      *            chain
      * @throws InitializationException in case of an initialization problem
-     * @since upcoming
+     * @since 1.4.5
      */
     public XStream(
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
@@ -503,7 +503,7 @@ public class XStream {
      * @param converterRegistry an instance to manage the converter instances
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4.5 use
      *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference, Mapper, ConverterLookup, ConverterRegistry)}
      */
     public XStream(
@@ -534,7 +534,7 @@ public class XStream {
      * @param converterRegistry an instance to manage the converter instances or <em>null</em>
      *            to prevent any further registry (including annotations)
      * @throws InitializationException in case of an initialization problem
-     * @since upcoming
+     * @since 1.4.5
      */
     public XStream(
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
@@ -1871,7 +1871,7 @@ public class XStream {
      * instance automatically.
      * 
      * @return the reference
-     * @since upcoming
+     * @since 1.4.5
      */
     public ClassLoaderReference getClassLoaderReference() {
         return classLoaderReference;
@@ -1896,7 +1896,7 @@ public class XStream {
     /**
      * Ignore all unknown elements.
      * 
-     * @since upcoming
+     * @since 1.4.5
      */
     public void ignoreUnknownElements() {
         ignoreUnknownElements(IGNORE_ALL);
@@ -1906,7 +1906,7 @@ public class XStream {
      * Add pattern for unknown element names to ignore.
      * 
      * @param pattern the name pattern as regular expression
-     * @since upcoming
+     * @since 1.4.5
      */
     public void ignoreUnknownElements(String pattern) {
         ignoreUnknownElements(Pattern.compile(pattern));
@@ -1916,7 +1916,7 @@ public class XStream {
      * Add pattern for unknown element names to ignore.
      * 
      * @param pattern the name pattern as regular expression
-     * @since upcoming
+     * @since 1.4.5
      */
     private void ignoreUnknownElements(Pattern pattern) {
         if (fieldAliasingMapper == null) {

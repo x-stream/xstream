@@ -107,7 +107,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * </ul>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.5
  */
 public class NamedMapConverter extends MapConverter {
 
@@ -130,7 +130,7 @@ public class NamedMapConverter extends MapConverter {
      * @param keyType the base type of key elements
      * @param valueName the name of the value elements
      * @param valueType the base type of value elements
-     * @since upcoming
+     * @since 1.4.5
      */
     public NamedMapConverter(
         Mapper mapper, String entryName, String keyName, Class keyType, String valueName,
@@ -148,7 +148,7 @@ public class NamedMapConverter extends MapConverter {
      * @param keyType the base type of key elements
      * @param valueName the name of the value elements
      * @param valueType the base type of value elements
-     * @since upcoming
+     * @since 1.4.5
      */
     public NamedMapConverter(
         Class type, Mapper mapper, String entryName, String keyName, Class keyType,
@@ -169,7 +169,7 @@ public class NamedMapConverter extends MapConverter {
      * @param keyAsAttribute flag to write key as attribute of entry element
      * @param valueAsAttribute flag to write value as attribute of entry element
      * @param lookup used to lookup SingleValueConverter for attributes
-     * @since upcoming
+     * @since 1.4.5
      */
     public NamedMapConverter(
         Mapper mapper, String entryName, String keyName, Class keyType, String valueName,
@@ -193,7 +193,7 @@ public class NamedMapConverter extends MapConverter {
      * @param keyAsAttribute flag to write key as attribute of entry element
      * @param valueAsAttribute flag to write value as attribute of entry element
      * @param lookup used to lookup SingleValueConverter for attributes
-     * @since upcoming
+     * @since 1.4.5
      */
     public NamedMapConverter(
         Class type, Mapper mapper, String entryName, String keyName, Class keyType,

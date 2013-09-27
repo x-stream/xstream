@@ -130,7 +130,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * CAUTION: A client must be aware that the element may contain a number or a string value.
      * </p>
      * 
-     * @since upcoming
+     * @since 1.4.5
      * @see <a href="http://ecma262-5.com/ELS5_HTML.htm#Section_8.5">ECMA Specification: The Number Type</a>
      */
     public static final int IEEE_754_MODE = 8;

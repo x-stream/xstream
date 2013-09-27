@@ -47,7 +47,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #getInstance(DataHolder, StreamCallback, ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #getInstance(DataHolder, StreamCallback, ClassLoaderReference)}
      */
     public static synchronized CustomObjectInputStream getInstance(DataHolder whereFrom, CustomObjectInputStream.StreamCallback callback, ClassLoader classLoader) {
         return getInstance(whereFrom, callback, new ClassLoaderReference(classLoader));
@@ -81,7 +81,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #CustomObjectInputStream(StreamCallback, ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #CustomObjectInputStream(StreamCallback, ClassLoaderReference)}
      */
     public CustomObjectInputStream(StreamCallback callback, ClassLoader classLoader) throws IOException, SecurityException {
         this(callback, new ClassLoaderReference(classLoader));

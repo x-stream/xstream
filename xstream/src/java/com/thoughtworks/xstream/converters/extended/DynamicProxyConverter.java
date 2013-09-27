@@ -47,7 +47,7 @@ public class DynamicProxyConverter implements Converter {
     };
 
     /**
-     * @deprecated As of upcoming use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
      */
     public DynamicProxyConverter(Mapper mapper) {
         this(mapper, DynamicProxyConverter.class.getClassLoader());
@@ -57,7 +57,7 @@ public class DynamicProxyConverter implements Converter {
      * Construct a DynamicProxyConverter.
      * @param mapper the Mapper chain
      * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public DynamicProxyConverter(Mapper mapper, ClassLoaderReference classLoaderReference) {
         this.classLoaderReference = classLoaderReference;
@@ -65,7 +65,7 @@ public class DynamicProxyConverter implements Converter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
      */
     public DynamicProxyConverter(Mapper mapper, ClassLoader classLoader) {
         this(mapper,new ClassLoaderReference(classLoader));

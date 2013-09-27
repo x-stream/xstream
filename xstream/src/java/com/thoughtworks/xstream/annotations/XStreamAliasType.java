@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * Annotation used to define an XStream type alias.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.5
  * @see com.thoughtworks.xstream.XStream#aliasType(String, Class)
  */
 @Retention(RetentionPolicy.RUNTIME)

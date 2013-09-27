@@ -46,7 +46,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
      * Construct a CollectionConverter for a special Collection type.
      * @param mapper the mapper
      * @param type the Collection type to handle
-     * @since upcoming
+     * @since 1.4.5
      */
     public CollectionConverter(Mapper mapper, Class type) {
         super(mapper);

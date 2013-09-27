@@ -29,7 +29,7 @@ import javax.xml.stream.XMLOutputFactory;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.5
  */
 public class StandardStaxDriver extends StaxDriver {
 

@@ -158,7 +158,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     /**
-     * @deprecated As of upcoming, use {@link #getFieldOrNull(Class, String)} instead
+     * @deprecated As of 1.4.5, use {@link #getFieldOrNull(Class, String)} instead
      */
     public boolean fieldDefinedInClass(String fieldName, Class type) {
         Field field = fieldDictionary.fieldOrNull(type, fieldName, null);

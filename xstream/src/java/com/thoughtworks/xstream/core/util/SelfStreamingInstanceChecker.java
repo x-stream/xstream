@@ -34,7 +34,7 @@ public class SelfStreamingInstanceChecker implements Converter {
     private final ConverterLookup lookup;
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public SelfStreamingInstanceChecker(ConverterLookup lookup, Object xstream) {
         this.lookup = lookup;
@@ -42,7 +42,7 @@ public class SelfStreamingInstanceChecker implements Converter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #SelfStreamingInstanceChecker(ConverterLookup, Object)}
+     * @deprecated As of 1.4.5 use {@link #SelfStreamingInstanceChecker(ConverterLookup, Object)}
      */
     public SelfStreamingInstanceChecker(Converter defaultConverter, Object xstream) {
         this.defaultConverter = defaultConverter;

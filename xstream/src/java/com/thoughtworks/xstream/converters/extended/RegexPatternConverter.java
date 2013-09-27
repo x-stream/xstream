@@ -28,13 +28,13 @@ import java.util.regex.Pattern;
 public class RegexPatternConverter implements Converter {
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public RegexPatternConverter() {
     }
 
     /**
-     * @deprecated As of upcoming, use {@link #RegexPatternConverter()} instead
+     * @deprecated As of 1.4.5, use {@link #RegexPatternConverter()} instead
      */
     public RegexPatternConverter(Converter defaultConverter) {
     }

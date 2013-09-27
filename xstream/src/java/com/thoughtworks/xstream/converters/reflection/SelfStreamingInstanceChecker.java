@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.converters.Converter;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.2
- * @deprecated As of upcoming use {@link com.thoughtworks.xstream.core.util.SelfStreamingInstanceChecker}
+ * @deprecated As of 1.4.5 use {@link com.thoughtworks.xstream.core.util.SelfStreamingInstanceChecker}
  */
 public class SelfStreamingInstanceChecker extends com.thoughtworks.xstream.core.util.SelfStreamingInstanceChecker {
 

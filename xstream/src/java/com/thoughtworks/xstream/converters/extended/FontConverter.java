@@ -37,7 +37,7 @@ public class FontConverter implements Converter {
 
     /**
      * Constructs a FontConverter.
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.5
      */
     public FontConverter() {
         this(null);
@@ -46,7 +46,7 @@ public class FontConverter implements Converter {
     /**
      * Constructs a FontConverter.
      * @param mapper
-     * @since upcoming
+     * @since 1.4.5
      */
     public FontConverter(Mapper mapper) {
         this.mapper = mapper;

@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
  * == false.</li>
  * </ul>
  * <li>{@link com.thoughtworks.xstream.core.JVM}: Utility e.g. to load classes.</li> <li>
- * {@link ClassLoader} (deprecated since upcoming): The class loader used by the XStream
+ * {@link ClassLoader} (deprecated since 1.4.5): The class loader used by the XStream
  * instance to deserialize the objects. Use ClassLoaderReference as argument</li>
  * <p>
  * The algorithm will try the converter's constructor with the most arguments first.
@@ -71,7 +71,7 @@ public @interface XStreamConverter {
      * constructor.
      * 
      * @return true if the current type is provided
-     * @since upcoming
+     * @since 1.4.5
      */
     boolean useImplicitType() default true;
 

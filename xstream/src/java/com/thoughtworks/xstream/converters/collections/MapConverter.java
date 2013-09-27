@@ -46,7 +46,7 @@ public class MapConverter extends AbstractCollectionConverter {
      * Construct a MapConverter for a special Map type.
      * @param mapper the mapper
      * @param type the type to handle
-     * @since upcoming
+     * @since 1.4.5
      */
     public MapConverter(Mapper mapper, Class type) {
         super(mapper);

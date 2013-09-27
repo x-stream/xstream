@@ -36,14 +36,14 @@ public class JavaFieldConverter implements Converter {
     /**
      * Construct a JavaFieldConverter.
      * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
-     * @since upcoming
+     * @since 1.4.5
      */
     public JavaFieldConverter(ClassLoaderReference classLoaderReference) {
         this(new JavaClassConverter(classLoaderReference), new DefaultMapper(classLoaderReference));
     }
 
     /**
-     * @deprecated As of upcoming use {@link #JavaFieldConverter(ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #JavaFieldConverter(ClassLoaderReference)}
      */
     public JavaFieldConverter(ClassLoader classLoader) {
         this(new ClassLoaderReference(classLoader));
@@ -53,7 +53,7 @@ public class JavaFieldConverter implements Converter {
      * Construct a JavaFieldConverter. Depending on the mapper chain the converter will also respect aliases.
      * @param javaClassConverter the converter to use 
      * @param mapper to use
-     * @since upcoming
+     * @since 1.4.5
      */
     protected JavaFieldConverter(SingleValueConverter javaClassConverter, Mapper mapper) {
         this.javaClassConverter = javaClassConverter;

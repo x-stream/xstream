@@ -18,14 +18,14 @@ package com.thoughtworks.xstream.core.util;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @since 1.1.1
- * @deprecated As of upcoming use {@link com.thoughtworks.xstream.core.ClassLoaderReference} instead
+ * @deprecated As of 1.4.5 use {@link com.thoughtworks.xstream.core.ClassLoaderReference} instead
  */
 public class ClassLoaderReference extends ClassLoader {
 
     private transient ClassLoader reference;
 
     /**
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4.5 use
      *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#ClassLoaderReference(ClassLoader)}
      *             instead
      */
@@ -34,7 +34,7 @@ public class ClassLoaderReference extends ClassLoader {
     }
 
     /**
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4.5 use
      *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#getReference()}
      *             .loadClass(String) instead
      */
@@ -43,7 +43,7 @@ public class ClassLoaderReference extends ClassLoader {
     }
 
     /**
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4.5 use
      *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#getReference()}
      *             instead
      */
@@ -52,7 +52,7 @@ public class ClassLoaderReference extends ClassLoader {
     }
 
     /**
-     * @deprecated As of upcoming use
+     * @deprecated As of 1.4.5 use
      *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#setReference(ClassLoader)}
      *             instead
      */

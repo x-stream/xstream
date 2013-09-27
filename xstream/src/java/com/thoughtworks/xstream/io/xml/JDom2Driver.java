@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
- * @since upcoming
+ * @since 1.4.5
  */
 public class JDom2Driver extends AbstractDriver {
 
@@ -39,7 +39,7 @@ public class JDom2Driver extends AbstractDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Driver(NameCoder nameCoder) {
         super(nameCoder);

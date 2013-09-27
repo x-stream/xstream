@@ -16,35 +16,35 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 /**
- * @since upcoming
+ * @since 1.4.5
  */
 public class JDom2Reader extends AbstractDocumentReader {
 
     private Element currentElement;
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Reader(Element root) {
         super(root);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Reader(Document document) {
         super(document.getRootElement());
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Reader(Element root, NameCoder nameCoder) {
         super(root, nameCoder);
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public JDom2Reader(Document document, NameCoder nameCoder) {
         super(document.getRootElement(), nameCoder);

@@ -31,7 +31,7 @@ public class ThrowableConverter implements Converter {
     private final ConverterLookup lookup;
 
     /**
-     * @deprecated As of upcoming use {@link #ThrowableConverter(ConverterLookup)}
+     * @deprecated As of 1.4.5 use {@link #ThrowableConverter(ConverterLookup)}
      */
     public ThrowableConverter(Converter defaultConverter) {
         this.defaultConverter = defaultConverter;
@@ -39,7 +39,7 @@ public class ThrowableConverter implements Converter {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.5
      */
     public ThrowableConverter(ConverterLookup lookup) {
         this.lookup = lookup;

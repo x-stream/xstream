@@ -28,7 +28,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.5
  */
 public class NamedCollectionConverter extends CollectionConverter {
 
@@ -41,7 +41,7 @@ public class NamedCollectionConverter extends CollectionConverter {
      * @param mapper the mapper
      * @param itemName the name of the items
      * @param itemType the base type of the items
-     * @since upcoming
+     * @since 1.4.5
      */
     public NamedCollectionConverter(Mapper mapper, String itemName, Class itemType) {
         this(null, mapper, itemName, itemType);
@@ -54,7 +54,7 @@ public class NamedCollectionConverter extends CollectionConverter {
      * @param mapper the mapper
      * @param itemName the name of the items
      * @param itemType the base type of the items
-     * @since upcoming
+     * @since 1.4.5
      */
     public NamedCollectionConverter(Class type, Mapper mapper, String itemName, Class itemType) {
         super(mapper, type);

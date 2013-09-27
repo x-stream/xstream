@@ -80,7 +80,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
      * Construct an AnnotationMapper.
      * 
      * @param wrapped the next {@link Mapper} in the chain
-     * @since upcoming
+     * @since 1.4.5
      */
     public AnnotationMapper(
         final Mapper wrapped, final ConverterRegistry converterRegistry, final ConverterLookup converterLookup,
@@ -102,7 +102,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
      * 
      * @param wrapped the next {@link Mapper} in the chain
      * @since 1.3
-     * @deprecated As of upcoming use {@link #AnnotationMapper(Mapper, ConverterRegistry, ConverterLookup, ClassLoaderReference, ReflectionProvider)}
+     * @deprecated As of 1.4.5 use {@link #AnnotationMapper(Mapper, ConverterRegistry, ConverterLookup, ClassLoaderReference, ReflectionProvider)}
      */
     public AnnotationMapper(
         final Mapper wrapped, final ConverterRegistry converterRegistry, final ConverterLookup converterLookup,

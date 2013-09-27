@@ -40,7 +40,7 @@ public class DefaultMapper implements Mapper {
      * Construct a DefaultMapper.
      * 
      * @param classLoaderReference the reference to the classloader used by the XStream instance.
-     * @since upcoming
+     * @since 1.4.5
      */
     public DefaultMapper(ClassLoaderReference classLoaderReference) {
         this.classLoaderReference = classLoaderReference;
@@ -50,7 +50,7 @@ public class DefaultMapper implements Mapper {
      * Construct a DefaultMapper.
      * 
      * @param classLoader the ClassLoader used by the XStream instance.
-     * @deprecated As of upcoming use {@link #DefaultMapper(ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #DefaultMapper(ClassLoaderReference)}
      */
     public DefaultMapper(ClassLoader classLoader) {
         this(new ClassLoaderReference(classLoader));
