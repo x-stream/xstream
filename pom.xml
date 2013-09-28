@@ -20,7 +20,7 @@
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.4.5</version>
+  <version>1.4.6-SNAPSHOT</version>
   <name>XStream Parent</name>
   <description>
     XStream is a serialization library from Java objects to XML and back.
