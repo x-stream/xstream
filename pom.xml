@@ -381,6 +381,7 @@
           <artifactId>maven-eclipse-plugin</artifactId>
           <configuration>
             <downloadSources>true</downloadSources>
+            <projectNameTemplate>[artifactId]-1.4.x</projectNameTemplate>
           </configuration>
         </plugin>
         <plugin>
@@ -609,9 +610,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/xstream/tags/XSTREAM_1_4_5</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/tags/XSTREAM_1_4_5</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/xstream/tags/XSTREAM_1_4_5</url>
+    <connection>scm:svn:http://svn.codehaus.org/xstream/branches/v-1.4.x</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/branches/v-1.4.x</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/xstream/branches/v-1.4.x</url>
   </scm>
   
   <properties>
