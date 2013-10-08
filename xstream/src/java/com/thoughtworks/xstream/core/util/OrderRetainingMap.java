@@ -36,6 +36,13 @@ public class OrderRetainingMap extends HashMap {
         putAll(m);
     }
 
+    public void putAll(Map m) {
+        for(Iterator iter = m.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry entry = (Map.Entry)iter.next();
+            put(entry.getKey(), entry.getValue());
+        }
+    }
+
     public Object put(Object key, Object value) {
         int idx = keyOrder.lastIndexOf(key);
         if (idx < 0) {
