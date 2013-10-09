@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,9 +16,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * Tool for copying the contents of one HierarichalStreamReader to a HierarichalStreamWriter.
- * <p/>
+ * <p>
  * This is useful for transforming the output of one format to another (e.g. binary to XML)
- * without needing to know details about the classes and avoiding the overhead of serialization.
+ * without needing to know details about the classes and avoiding the overhead of serialization.</p>
  *
  * <h3>Example</h3>
  * <pre>

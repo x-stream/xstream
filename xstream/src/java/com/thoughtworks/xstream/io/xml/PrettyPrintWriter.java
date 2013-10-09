@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,10 +22,9 @@ import java.io.Writer;
 /**
  * A simple writer that outputs XML in a pretty-printed indented stream.
  * <p>
- * By default, the chars <code><pre>
- * &amp; &lt; &gt; &quot; ' \r
- * </pre></code> are escaped and replaced with a suitable XML entity. To alter this behavior, override
- * the the {@link #writeText(com.thoughtworks.xstream.core.util.QuickWriter, String)} and
+ * By default, the chars <br><code>&amp; &lt; &gt; &quot; ' \r</code><br> are escaped
+ * and replaced with a suitable XML entity. To alter this behavior, override
+ * the {@link #writeText(com.thoughtworks.xstream.core.util.QuickWriter, String)} and
  * {@link #writeAttributeValue(com.thoughtworks.xstream.core.util.QuickWriter, String)} methods.
  * </p>
  * <p>

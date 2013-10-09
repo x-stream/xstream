@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,7 +44,7 @@ import java.util.List;
  *     <li>../../../another[3]/node</li>
  * </ul>
  *
- * <h3>Example<h3>
+ * <h3>Example</h3>
  *
  * <pre>
  * Path a = new Path("/html/body/div[1]/table[2]/tr[3]/td/div");

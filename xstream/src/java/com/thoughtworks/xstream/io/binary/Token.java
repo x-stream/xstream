@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,13 +20,13 @@ import java.io.DataInput;
 /**
  * Represents the Tokens stored in the binary stream used by
  * {@link BinaryStreamReader} and {@link BinaryStreamWriter}.
- * <p/>
- * <p>A token consists of a type and (depending on this type)
+ * <p>
+ * A token consists of a type and (depending on this type)
  * it may additionally have an ID (positive long number)
  * and/or a value (String).</p>
- * <p/>
- * <p>The first byte of the token represents how many subsequent
- * bytes are used by the ID.
+ * <p>
+ * The first byte of the token represents how many subsequent
+ * bytes are used by the ID.</p>
  *
  * @author Joe Walnes
  * @see BinaryStreamReader

@@ -142,7 +142,7 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 
 
 /**
- * Simple facade to XStream library, a Java-XML serialization tool. <p/>
+ * Simple facade to XStream library, a Java-XML serialization tool.
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
@@ -155,9 +155,9 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  *
  * </blockquote>
  * <hr>
- * <p/>
+ * 
  * <h3>Aliasing classes</h3>
- * <p/>
+ * 
  * <p>
  * To create shorter XML, you can specify aliases for classes using the <code>alias()</code>
  * method. For example, you can shorten all occurrences of element
@@ -173,9 +173,9 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  *
  * </blockquote>
  * <hr>
- * <p/>
+ * 
  * <h3>Converters</h3>
- * <p/>
+ * 
  * <p>
  * XStream contains a map of {@link com.thoughtworks.xstream.converters.Converter} instances, each
  * of which acts as a strategy for converting a particular type of class to XML and back again. Out
@@ -183,14 +183,14 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  * and collections (Map, List, Set, Properties, etc). For other objects reflection is used to
  * serialize each field recursively.
  * </p>
- * <p/>
+ * 
  * <p>
  * Extra converters can be registered using the <code>registerConverter()</code> method. Some
  * non-standard converters are supplied in the {@link com.thoughtworks.xstream.converters.extended}
  * package and you can create your own by implementing the
  * {@link com.thoughtworks.xstream.converters.Converter} interface.
  * </p>
- * <p/>
+ * 
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
@@ -211,7 +211,7 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  * {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter} as the fallback
  * converter.
  * </p>
- * <p/>
+ * 
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
@@ -222,20 +222,21 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  *
  * </blockquote>
  * <hr>
- * <p/>
+ * 
  * <h3>Object graphs</h3>
- * <p/>
+ * 
  * <p>
  * XStream has support for object graphs; a deserialized object graph will keep references intact,
  * including circular references.
  * </p>
- * <p/>
+ * 
  * <p>
  * XStream can signify references in XML using either relative/absolute XPath or IDs. The mode can be changed using
  * <code>setMode()</code>:
  * </p>
- * <p/>
+ * 
  * <table border='1'>
+ * <caption></caption>
  * <tr>
  * <td><code>xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);</code></td>
  * <td><i>(Default)</i> Uses XPath relative references to signify duplicate references. This produces XML
@@ -276,7 +277,7 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  * auto-detected on -the-fly.</em>
  * </p>
  * <h3>Implicit collections</h3>
- * <p/>
+ * 
  * <p>
  * To avoid the need for special tags for collections, you can define implicit collections using one
  * of the <code>addImplicitCollection</code> methods.

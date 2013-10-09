@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,7 +12,7 @@ package com.thoughtworks.xstream.converters;
 
 /**
  * SingleValueConverter implementations are marshallable to/from a single value String representation.
- * <p/>
+ *
  * <p>{@link com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter}
  * provides a starting point for objects that can store all information in a single value String.</p>
  *
