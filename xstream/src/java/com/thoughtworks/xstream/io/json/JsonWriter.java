@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -115,6 +115,7 @@ public class JsonWriter extends AbstractJsonWriter {
      * provided.
      * <p>
      * Following constants can be used as bit mask for the mode:
+     * </p>
      * <ul>
      * <li>{@link #DROP_ROOT_MODE}: drop the root node</li>
      * <li>{@link #STRICT_MODE}: do not throw {@link ConversionException}, if writer should
@@ -122,7 +123,6 @@ public class JsonWriter extends AbstractJsonWriter {
      * <li>{@link #EXPLICIT_MODE}: ensure that all available data is explicitly written even if
      * addition objects must be added</li>
      * </ul>
-     * </p>
      * 
      * @param writer the {@link Writer} where the JSON is written to
      * @param mode the JsonWriter mode

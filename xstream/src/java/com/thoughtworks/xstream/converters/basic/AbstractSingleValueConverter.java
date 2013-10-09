@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,7 +14,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 /**
  * Base abstract implementation of  {@link com.thoughtworks.xstream.converters.SingleValueConverter}.
- * <p/>
+ *
  * <p>Subclasses should implement methods canConvert(Class) and fromString(String) for the conversion.</p>
  *
  * @author Joe Walnes

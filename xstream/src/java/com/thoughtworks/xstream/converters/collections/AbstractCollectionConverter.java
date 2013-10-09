@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 /**
  * Base helper class for converters that need to handle
  * collections of items (arrays, Lists, Maps, etc).
- * <p/>
+ *
  * <p>Typically, subclasses of this will converter the outer
  * structure of the collection, loop through the contents and
  * call readItem() or writeItem() for each item.</p>

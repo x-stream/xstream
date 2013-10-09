@@ -40,10 +40,10 @@ import java.lang.annotation.Target;
  * argument is not supported when using
  * {@link com.thoughtworks.xstream.annotations.XStreamConverters} or {@link #useImplicitType()}
  * == false.</li>
- * </ul>
- * <li>{@link com.thoughtworks.xstream.core.JVM}: Utility e.g. to load classes.</li> <li>
- * {@link ClassLoader} (deprecated since 1.4.5): The class loader used by the XStream
+ * <li>{@link com.thoughtworks.xstream.core.JVM}: Utility e.g. to load classes.</li>
+ * <li>{@link ClassLoader} (deprecated since 1.4.5): The class loader used by the XStream
  * instance to deserialize the objects. Use ClassLoaderReference as argument</li>
+ * </ul>
  * <p>
  * The algorithm will try the converter's constructor with the most arguments first.
  * </p>

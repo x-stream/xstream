@@ -39,7 +39,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     /**
      * DROP_ROOT_MODE drops the JSON root node.
      * <p>
-     * The root node is the first level of the JSON object i.e.
+     * The root node is the first level of the JSON object i.e.</p>
      * 
      * <pre>
      * { &quot;person&quot;: {
@@ -47,7 +47,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * }}
      * </pre>
      * 
-     * will be written without root simply as
+     * <p>will be written without root simply as</p>
      * 
      * <pre>
      * {
@@ -55,9 +55,9 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * }
      * </pre>
      * 
+     * <p>
      * Without a root node, the top level element might now also be an array. However, it is
-     * possible to generate invalid JSON unless {@link #STRICT_MODE} is also set.
-     * </p>
+     * possible to generate invalid JSON unless {@link #STRICT_MODE} is also set.</p>
      * 
      * @since 1.3.1
      */
@@ -66,21 +66,21 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * STRICT_MODE prevents invalid JSON for single value objects when dropping the root.
      * <p>
      * The mode is only useful in combination with the {@link #DROP_ROOT_MODE}. An object with a
-     * single value as first node i.e.
+     * single value as first node i.e.</p>
      * 
      * <pre>
      * { &quot;name&quot;: &quot;Joe&quot; }
      * </pre>
      * 
-     * is simply written as
+     * <p>is simply written as</p>
      * 
      * <pre>
      * &quot;Joe&quot;
      * </pre>
      * 
+     * <p>
      * However, this is no longer valid JSON. Therefore you can activate {@link #STRICT_MODE}
-     * and a {@link ConversionException} is thrown instead.
-     * </p>
+     * and a {@link ConversionException} is thrown instead.</p>
      * 
      * @since 1.3.1
      */
@@ -102,12 +102,13 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * a JSON object with all attributes, the second one the value of the Java object which can
      * be null, a string or integer value or again a new JSON object representing a Java object.
      * Here an example of an string array with one member, where the array and the string has an
-     * additional attribute 'id':
+     * additional attribute 'id':</p>
      * 
      * <pre>
      * {&quot;string-array&quot;:[[{&quot;id&quot;:&quot;1&quot;}],[{&quot;string&quot;:[[{&quot;id&quot;:&quot;2&quot;}],[&quot;Joe&quot;]]}]]}
      * </pre>
      * 
+     * <p>
      * This format can be used to always deserialize into Java again.
      * </p>
      * <p>

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,8 +26,6 @@ import java.util.Map;
 /**
  * A HierarchicalStreamReader that reads from a binary stream created by
  * {@link BinaryStreamWriter}.
- * <p/>
- * <p>This produces
  *
  * @author Joe Walnes
  * @see BinaryStreamReader

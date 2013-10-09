@@ -38,6 +38,17 @@
     <ul>
     </ul>
 -->
+    <h1 id="upcoming">Upcoming</h1>
+
+    <p>Not yet released.</p>
+
+    <h2>Minor changes</h2>
+    
+    <ul>
+    	<li>JIRA:XSTR-739 and JIRA:XSTR-746: OrderRetainingMap fails if HashMap.putAll(Map) of Java Runtime is not
+    	implemented calling put for every element within the map.</li>
+    </ul>
+
     <h1 id="1.4.5">1.4.5</h1>
 
     <p>Released 18. September 2013.</p>
@@ -81,7 +92,7 @@
     	<li>JettisonMappedXmlDriver provides better support to overwrite its create methods.</li>
     	<li>JIRA:XSTR-685: StAX based drivers (StaxDriver and JettisonMappedXmlDriver) are not closing internal input
     	stream reading from file or URL.</li>
-    	<li>JIRA:XSTR-736: XStream.unmarshal may throw NPE is version info of manifest is missing.</li>
+    	<li>JIRA:XSTR-736: XStream.unmarshal may throw NPE if version info of manifest is missing.</li>
     	<li>JIRA:XSTR-733: Implicit elements that match multiple defined implicit collections will be assigned to the
     	map with the nearest matching element type.</li>
     	<li>JIRA:XSTR-740: ISO8601GregorianCalendarConverter creates Calendar instance with wrong Locale in Java 7 if
@@ -98,7 +109,7 @@
     <h2>API changes</h2>
 
     <ul>
-    	<li>Added c.t.x.convertesr.extended.NamedCollectionConverter for free element names in collections.</li>
+    	<li>Added c.t.x.converters.extended.NamedCollectionConverter for free element names in collections.</li>
     	<li>Added c.t.x.converters.extended.NamedMapConverter for free element names in maps.</li>
     	<li>Added c.t.x.io.xml.StandardStaxDriver to use the StAX implementation delivered with the Java 6 runtime.</li>
     	<li>Deprecated c.t.x.io.xml.SjsxpStaxDriver to select the internal StAX implementation of Oracle.</li>

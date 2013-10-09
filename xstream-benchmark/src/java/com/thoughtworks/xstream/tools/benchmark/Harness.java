@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,15 +17,19 @@ import java.util.Iterator;
 
 /**
  * A simple harness for running benchmarks over object serialization products.
- * <p/>
+ *
+ * <p>
  * There are three dimensions that can be added:
+ * </p>
  * <ul>
  * <li>{@link Product} (e.g. DOM, SAX, XPP...)</li>
  * <li>{@link Metric} (e.g. time taken, memory usage, output size...)</li>
  * <li>{@link Target} (e.g. a small object, large object, list of objects...)</li>
  * </ul>
+ * <p>
  * The Harness will then across every permutation of these
  * (in order of product, metric, target), and write the results to a {@link Reporter}.
+ * </p>
  *
  * <h3>Example usage</h3>
  * <pre>

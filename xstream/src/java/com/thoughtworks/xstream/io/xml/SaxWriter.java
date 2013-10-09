@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,18 +37,22 @@ import java.util.Map;
 /**
  * A SAX {@link org.xml.sax.XMLReader parser} that acts as an XStream
  * {@link com.thoughtworks.xstream.io.HierarchicalStreamWriter} to enable direct generation of a
- * SAX event flow from the XStream serialization of a list of list of Java objects. <p/> As a
+ * SAX event flow from the XStream serialization of a list of list of Java objects.
+ * <p>
+ * As a
  * custom SAX parser, this class ignores the arguments of the two standard parse methods ({@link #parse(java.lang.String)}
  * and {@link #parse(org.xml.sax.InputSource)}) but relies on a proprietary SAX property
  * {@link #SOURCE_OBJECT_LIST_PROPERTY} to define the list of objects to serialize.
  * </p>
- * <p/> Configuration of this SAX parser is achieved through the standard
+ * <p>
+ * Configuration of this SAX parser is achieved through the standard
  * {@link #setProperty SAX property mechanism}. While specific setter methods require direct
  * access to the parser instance, SAX properties support configuration settings to be propagated
  * through a chain of {@link org.xml.sax.XMLFilter filters} down to the underlying parser
  * object.
  * </p>
- * <p/> This mechanism shall be used to configure the
+ * <p>
+ * This mechanism shall be used to configure the
  * {@link #SOURCE_OBJECT_LIST_PROPERTY objects to be serialized} as well as the
  * {@link #CONFIGURED_XSTREAM_PROPERTY XStream facade}.
  * </p>
@@ -102,7 +106,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * The SAX features defined for this XMLReader.
-     * <p/>
+     * <p>
      * This class does not define any feature (yet) and ignores
      * the SAX mandatory feature.  Thus, this member is present
      * only to support the mandatory feature setting and retrieval
@@ -164,19 +168,19 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Sets the state of a feature.
-     * <p/>
+     * <p>
      * The feature name is any fully-qualified URI.</p>
-     * <p/>
+     * <p>
      * All XMLReaders are required to support setting
      * <code>http://xml.org/sax/features/namespaces</code> to
      * <code>true</code> and
      * <code>http://xml.org/sax/features/namespace-prefixes</code> to
      * <code>false</code>.</p>
-     * <p/>
+     * <p>
      * Some feature values may be immutable or mutable only
      * in specific contexts, such as before, during, or after
      * a parse.</p>
-     * <p/>
+     * <p>
      * <strong>Note</strong>: This implementation only supports the two
      * mandatory SAX features.</p>
      *
@@ -198,22 +202,22 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Looks up the value of a feature.
-     * <p/>
+     * <p>
      * The feature name is any fully-qualified URI.  It is
      * possible for an XMLReader to recognize a feature name but
      * to be unable to return its value; this is especially true
      * in the case of an adapter for a SAX1 Parser, which has
      * no way of knowing whether the underlying parser is
      * performing validation or expanding external entities.</p>
-     * <p/>
+     * <p>
      * All XMLReaders are required to recognize the
      * <code>http://xml.org/sax/features/namespaces</code> and the
      * <code>http://xml.org/sax/features/namespace-prefixes</code> feature
      * names.</p>
-     * <p/>
+     * <p>
      * Some feature values may be available only in specific
      * contexts, such as before, during, or after a parse.</p>
-     * <p/>
+     * <p>
      * Implementors are free (and encouraged) to invent their own
      * features, using names built on their own URIs.</p>
      *
@@ -240,22 +244,22 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Sets the value of a property.
-     * <p/>
+     * <p>
      * The property name is any fully-qualified URI.  It is
      * possible for an XMLReader to recognize a property name but
      * to be unable to set its value.</p>
-     * <p/>
+     * <p>
      * XMLReaders are not required to recognize setting any
      * specific property names, though a core set is provided with
      * SAX2.</p>
-     * <p/>
+     * <p>
      * Some property values may be immutable or mutable only
      * in specific contexts, such as before, during, or after
      * a parse.</p>
-     * <p/>
+     * <p>
      * This method is also the standard mechanism for setting
      * extended handlers.</p>
-     * <p/>
+     * <p>
      * <strong>Note</strong>: This implementation only supports two
      * (proprietary) properties: {@link #CONFIGURED_XSTREAM_PROPERTY}
      * and {@link #SOURCE_OBJECT_LIST_PROPERTY}.</p>
@@ -304,18 +308,18 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Looks up the value of a property.
-     * <p/>
+     * <p>
      * The property name is any fully-qualified URI.  It is
      * possible for an XMLReader to recognize a property name but
      * to be unable to return its state.</p>
-     * <p/>
+     * <p>
      * XMLReaders are not required to recognize any specific
      * property names, though an initial core set is documented for
      * SAX2.</p>
-     * <p/>
+     * <p>
      * Some property values may be available only in specific
      * contexts, such as before, during, or after a parse.</p>
-     * <p/>
+     * <p>
      * Implementors are free (and encouraged) to invent their own properties,
      * using names built on their own URIs.</p>
      *
@@ -341,10 +345,10 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Allows an application to register an entity resolver.
-     * <p/>
+     * <p>
      * If the application does not register an entity resolver,
      * the XMLReader will perform its own default resolution.</p>
-     * <p/>
+     * <p>
      * Applications may register a new or different resolver in the
      * middle of a parse, and the SAX parser must begin using the new
      * resolver immediately.</p>
@@ -375,10 +379,10 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Allows an application to register a DTD event handler.
-     * <p/>
+     * <p>
      * If the application does not register a DTD handler, all DTD
      * events reported by the SAX parser will be silently ignored.</p>
-     * <p/>
+     * <p>
      * Applications may register a new or different handler in the
      * middle of a parse, and the SAX parser must begin using the new
      * handler immediately.</p>
@@ -409,11 +413,11 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Allows an application to register a content event handler.
-     * <p/>
+     * <p>
      * If the application does not register a content handler, all
      * content events reported by the SAX parser will be silently
      * ignored.</p>
-     * <p/>
+     * <p>
      * Applications may register a new or different handler in the
      * middle of a parse, and the SAX parser must begin using the new
      * handler immediately.</p>
@@ -444,13 +448,13 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Allows an application to register an error event handler.
-     * <p/>
+     * <p>
      * If the application does not register an error handler, all
      * error events reported by the SAX parser will be silently
      * ignored; however, normal processing may not continue.  It is
      * highly recommended that all SAX applications implement an
      * error handler to avoid unexpected bugs.</p>
-     * <p/>
+     * <p>
      * Applications may register a new or different handler in the
      * middle of a parse, and the SAX parser must begin using the new
      * handler immediately.</p>
@@ -485,7 +489,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Parses an XML document from a system identifier (URI).
-     * <p/>
+     * <p>
      * This method is a shortcut for the common case of reading a
      * document from a system identifier.  It is the exact
      * equivalent of the following:</p>
@@ -494,10 +498,10 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      *    parse(new InputSource(systemId));
      *  </pre>
      * </blockquote>
-     * <p/>
+     * <p>
      * If the system identifier is a URL, it must be fully resolved
      * by the application before it is passed to the parser.</p>
-     * <p/>
+     * <p>
      * <strong>Note</strong>: As a custom SAX parser, this class
      * ignores the <code>systemId</code> argument of this method
      * and relies on the proprietary SAX property
@@ -515,25 +519,25 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Parse an XML document.
-     * <p/>
+     * <p>
      * The application can use this method to instruct the XML
      * reader to begin parsing an XML document from any valid input
      * source (a character stream, a byte stream, or a URI).</p>
-     * <p/>
+     * <p>
      * Applications may not invoke this method while a parse is in
      * progress (they should create a new XMLReader instead for each
      * nested XML document).  Once a parse is complete, an
      * application may reuse the same XMLReader object, possibly
      * with a different input source.</p>
-     * <p/>
+     * <p>
      * During the parse, the XMLReader will provide information
      * about the XML document through the registered event
      * handlers.</p>
-     * <p/>
+     * <p>
      * This method is synchronous: it will not return until parsing
      * has ended.  If a client application wants to terminate
      * parsing early, it should throw an exception.</p>
-     * <p/>
+     * <p>
      * <strong>Note</strong>: As a custom SAX parser, this class
      * ignores the <code>source</code> argument of this method
      * and relies on the proprietary SAX property
