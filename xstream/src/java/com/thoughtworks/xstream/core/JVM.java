@@ -429,11 +429,17 @@ public class JVM implements Caching {
                 break;
             }
         }
+        class Test {
+            String first;
+            String second;
+            String third;
+            String fourth;
+        }
         if (reverse) {
-            fields = JVM.class.getDeclaredFields();
+            fields = Test.class.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
-                if (fields[i].getName().equals("reflectionProvider")) {
-                    reverse = i > 2;
+                if (fields[i].getName().equals("first")) {
+                    reverse = i > 3;
                     break;
                 }
             }
