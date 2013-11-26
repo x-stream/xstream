@@ -112,7 +112,8 @@ public class JVM implements Caching {
             Class cls = loadClassForName("com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider");
             if (cls != null) {
                 try {
-                    DependencyInjectionFactory.newInstance(cls, null);
+                    ReflectionProvider provider = (ReflectionProvider)DependencyInjectionFactory.newInstance(cls, null);
+                    provider.newInstance(JVM.class);
                     type = cls;
                 } catch (ObjectAccessException e) {
                 }
