@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
@@ -69,7 +70,7 @@ public class ExternalizableConverter implements Converter {
     }
 
     public boolean canConvert(Class type) {
-        return Externalizable.class.isAssignableFrom(type);
+        return JVM.canCreateDerivedObjectOutputStream() && Externalizable.class.isAssignableFrom(type);
     }
 
     public void marshal(Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {

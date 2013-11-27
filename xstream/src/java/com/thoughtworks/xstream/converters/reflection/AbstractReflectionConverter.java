@@ -55,6 +55,16 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         this.reflectionProvider = reflectionProvider;
         serializationMethodInvoker = new SerializationMethodInvoker();
     }
+    
+    protected boolean canAccess(Class type) {
+        try {
+            reflectionProvider.getFieldOrNull(type, "%");
+            return true;
+        } catch (NoClassDefFoundError e) {
+            // restricted type in GAE
+        }
+        return false;
+    }
 
     public void marshal(Object original, final HierarchicalStreamWriter writer,
         final MarshallingContext context) {

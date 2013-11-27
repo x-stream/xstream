@@ -29,6 +29,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
@@ -69,6 +70,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
     private static final String ELEMENT_FIELDS = "fields";
     private static final String ELEMENT_FIELD = "field";
     private static final String ATTRIBUTE_NAME = "name";
+    
     private final ClassLoaderReference classLoaderReference;
 
     /**
@@ -98,13 +100,21 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     public boolean canConvert(Class type) {
-        return isSerializable(type);
+        return JVM.canCreateDerivedObjectOutputStream() && isSerializable(type);
     }
 
     private boolean isSerializable(Class type) {
-        return Serializable.class.isAssignableFrom(type)
+        if (Serializable.class.isAssignableFrom(type)
           && ( serializationMethodInvoker.supportsReadObject(type, true)
-            || serializationMethodInvoker.supportsWriteObject(type, true) );
+            || serializationMethodInvoker.supportsWriteObject(type, true) )) {
+            for(Iterator iter = hierarchyFor(type).iterator(); iter.hasNext(); ) {
+                if (!Serializable.class.isAssignableFrom((Class)iter.next())) {
+                    return canAccess(type);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
@@ -284,7 +294,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
     private Object readField(ObjectStreamField field, Class type, Object instance) {
         try {
             Field javaField = type.getDeclaredField(field.getName());
-            javaField.setAccessible(true);
+            if (!javaField.isAccessible()) {
+                javaField.setAccessible(true);
+            }
             return javaField.get(instance);
         } catch (IllegalArgumentException e) {
             throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
