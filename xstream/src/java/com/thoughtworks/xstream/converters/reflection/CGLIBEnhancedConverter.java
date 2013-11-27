@@ -155,7 +155,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         }
         try {
             final Field field = type.getDeclaredField("serialVersionUID");
-            field.setAccessible(true);
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
             long serialVersionUID = field.getLong(null);
             ExtendedHierarchicalStreamWriterHelper.startNode(
                 writer, "serialVersionUID", String.class);
@@ -184,7 +186,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             for (int i = 0; true; ++i) {
                 try {
                     Field field = type.getDeclaredField(CALLBACK_MARKER + i);
-                    field.setAccessible(true);
+                    if (!field.isAccessible()) {
+                        field.setAccessible(true);
+                    }
                     fields.add(field);
                 } catch (NoSuchFieldException e) {
                     break;
@@ -245,7 +249,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             }
             for (final Iterator iter = methods.iterator(); iter.hasNext();) {
                 final Method method = (Method)iter.next();
-                method.setAccessible(true);
+                if (!method.isAccessible()) {
+                    method.setAccessible(true);
+                }
                 if (Factory.class.isAssignableFrom(method.getDeclaringClass())
                     || (method.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) > 0) {
                     iter.remove();

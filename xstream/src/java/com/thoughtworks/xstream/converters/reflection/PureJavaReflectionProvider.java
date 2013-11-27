@@ -175,7 +175,9 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     protected void validateFieldAccess(Field field) {
         if (Modifier.isFinal(field.getModifiers())) {
             if (JVM.is15()) {
-                field.setAccessible(true);
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                }
             } else {
                 throw new ObjectAccessException("Invalid final field "
                         + field.getDeclaringClass().getName() + "." + field.getName());
