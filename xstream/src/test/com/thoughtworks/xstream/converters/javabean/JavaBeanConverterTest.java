@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -174,7 +174,7 @@ public class JavaBeanConverterTest extends TestCase {
 
         XStream xstream = new XStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
-            new StringComparator())), XStream.PRIORITY_VERY_LOW);
+            new StringComparator())), XStream.PRIORITY_LOW);
         xstream.alias("world", World.class);
 
         String expected = "" 
@@ -286,7 +286,7 @@ public class JavaBeanConverterTest extends TestCase {
             + "</bean>";
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("bean", SimpleBean.class);
 
         String xml = xstream.toXML(bean);
@@ -298,7 +298,7 @@ public class JavaBeanConverterTest extends TestCase {
         String expected = "<types/>";
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("types", TypesOfFields.class);
         xstream.omitField(TypesOfFields.class, "trans");
         xstream.omitField(TypesOfFields.class, "foo");
@@ -317,7 +317,7 @@ public class JavaBeanConverterTest extends TestCase {
             + "</types>";
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("types", TypesOfFields.class);
         xstream.omitField(TypesOfFields.class, "foo");
         xstream.omitField(TypesOfFields.class, "normal");
@@ -340,7 +340,7 @@ public class JavaBeanConverterTest extends TestCase {
         String expected = "<unsafeBean/>";
 
         XStream xstream = new XStream();
-        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("unsafeBean", UnsafeBean.class);
         xstream.omitField(UnsafeBean.class, "unsafe");
     
@@ -394,7 +394,7 @@ public class JavaBeanConverterTest extends TestCase {
     public void testDoesNotSerializeOmittedInheritedFields() {
         XStream xstream = new XStream();
         xstream.registerConverter(
-            new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+            new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.omitField(Person.class, "lastName");
         xstream.alias("man", Man.class);
 
@@ -411,7 +411,7 @@ public class JavaBeanConverterTest extends TestCase {
         XStream xstream = new XStream();
         xstream.registerConverter(
             new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
-                new StringComparator())), XStream.PRIORITY_VERY_LOW);
+                new StringComparator())), XStream.PRIORITY_LOW);
         xstream.aliasField("first-name", Person.class, "firstName");
         xstream.aliasField("last-name", Person.class, "lastName");
         xstream.alias("man", Man.class);
@@ -429,7 +429,7 @@ public class JavaBeanConverterTest extends TestCase {
     public void testFailsFastIfPropertyIsDefinedTwice() {
         XStream xstream = new XStream();
         xstream.registerConverter(
-            new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+            new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         String input = ""
             + "<types>\n"
             + "  <normal>foo</normal>\n"
