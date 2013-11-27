@@ -47,6 +47,7 @@
     <ul>
     	<li>JIRA:XSTR-739 and JIRA:XSTR-746: OrderRetainingMap fails if HashMap.putAll(Map) of Java Runtime is not
     	implemented calling put for every element within the map.</li>
+    	<li>No need for reflection in StackTraceElementFactory anymore. Avoids problems with SecurityManager and GAE.</li>
     </ul>
 
     <h1 id="1.4.5">1.4.5</h1>
