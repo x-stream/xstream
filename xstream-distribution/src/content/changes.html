@@ -45,9 +45,11 @@
     <h2>Minor changes</h2>
     
     <ul>
+    	<li>JavaBeanProvider ensures that it can instantiate a type before it claims to handle it. Avoids problems with SecurityManager.</li>
+    	<li>BeanProvider does no longer use reflection to locate default constructor. Avoids problems with SecurityManager and GAE.</li>
+    	<li>No need for reflection in StackTraceElementFactory anymore. Avoids problems with SecurityManager and GAE.</li>
     	<li>JIRA:XSTR-739 and JIRA:XSTR-746: OrderRetainingMap fails if HashMap.putAll(Map) of Java Runtime is not
     	implemented calling put for every element within the map.</li>
-    	<li>No need for reflection in StackTraceElementFactory anymore. Avoids problems with SecurityManager and GAE.</li>
     </ul>
 
     <h1 id="1.4.5">1.4.5</h1>

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,9 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 public class BeanProvider implements JavaBeanProvider {
 
+    /**
+     * @deprecated As of upcoming
+     */
     protected static final Object[] NO_PARAMS = new Object[0];
     protected PropertyDictionary propertyDictionary;
 
@@ -58,21 +61,15 @@ public class BeanProvider implements JavaBeanProvider {
 
     public Object newInstance(Class type) {
         try {
-            return getDefaultConstrutor(type).newInstance(NO_PARAMS);
+            return type.newInstance();
         } catch (InstantiationException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (IllegalAccessException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
-        } catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof RuntimeException) {
-                throw (RuntimeException)e.getTargetException();
-            } else if (e.getTargetException() instanceof Error) {
-                throw (Error)e.getTargetException();
-            } else {
-                throw new ObjectAccessException("Constructor for "
-                    + type.getName()
-                    + " threw an exception", e);
-            }
+        } catch (SecurityException e) {
+            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+        } catch (ExceptionInInitializerError e) {
+            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         }
     }
 
@@ -141,15 +138,21 @@ public class BeanProvider implements JavaBeanProvider {
      * Returns true if the Bean provider can instantiate the specified class
      */
     public boolean canInstantiate(Class type) {
-        return getDefaultConstrutor(type) != null;
+        try {
+            return newInstance(type) != null;
+        } catch (ObjectAccessException e) {
+            return false;
+        }
     }
 
     /**
      * Returns the default constructor, or null if none is found
      * 
      * @param type
+     * @deprecated As of upcoming use {@link #newInstance(Class)} or {@link #canInstantiate(Class)} directly.
      */
     protected Constructor getDefaultConstrutor(Class type) {
+        
         Constructor[] constructors = type.getConstructors();
         for (int i = 0; i < constructors.length; i++ ) {
             Constructor c = constructors[i];

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -74,11 +74,11 @@ public class JavaBeanConverter implements Converter {
     }
 
     /**
-     * Only checks for the availability of a public default constructor.
-     * If you need stricter checks, subclass JavaBeanConverter
+     * Checks if the bean provider can instantiate this type.
+     * If you need less strict checks, subclass JavaBeanConverter
      */
     public boolean canConvert(Class type) {
-        return (this.type == null || this.type==type) &&  beanProvider.canInstantiate(type);
+        return (this.type == null || this.type == type) && beanProvider.canInstantiate(type);
     }
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
