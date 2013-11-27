@@ -55,6 +55,9 @@
     		<li>SerializationConverter and ExternalizableConverter will check if they can create an instance of a derived
     		OutputObjectStream first.</li>
     		<li>BeanProvider does no longer use reflection to locate default constructor.</li>
+    		<li>AbstractAttributedCharacterIteratorAttributeConverter (and therefore TextAttributeConverter) will check first if it
+    		can access the possible constants of the type by reflection.</li>
+    		<li>NoClassDefFoundError raised in GAE accessing the fields of restricted types by reflection will be handled.</li>
     		<li>No need for reflection in StackTraceElementFactory anymore, Java 1.4 is required since long ago.</li>
     	</ul>
     	</li>

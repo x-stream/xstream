@@ -35,11 +35,13 @@ public class Fields {
                     }
                 }
             }
-            if (field != null) {
+            if (field != null && !field.isAccessible()) {
                 field.setAccessible(true);
             }
         } catch (SecurityException e) {
             // active SecurityManager
+        } catch (NoClassDefFoundError e) {
+            // restricted type in GAE
         }
         return field;
     }
@@ -53,6 +55,8 @@ public class Fields {
             return result;
         } catch (NoSuchFieldException e) {
             throw new IllegalArgumentException("Could not access " + type.getName() + "." + name + " field: " + e.getMessage());
+        } catch (NoClassDefFoundError e) {
+            throw new ObjectAccessException("Could not access " + type.getName() + "." + name + " field: " + e.getMessage());
         }
     }
 
@@ -61,6 +65,8 @@ public class Fields {
             field.set(instance, value);
         } catch (IllegalAccessException e) {
             throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field", e);
+        } catch (NoClassDefFoundError e) {
+            throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field", e);
         }
     }
 
@@ -68,6 +74,8 @@ public class Fields {
         try {
             return field.get(instance);
         } catch (IllegalAccessException e) {
+            throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field", e);
+        } catch (NoClassDefFoundError e) {
             throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field", e);
         }
     }

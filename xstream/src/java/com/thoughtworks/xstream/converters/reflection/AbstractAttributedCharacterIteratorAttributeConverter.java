@@ -66,7 +66,7 @@ public class AbstractAttributedCharacterIteratorAttributeConverter extends
     }
 
     public boolean canConvert(final Class type) {
-        return type == this.type;
+        return type == this.type && !attributeMap.isEmpty();
     }
 
     public String toString(final Object source) {
@@ -134,8 +134,11 @@ public class AbstractAttributedCharacterIteratorAttributeConverter extends
                     attributeMap.clear();
                 } catch (ObjectAccessException e) {
                     attributeMap.clear();
+                } catch (NoClassDefFoundError e) {
+                    attributeMap.clear();
                 }
             }
+            instanceMaps.put(type.getName(), attributeMap);
         }
         return this;
     }
