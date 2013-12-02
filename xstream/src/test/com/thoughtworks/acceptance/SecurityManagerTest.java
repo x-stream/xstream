@@ -91,40 +91,58 @@ public class SecurityManagerTest extends TestCase {
     public void testSerializeWithXppDriverAndSun14ReflectionProviderAndActiveSecurityManager() {
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.reflect"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("fileSystemProvider"));
+        sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
         sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
         sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.nio.file.spi.DefaultFileSystemProvider", "read"));
         sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
         sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
+        sm.addPermission(source, new PropertyPermission("user.country", "read"));
+        sm.addPermission(source, new PropertyPermission("user.dir", "read"));
+        sm.addPermission(source, new PropertyPermission("user.timezone", "read,write"));
         sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
         sm.addPermission(source, new NetPermission("specifyStreamHandler"));
         sm.setReadOnly();
         System.setSecurityManager(sm);
 
-        // uses implicit Sun14ReflectionProvider in JDK >= 1.4, since it has the appropriate
-        // rights
         xstream = new XStream();
 
         assertBothWays();
     }
 
     public void testSerializeWithXppDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("fileSystemProvider"));
+        sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
         sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.nio.file.spi.DefaultFileSystemProvider", "read"));
         sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
         sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
+        sm.addPermission(source, new PropertyPermission("user.country", "read"));
+        sm.addPermission(source, new PropertyPermission("user.dir", "read"));
+        sm.addPermission(source, new PropertyPermission("user.timezone", "read,write"));
         sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
         sm.addPermission(source, new NetPermission("specifyStreamHandler"));
         sm.setReadOnly();
@@ -136,8 +154,12 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("fileSystemProvider"));
+        sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
         sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
         sm.addPermission(source, new PropertyPermission("com.sun.org.apache.xerces.internal.xni.parser.XMLParserConfiguration", "read"));
@@ -146,15 +168,27 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check", "read"));
         sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.nio.file.spi.DefaultFileSystemProvider", "read"));
         sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.parsers.DocumentBuilderFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalDTD", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalSchema", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.elementAttributeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.entityExpansionLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxGeneralEntitySizeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxParameterEntitySizeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxOccurLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.totalEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
         sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
+        sm.addPermission(source, new PropertyPermission("user.country", "read"));
+        sm.addPermission(source, new PropertyPermission("user.dir", "read"));
+        sm.addPermission(source, new PropertyPermission("user.timezone", "read,write"));
         sm.addPermission(source, new NetPermission("specifyStreamHandler"));
         sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
         sm.setReadOnly();

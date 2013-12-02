@@ -15,10 +15,12 @@ import com.thoughtworks.xstream.converters.reflection.FieldDictionary;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.core.util.PresortedSet;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.AccessControlException;
@@ -42,6 +44,7 @@ public class JVM implements Caching {
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
     private static final boolean canParseUTCDateFormat;
+    private static final boolean canCreateDerivedObjectOutputStream;
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
@@ -102,6 +105,14 @@ public class JVM implements Caching {
             test = false;
         }
         canParseUTCDateFormat = test;
+        try {
+            test = new CustomObjectOutputStream(null) != null;
+        } catch (RuntimeException e) {
+            test = false;
+        } catch (IOException e) {
+            test = false;
+        }
+        canCreateDerivedObjectOutputStream = test;
         
         isAWTAvailable = loadClassForName("java.awt.Color", false) != null;
         isSwingAvailable = loadClassForName("javax.swing.LookAndFeel", false) != null;
@@ -112,7 +123,8 @@ public class JVM implements Caching {
             Class cls = loadClassForName("com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider");
             if (cls != null) {
                 try {
-                    DependencyInjectionFactory.newInstance(cls, null);
+                    ReflectionProvider provider = (ReflectionProvider)DependencyInjectionFactory.newInstance(cls, null);
+                    provider.newInstance(JVM.class);
                     type = cls;
                 } catch (ObjectAccessException e) {
                 }
@@ -187,7 +199,7 @@ public class JVM implements Caching {
     private static boolean isAndroid() {
         return vendor.indexOf("Android") != -1;
     }
-
+    
     /**
      * Load a XStream class for the given name.
      * 
@@ -415,6 +427,13 @@ public class JVM implements Caching {
     }
 
     /**
+     * @since upcoming
+     */
+    public static boolean canCreateDerivedObjectOutputStream() {
+        return canCreateDerivedObjectOutputStream;
+    }
+
+    /**
      * @deprecated As of 1.4.5 no functionality
      */
     public void flushCache() {
@@ -429,11 +448,17 @@ public class JVM implements Caching {
                 break;
             }
         }
+        class Test {
+            String first;
+            String second;
+            String third;
+            String fourth;
+        }
         if (reverse) {
-            fields = JVM.class.getDeclaredFields();
+            fields = Test.class.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
-                if (fields[i].getName().equals("reflectionProvider")) {
-                    reverse = i > 2;
+                if (fields[i].getName().equals("first")) {
+                    reverse = i > 3;
                     break;
                 }
             }
@@ -472,6 +497,7 @@ public class JVM implements Caching {
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());
+        System.out.println("Can create derive ObjectOutputStream: " + canCreateDerivedObjectOutputStream());
         System.out.println("Reverse field order detected (only if JVM class itself has been compiled): " + reverse);
     }
 }

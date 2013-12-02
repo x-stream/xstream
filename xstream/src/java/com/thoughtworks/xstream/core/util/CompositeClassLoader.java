@@ -57,7 +57,9 @@ public class CompositeClassLoader extends ClassLoader {
             // see http://www.cs.duke.edu/csed/java/jdk1.7/technotes/guides/lang/cl-mt.html
             try {
                 Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable", (Class[])null);
-                m.setAccessible(true);
+                if (!m.isAccessible()) {
+                    m.setAccessible(true);
+                }
                 m.invoke(null, (Object[])null);
             } catch (Exception e) {
                 // ignore errors, JVM will synchronize class for Java 7 or higher
