@@ -52,7 +52,7 @@
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/ArrayConverter.html">ArrayConverter</a></td>
-                <td>Any kind of array</td>
+                <td>any kind of array</td>
                 <td class="example">
                     &lt;<i>string</i>-array&gt;<br/>
                     &nbsp;&nbsp;&lt;<i>string</i>&gt;apple&lt;/<i>string</i>&gt;<br/>
@@ -83,12 +83,12 @@
                 <td>byte[]</td>
                 <td class="example">&lt;byte-array&gt;AHiEFiEABQ==&lt;/byte-array&gt;</td>
                 <td>Uses Base64 encoding to store binary data in XML. Converter can be registered globally or locally.</td>
-                <td>&nbsp;</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/CharConverter.html">CharConverter</a></td>
                 <td>char<br/>java.lang.Character</td>
-                <td class="example">&lt;char&gt;X&lt;/char&gt;</br>&lt;char null=&quot;true&quot;/&gt;</td>
+                <td class="example">&lt;char&gt;X&lt;/char&gt;<br/>&lt;char null=&quot;true&quot;/&gt;</td>
                 <td>The '\0' character is invalid in XML.</td>
                 <td>normal</td>
             </tr>
@@ -126,6 +126,20 @@
                 <td class="example">&lt;long&gt;2344556678888786&lt;/long&gt;</td>
                 <td>&nbsp;</td>
                 <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/NamedCollectionConverter.html">NamedArrayConverter</a></td>
+                <td>any kind of array</td>
+                <td class="example">
+                    &lt;<i>string</i>-array&gt;<br/>
+                    &nbsp;&nbsp;&lt;<i>product</i>&gt;apple&lt;/<i>product</i>&gt;<br/>
+                    &nbsp;&nbsp;&lt;<i>product</i>&gt;banana&lt;/<i>product</i>&gt;<br/>
+                    &nbsp;&nbsp;&lt;<i>product</i>&gt;cabbage&lt;/<i>product</i>&gt;<br/>
+                    &lt;<i>string</i>-array&gt;
+                </td>
+                <td>This supports arrays of primitives as well as objects. It also supports multi-dimensional arrays, even if
+                they are non-rectangular.  Should be registered locally or for an individual array type.</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/ShortConverter.html">ShortConverter</a></td>

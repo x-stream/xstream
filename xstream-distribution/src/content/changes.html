@@ -63,6 +63,7 @@
     	</li>
     	<li>JIRA:XSTR-739 and JIRA:XSTR-746: OrderRetainingMap fails if HashMap.putAll(Map) of Java Runtime is not
     	implemented calling put for every element within the map.</li>
+    	<li>New NamedArrayConverter to define names of inner elements.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -75,6 +76,7 @@
     <h2>API changes</h2>
 
     <ul>
+    	<li>Added c.t.x.converters.extended.NamedArrayConverter for free element names in arrays.</li>
     	<li>Added constructors to c.t.x.io.xml.StandardStaxDriver taking NameCoder instead of XmlFriendlyNameCoder.</li>
     	<li>Deprecated constructors of c.t.x.io.xml.StandardStaxDriver taking a XmlFriendlyNameCoder.</li>
     	<li>Added constructors to c.t.x.io.xml.BEAStaxDriver taking NameCoder instead of XmlFriendlyNameCoder.</li>
