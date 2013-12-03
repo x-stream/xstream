@@ -92,6 +92,15 @@
 	additional dependencies.</p>
 
     <!-- ...................................................... -->
+    <h2 id="Compatibility_GAE">Which limits exists for XStream in Google's Application Engine (GAE)?</h2>
+
+	<p>Starting with XStream 1.4.6 it is possible to instantiate an XStream instance in a GAE environment. Nevertheless
+	does GAE set some severe restrictions for XStream and therefore XStream will behave differently. Actually a
+	reflection-based converter cannot handle any type from the JDK itself. Nor is it possible to create an
+	ObjectOnputStream or an ObjectOutputStream. It is not possible to define a field alias for any type within the JDK.
+	XStream will typically work as general rule, if you process your own objects.</p>
+
+    <!-- ...................................................... -->
     <h2 id="Compatibility_Harmony">Why does XStream fail on Apache Harmony?</h2>
 
 	<p>Since JDK 5 it is possible according the Java specification to write into final fields using reflection. This is not yet 
@@ -115,7 +124,11 @@
 
     <p>This depends on the mode XStream is running in. Refer to the
     <a href="http://svn.xstream.codehaus.org/browse/xstream/trunk/xstream/src/test/com/thoughtworks/acceptance/SecurityManagerTest.java">SecurityManagerTest</a>
-    for details.</p>
+    for details. Actually XStream's converters try to check since version 1.4.6 any critical operation, before they
+    claim to be able to handle a type. As consequence XStream can behave differently running under a SecurityManager.
+    E.g. if the SecurityManager does not permit to create an instance for a derived class of ObjectOutputStream, the 
+    SerializationConverter will not handle any type and the ReflecitonConverter will take over (as long it has proper
+    rights for its own reflection-based operations).</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_XStream11">Why does XStream 1.2 no longer read XML generated with XStream 1.1.x?</h2>
