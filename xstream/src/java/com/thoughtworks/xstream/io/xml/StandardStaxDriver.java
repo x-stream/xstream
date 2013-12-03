@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -37,7 +38,17 @@ public class StandardStaxDriver extends StaxDriver {
         super();
     }
 
+    /**
+     * @deprecated As of upcoming use {@link #StandardStaxDriver(QNameMap, NameCoder)}
+     */
     public StandardStaxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+        super(qnameMap, nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public StandardStaxDriver(QNameMap qnameMap, NameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
@@ -45,7 +56,17 @@ public class StandardStaxDriver extends StaxDriver {
         super(qnameMap);
     }
 
+    /**
+     * @deprecated As of upcoming use {@link #StandardStaxDriver(NameCoder)}
+     */
     public StandardStaxDriver(XmlFriendlyNameCoder nameCoder) {
+        super(nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public StandardStaxDriver(NameCoder nameCoder) {
         super(nameCoder);
     }
 

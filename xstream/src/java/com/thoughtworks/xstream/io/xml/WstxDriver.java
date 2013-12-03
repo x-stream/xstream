@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 import com.ctc.wstx.stax.WstxOutputFactory;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -28,7 +29,17 @@ public class WstxDriver extends StaxDriver {
         super();
     }
 
+    /**
+     * @deprecated As of upcoming use {@link #WstxDriver(QNameMap, NameCoder)}
+     */
     public WstxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+        super(qnameMap, nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public WstxDriver(QNameMap qnameMap, NameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
@@ -36,7 +47,17 @@ public class WstxDriver extends StaxDriver {
         super(qnameMap);
     }
 
+    /**
+     * @deprecated As of upcoming use {@link #WstxDriver(NameCoder)}
+     */
     public WstxDriver(XmlFriendlyNameCoder nameCoder) {
+        super(nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public WstxDriver(NameCoder nameCoder) {
         super(nameCoder);
     }
 
