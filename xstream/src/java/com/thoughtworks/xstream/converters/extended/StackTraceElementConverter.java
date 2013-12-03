@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.core.JVM;
 
 /**
  * Converter for StackTraceElement (the lines of a stack trace) - JDK 1.4+ only.
@@ -32,10 +33,36 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
     // (Note group 4 is optional is optional and only present if a colon char exists.)
 
     private static final Pattern PATTERN = Pattern.compile("^(.+)\\.([^\\(]+)\\(([^:]*)(:(\\d+))?\\)$");
-    private static final StackTraceElementFactory FACTORY = new StackTraceElementFactory();
+    private static final StackTraceElementFactory FACTORY;
+    static {
+        StackTraceElementFactory factory = null;
+        if (JVM.is15()) {
+            Class factoryType = JVM.loadClassForName(
+                "com.thoughtworks.xstream.converters.extended.StackTraceElementFactory15",
+                false);
+            try {
+                factory = (StackTraceElementFactory)factoryType.newInstance();
+            } catch (Exception e) {
+                // N/A
+            } catch (LinkageError e) {
+                // N/A
+            }
+        }
+        if (factory == null) {
+            factory = new StackTraceElementFactory();
+        }
+        try {
+            factory.unknownSourceElement("a", "b");
+        } catch (Exception e) {
+            factory = null;
+        } catch (NoClassDefFoundError e) { // GAE
+            factory = null;
+        }
+        FACTORY = factory;
+    }
 
     public boolean canConvert(Class type) {
-        return StackTraceElement.class.equals(type);
+        return StackTraceElement.class.equals(type) && FACTORY != null;
     }
     
     public String toString(Object obj) {

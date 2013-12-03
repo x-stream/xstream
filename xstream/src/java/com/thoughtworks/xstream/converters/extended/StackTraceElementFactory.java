@@ -40,7 +40,7 @@ public class StackTraceElementFactory {
         return create(declaringClass, methodName, fileName, lineNumber);
     }
 
-    private StackTraceElement create(String declaringClass, String methodName, String fileName, int lineNumber) {
+    protected StackTraceElement create(String declaringClass, String methodName, String fileName, int lineNumber) {
         StackTraceElement result = new Throwable().getStackTrace()[0];
         setField(result, "declaringClass", declaringClass);
         setField(result, "methodName", methodName);

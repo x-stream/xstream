@@ -58,6 +58,7 @@
     		<li>AbstractAttributedCharacterIteratorAttributeConverter (and therefore TextAttributeConverter) will check first if it
     		can access the possible constants of the type by reflection.</li>
     		<li>NoClassDefFoundError raised in GAE accessing the fields of restricted types by reflection will be handled.</li>
+    		<li>StackTraceElementConverter uses constructor for StackTraceElement instances in Java 5 and GEA.</li>
     	</ul>
     	</li>
     	<li>JIRA:XSTR-739 and JIRA:XSTR-746: OrderRetainingMap fails if HashMap.putAll(Map) of Java Runtime is not
