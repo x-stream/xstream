@@ -305,6 +305,7 @@
                 <exclude>**/enums/*</exclude>
                 <exclude>**/basic/StringBuilder*</exclude>
                 <exclude>**/basic/UUID*</exclude>
+                <exclude>**/extended/*15*</exclude>
                 <exclude>**/io/xml/JDom2*</exclude>
               </excludes>
               <testExcludes>
