@@ -25,8 +25,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
+ * An array converter that uses predefined names for its items.
+ * <p>
+ * To be used as local converter.
+ * </p>
+ * 
  * @author J&ouml;rg Schaible
- *
  * @since upcoming
  */
 public class NamedArrayConverter implements Converter {
