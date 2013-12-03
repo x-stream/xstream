@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import com.bea.xml.stream.MXParserFactory;
 import com.bea.xml.stream.XMLOutputFactoryBase;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -28,7 +29,17 @@ public class BEAStaxDriver extends StaxDriver {
         super();
     }
 
+    /**
+     * @deprecated As of upcoming use {@link #BEAStaxDriver(QNameMap, NameCoder)}
+     */
     public BEAStaxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+        super(qnameMap, nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public BEAStaxDriver(QNameMap qnameMap, NameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
@@ -36,7 +47,17 @@ public class BEAStaxDriver extends StaxDriver {
         super(qnameMap);
     }
 
+    /**
+     * @deprecated As of upcoming use {@link #BEAStaxDriver(NameCoder)}
+     */
     public BEAStaxDriver(XmlFriendlyNameCoder nameCoder) {
+        super(nameCoder);
+    }
+
+    /**
+     * @since upcoming
+     */
+    public BEAStaxDriver(NameCoder nameCoder) {
         super(nameCoder);
     }
 

@@ -81,13 +81,19 @@
     <h2>Minor changes</h2>
     
     <ul>
-    	<li>JIRA:XSTR-739 and JIRA:XSTR-746: OrderRetainingMap fails if HashMap.putAll(Map) of Java Runtime is not
-    	implemented calling put for every element within the map.</li>
+    	<li>JIRA:XSTR-747: All constructors of StaxDriver derived classes take erroneously a XmlFriendlyNameCoder
+    	instead of a plain NameCoder.</li>
     </ul>
 
     <h2>API changes</h2>
 
     <ul>
+    	<li>Added constructors to c.t.x.io.xml.StandardStaxDriver taking NameCoder instead of XmlFriendlyNameCoder.</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.StandardStaxDriver taking a XmlFriendlyNameCoder.</li>
+    	<li>Added constructors to c.t.x.io.xml.BEAStaxDriver taking NameCoder instead of XmlFriendlyNameCoder.</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.BEAStaxDriver taking a XmlFriendlyNameCoder.</li>
+    	<li>Added constructors to c.t.x.io.xml.WstxDriver taking NameCoder instead of XmlFriendlyNameCoder.</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.WstxDriver taking a XmlFriendlyNameCoder.</li>
     	<li>Added method canAccess to c.t.x.converter.reflection.AbstractReflectionConverter.</li>
     	<li>Added static method canCreateDerivedObjectOutputStream to c.t.x.core.JVM.</li>
     	<li>Deprecated unused member c.t.x.converter.javabean.BeanProvider.NO_PARAMS.</li>
