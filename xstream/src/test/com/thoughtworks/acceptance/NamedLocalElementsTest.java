@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 20.09.2013 by Joerg Schaible
+ * Created on 20. September 2013 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
 
@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.SampleMaps;
+import com.thoughtworks.xstream.converters.extended.NamedArrayConverter;
 import com.thoughtworks.xstream.converters.extended.NamedCollectionConverter;
 import com.thoughtworks.xstream.converters.extended.NamedMapConverter;
 
@@ -31,6 +32,7 @@ public class NamedLocalElementsTest extends AbstractAcceptanceTest {
         super.setUp();
         xstream.alias("category", Category.class);
         xstream.alias("maps", SampleMaps.class);
+        xstream.alias("arrays", Arrays.class);
         xstream.aliasField("products", SampleMaps.class, "good");
         xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
     }
@@ -477,5 +479,125 @@ public class NamedLocalElementsTest extends AbstractAcceptanceTest {
         } catch (final IllegalArgumentException e) {
             // OK
         }
+    }
+    
+    public static class Arrays {
+        String[] strings;
+        Object[] objects;
+        int[] ints;
+        short[][] shortArrays;
+    }
+    
+    public void testArrayWithFinalType() {
+        xstream.registerLocalConverter(Arrays.class, "strings", 
+            new NamedArrayConverter(String[].class, xstream.getMapper(), "name"));
+        
+        Arrays arrays = new Arrays();
+        arrays.strings = new String[] {
+            "joe", "mauro" 
+        };
+        
+        String expected = ""
+            + "<arrays>\n"
+            + "  <strings>\n"
+            + "    <name>joe</name>\n"
+            + "    <name>mauro</name>\n"
+            + "  </strings>\n"
+            + "</arrays>";
+        
+        assertBothWays(arrays, expected);
+    }
+    
+    public void testArrayWithSuperTypes() {
+        xstream.registerLocalConverter(Arrays.class, "objects", 
+            new NamedArrayConverter(Object[].class, xstream.getMapper(), "item"));
+        
+        Arrays arrays = new Arrays();
+        arrays.objects = new Object[] {
+            "joe", Boolean.TRUE, Integer.valueOf(47) 
+        };
+        
+        String expected = (""
+            + "<arrays>\n"
+            + "  <objects>\n"
+            + "    <item class='string'>joe</item>\n"
+            + "    <item class='boolean'>true</item>\n"
+            + "    <item class='int'>47</item>\n"
+            + "  </objects>\n"
+            + "</arrays>").replace('\'', '"');
+        
+        assertBothWays(arrays, expected);
+    }
+    
+    public void testArrayWithNullElement() {
+        xstream.registerLocalConverter(Arrays.class, "strings", 
+            new NamedArrayConverter(String[].class, xstream.getMapper(), "name"));
+        
+        Arrays arrays = new Arrays();
+        arrays.strings = new String[] {
+            "joe", null, "mauro" 
+        };
+        
+        String expected = ""
+            + "<arrays>\n"
+            + "  <strings>\n"
+            + "    <name>joe</name>\n"
+            + "    <name class=\"null\"/>\n"
+            + "    <name>mauro</name>\n"
+            + "  </strings>\n"
+            + "</arrays>";
+        
+        assertBothWays(arrays, expected);
+    }
+    
+    public void testArrayWithPrimitives() {
+        xstream.registerLocalConverter(Arrays.class, "ints", 
+            new NamedArrayConverter(int[].class, xstream.getMapper(), "value"));
+        
+        Arrays arrays = new Arrays();
+        arrays.ints = new int[] {
+            47, 0, -3 
+        };
+        
+        String expected = ""
+            + "<arrays>\n"
+            + "  <ints>\n"
+            + "    <value>47</value>\n"
+            + "    <value>0</value>\n"
+            + "    <value>-3</value>\n"
+            + "  </ints>\n"
+            + "</arrays>";
+        
+        assertBothWays(arrays, expected);
+    }
+    
+    public void testArrayWithPrimitiveArrays() {
+        xstream.registerLocalConverter(Arrays.class, "shortArrays", 
+            new NamedArrayConverter(short[][].class, xstream.getMapper(), "values"));
+        
+        Arrays arrays = new Arrays();
+        arrays.shortArrays = new short[][] {
+            {47, 0, -3},
+            null,
+            {13, 7} 
+        };
+        
+        String expected = ""
+            + "<arrays>\n"
+            + "  <shortArrays>\n"
+            + "    <values>\n"
+            + "      <short>47</short>\n"
+            + "      <short>0</short>\n"
+            + "      <short>-3</short>\n"
+            + "    </values>\n"
+            + "    <values class=\"null\"/>\n"
+            + "    <values>\n"
+            + "      <short>13</short>\n"
+            + "      <short>7</short>\n"
+            + "    </values>\n"
+            + "  </shortArrays>\n"
+            + "</arrays>";
+        
+        assertBothWays(arrays, expected);
     }
 }
