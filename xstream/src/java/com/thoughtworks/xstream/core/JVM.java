@@ -427,7 +427,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.6
      */
     public static boolean canCreateDerivedObjectOutputStream() {
         return canCreateDerivedObjectOutputStream;

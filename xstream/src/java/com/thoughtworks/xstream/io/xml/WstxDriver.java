@@ -37,7 +37,7 @@ public class WstxDriver extends StaxDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.6
      */
     public WstxDriver(QNameMap qnameMap, NameCoder nameCoder) {
         super(qnameMap, nameCoder);
@@ -55,7 +55,7 @@ public class WstxDriver extends StaxDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.6
      */
     public WstxDriver(NameCoder nameCoder) {
         super(nameCoder);

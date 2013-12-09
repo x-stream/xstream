@@ -46,7 +46,7 @@ public class StandardStaxDriver extends StaxDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.6
      */
     public StandardStaxDriver(QNameMap qnameMap, NameCoder nameCoder) {
         super(qnameMap, nameCoder);
@@ -64,7 +64,7 @@ public class StandardStaxDriver extends StaxDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.6
      */
     public StandardStaxDriver(NameCoder nameCoder) {
         super(nameCoder);

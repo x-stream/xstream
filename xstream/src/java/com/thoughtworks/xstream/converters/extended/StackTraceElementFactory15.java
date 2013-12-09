@@ -13,7 +13,7 @@ package com.thoughtworks.xstream.converters.extended;
 /**
  * @author J&ouml;rg Schaible
  *
- * @since upcoming
+ * @since 1.4.6
  */
 class StackTraceElementFactory15 extends StackTraceElementFactory {
 
