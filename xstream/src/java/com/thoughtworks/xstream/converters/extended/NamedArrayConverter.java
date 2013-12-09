@@ -31,7 +31,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.6
  */
 public class NamedArrayConverter implements Converter {
 
@@ -44,7 +44,7 @@ public class NamedArrayConverter implements Converter {
      * @param arrayType
      * @param mapper
      * @param itemName
-     * @since upcoming
+     * @since 1.4.6
      */
     public NamedArrayConverter(final Class arrayType, final Mapper mapper, final String itemName) {
         if (!arrayType.isArray()) {

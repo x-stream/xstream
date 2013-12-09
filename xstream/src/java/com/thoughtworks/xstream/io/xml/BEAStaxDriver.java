@@ -37,7 +37,7 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.6
      */
     public BEAStaxDriver(QNameMap qnameMap, NameCoder nameCoder) {
         super(qnameMap, nameCoder);
@@ -55,7 +55,7 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.6
      */
     public BEAStaxDriver(NameCoder nameCoder) {
         super(nameCoder);
