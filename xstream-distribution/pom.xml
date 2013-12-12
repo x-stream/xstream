@@ -27,19 +27,16 @@
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>1.4.5</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream-hibernate</artifactId>
-      <version>1.4.5</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream-benchmark</artifactId>
-      <version>1.4.5</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
@@ -108,23 +105,17 @@
         <dependency>
           <groupId>com.thoughtworks.xstream</groupId>
           <artifactId>xstream</artifactId>
-          <version>1.4.5-SNAPSHOT</version>
           <classifier>javadoc</classifier>
-          <scope>provided</scope>
         </dependency>
         <dependency>
           <groupId>com.thoughtworks.xstream</groupId>
           <artifactId>xstream-hibernate</artifactId>
-          <version>1.4.5-SNAPSHOT</version>
           <classifier>javadoc</classifier>
-          <scope>provided</scope>
         </dependency>
         <dependency>
           <groupId>com.thoughtworks.xstream</groupId>
           <artifactId>xstream-benchmark</artifactId>
-          <version>1.4.5-SNAPSHOT</version>
           <classifier>javadoc</classifier>
-          <scope>provided</scope>
         </dependency>
       </dependencies>
     </profile>

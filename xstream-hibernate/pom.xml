@@ -145,15 +145,12 @@
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>1.4.6-SNAPSHOT</version>
       <classifier>tests</classifier>
       <type>test-jar</type>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>1.4.6-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>org.hibernate</groupId>
