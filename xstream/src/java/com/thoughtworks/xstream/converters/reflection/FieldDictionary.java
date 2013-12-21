@@ -60,17 +60,6 @@ public class FieldDictionary implements Caching {
      * 
      * @param cls the class you are interested on
      * @return an iterator for its fields
-     * @deprecated As of 1.3, use {@link #fieldsFor(Class)} instead
-     */
-    public Iterator serializableFieldsFor(Class cls) {
-        return fieldsFor(cls);
-    }
-
-    /**
-     * Returns an iterator for all fields for some class
-     * 
-     * @param cls the class you are interested on
-     * @return an iterator for its fields
      */
     public Iterator fieldsFor(final Class cls) {
         return buildMap(cls, true).values().iterator();

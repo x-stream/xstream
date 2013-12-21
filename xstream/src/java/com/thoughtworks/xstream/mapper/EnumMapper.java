@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSingleValueConverter;
 import com.thoughtworks.xstream.core.Caching;
@@ -34,15 +33,6 @@ public class EnumMapper extends MapperWrapper implements Caching {
 
     private transient AttributeMapper attributeMapper;
     private transient Map<Class, SingleValueConverter> enumConverterMap;
-
-    /**
-     * @deprecated As of 1.3.1, use {@link #EnumMapper(Mapper)}
-     */
-    @Deprecated
-    public EnumMapper(Mapper wrapped, ConverterLookup lookup) {
-        super(wrapped);
-        readResolve();
-    }
 
     public EnumMapper(Mapper wrapped) {
         super(wrapped);

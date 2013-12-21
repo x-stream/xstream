@@ -63,7 +63,6 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     protected int depth;
     private boolean readyForNewLine;
     private boolean tagIsEmpty;
-    private String newLine;
 
     private static final char[] NULL = "&#x0;".toCharArray();
     private static final char[] AMP = "&amp;".toCharArray();
@@ -74,34 +73,18 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     private static final char[] APOS = "&apos;".toCharArray();
     private static final char[] CLOSE = "</".toCharArray();
 
-    private PrettyPrintWriter(
-        Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder,
-        String newLine) {
-        super(nameCoder);
-        this.writer = new QuickWriter(writer);
-        this.lineIndenter = lineIndenter;
-        this.newLine = newLine;
-        this.mode = mode;
-        if (mode < XML_QUIRKS || mode > XML_1_1) {
-            throw new IllegalArgumentException("Not a valid XML mode");
-        }
-    }
-
-    /**
-     * @since 1.2
-     * @deprecated As of 1.3
-     */
-    public PrettyPrintWriter(
-        Writer writer, char[] lineIndenter, String newLine, XmlFriendlyReplacer replacer) {
-        this(writer, XML_QUIRKS, lineIndenter, replacer, newLine);
-    }
-
     /**
      * @since 1.4
      */
     public PrettyPrintWriter(
         Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder) {
-        this(writer, mode, lineIndenter, nameCoder, "\n");
+        super(nameCoder);
+        this.writer = new QuickWriter(writer);
+        this.lineIndenter = lineIndenter;
+        this.mode = mode;
+        if (mode < XML_QUIRKS || mode > XML_1_1) {
+            throw new IllegalArgumentException("Not a valid XML mode");
+        }
     }
 
     /**
@@ -110,14 +93,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      */
     public PrettyPrintWriter(
         Writer writer, int mode, char[] lineIndenter, XmlFriendlyReplacer replacer) {
-        this(writer, mode, lineIndenter, replacer, "\n");
-    }
-
-    /**
-     * @deprecated As of 1.3
-     */
-    public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine) {
-        this(writer, lineIndenter, newLine, new XmlFriendlyReplacer());
+        this(writer, mode, lineIndenter, (NameCoder)replacer);
     }
 
     /**
@@ -129,13 +105,6 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     public PrettyPrintWriter(Writer writer, char[] lineIndenter) {
         this(writer, XML_QUIRKS, lineIndenter);
-    }
-
-    /**
-     * @deprecated As of 1.3
-     */
-    public PrettyPrintWriter(Writer writer, String lineIndenter, String newLine) {
-        this(writer, lineIndenter.toCharArray(), newLine);
     }
 
     /**
@@ -168,14 +137,14 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @since 1.4
      */
     public PrettyPrintWriter(Writer writer, NameCoder nameCoder) {
-        this(writer, XML_QUIRKS, new char[]{' ', ' '}, nameCoder, "\n");
+        this(writer, XML_QUIRKS, new char[]{' ', ' '}, nameCoder);
     }
 
     /**
      * @deprecated As of 1.4 use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, NameCoder)} instead.
      */
     public PrettyPrintWriter(Writer writer, XmlFriendlyReplacer replacer) {
-        this(writer, new char[]{' ', ' '}, "\n", replacer);
+        this(writer, XML_QUIRKS, new char[]{' ', ' '}, replacer);
     }
 
     /**
@@ -360,6 +329,6 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @since 1.3
      */
     protected String getNewLine() {
-        return newLine;
+        return "\n";
     }
 }

@@ -136,21 +136,21 @@ public class DefaultMapper implements Mapper {
      * @deprecated As of 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     /**
      * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     /**
      * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(Class type) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type,
@@ -170,14 +170,14 @@ public class DefaultMapper implements Mapper {
      * @deprecated As of 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String aliasForAttribute(Class definedIn, String fieldName) {
-        return fieldName;
+        throw new UnsupportedOperationException();
     }
 
     /**
      * @deprecated As of 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String attributeForAlias(Class definedIn, String alias) {
-        return alias;
+        throw new UnsupportedOperationException();
     }
 
     /**

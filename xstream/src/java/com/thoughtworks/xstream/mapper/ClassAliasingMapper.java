@@ -38,13 +38,6 @@ public class ClassAliasingMapper extends MapperWrapper {
         classToName.put(type.getName(), name);
     }
 
-    /**
-     * @deprecated As of 1.3, method was a leftover of an old implementation
-     */
-    public void addClassAttributeAlias(String name, Class type) {
-        addClassAlias(name, type);
-    }
-
     public void addTypeAlias(String name, Class type) {
         nameToType.put(name, type.getName());
         typeToName.put(type, name);

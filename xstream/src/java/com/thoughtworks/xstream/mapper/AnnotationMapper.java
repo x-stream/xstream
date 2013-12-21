@@ -38,7 +38,6 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
-import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.converters.Converter;
@@ -198,9 +197,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     if (type.isInterface()) {
                         continue;
                     }
-    
-                    processImplicitCollectionAnnotation(type);
-    
+
                     final Field[] fields = type.getDeclaredFields();
                     for (int i = 0; i < fields.length; i++ ) {
                         final Field field = fields[i];
@@ -342,47 +339,6 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     + " available");
             }
             classAliasingMapper.addTypeAlias(aliasAnnotation.value(), type);
-        }
-    }
-
-    @Deprecated
-    private void processImplicitCollectionAnnotation(final Class<?> type) {
-        final XStreamImplicitCollection implicitColAnnotation = type
-            .getAnnotation(XStreamImplicitCollection.class);
-        if (implicitColAnnotation != null) {
-            if (implicitCollectionMapper == null) {
-                throw new InitializationException("No "
-                    + ImplicitCollectionMapper.class.getName()
-                    + " available");
-            }
-            final String fieldName = implicitColAnnotation.value();
-            final String itemFieldName = implicitColAnnotation.item();
-            final Field field;
-            try {
-                field = type.getDeclaredField(fieldName);
-            } catch (final NoSuchFieldException e) {
-                throw new InitializationException(type.getName()
-                    + " does not have a field named '"
-                    + fieldName
-                    + "' as required by "
-                    + XStreamImplicitCollection.class.getName());
-            }
-            Class itemType = null;
-            final Type genericType = field.getGenericType();
-            if (genericType instanceof ParameterizedType) {
-                final Type typeArgument = ((ParameterizedType)genericType)
-                    .getActualTypeArguments()[0];
-                itemType = getClass(typeArgument);
-            }
-            if (itemType == null) {
-                implicitCollectionMapper.add(type, fieldName, null, Object.class);
-            } else {
-                if (itemFieldName.equals("")) {
-                    implicitCollectionMapper.add(type, fieldName, null, itemType);
-                } else {
-                    implicitCollectionMapper.add(type, fieldName, itemFieldName, itemType);
-                }
-            }
         }
     }
 

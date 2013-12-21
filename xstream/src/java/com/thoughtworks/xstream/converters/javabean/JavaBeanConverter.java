@@ -41,11 +41,6 @@ public class JavaBeanConverter implements Converter {
     protected final Mapper mapper;
     protected final JavaBeanProvider beanProvider;
     private final Class type;
-    
-    /**
-     * @deprecated As of 1.3, no necessity for field anymore.
-     */
-    private String classAttributeIdentifier;
 
     public JavaBeanConverter(Mapper mapper) {
         this(mapper, (Class)null);
@@ -66,14 +61,6 @@ public class JavaBeanConverter implements Converter {
     }
 
     /**
-     * @deprecated As of 1.3, use {@link #JavaBeanConverter(Mapper)} and {@link com.thoughtworks.xstream.XStream#aliasAttribute(String, String)}
-     */
-    public JavaBeanConverter(Mapper mapper, String classAttributeIdentifier) {
-        this(mapper, new BeanProvider());
-        this.classAttributeIdentifier = classAttributeIdentifier;
-    }
-
-    /**
      * Checks if the bean provider can instantiate this type.
      * If you need less strict checks, subclass JavaBeanConverter
      */
@@ -82,7 +69,7 @@ public class JavaBeanConverter implements Converter {
     }
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.aliasForSystemAttribute("class");
+        final String classAttributeName = mapper.aliasForSystemAttribute("class");
         beanProvider.visitSerializableProperties(source, new JavaBeanProvider.Visitor() {
             public boolean shouldVisit(String name, Class definedIn) {
                 return mapper.shouldSerializeMember(definedIn, name);
@@ -153,21 +140,12 @@ public class JavaBeanConverter implements Converter {
     }
 
     private Class determineType(HierarchicalStreamReader reader, Object result, String fieldName) {
-        final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.aliasForSystemAttribute("class");
+        final String classAttributeName = mapper.aliasForSystemAttribute("class");
         String classAttribute = classAttributeName == null ? null : reader.getAttribute(classAttributeName);
         if (classAttribute != null) {
             return mapper.realClass(classAttribute);
         } else {
             return mapper.defaultImplementationOf(beanProvider.getPropertyType(result, fieldName));
-        }
-    }
-
-    /**
-     * @deprecated As of 1.3
-     */
-    public static class DuplicateFieldException extends ConversionException {
-        public DuplicateFieldException(String msg) {
-            super(msg);
         }
     }
 

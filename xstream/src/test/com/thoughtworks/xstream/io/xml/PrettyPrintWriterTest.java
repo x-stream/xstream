@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -106,7 +106,12 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     }
 
     public void testSupportsUserDefinedEOL() {
-        writer = new PrettyPrintWriter(buffer, "\t", "\r");
+        writer = new PrettyPrintWriter(buffer, "\t"){
+            @Override
+            protected String getNewLine() {
+                return "\r";
+            }
+        };
 
         writer.startNode("element");
         writer.startNode("empty");

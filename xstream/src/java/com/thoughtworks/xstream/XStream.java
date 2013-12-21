@@ -337,7 +337,7 @@ public class XStream {
      * @throws InitializationException in case of an initialization problem
      */
     public XStream() {
-        this(null, (Mapper)null, new XppDriver());
+        this(new XppDriver());
     }
 
     /**
@@ -351,7 +351,7 @@ public class XStream {
      * @throws InitializationException in case of an initialization problem
      */
     public XStream(ReflectionProvider reflectionProvider) {
-        this(reflectionProvider, (Mapper)null, new XppDriver());
+        this(reflectionProvider, new XppDriver());
     }
 
     /**
@@ -365,7 +365,7 @@ public class XStream {
      * @throws InitializationException in case of an initialization problem
      */
     public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(null, (Mapper)null, hierarchicalStreamDriver);
+        this(null, hierarchicalStreamDriver);
     }
 
     /**
@@ -379,26 +379,7 @@ public class XStream {
      */
     public XStream(
         ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
-        this(reflectionProvider, (Mapper)null, hierarchicalStreamDriver);
-    }
-
-    /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
-     * {@link ReflectionProvider} and a prepared {@link Mapper} chain.
-     * 
-     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
-     *            matching Provider
-     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
-     *            chain
-     * @param driver the driver instance
-     * @throws InitializationException in case of an initialization problem
-     * @deprecated As of 1.3, use
-     *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoader, Mapper)}
-     *             instead
-     */
-    public XStream(
-        ReflectionProvider reflectionProvider, Mapper mapper, HierarchicalStreamDriver driver) {
-        this(reflectionProvider, driver, new CompositeClassLoader(), mapper);
+        this(reflectionProvider, hierarchicalStreamDriver, new ClassLoaderReference(new CompositeClassLoader()));
     }
 
     /**
@@ -1966,30 +1947,6 @@ public class XStream {
     public void autodetectAnnotations(boolean mode) {
         if (annotationConfiguration != null) {
             annotationConfiguration.autodetectAnnotations(mode);
-        }
-    }
-
-    /**
-     * @deprecated As of 1.3, use {@link com.thoughtworks.xstream.InitializationException}
-     *             instead
-     */
-    public static class InitializationException extends XStreamException {
-        /**
-         * @deprecated As of 1.3, use
-         *             {@link com.thoughtworks.xstream.InitializationException#InitializationException(String, Throwable)}
-         *             instead
-         */
-        public InitializationException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        /**
-         * @deprecated As of 1.3, use
-         *             {@link com.thoughtworks.xstream.InitializationException#InitializationException(String)}
-         *             instead
-         */
-        public InitializationException(String message) {
-            super(message);
         }
     }
 }

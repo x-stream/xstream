@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,13 +11,13 @@
 package com.thoughtworks.xstream.builder.processor.annotations;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.annotations.Annotations;
 import com.thoughtworks.xstream.builder.processor.TypeConfigProcessor;
+
 
 public class AnnotatedTypeProcessor implements TypeConfigProcessor {
 
-	public void process(XStream instance, Class type) {
-		Annotations.configureAliases(instance, new Class[] { type });
-	}
+    public void process(XStream instance, Class type) {
+        instance.processAnnotations(type);
+    }
 
 }

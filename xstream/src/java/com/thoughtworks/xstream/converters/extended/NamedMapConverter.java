@@ -348,7 +348,7 @@ public class NamedMapConverter extends MapConverter {
     }
 
     private SingleValueConverter getSingleValueConverter(Class type) {
-        SingleValueConverter conv = UseAttributeForEnumMapper.isEnum(type) ? enumMapper
+        SingleValueConverter conv = Enum.class.isAssignableFrom(type) ? enumMapper
             .getConverterFromItemType(null, type, null) : mapper().getConverterFromItemType(
             null, type, null);
         if (conv == null) {
