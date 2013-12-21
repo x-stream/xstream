@@ -20,6 +20,6 @@ public class ReflectionConverter extends AbstractReflectionConverter {
     }
 
     public boolean canConvert(Class type) {
-        return canAccess(type);
+        return type != null && canAccess(type);
     }
 }
