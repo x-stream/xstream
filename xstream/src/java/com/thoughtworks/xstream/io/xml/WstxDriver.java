@@ -30,7 +30,7 @@ public class WstxDriver extends StaxDriver {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #WstxDriver(QNameMap, NameCoder)}
+     * @deprecated As of 1.4.6 use {@link #WstxDriver(QNameMap, NameCoder)}
      */
     public WstxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
         super(qnameMap, nameCoder);
@@ -48,7 +48,7 @@ public class WstxDriver extends StaxDriver {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #WstxDriver(NameCoder)}
+     * @deprecated As of 1.4.6 use {@link #WstxDriver(NameCoder)}
      */
     public WstxDriver(XmlFriendlyNameCoder nameCoder) {
         super(nameCoder);

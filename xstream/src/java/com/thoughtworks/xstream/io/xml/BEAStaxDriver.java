@@ -30,7 +30,7 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #BEAStaxDriver(QNameMap, NameCoder)}
+     * @deprecated As of 1.4.6 use {@link #BEAStaxDriver(QNameMap, NameCoder)}
      */
     public BEAStaxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
         super(qnameMap, nameCoder);
@@ -48,7 +48,7 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #BEAStaxDriver(NameCoder)}
+     * @deprecated As of 1.4.6 use {@link #BEAStaxDriver(NameCoder)}
      */
     public BEAStaxDriver(XmlFriendlyNameCoder nameCoder) {
         super(nameCoder);

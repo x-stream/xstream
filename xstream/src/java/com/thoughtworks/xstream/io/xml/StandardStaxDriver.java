@@ -39,7 +39,7 @@ public class StandardStaxDriver extends StaxDriver {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #StandardStaxDriver(QNameMap, NameCoder)}
+     * @deprecated As of 1.4.6 use {@link #StandardStaxDriver(QNameMap, NameCoder)}
      */
     public StandardStaxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
         super(qnameMap, nameCoder);
@@ -57,7 +57,7 @@ public class StandardStaxDriver extends StaxDriver {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #StandardStaxDriver(NameCoder)}
+     * @deprecated As of 1.4.6 use {@link #StandardStaxDriver(NameCoder)}
      */
     public StandardStaxDriver(XmlFriendlyNameCoder nameCoder) {
         super(nameCoder);
