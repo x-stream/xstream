@@ -28,6 +28,11 @@ import java.io.Writer;
  * {@link #writeAttributeValue(com.thoughtworks.xstream.core.util.QuickWriter, String)} methods.
  * </p>
  * <p>
+ * The XML specification requires XML parsers to drop CR characters completely. This implementation
+ * will therefore use only a LF for line endings, never the platform encoding. You can overwrite the
+ * {@link #getNewLine()} method for a different behavior. 
+ * </p>
+ * <p>
  * Note: Depending on the XML version some characters cannot be written. Especially a 0
  * character is never valid in XML, neither directly nor as entity nor within CDATA. However, this writer
  * works by default in a quirks mode, where it will write any character at least as character entity (even
@@ -345,6 +350,15 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
         writer.close();
     }
 
+    /**
+     * Retrieve the line terminator.
+     * 
+     * This method returns always a line feed, since according the XML specification any parser
+     * must ignore a carriage return. Overload this method, if you need different behavior. 
+     * 
+     * @return the line terminator
+     * @since 1.3
+     */
     protected String getNewLine() {
         return newLine;
     }
