@@ -27,7 +27,7 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 public class BeanProvider implements JavaBeanProvider {
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.6
      */
     protected static final Object[] NO_PARAMS = new Object[0];
     protected PropertyDictionary propertyDictionary;
@@ -149,7 +149,7 @@ public class BeanProvider implements JavaBeanProvider {
      * Returns the default constructor, or null if none is found
      * 
      * @param type
-     * @deprecated As of upcoming use {@link #newInstance(Class)} or {@link #canInstantiate(Class)} directly.
+     * @deprecated As of 1.4.6 use {@link #newInstance(Class)} or {@link #canInstantiate(Class)} directly.
      */
     protected Constructor getDefaultConstrutor(Class type) {
         
