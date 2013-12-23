@@ -21,6 +21,7 @@
   		<li><a href="#Serialization">Serialization</a></li>
   		<li><a href="#XML">XML specifics</a></li>
   		<li><a href="#JSON">JSON specifics</a></li>
+  		<li><a href="#Security">Security aspects</a></li>
   		<li><a href="#Other_Products">Comparison to other products</a></li>
   		<li><a href="#Scalability">Scalability</a></li>
     	<li><a href="#Uses">Uses of XStream</a></li>
@@ -407,8 +408,8 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <p>XStream architecture is based on IO Readers and Writers, while the XML declaration is the responsibility of XML
     parsers.  All <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
     implementations respect the encoding since version 1.3, but only if you provide an 
-    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/InputStream.html">InputStream</a>. If XStream consumes a 
-    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/Reader.html">Reader</a> you have to initialize the reader with 
+    <a href="http://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html">InputStream</a>. If XStream consumes a 
+    <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Reader.html">Reader</a> you have to initialize the reader with 
     the appropriate encoding yourself, since it is now the reader's task to perform the encoding and no XML parser can
     change the encoding of a Reader and any encoding definition in the XML header will be ignored.</p>
 
@@ -423,7 +424,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 
     <p>XStream does no character encoding by itself, it relies on the configuration of the underlying XML writer.
     By default it uses its own PrettyPrintWriter which writes into the default encoding of the current locale. To write
-    UTF-8 you have to provide a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/Writer.html">Writer</a>
+    UTF-8 you have to provide a <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Writer.html">Writer</a>
     with the appropriate encoding yourself.</p>
 
     <!-- ...................................................... -->
@@ -502,7 +503,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <h2 id="XML_xpath_nodelist">The XPath expressions in the references do select a list, but not a single node!</h2>
 
     <p>Yes, this is right. However, the result type of an 
-    <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/xpath/XPathExpression.html">XPath expression</a>
+    <a href="http://docs.oracle.com/javase/7/docs/api/javax/xml/xpath/XPathExpression.html">XPath expression</a>
     evaluation can be defined. A node result from a node list is the lists first node, therefore the XPath of XStream
     is compliant. Since XStream does not use a real XPath engine, you do not have to worry about memory consumption or
     wasted evaluation time, XStream will always operate on a single node anyway. Since XStream 1.4 you can force
@@ -515,6 +516,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <!-- ****************************************************** -->
     <h1 id="JSON">JSON specifics</h1>
 
+    <!-- ...................................................... -->
     <h2 id="JSON_2_drivers">Why are there two JSON driver implementations?</h2>
 
 	<p>As always, first for historical reasons! Main difference is that the 
@@ -524,17 +526,20 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
 	uses an own more flexible implementation, but can only be used to generate JSON, deserialization is not implemented.</p>
 
+    <!-- ...................................................... -->
     <h2 id="JSON_Jettison_version">Which versions of Jettison are supported?</h2>
 
 	<p>Users of Java 5 or higher can use Jettison 1.2, users of Java 1.4.2 have to use Jettison 1.0.1.  Jettison 1.1
 	nor Jettison 1.3 or higher is supported.</p>
 
+    <!-- ...................................................... -->
     <h2 id="JSON_deserialize_top_level_array">Why is it not possible to deserialize a JSON string starting with an array?</h2>
 
 	<p>XStream's implementation to deserialize JSON is based on Jettison and StAX. Jettison implements a XMLStreamReader
 	of	StaX and transforms the processed JSON virtually into XML first. However, if the JSON string starts with an array it is not
 	possible for Jettison to create a valid root element, since it has no name.</p>
 
+    <!-- ...................................................... -->
     <h2 id="JSON_unmarshalling_fails">XStream fails to unmarshal my JSON string and I do not know why?</h2>
 
     <p>Deserialization of JSON is currently done by Jettison, that transforms the JSON string into a StAX stream.
@@ -554,6 +559,7 @@ writer.close();
 System.out.println(writer.toString());
 </pre></div>
 
+    <!-- ...................................................... -->
     <h2 id="JSON_limitations">What limitations has XStream's JSON support?</h2>
 
 	<p>JSON represents a very simple data model for easy data transfer.  Especially it has no equivalent for XML
@@ -563,6 +569,7 @@ System.out.println(writer.toString());
 	possibility to express such a construct.  You should therefore always set the NO_REFERENCES mode of XStream.
 	Additionally you cannot use implicit collections, since the properties in a JSON object must have unique names.</p>
 
+    <!-- ...................................................... -->
     <h2 id="JSON_JavaScript_Long">Why are my Long values incorrect in JavaScript?</h2>
 
 	<p>JavaScript does not know about integer values. All numbers are represented with double precition floats using
@@ -575,12 +582,14 @@ System.out.println(writer.toString());
 	<strong>jettison.mapped.typeconverter.enforce_32bit_integer</strong> to <strong>true</strong> (not available for
 	Jettison 1.0.1 and Java 1.4).</p>
 
+    <!-- ...................................................... -->
     <h2 id="JSON_encoding">Why are there invalid characters in my JSON representation?</h2>
 
 	<p>The JSON spec requires any JSON string to be in UTF-8 encoding. However, XStream ensures this only if you
 	provide an InputStream or an OutputStream.	If you provide a Reader or Writer you have to ensure this requirement 
 	on your own.</p>
 
+    <!-- ...................................................... -->
     <h2 id="JSON_dashes">The generated JSON is invalid, it contains a dash in the label!</h2>
 
 	<p>Well, no, the JSON is valid! Please check yourself with the <a href="http://www.jslint.com/">JSON syntax checker</a>.
@@ -610,13 +619,43 @@ XStream xstream = new XStream(driver);
 </pre></div>
 
     <!-- ****************************************************** -->
+    <h1 id="Security">Security Aspects</h1>
+
+    <!-- ...................................................... -->
+    <h2 id="Security_EventHandler">Why does XStream not convert an java.beans.EventHandler?</h2>
+    
+    <p>Since XStream verison 1.4.7 it does no longer handle an
+    <a href="http://docs.oracle.com/javase/7/docs/api/java/beans/EventHandler.html">EventHandler</a> automatically.
+    Such an instance can be used to initiate calls on arbitray instances at deserialization time e.g. 
+    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ProcessBuilder.html#start()">ProcessBuilder.start()</a>
+    You can register a ReflectionConverter instance explicitly for the EventHandler if you need support for such
+    instances.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Security_ArbitraryDeserialization">XStream deserializes arbitrary objects!</h2>
+    
+    <p>Yes, XStream is designed to convert any object form Java to XML and back out of the box. In consequence it is
+    possible to adjust the processed XML manually to inject arbitrary objects into the deserialized object graph. To
+    avoid such a behavior, you have several options:</p>
+    
+    <ul>
+    <li>Prevent the usage of the reflection-based converters. Register an own converter with priority LOW that claims
+    to handle any type and throw a ConversionException in the marshal and unmarshal methods.</li>
+    <li>Overload XStream.setupConverters() and register only converters for the types that are allowd in your object
+    graph.</li>
+    <li>Provide own implementations for ConverterLookup and ConverterRegistry constructing the XStream. Your
+    implementation can then select the appropriate converter at lookup time on its own or prevent the registration of
+    specific converters.</li>
+    </ul>
+
+    <!-- ****************************************************** -->
     <h1 id="Other_Products">Comparison to other products</h1>
 
     <!-- ...................................................... -->
     <h2 id="Other_Products_XMLBeanEncoder">How does XStream compare to java.beans.XMLEncoder?</h2>
 
     <p>XStream is designed for serializing <i>objects</i> using internal fields, whereas
-    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/XMLEncoder.html">XMLEncoder</a> is designed for
+    <a href="http://docs.oracle.com/javase/7/docs/api/java/beans/XMLEncoder.html">XMLEncoder</a> is designed for
     serializing <i>JavaBeans</i> using public API methods (typically in the form
     of <code>getXXX()</code>, <code>setXXX()</code>, <code>addXXX()</code> and <code>removeXXX()</code> methods.</p>
 
@@ -625,34 +664,6 @@ XStream xstream = new XStream(driver);
     <p>JAXB is a Java binding tool. It generates Java code from a schema and you are able to transform from those classes into 
     XML matching the processed schema and back. Note, that you cannot use your own objects, you have to use what is 
     generated.</p>
-
-        <!--
-    <h1>Comparison to other products</h1>
-
-    <h2>How does XStream compare to JAXB (Java API for XML Binding)?</h2>
-    <p>Todo...</p>
-
-    <h2>How does XStream compare to JSX?</h2>
-    <p>Todo...</p>
-
-    <h2>How does XStream compare to Betwixt?</h2>
-    <p>Todo...</p>
-
-    <h2>How does XStream compare to Castor?</h2>
-    <p>Todo...</p>
-
-    <h2>How does XStream compare to Electric XML?</h2>
-    <p>Todo...</p>
-
-    <h2>How does XStream compare to JOX?</h2>
-    <p>Todo...</p>
-
-    <h2>How does XStream compare to JIBX?</h2>
-    <p>Todo...</p>
-
-    -->
-
-
 
     <!-- ****************************************************** -->
     <h1 id="Scalability">Scalability</h1>

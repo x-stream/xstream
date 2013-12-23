@@ -11,15 +11,33 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import java.beans.EventHandler;
+
 import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ReflectionConverter extends AbstractReflectionConverter {
+
+    private Class type;
 
     public ReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         super(mapper, reflectionProvider);
     }
 
+    /**
+     * Construct a ReflectionConverter for an explicit type.
+     * 
+     * @param mapper the mapper in use
+     * @param reflectionProvider the reflection provider in use
+     * @param type the explicit type to handle
+     * @since upcoming
+     */
+    public ReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider, Class type) {
+        this(mapper, reflectionProvider);
+        this.type = type;
+    }
+
     public boolean canConvert(Class type) {
-        return type != null && canAccess(type);
+        return ((this.type != null && this.type == type) || (this.type == null && type != null && type != EventHandler.class))
+            && canAccess(type);
     }
 }
