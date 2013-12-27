@@ -64,6 +64,8 @@
     
     <ul>
    		<li>java.bean.EventHandler no longer handled automatically because of severe security vulnerability.</li>
+   		<li>Fix instantiation of AnnotationMapper that requires ConverterLookup and ConverterRegistry to be the same
+   		instance.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -72,6 +74,7 @@
    		<li>XSTR-749: NPE if ReflectionConverter.canConvert(type) is called with null as argument.</li>
    		<li>Add constructor to ReflectionConverter taking an additional type to create an instance that is
    		dedicated to a specific type only.</li>
+   		<li>The ConverterLookup used by default cannot be casted to a ConverterRegistry anymore.</li>
     </ul>
 
     <h2>API changes</h2>
