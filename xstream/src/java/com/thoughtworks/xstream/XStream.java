@@ -481,11 +481,17 @@ public class XStream {
     }
     
     private XStream(
-        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
-        ClassLoaderReference classLoader, Mapper mapper, DefaultConverterLookup defaultConverterLookup) {
-        this(
-            reflectionProvider, driver, classLoader, mapper, defaultConverterLookup,
-            defaultConverterLookup);
+            ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver, ClassLoaderReference classLoader,
+            Mapper mapper, final DefaultConverterLookup defaultConverterLookup) {
+        this(reflectionProvider, driver, classLoader, mapper, new ConverterLookup() {
+            public Converter lookupConverterForType(Class type) {
+                return defaultConverterLookup.lookupConverterForType(type);
+            }
+        }, new ConverterRegistry() {
+            public void registerConverter(Converter converter, int priority) {
+                defaultConverterLookup.registerConverter(converter, priority);
+            }
+        });
     }
 
     /**
@@ -586,7 +592,7 @@ public class XStream {
             mapper = buildMapperDynamically(ANNOTATION_MAPPER_TYPE, new Class[]{
                 Mapper.class, ConverterRegistry.class, ConverterLookup.class,
                 ClassLoaderReference.class, ReflectionProvider.class}, new Object[]{
-                mapper, converterLookup, converterLookup, classLoaderReference,
+                mapper, converterRegistry, converterLookup, classLoaderReference,
                 reflectionProvider});
         }
         mapper = wrapMapper((MapperWrapper)mapper);
