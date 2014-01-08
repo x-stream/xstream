@@ -312,6 +312,7 @@
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/extended/*17Test*</exclude>
+                <exclude>**/reflection/SunLimitedUnsafeReflectionProviderTest*</exclude>
                 <exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
                 <exclude>**/io/xml/JDom2*Test*</exclude>
                 <exclude>**/acceptance/Basic15TypesTest*</exclude>
