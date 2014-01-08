@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2013 XStream Committers.
+ * Copyright (C) 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,7 +25,7 @@ import com.thoughtworks.xstream.converters.basic.StringConverter;
 import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.TreeMarshaller;
@@ -35,7 +35,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.thoughtworks.xstream.io.xml.XppReader;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
@@ -66,7 +65,7 @@ public class ToAttributedValueConverterTest extends TestCase {
         classAliasingMapper.addClassAlias("open-source", OpenSourceSoftware.class);
         mapper = new DefaultImplementationsMapper(new ArrayMapper(classAliasingMapper));
 
-        reflectionProvider = new Sun14ReflectionProvider();
+        reflectionProvider = new SunUnsafeReflectionProvider();
         driver = new XppDriver();
 
         converterLookup = new DefaultConverterLookup();

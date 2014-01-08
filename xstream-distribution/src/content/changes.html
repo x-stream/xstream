@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -64,6 +64,8 @@
     
     <ul>
    		<li>java.bean.EventHandler no longer handled automatically because of severe security vulnerability.</li>
+    	<li>JIRA:XSTR-751: New SunLimitedUnsafeReflectionProvider that uses undocumented features only to allocate new
+    	instances as required on Dalvik.</li>
    		<li>Fix instantiation of AnnotationMapper that requires ConverterLookup and ConverterRegistry to be the same
    		instance.</li>
     </ul>
@@ -80,6 +82,9 @@
     <h2>API changes</h2>
 
     <ul>
+    	<li>Added c.t.x.converters.reflection.SunLimitedUnsafeReflectionProvider.</li>
+    	<li>Deprecated c.t.x.converters.reflection.Sun14ReflectionProvider in favor of new
+    	c.t.x.converters.reflection.SunUnsafeReflectionProvider.</li>
     	<li>Added c.t.x.converters.reflection.ReflectionConverter(Mapper,ReflectionProvider,Class).</li>
     </ul>
 

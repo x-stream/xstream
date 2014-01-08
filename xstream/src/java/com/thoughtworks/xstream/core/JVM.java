@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,6 +41,7 @@ public class JVM implements Caching {
     private static final boolean isSwingAvailable;
     private static final boolean isSQLAvailable;
     private static final boolean canAllocateWithUnsafe;
+    private static final boolean canWriteWithUnsafe;
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
     private static final boolean canParseUTCDateFormat;
@@ -52,28 +53,72 @@ public class JVM implements Caching {
     private static final boolean reverseFieldOrder = false;
     private static final Class reflectionProviderType;
 
-    static class Broken {
-        Broken() {
+    static class Test {
+        private Object o;
+        private char c;
+        private byte b;
+        private short s;
+        private int i;
+        private long l;
+        private float f;
+        private double d;
+        private boolean bool;
+        Test() {
            throw new UnsupportedOperationException(); 
         }
     }
-    
+
     static {
         boolean test = true;
+        Object unsafe = null;
         try {
             Class unsafeClass = Class.forName("sun.misc.Unsafe");
             Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
-            Object unsafe = unsafeField.get(null);
+            unsafe = unsafeField.get(null);
             Method allocateInstance = unsafeClass.getDeclaredMethod("allocateInstance", new Class[]{Class.class});
             allocateInstance.setAccessible(true);
-            test = allocateInstance.invoke(unsafe, new Object[]{Broken.class}) != null;
+            test = allocateInstance.invoke(unsafe, new Object[]{Test.class}) != null;
         } catch (Exception e) {
             test = false;
         } catch (Error e) {
             test = false;
         }
         canAllocateWithUnsafe = test;
+        test = false;
+        Class type = PureJavaReflectionProvider.class;
+        if (canUseSunUnsafeReflectionProvider()) {
+            Class cls = loadClassForName("com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider");
+            if (cls != null) {
+                try {
+                    ReflectionProvider provider = (ReflectionProvider)DependencyInjectionFactory.newInstance(cls, null);
+                    Test t = (Test)provider.newInstance(Test.class);
+                    try {
+                        provider.writeField(t, "o", "object", Test.class);
+                        provider.writeField(t, "c", new Character('c'), Test.class);
+                        provider.writeField(t, "b", new Byte((byte)1), Test.class);
+                        provider.writeField(t, "s", new Short((short)1), Test.class);
+                        provider.writeField(t, "i", new Integer(1), Test.class);
+                        provider.writeField(t, "l", new Long(1), Test.class);
+                        provider.writeField(t, "f", new Float(1), Test.class);
+                        provider.writeField(t, "d", new Double(1), Test.class);
+                        provider.writeField(t, "bool", Boolean.TRUE, Test.class);
+                        test = true;
+                    } catch(IncompatibleClassChangeError e) {
+                        cls = null;
+                    } catch (ObjectAccessException e) {
+                        cls = null;
+                    }
+                    if (cls == null) {
+                        cls = loadClassForName("com.thoughtworks.xstream.converters.reflection.SunLimitedUnsafeReflectionProvider");
+                    }
+                    type = cls;
+                } catch (ObjectAccessException e) {
+                }
+            }
+        }
+        reflectionProviderType = type;
+        canWriteWithUnsafe = test;
         Comparator comparator = new Comparator() {
             public int compare(Object o1, Object o2) {
                 throw new RuntimeException();
@@ -117,20 +162,6 @@ public class JVM implements Caching {
         isAWTAvailable = loadClassForName("java.awt.Color", false) != null;
         isSwingAvailable = loadClassForName("javax.swing.LookAndFeel", false) != null;
         isSQLAvailable = loadClassForName("java.sql.Date") != null;
-        
-        Class type = PureJavaReflectionProvider.class;
-        if (canUseSun14ReflectionProvider()) {
-            Class cls = loadClassForName("com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider");
-            if (cls != null) {
-                try {
-                    ReflectionProvider provider = (ReflectionProvider)DependencyInjectionFactory.newInstance(cls, null);
-                    provider.newInstance(JVM.class);
-                    type = cls;
-                } catch (ObjectAccessException e) {
-                }
-            }
-        }
-        reflectionProviderType = type;
     }
     
     /**
@@ -322,31 +353,17 @@ public class JVM implements Caching {
      */
     public synchronized ReflectionProvider bestReflectionProvider() {
         if (reflectionProvider == null) {
-            try {
-                String className = null;
-                if (canUseSun14ReflectionProvider()) {
-                    className = "com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider";
-                }
-                if (className != null) {
-                    Class cls = loadClassForName(className);
-                    if (cls != null) {
-                        reflectionProvider = (ReflectionProvider) cls.newInstance();
-                    }
-                }
-            } catch (InstantiationException e) {
-            } catch (IllegalAccessException e) {
-            } catch (AccessControlException e) {
-                // thrown when trying to access sun.misc package in Applet context
-            }
-            if (reflectionProvider == null) {
-                reflectionProvider = new PureJavaReflectionProvider();
-            }
+            reflectionProvider = newReflectionProvider();
         }
         return reflectionProvider;
     }
 
-    private static boolean canUseSun14ReflectionProvider() {
+    private static boolean canUseSunUnsafeReflectionProvider() {
         return canAllocateWithUnsafe && is14();
+    }
+
+    private static boolean canUseSunLimitedUnsafeReflectionProvider() {
+        return canWriteWithUnsafe;
     }
 
     /**
@@ -440,27 +457,21 @@ public class JVM implements Caching {
     }
     
     public static void main(String[] args) {
-        boolean reverse = false;
+        boolean reverseJDK = false;
         Field[] fields = AttributedString.class.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             if (fields[i].getName().equals("text")) {
-                reverse = i > 3;
+                reverseJDK = i > 3;
                 break;
             }
         }
-        class Test {
-            String first;
-            String second;
-            String third;
-            String fourth;
-        }
-        if (reverse) {
-            fields = Test.class.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++) {
-                if (fields[i].getName().equals("first")) {
-                    reverse = i > 3;
-                    break;
-                }
+
+        boolean reverseLocal = false;
+        fields = Test.class.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i].getName().equals("o")) {
+                reverseLocal = i > 3;
+                break;
             }
         }
 
@@ -488,7 +499,8 @@ public class JVM implements Caching {
         System.out.println("java.vendor: " + System.getProperty("java.vendor"));
         System.out.println("java.vm.name: " + System.getProperty("java.vm.name"));
         System.out.println("Version: " + majorJavaVersion);
-        System.out.println("XStream support for enhanced Mode: " + canUseSun14ReflectionProvider());
+        System.out.println("XStream support for enhanced Mode: " + canUseSunUnsafeReflectionProvider());
+        System.out.println("XStream support for reduced Mode: " + canUseSunLimitedUnsafeReflectionProvider());
         System.out.println("Supports AWT: " + isAWTAvailable());
         System.out.println("Supports Swing: " + isSwingAvailable());
         System.out.println("Supports SQL: " + isSQLAvailable());
@@ -498,6 +510,7 @@ public class JVM implements Caching {
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());
         System.out.println("Can create derive ObjectOutputStream: " + canCreateDerivedObjectOutputStream());
-        System.out.println("Reverse field order detected (only if JVM class itself has been compiled): " + reverse);
+        System.out.println("Reverse field order detected for JDK: " + reverseJDK);
+        System.out.println("Reverse field order detected (only if JVM class itself has been compiled): " + reverseLocal);
     }
 }
