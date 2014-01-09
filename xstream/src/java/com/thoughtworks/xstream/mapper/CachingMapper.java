@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.core.Caching;
+import com.thoughtworks.xstream.security.ForbiddenClassException;
 
 /**
  * Mapper that caches which names map to which classes. Prevents repetitive searching and class loading.
@@ -38,13 +40,16 @@ public class CachingMapper extends MapperWrapper implements Caching {
             if (cached instanceof Class) {
                 return (Class)cached;
             }
-            throw (CannotResolveClassException)cached;
+            throw (XStreamException)cached;
         }
 
         try {
             Class result = super.realClass(elementName);
             realClassCache.put(elementName, result);
             return result;
+        } catch (ForbiddenClassException e) {
+            realClassCache.put(elementName, e);
+            throw e;
         } catch (CannotResolveClassException e) {
             realClassCache.put(elementName, e);
             throw e;

@@ -63,6 +63,7 @@
     <h2>Major changes</h2>
     
     <ul>
+   		<li>Add security framework to limit handled types while unmarshalling.</li>
    		<li>java.bean.EventHandler no longer handled automatically because of severe security vulnerability.</li>
     	<li>JIRA:XSTR-751: New SunLimitedUnsafeReflectionProvider that uses undocumented features only to allocate new
     	instances as required on Dalvik.</li>
@@ -82,6 +83,11 @@
     <h2>API changes</h2>
 
     <ul>
+    	<li>Added package c.t.x.security with interface TypePermission, all its implementations and
+    	ForbiddenClassException.</li>
+    	<li>Added c.t.x.mapper.SecurityMapper handling the new type permissions.</li>
+    	<li>Added methods addPermission, denyPermission, allowTypesXXX and denyTypesXXX to c.t.x.XStream to setup
+    	security at unmarshalling time.</li>
     	<li>Added c.t.x.converters.reflection.SunLimitedUnsafeReflectionProvider.</li>
     	<li>Deprecated c.t.x.converters.reflection.Sun14ReflectionProvider in favor of new
     	c.t.x.converters.reflection.SunUnsafeReflectionProvider.</li>
