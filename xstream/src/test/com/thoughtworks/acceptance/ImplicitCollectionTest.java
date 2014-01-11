@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -99,6 +99,36 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitCollection(Farm.class, "animals");
         assertBothWays(farm, expected);
+    }
+
+    public void testWithReferencedImplicitElement() {
+        List list = new ArrayList();
+        Animal cow = new Animal("Cow");
+        Animal sheep = new Animal("Sheep");
+        Farm farm = new Farm(100);
+        farm.add(cow);
+        farm.add(sheep);
+        list.add(cow);
+        list.add(farm);
+        list.add(sheep);
+
+        String expected = "" +
+                "<list>\n" +
+                "  <animal>\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <farm>\n" +
+                "    <size>100</size>\n" +
+                "    <animal reference=\"../../animal\"/>\n" +
+                "    <animal>\n" +
+                "      <name>Sheep</name>\n" +
+                "    </animal>\n" +
+                "  </farm>\n" +
+                "  <animal reference=\"../farm/animal[2]\"/>\n" +
+                "</list>";
+
+        xstream.addImplicitCollection(Farm.class, "animals");
+        assertBothWays(list, expected);
     }
 
     public static class MegaFarm extends Farm {

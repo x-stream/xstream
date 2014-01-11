@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -117,6 +117,37 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitMap(SampleMaps.class, "good", Software.class, "name");
         assertBothWays(sample, expected);
+    }
+
+    public void testWithReferencedImplicitElement() {
+        List list = new ArrayList();
+        SampleMaps sample = new SampleMaps();
+        sample.good = new OrderRetainingMap();
+        sample.good.put("Windows", new Software("Microsoft", "Windows"));
+        sample.good.put("Linux", new Software("Red Hat", "Linux"));
+        list.add(sample.good.get("Windows"));
+        list.add(sample);
+        list.add(sample.good.get("Linux"));
+
+        String expected = "" +
+                "<list>\n" +
+                "  <software>\n" +
+                "    <vendor>Microsoft</vendor>\n" +
+                "    <name>Windows</name>\n" +
+                "  </software>\n" +
+                "  <sample>\n" +
+                "    <software reference=\"../../software\"/>\n" +
+                "    <software>\n" +
+                "      <vendor>Red Hat</vendor>\n" +
+                "      <name>Linux</name>\n" +
+                "    </software>\n" +
+                "    <bad/>\n" +
+                "  </sample>\n" +
+                "  <software reference=\"../sample/software[2]\"/>\n" +
+                "</list>";
+
+        xstream.addImplicitMap(SampleMaps.class, "good", Software.class, "name");
+        assertBothWays(list, expected);
     }
 
     public static class MegaSampleMaps extends SampleMaps {

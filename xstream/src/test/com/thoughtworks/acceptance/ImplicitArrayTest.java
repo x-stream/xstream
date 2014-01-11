@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -66,6 +66,35 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitArray(Farm.class, "animals");
         assertBothWays(farm, expected);
+    }
+    
+    public void testWithReferencedImplicitElement() {
+        List list = new ArrayList();
+        Farm farm = new Farm();
+        farm.animals = new Animal[] {
+            new Animal("Cow"),
+            new Animal("Sheep")
+        };
+        list.add(farm.animals[0]);
+        list.add(farm);
+        list.add(farm.animals[1]);
+
+        String expected = "" +
+                "<list>\n" +
+                "  <animal>\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <farm>\n" +
+                "    <animal reference=\"../../animal\"/>\n" +
+                "    <animal>\n" +
+                "      <name>Sheep</name>\n" +
+                "    </animal>\n" +
+                "  </farm>\n" +
+                "  <animal reference=\"../farm/animal[2]\"/>\n" +
+                "</list>";
+
+        xstream.addImplicitArray(Farm.class, "animals");
+        assertBothWays(list, expected);
     }
 
     public static class MegaFarm extends Farm {
