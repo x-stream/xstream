@@ -23,7 +23,6 @@ import com.thoughtworks.xstream.core.util.PresortedSet;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.AccessControlException;
 import java.text.AttributedString;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -504,6 +503,7 @@ public class JVM implements Caching {
         System.out.println("Supports AWT: " + isAWTAvailable());
         System.out.println("Supports Swing: " + isSwingAvailable());
         System.out.println("Supports SQL: " + isSQLAvailable());
+        System.out.println("Java Beans EventHandler present: " + (loadClassForName("java.beans.EventHandler") != null));
         System.out.println("Standard StAX XMLInputFactory: " + staxInputFactory);
         System.out.println("Standard StAX XMLOutputFactory: " + staxOutputFactory);
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
