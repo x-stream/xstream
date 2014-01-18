@@ -17,6 +17,9 @@ import com.thoughtworks.xstream.security.TypePermission;
 
 
 /**
+ * A Mapper implementation injecting a security layer based on permission rules for any type required in the
+ * unmarshalling process.
+ * 
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
