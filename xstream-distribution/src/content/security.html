@@ -158,8 +158,18 @@ XStream.denyTypesByWildcard(String...);</pre></div>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/CGLIBProxyTypePermission.html">CGLIBProxyTypePermission</a></td>
+	    <td>Allow any CGLIB proxy type.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ExplicitTypePermission.html">ExplicitTypePermission</a></td>
 	    <td>Allow types explicitly by name.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/hibernate/security/HibernateProxyTypePermission.html">HibernateProxyTypePermission</a></td>
+	    <td>Allow any Hibernate proxy type. Implementation is located in XStream's Hibernate extension.</td>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
@@ -178,6 +188,11 @@ XStream.denyTypesByWildcard(String...);</pre></div>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/ProxyTypePermission.html">ProxyTypePermission</a></td>
+	    <td>Allow any Java proxy type.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/RegExpTypePermission.html">RegExpTypePermission</a></td>
 	    <td>Allow any type that matches with its name a regular expression.</td>
 	    <td class="example">.*\\.core\\..*<br/>[^$]+</td>
@@ -187,5 +202,6 @@ XStream.denyTypesByWildcard(String...);</pre></div>
 	    <td>Allow any type that matches with its name a wildcard expression.</td>
 	    <td class="example">java.lang.*<br/>java.util.**</td>
 	</tr>
+    </table>
   </body>
  </html>
