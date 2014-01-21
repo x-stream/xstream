@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -122,7 +122,7 @@ public class FieldDictionary implements Caching {
         synchronized (this) {
             if (!keyedByFieldNameCache.containsKey(type)) {
                 final List superClasses = new ArrayList();
-                while (!Object.class.equals(cls)) {
+                while (!Object.class.equals(cls) && cls != null) {
                     superClasses.add(0, cls);
                     cls = cls.getSuperclass();
                 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -92,7 +92,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     public void add(Class definedIn, String fieldName, String itemFieldName, Class itemType, String keyFieldName) {
         Field field = null;
         Class declaredIn = definedIn;
-        while (declaredIn != Object.class) {
+        while (declaredIn != Object.class && definedIn != null) {
             try {
                 field = declaredIn.getDeclaredField(fieldName);
                 break;
