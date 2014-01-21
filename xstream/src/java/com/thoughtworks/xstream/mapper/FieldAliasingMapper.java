@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -71,7 +71,9 @@ public class FieldAliasingMapper extends MapperWrapper {
 
     private String getMember(Class type, String name, Map map) {
         String member = null;
-        for (Class declaringType = type; member == null && declaringType != Object.class; declaringType = declaringType.getSuperclass()) {
+        for (Class declaringType = type; 
+                member == null && declaringType != Object.class && declaringType != null; 
+                declaringType = declaringType.getSuperclass()) {
             member = (String) map.get(key(declaringType, name));
         }
         return member;
