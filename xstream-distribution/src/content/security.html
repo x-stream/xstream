@@ -1,0 +1,207 @@
+<html>
+<!--
+ Copyright (C) 2014 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 09. January 2014 by Joerg Schaible
+ -->
+  <head>
+    <title>Security</title>
+  </head>
+
+  <body>
+    <h1 id="intro">Introduction</h1>
+    
+    <p>XStream is designed as a library, that is easy to use. It takes its main task very serious to convert from Java
+     objects to XML and back.  As result it is possible that you create an instance of XStream with the default
+     constructor, call a method to turn an object into XML and call another one to turn the XML back into an equal Java
+     object.  There are not a lot limits for those objects, XStream can handle nearly all.</p>
+     
+     <p>This flexibility comes at a price.  XStream is using aggressive code internally like undocumented Java
+     features and reflection to be able to handle all kind of unknown types.  The XML output contains by default any
+     information required to rebuild all these types.  Regarding security we have now two different aspects:</p>
+     
+     <ol>
+     <li>a Java runtime can have security constraints (typically by an active SecurityManager) that prevents partly the
+     execution of such aggressive code</li>
+     <li>the input data (XML) can be manipulated to inject objects into the unmarshalled object graph that where not
+     present at marshalling time and that might be used to execute code or even shell commands (CVE-2013-7285).</li>
+     </ol>
+
+     <p>Always remember that manipulation of input data might happen on different levels, e.g. manipulation the value
+     of objects (e.g. exchanging a price value) or breaking the format causing the XML parser to fail.  The latter
+     raises at least an error condition while the former must be catched with validity checks in case of sensitive
+     data.  Even worse is an unrecognized injection resulting in a modified application execution with the worst case
+     of arbitrary command execution.</p>
+     
+    <h2 id="external">External Security</h2>
+
+	<p>An active SecurityManager can prevent actions required by XStream components or converters.  Same applies for
+	an environment like Google Application Engine.  XStream tries to some extend to check the functionality of a
+	converter before it claims to handle a type.</p>
+	
+	<p>Therefore it is possible that XStream behaves different in such an environment, because a converter suddenly no
+	longer handles a special type or any type at all.  It is essential that an application that will have to run in such an environment is
+	tested at an early stage to prevent nasty surprises.</p>
+      
+    <h2 id="implicit">Implicit Security</h2>
+	
+	<p>As already explained it is possible to inject other object instances if someone has the possibility to
+	manipulate the data stream used to deserialize the Java objects (typically XML, but XStream supports other formats
+	like JSON).  A known vulnerability can be created with the help of the Java runtime library using the Java Bean
+	<a href="http://docs.oracle.com/javase/7/docs/api/java/beans/EventHandler.html">EventHandler</a>.  As an instance
+	for the <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/reflect/InvocationHandler.html">InvocationHandler</a>
+	of a dynamic proxy it can be used to install a redirect for an arbitrary call to the original object to the method
+	of a completely different instance of an embedded object of the EventHandler itself.</p>
+	
+	<p>This scenario can be used perfectly to replace/inject a dynamic proxy with such an EventHandler at any location
+	in the XML	where its parent expects an object of such an interface's type or a simple object instance (any list
+	element will suffice).  The usage of a ProcessBuilder as embedded element and the redirection of any call to the
+	ProcessBuilder's <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ProcessBuilder.html#start()">start()</a>
+	method allows even the call of shell commands.  All you have to know is the XML representation of such a
+	combination.</p>
+	
+	<p>Starting with XStream 1.4.7 an instance of the EventHandler is no longer handled by default.  You have to
+	register explicitly a ReflectionConverter for the EventHandler type, if your application has the requirement to
+	persist such an object.  However, you have to take special care about the location of the persisted data and how
+	you can ensure its integrity.</p>
+	
+	<p class=highlight>Note, that this vulnerability is not even a special problem of XStream.  The XML acts here like
+	a script and the scenario above can be created with any script that is executed within a Java runtime (e.g. using
+	its JavaScript interpreter) if someone is able to manipulate it externally.</p>     
+    
+    <h2 id="explicit">Explicit Security</h2>
+    
+    <p>While XStream implicitly avoids the vulnerability scenario with the EventHandler, there might be other
+    combinations with types from well-known and often used Java libraries like ASM, CGLIB, Groovy, or even in the Java
+    runtime that are currently simply unknown.</p>
+    
+    <p>Starting with XStream 1.4.7 it is possible to define <a href="#framework">permissions</a> for types to check the
+    type of an object that should be unmarshalled.  Those permissions can be used to allow or deny types explicitly.
+    With these permissions it is at least possible to inject types into an object graph that do not belong anywhere
+    into it.  Any application that deserializes data from an external source should at least use this possibility to
+    limit the danger of arbitrary command execution.</p>
+	
+	<p class=highlight>Apart from value manipulations, this implementation still allows the injection of allowed
+	objects at wrong locations. e.g. inserting an integer into a list of strings.</p>
+	
+	<p>Apart from the XStream security framework, it has always been possible to overwrite the setupConverter method of
+	XStream to register only the required converters.</p>
+    
+    <h2 id="validation">XML Validation</h2>
+
+    <p>XML itself supports input validation using a schema and a validating parser.  With XStream you can use e.g. a
+    StAX parser for validation, but it will take some effort to ensure that the XML read and written by XStream matches
+    the schema in first place.  Typically you will have to write some custom converters, but it can be worth the effort
+    depending on the use case.</p>
+
+    <h1 id="framework">Security Framework</h1>
+
+	<p>As explained, it might be possible, that other combinations are found with the Java runtime itself or other
+	often used Java libraries that allow a similar vulnerability like the known case using the Java Beans EventHandler.
+	To prevent such a possibility at all, XStream contains since version 1.4.7 a security framework, where you can
+	define, which types	are allowed to be unmarshalled with XStream.</p>
+	
+	<p>Core interface is <a href="javadoc/com/thoughtworks/xstream/security/TypePermission.html">TypePermission</a>.
+	The <a href="javadoc/com/thoughtworks/xstream/mapper/SecurityMapper.html">SecurityMapper</a> will evaluate a list
+	of registered instances for every type that will be required while unmarshalling input data. The interface has one
+	simple method:<p><div class="Source Java"><pre>boolean allow(Class&lt;?&gt;);</pre></div>
+	
+	<p>The <a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream</a> facade provides following methods to
+	register such type permissions within the SecurityMapper:<p><div class="Source Java">
+<pre>XStream.addPermission(TypePermission);
+XStream.allowTypes(String...);
+XStream.allowTypesByRegExp(String...);
+XStream.allowTypesByRegExp(Pattern...);
+XStream.allowTypesByWildcard(String...);
+XStream.denyPermission(TypePermission);
+XStream.denyTypes(String...);
+XStream.denyTypesByRegExp(String...);
+XStream.denyTypesByRegExp(Pattern...);
+XStream.denyTypesByWildcard(String...);</pre></div>
+
+	<p>The sequence of registration is essential. The latest registered permission will be evaluated first.</p>
+	
+	<p>Every TypePermission has three options to implement the allow method and make decisions on the provided type:<p>
+	<ul>
+	<li>if the method returns <i>true</i>, the type is simply accepted and no other permission is evaluated anymore</li>
+	<li>if the method returns <i>false</i>, the implementation cannot judge over the type and the SecurityMapper will
+	continue with the next permission instance in its registration list</li>
+	<li>the method throws a <a href="javadoc/com/thoughtworks/xstream/security/ForbiddenClassException.html">ForbiddenClassException</a>
+	to stop the unmarshalling process</li>
+	</ul>
+	
+	<p>XStream provides some TypePermission implementations to allow any or no type at all, to allow primitive types
+	and their counterpart, null, array types, implementations match the name of the type by regular or wildcard
+	expression and one to invert a permission.</p>
+	
+	<table class="examplesTable" summary="Overview over all Converters delivered with XStream">
+	<!-- .................................................................................................. -->
+	<tr>
+	    <th>Permission</th>
+	    <th>Description</th>
+	    <th>Example</th>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/AnyTypePermission.html">AnyTypePermission</a></td>
+	    <td>Allow any type.  You may use the ANY instance directly. A registration of this permission will wipe any
+	    prior one.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/ArrayTypePermission.html">ArrayTypePermission</a></td>
+	    <td>Allow any array type.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/CGLIBProxyTypePermission.html">CGLIBProxyTypePermission</a></td>
+	    <td>Allow any CGLIB proxy type.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/ExplicitTypePermission.html">ExplicitTypePermission</a></td>
+	    <td>Allow types explicitly by name.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/hibernate/security/HibernateProxyTypePermission.html">HibernateProxyTypePermission</a></td>
+	    <td>Allow any Hibernate proxy type. Implementation is located in XStream's Hibernate extension.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/NoPermission.html">NoPermission</a></td>
+	    <td>Invert any other permission.  Instances of this type are used by XStream in the deny methods.</td>
+	    <td class="example">&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/NullPermission.html">NullPermission</a></td>
+	    <td>Allow null as type.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/PrimitiveTypePermission.html">PrimitiveTypePermission</a></td>
+	    <td>Allow any primitive type and its boxed counterpart.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/ProxyTypePermission.html">ProxyTypePermission</a></td>
+	    <td>Allow any Java proxy type.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/RegExpTypePermission.html">RegExpTypePermission</a></td>
+	    <td>Allow any type that matches with its name a regular expression.</td>
+	    <td class="example">.*\\.core\\..*<br/>[^$]+</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/WildcardTypePermission.html">WildcardTypePermission</a></td>
+	    <td>Allow any type that matches with its name a wildcard expression.</td>
+	    <td class="example">java.lang.*<br/>java.util.**</td>
+	</tr>
+    </table>
+  </body>
+ </html>

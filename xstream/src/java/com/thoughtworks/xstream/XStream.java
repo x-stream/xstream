@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -137,8 +137,16 @@ import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
 import com.thoughtworks.xstream.mapper.PackageAliasingMapper;
+import com.thoughtworks.xstream.mapper.SecurityMapper;
 import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
+import com.thoughtworks.xstream.security.AnyTypePermission;
+import com.thoughtworks.xstream.security.ExplicitTypePermission;
+import com.thoughtworks.xstream.security.NoPermission;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.RegExpTypePermission;
+import com.thoughtworks.xstream.security.TypePermission;
+import com.thoughtworks.xstream.security.WildcardTypePermission;
 
 
 /**
@@ -274,7 +282,7 @@ import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
  * The XStream instance is thread-safe. That is, once the XStream instance has been created and
  * configured, it may be shared across multiple threads allowing objects to be
  * serialized/deserialized concurrently. <em>Note, that this only applies if annotations are not 
- * auto-detected on -the-fly.</em>
+ * auto-detected on-the-fly.</em>
  * </p>
  * <h3>Implicit collections</h3>
  * 
@@ -310,6 +318,7 @@ public class XStream {
     private ImmutableTypesMapper immutableTypesMapper;
     private ImplicitCollectionMapper implicitCollectionMapper;
     private LocalConversionMapper localConversionMapper;
+    private SecurityMapper securityMapper;
     private AnnotationConfiguration annotationConfiguration;
 
     public static final int NO_REFERENCES = 1001;
@@ -558,6 +567,7 @@ public class XStream {
         this.mapper = mapper == null ? buildMapper() : mapper;
 
         setupMappers();
+        setupSecurity();
         setupAliases();
         setupDefaultImplementations();
         setupConverters();
@@ -588,6 +598,7 @@ public class XStream {
         }
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
+        mapper = new SecurityMapper(mapper);
         if (JVM.is15()) {
             mapper = buildMapperDynamically(ANNOTATION_MAPPER_TYPE, new Class[]{
                 Mapper.class, ConverterRegistry.class, ConverterLookup.class,
@@ -641,8 +652,18 @@ public class XStream {
             .lookupMapperOfType(ImmutableTypesMapper.class);
         localConversionMapper = (LocalConversionMapper)this.mapper
             .lookupMapperOfType(LocalConversionMapper.class);
+        securityMapper = (SecurityMapper)this.mapper
+            .lookupMapperOfType(SecurityMapper.class);
         annotationConfiguration = (AnnotationConfiguration)this.mapper
             .lookupMapperOfType(AnnotationConfiguration.class);
+    }
+    
+    protected void setupSecurity() {
+        if (securityMapper == null) {
+            return;
+        }
+        
+        addPermission(AnyTypePermission.ANY);
     }
 
     protected void setupAliases() {
@@ -1973,6 +1994,129 @@ public class XStream {
         if (annotationConfiguration != null) {
             annotationConfiguration.autodetectAnnotations(mode);
         }
+    }
+    
+    /**
+     * Add a new security permission.
+     * 
+     * <p>
+     * Permissions are evaluated in the added sequence. An instance of {@link NoTypePermission} or
+     * {@link AnyTypePermission} will implicitly wipe any existing permission.
+     * </p>
+     * 
+     * @param permission the permission to add
+     * @since upcoming
+     */
+    public void addPermission(TypePermission permission) {
+        if (securityMapper != null) {
+            securityMapper.addPermission(permission);
+        }
+    }
+    
+    /**
+     * Add security permission for explicit types by name.
+     * 
+     * @param names the type names to allow
+     * @since upcoming
+     */
+    public void allowTypes(String... names) {
+        addPermission(new ExplicitTypePermission(names));
+    }
+    
+    /**
+     * Add security permission for types matching one of the specified regular expressions.
+     * 
+     * @param regexps the regular expressions to allow type names
+     * @since upcoming
+     */
+    public void allowTypesByRegExp(String... regexps) {
+        addPermission(new RegExpTypePermission(regexps));
+    }
+    
+    /**
+     * Add security permission for types matching one of the specified regular expressions.
+     * 
+     * @param regexps the regular expressions to allow type names
+     * @since upcoming
+     */
+    public void allowTypesByRegExp(Pattern... regexps) {
+        addPermission(new RegExpTypePermission(regexps));
+    }
+    
+    /**
+     * Add security permission for types matching one of the specified wildcard patterns.
+     * <p>
+     * Supported are patterns with path expressions using dot as separator:
+     * </p>
+     * <ul>
+     * <li>?: one non-control character except separator, e.g. for 'java.net.Inet?Address'</li>
+     * <li>*: arbitrary number of non-control characters except separator, e.g. for types in a package like 'java.lang.*'</li>
+     * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and subpackages like 'java.lang.**'</li>
+     * </ul>
+     * 
+     * @param patterns the patterns to allow type names
+     * @since upcoming
+     */
+    public void allowTypesByWildcard(String... patterns) {
+        addPermission(new WildcardTypePermission(patterns));
+    }
+    
+    /**
+     * Add security permission denying another one.
+     * 
+     * @param permission the permission to deny
+     * @since upcoming
+     */
+    public void denyPermission(TypePermission permission) {
+        addPermission(new NoPermission(permission));
+    }
+    
+    /**
+     * Add security permission forbidding explicit types by name.
+     * 
+     * @param names the type names to forbid
+     * @since upcoming
+     */
+    public void denyTypes(String... names) {
+        denyPermission(new ExplicitTypePermission(names));
+    }
+    
+    /**
+     * Add security permission forbidding types matching one of the specified regular expressions.
+     * 
+     * @param regexps the regular expressions to forbid type names
+     * @since upcoming
+     */
+    public void denyTypesByRegExp(String... regexps) {
+        denyPermission(new RegExpTypePermission(regexps));
+    }
+    
+    /**
+     * Add security permission forbidding types matching one of the specified regular expressions.
+     * 
+     * @param regexps the regular expressions to forbid type names
+     * @since upcoming
+     */
+    public void denyTypesByRegExp(Pattern... regexps) {
+        denyPermission(new RegExpTypePermission(regexps));
+    }
+    
+    /**
+     * Add security permission forbidding types matching one of the specified wildcard patterns.
+     * <p>
+     * Supported are patterns with path expressions using dot as separator:
+     * </p>
+     * <ul>
+     * <li>?: one non-control character except separator, e.g. for 'java.net.Inet?Address'</li>
+     * <li>*: arbitrary number of non-control characters except separator, e.g. for types in a package like 'java.lang.*'</li>
+     * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and subpackages like 'java.lang.**'</li>
+     * </ul>
+     * 
+     * @param patterns the patterns to forbid names
+     * @since upcoming
+     */
+    public void denyTypesByWildcard(String... patterns) {
+        denyPermission(new WildcardTypePermission(patterns));
     }
 
     /**

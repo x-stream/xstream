@@ -32,6 +32,7 @@
         <name>Using XStream</name>
         <page>architecture.html</page>
         <page>converters.html</page>
+        <page>security.html</page>
         <page>faq.html</page>
         <page>list-user.html</page>
         <page>issues.html</page>
