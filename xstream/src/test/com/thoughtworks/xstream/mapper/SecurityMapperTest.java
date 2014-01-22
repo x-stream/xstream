@@ -43,21 +43,20 @@ public class SecurityMapperTest extends TestCase {
 
         classMap = new HashMap<String, Class<?>>();
         mapper = new SecurityMapper(new MapperWrapper(null) {
-            @Override
             public Class realClass(final String elementName) {
                 return classMap.get(elementName);
             }
         });
     }
 
-    private void register(final Class<?>... types) {
-        for (final Class<?> type : types) {
-            classMap.put(type.getName(), type);
+    private void register(final Class[] types) {
+        for (int i = 0; i < types.length; ++i) {
+            classMap.put(types[i].getName(), types[i]);
         }
     }
 
     public void testAnyType() {
-        register(String.class, URL.class, List.class);
+        register(new Class[]{String.class, URL.class, List.class});
         mapper.addPermission(NoTypePermission.NONE);
         mapper.addPermission(AnyTypePermission.ANY);
         assertSame(String.class, mapper.realClass(String.class.getName()));
@@ -66,7 +65,7 @@ public class SecurityMapperTest extends TestCase {
     }
 
     public void testNoType() {
-        register(String.class, URL.class, List.class);
+        register(new Class[]{String.class, URL.class, List.class});
         mapper.addPermission(NoTypePermission.NONE);
         try {
             mapper.realClass(String.class.getName());
@@ -83,7 +82,7 @@ public class SecurityMapperTest extends TestCase {
     }
 
     public void testNullType() {
-        register(String.class, Mapper.Null.class);
+        register(new Class[]{String.class, Mapper.Null.class});
         mapper.addPermission(NullPermission.NULL);
         assertSame(Mapper.Null.class, mapper.realClass(Mapper.Null.class.getName()));
         assertNull(mapper.realClass(null));
@@ -96,7 +95,7 @@ public class SecurityMapperTest extends TestCase {
     }
 
     public void testPrimitiveTypes() {
-        register(String.class, int.class, Integer.class, char[].class, Character[].class);
+        register(new Class[]{String.class, int.class, Integer.class, char[].class, Character[].class});
         mapper.addPermission(PrimitiveTypePermission.PRIMITIVES);
         assertSame(int.class, mapper.realClass(int.class.getName()));
         assertSame(Integer.class, mapper.realClass(Integer.class.getName()));
@@ -121,7 +120,7 @@ public class SecurityMapperTest extends TestCase {
     }
 
     public void testArrayTypes() {
-        register(String.class, int.class, Integer.class, char[].class, Character[].class);
+        register(new Class[]{String.class, int.class, Integer.class, char[].class, Character[].class});
         mapper.addPermission(ArrayTypePermission.ARRAYS);
         assertSame(char[].class, mapper.realClass(char[].class.getName()));
         assertSame(Character[].class, mapper.realClass(Character[].class.getName()));
@@ -146,8 +145,8 @@ public class SecurityMapperTest extends TestCase {
     }
 
     public void testExplicitTypes() {
-        register(String.class, List.class);
-        mapper.addPermission(new ExplicitTypePermission(String.class.getName(), List.class.getName()));
+        register(new Class[]{String.class, List.class});
+        mapper.addPermission(new ExplicitTypePermission(new String[]{String.class.getName(), List.class.getName()}));
         assertSame(String.class, mapper.realClass(String.class.getName()));
         assertSame(List.class, mapper.realClass(List.class.getName()));
         try {
@@ -160,9 +159,11 @@ public class SecurityMapperTest extends TestCase {
 
     public void testNamesWithRegExps() {
         class Foo$_0 {}
-        final Class<?> anonymous = new Object() {}.getClass();
-        register(String.class, JVM.class, QuickWriter.class, Foo$_0.class, anonymous, DefaultClassMapperTest.class);
-        mapper.addPermission(new RegExpTypePermission(".*Test", ".*\\.core\\..*", ".*SecurityMapperTest\\$.+"));
+        final Class anonymous = new Object() {}.getClass();
+        register(new Class[]{
+            String.class, JVM.class, QuickWriter.class, Foo$_0.class, anonymous, DefaultClassMapperTest.class});
+        mapper.addPermission(new RegExpTypePermission(new String[]{
+            ".*Test", ".*\\.core\\..*", ".*SecurityMapperTest\\$.+"}));
         assertSame(DefaultClassMapperTest.class, mapper.realClass(DefaultClassMapperTest.class.getName()));
         assertSame(JVM.class, mapper.realClass(JVM.class.getName()));
         assertSame(QuickWriter.class, mapper.realClass(QuickWriter.class.getName()));
@@ -179,9 +180,10 @@ public class SecurityMapperTest extends TestCase {
     public void testNamesWithWildcardPatterns() {
         class Foo$_0 {}
         class Foo$_1 {}
-        final Class<?> anonymous = new Object() {}.getClass();
-        register(String.class, JVM.class, QuickWriter.class, Foo$_0.class, Foo$_1.class, anonymous);
-        mapper.addPermission(new WildcardTypePermission("**.*_0", "**.core.*", "**.SecurityMapperTest$?"));
+        final Class anonymous = new Object() {}.getClass();
+        register(new Class[]{String.class, JVM.class, QuickWriter.class, Foo$_0.class, Foo$_1.class, anonymous});
+        mapper
+            .addPermission(new WildcardTypePermission(new String[]{"**.*_0", "**.core.*", "**.SecurityMapperTest$?"}));
         assertSame(JVM.class, mapper.realClass(JVM.class.getName()));
         assertSame(Foo$_0.class, mapper.realClass(Foo$_0.class.getName()));
         assertSame(anonymous, mapper.realClass(anonymous.getName()));

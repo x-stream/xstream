@@ -29,11 +29,11 @@ public class WildcardTypePermission extends RegExpTypePermission {
     /**
      * @since upcoming
      */
-    public WildcardTypePermission(final String... patterns) {
+    public WildcardTypePermission(final String[] patterns) {
         super(getRegExpPatterns(patterns));
     }
 
-    private static String[] getRegExpPatterns(final String... wildcards) {
+    private static String[] getRegExpPatterns(final String[] wildcards) {
         if (wildcards == null)
             return null;
         final String[] regexps = new String[wildcards.length];

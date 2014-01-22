@@ -19,13 +19,13 @@ import java.util.Set;
  */
 public class ExplicitTypePermission implements TypePermission {
 
-    final Set<String> names;
+    final Set names;
     
     /**
      * @since upcoming
      */
-    public ExplicitTypePermission(String...names) {
-        this.names = names == null ? Collections.<String>emptySet() : new HashSet<String>(Arrays.asList(names));
+    public ExplicitTypePermission(String[] names) {
+        this.names = names == null ? Collections.EMPTY_SET : new HashSet(Arrays.asList(names));
     }
 
     public boolean allows(Class type) {

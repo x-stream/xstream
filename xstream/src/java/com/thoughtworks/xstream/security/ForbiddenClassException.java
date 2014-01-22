@@ -21,7 +21,7 @@ public class ForbiddenClassException extends XStreamException {
      * @param type the forbidden class
      * @since upcoming
      */
-    public ForbiddenClassException(Class<?> type) {
+    public ForbiddenClassException(Class type) {
         super(type == null ? "null" : type.getName());
     }
 }
