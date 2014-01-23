@@ -35,16 +35,15 @@ import junit.framework.TestCase;
 public class SecurityMapperTest extends TestCase {
 
     private SecurityMapper mapper;
-    private Map<String, Class<?>> classMap;
+    private Map classMap;
 
-    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
-        classMap = new HashMap<String, Class<?>>();
+        classMap = new HashMap();
         mapper = new SecurityMapper(new MapperWrapper(null) {
             public Class realClass(final String elementName) {
-                return classMap.get(elementName);
+                return (Class)classMap.get(elementName);
             }
         });
     }
