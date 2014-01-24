@@ -113,15 +113,15 @@
 	<p>The <a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream</a> facade provides the following methods to
 	register such type permissions within the SecurityMapper:</p><div class="Source Java">
 <pre>XStream.addPermission(TypePermission);
-XStream.allowTypes(String...);
-XStream.allowTypesByRegExp(String...);
-XStream.allowTypesByRegExp(Pattern...);
-XStream.allowTypesByWildcard(String...);
+XStream.allowTypes(String[]);
+XStream.allowTypesByRegExp(String[]);
+XStream.allowTypesByRegExp(Pattern[]);
+XStream.allowTypesByWildcard(String[]);
 XStream.denyPermission(TypePermission);
-XStream.denyTypes(String...);
-XStream.denyTypesByRegExp(String...);
-XStream.denyTypesByRegExp(Pattern...);
-XStream.denyTypesByWildcard(String...);</pre></div>
+XStream.denyTypes(String[]);
+XStream.denyTypesByRegExp(String[]);
+XStream.denyTypesByRegExp(Pattern[]);
+XStream.denyTypesByWildcard(String[]);</pre></div>
 
 	<p>The sequence of registration is essential. The most recently registered permission will be evaluated first.</p>
          
