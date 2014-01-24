@@ -8,6 +8,8 @@ package com.thoughtworks.xstream.security;
 
 import java.lang.reflect.Proxy;
 
+import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
+
 
 /**
  * Permission for any array type.
@@ -23,7 +25,7 @@ public class ProxyTypePermission implements TypePermission {
 
     @Override
     public boolean allows(final Class<?> type) {
-        return type != null && Proxy.isProxyClass(type);
+        return type != null && (Proxy.isProxyClass(type) || type == DynamicProxyMapper.DynamicProxy.class);
     }
 
     @Override
