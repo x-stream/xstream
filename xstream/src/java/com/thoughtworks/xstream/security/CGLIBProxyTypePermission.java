@@ -22,7 +22,8 @@ public class CGLIBProxyTypePermission implements TypePermission {
     public static final TypePermission PROXIES = new CGLIBProxyTypePermission();
 
     public boolean allows(final Class type) {
-        return type != null && Proxy.isProxyClass(type);
+        return type != null
+            && (Proxy.isProxyClass(type) || type.getName().startsWith(Proxy.class.getPackage().getName() + "."));
     }
 
     public int hashCode() {
