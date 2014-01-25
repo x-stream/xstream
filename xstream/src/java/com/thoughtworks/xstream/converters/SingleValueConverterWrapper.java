@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -50,7 +50,7 @@ public class SingleValueConverterWrapper implements Converter, SingleValueConver
     }
 
     public void appendErrors(ErrorWriter errorWriter) {
-        errorWriter.add("wrapped-converter", wrapped.getClass().getName());
+        errorWriter.add("wrapped-converter", wrapped == null ? "(null)" : wrapped.getClass().getName());
         if (wrapped instanceof ErrorReporter) {
             ((ErrorReporter)wrapped).appendErrors(errorWriter);
         }
