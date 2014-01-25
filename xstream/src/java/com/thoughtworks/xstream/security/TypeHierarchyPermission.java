@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.security;
  */
 public class TypeHierarchyPermission implements TypePermission {
 
-    private Class<?> type;
+    private Class type;
 
     /**
      * @since upcoming
