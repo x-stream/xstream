@@ -9,7 +9,7 @@ package com.thoughtworks.xstream.security;
 import com.thoughtworks.xstream.core.util.Primitives;
 
 /**
- * Permission for any primitive type and its boxed counterpart.
+ * Permission for any primitive type and its boxed counterpart (incl. void).
  * 
  * @author J&ouml;rg Schaible
  * @since upcoming
