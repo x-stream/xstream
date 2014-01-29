@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+
 /**
  * Explicit permission for a type with a name matching one in the provided list.
  * 
@@ -20,11 +21,27 @@ import java.util.Set;
 public class ExplicitTypePermission implements TypePermission {
 
     final Set<String> names;
-    
+
     /**
      * @since upcoming
      */
-    public ExplicitTypePermission(String...names) {
+    public ExplicitTypePermission(final Class<?>... types) {
+        this(new Object() {
+            public String[] getNames() {
+                if (types == null)
+                    return null;
+                String[] names = new String[types.length];
+                for (int i = 0; i < types.length; ++i)
+                    names[i] = types[i].getName();
+                return names;
+            }
+        }.getNames());
+    }
+
+    /**
+     * @since upcoming
+     */
+    public ExplicitTypePermission(String... names) {
         this.names = names == null ? Collections.<String>emptySet() : new HashSet<String>(Arrays.asList(names));
     }
 
