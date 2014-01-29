@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -85,6 +85,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
                 return new FieldPrefixStrippingMapper(next);
             }
         };
+        setupSecurity(xstream);
         xstream.alias("thing", ThingWithStupidNamingConventions.class);
 
         ThingWithStupidNamingConventions in = new ThingWithStupidNamingConventions("Joe", "Walnes", 10);
@@ -160,6 +161,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
             }
             
         };
+        setupSecurity(xstream);
         xstream.alias("software", Software.class);
 
         Software out = (Software) xstream.fromXML(expectedXml);
@@ -191,6 +193,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
             }
 
         };
+        setupSecurity(xstream);
         xstream.alias("wl", WithList.class);
         WithList wl = (WithList)xstream.fromXML("" 
                 + "<wl>\n" 

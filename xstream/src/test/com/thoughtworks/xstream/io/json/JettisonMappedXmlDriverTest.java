@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2010, 2011, 2013 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2010, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.io.json;
 
+import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.OwnerOfExternalizable;
 import com.thoughtworks.acceptance.objects.Product;
@@ -58,6 +59,8 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         super.setUp();
         TimeZoneChanger.change("UTC");
         xstream = new XStream(new JettisonMappedXmlDriver());
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
         xstream.alias("category", Category.class);
         xstream.alias("product", Product.class);
     }
@@ -91,6 +94,8 @@ public class JettisonMappedXmlDriverTest extends TestCase {
             Configuration config = new Configuration();
             setTypeConverter.invoke(config, new Object[]{typeConverter});
             xstream = new XStream(new JettisonMappedXmlDriver(config));
+            xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+            xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
             xstream.alias("product", Product.class);
             Product product = new Product("Banana", "123", 23.00);
             String result = xstream.toXML(product);

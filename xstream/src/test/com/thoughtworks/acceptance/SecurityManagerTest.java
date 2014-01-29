@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -118,6 +118,8 @@ public class SecurityManagerTest extends TestCase {
         System.setSecurityManager(sm);
 
         xstream = new XStream();
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
 
         assertBothWays();
     }
@@ -149,6 +151,8 @@ public class SecurityManagerTest extends TestCase {
         System.setSecurityManager(sm);
 
         xstream = new XStream(new PureJavaReflectionProvider());
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
 
         assertBothWays();
     }
@@ -195,6 +199,8 @@ public class SecurityManagerTest extends TestCase {
         System.setSecurityManager(sm);
 
         xstream = new XStream(new PureJavaReflectionProvider(), new DomDriver());
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
 
         assertBothWays();
     }

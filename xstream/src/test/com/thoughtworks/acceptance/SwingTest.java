@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.JVM;
 
 import javax.swing.DefaultListModel;
@@ -21,8 +22,13 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 
 public class SwingTest extends AbstractAcceptanceTest {
 
-    // JTable is one of the nastiest components to serialize. If this works, we're in good shape :)
+    @Override
+    protected void setupSecurity(XStream xstream) {
+        super.setupSecurity(xstream);
+        xstream.allowTypesByWildcard("javax.swing.**", "java.awt.**", "java.beans.**", "sun.swing.**");
+    }
 
+    // JTable is one of the nastiest components to serialize. If this works, we're in good shape :)
     public void testJTable() {
         boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
         if (!isHeadless || JVM.is15()) {

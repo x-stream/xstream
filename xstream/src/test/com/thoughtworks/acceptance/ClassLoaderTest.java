@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,6 +24,7 @@ public class ClassLoaderTest extends AbstractAcceptanceTest {
     public void testAllowsClassLoaderToBeOverriden() throws MalformedURLException {
         String name = "com.thoughtworks.proxy.kit.SimpleReference";
         String xml = "<com.thoughtworks.proxy.kit.SimpleReference/>";
+        xstream.allowTypes(name);
         try {
             xstream.fromXML(xml);
             fail("Thrown " + CannotResolveClassException.class.getName() + " expected");
@@ -46,9 +47,11 @@ public class ClassLoaderTest extends AbstractAcceptanceTest {
         
         xstream = createXStream();
         xstream.setClassLoader(classLoader);
+        xstream.allowTypes(name);
         assertEquals(name, xstream.fromXML(xml).getClass().getName());
         
         xstream = createXStream();
+        xstream.allowTypes(name);
         try {
             xstream.fromXML(xml);
             fail("Thrown " + CannotResolveClassException.class.getName() + " expected");

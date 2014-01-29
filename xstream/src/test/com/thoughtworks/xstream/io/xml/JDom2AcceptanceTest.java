@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,6 +31,7 @@ public class JDom2AcceptanceTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         xstream = new XStream();
+        xstream.allowTypes(X.class, Y.class);
         xstream.alias("x", X.class);
     }
 

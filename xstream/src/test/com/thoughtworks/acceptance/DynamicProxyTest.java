@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thoughtworks.acceptance.objects.SampleDynamicProxy;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.security.ProxyTypePermission;
 
 
 public class DynamicProxyTest extends AbstractAcceptanceTest {
@@ -22,6 +24,12 @@ public class DynamicProxyTest extends AbstractAcceptanceTest {
         SampleDynamicProxy.InterfaceOne one;
         SampleDynamicProxy.InterfaceTwo two;
     };
+
+    @Override
+    protected void setupSecurity(XStream xstream) {
+        super.setupSecurity(xstream);
+        xstream.addPermission(ProxyTypePermission.PROXIES);
+    }
 
     public void testCanBeMarshaled() {
         assertBothWays(

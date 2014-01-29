@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -97,6 +98,8 @@ public class DriverEndToEndTestSuite extends TestSuite {
 
     private void test(HierarchicalStreamDriver driver) {
         XStream xstream = new XStream(driver);
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
         xstream.registerConverter(new CollectionConverter(xstream.getMapper()) {
 
             public Object unmarshal(HierarchicalStreamReader reader,

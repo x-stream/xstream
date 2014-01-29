@@ -26,15 +26,21 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -47,8 +53,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.UUID;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -141,10 +149,15 @@ import com.thoughtworks.xstream.mapper.SecurityMapper;
 import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 import com.thoughtworks.xstream.security.AnyTypePermission;
+import com.thoughtworks.xstream.security.ArrayTypePermission;
 import com.thoughtworks.xstream.security.ExplicitTypePermission;
+import com.thoughtworks.xstream.security.InterfaceTypePermission;
 import com.thoughtworks.xstream.security.NoPermission;
 import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.NullPermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import com.thoughtworks.xstream.security.RegExpTypePermission;
+import com.thoughtworks.xstream.security.TypeHierarchyPermission;
 import com.thoughtworks.xstream.security.TypePermission;
 import com.thoughtworks.xstream.security.WildcardTypePermission;
 
@@ -644,7 +657,31 @@ public class XStream {
             return;
         }
         
-        addPermission(AnyTypePermission.ANY);
+        addPermission(NullPermission.NULL);
+        addPermission(PrimitiveTypePermission.PRIMITIVES);
+        addPermission(ArrayTypePermission.ARRAYS);
+        addPermission(InterfaceTypePermission.INTERFACES);
+        allowTypeHierarchy(Calendar.class);
+        allowTypeHierarchy(Collection.class);
+        allowTypeHierarchy(Enum.class);
+        allowTypeHierarchy(Map.class);
+        allowTypeHierarchy(Map.Entry.class);
+        allowTypeHierarchy(Member.class);
+        allowTypeHierarchy(Number.class);
+        allowTypeHierarchy(Throwable.class);
+        allowTypeHierarchy(TimeZone.class);
+        
+        Set<Class<?>> types = new HashSet<Class<?>>();
+        types.addAll(Arrays.<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
+            DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
+            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
+        if (JVM.isSQLAvailable()) {
+            types.add(JVM.loadClassForName("java.sql.Timestamp"));
+            types.add(JVM.loadClassForName("java.sql.Time"));
+            types.add(JVM.loadClassForName("java.sql.Date"));
+        }
+        types.remove(null);
+        allowTypes(types.toArray(new Class[types.size()]));
     }
 
     protected void setupAliases() {
@@ -2005,6 +2042,26 @@ public class XStream {
     }
     
     /**
+     * Add security permission for explicit types.
+     * 
+     * @param types the types to allow
+     * @since upcoming
+     */
+    public void allowTypes(Class<?>... types) {
+        addPermission(new ExplicitTypePermission(types));
+    }
+    
+    /**
+     * Add security permission for a type hierarchy.
+     * 
+     * @param type the base type to allow
+     * @since upcoming
+     */
+    public void allowTypeHierarchy(Class<?> type) {
+        addPermission(new TypeHierarchyPermission(type));
+    }
+    
+    /**
      * Add security permission for types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to allow type names
@@ -2060,6 +2117,26 @@ public class XStream {
      */
     public void denyTypes(String... names) {
         denyPermission(new ExplicitTypePermission(names));
+    }
+    
+    /**
+     * Add security permission forbidding explicit types.
+     * 
+     * @param types the types to forbid
+     * @since upcoming
+     */
+    public void denyTypes(Class<?>... types) {
+        denyPermission(new ExplicitTypePermission(types));
+    }
+    
+    /**
+     * Add security permission forbidding a type hierarchy.
+     * 
+     * @param type the base type to forbid
+     * @since upcoming
+     */
+    public void denyTypeHierarchy(Class<?> type) {
+        denyPermission(new TypeHierarchyPermission(type));
     }
     
     /**

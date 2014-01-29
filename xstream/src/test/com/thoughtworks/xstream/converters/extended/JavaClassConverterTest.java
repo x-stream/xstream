@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -56,5 +56,24 @@ public class JavaClassConverterTest extends AbstractAcceptanceTest {
         assertEquals("[Lcom.thoughtworks.xstream.converters.extended.JavaClassConverterTest$B;", result.getName());
         assertTrue("Should be an array", result.isArray());
         assertEquals("com.thoughtworks.xstream.converters.extended.JavaClassConverterTest$B", result.getComponentType().getName());
+    }
+    
+    public void testHandlesJavaClassArray() {
+        xstream.registerConverter(new JavaClassConverter(xstream.getMapper()){});
+        
+        Class[] classes = new Class[] {
+           Object.class,
+           Comparable.class,
+           null,
+           Throwable.class
+        };
+        
+        assertBothWays(classes, ""
+            + "<java-class-array>\n"
+            + "  <java-class>object</java-class>\n"
+            + "  <java-class>java.lang.Comparable</java-class>\n"
+            + "  <null/>\n"
+            + "  <java-class>java.lang.Throwable</java-class>\n"
+            + "</java-class-array>");
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream;
 
+import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
 import com.thoughtworks.acceptance.someobjects.Handler;
@@ -50,6 +51,8 @@ public class XStreamTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         xstream = new XStream();
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
         xstream.alias("x", X.class);
         xstream.alias("y", Y.class);
         xstream.alias("funny", FunnyConstructor.class);

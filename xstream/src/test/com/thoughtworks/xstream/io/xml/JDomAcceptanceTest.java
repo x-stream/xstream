@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,6 +33,7 @@ public class JDomAcceptanceTest extends TestCase {
         super.setUp();
         xstream = new XStream();
         xstream.alias("x", X.class);
+        xstream.allowTypes(X.class);
     }
 
     public void testUnmarshalsObjectFromJDOM() throws Exception {

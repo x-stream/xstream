@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,7 +37,9 @@ public abstract class AbstractAcceptanceTest extends TestCase {
     protected transient XStream xstream = createXStream();
     
     protected XStream createXStream() {
-        return new XStream(createDriver());
+        XStream xstream = new XStream(createDriver());
+        setupSecurity(xstream);
+        return xstream;
     }
 
     protected HierarchicalStreamDriver createDriver() {
@@ -55,6 +57,11 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             throw new RuntimeException("Could not load driver: " + driver);
         }
         return new XppDriver();
+    }
+    
+    protected void setupSecurity(XStream xstream) {
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
     }
     
     protected Object assertBothWaysNormalized(Object root, String xml, final String match,

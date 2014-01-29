@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,6 +31,7 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         super.setUp();
         xstream.alias("person", Person.class);
         xstream.alias("thing", Thing.class);
+        xstream.allowTypesByWildcard(AbstractReferenceTest.class.getName()+"$*");
     }
 
     public void testReferencesAreWorking() {

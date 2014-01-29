@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,13 +19,14 @@ import com.thoughtworks.xstream.io.xml.XppDriver;
 public class XStream11XmlFriendlyTest extends AbstractAcceptanceTest {
 
     protected XStream createXStream() {
-        return new XStream(new XppDriver(new XStream11XmlFriendlyReplacer())) {
-
+        XStream xstream = new XStream(new XppDriver(new XStream11XmlFriendlyReplacer())) {
             protected boolean useXStream11XmlFriendlyMapper() {
                 return true;
             }
-            
+
         };
+        setupSecurity(xstream);
+        return xstream;
     }
 
     public static class WithDollarCharField extends StandardObject {

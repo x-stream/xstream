@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -94,6 +94,7 @@ public class ReflectionConverterTest extends TestCase {
     
     public void testCanBeOverloadedToDeserializeTransientFields() {
         XStream xstream = new XStream(new XppDriver());
+        xstream.allowTypes(TypesOfFields.class);
         xstream.alias("types", TypesOfFields.class);
         xstream.registerConverter(new ReflectionConverter(xstream.getMapper(), xstream
             .getReflectionProvider()) {
