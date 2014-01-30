@@ -104,10 +104,12 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     private boolean isSerializable(Class type) {
-        if (Serializable.class.isAssignableFrom(type)
-          && ( serializationMethodInvoker.supportsReadObject(type, true)
-            || serializationMethodInvoker.supportsWriteObject(type, true) )) {
-            for(Iterator iter = hierarchyFor(type).iterator(); iter.hasNext(); ) {
+        if (type != null
+            && Serializable.class.isAssignableFrom(type)
+            && !type.isInterface()
+            && (serializationMethodInvoker.supportsReadObject(type, true) || serializationMethodInvoker
+                .supportsWriteObject(type, true))) {
+            for (Iterator iter = hierarchyFor(type).iterator(); iter.hasNext();) {
                 if (!Serializable.class.isAssignableFrom((Class)iter.next())) {
                     return canAccess(type);
                 }
