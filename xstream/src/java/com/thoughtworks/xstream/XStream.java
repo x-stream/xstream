@@ -145,6 +145,7 @@ import com.thoughtworks.xstream.security.ExplicitTypePermission;
 import com.thoughtworks.xstream.security.NoPermission;
 import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.RegExpTypePermission;
+import com.thoughtworks.xstream.security.TypeHierarchyPermission;
 import com.thoughtworks.xstream.security.TypePermission;
 import com.thoughtworks.xstream.security.WildcardTypePermission;
 
@@ -2024,6 +2025,26 @@ public class XStream {
     }
     
     /**
+     * Add security permission for explicit types.
+     * 
+     * @param types the types to allow
+     * @since upcoming
+     */
+    public void allowTypes(Class[] types) {
+        addPermission(new ExplicitTypePermission(types));
+    }
+    
+    /**
+     * Add security permission for a type hierarchy.
+     * 
+     * @param type the base type to allow
+     * @since upcoming
+     */
+    public void allowTypeHierarchy(Class type) {
+        addPermission(new TypeHierarchyPermission(type));
+    }
+    
+    /**
      * Add security permission for types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to allow type names
@@ -2079,6 +2100,26 @@ public class XStream {
      */
     public void denyTypes(String[] names) {
         denyPermission(new ExplicitTypePermission(names));
+    }
+    
+    /**
+     * Add security permission forbidding explicit types.
+     * 
+     * @param types the types to forbid
+     * @since upcoming
+     */
+    public void denyTypes(Class[] types) {
+        denyPermission(new ExplicitTypePermission(types));
+    }
+    
+    /**
+     * Add security permission forbidding a type hierarchy.
+     * 
+     * @param type the base type to forbid
+     * @since upcoming
+     */
+    public void denyTypeHierarchy(Class type) {
+        denyPermission(new TypeHierarchyPermission(type));
     }
     
     /**

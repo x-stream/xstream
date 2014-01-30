@@ -113,15 +113,19 @@
 	<p>The <a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream</a> facade provides the following methods to
 	register such type permissions within the SecurityMapper:</p><div class="Source Java">
 <pre>XStream.addPermission(TypePermission);
+XStream.allowTypes(Class[]);
 XStream.allowTypes(String[]);
 XStream.allowTypesByRegExp(String[]);
 XStream.allowTypesByRegExp(Pattern[]);
 XStream.allowTypesByWildcard(String[]);
+XStream.allowTypeHierary(Class);
 XStream.denyPermission(TypePermission);
+XStream.denyTypes(Class[]);
 XStream.denyTypes(String[]);
 XStream.denyTypesByRegExp(String[]);
 XStream.denyTypesByRegExp(Pattern[]);
-XStream.denyTypesByWildcard(String[]);</pre></div>
+XStream.denyTypesByWildcard(String[]);
+XStream.denyTypeHierary(Class);</pre></div>
 
 	<p>The sequence of registration is essential. The most recently registered permission will be evaluated first.</p>
          
@@ -153,17 +157,22 @@ XStream.denyTypesByWildcard(String[]);</pre></div>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ArrayTypePermission.html">ArrayTypePermission</a></td>
-	    <td>Allow any array type.</td>
+	    <td>Allow any array type.  You may use the ARRAYS instance directly.</td>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/CGLIBProxyTypePermission.html">CGLIBProxyTypePermission</a></td>
-	    <td>Allow any CGLIB proxy type.</td>
+	    <td>Allow any CGLIB proxy type.  You may use the PROXIES instance directly.</td>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ExplicitTypePermission.html">ExplicitTypePermission</a></td>
 	    <td>Allow types explicitly by name.</td>
+	    <td>&nbsp;</td>
+	</tr>
+	<tr>
+	    <td><a href="javadoc/com/thoughtworks/xstream/security/InterfaceTypePermission.html">InterfaceTypePermission</a></td>
+	    <td>Allow any interface type.  You may use the INTERFACES instance directly.</td>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
@@ -179,17 +188,17 @@ XStream.denyTypesByWildcard(String[]);</pre></div>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NullPermission.html">NullPermission</a></td>
-	    <td>Allow null as type.</td>
+	    <td>Allow null as type.  You may use the NULL instance directly.</td>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/PrimitiveTypePermission.html">PrimitiveTypePermission</a></td>
-	    <td>Allow any primitive type and its boxed counterpart.</td>
+	    <td>Allow any primitive type and its boxed counterpart (incl void).  You may use the PROXIES instance directly.</td>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ProxyTypePermission.html">ProxyTypePermission</a></td>
-	    <td>Allow any Java proxy type.</td>
+	    <td>Allow any Java proxy type.  You may use the PROXIES instance directly.</td>
 	    <td>&nbsp;</td>
 	</tr>
 	<tr>
