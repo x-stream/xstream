@@ -75,6 +75,8 @@
 
     <ul>
    		<li>XSTR-749: NPE if ReflectionConverter.canConvert(type) is called with null as argument.</li>
+   		<li>XSTR-753: NPE if SerializationConverter.canConvert(type) is called with an interface type as argument that
+   		extends Serializable.</li>
    		<li>Add constructor to ReflectionConverter taking an additional type to create an instance that is
    		dedicated to a specific type only.</li>
    		<li>The ConverterLookup used by default cannot be casted to a ConverterRegistry anymore.</li>

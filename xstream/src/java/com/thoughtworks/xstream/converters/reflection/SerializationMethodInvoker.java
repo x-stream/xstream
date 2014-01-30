@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -153,6 +153,9 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     private Method getMethod(Class type, String name, Class[] parameterTypes) {
+        if (type == null) {
+            return null;
+        }
         FastField method = new FastField(type, name);
         Method result = (Method)cache.get(method);
 
