@@ -326,7 +326,6 @@ public class SerializableConverterTest extends TestCase {
     
     public void testCanHandleFieldsDeclaredWithSerializableInterface() {
         XStream xstream = new XStream();
-        xstream.allowTypes(SerializableType.class);
         xstream.alias("sertype", SerializableType.class);
         xstream.useAttributeFor(SerializableType.class, "serializable");
         
