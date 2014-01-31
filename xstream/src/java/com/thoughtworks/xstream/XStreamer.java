@@ -266,6 +266,6 @@ public class XStreamer {
      * @since upcoming
      */
     public static TypePermission[] getDefaultPermissions() {
-        return PERMISSIONS.clone();
+        return (TypePermission[])PERMISSIONS.clone();
     }
 }
