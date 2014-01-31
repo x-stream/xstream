@@ -23,7 +23,7 @@ public class CGLIBProxyTypePermission implements TypePermission {
 
     @Override
     public boolean allows(final Class<?> type) {
-        return type != null
+        return type != null && type != Object.class && !type.isInterface()
             && (Proxy.isProxyClass(type) || type.getName().startsWith(Proxy.class.getPackage().getName() + "."));
     }
 
