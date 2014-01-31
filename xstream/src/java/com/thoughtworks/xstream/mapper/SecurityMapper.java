@@ -64,7 +64,7 @@ public class SecurityMapper extends MapperWrapper {
     public void addPermission(final TypePermission permission) {
         if (permission.equals(NoTypePermission.NONE) || permission.equals(AnyTypePermission.ANY))
             permissions.clear();
-        permissions.add(permission);
+        permissions.add(0, permission);
     }
 
     @Override
