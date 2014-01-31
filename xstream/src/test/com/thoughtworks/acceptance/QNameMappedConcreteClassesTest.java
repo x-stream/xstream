@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,8 +11,10 @@
  */
 package com.thoughtworks.acceptance;
 
-import com.bea.xml.stream.MXParserFactory;
-import com.bea.xml.stream.XMLOutputFactoryBase;
+import java.util.ArrayList;
+
+import javax.xml.namespace.QName;
+
 import com.thoughtworks.acceptance.someobjects.Handler;
 import com.thoughtworks.acceptance.someobjects.Protocol;
 import com.thoughtworks.acceptance.someobjects.WithList;
@@ -22,13 +24,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-import com.thoughtworks.xstream.io.xml.WstxDriver;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-
-import java.util.ArrayList;
 
 public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
