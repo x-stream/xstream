@@ -28,7 +28,7 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        xstream.allowTypes(new Class[]{Element.class, Color.class, Date.class, Time.class, Timestamp.class});
+        xstream.allowTypes(new Class[]{Element.class, Date.class, Time.class, Timestamp.class});
         
         // Ensure that this test always run as if it were in the EST timezone.
         // This prevents failures when running the tests in different zones.
@@ -44,6 +44,7 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
     public void testAwtColor() {
         boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
         if (!isHeadless || JVM.is15()) {
+            xstream.allowTypes(new Class[]{Color.class});
             Color color = new Color(0, 10, 20, 30);
     
             String expected = "" +
