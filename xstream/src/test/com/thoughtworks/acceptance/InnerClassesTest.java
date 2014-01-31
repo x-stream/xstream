@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ package com.thoughtworks.acceptance;
 public class InnerClassesTest extends AbstractAcceptanceTest {
 
     public void testSerializedInnerClassMaintainsReferenceToOuterClass() {
+        xstream.allowTypes(new Class[]{Outer.class, Outer.Inner.class});
 
         Outer outer = new Outer("THE-OUTER-NAME", "THE-INNER-NAME");
         Outer.Inner inner = outer.getInner();

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -164,6 +164,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
             }
         };
 
+        xstream.allowTypes(new Class[]{AnotherThing.class});
         xstream.alias("thing", AnotherThing.class);
 
         String actualXml = xstream.toXML(in);

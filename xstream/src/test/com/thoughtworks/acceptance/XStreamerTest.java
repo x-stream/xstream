@@ -15,6 +15,7 @@ import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamer;
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.security.TypePermission;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -61,13 +62,20 @@ public class XStreamerTest extends AbstractAcceptanceTest {
     public void testCanConvertAnotherInstance() throws TransformerException { 
         XStream x = createXStream();
         final String xml = normalizedXStreamXML(xstream.toXML(x));
+        final TypePermission[] permissions = XStreamer.getDefaultPermissions();
+        for(int i = 0; i < permissions.length; ++i)
+            xstream.addPermission(permissions[i]);
         final XStream serialized = (XStream)xstream.fromXML(xml);
         final String xmlSerialized = normalizedXStreamXML(xstream.toXML(serialized));
         assertEquals(xml, xmlSerialized);
     }
     
     public void testCanBeUsedAfterSerialization() throws TransformerException {
-        xstream = (XStream)xstream.fromXML(xstream.toXML(createXStream()));
+        final String xml = xstream.toXML(createXStream());
+        final TypePermission[] permissions = XStreamer.getDefaultPermissions();
+        for(int i = 0; i < permissions.length; ++i)
+            xstream.addPermission(permissions[i]);
+        xstream = (XStream)xstream.fromXML(xml);
         testCanConvertAnotherInstance();
     }
     

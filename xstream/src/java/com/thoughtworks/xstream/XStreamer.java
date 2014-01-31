@@ -19,12 +19,27 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import javax.xml.datatype.DatatypeFactory;
+
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.ConverterMatcher;
+import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.javabean.JavaBeanProvider;
+import com.thoughtworks.xstream.converters.reflection.FieldKeySorter;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.security.AnyTypePermission;
+import com.thoughtworks.xstream.security.TypeHierarchyPermission;
 import com.thoughtworks.xstream.security.TypePermission;
+import com.thoughtworks.xstream.security.WildcardTypePermission;
 
 /**
  * Self-contained XStream generator. The class is a utility to write XML streams that contain
@@ -37,7 +52,22 @@ import com.thoughtworks.xstream.security.TypePermission;
 public class XStreamer {
 
     private final static TypePermission[] PERMISSIONS = {
-        AnyTypePermission.ANY
+        new TypeHierarchyPermission(ConverterMatcher.class),
+        new TypeHierarchyPermission(Mapper.class),
+        new TypeHierarchyPermission(XStream.class),
+        new TypeHierarchyPermission(ReflectionProvider.class),
+        new TypeHierarchyPermission(JavaBeanProvider.class),
+        new TypeHierarchyPermission(FieldKeySorter.class),
+        new TypeHierarchyPermission(ConverterLookup.class),
+        new TypeHierarchyPermission(ConverterRegistry.class),
+        new TypeHierarchyPermission(HierarchicalStreamDriver.class),
+        new TypeHierarchyPermission(MarshallingStrategy.class),
+        new TypeHierarchyPermission(MarshallingContext.class),
+        new TypeHierarchyPermission(UnmarshallingContext.class),
+        new TypeHierarchyPermission(NameCoder.class),
+        new TypeHierarchyPermission(TypePermission.class),
+        new WildcardTypePermission(new String[]{JVM.class.getPackage().getName()+".**"}),
+        new TypeHierarchyPermission(DatatypeFactory.class) // required by DurationConverter
     };
 
     /**
@@ -221,7 +251,7 @@ public class XStreamer {
      */
     public Object fromXML(final HierarchicalStreamDriver driver, final Reader xml)
             throws IOException, ClassNotFoundException {
-        return fromXML(driver, xml, PERMISSIONS);
+        return fromXML(driver, xml, new TypePermission[]{AnyTypePermission.ANY});
     }
 
     /**

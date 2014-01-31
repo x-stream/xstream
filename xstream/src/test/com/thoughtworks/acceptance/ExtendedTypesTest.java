@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2012, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,8 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-
+        xstream.allowTypes(new Class[]{Element.class, Color.class, Date.class, Time.class, Timestamp.class});
+        
         // Ensure that this test always run as if it were in the EST timezone.
         // This prevents failures when running the tests in different zones.
         // Note: 'EST' has no relevance - it was just a randomly chosen zone.

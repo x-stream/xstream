@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,7 +12,15 @@ package com.thoughtworks.acceptance;
 
 import java.util.UUID;
 
+import com.thoughtworks.xstream.XStream;
+
 public class Basic15TypesTest extends AbstractAcceptanceTest {
+
+    @Override
+    protected void setupSecurity(XStream xstream) {
+        super.setupSecurity(xstream);
+        xstream.allowTypes(new Class[]{StringBuilder.class, UUID.class});
+    }
 
     public void testUUID() {
         UUID uuid = UUID.randomUUID();

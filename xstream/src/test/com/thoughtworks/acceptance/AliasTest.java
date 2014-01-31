@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -60,6 +60,7 @@ public class AliasTest extends AbstractAcceptanceTest {
     
     public void testWithUnderscore() {
         xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
+        setupSecurity(xstream);
         String xml = "" +
                 "<X_alias>\n" +
                 "  <anInt>0</anInt>\n" +

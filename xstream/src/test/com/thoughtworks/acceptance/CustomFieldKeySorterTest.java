@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,8 +27,10 @@ import java.util.TreeMap;
 public class CustomFieldKeySorterTest extends AbstractAcceptanceTest {
 
     protected XStream createXStream() {
-        return new XStream(new PureJavaReflectionProvider(new FieldDictionary(
+        XStream xstream = new XStream(new PureJavaReflectionProvider(new FieldDictionary(
             new AlphabeticalFieldkeySorter())));
+        setupSecurity(xstream);
+        return xstream;
     }
 
     static class Base {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ public class SortableFieldListTest extends AbstractAcceptanceTest {
 				new String[] { "b", "c", "a" });
 
 		xstream = new XStream(new PureJavaReflectionProvider(new FieldDictionary(sorter)));
-
+		setupSecurity(xstream);
 		xstream.alias("mommy", MommyBear.class);
 		MommyBear root = new MommyBear();
 		root.c = "ccc";
@@ -41,7 +41,7 @@ public class SortableFieldListTest extends AbstractAcceptanceTest {
 				new String[] { "b", "d", "c", "a" });
 
 		xstream = new XStream(new PureJavaReflectionProvider(new FieldDictionary(sorter)));
-
+                setupSecurity(xstream);
 		xstream.alias("baby", BabyBear.class);
 		BabyBear root = new BabyBear();
 		root.c = "ccc";

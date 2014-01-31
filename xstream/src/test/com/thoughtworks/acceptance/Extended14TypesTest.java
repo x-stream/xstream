@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import javax.security.auth.Subject;
@@ -97,6 +98,9 @@ public class Extended14TypesTest extends AbstractAcceptanceTest {
     }
     
     public void testSubject() {
+        xstream.allowTypes(new Class[]{Subject.class});
+        xstream.allowTypeHierarchy(Principal.class);
+        
         Subject subject = new Subject();
         Principal principal = new X500Principal("c=uk, o=Thoughtworks, ou=XStream");
         subject.getPrincipals().add(principal);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2008, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,7 @@ public class JodaTimeTypesTest extends AbstractAcceptanceTest {
             // inner class, must use enhanced mode for this test
             return;
         }
+        xstream.allowTypesByWildcard(new String[]{"org.joda.time.**"});
         DateTimeZone.setDefault(DateTimeZone.forID("America/Los_Angeles"));
         final LocalDate localDate = new LocalDate(2008, 07, 03);
         final String expected = "" +
