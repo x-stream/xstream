@@ -54,7 +54,7 @@ public class XStreamerTest extends AbstractAcceptanceTest {
             xstream.toXML(c);
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
-            assertTrue(e.getMessage().contains("XStream instance"));
+            assertTrue(e.getMessage().indexOf("XStream instance")>=0);
         }
     }
     
