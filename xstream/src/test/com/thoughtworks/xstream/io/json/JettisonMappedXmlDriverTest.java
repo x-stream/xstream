@@ -34,6 +34,7 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 
 
 /**
@@ -303,6 +304,32 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         SpecialCharacters sc2 = (SpecialCharacters)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(sc2));
     }
+    
+    public void testProperties()
+	{
+		Properties properties = new Properties();
+		properties.setProperty("key.1", "Value 1");
+        String json = xstream.toXML(properties);
+        assertEquals("{'properties':[{'property':{'@name':'key.1','@value':'Value 1'}}]}".replace('\'', '"'), json);
+		Properties properties2 = (Properties)xstream.fromXML(json);
+		assertEquals(json, xstream.toXML(properties2));
+		
+		properties.setProperty("key.2", "Value 2");
+        json = xstream.toXML(properties);
+        assertEquals("{'properties':[{'property':[{'@name':'key.2','@value':'Value 2'},{'@name':'key.1','@value':'Value 1'}]}]}".replace('\'', '"'), json);
+		properties2 = (Properties)xstream.fromXML(json);
+		assertEquals(json, xstream.toXML(properties2));
+	}
+    
+    public void testEmptyArray()
+	{
+    	xstream.alias("exception", Exception.class);
+		Exception[] exceptions = new Exception[3];
+        String json = xstream.toXML(exceptions);
+        assertEquals("{'exception-array':[{'null':['','','']}]}".replace('\'', '"'), json);
+        Exception[] exceptions2 = (Exception[])xstream.fromXML(json);
+		assertEquals(json, xstream.toXML(exceptions2));
+	}
 
     public void todoTestCanMarshalEmbeddedExternalizable() {
         xstream.alias("owner", OwnerOfExternalizable.class);
