@@ -138,6 +138,8 @@ XStream.denyTypeHierary(Class);</pre></div>
 	to stop the unmarshalling process</li>
 	</ul>
          
+    <h2 id="predefined">Predefined Permission Types</h2>
+
 	<p>XStream provides some TypePermission implementations to allow any or no type at all, to allow primitive types
 	and their counterpart, null, array types, implementations match the name of the type by regular or wildcard
 	expression and one to invert a permission.</p>
@@ -217,5 +219,25 @@ XStream.denyTypeHierary(Class);</pre></div>
 	    <td class="example">java.lang.*<br/>java.util.**</td>
 	</tr>
     </table>
+
+    <h2 id="example">Example Code</h2>
+
+	<p>XStream uses the AnyTypePermission by default, i.e. any type is accepted.  You have to clear out this default
+	and register your own permissions to activate the security framework (the Blog type is from the
+	<a href="alias-tutorial.html">Alias Tutorial</a>):</p>
+<div class="Source Java"><pre>XStream xstream = new XStream();
+// clear out existing permissions and set own ones
+xstream.addPermission(NoPermissionType.NONE);
+// allow some basics
+xstream.addPermission(NullPermission.NULL);
+xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+xstream.allowTypeHierarchy(Collection.class);
+// allow any type from the same package
+xstream.allowTypesByWildcard(new String[] {
+    Blog.class.getPackage().getName()+".**"
+});
+</pre></div>
+
+  <p>You may have a further look at XStream's acceptance tests, the security framework is enabled there in general.</p>
   </body>
  </html>
