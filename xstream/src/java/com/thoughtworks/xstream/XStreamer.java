@@ -147,7 +147,7 @@ public class XStreamer {
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws ObjectStreamException if the XML contains non-deserializable elements
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
-     * @since upcoming
+     * @since 1.4.7
      * @see #toXML(XStream, Object, Writer)
      */
     public Object fromXML(String xml, TypePermission... permissions) throws ClassNotFoundException, ObjectStreamException {
@@ -191,7 +191,7 @@ public class XStreamer {
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws ObjectStreamException if the XML contains non-deserializable elements
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
-     * @since upcoming
+     * @since 1.4.7
      * @see #toXML(XStream, Object, Writer)
      */
     public Object fromXML(HierarchicalStreamDriver driver, String xml, TypePermission... permissions)
@@ -230,7 +230,7 @@ public class XStreamer {
      * @throws IOException if an error occurs reading from the Reader.
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
-     * @since upcoming
+     * @since 1.4.7
      * @see #toXML(XStream, Object, Writer)
      */
     public Object fromXML(Reader xml, TypePermission... permissions)
@@ -262,7 +262,7 @@ public class XStreamer {
      * @throws IOException if an error occurs reading from the Reader.
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
-     * @since upcoming
+     * @since 1.4.7
      */
     public Object fromXML(HierarchicalStreamDriver driver, Reader xml, TypePermission... permissions)
             throws IOException, ClassNotFoundException {
@@ -292,7 +292,7 @@ public class XStreamer {
      * references to other types, you will have to add permission for those types on your own.
      * </p>
      * 
-     * @since upcoming
+     * @since 1.4.7
      */
     public static TypePermission[] getDefaultPermissions() {
         return PERMISSIONS.clone();

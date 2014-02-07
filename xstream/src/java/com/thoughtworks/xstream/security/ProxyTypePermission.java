@@ -15,11 +15,11 @@ import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
  * Permission for any array type.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class ProxyTypePermission implements TypePermission {
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public static final TypePermission PROXIES = new ProxyTypePermission();
 

@@ -13,12 +13,12 @@ package com.thoughtworks.xstream.security;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class NoTypePermission implements TypePermission {
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public static final TypePermission NONE = new NoTypePermission();
 

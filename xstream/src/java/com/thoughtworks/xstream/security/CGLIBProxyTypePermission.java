@@ -13,11 +13,11 @@ import net.sf.cglib.proxy.Proxy;
  * Permission for any array type.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class CGLIBProxyTypePermission implements TypePermission {
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public static final TypePermission PROXIES = new CGLIBProxyTypePermission();
 

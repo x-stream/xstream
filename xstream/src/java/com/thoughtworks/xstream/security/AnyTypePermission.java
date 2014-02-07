@@ -10,11 +10,11 @@ package com.thoughtworks.xstream.security;
  * Permission for any type and <code>null</code>.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class AnyTypePermission implements TypePermission {
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public static final TypePermission ANY = new AnyTypePermission();
 

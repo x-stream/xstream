@@ -31,7 +31,7 @@ import java.util.WeakHashMap;
  * @author Joe Walnes
  * @author Brian Slesinsky
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvider {
 
@@ -39,14 +39,14 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
     private transient Map fieldOffsetCache;
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public SunUnsafeReflectionProvider() {
         super();
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public SunUnsafeReflectionProvider(FieldDictionary dic) {
         super(dic);

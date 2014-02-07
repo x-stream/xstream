@@ -10,7 +10,7 @@ package com.thoughtworks.xstream.security;
  * Definition of a type permission. 
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public interface TypePermission {
     /**
@@ -19,7 +19,7 @@ public interface TypePermission {
      * @param type the type to check
      * @return <code>true</code> if provided type is allowed, <code>false</code> if permission does not handle the type
      * @throws ForbiddenClassException if provided type is explicitly forbidden
-     * @since upcoming
+     * @since 1.4.7
      */
     boolean allows(Class<?> type);
 }

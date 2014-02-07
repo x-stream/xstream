@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.security;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class NoPermission implements TypePermission {
 
@@ -24,7 +24,7 @@ public class NoPermission implements TypePermission {
      * Construct a NoPermission.
      * 
      * @param permission the permission to negate or <code>null</code> to forbid any type
-     * @since upcoming
+     * @since 1.4.7
      */
     public NoPermission(final TypePermission permission) {
         this.permission = permission;

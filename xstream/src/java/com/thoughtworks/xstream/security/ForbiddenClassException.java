@@ -12,14 +12,14 @@ import com.thoughtworks.xstream.XStreamException;
  * Exception thrown for a forbidden class.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class ForbiddenClassException extends XStreamException {
 
     /**
      * Construct a ForbiddenClassException.
      * @param type the forbidden class
-     * @since upcoming
+     * @since 1.4.7
      */
     public ForbiddenClassException(Class<?> type) {
         super(type == null ? "null" : type.getName());

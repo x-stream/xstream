@@ -10,12 +10,10 @@
  Created on 09. January 2014 by Joerg Schaible
  -->
   <head>
-    <title>Security</title>
+    <title>Security Aspects</title>
   </head>
 
   <body>
-    <h1 id="intro">Introduction</h1>
-    
 	<p>XStream is designed to be an easy to use library.  It takes its main task seriously: converting Java objects to
 	XML, and XML to Java objects. As a result, it is possible to create an instance of XStream with the default
 	constructor, call a method to convert an object into XML, then call another method to turn the XML back into an
@@ -94,9 +92,9 @@
     <h2 id="validation">XML Validation</h2>
 
 	<p>XML itself supports input validation using a schema and a validating parser.  With XStream, you can use e.g. a
-     StAX parser for validation, but it will take some effort to ensure that the XML read and written by XStream matches
-     the schema in first place. Typically you will have to write some custom converters, but it can be worth the effort
-     depending on the use case.</p>
+	StAX parser for validation, but it will take some effort to ensure that the XML read and written by XStream matches
+	the schema in first place. Typically you will have to write some custom converters, but it can be worth the effort
+	depending on the use case.</p>
 
     <h1 id="framework">Security Framework</h1>
 
@@ -138,6 +136,8 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	to stop the unmarshalling process</li>
 	</ul>
          
+    <h2 id="predefined">Predefined Permission Types</h2>
+
 	<p>XStream provides some TypePermission implementations to allow any or no type at all, to allow primitive types
 	and their counterpart, null, array types, implementations match the name of the type by regular or wildcard
 	expression and one to invert a permission.</p>
@@ -148,74 +148,110 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	    <th>Permission</th>
 	    <th>Description</th>
 	    <th>Example</th>
+	    <th>Default</th>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/AnyTypePermission.html">AnyTypePermission</a></td>
 	    <td>Allow any type.  You may use the ANY instance directly. A registration of this permission will wipe any
 	    prior one.</td>
 	    <td>&nbsp;</td>
+	    <td>no</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ArrayTypePermission.html">ArrayTypePermission</a></td>
 	    <td>Allow any array type.  You may use the ARRAYS instance directly.</td>
 	    <td>&nbsp;</td>
+	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/CGLIBProxyTypePermission.html">CGLIBProxyTypePermission</a></td>
 	    <td>Allow any CGLIB proxy type.  You may use the PROXIES instance directly.</td>
 	    <td>&nbsp;</td>
+	    <td>no</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ExplicitTypePermission.html">ExplicitTypePermission</a></td>
 	    <td>Allow types explicitly by name.</td>
 	    <td>&nbsp;</td>
+	    <td>java.io.File, java.nio.charset.Charset, java.util.BitSet, java.lang.Class, java.lang.Object,
+	    java.lang.StackTraceElement, java.lang.String, java.lang.StringBuffer, java.lang.StringBuilder, java.net.URL,
+	    java.net.URI, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.text.DecimalFormatSymbols,
+	    java.util.Currency, java.util.Date, java.util.Locale, java.util.regex.Pattern, java.util.UUID</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/InterfaceTypePermission.html">InterfaceTypePermission</a></td>
 	    <td>Allow any interface type.  You may use the INTERFACES instance directly.</td>
 	    <td>&nbsp;</td>
+	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NoPermission.html">NoPermission</a></td>
 	    <td>Invert any other permission.  Instances of this type are used by XStream in the deny methods.</td>
-	    <td class="example">&nbsp;</td>
+	    <td>&nbsp;</td>
+	    <td>no</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NoTypePermission.html">NoTypePermission</a></td>
 	    <td>Allow no type.  You may use the NONE instance directly. A registration of this permission will wipe any
 	    prior one.</td>
 	    <td>&nbsp;</td>
+	    <td>&ndash;</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NullPermission.html">NullPermission</a></td>
 	    <td>Allow null as type.  You may use the NULL instance directly.</td>
 	    <td>&nbsp;</td>
+	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/PrimitiveTypePermission.html">PrimitiveTypePermission</a></td>
 	    <td>Allow any primitive type and its boxed counterpart (incl void).  You may use the PROXIES instance directly.</td>
 	    <td>&nbsp;</td>
+	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ProxyTypePermission.html">ProxyTypePermission</a></td>
 	    <td>Allow any Java proxy type.  You may use the PROXIES instance directly.</td>
 	    <td>&nbsp;</td>
+	    <td>no</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/RegExpTypePermission.html">RegExpTypePermission</a></td>
 	    <td>Allow any type that matches with its name a regular expression.</td>
 	    <td class="example">.*\\.core\\..*<br/>[^$]+</td>
+	    <td>&ndash;</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/TypeHierarchyPermission.html">TypeHierarchyPermission</a></td>
 	    <td>Allow types of a hierarchy.</td>
 	    <td>&nbsp;</td>
+	    <td>java.lang.Enum, java.lang.Number, java.lang.Throwable, java.lang.reflect.Member, java.util.Calendar,
+	    java.util.Collection, java.util.Map, java.util.Map.Entry, java.util.TimeZone</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/WildcardTypePermission.html">WildcardTypePermission</a></td>
 	    <td>Allow any type that matches with its name a wildcard expression.</td>
 	    <td class="example">java.lang.*<br/>java.util.**</td>
+	    <td>&ndash;</td>
 	</tr>
     </table>
+
+    <h2 id="example">Example Code</h2>
+
+	<p>XStream uses the default permissions from the table above.  You may either clear out this default
+	and register your own permissions to activate the security framework simply add your own permissions on top of it
+	(the Blog type is from the 	<a href="alias-tutorial.html">Alias Tutorial</a>):</p>
+<div class="Source Java"><pre>XStream xstream = new XStream();
+// clear out existing permissions and set own ones
+xstream.addPermission(NoPermissionType.NONE);
+// allow some basics
+xstream.addPermission(NullPermission.NULL);
+xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+xstream.allowTypeHierarchy(Collection.class);
+// allow any type from the same package
+xstream.allowTypesByWildcard(Blog.class.getPackage().getName()+".*");
+</pre></div>
+
+  <p>You may have a further look at XStream's acceptance tests, the security framework is enabled there in general.</p>
   </body>
  </html>

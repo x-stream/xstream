@@ -28,16 +28,6 @@
 	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
 	</p>
 
-<!--  
-    <h1 id="upcoming">Upcoming</h1>
-
-    <p>Not yet released.</p>
-
-    <h2>Major changes</h2>
-    
-    <ul>
-    </ul>
--->
     <h1 id="upcoming">Upcoming</h1>
 
     <p>Not yet released.</p>
@@ -56,14 +46,25 @@
    		<li>Remove any stuff deprecated in XStream 1.2.x.</li>
     </ul>
 
+<!--
     <h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
 
     <p>Not yet released.</p>
 
     <h2>Major changes</h2>
+-->
+    
+    <h1 id="1.4.7">1.4.7</h1>
+
+    <p>Released February 8, 2013.</p>
+
+    <p class="highlight">This maintenance release addresses mainly the security vulnerability CVE-2013-7285, an
+    arbitrary execution of commands when unmarshalling.</p>
+
+    <h2>Major changes</h2>
     
     <ul>
-   		<li>Add security framework to limit handled types while unmarshalling.</li>
+   		<li>Add <a href="security.html#framework">security framework</a> to limit handled types while unmarshalling.</li>
    		<li>java.bean.EventHandler no longer handled automatically because of severe security vulnerability.</li>
     	<li>JIRA:XSTR-751: New SunLimitedUnsafeReflectionProvider that uses undocumented features only to allocate new
     	instances as required on Dalvik.</li>

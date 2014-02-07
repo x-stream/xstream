@@ -22,12 +22,12 @@ package com.thoughtworks.xstream.security;
  * </p>
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class WildcardTypePermission extends RegExpTypePermission {
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public WildcardTypePermission(final String... patterns) {
         super(getRegExpPatterns(patterns));

@@ -12,11 +12,11 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * Permission for <code>null</code> or XStream's null replacement type.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class NullPermission implements TypePermission {
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public static final TypePermission NULL = new NullPermission();
 
