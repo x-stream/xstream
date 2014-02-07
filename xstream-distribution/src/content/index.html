@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013, 2014 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -36,6 +36,8 @@
         directly to/from any tree structure (not just XML).</li>
         <li><b>Customizable conversion strategies.</b> Strategies can be registered allowing customization of how
         particular types are represented as XML.</li>
+        <li><b>Security framework.</b> Fine-control about the unmarshalled types to prevent security issues with
+        manipulated input.</li>
         <li><b>Error messages.</b> When an exception occurs due to malformed XML, detailed diagnostics are provided
         to help isolate and fix the problem.</li>
         <li><b>Alternative output format.</b> The modular design allows other output formats. XStream ships currently
@@ -71,21 +73,18 @@
 
     <h1 id="news">Latest News</h1>
 
-    <h2 id="1.4.6"><b>December 12, 2013</b> XStream 1.4.6 released</h2>
+    <h2 id="1.4.7"><b>February 8, 2014</b> XStream 1.4.7 released</h2>
 
-      <p>Maintenance release 1.4.6 of XStream with bug fixes and improvements running with Java 8, in a GAE runtime
-      environment and under an active SecurityManager.</p>
+      <p class="highlight">This maintenance release addresses mainly the security vulnerability CVE-2013-7285, an
+      arbitrary execution of commands when unmarshalling.  All previous versions are affected running at least Java 5.</p>
+
+      <p>XStream contains now a security framework to fine-control the unmarshalled types.</p>
 
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
 
       <p>Note, the next major release 1.5 will require Java 6.</p>
 
-	  <p>Thanks to this impressive list of <a href="team.html#contributors">contributors</a>.</p>
-
-    <h2 id="decade"><b>September 26, 2013</b> A Decade of XStream</h2>
-
-      <p>Joe Walnes made his initial commit to the XStream project at Codehaus in 26th September 2003.
-      10 years passed by and XStream celebrates its 10th birthday!</p>
+      <p>Thanks to this impressive list of <a href="team.html#contributors">contributors</a>.</p>
 
   </body>
 </html>
