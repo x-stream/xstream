@@ -30,7 +30,7 @@ public class ReflectionConverter extends AbstractReflectionConverter {
      * @param mapper the mapper in use
      * @param reflectionProvider the reflection provider in use
      * @param type the explicit type to handle
-     * @since upcoming
+     * @since 1.4.7
      */
     public ReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider, Class type) {
         this(mapper, reflectionProvider);

@@ -12,11 +12,11 @@ import com.thoughtworks.xstream.core.util.Primitives;
  * Permission for any primitive type and its boxed counterpart (incl. void).
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class PrimitiveTypePermission implements TypePermission {
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public static final TypePermission PRIMITIVES = new PrimitiveTypePermission();
 

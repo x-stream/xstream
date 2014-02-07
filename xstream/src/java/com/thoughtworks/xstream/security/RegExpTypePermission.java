@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * Permission for any type with a name matching one of the provided regular expressions.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class RegExpTypePermission implements TypePermission {
 

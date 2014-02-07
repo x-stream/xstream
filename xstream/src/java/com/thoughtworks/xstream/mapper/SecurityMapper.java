@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.security.TypePermission;
  * unmarshalling process.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class SecurityMapper extends MapperWrapper {
 
@@ -31,7 +31,7 @@ public class SecurityMapper extends MapperWrapper {
      * Construct a SecurityMapper.
      * 
      * @param wrapped the mapper chain
-     * @since upcoming
+     * @since 1.4.7
      */
     public SecurityMapper(final Mapper wrapped) {
         this(wrapped, (TypePermission[])null);
@@ -42,7 +42,7 @@ public class SecurityMapper extends MapperWrapper {
      * 
      * @param wrapped the mapper chain
      * @param permissions the predefined permissions
-     * @since upcoming
+     * @since 1.4.7
      */
     public SecurityMapper(final Mapper wrapped, final TypePermission[] permissions) {
         super(wrapped);
@@ -59,7 +59,7 @@ public class SecurityMapper extends MapperWrapper {
      * </p>
      * 
      * @param permission the permission to add.
-     * @since upcoming
+     * @since 1.4.7
      */
     public void addPermission(final TypePermission permission) {
         if (permission.equals(NoTypePermission.NONE) || permission.equals(AnyTypePermission.ANY))

@@ -2006,7 +2006,7 @@ public class XStream {
      * </p>
      * 
      * @param permission the permission to add
-     * @since upcoming
+     * @since 1.4.7
      */
     public void addPermission(TypePermission permission) {
         if (securityMapper != null) {
@@ -2018,7 +2018,7 @@ public class XStream {
      * Add security permission for explicit types by name.
      * 
      * @param names the type names to allow
-     * @since upcoming
+     * @since 1.4.7
      */
     public void allowTypes(String[] names) {
         addPermission(new ExplicitTypePermission(names));
@@ -2028,7 +2028,7 @@ public class XStream {
      * Add security permission for explicit types.
      * 
      * @param types the types to allow
-     * @since upcoming
+     * @since 1.4.7
      */
     public void allowTypes(Class[] types) {
         addPermission(new ExplicitTypePermission(types));
@@ -2038,7 +2038,7 @@ public class XStream {
      * Add security permission for a type hierarchy.
      * 
      * @param type the base type to allow
-     * @since upcoming
+     * @since 1.4.7
      */
     public void allowTypeHierarchy(Class type) {
         addPermission(new TypeHierarchyPermission(type));
@@ -2048,7 +2048,7 @@ public class XStream {
      * Add security permission for types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to allow type names
-     * @since upcoming
+     * @since 1.4.7
      */
     public void allowTypesByRegExp(String[] regexps) {
         addPermission(new RegExpTypePermission(regexps));
@@ -2058,7 +2058,7 @@ public class XStream {
      * Add security permission for types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to allow type names
-     * @since upcoming
+     * @since 1.4.7
      */
     public void allowTypesByRegExp(Pattern[] regexps) {
         addPermission(new RegExpTypePermission(regexps));
@@ -2076,7 +2076,7 @@ public class XStream {
      * </ul>
      * 
      * @param patterns the patterns to allow type names
-     * @since upcoming
+     * @since 1.4.7
      */
     public void allowTypesByWildcard(String[] patterns) {
         addPermission(new WildcardTypePermission(patterns));
@@ -2086,7 +2086,7 @@ public class XStream {
      * Add security permission denying another one.
      * 
      * @param permission the permission to deny
-     * @since upcoming
+     * @since 1.4.7
      */
     public void denyPermission(TypePermission permission) {
         addPermission(new NoPermission(permission));
@@ -2096,7 +2096,7 @@ public class XStream {
      * Add security permission forbidding explicit types by name.
      * 
      * @param names the type names to forbid
-     * @since upcoming
+     * @since 1.4.7
      */
     public void denyTypes(String[] names) {
         denyPermission(new ExplicitTypePermission(names));
@@ -2106,7 +2106,7 @@ public class XStream {
      * Add security permission forbidding explicit types.
      * 
      * @param types the types to forbid
-     * @since upcoming
+     * @since 1.4.7
      */
     public void denyTypes(Class[] types) {
         denyPermission(new ExplicitTypePermission(types));
@@ -2116,7 +2116,7 @@ public class XStream {
      * Add security permission forbidding a type hierarchy.
      * 
      * @param type the base type to forbid
-     * @since upcoming
+     * @since 1.4.7
      */
     public void denyTypeHierarchy(Class type) {
         denyPermission(new TypeHierarchyPermission(type));
@@ -2126,7 +2126,7 @@ public class XStream {
      * Add security permission forbidding types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to forbid type names
-     * @since upcoming
+     * @since 1.4.7
      */
     public void denyTypesByRegExp(String[] regexps) {
         denyPermission(new RegExpTypePermission(regexps));
@@ -2136,7 +2136,7 @@ public class XStream {
      * Add security permission forbidding types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to forbid type names
-     * @since upcoming
+     * @since 1.4.7
      */
     public void denyTypesByRegExp(Pattern[] regexps) {
         denyPermission(new RegExpTypePermission(regexps));
@@ -2154,7 +2154,7 @@ public class XStream {
      * </ul>
      * 
      * @param patterns the patterns to forbid names
-     * @since upcoming
+     * @since 1.4.7
      */
     public void denyTypesByWildcard(String[] patterns) {
         denyPermission(new WildcardTypePermission(patterns));

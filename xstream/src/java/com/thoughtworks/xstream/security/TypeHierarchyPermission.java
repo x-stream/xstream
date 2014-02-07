@@ -10,14 +10,14 @@ package com.thoughtworks.xstream.security;
  * Permission for a type hierarchy with a name matching one in the provided list.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class TypeHierarchyPermission implements TypePermission {
 
     private Class type;
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public TypeHierarchyPermission(Class type) {
         this.type = type;

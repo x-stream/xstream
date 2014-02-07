@@ -10,11 +10,11 @@ package com.thoughtworks.xstream.security;
  * Permission for any interface type.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class InterfaceTypePermission implements TypePermission {
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public static final TypePermission INTERFACES = new InterfaceTypePermission();
 

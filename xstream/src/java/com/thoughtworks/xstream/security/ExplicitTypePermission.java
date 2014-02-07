@@ -16,14 +16,14 @@ import java.util.Set;
  * Explicit permission for a type with a name matching one in the provided list.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.7
  */
 public class ExplicitTypePermission implements TypePermission {
 
     final Set names;
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public ExplicitTypePermission(final Class[] types) {
         this(new Object() {
@@ -39,7 +39,7 @@ public class ExplicitTypePermission implements TypePermission {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public ExplicitTypePermission(String[] names) {
         this.names = names == null ? Collections.EMPTY_SET : new HashSet(Arrays.asList(names));

@@ -28,7 +28,7 @@ import sun.misc.Unsafe;
  * @author J&ouml;rg Schaible
  * @author Joe Walnes
  * @author Brian Slesinsky
- * @since upcoming
+ * @since 1.4.7
  */
 public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvider {
 
@@ -55,14 +55,14 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public SunLimitedUnsafeReflectionProvider() {
         super();
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.7
      */
     public SunLimitedUnsafeReflectionProvider(FieldDictionary fieldDictionary) {
         super(fieldDictionary);
