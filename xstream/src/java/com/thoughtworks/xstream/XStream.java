@@ -628,6 +628,9 @@ public class XStream {
         return next;
     }
 
+    /**
+     * @deprecated As of upcoming
+     */
     protected boolean useXStream11XmlFriendlyMapper() {
         return false;
     }
