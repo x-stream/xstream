@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -189,7 +189,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
             : new ThreadSafeSimpleDateFormat[0];
         for (int i = 0; i < this.acceptableFormats.length; i++ ) {
             this.acceptableFormats[i] = new ThreadSafeSimpleDateFormat(
-                acceptableFormats[i], timeZone, 1, 20, lenient);
+                acceptableFormats[i], timeZone, locale, 1, 20, lenient);
         }
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2012, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -214,5 +214,29 @@ public class DateConverterTest extends TestCase {
         assertEquals(date, converter.fromString("0001-12-31 BC 23:59:59.999 UTC"));
         cal.add(Calendar.MILLISECOND, 1);
         assertEquals(cal.getTime(), converter.fromString("0001-01-01 AD 00:00:00.000 UTC"));
+    }
+    
+    public void testDatesWithEnglishLocaleOfDefault() {
+        converter = new DateConverter(null, "EEEE, dd MMMM yyyy z", 
+            null, Locale.ENGLISH, TimeZone.getTimeZone("UTC"), false);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        cal.clear();
+        cal.set(2000, Calendar.JANUARY, 1);
+        Date date = cal.getTime();
+        assertEquals("Saturday, 01 January 2000 UTC", converter.toString(date));
+        assertEquals(date, converter.fromString("Saturday, 01 January 2000 UTC"));
+    }
+    
+    public void testDatesWithGermanLocale() {
+        converter = new DateConverter(null, "EEEE, dd MMMM yyyy z", 
+            null, Locale.GERMAN, TimeZone.getTimeZone("UTC"), false);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        cal.clear();
+        cal.set(2000, Calendar.JANUARY, 1);
+        Date date = cal.getTime();
+        assertEquals("Samstag, 01 Januar 2000 UTC", converter.toString(date));
+        assertEquals(date, converter.fromString("Samstag, 01 Januar 2000 UTC"));
     }
 }
