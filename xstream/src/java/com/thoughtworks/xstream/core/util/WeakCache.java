@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2013 XStream Committers.
+ * Copyright (C) 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -135,7 +135,8 @@ public class WeakCache extends AbstractMap {
                         }
 
                         public Object setValue(Object value) {
-                            return entry.setValue(createReference(value));
+                            Reference reference = (Reference)entry.setValue(createReference(value));
+                            return reference != null ? reference.get() : null;
                         }
 
                     });
