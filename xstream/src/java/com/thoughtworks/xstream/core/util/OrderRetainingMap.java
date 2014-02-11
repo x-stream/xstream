@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,6 +22,9 @@ import java.util.Map;
 import java.util.Set;
 
 
+/**
+ * @deprecated As of upcoming use {@link java.util.LinkedHashMap}
+ */
 public class OrderRetainingMap extends HashMap {
 
     private ArraySet keyOrder = new ArraySet();
