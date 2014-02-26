@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,7 +16,9 @@ package com.thoughtworks.xstream.converters.extended;
  *
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
  * @author Joe Walnes
+ * @deprecated As of upcoming, it is an internal helper class
  */
+@Deprecated
 public class StackTraceElementFactory {
 
     public StackTraceElement nativeMethodElement(String declaringClass, String methodName) {
