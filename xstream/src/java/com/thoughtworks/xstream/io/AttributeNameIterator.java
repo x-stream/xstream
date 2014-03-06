@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,6 +17,7 @@ import java.util.Iterator;
  * Provide an iterator over the attribute names of the current node of a reader.
  *
  * @author Joe Walnes
+ * @deprecated As of upcoming, it is an internal helper class only
  */
 public class AttributeNameIterator implements Iterator {
 
