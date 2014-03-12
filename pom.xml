@@ -668,7 +668,7 @@
     <version.plugin.maven.antrun>1.1</version.plugin.maven.antrun>
     <version.plugin.maven.assembly>2.1</version.plugin.maven.assembly>
     <version.plugin.maven.clean>2.2</version.plugin.maven.clean>
-    <version.plugin.maven.compiler>2.1</version.plugin.maven.compiler><!-- JDK 1.4 compatible -->
+    <version.plugin.maven.compiler>3.1</version.plugin.maven.compiler>
     <version.plugin.maven.dependency>2.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>2.3</version.plugin.maven.deploy>
     <version.plugin.maven.install>2.2</version.plugin.maven.install>

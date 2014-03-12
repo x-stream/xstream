@@ -24,7 +24,7 @@ public class EnumSingleValueConverter<T extends Enum<T>> extends AbstractSingleV
     private final Class<T> enumType;
 
     public EnumSingleValueConverter(final Class<T> type) {
-        if (!Enum.class.isAssignableFrom(type) && type != Enum.class) {
+        if (!Enum.class.isAssignableFrom(type) && !Enum.class.equals(type)) {
             throw new IllegalArgumentException("Converter can only handle defined enums");
         }
         enumType = type;
