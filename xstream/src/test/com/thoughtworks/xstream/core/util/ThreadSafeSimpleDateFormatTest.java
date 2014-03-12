@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2014  XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,27 +10,38 @@
  */
 package com.thoughtworks.xstream.core.util;
 
-import junit.framework.TestCase;
-
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import junit.framework.TestCase;
+
+
 /**
  * @author J&ouml;rg Schaible
  */
 public class ThreadSafeSimpleDateFormatTest extends TestCase {
+
+    public void testDateFormatting() throws ParseException {
+        final ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss,S z", TimeZone
+            .getTimeZone("UTC"), 2, 4, false);
+        final Date now = new Date();
+        final String formatted = format.format(now);
+        assertEquals(now, format.parse(formatted));
+    }
+
     public void testConcurrentDateFormatting() throws InterruptedException {
 
-        final ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss,S z", TimeZone.getTimeZone("UTC"), 2, 4, false);
+        final ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss,S z", TimeZone
+            .getTimeZone("UTC"), 2, 4, false);
         final Date now = new Date();
-        
-        final Map exceptions = new HashMap();
+
+        final Map<Throwable, String> exceptions = new HashMap<Throwable, String>();
         final ThreadGroup tg = new ThreadGroup(getName()) {
-            public void uncaughtException(Thread t, Throwable e) {
+            @Override
+            public void uncaughtException(final Thread t, final Throwable e) {
                 exceptions.put(e, t.getName());
                 super.uncaughtException(t, e);
             }
@@ -42,6 +53,7 @@ public class ThreadSafeSimpleDateFormatTest extends TestCase {
         for (int i = 0; i < threads.length; ++i) {
             threads[i] = new Thread(tg, "JUnit Thread " + i) {
 
+                @Override
                 public void run() {
                     int i = 0;
                     try {
@@ -49,15 +61,15 @@ public class ThreadSafeSimpleDateFormatTest extends TestCase {
                             notifyAll();
                             wait();
                         }
-                        while (i < 1000  && !interrupted()) {
-                            String formatted = format.format(now);
+                        while (i < 1000 && !interrupted()) {
+                            final String formatted = format.format(now);
                             Thread.yield();
                             assertEquals(now, format.parse(formatted));
                             ++i;
                         }
-                    } catch (InterruptedException e) {
+                    } catch (final InterruptedException e) {
                         fail("Unexpected InterruptedException");
-                    } catch (ParseException e) {
+                    } catch (final ParseException e) {
                         fail("Unexpected ParseException");
                     }
                     synchronized (counter) {
@@ -68,27 +80,27 @@ public class ThreadSafeSimpleDateFormatTest extends TestCase {
             };
         }
 
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].start();
-                threads[i].wait();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.start();
+                thread.wait();
             }
         }
 
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].notifyAll();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.notifyAll();
             }
         }
 
         Thread.sleep(1500);
 
-        for (int i = 0; i < threads.length; ++i) {
-            threads[i].interrupt();
+        for (final Thread thread : threads) {
+            thread.interrupt();
         }
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].join();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.join();
             }
         }
 
