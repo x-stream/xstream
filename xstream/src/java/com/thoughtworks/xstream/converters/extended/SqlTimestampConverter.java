@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.TimeZone;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
 
@@ -56,7 +57,7 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
     public Object fromString(final String str) {
         final int idx = str.lastIndexOf('.');
         if (idx < 0 || str.length() - idx < 2 || str.length() - idx > 10) {
-            throw new IllegalArgumentException("Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]");
+            throw new ConversionException("Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]");
         }
         try {
             final Timestamp timestamp = new Timestamp(format.parse(str.substring(0, idx)).getTime());
@@ -66,8 +67,10 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
             }
             timestamp.setNanos(Integer.parseInt(buffer.toString()));
             return timestamp;
+        } catch (final NumberFormatException e) {
+            throw new ConversionException("Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]", e);
         } catch (final ParseException e) {
-            throw new IllegalArgumentException("Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]");
+            throw new ConversionException("Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]");
         }
     }
 
