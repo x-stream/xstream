@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2013 XStream Committers.
+ * Copyright (C) 2007, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,88 +10,92 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
-import com.thoughtworks.xstream.core.util.Fields;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.AttributedCharacterIterator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.core.util.Fields;
 
 
 /**
- * An abstract converter implementation for constants of
- * {@link java.text.AttributedCharacterIterator.Attribute} and derived types.
+ * An abstract converter implementation for constants of {@link java.text.AttributedCharacterIterator.Attribute} and
+ * derived types.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.2.2
  */
-public class AbstractAttributedCharacterIteratorAttributeConverter extends
-    AbstractSingleValueConverter {
+public class AbstractAttributedCharacterIteratorAttributeConverter<T extends AttributedCharacterIterator.Attribute>
+    extends AbstractSingleValueConverter {
 
-    private static final Map instanceMaps = new HashMap();
+    private static final Map<String, Map<String, ? extends AttributedCharacterIterator.Attribute>> instanceMaps = new HashMap<String, Map<String, ? extends AttributedCharacterIterator.Attribute>>();
     private static final Method getName;
     static {
         Method method = null;
         try {
-            method = AttributedCharacterIterator.Attribute.class.getDeclaredMethod(
-                "getName", (Class[])null);
+            method = AttributedCharacterIterator.Attribute.class.getDeclaredMethod("getName", (Class[])null);
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             // ignore for now
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // ignore for now
         }
         getName = method;
     }
 
-    private final Class type;
-    private transient Map attributeMap;
+    private final Class<? extends T> type;
+    private transient Map<String, T> attributeMap;
 
-    public AbstractAttributedCharacterIteratorAttributeConverter(final Class type) {
+    public AbstractAttributedCharacterIteratorAttributeConverter(final Class<? extends T> type) {
         super();
         if (!AttributedCharacterIterator.Attribute.class.isAssignableFrom(type)) {
             throw new IllegalArgumentException(type.getName()
-                + " is not a " + AttributedCharacterIterator.Attribute.class.getName());
+                + " is not a "
+                + AttributedCharacterIterator.Attribute.class.getName());
         }
         this.type = type;
         readResolve();
     }
 
-    public boolean canConvert(final Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type == this.type && !attributeMap.isEmpty();
     }
 
+    @Override
     public String toString(final Object source) {
-        return getName((AttributedCharacterIterator.Attribute)source);
+        @SuppressWarnings("unchecked")
+        final T t = (T)source;
+        return getName(t);
     }
 
-    private String getName(AttributedCharacterIterator.Attribute attribute) {
+    private String getName(final AttributedCharacterIterator.Attribute attribute) {
         Exception ex = null;
         if (getName != null) {
             try {
-                return (String)getName.invoke(attribute, (Object[])null);
-            } catch (IllegalAccessException e) {
+                return (String)getName.invoke(attribute);
+            } catch (final IllegalAccessException e) {
                 ex = e;
-            } catch (InvocationTargetException e) {
+            } catch (final InvocationTargetException e) {
                 ex = e;
             }
         }
-        String s = attribute.toString();
-        String className = attribute.getClass().getName();
+        final String s = attribute.toString();
+        final String className = attribute.getClass().getName();
         if (s.startsWith(className)) {
-            return s.substring(className.length()+1, s.length()-1);
+            return s.substring(className.length() + 1, s.length() - 1);
         }
         throw new ConversionException("Cannot find name of attribute of type " + className, ex);
     }
 
+    @Override
     public Object fromString(final String str) {
         if (attributeMap.containsKey(str)) {
             return attributeMap.get(str);
@@ -100,41 +104,43 @@ public class AbstractAttributedCharacterIteratorAttributeConverter extends
     }
 
     private Object readResolve() {
-        attributeMap = (Map)instanceMaps.get(type.getName());
+        @SuppressWarnings("unchecked")
+        final Map<String, T> typedMap = (Map<String, T>)instanceMaps.get(type.getName());
+        attributeMap = typedMap;
         if (attributeMap == null) {
-            attributeMap = new HashMap();
-            Field instanceMap = Fields.locate(type, Map.class, true);
+            attributeMap = new HashMap<String, T>();
+            final Field instanceMap = Fields.locate(type, Map.class, true);
             if (instanceMap != null) {
                 try {
-                    Map map = (Map)Fields.read(instanceMap, null);
+                    @SuppressWarnings("unchecked")
+                    final Map<String, T> map = (Map<String, T>)Fields.read(instanceMap, null);
                     if (map != null) {
                         boolean valid = true;
-                        for (Iterator iter = map.entrySet().iterator(); valid && iter.hasNext(); ) {
-                            Map.Entry entry = (Map.Entry)iter.next(); 
+                        for (final Map.Entry<String, T> entry : map.entrySet()) {
                             valid = entry.getKey().getClass() == String.class && entry.getValue().getClass() == type;
                         }
                         if (valid) {
                             attributeMap.putAll(map);
                         }
                     }
-                } catch (ObjectAccessException e) {
+                } catch (final ObjectAccessException e) {
                 }
             }
             if (attributeMap.isEmpty()) {
                 try {
-                    Field[] fields = type.getDeclaredFields();
-                    for(int i = 0; i < fields.length; ++i) {
-                        if(fields[i].getType() == type == Modifier.isStatic(fields[i].getModifiers())) {
-                            AttributedCharacterIterator.Attribute attribute =
-                                    (AttributedCharacterIterator.Attribute)Fields.read(fields[i], null);
+                    final Field[] fields = type.getDeclaredFields();
+                    for (final Field field : fields) {
+                        if (field.getType() == type == Modifier.isStatic(field.getModifiers())) {
+                            @SuppressWarnings("unchecked")
+                            final T attribute = (T)Fields.read(field, null);
                             attributeMap.put(toString(attribute), attribute);
                         }
                     }
-                } catch (SecurityException e) {
+                } catch (final SecurityException e) {
                     attributeMap.clear();
-                } catch (ObjectAccessException e) {
+                } catch (final ObjectAccessException e) {
                     attributeMap.clear();
-                } catch (NoClassDefFoundError e) {
+                } catch (final NoClassDefFoundError e) {
                     attributeMap.clear();
                 }
             }

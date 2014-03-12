@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2008 XStream Committers.
+ * Copyright (c) 2007, 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,21 +10,20 @@
  */
 package com.thoughtworks.xstream.core.util;
 
-import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
-
 import java.beans.PropertyEditor;
+
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 
 /**
  * Wrapper around {@link PropertyEditor} that can be called by multiple threads concurrently.
  * <p>
- * A PropertyEditor is not thread safe. To make best use of resources, the PropertyEditor
- * provides a dynamically sizing pool of instances, each of which will only be called by a
- * single thread at a time.
+ * A PropertyEditor is not thread safe. To make best use of resources, the PropertyEditor provides a dynamically sizing
+ * pool of instances, each of which will only be called by a single thread at a time.
  * </p>
  * <p>
- * The pool has a maximum capacity, to limit overhead. If all instances in the pool are in use
- * and another is required, it shall block until one becomes available.
+ * The pool has a maximum capacity, to limit overhead. If all instances in the pool are in use and another is required,
+ * it shall block until one becomes available.
  * </p>
  * 
  * @author J&ouml;rg Schaible
@@ -32,34 +31,32 @@ import java.beans.PropertyEditor;
  */
 public class ThreadSafePropertyEditor {
 
-    private final Class editorType;
-    private final Pool pool;
+    private final Class<? extends PropertyEditor> editorType;
+    private final Pool<PropertyEditor> pool;
 
-    public ThreadSafePropertyEditor(Class type, int initialPoolSize, int maxPoolSize) {
+    public ThreadSafePropertyEditor(
+            final Class<? extends PropertyEditor> type, final int initialPoolSize, final int maxPoolSize) {
         if (!PropertyEditor.class.isAssignableFrom(type)) {
-            throw new IllegalArgumentException(type.getName()
-                + " is not a "
-                + PropertyEditor.class.getName());
+            throw new IllegalArgumentException(type.getName() + " is not a " + PropertyEditor.class.getName());
         }
         editorType = type;
-        pool = new Pool(initialPoolSize, maxPoolSize, new Pool.Factory() {
-            public Object newInstance() {
+        pool = new Pool<PropertyEditor>(initialPoolSize, maxPoolSize, new Pool.Factory<PropertyEditor>() {
+            @Override
+            public PropertyEditor newInstance() {
                 try {
                     return editorType.newInstance();
-                } catch (InstantiationException e) {
-                    throw new ObjectAccessException("Could not call default constructor of "
-                        + editorType.getName(), e);
-                } catch (IllegalAccessException e) {
-                    throw new ObjectAccessException("Could not call default constructor of "
-                        + editorType.getName(), e);
+                } catch (final InstantiationException e) {
+                    throw new ObjectAccessException("Could not call default constructor of " + editorType.getName(), e);
+                } catch (final IllegalAccessException e) {
+                    throw new ObjectAccessException("Could not call default constructor of " + editorType.getName(), e);
                 }
             }
 
         });
     }
 
-    public String getAsText(Object object) {
-        PropertyEditor editor = fetchFromPool();
+    public String getAsText(final Object object) {
+        final PropertyEditor editor = fetchFromPool();
         try {
             editor.setValue(object);
             return editor.getAsText();
@@ -68,8 +65,8 @@ public class ThreadSafePropertyEditor {
         }
     }
 
-    public Object setAsText(String str) {
-        PropertyEditor editor = fetchFromPool();
+    public Object setAsText(final String str) {
+        final PropertyEditor editor = fetchFromPool();
         try {
             editor.setAsText(str);
             return editor.getValue();
@@ -79,7 +76,6 @@ public class ThreadSafePropertyEditor {
     }
 
     private PropertyEditor fetchFromPool() {
-        PropertyEditor editor = (PropertyEditor)pool.fetchFromPool();
-        return editor;
+        return pool.fetchFromPool();
     }
 }

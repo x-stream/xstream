@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,30 +11,32 @@
  */
 package com.thoughtworks.xstream.converters.collections;
 
+import java.util.BitSet;
+import java.util.StringTokenizer;
+
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.BitSet;
-import java.util.StringTokenizer;
 
 /**
- * Converts a java.util.BitSet to XML, as a compact
- * comma delimited list of ones and zeros.
- *
+ * Converts a {@link BitSet}, as a compact comma delimited list of ones and zeros.
+ * 
  * @author Joe Walnes
  */
 public class BitSetConverter implements Converter {
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type.equals(BitSet.class);
     }
 
-    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        BitSet bitSet = (BitSet) source;
-        StringBuffer buffer = new StringBuffer();
+    @Override
+    public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+        final BitSet bitSet = (BitSet)source;
+        final StringBuilder buffer = new StringBuilder();
         boolean seenFirst = false;
         for (int i = 0; i < bitSet.length(); i++) {
             if (bitSet.get(i)) {
@@ -49,11 +51,12 @@ public class BitSetConverter implements Converter {
         writer.setValue(buffer.toString());
     }
 
-    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        BitSet result = new BitSet();
-        StringTokenizer tokenizer = new StringTokenizer(reader.getValue(), ",", false);
+    @Override
+    public BitSet unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
+        final BitSet result = new BitSet();
+        final StringTokenizer tokenizer = new StringTokenizer(reader.getValue(), ",", false);
         while (tokenizer.hasMoreTokens()) {
-            int index = Integer.parseInt(tokenizer.nextToken());
+            final int index = Integer.parseInt(tokenizer.nextToken());
             result.set(index);
         }
         return result;

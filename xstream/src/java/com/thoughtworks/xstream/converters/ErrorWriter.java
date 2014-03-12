@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,30 +13,30 @@ package com.thoughtworks.xstream.converters;
 
 import java.util.Iterator;
 
+
 /**
- * To aid debugging, some components are passed an ErrorWriter
- * when things go wrong, allowing them to add information
- * to the error message that may be helpful to diagnose problems.
- *
+ * To aid debugging, some components are passed an ErrorWriter when things go wrong, allowing them to add information to
+ * the error message that may be helpful to diagnose problems.
+ * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public interface ErrorWriter {
 
     /**
-     * Add some information to the error message. The information will be added even
-     * if the identifier is already in use.
-     *
-     * @param name        something to identify the type of information (e.g. 'XPath').
+     * Add some information to the error message. The information will be added even if the identifier is already in
+     * use.
+     * 
+     * @param name something to identify the type of information (e.g. 'XPath').
      * @param information detail of the message (e.g. '/blah/moo[3]'
      */
     void add(String name, String information);
 
     /**
-     * Set some information to the error message. If the identifier is already in use, the
-     * new information will replace the old one.
-     *
-     * @param name        something to identify the type of information (e.g. 'XPath').
+     * Set some information to the error message. If the identifier is already in use, the new information will replace
+     * the old one.
+     * 
+     * @param name something to identify the type of information (e.g. 'XPath').
      * @param information detail of the message (e.g. '/blah/moo[3]'
      * @since 1.4
      */
@@ -57,5 +57,5 @@ public interface ErrorWriter {
      * @return an Iterator
      * @since 1.3
      */
-    Iterator keys();
+    Iterator<String> keys();
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,41 +11,43 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.Writer;
+
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
-import java.io.Writer;
 
 public class CompactWriter extends PrettyPrintWriter {
 
-    public CompactWriter(Writer writer) {
+    public CompactWriter(final Writer writer) {
         super(writer);
     }
 
     /**
      * @since 1.3
      */
-    public CompactWriter(Writer writer, int mode) {
+    public CompactWriter(final Writer writer, final int mode) {
         super(writer, mode);
     }
 
     /**
      * @since 1.4
      */
-    public CompactWriter(Writer writer, NameCoder nameCoder) {
+    public CompactWriter(final Writer writer, final NameCoder nameCoder) {
         super(writer, nameCoder);
     }
 
     /**
      * @since 1.4
      */
-    public CompactWriter(Writer writer, int mode, NameCoder nameCoder) {
+    public CompactWriter(final Writer writer, final int mode, final NameCoder nameCoder) {
         super(writer, mode, nameCoder);
     }
 
     /**
      * @deprecated As of 1.4 use {@link CompactWriter#CompactWriter(Writer, NameCoder)} instead.
      */
-    public CompactWriter(Writer writer, XmlFriendlyReplacer replacer) {
+    @Deprecated
+    public CompactWriter(final Writer writer, final XmlFriendlyReplacer replacer) {
         super(writer, replacer);
     }
 
@@ -53,10 +55,12 @@ public class CompactWriter extends PrettyPrintWriter {
      * @since 1.3
      * @deprecated As of 1.4 use {@link CompactWriter#CompactWriter(Writer, int, NameCoder)} instead.
      */
-    public CompactWriter(Writer writer, int mode, XmlFriendlyReplacer replacer) {
+    @Deprecated
+    public CompactWriter(final Writer writer, final int mode, final XmlFriendlyReplacer replacer) {
         super(writer, mode, replacer);
     }
-    
+
+    @Override
     protected void endOfLine() {
         // override parent: don't write anything at end of line
     }

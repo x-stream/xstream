@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,35 +29,36 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 public class TreeUnmarshaller implements UnmarshallingContext {
 
-    private Object root;
+    private final Object root;
     protected HierarchicalStreamReader reader;
-    private ConverterLookup converterLookup;
-    private Mapper mapper;
-    private FastStack types = new FastStack(16);
+    private final ConverterLookup converterLookup;
+    private final Mapper mapper;
+    private final FastStack<Class<?>> types = new FastStack<Class<?>>(16);
     private DataHolder dataHolder;
-    private final PrioritizedList validationList = new PrioritizedList();
+    private final PrioritizedList<Runnable> validationList = new PrioritizedList<Runnable>();
 
     public TreeUnmarshaller(
-        Object root, HierarchicalStreamReader reader, ConverterLookup converterLookup,
-        Mapper mapper) {
+            final Object root, final HierarchicalStreamReader reader, final ConverterLookup converterLookup,
+            final Mapper mapper) {
         this.root = root;
         this.reader = reader;
         this.converterLookup = converterLookup;
         this.mapper = mapper;
     }
 
-    public Object convertAnother(Object parent, Class type) {
+    @Override
+    public Object convertAnother(final Object parent, final Class<?> type) {
         return convertAnother(parent, type, null);
     }
 
-    public Object convertAnother(Object parent, Class type, Converter converter) {
+    @Override
+    public Object convertAnother(final Object parent, Class<?> type, Converter converter) {
         type = mapper.defaultImplementationOf(type);
         if (converter == null) {
             converter = converterLookup.lookupConverterForType(type);
         } else {
             if (!converter.canConvert(type)) {
-                ConversionException e = new ConversionException(
-                    "Explicit selected converter cannot handle type");
+                final ConversionException e = new ConversionException("Explicit selected converter cannot handle type");
                 e.add("item-type", type.getName());
                 e.add("converter-type", converter.getClass().getName());
                 throw e;
@@ -66,23 +67,24 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         return convert(parent, type, converter);
     }
 
-    protected Object convert(Object parent, Class type, Converter converter) {
+    protected Object convert(final Object parent, final Class<?> type, final Converter converter) {
         try {
             types.push(type);
-            Object result = converter.unmarshal(reader, this);
+            final Object result = converter.unmarshal(reader, this);
             types.popSilently();
             return result;
-        } catch (ConversionException conversionException) {
+        } catch (final ConversionException conversionException) {
             addInformationTo(conversionException, type, converter, parent);
             throw conversionException;
-        } catch (RuntimeException e) {
-            ConversionException conversionException = new ConversionException(e);
+        } catch (final RuntimeException e) {
+            final ConversionException conversionException = new ConversionException(e);
             addInformationTo(conversionException, type, converter, parent);
             throw conversionException;
         }
     }
 
-    private void addInformationTo(ErrorWriter errorWriter, Class type, Converter converter, Object parent) {
+    private void addInformationTo(final ErrorWriter errorWriter, final Class<?> type, final Converter converter,
+            final Object parent) {
         errorWriter.add("class", type.getName());
         errorWriter.add("required-type", getRequiredType().getName());
         errorWriter.add("converter-type", converter.getClass().getName());
@@ -95,29 +97,35 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         reader.appendErrors(errorWriter);
     }
 
-    public void addCompletionCallback(Runnable work, int priority) {
+    @Override
+    public void addCompletionCallback(final Runnable work, final int priority) {
         validationList.add(work, priority);
     }
 
+    @Override
     public Object currentObject() {
         return types.size() == 1 ? root : null;
     }
 
-    public Class getRequiredType() {
-        return (Class)types.peek();
+    @Override
+    public Class<?> getRequiredType() {
+        return types.peek();
     }
 
-    public Object get(Object key) {
+    @Override
+    public Object get(final Object key) {
         lazilyCreateDataHolder();
         return dataHolder.get(key);
     }
 
-    public void put(Object key, Object value) {
+    @Override
+    public void put(final Object key, final Object value) {
         lazilyCreateDataHolder();
         dataHolder.put(key, value);
     }
 
-    public Iterator keys() {
+    @Override
+    public Iterator<Object> keys() {
         lazilyCreateDataHolder();
         return dataHolder.keys();
     }
@@ -128,20 +136,18 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         }
     }
 
-    public Object start(DataHolder dataHolder) {
+    public Object start(final DataHolder dataHolder) {
         this.dataHolder = dataHolder;
-        Class type = HierarchicalStreams.readClassType(reader, mapper);
-        Object result = convertAnother(null, type);
-        Iterator validations = validationList.iterator();
-        while (validations.hasNext()) {
-            Runnable runnable = (Runnable)validations.next();
+        final Class<?> type = HierarchicalStreams.readClassType(reader, mapper);
+        final Object result = convertAnother(null, type);
+        for (final Runnable runnable : validationList) {
             runnable.run();
         }
         return result;
     }
 
     protected Mapper getMapper() {
-        return this.mapper;
+        return mapper;
     }
 
 }

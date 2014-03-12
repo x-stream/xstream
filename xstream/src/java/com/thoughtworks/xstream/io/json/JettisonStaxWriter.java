@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,20 +10,20 @@
  */
 package com.thoughtworks.xstream.io.json;
 
-import com.thoughtworks.xstream.io.naming.NameCoder;
-import com.thoughtworks.xstream.io.xml.QNameMap;
-import com.thoughtworks.xstream.io.xml.StaxWriter;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
-
-import org.codehaus.jettison.AbstractXMLStreamWriter;
-import org.codehaus.jettison.mapped.MappedNamespaceConvention;
+import java.util.Collection;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import java.util.Collection;
-import java.util.Map;
+import org.codehaus.jettison.AbstractXMLStreamWriter;
+import org.codehaus.jettison.mapped.MappedNamespaceConvention;
+
+import com.thoughtworks.xstream.io.naming.NameCoder;
+import com.thoughtworks.xstream.io.xml.QNameMap;
+import com.thoughtworks.xstream.io.xml.StaxWriter;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 
 
 /**
@@ -40,9 +40,9 @@ public class JettisonStaxWriter extends StaxWriter {
      * @since 1.4
      */
     public JettisonStaxWriter(
-        QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument,
-        boolean namespaceRepairingMode, NameCoder nameCoder,
-        MappedNamespaceConvention convention) throws XMLStreamException {
+            final QNameMap qnameMap, final XMLStreamWriter out, final boolean writeEnclosingDocument,
+            final boolean namespaceRepairingMode, final NameCoder nameCoder, final MappedNamespaceConvention convention)
+            throws XMLStreamException {
         super(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, nameCoder);
         this.convention = convention;
     }
@@ -52,24 +52,24 @@ public class JettisonStaxWriter extends StaxWriter {
      *             {@link JettisonStaxWriter#JettisonStaxWriter(QNameMap, XMLStreamWriter, boolean, boolean, NameCoder, MappedNamespaceConvention)}
      *             instead
      */
+    @Deprecated
     public JettisonStaxWriter(
-        QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument,
-        boolean namespaceRepairingMode, XmlFriendlyReplacer replacer,
-        MappedNamespaceConvention convention) throws XMLStreamException {
-        this(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, (NameCoder) replacer, convention);
+            final QNameMap qnameMap, final XMLStreamWriter out, final boolean writeEnclosingDocument,
+            final boolean namespaceRepairingMode, final XmlFriendlyReplacer replacer,
+            final MappedNamespaceConvention convention) throws XMLStreamException {
+        this(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode, (NameCoder)replacer, convention);
     }
 
     public JettisonStaxWriter(
-        QNameMap qnameMap, XMLStreamWriter out, boolean writeEnclosingDocument,
-        boolean namespaceRepairingMode, MappedNamespaceConvention convention)
-        throws XMLStreamException {
+            final QNameMap qnameMap, final XMLStreamWriter out, final boolean writeEnclosingDocument,
+            final boolean namespaceRepairingMode, final MappedNamespaceConvention convention) throws XMLStreamException {
         super(qnameMap, out, writeEnclosingDocument, namespaceRepairingMode);
         this.convention = convention;
     }
 
     public JettisonStaxWriter(
-        QNameMap qnameMap, XMLStreamWriter out, MappedNamespaceConvention convention)
-        throws XMLStreamException {
+            final QNameMap qnameMap, final XMLStreamWriter out, final MappedNamespaceConvention convention)
+            throws XMLStreamException {
         super(qnameMap, out);
         this.convention = convention;
     }
@@ -78,22 +78,21 @@ public class JettisonStaxWriter extends StaxWriter {
      * @since 1.4
      */
     public JettisonStaxWriter(
-        QNameMap qnameMap, XMLStreamWriter out, NameCoder nameCoder, MappedNamespaceConvention convention)
-        throws XMLStreamException {
+            final QNameMap qnameMap, final XMLStreamWriter out, final NameCoder nameCoder,
+            final MappedNamespaceConvention convention) throws XMLStreamException {
         super(qnameMap, out, nameCoder);
         this.convention = convention;
     }
 
-    public void startNode(String name, Class clazz) {
-        XMLStreamWriter out = getXMLStreamWriter();
+    @Override
+    public void startNode(final String name, final Class<?> clazz) {
+        final XMLStreamWriter out = getXMLStreamWriter();
         if (clazz != null && out instanceof AbstractXMLStreamWriter) {
-            if (Collection.class.isAssignableFrom(clazz)
-                || Map.class.isAssignableFrom(clazz)
-                || clazz.isArray()) {
-                QName qname = getQNameMap().getQName(encodeNode(name));
-                String prefix = qname.getPrefix();
-                String uri = qname.getNamespaceURI();
-                String key = convention.createKey(prefix, uri, qname.getLocalPart());
+            if (Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz) || clazz.isArray()) {
+                final QName qname = getQNameMap().getQName(encodeNode(name));
+                final String prefix = qname.getPrefix();
+                final String uri = qname.getNamespaceURI();
+                final String key = convention.createKey(prefix, uri, qname.getLocalPart());
                 if (!((AbstractXMLStreamWriter)out).getSerializedAsArrays().contains(key)) {
                     // Typo is in the API of Jettison ...
                     ((AbstractXMLStreamWriter)out).seriliazeAsArray(key);

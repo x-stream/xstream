@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+
 /**
  * Abstract base class for a TreeUnmarshaller, that resolves references.
  * 
@@ -28,39 +29,42 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * @author Mauro Talevi
  * @since 1.2
  */
-public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
+public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller {
 
     private static final Object NULL = new Object();
-    private Map values = new HashMap();
-    private FastStack parentStack = new FastStack(16);
+    private final Map<R, Object> values = new HashMap<R, Object>();
+    private final FastStack<R> parentStack = new FastStack<R>(16);
 
-    public AbstractReferenceUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                     ConverterLookup converterLookup, Mapper mapper) {
+    public AbstractReferenceUnmarshaller(
+            final Object root, final HierarchicalStreamReader reader, final ConverterLookup converterLookup,
+            final Mapper mapper) {
         super(root, reader, converterLookup, mapper);
     }
 
-    protected Object convert(Object parent, Class type, Converter converter) {
+    @Override
+    protected Object convert(final Object parent, final Class<?> type, final Converter converter) {
         if (parentStack.size() > 0) { // handles circular references
-            Object parentReferenceKey = parentStack.peek();
+            final R parentReferenceKey = parentStack.peek();
             if (parentReferenceKey != null) {
-                if (!values.containsKey(parentReferenceKey)) { // see AbstractCircularReferenceTest.testWeirdCircularReference()
+                // see AbstractCircularReferenceTest.testWeirdCircularReference()
+                if (!values.containsKey(parentReferenceKey)) {
                     values.put(parentReferenceKey, parent);
                 }
             }
         }
         final Object result;
-        String attributeName = getMapper().aliasForSystemAttribute("reference");
-        String reference = attributeName == null ? null : reader.getAttribute(attributeName);
+        final String attributeName = getMapper().aliasForSystemAttribute("reference");
+        final String reference = attributeName == null ? null : reader.getAttribute(attributeName);
         if (reference != null) {
-            Object cache = values.get(getReferenceKey(reference));
+            final Object cache = values.get(getReferenceKey(reference));
             if (cache == null) {
                 final ConversionException ex = new ConversionException("Invalid reference");
                 ex.add("reference", reference);
                 throw ex;
-            } 
+            }
             result = cache == NULL ? null : cache;
         } else {
-            Object currentReferenceKey = getCurrentReferenceKey();
+            final R currentReferenceKey = getCurrentReferenceKey();
             parentStack.push(currentReferenceKey);
             result = super.convert(parent, type, converter);
             if (currentReferenceKey != null) {
@@ -70,7 +74,8 @@ public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
         }
         return result;
     }
-    
-    protected abstract Object getReferenceKey(String reference);
-    protected abstract Object getCurrentReferenceKey();
+
+    protected abstract R getReferenceKey(String reference);
+
+    protected abstract R getCurrentReferenceKey();
 }

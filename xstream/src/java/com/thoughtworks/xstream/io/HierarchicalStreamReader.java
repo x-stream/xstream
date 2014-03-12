@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,15 +11,17 @@
  */
 package com.thoughtworks.xstream.io;
 
+import java.io.Closeable;
+import java.util.Iterator;
+
 import com.thoughtworks.xstream.converters.ErrorReporter;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 
-import java.util.Iterator;
 
 /**
  * @author Joe Walnes
  */
-public interface HierarchicalStreamReader extends ErrorReporter {
+public interface HierarchicalStreamReader extends ErrorReporter, Closeable {
 
     /**
      * Does the node have any more children remaining that have not yet been read?
@@ -27,8 +29,8 @@ public interface HierarchicalStreamReader extends ErrorReporter {
     boolean hasMoreChildren();
 
     /**
-     * Select the current child as current node.
-     * A call to this function must be balanced with a call to {@link #moveUp()}.
+     * Select the current child as current node. A call to this function must be balanced with a call to
+     * {@link #moveUp()}.
      */
     void moveDown();
 
@@ -56,7 +58,7 @@ public interface HierarchicalStreamReader extends ErrorReporter {
      * Get the value of an attribute of the current node, by index.
      */
     String getAttribute(int index);
-    
+
     /**
      * Number of attributes in current node.
      */
@@ -68,38 +70,48 @@ public interface HierarchicalStreamReader extends ErrorReporter {
     String getAttributeName(int index);
 
     /**
-     * Names of attributes (as Strings). 
+     * Names of attributes.
      */
-    Iterator getAttributeNames();
+    Iterator<String> getAttributeNames();
 
     /**
-     * If any errors are detected, allow the reader to add any additional information that can aid debugging
-     * (such as line numbers, XPath expressions, etc).
+     * If any errors are detected, allow the reader to add any additional information that can aid debugging (such as
+     * line numbers, XPath expressions, etc).
      */
+    @Override
     void appendErrors(ErrorWriter errorWriter);
 
     /**
      * Close the reader, if necessary.
      */
+    @Override
     void close();
 
     /**
      * Return the underlying HierarchicalStreamReader implementation.
-     *
-     * <p>If a Converter needs to access methods of a specific HierarchicalStreamReader implementation that are not
-     * defined in the HierarchicalStreamReader interface, it should call this method before casting. This is because
-     * the reader passed to the Converter is often wrapped/decorated by another implementation to provide additional
-     * functionality (such as XPath tracking).</p>
-     *
-     * <p>For example:</p>
-     * <pre>MySpecificReader mySpecificReader = (MySpecificReader)reader; <b>// INCORRECT!</b>
-     * mySpecificReader.doSomethingSpecific();</pre>
-
-     * <pre>MySpecificReader mySpecificReader = (MySpecificReader)reader.underlyingReader();  <b>// CORRECT!</b>
-     * mySpecificReader.doSomethingSpecific();</pre>
-     *
-     * <p>Implementations of HierarchicalStreamReader should return 'this', unless they are a decorator, in which case
-     * they should delegate to whatever they are wrapping.</p>
+     * <p>
+     * If a Converter needs to access methods of a specific HierarchicalStreamReader implementation that are not defined
+     * in the HierarchicalStreamReader interface, it should call this method before casting. This is because the reader
+     * passed to the Converter is often wrapped/decorated by another implementation to provide additional functionality
+     * (such as XPath tracking).
+     * </p>
+     * <p>
+     * For example:
+     * </p>
+     * 
+     * <pre>
+     * MySpecificReader mySpecificReader = (MySpecificReader)reader; <b>// INCORRECT!</b>
+     * mySpecificReader.doSomethingSpecific();
+     * </pre>
+     * 
+     * <pre>
+     * MySpecificReader mySpecificReader = (MySpecificReader)reader.underlyingReader();  <b>// CORRECT!</b>
+     * mySpecificReader.doSomethingSpecific();
+     * </pre>
+     * <p>
+     * Implementations of HierarchicalStreamReader should return 'this', unless they are a decorator, in which case they
+     * should delegate to whatever they are wrapping.
+     * </p>
      */
     HierarchicalStreamReader underlyingReader();
 

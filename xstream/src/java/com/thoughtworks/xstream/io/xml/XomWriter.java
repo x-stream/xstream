@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,23 +41,27 @@ public class XomWriter extends AbstractDocumentWriter {
      * @since 1.2
      * @deprecated As of 1.4 use {@link XomWriter#XomWriter(Element, NameCoder)} instead
      */
+    @Deprecated
     public XomWriter(final Element parentElement, final XmlFriendlyReplacer replacer) {
         this(parentElement, (NameCoder)replacer);
     }
 
+    @Override
     protected Object createNode(final String name) {
         final Element newNode = new Element(encodeNode(name));
         final Element top = top();
-        if (top != null){
+        if (top != null) {
             top().appendChild(newNode);
         }
         return newNode;
     }
 
+    @Override
     public void addAttribute(final String name, final String value) {
         top().addAttribute(new Attribute(encodeAttribute(name), value));
     }
 
+    @Override
     public void setValue(final String text) {
         top().appendChild(text);
     }

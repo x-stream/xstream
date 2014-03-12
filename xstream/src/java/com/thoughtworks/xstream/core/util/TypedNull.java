@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 XStream Committers.
+ * Copyright (c) 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,22 +12,19 @@ package com.thoughtworks.xstream.core.util;
 
 /**
  * A placeholder for a <code>null</code> value of a specific type.
- *
- * @author  J&ouml;rg Schaible
+ * 
+ * @author J&ouml;rg Schaible
  * @since 1.2.2
  */
-public class TypedNull
-{
-	private final Class type;
-	
-	public TypedNull(Class type)
-	{
-		super();
-		this.type = type;
-	}
-	
-	public Class getType()
-	{
-		return this.type;
-	}
+public class TypedNull<T> {
+    private final Class<T> type;
+
+    public TypedNull(final Class<T> type) {
+        super();
+        this.type = type;
+    }
+
+    public Class<T> getType() {
+        return this.type;
+    }
 }

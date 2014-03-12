@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,20 +13,22 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.core.util.Primitives;
 
+
 /**
- * Mapper that detects arrays and changes the name so it can identified as an array
- * (for example Foo[] gets serialized as foo-array). Supports multi-dimensional arrays.
- *
- * @author Joe Walnes 
+ * Mapper that detects arrays and changes the name so it can identified as an array (for example Foo[] gets serialized
+ * as foo-array). Supports multi-dimensional arrays.
+ * 
+ * @author Joe Walnes
  */
 public class ArrayMapper extends MapperWrapper {
 
-    public ArrayMapper(Mapper wrapped) {
+    public ArrayMapper(final Mapper wrapped) {
         super(wrapped);
     }
 
-    public String serializedClass(Class type) {
-        StringBuffer arraySuffix = new StringBuffer();
+    @Override
+    public String serializedClass(Class<?> type) {
+        final StringBuilder arraySuffix = new StringBuilder();
         String name = null;
         while (type.isArray()) {
             name = super.serializedClass(type);
@@ -51,7 +53,8 @@ public class ArrayMapper extends MapperWrapper {
         }
     }
 
-    public Class realClass(String elementName) {
+    @Override
+    public Class<?> realClass(String elementName) {
         int dimensions = 0;
 
         // strip off "-array" suffix
@@ -61,7 +64,7 @@ public class ArrayMapper extends MapperWrapper {
         }
 
         if (dimensions > 0) {
-            Class componentType = Primitives.primitiveType(elementName);
+            Class<?> componentType = Primitives.primitiveType(elementName);
             if (componentType == null) {
                 componentType = super.realClass(elementName);
             }
@@ -75,8 +78,8 @@ public class ArrayMapper extends MapperWrapper {
         }
     }
 
-    private String arrayType(int dimensions, Class componentType) {
-        StringBuffer className = new StringBuffer();
+    private String arrayType(final int dimensions, final Class<?> componentType) {
+        final StringBuilder className = new StringBuilder();
         for (int i = 0; i < dimensions; i++) {
             className.append('[');
         }
@@ -88,8 +91,8 @@ public class ArrayMapper extends MapperWrapper {
             return className.toString();
         }
     }
-    
-    private String boxedTypeName(Class type) {
+
+    private String boxedTypeName(final Class<?> type) {
         return Primitives.isBoxed(type) ? type.getName() : null;
     }
 }

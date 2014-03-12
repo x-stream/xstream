@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,14 +11,14 @@
 package com.thoughtworks.xstream.io.xml;
 
 /**
- * An interface for a {@link com.thoughtworks.xstream.io.HierarchicalStreamReader} supporting
- * XML-friendly names.
+ * An interface for a {@link com.thoughtworks.xstream.io.HierarchicalStreamReader} supporting XML-friendly names.
  * 
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
  * @since 1.3
  * @deprecated As of 1.4
  */
+@Deprecated
 public interface XmlFriendlyReader {
 
     /**
@@ -28,6 +28,7 @@ public interface XmlFriendlyReader {
      * @return An unescaped name with original characters
      * @deprecated As of 1.4
      */
+    @Deprecated
     String unescapeXmlName(String name);
 
 }

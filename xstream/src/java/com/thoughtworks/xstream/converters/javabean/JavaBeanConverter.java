@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,72 +20,73 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
 import com.thoughtworks.xstream.core.util.FastField;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+
 /**
- * Can convert any bean with a public default constructor. The {@link BeanProvider} used as
- * default is based on {@link java.beans.BeanInfo}. Indexed properties are currently not supported.
+ * Can convert any bean with a public default constructor. The {@link BeanProvider} used as default is based on
+ * {@link java.beans.BeanInfo}. Indexed properties are currently not supported.
  */
 public class JavaBeanConverter implements Converter {
 
-    /*
-     * TODO:
-     *  - support indexed properties
-     *  - support attributes (XSTR-620)
-     *  - support local converters (XSTR-601)
-     *  Problem: Mappers take definitions based on reflection, they don't know about bean info
-     */
+    /* TODO: - support indexed properties - support attributes (XSTR-620) - support local converters (XSTR-601) Problem:
+     * Mappers take definitions based on reflection, they don't know about bean info */
     protected final Mapper mapper;
     protected final JavaBeanProvider beanProvider;
-    private final Class type;
+    private final Class<?> type;
 
-    public JavaBeanConverter(Mapper mapper) {
-        this(mapper, (Class)null);
+    public JavaBeanConverter(final Mapper mapper) {
+        this(mapper, (Class<?>)null);
     }
 
-    public JavaBeanConverter(Mapper mapper, Class type) {
+    public JavaBeanConverter(final Mapper mapper, final Class<?> type) {
         this(mapper, new BeanProvider(), type);
     }
 
-    public JavaBeanConverter(Mapper mapper, JavaBeanProvider beanProvider) {
-        this(mapper,beanProvider, null);
+    public JavaBeanConverter(final Mapper mapper, final JavaBeanProvider beanProvider) {
+        this(mapper, beanProvider, null);
     }
 
-    public JavaBeanConverter(Mapper mapper, JavaBeanProvider beanProvider, Class type) {
+    public JavaBeanConverter(final Mapper mapper, final JavaBeanProvider beanProvider, final Class<?> type) {
         this.mapper = mapper;
         this.beanProvider = beanProvider;
         this.type = type;
     }
 
     /**
-     * Checks if the bean provider can instantiate this type.
-     * If you need less strict checks, subclass JavaBeanConverter
+     * Checks if the bean provider can instantiate this type. If you need less strict checks, subclass JavaBeanConverter
      */
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return (this.type == null || this.type == type) && beanProvider.canInstantiate(type);
     }
 
+    @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final String classAttributeName = mapper.aliasForSystemAttribute("class");
         beanProvider.visitSerializableProperties(source, new JavaBeanProvider.Visitor() {
-            public boolean shouldVisit(String name, Class definedIn) {
+            @Override
+            public boolean shouldVisit(final String name, final Class<?> definedIn) {
                 return mapper.shouldSerializeMember(definedIn, name);
             }
-            
-            public void visit(String propertyName, Class fieldType, Class definedIn, Object newObj) {
+
+            @Override
+            public void visit(final String propertyName, final Class<?> fieldType, final Class<?> definedIn,
+                    final Object newObj) {
                 if (newObj != null) {
                     writeField(propertyName, fieldType, newObj, definedIn);
                 }
             }
 
-            private void writeField(String propertyName, Class fieldType, Object newObj, Class definedIn) {
-                Class actualType = newObj.getClass();
-                Class defaultType = mapper.defaultImplementationOf(fieldType);
-                String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
-				ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, actualType);
+            private void writeField(final String propertyName, final Class<?> fieldType, final Object newObj,
+                    final Class<?> definedIn) {
+                final Class<?> actualType = newObj.getClass();
+                final Class<?> defaultType = mapper.defaultImplementationOf(fieldType);
+                final String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, actualType);
                 if (!actualType.equals(defaultType) && classAttributeName != null) {
                     writer.addAttribute(classAttributeName, mapper.serializedClass(actualType));
                 }
@@ -96,29 +97,31 @@ public class JavaBeanConverter implements Converter {
         });
     }
 
+    @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final Object result = instantiateNewInstance(context);
-        final Set seenProperties = new HashSet() {
-            public boolean add(Object e) {
+        final Set<FastField> seenProperties = new HashSet<FastField>() {
+            @Override
+            public boolean add(final FastField e) {
                 if (!super.add(e)) {
-                    throw new DuplicatePropertyException(((FastField)e).getName());
+                    throw new DuplicatePropertyException(e.getName());
                 }
                 return true;
             }
         };
 
-        Class resultType = result.getClass();
+        final Class<?> resultType = result.getClass();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
 
-            String propertyName = mapper.realMember(resultType, reader.getNodeName());
+            final String propertyName = mapper.realMember(resultType, reader.getNodeName());
 
             if (mapper.shouldSerializeMember(resultType, propertyName)) {
-                boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName, resultType);
-    
+                final boolean propertyExistsInClass = beanProvider.propertyDefinedInClass(propertyName, resultType);
+
                 if (propertyExistsInClass) {
-                    Class type = determineType(reader, result, propertyName);
-                    Object value = context.convertAnother(result, type);
+                    final Class<?> type = determineType(reader, result, propertyName);
+                    final Object value = context.convertAnother(result, type);
                     beanProvider.writeProperty(result, propertyName, value);
                     seenProperties.add(new FastField(resultType, propertyName));
                 } else {
@@ -131,7 +134,7 @@ public class JavaBeanConverter implements Converter {
         return result;
     }
 
-    private Object instantiateNewInstance(UnmarshallingContext context) {
+    private Object instantiateNewInstance(final UnmarshallingContext context) {
         Object result = context.currentObject();
         if (result == null) {
             result = beanProvider.newInstance(context.getRequiredType());
@@ -139,9 +142,9 @@ public class JavaBeanConverter implements Converter {
         return result;
     }
 
-    private Class determineType(HierarchicalStreamReader reader, Object result, String fieldName) {
+    private Class<?> determineType(final HierarchicalStreamReader reader, final Object result, final String fieldName) {
         final String classAttributeName = mapper.aliasForSystemAttribute("class");
-        String classAttribute = classAttributeName == null ? null : reader.getAttribute(classAttributeName);
+        final String classAttribute = classAttributeName == null ? null : reader.getAttribute(classAttributeName);
         if (classAttribute != null) {
             return mapper.realClass(classAttribute);
         } else {
@@ -156,7 +159,7 @@ public class JavaBeanConverter implements Converter {
      * @since 1.4.2
      */
     public static class DuplicatePropertyException extends ConversionException {
-        public DuplicatePropertyException(String msg) {
+        public DuplicatePropertyException(final String msg) {
             super("Duplicate property " + msg);
             add("property", msg);
         }

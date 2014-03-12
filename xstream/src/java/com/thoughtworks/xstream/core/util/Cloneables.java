@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2009, 2010, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,40 +23,40 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
  * @since 1.4
  */
 public class Cloneables {
-    
-    public static Object clone(Object o) {
+
+    @SuppressWarnings("unchecked")
+    public static <T> T clone(final T o) {
         if (o instanceof Cloneable) {
             if (o.getClass().isArray()) {
-                final Class componentType = o.getClass().getComponentType();
+                final Class<?> componentType = o.getClass().getComponentType();
                 if (!componentType.isPrimitive()) {
-                    return ((Object[])o).clone();
+                    return (T)((Object[])o).clone();
                 } else {
                     int length = Array.getLength(o);
                     final Object clone = Array.newInstance(componentType, length);
                     while (length-- > 0) {
                         Array.set(clone, length, Array.get(o, length));
                     }
-
-                    return clone;
+                    return (T)clone;
                 }
             } else {
                 try {
-                    Method clone = o.getClass().getMethod("clone", (Class[])null);
-                    return clone.invoke(o, (Object[])null);
-                } catch (NoSuchMethodException e) {
+                    final Method clone = o.getClass().getMethod("clone");
+                    return (T)clone.invoke(o);
+                } catch (final NoSuchMethodException e) {
                     throw new ObjectAccessException("Cloneable type has no clone method", e);
-                } catch (IllegalAccessException e) {
+                } catch (final IllegalAccessException e) {
                     throw new ObjectAccessException("Cannot clone Cloneable type", e);
-                } catch (InvocationTargetException e) {
+                } catch (final InvocationTargetException e) {
                     throw new ObjectAccessException("Exception cloning Cloneable type", e.getCause());
                 }
             }
         }
         return null;
     }
-    
-    public static Object cloneIfPossible(Object o) {
-        Object clone = clone(o);
+
+    public static <T> T cloneIfPossible(final T o) {
+        final T clone = clone(o);
         return clone == null ? o : clone;
     }
 }

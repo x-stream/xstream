@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,9 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
@@ -20,13 +23,10 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Converts a byte array to a single Base64 encoding string.
- *
+ * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
@@ -35,16 +35,19 @@ public class EncodedByteArrayConverter implements Converter, SingleValueConverte
     private static final Base64Encoder base64 = new Base64Encoder();
     private static final ByteConverter byteConverter = new ByteConverter();
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type.isArray() && type.getComponentType().equals(byte.class);
     }
 
-    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    @Override
+    public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         writer.setValue(toString(source));
     }
 
-    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        String data = reader.getValue(); // needs to be called before hasMoreChildren.
+    @Override
+    public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
+        final String data = reader.getValue(); // needs to be called before hasMoreChildren.
         if (!reader.hasMoreChildren()) {
             return fromString(data);
         } else {
@@ -53,31 +56,32 @@ public class EncodedByteArrayConverter implements Converter, SingleValueConverte
         }
     }
 
-    private Object unmarshalIndividualByteElements(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        List bytes = new ArrayList(); // have to create a temporary list because don't know the size of the array
+    private Object unmarshalIndividualByteElements(final HierarchicalStreamReader reader,
+            final UnmarshallingContext context) {
+        // have to create a temporary list because we don't know the size of the array
+        final List<Byte> bytes = new ArrayList<Byte>();
         boolean firstIteration = true;
         while (firstIteration || reader.hasMoreChildren()) { // hangover from previous hasMoreChildren
             reader.moveDown();
-            bytes.add(byteConverter.fromString(reader.getValue()));
+            bytes.add((Byte)byteConverter.fromString(reader.getValue()));
             reader.moveUp();
             firstIteration = false;
         }
         // copy into real array
-        byte[] result = new byte[bytes.size()];
-        int i = 0;
-        for (Iterator iterator = bytes.iterator(); iterator.hasNext();) {
-            Byte b = (Byte) iterator.next();
-            result[i] = b.byteValue();
-            i++;
+        final byte[] result = new byte[bytes.size()];
+        for (int i = 0; i < result.length; ++i) {
+            result[i] = bytes.get(i).byteValue();
         }
         return result;
     }
 
-    public String toString(Object obj) {
-        return base64.encode((byte[]) obj);
+    @Override
+    public String toString(final Object obj) {
+        return base64.encode((byte[])obj);
     }
 
-    public Object fromString(String str) {
+    @Override
+    public Object fromString(final String str) {
         return base64.decode(str);
     }
 }

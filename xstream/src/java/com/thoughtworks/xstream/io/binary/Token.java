@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,23 +11,23 @@
  */
 package com.thoughtworks.xstream.io.binary;
 
-import com.thoughtworks.xstream.io.StreamException;
-
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.DataInput;
+
+import com.thoughtworks.xstream.io.StreamException;
+
 
 /**
- * Represents the Tokens stored in the binary stream used by
- * {@link BinaryStreamReader} and {@link BinaryStreamWriter}.
+ * Represents the Tokens stored in the binary stream used by {@link BinaryStreamReader} and {@link BinaryStreamWriter}.
  * <p>
- * A token consists of a type and (depending on this type)
- * it may additionally have an ID (positive long number)
- * and/or a value (String).</p>
+ * A token consists of a type and (depending on this type) it may additionally have an ID (positive long number) and/or
+ * a value (String).
+ * </p>
  * <p>
- * The first byte of the token represents how many subsequent
- * bytes are used by the ID.</p>
- *
+ * The first byte of the token represents how many subsequent bytes are used by the ID.
+ * </p>
+ * 
  * @author Joe Walnes
  * @see BinaryStreamReader
  * @see BinaryStreamWriter
@@ -49,7 +49,7 @@ public abstract class Token {
     private static final byte ID_FOUR_BYTES = 0x18;
     private static final byte ID_EIGHT_BYTES = 0x20;
 
-    private static final String ID_SPLITTED = "\u0000\u2021\u0000"; 
+    private static final String ID_SPLITTED = "\u0000\u2021\u0000";
     private static final int MAX_UTF8_LENGTH = 0xffff;
 
     private final byte type;
@@ -57,7 +57,7 @@ public abstract class Token {
     protected long id = -1;
     protected String value;
 
-    public Token(byte type) {
+    public Token(final byte type) {
         this.type = type;
     }
 
@@ -73,25 +73,36 @@ public abstract class Token {
         return value;
     }
 
+    @Override
     public String toString() {
         return getClass().getName() + " [id=" + id + ", value='" + value + "']";
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        final Token token = (Token) o;
+        final Token token = (Token)o;
 
-        if (id != token.id) return false;
-        if (type != token.type) return false;
+        if (id != token.id) {
+            return false;
+        }
+        if (type != token.type) {
+            return false;
+        }
         return !(value != null ? !value.equals(token.value) : token.value != null);
     }
 
+    @Override
     public int hashCode() {
         int result;
         result = type;
-        result = 29 * result + (int) (id ^ (id >>> 32));
+        result = 29 * result + (int)(id ^ id >>> 32);
         result = 29 * result + (value != null ? value.hashCode() : 0);
         return result;
     }
@@ -100,31 +111,31 @@ public abstract class Token {
 
     public abstract void readFrom(DataInput in, byte idType) throws IOException;
 
-    protected void writeId(DataOutput out, long id, byte idType) throws IOException {
+    protected void writeId(final DataOutput out, final long id, final byte idType) throws IOException {
         if (id < 0) {
             throw new IOException("id must not be negative " + id);
         }
         switch (idType) {
-            case ID_ONE_BYTE:
-                out.writeByte((byte) id + Byte.MIN_VALUE);
-                break;
-            case ID_TWO_BYTES:
-                out.writeShort((short) id + Short.MIN_VALUE);
-                break;
-            case ID_FOUR_BYTES:
-                out.writeInt((int) id + Integer.MIN_VALUE);
-                break;
-            case ID_EIGHT_BYTES:
-                out.writeLong(id + Long.MIN_VALUE);
-                break;
-            default:
-                throw new Error("Unknown idType " + idType);
+        case ID_ONE_BYTE:
+            out.writeByte((byte)id + Byte.MIN_VALUE);
+            break;
+        case ID_TWO_BYTES:
+            out.writeShort((short)id + Short.MIN_VALUE);
+            break;
+        case ID_FOUR_BYTES:
+            out.writeInt((int)id + Integer.MIN_VALUE);
+            break;
+        case ID_EIGHT_BYTES:
+            out.writeLong(id + Long.MIN_VALUE);
+            break;
+        default:
+            throw new Error("Unknown idType " + idType);
         }
     }
 
-    protected void writeString(DataOutput out, String string) throws IOException {
-        final byte[] bytes = (string.length() > MAX_UTF8_LENGTH / 4) ? string.getBytes("utf-8") : new byte[0];
-        int length = bytes.length;
+    protected void writeString(final DataOutput out, final String string) throws IOException {
+        final byte[] bytes = string.length() > MAX_UTF8_LENGTH / 4 ? string.getBytes("utf-8") : new byte[0];
+        final int length = bytes.length;
         if (length <= MAX_UTF8_LENGTH) {
             out.writeUTF(string);
         } else {
@@ -134,22 +145,22 @@ public abstract class Token {
         }
     }
 
-    protected long readId(DataInput in, byte idType) throws IOException {
+    protected long readId(final DataInput in, final byte idType) throws IOException {
         switch (idType) {
-            case ID_ONE_BYTE:
-                return in.readByte() - Byte.MIN_VALUE;
-            case ID_TWO_BYTES:
-                return in.readShort() - Short.MIN_VALUE;
-            case ID_FOUR_BYTES:
-                return in.readInt() - Integer.MIN_VALUE;
-            case ID_EIGHT_BYTES:
-                return in.readLong() - Long.MIN_VALUE;
-            default:
-                throw new Error("Unknown idType " + idType);
+        case ID_ONE_BYTE:
+            return in.readByte() - Byte.MIN_VALUE;
+        case ID_TWO_BYTES:
+            return in.readShort() - Short.MIN_VALUE;
+        case ID_FOUR_BYTES:
+            return in.readInt() - Integer.MIN_VALUE;
+        case ID_EIGHT_BYTES:
+            return in.readLong() - Long.MIN_VALUE;
+        default:
+            throw new Error("Unknown idType " + idType);
         }
     }
 
-    protected String readString(DataInput in) throws IOException {
+    protected String readString(final DataInput in) throws IOException {
         final String string = in.readUTF();
         if (!ID_SPLITTED.equals(string)) {
             return string;
@@ -162,14 +173,14 @@ public abstract class Token {
 
     public static class Formatter {
 
-        public void write(DataOutput out, Token token) throws IOException {
-            long id = token.getId();
+        public void write(final DataOutput out, final Token token) throws IOException {
+            final long id = token.getId();
             byte idType;
             if (id <= Byte.MAX_VALUE - Byte.MIN_VALUE) {
                 idType = ID_ONE_BYTE;
             } else if (id <= Short.MAX_VALUE - Short.MIN_VALUE) {
                 idType = ID_TWO_BYTES;
-            } else if (id <= (long) Integer.MAX_VALUE - (long) Integer.MIN_VALUE) { // cast to long to prevent overflow
+            } else if (id <= (long)Integer.MAX_VALUE - (long)Integer.MIN_VALUE) { // cast to long to prevent overflow
                 idType = ID_FOUR_BYTES;
             } else {
                 idType = ID_EIGHT_BYTES;
@@ -178,36 +189,36 @@ public abstract class Token {
             token.writeTo(out, idType);
         }
 
-        public Token read(DataInput in) throws IOException {
-            byte nextByte = in.readByte();
-            byte type = (byte) (nextByte & TYPE_MASK);
-            byte idType = (byte) (nextByte & ID_MASK);
-            Token token = contructToken(type);
+        public Token read(final DataInput in) throws IOException {
+            final byte nextByte = in.readByte();
+            final byte type = (byte)(nextByte & TYPE_MASK);
+            final byte idType = (byte)(nextByte & ID_MASK);
+            final Token token = contructToken(type);
             token.readFrom(in, idType);
             return token;
         }
 
-        private Token contructToken(byte type) {
+        private Token contructToken(final byte type) {
             switch (type) {
-                case Token.TYPE_START_NODE:
-                    return new StartNode();
-                case Token.TYPE_MAP_ID_TO_VALUE:
-                    return new MapIdToValue();
-                case Token.TYPE_ATTRIBUTE:
-                    return new Attribute();
-                case Token.TYPE_END_NODE:
-                    return new EndNode();
-                case Token.TYPE_VALUE:
-                    return new Value();
-                default:
-                    throw new StreamException("Unknown token type");
+            case Token.TYPE_START_NODE:
+                return new StartNode();
+            case Token.TYPE_MAP_ID_TO_VALUE:
+                return new MapIdToValue();
+            case Token.TYPE_ATTRIBUTE:
+                return new Attribute();
+            case Token.TYPE_END_NODE:
+                return new EndNode();
+            case Token.TYPE_VALUE:
+                return new Value();
+            default:
+                throw new StreamException("Unknown token type");
             }
         }
     }
 
     public static class MapIdToValue extends Token {
 
-        public MapIdToValue(long id, String value) {
+        public MapIdToValue(final long id, final String value) {
             super(TYPE_MAP_ID_TO_VALUE);
             this.id = id;
             this.value = value;
@@ -217,12 +228,14 @@ public abstract class Token {
             super(TYPE_MAP_ID_TO_VALUE);
         }
 
-        public void writeTo(DataOutput out, byte idType) throws IOException {
+        @Override
+        public void writeTo(final DataOutput out, final byte idType) throws IOException {
             writeId(out, id, idType);
             writeString(out, value);
         }
 
-        public void readFrom(DataInput in, byte idType) throws IOException {
+        @Override
+        public void readFrom(final DataInput in, final byte idType) throws IOException {
             id = readId(in, idType);
             value = readString(in);
         }
@@ -231,7 +244,7 @@ public abstract class Token {
 
     public static class StartNode extends Token {
 
-        public StartNode(long id) {
+        public StartNode(final long id) {
             super(TYPE_START_NODE);
             this.id = id;
         }
@@ -240,11 +253,13 @@ public abstract class Token {
             super(TYPE_START_NODE);
         }
 
-        public void writeTo(DataOutput out, byte idType) throws IOException {
+        @Override
+        public void writeTo(final DataOutput out, final byte idType) throws IOException {
             writeId(out, id, idType);
         }
 
-        public void readFrom(DataInput in, byte idType) throws IOException {
+        @Override
+        public void readFrom(final DataInput in, final byte idType) throws IOException {
             id = readId(in, idType);
         }
 
@@ -256,17 +271,19 @@ public abstract class Token {
             super(TYPE_END_NODE);
         }
 
-        public void writeTo(DataOutput out, byte idType) {
+        @Override
+        public void writeTo(final DataOutput out, final byte idType) {
         }
 
-        public void readFrom(DataInput in, byte idType) {
+        @Override
+        public void readFrom(final DataInput in, final byte idType) {
         }
 
     }
 
     public static class Attribute extends Token {
 
-        public Attribute(long id, String value) {
+        public Attribute(final long id, final String value) {
             super(TYPE_ATTRIBUTE);
             this.id = id;
             this.value = value;
@@ -276,21 +293,23 @@ public abstract class Token {
             super(TYPE_ATTRIBUTE);
         }
 
-        public void writeTo(DataOutput out, byte idType) throws IOException {
+        @Override
+        public void writeTo(final DataOutput out, final byte idType) throws IOException {
             writeId(out, id, idType);
             writeString(out, value);
         }
 
-        public void readFrom(DataInput in, byte idType) throws IOException {
-            this.id = readId(in, idType);
-            this.value = readString(in);
+        @Override
+        public void readFrom(final DataInput in, final byte idType) throws IOException {
+            id = readId(in, idType);
+            value = readString(in);
         }
 
     }
 
     public static class Value extends Token {
 
-        public Value(String value) {
+        public Value(final String value) {
             super(TYPE_VALUE);
             this.value = value;
         }
@@ -299,11 +318,13 @@ public abstract class Token {
             super(TYPE_VALUE);
         }
 
-        public void writeTo(DataOutput out, byte idType) throws IOException {
+        @Override
+        public void writeTo(final DataOutput out, final byte idType) throws IOException {
             writeString(out, value);
         }
 
-        public void readFrom(DataInput in, byte idType) throws IOException {
+        @Override
+        public void readFrom(final DataInput in, final byte idType) throws IOException {
             value = readString(in);
         }
 

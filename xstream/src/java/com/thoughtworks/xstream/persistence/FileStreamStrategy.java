@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,24 +11,26 @@
  */
 package com.thoughtworks.xstream.persistence;
 
-import com.thoughtworks.xstream.XStream;
-
 import java.io.File;
+
+import com.thoughtworks.xstream.XStream;
 
 
 /**
- * PersistenceStrategy to assign string based keys to objects persisted in files. The file
- * naming strategy is based on the key's type name and its toString method. It escapes non
- * digit, non a-z and A-Z characters. In order to change the escaping/unescaping algorithm,
- * simply extend this class and rewrite its getName/extractKey methods. Note, this
- * implementation silently implies that the keys actually are Strings, since the keys will be
- * turned into string keys at deserialization time.
+ * PersistenceStrategy to assign string based keys to objects persisted in files.
+ * <p>
+ * The file naming strategy is based on the key's type name and its toString method. It escapes non digit, non a-z and
+ * A-Z characters. In order to change the escaping/unescaping algorithm, simply extend this class and rewrite its
+ * getName/extractKey methods. Note, this implementation silently implies that the keys actually are Strings, since the
+ * keys will be turned into string keys at deserialization time.
+ * </p>
  * 
  * @author Guilherme Silveira
  * @deprecated As of 1.3.1, use FilePersistenceStrategy
  */
-public class FileStreamStrategy extends AbstractFilePersistenceStrategy implements
-    StreamStrategy {
+@Deprecated
+public class FileStreamStrategy<V> extends AbstractFilePersistenceStrategy<String, V> implements
+    StreamStrategy<String, V> {
     public FileStreamStrategy(final File baseDirectory) {
         this(baseDirectory, new XStream());
     }
@@ -43,19 +45,19 @@ public class FileStreamStrategy extends AbstractFilePersistenceStrategy implemen
      * @param name the filename
      * @return the original key
      */
-    protected Object extractKey(final String name) {
+    @Override
+    protected String extractKey(final String name) {
         final String key = unescape(name.substring(0, name.length() - 4));
         return key.equals("\0") ? null : key;
     }
 
     protected String unescape(final String name) {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         char lastC = '\uffff';
         int currentValue = -1;
         // do we have a regex master to do it?
         final char[] array = name.toCharArray();
-        for (int i = 0; i < array.length; i++ ) {
-            final char c = array[i];
+        for (final char c : array) {
             if (c == '_' && currentValue != -1) {
                 if (lastC == '_') {
                     buffer.append('_');
@@ -81,22 +83,21 @@ public class FileStreamStrategy extends AbstractFilePersistenceStrategy implemen
      * @param key the key
      * @return the desired and escaped filename
      */
+    @Override
     protected String getName(final Object key) {
         return escape(key == null ? "\0" : key.toString()) + ".xml";
     }
 
     protected String escape(final String key) {
-        // do we have a regex master to do it?
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         final char[] array = key.toCharArray();
-        for (int i = 0; i < array.length; i++ ) {
-            final char c = array[i];
-            if (Character.isDigit(c) || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+        for (final char c : array) {
+            if (Character.isDigit(c) || c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {
                 buffer.append(c);
             } else if (c == '_') {
                 buffer.append("__");
             } else {
-                buffer.append("_" + (Integer.toHexString(c)) + "_");
+                buffer.append("_" + Integer.toHexString(c) + "_");
             }
         }
         return buffer.toString();

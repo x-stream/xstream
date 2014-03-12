@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,26 +10,28 @@
  */
 package com.thoughtworks.xstream.converters.basic;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-
 import java.util.UUID;
+
+import com.thoughtworks.xstream.converters.ConversionException;
 
 
 /**
- * Converts a java.util.UUID to a string.
+ * Converts a {@link UUID} to a string.
  * 
  * @author J&ouml;rg Schaible
  */
 public class UUIDConverter extends AbstractSingleValueConverter {
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type.equals(UUID.class);
     }
 
-    public Object fromString(String str) {
+    @Override
+    public Object fromString(final String str) {
         try {
             return UUID.fromString(str);
-        } catch(IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new ConversionException("Cannot create UUID instance", e);
         }
     }

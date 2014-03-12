@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,18 +10,21 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import java.lang.reflect.Field;
 import java.util.Map;
+
 
 /**
  * Does not change the order of the fields.
- *
+ * 
  * @author Guilherme Silveira
  * @since 1.2.2
  */
 public class ImmutableFieldKeySorter implements FieldKeySorter {
 
-	public Map sort(Class type, Map keyedByFieldKey) {
-		return keyedByFieldKey;
-	}
+    @Override
+    public Map<FieldKey, Field> sort(final Class<?> type, final Map<FieldKey, Field> keyedByFieldKey) {
+        return keyedByFieldKey;
+    }
 
 }

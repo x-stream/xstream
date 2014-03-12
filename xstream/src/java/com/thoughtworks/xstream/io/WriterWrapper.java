@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,46 +13,54 @@ package com.thoughtworks.xstream.io;
 
 /**
  * Base class to make it easy to create wrappers (decorators) for HierarchicalStreamWriter.
- *
+ * 
  * @author Joe Walnes
  */
 public abstract class WriterWrapper implements ExtendedHierarchicalStreamWriter {
 
     protected HierarchicalStreamWriter wrapped;
 
-    protected WriterWrapper(HierarchicalStreamWriter wrapped) {
+    protected WriterWrapper(final HierarchicalStreamWriter wrapped) {
         this.wrapped = wrapped;
     }
 
-    public void startNode(String name) {
+    @Override
+    public void startNode(final String name) {
         wrapped.startNode(name);
     }
 
-    public void startNode(String name, Class clazz) {
+    @Override
+    public void startNode(final String name, final Class<?> clazz) {
 
-        ((ExtendedHierarchicalStreamWriter) wrapped).startNode(name, clazz);
+        ((ExtendedHierarchicalStreamWriter)wrapped).startNode(name, clazz);
     }
 
+    @Override
     public void endNode() {
         wrapped.endNode();
     }
 
-    public void addAttribute(String key, String value) {
+    @Override
+    public void addAttribute(final String key, final String value) {
         wrapped.addAttribute(key, value);
     }
 
-    public void setValue(String text) {
+    @Override
+    public void setValue(final String text) {
         wrapped.setValue(text);
     }
 
+    @Override
     public void flush() {
         wrapped.flush();
     }
 
+    @Override
     public void close() {
         wrapped.close();
     }
 
+    @Override
     public HierarchicalStreamWriter underlyingWriter() {
         return wrapped.underlyingWriter();
     }

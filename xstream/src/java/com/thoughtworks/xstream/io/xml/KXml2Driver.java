@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,12 +10,11 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import org.kxml2.io.KXmlParser;
+import org.xmlpull.v1.XmlPullParser;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.naming.NameCoder;
-
-import org.kxml2.io.KXmlParser;
-import org.xmlpull.v1.XmlPullParser;
 
 
 /**
@@ -41,13 +40,14 @@ public class KXml2Driver extends AbstractXppDriver {
      * @param nameCoder the replacer for XML friendly names
      * @since 1.4
      */
-    public KXml2Driver(NameCoder nameCoder) {
+    public KXml2Driver(final NameCoder nameCoder) {
         super(nameCoder);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected XmlPullParser createParser() {
         return new KXmlParser();
     }

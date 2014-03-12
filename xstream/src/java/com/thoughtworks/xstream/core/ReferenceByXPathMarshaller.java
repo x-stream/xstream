@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,26 +16,35 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.path.Path;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-public class ReferenceByXPathMarshaller extends AbstractReferenceMarshaller {
+
+public class ReferenceByXPathMarshaller extends AbstractReferenceMarshaller<Path> {
 
     private final int mode;
 
-    public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, Mapper mapper, int mode) {
+    public ReferenceByXPathMarshaller(
+            final HierarchicalStreamWriter writer, final ConverterLookup converterLookup, final Mapper mapper,
+            final int mode) {
         super(writer, converterLookup, mapper);
         this.mode = mode;
     }
 
-    protected String createReference(Path currentPath, Object existingReferenceKey) {
-        Path existingPath = (Path)existingReferenceKey;
-        Path referencePath = (mode & ReferenceByXPathMarshallingStrategy.ABSOLUTE) > 0 ? existingPath : currentPath.relativeTo(existingPath);
-        return (mode & ReferenceByXPathMarshallingStrategy.SINGLE_NODE) > 0 ? referencePath.explicit() : referencePath.toString();
+    @Override
+    protected String createReference(final Path currentPath, final Path existingReferenceKey) {
+        final Path existingPath = existingReferenceKey;
+        final Path referencePath = (mode & ReferenceByXPathMarshallingStrategy.ABSOLUTE) > 0
+            ? existingPath
+            : currentPath.relativeTo(existingPath);
+        return (mode & ReferenceByXPathMarshallingStrategy.SINGLE_NODE) > 0 ? referencePath.explicit() : referencePath
+            .toString();
     }
 
-    protected Object createReferenceKey(Path currentPath, Object item) {
+    @Override
+    protected Path createReferenceKey(final Path currentPath, final Object item) {
         return currentPath;
     }
 
-    protected void fireValidReference(Object referenceKey) {
+    @Override
+    protected void fireValidReference(final Path referenceKey) {
         // nothing to do
     }
 }

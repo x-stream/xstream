@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,35 +15,38 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.ReaderWrapper;
 
+
 /**
  * Wrapper for HierarchicalStreamReader that tracks the path (a subset of XPath) of the current node that is being read.
- *
+ * 
  * @see PathTracker
  * @see Path
- *
  * @author Joe Walnes
  */
 public class PathTrackingReader extends ReaderWrapper {
 
     private final PathTracker pathTracker;
 
-    public PathTrackingReader(HierarchicalStreamReader reader, PathTracker pathTracker) {
+    public PathTrackingReader(final HierarchicalStreamReader reader, final PathTracker pathTracker) {
         super(reader);
         this.pathTracker = pathTracker;
         pathTracker.pushElement(getNodeName());
     }
 
+    @Override
     public void moveDown() {
         super.moveDown();
         pathTracker.pushElement(getNodeName());
     }
 
+    @Override
     public void moveUp() {
         super.moveUp();
         pathTracker.popElement();
     }
 
-    public void appendErrors(ErrorWriter errorWriter) {
+    @Override
+    public void appendErrors(final ErrorWriter errorWriter) {
         errorWriter.add("path", pathTracker.getPath().toString());
         super.appendErrors(errorWriter);
     }

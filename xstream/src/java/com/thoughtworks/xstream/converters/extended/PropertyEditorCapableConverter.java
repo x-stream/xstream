@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,15 +10,15 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
+import java.beans.PropertyEditor;
+
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.core.util.ThreadSafePropertyEditor;
 
-import java.beans.PropertyEditor;
-
 
 /**
- * A SingleValueConverter that can utilize a {@link PropertyEditor} implementation used for a
- * specific type. The converter ensures that the editors can be used concurrently.
+ * A SingleValueConverter that can utilize a {@link PropertyEditor} implementation used for a specific type. The
+ * converter ensures that the editors can be used concurrently.
  * 
  * @author Jukka Lindstr&ouml;m
  * @author J&ouml;rg Schaible
@@ -27,21 +27,24 @@ import java.beans.PropertyEditor;
 public class PropertyEditorCapableConverter implements SingleValueConverter {
 
     private final ThreadSafePropertyEditor editor;
-    private final Class type;
+    private final Class<?> type;
 
-    public PropertyEditorCapableConverter(final Class propertyEditorType, final Class type) {
+    public PropertyEditorCapableConverter(final Class<? extends PropertyEditor> propertyEditorType, final Class<?> type) {
         this.type = type;
         editor = new ThreadSafePropertyEditor(propertyEditorType, 2, 5);
     }
 
-    public boolean canConvert(final Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return this.type == type;
     }
 
+    @Override
     public Object fromString(final String str) {
         return editor.setAsText(str);
     }
 
+    @Override
     public String toString(final Object obj) {
         return editor.getAsText(obj);
     }

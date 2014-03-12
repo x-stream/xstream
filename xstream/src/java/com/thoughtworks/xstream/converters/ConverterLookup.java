@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,7 @@ package com.thoughtworks.xstream.converters;
 
 /**
  * Responsible for looking up the correct Converter implementation for a specific type.
- *
+ * 
  * @author Joe Walnes
  * @see Converter
  */
@@ -22,9 +22,9 @@ public interface ConverterLookup {
     /**
      * Lookup a converter for a specific type.
      * <p>
-     * This type may be any Class, including primitive and array types. It may also be null, signifying
-     * the value to be converted is a null type.
+     * This type may be any Class, including primitive and array types. It may also be null, signifying the value to be
+     * converted is a null type.
      * </p>
      */
-    Converter lookupConverterForType(Class type);
+    Converter lookupConverterForType(Class<?> type);
 }

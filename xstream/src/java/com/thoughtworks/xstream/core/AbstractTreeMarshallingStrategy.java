@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,19 +27,23 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public abstract class AbstractTreeMarshallingStrategy implements MarshallingStrategy {
 
-    public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder, ConverterLookup converterLookup, Mapper mapper) {
-        TreeUnmarshaller context = createUnmarshallingContext(root, reader, converterLookup, mapper);
+    @Override
+    public Object unmarshal(final Object root, final HierarchicalStreamReader reader, final DataHolder dataHolder,
+            final ConverterLookup converterLookup, final Mapper mapper) {
+        final TreeUnmarshaller context = createUnmarshallingContext(root, reader, converterLookup, mapper);
         return context.start(dataHolder);
     }
 
-    public void marshal(HierarchicalStreamWriter writer, Object obj, ConverterLookup converterLookup, Mapper mapper, DataHolder dataHolder) {
-        TreeMarshaller context = createMarshallingContext(writer, converterLookup, mapper);
+    @Override
+    public void marshal(final HierarchicalStreamWriter writer, final Object obj, final ConverterLookup converterLookup,
+            final Mapper mapper, final DataHolder dataHolder) {
+        final TreeMarshaller context = createMarshallingContext(writer, converterLookup, mapper);
         context.start(obj, dataHolder);
     }
-    
-    protected abstract TreeUnmarshaller createUnmarshallingContext(Object root,
-        HierarchicalStreamReader reader, ConverterLookup converterLookup, Mapper mapper);
 
-    protected abstract TreeMarshaller createMarshallingContext(
-        HierarchicalStreamWriter writer, ConverterLookup converterLookup, Mapper mapper);
+    protected abstract TreeUnmarshaller createUnmarshallingContext(Object root, HierarchicalStreamReader reader,
+            ConverterLookup converterLookup, Mapper mapper);
+
+    protected abstract TreeMarshaller createMarshallingContext(HierarchicalStreamWriter writer,
+            ConverterLookup converterLookup, Mapper mapper);
 }

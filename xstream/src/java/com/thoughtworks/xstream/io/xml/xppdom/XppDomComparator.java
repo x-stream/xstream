@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,8 +22,8 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  * @since 1.4.1
  */
-public class XppDomComparator implements Comparator {
-    private final ThreadLocal xpath;
+public class XppDomComparator implements Comparator<XppDom> {
+    private final ThreadLocal<String> xpath;
 
     /**
      * Creates a new Xpp3DomComparator object.
@@ -40,14 +40,15 @@ public class XppDomComparator implements Comparator {
      * @param xpath the reference for the XPath
      * @since 1.4.1
      */
-    public XppDomComparator(final ThreadLocal xpath) {
+    public XppDomComparator(final ThreadLocal<String> xpath) {
         this.xpath = xpath;
     }
 
-    public int compare(final Object dom1, final Object dom2) {
+    @Override
+    public int compare(final XppDom dom1, final XppDom dom2) {
 
-        final StringBuffer xpath = new StringBuffer("/");
-        final int s = compareInternal((XppDom)dom1, (XppDom)dom2, xpath, -1);
+        final StringBuilder xpath = new StringBuilder("/");
+        final int s = compareInternal(dom1, dom2, xpath, -1);
         if (this.xpath != null) {
             if (s != 0) {
                 this.xpath.set(xpath.toString());
@@ -59,8 +60,7 @@ public class XppDomComparator implements Comparator {
         return s;
     }
 
-    private int compareInternal(final XppDom dom1, final XppDom dom2,
-        final StringBuffer xpath, final int count) {
+    private int compareInternal(final XppDom dom1, final XppDom dom2, final StringBuilder xpath, final int count) {
         final int pathlen = xpath.length();
         final String name = dom1.getName();
         int s = name.compareTo(dom2.getName());
@@ -114,14 +114,12 @@ public class XppDomComparator implements Comparator {
 
         if (children > 0) {
             if (dom1.getValue() != null || dom2.getValue() != null) {
-                throw new IllegalArgumentException("XppDom cannot handle mixed mode at "
-                    + xpath
-                    + "::text()");
+                throw new IllegalArgumentException("XppDom cannot handle mixed mode at " + xpath + "::text()");
             }
 
             xpath.append('/');
 
-            final Map names = new HashMap();
+            final Map<String, int[]> names = new HashMap<String, int[]>();
             for (int i = 0; i < children; ++i) {
                 final XppDom child1 = dom1.getChild(i);
                 final XppDom child2 = dom2.getChild(i);
@@ -130,7 +128,7 @@ public class XppDomComparator implements Comparator {
                     names.put(child, new int[1]);
                 }
 
-                s = compareInternal(child1, child2, xpath, ((int[])names.get(child))[0]++);
+                s = compareInternal(child1, child2, xpath, names.get(child)[0]++);
                 if (s != 0) {
                     return s;
                 }

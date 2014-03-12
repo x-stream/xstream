@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,7 +16,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,15 +27,16 @@ import java.util.TreeMap;
  */
 public class PackageAliasingMapper extends MapperWrapper implements Serializable {
 
-    private static final Comparator REVERSE = new Comparator() {
+    private static final Comparator<String> REVERSE = new Comparator<String>() {
 
-        public int compare(final Object o1, final Object o2) {
-            return ((String)o2).compareTo((String)o1);
+        @Override
+        public int compare(final String o1, final String o2) {
+            return o2.compareTo(o1);
         }
     };
 
-    private Map packageToName = new TreeMap(REVERSE);
-    protected transient Map nameToPackage = new HashMap();
+    private Map<String, String> packageToName = new TreeMap<String, String>(REVERSE);
+    protected transient Map<String, String> nameToPackage = new HashMap<String, String>();
 
     public PackageAliasingMapper(final Mapper wrapped) {
         super(wrapped);
@@ -53,14 +53,15 @@ public class PackageAliasingMapper extends MapperWrapper implements Serializable
         packageToName.put(pkg, name);
     }
 
-    public String serializedClass(final Class type) {
+    @Override
+    public String serializedClass(final Class<?> type) {
         final String className = type.getName();
         int length = className.length();
         int dot = -1;
         do {
             dot = className.lastIndexOf('.', length);
             final String pkg = dot < 0 ? "" : className.substring(0, dot + 1);
-            final String alias = (String)packageToName.get(pkg);
+            final String alias = packageToName.get(pkg);
             if (alias != null) {
                 return alias + (dot < 0 ? className : className.substring(dot + 1));
             }
@@ -69,17 +70,17 @@ public class PackageAliasingMapper extends MapperWrapper implements Serializable
         return super.serializedClass(type);
     }
 
-    public Class realClass(String elementName) {
+    @Override
+    public Class<?> realClass(String elementName) {
         int length = elementName.length();
         int dot = -1;
         do {
             dot = elementName.lastIndexOf('.', length);
             final String name = dot < 0 ? "" : elementName.substring(0, dot) + '.';
-            final String packageName = (String)nameToPackage.get(name);
+            final String packageName = nameToPackage.get(name);
 
             if (packageName != null) {
-                elementName = packageName
-                    + (dot < 0 ? elementName : elementName.substring(dot + 1));
+                elementName = packageName + (dot < 0 ? elementName : elementName.substring(dot + 1));
                 break;
             }
             length = dot - 1;
@@ -89,17 +90,17 @@ public class PackageAliasingMapper extends MapperWrapper implements Serializable
     }
 
     private void writeObject(final ObjectOutputStream out) throws IOException {
-        out.writeObject(new HashMap(packageToName));
+        out.writeObject(new HashMap<String, String>(packageToName));
     }
 
-    private void readObject(final ObjectInputStream in)
-        throws IOException, ClassNotFoundException {
-        packageToName = new TreeMap(REVERSE);
-        packageToName.putAll((Map)in.readObject());
-        nameToPackage = new HashMap();
-        for (final Iterator iter = packageToName.keySet().iterator(); iter.hasNext();) {
-            final Object type = iter.next();
-            nameToPackage.put(packageToName.get(type), type);
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        packageToName = new TreeMap<String, String>(REVERSE);
+        @SuppressWarnings("unchecked")
+        final Map<String, String> map = (Map<String, String>)in.readObject();
+        packageToName.putAll(map);
+        nameToPackage = new HashMap<String, String>();
+        for (final Map.Entry<String, String> entry : packageToName.entrySet()) {
+            nameToPackage.put(entry.getValue(), entry.getKey());
         }
     }
 }

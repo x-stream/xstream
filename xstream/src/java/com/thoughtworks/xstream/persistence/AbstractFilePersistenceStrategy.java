@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -9,11 +9,6 @@
  * Created on 18. November 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.persistence;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.io.StreamException;
-import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,7 +22,11 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 
 /**
@@ -37,15 +36,14 @@ import java.util.Map.Entry;
  * @author Joerg Schaible
  * @since 1.3.1
  */
-public abstract class AbstractFilePersistenceStrategy implements PersistenceStrategy {
+public abstract class AbstractFilePersistenceStrategy<K, V> implements PersistenceStrategy<K, V> {
 
     private final FilenameFilter filter;
     private final File baseDirectory;
     private final String encoding;
     private final transient XStream xstream;
 
-    public AbstractFilePersistenceStrategy(
-        final File baseDirectory, final XStream xstream, final String encoding) {
+    public AbstractFilePersistenceStrategy(final File baseDirectory, final XStream xstream, final String encoding) {
         this.baseDirectory = baseDirectory;
         this.xstream = xstream;
         this.encoding = encoding;
@@ -70,7 +68,7 @@ public abstract class AbstractFilePersistenceStrategy implements PersistenceStra
      * @param name the filename
      * @return the original key
      */
-    protected abstract Object extractKey(String name);
+    protected abstract K extractKey(String name);
 
     /**
      * Given a key, the escape method returns the filename which shall be used.
@@ -81,12 +79,13 @@ public abstract class AbstractFilePersistenceStrategy implements PersistenceStra
     protected abstract String getName(Object key);
 
     protected class ValidFilenameFilter implements FilenameFilter {
+        @Override
         public boolean accept(final File dir, final String name) {
             return new File(dir, name).isFile() && isValid(dir, name);
         }
     }
 
-    protected class XmlMapEntriesIterator implements Iterator {
+    protected class XmlMapEntriesIterator implements Iterator<Map.Entry<K, V>> {
 
         private final File[] files = baseDirectory.listFiles(filter);
 
@@ -94,10 +93,12 @@ public abstract class AbstractFilePersistenceStrategy implements PersistenceStra
 
         private File current = null;
 
+        @Override
         public boolean hasNext() {
             return position + 1 < files.length;
         }
 
+        @Override
         public void remove() {
             if (current == null) {
                 throw new IllegalStateException();
@@ -106,38 +107,53 @@ public abstract class AbstractFilePersistenceStrategy implements PersistenceStra
             current.delete();
         }
 
-        public Object next() {
-            return new Map.Entry() {
-                private final File file = current = files[ ++position];
-                private final Object key = extractKey(file.getName());
+        @Override
+        public Map.Entry<K, V> next() {
+            return new Map.Entry<K, V>() {
+                private final File file = current = files[++position];
+                private final K key = extractKey(file.getName());
 
-                public Object getKey() {
+                @Override
+                public K getKey() {
                     return key;
                 }
 
-                public Object getValue() {
+                @Override
+                public V getValue() {
                     return readFile(file);
                 }
 
-                public Object setValue(final Object value) {
+                @Override
+                public V setValue(final V value) {
                     return put(key, value);
                 }
 
+                @Override
+                public int hashCode() {
+                    final V value = getValue();
+                    return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
+                }
+
+                @Override
                 public boolean equals(final Object obj) {
-                    if (!(obj instanceof Entry)) {
+                    if (!(obj instanceof Map.Entry<?, ?>)) {
                         return false;
                     }
-                    Object value = getValue();
-                    final Entry e2 = (Entry)obj;
-                    Object key2 = e2.getKey();
-                    Object value2 = e2.getValue();
-                    return (key == null ? key2 == null : key.equals(key2))
-                        && (value == null ? value2 == null : getValue().equals(e2.getValue()));
+                    @SuppressWarnings("unchecked")
+                    final Map.Entry<K, V> e2 = (Map.Entry<K, V>)obj;
+                    final K key2 = e2.getKey();
+                    if (key == null ? key2 == null : key.equals(key2)) {
+                        final V value = getValue();
+                        final V value2 = e2.getValue();
+                        return value == null ? value2 == null : value.equals(value2);
+                    }
+                    return false;
                 }
             };
         }
     }
 
+    @SuppressWarnings("resource")
     private void writeFile(final File file, final Object value) {
         try {
             final FileOutputStream out = new FileOutputStream(file);
@@ -158,14 +174,15 @@ public abstract class AbstractFilePersistenceStrategy implements PersistenceStra
         return new File(baseDirectory, filename);
     }
 
-    private Object readFile(final File file) {
+    @SuppressWarnings("resource")
+    private V readFile(final File file) {
         try {
             final FileInputStream in = new FileInputStream(file);
-            final Reader reader = encoding != null
-                ? new InputStreamReader(in, encoding)
-                : new InputStreamReader(in);
+            final Reader reader = encoding != null ? new InputStreamReader(in, encoding) : new InputStreamReader(in);
             try {
-                return xstream.fromXML(reader);
+                @SuppressWarnings("unchecked")
+                final V value = (V)xstream.fromXML(reader);
+                return value;
             } finally {
                 reader.close();
             }
@@ -177,35 +194,40 @@ public abstract class AbstractFilePersistenceStrategy implements PersistenceStra
         }
     }
 
-    public Object put(final Object key, final Object value) {
-        final Object oldValue = get(key);
+    @Override
+    public V put(final K key, final V value) {
+        final V oldValue = get(key);
         final String filename = getName(key);
         writeFile(new File(baseDirectory, filename), value);
         return oldValue;
     }
 
-    public Iterator iterator() {
+    @Override
+    public Iterator<Map.Entry<K, V>> iterator() {
         return new XmlMapEntriesIterator();
     }
 
+    @Override
     public int size() {
         return baseDirectory.list(filter).length;
     }
 
-    public boolean containsKey(final Object key) {
+    public boolean containsKey(final K key) {
         // faster lookup
         final File file = getFile(getName(key));
         return file.isFile();
     }
 
-    public Object get(final Object key) {
+    @Override
+    public V get(final Object key) {
         return readFile(getFile(getName(key)));
     }
 
-    public Object remove(final Object key) {
+    @Override
+    public V remove(final Object key) {
         // faster lookup
         final File file = getFile(getName(key));
-        Object value = null;
+        V value = null;
         if (file.isFile()) {
             value = readFile(file);
             file.delete();

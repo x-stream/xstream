@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,19 +10,20 @@
  */
 package com.thoughtworks.xstream.converters.javabean;
 
+import java.beans.PropertyDescriptor;
 import java.util.Map;
 
 
 /**
- * A sorter that keeps the natural order of the bean properties as they are returned by the
- * JavaBean introspection.
+ * A sorter that keeps the natural order of the bean properties as they are returned by the JavaBean introspection.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
  */
 public class NativePropertySorter implements PropertySorter {
 
-    public Map sort(final Class type, final Map nameMap) {
+    @Override
+    public Map<String, PropertyDescriptor> sort(final Class<?> type, final Map<String, PropertyDescriptor> nameMap) {
         return nameMap;
     }
 

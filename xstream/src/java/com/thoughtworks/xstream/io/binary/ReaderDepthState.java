@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,16 +11,15 @@
  */
 package com.thoughtworks.xstream.io.binary;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
- * Maintains the state of a pull reader at various states in the document depth.
- *
- * Used by the {@link BinaryStreamReader}
- *
+ * Maintains the state of a pull reader at various states in the document depth. Used by the {@link BinaryStreamReader}
+ * 
  * @author Joe Walnes
  * @since 1.2
  */
@@ -31,7 +30,7 @@ class ReaderDepthState {
     private static class State {
         String name;
         String value;
-        List attributes;
+        List<Attribute> attributes;
         boolean hasMoreChildren;
         State parent;
     }
@@ -44,7 +43,7 @@ class ReaderDepthState {
     private State current;
 
     public void push() {
-        State newState = new State();
+        final State newState = new State();
         newState.parent = current;
         current = newState;
     }
@@ -57,7 +56,7 @@ class ReaderDepthState {
         return current.name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         current.name = name;
     }
 
@@ -65,7 +64,7 @@ class ReaderDepthState {
         return current.value == null ? EMPTY_STRING : current.value;
     }
 
-    public void setValue(String value) {
+    public void setValue(final String value) {
         current.value = value;
     }
 
@@ -73,27 +72,26 @@ class ReaderDepthState {
         return current.hasMoreChildren;
     }
 
-    public void setHasMoreChildren(boolean hasMoreChildren) {
+    public void setHasMoreChildren(final boolean hasMoreChildren) {
         current.hasMoreChildren = hasMoreChildren;
     }
 
-    public void addAttribute(String name, String value) {
-        Attribute attribute = new Attribute();
+    public void addAttribute(final String name, final String value) {
+        final Attribute attribute = new Attribute();
         attribute.name = name;
         attribute.value = value;
         if (current.attributes == null) {
-            current.attributes = new ArrayList();
+            current.attributes = new ArrayList<Attribute>();
         }
         current.attributes.add(attribute);
     }
 
-    public String getAttribute(String name) {
+    public String getAttribute(final String name) {
         if (current.attributes == null) {
             return null;
         } else {
             // For short maps, it's faster to iterate then do a hashlookup.
-            for (Iterator iterator = current.attributes.iterator(); iterator.hasNext();) {
-                Attribute attribute = (Attribute) iterator.next();
+            for (final Attribute attribute : current.attributes) {
                 if (attribute.name.equals(name)) {
                     return attribute.value;
                 }
@@ -102,20 +100,20 @@ class ReaderDepthState {
         }
     }
 
-    public String getAttribute(int index) {
+    public String getAttribute(final int index) {
         if (current.attributes == null) {
             return null;
         } else {
-            Attribute attribute = (Attribute) current.attributes.get(index);
+            final Attribute attribute = current.attributes.get(index);
             return attribute.value;
         }
     }
 
-    public String getAttributeName(int index) {
+    public String getAttributeName(final int index) {
         if (current.attributes == null) {
             return null;
         } else {
-            Attribute attribute = (Attribute) current.attributes.get(index);
+            final Attribute attribute = current.attributes.get(index);
             return attribute.name;
         }
     }
@@ -124,21 +122,24 @@ class ReaderDepthState {
         return current.attributes == null ? 0 : current.attributes.size();
     }
 
-    public Iterator getAttributeNames() {
+    public Iterator<String> getAttributeNames() {
         if (current.attributes == null) {
-            return Collections.EMPTY_SET.iterator();
+            return Collections.<String>emptySet().iterator();
         } else {
-            final Iterator attributeIterator = current.attributes.iterator();
-            return new Iterator() {
+            final Iterator<Attribute> attributeIterator = current.attributes.iterator();
+            return new Iterator<String>() {
+                @Override
                 public boolean hasNext() {
                     return attributeIterator.hasNext();
                 }
 
-                public Object next() {
-                    Attribute attribute = (Attribute) attributeIterator.next();
+                @Override
+                public String next() {
+                    final Attribute attribute = attributeIterator.next();
                     return attribute.name;
                 }
 
+                @Override
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }

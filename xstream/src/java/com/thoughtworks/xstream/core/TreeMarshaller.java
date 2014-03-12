@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,45 +11,46 @@
  */
 package com.thoughtworks.xstream.core;
 
+import java.util.Iterator;
+
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
-
-import java.util.Iterator;
 
 
 public class TreeMarshaller implements MarshallingContext {
 
     protected HierarchicalStreamWriter writer;
     protected ConverterLookup converterLookup;
-    private Mapper mapper;
-    private ObjectIdDictionary parentObjects = new ObjectIdDictionary();
+    private final Mapper mapper;
+    private final ObjectIdDictionary<Object> parentObjects = new ObjectIdDictionary<Object>();
     private DataHolder dataHolder;
 
     public TreeMarshaller(
-        HierarchicalStreamWriter writer, ConverterLookup converterLookup, Mapper mapper) {
+            final HierarchicalStreamWriter writer, final ConverterLookup converterLookup, final Mapper mapper) {
         this.writer = writer;
         this.converterLookup = converterLookup;
         this.mapper = mapper;
     }
 
-    public void convertAnother(Object item) {
+    @Override
+    public void convertAnother(final Object item) {
         convertAnother(item, null);
     }
 
-    public void convertAnother(Object item, Converter converter) {
+    @Override
+    public void convertAnother(final Object item, Converter converter) {
         if (converter == null) {
             converter = converterLookup.lookupConverterForType(item.getClass());
         } else {
             if (!converter.canConvert(item.getClass())) {
-                ConversionException e = new ConversionException(
-                    "Explicit selected converter cannot handle item");
+                final ConversionException e = new ConversionException("Explicit selected converter cannot handle item");
                 e.add("item-type", item.getClass().getName());
                 e.add("converter-type", converter.getClass().getName());
                 throw e;
@@ -58,10 +59,9 @@ public class TreeMarshaller implements MarshallingContext {
         convert(item, converter);
     }
 
-    protected void convert(Object item, Converter converter) {
+    protected void convert(final Object item, final Converter converter) {
         if (parentObjects.containsId(item)) {
-            ConversionException e = new CircularReferenceException(
-                "Recursive reference to parent object");
+            final ConversionException e = new CircularReferenceException("Recursive reference to parent object");
             e.add("item-type", item.getClass().getName());
             e.add("converter-type", converter.getClass().getName());
             throw e;
@@ -71,30 +71,33 @@ public class TreeMarshaller implements MarshallingContext {
         parentObjects.removeId(item);
     }
 
-    public void start(Object item, DataHolder dataHolder) {
+    public void start(final Object item, final DataHolder dataHolder) {
         this.dataHolder = dataHolder;
         if (item == null) {
             writer.startNode(mapper.serializedClass(null));
             writer.endNode();
         } else {
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper
-                .serializedClass(item.getClass()), item.getClass());
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(item.getClass()), item
+                .getClass());
             convertAnother(item);
             writer.endNode();
         }
     }
 
-    public Object get(Object key) {
+    @Override
+    public Object get(final Object key) {
         lazilyCreateDataHolder();
         return dataHolder.get(key);
     }
 
-    public void put(Object key, Object value) {
+    @Override
+    public void put(final Object key, final Object value) {
         lazilyCreateDataHolder();
         dataHolder.put(key, value);
     }
 
-    public Iterator keys() {
+    @Override
+    public Iterator<Object> keys() {
         lazilyCreateDataHolder();
         return dataHolder.keys();
     }
@@ -106,12 +109,12 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     protected Mapper getMapper() {
-        return this.mapper;
+        return mapper;
     }
 
     public static class CircularReferenceException extends ConversionException {
 
-        public CircularReferenceException(String msg) {
+        public CircularReferenceException(final String msg) {
             super(msg);
         }
     }

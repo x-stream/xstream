@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,7 @@ package com.thoughtworks.xstream.io.xml;
  * @since 1.2
  * @deprecated As of 1.4, use {@link XmlFriendlyNameCoder} instead
  */
+@Deprecated
 public class XmlFriendlyReplacer extends XmlFriendlyNameCoder {
 
     /**
@@ -33,6 +34,7 @@ public class XmlFriendlyReplacer extends XmlFriendlyNameCoder {
      * 
      * @deprecated As of 1.4, use {@link XmlFriendlyNameCoder} instead
      */
+    @Deprecated
     public XmlFriendlyReplacer() {
         this("_-", "__");
     }
@@ -44,7 +46,8 @@ public class XmlFriendlyReplacer extends XmlFriendlyNameCoder {
      * @param underscoreReplacement the replacement for '_'
      * @deprecated As of 1.4, use {@link XmlFriendlyNameCoder} instead
      */
-    public XmlFriendlyReplacer(String dollarReplacement, String underscoreReplacement) {
+    @Deprecated
+    public XmlFriendlyReplacer(final String dollarReplacement, final String underscoreReplacement) {
         super(dollarReplacement, underscoreReplacement);
     }
 
@@ -55,7 +58,8 @@ public class XmlFriendlyReplacer extends XmlFriendlyNameCoder {
      * @return The String with the escaped name
      * @deprecated As of 1.4, use {@link XmlFriendlyNameCoder} instead
      */
-    public String escapeName(String name) {
+    @Deprecated
+    public String escapeName(final String name) {
         return super.encodeNode(name);
     }
 
@@ -66,7 +70,8 @@ public class XmlFriendlyReplacer extends XmlFriendlyNameCoder {
      * @return The String with unescaped name
      * @deprecated As of 1.4, use {@link XmlFriendlyNameCoder} instead
      */
-    public String unescapeName(String name) {
+    @Deprecated
+    public String unescapeName(final String name) {
         return super.decodeNode(name);
     }
 

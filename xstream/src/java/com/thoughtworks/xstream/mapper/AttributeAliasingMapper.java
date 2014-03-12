@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,8 +11,6 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-
-
 /**
  * Mapper that allows aliasing of attribute names.
  * 
@@ -22,17 +20,19 @@ package com.thoughtworks.xstream.mapper;
  */
 public class AttributeAliasingMapper extends AbstractAttributeAliasingMapper {
 
-    public AttributeAliasingMapper(Mapper wrapped) {
+    public AttributeAliasingMapper(final Mapper wrapped) {
         super(wrapped);
     }
 
-    public String aliasForAttribute(String attribute) {
-        String alias = (String)nameToAlias.get(attribute);
+    @Override
+    public String aliasForAttribute(final String attribute) {
+        final String alias = nameToAlias.get(attribute);
         return alias == null ? super.aliasForAttribute(attribute) : alias;
     }
 
-    public String attributeForAlias(String alias) {
-        String name = (String)aliasToName.get(alias);
+    @Override
+    public String attributeForAlias(final String alias) {
+        final String name = aliasToName.get(alias);
         return name == null ? super.attributeForAlias(alias) : name;
     }
 }

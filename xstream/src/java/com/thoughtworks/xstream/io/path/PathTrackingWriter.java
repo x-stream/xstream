@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,12 +15,13 @@ import com.thoughtworks.xstream.io.AbstractWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.WriterWrapper;
 
+
 /**
- * Wrapper for HierarchicalStreamWriter that tracks the path (a subset of XPath) of the current node that is being written.
- *
+ * Wrapper for HierarchicalStreamWriter that tracks the path (a subset of XPath) of the current node that is being
+ * written.
+ * 
  * @see PathTracker
  * @see Path
- *
  * @author Joe Walnes
  */
 public class PathTrackingWriter extends WriterWrapper {
@@ -28,22 +29,25 @@ public class PathTrackingWriter extends WriterWrapper {
     private final PathTracker pathTracker;
     private final boolean isNameEncoding;
 
-    public PathTrackingWriter(HierarchicalStreamWriter writer, PathTracker pathTracker) {
+    public PathTrackingWriter(final HierarchicalStreamWriter writer, final PathTracker pathTracker) {
         super(writer);
-        this.isNameEncoding = writer.underlyingWriter() instanceof AbstractWriter;
+        isNameEncoding = writer.underlyingWriter() instanceof AbstractWriter;
         this.pathTracker = pathTracker;
     }
 
-    public void startNode(String name) {
+    @Override
+    public void startNode(final String name) {
         pathTracker.pushElement(isNameEncoding ? ((AbstractWriter)wrapped.underlyingWriter()).encodeNode(name) : name);
-        super.startNode(name); 
+        super.startNode(name);
     }
 
-    public void startNode(String name, Class clazz) {
+    @Override
+    public void startNode(final String name, final Class<?> clazz) {
         pathTracker.pushElement(isNameEncoding ? ((AbstractWriter)wrapped.underlyingWriter()).encodeNode(name) : name);
         super.startNode(name, clazz);
     }
 
+    @Override
     public void endNode() {
         super.endNode();
         pathTracker.popElement();

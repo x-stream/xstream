@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,34 +10,32 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.core.util.FastStack;
-import com.thoughtworks.xstream.io.naming.NameCoder;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thoughtworks.xstream.core.util.FastStack;
+import com.thoughtworks.xstream.io.naming.NameCoder;
+
 
 /**
- * A generic {@link com.thoughtworks.xstream.io.HierarchicalStreamWriter} for DOM writer
- * implementations. The implementation manages a list of top level DOM nodes. Every time the
- * last node is closed on the node stack, the next started node is added to the list. This list
- * can be retrieved using the {@link DocumentWriter#getTopLevelNodes()} method.
+ * A generic {@link com.thoughtworks.xstream.io.HierarchicalStreamWriter} for DOM writer implementations. The
+ * implementation manages a list of top level DOM nodes. Every time the last node is closed on the node stack, the next
+ * started node is added to the list. This list can be retrieved using the {@link DocumentWriter#getTopLevelNodes()}
+ * method.
  * 
  * @author Laurent Bihanic
  * @author J&ouml;rg Schaible
  * @since 1.2.1
  */
-public abstract class AbstractDocumentWriter extends AbstractXmlWriter implements
-    DocumentWriter {
+public abstract class AbstractDocumentWriter extends AbstractXmlWriter implements DocumentWriter {
 
-    private final List result = new ArrayList();
-    private final FastStack nodeStack = new FastStack(16);
+    private final List<Object> result = new ArrayList<Object>();
+    private final FastStack<Object> nodeStack = new FastStack<Object>(16);
 
     /**
      * Constructs an AbstractDocumentWriter.
      * 
-     * @param container the top level container for the nodes to create (may be
-     *            <code>null</code>)
+     * @param container the top level container for the nodes to create (may be <code>null</code>)
      * @param nameCoder the object that creates XML-friendly names
      * @since 1.4
      */
@@ -52,26 +50,25 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
     /**
      * Constructs an AbstractDocumentWriter.
      * 
-     * @param container the top level container for the nodes to create (may be
-     *            <code>null</code>)
+     * @param container the top level container for the nodes to create (may be <code>null</code>)
      * @param replacer the object that creates XML-friendly names
      * @since 1.2.1
-     * @deprecated As of 1.4 use
-     *             {@link AbstractDocumentWriter#AbstractDocumentWriter(Object, NameCoder)}
-     *             instead.
+     * @deprecated As of 1.4 use {@link AbstractDocumentWriter#AbstractDocumentWriter(Object, NameCoder)} instead.
      */
+    @Deprecated
     public AbstractDocumentWriter(final Object container, final XmlFriendlyReplacer replacer) {
         this(container, (NameCoder)replacer);
     }
 
+    @Override
     public final void startNode(final String name) {
         final Object node = createNode(name);
         nodeStack.push(node);
     }
 
     /**
-     * Create a node. The provided node name is not yet XML friendly. If {@link #getCurrent()}
-     * returns <code>null</code> the node is a top level node.
+     * Create a node. The provided node name is not yet XML friendly. If {@link #getCurrent()} returns <code>null</code>
+     * the node is a top level node.
      * 
      * @param name the node name
      * @return the new node
@@ -79,6 +76,7 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
      */
     protected abstract Object createNode(String name);
 
+    @Override
     public final void endNode() {
         endNodeInternally();
         final Object node = nodeStack.pop();
@@ -102,14 +100,17 @@ public abstract class AbstractDocumentWriter extends AbstractXmlWriter implement
         return nodeStack.peek();
     }
 
-    public List getTopLevelNodes() {
+    @Override
+    public List<Object> getTopLevelNodes() {
         return result;
     }
 
+    @Override
     public void flush() {
         // don't need to do anything
     }
 
+    @Override
     public void close() {
         // don't need to do anything
     }

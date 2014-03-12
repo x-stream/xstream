@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,26 +10,26 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import java.lang.reflect.Field;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
 
 /**
- * Sort the fields in their natural order. Fields are returned in their declaration order,
- * fields of base classes first.
+ * Sort the fields in their natural order. Fields are returned in their declaration order, fields of base classes first.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.2.2
  */
 public class NativeFieldKeySorter implements FieldKeySorter {
 
-    public Map sort(final Class type, final Map keyedByFieldKey) {
-        final Map map = new TreeMap(new Comparator() {
+    @Override
+    public Map<FieldKey, Field> sort(final Class<?> type, final Map<FieldKey, Field> keyedByFieldKey) {
+        final Map<FieldKey, Field> map = new TreeMap<FieldKey, Field>(new Comparator<FieldKey>() {
 
-            public int compare(final Object o1, final Object o2) {
-                final FieldKey fieldKey1 = (FieldKey)o1;
-                final FieldKey fieldKey2 = (FieldKey)o2;
+            @Override
+            public int compare(final FieldKey fieldKey1, final FieldKey fieldKey2) {
                 int i = fieldKey1.getDepth() - fieldKey2.getDepth();
                 if (i == 0) {
                     i = fieldKey1.getOrder() - fieldKey2.getOrder();

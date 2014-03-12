@@ -19,49 +19,52 @@ import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.security.ForbiddenClassException;
 
+
 /**
  * Mapper that caches which names map to which classes. Prevents repetitive searching and class loading.
- *
+ * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public class CachingMapper extends MapperWrapper implements Caching {
 
-    private transient Map realClassCache;
+    private transient Map<String, ? super Object> realClassCache;
 
-    public CachingMapper(Mapper wrapped) {
+    public CachingMapper(final Mapper wrapped) {
         super(wrapped);
         readResolve();
     }
 
-    public Class realClass(String elementName) {
-        Object cached = realClassCache.get(elementName);
+    @Override
+    public Class<?> realClass(final String elementName) {
+        final Object cached = realClassCache.get(elementName);
         if (cached != null) {
             if (cached instanceof Class) {
-                return (Class)cached;
+                return (Class<?>)cached;
             }
             throw (XStreamException)cached;
         }
 
         try {
-            Class result = super.realClass(elementName);
+            final Class<?> result = super.realClass(elementName);
             realClassCache.put(elementName, result);
             return result;
-        } catch (ForbiddenClassException e) {
+        } catch (final ForbiddenClassException e) {
             realClassCache.put(elementName, e);
             throw e;
-        } catch (CannotResolveClassException e) {
+        } catch (final CannotResolveClassException e) {
             realClassCache.put(elementName, e);
             throw e;
         }
     }
 
+    @Override
     public void flushCache() {
         realClassCache.clear();
     }
 
     private Object readResolve() {
-        realClassCache = Collections.synchronizedMap(new HashMap(128));
+        realClassCache = Collections.synchronizedMap(new HashMap<String, Object>(128));
         return this;
     }
 }

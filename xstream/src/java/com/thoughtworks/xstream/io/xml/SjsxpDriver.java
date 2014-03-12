@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2013 XStream Committers.
+ * Copyright (C) 2009, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,10 +10,11 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.StreamException;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
+
+import com.thoughtworks.xstream.io.StreamException;
+
 
 /**
  * A driver using the JDK 6 StAX implementation of Sun.
@@ -22,11 +23,13 @@ import javax.xml.stream.XMLOutputFactory;
  * @since 1.4
  * @deprecated As of 1.4.5 use {@link StandardStaxDriver}
  */
+@Deprecated
 public class SjsxpDriver extends StaxDriver {
 
     /**
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver()}
      */
+    @Deprecated
     public SjsxpDriver() {
         super();
     }
@@ -34,36 +37,41 @@ public class SjsxpDriver extends StaxDriver {
     /**
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(QNameMap, XmlFriendlyNameCoder)}
      */
-    public SjsxpDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+    @Deprecated
+    public SjsxpDriver(final QNameMap qnameMap, final XmlFriendlyNameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
     /**
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(QNameMap)}
      */
-    public SjsxpDriver(QNameMap qnameMap) {
+    @Deprecated
+    public SjsxpDriver(final QNameMap qnameMap) {
         super(qnameMap);
     }
 
     /**
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(XmlFriendlyNameCoder)}
      */
-    public SjsxpDriver(XmlFriendlyNameCoder nameCoder) {
+    @Deprecated
+    public SjsxpDriver(final XmlFriendlyNameCoder nameCoder) {
         super(nameCoder);
     }
 
     /**
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#createInputFactory()}
      */
+    @Deprecated
+    @Override
     protected XMLInputFactory createInputFactory() {
         Exception exception = null;
         try {
             return (XMLInputFactory)Class.forName("com.sun.xml.internal.stream.XMLInputFactoryImpl").newInstance();
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             exception = e;
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             exception = e;
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             exception = e;
         }
         throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLInputFaqctory instance.", exception);
@@ -72,15 +80,17 @@ public class SjsxpDriver extends StaxDriver {
     /**
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#createOutputFactory()}
      */
+    @Deprecated
+    @Override
     protected XMLOutputFactory createOutputFactory() {
         Exception exception = null;
         try {
             return (XMLOutputFactory)Class.forName("com.sun.xml.internal.stream.XMLOutputFactoryImpl").newInstance();
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             exception = e;
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             exception = e;
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             exception = e;
         }
         throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLOutputFaqctory instance.", exception);

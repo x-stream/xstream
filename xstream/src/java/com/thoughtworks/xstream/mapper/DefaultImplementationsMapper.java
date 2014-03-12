@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,26 +11,24 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.InitializationException;
-
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
+import com.thoughtworks.xstream.InitializationException;
 
 
 /**
- * Mapper that resolves default implementations of classes. For example,
- * mapper.serializedClass(ArrayList.class) will return java.util.List. Calling
- * mapper.defaultImplementationOf(List.class) will return ArrayList.
+ * Mapper that resolves default implementations of classes. For example, mapper.serializedClass(ArrayList.class) will
+ * return java.util.List. Calling mapper.defaultImplementationOf(List.class) will return ArrayList.
  * 
  * @author Joe Walnes
  */
 public class DefaultImplementationsMapper extends MapperWrapper {
 
-    private final Map typeToImpl = new HashMap();
-    private transient Map implToType = new HashMap();
+    private final Map<Class<?>, Class<?>> typeToImpl = new HashMap<Class<?>, Class<?>>();
+    private transient Map<Class<?>, Class<?>> implToType = new HashMap<Class<?>, Class<?>>();
 
-    public DefaultImplementationsMapper(Mapper wrapped) {
+    public DefaultImplementationsMapper(final Mapper wrapped) {
         super(wrapped);
         addDefaults();
     }
@@ -49,33 +47,33 @@ public class DefaultImplementationsMapper extends MapperWrapper {
         addDefaultImplementation(Long.class, long.class);
     }
 
-    public void addDefaultImplementation(Class defaultImplementation, Class ofType) {
+    public void addDefaultImplementation(final Class<?> defaultImplementation, final Class<?> ofType) {
         if (defaultImplementation != null && defaultImplementation.isInterface()) {
-            throw new InitializationException(
-                "Default implementation is not a concrete class: "
-                    + defaultImplementation.getName());
+            throw new InitializationException("Default implementation is not a concrete class: "
+                + defaultImplementation.getName());
         }
         typeToImpl.put(ofType, defaultImplementation);
         implToType.put(defaultImplementation, ofType);
     }
 
-    public String serializedClass(Class type) {
-        Class baseType = (Class)implToType.get(type);
+    @Override
+    public String serializedClass(final Class<?> type) {
+        final Class<?> baseType = implToType.get(type);
         return baseType == null ? super.serializedClass(type) : super.serializedClass(baseType);
     }
 
-    public Class defaultImplementationOf(Class type) {
+    @Override
+    public Class<?> defaultImplementationOf(final Class<?> type) {
         if (typeToImpl.containsKey(type)) {
-            return (Class)typeToImpl.get(type);
+            return typeToImpl.get(type);
         } else {
             return super.defaultImplementationOf(type);
         }
     }
 
     private Object readResolve() {
-        implToType = new HashMap();
-        for (final Iterator iter = typeToImpl.keySet().iterator(); iter.hasNext();) {
-            final Object type = iter.next();
+        implToType = new HashMap<Class<?>, Class<?>>();
+        for (final Class<?> type : typeToImpl.keySet()) {
             implToType.put(typeToImpl.get(type), type);
         }
         return this;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,12 +10,13 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+
 import com.bea.xml.stream.MXParserFactory;
 import com.bea.xml.stream.XMLOutputFactoryBase;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 
 /**
  * A driver using the BEA StAX implementation.
@@ -32,39 +33,43 @@ public class BEAStaxDriver extends StaxDriver {
     /**
      * @deprecated As of 1.4.6 use {@link #BEAStaxDriver(QNameMap, NameCoder)}
      */
-    public BEAStaxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+    @Deprecated
+    public BEAStaxDriver(final QNameMap qnameMap, final XmlFriendlyNameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
     /**
      * @since 1.4.6
      */
-    public BEAStaxDriver(QNameMap qnameMap, NameCoder nameCoder) {
+    public BEAStaxDriver(final QNameMap qnameMap, final NameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
-    public BEAStaxDriver(QNameMap qnameMap) {
+    public BEAStaxDriver(final QNameMap qnameMap) {
         super(qnameMap);
     }
 
     /**
      * @deprecated As of 1.4.6 use {@link #BEAStaxDriver(NameCoder)}
      */
-    public BEAStaxDriver(XmlFriendlyNameCoder nameCoder) {
+    @Deprecated
+    public BEAStaxDriver(final XmlFriendlyNameCoder nameCoder) {
         super(nameCoder);
     }
 
     /**
      * @since 1.4.6
      */
-    public BEAStaxDriver(NameCoder nameCoder) {
+    public BEAStaxDriver(final NameCoder nameCoder) {
         super(nameCoder);
     }
 
+    @Override
     protected XMLInputFactory createInputFactory() {
         return new MXParserFactory();
     }
 
+    @Override
     protected XMLOutputFactory createOutputFactory() {
         return new XMLOutputFactoryBase();
     }

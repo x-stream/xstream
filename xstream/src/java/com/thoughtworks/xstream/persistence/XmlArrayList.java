@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,65 +13,69 @@ package com.thoughtworks.xstream.persistence;
 
 import java.util.AbstractList;
 
+
 /**
  * A persistent list implementation backed on a XmlMap.
  * 
  * @author Guilherme Silveira
  */
-public class XmlArrayList extends AbstractList {
+public class XmlArrayList<V> extends AbstractList<V> {
 
-	private final XmlMap map;
+    private final XmlMap<Integer, V> map;
 
-	public XmlArrayList(PersistenceStrategy persistenceStrategy) {
-		this.map = new XmlMap(persistenceStrategy);
-	}
+    public XmlArrayList(final PersistenceStrategy<Integer, V> persistenceStrategy) {
+        this.map = new XmlMap<Integer, V>(persistenceStrategy);
+    }
 
-	public int size() {
-		return map.size();
-	}
+    @Override
+    public int size() {
+        return map.size();
+    }
 
-	public Object set(int index, Object element) {
-		rangeCheck(index);
-		Object value = get(index);
-		map.put(new Integer(index), element);
-		return value;
-	}
+    @Override
+    public V set(final int index, final V element) {
+        rangeCheck(index);
+        final V value = get(index);
+        map.put(Integer.valueOf(index), element);
+        return value;
+    }
 
-	public void add(int index, Object element) {
-		int size = size();
-		if (index >= (size + 1) || index < 0) {
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: "
-					+ size);
-		}
-		int to = index != size ? index - 1 : index;
-		for (int i = size; i > to; i--) {
-			map.put(new Integer(i + 1), map.get(new Integer(i)));
-		}
-		map.put(new Integer(index), element);
-	}
+    @Override
+    public void add(final int index, final V element) {
+        final int size = size();
+        if (index >= size + 1 || index < 0) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+        final int to = index != size ? index - 1 : index;
+        for (int i = size; i > to; i--) {
+            map.put(Integer.valueOf(i + 1), map.get(Integer.valueOf(i)));
+        }
+        map.put(new Integer(index), element);
+    }
 
-	private void rangeCheck(int index) {
-		int size = size();
-		if (index >= size || index < 0) {
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: "
-					+ size);
-		}
-	}
+    private void rangeCheck(final int index) {
+        final int size = size();
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
 
-	public Object get(int index) {
-		rangeCheck(index);
-		return map.get(new Integer(index));
-	}
+    @Override
+    public V get(final int index) {
+        rangeCheck(index);
+        return map.get(Integer.valueOf(index));
+    }
 
-	public Object remove(int index) {
-		int size = size();
-		rangeCheck(index);
-		Object value = map.get(new Integer(index));
-		for (int i = index; i < size - 1; i++) {
-			map.put(new Integer(i), map.get(new Integer(i + 1)));
-		}
-		map.remove(new Integer(size - 1));
-		return value;
-	}
+    @Override
+    public V remove(final int index) {
+        final int size = size();
+        rangeCheck(index);
+        final V value = map.get(Integer.valueOf(index));
+        for (int i = index; i < size - 1; i++) {
+            map.put(Integer.valueOf(i), map.get(Integer.valueOf(i + 1)));
+        }
+        map.remove(Integer.valueOf(size - 1));
+        return value;
+    }
 
 }

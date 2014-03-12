@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,15 +17,14 @@ import com.thoughtworks.xstream.io.naming.NoNameCoder;
 
 /**
  * Abstract base class for all HierarchicalStreamWriter implementations. Implementations of
- * {@link HierarchicalStreamWriter} should rather be derived from this class then implementing
- * the interface directly.
+ * {@link HierarchicalStreamWriter} should rather be derived from this class then implementing the interface directly.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
  */
 public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter {
 
-    private NameCoder nameCoder;
+    private final NameCoder nameCoder;
 
     /**
      * Creates an AbstractWriter with a NameCoder that does nothing.
@@ -42,20 +41,16 @@ public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter
      * @param nameCoder the name coder used to write names in the target format
      * @since 1.4
      */
-    protected AbstractWriter(NameCoder nameCoder) {
-        this.nameCoder = (NameCoder)Cloneables.cloneIfPossible(nameCoder);
+    protected AbstractWriter(final NameCoder nameCoder) {
+        this.nameCoder = Cloneables.cloneIfPossible(nameCoder);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void startNode(String name, Class clazz) {
+    @Override
+    public void startNode(final String name, final Class<?> clazz) {
         startNode(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public HierarchicalStreamWriter underlyingWriter() {
         return this;
     }
@@ -67,7 +62,7 @@ public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter
      * @return the name in the target format
      * @since 1.4
      */
-    public String encodeNode(String name) {
+    public String encodeNode(final String name) {
         return nameCoder.encodeNode(name);
     }
 
@@ -78,7 +73,7 @@ public abstract class AbstractWriter implements ExtendedHierarchicalStreamWriter
      * @return the name in the target format
      * @since 1.4
      */
-    public String encodeAttribute(String name) {
+    public String encodeAttribute(final String name) {
         return nameCoder.encodeAttribute(name);
     }
 }

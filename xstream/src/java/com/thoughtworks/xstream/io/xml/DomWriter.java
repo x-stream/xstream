@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,10 +11,10 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.naming.NameCoder;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
 /**
@@ -60,6 +60,7 @@ public class DomWriter extends AbstractDocumentWriter {
      * @since 1.2
      * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Document, NameCoder)} instead.
      */
+    @Deprecated
     public DomWriter(final Document document, final XmlFriendlyReplacer replacer) {
         this(document.getDocumentElement(), document, (NameCoder)replacer);
     }
@@ -68,6 +69,7 @@ public class DomWriter extends AbstractDocumentWriter {
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Element, Document, NameCoder)} instead.
      */
+    @Deprecated
     public DomWriter(final Element element, final Document document, final XmlFriendlyReplacer replacer) {
         this(element, document, (NameCoder)replacer);
     }
@@ -76,10 +78,12 @@ public class DomWriter extends AbstractDocumentWriter {
      * @since 1.2
      * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Element, NameCoder)} instead.
      */
+    @Deprecated
     public DomWriter(final Element rootElement, final XmlFriendlyReplacer replacer) {
         this(rootElement, rootElement.getOwnerDocument(), (NameCoder)replacer);
     }
 
+    @Override
     protected Object createNode(final String name) {
         final Element child = document.createElement(encodeNode(name));
         final Element top = top();
@@ -92,10 +96,12 @@ public class DomWriter extends AbstractDocumentWriter {
         return child;
     }
 
+    @Override
     public void addAttribute(final String name, final String value) {
         top().setAttribute(encodeAttribute(name), value);
     }
 
+    @Override
     public void setValue(final String text) {
         top().appendChild(document.createTextNode(text));
     }

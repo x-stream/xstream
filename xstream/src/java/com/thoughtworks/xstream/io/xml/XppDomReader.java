@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.io.xml;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
+
 /**
  * @author Jason van Zyl
  */
@@ -21,14 +22,14 @@ public class XppDomReader extends AbstractDocumentReader {
 
     private XppDom currentElement;
 
-    public XppDomReader(XppDom xppDom) {
+    public XppDomReader(final XppDom xppDom) {
         super(xppDom);
     }
 
     /**
      * @since 1.4
      */
-    public XppDomReader(XppDom xppDom, NameCoder nameCoder) {
+    public XppDomReader(final XppDom xppDom, final NameCoder nameCoder) {
         super(xppDom, nameCoder);
     }
 
@@ -36,58 +37,70 @@ public class XppDomReader extends AbstractDocumentReader {
      * @since 1.2
      * @deprecated As of 1.4 use {@link XppDomReader#XppDomReader(XppDom, NameCoder)} instead.
      */
-    public XppDomReader(XppDom xppDom, XmlFriendlyReplacer replacer) {
+    @Deprecated
+    public XppDomReader(final XppDom xppDom, final XmlFriendlyReplacer replacer) {
         this(xppDom, (NameCoder)replacer);
     }
-    
+
+    @Override
     public String getNodeName() {
         return decodeNode(currentElement.getName());
     }
 
+    @Override
     public String getValue() {
         String text = null;
 
         try {
             text = currentElement.getValue();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // do nothing.
         }
 
         return text == null ? "" : text;
     }
 
-    public String getAttribute(String attributeName) {
+    @Override
+    public String getAttribute(final String attributeName) {
         return currentElement.getAttribute(encodeAttribute(attributeName));
     }
 
-    public String getAttribute(int index) {
+    @Override
+    public String getAttribute(final int index) {
         return currentElement.getAttribute(currentElement.getAttributeNames()[index]);
     }
 
+    @Override
     public int getAttributeCount() {
         return currentElement.getAttributeNames().length;
     }
 
-    public String getAttributeName(int index) {
+    @Override
+    public String getAttributeName(final int index) {
         return decodeAttribute(currentElement.getAttributeNames()[index]);
     }
 
+    @Override
     protected Object getParent() {
         return currentElement.getParent();
     }
 
-    protected Object getChild(int index) {
+    @Override
+    protected Object getChild(final int index) {
         return currentElement.getChild(index);
     }
 
+    @Override
     protected int getChildCount() {
         return currentElement.getChildCount();
     }
 
-    protected void reassignCurrentElement(Object current) {
-        this.currentElement = (XppDom) current;
+    @Override
+    protected void reassignCurrentElement(final Object current) {
+        currentElement = (XppDom)current;
     }
 
+    @Override
     public String peekNextChild() {
         if (currentElement.getChildCount() == 0) {
             return null;

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,6 @@ package com.thoughtworks.xstream.io;
  */
 public interface ExtendedHierarchicalStreamWriter extends HierarchicalStreamWriter {
 
-    void startNode(String name, Class clazz);    
+    void startNode(String name, Class<?> clazz);
 
 }

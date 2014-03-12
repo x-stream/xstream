@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,18 +15,21 @@ import java.sql.Date;
 
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
+
 /**
- * Converts a java.sql.Date to text.
- *
- * @author Jose A. Illescas 
+ * Converts a {@link Date} to a string.
+ * 
+ * @author Jose A. Illescas
  */
 public class SqlDateConverter extends AbstractSingleValueConverter {
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type.equals(Date.class);
     }
 
-    public Object fromString(String str) {
+    @Override
+    public Object fromString(final String str) {
         return Date.valueOf(str);
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,65 +11,69 @@
  */
 package com.thoughtworks.xstream.converters;
 
-import com.thoughtworks.xstream.XStreamException;
-import com.thoughtworks.xstream.core.util.OrderRetainingMap;
-
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.thoughtworks.xstream.XStreamException;
+
+
 /**
- * Thrown by {@link Converter} implementations when they cannot convert an object
- * to/from textual data.
- *
- * When this exception is thrown it can be passed around to things that accept an
- * {@link ErrorWriter}, allowing them to add diagnostics to the stack trace.
- *
+ * Thrown by {@link Converter} implementations when they cannot convert an object to/from textual data. When this
+ * exception is thrown it can be passed around to things that accept an {@link ErrorWriter}, allowing them to add
+ * diagnostics to the stack trace.
+ * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
- *
  * @see ErrorWriter
  */
 public class ConversionException extends XStreamException implements ErrorWriter {
 
     private static final String SEPARATOR = "\n-------------------------------";
-    private Map stuff = new OrderRetainingMap();
+    private final Map<String, String> stuff = new LinkedHashMap<String, String>();
 
-    public ConversionException(String msg, Throwable cause) {
+    public ConversionException(final String msg, final Throwable cause) {
         super(msg, cause);
         if (msg != null) {
             add("message", msg);
         }
         if (cause != null) {
             add("cause-exception", cause.getClass().getName());
-            add("cause-message", cause instanceof ConversionException ? ((ConversionException)cause).getShortMessage() :  cause.getMessage());
+            add("cause-message", cause instanceof ConversionException
+                ? ((ConversionException)cause).getShortMessage()
+                : cause.getMessage());
         }
     }
 
-    public ConversionException(String msg) {
+    public ConversionException(final String msg) {
         super(msg);
     }
 
-    public ConversionException(Throwable cause) {
+    public ConversionException(final Throwable cause) {
         this(cause.getMessage(), cause);
     }
 
-    public String get(String errorKey) {
-        return (String) stuff.get(errorKey);
+    @Override
+    public String get(final String errorKey) {
+        return stuff.get(errorKey);
     }
 
-    public void add(String name, String information) {
+    @Override
+    public void add(final String name, final String information) {
         String key = name;
         int i = 0;
         while (stuff.containsKey(key)) {
-            String value = (String)stuff.get(key);
-            if (information.equals(value))
+            final String value = stuff.get(key);
+            if (information.equals(value)) {
                 return;
-            key = name + "[" + ++i +"]";
+            }
+            key = name + "[" + ++i + "]";
         }
         stuff.put(key, information);
     }
 
-    public void set(String name, String information) {
+    @Override
+    public void set(final String name, final String information) {
         String key = name;
         int i = 0;
         stuff.put(key, information); // keep order
@@ -77,25 +81,27 @@ public class ConversionException extends XStreamException implements ErrorWriter
             if (i != 0) {
                 stuff.remove(key);
             }
-            key = name + "[" + ++i +"]";
+            key = name + "[" + ++i + "]";
         }
     }
 
-    public Iterator keys() {
+    @Override
+    public Iterator<String> keys() {
         return stuff.keySet().iterator();
     }
 
+    @Override
     public String getMessage() {
-        StringBuffer result = new StringBuffer();
+        final StringBuilder result = new StringBuilder();
         if (super.getMessage() != null) {
             result.append(super.getMessage());
         }
         if (!result.toString().endsWith(SEPARATOR)) {
             result.append("\n---- Debugging information ----");
         }
-        for (Iterator iterator = keys(); iterator.hasNext();) {
-            String k = (String) iterator.next();
-            String v = get(k);
+        for (final Iterator<String> iterator = keys(); iterator.hasNext();) {
+            final String k = iterator.next();
+            final String v = get(k);
             result.append('\n').append(k);
             result.append("                    ".substring(Math.min(20, k.length())));
             result.append(": ").append(v);

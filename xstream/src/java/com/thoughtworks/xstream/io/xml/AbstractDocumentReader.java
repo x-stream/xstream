@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,44 +18,50 @@ import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.AttributeNameIterator;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
+
 public abstract class AbstractDocumentReader extends AbstractXmlReader implements DocumentReader {
 
-    private FastStack pointers = new FastStack(16);
+    private final FastStack<Pointer> pointers = new FastStack<Pointer>(16);
     private Object current;
 
-    protected AbstractDocumentReader(Object rootElement) {
+    protected AbstractDocumentReader(final Object rootElement) {
         this(rootElement, new XmlFriendlyNameCoder());
     }
 
     /**
-    * @since 1.4
-    */ 
-    protected AbstractDocumentReader(Object rootElement, NameCoder nameCoder) {
+     * @since 1.4
+     */
+    protected AbstractDocumentReader(final Object rootElement, final NameCoder nameCoder) {
         super(nameCoder);
-        this.current = rootElement;
+        current = rootElement;
         pointers.push(new Pointer());
         reassignCurrentElement(current);
     }
 
     /**
-    * @since 1.2
-    * @deprecated As of 1.4, use {@link AbstractDocumentReader#AbstractDocumentReader(Object, NameCoder)} instead.
-    */ 
-    protected AbstractDocumentReader(Object rootElement, XmlFriendlyReplacer replacer) {
+     * @since 1.2
+     * @deprecated As of 1.4, use {@link AbstractDocumentReader#AbstractDocumentReader(Object, NameCoder)} instead.
+     */
+    @Deprecated
+    protected AbstractDocumentReader(final Object rootElement, final XmlFriendlyReplacer replacer) {
         this(rootElement, (NameCoder)replacer);
     }
-    
+
     protected abstract void reassignCurrentElement(Object current);
+
     protected abstract Object getParent();
+
     protected abstract Object getChild(int index);
+
     protected abstract int getChildCount();
 
     private static class Pointer {
         public int v;
     }
 
+    @Override
     public boolean hasMoreChildren() {
-        Pointer pointer = (Pointer) pointers.peek();
+        final Pointer pointer = pointers.peek();
 
         if (pointer.v < getChildCount()) {
             return true;
@@ -64,14 +70,16 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
         }
     }
 
+    @Override
     public void moveUp() {
         current = getParent();
         pointers.popSilently();
         reassignCurrentElement(current);
     }
 
+    @Override
     public void moveDown() {
-        Pointer pointer = (Pointer) pointers.peek();
+        final Pointer pointer = pointers.peek();
         pointers.push(new Pointer());
 
         current = getChild(pointer.v);
@@ -80,17 +88,21 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
         reassignCurrentElement(current);
     }
 
-    public Iterator getAttributeNames() {
+    @Override
+    public Iterator<String> getAttributeNames() {
         return new AttributeNameIterator(this);
     }
 
-    public void appendErrors(ErrorWriter errorWriter) {
-    }
-    
-    public Object getCurrent() {
-        return this.current;
+    @Override
+    public void appendErrors(final ErrorWriter errorWriter) {
     }
 
+    @Override
+    public Object getCurrent() {
+        return current;
+    }
+
+    @Override
     public void close() {
         // don't need to do anything
     }

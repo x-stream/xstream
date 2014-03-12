@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,14 +13,15 @@ package com.thoughtworks.xstream.core;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.path.Path;
 
+
 /**
- * A {@link MarshallingContext} that manages references. 
+ * A {@link MarshallingContext} that manages references.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
  */
-public interface ReferencingMarshallingContext extends MarshallingContext {
-    
+public interface ReferencingMarshallingContext<K> extends MarshallingContext {
+
     /**
      * Retrieve the current path.
      * 
@@ -28,22 +29,24 @@ public interface ReferencingMarshallingContext extends MarshallingContext {
      * @since 1.4
      * @deprecated As of 1.4.2
      */
+    @Deprecated
     Path currentPath();
-    
+
     /**
-     * Request the reference key for the given item 
+     * Request the reference key for the given item
      * 
      * @param item the item to lookup
      * @return the reference key or <code>null</code>
      * @since 1.4
      */
-    Object lookupReference(Object item);
-    
+    K lookupReference(Object item);
+
     /**
      * Replace the currently marshalled item.
-     * 
-     * <p><strong>Use this method only, if you know exactly what you do!</strong> It is a special solution for
-     * Serializable types that make usage of the writeReplace method where the replacing object itself is referenced.</p>
+     * <p>
+     * <strong>Use this method only, if you know exactly what you do!</strong> It is a special solution for Serializable
+     * types that make usage of the writeReplace method where the replacing object itself is referenced.
+     * </p>
      * 
      * @param original the original item to convert
      * @param replacement the replacement item that is converted instead

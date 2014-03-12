@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,12 +22,12 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
+
 /**
- * Mapper that allows the usage of attributes for fields and corresponding 
- * types or specified arbitrary types. It is responsible for the lookup of the 
- * {@link SingleValueConverter} for item types and attribute names.
- *
- * @author Paul Hammant 
+ * Mapper that allows the usage of attributes for fields and corresponding types or specified arbitrary types. It is
+ * responsible for the lookup of the {@link SingleValueConverter} for item types and attribute names.
+ * 
+ * @author Paul Hammant
  * @author Ian Cartwright
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
@@ -36,28 +36,29 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
  */
 public class AttributeMapper extends MapperWrapper {
 
-    private final Map fieldNameToTypeMap = new HashMap();
-    private final Set typeSet = new HashSet();
-    private ConverterLookup converterLookup;
-    private ReflectionProvider reflectionProvider;
-    private final Set fieldToUseAsAttribute = new HashSet();
+    private final Map<String, Class<?>> fieldNameToTypeMap = new HashMap<String, Class<?>>();
+    private final Set<Class<?>> typeSet = new HashSet<Class<?>>();
+    private final ConverterLookup converterLookup;
+    private final ReflectionProvider reflectionProvider;
+    private final Set<Field> fieldToUseAsAttribute = new HashSet<Field>();
 
-    public AttributeMapper(Mapper wrapped, ConverterLookup converterLookup, ReflectionProvider refProvider) {
+    public AttributeMapper(
+            final Mapper wrapped, final ConverterLookup converterLookup, final ReflectionProvider refProvider) {
         super(wrapped);
         this.converterLookup = converterLookup;
-        this.reflectionProvider = refProvider;
+        reflectionProvider = refProvider;
     }
-    
-    public void addAttributeFor(final String fieldName, final Class type) {
+
+    public void addAttributeFor(final String fieldName, final Class<?> type) {
         fieldNameToTypeMap.put(fieldName, type);
     }
 
-    public void addAttributeFor(final Class type) {
+    public void addAttributeFor(final Class<?> type) {
         typeSet.add(type);
     }
 
-    private SingleValueConverter getLocalConverterFromItemType(Class type) {
-        Converter converter = converterLookup.lookupConverterForType(type);
+    private SingleValueConverter getLocalConverterFromItemType(final Class<?> type) {
+        final Converter converter = converterLookup.lookupConverterForType(type);
         if (converter != null && converter instanceof SingleValueConverter) {
             return (SingleValueConverter)converter;
         } else {
@@ -65,10 +66,11 @@ public class AttributeMapper extends MapperWrapper {
         }
     }
 
-    public SingleValueConverter getConverterFromItemType(String fieldName, Class type,
-        Class definedIn) {
+    @Override
+    public SingleValueConverter getConverterFromItemType(final String fieldName, final Class<?> type,
+            final Class<?> definedIn) {
         if (shouldLookForSingleValueConverter(fieldName, type, definedIn)) {
-            SingleValueConverter converter = getLocalConverterFromItemType(type);
+            final SingleValueConverter converter = getLocalConverterFromItemType(type);
             if (converter != null) {
                 return converter;
             }
@@ -76,13 +78,14 @@ public class AttributeMapper extends MapperWrapper {
         return super.getConverterFromItemType(fieldName, type, definedIn);
     }
 
-    public boolean shouldLookForSingleValueConverter(String fieldName, Class type, Class definedIn) {
+    public boolean shouldLookForSingleValueConverter(final String fieldName, final Class<?> type,
+            final Class<?> definedIn) {
         if (typeSet.contains(type)) {
             return true;
         } else if (fieldNameToTypeMap.get(fieldName) == type) {
             return true;
         } else if (fieldName != null && definedIn != null) {
-            Field field = reflectionProvider.getField(definedIn, fieldName);
+            final Field field = reflectionProvider.getField(definedIn, fieldName);
             return fieldToUseAsAttribute.contains(field);
         }
         return false;
@@ -91,14 +94,18 @@ public class AttributeMapper extends MapperWrapper {
     /**
      * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
-    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute) {
-        Field field = reflectionProvider.getField(definedIn, attribute);
+    @Deprecated
+    @Override
+    public SingleValueConverter getConverterFromAttribute(final Class<?> definedIn, final String attribute) {
+        final Field field = reflectionProvider.getField(definedIn, attribute);
         return getConverterFromAttribute(definedIn, attribute, field.getType());
     }
 
-    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type) {
+    @Override
+    public SingleValueConverter getConverterFromAttribute(final Class<?> definedIn, final String attribute,
+            final Class<?> type) {
         if (shouldLookForSingleValueConverter(attribute, type, definedIn)) {
-            SingleValueConverter converter = getLocalConverterFromItemType(type);
+            final SingleValueConverter converter = getLocalConverterFromItemType(type);
             if (converter != null) {
                 return converter;
             }
@@ -112,7 +119,7 @@ public class AttributeMapper extends MapperWrapper {
      * @param field the field itself
      * @since 1.2.2
      */
-    public void addAttributeFor(Field field) {
+    public void addAttributeFor(final Field field) {
         fieldToUseAsAttribute.add(field);
     }
 
@@ -124,7 +131,7 @@ public class AttributeMapper extends MapperWrapper {
      * @throws IllegalArgumentException if the field does not exist
      * @since 1.3
      */
-    public void addAttributeFor(Class definedIn, String fieldName) {
+    public void addAttributeFor(final Class<?> definedIn, final String fieldName) {
         fieldToUseAsAttribute.add(reflectionProvider.getField(definedIn, fieldName));
     }
 }

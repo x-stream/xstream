@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,35 +10,36 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.core.Caching;
-import com.thoughtworks.xstream.core.util.OrderRetainingMap;
-import com.thoughtworks.xstream.io.StreamException;
-
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+
+import com.thoughtworks.xstream.core.Caching;
+import com.thoughtworks.xstream.io.StreamException;
 
 
 /**
- * The default implementation for sorting fields. Invoke registerFieldOrder in order to set the
- * field order for an specific type.
+ * The default implementation for sorting fields. Invoke registerFieldOrder in order to set the field order for an
+ * specific type.
  * 
  * @author Guilherme Silveira
  * @since 1.2.2
  */
 public class SortableFieldKeySorter implements FieldKeySorter, Caching {
 
-    private final Map map = new HashMap();
+    private final Map<Class<?>, Comparator<FieldKey>> map = new HashMap<Class<?>, Comparator<FieldKey>>();
 
-    public Map sort(Class type, Map keyedByFieldKey) {
+    @Override
+    public Map<FieldKey, Field> sort(final Class<?> type, final Map<FieldKey, Field> keyedByFieldKey) {
         if (map.containsKey(type)) {
-            Map result = new OrderRetainingMap();
-            FieldKey[] fieldKeys = (FieldKey[])keyedByFieldKey.keySet().toArray(
-                new FieldKey[keyedByFieldKey.size()]);
-            Arrays.sort(fieldKeys, (Comparator)map.get(type));
-            for (int i = 0; i < fieldKeys.length; i++ ) {
-                result.put(fieldKeys[i], keyedByFieldKey.get(fieldKeys[i]));
+            final Map<FieldKey, Field> result = new LinkedHashMap<FieldKey, Field>();
+            final FieldKey[] fieldKeys = keyedByFieldKey.keySet().toArray(new FieldKey[keyedByFieldKey.size()]);
+            Arrays.sort(fieldKeys, map.get(type));
+            for (final FieldKey fieldKey : fieldKeys) {
+                result.put(fieldKey, keyedByFieldKey.get(fieldKey));
             }
             return result;
         } else {
@@ -47,28 +48,28 @@ public class SortableFieldKeySorter implements FieldKeySorter, Caching {
     }
 
     /**
-     * Registers the field order to use for a specific type. This will not affect any of the
-     * type's super or sub classes. If you skip a field which will be serialized, XStream will
-     * thrown an StreamException during the serialization process.
+     * Registers the field order to use for a specific type. This will not affect any of the type's super or sub
+     * classes. If you skip a field which will be serialized, XStream will thrown an StreamException during the
+     * serialization process.
      * 
      * @param type the type
      * @param fields the field order
      */
-    public void registerFieldOrder(Class type, String[] fields) {
+    public void registerFieldOrder(final Class<?> type, final String[] fields) {
         map.put(type, new FieldComparator(fields));
     }
 
-    private class FieldComparator implements Comparator {
+    private class FieldComparator implements Comparator<FieldKey> {
 
         private final String[] fieldOrder;
 
-        public FieldComparator(String[] fields) {
-            this.fieldOrder = fields;
+        public FieldComparator(final String[] fields) {
+            fieldOrder = fields;
         }
 
-        public int compare(String first, String second) {
+        private int compare(final String first, final String second) {
             int firstPosition = -1, secondPosition = -1;
-            for (int i = 0; i < fieldOrder.length; i++ ) {
+            for (int i = 0; i < fieldOrder.length; i++) {
                 if (fieldOrder[i].equals(first)) {
                     firstPosition = i;
                 }
@@ -78,19 +79,19 @@ public class SortableFieldKeySorter implements FieldKeySorter, Caching {
             }
             if (firstPosition == -1 || secondPosition == -1) {
                 // field not defined!!!
-                throw new StreamException(
-                    "You have not given XStream a list of all fields to be serialized.");
+                throw new StreamException("You have not given XStream a list of all fields to be serialized.");
             }
             return firstPosition - secondPosition;
         }
 
-        public int compare(Object firstObject, Object secondObject) {
-            FieldKey first = (FieldKey)firstObject, second = (FieldKey)secondObject;
+        @Override
+        public int compare(final FieldKey first, final FieldKey second) {
             return compare(first.getFieldName(), second.getFieldName());
         }
 
     }
 
+    @Override
     public void flushCache() {
         map.clear();
     }

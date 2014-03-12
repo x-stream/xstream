@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,10 +21,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 
 /**
- * HierarchicalStreamDriver for binary input and output. The driver uses an optimized binary
- * format to store an object graph. The format is not as compact as Java serialization, but a
- * lot more than typical text-based formats like XML. However, due to its nature it cannot use a
- * {@link Reader} for input or a {@link Writer} for output.
+ * HierarchicalStreamDriver for binary input and output. The driver uses an optimized binary format to store an object
+ * graph. The format is not as compact as Java serialization, but a lot more than typical text-based formats like XML.
+ * However, due to its nature it cannot use a {@link Reader} for input or a {@link Writer} for output.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4.2
@@ -34,24 +33,26 @@ public class BinaryStreamDriver extends AbstractDriver {
     /**
      * @throws UnsupportedOperationException if called
      */
-    public HierarchicalStreamReader createReader(Reader in) {
-        throw new UnsupportedOperationException(
-            "The BinaryDriver cannot use character-oriented input streams.");
+    @Override
+    public HierarchicalStreamReader createReader(final Reader in) {
+        throw new UnsupportedOperationException("The BinaryDriver cannot use character-oriented input streams.");
     }
 
-    public HierarchicalStreamReader createReader(InputStream in) {
+    @Override
+    public HierarchicalStreamReader createReader(final InputStream in) {
         return new BinaryStreamReader(in);
     }
 
     /**
      * @throws UnsupportedOperationException if called
      */
-    public HierarchicalStreamWriter createWriter(Writer out) {
-        throw new UnsupportedOperationException(
-            "The BinaryDriver cannot use character-oriented output streams.");
+    @Override
+    public HierarchicalStreamWriter createWriter(final Writer out) {
+        throw new UnsupportedOperationException("The BinaryDriver cannot use character-oriented output streams.");
     }
 
-    public HierarchicalStreamWriter createWriter(OutputStream out) {
+    @Override
+    public HierarchicalStreamWriter createWriter(final OutputStream out) {
         return new BinaryStreamWriter(out);
     }
 }

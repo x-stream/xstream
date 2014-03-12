@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,58 +14,69 @@ package com.thoughtworks.xstream.persistence;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
+
 /**
- * A persistent map. Its values are actually serialized as xml files. If you
- * need an application-wide synchronized version of this map, try the respective
- * Collections methods.
+ * A persistent map. Its values are actually serialized as xml files.
+ * <p>
+ * If you need an application-wide synchronized version of this map, try the respective Collections methods.
+ * </p>
  * 
  * @author Guilherme Silveira
  */
-public class XmlMap extends AbstractMap {
+public class XmlMap<K, V> extends AbstractMap<K, V> {
 
-	private final PersistenceStrategy persistenceStrategy;
+    private final PersistenceStrategy<K, V> persistenceStrategy;
 
-	public XmlMap(PersistenceStrategy streamStrategy) {
-		this.persistenceStrategy = streamStrategy;
-	}
+    public XmlMap(final PersistenceStrategy<K, V> streamStrategy) {
+        this.persistenceStrategy = streamStrategy;
+    }
 
-	public int size() {
-		return persistenceStrategy.size();
-	}
+    @Override
+    public int size() {
+        return persistenceStrategy.size();
+    }
 
-	public Object get(Object key) {
-		// faster lookup
-		return persistenceStrategy.get(key);
-	}
+    @Override
+    public V get(final Object key) {
+        // faster lookup
+        return persistenceStrategy.get(key);
+    }
 
-	public Object put(Object key, Object value) {
-		return persistenceStrategy.put(key,value);
-	}
+    @Override
+    public V put(final K key, final V value) {
+        return persistenceStrategy.put(key, value);
+    }
 
-	public Object remove(Object key) {
-		return persistenceStrategy.remove(key);
-	}
+    @Override
+    public V remove(final Object key) {
+        return persistenceStrategy.remove(key);
+    }
 
-	public Set entrySet() {
-		return new XmlMapEntries();
-	}
+    @Override
+    public Set<Map.Entry<K, V>> entrySet() {
+        return new XmlMapEntries();
+    }
 
-	class XmlMapEntries extends AbstractSet {
+    class XmlMapEntries extends AbstractSet<Map.Entry<K, V>> {
 
-		public int size() {
-			return XmlMap.this.size();
-		}
+        @Override
+        public int size() {
+            return XmlMap.this.size();
+        }
 
-		public boolean isEmpty() {
-			return XmlMap.this.isEmpty();
-		}
+        @Override
+        public boolean isEmpty() {
+            return XmlMap.this.isEmpty();
+        }
 
-		public Iterator iterator() {
-			return persistenceStrategy.iterator();
-		}
+        @Override
+        public Iterator<Map.Entry<K, V>> iterator() {
+            return persistenceStrategy.iterator();
+        }
 
-	}
+    }
 
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,67 +16,74 @@ import java.lang.reflect.Modifier;
 
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
+
 /**
  * Slightly nicer way to find, get and set fields in classes. Wraps standard java.lang.reflect.Field calls but wraps
  * wraps exception in XStreamExceptions.
- *
+ * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public class Fields {
-    public static Field locate(Class definedIn, Class fieldType, boolean isStatic) {
+    public static Field locate(final Class<?> definedIn, final Class<?> fieldType, final boolean isStatic) {
         Field field = null;
         try {
-            Field[] fields = definedIn.getDeclaredFields();
-            for(int i = 0; i < fields.length; ++i) {
-                if (Modifier.isStatic(fields[i].getModifiers()) == isStatic) {
-                    if (fieldType.isAssignableFrom(fields[i].getType())) {
-                        field = fields[i];
+            final Field[] fields = definedIn.getDeclaredFields();
+            for (final Field field2 : fields) {
+                if (Modifier.isStatic(field2.getModifiers()) == isStatic) {
+                    if (fieldType.isAssignableFrom(field2.getType())) {
+                        field = field2;
                     }
                 }
             }
             if (field != null && !field.isAccessible()) {
                 field.setAccessible(true);
             }
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             // active SecurityManager
-        } catch (NoClassDefFoundError e) {
+        } catch (final NoClassDefFoundError e) {
             // restricted type in GAE
         }
         return field;
     }
 
-    public static Field find(Class type, String name) {
+    public static Field find(final Class<?> type, final String name) {
         try {
-            Field result = type.getDeclaredField(name);
+            final Field result = type.getDeclaredField(name);
             if (!result.isAccessible()) {
                 result.setAccessible(true);
             }
             return result;
-        } catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException("Could not access " + type.getName() + "." + name + " field: " + e.getMessage());
-        } catch (NoClassDefFoundError e) {
-            throw new ObjectAccessException("Could not access " + type.getName() + "." + name + " field: " + e.getMessage());
+        } catch (final NoSuchFieldException e) {
+            final String message = "Could not access " + type.getName() + "." + name + " field: " + e.getMessage();
+            throw new IllegalArgumentException(message);
+        } catch (final NoClassDefFoundError e) {
+            final String message = "Could not access " + type.getName() + "." + name + " field: " + e.getMessage();
+            throw new ObjectAccessException(message);
         }
     }
 
-    public static void write(Field field, Object instance, Object value) {
+    public static void write(final Field field, final Object instance, final Object value) {
         try {
             field.set(instance, value);
-        } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field", e);
-        } catch (NoClassDefFoundError e) {
-            throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field", e);
+        } catch (final IllegalAccessException e) {
+            final String message = "Could not write " + field.getType().getName() + "." + field.getName() + " field";
+            throw new ObjectAccessException(message, e);
+        } catch (final NoClassDefFoundError e) {
+            final String message = "Could not write " + field.getType().getName() + "." + field.getName() + " field";
+            throw new ObjectAccessException(message, e);
         }
     }
 
-    public static Object read(Field field, Object instance) {
+    public static Object read(final Field field, final Object instance) {
         try {
             return field.get(instance);
-        } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field", e);
-        } catch (NoClassDefFoundError e) {
-            throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field", e);
+        } catch (final IllegalAccessException e) {
+            final String message = "Could not read " + field.getType().getName() + "." + field.getName() + " field";
+            throw new ObjectAccessException(message, e);
+        } catch (final NoClassDefFoundError e) {
+            final String message = "Could not read " + field.getType().getName() + "." + field.getName() + " field";
+            throw new ObjectAccessException(message, e);
         }
     }
 }

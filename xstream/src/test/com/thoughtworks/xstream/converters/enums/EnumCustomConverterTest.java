@@ -102,8 +102,8 @@ public class EnumCustomConverterTest extends TestCase {
         assertSame(out.simple, SimpleEnum.GREEN);
     }
 
-    private final static class PolymorphicEnumConverter extends EnumSingleValueConverter {
-        private PolymorphicEnumConverter(Class type) {
+    private final static class PolymorphicEnumConverter<T extends Enum<T>> extends EnumSingleValueConverter<T> {
+        private PolymorphicEnumConverter(Class<T> type) {
             super(type);
         }
 

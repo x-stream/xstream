@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,35 +11,37 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-
 /**
- * Mapper that ensures that all names in the serialization stream are XML friendly.
- * The replacement chars and strings are:
+ * Mapper that ensures that all names in the serialization stream are XML friendly. The replacement chars and strings
+ * are:
  * <ul>
- * <li><b>$</b> (dollar) chars appearing in class names are replaced with <b>_</b> (underscore) chars.<br></li>
- * <li><b>$</b> (dollar) chars appearing in field names are replaced with <b>_DOLLAR_</b> string.<br></li>
- * <li><b>_</b> (underscore) chars appearing in field names are replaced with <b>__</b> (double underscore) string.<br></li>
+ * <li><b>$</b> (dollar) chars appearing in class names are replaced with <b>_</b> (underscore) chars.<br>
+ * </li>
+ * <li><b>$</b> (dollar) chars appearing in field names are replaced with <b>_DOLLAR_</b> string.<br>
+ * </li>
+ * <li><b>_</b> (underscore) chars appearing in field names are replaced with <b>__</b> (double underscore) string.<br>
+ * </li>
  * <li><b>default</b> as the prefix for class names with no package.</li>
  * </ul>
+ * Note, this class is no longer in regular use for current XStream versions. It exists to provide backward
+ * compatibility to existing XML data written with older XStream versions.
  * 
- * Note, this class is no longer in regular use for current XStream versions. It exists to provide backward compatibility
- * to existing XML data written with older XStream versions.
- *  
  * @author Joe Walnes
  * @author Mauro Talevi
  * @deprecated As of 1.4 use {@link com.thoughtworks.xstream.io.xml.XmlFriendlyReader}
  */
+@Deprecated
 public class AbstractXmlFriendlyMapper extends MapperWrapper {
 
-    private char dollarReplacementInClass = '-';
-    private String dollarReplacementInField = "_DOLLAR_";
-    private String underscoreReplacementInField = "__";
-    private String noPackagePrefix = "default";
-    
-    protected AbstractXmlFriendlyMapper(Mapper wrapped) {
+    private final char dollarReplacementInClass = '-';
+    private final String dollarReplacementInField = "_DOLLAR_";
+    private final String underscoreReplacementInField = "__";
+    private final String noPackagePrefix = "default";
+
+    protected AbstractXmlFriendlyMapper(final Mapper wrapped) {
         super(wrapped);
     }
-    
+
     protected String escapeClassName(String className) {
         // the $ used in inner class names is illegal as an xml element getNodeName
         className = className.replace('$', dollarReplacementInClass);
@@ -54,7 +56,7 @@ public class AbstractXmlFriendlyMapper extends MapperWrapper {
 
     protected String unescapeClassName(String className) {
         // special case for classes named $Blah with no package; <-Blah> is illegal XML
-        if (className.startsWith(noPackagePrefix+dollarReplacementInClass)) {
+        if (className.startsWith(noPackagePrefix + dollarReplacementInClass)) {
             className = className.substring(noPackagePrefix.length());
         }
 
@@ -64,12 +66,12 @@ public class AbstractXmlFriendlyMapper extends MapperWrapper {
         return className;
     }
 
-    protected String escapeFieldName(String fieldName) {
-        StringBuffer result = new StringBuffer();
-        int length = fieldName.length();
-        for(int i = 0; i < length; i++) {
-            char c = fieldName.charAt(i);
-            if (c == '$' ) {
+    protected String escapeFieldName(final String fieldName) {
+        final StringBuilder result = new StringBuilder();
+        final int length = fieldName.length();
+        for (int i = 0; i < length; i++) {
+            final char c = fieldName.charAt(i);
+            if (c == '$') {
                 result.append(dollarReplacementInField);
             } else if (c == '_') {
                 result.append(underscoreReplacementInField);
@@ -78,18 +80,18 @@ public class AbstractXmlFriendlyMapper extends MapperWrapper {
             }
         }
         return result.toString();
-    }    
-    
-    protected String unescapeFieldName(String xmlName) {
-        StringBuffer result = new StringBuffer();
-        int length = xmlName.length();
-        for(int i = 0; i < length; i++) {
-            char c = xmlName.charAt(i);
-            if ( stringFoundAt(xmlName, i,underscoreReplacementInField)) {
-                i +=underscoreReplacementInField.length() - 1;
+    }
+
+    protected String unescapeFieldName(final String xmlName) {
+        final StringBuilder result = new StringBuilder();
+        final int length = xmlName.length();
+        for (int i = 0; i < length; i++) {
+            final char c = xmlName.charAt(i);
+            if (stringFoundAt(xmlName, i, underscoreReplacementInField)) {
+                i += underscoreReplacementInField.length() - 1;
                 result.append('_');
-            } else if ( stringFoundAt(xmlName, i,dollarReplacementInField)) {
-                i +=dollarReplacementInField.length() - 1;
+            } else if (stringFoundAt(xmlName, i, dollarReplacementInField)) {
+                i += dollarReplacementInField.length() - 1;
                 result.append('$');
             } else {
                 result.append(c);
@@ -98,12 +100,12 @@ public class AbstractXmlFriendlyMapper extends MapperWrapper {
         return result.toString();
     }
 
-    private boolean stringFoundAt(String name, int i, String replacement) {
-        if ( name.length() >= i + replacement.length() 
-          && name.substring(i, i + replacement.length()).equals(replacement) ){
+    private boolean stringFoundAt(final String name, final int i, final String replacement) {
+        if (name.length() >= i + replacement.length()
+            && name.substring(i, i + replacement.length()).equals(replacement)) {
             return true;
         }
         return false;
     }
-    
+
 }

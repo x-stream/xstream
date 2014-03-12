@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,21 +15,26 @@ import java.util.Currency;
 
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
+
 /**
- * Converts a java.util.Currency to String. Despite the name of this class, it has nothing to do with converting
- * currencies between exchange rates! It makes sense in the context of XStream.
- *
- * @author Jose A. Illescas 
+ * Converts a {@link Currency} to a string.
+ * <p>
+ * Despite the name of this class, it has nothing to do with converting currencies between exchange rates! It makes
+ * sense in the context of XStream.
+ * </p>
+ * 
+ * @author Jose A. Illescas
  * @author Joe Walnes
  */
 public class CurrencyConverter extends AbstractSingleValueConverter {
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type.equals(Currency.class);
     }
 
-    public Object fromString(String str) {
+    @Override
+    public Object fromString(final String str) {
         return Currency.getInstance(str);
     }
-
 }

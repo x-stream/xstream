@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+
 /**
  * Helper methods for {@link HierarchicalStreamReader} and {@link HierarchicalStreamWriter}.
  * 
@@ -22,9 +23,9 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public class HierarchicalStreams {
 
-    public static Class readClassType(HierarchicalStreamReader reader, Mapper mapper) {
-        String classAttribute = readClassAttribute(reader, mapper);
-        Class type;
+    public static Class<?> readClassType(final HierarchicalStreamReader reader, final Mapper mapper) {
+        final String classAttribute = readClassAttribute(reader, mapper);
+        Class<?> type;
         if (classAttribute == null) {
             type = mapper.realClass(reader.getNodeName());
         } else {
@@ -33,7 +34,7 @@ public class HierarchicalStreams {
         return type;
     }
 
-    public static String readClassAttribute(HierarchicalStreamReader reader, Mapper mapper) {
+    public static String readClassAttribute(final HierarchicalStreamReader reader, final Mapper mapper) {
         String attributeName = mapper.aliasForSystemAttribute("resolves-to");
         String classAttribute = attributeName == null ? null : reader.getAttribute(attributeName);
         if (classAttribute == null) {

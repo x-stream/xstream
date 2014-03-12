@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,10 +19,10 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+
 /**
- * A special converter that prevents self-serialization. The serializing XStream instance
- * adds a converter of this type to prevent self-serialization and will throw an
- * exception instead.
+ * A special converter that prevents self-serialization. The serializing XStream instance adds a converter of this type
+ * to prevent self-serialization and will throw an exception instead.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.2
@@ -36,32 +36,36 @@ public class SelfStreamingInstanceChecker implements Converter {
     /**
      * @since 1.4.5
      */
-    public SelfStreamingInstanceChecker(ConverterLookup lookup, Object xstream) {
+    public SelfStreamingInstanceChecker(final ConverterLookup lookup, final Object xstream) {
         this.lookup = lookup;
-        this.self = xstream;
+        self = xstream;
     }
 
     /**
      * @deprecated As of 1.4.5 use {@link #SelfStreamingInstanceChecker(ConverterLookup, Object)}
      */
-    public SelfStreamingInstanceChecker(Converter defaultConverter, Object xstream) {
+    @Deprecated
+    public SelfStreamingInstanceChecker(final Converter defaultConverter, final Object xstream) {
         this.defaultConverter = defaultConverter;
-        this.self = xstream;
+        self = xstream;
         lookup = null;
     }
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type == self.getClass();
     }
 
-    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    @Override
+    public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         if (source == self) {
             throw new ConversionException("Cannot marshal the XStream instance in action");
         }
         getConverter().marshal(source, writer, context);
     }
 
-    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    @Override
+    public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         return getConverter().unmarshal(reader, context);
     }
 

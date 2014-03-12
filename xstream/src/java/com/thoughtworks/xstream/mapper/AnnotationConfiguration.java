@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2013 XStream Committers.
+ * Copyright (C) 2007, 2008, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,16 +11,18 @@
 package com.thoughtworks.xstream.mapper;
 
 /**
- * An interface for the configuration part of the AnnotationMapper.
+ * A helper interface for the configuration part of the AnnotationMapper.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.3
- * @deprecated As of 1.4.5, minimal JDK version will be 1.6 for next major release
+ * @deprecated As of 1.4.5, minimal JDK version will be 1.6 for next major release and AnnotationMapper can be used
+ *             directly
  */
+@Deprecated
 public interface AnnotationConfiguration {
 
     void autodetectAnnotations(boolean mode);
 
-    void processAnnotations(Class[] types);
+    void processAnnotations(Class<?>... types);
 
 }

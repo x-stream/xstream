@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,11 +11,11 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.naming.NameCoder;
-
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
+
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
 /**
@@ -28,9 +28,7 @@ public class JDomWriter extends AbstractDocumentWriter {
     /**
      * @since 1.4
      */
-    public JDomWriter(
-                      final Element container, final JDOMFactory factory,
-                      final NameCoder nameCoder) {
+    public JDomWriter(final Element container, final JDOMFactory factory, final NameCoder nameCoder) {
         super(container, nameCoder);
         documentFactory = factory;
     }
@@ -39,9 +37,8 @@ public class JDomWriter extends AbstractDocumentWriter {
      * @since 1.2
      * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(Element, JDOMFactory, NameCoder)} instead.
      */
-    public JDomWriter(
-                      final Element container, final JDOMFactory factory,
-                      final XmlFriendlyReplacer replacer) {
+    @Deprecated
+    public JDomWriter(final Element container, final JDOMFactory factory, final XmlFriendlyReplacer replacer) {
         this(container, factory, (NameCoder)replacer);
     }
 
@@ -60,6 +57,7 @@ public class JDomWriter extends AbstractDocumentWriter {
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(JDOMFactory, NameCoder)} instead.
      */
+    @Deprecated
     public JDomWriter(final JDOMFactory factory, final XmlFriendlyReplacer replacer) {
         this(null, factory, (NameCoder)replacer);
     }
@@ -79,6 +77,7 @@ public class JDomWriter extends AbstractDocumentWriter {
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(Element, NameCoder)} instead.
      */
+    @Deprecated
     public JDomWriter(final Element container, final XmlFriendlyReplacer replacer) {
         this(container, new DefaultJDOMFactory(), (NameCoder)replacer);
     }
@@ -91,6 +90,7 @@ public class JDomWriter extends AbstractDocumentWriter {
         this(new DefaultJDOMFactory());
     }
 
+    @Override
     protected Object createNode(final String name) {
         final Element element = documentFactory.element(encodeNode(name));
         final Element parent = top();
@@ -100,10 +100,12 @@ public class JDomWriter extends AbstractDocumentWriter {
         return element;
     }
 
+    @Override
     public void setValue(final String text) {
         top().addContent(documentFactory.text(text));
     }
 
+    @Override
     public void addAttribute(final String key, final String value) {
         top().setAttribute(documentFactory.attribute(encodeAttribute(key), value));
     }

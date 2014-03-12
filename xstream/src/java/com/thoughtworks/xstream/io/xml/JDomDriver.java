@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,6 +29,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
+
 /**
  * @author Laurent Bihanic
  */
@@ -41,7 +42,7 @@ public class JDomDriver extends AbstractXmlDriver {
     /**
      * @since 1.4
      */
-    public JDomDriver(NameCoder nameCoder) {
+    public JDomDriver(final NameCoder nameCoder) {
         super(nameCoder);
     }
 
@@ -49,65 +50,71 @@ public class JDomDriver extends AbstractXmlDriver {
      * @since 1.2
      * @deprecated As of 1.4, use {@link JDomDriver#JDomDriver(NameCoder)} instead.
      */
-    public JDomDriver(XmlFriendlyReplacer replacer) {
+    @Deprecated
+    public JDomDriver(final XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);
     }
 
-    public HierarchicalStreamReader createReader(Reader reader) {
+    @Override
+    public HierarchicalStreamReader createReader(final Reader reader) {
         try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(reader);
+            final SAXBuilder builder = new SAXBuilder();
+            final Document document = builder.build(reader);
             return new JDomReader(document, getNameCoder());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StreamException(e);
-        } catch (JDOMException e) {
+        } catch (final JDOMException e) {
             throw new StreamException(e);
         }
     }
 
-    public HierarchicalStreamReader createReader(InputStream in) {
+    @Override
+    public HierarchicalStreamReader createReader(final InputStream in) {
         try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(in);
+            final SAXBuilder builder = new SAXBuilder();
+            final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StreamException(e);
-        } catch (JDOMException e) {
+        } catch (final JDOMException e) {
             throw new StreamException(e);
         }
     }
 
-    public HierarchicalStreamReader createReader(URL in) {
+    @Override
+    public HierarchicalStreamReader createReader(final URL in) {
         try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(in);
+            final SAXBuilder builder = new SAXBuilder();
+            final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StreamException(e);
-        } catch (JDOMException e) {
+        } catch (final JDOMException e) {
             throw new StreamException(e);
         }
     }
 
-    public HierarchicalStreamReader createReader(File in) {
+    @Override
+    public HierarchicalStreamReader createReader(final File in) {
         try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(in);
+            final SAXBuilder builder = new SAXBuilder();
+            final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StreamException(e);
-        } catch (JDOMException e) {
+        } catch (final JDOMException e) {
             throw new StreamException(e);
         }
     }
 
-    public HierarchicalStreamWriter createWriter(Writer out) {
+    @Override
+    public HierarchicalStreamWriter createWriter(final Writer out) {
         return new PrettyPrintWriter(out, getNameCoder());
     }
 
-    public HierarchicalStreamWriter createWriter(OutputStream out) {
+    @Override
+    public HierarchicalStreamWriter createWriter(final OutputStream out) {
         return new PrettyPrintWriter(new OutputStreamWriter(out));
     }
 
 }
-

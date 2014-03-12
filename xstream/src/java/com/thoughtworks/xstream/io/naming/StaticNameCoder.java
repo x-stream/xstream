@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,17 +11,15 @@
 package com.thoughtworks.xstream.io.naming;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 
 /**
  * A NameCoder that encodes and decodes names based on a map.
  * <p>
- * The provided map should contain a mapping between the name of the Java type or field to the
- * proper element in the target format. If a name cannot be found in the map, it is assumed not
- * to be mapped at all. Note that the values of the map should be unique also, otherwise the
- * decoding will produce wrong results.
+ * The provided map should contain a mapping between the name of the Java type or field to the proper element in the
+ * target format. If a name cannot be found in the map, it is assumed not to be mapped at all. Note that the values of
+ * the map should be unique also, otherwise the decoding will produce wrong results.
  * </p>
  * 
  * @author J&ouml;rg Schaible
@@ -29,11 +27,11 @@ import java.util.Map;
  */
 public class StaticNameCoder implements NameCoder {
 
-    private final Map java2Node;
-    private final Map java2Attribute;
+    private final Map<String, String> java2Node;
+    private final Map<String, String> java2Attribute;
 
-    private transient Map node2Java;
-    private transient Map attribute2Java;
+    private transient Map<String, String> node2Java;
+    private transient Map<String, String> attribute2Java;
 
     /**
      * Construct a StaticNameCoder.
@@ -42,45 +40,37 @@ public class StaticNameCoder implements NameCoder {
      * @param java2Attribute mapping of Java names to attributes
      * @since 1.4
      */
-    public StaticNameCoder(Map java2Node, Map java2Attribute) {
-        this.java2Node = new HashMap(java2Node);
+    public StaticNameCoder(final Map<String, String> java2Node, final Map<String, String> java2Attribute) {
+        this.java2Node = new HashMap<String, String>(java2Node);
         if (java2Node == java2Attribute || java2Attribute == null) {
             this.java2Attribute = this.java2Node;
         } else {
-            this.java2Attribute = new HashMap(java2Attribute);
+            this.java2Attribute = new HashMap<String, String>(java2Attribute);
         }
         readResolve();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String decodeAttribute(String attributeName) {
-        String name = (String)attribute2Java.get(attributeName);
+    @Override
+    public String decodeAttribute(final String attributeName) {
+        final String name = attribute2Java.get(attributeName);
         return name == null ? attributeName : name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String decodeNode(String nodeName) {
-        String name = (String)node2Java.get(nodeName);
+    @Override
+    public String decodeNode(final String nodeName) {
+        final String name = node2Java.get(nodeName);
         return name == null ? nodeName : name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String encodeAttribute(String name) {
-        String friendlyName = (String)java2Attribute.get(name);
+    @Override
+    public String encodeAttribute(final String name) {
+        final String friendlyName = java2Attribute.get(name);
         return friendlyName == null ? name : friendlyName;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String encodeNode(String name) {
-        String friendlyName = (String)java2Node.get(name);
+    @Override
+    public String encodeNode(final String name) {
+        final String friendlyName = java2Node.get(name);
         return friendlyName == null ? name : friendlyName;
     }
 
@@ -94,11 +84,10 @@ public class StaticNameCoder implements NameCoder {
         return this;
     }
 
-    private Map invertMap(Map map) {
-        Map inverseMap = new HashMap(map.size());
-        for (final Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
-            final Map.Entry entry = (Map.Entry)iter.next();
-            inverseMap.put((String)entry.getValue(), (String)entry.getKey());
+    private Map<String, String> invertMap(final Map<String, String> map) {
+        final Map<String, String> inverseMap = new HashMap<String, String>(map.size());
+        for (final Map.Entry<String, String> entry : map.entrySet()) {
+            inverseMap.put(entry.getValue(), entry.getKey());
         }
         return inverseMap;
     }

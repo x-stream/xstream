@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 XStream Committers.
+ * Copyright (C) 2010, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,20 +17,22 @@ import com.thoughtworks.xstream.converters.ConversionException;
 
 
 /**
- * Converts a java.net.URI to a string.
+ * Converts a {@link URI} to a string.
  * 
  * @author Carlos Roman
  */
 public class URIConverter extends AbstractSingleValueConverter {
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type.equals(URI.class);
     }
 
-    public Object fromString(String str) {
+    @Override
+    public Object fromString(final String str) {
         try {
             return new URI(str);
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new ConversionException(e);
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2007, 2008, 2010, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,13 +59,13 @@ public final class XmlHeaderAwareReader extends Reader {
         final PushbackInputStream[] pin = new PushbackInputStream[]{in instanceof PushbackInputStream
             ? (PushbackInputStream)in
             : new PushbackInputStream(in, 64)};
-        final Map header = getHeader(pin);
-        version = Double.parseDouble((String)header.get(KEY_VERSION));
-        reader = new InputStreamReader(pin[0], (String)header.get(KEY_ENCODING));
+        final Map<String, String> header = getHeader(pin);
+        version = Double.parseDouble(header.get(KEY_VERSION));
+        reader = new InputStreamReader(pin[0], header.get(KEY_ENCODING));
     }
 
-    private Map getHeader(final PushbackInputStream[] in) throws IOException {
-        final Map header = new HashMap();
+    private Map<String, String> getHeader(final PushbackInputStream[] in) throws IOException {
+        final Map<String, String> header = new HashMap<String, String>();
         header.put(KEY_ENCODING, "utf-8");
         header.put(KEY_VERSION, "1.0");
 
@@ -81,9 +82,7 @@ public final class XmlHeaderAwareReader extends Reader {
             ch = (char)i;
             switch (state) {
             case STATE_BOM:
-                if ((ch == 0xEF && out.size() == 1)
-                        || (ch == 0xBB && out.size() == 2)
-                        || (ch == 0xBF && out.size() == 3)) {
+                if (ch == 0xEF && out.size() == 1 || ch == 0xBB && out.size() == 2 || ch == 0xBF && out.size() == 3) {
                     if (ch == 0xBF) {
                         out.reset();
                         state = STATE_START;
@@ -95,7 +94,7 @@ public final class XmlHeaderAwareReader extends Reader {
                 } else {
                     state = STATE_START;
                 }
-                // fall through
+                //$FALL-THROUGH$
             case STATE_START:
                 if (!Character.isWhitespace(ch)) {
                     if (ch == '<') {
@@ -167,12 +166,12 @@ public final class XmlHeaderAwareReader extends Reader {
             }
         }
 
-        byte[] pushbackData = out.toByteArray();
+        final byte[] pushbackData = out.toByteArray();
         for (i = pushbackData.length; i-- > 0;) {
             final byte b = pushbackData[i];
             try {
                 in[0].unread(b);
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 in[0] = new PushbackInputStream(in[0], ++i);
             }
         }
@@ -188,98 +187,74 @@ public final class XmlHeaderAwareReader extends Reader {
     }
 
     /**
-     * @see InputStreamReader#getEncoding()
+     * @return the XML version
      * @since 1.3
      */
     public double getVersion() {
         return version;
     }
 
-    /**
-     * @see java.io.Reader#mark(int)
-     */
+    @Override
     public void mark(final int readAheadLimit) throws IOException {
         reader.mark(readAheadLimit);
     }
 
-    /**
-     * @see java.io.Reader#markSupported()
-     */
+    @Override
     public boolean markSupported() {
         return reader.markSupported();
     }
 
-    /**
-     * @see java.io.Reader#read()
-     */
+    @Override
     public int read() throws IOException {
         return reader.read();
     }
 
-    /**
-     * @see java.io.Reader#read(char[], int, int)
-     */
+    @Override
     public int read(final char[] cbuf, final int offset, final int length) throws IOException {
         return reader.read(cbuf, offset, length);
     }
 
-    /**
-     * @see java.io.Reader#read(char[])
-     */
+    @Override
     public int read(final char[] cbuf) throws IOException {
         return reader.read(cbuf);
     }
 
-// TODO: This is JDK 1.5    
-//    public int read(final CharBuffer target) throws IOException {
-//        return reader.read(target);
-//    }
+    @Override
+    public int read(final CharBuffer target) throws IOException {
+        return reader.read(target);
+    }
 
-    /**
-     * @see java.io.Reader#ready()
-     */
+    @Override
     public boolean ready() throws IOException {
         return reader.ready();
     }
 
-    /**
-     * @see java.io.Reader#reset()
-     */
+    @Override
     public void reset() throws IOException {
         reader.reset();
     }
 
-    /**
-     * @see java.io.Reader#skip(long)
-     */
+    @Override
     public long skip(final long n) throws IOException {
         return reader.skip(n);
     }
 
-    /**
-     * @see java.io.Reader#close()
-     */
+    @Override
     public void close() throws IOException {
         reader.close();
     }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
+    @Override
     public boolean equals(final Object obj) {
         return reader.equals(obj);
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
+    @Override
     public int hashCode() {
         return reader.hashCode();
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
         return reader.toString();
     }

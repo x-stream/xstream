@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,28 +10,31 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
-
 import java.nio.charset.Charset;
 
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+
+
 /**
- * Converts a java.nio.charset.Carset to a string.
+ * Converts a {@link Charset} to a string.
  * 
  * @author J&ouml;rg Schaible
  * @since 1.2
  */
 public class CharsetConverter extends AbstractSingleValueConverter {
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return Charset.class.isAssignableFrom(type);
     }
 
-    public String toString(Object obj) {
-        return obj == null ? null : ((Charset)obj).name();
+    @Override
+    public String toString(final Object obj) {
+        return ((Charset)obj).name();
     }
 
-
-    public Object fromString(String str) {
+    @Override
+    public Object fromString(final String str) {
         return Charset.forName(str);
     }
 }

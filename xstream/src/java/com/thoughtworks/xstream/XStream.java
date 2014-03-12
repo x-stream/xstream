@@ -42,10 +42,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.Date;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +62,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -80,9 +85,11 @@ import com.thoughtworks.xstream.converters.basic.LongConverter;
 import com.thoughtworks.xstream.converters.basic.NullConverter;
 import com.thoughtworks.xstream.converters.basic.ShortConverter;
 import com.thoughtworks.xstream.converters.basic.StringBufferConverter;
+import com.thoughtworks.xstream.converters.basic.StringBuilderConverter;
 import com.thoughtworks.xstream.converters.basic.StringConverter;
 import com.thoughtworks.xstream.converters.basic.URIConverter;
 import com.thoughtworks.xstream.converters.basic.URLConverter;
+import com.thoughtworks.xstream.converters.basic.UUIDConverter;
 import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.collections.BitSetConverter;
 import com.thoughtworks.xstream.converters.collections.CharArrayConverter;
@@ -93,7 +100,12 @@ import com.thoughtworks.xstream.converters.collections.SingletonCollectionConver
 import com.thoughtworks.xstream.converters.collections.SingletonMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
+import com.thoughtworks.xstream.converters.enums.EnumConverter;
+import com.thoughtworks.xstream.converters.enums.EnumMapConverter;
+import com.thoughtworks.xstream.converters.enums.EnumSetConverter;
+import com.thoughtworks.xstream.converters.extended.CharsetConverter;
 import com.thoughtworks.xstream.converters.extended.ColorConverter;
+import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
 import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
 import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
 import com.thoughtworks.xstream.converters.extended.FileConverter;
@@ -104,10 +116,13 @@ import com.thoughtworks.xstream.converters.extended.JavaFieldConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
+import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
+import com.thoughtworks.xstream.converters.extended.StackTraceElementConverter;
 import com.thoughtworks.xstream.converters.extended.TextAttributeConverter;
+import com.thoughtworks.xstream.converters.extended.ThrowableConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
@@ -128,7 +143,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StatefulWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.thoughtworks.xstream.mapper.AnnotationConfiguration;
+import com.thoughtworks.xstream.mapper.AnnotationMapper;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.AttributeMapper;
@@ -137,6 +152,7 @@ import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
+import com.thoughtworks.xstream.mapper.EnumMapper;
 import com.thoughtworks.xstream.mapper.FieldAliasingMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
@@ -167,143 +183,125 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
- *
+ * 
  * <pre>
  * XStream xstream = new XStream();
  * String xml = xstream.toXML(myObject); // serialize to XML
  * Object myObject2 = xstream.fromXML(xml); // deserialize from XML
  * </pre>
- *
+ * 
  * </blockquote>
  * <hr>
- * 
  * <h3>Aliasing classes</h3>
- * 
  * <p>
- * To create shorter XML, you can specify aliases for classes using the <code>alias()</code>
- * method. For example, you can shorten all occurrences of element
- * <code>&lt;com.blah.MyThing&gt;</code> to <code>&lt;my-thing&gt;</code> by registering an
- * alias for the class.
+ * To create shorter XML, you can specify aliases for classes using the <code>alias()</code> method. For example, you
+ * can shorten all occurrences of element <code>&lt;com.blah.MyThing&gt;</code> to <code>&lt;my-thing&gt;</code> by
+ * registering an alias for the class.
  * <p>
  * <hr>
  * <blockquote>
- *
+ * 
  * <pre>
  * xstream.alias(&quot;my-thing&quot;, MyThing.class);
  * </pre>
- *
+ * 
  * </blockquote>
  * <hr>
- * 
  * <h3>Converters</h3>
- * 
  * <p>
- * XStream contains a map of {@link com.thoughtworks.xstream.converters.Converter} instances, each
- * of which acts as a strategy for converting a particular type of class to XML and back again. Out
- * of the box, XStream contains converters for most basic types (String, Date, int, boolean, etc)
- * and collections (Map, List, Set, Properties, etc). For other objects reflection is used to
- * serialize each field recursively.
+ * XStream contains a map of {@link com.thoughtworks.xstream.converters.Converter} instances, each of which acts as a
+ * strategy for converting a particular type of class to XML and back again. Out of the box, XStream contains converters
+ * for most basic types (String, Date, int, boolean, etc) and collections (Map, List, Set, Properties, etc). For other
+ * objects reflection is used to serialize each field recursively.
  * </p>
- * 
  * <p>
- * Extra converters can be registered using the <code>registerConverter()</code> method. Some
- * non-standard converters are supplied in the {@link com.thoughtworks.xstream.converters.extended}
- * package and you can create your own by implementing the
- * {@link com.thoughtworks.xstream.converters.Converter} interface.
+ * Extra converters can be registered using the <code>registerConverter()</code> method. Some non-standard converters
+ * are supplied in the {@link com.thoughtworks.xstream.converters.extended} package and you can create your own by
+ * implementing the {@link com.thoughtworks.xstream.converters.Converter} interface.
  * </p>
- * 
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
- *
+ * 
  * <pre>
  * xstream.registerConverter(new SqlTimestampConverter());
  * xstream.registerConverter(new DynamicProxyConverter());
  * </pre>
- *
+ * 
  * </blockquote>
  * <hr>
  * <p>
- * The converters can be registered with an explicit priority. By default they are registered with 
- * XStream.PRIORITY_NORMAL. Converters of same priority will be used in the reverse sequence
- * they have been registered. The default converter, i.e. the converter which will be used if
- * no other registered converter is suitable, can be registered with priority
- * XStream.PRIORITY_VERY_LOW. XStream uses by default the
- * {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter} as the fallback
- * converter.
+ * The converters can be registered with an explicit priority. By default they are registered with
+ * XStream.PRIORITY_NORMAL. Converters of same priority will be used in the reverse sequence they have been registered.
+ * The default converter, i.e. the converter which will be used if no other registered converter is suitable, can be
+ * registered with priority XStream.PRIORITY_VERY_LOW. XStream uses by default the
+ * {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter} as the fallback converter.
  * </p>
- * 
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
- *
+ * 
  * <pre>
  * xstream.registerConverter(new CustomDefaultConverter(), XStream.PRIORITY_VERY_LOW);
  * </pre>
- *
+ * 
  * </blockquote>
  * <hr>
- * 
  * <h3>Object graphs</h3>
- * 
  * <p>
- * XStream has support for object graphs; a deserialized object graph will keep references intact,
- * including circular references.
+ * XStream has support for object graphs; a deserialized object graph will keep references intact, including circular
+ * references.
  * </p>
- * 
  * <p>
  * XStream can signify references in XML using either relative/absolute XPath or IDs. The mode can be changed using
  * <code>setMode()</code>:
  * </p>
- * 
  * <table border='1'>
  * <caption></caption>
  * <tr>
  * <td><code>xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);</code></td>
- * <td><i>(Default)</i> Uses XPath relative references to signify duplicate references. This produces XML
- * with the least clutter.</td>
+ * <td><i>(Default)</i> Uses XPath relative references to signify duplicate references. This produces XML with the least
+ * clutter.</td>
  * </tr>
  * <tr>
  * <td><code>xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);</code></td>
- * <td>Uses XPath absolute references to signify duplicate
- * references. This produces XML with the least clutter.</td>
+ * <td>Uses XPath absolute references to signify duplicate references. This produces XML with the least clutter.</td>
  * </tr>
  * <tr>
  * <td><code>xstream.setMode(XStream.SINGLE_NODE_XPATH_RELATIVE_REFERENCES);</code></td>
- * <td>Uses XPath relative references to signify duplicate references. The XPath expression ensures that
- * a single node only is selected always.</td>
+ * <td>Uses XPath relative references to signify duplicate references. The XPath expression ensures that a single node
+ * only is selected always.</td>
  * </tr>
  * <tr>
  * <td><code>xstream.setMode(XStream.SINGLE_NODE_XPATH_ABSOLUTE_REFERENCES);</code></td>
- * <td>Uses XPath absolute references to signify duplicate references.  The XPath expression ensures that
- * a single node only is selected always.</td>
+ * <td>Uses XPath absolute references to signify duplicate references. The XPath expression ensures that a single node
+ * only is selected always.</td>
  * </tr>
  * <tr>
  * <td><code>xstream.setMode(XStream.ID_REFERENCES);</code></td>
- * <td>Uses ID references to signify duplicate references. In some scenarios, such as when using
- * hand-written XML, this is easier to work with.</td>
+ * <td>Uses ID references to signify duplicate references. In some scenarios, such as when using hand-written XML, this
+ * is easier to work with.</td>
  * </tr>
  * <tr>
  * <td><code>xstream.setMode(XStream.NO_REFERENCES);</code></td>
- * <td>This disables object graph support and treats the object structure like a tree. Duplicate
- * references are treated as two separate objects and circular references cause an exception. This
- * is slightly faster and uses less memory than the other two modes.</td>
+ * <td>This disables object graph support and treats the object structure like a tree. Duplicate references are treated
+ * as two separate objects and circular references cause an exception. This is slightly faster and uses less memory than
+ * the other two modes.</td>
  * </tr>
  * </table>
  * <h3>Thread safety</h3>
  * <p>
- * The XStream instance is thread-safe. That is, once the XStream instance has been created and
- * configured, it may be shared across multiple threads allowing objects to be
- * serialized/deserialized concurrently. <em>Note, that this only applies if annotations are not 
+ * The XStream instance is thread-safe. That is, once the XStream instance has been created and configured, it may be
+ * shared across multiple threads allowing objects to be serialized/deserialized concurrently.
+ * <em>Note, that this only applies if annotations are not
  * auto-detected on-the-fly.</em>
  * </p>
  * <h3>Implicit collections</h3>
- * 
  * <p>
- * To avoid the need for special tags for collections, you can define implicit collections using one
- * of the <code>addImplicitCollection</code> methods.
+ * To avoid the need for special tags for collections, you can define implicit collections using one of the
+ * <code>addImplicitCollection</code> methods.
  * </p>
- *
+ * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
@@ -313,13 +311,13 @@ public class XStream {
 
     // CAUTION: The sequence of the fields is intentional for an optimal XML output of a
     // self-serialization!
-    private ReflectionProvider reflectionProvider;
-    private HierarchicalStreamDriver hierarchicalStreamDriver;
-    private ClassLoaderReference classLoaderReference;
+    private final ReflectionProvider reflectionProvider;
+    private final HierarchicalStreamDriver hierarchicalStreamDriver;
+    private final ClassLoaderReference classLoaderReference;
     private MarshallingStrategy marshallingStrategy;
-    private ConverterLookup converterLookup;
-    private ConverterRegistry converterRegistry;
-    private Mapper mapper;
+    private final ConverterLookup converterLookup;
+    private final ConverterRegistry converterRegistry;
+    private final Mapper mapper;
 
     private PackageAliasingMapper packageAliasingMapper;
     private ClassAliasingMapper classAliasingMapper;
@@ -332,7 +330,7 @@ public class XStream {
     private ImplicitCollectionMapper implicitCollectionMapper;
     private LocalConversionMapper localConversionMapper;
     private SecurityMapper securityMapper;
-    private AnnotationConfiguration annotationConfiguration;
+    private AnnotationMapper annotationMapper;
 
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
@@ -346,14 +344,13 @@ public class XStream {
     public static final int PRIORITY_LOW = -10;
     public static final int PRIORITY_VERY_LOW = -20;
 
-    private static final String ANNOTATION_MAPPER_TYPE = "com.thoughtworks.xstream.mapper.AnnotationMapper";
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
 
     /**
      * Constructs a default XStream.
      * <p>
-     * The instance will use the {@link XppDriver} as default and tries to determine the best
-     * match for the {@link ReflectionProvider} on its own.
+     * The instance will use the {@link XppDriver} as default and tries to determine the best match for the
+     * {@link ReflectionProvider} on its own.
      * </p>
      * 
      * @throws InitializationException in case of an initialization problem
@@ -368,147 +365,134 @@ public class XStream {
      * The instance will use the {@link XppDriver} as default.
      * </p>
      * 
-     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
-     *            matching reflection provider
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching reflection provider
      * @throws InitializationException in case of an initialization problem
      */
-    public XStream(ReflectionProvider reflectionProvider) {
+    public XStream(final ReflectionProvider reflectionProvider) {
         this(reflectionProvider, new XppDriver());
     }
 
     /**
      * Constructs an XStream with a special {@link HierarchicalStreamDriver}.
      * <p>
-     * The instance will tries to determine the best match for the {@link ReflectionProvider} on
-     * its own.
+     * The instance will tries to determine the best match for the {@link ReflectionProvider} on its own.
      * </p>
      * 
      * @param hierarchicalStreamDriver the driver instance
      * @throws InitializationException in case of an initialization problem
      */
-    public XStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
+    public XStream(final HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(null, hierarchicalStreamDriver);
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and
-     * {@link ReflectionProvider}.
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver} and {@link ReflectionProvider}.
      * 
-     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
-     *            matching Provider
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param hierarchicalStreamDriver the driver instance
      * @throws InitializationException in case of an initialization problem
      */
-    public XStream(
-        ReflectionProvider reflectionProvider, HierarchicalStreamDriver hierarchicalStreamDriver) {
+    public XStream(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(reflectionProvider, hierarchicalStreamDriver, new ClassLoaderReference(new CompositeClassLoader()));
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
-     * {@link ReflectionProvider} and a {@link ClassLoaderReference}.
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider} and a
+     * {@link ClassLoaderReference}.
      * 
-     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
-     *            matching Provider
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoaderReference the reference to the {@link ClassLoader} to use
      * @throws InitializationException in case of an initialization problem
      * @since 1.4.5
      */
     public XStream(
-        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
-        ClassLoaderReference classLoaderReference) {
+            final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
+            final ClassLoaderReference classLoaderReference) {
         this(reflectionProvider, driver, classLoaderReference, null);
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
-     * {@link ReflectionProvider} and the {@link ClassLoader} to use.
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider} and the
+     * {@link ClassLoader} to use.
      * 
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
-     * @deprecated As of 1.4.5 use
-     *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference)}
+     * @deprecated As of 1.4.5 use {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference)}
      */
+    @Deprecated
     public XStream(
-        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
-        ClassLoader classLoader) {
+            final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
+            final ClassLoader classLoader) {
         this(reflectionProvider, driver, classLoader, null);
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
-     * {@link ReflectionProvider}, a prepared {@link Mapper} chain and the {@link ClassLoader}
-     * to use.
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider}, a prepared
+     * {@link Mapper} chain and the {@link ClassLoader} to use.
      * 
-     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
-     *            matching Provider
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoader the {@link ClassLoader} to use
-     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
-     *            chain
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default chain
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
      * @deprecated As of 1.4.5 use
      *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference, Mapper)}
      */
+    @Deprecated
     public XStream(
-        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
-        ClassLoader classLoader, Mapper mapper) {
-        this(
-            reflectionProvider, driver, new ClassLoaderReference(classLoader), mapper, new DefaultConverterLookup());
+            final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
+            final ClassLoader classLoader, final Mapper mapper) {
+        this(reflectionProvider, driver, new ClassLoaderReference(classLoader), mapper, new DefaultConverterLookup());
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
-     * {@link ReflectionProvider}, a prepared {@link Mapper} chain and the
-     * {@link ClassLoaderReference}.
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider}, a prepared
+     * {@link Mapper} chain and the {@link ClassLoaderReference}.
      * <p>
      * The {@link ClassLoaderReference} should also be used for the {@link Mapper} chain.
      * </p>
      * 
-     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
-     *            matching Provider
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoaderReference the reference to the {@link ClassLoader} to use
-     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
-     *            chain
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default chain
      * @throws InitializationException in case of an initialization problem
      * @since 1.4.5
      */
     public XStream(
-        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
-        ClassLoaderReference classLoaderReference, Mapper mapper) {
-        this(
-            reflectionProvider, driver, classLoaderReference, mapper, new DefaultConverterLookup());
+            final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
+            final ClassLoaderReference classLoaderReference, final Mapper mapper) {
+        this(reflectionProvider, driver, classLoaderReference, mapper, new DefaultConverterLookup());
     }
-    
+
     private XStream(
-            ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver, ClassLoaderReference classLoader,
-            Mapper mapper, final DefaultConverterLookup defaultConverterLookup) {
+            final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
+            final ClassLoaderReference classLoader, final Mapper mapper,
+            final DefaultConverterLookup defaultConverterLookup) {
         this(reflectionProvider, driver, classLoader, mapper, new ConverterLookup() {
-            public Converter lookupConverterForType(Class type) {
+            @Override
+            public Converter lookupConverterForType(final Class<?> type) {
                 return defaultConverterLookup.lookupConverterForType(type);
             }
         }, new ConverterRegistry() {
-            public void registerConverter(Converter converter, int priority) {
+            @Override
+            public void registerConverter(final Converter converter, final int priority) {
                 defaultConverterLookup.registerConverter(converter, priority);
             }
         });
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
-     * {@link ReflectionProvider}, a prepared {@link Mapper} chain, the
-     * {@link ClassLoaderReference} and an own {@link ConverterLookup} and
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider}, a prepared
+     * {@link Mapper} chain, the {@link ClassLoaderReference} and an own {@link ConverterLookup} and
      * {@link ConverterRegistry}.
      * 
-     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
-     *            matching Provider
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoader the {@link ClassLoader} to use
-     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
-     *            chain
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default chain
      * @param converterLookup the instance that is used to lookup the converters
      * @param converterRegistry an instance to manage the converter instances
      * @throws InitializationException in case of an initialization problem
@@ -516,45 +500,44 @@ public class XStream {
      * @deprecated As of 1.4.5 use
      *             {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference, Mapper, ConverterLookup, ConverterRegistry)}
      */
+    @Deprecated
     public XStream(
-        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
-        ClassLoader classLoader, Mapper mapper, ConverterLookup converterLookup,
-        ConverterRegistry converterRegistry) {
-        this(reflectionProvider, driver, new ClassLoaderReference(classLoader), mapper, converterLookup, converterRegistry);
+            final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
+            final ClassLoader classLoader, final Mapper mapper, final ConverterLookup converterLookup,
+            final ConverterRegistry converterRegistry) {
+        this(reflectionProvider, driver, new ClassLoaderReference(classLoader), mapper, converterLookup,
+            converterRegistry);
     }
 
     /**
-     * Constructs an XStream with a special {@link HierarchicalStreamDriver},
-     * {@link ReflectionProvider}, a prepared {@link Mapper} chain, the
-     * {@link ClassLoaderReference} and an own {@link ConverterLookup} and
+     * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider}, a prepared
+     * {@link Mapper} chain, the {@link ClassLoaderReference} and an own {@link ConverterLookup} and
      * {@link ConverterRegistry}.
      * <p>
-     * The ClassLoaderReference should also be used for the Mapper chain. The ConverterLookup
-     * should access the ConverterRegistry if you intent to register {@link Converter} instances
-     * with XStream facade or you are using annotations.
+     * The ClassLoaderReference should also be used for the Mapper chain. The ConverterLookup should access the
+     * ConverterRegistry if you intent to register {@link Converter} instances with XStream facade or you are using
+     * annotations.
      * </p>
      * 
-     * @param reflectionProvider the reflection provider to use or <em>null</em> for best
-     *            matching Provider
+     * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoaderReference the reference to the {@link ClassLoader} to use
-     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default
-     *            chain
+     * @param mapper the instance with the {@link Mapper} chain or <em>null</em> for the default chain
      * @param converterLookup the instance that is used to lookup the converters
-     * @param converterRegistry an instance to manage the converter instances or <em>null</em>
-     *            to prevent any further registry (including annotations)
+     * @param converterRegistry an instance to manage the converter instances or <em>null</em> to prevent any further
+     *            registry (including annotations)
      * @throws InitializationException in case of an initialization problem
      * @since 1.4.5
      */
     public XStream(
-        ReflectionProvider reflectionProvider, HierarchicalStreamDriver driver,
-        ClassLoaderReference classLoaderReference, Mapper mapper, ConverterLookup converterLookup,
-        ConverterRegistry converterRegistry) {
+            ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
+            final ClassLoaderReference classLoaderReference, final Mapper mapper,
+            final ConverterLookup converterLookup, final ConverterRegistry converterRegistry) {
         if (reflectionProvider == null) {
             reflectionProvider = JVM.newReflectionProvider();
         }
         this.reflectionProvider = reflectionProvider;
-        this.hierarchicalStreamDriver = driver;
+        hierarchicalStreamDriver = driver;
         this.classLoaderReference = classLoaderReference;
         this.converterLookup = converterLookup;
         this.converterRegistry = converterRegistry;
@@ -585,78 +568,63 @@ public class XStream {
         mapper = new ArrayMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
         mapper = new AttributeMapper(mapper, converterLookup, reflectionProvider);
-        if (JVM.is15()) {
-            mapper = buildMapperDynamically(
-                "com.thoughtworks.xstream.mapper.EnumMapper", new Class[]{Mapper.class},
-                new Object[]{mapper});
-        }
+        mapper = new EnumMapper(mapper);
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
         mapper = new SecurityMapper(mapper);
-        if (JVM.is15()) {
-            mapper = buildMapperDynamically(ANNOTATION_MAPPER_TYPE, new Class[]{
-                Mapper.class, ConverterRegistry.class, ConverterLookup.class,
-                ClassLoaderReference.class, ReflectionProvider.class}, new Object[]{
-                mapper, converterRegistry, converterLookup, classLoaderReference,
-                reflectionProvider});
-        }
+        mapper = new AnnotationMapper(mapper, converterRegistry, converterLookup, classLoaderReference,
+            reflectionProvider);
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);
         return mapper;
     }
 
-    private Mapper buildMapperDynamically(String className, Class[] constructorParamTypes,
-        Object[] constructorParamValues) {
+    @SuppressWarnings("unused")
+    private Mapper buildMapperDynamically(final String className, final Class<?>[] constructorParamTypes,
+            final Object[] constructorParamValues) {
         try {
-            Class type = Class.forName(className, false, classLoaderReference.getReference());
-            Constructor constructor = type.getConstructor(constructorParamTypes);
+            final Class<?> type = Class.forName(className, false, classLoaderReference.getReference());
+            final Constructor<?> constructor = type.getConstructor(constructorParamTypes);
             return (Mapper)constructor.newInstance(constructorParamValues);
-        } catch (Exception e) {
-            throw new com.thoughtworks.xstream.InitializationException(
-                "Could not instantiate mapper : " + className, e);
+        } catch (final Exception e) {
+            throw new InitializationException("Could not instantiate mapper : " + className, e);
+        } catch (final LinkageError e) {
+            throw new InitializationException("Could not instantiate mapper : " + className, e);
         }
     }
 
-    protected MapperWrapper wrapMapper(MapperWrapper next) {
+    protected MapperWrapper wrapMapper(final MapperWrapper next) {
         return next;
     }
 
+    /**
+     * @deprecated As of upcoming
+     */
+    @Deprecated
     protected boolean useXStream11XmlFriendlyMapper() {
         return false;
     }
 
     private void setupMappers() {
-        packageAliasingMapper = (PackageAliasingMapper)this.mapper
-            .lookupMapperOfType(PackageAliasingMapper.class);
-        classAliasingMapper = (ClassAliasingMapper)this.mapper
-            .lookupMapperOfType(ClassAliasingMapper.class);
-        fieldAliasingMapper = (FieldAliasingMapper)this.mapper
-            .lookupMapperOfType(FieldAliasingMapper.class);
-        attributeMapper = (AttributeMapper)this.mapper
-            .lookupMapperOfType(AttributeMapper.class);
-        attributeAliasingMapper = (AttributeAliasingMapper)this.mapper
-            .lookupMapperOfType(AttributeAliasingMapper.class);
-        systemAttributeAliasingMapper = (SystemAttributeAliasingMapper)this.mapper
-            .lookupMapperOfType(SystemAttributeAliasingMapper.class);
-        implicitCollectionMapper = (ImplicitCollectionMapper)this.mapper
-            .lookupMapperOfType(ImplicitCollectionMapper.class);
-        defaultImplementationsMapper = (DefaultImplementationsMapper)this.mapper
-            .lookupMapperOfType(DefaultImplementationsMapper.class);
-        immutableTypesMapper = (ImmutableTypesMapper)this.mapper
-            .lookupMapperOfType(ImmutableTypesMapper.class);
-        localConversionMapper = (LocalConversionMapper)this.mapper
-            .lookupMapperOfType(LocalConversionMapper.class);
-        securityMapper = (SecurityMapper)this.mapper
-            .lookupMapperOfType(SecurityMapper.class);
-        annotationConfiguration = (AnnotationConfiguration)this.mapper
-            .lookupMapperOfType(AnnotationConfiguration.class);
+        packageAliasingMapper = mapper.lookupMapperOfType(PackageAliasingMapper.class);
+        classAliasingMapper = mapper.lookupMapperOfType(ClassAliasingMapper.class);
+        fieldAliasingMapper = mapper.lookupMapperOfType(FieldAliasingMapper.class);
+        attributeMapper = mapper.lookupMapperOfType(AttributeMapper.class);
+        attributeAliasingMapper = mapper.lookupMapperOfType(AttributeAliasingMapper.class);
+        systemAttributeAliasingMapper = mapper.lookupMapperOfType(SystemAttributeAliasingMapper.class);
+        implicitCollectionMapper = mapper.lookupMapperOfType(ImplicitCollectionMapper.class);
+        defaultImplementationsMapper = mapper.lookupMapperOfType(DefaultImplementationsMapper.class);
+        immutableTypesMapper = mapper.lookupMapperOfType(ImmutableTypesMapper.class);
+        localConversionMapper = mapper.lookupMapperOfType(LocalConversionMapper.class);
+        securityMapper = mapper.lookupMapperOfType(SecurityMapper.class);
+        annotationMapper = mapper.lookupMapperOfType(AnnotationMapper.class);
     }
-    
+
     protected void setupSecurity() {
         if (securityMapper == null) {
             return;
         }
-        
+
         addPermission(NullPermission.NULL);
         addPermission(PrimitiveTypePermission.PRIMITIVES);
         addPermission(ArrayTypePermission.ARRAYS);
@@ -670,8 +638,8 @@ public class XStream {
         allowTypeHierarchy(Number.class);
         allowTypeHierarchy(Throwable.class);
         allowTypeHierarchy(TimeZone.class);
-        
-        Set<Class<?>> types = new HashSet<Class<?>>();
+
+        final Set<Class<?>> types = new HashSet<Class<?>>();
         types.addAll(Arrays.<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
             DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
             String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
@@ -703,16 +671,23 @@ public class XStream {
         alias("big-int", BigInteger.class);
         alias("big-decimal", BigDecimal.class);
 
-        alias("string-buffer", StringBuffer.class);
         alias("string", String.class);
+        alias("string-buffer", StringBuffer.class);
+        alias("string-builder", StringBuilder.class);
+        alias("uuid", UUID.class);
         alias("java-class", Class.class);
         alias("method", Method.class);
         alias("constructor", Constructor.class);
         alias("field", Field.class);
         alias("date", Date.class);
+        alias("gregorian-calendar", Calendar.class);
         alias("uri", URI.class);
         alias("url", URL.class);
+        alias("file", File.class);
+        alias("locale", Locale.class);
         alias("bit-set", BitSet.class);
+        alias("trace", StackTraceElement.class);
+        alias("currency", Currency.class);
 
         alias("map", Map.class);
         alias("entry", Map.Entry.class);
@@ -726,7 +701,12 @@ public class XStream {
         alias("tree-map", TreeMap.class);
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
-        
+        alias("linked-hash-map", LinkedHashMap.class);
+        alias("linked-hash-set", LinkedHashSet.class);
+        alias("concurrent-hash-map", ConcurrentHashMap.class);
+
+        alias("enum-set", EnumSet.class);
+        alias("enum-map", EnumMap.class);
         alias("empty-list", Collections.EMPTY_LIST.getClass());
         alias("empty-map", Collections.EMPTY_MAP.getClass());
         alias("empty-set", Collections.EMPTY_SET.getClass());
@@ -749,31 +729,18 @@ public class XStream {
             alias("sql-date", JVM.loadClassForName("java.sql.Date"));
         }
 
-        alias("file", File.class);
-        alias("locale", Locale.class);
-        alias("gregorian-calendar", Calendar.class);
+        aliasType("charset", Charset.class);
 
-        if (JVM.is14()) {
+        if (JVM.loadClassForName("javax.security.auth.Subject") != null) {
             aliasDynamically("auth-subject", "javax.security.auth.Subject");
-            alias("linked-hash-map", JVM.loadClassForName("java.util.LinkedHashMap"));
-            alias("linked-hash-set", JVM.loadClassForName("java.util.LinkedHashSet"));
-            alias("trace", JVM.loadClassForName("java.lang.StackTraceElement"));
-            alias("currency", JVM.loadClassForName("java.util.Currency"));
-            aliasType("charset", JVM.loadClassForName("java.nio.charset.Charset"));
         }
-
-        if (JVM.is15()) {
+        if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
             aliasDynamically("duration", "javax.xml.datatype.Duration");
-            alias("concurrent-hash-map", JVM.loadClassForName("java.util.concurrent.ConcurrentHashMap"));
-            alias("enum-set", JVM.loadClassForName("java.util.EnumSet"));
-            alias("enum-map", JVM.loadClassForName("java.util.EnumMap"));
-            alias("string-builder", JVM.loadClassForName("java.lang.StringBuilder"));
-            alias("uuid", JVM.loadClassForName("java.util.UUID"));
         }
     }
 
-    private void aliasDynamically(String alias, String className) {
-        Class type = JVM.loadClassForName(className);
+    private void aliasDynamically(final String alias, final String className) {
+        final Class<?> type = JVM.loadClassForName(className);
         if (type != null) {
             alias(alias, type);
         }
@@ -791,11 +758,9 @@ public class XStream {
     }
 
     protected void setupConverters() {
-        registerConverter(
-            new ReflectionConverter(mapper, reflectionProvider), PRIORITY_VERY_LOW);
+        registerConverter(new ReflectionConverter(mapper, reflectionProvider), PRIORITY_VERY_LOW);
 
-        registerConverter(
-            new SerializableConverter(mapper, reflectionProvider, classLoaderReference), PRIORITY_LOW);
+        registerConverter(new SerializableConverter(mapper, reflectionProvider, classLoaderReference), PRIORITY_LOW);
         registerConverter(new ExternalizableConverter(mapper, classLoaderReference), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
@@ -810,8 +775,17 @@ public class XStream {
 
         registerConverter(new StringConverter(), PRIORITY_NORMAL);
         registerConverter(new StringBufferConverter(), PRIORITY_NORMAL);
+        registerConverter(new StringBuilderConverter(), PRIORITY_NORMAL);
+        registerConverter(new ThrowableConverter(converterLookup), PRIORITY_NORMAL);
+        registerConverter(new StackTraceElementConverter(), PRIORITY_NORMAL);
         registerConverter(new DateConverter(), PRIORITY_NORMAL);
+        registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
+        registerConverter(new RegexPatternConverter(), PRIORITY_NORMAL);
+        registerConverter(new CurrencyConverter(), PRIORITY_NORMAL);
+        registerConverter(new CharsetConverter(), PRIORITY_NORMAL);
+        registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new BitSetConverter(), PRIORITY_NORMAL);
+        registerConverter(new UUIDConverter(), PRIORITY_NORMAL);
         registerConverter(new URIConverter(), PRIORITY_NORMAL);
         registerConverter(new URLConverter(), PRIORITY_NORMAL);
         registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
@@ -827,6 +801,9 @@ public class XStream {
         registerConverter(new SingletonMapConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new EncodedByteArrayConverter(), PRIORITY_NORMAL);
+        registerConverter(new EnumConverter(), PRIORITY_NORMAL);
+        registerConverter(new EnumSetConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new EnumMapConverter(mapper), PRIORITY_NORMAL);
 
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
         if (JVM.isSQLAvailable()) {
@@ -834,8 +811,7 @@ public class XStream {
             registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
-        registerConverter(
-            new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
+        registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaFieldConverter(classLoaderReference), PRIORITY_NORMAL);
@@ -845,77 +821,36 @@ public class XStream {
             registerConverter(new TextAttributeConverter(), PRIORITY_NORMAL);
         }
         if (JVM.isSwingAvailable()) {
-            registerConverter(
-                new LookAndFeelConverter(mapper, reflectionProvider), PRIORITY_NORMAL);
+            registerConverter(new LookAndFeelConverter(mapper, reflectionProvider), PRIORITY_NORMAL);
         }
-        registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
-        registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
 
-        if (JVM.is14()) {
-            // late bound converters - allows XStream to be compiled on earlier JDKs
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.extended.SubjectConverter",
+        if (JVM.loadClassForName("javax.security.auth.Subject") != null) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.SubjectConverter",
                 PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.extended.ThrowableConverter",
-                PRIORITY_NORMAL, new Class[]{ConverterLookup.class},
-                new Object[]{converterLookup});
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.extended.StackTraceElementConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.extended.CurrencyConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.extended.RegexPatternConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.extended.CharsetConverter",
+        }
+        if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.DurationConverter",
                 PRIORITY_NORMAL, null, null);
         }
 
-        if (JVM.is15()) {
-            // late bound converters - allows XStream to be compiled on earlier JDKs
-            if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
-                registerConverterDynamically(
-                    "com.thoughtworks.xstream.converters.extended.DurationConverter",
-                    PRIORITY_NORMAL, null, null);
-            }
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.enums.EnumConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.enums.EnumSetConverter", PRIORITY_NORMAL,
-                new Class[]{Mapper.class}, new Object[]{mapper});
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.enums.EnumMapConverter", PRIORITY_NORMAL,
-                new Class[]{Mapper.class}, new Object[]{mapper});
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.basic.StringBuilderConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically(
-                "com.thoughtworks.xstream.converters.basic.UUIDConverter", PRIORITY_NORMAL,
-                null, null);
-        }
-
-        registerConverter(
-            new SelfStreamingInstanceChecker(converterLookup, this), PRIORITY_NORMAL);
+        registerConverter(new SelfStreamingInstanceChecker(converterLookup, this), PRIORITY_NORMAL);
     }
 
-    private void registerConverterDynamically(String className, int priority,
-        Class[] constructorParamTypes, Object[] constructorParamValues) {
+    private void registerConverterDynamically(final String className, final int priority,
+            final Class<?>[] constructorParamTypes, final Object[] constructorParamValues) {
         try {
-            Class type = Class.forName(className, false, classLoaderReference.getReference());
-            Constructor constructor = type.getConstructor(constructorParamTypes);
-            Object instance = constructor.newInstance(constructorParamValues);
+            final Class<?> type = Class.forName(className, false, classLoaderReference.getReference());
+            final Constructor<?> constructor = type.getConstructor(constructorParamTypes);
+            final Object instance = constructor.newInstance(constructorParamValues);
             if (instance instanceof Converter) {
                 registerConverter((Converter)instance, priority);
             } else if (instance instanceof SingleValueConverter) {
                 registerConverter((SingleValueConverter)instance, priority);
             }
-        } catch (Exception e) {
-            throw new com.thoughtworks.xstream.InitializationException(
-                "Could not instantiate converter : " + className, e);
+        } catch (final Exception e) {
+            throw new InitializationException("Could not instantiate converter : " + className, e);
+        } catch (final LinkageError e) {
+            throw new InitializationException("Could not instantiate converter : " + className, e);
         }
     }
 
@@ -947,6 +882,8 @@ public class XStream {
         addImmutableType(BigDecimal.class);
         addImmutableType(BigInteger.class);
         addImmutableType(String.class);
+        addImmutableType(Charset.class);
+        addImmutableType(Currency.class);
         addImmutableType(URI.class);
         addImmutableType(URL.class);
         addImmutableType(File.class);
@@ -959,22 +896,22 @@ public class XStream {
         if (JVM.isAWTAvailable()) {
             addImmutableTypeDynamically("java.awt.font.TextAttribute");
         }
-
-        if (JVM.is14()) {
-            // late bound types - allows XStream to be compiled on earlier JDKs
-            addImmutableTypeDynamically("java.nio.charset.Charset");
-            addImmutableTypeDynamically("java.util.Currency");
-        }
     }
 
-    private void addImmutableTypeDynamically(String className) {
-        Class type = JVM.loadClassForName(className);
+    private void addImmutableTypeDynamically(final String className) {
+        final Class<?> type = JVM.loadClassForName(className);
         if (type != null) {
             addImmutableType(type);
         }
     }
 
-    public void setMarshallingStrategy(MarshallingStrategy marshallingStrategy) {
+    /**
+     * Setter for an arbitrary marshalling strategy.
+     * 
+     * @param marshallingStrategy the implementation to use
+     * @see #setMode(int)
+     */
+    public void setMarshallingStrategy(final MarshallingStrategy marshallingStrategy) {
         this.marshallingStrategy = marshallingStrategy;
     }
 
@@ -983,20 +920,21 @@ public class XStream {
      * 
      * @throws XStreamException if the object cannot be serialized
      */
-    public String toXML(Object obj) {
-        Writer writer = new StringWriter();
+    public String toXML(final Object obj) {
+        final Writer writer = new StringWriter();
         toXML(obj, writer);
         return writer.toString();
     }
 
     /**
-     * Serialize an object to the given Writer as pretty-printed XML. The Writer will be flushed
-     * afterwards and in case of an exception.
+     * Serialize an object to the given Writer as pretty-printed XML. The Writer will be flushed afterwards and in case
+     * of an exception.
      * 
      * @throws XStreamException if the object cannot be serialized
      */
-    public void toXML(Object obj, Writer out) {
-        HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
+    public void toXML(final Object obj, final Writer out) {
+        @SuppressWarnings("resource")
+        final HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
         try {
             marshal(obj, writer);
         } finally {
@@ -1005,13 +943,14 @@ public class XStream {
     }
 
     /**
-     * Serialize an object to the given OutputStream as pretty-printed XML. The OutputStream
-     * will be flushed afterwards and in case of an exception.
+     * Serialize an object to the given OutputStream as pretty-printed XML. The OutputStream will be flushed afterwards
+     * and in case of an exception.
      * 
      * @throws XStreamException if the object cannot be serialized
      */
-    public void toXML(Object obj, OutputStream out) {
-        HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
+    public void toXML(final Object obj, final OutputStream out) {
+        @SuppressWarnings("resource")
+        final HierarchicalStreamWriter writer = hierarchicalStreamDriver.createWriter(out);
         try {
             marshal(obj, writer);
         } finally {
@@ -1024,18 +963,18 @@ public class XStream {
      * 
      * @throws XStreamException if the object cannot be serialized
      */
-    public void marshal(Object obj, HierarchicalStreamWriter writer) {
+    public void marshal(final Object obj, final HierarchicalStreamWriter writer) {
         marshal(obj, writer, null);
     }
 
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
      * 
-     * @param dataHolder Extra data you can use to pass to your converters. Use this as you
-     *            want. If not present, XStream shall create one lazily as needed.
+     * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If not present,
+     *            XStream shall create one lazily as needed.
      * @throws XStreamException if the object cannot be serialized
      */
-    public void marshal(Object obj, HierarchicalStreamWriter writer, DataHolder dataHolder) {
+    public void marshal(final Object obj, final HierarchicalStreamWriter writer, final DataHolder dataHolder) {
         marshallingStrategy.marshal(writer, obj, converterLookup, mapper, dataHolder);
     }
 
@@ -1044,7 +983,7 @@ public class XStream {
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object fromXML(String xml) {
+    public <T> T fromXML(final String xml) {
         return fromXML(new StringReader(xml));
     }
 
@@ -1053,7 +992,7 @@ public class XStream {
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object fromXML(Reader reader) {
+    public <T> T fromXML(final Reader reader) {
         return unmarshal(hierarchicalStreamDriver.createReader(reader), null);
     }
 
@@ -1062,90 +1001,78 @@ public class XStream {
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object fromXML(InputStream input) {
+    public <T> T fromXML(final InputStream input) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), null);
     }
 
     /**
-     * Deserialize an object from a URL.
-     * 
-     * Depending on the parser implementation, some might take the file path as SystemId to
-     * resolve additional references.
+     * Deserialize an object from a URL. Depending on the parser implementation, some might take the file path as
+     * SystemId to resolve additional references.
      * 
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
-    public Object fromXML(URL url) {
+    public <T> T fromXML(final URL url) {
         return fromXML(url, null);
     }
 
     /**
-     * Deserialize an object from a file.
-     * 
-     * Depending on the parser implementation, some might take the file path as SystemId to
-     * resolve additional references.
+     * Deserialize an object from a file. Depending on the parser implementation, some might take the file path as
+     * SystemId to resolve additional references.
      * 
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
-    public Object fromXML(File file) {
+    public <T> T fromXML(final File file) {
         return fromXML(file, null);
     }
 
     /**
-     * Deserialize an object from an XML String, populating the fields of the given root object
-     * instead of instantiating a new one. Note, that this is a special use case! With the
-     * ReflectionConverter XStream will write directly into the raw memory area of the existing
-     * object. Use with care!
+     * Deserialize an object from an XML String, populating the fields of the given root object instead of instantiating
+     * a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into
+     * the raw memory area of the existing object. Use with care!
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object fromXML(String xml, Object root) {
+    public <T> T fromXML(final String xml, final T root) {
         return fromXML(new StringReader(xml), root);
     }
 
     /**
-     * Deserialize an object from an XML Reader, populating the fields of the given root object
-     * instead of instantiating a new one. Note, that this is a special use case! With the
-     * ReflectionConverter XStream will write directly into the raw memory area of the existing
-     * object. Use with care!
+     * Deserialize an object from an XML Reader, populating the fields of the given root object instead of instantiating
+     * a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into
+     * the raw memory area of the existing object. Use with care!
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object fromXML(Reader xml, Object root) {
+    public <T> T fromXML(final Reader xml, final T root) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
     }
 
     /**
-     * Deserialize an object from a URL, populating the fields of the given root
-     * object instead of instantiating a new one. Note, that this is a special use case! With
-     * the ReflectionConverter XStream will write directly into the raw memory area of the
-     * existing object. Use with care!
-     * 
-     * Depending on the parser implementation, some might take the file path as SystemId to
-     * resolve additional references.
+     * Deserialize an object from a URL, populating the fields of the given root object instead of instantiating a new
+     * one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into the raw
+     * memory area of the existing object. Use with care! Depending on the parser implementation, some might take the
+     * file path as SystemId to resolve additional references.
      * 
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
-    public Object fromXML(URL url, Object root) {
+    public <T> T fromXML(final URL url, final T root) {
         return unmarshal(hierarchicalStreamDriver.createReader(url), root);
     }
 
     /**
-     * Deserialize an object from a file, populating the fields of the given root
-     * object instead of instantiating a new one. Note, that this is a special use case! With
-     * the ReflectionConverter XStream will write directly into the raw memory area of the
-     * existing object. Use with care!
-     * 
-     * Depending on the parser implementation, some might take the file path as SystemId to
-     * resolve additional references.
+     * Deserialize an object from a file, populating the fields of the given root object instead of instantiating a new
+     * one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into the raw
+     * memory area of the existing object. Use with care! Depending on the parser implementation, some might take the
+     * file path as SystemId to resolve additional references.
      * 
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
-    public Object fromXML(File file, Object root) {
-        HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file);
+    public <T> T fromXML(final File file, final T root) {
+        final HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file);
         try {
             return unmarshal(reader, root);
         } finally {
@@ -1154,14 +1081,13 @@ public class XStream {
     }
 
     /**
-     * Deserialize an object from an XML InputStream, populating the fields of the given root
-     * object instead of instantiating a new one. Note, that this is a special use case! With
-     * the ReflectionConverter XStream will write directly into the raw memory area of the
-     * existing object. Use with care!
+     * Deserialize an object from an XML InputStream, populating the fields of the given root object instead of
+     * instantiating a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write
+     * directly into the raw memory area of the existing object. Use with care!
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object fromXML(InputStream input, Object root) {
+    public <T> T fromXML(final InputStream input, final T root) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), root);
     }
 
@@ -1170,41 +1096,40 @@ public class XStream {
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object unmarshal(HierarchicalStreamReader reader) {
+    public <T> T unmarshal(final HierarchicalStreamReader reader) {
         return unmarshal(reader, null, null);
     }
 
     /**
-     * Deserialize an object from a hierarchical data structure (such as XML), populating the
-     * fields of the given root object instead of instantiating a new one. Note, that this is a
-     * special use case! With the ReflectionConverter XStream will write directly into the raw
-     * memory area of the existing object. Use with care!
+     * Deserialize an object from a hierarchical data structure (such as XML), populating the fields of the given root
+     * object instead of instantiating a new one. Note, that this is a special use case! With the ReflectionConverter
+     * XStream will write directly into the raw memory area of the existing object. Use with care!
      * 
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object unmarshal(HierarchicalStreamReader reader, Object root) {
+    public <T> T unmarshal(final HierarchicalStreamReader reader, final T root) {
         return unmarshal(reader, root, null);
     }
 
     /**
      * Deserialize an object from a hierarchical data structure (such as XML).
      * 
-     * @param root If present, the passed in object will have its fields populated, as opposed
-     *            to XStream creating a new instance. Note, that this is a special use case!
-     *            With the ReflectionConverter XStream will write directly into the raw memory
-     *            area of the existing object. Use with care!
-     * @param dataHolder Extra data you can use to pass to your converters. Use this as you
-     *            want. If not present, XStream shall create one lazily as needed.
+     * @param root If present, the passed in object will have its fields populated, as opposed to XStream creating a new
+     *            instance. Note, that this is a special use case! With the ReflectionConverter XStream will write
+     *            directly into the raw memory area of the existing object. Use with care!
+     * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If not present,
+     *            XStream shall create one lazily as needed.
      * @throws XStreamException if the object cannot be deserialized
      */
-    public Object unmarshal(HierarchicalStreamReader reader, Object root, DataHolder dataHolder) {
+    public <T> T unmarshal(final HierarchicalStreamReader reader, final T root, final DataHolder dataHolder) {
         try {
-            return marshallingStrategy.unmarshal(
-                root, reader, dataHolder, converterLookup, mapper);
+            @SuppressWarnings("unchecked")
+            final T t = (T)marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
+            return t;
 
-        } catch (ConversionException e) {
-            Package pkg = getClass().getPackage();
-            String version = pkg != null ? pkg.getImplementationVersion() : null;
+        } catch (final ConversionException e) {
+            final Package pkg = getClass().getPackage();
+            final String version = pkg != null ? pkg.getImplementationVersion() : null;
             e.add("version", version != null ? version : "not available");
             throw e;
         }
@@ -1217,29 +1142,25 @@ public class XStream {
      * @param type Type to be aliased
      * @throws InitializationException if no {@link ClassAliasingMapper} is available
      */
-    public void alias(String name, Class type) {
+    public void alias(final String name, final Class<?> type) {
         if (classAliasingMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + ClassAliasingMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + ClassAliasingMapper.class.getName() + " available");
         }
         classAliasingMapper.addClassAlias(name, type);
     }
 
     /**
-     * Alias a type to a shorter name to be used in XML elements. Any class that is assignable
-     * to this type will be aliased to the same name.
+     * Alias a type to a shorter name to be used in XML elements. Any class that is assignable to this type will be
+     * aliased to the same name.
      * 
      * @param name Short name
      * @param type Type to be aliased
      * @since 1.2
      * @throws InitializationException if no {@link ClassAliasingMapper} is available
      */
-    public void aliasType(String name, Class type) {
+    public void aliasType(final String name, final Class<?> type) {
         if (classAliasingMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + ClassAliasingMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + ClassAliasingMapper.class.getName() + " available");
         }
         classAliasingMapper.addTypeAlias(name, type);
     }
@@ -1250,10 +1171,10 @@ public class XStream {
      * @param name Short name
      * @param type Type to be aliased
      * @param defaultImplementation Default implementation of type to use if no other specified.
-     * @throws InitializationException if no {@link DefaultImplementationsMapper} or no
-     *             {@link ClassAliasingMapper} is available
+     * @throws InitializationException if no {@link DefaultImplementationsMapper} or no {@link ClassAliasingMapper} is
+     *             available
      */
-    public void alias(String name, Class type, Class defaultImplementation) {
+    public void alias(final String name, final Class<?> type, final Class<?> defaultImplementation) {
         alias(name, type);
         addDefaultImplementation(defaultImplementation, type);
     }
@@ -1263,15 +1184,13 @@ public class XStream {
      * 
      * @param name Short name
      * @param pkgName package to be aliased
-     * @throws InitializationException if no {@link DefaultImplementationsMapper} or no
-     *             {@link PackageAliasingMapper} is available
+     * @throws InitializationException if no {@link DefaultImplementationsMapper} or no {@link PackageAliasingMapper} is
+     *             available
      * @since 1.3.1
      */
-    public void aliasPackage(String name, String pkgName) {
+    public void aliasPackage(final String name, final String pkgName) {
         if (packageAliasingMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + PackageAliasingMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + PackageAliasingMapper.class.getName() + " available");
         }
         packageAliasingMapper.addPackageAlias(name, pkgName);
     }
@@ -1284,11 +1203,9 @@ public class XStream {
      * @param fieldName the name of the field
      * @throws InitializationException if no {@link FieldAliasingMapper} is available
      */
-    public void aliasField(String alias, Class definedIn, String fieldName) {
+    public void aliasField(final String alias, final Class<?> definedIn, final String fieldName) {
         if (fieldAliasingMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + FieldAliasingMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
         }
         fieldAliasingMapper.addFieldAlias(alias, definedIn, fieldName);
     }
@@ -1300,31 +1217,26 @@ public class XStream {
      * @param attributeName the name of the attribute
      * @throws InitializationException if no {@link AttributeAliasingMapper} is available
      */
-    public void aliasAttribute(String alias, String attributeName) {
+    public void aliasAttribute(final String alias, final String attributeName) {
         if (attributeAliasingMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + AttributeAliasingMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + AttributeAliasingMapper.class.getName() + " available");
         }
         attributeAliasingMapper.addAliasFor(attributeName, alias);
     }
 
     /**
-     * Create an alias for a system attribute. XStream will not write a system attribute if its
-     * alias is set to <code>null</code>. However, this is not reversible, i.e. deserialization
-     * of the result is likely to fail afterwards and will not produce an object equal to the
-     * originally written one.
+     * Create an alias for a system attribute. XStream will not write a system attribute if its alias is set to
+     * <code>null</code>. However, this is not reversible, i.e. deserialization of the result is likely to fail
+     * afterwards and will not produce an object equal to the originally written one.
      * 
      * @param alias the alias itself (may be <code>null</code>)
      * @param systemAttributeName the name of the system attribute
      * @throws InitializationException if no {@link SystemAttributeAliasingMapper} is available
      * @since 1.3.1
      */
-    public void aliasSystemAttribute(String alias, String systemAttributeName) {
+    public void aliasSystemAttribute(final String alias, final String systemAttributeName) {
         if (systemAttributeAliasingMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + SystemAttributeAliasingMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + SystemAttributeAliasingMapper.class.getName() + " available");
         }
         systemAttributeAliasingMapper.addAliasFor(systemAttributeName, alias);
     }
@@ -1338,7 +1250,7 @@ public class XStream {
      * @throws InitializationException if no {@link AttributeAliasingMapper} is available
      * @since 1.2.2
      */
-    public void aliasAttribute(Class definedIn, String attributeName, String alias) {
+    public void aliasAttribute(final Class<?> definedIn, final String attributeName, final String alias) {
         aliasField(alias, definedIn, attributeName);
         useAttributeFor(definedIn, attributeName);
     }
@@ -1351,11 +1263,9 @@ public class XStream {
      * @throws InitializationException if no {@link AttributeMapper} is available
      * @since 1.2
      */
-    public void useAttributeFor(String fieldName, Class type) {
+    public void useAttributeFor(final String fieldName, final Class<?> type) {
         if (attributeMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + AttributeMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
         }
         attributeMapper.addAttributeFor(fieldName, type);
     }
@@ -1368,11 +1278,9 @@ public class XStream {
      * @throws InitializationException if no {@link AttributeMapper} is available
      * @since 1.2.2
      */
-    public void useAttributeFor(Class definedIn, String fieldName) {
+    public void useAttributeFor(final Class<?> definedIn, final String fieldName) {
         if (attributeMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + AttributeMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
         }
         attributeMapper.addAttributeFor(definedIn, fieldName);
     }
@@ -1384,66 +1292,81 @@ public class XStream {
      * @throws InitializationException if no {@link AttributeMapper} is available
      * @since 1.2
      */
-    public void useAttributeFor(Class type) {
+    public void useAttributeFor(final Class<?> type) {
         if (attributeMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + AttributeMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + AttributeMapper.class.getName() + " available");
         }
         attributeMapper.addAttributeFor(type);
     }
 
     /**
-     * Associate a default implementation of a class with an object. Whenever XStream encounters
-     * an instance of this type, it will use the default implementation instead. For example,
-     * java.util.ArrayList is the default implementation of java.util.List.
+     * Associate a default implementation of a class with an object. Whenever XStream encounters an instance of this
+     * type, it will use the default implementation instead. For example, java.util.ArrayList is the default
+     * implementation of java.util.List.
      * 
      * @param defaultImplementation
      * @param ofType
      * @throws InitializationException if no {@link DefaultImplementationsMapper} is available
      */
-    public void addDefaultImplementation(Class defaultImplementation, Class ofType) {
+    public void addDefaultImplementation(final Class<?> defaultImplementation, final Class<?> ofType) {
         if (defaultImplementationsMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + DefaultImplementationsMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + DefaultImplementationsMapper.class.getName() + " available");
         }
         defaultImplementationsMapper.addDefaultImplementation(defaultImplementation, ofType);
     }
 
     /**
-     * Add immutable types. The value of the instances of these types will always be written
-     * into the stream even if they appear multiple times.
+     * Add immutable types. The value of the instances of these types will always be written into the stream even if
+     * they appear multiple times.
      * 
      * @throws InitializationException if no {@link ImmutableTypesMapper} is available
      */
-    public void addImmutableType(Class type) {
+    public void addImmutableType(final Class<?> type) {
         if (immutableTypesMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + ImmutableTypesMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + ImmutableTypesMapper.class.getName() + " available");
         }
         immutableTypesMapper.addImmutableType(type);
     }
 
-    public void registerConverter(Converter converter) {
+    /**
+     * Register a converter with normal priority.
+     * 
+     * @param converter the converter instance
+     */
+    public void registerConverter(final Converter converter) {
         registerConverter(converter, PRIORITY_NORMAL);
     }
 
-    public void registerConverter(Converter converter, int priority) {
+    /**
+     * Register a converter with chosen priority.
+     * 
+     * @param converter the converter instance
+     * @param priority the converter priority
+     */
+    public void registerConverter(final Converter converter, final int priority) {
         if (converterRegistry != null) {
             converterRegistry.registerConverter(converter, priority);
         }
     }
 
-    public void registerConverter(SingleValueConverter converter) {
+    /**
+     * Register a single value converter with normal priority.
+     * 
+     * @param converter the single value converter instance
+     */
+    public void registerConverter(final SingleValueConverter converter) {
         registerConverter(converter, PRIORITY_NORMAL);
     }
 
-    public void registerConverter(SingleValueConverter converter, int priority) {
+    /**
+     * Register a single converter with chosen priority.
+     * 
+     * @param converter the single converter instance
+     * @param priority the converter priority
+     */
+    public void registerConverter(final SingleValueConverter converter, final int priority) {
         if (converterRegistry != null) {
-            converterRegistry.registerConverter(
-                new SingleValueConverterWrapper(converter), priority);
+            converterRegistry.registerConverter(new SingleValueConverterWrapper(converter), priority);
         }
     }
 
@@ -1455,11 +1378,9 @@ public class XStream {
      * @param converter the converter to use
      * @since 1.3
      */
-    public void registerLocalConverter(Class definedIn, String fieldName, Converter converter) {
+    public void registerLocalConverter(final Class<?> definedIn, final String fieldName, final Converter converter) {
         if (localConversionMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + LocalConversionMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + LocalConversionMapper.class.getName() + " available");
         }
         localConversionMapper.registerLocalConverter(definedIn, fieldName, converter);
     }
@@ -1472,15 +1393,14 @@ public class XStream {
      * @param converter the converter to use
      * @since 1.3
      */
-    public void registerLocalConverter(Class definedIn, String fieldName,
-        SingleValueConverter converter) {
-        registerLocalConverter(
-            definedIn, fieldName, (Converter)new SingleValueConverterWrapper(converter));
+    public void registerLocalConverter(final Class<?> definedIn, final String fieldName,
+            final SingleValueConverter converter) {
+        final Converter wrapper = new SingleValueConverterWrapper(converter);
+        registerLocalConverter(definedIn, fieldName, wrapper);
     }
 
     /**
-     * Retrieve the {@link Mapper}. This is by default a chain of {@link MapperWrapper
-     * MapperWrappers}.
+     * Retrieve the {@link Mapper}. This is by default a chain of {@link MapperWrapper MapperWrappers}.
      * 
      * @return the mapper
      * @since 1.2
@@ -1504,17 +1424,18 @@ public class XStream {
     }
 
     /**
-     * Change mode for dealing with duplicate references. Valid values are
-     * <code>XPATH_ABSOLUTE_REFERENCES</code>, <code>XPATH_RELATIVE_REFERENCES</code>,
-     * <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>.
+     * Change mode for dealing with duplicate references. Valid values are <code>XPATH_ABSOLUTE_REFERENCES</code>,
+     * <code>XPATH_RELATIVE_REFERENCES</code>, <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>
+     * .
      * 
      * @throws IllegalArgumentException if the mode is not one of the declared types
+     * @see #setMarshallingStrategy(MarshallingStrategy)
      * @see #XPATH_ABSOLUTE_REFERENCES
      * @see #XPATH_RELATIVE_REFERENCES
      * @see #ID_REFERENCES
      * @see #NO_REFERENCES
      */
-    public void setMode(int mode) {
+    public void setMode(final int mode) {
         switch (mode) {
         case NO_REFERENCES:
             setMarshallingStrategy(new TreeMarshallingStrategy());
@@ -1523,21 +1444,17 @@ public class XStream {
             setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
             break;
         case XPATH_RELATIVE_REFERENCES:
-            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
-                ReferenceByXPathMarshallingStrategy.RELATIVE));
+            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.RELATIVE));
             break;
         case XPATH_ABSOLUTE_REFERENCES:
-            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
-                ReferenceByXPathMarshallingStrategy.ABSOLUTE));
+            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.ABSOLUTE));
             break;
         case SINGLE_NODE_XPATH_RELATIVE_REFERENCES:
-            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
-                  ReferenceByXPathMarshallingStrategy.RELATIVE 
+            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.RELATIVE
                 | ReferenceByXPathMarshallingStrategy.SINGLE_NODE));
             break;
         case SINGLE_NODE_XPATH_ABSOLUTE_REFERENCES:
-            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
-                  ReferenceByXPathMarshallingStrategy.ABSOLUTE 
+            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.ABSOLUTE
                 | ReferenceByXPathMarshallingStrategy.SINGLE_NODE));
             break;
         default:
@@ -1549,11 +1466,10 @@ public class XStream {
      * Adds a default implicit collection which is used for any unmapped XML tag.
      * 
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This field must be a concrete
-     *            collection type or matching the default implementation type of the collection
-     *            type.
+     * @param fieldName name of the field in the ownerType. This field must be a concrete collection type or matching
+     *            the default implementation type of the collection type.
      */
-    public void addImplicitCollection(Class ownerType, String fieldName) {
+    public void addImplicitCollection(final Class<?> ownerType, final String fieldName) {
         addImplicitCollection(ownerType, fieldName, null, null);
     }
 
@@ -1561,30 +1477,27 @@ public class XStream {
      * Adds implicit collection which is used for all items of the given itemType.
      * 
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This field must be a concrete
-     *            collection type or matching the default implementation type of the collection
-     *            type.
+     * @param fieldName name of the field in the ownerType. This field must be a concrete collection type or matching
+     *            the default implementation type of the collection type.
      * @param itemType type of the items to be part of this collection
      * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
      */
-    public void addImplicitCollection(Class ownerType, String fieldName, Class itemType) {
+    public void addImplicitCollection(final Class<?> ownerType, final String fieldName, final Class<?> itemType) {
         addImplicitCollection(ownerType, fieldName, null, itemType);
     }
 
     /**
-     * Adds implicit collection which is used for all items of the given element name defined by
-     * itemFieldName.
+     * Adds implicit collection which is used for all items of the given element name defined by itemFieldName.
      * 
      * @param ownerType class owning the implicit collection
-     * @param fieldName name of the field in the ownerType. This field must be a concrete
-     *            collection type or matching the default implementation type of the collection
-     *            type.
+     * @param fieldName name of the field in the ownerType. This field must be a concrete collection type or matching
+     *            the default implementation type of the collection type.
      * @param itemFieldName element name of the implicit collection
      * @param itemType item type to be aliases be the itemFieldName
      * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
      */
-    public void addImplicitCollection(Class ownerType, String fieldName, String itemFieldName,
-        Class itemType) {
+    public void addImplicitCollection(final Class<?> ownerType, final String fieldName, final String itemFieldName,
+            final Class<?> itemType) {
         addImplicitMap(ownerType, fieldName, itemFieldName, itemType, null);
     }
 
@@ -1593,38 +1506,36 @@ public class XStream {
      * 
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field
-     * @since 1.4 
+     * @since 1.4
      */
-    public void addImplicitArray(Class ownerType, String fieldName) {
+    public void addImplicitArray(final Class<?> ownerType, final String fieldName) {
         addImplicitCollection(ownerType, fieldName);
     }
 
     /**
-     * Adds an implicit array which is used for all items of the given itemType when the array
-     * type matches.
+     * Adds an implicit array which is used for all items of the given itemType when the array type matches.
      * 
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field in the ownerType
      * @param itemType type of the items to be part of this array
-     * @throws InitializationException if no {@link ImplicitCollectionMapper} is available or the
-     * array type does not match the itemType
-     * @since 1.4 
+     * @throws InitializationException if no {@link ImplicitCollectionMapper} is available or the array type does not
+     *             match the itemType
+     * @since 1.4
      */
-    public void addImplicitArray(Class ownerType, String fieldName, Class itemType) {
+    public void addImplicitArray(final Class<?> ownerType, final String fieldName, final Class<?> itemType) {
         addImplicitCollection(ownerType, fieldName, itemType);
     }
 
     /**
-     * Adds an implicit array which is used for all items of the given element name defined by
-     * itemName.
+     * Adds an implicit array which is used for all items of the given element name defined by itemName.
      * 
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field in the ownerType
      * @param itemName alias name of the items
      * @throws InitializationException if no {@link ImplicitCollectionMapper} is available
-     * @since 1.4 
+     * @since 1.4
      */
-    public void addImplicitArray(Class ownerType, String fieldName, String itemName) {
+    public void addImplicitArray(final Class<?> ownerType, final String fieldName, final String itemName) {
         addImplicitCollection(ownerType, fieldName, itemName, null);
     }
 
@@ -1632,14 +1543,14 @@ public class XStream {
      * Adds an implicit map.
      * 
      * @param ownerType class owning the implicit map
-     * @param fieldName name of the field in the ownerType. This field must be a concrete
-     *            map type or matching the default implementation type of the map
-     *            type.
+     * @param fieldName name of the field in the ownerType. This field must be a concrete map type or matching the
+     *            default implementation type of the map type.
      * @param itemType type of the items to be part of this map as value
      * @param keyFieldName the name of the field of the itemType that is used for the key in the map
-     * @since 1.4 
+     * @since 1.4
      */
-    public void addImplicitMap(Class ownerType, String fieldName, Class itemType, String keyFieldName) {
+    public void addImplicitMap(final Class<?> ownerType, final String fieldName, final Class<?> itemType,
+            final String keyFieldName) {
         addImplicitMap(ownerType, fieldName, null, itemType, keyFieldName);
     }
 
@@ -1647,27 +1558,24 @@ public class XStream {
      * Adds an implicit map.
      * 
      * @param ownerType class owning the implicit map
-     * @param fieldName name of the field in the ownerType. This field must be a concrete
-     *            map type or matching the default implementation type of the map
-     *            type.
+     * @param fieldName name of the field in the ownerType. This field must be a concrete map type or matching the
+     *            default implementation type of the map type.
      * @param itemName alias name of the items
      * @param itemType type of the items to be part of this map as value
      * @param keyFieldName the name of the field of the itemType that is used for the key in the map
-     * @since 1.4 
+     * @since 1.4
      */
-    public void addImplicitMap(Class ownerType, String fieldName, String itemName, 
-        Class itemType, String keyFieldName) {
+    public void addImplicitMap(final Class<?> ownerType, final String fieldName, final String itemName,
+            final Class<?> itemType, final String keyFieldName) {
         if (implicitCollectionMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + ImplicitCollectionMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + ImplicitCollectionMapper.class.getName() + " available");
         }
         implicitCollectionMapper.add(ownerType, fieldName, itemName, itemType, keyFieldName);
     }
 
     /**
-     * Create a DataHolder that can be used to pass data to the converters. The DataHolder is
-     * provided with a call to {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)} or
+     * Create a DataHolder that can be used to pass data to the converters. The DataHolder is provided with a call to
+     * {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)} or
      * {@link #unmarshal(HierarchicalStreamReader, Object, DataHolder)}.
      * 
      * @return a new {@link DataHolder}
@@ -1677,99 +1585,82 @@ public class XStream {
     }
 
     /**
-     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using
-     * XStream.
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
      * <p>
      * To change the name of the root element (from &lt;object-stream&gt;), use
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
      * 
-     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter,
-     *      String)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
-    public ObjectOutputStream createObjectOutputStream(Writer writer) throws IOException {
-        return createObjectOutputStream(
-            hierarchicalStreamDriver.createWriter(writer), "object-stream");
+    public ObjectOutputStream createObjectOutputStream(final Writer writer) throws IOException {
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), "object-stream");
     }
 
     /**
-     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using
-     * XStream.
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
      * <p>
      * To change the name of the root element (from &lt;object-stream&gt;), use
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
      * 
-     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter,
-     *      String)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
-    public ObjectOutputStream createObjectOutputStream(HierarchicalStreamWriter writer)
-        throws IOException {
+    public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer) throws IOException {
         return createObjectOutputStream(writer, "object-stream");
     }
 
     /**
-     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using
-     * XStream.
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
      * 
-     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter,
-     *      String)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
-    public ObjectOutputStream createObjectOutputStream(Writer writer, String rootNodeName)
-        throws IOException {
-        return createObjectOutputStream(
-            hierarchicalStreamDriver.createWriter(writer), rootNodeName);
+    public ObjectOutputStream createObjectOutputStream(final Writer writer, final String rootNodeName)
+            throws IOException {
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), rootNodeName);
     }
 
     /**
-     * Creates an ObjectOutputStream that serializes a stream of objects to the OutputStream
-     * using XStream.
+     * Creates an ObjectOutputStream that serializes a stream of objects to the OutputStream using XStream.
      * <p>
      * To change the name of the root element (from &lt;object-stream&gt;), use
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
      * 
-     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter,
-     *      String)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
      */
-    public ObjectOutputStream createObjectOutputStream(OutputStream out) throws IOException {
-        return createObjectOutputStream(
-            hierarchicalStreamDriver.createWriter(out), "object-stream");
+    public ObjectOutputStream createObjectOutputStream(final OutputStream out) throws IOException {
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), "object-stream");
     }
 
     /**
-     * Creates an ObjectOutputStream that serializes a stream of objects to the OutputStream
-     * using XStream.
+     * Creates an ObjectOutputStream that serializes a stream of objects to the OutputStream using XStream.
      * 
-     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter,
-     *      String)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
      */
-    public ObjectOutputStream createObjectOutputStream(OutputStream out, String rootNodeName)
-        throws IOException {
-        return createObjectOutputStream(
-            hierarchicalStreamDriver.createWriter(out), rootNodeName);
+    public ObjectOutputStream createObjectOutputStream(final OutputStream out, final String rootNodeName)
+            throws IOException {
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), rootNodeName);
     }
 
     /**
-     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using
-     * XStream.
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
      * <p>
-     * Because an ObjectOutputStream can contain multiple items and XML only allows a single
-     * root node, the stream must be written inside an enclosing node.
+     * Because an ObjectOutputStream can contain multiple items and XML only allows a single root node, the stream must
+     * be written inside an enclosing node.
      * </p>
      * <p>
-     * It is necessary to call ObjectOutputStream.close() when done, otherwise the stream will
-     * be incomplete.
+     * It is necessary to call ObjectOutputStream.close() when done, otherwise the stream will be incomplete.
      * </p>
      * <h3>Example</h3>
      * 
@@ -1786,27 +1677,33 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
-    public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer,
-        String rootNodeName) throws IOException {
+    @SuppressWarnings("resource")
+    public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName)
+            throws IOException {
         final StatefulWriter statefulWriter = new StatefulWriter(writer);
         statefulWriter.startNode(rootNodeName, null);
         return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
-            public void writeToStream(Object object) {
+            @Override
+            public void writeToStream(final Object object) {
                 marshal(object, statefulWriter);
             }
 
-            public void writeFieldsToStream(Map fields) throws NotActiveException {
+            @Override
+            public void writeFieldsToStream(final Map<String, Object> fields) throws NotActiveException {
                 throw new NotActiveException("not in call to writeObject");
             }
 
+            @Override
             public void defaultWriteObject() throws NotActiveException {
                 throw new NotActiveException("not in call to writeObject");
             }
 
+            @Override
             public void flush() {
                 statefulWriter.flush();
             }
 
+            @Override
             public void close() {
                 if (statefulWriter.state() != StatefulWriter.STATE_CLOSED) {
                     statefulWriter.endNode();
@@ -1817,34 +1714,29 @@ public class XStream {
     }
 
     /**
-     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using
-     * XStream.
+     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream.
      * 
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
-     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter,
-     *      String)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.0.3
      */
-    public ObjectInputStream createObjectInputStream(Reader xmlReader) throws IOException {
+    public ObjectInputStream createObjectInputStream(final Reader xmlReader) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(xmlReader));
     }
 
     /**
-     * Creates an ObjectInputStream that deserializes a stream of objects from an InputStream
-     * using XStream.
+     * Creates an ObjectInputStream that deserializes a stream of objects from an InputStream using XStream.
      * 
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
-     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter,
-     *      String)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.3
      */
-    public ObjectInputStream createObjectInputStream(InputStream in) throws IOException {
+    public ObjectInputStream createObjectInputStream(final InputStream in) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(in));
     }
 
     /**
-     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using
-     * XStream. <h3>Example</h3>
+     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream. <h3>Example</h3>
      * 
      * <pre>
      * ObjectInputStream in = xstream.createObjectOutputStream(aReader);
@@ -1853,36 +1745,39 @@ public class XStream {
      * Object c = out.readObject();
      * </pre>
      * 
-     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter,
-     *      String)
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.0.3
      */
-    public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader)
-        throws IOException {
+    public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader) throws IOException {
         return new CustomObjectInputStream(new CustomObjectInputStream.StreamCallback() {
+            @Override
             public Object readFromStream() throws EOFException {
                 if (!reader.hasMoreChildren()) {
                     throw new EOFException();
                 }
                 reader.moveDown();
-                Object result = unmarshal(reader);
+                final Object result = unmarshal(reader);
                 reader.moveUp();
                 return result;
             }
 
-            public Map readFieldsFromStream() throws IOException {
+            @Override
+            public Map<String, Object> readFieldsFromStream() throws IOException {
                 throw new NotActiveException("not in call to readObject");
             }
 
+            @Override
             public void defaultReadObject() throws NotActiveException {
                 throw new NotActiveException("not in call to readObject");
             }
 
-            public void registerValidation(ObjectInputValidation validation, int priority)
-                throws NotActiveException {
+            @Override
+            public void registerValidation(final ObjectInputValidation validation, final int priority)
+                    throws NotActiveException {
                 throw new NotActiveException("stream inactive");
             }
 
+            @Override
             public void close() {
                 reader.close();
             }
@@ -1890,15 +1785,14 @@ public class XStream {
     }
 
     /**
-     * Change the ClassLoader XStream uses to load classes. Creating an XStream instance it will
-     * register for all kind of classes and types of the current JDK, but not for any 3rd party
-     * type. To ensure that all other types are loaded with your class loader, you should call
-     * this method as early as possible - or consider to provide the class loader directly in
-     * the constructor.
+     * Change the ClassLoader XStream uses to load classes. Creating an XStream instance it will register for all kind
+     * of classes and types of the current JDK, but not for any 3rd party type. To ensure that all other types are
+     * loaded with your class loader, you should call this method as early as possible - or consider to provide the
+     * class loader directly in the constructor.
      * 
      * @since 1.1.1
      */
-    public void setClassLoader(ClassLoader classLoader) {
+    public void setClassLoader(final ClassLoader classLoader) {
         classLoaderReference.setReference(classLoader);
     }
 
@@ -1910,11 +1804,10 @@ public class XStream {
     public ClassLoader getClassLoader() {
         return classLoaderReference.getReference();
     }
-    
+
     /**
-     * Retrieve the reference to this instance' ClassLoader. Use this reference for other
-     * XStream components (like converters) to ensure that they will use a changed ClassLoader
-     * instance automatically.
+     * Retrieve the reference to this instance' ClassLoader. Use this reference for other XStream components (like
+     * converters) to ensure that they will use a changed ClassLoader instance automatically.
      * 
      * @return the reference
      * @since 1.4.5
@@ -1924,21 +1817,19 @@ public class XStream {
     }
 
     /**
-     * Prevents a field from being serialized. To omit a field you must always provide the
-     * declaring type and not necessarily the type that is converted.
+     * Prevents a field from being serialized. To omit a field you must always provide the declaring type and not
+     * necessarily the type that is converted.
      * 
      * @since 1.1.3
      * @throws InitializationException if no {@link FieldAliasingMapper} is available
      */
-    public void omitField(Class definedIn, String fieldName) {
+    public void omitField(final Class<?> definedIn, final String fieldName) {
         if (fieldAliasingMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + FieldAliasingMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
         }
         fieldAliasingMapper.omitField(definedIn, fieldName);
     }
-    
+
     /**
      * Ignore all unknown elements.
      * 
@@ -1954,7 +1845,7 @@ public class XStream {
      * @param pattern the name pattern as regular expression
      * @since 1.4.5
      */
-    public void ignoreUnknownElements(String pattern) {
+    public void ignoreUnknownElements(final String pattern) {
         ignoreUnknownElements(Pattern.compile(pattern));
     }
 
@@ -1964,11 +1855,9 @@ public class XStream {
      * @param pattern the name pattern as regular expression
      * @since 1.4.5
      */
-    private void ignoreUnknownElements(Pattern pattern) {
+    private void ignoreUnknownElements(final Pattern pattern) {
         if (fieldAliasingMapper == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + FieldAliasingMapper.class.getName()
-                + " available");
+            throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
         }
         fieldAliasingMapper.addFieldsToIgnore(pattern);
     }
@@ -1979,44 +1868,29 @@ public class XStream {
      * @param types the types with XStream annotations
      * @since 1.3
      */
-    public void processAnnotations(final Class[] types) {
-        if (annotationConfiguration == null) {
-            throw new com.thoughtworks.xstream.InitializationException("No "
-                + ANNOTATION_MAPPER_TYPE
-                + " available");
+    public void processAnnotations(final Class<?>... types) {
+        if (annotationMapper == null) {
+            throw new InitializationException("No " + AnnotationMapper.class.getName() + " available");
         }
-        annotationConfiguration.processAnnotations(types);
+        annotationMapper.processAnnotations(types);
     }
 
     /**
-     * Process the annotations of the given type and configure the XStream. A call of this
-     * method will automatically turn the auto-detection mode for annotations off.
-     * 
-     * @param type the type with XStream annotations
-     * @since 1.3
-     */
-    public void processAnnotations(final Class type) {
-        processAnnotations(new Class[]{type});
-    }
-
-    /**
-     * Set the auto-detection mode of the AnnotationMapper. Note that auto-detection implies
-     * that the XStream is configured while it is processing the XML steams. This is a potential
-     * concurrency problem. Also is it technically not possible to detect all class aliases at
-     * deserialization. You have been warned!
+     * Set the auto-detection mode of the AnnotationMapper. Note that auto-detection implies that the XStream is
+     * configured while it is processing the XML steams. This is a potential concurrency problem. Also is it technically
+     * not possible to detect all class aliases at deserialization. You have been warned!
      * 
      * @param mode <code>true</code> if annotations are auto-detected
      * @since 1.3
      */
-    public void autodetectAnnotations(boolean mode) {
-        if (annotationConfiguration != null) {
-            annotationConfiguration.autodetectAnnotations(mode);
+    public void autodetectAnnotations(final boolean mode) {
+        if (annotationMapper != null) {
+            annotationMapper.autodetectAnnotations(mode);
         }
     }
-    
+
     /**
      * Add a new security permission.
-     * 
      * <p>
      * Permissions are evaluated in the added sequence. An instance of {@link NoTypePermission} or
      * {@link AnyTypePermission} will implicitly wipe any existing permission.
@@ -2025,62 +1899,62 @@ public class XStream {
      * @param permission the permission to add
      * @since 1.4.7
      */
-    public void addPermission(TypePermission permission) {
+    public void addPermission(final TypePermission permission) {
         if (securityMapper != null) {
             securityMapper.addPermission(permission);
         }
     }
-    
+
     /**
      * Add security permission for explicit types by name.
      * 
      * @param names the type names to allow
      * @since 1.4.7
      */
-    public void allowTypes(String... names) {
+    public void allowTypes(final String... names) {
         addPermission(new ExplicitTypePermission(names));
     }
-    
+
     /**
      * Add security permission for explicit types.
      * 
      * @param types the types to allow
      * @since 1.4.7
      */
-    public void allowTypes(Class<?>... types) {
+    public void allowTypes(final Class<?>... types) {
         addPermission(new ExplicitTypePermission(types));
     }
-    
+
     /**
      * Add security permission for a type hierarchy.
      * 
      * @param type the base type to allow
      * @since 1.4.7
      */
-    public void allowTypeHierarchy(Class<?> type) {
+    public void allowTypeHierarchy(final Class<?> type) {
         addPermission(new TypeHierarchyPermission(type));
     }
-    
+
     /**
      * Add security permission for types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to allow type names
      * @since 1.4.7
      */
-    public void allowTypesByRegExp(String... regexps) {
+    public void allowTypesByRegExp(final String... regexps) {
         addPermission(new RegExpTypePermission(regexps));
     }
-    
+
     /**
      * Add security permission for types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to allow type names
      * @since 1.4.7
      */
-    public void allowTypesByRegExp(Pattern... regexps) {
+    public void allowTypesByRegExp(final Pattern... regexps) {
         addPermission(new RegExpTypePermission(regexps));
     }
-    
+
     /**
      * Add security permission for types matching one of the specified wildcard patterns.
      * <p>
@@ -2088,77 +1962,79 @@ public class XStream {
      * </p>
      * <ul>
      * <li>?: one non-control character except separator, e.g. for 'java.net.Inet?Address'</li>
-     * <li>*: arbitrary number of non-control characters except separator, e.g. for types in a package like 'java.lang.*'</li>
-     * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and subpackages like 'java.lang.**'</li>
+     * <li>*: arbitrary number of non-control characters except separator, e.g. for types in a package like
+     * 'java.lang.*'</li>
+     * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and
+     * subpackages like 'java.lang.**'</li>
      * </ul>
      * 
      * @param patterns the patterns to allow type names
      * @since 1.4.7
      */
-    public void allowTypesByWildcard(String... patterns) {
+    public void allowTypesByWildcard(final String... patterns) {
         addPermission(new WildcardTypePermission(patterns));
     }
-    
+
     /**
      * Add security permission denying another one.
      * 
      * @param permission the permission to deny
      * @since 1.4.7
      */
-    public void denyPermission(TypePermission permission) {
+    public void denyPermission(final TypePermission permission) {
         addPermission(new NoPermission(permission));
     }
-    
+
     /**
      * Add security permission forbidding explicit types by name.
      * 
      * @param names the type names to forbid
      * @since 1.4.7
      */
-    public void denyTypes(String... names) {
+    public void denyTypes(final String... names) {
         denyPermission(new ExplicitTypePermission(names));
     }
-    
+
     /**
      * Add security permission forbidding explicit types.
      * 
      * @param types the types to forbid
      * @since 1.4.7
      */
-    public void denyTypes(Class<?>... types) {
+    public void denyTypes(final Class<?>... types) {
         denyPermission(new ExplicitTypePermission(types));
     }
-    
+
     /**
      * Add security permission forbidding a type hierarchy.
      * 
      * @param type the base type to forbid
      * @since 1.4.7
      */
-    public void denyTypeHierarchy(Class<?> type) {
+    public void denyTypeHierarchy(final Class<?> type) {
         denyPermission(new TypeHierarchyPermission(type));
     }
-    
+
     /**
      * Add security permission forbidding types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to forbid type names
      * @since 1.4.7
      */
-    public void denyTypesByRegExp(String... regexps) {
+    public void denyTypesByRegExp(final String... regexps) {
         denyPermission(new RegExpTypePermission(regexps));
     }
-    
+
     /**
      * Add security permission forbidding types matching one of the specified regular expressions.
      * 
      * @param regexps the regular expressions to forbid type names
      * @since 1.4.7
      */
-    public void denyTypesByRegExp(Pattern... regexps) {
+    public void denyTypesByRegExp(final Pattern... regexps) {
         denyPermission(new RegExpTypePermission(regexps));
     }
-    
+
     /**
      * Add security permission forbidding types matching one of the specified wildcard patterns.
      * <p>
@@ -2166,14 +2042,16 @@ public class XStream {
      * </p>
      * <ul>
      * <li>?: one non-control character except separator, e.g. for 'java.net.Inet?Address'</li>
-     * <li>*: arbitrary number of non-control characters except separator, e.g. for types in a package like 'java.lang.*'</li>
-     * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and subpackages like 'java.lang.**'</li>
+     * <li>*: arbitrary number of non-control characters except separator, e.g. for types in a package like
+     * 'java.lang.*'</li>
+     * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and
+     * subpackages like 'java.lang.**'</li>
      * </ul>
      * 
      * @param patterns the patterns to forbid names
      * @since 1.4.7
      */
-    public void denyTypesByWildcard(String... patterns) {
+    public void denyTypesByWildcard(final String... patterns) {
         denyPermission(new WildcardTypePermission(patterns));
     }
 }

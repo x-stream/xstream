@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,10 +11,13 @@
  */
 package com.thoughtworks.xstream.io;
 
+import java.io.Closeable;
+
+
 /**
  * @author Joe Walnes
  */
-public interface HierarchicalStreamWriter {
+public interface HierarchicalStreamWriter extends Closeable {
 
     void startNode(String name);
 
@@ -35,25 +38,34 @@ public interface HierarchicalStreamWriter {
     /**
      * Close the writer, if necessary.
      */
+    @Override
     void close();
 
     /**
      * Return the underlying HierarchicalStreamWriter implementation.
-     *
-     * <p>If a Converter needs to access methods of a specific HierarchicalStreamWriter implementation that are not
-     * defined in the HierarchicalStreamWriter interface, it should call this method before casting. This is because
-     * the writer passed to the Converter is often wrapped/decorated by another implementation to provide additional
-     * functionality (such as XPath tracking).</p>
-     *
-     * <p>For example:</p>
-     * <pre>MySpecificWriter mySpecificWriter = (MySpecificWriter)writer; <b>// INCORRECT!</b>
-     * mySpecificWriter.doSomethingSpecific();</pre>
-
-     * <pre>MySpecificWriter mySpecificWriter = (MySpecificWriter)writer.underlyingWriter();  <b>// CORRECT!</b>
-     * mySpecificWriter.doSomethingSpecific();</pre>
-     *
-     * <p>Implementations of HierarchicalStreamWriter should return 'this', unless they are a decorator, in which case
-     * they should delegate to whatever they are wrapping.</p>
+     * <p>
+     * If a Converter needs to access methods of a specific HierarchicalStreamWriter implementation that are not defined
+     * in the HierarchicalStreamWriter interface, it should call this method before casting. This is because the writer
+     * passed to the Converter is often wrapped/decorated by another implementation to provide additional functionality
+     * (such as XPath tracking).
+     * </p>
+     * <p>
+     * For example:
+     * </p>
+     * 
+     * <pre>
+     * MySpecificWriter mySpecificWriter = (MySpecificWriter)writer; <b>// INCORRECT!</b>
+     * mySpecificWriter.doSomethingSpecific();
+     * </pre>
+     * 
+     * <pre>
+     * MySpecificWriter mySpecificWriter = (MySpecificWriter)writer.underlyingWriter();  <b>// CORRECT!</b>
+     * mySpecificWriter.doSomethingSpecific();
+     * </pre>
+     * <p>
+     * Implementations of HierarchicalStreamWriter should return 'this', unless they are a decorator, in which case they
+     * should delegate to whatever they are wrapping.
+     * </p>
      */
     HierarchicalStreamWriter underlyingWriter();
 

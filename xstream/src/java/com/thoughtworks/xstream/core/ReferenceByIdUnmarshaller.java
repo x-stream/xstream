@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,19 +15,23 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-public class ReferenceByIdUnmarshaller extends AbstractReferenceUnmarshaller {
 
-    public ReferenceByIdUnmarshaller(Object root, HierarchicalStreamReader reader,
-                                     ConverterLookup converterLookup, Mapper mapper) {
+public class ReferenceByIdUnmarshaller extends AbstractReferenceUnmarshaller<String> {
+
+    public ReferenceByIdUnmarshaller(
+            final Object root, final HierarchicalStreamReader reader, final ConverterLookup converterLookup,
+            final Mapper mapper) {
         super(root, reader, converterLookup, mapper);
     }
 
-    protected Object getReferenceKey(String reference) {
+    @Override
+    protected String getReferenceKey(final String reference) {
         return reference;
     }
 
-    protected Object getCurrentReferenceKey() {
-        String attributeName = getMapper().aliasForSystemAttribute("id");
+    @Override
+    protected String getCurrentReferenceKey() {
+        final String attributeName = getMapper().aliasForSystemAttribute("id");
         return attributeName == null ? null : reader.getAttribute(attributeName);
     }
 }

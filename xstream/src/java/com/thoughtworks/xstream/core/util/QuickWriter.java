@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,28 +11,30 @@
  */
 package com.thoughtworks.xstream.core.util;
 
-import com.thoughtworks.xstream.io.StreamException;
-
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 
-public class QuickWriter {
+import com.thoughtworks.xstream.io.StreamException;
+
+
+public class QuickWriter implements Closeable {
 
     private final Writer writer;
-    private char[] buffer;
+    private final char[] buffer;
     private int pointer;
 
-    public QuickWriter(Writer writer) {
+    public QuickWriter(final Writer writer) {
         this(writer, 1024);
     }
 
-    public QuickWriter(Writer writer, int bufferSize) {
+    public QuickWriter(final Writer writer, final int bufferSize) {
         this.writer = writer;
         buffer = new char[bufferSize];
     }
 
-    public void write(String str) {
-        int len = str.length();
+    public void write(final String str) {
+        final int len = str.length();
         if (pointer + len >= buffer.length) {
             flush();
             if (len > buffer.length) {
@@ -44,7 +46,7 @@ public class QuickWriter {
         pointer += len;
     }
 
-    public void write(char c) {
+    public void write(final char c) {
         if (pointer + 1 >= buffer.length) {
             flush();
             if (buffer.length == 0) {
@@ -55,8 +57,8 @@ public class QuickWriter {
         buffer[pointer++] = c;
     }
 
-    public void write(char[] c) {
-        int len = c.length;
+    public void write(final char[] c) {
+        final int len = c.length;
         if (pointer + len >= buffer.length) {
             flush();
             if (len > buffer.length) {
@@ -73,35 +75,36 @@ public class QuickWriter {
             writer.write(buffer, 0, pointer);
             pointer = 0;
             writer.flush();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StreamException(e);
         }
     }
 
+    @Override
     public void close() {
         try {
             writer.write(buffer, 0, pointer);
             pointer = 0;
             writer.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StreamException(e);
         }
     }
 
-    private void raw(char[] c) {
+    private void raw(final char[] c) {
         try {
             writer.write(c);
             writer.flush();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StreamException(e);
         }
     }
 
-    private void raw(char c) {
+    private void raw(final char c) {
         try {
             writer.write(c);
             writer.flush();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new StreamException(e);
         }
     }

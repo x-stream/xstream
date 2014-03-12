@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 XStream Committers.
+ * Copyright (c) 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,46 +10,54 @@
  */
 package com.thoughtworks.xstream.core.util;
 
+import java.util.Arrays;
+
+
 /**
  * A simple pool implementation.
- *
+ * 
  * @author J&ouml;rg Schaible
  * @author Joe Walnes
  */
-public class Pool {
-    
-    public interface Factory {
-        public Object newInstance();
+public class Pool<T> {
+
+    public interface Factory<T> {
+        public T newInstance();
     }
 
     private final int initialPoolSize;
     private final int maxPoolSize;
-    private final Factory factory;
-    private transient Object[] pool;
+    private final Factory<T> factory;
+    private transient T[] pool;
     private transient int nextAvailable;
-    private transient Object mutex = new Object();
 
-    public Pool(int initialPoolSize, int maxPoolSize, Factory factory) {
+    public Pool(final int initialPoolSize, final int maxPoolSize, final Factory<T> factory) {
         this.initialPoolSize = initialPoolSize;
         this.maxPoolSize = maxPoolSize;
         this.factory = factory;
     }
 
-    public Object fetchFromPool() {
-        Object result;
-        synchronized (mutex) {
+    private T[] newArray(final int capacity, final T... t) {
+        return Arrays.copyOf(t, capacity);
+    }
+
+    public T fetchFromPool() {
+        T result;
+        synchronized (this) {
             if (pool == null) {
-                pool = new Object[maxPoolSize];
-                for (nextAvailable = initialPoolSize; nextAvailable > 0; ) {
+                @SuppressWarnings("unchecked")
+                final T[] all = newArray(maxPoolSize);
+                pool = all;
+                for (nextAvailable = initialPoolSize; nextAvailable > 0;) {
                     putInPool(factory.newInstance());
                 }
             }
             while (nextAvailable == maxPoolSize) {
                 try {
-                    mutex.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException("Interrupted whilst waiting " +
-                            "for a free item in the pool : " + e.getMessage());
+                    wait();
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException("Interrupted whilst waiting for a free item in the pool: "
+                        + e.getMessage());
                 }
             }
             result = pool[nextAvailable++];
@@ -62,15 +70,25 @@ public class Pool {
         return result;
     }
 
-    protected void putInPool(Object object) {
-        synchronized (mutex) {
+    protected void putInPool(final T object) {
+        synchronized (this) {
+            if (nextAvailable == 0) {
+                throw new IllegalStateException("Cannot put more objects than "
+                    + maxPoolSize
+                    + " elements into this pool");
+            }
             pool[--nextAvailable] = object;
-            mutex.notify();
+            if (object == null) {
+                for (int i = maxPoolSize; i > nextAvailable;) {
+                    if (pool[--i] != null) {
+                        pool[nextAvailable] = pool[i];
+                        pool[i] = null;
+                        break;
+                    }
+                }
+            }
+
+            notify();
         }
-    }
-    
-    private Object readResolve() {
-        mutex = new Object();
-        return this;
     }
 }

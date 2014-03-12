@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2011 XStream Committers.
+ * Copyright (C) 2007, 2008, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,20 +10,21 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+
 
 /**
- * A Converter for the XML Schema datatype <a
- * href="http://www.w3.org/TR/xmlschema-2/#duration">duration</a> and the Java type
- * {@link Duration}. The implementation uses a {@link DatatypeFactory} to create Duration
- * objects. If no factory is provided and the instantiation of the internal factory fails with a
- * {@link DatatypeConfigurationException}, the converter will not claim the responsibility for
- * Duration objects.
+ * A Converter for the XML Schema datatype <a href="http://www.w3.org/TR/xmlschema-2/#duration">duration</a> and the
+ * Java type {@link Duration}.
+ * <p>
+ * The implementation uses a {@link DatatypeFactory} to create Duration objects. If no factory is provided and the
+ * instantiation of the internal factory fails with a {@link DatatypeConfigurationException} , the converter will not
+ * claim the responsibility for Duration objects.
+ * </p>
  * 
  * @author John Kristian
  * @author J&ouml;rg Schaible
@@ -44,15 +45,17 @@ public class DurationConverter extends AbstractSingleValueConverter {
         }.getFactory());
     }
 
-    public DurationConverter(DatatypeFactory factory) {
+    public DurationConverter(final DatatypeFactory factory) {
         this.factory = factory;
     }
 
-    public boolean canConvert(Class c) {
+    @Override
+    public boolean canConvert(final Class<?> c) {
         return factory != null && Duration.class.isAssignableFrom(c);
     }
 
-    public Object fromString(String s) {
+    @Override
+    public Object fromString(final String s) {
         return factory.newDuration(s);
     }
 }

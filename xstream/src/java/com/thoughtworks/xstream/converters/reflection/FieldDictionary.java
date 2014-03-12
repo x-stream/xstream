@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.JVM;
-import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
 
 /**
@@ -35,24 +35,24 @@ import com.thoughtworks.xstream.core.util.OrderRetainingMap;
  */
 public class FieldDictionary implements Caching {
 
-    private transient Map keyedByFieldNameCache;
-    private transient Map keyedByFieldKeyCache;
+    private transient Map<Class<?>, Map<String, Field>> keyedByFieldNameCache;
+    private transient Map<Class<?>, Map<FieldKey, Field>> keyedByFieldKeyCache;
     private final FieldKeySorter sorter;
 
     public FieldDictionary() {
         this(new ImmutableFieldKeySorter());
     }
 
-    public FieldDictionary(FieldKeySorter sorter) {
+    public FieldDictionary(final FieldKeySorter sorter) {
         this.sorter = sorter;
         init();
     }
 
     private void init() {
-        keyedByFieldNameCache = new HashMap();
-        keyedByFieldKeyCache = new HashMap();
-        keyedByFieldNameCache.put(Object.class, Collections.EMPTY_MAP);
-        keyedByFieldKeyCache.put(Object.class, Collections.EMPTY_MAP);
+        keyedByFieldNameCache = new HashMap<Class<?>, Map<String, Field>>();
+        keyedByFieldKeyCache = new HashMap<Class<?>, Map<FieldKey, Field>>();
+        keyedByFieldNameCache.put(Object.class, Collections.<String, Field>emptyMap());
+        keyedByFieldKeyCache.put(Object.class, Collections.<FieldKey, Field>emptyMap());
     }
 
     /**
@@ -61,15 +61,14 @@ public class FieldDictionary implements Caching {
      * @param cls the class you are interested on
      * @return an iterator for its fields
      */
-    public Iterator fieldsFor(final Class cls) {
+    public Iterator<Field> fieldsFor(final Class<?> cls) {
         return buildMap(cls, true).values().iterator();
     }
 
     /**
-     * Returns an specific field of some class. If definedIn is null, it searches for the field
-     * named 'name' inside the class cls. If definedIn is different than null, tries to find the
-     * specified field name in the specified class cls which should be defined in class
-     * definedIn (either equals cls or a one of it's superclasses)
+     * Returns an specific field of some class. If definedIn is null, it searches for the field named 'name' inside the
+     * class cls. If definedIn is different than null, tries to find the specified field name in the specified class cls
+     * which should be defined in class definedIn (either equals cls or a one of it's superclasses)
      * 
      * @param cls the class where the field is to be searched
      * @param name the field name
@@ -77,8 +76,8 @@ public class FieldDictionary implements Caching {
      * @return the field itself
      * @throws ObjectAccessException if no field can be found
      */
-    public Field field(Class cls, String name, Class definedIn) {
-        Field field = fieldOrNull(cls, name, definedIn);
+    public Field field(final Class<?> cls, final String name, final Class<?> definedIn) {
+        final Field field = fieldOrNull(cls, name, definedIn);
         if (field == null) {
             throw new MissingFieldException(cls.getName(), name);
         } else {
@@ -87,10 +86,9 @@ public class FieldDictionary implements Caching {
     }
 
     /**
-     * Returns an specific field of some class. If definedIn is null, it searches for the field
-     * named 'name' inside the class cls. If definedIn is different than null, tries to find the
-     * specified field name in the specified class cls which should be defined in class
-     * definedIn (either equals cls or a one of it's superclasses)
+     * Returns an specific field of some class. If definedIn is null, it searches for the field named 'name' inside the
+     * class cls. If definedIn is different than null, tries to find the specified field name in the specified class cls
+     * which should be defined in class definedIn (either equals cls or a one of it's superclasses)
      * 
      * @param cls the class where the field is to be searched
      * @param name the field name
@@ -98,31 +96,30 @@ public class FieldDictionary implements Caching {
      * @return the field itself or <code>null</code>
      * @since 1.4
      */
-    public Field fieldOrNull(Class cls, String name, Class definedIn) {
-        Map fields = buildMap(cls, definedIn != null);
-        Field field = (Field)fields.get(definedIn != null
-            ? (Object)new FieldKey(name, definedIn, -1)
-            : (Object)name);
+    public Field fieldOrNull(final Class<?> cls, final String name, final Class<?> definedIn) {
+        final Map<?, Field> fields = buildMap(cls, definedIn != null);
+        final Field field = fields.get(definedIn != null ? (Object)new FieldKey(name, definedIn, -1) : (Object)name);
         return field;
     }
 
-    private Map buildMap(final Class type, boolean tupleKeyed) {
-        Class cls = type;
+    private Map<?, Field> buildMap(final Class<?> type, final boolean tupleKeyed) {
+        Class<?> cls = type;
         synchronized (this) {
             if (!keyedByFieldNameCache.containsKey(type)) {
-                final List superClasses = new ArrayList();
+                final List<Class<?>> superClasses = new ArrayList<Class<?>>();
                 while (!Object.class.equals(cls) && cls != null) {
                     superClasses.add(0, cls);
                     cls = cls.getSuperclass();
                 }
-                Map lastKeyedByFieldName = Collections.EMPTY_MAP;
-                Map lastKeyedByFieldKey = Collections.EMPTY_MAP;
-                for (final Iterator iter = superClasses.iterator(); iter.hasNext();) {
-                    cls = (Class)iter.next();
+                Map<String, Field> lastKeyedByFieldName = Collections.emptyMap();
+                Map<FieldKey, Field> lastKeyedByFieldKey = Collections.emptyMap();
+                for (final Class<?> element : superClasses) {
+                    cls = element;
                     if (!keyedByFieldNameCache.containsKey(cls)) {
-                        final Map keyedByFieldName = new HashMap(lastKeyedByFieldName);
-                        final Map keyedByFieldKey = new OrderRetainingMap(lastKeyedByFieldKey);
-                        Field[] fields = cls.getDeclaredFields();
+                        final Map<String, Field> keyedByFieldName = new HashMap<String, Field>(lastKeyedByFieldName);
+                        final Map<FieldKey, Field> keyedByFieldKey = new LinkedHashMap<FieldKey, Field>(
+                            lastKeyedByFieldKey);
+                        final Field[] fields = cls.getDeclaredFields();
                         if (JVM.reverseFieldDefinition()) {
                             for (int i = fields.length >> 1; i-- > 0;) {
                                 final int idx = fields.length - i - 1;
@@ -131,43 +128,42 @@ public class FieldDictionary implements Caching {
                                 fields[idx] = field;
                             }
                         }
-                        for (int i = 0; i < fields.length; i++ ) {
-                            Field field = fields[i];
+                        for (int i = 0; i < fields.length; i++) {
+                            final Field field = fields[i];
                             if (!field.isAccessible()) {
                                 field.setAccessible(true);
                             }
-                            FieldKey fieldKey = new FieldKey(
-                                field.getName(), field.getDeclaringClass(), i);
-                            Field existent = (Field)keyedByFieldName.get(field.getName());
+                            final FieldKey fieldKey = new FieldKey(field.getName(), field.getDeclaringClass(), i);
+                            final Field existent = keyedByFieldName.get(field.getName());
                             if (existent == null
                             // do overwrite statics
-                                || ((existent.getModifiers() & Modifier.STATIC) != 0)
+                                || (existent.getModifiers() & Modifier.STATIC) != 0
                                 // overwrite non-statics with non-statics only
-                                || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
+                                || existent != null
+                                && (field.getModifiers() & Modifier.STATIC) == 0) {
                                 keyedByFieldName.put(field.getName(), field);
                             }
                             keyedByFieldKey.put(fieldKey, field);
                         }
-                        final Map sortedFieldKeys = sorter.sort(cls, keyedByFieldKey);
+                        final Map<FieldKey, Field> sortedFieldKeys = sorter.sort(cls, keyedByFieldKey);
                         keyedByFieldNameCache.put(cls, keyedByFieldName);
                         keyedByFieldKeyCache.put(cls, sortedFieldKeys);
                         lastKeyedByFieldName = keyedByFieldName;
                         lastKeyedByFieldKey = sortedFieldKeys;
                     } else {
-                        lastKeyedByFieldName = (Map)keyedByFieldNameCache.get(cls);
-                        lastKeyedByFieldKey = (Map)keyedByFieldKeyCache.get(cls);
+                        lastKeyedByFieldName = keyedByFieldNameCache.get(cls);
+                        lastKeyedByFieldKey = keyedByFieldKeyCache.get(cls);
                     }
                 }
                 return tupleKeyed ? lastKeyedByFieldKey : lastKeyedByFieldName;
             }
         }
-        return (Map)(tupleKeyed
-                ? keyedByFieldKeyCache.get(type)
-                : keyedByFieldNameCache.get(type));
+        return tupleKeyed ? keyedByFieldKeyCache.get(type) : keyedByFieldNameCache.get(type);
     }
 
+    @Override
     public synchronized void flushCache() {
-        Set objectTypeSet = Collections.singleton(Object.class);
+        final Set<Class<?>> objectTypeSet = Collections.<Class<?>>singleton(Object.class);
         keyedByFieldNameCache.keySet().retainAll(objectTypeSet);
         keyedByFieldKeyCache.keySet().retainAll(objectTypeSet);
         if (sorter instanceof Caching) {

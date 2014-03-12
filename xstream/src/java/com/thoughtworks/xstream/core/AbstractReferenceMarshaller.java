@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -9,6 +9,8 @@
  * Created on 15. March 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.core;
+
+import java.util.Iterator;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
@@ -21,7 +23,6 @@ import com.thoughtworks.xstream.io.path.PathTracker;
 import com.thoughtworks.xstream.io.path.PathTrackingWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import java.util.Iterator;
 
 /**
  * Abstract base class for a TreeMarshaller, that can build references.
@@ -31,80 +32,90 @@ import java.util.Iterator;
  * @author Mauro Talevi
  * @since 1.2
  */
-public abstract class AbstractReferenceMarshaller extends TreeMarshaller implements MarshallingContext {
+public abstract class AbstractReferenceMarshaller<R> extends TreeMarshaller implements MarshallingContext {
 
-    private ObjectIdDictionary references = new ObjectIdDictionary();
-    private ObjectIdDictionary implicitElements = new ObjectIdDictionary();
-    private PathTracker pathTracker = new PathTracker();
+    private final ObjectIdDictionary<Id<R>> references = new ObjectIdDictionary<Id<R>>();
+    private final ObjectIdDictionary<Object> implicitElements = new ObjectIdDictionary<Object>();
+    private final PathTracker pathTracker = new PathTracker();
     private Path lastPath;
 
-    public AbstractReferenceMarshaller(HierarchicalStreamWriter writer,
-                                   ConverterLookup converterLookup,
-                                   Mapper mapper) {
+    public AbstractReferenceMarshaller(
+            final HierarchicalStreamWriter writer, final ConverterLookup converterLookup, final Mapper mapper) {
         super(writer, converterLookup, mapper);
         this.writer = new PathTrackingWriter(writer, pathTracker);
     }
 
-    public void convert(Object item, Converter converter) {
+    @Override
+    public void convert(final Object item, final Converter converter) {
         if (getMapper().isImmutableValueType(item.getClass())) {
             // strings, ints, dates, etc... don't bother using references.
             converter.marshal(item, writer, this);
         } else {
             final Path currentPath = pathTracker.getPath();
-            Id existingReference = (Id)references.lookupId(item);
+            final Id<R> existingReference = references.lookupId(item);
             if (existingReference != null && existingReference.getPath() != currentPath) {
-                String attributeName = getMapper().aliasForSystemAttribute("reference");
+                final String attributeName = getMapper().aliasForSystemAttribute("reference");
                 if (attributeName != null) {
                     writer.addAttribute(attributeName, createReference(currentPath, existingReference.getItem()));
                 }
             } else {
-                final Object newReferenceKey = existingReference == null 
-                    ? createReferenceKey(currentPath, item) 
+                final R newReferenceKey = existingReference == null
+                    ? createReferenceKey(currentPath, item)
                     : existingReference.getItem();
                 if (lastPath == null || !currentPath.isAncestor(lastPath)) {
                     fireValidReference(newReferenceKey);
                     lastPath = currentPath;
-                    references.associateId(item, new Id(newReferenceKey, currentPath));
+                    references.associateId(item, new Id<R>(newReferenceKey, currentPath));
                 }
-                converter.marshal(item, writer, new ReferencingMarshallingContext() {
-                    
-                    public void put(Object key, Object value) {
+                converter.marshal(item, writer, new ReferencingMarshallingContext<R>() {
+
+                    @Override
+                    public void put(final Object key, final Object value) {
                         AbstractReferenceMarshaller.this.put(key, value);
                     }
-                    
-                    public Iterator keys() {
+
+                    @Override
+                    public Iterator<Object> keys() {
                         return AbstractReferenceMarshaller.this.keys();
                     }
-                    
-                    public Object get(Object key) {
+
+                    @Override
+                    public Object get(final Object key) {
                         return AbstractReferenceMarshaller.this.get(key);
                     }
-                    
-                    public void convertAnother(Object nextItem, Converter converter) {
+
+                    @Override
+                    public void convertAnother(final Object nextItem, final Converter converter) {
                         AbstractReferenceMarshaller.this.convertAnother(nextItem, converter);
                     }
-                    
-                    public void convertAnother(Object nextItem) {
+
+                    @Override
+                    public void convertAnother(final Object nextItem) {
                         AbstractReferenceMarshaller.this.convertAnother(nextItem);
                     }
-                    
-                    public void replace(Object original, Object replacement) {
-                        references.associateId(replacement, new Id(newReferenceKey, currentPath));
+
+                    @Override
+                    public void replace(final Object original, final Object replacement) {
+                        references.associateId(replacement, new Id<R>(newReferenceKey, currentPath));
                     }
-                    
-                    public Object lookupReference(Object item) {
-                        Id id = (Id)references.lookupId(item);
+
+                    @Override
+                    public R lookupReference(final Object item) {
+                        final Id<R> id = references.lookupId(item);
                         return id.getItem();
                     }
-                    
+
                     /**
-                     * @deprecated As of 1.4.2 
+                     * @deprecated As of 1.4.2
                      */
+                    @Deprecated
+                    @Override
                     public Path currentPath() {
                         return pathTracker.getPath();
                     }
 
-                    public void registerImplicit(Object item) {
+                    @Override
+                    public void registerImplicit(final Object item) {
                         if (implicitElements.containsId(item)) {
                             throw new ReferencedImplicitElementException(item, currentPath);
                         }
@@ -114,26 +125,31 @@ public abstract class AbstractReferenceMarshaller extends TreeMarshaller impleme
             }
         }
     }
-    
-    protected abstract String createReference(Path currentPath, Object existingReferenceKey);
-    protected abstract Object createReferenceKey(Path currentPath, Object item);
-    protected abstract void fireValidReference(Object referenceKey);
-    
-    private static class Id {
-        private Object item;
-        private Path path;
-        public Id(Object item, Path path) {
+
+    protected abstract String createReference(Path currentPath, R existingReferenceKey);
+
+    protected abstract R createReferenceKey(Path currentPath, Object item);
+
+    protected abstract void fireValidReference(R referenceKey);
+
+    private static class Id<R> {
+        private final R item;
+        private final Path path;
+
+        public Id(final R item, final Path path) {
             this.item = item;
             this.path = path;
         }
-        protected Object getItem() {
-            return this.item;
+
+        protected R getItem() {
+            return item;
         }
+
         protected Path getPath() {
-            return this.path;
+            return path;
         }
     }
-    
+
     public static class ReferencedImplicitElementException extends ConversionException {
         public ReferencedImplicitElementException(final Object item, final Path path) {
             super("Cannot reference implicit element");

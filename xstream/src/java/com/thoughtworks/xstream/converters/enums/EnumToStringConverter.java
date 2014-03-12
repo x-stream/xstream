@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,6 @@ package com.thoughtworks.xstream.converters.enums;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -32,26 +31,25 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
     private final Map<String, T> strings;
     private final EnumMap<T, String> values;
 
-    public EnumToStringConverter(Class<T> type) {
+    public EnumToStringConverter(final Class<T> type) {
         this(type, extractStringMap(type), null);
     }
 
-    public EnumToStringConverter(Class<T> type, Map<String, T> strings) {
+    public EnumToStringConverter(final Class<T> type, final Map<String, T> strings) {
         this(type, strings, buildValueMap(type, strings));
     }
 
-    private EnumToStringConverter(
-        Class<T> type, Map<String, T> strings, EnumMap<T, String> values) {
+    private EnumToStringConverter(final Class<T> type, final Map<String, T> strings, final EnumMap<T, String> values) {
         enumType = type;
         this.strings = strings;
         this.values = values;
     }
 
-    private static <T extends Enum<T>> Map<String, T> extractStringMap(Class<T> type) {
+    private static <T extends Enum<T>> Map<String, T> extractStringMap(final Class<T> type) {
         checkType(type);
-        EnumSet<T> values = EnumSet.allOf(type);
-        Map<String, T> strings = new HashMap<String, T>(values.size());
-        for (T value : values) {
+        final EnumSet<T> values = EnumSet.allOf(type);
+        final Map<String, T> strings = new HashMap<String, T>(values.size());
+        for (final T value : values) {
             if (strings.put(value.toString(), value) != null) {
                 throw new IllegalArgumentException("Enum type "
                     + type.getName()
@@ -61,38 +59,37 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
         return strings;
     }
 
-    private static <T> void checkType(Class<T> type) {
+    private static <T> void checkType(final Class<T> type) {
         if (!Enum.class.isAssignableFrom(type) && type != Enum.class) {
             throw new IllegalArgumentException("Converter can only handle enum types");
         }
     }
 
-    private static <T extends Enum<T>> EnumMap<T, String> buildValueMap(Class<T> type,
-        Map<String, T> strings) {
-        EnumMap<T, String> values = new EnumMap<T, String>(type);
-        for (Map.Entry<String, T> entry : strings.entrySet()) {
+    private static <T extends Enum<T>> EnumMap<T, String> buildValueMap(final Class<T> type,
+            final Map<String, T> strings) {
+        final EnumMap<T, String> values = new EnumMap<T, String>(type);
+        for (final Map.Entry<String, T> entry : strings.entrySet()) {
             values.put(entry.getValue(), entry.getKey());
         }
         return values;
     }
 
     @Override
-    public boolean canConvert(Class type) {
+    public boolean canConvert(final Class<?> type) {
         return enumType.isAssignableFrom(type);
     }
 
     @Override
-    public String toString(Object obj) {
-        Enum value = Enum.class.cast(obj);
-        return values == null ? value.toString() : values.get(value);
+    public String toString(final Object obj) {
+        return values == null ? obj.toString() : values.get(obj);
     }
 
     @Override
-    public Object fromString(String str) {
+    public Object fromString(final String str) {
         if (str == null) {
             return null;
         }
-        T result = strings.get(str);
+        final T result = strings.get(str);
         if (result == null) {
             throw new ConversionException("Invalid string representation for enum type "
                 + enumType.getName()

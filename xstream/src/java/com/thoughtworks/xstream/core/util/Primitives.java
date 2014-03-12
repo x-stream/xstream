@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2007, 2011 XStream Committers.
+ * Copyright (c) 2006, 2007, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.core.util;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Utility class for primitives.
  * 
@@ -20,37 +21,22 @@ import java.util.Map;
  * @since 1.2.1
  */
 public final class Primitives {
-    private final static Map BOX = new HashMap();
-    private final static Map UNBOX = new HashMap();
-    private final static Map NAMED_PRIMITIVE = new HashMap();
-    private final static Map REPRESENTING_CHAR = new HashMap();
-    
+    private final static Map<Class<?>, Class<?>> BOX = new HashMap<Class<?>, Class<?>>();
+    private final static Map<Class<?>, Class<?>> UNBOX = new HashMap<Class<?>, Class<?>>();
+    private final static Map<String, Class<?>> NAMED_PRIMITIVE = new HashMap<String, Class<?>>();
+    private final static Map<Class<?>, Character> REPRESENTING_CHAR = new HashMap<Class<?>, Character>();
+
     static {
-        final Class[][] boxing = new Class[][]{
-            { Byte.TYPE, Byte.class},
-            { Character.TYPE, Character.class},
-            { Short.TYPE, Short.class},
-            { Integer.TYPE, Integer.class},
-            { Long.TYPE, Long.class},
-            { Float.TYPE, Float.class},
-            { Double.TYPE, Double.class},
-            { Boolean.TYPE, Boolean.class},
-            { Void.TYPE, Void.class},
-        };
-        final Character[] representingChars = { 
-            new Character('B'), 
-            new Character('C'), 
-            new Character('S'), 
-            new Character('I'), 
-            new Character('J'), 
-            new Character('F'), 
-            new Character('D'), 
-            new Character('Z'),
-            null
-         };
+        final Class<?>[][] boxing = new Class[][]{
+            {Byte.TYPE, Byte.class}, {Character.TYPE, Character.class}, {Short.TYPE, Short.class},
+            {Integer.TYPE, Integer.class}, {Long.TYPE, Long.class}, {Float.TYPE, Float.class},
+            {Double.TYPE, Double.class}, {Boolean.TYPE, Boolean.class}, {Void.TYPE, Void.class},};
+        final Character[] representingChars = {
+            new Character('B'), new Character('C'), new Character('S'), new Character('I'), new Character('J'),
+            new Character('F'), new Character('D'), new Character('Z'), null};
         for (int i = 0; i < boxing.length; i++) {
-            final Class primitiveType = boxing[i][0];
-            final Class boxedType = boxing[i][1];
+            final Class<?> primitiveType = boxing[i][0];
+            final Class<?> boxedType = boxing[i][1];
             BOX.put(primitiveType, boxedType);
             UNBOX.put(boxedType, primitiveType);
             NAMED_PRIMITIVE.put(primitiveType.getName(), primitiveType);
@@ -64,18 +50,18 @@ public final class Primitives {
      * @param type the primitive type
      * @return the boxed type or null
      */
-    static public Class box(final Class type) {
-        return (Class)BOX.get(type);
+    static public Class<?> box(final Class<?> type) {
+        return BOX.get(type);
     }
-    
+
     /**
      * Get the primitive type for a boxed one.
      * 
      * @param type the boxed type
      * @return the primitive type or null
      */
-    static public Class unbox(final Class type) {
-        return (Class)UNBOX.get(type);
+    static public Class<?> unbox(final Class<?> type) {
+        return UNBOX.get(type);
     }
 
     /**
@@ -85,7 +71,7 @@ public final class Primitives {
      * @return <code>true</code> if the type is boxed
      * @since 1.4
      */
-    static public boolean isBoxed(final Class type) {
+    static public boolean isBoxed(final Class<?> type) {
         return UNBOX.containsKey(type);
     }
 
@@ -96,8 +82,8 @@ public final class Primitives {
      * @return the Java type or <code>null</code>
      * @since 1.4
      */
-    static public Class primitiveType(final String name) {
-        return (Class)NAMED_PRIMITIVE.get(name);
+    static public Class<?> primitiveType(final String name) {
+        return NAMED_PRIMITIVE.get(name);
     }
 
     /**
@@ -107,8 +93,8 @@ public final class Primitives {
      * @return the representing character or 0
      * @since 1.4
      */
-    static public char representingChar(final Class type) {
-        Character ch = (Character)REPRESENTING_CHAR.get(type);
+    static public char representingChar(final Class<?> type) {
+        final Character ch = REPRESENTING_CHAR.get(type);
         return ch == null ? 0 : ch.charValue();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,9 +10,11 @@
  */
 package com.thoughtworks.xstream.converters.javabean;
 
+import java.beans.PropertyDescriptor;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
+
 
 /**
  * A sorter that uses a comparator to determine the order of the bean properties.
@@ -22,14 +24,15 @@ import java.util.TreeMap;
  */
 public class ComparingPropertySorter implements PropertySorter {
 
-    private final Comparator comparator;
+    private final Comparator<String> comparator;
 
-    public ComparingPropertySorter(final Comparator propertyNameComparator) {
-        this.comparator = propertyNameComparator;
+    public ComparingPropertySorter(final Comparator<String> propertyNameComparator) {
+        comparator = propertyNameComparator;
     }
 
-    public Map sort(final Class type, final Map nameMap) {
-        TreeMap map = new TreeMap(comparator);
+    @Override
+    public Map<String, PropertyDescriptor> sort(final Class<?> type, final Map<String, PropertyDescriptor> nameMap) {
+        final TreeMap<String, PropertyDescriptor> map = new TreeMap<String, PropertyDescriptor>(comparator);
         map.putAll(nameMap);
         return map;
     }

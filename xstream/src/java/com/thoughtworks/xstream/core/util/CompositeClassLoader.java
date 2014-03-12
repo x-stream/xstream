@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,11 +11,11 @@
  */
 package com.thoughtworks.xstream.core.util;
 
+import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,19 +56,19 @@ public class CompositeClassLoader extends ClassLoader {
         if (JVM.is17()) {
             // see http://www.cs.duke.edu/csed/java/jdk1.7/technotes/guides/lang/cl-mt.html
             try {
-                Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable", (Class[])null);
+                final Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
                 if (!m.isAccessible()) {
                     m.setAccessible(true);
                 }
-                m.invoke(null, (Object[])null);
-            } catch (Exception e) {
+                m.invoke(null);
+            } catch (final Exception e) {
                 // ignore errors, JVM will synchronize class for Java 7 or higher
             }
         }
     }
 
-    private final ReferenceQueue queue = new ReferenceQueue();
-    private final List classLoaders = new ArrayList();
+    private final ReferenceQueue<ClassLoader> queue = new ReferenceQueue<ClassLoader>();
+    private final List<WeakReference<ClassLoader>> classLoaders = new ArrayList<WeakReference<ClassLoader>>();
 
     public CompositeClassLoader() {
         addInternal(Object.class.getClassLoader()); // bootstrap loader.
@@ -79,18 +79,18 @@ public class CompositeClassLoader extends ClassLoader {
      * Add a loader to the n
      * @param classLoader
      */
-    public synchronized void add(ClassLoader classLoader) {
+    public synchronized void add(final ClassLoader classLoader) {
         cleanup();
         if (classLoader != null) {
             addInternal(classLoader);
         }
     }
 
-    private void addInternal(ClassLoader classLoader) {
-        WeakReference refClassLoader = null;
-        for (Iterator iterator = classLoaders.iterator(); iterator.hasNext();) {
-            WeakReference ref = (WeakReference) iterator.next();
-            ClassLoader cl = (ClassLoader)ref.get();
+    private void addInternal(final ClassLoader classLoader) {
+        WeakReference<ClassLoader> refClassLoader = null;
+        for (final Iterator<WeakReference<ClassLoader>> iterator = classLoaders.iterator(); iterator.hasNext();) {
+            final WeakReference<ClassLoader> ref = iterator.next();
+            final ClassLoader cl = ref.get();
             if (cl == null) {
                 iterator.remove();
             } else if (cl == classLoader) {
@@ -98,47 +98,34 @@ public class CompositeClassLoader extends ClassLoader {
                 refClassLoader = ref;
             }
         }
-        classLoaders.add(0, refClassLoader != null ? refClassLoader : new WeakReference(classLoader, queue));
+        classLoaders.add(0, refClassLoader != null ? refClassLoader : new WeakReference<ClassLoader>(classLoader, queue));
     }
 
-    public Class loadClass(String name) throws ClassNotFoundException {
-        List copy = new ArrayList(classLoaders.size()) {
-
-            public boolean addAll(Collection c) {
-                boolean result = false;
-                for(Iterator iter = c.iterator(); iter.hasNext(); ) {
-                    result |= add(iter.next());
-                }
-                return result;
-            }
-
-            public boolean add(Object ref) {
-                Object classLoader = ((WeakReference)ref).get();
-                if (classLoader != null) {
-                    return super.add(classLoader);
-                }
-                return false;
-            }
-            
-        };
+    @Override
+    public Class<?> loadClass(final String name) throws ClassNotFoundException {
+        final List<ClassLoader> copy = new ArrayList<ClassLoader>(classLoaders.size());
         synchronized(this) {
             cleanup();
-            copy.addAll(classLoaders);
+            for(final WeakReference<ClassLoader> ref : classLoaders) {
+                final ClassLoader cl = ref.get();
+                if (cl != null) {
+                    copy.add(cl);
+                }
+            }
         }
-        
+
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        for (Iterator iterator = copy.iterator(); iterator.hasNext();) {
-            ClassLoader classLoader = (ClassLoader) iterator.next();
+        for (final ClassLoader classLoader : copy) {
             if (classLoader == contextClassLoader) {
                 contextClassLoader = null;
             }
             try {
                 return classLoader.loadClass(name);
-            } catch (ClassNotFoundException notFound) {
+            } catch (final ClassNotFoundException notFound) {
                 // ok.. try another one
             }
         }
-        
+
         // One last try - the context class loader associated with the current thread. Often used in j2ee servers.
         // Note: The contextClassLoader cannot be added to the classLoaders list up front as the thread that constructs
         // XStream is potentially different to thread that uses it.
@@ -150,8 +137,8 @@ public class CompositeClassLoader extends ClassLoader {
     }
 
     private void cleanup() {
-        WeakReference ref;
-        while ((ref = (WeakReference)queue.poll()) != null)
+        Reference<? extends ClassLoader> ref;
+        while ((ref = queue.poll()) != null)
         {
             classLoaders.remove(ref);
         }

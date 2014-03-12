@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,12 +10,13 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+
 import com.ctc.wstx.stax.WstxInputFactory;
 import com.ctc.wstx.stax.WstxOutputFactory;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 
 /**
  * A driver using the Woodstox StAX implementation.
@@ -32,39 +33,43 @@ public class WstxDriver extends StaxDriver {
     /**
      * @deprecated As of 1.4.6 use {@link #WstxDriver(QNameMap, NameCoder)}
      */
-    public WstxDriver(QNameMap qnameMap, XmlFriendlyNameCoder nameCoder) {
+    @Deprecated
+    public WstxDriver(final QNameMap qnameMap, final XmlFriendlyNameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
     /**
      * @since 1.4.6
      */
-    public WstxDriver(QNameMap qnameMap, NameCoder nameCoder) {
+    public WstxDriver(final QNameMap qnameMap, final NameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
-    public WstxDriver(QNameMap qnameMap) {
+    public WstxDriver(final QNameMap qnameMap) {
         super(qnameMap);
     }
 
     /**
      * @deprecated As of 1.4.6 use {@link #WstxDriver(NameCoder)}
      */
-    public WstxDriver(XmlFriendlyNameCoder nameCoder) {
+    @Deprecated
+    public WstxDriver(final XmlFriendlyNameCoder nameCoder) {
         super(nameCoder);
     }
 
     /**
      * @since 1.4.6
      */
-    public WstxDriver(NameCoder nameCoder) {
+    public WstxDriver(final NameCoder nameCoder) {
         super(nameCoder);
     }
 
+    @Override
     protected XMLInputFactory createInputFactory() {
         return new WstxInputFactory();
     }
 
+    @Override
     protected XMLOutputFactory createOutputFactory() {
         return new WstxOutputFactory();
     }

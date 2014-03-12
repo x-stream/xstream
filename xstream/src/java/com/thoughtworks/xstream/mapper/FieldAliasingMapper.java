@@ -11,48 +11,48 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.core.util.FastField;
-
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.thoughtworks.xstream.core.util.FastField;
+
+
 /**
- * Mapper that allows a field of a specific class to be replaced with a shorter alias, or omitted
- * entirely.
- *
+ * Mapper that allows a field of a specific class to be replaced with a shorter alias, or omitted entirely.
+ * 
  * @author Joe Walnes
  */
 public class FieldAliasingMapper extends MapperWrapper {
 
-    protected final Map fieldToAliasMap = new HashMap();
-    protected final Map aliasToFieldMap = new HashMap();
-    protected final Set fieldsToOmit = new HashSet();
-    protected final Set unknownFieldsToIgnore = new LinkedHashSet();
+    protected final Map<FastField, String> fieldToAliasMap = new HashMap<FastField, String>();
+    protected final Map<FastField, String> aliasToFieldMap = new HashMap<FastField, String>();
+    protected final Set<FastField> fieldsToOmit = new HashSet<FastField>();
+    protected final Set<Pattern> unknownFieldsToIgnore = new LinkedHashSet<Pattern>();
 
-    public FieldAliasingMapper(Mapper wrapped) {
+    public FieldAliasingMapper(final Mapper wrapped) {
         super(wrapped);
     }
 
-    public void addFieldAlias(String alias, Class type, String fieldName) {
+    public void addFieldAlias(final String alias, final Class<?> type, final String fieldName) {
         fieldToAliasMap.put(key(type, fieldName), alias);
         aliasToFieldMap.put(key(type, alias), fieldName);
     }
-    
+
     public void addFieldsToIgnore(final Pattern pattern) {
         unknownFieldsToIgnore.add(pattern);
     }
 
-    private Object key(Class type, String name) {
+    private FastField key(final Class<?> type, final String name) {
         return new FastField(type, name);
     }
 
-    public String serializedMember(Class type, String memberName) {
-        String alias = getMember(type, memberName, fieldToAliasMap);
+    @Override
+    public String serializedMember(final Class<?> type, final String memberName) {
+        final String alias = getMember(type, memberName, fieldToAliasMap);
         if (alias == null) {
             return super.serializedMember(type, memberName);
         } else {
@@ -60,8 +60,9 @@ public class FieldAliasingMapper extends MapperWrapper {
         }
     }
 
-    public String realMember(Class type, String serialized) {
-        String real = getMember(type, serialized, aliasToFieldMap);
+    @Override
+    public String realMember(final Class<?> type, final String serialized) {
+        final String real = getMember(type, serialized, aliasToFieldMap);
         if (real == null) {
             return super.realMember(type, serialized);
         } else {
@@ -69,22 +70,21 @@ public class FieldAliasingMapper extends MapperWrapper {
         }
     }
 
-    private String getMember(Class type, String name, Map map) {
+    private String getMember(final Class<?> type, final String name, final Map<FastField, String> map) {
         String member = null;
-        for (Class declaringType = type; 
-                member == null && declaringType != Object.class && declaringType != null; 
-                declaringType = declaringType.getSuperclass()) {
-            member = (String) map.get(key(declaringType, name));
+        for (Class<?> declaringType = type; member == null && declaringType != Object.class && declaringType != null; declaringType = declaringType
+            .getSuperclass()) {
+            member = map.get(key(declaringType, name));
         }
         return member;
     }
 
-    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+    @Override
+    public boolean shouldSerializeMember(final Class<?> definedIn, final String fieldName) {
         if (fieldsToOmit.contains(key(definedIn, fieldName))) {
             return false;
         } else if (definedIn == Object.class && !unknownFieldsToIgnore.isEmpty()) {
-            for(Iterator iter = unknownFieldsToIgnore.iterator(); iter.hasNext();) {
-                Pattern pattern = (Pattern)iter.next();
+            for (final Pattern pattern : unknownFieldsToIgnore) {
                 if (pattern.matcher(fieldName).matches()) {
                     return false;
                 }
@@ -93,7 +93,7 @@ public class FieldAliasingMapper extends MapperWrapper {
         return true;
     }
 
-    public void omitField(Class definedIn, String fieldName) {
+    public void omitField(final Class<?> definedIn, final String fieldName) {
         fieldsToOmit.add(key(definedIn, fieldName));
     }
 }

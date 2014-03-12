@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,25 +14,27 @@ package com.thoughtworks.xstream.mapper;
 import java.util.HashSet;
 import java.util.Set;
 
+
 /**
  * Mapper that specifies which types are basic immutable types. Types that are marked as immutable will be written
  * multiple times in the serialization stream without using references.
- *
+ * 
  * @author Joe Walnes
  */
 public class ImmutableTypesMapper extends MapperWrapper {
 
-    private final Set immutableTypes = new HashSet();
+    private final Set<Class<?>> immutableTypes = new HashSet<Class<?>>();
 
-    public ImmutableTypesMapper(Mapper wrapped) {
+    public ImmutableTypesMapper(final Mapper wrapped) {
         super(wrapped);
     }
 
-    public void addImmutableType(Class type) {
+    public void addImmutableType(final Class<?> type) {
         immutableTypes.add(type);
     }
 
-    public boolean isImmutableValueType(Class type) {
+    @Override
+    public boolean isImmutableValueType(final Class<?> type) {
         if (immutableTypes.contains(type)) {
             return true;
         } else {

@@ -20,10 +20,12 @@ package com.thoughtworks.xstream.converters.reflection;
  * @author Brian Slesinsky
  * @deprecated As of upcoming use {@link SunUnsafeReflectionProvider}
  */
+@Deprecated
 public class Sun14ReflectionProvider extends SunUnsafeReflectionProvider {
     /**
      * @deprecated As of upcoming use {@link SunUnsafeReflectionProvider#SunUnsafeReflectionProvider()}
      */
+    @Deprecated
     public Sun14ReflectionProvider() {
         super();
     }
@@ -31,10 +33,11 @@ public class Sun14ReflectionProvider extends SunUnsafeReflectionProvider {
     /**
      * @deprecated As of upcoming use {@link SunUnsafeReflectionProvider#SunUnsafeReflectionProvider(FieldDictionary)}
      */
-    public Sun14ReflectionProvider(FieldDictionary dic) {
+    @Deprecated
+    public Sun14ReflectionProvider(final FieldDictionary dic) {
         super(dic);
     }
-    
+
     private Object readResolve() {
         init();
         return this;

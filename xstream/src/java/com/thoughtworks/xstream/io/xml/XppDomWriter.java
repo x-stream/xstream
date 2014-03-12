@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -45,6 +45,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
      * @since 1.2
      * @deprecated As of 1.4 use {@link XppDomWriter#XppDomWriter(NameCoder)} instead
      */
+    @Deprecated
     public XppDomWriter(final XmlFriendlyReplacer replacer) {
         this(null, replacer);
     }
@@ -53,6 +54,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link XppDomWriter#XppDomWriter(XppDom, NameCoder)} instead.
      */
+    @Deprecated
     public XppDomWriter(final XppDom parent, final XmlFriendlyReplacer replacer) {
         this(parent, (NameCoder)replacer);
     }
@@ -61,6 +63,7 @@ public class XppDomWriter extends AbstractDocumentWriter {
         return (XppDom)getTopLevelNodes().get(0);
     }
 
+    @Override
     protected Object createNode(final String name) {
         final XppDom newNode = new XppDom(encodeNode(name));
         final XppDom top = top();
@@ -70,10 +73,12 @@ public class XppDomWriter extends AbstractDocumentWriter {
         return newNode;
     }
 
+    @Override
     public void setValue(final String text) {
         top().setValue(text);
     }
 
+    @Override
     public void addAttribute(final String key, final String value) {
         top().setAttribute(encodeAttribute(key), value);
     }

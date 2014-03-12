@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,86 +14,112 @@ package com.thoughtworks.xstream.mapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
+
 public abstract class MapperWrapper implements Mapper {
 
     private final Mapper wrapped;
 
-    public MapperWrapper(Mapper wrapped) {
+    public MapperWrapper(final Mapper wrapped) {
         this.wrapped = wrapped;
     }
 
-    public String serializedClass(Class type) {
+    @Override
+    public String serializedClass(final Class<?> type) {
         return wrapped.serializedClass(type);
     }
 
-    public Class realClass(String elementName) {
+    @Override
+    public Class<?> realClass(final String elementName) {
         return wrapped.realClass(elementName);
     }
 
-    public String serializedMember(Class type, String memberName) {
+    @Override
+    public String serializedMember(final Class<?> type, final String memberName) {
         return wrapped.serializedMember(type, memberName);
     }
 
-    public String realMember(Class type, String serialized) {
+    @Override
+    public String realMember(final Class<?> type, final String serialized) {
         return wrapped.realMember(type, serialized);
     }
 
-    public boolean isImmutableValueType(Class type) {
+    @Override
+    public boolean isImmutableValueType(final Class<?> type) {
         return wrapped.isImmutableValueType(type);
     }
 
-    public Class defaultImplementationOf(Class type) {
+    @Override
+    public Class<?> defaultImplementationOf(final Class<?> type) {
         return wrapped.defaultImplementationOf(type);
     }
 
-    public String aliasForAttribute(String attribute) {
+    @Override
+    public String aliasForAttribute(final String attribute) {
         return wrapped.aliasForAttribute(attribute);
     }
 
-    public String attributeForAlias(String alias) {
+    @Override
+    public String attributeForAlias(final String alias) {
         return wrapped.attributeForAlias(alias);
     }
 
-    public String aliasForSystemAttribute(String attribute) {
+    @Override
+    public String aliasForSystemAttribute(final String attribute) {
         return wrapped.aliasForSystemAttribute(attribute);
     }
 
-    public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {
+    @Override
+    public String getFieldNameForItemTypeAndName(final Class<?> definedIn, final Class<?> itemType,
+            final String itemFieldName) {
         return wrapped.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
     }
 
-    public Class getItemTypeForItemFieldName(Class definedIn, String itemFieldName) {
+    @Override
+    public Class<?> getItemTypeForItemFieldName(final Class<?> definedIn, final String itemFieldName) {
         return wrapped.getItemTypeForItemFieldName(definedIn, itemFieldName);
     }
 
-    public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(Class itemType, String fieldName) {
+    @Override
+    public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(final Class<?> itemType,
+            final String fieldName) {
         return wrapped.getImplicitCollectionDefForFieldName(itemType, fieldName);
     }
 
-    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+    @Override
+    public boolean shouldSerializeMember(final Class<?> definedIn, final String fieldName) {
         return wrapped.shouldSerializeMember(definedIn, fieldName);
     }
 
-    public Converter getLocalConverter(Class definedIn, String fieldName) {
+    @Override
+    public Converter getLocalConverter(final Class<?> definedIn, final String fieldName) {
         return wrapped.getLocalConverter(definedIn, fieldName);
     }
 
-    public Mapper lookupMapperOfType(Class type) {
-        return type.isAssignableFrom(getClass()) ? this : wrapped.lookupMapperOfType(type);
+    @Override
+    public <T extends Mapper> T lookupMapperOfType(final Class<T> type) {
+        @SuppressWarnings("unchecked")
+        final T t = type.isAssignableFrom(getClass()) ? (T)this : wrapped.lookupMapperOfType(type);
+        return t;
     }
-    
-    public SingleValueConverter getConverterFromItemType(String fieldName, Class type, Class definedIn) {
-    	return wrapped.getConverterFromItemType(fieldName, type, definedIn);
+
+    @Override
+    public SingleValueConverter getConverterFromItemType(final String fieldName, final Class<?> type,
+            final Class<?> definedIn) {
+        return wrapped.getConverterFromItemType(fieldName, type, definedIn);
     }
-    
+
     /**
-     * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
-    public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
-    	return wrapped.getConverterFromAttribute(type, attribute);
+    @Deprecated
+    @Override
+    public SingleValueConverter getConverterFromAttribute(final Class<?> type, final String attribute) {
+        return wrapped.getConverterFromAttribute(type, attribute);
     }
-    
-    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type) {
+
+    @Override
+    public SingleValueConverter getConverterFromAttribute(final Class<?> definedIn, final String attribute,
+            final Class<?> type) {
         return wrapped.getConverterFromAttribute(definedIn, attribute, type);
     }
 

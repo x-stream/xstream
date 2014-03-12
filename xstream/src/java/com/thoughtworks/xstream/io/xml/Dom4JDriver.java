@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -32,6 +32,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
+
 public class Dom4JDriver extends AbstractXmlDriver {
 
     private DocumentFactory documentFactory;
@@ -44,19 +45,19 @@ public class Dom4JDriver extends AbstractXmlDriver {
     /**
      * @since 1.4
      */
-    public Dom4JDriver(NameCoder nameCoder) {
+    public Dom4JDriver(final NameCoder nameCoder) {
         this(new DocumentFactory(), OutputFormat.createPrettyPrint(), nameCoder);
         outputFormat.setTrimText(false);
     }
 
-    public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat) {
+    public Dom4JDriver(final DocumentFactory documentFactory, final OutputFormat outputFormat) {
         this(documentFactory, outputFormat, new XmlFriendlyNameCoder());
     }
 
     /**
      * @since 1.4
      */
-    public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, NameCoder nameCoder) {
+    public Dom4JDriver(final DocumentFactory documentFactory, final OutputFormat outputFormat, final NameCoder nameCoder) {
         super(nameCoder);
         this.documentFactory = documentFactory;
         this.outputFormat = outputFormat;
@@ -66,16 +67,17 @@ public class Dom4JDriver extends AbstractXmlDriver {
      * @since 1.2
      * @deprecated As of 1.4, use {@link Dom4JDriver#Dom4JDriver(DocumentFactory, OutputFormat, NameCoder)} instead.
      */
-    public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, XmlFriendlyReplacer replacer) {
+    @Deprecated
+    public Dom4JDriver(
+            final DocumentFactory documentFactory, final OutputFormat outputFormat, final XmlFriendlyReplacer replacer) {
         this(documentFactory, outputFormat, (NameCoder)replacer);
     }
-
 
     public DocumentFactory getDocumentFactory() {
         return documentFactory;
     }
 
-    public void setDocumentFactory(DocumentFactory documentFactory) {
+    public void setDocumentFactory(final DocumentFactory documentFactory) {
         this.documentFactory = documentFactory;
     }
 
@@ -83,39 +85,28 @@ public class Dom4JDriver extends AbstractXmlDriver {
         return outputFormat;
     }
 
-    public void setOutputFormat(OutputFormat outputFormat) {
+    public void setOutputFormat(final OutputFormat outputFormat) {
         this.outputFormat = outputFormat;
     }
 
-    public HierarchicalStreamReader createReader(Reader text) {
+    @Override
+    public HierarchicalStreamReader createReader(final Reader text) {
         try {
-            SAXReader reader = new SAXReader();
-            Document document = reader.read(text);
+            final SAXReader reader = new SAXReader();
+            final Document document = reader.read(text);
             return new Dom4JReader(document, getNameCoder());
-        } catch (DocumentException e) {
+        } catch (final DocumentException e) {
             throw new StreamException(e);
         }
     }
 
-    public HierarchicalStreamReader createReader(InputStream in) {
+    @Override
+    public HierarchicalStreamReader createReader(final InputStream in) {
         try {
-            SAXReader reader = new SAXReader();
-            Document document = reader.read(in);
+            final SAXReader reader = new SAXReader();
+            final Document document = reader.read(in);
             return new Dom4JReader(document, getNameCoder());
-        } catch (DocumentException e) {
-            throw new StreamException(e);
-        }
-    }
-
-    /**
-     * @since 1.4
-     */
-    public HierarchicalStreamReader createReader(URL in) {
-        try {
-            SAXReader reader = new SAXReader();
-            Document document = reader.read(in);
-            return new Dom4JReader(document, getNameCoder());
-        } catch (DocumentException e) {
+        } catch (final DocumentException e) {
             throw new StreamException(e);
         }
     }
@@ -123,27 +114,45 @@ public class Dom4JDriver extends AbstractXmlDriver {
     /**
      * @since 1.4
      */
-    public HierarchicalStreamReader createReader(File in) {
+    @Override
+    public HierarchicalStreamReader createReader(final URL in) {
         try {
-            SAXReader reader = new SAXReader();
-            Document document = reader.read(in);
+            final SAXReader reader = new SAXReader();
+            final Document document = reader.read(in);
             return new Dom4JReader(document, getNameCoder());
-        } catch (DocumentException e) {
+        } catch (final DocumentException e) {
             throw new StreamException(e);
         }
     }
 
+    /**
+     * @since 1.4
+     */
+    @Override
+    public HierarchicalStreamReader createReader(final File in) {
+        try {
+            final SAXReader reader = new SAXReader();
+            final Document document = reader.read(in);
+            return new Dom4JReader(document, getNameCoder());
+        } catch (final DocumentException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    @Override
     public HierarchicalStreamWriter createWriter(final Writer out) {
         final HierarchicalStreamWriter[] writer = new HierarchicalStreamWriter[1];
-        final FilterWriter filter = new FilterWriter(out){
+        final FilterWriter filter = new FilterWriter(out) {
+            @Override
             public void close() {
                 writer[0].close();
             }
         };
-        writer[0] = new Dom4JXmlWriter(new XMLWriter(filter,  outputFormat), getNameCoder());
+        writer[0] = new Dom4JXmlWriter(new XMLWriter(filter, outputFormat), getNameCoder());
         return writer[0];
     }
 
+    @Override
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
         final Writer writer = new OutputStreamWriter(out);
         return createWriter(writer);

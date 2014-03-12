@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,28 +11,34 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
-
 import java.io.File;
 
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+
+
 /**
- * This converter will take care of storing and retrieving File with either
- * an absolute path OR a relative path depending on how they were created.
- *
+ * Converts a {@link File}.
+ * 
+ * <p>This converter will take care of storing and retrieving {@link File} with either an absolute path OR a relative path
+ * depending on how they were created.</p>
+ * 
  * @author Joe Walnes
  */
 public class FileConverter extends AbstractSingleValueConverter {
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type.equals(File.class);
     }
 
-    public Object fromString(String str) {
+    @Override
+    public Object fromString(final String str) {
         return new File(str);
     }
 
-    public String toString(Object obj) {
-        return ((File) obj).getPath();
+    @Override
+    public String toString(final Object obj) {
+        return ((File)obj).getPath();
     }
 
 }

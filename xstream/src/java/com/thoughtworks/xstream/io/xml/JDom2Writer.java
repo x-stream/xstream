@@ -1,20 +1,20 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  * 
- * Created on 24. June 2012 by Joerg Schaible 
+ * Created on 24. June 2013 by Joerg Schaible 
  */
 package com.thoughtworks.xstream.io.xml;
-
-import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.jdom2.DefaultJDOMFactory;
 import org.jdom2.Element;
 import org.jdom2.JDOMFactory;
+
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
 /**
@@ -27,9 +27,7 @@ public class JDom2Writer extends AbstractDocumentWriter {
     /**
      * @since 1.4.5
      */
-    public JDom2Writer(
-                      final Element container, final JDOMFactory factory,
-                      final NameCoder nameCoder) {
+    public JDom2Writer(final Element container, final JDOMFactory factory, final NameCoder nameCoder) {
         super(container, nameCoder);
         documentFactory = factory;
     }
@@ -76,6 +74,7 @@ public class JDom2Writer extends AbstractDocumentWriter {
         this(new DefaultJDOMFactory());
     }
 
+    @Override
     protected Object createNode(final String name) {
         final Element element = documentFactory.element(encodeNode(name));
         final Element parent = top();
@@ -85,10 +84,12 @@ public class JDom2Writer extends AbstractDocumentWriter {
         return element;
     }
 
+    @Override
     public void setValue(final String text) {
         top().addContent(documentFactory.text(text));
     }
 
+    @Override
     public void addAttribute(final String key, final String value) {
         top().setAttribute(documentFactory.attribute(encodeAttribute(key), value));
     }

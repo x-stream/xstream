@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,14 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.NotActiveException;
+import java.io.ObjectInputValidation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -20,37 +28,31 @@ import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.NotActiveException;
-import java.io.ObjectInputValidation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 /**
- * Converts any object that implements the java.io.Externalizable interface, allowing compatibility with native Java
+ * Converts any object that implements the {@link Externalizable} interface, allowing compatibility with native Java
  * serialization.
- *
+ * 
  * @author Joe Walnes
  */
 public class ExternalizableConverter implements Converter {
 
-    private Mapper mapper;
+    private final Mapper mapper;
     private final ClassLoaderReference classLoaderReference;
 
     /**
      * Construct an ExternalizableConverter.
+     * 
      * @param mapper the Mapper chain
      * @param classLoaderReference the reference to XStream's {@link ClassLoader} instance
      * @since 1.4.5
      */
-    public ExternalizableConverter(Mapper mapper, ClassLoaderReference classLoaderReference) {
+    public ExternalizableConverter(final Mapper mapper, final ClassLoaderReference classLoaderReference) {
         this.mapper = mapper;
         this.classLoaderReference = classLoaderReference;
     }
@@ -58,109 +60,134 @@ public class ExternalizableConverter implements Converter {
     /**
      * @deprecated As of 1.4.5 use {@link #ExternalizableConverter(Mapper, ClassLoaderReference)}
      */
-    public ExternalizableConverter(Mapper mapper, ClassLoader classLoader) {
+    @Deprecated
+    public ExternalizableConverter(final Mapper mapper, final ClassLoader classLoader) {
         this(mapper, new ClassLoaderReference(classLoader));
     }
 
     /**
      * @deprecated As of 1.4 use {@link #ExternalizableConverter(Mapper, ClassLoader)}
      */
-    public ExternalizableConverter(Mapper mapper) {
+    @Deprecated
+    public ExternalizableConverter(final Mapper mapper) {
         this(mapper, ExternalizableConverter.class.getClassLoader());
     }
 
-    public boolean canConvert(Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return JVM.canCreateDerivedObjectOutputStream() && Externalizable.class.isAssignableFrom(type);
     }
 
-    public void marshal(Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+    @Override
+    public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         try {
-            Externalizable externalizable = (Externalizable) source;
-            CustomObjectOutputStream.StreamCallback callback = new CustomObjectOutputStream.StreamCallback() {
-                public void writeToStream(Object object) {
+            final Externalizable externalizable = (Externalizable)source;
+            final CustomObjectOutputStream.StreamCallback callback = new CustomObjectOutputStream.StreamCallback() {
+                @Override
+                public void writeToStream(final Object object) {
                     if (object == null) {
                         writer.startNode("null");
                         writer.endNode();
                     } else {
-                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(object.getClass()), object.getClass());
+                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(object
+                            .getClass()), object.getClass());
                         context.convertAnother(object);
                         writer.endNode();
                     }
                 }
 
-                public void writeFieldsToStream(Map fields) {
+                @Override
+                public void writeFieldsToStream(final Map<String, Object> fields) {
                     throw new UnsupportedOperationException();
                 }
 
+                @Override
                 public void defaultWriteObject() {
                     throw new UnsupportedOperationException();
                 }
 
+                @Override
                 public void flush() {
                     writer.flush();
                 }
 
+                @Override
                 public void close() {
-                    throw new UnsupportedOperationException("Objects are not allowed to call ObjectOutput.close() from writeExternal()");
+                    throw new UnsupportedOperationException(
+                        "Objects are not allowed to call ObjectOutput.close() from writeExternal()");
                 }
             };
-            CustomObjectOutputStream objectOutput = CustomObjectOutputStream.getInstance(context, callback);
+            @SuppressWarnings("resource")
+            final CustomObjectOutputStream objectOutput = CustomObjectOutputStream.getInstance(context, callback);
             externalizable.writeExternal(objectOutput);
             objectOutput.popCallback();
-        } catch (IOException e) {
-            throw new ConversionException("Cannot serialize " + source.getClass().getName() + " using Externalization", e);
+        } catch (final IOException e) {
+            throw new ConversionException("Cannot serialize " + source.getClass().getName() + " using Externalization",
+                e);
         }
     }
 
+    @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Class type = context.getRequiredType();
-        final Constructor defaultConstructor;
+        final Class<?> type = context.getRequiredType();
+        final Constructor<?> defaultConstructor;
         try {
-            defaultConstructor = type.getDeclaredConstructor((Class[]) null);
+            defaultConstructor = type.getDeclaredConstructor();
             if (!defaultConstructor.isAccessible()) {
                 defaultConstructor.setAccessible(true);
             }
-            final Externalizable externalizable = (Externalizable) defaultConstructor.newInstance((Object[]) null);
-            CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
+            final Externalizable externalizable = (Externalizable)defaultConstructor.newInstance();
+            final CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
+                @Override
                 public Object readFromStream() {
                     reader.moveDown();
-                    Class type = HierarchicalStreams.readClassType(reader, mapper);
-                    Object streamItem = context.convertAnother(externalizable, type);
+                    final Class<?> type = HierarchicalStreams.readClassType(reader, mapper);
+                    final Object streamItem = context.convertAnother(externalizable, type);
                     reader.moveUp();
                     return streamItem;
                 }
 
-                public Map readFieldsFromStream() {
+                @Override
+                public Map<String, Object> readFieldsFromStream() {
                     throw new UnsupportedOperationException();
                 }
 
+                @Override
                 public void defaultReadObject() {
                     throw new UnsupportedOperationException();
                 }
 
-                public void registerValidation(ObjectInputValidation validation, int priority) throws NotActiveException {
+                @Override
+                public void registerValidation(final ObjectInputValidation validation, final int priority)
+                        throws NotActiveException {
                     throw new NotActiveException("stream inactive");
                 }
 
+                @Override
                 public void close() {
-                    throw new UnsupportedOperationException("Objects are not allowed to call ObjectInput.close() from readExternal()");
+                    throw new UnsupportedOperationException(
+                        "Objects are not allowed to call ObjectInput.close() from readExternal()");
                 }
             };
-            CustomObjectInputStream objectInput = CustomObjectInputStream.getInstance(context, callback, classLoaderReference);
-            externalizable.readExternal(objectInput);
-            objectInput.popCallback();
+            {
+                @SuppressWarnings("resource")
+                final CustomObjectInputStream objectInput = CustomObjectInputStream.getInstance(context, callback,
+                    classLoaderReference);
+                externalizable.readExternal(objectInput);
+                objectInput.popCallback();
+            }
             return externalizable;
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             throw new ConversionException("Cannot construct " + type.getClass() + ", missing default constructor", e);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             throw new ConversionException("Cannot construct " + type.getClass(), e);
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             throw new ConversionException("Cannot construct " + type.getClass(), e);
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             throw new ConversionException("Cannot construct " + type.getClass(), e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ConversionException("Cannot externalize " + type.getClass(), e);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             throw new ConversionException("Cannot externalize " + type.getClass(), e);
         }
     }

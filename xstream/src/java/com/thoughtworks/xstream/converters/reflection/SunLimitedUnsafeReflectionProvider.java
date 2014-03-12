@@ -38,16 +38,16 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
         Unsafe u = null;
         Exception ex = null;
         try {
-            Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+            final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
             u = (Unsafe)unsafeField.get(null);
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             ex = e;
-        } catch (NoSuchFieldException e) {
+        } catch (final NoSuchFieldException e) {
             ex = e;
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             ex = e;
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             ex = e;
         }
         exception = ex;
@@ -64,26 +64,28 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
     /**
      * @since 1.4.7
      */
-    public SunLimitedUnsafeReflectionProvider(FieldDictionary fieldDictionary) {
+    public SunLimitedUnsafeReflectionProvider(final FieldDictionary fieldDictionary) {
         super(fieldDictionary);
     }
 
-    public Object newInstance(Class type) {
+    @Override
+    public Object newInstance(final Class<?> type) {
         if (exception != null) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), exception);
         }
         try {
             return unsafe.allocateInstance(type);
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         }
     }
 
-    protected void validateFieldAccess(Field field) {
+    @Override
+    protected void validateFieldAccess(final Field field) {
         // (overriden) don't mind final fields.
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2014 XStream Committers.
  * All rights reserved.
  *
  * Created on 12.10.2010 by Joerg Schaible, extracted from TreeSetConverter.
@@ -13,113 +13,131 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 
+
 /**
  * @author J&ouml;rg Schaible
  */
-public class PresortedSet implements SortedSet {
-    private final List list = new ArrayList();
-    private final Comparator comparator;
+public class PresortedSet<E> implements SortedSet<E> {
+    private final List<E> list = new ArrayList<E>();
+    private final Comparator<E> comparator;
 
     public PresortedSet() {
         this(null);
     }
 
-    public PresortedSet(Comparator comparator) {
+    public PresortedSet(final Comparator<E> comparator) {
         this(comparator, null);
     }
 
-    public PresortedSet(Comparator comparator, Collection c) {
+    public PresortedSet(final Comparator<E> comparator, final Collection<E> c) {
         this.comparator = comparator;
         if (c != null) {
             addAll(c);
         }
     }
 
-    public boolean add(Object e) {
+    @Override
+    public boolean add(final E e) {
         return this.list.add(e);
     }
 
-    public boolean addAll(Collection c) {
+    @Override
+    public boolean addAll(final Collection<? extends E> c) {
         return this.list.addAll(c);
     }
 
+    @Override
     public void clear() {
         this.list.clear();
     }
 
-    public boolean contains(Object o) {
+    @Override
+    public boolean contains(final Object o) {
         return this.list.contains(o);
     }
 
-    public boolean containsAll(Collection c) {
+    @Override
+    public boolean containsAll(final Collection<?> c) {
         return this.list.containsAll(c);
     }
 
-    public boolean equals(Object o) {
+    @Override
+    public boolean equals(final Object o) {
         return this.list.equals(o);
     }
 
+    @Override
     public int hashCode() {
         return this.list.hashCode();
     }
 
+    @Override
     public boolean isEmpty() {
         return this.list.isEmpty();
     }
 
-    public Iterator iterator() {
+    @Override
+    public Iterator<E> iterator() {
         return this.list.iterator();
     }
 
-    public boolean remove(Object o) {
+    @Override
+    public boolean remove(final Object o) {
         return this.list.remove(o);
     }
 
-    public boolean removeAll(Collection c) {
+    @Override
+    public boolean removeAll(final Collection<?> c) {
         return this.list.removeAll(c);
     }
 
-    public boolean retainAll(Collection c) {
+    @Override
+    public boolean retainAll(final Collection<?> c) {
         return this.list.retainAll(c);
     }
 
+    @Override
     public int size() {
         return this.list.size();
     }
 
-    public List subList(int fromIndex, int toIndex) {
-        return this.list.subList(fromIndex, toIndex);
-    }
-
+    @Override
     public Object[] toArray() {
         return this.list.toArray();
     }
 
-    public Object[] toArray(Object[] a) {
+    @Override
+    public <T> T[] toArray(final T[] a) {
         return this.list.toArray(a);
     }
 
-    public Comparator comparator() {
+    @Override
+    public Comparator<E> comparator() {
         return comparator;
     }
 
-    public Object first() {
+    @Override
+    public E first() {
         return list.isEmpty() ? null : list.get(0);
     }
 
-    public SortedSet headSet(Object toElement) {
+    @Override
+    public SortedSet<E> headSet(final Object toElement) {
         throw new UnsupportedOperationException();
     }
 
-    public Object last() {
+    @Override
+    public E last() {
         return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
-    public SortedSet subSet(Object fromElement, Object toElement) {
+    @Override
+    public SortedSet<E> subSet(final Object fromElement, final Object toElement) {
         throw new UnsupportedOperationException();
     }
 
-    public SortedSet tailSet(Object fromElement) {
+    @Override
+    public SortedSet<E> tailSet(final Object fromElement) {
         throw new UnsupportedOperationException();
     }
 }

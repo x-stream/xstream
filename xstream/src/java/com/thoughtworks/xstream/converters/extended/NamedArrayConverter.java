@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,6 +24,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+
 /**
  * An array converter that uses predefined names for its items.
  * <p>
@@ -35,18 +36,19 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public class NamedArrayConverter implements Converter {
 
-    private final Class arrayType;
+    private final Class<?> arrayType;
     private final String itemName;
     private final Mapper mapper;
 
     /**
      * Construct a NamedArrayConverter.
+     * 
      * @param arrayType
      * @param mapper
      * @param itemName
      * @since 1.4.6
      */
-    public NamedArrayConverter(final Class arrayType, final Mapper mapper, final String itemName) {
+    public NamedArrayConverter(final Class<?> arrayType, final Mapper mapper, final String itemName) {
         if (!arrayType.isArray()) {
             throw new IllegalArgumentException(arrayType.getName() + " is not an array");
         }
@@ -55,19 +57,19 @@ public class NamedArrayConverter implements Converter {
         this.itemName = itemName;
     }
 
-    public boolean canConvert(final Class type) {
+    @Override
+    public boolean canConvert(final Class<?> type) {
         return type == arrayType;
     }
 
+    @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final int length = Array.getLength(source);
         for (int i = 0; i < length; ++i) {
             final Object item = Array.get(source, i);
-            final Class itemType = item == null 
-                    ? Mapper.Null.class 
-                    : arrayType.getComponentType().isPrimitive()
-                        ?  Primitives.unbox(item.getClass())
-                        : item.getClass();
+            final Class<?> itemType = item == null ? Mapper.Null.class : arrayType.getComponentType().isPrimitive()
+                ? Primitives.unbox(item.getClass())
+                : item.getClass();
             ExtendedHierarchicalStreamWriterHelper.startNode(writer, itemName, itemType);
             if (!itemType.equals(arrayType.getComponentType())) {
                 final String attributeName = mapper.aliasForSystemAttribute("class");
@@ -82,13 +84,14 @@ public class NamedArrayConverter implements Converter {
         }
     }
 
+    @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final List list = new ArrayList();
+        final List<Object> list = new ArrayList<Object>();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             final Object item;
             final String className = HierarchicalStreams.readClassAttribute(reader, mapper);
-            final Class itemType = className == null ? arrayType.getComponentType() : mapper.realClass(className);
+            final Class<?> itemType = className == null ? arrayType.getComponentType() : mapper.realClass(className);
             if (Mapper.Null.class.equals(itemType)) {
                 item = null;
             } else {
