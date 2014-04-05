@@ -153,7 +153,6 @@ public abstract class AbstractFilePersistenceStrategy<K, V> implements Persisten
         }
     }
 
-    @SuppressWarnings("resource")
     private void writeFile(final File file, final Object value) {
         try {
             final FileOutputStream out = new FileOutputStream(file);
@@ -174,7 +173,6 @@ public abstract class AbstractFilePersistenceStrategy<K, V> implements Persisten
         return new File(baseDirectory, filename);
     }
 
-    @SuppressWarnings("resource")
     private V readFile(final File file) {
         try {
             final FileInputStream in = new FileInputStream(file);
