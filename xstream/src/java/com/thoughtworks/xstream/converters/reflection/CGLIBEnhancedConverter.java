@@ -436,6 +436,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     }
 
     private Object readResolve() {
+        init();
         fieldCache = new HashMap<String, List<Field>>();
         return this;
     }

@@ -53,7 +53,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     public AbstractReflectionConverter(final Mapper mapper, final ReflectionProvider reflectionProvider) {
         this.mapper = mapper;
         this.reflectionProvider = reflectionProvider;
-        serializationMethodInvoker = new SerializationMethodInvoker();
+        init();
     }
 
     protected boolean canAccess(final Class<?> type) {
@@ -532,8 +532,12 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         serializationMethodInvoker.flushCache();
     }
 
-    private Object readResolve() {
+    protected void init() {
         serializationMethodInvoker = new SerializationMethodInvoker();
+    }
+
+    private Object readResolve() {
+        init();
         return this;
     }
 
