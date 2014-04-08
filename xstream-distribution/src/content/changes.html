@@ -39,6 +39,7 @@
     	<li>Fix: DateConverter ignores provided locale.</li>
     	<li>Fix: WeakCache.entrySet().iterator().next.setValue(value) returns the reference instead of the old value.</li>
     	<li>Fix: SqlTimestampConverter throws IllegalArgumentException instead of ConversionException on fromString().</li>
+    	<li>Fix: CGLIBEnhancedConverter does not initialize transient members of parent after deserialization.</li>
     </ul>
 
     <h2>API changes</h2>

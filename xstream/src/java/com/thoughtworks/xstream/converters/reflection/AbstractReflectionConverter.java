@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -53,7 +53,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     public AbstractReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         this.mapper = mapper;
         this.reflectionProvider = reflectionProvider;
-        serializationMethodInvoker = new SerializationMethodInvoker();
+        init();
     }
     
     protected boolean canAccess(Class type) {
@@ -558,8 +558,12 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         serializationMethodInvoker.flushCache();
     }
 
-    private Object readResolve() {
+    protected void init() {
         serializationMethodInvoker = new SerializationMethodInvoker();
+    }
+
+    private Object readResolve() {
+        init();
         return this;
     }
 
