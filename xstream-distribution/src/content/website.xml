@@ -1,6 +1,6 @@
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2010, 2011 XStream committers.
+ Copyright (C) 2006, 2007, 2010, 2011, 2014 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -52,6 +52,7 @@
         <page>objectstream.html</page>
         <page>persistence-tutorial.html</page>
         <page>json-tutorial.html</page>
+        <link title="StudyTrails">http://www.studytrails.com/java/xml/xstream/xstream-introduction.jsp</link>
     </section>
     <section>
         <name>Developing XStream</name>
