@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -199,5 +199,15 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
             assertSame(UnusedComparator.THROWING_COMPARATOR, result.comparator());
             assertEquals(new ArrayList(set), new ArrayList(result));
         }
+    }
+    
+    public void testTreeSetRemoveWorksProperlyAfterDeserialization() {
+        TreeSet set = new TreeSet();
+        set.add("guy");
+        set.add("hi");
+        set.add("bye");
+        
+        TreeSet result = (TreeSet) xstream.fromXML(xstream.toXML(set));
+        assertTrue(result.remove("hi"));
     }
 }

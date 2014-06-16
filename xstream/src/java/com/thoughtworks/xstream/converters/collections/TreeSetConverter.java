@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 08. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.collections;
@@ -36,14 +36,48 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * <p>
  * The converter assumes that the elements in the XML are already sorted according the comparator.
  * </p>
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public class TreeSetConverter extends CollectionConverter {
     private transient TreeMapConverter treeMapConverter;
-    private final static Field sortedMapField = JVM.hasOptimizedTreeSetAddAll() ? Fields.locate(TreeSet.class,
-        SortedMap.class, false) : null;
+    private final static Field sortedMapField;
+    private final static Object constantValue;
+    static {
+        Object value = null;
+        sortedMapField = JVM.hasOptimizedTreeSetAddAll() ? Fields.locate(TreeSet.class, SortedMap.class, false) : null;
+        if (sortedMapField != null) {
+            final TreeSet<String> set = new TreeSet<String>();
+            set.add("1");
+            set.add("2");
+
+            Map<String, Object> backingMap = null;
+            try {
+                @SuppressWarnings("unchecked")
+                final Map<String, Object> map = (Map<String, Object>)sortedMapField.get(set);
+                backingMap = map;
+            } catch (final IllegalAccessException e) {
+                // give up;
+            }
+            if (backingMap != null) {
+                final Object[] values = backingMap.values().toArray();
+                if (values[0] == values[1]) {
+                    value = values[0];
+                }
+            }
+        } else {
+            final Field valueField = Fields.locate(TreeSet.class, Object.class, true);
+            if (valueField != null) {
+                try {
+                    value = valueField.get(null);
+                } catch (final IllegalAccessException e) {
+                    // give up;
+                }
+            }
+        }
+        constantValue = value;
+    }
 
     public TreeSetConverter(final Mapper mapper) {
         super(mapper, TreeSet.class);
@@ -67,7 +101,7 @@ public class TreeSetConverter extends CollectionConverter {
         final Comparator<Object> comparator = inFirstElement ? null : (Comparator<Object>)unmarshalledComparator;
         if (sortedMapField != null) {
             final TreeSet<Object> possibleResult = comparator == null ? new TreeSet<Object>() : new TreeSet<Object>(
-                comparator);
+                    comparator);
             Object backingMap = null;
             try {
                 backingMap = sortedMapField.get(possibleResult);
@@ -112,7 +146,7 @@ public class TreeSetConverter extends CollectionConverter {
                     public boolean add(final Object object) {
                         @SuppressWarnings("unchecked")
                         final Map<Object, Object> collectionTarget = (Map<Object, Object>)target;
-                        return collectionTarget.put(object, object) != null;
+                        return collectionTarget.put(object, constantValue != null ? constantValue : object) != null;
                     }
 
                     @Override
