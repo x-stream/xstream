@@ -51,7 +51,7 @@ public class TreeSetConverter extends CollectionConverter {
             set.add("1");
             set.add("2");
 
-            Map<String, Object> backingMap = null;
+            Map backingMap = null;
             try {
                 backingMap = (Map)sortedMapField.get(set);
             } catch (final IllegalAccessException e) {
