@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,8 +41,40 @@ import java.util.TreeSet;
  */
 public class TreeSetConverter extends CollectionConverter {
     private transient TreeMapConverter treeMapConverter;  
-    private final static Field sortedMapField = 
-       JVM.hasOptimizedTreeSetAddAll() ? Fields.locate(TreeSet.class, SortedMap.class, false) : null;
+    private final static Field sortedMapField;
+    private final static Object constantValue;
+    static {
+        Object value = null;
+        sortedMapField = JVM.hasOptimizedTreeSetAddAll() ? Fields.locate(TreeSet.class, SortedMap.class, false) : null;
+        if (sortedMapField != null) {
+            TreeSet set = new TreeSet();
+            set.add("1");
+            set.add("2");
+
+            Map<String, Object> backingMap = null;
+            try {
+                backingMap = (Map)sortedMapField.get(set);
+            } catch (final IllegalAccessException e) {
+                // give up;
+            }
+            if (backingMap != null) {
+                Object[] values = backingMap.values().toArray();
+                if (values[0] == values[1]) {
+                    value = values[0];
+                }
+            }
+        } else {
+            Field valueField = Fields.locate(TreeSet.class, Object.class, true);
+            if (valueField != null) {
+                try {
+                    value = valueField.get(null);
+                } catch (final IllegalAccessException e) {
+                    // give up;
+                }
+            }
+        }
+        constantValue = value;
+    }
 
     public TreeSetConverter(Mapper mapper) {
         super(mapper, TreeSet.class);
@@ -103,7 +135,7 @@ public class TreeSetConverter extends CollectionConverter {
                 UnmarshallingContext context, Map map, final Map target) {
                 populateCollection(reader, context, new AbstractList() {
                     public boolean add(Object object) {
-                        return target.put(object, object) != null;
+                        return target.put(object, constantValue != null ? constantValue : object) != null;
                     }
 
                     public Object get(int location) {
