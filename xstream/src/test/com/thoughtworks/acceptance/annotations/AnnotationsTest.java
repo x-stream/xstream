@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,9 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,6 +171,23 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
             + "  <aliased>value</aliased>\n" // 
             + "</second>";
         assertEquals(internalType, xstream.fromXML(xml));
+    }
+
+    public void testForClassInObjectStreamIsDetectedAtDeserialization() throws IOException, ClassNotFoundException {
+        // must preprocess annotations here
+        xstream.processAnnotations(InternalType.class);
+        xstream.ignoreUnknownElements();
+        InternalType internalType = new InternalType();
+        String xml = ""
+            + "<root>\n"
+            + "  <second>\n"
+            + "    <aliased>value</aliased>\n"
+            + "    <none>1</none>\n"
+            + "  </second>\n"
+            + "</root>";
+        ObjectInputStream in = xstream.createObjectInputStream(new StringReader(xml));
+        assertEquals(internalType, in.readObject());
+        in.close();
     }
 
     @XStreamInclude({InternalType.class})
