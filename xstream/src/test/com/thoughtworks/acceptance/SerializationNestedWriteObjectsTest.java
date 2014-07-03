@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2010, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -207,17 +207,17 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("raw", RawString.class);
 
         String expectedXml = ""
-            + "<object-stream>\n"
+            + "<root>\n"
             + "  <raw serialization=\"custom\">\n"
             + "    <raw>\n"
             + "      <byte>7</byte>\n"
             + "      <byte-array>WFN0cmVhbQ==</byte-array>\n"
             + "    </raw>\n"
             + "  </raw>\n"
-            + "</object-stream>";
+            + "</root>";
 
         StringWriter stringWriter = new StringWriter();
-        ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter);
+        ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter, "root");
         os.writeObject(new RawString("XStream"));
         os.close();
         String actualXml = stringWriter.getBuffer().toString();
