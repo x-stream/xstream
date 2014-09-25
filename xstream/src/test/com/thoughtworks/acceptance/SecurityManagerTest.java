@@ -182,6 +182,7 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.elementAttributeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.entityExpansionLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxElementDepth", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxGeneralEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxParameterEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxOccurLimit", "read"));
