@@ -397,7 +397,7 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
             return true;
         }
 
-        private Object writeReplace() {
+        protected Object writeReplace() {
             if (getClass() == TreeData.class) {
                 return this;
             }

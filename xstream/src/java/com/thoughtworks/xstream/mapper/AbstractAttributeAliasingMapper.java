@@ -34,7 +34,7 @@ public abstract class AbstractAttributeAliasingMapper extends MapperWrapper {
         nameToAlias.put(attributeName, alias);
     }
 
-    private Object readResolve() {
+    Object readResolve() {
         nameToAlias = new HashMap();
         for (final Iterator iter = aliasToName.keySet().iterator(); iter.hasNext();) {
             final Object alias = iter.next();

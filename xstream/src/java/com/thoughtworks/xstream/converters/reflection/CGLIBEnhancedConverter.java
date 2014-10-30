@@ -438,8 +438,8 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         return typeHierarchy;
     }
 
-    private Object readResolve() {
-        init();
+    protected Object readResolve() {
+        super.readResolve();
         fieldCache = new HashMap();
         return this;
     }
