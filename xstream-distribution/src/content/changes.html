@@ -60,6 +60,7 @@
     <h2>Minor changes</h2>
     
     <ul>
+    	<li>XSTR-762: Private method readResolve() called on base classes.</li>
     	<li>XSTR-755: ExternalizableConverter does not respect writeReplace and readResolve.</li>
     	<li>XSTR-757: Deserialized TreeSet does not honor remove(Object) return value contract.</li>
     	<li>Fix: DateConverter ignores provided locale.</li>
@@ -71,6 +72,8 @@
     <h2>API changes</h2>
     
     <ul>
+    	<li>c.t.x.converters.reflection.AbstractReflectionConverter.readResolve() is protected now.</li>
+    	<li>c.t.x.mapper.AbstractAttributeAliasingMapper.readResolve() is protected now.</li>
     	<li>Deprecated c.t.x.converters.extended.StackTraceElementFactory, it is an internal helper class.</li>
     	<li>Deprecated c.t.x.io.AttributeNameIterator, it is an internal helper class.</li>
     	<li>Deprecated c.t.x.XStream.useXStream11XmlFriendlyMapper(), corresponding

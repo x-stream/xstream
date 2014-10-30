@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,61 +26,211 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
     // static so it can be accessed by objects under test, without them needing a reference back to the testcase
     private static CallLog log = new CallLog();
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         log.reset();
     }
    
 
-    // --- Sample class hiearchy
+    // --- Sample class hierarchy
 
-    public static class Base implements Serializable{
+    public static class PrivateBase implements Serializable{
 
         private void writeObject(ObjectOutputStream out) throws IOException {
-            log.actual("Base.writeObject() start");
+            log.actual("PrivateBase.writeObject() start");
             out.defaultWriteObject();
-            log.actual("Base.writeObject() end");
+            log.actual("PrivateBase.writeObject() end");
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-            log.actual("Base.readObject() start");
+            log.actual("PrivateBase.readObject() start");
             in.defaultReadObject();
-            log.actual("Base.readObject() end");
+            log.actual("PrivateBase.readObject() end");
         }
 
         private Object writeReplace() {
-            log.actual("Base.writeReplace()");
+            log.actual("PrivateBase.writeReplace()");
             return this;
         }
 
         private Object readResolve() {
-            log.actual("Base.readResolve()");
+            log.actual("PrivateBase.readResolve()");
             return this;
         }
     }
 
-    public static class Child extends Base implements Serializable{
+    public static class PrivateChildOwnRR extends PrivateBase implements Serializable{
 
         private void writeObject(ObjectOutputStream out) throws IOException {
-            log.actual("Child.writeObject() start");
+            log.actual("PrivateChildOwnRR.writeObject() start");
             out.defaultWriteObject();
-            log.actual("Child.writeObject() end");
+            log.actual("PrivateChildOwnRR.writeObject() end");
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-            log.actual("Child.readObject() start");
+            log.actual("PrivateChildOwnRR.readObject() start");
             in.defaultReadObject();
-            log.actual("Child.readObject() end");
+            log.actual("PrivateChildOwnRR.readObject() end");
         }
 
         private Object writeReplace() {
-            log.actual("Child.writeReplace()");
+            log.actual("PrivateChildOwnRR.writeReplace()");
             return this;
         }
 
         private Object readResolve() {
-            log.actual("Child.readResolve()");
+            log.actual("PrivateChildOwnRR.readResolve()");
             return this;
+        }
+    }
+
+    public static class PrivateChildNoRR extends PrivateBase implements Serializable{
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            log.actual("PrivateChildNoRR.writeObject() start");
+            out.defaultWriteObject();
+            log.actual("PrivateChildNoRR.writeObject() end");
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("PrivateChildNoRR.readObject() start");
+            in.defaultReadObject();
+            log.actual("PrivateChildNoRR.readObject() end");
+        }
+    }
+    
+    public static class ProtectedBase implements Serializable{
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            log.actual("ProtectedBase.writeObject() start");
+            out.defaultWriteObject();
+            log.actual("ProtectedBase.writeObject() end");
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("ProtectedBase.readObject() start");
+            in.defaultReadObject();
+            log.actual("ProtectedBase.readObject() end");
+        }
+
+        protected Object writeReplace() {
+            log.actual("ProtectedBase.writeReplace()");
+            return this;
+        }
+
+        protected Object readResolve() {
+            log.actual("ProtectedBase.readResolve()");
+            return this;
+        }
+    }
+
+    public static class ProtectedChildOwnRR extends ProtectedBase implements Serializable{
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            log.actual("ProtectedChildOwnRR.writeObject() start");
+            out.defaultWriteObject();
+            log.actual("ProtectedChildOwnRR.writeObject() end");
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("ProtectedChildOwnRR.readObject() start");
+            in.defaultReadObject();
+            log.actual("ProtectedChildOwnRR.readObject() end");
+        }
+
+        @Override
+        protected Object writeReplace() {
+            log.actual("ProtectedChildOwnRR.writeReplace()");
+            return this;
+        }
+
+        @Override
+        protected Object readResolve() {
+            log.actual("ProtectedChildOwnRR.readResolve()");
+            return this;
+        }
+    }
+
+    public static class ProtectedChildInheritedRR extends ProtectedBase implements Serializable{
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            log.actual("ProtectedChildInheritedRR.writeObject() start");
+            out.defaultWriteObject();
+            log.actual("ProtectedChildInheritedRR.writeObject() end");
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("ProtectedChildInheritedRR.readObject() start");
+            in.defaultReadObject();
+            log.actual("ProtectedChildInheritedRR.readObject() end");
+        }
+    }
+    
+    public static class PackageBase implements Serializable{
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            log.actual("PackageBase.writeObject() start");
+            out.defaultWriteObject();
+            log.actual("PackageBase.writeObject() end");
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("PackageBase.readObject() start");
+            in.defaultReadObject();
+            log.actual("PackageBase.readObject() end");
+        }
+
+        Object writeReplace() {
+            log.actual("PackageBase.writeReplace()");
+            return this;
+        }
+
+        Object readResolve() {
+            log.actual("PackageBase.readResolve()");
+            return this;
+        }
+    }
+
+    public static class PackageChildOwnRR extends PackageBase implements Serializable{
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            log.actual("PackageChildOwnRR.writeObject() start");
+            out.defaultWriteObject();
+            log.actual("PackageChildOwnRR.writeObject() end");
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("PackageChildOwnRR.readObject() start");
+            in.defaultReadObject();
+            log.actual("PackageChildOwnRR.readObject() end");
+        }
+
+        @Override
+        Object writeReplace() {
+            log.actual("PackageChildOwnRR.writeReplace()");
+            return this;
+        }
+
+        @Override
+        Object readResolve() {
+            log.actual("PackageChildOwnRR.readResolve()");
+            return this;
+        }
+    }
+
+    public static class PackageChildInheritedRR extends PackageBase implements Serializable{
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            log.actual("PackageChildInheritedRR.writeObject() start");
+            out.defaultWriteObject();
+            log.actual("PackageChildInheritedRR.writeObject() end");
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("PackageChildInheritedRR.readObject() start");
+            in.defaultReadObject();
+            log.actual("PackageChildInheritedRR.readObject() end");
         }
     }
 
@@ -101,47 +251,195 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     // --- Tests
 
-    public void testJavaSerialization() throws IOException {
+    public void testJavaSerializationOwnPrivateRR() throws IOException {
         // expectations
-        log.expect("Child.writeReplace()");
-        log.expect("Base.writeObject() start");
-        log.expect("Base.writeObject() end");
-        log.expect("Child.writeObject() start");
-        log.expect("Child.writeObject() end");
+        log.expect("PrivateChildOwnRR.writeReplace()");
+        log.expect("PrivateBase.writeObject() start");
+        log.expect("PrivateBase.writeObject() end");
+        log.expect("PrivateChildOwnRR.writeObject() start");
+        log.expect("PrivateChildOwnRR.writeObject() end");
 
         // execute
-        javaSerialize(new Child());
+        javaSerialize(new PrivateChildOwnRR());
 
         // verify
         log.verify();
     }
 
-    public void testXStreamSerialization() {
+    public void testJavaSerializationNoRR() throws IOException {
         // expectations
-        log.expect("Child.writeReplace()");
-        log.expect("Base.writeObject() start");
-        log.expect("Base.writeObject() end");
-        log.expect("Child.writeObject() start");
-        log.expect("Child.writeObject() end");
+        log.expect("PrivateBase.writeObject() start");
+        log.expect("PrivateBase.writeObject() end");
+        log.expect("PrivateChildNoRR.writeObject() start");
+        log.expect("PrivateChildNoRR.writeObject() end");
 
         // execute
-        xstream.toXML(new Child());
+        javaSerialize(new PrivateChildNoRR());
 
         // verify
         log.verify();
     }
 
-    public void testJavaDeserialization() throws IOException, ClassNotFoundException {
+    public void testJavaSerializationOwnProtectedRR() throws IOException {
+        // expectations
+        log.expect("ProtectedChildOwnRR.writeReplace()");
+        log.expect("ProtectedBase.writeObject() start");
+        log.expect("ProtectedBase.writeObject() end");
+        log.expect("ProtectedChildOwnRR.writeObject() start");
+        log.expect("ProtectedChildOwnRR.writeObject() end");
+
+        // execute
+        javaSerialize(new ProtectedChildOwnRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaSerializationInheritedRR() throws IOException {
+        // expectations
+        log.expect("ProtectedBase.writeReplace()");
+        log.expect("ProtectedBase.writeObject() start");
+        log.expect("ProtectedBase.writeObject() end");
+        log.expect("ProtectedChildInheritedRR.writeObject() start");
+        log.expect("ProtectedChildInheritedRR.writeObject() end");
+
+        // execute
+        javaSerialize(new ProtectedChildInheritedRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaSerializationOwnPackageRR() throws IOException {
+        // expectations
+        log.expect("PackageChildOwnRR.writeReplace()");
+        log.expect("PackageBase.writeObject() start");
+        log.expect("PackageBase.writeObject() end");
+        log.expect("PackageChildOwnRR.writeObject() start");
+        log.expect("PackageChildOwnRR.writeObject() end");
+
+        // execute
+        javaSerialize(new PackageChildOwnRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaSerializationInheritedPackageRR() throws IOException {
+        // expectations
+        log.expect("PackageBase.writeReplace()");
+        log.expect("PackageBase.writeObject() start");
+        log.expect("PackageBase.writeObject() end");
+        log.expect("PackageChildInheritedRR.writeObject() start");
+        log.expect("PackageChildInheritedRR.writeObject() end");
+
+        // execute
+        javaSerialize(new PackageChildInheritedRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamSerializationOwnPrivateRR() {
+        // expectations
+        log.expect("PrivateChildOwnRR.writeReplace()");
+        log.expect("PrivateBase.writeObject() start");
+        log.expect("PrivateBase.writeObject() end");
+        log.expect("PrivateChildOwnRR.writeObject() start");
+        log.expect("PrivateChildOwnRR.writeObject() end");
+
+        // execute
+        xstream.toXML(new PrivateChildOwnRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamSerializationNoRR() {
+        // expectations
+        log.expect("PrivateBase.writeObject() start");
+        log.expect("PrivateBase.writeObject() end");
+        log.expect("PrivateChildNoRR.writeObject() start");
+        log.expect("PrivateChildNoRR.writeObject() end");
+
+        // execute
+        xstream.toXML(new PrivateChildNoRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamSerializationOwnProtectedRR() {
+        // expectations
+        log.expect("ProtectedChildOwnRR.writeReplace()");
+        log.expect("ProtectedBase.writeObject() start");
+        log.expect("ProtectedBase.writeObject() end");
+        log.expect("ProtectedChildOwnRR.writeObject() start");
+        log.expect("ProtectedChildOwnRR.writeObject() end");
+
+        // execute
+        xstream.toXML(new ProtectedChildOwnRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamSerializationOwnInheritedRR() {
+        // expectations
+        log.expect("ProtectedBase.writeReplace()");
+        log.expect("ProtectedBase.writeObject() start");
+        log.expect("ProtectedBase.writeObject() end");
+        log.expect("ProtectedChildInheritedRR.writeObject() start");
+        log.expect("ProtectedChildInheritedRR.writeObject() end");
+
+        // execute
+        xstream.toXML(new ProtectedChildInheritedRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamSerializationOwnPackageRR() {
+        // expectations
+        log.expect("PackageChildOwnRR.writeReplace()");
+        log.expect("PackageBase.writeObject() start");
+        log.expect("PackageBase.writeObject() end");
+        log.expect("PackageChildOwnRR.writeObject() start");
+        log.expect("PackageChildOwnRR.writeObject() end");
+
+        // execute
+        xstream.toXML(new PackageChildOwnRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamSerializationOwnInheritedPackageRR() {
+        // expectations
+        log.expect("PackageBase.writeReplace()");
+        log.expect("PackageBase.writeObject() start");
+        log.expect("PackageBase.writeObject() end");
+        log.expect("PackageChildInheritedRR.writeObject() start");
+        log.expect("PackageChildInheritedRR.writeObject() end");
+
+        // execute
+        xstream.toXML(new PackageChildInheritedRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaDeserializationOwnPrivateRR() throws IOException, ClassNotFoundException {
         // setup
-        byte[] data = javaSerialize(new Child());
+        byte[] data = javaSerialize(new PrivateChildOwnRR());
         log.reset();
 
         // expectations
-        log.expect("Base.readObject() start");
-        log.expect("Base.readObject() end");
-        log.expect("Child.readObject() start");
-        log.expect("Child.readObject() end");
-        log.expect("Child.readResolve()");
+        log.expect("PrivateBase.readObject() start");
+        log.expect("PrivateBase.readObject() end");
+        log.expect("PrivateChildOwnRR.readObject() start");
+        log.expect("PrivateChildOwnRR.readObject() end");
+        log.expect("PrivateChildOwnRR.readResolve()");
 
         // execute
         javaDeserialize(data);
@@ -150,17 +448,111 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
-    public void testXStreamDeserialization() {
+    public void testJavaDeserializationNoRR() throws IOException, ClassNotFoundException {
         // setup
-        String data = xstream.toXML(new Child());
+        byte[] data = javaSerialize(new PrivateChildNoRR());
         log.reset();
 
         // expectations
-        log.expect("Base.readObject() start");
-        log.expect("Base.readObject() end");
-        log.expect("Child.readObject() start");
-        log.expect("Child.readObject() end");
-        log.expect("Child.readResolve()");
+        log.expect("PrivateBase.readObject() start");
+        log.expect("PrivateBase.readObject() end");
+        log.expect("PrivateChildNoRR.readObject() start");
+        log.expect("PrivateChildNoRR.readObject() end");
+
+        // execute
+        javaDeserialize(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaDeserializationOwnProtectedRR() throws IOException, ClassNotFoundException {
+        // setup
+        byte[] data = javaSerialize(new ProtectedChildOwnRR());
+        log.reset();
+
+        // expectations
+        log.expect("ProtectedBase.readObject() start");
+        log.expect("ProtectedBase.readObject() end");
+        log.expect("ProtectedChildOwnRR.readObject() start");
+        log.expect("ProtectedChildOwnRR.readObject() end");
+        log.expect("ProtectedChildOwnRR.readResolve()");
+
+        // execute
+        javaDeserialize(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaDeserializationInheritedRR() throws IOException, ClassNotFoundException {
+        // setup
+        byte[] data = javaSerialize(new ProtectedChildInheritedRR());
+        log.reset();
+
+        // expectations
+        log.expect("ProtectedBase.readObject() start");
+        log.expect("ProtectedBase.readObject() end");
+        log.expect("ProtectedChildInheritedRR.readObject() start");
+        log.expect("ProtectedChildInheritedRR.readObject() end");
+        log.expect("ProtectedBase.readResolve()");
+
+        // execute
+        javaDeserialize(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaDeserializationOwnPackageRR() throws IOException, ClassNotFoundException {
+        // setup
+        byte[] data = javaSerialize(new PackageChildOwnRR());
+        log.reset();
+
+        // expectations
+        log.expect("PackageBase.readObject() start");
+        log.expect("PackageBase.readObject() end");
+        log.expect("PackageChildOwnRR.readObject() start");
+        log.expect("PackageChildOwnRR.readObject() end");
+        log.expect("PackageChildOwnRR.readResolve()");
+
+        // execute
+        javaDeserialize(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaDeserializationInheritedPackageRR() throws IOException, ClassNotFoundException {
+        // setup
+        byte[] data = javaSerialize(new PackageChildInheritedRR());
+        log.reset();
+
+        // expectations
+        log.expect("PackageBase.readObject() start");
+        log.expect("PackageBase.readObject() end");
+        log.expect("PackageChildInheritedRR.readObject() start");
+        log.expect("PackageChildInheritedRR.readObject() end");
+        log.expect("PackageBase.readResolve()");
+
+        // execute
+        javaDeserialize(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationOwnPrivateRR() {
+        // setup
+        String data = xstream.toXML(new PrivateChildOwnRR());
+        log.reset();
+
+        // expectations
+        log.expect("PrivateBase.readObject() start");
+        log.expect("PrivateBase.readObject() end");
+        log.expect("PrivateChildOwnRR.readObject() start");
+        log.expect("PrivateChildOwnRR.readObject() end");
+        log.expect("PrivateChildOwnRR.readResolve()");
 
         // execute
         xstream.fromXML(data);
@@ -169,6 +561,99 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
+    public void testXStreamDeserializationNoRR() {
+        // setup
+        String data = xstream.toXML(new PrivateChildNoRR());
+        log.reset();
+
+        // expectations
+        log.expect("PrivateBase.readObject() start");
+        log.expect("PrivateBase.readObject() end");
+        log.expect("PrivateChildNoRR.readObject() start");
+        log.expect("PrivateChildNoRR.readObject() end");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationOwnProtectedRR() {
+        // setup
+        String data = xstream.toXML(new ProtectedChildOwnRR());
+        log.reset();
+
+        // expectations
+        log.expect("ProtectedBase.readObject() start");
+        log.expect("ProtectedBase.readObject() end");
+        log.expect("ProtectedChildOwnRR.readObject() start");
+        log.expect("ProtectedChildOwnRR.readObject() end");
+        log.expect("ProtectedChildOwnRR.readResolve()");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationInheritedRR() {
+        // setup
+        String data = xstream.toXML(new ProtectedChildInheritedRR());
+        log.reset();
+
+        // expectations
+        log.expect("ProtectedBase.readObject() start");
+        log.expect("ProtectedBase.readObject() end");
+        log.expect("ProtectedChildInheritedRR.readObject() start");
+        log.expect("ProtectedChildInheritedRR.readObject() end");
+        log.expect("ProtectedBase.readResolve()");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationOwnPackageRR() {
+        // setup
+        String data = xstream.toXML(new PackageChildOwnRR());
+        log.reset();
+
+        // expectations
+        log.expect("PackageBase.readObject() start");
+        log.expect("PackageBase.readObject() end");
+        log.expect("PackageChildOwnRR.readObject() start");
+        log.expect("PackageChildOwnRR.readObject() end");
+        log.expect("PackageChildOwnRR.readResolve()");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationInheritedPackageRR() {
+        // setup
+        String data = xstream.toXML(new PackageChildInheritedRR());
+        log.reset();
+
+        // expectations
+        log.expect("PackageBase.readObject() start");
+        log.expect("PackageBase.readObject() end");
+        log.expect("PackageChildInheritedRR.readObject() start");
+        log.expect("PackageChildInheritedRR.readObject() end");
+        log.expect("PackageBase.readResolve()");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
 
     public static class ParentNotTransient implements Serializable {
 

@@ -435,8 +435,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         return typeHierarchy;
     }
 
-    private Object readResolve() {
-        init();
+    @Override
+    protected Object readResolve() {
+        super.readResolve();
         fieldCache = new HashMap<String, List<Field>>();
         return this;
     }

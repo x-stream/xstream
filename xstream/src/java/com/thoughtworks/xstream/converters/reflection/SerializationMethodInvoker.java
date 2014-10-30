@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 23. August 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.reflection;
@@ -15,10 +15,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.Caching;
@@ -27,7 +28,7 @@ import com.thoughtworks.xstream.core.util.FastField;
 
 /**
  * Convenience wrapper to invoke special serialization methods on objects (and perform reflection caching).
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
@@ -38,13 +39,19 @@ public class SerializationMethodInvoker implements Caching {
         private void noMethod() {
         }
     }.getClass().getDeclaredMethods()[0];
-    private static final FastField[] OBJECT_TYPE_FIELDS = new FastField[]{
+    private static final FastField[] OBJECT_TYPE_FIELDS = {
         new FastField(Object.class, "readResolve"), new FastField(Object.class, "writeReplace"),
         new FastField(Object.class, "readObject"), new FastField(Object.class, "writeObject")};
-    private final Map<FastField, Method> cache = Collections.synchronizedMap(new HashMap<FastField, Method>());
+    private final ConcurrentMap<FastField, Method> declaredCache = new ConcurrentHashMap<FastField, Method>(
+            new HashMap<FastField, Method>());
+    private final ConcurrentMap<FastField, Method> resRepCache = new ConcurrentHashMap<FastField, Method>(
+            new HashMap<FastField, Method>());
     {
         for (final FastField element : OBJECT_TYPE_FIELDS) {
-            cache.put(element, NO_METHOD);
+            declaredCache.put(element, NO_METHOD);
+        }
+        for (final FastField element : Arrays.copyOf(OBJECT_TYPE_FIELDS, 2)) {
+            resRepCache.put(element, NO_METHOD);
         }
     }
 
@@ -55,16 +62,16 @@ public class SerializationMethodInvoker implements Caching {
         if (result == null) {
             return null;
         } else {
-            final Method readResolveMethod = getMethod(result.getClass(), "readResolve", true);
+            final Class<? extends Object> resultType = result.getClass();
+            final Method readResolveMethod = getRRMethod(resultType, "readResolve");
             if (readResolveMethod != null) {
                 try {
                     return readResolveMethod.invoke(result);
                 } catch (final IllegalAccessException e) {
-                    throw new ObjectAccessException("Could not call " + result.getClass().getName() + ".readResolve()",
-                        e);
+                    throw new ObjectAccessException("Could not call " + resultType.getName() + ".readResolve()", e);
                 } catch (final InvocationTargetException e) {
-                    throw new ObjectAccessException("Could not call " + result.getClass().getName() + ".readResolve()",
-                        e.getTargetException());
+                    throw new ObjectAccessException("Could not call " + resultType.getName() + ".readResolve()", e
+                        .getTargetException());
                 }
             } else {
                 return result;
@@ -76,16 +83,16 @@ public class SerializationMethodInvoker implements Caching {
         if (object == null) {
             return null;
         } else {
-            final Method writeReplaceMethod = getMethod(object.getClass(), "writeReplace", true);
+            final Class<? extends Object> objectType = object.getClass();
+            final Method writeReplaceMethod = getRRMethod(objectType, "writeReplace");
             if (writeReplaceMethod != null) {
                 try {
                     return writeReplaceMethod.invoke(object);
                 } catch (final IllegalAccessException e) {
-                    throw new ObjectAccessException(
-                        "Could not call " + object.getClass().getName() + ".writeReplace()", e);
+                    throw new ObjectAccessException("Could not call " + objectType.getName() + ".writeReplace()", e);
                 } catch (final InvocationTargetException e) {
-                    throw new ObjectAccessException(
-                        "Could not call " + object.getClass().getName() + ".writeReplace()", e.getTargetException());
+                    throw new ObjectAccessException("Could not call " + objectType.getName() + ".writeReplace()", e
+                        .getTargetException());
                 }
             } else {
                 return object;
@@ -136,7 +143,7 @@ public class SerializationMethodInvoker implements Caching {
             return null;
         }
         final FastField method = new FastField(type, name);
-        Method result = cache.get(method);
+        Method result = declaredCache.get(method);
 
         if (result == null) {
             try {
@@ -147,13 +154,34 @@ public class SerializationMethodInvoker implements Caching {
             } catch (final NoSuchMethodException e) {
                 result = getMethod(type.getSuperclass(), name, parameterTypes);
             }
-            cache.put(method, result);
+            declaredCache.put(method, result);
         }
         return result;
     }
 
+    private Method getRRMethod(final Class<?> type, final String name) {
+        final FastField method = new FastField(type, name);
+        Method result = resRepCache.get(method);
+        if (result == null) {
+            result = getMethod(type, name, true);
+            if (result != null && result.getDeclaringClass() != type) {
+                if ((result.getModifiers() & (Modifier.PUBLIC | Modifier.PROTECTED)) == 0) {
+                    if ((result.getModifiers() & Modifier.PRIVATE) > 0
+                            || type.getPackage() != result.getDeclaringClass().getPackage()) {
+                        result = NO_METHOD;
+                    }
+                }
+            } else if (result == null) {
+                result = NO_METHOD;
+            }
+            resRepCache.putIfAbsent(method, result);
+        }
+        return result == NO_METHOD ? null : result;
+    }
+
     @Override
     public void flushCache() {
-        cache.keySet().retainAll(Arrays.asList(OBJECT_TYPE_FIELDS));
+        declaredCache.keySet().retainAll(Arrays.asList(OBJECT_TYPE_FIELDS));
+        resRepCache.keySet().retainAll(Arrays.asList(OBJECT_TYPE_FIELDS));
     }
 }
