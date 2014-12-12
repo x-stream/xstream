@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * @author Chris Kelly
@@ -51,5 +52,32 @@ public class ReadResolveTest extends AbstractAcceptanceTest {
         StatusEnum rStatus = (StatusEnum) xstream.fromXML(xml);
 
         assertSame(status, rStatus);
+    }
+    
+    public static class ResolveToNull implements Serializable {
+        private String name;
+        public ResolveToNull(String name) {
+            this.name = name;
+        }
+        private Object readResolve() {
+            return null;
+        }
+    }
+    
+    public void testResolveToNull() throws IOException, ClassNotFoundException {
+        ResolveToNull obj = new ResolveToNull("test");
+        
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(bout);
+        os.writeObject(obj);
+        
+        byte[] bArray = bout.toByteArray();
+        ObjectInputStream in = null;
+        ByteArrayInputStream bin = new ByteArrayInputStream(bArray);
+        in = new ObjectInputStream(bin);
+        assertNull(in.readObject());
+        
+        xstream.alias("toNull", ResolveToNull.class);
+        assertNull(xstream.fromXML("<toNull><name>test</name></toNull>"));
     }
 }
