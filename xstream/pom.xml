@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -216,6 +216,65 @@
 
   <profiles>
     <profile>
+      <id>jdk18ge</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs>
+                <arg>-XDignore.symbol.file</arg>
+              </compilerArgs>
+              <testExcludes>
+                <exclude>**/Lambda**</exclude>
+              </testExcludes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>compile-jdk18</id>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <testExcludes>
+                      <exclude>foo</exclude>
+                    </testExcludes>
+                </configuration>
+                <goals>
+                  <goal>testCompile</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>jdk17</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs>
+                <arg>-XDignore.symbol.file</arg>
+              </compilerArgs>
+              <testExcludes>
+                <exclude>**/Lambda**</exclude>
+              </testExcludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>jdk15-16</id>
       <activation>
         <jdk>[1.5,1.7)</jdk>
@@ -230,6 +289,7 @@
                 <arg>-XDignore.symbol.file</arg>
               </compilerArgs>
               <testExcludes>
+                <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/*17Test*</exclude>
               </testExcludes>
             </configuration>
