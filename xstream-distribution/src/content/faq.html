@@ -63,6 +63,10 @@
     <!-- ...................................................... -->
     <h2 id="Compatibility_enhanced_mode_advantage">What are the advantages of using enhanced mode over pure Java mode?</h2>
 
+	<p>Currently it is not possible to recreate every instance of a type using the official Java API only. The enhanced mode uses some undocumented, but wide-spread
+	available functionality to recreate such instances nevertheless. However, in a secured secured environment, older Java run times or a limited Java environment might
+	prevent the usage of the enhanced mode and XStream uses the plain Java API as fallback. This mode has some restrictions though:</p> 
+
     <table summary="Comparison of pure Java and enhanced mode">
       <tr><th>Feature</th><th>Pure Java</th><th>Enhanced Mode</th></tr>
       <tr><td>Public classes</td><td>Yes</td><td>Yes</td></tr>
