@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -571,6 +571,10 @@ public class XStream {
         mapper = new EnumMapper(mapper);
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
+        if (JVM.is18()) {
+            mapper = buildMapperDynamically("com.thoughtworks.xstream.mapper.LambdaMapper", new Class[]{Mapper.class},
+                new Object[]{mapper});
+        }
         mapper = new SecurityMapper(mapper);
         mapper = new AnnotationMapper(mapper, converterRegistry, converterLookup, classLoaderReference,
             reflectionProvider);
@@ -579,7 +583,6 @@ public class XStream {
         return mapper;
     }
 
-    @SuppressWarnings("unused")
     private Mapper buildMapperDynamically(final String className, final Class<?>[] constructorParamTypes,
             final Object[] constructorParamValues) {
         try {
@@ -737,6 +740,9 @@ public class XStream {
         if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
             aliasDynamically("duration", "javax.xml.datatype.Duration");
         }
+        if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
+            aliasDynamically("serialized-lambda", "java.lang.invoke.SerializedLambda");
+        }
     }
 
     private void aliasDynamically(final String alias, final String className) {
@@ -831,6 +837,11 @@ public class XStream {
         if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.DurationConverter",
                 PRIORITY_NORMAL, null, null);
+        }
+        if (JVM.is18()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
+                PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class, ClassLoaderReference.class},
+                new Object[]{mapper, reflectionProvider, classLoaderReference});
         }
 
         registerConverter(new SelfStreamingInstanceChecker(converterLookup, this), PRIORITY_NORMAL);

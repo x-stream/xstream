@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -826,14 +826,6 @@
                 <td>very low</td>
             </tr>
             <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/annotations/AnnotationReflectionConverter.html">AnnotationReflectionConverter</a></td>
-                <td>Any type</td>
-                <td>The Converter is used as fallback. It uses reflection to examine the class and will serialize its fields and supports annotations for 
-                local converters.</td>
-                <td>Needs JDK 1.5, default for JDK 1.5. Deprecated since XStream 1.3 and must be registered now explicitly.</td>
-                <td>&nbsp;</td>
-            </tr>
-            <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/SerializableConverter.html">SerializableConverter</a></td>
                 <td>java.io.Serializable or types with one of the serializable methods readObject or writeObject</td>
                 <td>The Converter is used for any JDK-serializable types, if not handled by a specialized Converter.</td>
@@ -846,6 +838,16 @@
                 <td>The Converter is used for any JDK-externalizable types, if not handled by a specialized Converter.</td>
                 <td>&nbsp;</td>
                 <td>low</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/LambdaConverter.html">LambdaConverter</a></td>
+                <td>For serializable and non-serializable lambda types. Noon-serialzable lambda instances will be mapped to null, since they
+                contain no information for recreation. Serializable lambda types have such info, but it is specific to compiler vendor and
+                occurrence in the code. Never assume that you can deserialize such an element when you use a different version of your code
+                or a different compiler.</td>
+                <td>&nbsp;</td>
+                <td>Only automatically registered for Java 8.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ToAttributedValueConverter.html">ToAttributedValueConverter</a></td>

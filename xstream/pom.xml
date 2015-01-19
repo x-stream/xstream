@@ -229,6 +229,9 @@
               <compilerArgs>
                 <arg>-XDignore.symbol.file</arg>
               </compilerArgs>
+              <excludes>
+                <exclude>**/Lambda**</exclude>
+              </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
               </testExcludes>
@@ -237,13 +240,17 @@
               <execution>
                 <id>compile-jdk18</id>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <testExcludes>
-                      <exclude>foo</exclude>
-                    </testExcludes>
+                  <source>1.8</source>
+                  <target>1.8</target>
+                  <excludes>
+                    <exclude>foo</exclude>
+                  </excludes>
+                  <testExcludes>
+                    <exclude>foo</exclude>
+                  </testExcludes>
                 </configuration>
                 <goals>
+                  <goal>compile</goal>
                   <goal>testCompile</goal>
                 </goals>
               </execution>
@@ -266,6 +273,9 @@
               <compilerArgs>
                 <arg>-XDignore.symbol.file</arg>
               </compilerArgs>
+              <excludes>
+                <exclude>**/Lambda**</exclude>
+              </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
               </testExcludes>
@@ -288,6 +298,9 @@
               <compilerArgs>
                 <arg>-XDignore.symbol.file</arg>
               </compilerArgs>
+              <excludes>
+                <exclude>**/Lambda**</exclude>
+              </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/*17Test*</exclude>
