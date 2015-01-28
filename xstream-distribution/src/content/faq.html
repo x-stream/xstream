@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -62,6 +62,10 @@
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_enhanced_mode_advantage">What are the advantages of using enhanced mode over pure Java mode?</h2>
+
+	<p>Currently it is not possible to recreate every instance of a type using the official Java API only. The enhanced mode uses some undocumented, but wide-spread
+	available functionality to recreate such instances nevertheless. However, in a secured secured environment, older Java run times or a limited Java environment might
+	prevent the usage of the enhanced mode and XStream uses the plain Java API as fallback. This mode has some restrictions though:</p> 
 
     <table summary="Comparison of pure Java and enhanced mode">
       <tr><th>Feature</th><th>Pure Java</th><th>Enhanced Mode</th></tr>
@@ -200,6 +204,8 @@
     	<li>Inner class types of the JDK can often vary in implementation details between JDK versions and vendors and are therefore only compatible for the same JDK. This
     	includes	collection types returned by the methods of the Collections class that wrap another one (like unmodifiableList) or the collections that are returned by the
     	different Map implementations for the keySet(), entrySet() and values() methods.</li>
+    	<li><a href="#Serialization_lambda_null">Non-serializable lambda expressions</a> cannot be deserialized at all and <a href="#Serialization_lambda_fails">serializable
+    	lambda</a> expression contain compiler and vendor specific information that might cause	deserialization to fail.</li>
     </ol>
 
     <!-- ...................................................... -->
@@ -286,11 +292,22 @@ xstream.registerConverter(new JavaFieldConverter(javaClassConverter, mapper){});
 
     <!-- ...................................................... -->
     <h2 id="Serialization_Serializable">Do my classes have to implement Serializable if XStream is to serialize them?</h2>
-    <p>No, but XStream respects the Java serialization methods even for types not declared as Serializable.</p>
+    <p>No (except for lambda expressions), but XStream respects the Java serialization methods even for types not declared as Serializable.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_proxies">Can dynamic proxies be serialized?</h2>
     <p>Yes.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_lambda_null">My lambda expression is serialized to null!</h2>
+    <p>Non-serializable lambda expressions to not contain any information at all to recreate the instance at a later time again. These instances are treated as temporary
+    objects and as such XStream has no other possibility as to serialize null instead.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_lambda_fails">Suddenly the deserialization of my (serializable) lambda expression fails!</h2>
+    <p>Serializable lambda expressions contain information that is specific for compiler and vendor. Even worse, the compiler is free to add information related to the location
+    of the lambda expression in the source i.e. you may not be able to deserialize a lambda expression after source code changes. XStream has no control over this information 
+    and how it is used by native functionality in the JDK. Therefore Oracle strongly discourages the usage of serializable lambda expressions in the JDK documentation.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_CGLIB">Can CGLIB proxies be serialized?</h2>
