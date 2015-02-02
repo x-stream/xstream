@@ -800,6 +800,6 @@
 
     <link.javadoc.javase>http://docs.oracle.com/javase/8/docs/api/</link.javadoc.javase>
 
-    <javadoc.xdoclint>-Xmaxerrs 100</javadoc.xdoclint>
+    <javadoc.xdoclint/>
   </properties>
 </project>
