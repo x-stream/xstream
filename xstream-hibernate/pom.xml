@@ -1,6 +1,6 @@
 <?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
-     Copyright (C) 2011, 2012, 2013 XStream committers.
+     Copyright (C) 2011, 2012, 2013, 2015 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -33,15 +33,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -71,20 +62,6 @@
   </profiles>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <configuration>
-            <source>${version.java.source}</source>
-            <links>
-              <link>${link.javadoc.javase}</link>
-            </links>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -122,6 +99,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${version.plugin.maven.javadoc}</version>
         <configuration>
+          <additionalparam>${javadoc.xdoclint}</additionalparam>
+          <detectJavaApiLink>false</detectJavaApiLink>
           <source>${version.java.source}</source>
           <links>
             <link>${link.javadoc.javase}</link>

@@ -32,15 +32,9 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
+            <configuration>
+              <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
+            </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -70,21 +64,6 @@
   </profiles>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <configuration>
-            <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
-            <source>${version.java.source}</source>
-            <links>
-              <link>${link.javadoc.javase}</link>
-            </links>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -104,6 +83,8 @@
         <version>${version.plugin.maven.javadoc}</version>
         <configuration>
           <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
+          <detectJavaApiLink>false</detectJavaApiLink>
+          <additionalparam>${javadoc.xdoclint}</additionalparam>
           <source>${version.java.source}</source>
           <links>
             <link>${link.javadoc.javase}</link>
