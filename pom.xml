@@ -79,6 +79,43 @@
         <version.org.hibernate.core>3.6.6.Final</version.org.hibernate.core>
       </properties>
     </profile>
+    <profile>
+      <id>java</id>
+      <activation>
+        <file>
+          <exists>src/java</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>enforce-java-version</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireJavaVersion>
+                      <version>${version.java.enforced}</version>
+                    </requireJavaVersion>
+                  </rules>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>release</id>
+      <properties>
+        <version.java.enforced>[1.8;1.9)</version.java.enforced>
+      </properties>
+    </profile>
   </profiles>
 
   <modules>
@@ -424,6 +461,11 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${version.plugin.maven.enforcer}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
           <version>${version.plugin.maven.install}</version>
         </plugin>
@@ -656,6 +698,7 @@
   <properties>
     <version.java.source>1.5</version.java.source>
     <version.java.target>1.5</version.java.target>
+    <version.java.enforced>[1.6,)</version.java.enforced>
 
     <version.plugin.codehaus.xsite>1.2.1</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>2.3.7</version.plugin.felix.bundle>
@@ -665,6 +708,7 @@
     <version.plugin.maven.compiler>3.1</version.plugin.maven.compiler>
     <version.plugin.maven.dependency>2.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>2.3</version.plugin.maven.deploy>
+    <version.plugin.maven.enforcer>1.4</version.plugin.maven.enforcer>
     <version.plugin.maven.install>2.2</version.plugin.maven.install>
     <version.plugin.maven.jar>2.2</version.plugin.maven.jar>
     <version.plugin.maven.javadoc>2.7</version.plugin.maven.javadoc>
@@ -708,6 +752,6 @@
     <version.xom>1.1</version.xom>
     <version.xpp3>1.1.4c</version.xpp3>
 
-    <link.javadoc.javase>http://docs.oracle.com/javase/7/docs/api/</link.javadoc.javase>
+    <link.javadoc.javase>http://docs.oracle.com/javase/8/docs/api/</link.javadoc.javase>
   </properties>
 </project>
