@@ -44,6 +44,15 @@
       </properties>
     </profile>
     <profile>
+      <id>jdk18ge</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <javadoc.xdoclint>-Xdoclint:-missing</javadoc.xdoclint>
+      </properties>
+    </profile>
+    <profile>
       <id>jdk15-ge</id>
       <activation>
         <jdk>[1.5,)</jdk>
@@ -91,6 +100,8 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
+            <!-- overwrite codehaus-parent -->
+            <version>${version.plugin.maven.enforcer}</version>
             <executions>
               <execution>
                 <id>enforce-java-version</id>
@@ -111,10 +122,27 @@
       </build>
     </profile>
     <profile>
-      <id>release</id>
+      <id>xstream-release</id>
       <properties>
         <version.java.enforced>[1.8;1.9)</version.java.enforced>
       </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
@@ -466,6 +494,11 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${version.plugin.maven.gpg}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
           <version>${version.plugin.maven.install}</version>
         </plugin>
@@ -494,7 +527,17 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${version.plugin.maven.javadoc}</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
           <configuration>
+            <detectJavaApiLink>false</detectJavaApiLink>
+            <additionalparam>${javadoc.xdoclint}</additionalparam>
             <source>${version.java.source}</source>
             <links>
               <link>${link.javadoc.javase}</link>
@@ -517,6 +560,8 @@
           <configuration>
             <goals>deploy</goals>
             <autoVersionSubmodules>true</autoVersionSubmodules>
+            <!-- overwrite codehaus-parent -->
+            <arguments>-Pxstream-release</arguments>
           </configuration>
         </plugin>
         <plugin>
@@ -709,9 +754,10 @@
     <version.plugin.maven.dependency>2.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>2.3</version.plugin.maven.deploy>
     <version.plugin.maven.enforcer>1.4</version.plugin.maven.enforcer>
+    <version.plugin.maven.gpg>1.4</version.plugin.maven.gpg>
     <version.plugin.maven.install>2.2</version.plugin.maven.install>
     <version.plugin.maven.jar>2.2</version.plugin.maven.jar>
-    <version.plugin.maven.javadoc>2.7</version.plugin.maven.javadoc>
+    <version.plugin.maven.javadoc>2.10</version.plugin.maven.javadoc>
     <version.plugin.maven.release>2.1</version.plugin.maven.release>
     <version.plugin.maven.resources>2.2</version.plugin.maven.resources>
     <version.plugin.maven.site>2.0-beta-6</version.plugin.maven.site>
@@ -753,5 +799,7 @@
     <version.xpp3>1.1.4c</version.xpp3>
 
     <link.javadoc.javase>http://docs.oracle.com/javase/8/docs/api/</link.javadoc.javase>
+
+    <javadoc.xdoclint>-Xmaxerrs 100</javadoc.xdoclint>
   </properties>
 </project>

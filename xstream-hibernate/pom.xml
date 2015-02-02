@@ -33,15 +33,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -71,20 +62,6 @@
   </profiles>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <configuration>
-            <source>${version.java.source}</source>
-            <links>
-              <link>${link.javadoc.javase}</link>
-            </links>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -122,6 +99,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${version.plugin.maven.javadoc}</version>
         <configuration>
+          <additionalparam>${javadoc.xdoclint}</additionalparam>
+          <detectJavaApiLink>false</detectJavaApiLink>
           <source>${version.java.source}</source>
           <links>
             <link>${link.javadoc.javase}</link>
