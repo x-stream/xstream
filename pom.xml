@@ -59,34 +59,11 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>maven-bundle-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>bundle-manifest</id>
-                <phase>process-classes</phase>
-                <goals>
-                  <goal>manifest</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
         </plugins>
       </build>
       <modules>
         <!--module>xstream-builder</module-->
       </modules>
-    </profile>
-    <profile>
-      <id>jdk15</id>
-      <activation>
-        <jdk>1.5</jdk>
-      </activation>
-      <properties>
-        <version.hsqldb>1.8.0.10</version.hsqldb>
-        <version.org.hibernate.core>3.6.6.Final</version.org.hibernate.core>
-      </properties>
     </profile>
     <profile>
       <id>java</id>
@@ -115,6 +92,19 @@
                     </requireJavaVersion>
                   </rules>
                 </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>maven-bundle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>bundle-manifest</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>manifest</goal>
+                </goals>
               </execution>
             </executions>
           </plugin>

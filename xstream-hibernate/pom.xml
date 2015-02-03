@@ -24,9 +24,9 @@
 
   <profiles>
     <profile>
-      <id>jdk16-ge</id>
+      <id>jdk18-ge</id>
       <activation>
-        <jdk>[1.6,)</jdk>
+        <jdk>[1.8,)</jdk>
       </activation>
       <build>
         <plugins>
@@ -34,30 +34,25 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
           </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${version.plugin.maven.javadoc}</version>
             <configuration>
-              <archive combine.children="append">
-                <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
-              </archive>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>maven-bundle-plugin</artifactId>
-            <configuration>
-              <instructions combine.children="append">
-                <Export-Package>!com.thoughtworks.xstream.hibernate.util,com.thoughtworks.xstream.hibernate.*;-noimport:=true</Export-Package>
-              </instructions>
+              <additionalparam>${javadoc.xdoclint}</additionalparam>
+              <detectJavaApiLink>false</detectJavaApiLink>
+              <source>${version.java.source}</source>
+              <links>
+                <link>${link.javadoc.javase}</link>
+              </links>
             </configuration>
           </plugin>
         </plugins>
-      </build>
+      </reporting>
     </profile>
   </profiles>
 
@@ -66,6 +61,28 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive combine.children="append">
+            <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions combine.children="append">
+            <Export-Package>!com.thoughtworks.xstream.hibernate.util,com.thoughtworks.xstream.hibernate.*;-noimport:=true</Export-Package>
+          </instructions>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -94,19 +111,6 @@
 
   <reporting>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${version.plugin.maven.javadoc}</version>
-        <configuration>
-          <additionalparam>${javadoc.xdoclint}</additionalparam>
-          <detectJavaApiLink>false</detectJavaApiLink>
-          <source>${version.java.source}</source>
-          <links>
-            <link>${link.javadoc.javase}</link>
-          </links>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
