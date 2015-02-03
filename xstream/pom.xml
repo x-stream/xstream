@@ -241,8 +241,33 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${version.plugin.maven.javadoc}</version>
+            <configuration>
+              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
+              <additionalparam>${javadoc.xdoclint}</additionalparam>
+              <detectJavaApiLink>false</detectJavaApiLink>
+              <source>${version.java.source}</source>
+              <links>
+                <link>${link.javadoc.javase}</link>
+              </links>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
     <profile>
       <id>jdk17</id>
@@ -302,13 +327,6 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
-            </configuration>
-          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
@@ -398,20 +416,6 @@
 
   <reporting>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${version.plugin.maven.javadoc}</version>
-        <configuration>
-          <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
-          <additionalparam>${javadoc.xdoclint}</additionalparam>
-          <detectJavaApiLink>false</detectJavaApiLink>
-          <source>${version.java.source}</source>
-          <links>
-            <link>${link.javadoc.javase}</link>
-          </links>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>

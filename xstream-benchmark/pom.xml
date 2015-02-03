@@ -23,9 +23,9 @@
 
   <profiles>
     <profile>
-      <id>jdk15-ge</id>
+      <id>jdk18-ge</id>
       <activation>
-        <jdk>[1.5,)</jdk>
+        <jdk>[1.8,)</jdk>
       </activation>
       <build>
         <plugins>
@@ -36,6 +36,34 @@
               <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
             </configuration>
           </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${version.plugin.maven.javadoc}</version>
+            <configuration>
+              <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
+              <additionalparam>${javadoc.xdoclint}</additionalparam>
+              <detectJavaApiLink>false</detectJavaApiLink>
+              <source>${version.java.source}</source>
+              <links>
+                <link>${link.javadoc.javase}</link>
+              </links>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+    <profile>
+      <id>jdk15-ge</id>
+      <activation>
+        <jdk>[1.5,)</jdk>
+      </activation>
+      <build>
+        <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
@@ -44,10 +72,6 @@
                 <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
               </archive>
             </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
           </plugin>
           <plugin>
             <groupId>org.apache.felix</groupId>
@@ -67,6 +91,10 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <skip>true</skip>
@@ -74,26 +102,6 @@
       </plugin>
     </plugins>
   </build>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${version.plugin.maven.javadoc}</version>
-        <configuration>
-          <excludePackageNames>com.thoughtworks.xstream.tools.benchmark.model</excludePackageNames>
-          <detectJavaApiLink>false</detectJavaApiLink>
-          <additionalparam>${javadoc.xdoclint}</additionalparam>
-          <source>${version.java.source}</source>
-          <links>
-            <link>${link.javadoc.javase}</link>
-          </links>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
-
 
   <dependencies>
     <dependency>
