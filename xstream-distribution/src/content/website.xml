@@ -1,6 +1,6 @@
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2010, 2011, 2014 XStream committers.
+ Copyright (C) 2006, 2007, 2010, 2011, 2014, 2015 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -26,7 +26,7 @@
         <page>download.html</page>
         <page>references.html</page>
         <page>parser-benchmarks.html</page>
-        <link title="Code Statistics">http://www.ohloh.net/projects/3459</link>
+        <link title="Code Statistics">https://www.openhub.net/p/xstream</link>
     </section>
     <section>
         <name>Using XStream</name>
