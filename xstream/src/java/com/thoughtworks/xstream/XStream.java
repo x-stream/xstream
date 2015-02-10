@@ -1866,7 +1866,7 @@ public class XStream {
      * @param pattern the name pattern as regular expression
      * @since 1.4.5
      */
-    private void ignoreUnknownElements(final Pattern pattern) {
+    public void ignoreUnknownElements(final Pattern pattern) {
         if (fieldAliasingMapper == null) {
             throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
         }
