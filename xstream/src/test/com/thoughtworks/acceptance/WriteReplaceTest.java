@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -133,7 +133,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
         assertBothWays(in, expectedXml);
     }
 
-    public static class ExtenalizableContainer extends StandardObject implements Externalizable {
+    public static class ExternalizableContainer extends StandardObject implements Externalizable {
         Original original;
         
         public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -146,11 +146,11 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     }
     
     public void testAllowsDifferentTypeToBeSubstitutedInExternalizable() {
-        xstream.alias("container", ExtenalizableContainer.class);
+        xstream.alias("container", ExternalizableContainer.class);
         xstream.alias("original-class", Original.class);
         xstream.alias("replaced-class", Replaced.class);
 
-        ExtenalizableContainer in = new ExtenalizableContainer(); 
+        ExternalizableContainer in = new ExternalizableContainer(); 
         in.original = new Original("hello world");
 
         String expectedXml = ""
@@ -213,11 +213,11 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     }
     
     public void testAllowsDifferentTypeToBeSubstitutedWithNonExistingClassInExternalizable() {
-        xstream.alias("container", ExtenalizableContainer.class);
+        xstream.alias("container", ExternalizableContainer.class);
         xstream.alias("original-class", Original.class);
         xstream.alias("replaced-class", Replaced.class);
 
-        ExtenalizableContainer in = new ExtenalizableContainer(); 
+        ExternalizableContainer in = new ExternalizableContainer(); 
         in.original = new Original("hello world");
 
         String xml = ""
