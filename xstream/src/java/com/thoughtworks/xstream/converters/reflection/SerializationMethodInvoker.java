@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,11 +13,15 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -39,13 +43,14 @@ public class SerializationMethodInvoker implements Caching {
         private void noMethod() {
         }
     }.getClass().getDeclaredMethods()[0];
+    private static final Map<String, ObjectStreamField> NO_FIELDS = Collections.emptyMap();
+    private static final int PERSISTENT_FIELDS_MODIFIER = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL;
     private static final FastField[] OBJECT_TYPE_FIELDS = {
         new FastField(Object.class, "readResolve"), new FastField(Object.class, "writeReplace"),
         new FastField(Object.class, "readObject"), new FastField(Object.class, "writeObject")};
-    private final ConcurrentMap<FastField, Method> declaredCache = new ConcurrentHashMap<FastField, Method>(
-            new HashMap<FastField, Method>());
-    private final ConcurrentMap<FastField, Method> resRepCache = new ConcurrentHashMap<FastField, Method>(
-            new HashMap<FastField, Method>());
+    private final ConcurrentMap<FastField, Method> declaredCache = new ConcurrentHashMap<FastField, Method>();
+    private final ConcurrentMap<FastField, Method> resRepCache = new ConcurrentHashMap<FastField, Method>();
+    private final ConcurrentMap<String, Map<String, ObjectStreamField>> fieldCache = new ConcurrentHashMap<String, Map<String, ObjectStreamField>>();
     {
         for (final FastField element : OBJECT_TYPE_FIELDS) {
             declaredCache.put(element, NO_METHOD);
@@ -177,6 +182,38 @@ public class SerializationMethodInvoker implements Caching {
             resRepCache.putIfAbsent(method, result);
         }
         return result == NO_METHOD ? null : result;
+    }
+
+    public Map<String, ObjectStreamField> getSerializablePersistentFields(final Class<?> type) {
+        if (type == null) {
+            return null;
+        }
+        Map<String, ObjectStreamField> result = fieldCache.get(type.getName());
+        if (result == null) {
+            try {
+                final Field field = type.getDeclaredField("serialPersistentFields");
+                if ((field.getModifiers() & PERSISTENT_FIELDS_MODIFIER) == PERSISTENT_FIELDS_MODIFIER) {
+                    field.setAccessible(true);
+                    final ObjectStreamField[] fields = (ObjectStreamField[])field.get(null);
+                    if (fields != null) {
+                        result = new HashMap<String, ObjectStreamField>();
+                        for (final ObjectStreamField f : fields) {
+                            result.put(f.getName(), f);
+                        }
+                    }
+                }
+            } catch (final NoSuchFieldException e) {
+            } catch (final IllegalAccessException e) {
+                throw new ObjectAccessException("Cannot get " + type.getName() + ".serialPersistentFields.", e);
+            } catch (final ClassCastException e) {
+                throw new ObjectAccessException("Cannot get " + type.getName() + ".serialPersistentFields.", e);
+            }
+            if (result == null) {
+                result = NO_FIELDS;
+            }
+            fieldCache.putIfAbsent(type.getName(), result);
+        }
+        return result == NO_FIELDS ? null : result;
     }
 
     @Override
