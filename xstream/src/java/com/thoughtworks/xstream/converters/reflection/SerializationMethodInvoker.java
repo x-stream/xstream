@@ -43,7 +43,7 @@ public class SerializationMethodInvoker implements Caching {
     }).getClass().getDeclaredMethods()[0];
     private static final Object[] EMPTY_ARGS = new Object[0];
     private static final Class[] EMPTY_CLASSES = new Class[0];
-    private static final Map<String, ObjectStreamField> NO_FIELDS = Collections.emptyMap();
+    private static final Map NO_FIELDS = Collections.EMPTY_MAP;
     private static final int PERSISTENT_FIELDS_MODIFIER = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL;
     private static final FastField[] OBJECT_TYPE_FIELDS = {
         new FastField(Object.class, "readResolve"), 
