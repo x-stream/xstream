@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -513,6 +513,44 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "    <default>\n"
                 + "      <number>5</number>\n"
                 + "      <name>a name</name>\n"
+                + "    </default>\n"
+                + "  </an-object>\n"
+                + "</an-object>";
+
+        assertBothWays(input, expectedXml);
+    }
+    
+    public static class ObjectThatWritesCustomFieldsButDoesNotReadThem extends StandardObject implements Serializable {
+
+        private static final ObjectStreamField[] serialPersistentFields = {
+            new ObjectStreamField("number", int.class),
+            new ObjectStreamField("name", String.class),
+        };
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            ObjectOutputStream.PutField fields = out.putFields();
+            fields.put("name", "test");
+            fields.put("number", 42);
+            out.writeFields();
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            in.defaultReadObject();
+        }
+
+    }
+
+    public void testSupportsPutFieldsWithoutGetFields() {
+        xstream.alias("an-object", ObjectThatWritesCustomFieldsButDoesNotReadThem.class);
+
+        ObjectThatWritesCustomFieldsButDoesNotReadThem input = new ObjectThatWritesCustomFieldsButDoesNotReadThem();
+
+        String expectedXml = ""
+                + "<an-object serialization=\"custom\">\n"
+                + "  <an-object>\n"
+                + "    <default>\n"
+                + "      <name>test</name>\n"
+                + "      <number>42</number>\n"
                 + "    </default>\n"
                 + "  </an-object>\n"
                 + "</an-object>";

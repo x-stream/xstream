@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,6 +17,8 @@ import com.thoughtworks.xstream.core.util.FastField;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -41,6 +43,8 @@ public class SerializationMethodInvoker implements Caching {
     }).getClass().getDeclaredMethods()[0];
     private static final Object[] EMPTY_ARGS = new Object[0];
     private static final Class[] EMPTY_CLASSES = new Class[0];
+    private static final Map<String, ObjectStreamField> NO_FIELDS = Collections.emptyMap();
+    private static final int PERSISTENT_FIELDS_MODIFIER = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL;
     private static final FastField[] OBJECT_TYPE_FIELDS = {
         new FastField(Object.class, "readResolve"), 
         new FastField(Object.class, "writeReplace"), 
@@ -49,6 +53,7 @@ public class SerializationMethodInvoker implements Caching {
     };
     private Map declaredCache = Collections.synchronizedMap(new HashMap());
     private Map resRepCache = Collections.synchronizedMap(new HashMap());
+    private final Map fieldCache = Collections.synchronizedMap(new HashMap());
     {
         for(int i = 0; i < OBJECT_TYPE_FIELDS.length; ++i) {
             declaredCache.put(OBJECT_TYPE_FIELDS[i], NO_METHOD);
@@ -198,6 +203,38 @@ public class SerializationMethodInvoker implements Caching {
             resRepCache.put(method, result);
         }
         return result == NO_METHOD ? null : result;
+    }
+
+    public Map getSerializablePersistentFields(final Class type) {
+        if (type == null) {
+            return null;
+        }
+        Map result = (Map)fieldCache.get(type.getName());
+        if (result == null) {
+            try {
+                final Field field = type.getDeclaredField("serialPersistentFields");
+                if ((field.getModifiers() & PERSISTENT_FIELDS_MODIFIER) == PERSISTENT_FIELDS_MODIFIER) {
+                    field.setAccessible(true);
+                    final ObjectStreamField[] fields = (ObjectStreamField[])field.get(null);
+                    if (fields != null) {
+                        result = new HashMap();
+                        for (final ObjectStreamField f : fields) {
+                            result.put(f.getName(), f);
+                        }
+                    }
+                }
+            } catch (final NoSuchFieldException e) {
+            } catch (final IllegalAccessException e) {
+                throw new ObjectAccessException("Cannot get " + type.getName() + ".serialPersistentFields.", e);
+            } catch (final ClassCastException e) {
+                throw new ObjectAccessException("Cannot get " + type.getName() + ".serialPersistentFields.", e);
+            }
+            if (result == null) {
+                result = NO_FIELDS;
+            }
+            fieldCache.put(type.getName(), result);
+        }
+        return result == NO_FIELDS ? null : result;
     }
 
     public void flushCache() {

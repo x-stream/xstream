@@ -390,6 +390,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
             }
 
             public void defaultReadObject() {
+                if (serializationMethodInvoker.getSerializablePersistentFields(currentType[0]) != null) {
+                    readFieldsFromStream();
+                    return;
+                }
                 if (!reader.hasMoreChildren()) {
                     return;
                 }
