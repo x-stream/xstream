@@ -218,8 +218,8 @@ public class SerializationMethodInvoker implements Caching {
                     final ObjectStreamField[] fields = (ObjectStreamField[])field.get(null);
                     if (fields != null) {
                         result = new HashMap();
-                        for (final ObjectStreamField f : fields) {
-                            result.put(f.getName(), f);
+                        for (int i = 0; i < fields.length; ++i) {
+                            result.put(fields[i].getName(), fields[i]);
                         }
                     }
                 }
