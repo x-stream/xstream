@@ -111,7 +111,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
         if (type != null
             && Serializable.class.isAssignableFrom(type)
             && !type.isInterface()
-            && (serializationMethodInvoker.supportsReadObject(type, true) || serializationMethodInvoker
+            && (serializationMembers.supportsReadObject(type, true) || serializationMembers
                 .supportsWriteObject(type, true))) {
             for (final Class<?> clazz : hierarchyFor(type)) {
                 if (!Serializable.class.isAssignableFrom(clazz)) {
@@ -257,7 +257,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         marshalUnserializableParent(writer, context, source);
                         mustHandleUnserializableParent = false;
                     }
-                    if (serializationMethodInvoker.supportsWriteObject(currentType, false)) {
+                    if (serializationMembers.supportsWriteObject(currentType, false)) {
                         writtenClassWrapper[0] = true;
                         writer.startNode(mapper.serializedClass(currentType));
                         if (currentType != mapper.defaultImplementationOf(currentType)) {
@@ -269,10 +269,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         @SuppressWarnings("resource")
                         final CustomObjectOutputStream objectOutputStream = CustomObjectOutputStream.getInstance(
                             context, callback);
-                        serializationMethodInvoker.callWriteObject(currentType, source, objectOutputStream);
+                        serializationMembers.callWriteObject(currentType, source, objectOutputStream);
                         objectOutputStream.popCallback();
                         writer.endNode();
-                    } else if (serializationMethodInvoker.supportsReadObject(currentType, false)) {
+                    } else if (serializationMembers.supportsReadObject(currentType, false)) {
                         // Special case for objects that have readObject(), but not writeObject().
                         // The class wrapper is always written, whether or not this class in the hierarchy has
                         // serializable fields. This guarantees that readObject() will be called upon deserialization.
@@ -416,7 +416,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
             @Override
             public void defaultReadObject() {
-                if (serializationMethodInvoker.getSerializablePersistentFields(currentType[0]) != null) {
+                if (serializationMembers.getSerializablePersistentFields(currentType[0]) != null) {
                     readFieldsFromStream();
                     return;
                 }
@@ -483,11 +483,11 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 } else {
                     currentType[0] = mapper.realClass(classAttribute);
                 }
-                if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
+                if (serializationMembers.supportsReadObject(currentType[0], false)) {
                     @SuppressWarnings("resource")
                     final CustomObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context,
                         callback, classLoaderReference);
-                    serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);
+                    serializationMembers.callReadObject(currentType[0], result, objectInputStream);
                     objectInputStream.popCallback();
                 } else {
                     try {
