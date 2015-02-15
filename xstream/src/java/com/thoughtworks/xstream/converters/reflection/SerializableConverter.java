@@ -40,15 +40,14 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
- * implement or inherit a custom readObject()/writeObject() method. <h3>Supported features of serialization</h3>
+ * implement or inherit a custom readObject()/writeObject() method.
+ * 
+ * <h3>Supported features of serialization</h3>
  * <ul>
  * <li>readObject(), writeObject()</li>
  * <li>class inheritance</li>
  * <li>readResolve(), writeReplace()</li>
- * </ul>
- * <h3>Currently unsupported features</h3>
- * <ul>
- * <li>putFields(), writeFields(), readFields()</li>
+ * <li>getFields(), putFields(), writeFields(), readFields()</li>
  * <li>ObjectStreamField[] serialPersistentFields</li>
  * <li>ObjectInputValidation</li>
  * </ul>
@@ -111,8 +110,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
         if (type != null
             && Serializable.class.isAssignableFrom(type)
             && !type.isInterface()
-            && (serializationMembers.supportsReadObject(type, true) || serializationMembers
-                .supportsWriteObject(type, true))) {
+            && (serializationMembers.supportsReadObject(type, true) || serializationMembers.supportsWriteObject(type,
+                true))) {
             for (final Class<?> clazz : hierarchyFor(type)) {
                 if (!Serializable.class.isAssignableFrom(clazz)) {
                     return canAccess(type);
