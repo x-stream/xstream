@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,9 +21,10 @@ import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
+import com.thoughtworks.xstream.core.util.SerializationMembers;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.io.Externalizable;
@@ -44,7 +45,7 @@ public class ExternalizableConverter implements Converter {
 
     private Mapper mapper;
     private final ClassLoaderReference classLoaderReference;
-    private transient SerializationMethodInvoker serializationMethodInvoker;
+    private transient SerializationMembers serializationMembers;
 
     /**
      * Construct an ExternalizableConverter.
@@ -56,7 +57,7 @@ public class ExternalizableConverter implements Converter {
     public ExternalizableConverter(Mapper mapper, ClassLoaderReference classLoaderReference) {
         this.mapper = mapper;
         this.classLoaderReference = classLoaderReference;
-        serializationMethodInvoker = new SerializationMethodInvoker();
+        serializationMembers = new SerializationMembers();
     }
 
     /**
@@ -78,7 +79,7 @@ public class ExternalizableConverter implements Converter {
     }
 
     public void marshal(final Object original, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        final Object source = serializationMethodInvoker.callWriteReplace(original);
+        final Object source = serializationMembers.callWriteReplace(original);
         if (source != original && context instanceof ReferencingMarshallingContext) {
             ((ReferencingMarshallingContext)context).replace(original, source);
         }
@@ -165,7 +166,7 @@ public class ExternalizableConverter implements Converter {
             CustomObjectInputStream objectInput = CustomObjectInputStream.getInstance(context, callback, classLoaderReference);
             externalizable.readExternal(objectInput);
             objectInput.popCallback();
-            return serializationMethodInvoker.callReadResolve(externalizable);
+            return serializationMembers.callReadResolve(externalizable);
         } catch (NoSuchMethodException e) {
             throw new ConversionException("Cannot construct " + type.getClass() + ", missing default constructor", e);
         } catch (InvocationTargetException e) {
@@ -182,7 +183,7 @@ public class ExternalizableConverter implements Converter {
     }
 
     private Object readResolve() {
-        serializationMethodInvoker = new SerializationMethodInvoker();
+        serializationMembers = new SerializationMembers();
         return this;
     }
 }

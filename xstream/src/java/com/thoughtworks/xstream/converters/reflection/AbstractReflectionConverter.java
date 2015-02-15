@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.core.util.ArrayIterator;
 import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
+import com.thoughtworks.xstream.core.util.SerializationMembers;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -47,13 +48,19 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
     protected final ReflectionProvider reflectionProvider;
     protected final Mapper mapper;
+    /**
+     * @deprecated As of upcoming, use {@link #serializationMembers}.
+     */
+    @Deprecated
     protected transient SerializationMethodInvoker serializationMethodInvoker;
+    protected transient SerializationMembers serializationMembers;
     private transient ReflectionProvider pureJavaReflectionProvider;
 
     public AbstractReflectionConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
         this.mapper = mapper;
         this.reflectionProvider = reflectionProvider;
         serializationMethodInvoker = new SerializationMethodInvoker();
+        serializationMembers = serializationMethodInvoker.serializationMembers;
     }
     
     protected boolean canAccess(Class type) {
@@ -68,7 +75,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
     public void marshal(Object original, final HierarchicalStreamWriter writer,
         final MarshallingContext context) {
-        final Object source = serializationMethodInvoker.callWriteReplace(original);
+        final Object source = serializationMembers.callWriteReplace(original);
 
         if (source != original && context instanceof ReferencingMarshallingContext) {
             ((ReferencingMarshallingContext)context).replace(original, source);
@@ -255,7 +262,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         final UnmarshallingContext context) {
         Object result = instantiateNewInstance(reader, context);
         result = doUnmarshal(result, reader, context);
-        return serializationMethodInvoker.callReadResolve(result);
+        return serializationMembers.callReadResolve(result);
     }
 
     public Object doUnmarshal(final Object result, final HierarchicalStreamReader reader,
@@ -560,6 +567,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
     protected Object readResolve() {
         serializationMethodInvoker = new SerializationMethodInvoker();
+        serializationMembers = serializationMethodInvoker.serializationMembers;
         return this;
     }
 
