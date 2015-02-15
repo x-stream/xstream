@@ -51,7 +51,6 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     /**
      * @deprecated As of upcoming, use {@link #serializationMembers}.
      */
-    @Deprecated
     protected transient SerializationMethodInvoker serializationMethodInvoker;
     protected transient SerializationMembers serializationMembers;
     private transient ReflectionProvider pureJavaReflectionProvider;
