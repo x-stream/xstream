@@ -47,11 +47,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  *   <li>readObject(), writeObject()</li>
  *   <li>class inheritance</li>
  *   <li>readResolve(), writeReplace()</li>
- * </ul>
- *
- * <h3>Currently unsupported features</h3>
- * <ul>
- *   <li>putFields(), writeFields(), readFields()</li>
+ *   <li>getFields(), putFields(), writeFields(), readFields()</li>
  *   <li>ObjectStreamField[] serialPersistentFields</li>
  *   <li>ObjectInputValidation</li>
  * </ul>
@@ -108,8 +104,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
         if (type != null
             && Serializable.class.isAssignableFrom(type)
             && !type.isInterface()
-            && (serializationMembers.supportsReadObject(type, true) || serializationMembers
-                .supportsWriteObject(type, true))) {
+            && (serializationMembers.supportsReadObject(type, true) || serializationMembers.supportsWriteObject(type,
+                true))) {
             for (Iterator iter = hierarchyFor(type).iterator(); iter.hasNext();) {
                 if (!Serializable.class.isAssignableFrom((Class)iter.next())) {
                     return canAccess(type);
