@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2012, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2012, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.converters.basic;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import junit.framework.TestCase;
@@ -84,6 +85,15 @@ public class DateConverterTest extends TestCase {
         assertEquals(expected, converter.fromString("2004-02-22 20:16:04.0 UTC"));
         assertEquals(expected, converter.fromString("2004-02-23 01:46:04.0 IST"));
         assertEquals(expected, converter.fromString("2004-02-23 01:46:04.0 GMT+05:30"));
+        
+        if (JVM.canParseISO8601TimeZoneInDateFormat()) {
+            // W3C subset of ISO 8601 date time representations
+            assertEquals(expected, converter.fromString("2004-02-22T15:16:04-05:00"));
+            assertEquals(expected, converter.fromString("2004-02-22T20:16:04Z"));
+            assertEquals(expected, converter.fromString("2004-02-22T20:16:04.0Z"));
+            expected.setTime(expected.getTime()-4000);
+            assertEquals(expected, converter.fromString("2004-02-22T15:16-05:00"));
+        }
     }
 
     public void testUnmarshalsDateWithDifferentDefaultTimeZones() throws ParseException {

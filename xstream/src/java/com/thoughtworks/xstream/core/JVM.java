@@ -44,6 +44,7 @@ public class JVM implements Caching {
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
     private static final boolean canParseUTCDateFormat;
+    private static final boolean canParseISO8601TimeZoneInDateFormat;
     private static final boolean canCreateDerivedObjectOutputStream;
 
     private static final String vendor = System.getProperty("java.vm.vendor");
@@ -149,6 +150,15 @@ public class JVM implements Caching {
             test = false;
         }
         canParseUTCDateFormat = test;
+        try {
+            new SimpleDateFormat("X").parse("Z");
+            test = true;
+        } catch (final ParseException e) {
+            test = false;
+        } catch (final IllegalArgumentException e) {
+            test = false;
+        }
+        canParseISO8601TimeZoneInDateFormat = test;
         try {
             test = new CustomObjectOutputStream(null) != null;
         } catch (RuntimeException e) {
@@ -447,6 +457,13 @@ public class JVM implements Caching {
 
     public static boolean canParseUTCDateFormat() {
         return canParseUTCDateFormat;
+    }
+
+    /**
+     * @since upcoming
+     */
+    public static boolean canParseISO8601TimeZoneInDateFormat() {
+        return canParseISO8601TimeZoneInDateFormat;
     }
 
     /**

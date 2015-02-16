@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,10 +11,6 @@
  */
 package com.thoughtworks.xstream.converters.basic;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.ErrorReporter;
-import com.thoughtworks.xstream.converters.ErrorWriter;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,21 +20,29 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorReporter;
+import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
 
 
 /**
- * Converts a java.util.Date to a String as a date format, retaining precision down to
- * milliseconds.
- * 
- * <p>The formatted string is by default in UTC and English locale. You can provide
- * a different {@link Locale} and {@link TimeZone} that are used for serialization or
- * <code>null</code> to use always the current TimeZone. Note, that the default format uses
- * 3-letter time zones that can be ambiguous and may cause wrong results at deserialization and
- * is localized since Java 6.</p>
- * 
- * <p>Dates in a different era are using a special default pattern that contains the era itself.</p> 
+ * Converts a {@link Date} to a string as a date format, retaining precision down to milliseconds.
+ * <p>
+ * The formatted string is by default in UTC and English locale. You can provide a different {@link Locale} and
+ * {@link TimeZone} that are used for serialization or <code>null</code> to use always the current TimeZone. Note, that
+ * the default format uses 3-letter time zones that can be ambiguous and may cause wrong results at deserialization and
+ * is localized since Java 6.
+ * </p>
+ * <p>
+ * Using a Java 7 runtime or higher, the converter supports the <a href="http://www.w3.org/TR/NOTE-datetime">datetime
+ * format defined by W3C</a> (a subset of ISO 8601) at deserialization. Only the formats that also contain the time
+ * information.
+ * </p>
+ * <p>
+ * Dates in a different era are using a special default pattern that contains the era itself.
+ * </p>
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
@@ -70,6 +74,11 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
         if (!utcSupported) {
             acceptablePatterns.add("yyyy-MM-dd HH:mm:ss 'UTC'");
         }
+        if (JVM.canParseISO8601TimeZoneInDateFormat()) {
+            acceptablePatterns.add("yyyy-MM-dd'T'HH:mm:ss.SX");
+            acceptablePatterns.add("yyyy-MM-dd'T'HH:mm:ssX");
+            acceptablePatterns.add("yyyy-MM-dd'T'HH:mmX");
+        }
         // backwards compatibility
         acceptablePatterns.add("yyyy-MM-dd HH:mm:ssa");
         DEFAULT_ACCEPTABLE_FORMATS = (String[]) acceptablePatterns.toArray(new String[acceptablePatterns.size()]);
@@ -83,7 +92,6 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
     private final ThreadSafeSimpleDateFormat defaultFormat;
     private final ThreadSafeSimpleDateFormat defaultEraFormat;
     private final ThreadSafeSimpleDateFormat[] acceptableFormats;
-    private final Locale locale;
 
     /**
      * Construct a DateConverter with standard formats and lenient set off.
@@ -99,7 +107,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @param timeZone the TimeZone used to serialize the Date
      * @since 1.4
      */
-    public DateConverter(TimeZone timeZone) {
+    public DateConverter(final TimeZone timeZone) {
         this(DEFAULT_PATTERN, DEFAULT_ACCEPTABLE_FORMATS, timeZone);
     }
 
@@ -109,7 +117,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
      * @since 1.3
      */
-    public DateConverter(boolean lenient) {
+    public DateConverter(final boolean lenient) {
         this(DEFAULT_PATTERN, DEFAULT_ACCEPTABLE_FORMATS, lenient);
     }
 
@@ -119,7 +127,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @param defaultFormat the default format
      * @param acceptableFormats fallback formats
      */
-    public DateConverter(String defaultFormat, String[] acceptableFormats) {
+    public DateConverter(final String defaultFormat, final String[] acceptableFormats) {
         this(defaultFormat, acceptableFormats, false);
     }
 
@@ -130,7 +138,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @param acceptableFormats fallback formats
      * @since 1.4
      */
-    public DateConverter(String defaultFormat, String[] acceptableFormats, TimeZone timeZone) {
+    public DateConverter(final String defaultFormat, final String[] acceptableFormats, final TimeZone timeZone) {
         this(defaultFormat, acceptableFormats, timeZone, false);
     }
 
@@ -142,7 +150,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
      * @since 1.3
      */
-    public DateConverter(String defaultFormat, String[] acceptableFormats, boolean lenient) {
+    public DateConverter(final String defaultFormat, final String[] acceptableFormats, final boolean lenient) {
         this(defaultFormat, acceptableFormats, UTC, lenient);
     }
 
@@ -156,7 +164,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @since 1.4
      */
     public DateConverter(
-        String defaultFormat, String[] acceptableFormats, TimeZone timeZone, boolean lenient) {
+            final String defaultFormat, final String[] acceptableFormats, final TimeZone timeZone, final boolean lenient) {
         this(DEFAULT_ERA_PATTERN, defaultFormat, acceptableFormats, Locale.ENGLISH, timeZone, lenient);
     }
 
@@ -173,9 +181,8 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @since 1.4.4
      */
     public DateConverter(
-        String defaultEraFormat, String defaultFormat, String[] acceptableFormats,
-        Locale locale, TimeZone timeZone, boolean lenient) {
-        this.locale = locale;
+            final String defaultEraFormat, final String defaultFormat, final String[] acceptableFormats,
+            final Locale locale, final TimeZone timeZone, final boolean lenient) {
         if (defaultEraFormat != null) {
             this.defaultEraFormat = new ThreadSafeSimpleDateFormat(
                 defaultEraFormat, timeZone, locale, 4, 20, lenient);
