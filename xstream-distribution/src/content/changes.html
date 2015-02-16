@@ -70,6 +70,8 @@
     	<li>XSTR-761: Support ignored serialPersistentField at deserialization time.</li>
     	<li>XSTR-755: ExternalizableConverter does not respect writeReplace and readResolve.</li>
     	<li>XSTR-757: Deserialized TreeSet does not honor remove(Object) return value contract.</li>
+    	<li>XSTR-759: Support deserialization of <a href="http://www.w3.org/TR/NOTE-datetime">W3C datetime format</a>
+    	in DateConverter with Java 7 runtime.</li>
     	<li>Fix: DateConverter ignores provided locale.</li>
     	<li>Fix: WeakCache.entrySet().iterator().next.setValue(value) returns the reference instead of the old value.</li>
     	<li>Fix: SqlTimestampConverter throws IllegalArgumentException instead of ConversionException on fromString().</li>

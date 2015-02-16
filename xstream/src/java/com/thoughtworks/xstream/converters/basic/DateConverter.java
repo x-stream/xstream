@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,6 +36,11 @@ import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
  * is localized since Java 6.
  * </p>
  * <p>
+ * Using a Java 7 runtime or higher, the converter supports the <a href="http://www.w3.org/TR/NOTE-datetime">datetime
+ * format defined by W3C</a> (a subset of ISO 8601) at deserialization. Only the formats that also contain the time
+ * information.
+ * </p>
+ * <p>
  * Dates in a different era are using a special default pattern that contains the era itself.
  * </p>
  * 
@@ -68,6 +73,11 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
         acceptablePatterns.add("yyyy-MM-dd HH:mm:ss z");
         if (!utcSupported) {
             acceptablePatterns.add("yyyy-MM-dd HH:mm:ss 'UTC'");
+        }
+        if (JVM.canParseISO8601TimeZoneInDateFormat()) {
+            acceptablePatterns.add("yyyy-MM-dd'T'HH:mm:ss.SX");
+            acceptablePatterns.add("yyyy-MM-dd'T'HH:mm:ssX");
+            acceptablePatterns.add("yyyy-MM-dd'T'HH:mmX");
         }
         // backwards compatibility
         acceptablePatterns.add("yyyy-MM-dd HH:mm:ssa");
