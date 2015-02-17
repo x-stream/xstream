@@ -100,7 +100,7 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
         final DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
         for (int i = 0; i < formattersNoUTC.length; i++ ) {
             try {
-                final DateTimeFormatter formatter = element.withZone(dateTimeZone);
+                final DateTimeFormatter formatter = formattersNoUTC[i].withZone(dateTimeZone);
                 final DateTime dt = formatter.parseDateTime(str);
                 final Calendar calendar = dt.toGregorianCalendar();
                 calendar.setTimeZone(TimeZone.getDefault());
