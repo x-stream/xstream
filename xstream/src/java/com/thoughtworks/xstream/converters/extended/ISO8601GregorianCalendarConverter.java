@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -100,10 +100,10 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
                 // try with next formatter
             }
         }
-        final String timeZoneID = TimeZone.getDefault().getID();
+        final DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
         for (final DateTimeFormatter element : formattersNoUTC) {
             try {
-                final DateTimeFormatter formatter = element.withZone(DateTimeZone.forID(timeZoneID));
+                final DateTimeFormatter formatter = element.withZone(dateTimeZone);
                 final DateTime dt = formatter.parseDateTime(str);
                 final Calendar calendar = dt.toGregorianCalendar();
                 calendar.setTimeZone(TimeZone.getDefault());
