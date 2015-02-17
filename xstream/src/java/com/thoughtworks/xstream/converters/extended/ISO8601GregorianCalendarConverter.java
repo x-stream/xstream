@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,7 +31,7 @@ import java.util.TimeZone;
  * 
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
- * @see "http://www.iso.org/iso/catalogue_detail?csnumber=40874"
+ * @see <a href="http://www.iso.org/iso/home/store/catalogue_ics/catalogue_detail_ics.htm?csnumber=40874">ISO 8601</a>
  * @since 1.1.3
  */
 public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConverter {
@@ -97,12 +97,12 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
                 // try with next formatter
             }
         }
-        String timeZoneID = TimeZone.getDefault().getID();
+        final DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
         for (int i = 0; i < formattersNoUTC.length; i++ ) {
             try {
-                DateTimeFormatter formatter = formattersNoUTC[i].withZone(DateTimeZone.forID(timeZoneID));
-                DateTime dt = formatter.parseDateTime(str);
-                Calendar calendar = dt.toGregorianCalendar();
+                final DateTimeFormatter formatter = element.withZone(dateTimeZone);
+                final DateTime dt = formatter.parseDateTime(str);
+                final Calendar calendar = dt.toGregorianCalendar();
                 calendar.setTimeZone(TimeZone.getDefault());
                 return calendar;
             } catch (IllegalArgumentException e) {
