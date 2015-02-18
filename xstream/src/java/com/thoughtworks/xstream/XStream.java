@@ -601,7 +601,7 @@ public class XStream {
     }
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.8
      */
     @Deprecated
     protected boolean useXStream11XmlFriendlyMapper() {

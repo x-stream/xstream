@@ -18,12 +18,12 @@ package com.thoughtworks.xstream.converters.reflection;
  * 
  * @author Joe Walnes
  * @author Brian Slesinsky
- * @deprecated As of upcoming use {@link SunUnsafeReflectionProvider}
+ * @deprecated As of 1.4.7 use {@link SunUnsafeReflectionProvider}
  */
 @Deprecated
 public class Sun14ReflectionProvider extends SunUnsafeReflectionProvider {
     /**
-     * @deprecated As of upcoming use {@link SunUnsafeReflectionProvider#SunUnsafeReflectionProvider()}
+     * @deprecated As of 1.4.7 use {@link SunUnsafeReflectionProvider#SunUnsafeReflectionProvider()}
      */
     @Deprecated
     public Sun14ReflectionProvider() {
@@ -31,7 +31,7 @@ public class Sun14ReflectionProvider extends SunUnsafeReflectionProvider {
     }
 
     /**
-     * @deprecated As of upcoming use {@link SunUnsafeReflectionProvider#SunUnsafeReflectionProvider(FieldDictionary)}
+     * @deprecated As of 1.4.7 use {@link SunUnsafeReflectionProvider#SunUnsafeReflectionProvider(FieldDictionary)}
      */
     @Deprecated
     public Sun14ReflectionProvider(final FieldDictionary dic) {

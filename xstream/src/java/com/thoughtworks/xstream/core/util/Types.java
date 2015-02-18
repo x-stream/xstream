@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * Helper methods for class types.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.8
  */
 public class Types {
     private static final Pattern lambdaPattern = Pattern.compile(".*\\$\\$Lambda\\$[0-9]+/.*");

@@ -248,7 +248,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.8
      */
     public static boolean is19() {
         return majorJavaVersion >= 1.9f;
@@ -496,7 +496,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @since upcoming
+     * @since 1.4.8
      */
     public static boolean canParseISO8601TimeZoneInDateFormat() {
         return canParseISO8601TimeZoneInDateFormat;

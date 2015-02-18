@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.core.util.SerializationMembers;
  *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
- * @deprecated As of upcoming, moved into internal util package.
+ * @deprecated As of 1.4.8, moved into internal util package.
  */
 @Deprecated
 public class SerializationMethodInvoker implements Caching {
@@ -33,7 +33,7 @@ public class SerializationMethodInvoker implements Caching {
     /**
      * Resolves an object as native serialization does by calling readResolve(), if available.
      * 
-     * @deprecated As of upcoming, moved into internal util package.
+     * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
     public Object callReadResolve(final Object result) {
@@ -41,7 +41,7 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming, moved into internal util package.
+     * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
     public Object callWriteReplace(final Object object) {
@@ -49,7 +49,7 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming, moved into internal util package.
+     * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
     public boolean supportsReadObject(final Class<?> type, final boolean includeBaseClasses) {
@@ -57,7 +57,7 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming, moved into internal util package.
+     * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
     public void callReadObject(final Class<?> type, final Object object, final ObjectInputStream stream) {
@@ -65,7 +65,7 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming, moved into internal util package.
+     * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
     public boolean supportsWriteObject(final Class<?> type, final boolean includeBaseClasses) {
@@ -73,7 +73,7 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming, moved into internal util package.
+     * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
     public void callWriteObject(final Class<?> type, final Object instance, final ObjectOutputStream stream) {
@@ -81,7 +81,7 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
-     * @deprecated As of upcoming, moved into internal util package.
+     * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Override
     @Deprecated
