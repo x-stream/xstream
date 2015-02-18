@@ -140,7 +140,7 @@
     <profile>
       <id>xstream-release</id>
       <properties>
-        <version.java.enforced>[1.8;1.9)</version.java.enforced>
+        <version.java.enforced>[1.8,1.9)</version.java.enforced>
       </properties>
       <build>
         <plugins>
