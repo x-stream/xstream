@@ -20,7 +20,7 @@
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.4.8-SNAPSHOT</version>
+  <version>1.4.8</version>
   <name>XStream Parent</name>
   <description>
     XStream is a serialization library from Java objects to XML and back.
@@ -182,12 +182,12 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.8-SNAPSHOT</version>
+        <version>1.4.8</version>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.8-SNAPSHOT</version>
+        <version>1.4.8</version>
         <classifier>tests</classifier>
         <type>test-jar</type>
         <scope>test</scope>
@@ -195,31 +195,31 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.8-SNAPSHOT</version>
+        <version>1.4.8</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-hibernate</artifactId>
-        <version>1.4.8-SNAPSHOT</version>
+        <version>1.4.8</version>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-hibernate</artifactId>
-        <version>1.4.8-SNAPSHOT</version>
+        <version>1.4.8</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-benchmark</artifactId>
-        <version>1.4.8-SNAPSHOT</version>
+        <version>1.4.8</version>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-benchmark</artifactId>
-        <version>1.4.8-SNAPSHOT</version>
+        <version>1.4.8</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
       </dependency>
@@ -752,9 +752,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/xstream/branches/v-1.4.x</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/branches/v-1.4.x</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/xstream/branches/v-1.4.x</url>
+    <connection>scm:svn:http://svn.codehaus.org/xstream/tags/XSTREAM_1_4_8</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/tags/XSTREAM_1_4_8</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/xstream/tags/XSTREAM_1_4_8</url>
   </scm>
   
   <properties>
@@ -817,6 +817,6 @@
 
     <link.javadoc.javase>http://docs.oracle.com/javase/8/docs/api/</link.javadoc.javase>
 
-    <javadoc.xdoclint/>
+    <javadoc.xdoclint />
   </properties>
 </project>
