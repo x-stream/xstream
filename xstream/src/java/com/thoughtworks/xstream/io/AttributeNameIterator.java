@@ -17,7 +17,7 @@ import java.util.Iterator;
  * Provide an iterator over the attribute names of the current node of a reader.
  *
  * @author Joe Walnes
- * @deprecated As of upcoming, it is an internal helper class only
+ * @deprecated As of 1.4.8, it is an internal helper class only
  */
 public class AttributeNameIterator implements Iterator {
 

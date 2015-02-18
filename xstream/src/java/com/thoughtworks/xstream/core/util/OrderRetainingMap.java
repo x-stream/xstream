@@ -23,7 +23,7 @@ import java.util.Set;
 
 
 /**
- * @deprecated As of upcoming use {@link java.util.LinkedHashMap}
+ * @deprecated As of 1.4.8 use {@link java.util.LinkedHashMap}
  */
 public class OrderRetainingMap extends HashMap {
 

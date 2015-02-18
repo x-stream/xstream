@@ -49,7 +49,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     protected final ReflectionProvider reflectionProvider;
     protected final Mapper mapper;
     /**
-     * @deprecated As of upcoming, use {@link #serializationMembers}.
+     * @deprecated As of 1.4.8, use {@link #serializationMembers}.
      */
     protected transient SerializationMethodInvoker serializationMethodInvoker;
     protected transient SerializationMembers serializationMembers;

@@ -42,7 +42,7 @@ public class BooleanConverter extends AbstractSingleValueConverter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #canConvert(Class)}
+     * @deprecated As of 1.4.8 use {@link #canConvert(Class)}
      */
     public boolean shouldConvert(final Class type, final Object value) {
         return true;

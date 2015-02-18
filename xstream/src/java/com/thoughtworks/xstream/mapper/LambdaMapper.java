@@ -18,7 +18,7 @@ import com.thoughtworks.xstream.core.util.Types;
  * Mapper.Null.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.8
  */
 public class LambdaMapper extends MapperWrapper {
 
@@ -26,7 +26,7 @@ public class LambdaMapper extends MapperWrapper {
      * Constructs a LambdaMapper.
      *
      * @param wrapped mapper
-     * @since upcoming
+     * @since 1.4.8
      */
     public LambdaMapper(final Mapper wrapped) {
         super(wrapped);

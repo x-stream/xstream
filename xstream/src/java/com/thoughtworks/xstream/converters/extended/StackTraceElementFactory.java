@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
  *
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
  * @author Joe Walnes
- * @deprecated As of upcoming, it is an internal helper class
+ * @deprecated As of 1.4.8, it is an internal helper class
  */
 public class StackTraceElementFactory {
 

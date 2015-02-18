@@ -22,7 +22,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * The implementation maps any non-serializable lambda instance to {@code null}.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.8
  */
 public class LambdaConverter extends SerializableConverter {
 
@@ -32,7 +32,7 @@ public class LambdaConverter extends SerializableConverter {
      * @param mapper
      * @param reflectionProvider
      * @param classLoaderReference
-     * @since upcoming
+     * @since 1.4.8
      */
     public LambdaConverter(
             final Mapper mapper, final ReflectionProvider reflectionProvider,
