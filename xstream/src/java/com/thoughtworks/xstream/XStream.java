@@ -969,6 +969,10 @@ public class XStream {
             addImmutableTypeDynamically("java.nio.charset.Charset");
             addImmutableTypeDynamically("java.util.Currency");
         }
+        
+        if (JVM.is15()) {
+            addImmutableTypeDynamically("java.util.UUID");
+        }
     }
 
     private void addImmutableTypeDynamically(String className) {
