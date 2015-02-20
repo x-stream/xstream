@@ -899,6 +899,7 @@ public class XStream {
         addImmutableType(URL.class);
         addImmutableType(File.class);
         addImmutableType(Class.class);
+        addImmutableType(UUID.class);
 
         addImmutableType(Collections.EMPTY_LIST.getClass());
         addImmutableType(Collections.EMPTY_SET.getClass());
