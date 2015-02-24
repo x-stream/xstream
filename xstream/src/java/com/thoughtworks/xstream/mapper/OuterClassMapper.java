@@ -60,7 +60,7 @@ public class OuterClassMapper extends MapperWrapper implements Caching {
             if (len == serialized.length()) {
                 idx = 0;
             } else if (serialized.length() > len + 1 && serialized.charAt(len) == '-') {
-                idx = Integer.valueOf(serialized.substring(len + 1));
+                idx = Integer.valueOf(serialized.substring(len + 1)).intValue();
             }
             if (idx >= 0) {
                 final String[] innerFieldNames = getInnerFieldNames(type);
