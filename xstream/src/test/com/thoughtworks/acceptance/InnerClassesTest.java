@@ -60,7 +60,7 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
 
             public class Dynamic3 extends Dynamic1.Dynamic2 {
                 private final String name3 = "Name 3";
-                private final Dynamic1.Dynamic2 dyn4;
+                final Dynamic1.Dynamic2 dyn4;
 
                 public Dynamic3(final Dynamic1 outer) {
                     outer.super();
@@ -81,9 +81,10 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
     }
 
     public void testNestedDynamicTypes() {
-        xstream.alias("inner", OuterType.InnerType.class);
-
         final OuterType outer = new OuterType();
+
+        xstream.alias("inner", OuterType.InnerType.class);
+        xstream.alias("Dynamic4", outer.dyn3.dyn4.getClass());
 
         String expectedXml = ""
                 + "<inner>\n"
@@ -103,7 +104,7 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
                 + "      <name2>Name 2</name2>\n"
                 + "      <outer-class reference=\"../../dyn1\"/>\n"
                 + "      <name3>Name 3</name3>\n"
-                + "      <dyn4 class=\"com.thoughtworks.acceptance.InnerClassesTest$OuterType$InnerType$Dynamic3$1Dynamic4\">\n"
+                + "      <dyn4 class=\"Dynamic4\">\n"
                 + "        <name2>Name 2</name2>\n"
                 + "        <outer-class defined-in=\"com.thoughtworks.acceptance.InnerClassesTest$OuterType$InnerType$Dynamic1$Dynamic2\" reference=\"../../../dyn1\"/>\n"
                 + "        <name4>Name 4</name4>\n"
@@ -117,10 +118,6 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
                 + "    </dyn3>\n"
                 + "  </outer-class>\n"
                 + "</inner>";
-        
-        if (!JVM.is15()) {
-            expectedXml = expectedXml.replaceFirst("OuterType\\$InnerType\\$Dynamic3\\$1", "1\\$");
-        }
 
         assertBothWays(outer.inner, expectedXml);
     }
