@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.core.JVM;
+
 public class InnerClassesTest extends AbstractAcceptanceTest {
 
     public void testSerializedInnerClassMaintainsReferenceToOuterClass() {
@@ -83,7 +85,7 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
 
         final OuterType outer = new OuterType();
 
-        final String expectedXml = ""
+        String expectedXml = ""
                 + "<inner>\n"
                 + "  <innerName>Inner Name</innerName>\n"
                 + "  <outer-class>\n"
@@ -115,6 +117,10 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
                 + "    </dyn3>\n"
                 + "  </outer-class>\n"
                 + "</inner>";
+        
+        if (!JVM.is15()) {
+            expectedXml = expectedXml.replaceFirst("OuterType\\$InnerType\\$Dynamic3\\$1", "1\\$");
+        }
 
         assertBothWays(outer.inner, expectedXml);
     }
