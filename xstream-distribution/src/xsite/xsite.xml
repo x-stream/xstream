@@ -1,6 +1,6 @@
 <!--
  Copyright (C) 2006, 2007, 2008, 2010 XSite committers.
- Copyright (C) 2011 XStream committers.
+ Copyright (C) 2011, 2015 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -24,8 +24,8 @@
 	<component-implementation key="org.codehaus.xsite.PageExtractor" class="org.codehaus.xsite.extractors.SiteMeshPageExtractor"/>
 	<component-implementation class="org.codehaus.xsite.extractors.sitemesh.rules.AddFirstChildClassToHeader"/>
 	<component-implementation class="com.opensymphony.module.sitemesh.html.rules.RegexReplacementTextFilter">
-		<parameter><string>JIRA:([A-Z]+)-([0-9]+)</string></parameter>
-		<parameter><string><![CDATA[<a href=\"http://jira.codehaus.org/browse/$1-$2\">$1-$2</a>]]></string></parameter>
+		<parameter><string>JIRA:XSTR-([0-9]+)</string></parameter>
+		<parameter><string><![CDATA[<a href=\"/jira/$1\">XSTR-$1</a>]]></string></parameter>
 	</component-implementation>
 	<component-implementation key="email-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
 		<parameter><string>mailto:</string></parameter>

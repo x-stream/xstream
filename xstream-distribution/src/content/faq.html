@@ -131,7 +131,7 @@
     <h2 id="Compatibility_SecurityManager">Which permissions does XStream need when running with an active SecurityManager?</h2>
 
     <p>This depends on the mode XStream is running in. Refer to the
-    <a href="http://svn.xstream.codehaus.org/browse/xstream/trunk/xstream/src/test/com/thoughtworks/acceptance/SecurityManagerTest.java">SecurityManagerTest</a>
+    <a href="https://github.com/x-stream/xstream/blob/master/xstream/src/test/com/thoughtworks/acceptance/SecurityManagerTest.java">SecurityManagerTest</a>
     for details. Actually XStream's converters try to check since version 1.4.6 any critical operation, before they
     claim to be able to handle a type. As consequence XStream can behave differently running under a SecurityManager.
     E.g. if the SecurityManager does not permit to create an instance for a derived class of ObjectOutputStream, the 
@@ -541,7 +541,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 
 	<p>As always, first for historical reasons! Main difference is that the 
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriver.html">JettisonMappedXmlDriver</a> is a 
-	thin wrapper around <a href="http://jettison.codehaus.org">Jettison</a> in combination with the 
+	thin wrapper around <a href="https://github.com/jettison-json">Jettison</a> in combination with the 
 	<a href="javadoc/com/thoughtworks/xstream/io/xml/StaxDriver.html">StaxDriver</a>, while the 
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
 	uses an own more flexible implementation, but can only be used to generate JSON, deserialization is not implemented.</p>

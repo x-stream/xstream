@@ -34,7 +34,7 @@
         <page>converters.html</page>
         <page>security.html</page>
         <page>faq.html</page>
-        <page>list-user.html</page>
+        <page>mailing-lists.html</page>
         <page>issues.html</page>
     </section>
     <section>
@@ -57,7 +57,6 @@
     <section>
         <name>Developing XStream</name>
         <page>how-to-contribute.html</page>
-        <page>list-dev.html</page>
         <page>team.html</page>
         <page>repository.html</page>
         <link title="Continuous Integration">http://bamboo.ci.codehaus.org/browse/XSTREAM</link>
