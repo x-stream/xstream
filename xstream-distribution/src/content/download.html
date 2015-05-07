@@ -21,18 +21,19 @@
     <h1 id="stable">Stable Version: <span class="version">1.4.8</span></h1>
 
     <ul>
-      <li><b><a href="https://nexus.codehaus.org/content/repositories/releases/com/thoughtworks/xstream/xstream-distribution/1.4.8/xstream-distribution-1.4.8-bin.zip">Binary distribution:</a></b>
+      <li><b><a href="http://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-distribution/1.4.8/xstream-distribution-1.4.8-bin.zip">Binary distribution:</a></b>
       Contains the XStream jar files, the Hibernate and Benchmark modules and all the dependencies.</li>
-      <li><b><a href="https://nexus.codehaus.org/content/repositories/releases/com/thoughtworks/xstream/xstream-distribution/1.4.8/xstream-distribution-1.4.8-src.zip">Source distribution:</a></b>
+      <li><b><a href="http://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-distribution/1.4.8/xstream-distribution-1.4.8-src.zip">Source distribution:</a></b>
       Contains the complete XStream project as if checked out from the Subversion version tag.</li>
-      <li><b><a href="https://nexus.codehaus.org/content/repositories/releases/com/thoughtworks/xstream/xstream/1.4.8/xstream-1.4.8.jar">XStream Core only:</a>
+      <li><b><a href="http://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream/1.4.8/xstream-1.4.8.jar">XStream Core only:</a>
       The xstream.jar only as it is downloaded automatically when it is referenced as Maven dependency.</b></li>
-      <li><b><a href="https://nexus.codehaus.org/content/repositories/releases/com/thoughtworks/xstream/xstream-hibernate/1.4.8/xstream-hibernate-1.4.8.jar">XStream Hibernate module:</a></b>
+      <li><b><a href="http://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-hibernate/1.4.8/xstream-hibernate-1.4.8.jar">XStream Hibernate module:</a></b>
       The xstream-hibernate.jar as it is downloaded automatically when it is referenced as Maven dependency.</li>
-      <li><b><a href="https://nexus.codehaus.org/content/repositories/releases/com/thoughtworks/xstream/xstream-benchmark/1.4.8/xstream-benchmark-1.4.8.jar">XStream Benchmark module:</a></b>
+      <li><b><a href="http://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-benchmark/1.4.8/xstream-benchmark-1.4.8.jar">XStream Benchmark module:</a></b>
       The xstream-benchmark.jar as it is downloaded automatically when it is referenced as Maven dependency.</li>
     </ul>
 
+	<!--
     <h1 id="snapshot">Latest Snapshot HEAD revision</h1>
 
     <p>Below are builds of the latest HEAD version of XStream from the <a href="repository.html">repository</a>.</p>
@@ -54,40 +55,41 @@
       <li><a href="https://nexus.codehaus.org/content/groups/public/com/thoughtworks/xstream/xstream-hibernate/1.4.9-SNAPSHOT/">XStream Hibernate module (1.4.x)</a></li>
       <li><a href="https://nexus.codehaus.org/content/groups/public/com/thoughtworks/xstream/xstream-benchmark/1.4.9-SNAPSHOT/">XStream Benchmark module (1.4.x)</a></li>
     </ul>
+    -->
 
     <h1 id="previous-releases">Previous Releases</h1>
 
     <p>Previous releases of XStream are also available. However, use of the latest stable version is recommended.</p>
 
     <ul>
-       <li><a href="http://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/">Previous releases (&gt;= 1.2)</a></li>
-       <li><a href="http://repo.maven.apache.org/maven2/xstream/xstream/">Previous releases (&lt;= 1.2)</a></li>
+      <li><a href="http://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/">Previous releases (&gt;= 1.2)</a></li>
+      <li><a href="http://repo.maven.apache.org/maven2/xstream/xstream/">Previous releases (&lt;= 1.2)</a></li>
     </ul>
 
     <h1 id="optional-deps">Optional Dependencies</h1>
 
     <ul>
-    	<li>Supported XML parsers and packages:
-    	<ul>
-      		<li><a href="http://repo.maven.apache.org/maven2/xmlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar">XmlPull</a>, the <a href="http://www.xmlpull.org/">XML pull parser API</a> and factory to detect available implementations.</li>
-      		<li><a href="http://www.extreme.indiana.edu/dist/java-repository/xpp3/jars/xpp3_min-1.1.4c.jar">Xpp3</a>, an XML pull parser (recommended).</li>
-      		<li><a href="http://downloads.sourceforge.net/kxml/kxml2-2.3.0.jar">kXML2</a> or <a href="http://downloads.sourceforge.net/kxml/kxml2-min-2.3.0.jar">kXML2-min</a>, an XML pull parser.</li>
-      		<li><a href="http://downloads.sourceforge.net/dom4j/dom4j-1.6.1.zip">DOM4J</a>, easy XML representation and manipulation framework.</li>
-      		<li><a href="http://www.jdom.org/dist/binary/archive/jdom-1.1.3.zip">JDOM</a>, easy XML representation and manipulation (requires Java 1.2, superseded by JDOM2).</li>
-      		<li><a href="http://www.jdom.org/dist/binary/jdom2-2.0.5.zip">JDOM2</a>, easy XML representation and manipulation, successor of JDOM (requires Java 5).</li>
-      		<li>StaX, the <a href="http://dist.codehaus.org/stax/jars/stax-1.2.0.jar">reference implementation</a> of the <a href="http://dist.codehaus.org/stax/jars/stax-api-1.0.1.jar">Streaming API for XML</a>.</li>
-      		<li><a href="http://woodstox.codehaus.org/3.2.7/wstx-asl-3.2.7.jar">Woodstox</a>, an alternate open source StaX implementation.</li>
-      		<li><a href="http://www.cafeconleche.org/XOM/xom-1.1.jar">XOM</a>, another alternative XML API.</li>
-      	</ul>
-      	</li>
-      	<li>Other optional 3rd party dependencies:
-      	<ul>
-      		<li><a href="http://downloads.sourceforge.net/joda-time/joda-time-1.6.zip">Joda Time</a> for optional ISO8601 date/time formats.</li>
-      		<li><a href="http://downloads.sourceforge.net/cglib/cglib-nodep-2.2.jar">CGLIB</a> for optional support of some proxies generated with the CGLIB Enhancer.</li>
-      		<li><a href="http://repository.codehaus.org/org/codehaus/jettison/jettison/1.2/jettison-1.2.jar">Jettison</a> for serialization and deserialization support with JSON. Note, that newer versions 1.3.x are no longer compatible with XStream.</li>
-      		<li><a href="http://repository.codehaus.org/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.jar">Jettison 1.0.1</a> for serialization and deserialization support with JSON in JDK 1.4. Note, that newer version 1.1 is not compatible with XStream.</li>
-      	</ul>
-      	</li>
+      <li>Supported XML parsers and packages:
+      <ul>
+        <li><a href="http://repo.maven.apache.org/maven2/xmlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar">XmlPull</a>, the <a href="http://www.xmlpull.org/">XML pull parser API</a> and factory to detect available implementations.</li>
+        <li><a href="http://www.extreme.indiana.edu/dist/java-repository/xpp3/jars/xpp3_min-1.1.4c.jar">Xpp3</a>, an XML pull parser (recommended).</li>
+        <li><a href="http://downloads.sourceforge.net/kxml/kxml2-2.3.0.jar">kXML2</a> or <a href="http://downloads.sourceforge.net/kxml/kxml2-min-2.3.0.jar">kXML2-min</a>, an XML pull parser.</li>
+        <li><a href="http://downloads.sourceforge.net/dom4j/dom4j-1.6.1.zip">DOM4J</a>, easy XML representation and manipulation framework.</li>
+        <li><a href="http://www.jdom.org/dist/binary/archive/jdom-1.1.3.zip">JDOM</a>, easy XML representation and manipulation (requires Java 1.2, superseded by JDOM2).</li>
+        <li><a href="http://www.jdom.org/dist/binary/jdom2-2.0.5.zip">JDOM2</a>, easy XML representation and manipulation, successor of JDOM (requires Java 5).</li>
+        <li>StaX, the <a href="http://repo.maven.apache.org/maven2/stax/stax-1.2.0.jar">reference implementation</a> of the <a href="http://repo.maven.apache.org/maven2/stax/stax-api-1.0.1.jar">Streaming API for XML</a>.</li>
+        <li><a href="http://repo.maven.apache.org/maven2/woodstox/wstx-asl-3.2.7.jar">Woodstox</a>, an alternate open source StaX implementation.</li>
+        <li><a href="http://www.cafeconleche.org/XOM/xom-1.1.jar">XOM</a>, another alternative XML API.</li>
+      </ul>
+      </li>
+        <li>Other optional 3rd party dependencies:
+        <ul>
+      	  <li><a href="http://downloads.sourceforge.net/joda-time/joda-time-1.6.zip">Joda Time</a> for optional ISO8601 date/time formats.</li>
+      	  <li><a href="http://downloads.sourceforge.net/cglib/cglib-nodep-2.2.jar">CGLIB</a> for optional support of some proxies generated with the CGLIB Enhancer.</li>
+      	  <li><a href="http://repository.codehaus.org/org/codehaus/jettison/jettison/1.2/jettison-1.2.jar">Jettison</a> for serialization and deserialization support with JSON. Note, that newer versions 1.3.x are no longer compatible with XStream.</li>
+      	  <li><a href="http://repository.codehaus.org/org/codehaus/jettison/jettison/1.0.1/jettison-1.0.1.jar">Jettison 1.0.1</a> for serialization and deserialization support with JSON in JDK 1.4. Note, that newer version 1.1 is not compatible with XStream.</li>
+        </ul>
+      </li>
     </ul>
 
     <h1 id="hibernate">Dependencies Hibernate Module</h1>
