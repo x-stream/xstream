@@ -48,6 +48,9 @@
 	<component-implementation key="javadoc-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
 		<parameter><string>javadoc/</string></parameter>
 	</component-implementation>
+    <component-implementation key="jira-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
+        <parameter><string>jira/</string></parameter>
+    </component-implementation>
     <component-implementation key="code-coverage-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
         <parameter><string>code-coverage/</string></parameter>
     </component-implementation>
