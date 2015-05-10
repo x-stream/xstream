@@ -18,6 +18,8 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.javabean.BeanProvider;
+import com.thoughtworks.xstream.converters.javabean.JavaBeanProvider;
 import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
 import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -78,6 +80,8 @@ public class JavaBeanConverter implements Converter {
                     final Object newObj) {
                 if (newObj != null) {
                     writeField(propertyName, fieldType, newObj, definedIn);
+                } else {
+                    writeNullField(propertyName);
                 }
             }
 
@@ -92,6 +96,13 @@ public class JavaBeanConverter implements Converter {
                 }
                 context.convertAnother(newObj);
 
+                writer.endNode();
+            }
+
+            private void writeNullField(final String propertyName) {
+                final String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, Mapper.Null.class);
+                writer.addAttribute(classAttributeName, mapper.serializedClass(Mapper.Null.class));
                 writer.endNode();
             }
         });
