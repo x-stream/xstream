@@ -9,7 +9,7 @@
 --[ Binaries ]-----------------------------------------------
 
 All binary artifacts are bundled in the -bin archive.  It includes
-the xstream jars and any other library used at build time, or
+the XStream jars and any other library used at build time, or
 optional runtime extras.  Xpp3 is recommend for use as it will
 greatly improve the performance of XStream.
 
@@ -24,7 +24,8 @@ includes:
 
 --[ Source ]-------------------------------------------------
 
-The complete source for XStream is bundled.  This includes:
+The complete source for XStream is bundled in the -src archive.
+This includes:
  * Main API [xstream/src/java]
  * Unit tests [xstream/src/test]
  * Maven build files [pom.xml] 
