@@ -59,6 +59,6 @@
         <page>how-to-contribute.html</page>
         <page>team.html</page>
         <page>repository.html</page>
-        <link title="Continuous Integration">http://bamboo.ci.codehaus.org/browse/XSTREAM</link>
+        <link title="Continuous Integration">https://travis-ci.org/x-stream/xstream/branches</link>
     </section>
 </sitemap>
