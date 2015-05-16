@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/x-stream/xstream.svg?branch=master)](https://travis-ci.org/x-stream/xstream)
 ----
-# XSTREAM
+# XStream
 _Java to XML Serialization, and back again_
 
 ## Binaries
