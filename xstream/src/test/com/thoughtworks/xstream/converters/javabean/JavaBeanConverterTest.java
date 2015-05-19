@@ -170,6 +170,19 @@ public class JavaBeanConverterTest extends TestCase {
         }
     }
 
+    public void testRoundtripWithNullValue() {
+        World world = new World();
+        world.setAString(null);
+
+        XStream xstream = new XStream();
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
+            new StringComparator())), XStream.PRIORITY_LOW);
+        xstream.allowTypes(World.class);
+
+        World world2 = (World) xstream.fromXML(xstream.toXML(world));
+        assertEquals(null, world2.getAString());
+    }
+
     public void testSerializesAllPrimitiveFieldsInACustomObject() {
         World world = new World();
 
