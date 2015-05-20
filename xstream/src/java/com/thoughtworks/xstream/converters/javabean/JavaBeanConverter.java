@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 12. April 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.javabean;
@@ -20,14 +20,15 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
 import com.thoughtworks.xstream.core.util.FastField;
+import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+
 /**
- * Can convert any bean with a public default constructor. The {@link BeanProvider} used as
- * default is based on {@link java.beans.BeanInfo}. Indexed properties are currently not supported.
+ * Can convert any bean with a public default constructor. The {@link BeanProvider} used as default is based on
+ * {@link java.beans.BeanInfo}. Indexed properties are currently not supported.
  */
 public class JavaBeanConverter implements Converter {
 
@@ -82,7 +83,7 @@ public class JavaBeanConverter implements Converter {
     }
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        final String classAttributeName = classAttributeIdentifier != null ? classAttributeIdentifier : mapper.aliasForSystemAttribute("class");
+        final String classAttributeName = mapper.aliasForSystemAttribute("class");
         beanProvider.visitSerializableProperties(source, new JavaBeanProvider.Visitor() {
             public boolean shouldVisit(String name, Class definedIn) {
                 return mapper.shouldSerializeMember(definedIn, name);
@@ -90,20 +91,29 @@ public class JavaBeanConverter implements Converter {
             
             public void visit(String propertyName, Class fieldType, Class definedIn, Object newObj) {
                 if (newObj != null) {
-                    writeField(propertyName, fieldType, newObj, definedIn);
+                    writeField(propertyName, fieldType, newObj);
+                } else {
+                    writeNullField(propertyName);
                 }
             }
 
-            private void writeField(String propertyName, Class fieldType, Object newObj, Class definedIn) {
+            private void writeField(String propertyName, Class fieldType, Object newObj) {
                 Class actualType = newObj.getClass();
                 Class defaultType = mapper.defaultImplementationOf(fieldType);
                 String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
-				ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, actualType);
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, actualType);
                 if (!actualType.equals(defaultType) && classAttributeName != null) {
                     writer.addAttribute(classAttributeName, mapper.serializedClass(actualType));
                 }
                 context.convertAnother(newObj);
 
+                writer.endNode();
+            }
+
+            private void writeNullField(final String propertyName) {
+                final String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, Mapper.Null.class);
+                writer.addAttribute(classAttributeName, mapper.serializedClass(Mapper.Null.class));
                 writer.endNode();
             }
         });
