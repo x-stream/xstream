@@ -23,10 +23,14 @@
     <component-implementation key="org.codehaus.xsite.Skin" class="org.codehaus.xsite.skins.FreemarkerSkin"/>
 	<component-implementation key="org.codehaus.xsite.PageExtractor" class="org.codehaus.xsite.extractors.SiteMeshPageExtractor"/>
 	<component-implementation class="org.codehaus.xsite.extractors.sitemesh.rules.AddFirstChildClassToHeader"/>
-	<component-implementation class="com.opensymphony.module.sitemesh.html.rules.RegexReplacementTextFilter">
+	<component-implementation key="jira-issues" class="com.opensymphony.module.sitemesh.html.rules.RegexReplacementTextFilter">
 		<parameter><string>JIRA:XSTR-([0-9]+)</string></parameter>
 		<parameter><string><![CDATA[<a href=\"/jira/$1\">XSTR-$1</a>]]></string></parameter>
 	</component-implementation>
+    <component-implementation key="github-issues" class="com.opensymphony.module.sitemesh.html.rules.RegexReplacementTextFilter">
+        <parameter><string>GH:[#]([0-9]+)</string></parameter>
+        <parameter><string><![CDATA[<a href=\"https://github.com/x-stream/xstream/issues/$1\">#$1</a>]]></string></parameter>
+    </component-implementation>
 	<component-implementation key="email-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
 		<parameter><string>mailto:</string></parameter>
 	</component-implementation>
