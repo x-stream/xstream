@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 12. April 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.javabean;
@@ -77,12 +77,13 @@ public class JavaBeanConverter implements Converter {
             public void visit(final String propertyName, final Class<?> fieldType, final Class<?> definedIn,
                     final Object newObj) {
                 if (newObj != null) {
-                    writeField(propertyName, fieldType, newObj, definedIn);
+                    writeField(propertyName, fieldType, newObj);
+                } else {
+                    writeNullField(propertyName);
                 }
             }
 
-            private void writeField(final String propertyName, final Class<?> fieldType, final Object newObj,
-                    final Class<?> definedIn) {
+            private void writeField(final String propertyName, final Class<?> fieldType, final Object newObj) {
                 final Class<?> actualType = newObj.getClass();
                 final Class<?> defaultType = mapper.defaultImplementationOf(fieldType);
                 final String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
@@ -92,6 +93,13 @@ public class JavaBeanConverter implements Converter {
                 }
                 context.convertAnother(newObj);
 
+                writer.endNode();
+            }
+
+            private void writeNullField(final String propertyName) {
+                final String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, Mapper.Null.class);
+                writer.addAttribute(classAttributeName, mapper.serializedClass(Mapper.Null.class));
                 writer.endNode();
             }
         });
@@ -154,7 +162,7 @@ public class JavaBeanConverter implements Converter {
 
     /**
      * Exception to indicate double processing of a property to avoid silent clobbering.
-     * 
+     *
      * @author J&ouml;rg Schaible
      * @since 1.4.2
      */

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -200,6 +200,43 @@ public class JavaBeanConverterTest extends TestCase {
         String result = xstream.toXML(world);
 
         assertEquals(expected, result);
+    }
+
+    public void testSerializesNullValue() {
+        World world = new World();
+        world.setAString(null);
+
+        XStream xstream = new XStream();
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
+            new StringComparator())), XStream.PRIORITY_LOW);
+        xstream.alias("world", World.class);
+        xstream.allowTypes(World.class);
+
+        String expected = "" 
+                + "<world>\n"
+                + "  <ABool>true</ABool>\n"
+                + "  <ABoolean>false</ABoolean>\n"
+                + "  <AByte>4</AByte>\n"
+                + "  <AByteClass>5</AByteClass>\n"
+                + "  <AChar>a</AChar>\n"
+                + "  <ACharacter>w</ACharacter>\n"
+                + "  <AFloat>8.0</AFloat>\n"
+                + "  <AFloatClass>9.0</AFloatClass>\n"
+                + "  <ALong>10</ALong>\n"
+                + "  <ALongClass>11</ALongClass>\n"
+                + "  <anInt>1</anInt>\n"
+                + "  <anInteger>2</anInteger>\n"
+                + "  <AShort>6</AShort>\n"
+                + "  <AShortClass>7</AShortClass>\n"
+                + "  <AString class=\"null\"/>\n"
+                + "</world>";
+
+        String result = xstream.toXML(world);
+
+        assertEquals(expected, result);
+
+        World world2 = (World) xstream.fromXML(result);
+        assertEquals(null, world2.getAString());
     }
 
     /**
