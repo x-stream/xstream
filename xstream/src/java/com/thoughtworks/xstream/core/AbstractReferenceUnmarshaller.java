@@ -56,16 +56,24 @@ public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller 
         final Object result;
         String referenceAttrName = getMapper().aliasForSystemAttribute("reference");
         String reference = referenceAttrName == null ? null : reader.getAttribute(referenceAttrName);
-        boolean keepReference = type != null && getMapper().isReferenceable(type);
+        boolean keepReference = type == null || getMapper().isReferenceable(type);
+        R refKey = reference == null ? null : getReferenceKey(reference);
 
-        if (reference == null && ! keepReference){
-            result = super.convert(parent, type, converter);
-        } else if (reference != null && ! keepReference) {
+        if (reference != null && ! keepReference) {
+            // found a reference but we've been told not to keep them
             throw badReference(type, reference);
-        } else if (reference != null){
-            Object cache = values.get(getReferenceKey(reference));
+        } else if(reference != null && ! values.containsKey(refKey)){
+            // found a reference but there is no entry for that reference (garbage path)
+            throw badReference(type, reference);
+        } else if (reference == null && ! keepReference){
+            // dont have a reference and we're not supposed to keep them.
+            result = super.convert(parent, type, converter);
+        } else if (reference != null && values.containsKey(refKey)){
+            // have a reference and have the value for that reference
+            Object cache = values.get(refKey);
             result = cache == NULL ? null : cache;
         } else {
+            // dont have a reference, and this type is referenceable
             final R currentReferenceKey = getCurrentReferenceKey();
             parentStack.push(currentReferenceKey);
             result = super.convert(parent, type, converter);
@@ -78,13 +86,11 @@ public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller 
         return result;
     }
 
-    private ConversionException badReference(Class type, String reference) {
-
-        ConversionException ex = new ConversionException("Invalid reference");
-        ex.add("class", type == null ? "not available" : type.getCanonicalName());
-        ex.add("reference", reference);
-
-        return ex;
+    private ConversionException badReference(Class<?> type, String reference) {
+        ConversionException conversionException = new ConversionException("Invalid reference");
+        conversionException.set("class", type == null ? "not available" : type.getCanonicalName());
+        conversionException.set("reference", reference);
+        return conversionException;
     }
 
     protected abstract R getReferenceKey(String reference);
