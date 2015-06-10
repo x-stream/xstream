@@ -49,6 +49,11 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     @Override
+    public boolean isReferenceable(Class<?> type) {
+        return wrapped.isReferenceable(type);
+    }
+
+    @Override
     public Class<?> defaultImplementationOf(final Class<?> type) {
         return wrapped.defaultImplementationOf(type);
     }

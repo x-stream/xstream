@@ -32,6 +32,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller {
 
     private static final Object NULL = new Object();
+
     private final Map<R, Object> values = new HashMap<R, Object>();
     private final FastStack<R> parentStack = new FastStack<R>(16);
 
@@ -53,15 +54,16 @@ public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller 
             }
         }
         final Object result;
-        final String attributeName = getMapper().aliasForSystemAttribute("reference");
-        final String reference = attributeName == null ? null : reader.getAttribute(attributeName);
-        if (reference != null) {
-            final Object cache = values.get(getReferenceKey(reference));
-            if (cache == null) {
-                final ConversionException ex = new ConversionException("Invalid reference");
-                ex.add("reference", reference);
-                throw ex;
-            }
+        String referenceAttrName = getMapper().aliasForSystemAttribute("reference");
+        String reference = referenceAttrName == null ? null : reader.getAttribute(referenceAttrName);
+        boolean keepReference = type != null && getMapper().isReferenceable(type);
+
+        if (reference == null && ! keepReference){
+            result = super.convert(parent, type, converter);
+        } else if (reference != null && ! keepReference) {
+            throw badReference(type, reference);
+        } else if (reference != null){
+            Object cache = values.get(getReferenceKey(reference));
             result = cache == NULL ? null : cache;
         } else {
             final R currentReferenceKey = getCurrentReferenceKey();
@@ -72,7 +74,17 @@ public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller 
             }
             parentStack.popSilently();
         }
+
         return result;
+    }
+
+    private ConversionException badReference(Class type, String reference) {
+
+        ConversionException ex = new ConversionException("Invalid reference");
+        ex.add("class", type == null ? "not available" : type.getCanonicalName());
+        ex.add("reference", reference);
+
+        return ex;
     }
 
     protected abstract R getReferenceKey(String reference);

@@ -47,6 +47,14 @@ public interface Mapper {
      */
     boolean isImmutableValueType(Class<?> type);
 
+    /**
+     * Whether this type is an immutable type whose references must be kept anyways
+     * (for compatibility) at deserialization.
+     *
+     * @since upcoming
+     */
+    boolean isReferenceable(Class<?> type);
+
     Class<?> defaultImplementationOf(Class<?> type);
 
     /**
