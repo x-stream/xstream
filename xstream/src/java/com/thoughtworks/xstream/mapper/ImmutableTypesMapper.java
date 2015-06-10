@@ -23,23 +23,25 @@ import java.util.Set;
  */
 public class ImmutableTypesMapper extends MapperWrapper {
 
+    private final Set<Class<?>> unreferenceableTypes = new HashSet<Class<?>>();
     private final Set<Class<?>> immutableTypes = new HashSet<Class<?>>();
 
     public ImmutableTypesMapper(final Mapper wrapped) {
         super(wrapped);
     }
 
-    public void addImmutableType(final Class<?> type) {
+    public void addImmutableType(final Class<?> type, boolean isReferenceable) {
         immutableTypes.add(type);
+        if(! isReferenceable) { unreferenceableTypes.add(type); }
     }
 
     @Override
     public boolean isImmutableValueType(final Class<?> type) {
-        if (immutableTypes.contains(type)) {
-            return true;
-        } else {
-            return super.isImmutableValueType(type);
-        }
+        return immutableTypes.contains(type) || super.isImmutableValueType(type);
     }
 
+    @Override
+    public boolean isReferenceable(final Class<?> type) {
+        return ! unreferenceableTypes.contains(type);
+    }
 }

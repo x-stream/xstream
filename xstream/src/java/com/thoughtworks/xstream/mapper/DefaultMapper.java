@@ -110,6 +110,11 @@ public class DefaultMapper implements Mapper {
     }
 
     @Override
+    public boolean isReferenceable(final Class<?> type){
+        return true;
+    }
+
+    @Override
     public String getFieldNameForItemTypeAndName(final Class<?> definedIn, final Class<?> itemType,
             final String itemFieldName) {
         return null;
