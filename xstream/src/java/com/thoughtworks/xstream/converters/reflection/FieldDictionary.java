@@ -49,7 +49,7 @@ public class FieldDictionary implements Caching {
         init();
     }
 
-    protected void init() {
+    private void init() {
         keyedByFieldNameCache = new ConcurrentHashMap<Class<?>, Map<String, Field>>();
         keyedByFieldKeyCache = new ConcurrentHashMap<Class<?>, Map<FieldKey, Field>>();
         keyedByFieldNameCache.put(Object.class, Collections.<String, Field>emptyMap());
