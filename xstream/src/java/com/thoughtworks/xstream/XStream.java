@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 26. September 2003 by Joe Walnes
  */
 package com.thoughtworks.xstream;
@@ -183,13 +183,13 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
- * 
+ *
  * <pre>
  * XStream xstream = new XStream();
  * String xml = xstream.toXML(myObject); // serialize to XML
  * Object myObject2 = xstream.fromXML(xml); // deserialize from XML
  * </pre>
- * 
+ *
  * </blockquote>
  * <hr>
  * <h3>Aliasing classes</h3>
@@ -200,11 +200,11 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * <p>
  * <hr>
  * <blockquote>
- * 
+ *
  * <pre>
  * xstream.alias(&quot;my-thing&quot;, MyThing.class);
  * </pre>
- * 
+ *
  * </blockquote>
  * <hr>
  * <h3>Converters</h3>
@@ -222,12 +222,12 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
- * 
+ *
  * <pre>
  * xstream.registerConverter(new SqlTimestampConverter());
  * xstream.registerConverter(new DynamicProxyConverter());
  * </pre>
- * 
+ *
  * </blockquote>
  * <hr>
  * <p>
@@ -240,11 +240,11 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * <p>
  * <hr>
  * <b>Example</b><blockquote>
- * 
+ *
  * <pre>
  * xstream.registerConverter(new CustomDefaultConverter(), XStream.PRIORITY_VERY_LOW);
  * </pre>
- * 
+ *
  * </blockquote>
  * <hr>
  * <h3>Object graphs</h3>
@@ -301,7 +301,7 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * To avoid the need for special tags for collections, you can define implicit collections using one of the
  * <code>addImplicitCollection</code> methods.
  * </p>
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
@@ -352,7 +352,7 @@ public class XStream {
      * The instance will use the {@link XppDriver} as default and tries to determine the best match for the
      * {@link ReflectionProvider} on its own.
      * </p>
-     * 
+     *
      * @throws InitializationException in case of an initialization problem
      */
     public XStream() {
@@ -364,7 +364,7 @@ public class XStream {
      * <p>
      * The instance will use the {@link XppDriver} as default.
      * </p>
-     * 
+     *
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching reflection provider
      * @throws InitializationException in case of an initialization problem
      */
@@ -377,7 +377,7 @@ public class XStream {
      * <p>
      * The instance will tries to determine the best match for the {@link ReflectionProvider} on its own.
      * </p>
-     * 
+     *
      * @param hierarchicalStreamDriver the driver instance
      * @throws InitializationException in case of an initialization problem
      */
@@ -387,7 +387,7 @@ public class XStream {
 
     /**
      * Constructs an XStream with a special {@link HierarchicalStreamDriver} and {@link ReflectionProvider}.
-     * 
+     *
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param hierarchicalStreamDriver the driver instance
      * @throws InitializationException in case of an initialization problem
@@ -399,7 +399,7 @@ public class XStream {
     /**
      * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider} and a
      * {@link ClassLoaderReference}.
-     * 
+     *
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoaderReference the reference to the {@link ClassLoader} to use
@@ -415,7 +415,7 @@ public class XStream {
     /**
      * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider} and the
      * {@link ClassLoader} to use.
-     * 
+     *
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
      * @deprecated As of 1.4.5 use {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference)}
@@ -430,7 +430,7 @@ public class XStream {
     /**
      * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider}, a prepared
      * {@link Mapper} chain and the {@link ClassLoader} to use.
-     * 
+     *
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoader the {@link ClassLoader} to use
@@ -453,7 +453,7 @@ public class XStream {
      * <p>
      * The {@link ClassLoaderReference} should also be used for the {@link Mapper} chain.
      * </p>
-     * 
+     *
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoaderReference the reference to the {@link ClassLoader} to use
@@ -488,7 +488,7 @@ public class XStream {
      * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider}, a prepared
      * {@link Mapper} chain, the {@link ClassLoaderReference} and an own {@link ConverterLookup} and
      * {@link ConverterRegistry}.
-     * 
+     *
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoader the {@link ClassLoader} to use
@@ -518,7 +518,7 @@ public class XStream {
      * ConverterRegistry if you intent to register {@link Converter} instances with XStream facade or you are using
      * annotations.
      * </p>
-     * 
+     *
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching Provider
      * @param driver the driver instance
      * @param classLoaderReference the reference to the {@link ClassLoader} to use
@@ -724,6 +724,7 @@ public class XStream {
             alias("awt-color", JVM.loadClassForName("java.awt.Color", false));
             alias("awt-font", JVM.loadClassForName("java.awt.Font", false));
             alias("awt-text-attribute", JVM.loadClassForName("java.awt.font.TextAttribute"));
+            alias("activation-data-flavor", JVM.loadClassForName("javax.activation.ActivationDataFlavor"));
         }
 
         if (JVM.isSQLAvailable()) {
@@ -838,6 +839,10 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.DurationConverter",
                 PRIORITY_NORMAL, null, null);
         }
+        if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
+                PRIORITY_NORMAL, null, null);
+        }
         if (JVM.is18()) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
                 PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class, ClassLoaderReference.class},
@@ -919,7 +924,7 @@ public class XStream {
 
     /**
      * Setter for an arbitrary marshalling strategy.
-     * 
+     *
      * @param marshallingStrategy the implementation to use
      * @see #setMode(int)
      */
@@ -929,7 +934,7 @@ public class XStream {
 
     /**
      * Serialize an object to a pretty-printed XML String.
-     * 
+     *
      * @throws XStreamException if the object cannot be serialized
      */
     public String toXML(final Object obj) {
@@ -941,7 +946,7 @@ public class XStream {
     /**
      * Serialize an object to the given Writer as pretty-printed XML. The Writer will be flushed afterwards and in case
      * of an exception.
-     * 
+     *
      * @throws XStreamException if the object cannot be serialized
      */
     public void toXML(final Object obj, final Writer out) {
@@ -957,7 +962,7 @@ public class XStream {
     /**
      * Serialize an object to the given OutputStream as pretty-printed XML. The OutputStream will be flushed afterwards
      * and in case of an exception.
-     * 
+     *
      * @throws XStreamException if the object cannot be serialized
      */
     public void toXML(final Object obj, final OutputStream out) {
@@ -972,7 +977,7 @@ public class XStream {
 
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
-     * 
+     *
      * @throws XStreamException if the object cannot be serialized
      */
     public void marshal(final Object obj, final HierarchicalStreamWriter writer) {
@@ -981,7 +986,7 @@ public class XStream {
 
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
-     * 
+     *
      * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If not present,
      *            XStream shall create one lazily as needed.
      * @throws XStreamException if the object cannot be serialized
@@ -992,7 +997,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML String.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final String xml) {
@@ -1001,7 +1006,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML Reader.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final Reader reader) {
@@ -1010,7 +1015,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML InputStream.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final InputStream input) {
@@ -1020,7 +1025,7 @@ public class XStream {
     /**
      * Deserialize an object from a URL. Depending on the parser implementation, some might take the file path as
      * SystemId to resolve additional references.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
@@ -1031,7 +1036,7 @@ public class XStream {
     /**
      * Deserialize an object from a file. Depending on the parser implementation, some might take the file path as
      * SystemId to resolve additional references.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
@@ -1043,7 +1048,7 @@ public class XStream {
      * Deserialize an object from an XML String, populating the fields of the given root object instead of instantiating
      * a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into
      * the raw memory area of the existing object. Use with care!
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final String xml, final T root) {
@@ -1054,7 +1059,7 @@ public class XStream {
      * Deserialize an object from an XML Reader, populating the fields of the given root object instead of instantiating
      * a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into
      * the raw memory area of the existing object. Use with care!
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final Reader xml, final T root) {
@@ -1066,7 +1071,7 @@ public class XStream {
      * one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into the raw
      * memory area of the existing object. Use with care! Depending on the parser implementation, some might take the
      * file path as SystemId to resolve additional references.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
@@ -1079,7 +1084,7 @@ public class XStream {
      * one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into the raw
      * memory area of the existing object. Use with care! Depending on the parser implementation, some might take the
      * file path as SystemId to resolve additional references.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
@@ -1096,7 +1101,7 @@ public class XStream {
      * Deserialize an object from an XML InputStream, populating the fields of the given root object instead of
      * instantiating a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write
      * directly into the raw memory area of the existing object. Use with care!
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final InputStream input, final T root) {
@@ -1105,7 +1110,7 @@ public class XStream {
 
     /**
      * Deserialize an object from a hierarchical data structure (such as XML).
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T unmarshal(final HierarchicalStreamReader reader) {
@@ -1116,7 +1121,7 @@ public class XStream {
      * Deserialize an object from a hierarchical data structure (such as XML), populating the fields of the given root
      * object instead of instantiating a new one. Note, that this is a special use case! With the ReflectionConverter
      * XStream will write directly into the raw memory area of the existing object. Use with care!
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T unmarshal(final HierarchicalStreamReader reader, final T root) {
@@ -1125,7 +1130,7 @@ public class XStream {
 
     /**
      * Deserialize an object from a hierarchical data structure (such as XML).
-     * 
+     *
      * @param root If present, the passed in object will have its fields populated, as opposed to XStream creating a new
      *            instance. Note, that this is a special use case! With the ReflectionConverter XStream will write
      *            directly into the raw memory area of the existing object. Use with care!
@@ -1149,7 +1154,7 @@ public class XStream {
 
     /**
      * Alias a Class to a shorter name to be used in XML elements.
-     * 
+     *
      * @param name Short name
      * @param type Type to be aliased
      * @throws InitializationException if no {@link ClassAliasingMapper} is available
@@ -1164,7 +1169,7 @@ public class XStream {
     /**
      * Alias a type to a shorter name to be used in XML elements. Any class that is assignable to this type will be
      * aliased to the same name.
-     * 
+     *
      * @param name Short name
      * @param type Type to be aliased
      * @since 1.2
@@ -1179,7 +1184,7 @@ public class XStream {
 
     /**
      * Alias a Class to a shorter name to be used in XML elements.
-     * 
+     *
      * @param name Short name
      * @param type Type to be aliased
      * @param defaultImplementation Default implementation of type to use if no other specified.
@@ -1193,7 +1198,7 @@ public class XStream {
 
     /**
      * Alias a package to a shorter name to be used in XML elements.
-     * 
+     *
      * @param name Short name
      * @param pkgName package to be aliased
      * @throws InitializationException if no {@link DefaultImplementationsMapper} or no {@link PackageAliasingMapper} is
@@ -1209,7 +1214,7 @@ public class XStream {
 
     /**
      * Create an alias for a field name.
-     * 
+     *
      * @param alias the alias itself
      * @param definedIn the type that declares the field
      * @param fieldName the name of the field
@@ -1224,7 +1229,7 @@ public class XStream {
 
     /**
      * Create an alias for an attribute
-     * 
+     *
      * @param alias the alias itself
      * @param attributeName the name of the attribute
      * @throws InitializationException if no {@link AttributeAliasingMapper} is available
@@ -1240,7 +1245,7 @@ public class XStream {
      * Create an alias for a system attribute. XStream will not write a system attribute if its alias is set to
      * <code>null</code>. However, this is not reversible, i.e. deserialization of the result is likely to fail
      * afterwards and will not produce an object equal to the originally written one.
-     * 
+     *
      * @param alias the alias itself (may be <code>null</code>)
      * @param systemAttributeName the name of the system attribute
      * @throws InitializationException if no {@link SystemAttributeAliasingMapper} is available
@@ -1255,7 +1260,7 @@ public class XStream {
 
     /**
      * Create an alias for an attribute.
-     * 
+     *
      * @param definedIn the type where the attribute is defined
      * @param attributeName the name of the attribute
      * @param alias the alias itself
@@ -1269,7 +1274,7 @@ public class XStream {
 
     /**
      * Use an attribute for a field or a specific type.
-     * 
+     *
      * @param fieldName the name of the field
      * @param type the Class of the type to be rendered as XML attribute
      * @throws InitializationException if no {@link AttributeMapper} is available
@@ -1284,7 +1289,7 @@ public class XStream {
 
     /**
      * Use an attribute for a field declared in a specific type.
-     * 
+     *
      * @param fieldName the name of the field
      * @param definedIn the Class containing such field
      * @throws InitializationException if no {@link AttributeMapper} is available
@@ -1299,7 +1304,7 @@ public class XStream {
 
     /**
      * Use an attribute for an arbitrary type.
-     * 
+     *
      * @param type the Class of the type to be rendered as XML attribute
      * @throws InitializationException if no {@link AttributeMapper} is available
      * @since 1.2
@@ -1315,7 +1320,7 @@ public class XStream {
      * Associate a default implementation of a class with an object. Whenever XStream encounters an instance of this
      * type, it will use the default implementation instead. For example, java.util.ArrayList is the default
      * implementation of java.util.List.
-     * 
+     *
      * @param defaultImplementation
      * @param ofType
      * @throws InitializationException if no {@link DefaultImplementationsMapper} is available
@@ -1330,7 +1335,7 @@ public class XStream {
     /**
      * Add immutable types. The value of the instances of these types will always be written into the stream even if
      * they appear multiple times.
-     * 
+     *
      * @throws InitializationException if no {@link ImmutableTypesMapper} is available
      */
     public void addImmutableType(final Class<?> type) {
@@ -1342,7 +1347,7 @@ public class XStream {
 
     /**
      * Register a converter with normal priority.
-     * 
+     *
      * @param converter the converter instance
      */
     public void registerConverter(final Converter converter) {
@@ -1351,7 +1356,7 @@ public class XStream {
 
     /**
      * Register a converter with chosen priority.
-     * 
+     *
      * @param converter the converter instance
      * @param priority the converter priority
      */
@@ -1363,7 +1368,7 @@ public class XStream {
 
     /**
      * Register a single value converter with normal priority.
-     * 
+     *
      * @param converter the single value converter instance
      */
     public void registerConverter(final SingleValueConverter converter) {
@@ -1372,7 +1377,7 @@ public class XStream {
 
     /**
      * Register a single converter with chosen priority.
-     * 
+     *
      * @param converter the single converter instance
      * @param priority the converter priority
      */
@@ -1384,7 +1389,7 @@ public class XStream {
 
     /**
      * Register a local {@link Converter} for a field.
-     * 
+     *
      * @param definedIn the class type the field is defined in
      * @param fieldName the field name
      * @param converter the converter to use
@@ -1399,7 +1404,7 @@ public class XStream {
 
     /**
      * Register a local {@link SingleValueConverter} for a field.
-     * 
+     *
      * @param definedIn the class type the field is defined in
      * @param fieldName the field name
      * @param converter the converter to use
@@ -1413,7 +1418,7 @@ public class XStream {
 
     /**
      * Retrieve the {@link Mapper}. This is by default a chain of {@link MapperWrapper MapperWrappers}.
-     * 
+     *
      * @return the mapper
      * @since 1.2
      */
@@ -1423,7 +1428,7 @@ public class XStream {
 
     /**
      * Retrieve the {@link ReflectionProvider} in use.
-     * 
+     *
      * @return the mapper
      * @since 1.2.1
      */
@@ -1439,7 +1444,7 @@ public class XStream {
      * Change mode for dealing with duplicate references. Valid values are <code>XPATH_ABSOLUTE_REFERENCES</code>,
      * <code>XPATH_RELATIVE_REFERENCES</code>, <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>
      * .
-     * 
+     *
      * @throws IllegalArgumentException if the mode is not one of the declared types
      * @see #setMarshallingStrategy(MarshallingStrategy)
      * @see #XPATH_ABSOLUTE_REFERENCES
@@ -1476,7 +1481,7 @@ public class XStream {
 
     /**
      * Adds a default implicit collection which is used for any unmapped XML tag.
-     * 
+     *
      * @param ownerType class owning the implicit collection
      * @param fieldName name of the field in the ownerType. This field must be a concrete collection type or matching
      *            the default implementation type of the collection type.
@@ -1487,7 +1492,7 @@ public class XStream {
 
     /**
      * Adds implicit collection which is used for all items of the given itemType.
-     * 
+     *
      * @param ownerType class owning the implicit collection
      * @param fieldName name of the field in the ownerType. This field must be a concrete collection type or matching
      *            the default implementation type of the collection type.
@@ -1500,7 +1505,7 @@ public class XStream {
 
     /**
      * Adds implicit collection which is used for all items of the given element name defined by itemFieldName.
-     * 
+     *
      * @param ownerType class owning the implicit collection
      * @param fieldName name of the field in the ownerType. This field must be a concrete collection type or matching
      *            the default implementation type of the collection type.
@@ -1515,7 +1520,7 @@ public class XStream {
 
     /**
      * Adds an implicit array.
-     * 
+     *
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field
      * @since 1.4
@@ -1526,7 +1531,7 @@ public class XStream {
 
     /**
      * Adds an implicit array which is used for all items of the given itemType when the array type matches.
-     * 
+     *
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field in the ownerType
      * @param itemType type of the items to be part of this array
@@ -1540,7 +1545,7 @@ public class XStream {
 
     /**
      * Adds an implicit array which is used for all items of the given element name defined by itemName.
-     * 
+     *
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field in the ownerType
      * @param itemName alias name of the items
@@ -1553,7 +1558,7 @@ public class XStream {
 
     /**
      * Adds an implicit map.
-     * 
+     *
      * @param ownerType class owning the implicit map
      * @param fieldName name of the field in the ownerType. This field must be a concrete map type or matching the
      *            default implementation type of the map type.
@@ -1568,7 +1573,7 @@ public class XStream {
 
     /**
      * Adds an implicit map.
-     * 
+     *
      * @param ownerType class owning the implicit map
      * @param fieldName name of the field in the ownerType. This field must be a concrete map type or matching the
      *            default implementation type of the map type.
@@ -1589,7 +1594,7 @@ public class XStream {
      * Create a DataHolder that can be used to pass data to the converters. The DataHolder is provided with a call to
      * {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)} or
      * {@link #unmarshal(HierarchicalStreamReader, Object, DataHolder)}.
-     * 
+     *
      * @return a new {@link DataHolder}
      */
     public DataHolder newDataHolder() {
@@ -1602,7 +1607,7 @@ public class XStream {
      * To change the name of the root element (from &lt;object-stream&gt;), use
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
-     * 
+     *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
@@ -1617,7 +1622,7 @@ public class XStream {
      * To change the name of the root element (from &lt;object-stream&gt;), use
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
-     * 
+     *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
@@ -1628,7 +1633,7 @@ public class XStream {
 
     /**
      * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
-     * 
+     *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
@@ -1644,7 +1649,7 @@ public class XStream {
      * To change the name of the root element (from &lt;object-stream&gt;), use
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
-     * 
+     *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
@@ -1655,7 +1660,7 @@ public class XStream {
 
     /**
      * Creates an ObjectOutputStream that serializes a stream of objects to the OutputStream using XStream.
-     * 
+     *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
@@ -1675,7 +1680,7 @@ public class XStream {
      * It is necessary to call ObjectOutputStream.close() when done, otherwise the stream will be incomplete.
      * </p>
      * <h3>Example</h3>
-     * 
+     *
      * <pre>
      *  ObjectOutputStream out = xstream.createObjectOutputStream(aWriter, &quot;things&quot;);
      *   out.writeInt(123);
@@ -1683,7 +1688,7 @@ public class XStream {
      *   out.writeObject(someObject)
      *   out.close();
      * </pre>
-     * 
+     *
      * @param writer The writer to serialize the objects to.
      * @param rootNodeName The name of the root node enclosing the stream of objects.
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
@@ -1727,7 +1732,7 @@ public class XStream {
 
     /**
      * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream.
-     * 
+     *
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.0.3
@@ -1738,7 +1743,7 @@ public class XStream {
 
     /**
      * Creates an ObjectInputStream that deserializes a stream of objects from an InputStream using XStream.
-     * 
+     *
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.3
@@ -1749,14 +1754,14 @@ public class XStream {
 
     /**
      * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream. <h3>Example</h3>
-     * 
+     *
      * <pre>
      * ObjectInputStream in = xstream.createObjectOutputStream(aReader);
      * int a = out.readInt();
      * Object b = out.readObject();
      * Object c = out.readObject();
      * </pre>
-     * 
+     *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.0.3
      */
@@ -1801,7 +1806,7 @@ public class XStream {
      * of classes and types of the current JDK, but not for any 3rd party type. To ensure that all other types are
      * loaded with your class loader, you should call this method as early as possible - or consider to provide the
      * class loader directly in the constructor.
-     * 
+     *
      * @since 1.1.1
      */
     public void setClassLoader(final ClassLoader classLoader) {
@@ -1810,7 +1815,7 @@ public class XStream {
 
     /**
      * Retrieve the ClassLoader XStream uses to load classes.
-     * 
+     *
      * @since 1.1.1
      */
     public ClassLoader getClassLoader() {
@@ -1820,7 +1825,7 @@ public class XStream {
     /**
      * Retrieve the reference to this instance' ClassLoader. Use this reference for other XStream components (like
      * converters) to ensure that they will use a changed ClassLoader instance automatically.
-     * 
+     *
      * @return the reference
      * @since 1.4.5
      */
@@ -1831,7 +1836,7 @@ public class XStream {
     /**
      * Prevents a field from being serialized. To omit a field you must always provide the declaring type and not
      * necessarily the type that is converted.
-     * 
+     *
      * @since 1.1.3
      * @throws InitializationException if no {@link FieldAliasingMapper} is available
      */
@@ -1844,7 +1849,7 @@ public class XStream {
 
     /**
      * Ignore all unknown elements.
-     * 
+     *
      * @since 1.4.5
      */
     public void ignoreUnknownElements() {
@@ -1853,7 +1858,7 @@ public class XStream {
 
     /**
      * Add pattern for unknown element names to ignore.
-     * 
+     *
      * @param pattern the name pattern as regular expression
      * @since 1.4.5
      */
@@ -1863,7 +1868,7 @@ public class XStream {
 
     /**
      * Add pattern for unknown element names to ignore.
-     * 
+     *
      * @param pattern the name pattern as regular expression
      * @since 1.4.5
      */
@@ -1876,7 +1881,7 @@ public class XStream {
 
     /**
      * Process the annotations of the given types and configure the XStream.
-     * 
+     *
      * @param types the types with XStream annotations
      * @since 1.3
      */
@@ -1891,7 +1896,7 @@ public class XStream {
      * Set the auto-detection mode of the AnnotationMapper. Note that auto-detection implies that the XStream is
      * configured while it is processing the XML steams. This is a potential concurrency problem. Also is it technically
      * not possible to detect all class aliases at deserialization. You have been warned!
-     * 
+     *
      * @param mode <code>true</code> if annotations are auto-detected
      * @since 1.3
      */
@@ -1907,7 +1912,7 @@ public class XStream {
      * Permissions are evaluated in the added sequence. An instance of {@link NoTypePermission} or
      * {@link AnyTypePermission} will implicitly wipe any existing permission.
      * </p>
-     * 
+     *
      * @param permission the permission to add
      * @since 1.4.7
      */
@@ -1919,7 +1924,7 @@ public class XStream {
 
     /**
      * Add security permission for explicit types by name.
-     * 
+     *
      * @param names the type names to allow
      * @since 1.4.7
      */
@@ -1929,7 +1934,7 @@ public class XStream {
 
     /**
      * Add security permission for explicit types.
-     * 
+     *
      * @param types the types to allow
      * @since 1.4.7
      */
@@ -1939,7 +1944,7 @@ public class XStream {
 
     /**
      * Add security permission for a type hierarchy.
-     * 
+     *
      * @param type the base type to allow
      * @since 1.4.7
      */
@@ -1949,7 +1954,7 @@ public class XStream {
 
     /**
      * Add security permission for types matching one of the specified regular expressions.
-     * 
+     *
      * @param regexps the regular expressions to allow type names
      * @since 1.4.7
      */
@@ -1959,7 +1964,7 @@ public class XStream {
 
     /**
      * Add security permission for types matching one of the specified regular expressions.
-     * 
+     *
      * @param regexps the regular expressions to allow type names
      * @since 1.4.7
      */
@@ -1979,7 +1984,7 @@ public class XStream {
      * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and
      * subpackages like 'java.lang.**'</li>
      * </ul>
-     * 
+     *
      * @param patterns the patterns to allow type names
      * @since 1.4.7
      */
@@ -1989,7 +1994,7 @@ public class XStream {
 
     /**
      * Add security permission denying another one.
-     * 
+     *
      * @param permission the permission to deny
      * @since 1.4.7
      */
@@ -1999,7 +2004,7 @@ public class XStream {
 
     /**
      * Add security permission forbidding explicit types by name.
-     * 
+     *
      * @param names the type names to forbid
      * @since 1.4.7
      */
@@ -2009,7 +2014,7 @@ public class XStream {
 
     /**
      * Add security permission forbidding explicit types.
-     * 
+     *
      * @param types the types to forbid
      * @since 1.4.7
      */
@@ -2019,7 +2024,7 @@ public class XStream {
 
     /**
      * Add security permission forbidding a type hierarchy.
-     * 
+     *
      * @param type the base type to forbid
      * @since 1.4.7
      */
@@ -2029,7 +2034,7 @@ public class XStream {
 
     /**
      * Add security permission forbidding types matching one of the specified regular expressions.
-     * 
+     *
      * @param regexps the regular expressions to forbid type names
      * @since 1.4.7
      */
@@ -2039,7 +2044,7 @@ public class XStream {
 
     /**
      * Add security permission forbidding types matching one of the specified regular expressions.
-     * 
+     *
      * @param regexps the regular expressions to forbid type names
      * @since 1.4.7
      */
@@ -2059,7 +2064,7 @@ public class XStream {
      * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and
      * subpackages like 'java.lang.**'</li>
      * </ul>
-     * 
+     *
      * @param patterns the patterns to forbid names
      * @since 1.4.7
      */
