@@ -102,6 +102,11 @@
       <optional>true</optional>
     </dependency>
 
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+    </dependency>
+
     <!-- test-scoped -->
     <dependency>
       <groupId>junit</groupId>
