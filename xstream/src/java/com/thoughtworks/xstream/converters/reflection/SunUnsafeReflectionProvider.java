@@ -1,19 +1,19 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 08. January 2014 by Joerg Schaible, renamed from Sun14ReflectionProvider
  */
 package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 
 /**
@@ -27,7 +27,7 @@ import java.util.Map;
  * The implementation will use the same internals to write into fields. This is a lot faster and was additionally the
  * only possibility to set final fields prior to Java 5.
  * <p>
- * 
+ *
  * @author Joe Walnes
  * @author Brian Slesinsky
  * @author J&ouml;rg Schaible
@@ -36,7 +36,7 @@ import java.util.Map;
 public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvider {
 
     // references to the Field key are kept in the FieldDictionary
-    private transient Map<Field, Long> fieldOffsetCache;
+    private transient ConcurrentMap<Field, Long> fieldOffsetCache;
 
     /**
      * @since 1.4.7
@@ -84,11 +84,11 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
                     unsafe.putBoolean(object, offset, ((Boolean)value).booleanValue());
                 } else {
                     throw new ObjectAccessException("Could not set field "
-                        + object.getClass()
-                        + "."
-                        + field.getName()
-                        + ": Unknown type "
-                        + type);
+                            + object.getClass()
+                            + "."
+                            + field.getName()
+                            + ": Unknown type "
+                            + type);
                 }
             } else {
                 unsafe.putObject(object, offset, value);
@@ -99,11 +99,11 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
         }
     }
 
-    private synchronized long getFieldOffset(final Field f) {
+    private long getFieldOffset(final Field f) {
         Long l = fieldOffsetCache.get(f);
         if (l == null) {
-            l = Long.valueOf(unsafe.objectFieldOffset(f));
-            fieldOffsetCache.put(f, l);
+            fieldOffsetCache.putIfAbsent(f, Long.valueOf(unsafe.objectFieldOffset(f)));
+            l = fieldOffsetCache.get(f);
         }
 
         return l.longValue();
@@ -117,6 +117,6 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
     @Override
     protected void init() {
         super.init();
-        fieldOffsetCache = new HashMap<Field, Long>();
+        fieldOffsetCache = new ConcurrentHashMap<Field, Long>();
     }
 }
