@@ -28,8 +28,12 @@
 		<parameter><string><![CDATA[<a href=\"/jira/$1\">XSTR-$1</a>]]></string></parameter>
 	</component-implementation>
     <component-implementation key="github-issues" class="com.opensymphony.module.sitemesh.html.rules.RegexReplacementTextFilter">
-        <parameter><string>GH:[#]([0-9]+)</string></parameter>
+        <parameter><string>GHI:[#]([0-9]+)</string></parameter>
         <parameter><string><![CDATA[<a href=\"https://github.com/x-stream/xstream/issues/$1\">#$1</a>]]></string></parameter>
+    </component-implementation>
+    <component-implementation key="github-pull-requests" class="com.opensymphony.module.sitemesh.html.rules.RegexReplacementTextFilter">
+        <parameter><string>GHPR:[#]([0-9]+)</string></parameter>
+        <parameter><string><![CDATA[<a href=\"https://github.com/x-stream/xstream/pull/$1\">#$1</a>]]></string></parameter>
     </component-implementation>
 	<component-implementation key="email-link-validator" class="org.codehaus.xsite.validators.StartsWithLinkValidator">
 		<parameter><string>mailto:</string></parameter>
