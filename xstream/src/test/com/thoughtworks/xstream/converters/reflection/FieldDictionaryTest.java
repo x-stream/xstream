@@ -139,7 +139,7 @@ public class FieldDictionaryTest extends TestCase {
 
         final List<Class<?>> types = Arrays.asList(A.class, B.class, C.class, E.class, F.class, G.class, H.class,
             I.class, J.class, BB.class, CC.class, DD.class, EE.class, FF.class, GG.class, HH.class, II.class, JJ.class,
-            JJJ.class);
+            JJJ.class, FieldDictionaryTest.class);
         final CyclicBarrier gate = new CyclicBarrier(types.size()+1);
         final List<Thread> threads = createThreads(gate, types);
 
