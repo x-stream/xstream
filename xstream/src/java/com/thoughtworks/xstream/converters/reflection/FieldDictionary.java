@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 14. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.reflection;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.JVM;
@@ -29,15 +30,15 @@ import com.thoughtworks.xstream.core.JVM;
 
 /**
  * A field dictionary instance caches information about classes fields.
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @author Guilherme Silveira
  */
 public class FieldDictionary implements Caching {
 
-    protected transient Map<Class<?>, Map<String, Field>> keyedByFieldNameCache;
-    private transient Map<Class<?>, Map<FieldKey, Field>> keyedByFieldKeyCache;
+    private transient ConcurrentMap<Class<?>, Map<String, Field>> keyedByFieldNameCache;
+    private transient ConcurrentMap<Class<?>, Map<FieldKey, Field>> keyedByFieldKeyCache;
     private final FieldKeySorter sorter;
 
     public FieldDictionary() {
@@ -58,7 +59,7 @@ public class FieldDictionary implements Caching {
 
     /**
      * Returns an iterator for all fields for some class
-     * 
+     *
      * @param cls the class you are interested on
      * @return an iterator for its fields
      */
@@ -70,7 +71,7 @@ public class FieldDictionary implements Caching {
      * Returns an specific field of some class. If definedIn is null, it searches for the field named 'name' inside the
      * class cls. If definedIn is different than null, tries to find the specified field name in the specified class cls
      * which should be defined in class definedIn (either equals cls or a one of it's superclasses)
-     * 
+     *
      * @param cls the class where the field is to be searched
      * @param name the field name
      * @param definedIn the superclass (or the class itself) of cls where the field was defined
@@ -90,7 +91,7 @@ public class FieldDictionary implements Caching {
      * Returns an specific field of some class. If definedIn is null, it searches for the field named 'name' inside the
      * class cls. If definedIn is different than null, tries to find the specified field name in the specified class cls
      * which should be defined in class definedIn (either equals cls or a one of it's superclasses)
-     * 
+     *
      * @param cls the class where the field is to be searched
      * @param name the field name
      * @param definedIn the superclass (or the class itself) of cls where the field was defined
@@ -105,13 +106,14 @@ public class FieldDictionary implements Caching {
 
     private Map<?, Field> buildMap(final Class<?> type, final boolean tupleKeyed) {
 
-        if (keyedByFieldNameCache.containsKey(type)) {
+        if (keyedByFieldKeyCache.containsKey(type)) { // this cache is filled last
             return tupleKeyed ? keyedByFieldKeyCache.get(type) : keyedByFieldNameCache.get(type);
         }
 
         return buildCache(type, tupleKeyed);
     }
 
+    @SuppressWarnings("deprecation")
     private synchronized Map<?, Field> buildCache(final Class<?> type, final boolean tupleKeyed) {
         Class<?> cls = type;
         final List<Class<?>> superClasses = new ArrayList<Class<?>>();
@@ -125,8 +127,7 @@ public class FieldDictionary implements Caching {
             cls = element;
             if (!keyedByFieldNameCache.containsKey(cls)) {
                 final Map<String, Field> keyedByFieldName = new HashMap<String, Field>(lastKeyedByFieldName);
-                final Map<FieldKey, Field> keyedByFieldKey = new LinkedHashMap<FieldKey, Field>(
-                    lastKeyedByFieldKey);
+                final Map<FieldKey, Field> keyedByFieldKey = new LinkedHashMap<FieldKey, Field>(lastKeyedByFieldKey);
                 final Field[] fields = cls.getDeclaredFields();
                 if (JVM.reverseFieldDefinition()) {
                     for (int i = fields.length >> 1; i-- > 0;) {
@@ -144,11 +145,11 @@ public class FieldDictionary implements Caching {
                     final FieldKey fieldKey = new FieldKey(field.getName(), field.getDeclaringClass(), i);
                     final Field existent = keyedByFieldName.get(field.getName());
                     if (existent == null
-                    // do overwrite statics
-                        || (existent.getModifiers() & Modifier.STATIC) != 0
-                        // overwrite non-statics with non-statics only
-                        || existent != null
-                        && (field.getModifiers() & Modifier.STATIC) == 0) {
+                            // do overwrite statics
+                            || (existent.getModifiers() & Modifier.STATIC) != 0
+                            // overwrite non-statics with non-statics only
+                            || existent != null
+                            && (field.getModifiers() & Modifier.STATIC) == 0) {
                         keyedByFieldName.put(field.getName(), field);
                     }
                     keyedByFieldKey.put(fieldKey, field);
@@ -169,8 +170,8 @@ public class FieldDictionary implements Caching {
     @Override
     public synchronized void flushCache() {
         final Set<Class<?>> objectTypeSet = Collections.<Class<?>>singleton(Object.class);
+        keyedByFieldKeyCache.keySet().retainAll(objectTypeSet); // this cache must be deleted first
         keyedByFieldNameCache.keySet().retainAll(objectTypeSet);
-        keyedByFieldKeyCache.keySet().retainAll(objectTypeSet);
         if (sorter instanceof Caching) {
             ((Caching)sorter).flushCache();
         }
