@@ -106,66 +106,70 @@ public class FieldDictionary implements Caching {
     private Map<?, Field> buildMap(final Class<?> type, final boolean tupleKeyed) {
 
     	DictionaryEntry dictionaryEntry = dictionaryEntries.get(type);
-        if (dictionaryEntry != null) {
-            return tupleKeyed ? dictionaryEntry.getKeyedByFieldKey() : dictionaryEntry.getKeyedByFieldName();
-        }
+    	if (dictionaryEntry == null) {
+    		dictionaryEntry = buildCache(type);
+    	}
+        return tupleKeyed ? dictionaryEntry.getKeyedByFieldKey() : dictionaryEntry.getKeyedByFieldName();
 
-        return buildCache(type, tupleKeyed);
     }
 
-    @SuppressWarnings("deprecation")
-    private synchronized Map<?, Field> buildCache(final Class<?> type, final boolean tupleKeyed) {
+    private synchronized DictionaryEntry buildCache(final Class<?> type) {
         Class<?> cls = type;
         final List<Class<?>> superClasses = new ArrayList<Class<?>>();
         while (!Object.class.equals(cls) && cls != null) {
             superClasses.add(0, cls);
             cls = cls.getSuperclass();
         }
-        Map<String, Field> lastKeyedByFieldName = Collections.emptyMap();
-        Map<FieldKey, Field> lastKeyedByFieldKey = Collections.emptyMap();
+        DictionaryEntry lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
         for (final Class<?> element : superClasses) {
             cls = element;
-            if (!dictionaryEntries.containsKey(cls)) {
-                final Map<String, Field> keyedByFieldName = new HashMap<String, Field>(lastKeyedByFieldName);
-                final Map<FieldKey, Field> keyedByFieldKey = new LinkedHashMap<FieldKey, Field>(lastKeyedByFieldKey);
-                final Field[] fields = cls.getDeclaredFields();
-                if (JVM.reverseFieldDefinition()) {
-                    for (int i = fields.length >> 1; i-- > 0;) {
-                        final int idx = fields.length - i - 1;
-                        final Field field = fields[i];
-                        fields[i] = fields[idx];
-                        fields[idx] = field;
-                    }
-                }
-                for (int i = 0; i < fields.length; i++) {
-                    final Field field = fields[i];
-                    if (!field.isAccessible()) {
-                        field.setAccessible(true);
-                    }
-                    final FieldKey fieldKey = new FieldKey(field.getName(), field.getDeclaringClass(), i);
-                    final Field existent = keyedByFieldName.get(field.getName());
-                    if (existent == null
-                            // do overwrite statics
-                            || (existent.getModifiers() & Modifier.STATIC) != 0
-                            // overwrite non-statics with non-statics only
-                            || existent != null
-                            && (field.getModifiers() & Modifier.STATIC) == 0) {
-                        keyedByFieldName.put(field.getName(), field);
-                    }
-                    keyedByFieldKey.put(fieldKey, field);
-                }
-                final Map<FieldKey, Field> sortedFieldKeys = sorter.sort(cls, keyedByFieldKey);
-                DictionaryEntry dictionaryEntry = new DictionaryEntry(keyedByFieldName, sortedFieldKeys);
-                dictionaryEntries.put(cls, dictionaryEntry);
-                lastKeyedByFieldName = keyedByFieldName;
-                lastKeyedByFieldKey = sortedFieldKeys;
-            } else {
-                lastKeyedByFieldName = dictionaryEntries.get(cls).getKeyedByFieldName();
-                lastKeyedByFieldKey = dictionaryEntries.get(cls).getKeyedByFieldKey();
+            DictionaryEntry currentDictionaryEntry = dictionaryEntries.get(cls);
+            if (currentDictionaryEntry == null) {
+                currentDictionaryEntry = buildDictionaryEntryForClass(cls, lastDictionaryEntry);
+                dictionaryEntries.put(cls, currentDictionaryEntry);
             }
+            lastDictionaryEntry = currentDictionaryEntry;
         }
-        return tupleKeyed ? lastKeyedByFieldKey : lastKeyedByFieldName;
+        return lastDictionaryEntry;
     }
+
+    @SuppressWarnings("deprecation")
+	private DictionaryEntry buildDictionaryEntryForClass(Class<?> cls, DictionaryEntry lastDictionaryEntry) {
+		final Map<String, Field> keyedByFieldName = new HashMap<String, Field>(lastDictionaryEntry.getKeyedByFieldName());
+		final Map<FieldKey, Field> keyedByFieldKey = new LinkedHashMap<FieldKey, Field>(lastDictionaryEntry.getKeyedByFieldKey());
+		final Field[] fields = cls.getDeclaredFields();
+		if (JVM.reverseFieldDefinition()) {
+			revertFieldsArray(fields);
+		}
+		for (int i = 0; i < fields.length; i++) {
+		    final Field field = fields[i];
+		    if (!field.isAccessible()) {
+		        field.setAccessible(true);
+		    }
+		    final FieldKey fieldKey = new FieldKey(field.getName(), field.getDeclaringClass(), i);
+		    final Field existent = keyedByFieldName.get(field.getName());
+		    if (existent == null
+		            // do overwrite statics
+		            || (existent.getModifiers() & Modifier.STATIC) != 0
+		            // overwrite non-statics with non-statics only
+		            || existent != null
+		            && (field.getModifiers() & Modifier.STATIC) == 0) {
+		        keyedByFieldName.put(field.getName(), field);
+		    }
+		    keyedByFieldKey.put(fieldKey, field);
+		}
+		final Map<FieldKey, Field> sortedFieldKeys = sorter.sort(cls, keyedByFieldKey);
+		return new DictionaryEntry(keyedByFieldName, sortedFieldKeys);
+	}
+
+	private void revertFieldsArray(final Field[] fields) {
+		for (int i = fields.length >> 1; i-- > 0;) {
+		    final int idx = fields.length - i - 1;
+		    final Field field = fields[i];
+		    fields[i] = fields[idx];
+		    fields[idx] = field;
+		}
+	}
 
     @Override
     public synchronized void flushCache() {
