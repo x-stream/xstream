@@ -13,15 +13,12 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -113,7 +110,7 @@ public class FieldDictionary implements Caching {
 
     }
 
-    private synchronized DictionaryEntry buildCache(final Class<?> type) {
+    private DictionaryEntry buildCache(final Class<?> type) {
         Class<?> cls = type;
         DictionaryEntry lastDictionaryEntry = null;
         final LinkedList<Class<?>> superClasses = new LinkedList<Class<?>>();
@@ -133,7 +130,10 @@ public class FieldDictionary implements Caching {
             DictionaryEntry currentDictionaryEntry = dictionaryEntries.get(cls);
             if (currentDictionaryEntry == null) {
                 currentDictionaryEntry = buildDictionaryEntryForClass(cls, lastDictionaryEntry);
-                dictionaryEntries.put(cls, currentDictionaryEntry);
+                DictionaryEntry existingValue = dictionaryEntries.putIfAbsent(cls, currentDictionaryEntry);
+                if (existingValue != null) {
+                	currentDictionaryEntry = existingValue;
+                }
             }
             lastDictionaryEntry = currentDictionaryEntry;
         }
@@ -179,11 +179,11 @@ public class FieldDictionary implements Caching {
 	}
 
     @Override
-    public synchronized void flushCache() {
-        dictionaryEntries.clear();
+    public void flushCache() {
         if (sorter instanceof Caching) {
             ((Caching)sorter).flushCache();
         }
+        dictionaryEntries.clear();
     }
 
     protected Object readResolve() {
