@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +54,6 @@ public class FieldDictionary implements Caching {
 
     private void init() {
     	dictionaryEntries = new ConcurrentHashMap<Class<?>, DictionaryEntry>();
-    	dictionaryEntries.put(Object.class, OBJECT_DICTIONARY_ENTRY);
     }
 
     /**
@@ -115,12 +115,19 @@ public class FieldDictionary implements Caching {
 
     private synchronized DictionaryEntry buildCache(final Class<?> type) {
         Class<?> cls = type;
-        final List<Class<?>> superClasses = new ArrayList<Class<?>>();
-        while (!Object.class.equals(cls) && cls != null) {
-            superClasses.add(0, cls);
-            cls = cls.getSuperclass();
+        DictionaryEntry lastDictionaryEntry = null;
+        final LinkedList<Class<?>> superClasses = new LinkedList<Class<?>>();
+        while (lastDictionaryEntry == null) {
+        	if (Object.class.equals(cls) || cls == null) {
+        		lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
+        	} else {
+        		lastDictionaryEntry = dictionaryEntries.get(cls);
+        	}
+        	if (lastDictionaryEntry == null) {
+        		superClasses.addFirst(cls);
+        		cls = cls.getSuperclass();
+        	}
         }
-        DictionaryEntry lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
         for (final Class<?> element : superClasses) {
             cls = element;
             DictionaryEntry currentDictionaryEntry = dictionaryEntries.get(cls);
@@ -173,8 +180,7 @@ public class FieldDictionary implements Caching {
 
     @Override
     public synchronized void flushCache() {
-        final Set<Class<?>> objectTypeSet = Collections.<Class<?>>singleton(Object.class);
-        dictionaryEntries.keySet().retainAll(objectTypeSet);
+        dictionaryEntries.clear();
         if (sorter instanceof Caching) {
             ((Caching)sorter).flushCache();
         }
