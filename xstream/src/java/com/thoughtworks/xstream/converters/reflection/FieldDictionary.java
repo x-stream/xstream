@@ -36,9 +36,10 @@ import com.thoughtworks.xstream.core.JVM;
  * @author Guilherme Silveira
  */
 public class FieldDictionary implements Caching {
+	
+	private static final DictionaryEntry OBJECT_DICTIONARY_ENTRY = new DictionaryEntry(Collections.<String, Field>emptyMap(), Collections.<FieldKey, Field>emptyMap());
 
-    private transient ConcurrentMap<Class<?>, Map<String, Field>> keyedByFieldNameCache;
-    private transient ConcurrentMap<Class<?>, Map<FieldKey, Field>> keyedByFieldKeyCache;
+	private transient ConcurrentMap<Class<?>, DictionaryEntry> dictionaryEntries;
     private final FieldKeySorter sorter;
 
     public FieldDictionary() {
@@ -51,10 +52,8 @@ public class FieldDictionary implements Caching {
     }
 
     private void init() {
-        keyedByFieldNameCache = new ConcurrentHashMap<Class<?>, Map<String, Field>>();
-        keyedByFieldKeyCache = new ConcurrentHashMap<Class<?>, Map<FieldKey, Field>>();
-        keyedByFieldNameCache.put(Object.class, Collections.<String, Field>emptyMap());
-        keyedByFieldKeyCache.put(Object.class, Collections.<FieldKey, Field>emptyMap());
+    	dictionaryEntries = new ConcurrentHashMap<Class<?>, DictionaryEntry>();
+    	dictionaryEntries.put(Object.class, OBJECT_DICTIONARY_ENTRY);
     }
 
     /**
@@ -106,8 +105,9 @@ public class FieldDictionary implements Caching {
 
     private Map<?, Field> buildMap(final Class<?> type, final boolean tupleKeyed) {
 
-        if (keyedByFieldKeyCache.containsKey(type)) { // this cache is filled last
-            return tupleKeyed ? keyedByFieldKeyCache.get(type) : keyedByFieldNameCache.get(type);
+    	DictionaryEntry dictionaryEntry = dictionaryEntries.get(type);
+        if (dictionaryEntry != null) {
+            return tupleKeyed ? dictionaryEntry.getKeyedByFieldKey() : dictionaryEntry.getKeyedByFieldName();
         }
 
         return buildCache(type, tupleKeyed);
@@ -125,7 +125,7 @@ public class FieldDictionary implements Caching {
         Map<FieldKey, Field> lastKeyedByFieldKey = Collections.emptyMap();
         for (final Class<?> element : superClasses) {
             cls = element;
-            if (!keyedByFieldNameCache.containsKey(cls)) {
+            if (!dictionaryEntries.containsKey(cls)) {
                 final Map<String, Field> keyedByFieldName = new HashMap<String, Field>(lastKeyedByFieldName);
                 final Map<FieldKey, Field> keyedByFieldKey = new LinkedHashMap<FieldKey, Field>(lastKeyedByFieldKey);
                 final Field[] fields = cls.getDeclaredFields();
@@ -155,13 +155,13 @@ public class FieldDictionary implements Caching {
                     keyedByFieldKey.put(fieldKey, field);
                 }
                 final Map<FieldKey, Field> sortedFieldKeys = sorter.sort(cls, keyedByFieldKey);
-                keyedByFieldNameCache.put(cls, keyedByFieldName);
-                keyedByFieldKeyCache.put(cls, sortedFieldKeys);
+                DictionaryEntry dictionaryEntry = new DictionaryEntry(keyedByFieldName, sortedFieldKeys);
+                dictionaryEntries.put(cls, dictionaryEntry);
                 lastKeyedByFieldName = keyedByFieldName;
                 lastKeyedByFieldKey = sortedFieldKeys;
             } else {
-                lastKeyedByFieldName = keyedByFieldNameCache.get(cls);
-                lastKeyedByFieldKey = keyedByFieldKeyCache.get(cls);
+                lastKeyedByFieldName = dictionaryEntries.get(cls).getKeyedByFieldName();
+                lastKeyedByFieldKey = dictionaryEntries.get(cls).getKeyedByFieldKey();
             }
         }
         return tupleKeyed ? lastKeyedByFieldKey : lastKeyedByFieldName;
@@ -170,8 +170,7 @@ public class FieldDictionary implements Caching {
     @Override
     public synchronized void flushCache() {
         final Set<Class<?>> objectTypeSet = Collections.<Class<?>>singleton(Object.class);
-        keyedByFieldKeyCache.keySet().retainAll(objectTypeSet); // this cache must be deleted first
-        keyedByFieldNameCache.keySet().retainAll(objectTypeSet);
+        dictionaryEntries.keySet().retainAll(objectTypeSet);
         if (sorter instanceof Caching) {
             ((Caching)sorter).flushCache();
         }
@@ -181,4 +180,26 @@ public class FieldDictionary implements Caching {
         init();
         return this;
     }
+    
+    private static final class DictionaryEntry {
+    	
+    	private final Map<String, Field> keyedByFieldName;
+		private final Map<FieldKey, Field> keyedByFieldKey;
+    	
+    	public DictionaryEntry(Map<String, Field> keyedByFieldName, Map<FieldKey, Field> keyedByFieldKey) {
+			super();
+			this.keyedByFieldName = keyedByFieldName;
+			this.keyedByFieldKey = keyedByFieldKey;
+		}
+
+		public Map<String, Field> getKeyedByFieldName() {
+			return keyedByFieldName;
+		}
+
+		public Map<FieldKey, Field> getKeyedByFieldKey() {
+			return keyedByFieldKey;
+		}
+    	
+    }
+    
 }

@@ -45,7 +45,7 @@ public class FieldDictionaryTest extends TestCase {
         super.setUp();
         fieldDictionary = new FieldDictionary();
         assertNoDuplicateHashMap = new AssertNoDuplicateHashMap<Class<?>, Map<String, Field>>();
-        Field field = FieldDictionary.class.getDeclaredField("keyedByFieldNameCache");
+        Field field = FieldDictionary.class.getDeclaredField("dictionaryEntries");
         field.setAccessible(true);
         field.set(fieldDictionary, assertNoDuplicateHashMap);
     }
