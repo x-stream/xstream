@@ -2,29 +2,24 @@
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
  * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
- *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
  * Created on 14. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
-
 
 /**
  * A field dictionary instance caches information about classes fields.
@@ -35,8 +30,9 @@ import com.thoughtworks.xstream.core.util.OrderRetainingMap;
  */
 public class FieldDictionary implements Caching {
 
-    private transient Map keyedByFieldNameCache;
-    private transient Map keyedByFieldKeyCache;
+    private static final DictionaryEntry OBJECT_DICTIONARY_ENTRY = new DictionaryEntry(Collections.EMPTY_MAP, Collections.EMPTY_MAP);
+
+    private transient Map dictionaryEntries;
     private final FieldKeySorter sorter;
 
     public FieldDictionary() {
@@ -48,11 +44,8 @@ public class FieldDictionary implements Caching {
         init();
     }
 
-    private void init() {
-        keyedByFieldNameCache = new HashMap();
-        keyedByFieldKeyCache = new HashMap();
-        keyedByFieldNameCache.put(Object.class, Collections.EMPTY_MAP);
-        keyedByFieldKeyCache.put(Object.class, Collections.EMPTY_MAP);
+    private synchronized void init() {
+        dictionaryEntries = new HashMap();
     }
 
     /**
@@ -111,78 +104,89 @@ public class FieldDictionary implements Caching {
      */
     public Field fieldOrNull(Class cls, String name, Class definedIn) {
         Map fields = buildMap(cls, definedIn != null);
-        Field field = (Field)fields.get(definedIn != null
-            ? (Object)new FieldKey(name, definedIn, -1)
-            : (Object)name);
+        Field field = (Field) fields.get(definedIn != null
+                ? (Object) new FieldKey(name, definedIn, -1)
+                : (Object) name);
         return field;
     }
 
-    private Map buildMap(final Class type, boolean tupleKeyed) {
+    private Map buildMap(final Class type, final boolean tupleKeyed) {
+
         Class cls = type;
-        synchronized (this) {
-            if (!keyedByFieldNameCache.containsKey(type)) {
-                final List superClasses = new ArrayList();
-                while (!Object.class.equals(cls) && cls != null) {
-                    superClasses.add(0, cls);
-                    cls = cls.getSuperclass();
-                }
-                Map lastKeyedByFieldName = Collections.EMPTY_MAP;
-                Map lastKeyedByFieldKey = Collections.EMPTY_MAP;
-                for (final Iterator iter = superClasses.iterator(); iter.hasNext();) {
-                    cls = (Class)iter.next();
-                    if (!keyedByFieldNameCache.containsKey(cls)) {
-                        final Map keyedByFieldName = new HashMap(lastKeyedByFieldName);
-                        final Map keyedByFieldKey = new OrderRetainingMap(lastKeyedByFieldKey);
-                        Field[] fields = cls.getDeclaredFields();
-                        if (JVM.reverseFieldDefinition()) {
-                            for (int i = fields.length >> 1; i-- > 0;) {
-                                final int idx = fields.length - i - 1;
-                                final Field field = fields[i];
-                                fields[i] = fields[idx];
-                                fields[idx] = field;
-                            }
-                        }
-                        for (int i = 0; i < fields.length; i++ ) {
-                            Field field = fields[i];
-                            if (!field.isAccessible()) {
-                                field.setAccessible(true);
-                            }
-                            FieldKey fieldKey = new FieldKey(
-                                field.getName(), field.getDeclaringClass(), i);
-                            Field existent = (Field)keyedByFieldName.get(field.getName());
-                            if (existent == null
-                            // do overwrite statics
-                                || ((existent.getModifiers() & Modifier.STATIC) != 0)
-                                // overwrite non-statics with non-statics only
-                                || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
-                                keyedByFieldName.put(field.getName(), field);
-                            }
-                            keyedByFieldKey.put(fieldKey, field);
-                        }
-                        final Map sortedFieldKeys = sorter.sort(cls, keyedByFieldKey);
-                        keyedByFieldNameCache.put(cls, keyedByFieldName);
-                        keyedByFieldKeyCache.put(cls, sortedFieldKeys);
-                        lastKeyedByFieldName = keyedByFieldName;
-                        lastKeyedByFieldKey = sortedFieldKeys;
-                    } else {
-                        lastKeyedByFieldName = (Map)keyedByFieldNameCache.get(cls);
-                        lastKeyedByFieldKey = (Map)keyedByFieldKeyCache.get(cls);
-                    }
-                }
-                return tupleKeyed ? lastKeyedByFieldKey : lastKeyedByFieldName;
+
+        DictionaryEntry lastDictionaryEntry = null;
+        final LinkedList superClasses = new LinkedList();
+        while (lastDictionaryEntry == null) {
+            if (Object.class.equals(cls) || cls == null) {
+                lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
+            } else {
+                lastDictionaryEntry = getDictionaryEntry(cls);
+            }
+            if (lastDictionaryEntry == null) {
+                superClasses.addFirst(cls);
+                cls = cls.getSuperclass();
             }
         }
-        return (Map)(tupleKeyed
-                ? keyedByFieldKeyCache.get(type)
-                : keyedByFieldNameCache.get(type));
+
+        for (final Iterator iter = superClasses.iterator(); iter.hasNext();) {
+            cls = (Class) iter.next();
+            DictionaryEntry newDictionaryEntry = buildDictionaryEntryForClass(cls, lastDictionaryEntry);
+            synchronized (this) {
+                DictionaryEntry concurrentEntry = getDictionaryEntry(cls);
+                if (concurrentEntry == null) {
+                    dictionaryEntries.put(cls, newDictionaryEntry);
+                } else {
+                    newDictionaryEntry = concurrentEntry;
+                }
+            }
+            lastDictionaryEntry = newDictionaryEntry;
+        }
+
+        return tupleKeyed ? lastDictionaryEntry.getKeyedByFieldKey() : lastDictionaryEntry.getKeyedByFieldName();
+
+    }
+
+    private DictionaryEntry buildDictionaryEntryForClass(Class cls, DictionaryEntry lastDictionaryEntry) {
+        final Map keyedByFieldName = new HashMap(lastDictionaryEntry.getKeyedByFieldName());
+        final Map keyedByFieldKey = new OrderRetainingMap(lastDictionaryEntry.getKeyedByFieldKey());
+        Field[] fields = cls.getDeclaredFields();
+        if (JVM.reverseFieldDefinition()) {
+            for (int i = fields.length >> 1; i-- > 0;) {
+                final int idx = fields.length - i - 1;
+                final Field field = fields[i];
+                fields[i] = fields[idx];
+                fields[idx] = field;
+            }
+        }
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            FieldKey fieldKey = new FieldKey(
+                    field.getName(), field.getDeclaringClass(), i);
+            Field existent = (Field) keyedByFieldName.get(field.getName());
+            if (existent == null
+                    // do overwrite statics
+                    || ((existent.getModifiers() & Modifier.STATIC) != 0)
+                    // overwrite non-statics with non-statics only
+                    || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
+                keyedByFieldName.put(field.getName(), field);
+            }
+            keyedByFieldKey.put(fieldKey, field);
+        }
+        final Map sortedFieldKeys = sorter.sort(cls, keyedByFieldKey);
+        return new DictionaryEntry(keyedByFieldName, sortedFieldKeys);
+    }
+
+    private synchronized DictionaryEntry getDictionaryEntry(Class cls) {
+        return (DictionaryEntry) dictionaryEntries.get(cls);
     }
 
     public synchronized void flushCache() {
-        Set objectTypeSet = Collections.singleton(Object.class);
-        keyedByFieldNameCache.keySet().retainAll(objectTypeSet);
-        keyedByFieldKeyCache.keySet().retainAll(objectTypeSet);
+        dictionaryEntries.clear();
         if (sorter instanceof Caching) {
-            ((Caching)sorter).flushCache();
+            ((Caching) sorter).flushCache();
         }
     }
 
@@ -190,4 +194,26 @@ public class FieldDictionary implements Caching {
         init();
         return this;
     }
+
+    private static final class DictionaryEntry {
+
+        private final Map keyedByFieldName;
+        private final Map keyedByFieldKey;
+
+        public DictionaryEntry(Map keyedByFieldName, Map keyedByFieldKey) {
+            super();
+            this.keyedByFieldName = keyedByFieldName;
+            this.keyedByFieldKey = keyedByFieldKey;
+        }
+
+        public Map getKeyedByFieldName() {
+            return keyedByFieldName;
+        }
+
+        public Map getKeyedByFieldKey() {
+            return keyedByFieldKey;
+        }
+
+    }
+
 }
