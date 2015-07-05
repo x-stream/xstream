@@ -141,10 +141,10 @@ public class FieldDictionary implements Caching {
 
     @SuppressWarnings("deprecation")
     private DictionaryEntry buildDictionaryEntryForClass(final Class<?> cls, final DictionaryEntry lastDictionaryEntry) {
-        final Map<String, Field> keyedByFieldName = new HashMap<String, Field>(lastDictionaryEntry
-            .getKeyedByFieldName());
-        final Map<FieldKey, Field> keyedByFieldKey = new LinkedHashMap<FieldKey, Field>(lastDictionaryEntry
-            .getKeyedByFieldKey());
+        final Map<String, Field> keyedByFieldName =
+                new HashMap<String, Field>(lastDictionaryEntry.getKeyedByFieldName());
+        final Map<FieldKey, Field> keyedByFieldKey =
+                new LinkedHashMap<FieldKey, Field>(lastDictionaryEntry.getKeyedByFieldKey());
         final Field[] fields = cls.getDeclaredFields();
         if (JVM.reverseFieldDefinition()) {
             reverseFieldsArray(fields);
@@ -157,11 +157,10 @@ public class FieldDictionary implements Caching {
             final FieldKey fieldKey = new FieldKey(field.getName(), field.getDeclaringClass(), i);
             final Field existent = keyedByFieldName.get(field.getName());
             if (existent == null
-            // do overwrite statics
-                || (existent.getModifiers() & Modifier.STATIC) != 0
-                // overwrite non-statics with non-statics only
-                || existent != null
-                && (field.getModifiers() & Modifier.STATIC) == 0) {
+                    // do overwrite statics
+                    || (existent.getModifiers() & Modifier.STATIC) != 0
+                    // overwrite non-statics with non-statics only
+                    || (existent != null && (field.getModifiers() & Modifier.STATIC) == 0)) {
                 keyedByFieldName.put(field.getName(), field);
             }
             keyedByFieldKey.put(fieldKey, field);

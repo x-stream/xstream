@@ -28,26 +28,12 @@ import junit.framework.TestCase;
 
 public class FieldDictionaryTest extends TestCase {
 
-    @SuppressWarnings("serial")
-    private static class AssertNoDuplicateHashMap<K, V> extends ConcurrentHashMap<K, V> {
-        @Override
-        public V put(final K key, final V value) {
-            assertFalse("Attempt to insert duplicate key: " + key, containsKey(key));
-            return super.put(key, value);
-        }
-    }
-
-    private AssertNoDuplicateHashMap<Class<?>, Map<String, Field>> assertNoDuplicateHashMap;
     private FieldDictionary fieldDictionary;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         fieldDictionary = new FieldDictionary();
-        assertNoDuplicateHashMap = new AssertNoDuplicateHashMap<Class<?>, Map<String, Field>>();
-        Field field = FieldDictionary.class.getDeclaredField("dictionaryEntries");
-        field.setAccessible(true);
-        field.set(fieldDictionary, assertNoDuplicateHashMap);
     }
 
     @SuppressWarnings("unused")
@@ -106,6 +92,15 @@ public class FieldDictionaryTest extends TestCase {
         assertFalse("No more fields should be present", fields.hasNext());
     }
 
+    @SuppressWarnings("serial")
+    private static class AssertNoDuplicateHashMap<K, V> extends ConcurrentHashMap<K, V> {
+        @Override
+        public V put(final K key, final V value) {
+            assertFalse("Attempt to insert duplicate key: " + key, containsKey(key));
+            return super.put(key, value);
+        }
+    }
+
     static class A { String a; }
     static class B extends A { String b; }
     static class C extends B { String c; }
@@ -128,6 +123,12 @@ public class FieldDictionaryTest extends TestCase {
     static class JJJ extends JJ { @SuppressWarnings("hiding") String j; }
 
     public void testSynchronizedAccessShouldEnsureEachClassAddedOnceToCache() throws Exception {
+        AssertNoDuplicateHashMap<Class<?>, Map<String, Field>> assertNoDuplicateHashMap =
+                new AssertNoDuplicateHashMap<Class<?>, Map<String, Field>>();
+        Field field = FieldDictionary.class.getDeclaredField("dictionaryEntries");
+        field.setAccessible(true);
+        field.set(fieldDictionary, assertNoDuplicateHashMap);
+
         final List<String> exceptions = Collections.synchronizedList(new ArrayList<String>());
 
         final Thread.UncaughtExceptionHandler exceptionHandler = new Thread.UncaughtExceptionHandler() {
@@ -137,10 +138,11 @@ public class FieldDictionaryTest extends TestCase {
             }
         };
 
-        final List<Class<?>> types = Arrays.asList(A.class, B.class, C.class, E.class, F.class, G.class, H.class,
-            I.class, J.class, BB.class, CC.class, DD.class, EE.class, FF.class, GG.class, HH.class, II.class, JJ.class,
-            JJJ.class, FieldDictionaryTest.class);
-        final CyclicBarrier gate = new CyclicBarrier(types.size()+1);
+        final List<Class<?>> types =
+                Arrays.asList(A.class, B.class, C.class, E.class, F.class, G.class, H.class, I.class, J.class,
+                    BB.class, CC.class, DD.class, EE.class, FF.class, GG.class, HH.class, II.class, JJ.class,
+                    JJJ.class, FieldDictionaryTest.class);
+        final CyclicBarrier gate = new CyclicBarrier(types.size() + 1);
         final List<Thread> threads = createThreads(gate, types);
 
         for (final Thread thread : threads) {
@@ -173,9 +175,13 @@ public class FieldDictionaryTest extends TestCase {
                             fieldIterator.next();
                         }
                         
-                        int count = 0;
-                        for(Class<?> cls = type; cls != null; count++, cls = cls.getSuperclass());
-                        assertEquals("fieldCount not equal for type " + type.getName(), count-1, fieldCount);
+                        if (type == FieldDictionaryTest.class) {
+                            assertEquals("fieldCount not equal for type " + type.getName(), 2, fieldCount);
+                        } else {
+                            int count = 0;
+                            for(Class<?> cls = type; cls != null; count++, cls = cls.getSuperclass());
+                            assertEquals("fieldCount not equal for type " + type.getName(), count-1, fieldCount);
+                        }
                     } catch (final InterruptedException e) {
                         fail("Exception " + e.getClass());
                     } catch (final BrokenBarrierException e) {
