@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,12 @@ import junit.framework.TestCase;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 public class FieldDictionaryTest extends TestCase {
 
@@ -77,5 +82,117 @@ public class FieldDictionaryTest extends TestCase {
             return getNonStaticFieldName(fields);
         }
         return field.getName();
+    }
+
+    private static class AssertNoDuplicateHashMap extends HashMap {
+        public Object put(final Object key, final Object value) {
+            assertFalse("Attempt to insert duplicate key: " + key, containsKey(key));
+            return super.put(key, value);
+        }
+    }
+
+    static class A { String a; }
+    static class B extends A { String b; }
+    static class C extends B { String c; }
+    static class D extends C { String d; }
+    static class E extends D { String e; }
+    static class F extends E { String f; }
+    static class G extends F { String g; }
+    static class H extends G { String h; }
+    static class I extends H { String i; }
+    static class J extends I { String j; }
+    static class BB extends B { String b; }
+    static class CC extends C { String c; }
+    static class DD extends D { String d; }
+    static class EE extends E { String e; }
+    static class FF extends F { String f; }
+    static class GG extends G { String g; }
+    static class HH extends H { String h; }
+    static class II extends I { String i; }
+    static class JJ extends J { String j; }
+    static class JJJ extends JJ { String j; }
+
+    public void testSynchronizedAccessShouldEnsureEachClassAddedOnceToCache() throws Exception {
+        AssertNoDuplicateHashMap assertNoDuplicateHashMap = new AssertNoDuplicateHashMap();
+
+        Field field = FieldDictionary.class.getDeclaredField("dictionaryEntries");
+        field.setAccessible(true);
+        field.set(fieldDictionary, assertNoDuplicateHashMap);
+
+        final List exceptions = Collections.synchronizedList(new ArrayList());
+
+        final Thread.UncaughtExceptionHandler exceptionHandler = new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(final Thread th, final Throwable ex) {
+                exceptions.add("Exception " + ex.getClass() + " message " + ex.getMessage() + "\n");
+            }
+        };
+
+        final List types =
+                Arrays.asList(A.class, B.class, C.class, E.class, F.class, G.class, H.class, I.class, J.class,
+                    BB.class, CC.class, DD.class, EE.class, FF.class, GG.class, HH.class, II.class, JJ.class,
+                    JJJ.class, FieldDictionaryTest.class);
+        final Thread[] threads = createThreads(types);
+
+        for (int i = 0; i < threads.length; ++i) {
+            synchronized (threads[i]) {
+                threads[i].setUncaughtExceptionHandler(exceptionHandler);
+                threads[i].start();
+                threads[i].wait();
+            }
+        }
+
+        for (int i = 0; i < threads.length; ++i) {
+            synchronized (threads[i]) {
+                threads[i].notifyAll();
+            }
+        }
+
+        Thread.sleep(1500);
+
+        for (int i = 0; i < threads.length; ++i) {
+            threads[i].interrupt();
+        }
+        for (int i = 0; i < threads.length; ++i) {
+            synchronized (threads[i]) {
+                threads[i].join();
+            }
+        }
+
+        assertEquals("Assertions failed or exceptions thrown", Collections.emptyList(), exceptions);
+    }
+
+    private Thread[] createThreads(final List types) {
+        Collections.shuffle(types);
+        final Thread[] threads = new Thread[types.size()];
+        for (int i = 0; i < types.size(); i++) {
+            final Class type = (Class)types.get(i);
+            threads[i] = new Thread() {
+                public void run() {
+                    try {
+                        synchronized (this) {
+                            notifyAll();
+                            wait();
+                        }
+                        final Iterator fieldIterator = fieldDictionary.fieldsFor(type);
+                        int fieldCount = 0;
+                        while (fieldIterator.hasNext()) {
+                            fieldCount++;
+                            fieldIterator.next();
+                        }
+                        
+                        if (type == FieldDictionaryTest.class) {
+                            assertEquals("fieldCount not equal for type " + type.getName(), 2, fieldCount);
+                        } else {
+                            int count = 0;
+                            for(Class cls = type; cls != null; count++, cls = cls.getSuperclass());
+                            assertEquals("fieldCount not equal for type " + type.getName(), count-1, fieldCount);
+                        }
+                    } catch (final InterruptedException e) {
+                        fail("Exception " + e.getClass());
+                    }
+                }
+            };
+        }
+        return threads;
     }
 }
