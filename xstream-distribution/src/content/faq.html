@@ -308,13 +308,11 @@ xstream.registerConverter(new JavaFieldConverter(javaClassConverter, mapper){});
 	<p>Any immutable type could be dereferenced before version 1.4.9, but only at the cost of a large memory footprint.
 	Since version 1.4.9 this is only possible if the immutable type has been explicitly declared as referenceable too.
 	This should be done only if backward compatibility is required and a persisted stream may contain a reference of such
-	an instance at all. Any type that has been declared as immutable by XStream itself before version 1.4 will not be
+	an instance at all. Any type that has been declared as immutable by XStream itself before version 1.5 will not be
 	referenceable now by default (all primitive types and their boxed counterparts, java.lang.Class, java.lang.String,
-	java.math.BigInteger, java.math.BigDecimal, java.io.File, java.net.URL, and java.awt.font.TextAttribute). All other
-	immutable types (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection
-	types) will currently still be referenceable at deserialization time for compatibility reasons. This support by
-	default will be dropped with the next major version of XStream. You can always overwrite the default by adding the same
-	type again as immutable with a different value for the referenceable flag.</p>
+	java.math.BigInteger, java.math.BigDecimal, java.io.File, java.net.URL, java.awt.font.TextAttribute, java.util.Currency, 
+	java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection	types).  You can always overwrite the
+	default by adding the same type again as immutable with a different value for the referenceable flag.</p>
 
 	<!-- ...................................................... -->
     <h2 id="Serialization_lambda_null">My lambda expression is serialized to null!</h2>

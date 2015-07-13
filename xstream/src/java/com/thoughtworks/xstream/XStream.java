@@ -905,23 +905,22 @@ public class XStream {
         addImmutableType(Class.class, false);
 
         if (JVM.isAWTAvailable()) {
-            addImmutableTypeDynamically("java.awt.font.TextAttribute");
+            addImmutableTypeDynamically("java.awt.font.TextAttribute", false);
         }
 
-        // drop reference support with XStream 1.5.x
-        addImmutableType(UUID.class, true);
-        addImmutableType(URI.class, true);
-        addImmutableType(Charset.class, true);
-        addImmutableType(Currency.class, true);
-        addImmutableType(Collections.EMPTY_LIST.getClass(), true);
-        addImmutableType(Collections.EMPTY_SET.getClass(), true);
-        addImmutableType(Collections.EMPTY_MAP.getClass(), true);
+        addImmutableType(UUID.class, false);
+        addImmutableType(URI.class, false);
+        addImmutableType(Charset.class, false);
+        addImmutableType(Currency.class, false);
+        addImmutableType(Collections.EMPTY_LIST.getClass(), false);
+        addImmutableType(Collections.EMPTY_SET.getClass(), false);
+        addImmutableType(Collections.EMPTY_MAP.getClass(), false);
     }
 
-    private void addImmutableTypeDynamically(final String className) {
+    private void addImmutableTypeDynamically(final String className, final boolean isReferenceable) {
         final Class<?> type = JVM.loadClassForName(className);
         if (type != null) {
-            addImmutableType(type, false);
+            addImmutableType(type, isReferenceable);
         }
     }
 
