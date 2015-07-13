@@ -1,5 +1,4 @@
-For Java 5 or higher build with Maven 2.2 or 3
-For Java 1.4 build with Maven 2.0.11
+For Java 6 or higher build with Maven 3
 
 Before building:
 
