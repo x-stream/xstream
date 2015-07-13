@@ -600,8 +600,9 @@ public class XStream {
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
         if (JVM.is18()) {
-            mapper = buildMapperDynamically("com.thoughtworks.xstream.mapper.LambdaMapper", new Class[]{Mapper.class},
-                new Object[]{mapper});
+            mapper =
+                    buildMapperDynamically("com.thoughtworks.xstream.mapper.LambdaMapper", new Class[]{Mapper.class},
+                        new Object[]{mapper});
         }
         mapper = new SecurityMapper(mapper);
         if (JVM.is15()) {
@@ -934,56 +935,56 @@ public class XStream {
         }
 
         // primitives are always immutable
-        addImmutableType(boolean.class);
-        addImmutableType(Boolean.class);
-        addImmutableType(byte.class);
-        addImmutableType(Byte.class);
-        addImmutableType(char.class);
-        addImmutableType(Character.class);
-        addImmutableType(double.class);
-        addImmutableType(Double.class);
-        addImmutableType(float.class);
-        addImmutableType(Float.class);
-        addImmutableType(int.class);
-        addImmutableType(Integer.class);
-        addImmutableType(long.class);
-        addImmutableType(Long.class);
-        addImmutableType(short.class);
-        addImmutableType(Short.class);
+        addImmutableType(boolean.class, false);
+        addImmutableType(Boolean.class, false);
+        addImmutableType(byte.class, false);
+        addImmutableType(Byte.class, false);
+        addImmutableType(char.class, false);
+        addImmutableType(Character.class, false);
+        addImmutableType(double.class, false);
+        addImmutableType(Double.class, false);
+        addImmutableType(float.class, false);
+        addImmutableType(Float.class, false);
+        addImmutableType(int.class, false);
+        addImmutableType(Integer.class, false);
+        addImmutableType(long.class, false);
+        addImmutableType(Long.class, false);
+        addImmutableType(short.class, false);
+        addImmutableType(Short.class, false);
 
         // additional types
-        addImmutableType(Mapper.Null.class);
-        addImmutableType(BigDecimal.class);
-        addImmutableType(BigInteger.class);
-        addImmutableType(String.class);
-        addImmutableType(URI.class);
-        addImmutableType(URL.class);
-        addImmutableType(File.class);
-        addImmutableType(Class.class);
-
-        addImmutableType(Collections.EMPTY_LIST.getClass());
-        addImmutableType(Collections.EMPTY_SET.getClass());
-        addImmutableType(Collections.EMPTY_MAP.getClass());
+        addImmutableType(Mapper.Null.class, false);
+        addImmutableType(BigDecimal.class, false);
+        addImmutableType(BigInteger.class, false);
+        addImmutableType(String.class, false);
+        addImmutableType(URL.class, false);
+        addImmutableType(File.class, false);
+        addImmutableType(Class.class, false);
 
         if (JVM.isAWTAvailable()) {
-            addImmutableTypeDynamically("java.awt.font.TextAttribute");
+            addImmutableTypeDynamically("java.awt.font.TextAttribute", false);
         }
 
         if (JVM.is14()) {
             // late bound types - allows XStream to be compiled on earlier JDKs
-            addImmutableTypeDynamically("java.nio.charset.Charset");
-            addImmutableTypeDynamically("java.util.Currency");
+            addImmutableTypeDynamically("java.nio.charset.Charset", false);
+            addImmutableTypeDynamically("java.util.Currency", false);
         }
         
         if (JVM.is15()) {
-            addImmutableTypeDynamically("java.util.UUID");
+            addImmutableTypeDynamically("java.util.UUID", false);
         }
+
+        addImmutableType(URI.class, true);
+        addImmutableType(Collections.EMPTY_LIST.getClass(), true);
+        addImmutableType(Collections.EMPTY_SET.getClass(), true);
+        addImmutableType(Collections.EMPTY_MAP.getClass(), true);
     }
 
-    private void addImmutableTypeDynamically(String className) {
+    private void addImmutableTypeDynamically(String className, boolean isReferenceable) {
         Class type = JVM.loadClassForName(className);
         if (type != null) {
-            addImmutableType(type);
+            addImmutableType(type, isReferenceable);
         }
     }
 
@@ -1425,18 +1426,38 @@ public class XStream {
     }
 
     /**
-     * Add immutable types. The value of the instances of these types will always be written
-     * into the stream even if they appear multiple times.
-     * 
+     * Add immutable types. The value of the instances of these types will always be written into the stream even if
+     * they appear multiple times. However, references are still supported at deserialization time.
+     *
      * @throws InitializationException if no {@link ImmutableTypesMapper} is available
+     * @deprecated As of upcoming use {@link #addImmutableType(Class, boolean)}
      */
     public void addImmutableType(Class type) {
+        addImmutableType(type, true);
+    }
+
+    /**
+     * Add immutable types. The value of the instances of these types will always be written into the stream even if
+     * they appear multiple times.
+     * <p>
+     * Note, while a reference-keeping marshaller will not write references for immutable types into the stream, a
+     * reference-keeping unmarshaller can still support such references in the stream for compatibility reasons at the
+     * expense of memory consumption. Therefore declare these types only as referenceable if your already persisted
+     * streams do contain such references. Otherwise you may waste a lot of memory during deserialization.
+     * </p>
+     *
+     * @param isReferenceable <code>true</code> if support at deserialization time is required for compatibility at the
+     *            cost of a higher memory footprint, <code>false</code> otherwise
+     * @throws InitializationException if no {@link ImmutableTypesMapper} is available
+     * @since upcoming
+     */
+    public void addImmutableType(final Class type, final boolean isReferenceable) {
         if (immutableTypesMapper == null) {
             throw new com.thoughtworks.xstream.InitializationException("No "
                 + ImmutableTypesMapper.class.getName()
                 + " available");
         }
-        immutableTypesMapper.addImmutableType(type);
+        immutableTypesMapper.addImmutableType(type, isReferenceable);
     }
 
     public void registerConverter(Converter converter) {

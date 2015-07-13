@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 22. January 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
@@ -18,8 +18,10 @@ import com.thoughtworks.xstream.core.util.Primitives;
 
 
 /**
- * Default mapper implementation with 'vanilla' functionality. To build up the functionality required, wrap this mapper
- * with other mapper implementations.
+ * Default mapper implementation with 'vanilla' functionality.
+ * <p>
+ * To build up the functionality required, wrap this mapper with other mapper implementations.
+ * </p>
  *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
@@ -38,7 +40,7 @@ public class DefaultMapper implements Mapper {
     
     /**
      * Construct a DefaultMapper.
-     * 
+     *
      * @param classLoaderReference the reference to the classloader used by the XStream instance.
      * @since 1.4.5
      */
@@ -48,7 +50,7 @@ public class DefaultMapper implements Mapper {
 
     /**
      * Construct a DefaultMapper.
-     * 
+     *
      * @param classLoader the ClassLoader used by the XStream instance.
      * @deprecated As of 1.4.5 use {@link #DefaultMapper(ClassLoaderReference)}
      */
@@ -98,6 +100,10 @@ public class DefaultMapper implements Mapper {
 
     public boolean isImmutableValueType(Class type) {
         return false;
+    }
+
+    public boolean isReferenceable(final Class type) {
+        return true;
     }
 
     public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {

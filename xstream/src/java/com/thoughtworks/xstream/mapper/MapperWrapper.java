@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -40,6 +40,10 @@ public abstract class MapperWrapper implements Mapper {
 
     public boolean isImmutableValueType(Class type) {
         return wrapped.isImmutableValueType(type);
+    }
+
+    public boolean isReferenceable(Class type) {
+        return wrapped.isReferenceable(type);
     }
 
     public Class defaultImplementationOf(Class type) {
