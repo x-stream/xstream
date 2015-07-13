@@ -967,12 +967,12 @@ public class XStream {
 
         if (JVM.is14()) {
             // late bound types - allows XStream to be compiled on earlier JDKs
-            addImmutableTypeDynamically("java.nio.charset.Charset", false);
-            addImmutableTypeDynamically("java.util.Currency", false);
+            addImmutableTypeDynamically("java.nio.charset.Charset", true);
+            addImmutableTypeDynamically("java.util.Currency", true);
         }
         
         if (JVM.is15()) {
-            addImmutableTypeDynamically("java.util.UUID", false);
+            addImmutableTypeDynamically("java.util.UUID", true);
         }
 
         addImmutableType(URI.class, true);
