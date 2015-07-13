@@ -257,7 +257,7 @@
 	always with the boxed types and converts to primitives types on the fly. However, for method and field type
 	signatures the difference is essential. Nevertheless it is possible to register derived versions of the converters
 	that are able to respect the aliasing with some minor effort. Following lines are taken from the AliasTest in the
-	acceptence tests:</p>
+	acceptance tests:</p>
 <div class="Source Java"><pre>XStream xstream = new XStream();
 Mapper mapper = new MapperWrapper(xstream.getMapper().lookupMapperOfType(ArrayMapper.class)) {
   public Class realClass(String elementName) {
@@ -299,6 +299,24 @@ xstream.registerConverter(new JavaFieldConverter(javaClassConverter, mapper){});
     <p>Yes.</p>
 
     <!-- ...................................................... -->
+    <h2 id="Serialization_referencing_immutable_types">Can immutable types be referenced?</h2>
+	<p>Adding a type as immutable implies that a referencing marshaller strategy will write each occurrence of the same
+	instance separately into the stream without referencing it, i.e. instance of those types are normally never referenced
+	at deserialization time. Such referenced can exist though for persisted streams when a type is added as immutable in
+	later versions. In such cases the type can be added as immutable, but still referenceable.</p>
+
+	<p>Any immutable type could be dereferenced before version 1.4.9, but only at the cost of a large memory footprint.
+	Since version 1.4.9 this is only possible if the immutable type has been explicitly declared as referenceable too.
+	This should be done only if backward compatibility is required and a persisted stream may contain a reference of such
+	an instance at all. Any type that has been declared as immutable by XStream itself before version 1.4 will not be
+	referenceable now by default (all primitive types and their boxed counterparts, java.lang.Class, java.lang.String,
+	java.math.BigInteger, java.math.BigDecimal, java.io.File, java.net.URL, and java.awt.font.TextAttribute). All other
+	immutable types (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection
+	types) will currently still be referenceable at deserialization time for compatibility reasons. This support by
+	default will be dropped with the next major version of XStream. You can always overwrite the default by adding the same
+	type again as immutable with a different value for the referenceable flag.</p>
+
+	<!-- ...................................................... -->
     <h2 id="Serialization_lambda_null">My lambda expression is serialized to null!</h2>
     <p>Non-serializable lambda expressions to not contain any information at all to recreate the instance at a later time again. These instances are treated as temporary
     objects and as such XStream has no other possibility as to serialize null instead.</p>

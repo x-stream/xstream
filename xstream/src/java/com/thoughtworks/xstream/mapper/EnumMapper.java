@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 20. March 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
@@ -23,8 +23,8 @@ import com.thoughtworks.xstream.core.Caching;
 /**
  * Mapper that handles the special case of polymorphic enums in Java 1.5. This renames MyEnum$1 to MyEnum making it less
  * bloaty in the XML and avoiding the need for an alias per enum value to be specified. Additionally every enum is
- * treated automatically as immutable type and can be written as attribute.
- * 
+ * treated automatically as immutable and non-refrenceable type that can be written as attribute.
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
@@ -58,6 +58,15 @@ public class EnumMapper extends MapperWrapper implements Caching {
     }
 
     @Override
+    public boolean isReferenceable(final Class<?> type) {
+        if (type != null && Enum.class.isAssignableFrom(type)) {
+            return false;
+        } else {
+            return super.isReferenceable(type);
+        }
+    }
+
+    @Override
     public SingleValueConverter getConverterFromItemType(final String fieldName, final Class<?> type,
             final Class<?> definedIn) {
         final SingleValueConverter converter = getLocalConverter(fieldName, type, definedIn);
@@ -73,8 +82,8 @@ public class EnumMapper extends MapperWrapper implements Caching {
 
     private SingleValueConverter getLocalConverter(final String fieldName, final Class<?> type, final Class<?> definedIn) {
         if (attributeMapper != null
-            && Enum.class.isAssignableFrom(type)
-            && attributeMapper.shouldLookForSingleValueConverter(fieldName, type, definedIn)) {
+                && Enum.class.isAssignableFrom(type)
+                && attributeMapper.shouldLookForSingleValueConverter(fieldName, type, definedIn)) {
             synchronized (enumConverterMap) {
                 SingleValueConverter singleValueConverter = enumConverterMap.get(type);
                 if (singleValueConverter == null) {

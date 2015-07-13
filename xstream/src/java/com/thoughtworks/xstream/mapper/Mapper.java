@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2103, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2103, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 22. January 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
@@ -42,16 +42,23 @@ public interface Mapper {
     String realMember(Class<?> type, String serialized);
 
     /**
-     * Whether this type is a simple immutable value (int, boolean, String, URL, etc. Immutable types will be repeatedly
-     * written in the serialized stream, instead of using object references.
+     * Whether this type is a simple immutable value (int, boolean, String, URL, etc). Immutable types will be
+     * repeatedly written in the serialized stream, instead of using object references.
      */
     boolean isImmutableValueType(Class<?> type);
+
+    /**
+     * Whether this type is referenceable in a stream.
+     *
+     * @since upcoming
+     */
+    boolean isReferenceable(Class<?> type);
 
     Class<?> defaultImplementationOf(Class<?> type);
 
     /**
      * Get the alias for an attribute's name.
-     * 
+     *
      * @param attribute the attribute
      * @return the alias
      * @since 1.2
@@ -60,7 +67,7 @@ public interface Mapper {
 
     /**
      * Get the attribute's name for an alias.
-     * 
+     *
      * @param alias the alias
      * @return the attribute's name
      * @since 1.2
@@ -69,7 +76,7 @@ public interface Mapper {
 
     /**
      * Get the alias for a system attribute's name.
-     * 
+     *
      * @param attribute the system attribute
      * @return the alias
      * @since 1.3.1
@@ -78,7 +85,7 @@ public interface Mapper {
 
     /**
      * Get the name of the field that acts as the default collection for an object, or return null if there is none.
-     * 
+     *
      * @param definedIn owning type
      * @param itemType item type
      * @param itemFieldName optional item element name
@@ -91,7 +98,7 @@ public interface Mapper {
 
     /**
      * Determine whether a specific member should be serialized.
-     * 
+     *
      * @since 1.1.3
      */
     boolean shouldSerializeMember(Class<?> definedIn, String fieldName);
@@ -112,7 +119,7 @@ public interface Mapper {
 
     /**
      * Returns a single value converter to be used in a specific field.
-     * 
+     *
      * @param fieldName the field name
      * @param type the field type
      * @param definedIn the type which defines this field
@@ -123,7 +130,7 @@ public interface Mapper {
 
     /**
      * Returns which converter to use for an specific attribute in a type.
-     * 
+     *
      * @param definedIn the field's parent
      * @param attribute the attribute name
      * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
@@ -133,7 +140,7 @@ public interface Mapper {
 
     /**
      * Returns which converter to use for an specific attribute in a type.
-     * 
+     *
      * @param definedIn the field's parent
      * @param attribute the attribute name
      * @param type the type the converter should create

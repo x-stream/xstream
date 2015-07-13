@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -66,6 +66,8 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         Thing t0 = (Thing)result.get(0);
         Thing t1 = (Thing)result.get(1);
         Thing t2 = (Thing)result.get(2);
+        
+        assertSame(t0, t1);
 
         t0.field = "bye";
 
@@ -471,5 +473,60 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         xstream.addImplicitArray(EmailArray.class, "addresses", "address");
         String xml = xstream.toXML(emails);
         assertEquals(emails, xstream.fromXML(xml));
+    }
+    
+    public void testImmutableInstancesAreNotReferenced() {
+        xstream.addImmutableType(Thing.class, false);
+
+        Thing sameThing = new Thing("hello");
+        Thing anotherThing = new Thing("hello");
+
+        List list = new ArrayList();
+        list.add(sameThing);
+        list.add(sameThing);
+        list.add(anotherThing);
+
+        String xml = xstream.toXML(list);
+        List result = (List)xstream.fromXML(xml);
+
+        Thing t0 = (Thing)result.get(0);
+        Thing t1 = (Thing)result.get(1);
+        Thing t2 = (Thing)result.get(2);
+        
+        assertEquals(t0, t1);
+        assertNotSame(t0, t1);
+    }
+    
+    public void testImmutableInstancesCanBeDereferenced() {
+
+        Thing sameThing = new Thing("hello");
+        Thing anotherThing = new Thing("hello");
+
+        List list = new ArrayList();
+        list.add(sameThing);
+        list.add(sameThing);
+        list.add(anotherThing);
+
+        String xml = xstream.toXML(list);
+
+        xstream.addImmutableType(Thing.class, false);
+
+        try {
+            xstream.fromXML(xml);
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(Thing.class.getName(), e.get("referenced-type"));
+        }
+
+        xstream.addImmutableType(Thing.class, true);
+
+        List result = (List)xstream.fromXML(xml);
+
+        Thing t0 = (Thing)result.get(0);
+        Thing t1 = (Thing)result.get(1);
+        Thing t2 = (Thing)result.get(2);
+        
+        assertEquals(t0, t1);
+        assertSame(t0, t1);
     }
 }

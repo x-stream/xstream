@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 15. March 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.core;
@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Abstract base class for a TreeUnmarshaller, that resolves references.
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
@@ -55,14 +55,19 @@ public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller 
         final Object result;
         final String attributeName = getMapper().aliasForSystemAttribute("reference");
         final String reference = attributeName == null ? null : reader.getAttribute(attributeName);
+        final boolean isReferenceable = getMapper().isReferenceable(type);
         if (reference != null) {
-            final Object cache = values.get(getReferenceKey(reference));
+            final Object cache = isReferenceable ? values.get(getReferenceKey(reference)) : null;
             if (cache == null) {
                 final ConversionException ex = new ConversionException("Invalid reference");
                 ex.add("reference", reference);
+                ex.add("referenced-type", type.getName());
+                ex.add("referenceable", Boolean.toString(isReferenceable));
                 throw ex;
             }
             result = cache == NULL ? null : cache;
+        } else if (!isReferenceable) {
+            result = super.convert(parent, type, converter);
         } else {
             final R currentReferenceKey = getCurrentReferenceKey();
             parentStack.push(currentReferenceKey);
