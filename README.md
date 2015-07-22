@@ -1,4 +1,4 @@
-* master: [![Build Status](https://travis-ci.org/x-stream/xstream.svg?branch=master)](https://travis-ci.org/x-stream/xstream)  
+* master: [![Build Status](https://travis-ci.org/x-stream/xstream.svg?branch=master)](https://travis-ci.org/x-stream/xstream)
 * v-1.4.x: [![Build Status](https://travis-ci.org/x-stream/xstream.svg?branch=v-1.4.x)](https://travis-ci.org/x-stream/xstream)
 ----
 # XStream
