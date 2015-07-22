@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/x-stream/xstream.svg?branch=master)](https://travis-ci.org/x-stream/xstream)
+[![Build Status](https://travis-ci.org/x-stream/xstream.svg?branch=master)](https://travis-ci.org/x-stream/xstream) master  
+[![Build Status](https://travis-ci.org/x-stream/xstream.svg?branch=v_1.4.x)](https://travis-ci.org/x-stream/xstream) v-1.4.x
 ----
 # XStream
 _Java to XML Serialization, and back again_
