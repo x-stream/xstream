@@ -11,12 +11,6 @@
      Created on 29. July 2006 by Mauro Talevi
      -->
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.codehaus</groupId>
-    <artifactId>codehaus-parent</artifactId>
-    <version>3</version><!-- 4 required Java 5 -->
-    <relativePath />
-  </parent>
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
   <packaging>pom</packaging>
@@ -29,7 +23,7 @@
   <inceptionYear>2004</inceptionYear>
   <organization>
     <name>XStream</name>
-    <url>http://xstream.codehaus.org</url>
+    <url>http://x-stream.github.io</url>
   </organization>
 
   <profiles>
@@ -156,10 +150,53 @@
   <licenses>
     <license>
       <name>BSD style</name>
-      <url>http://xstream.codehaus.org/license.html</url>
+      <url>http://x-stream.github.io/license.html</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/x-stream/xstream/issues/</url>
+  </issueManagement>
+  <ciManagement>
+    <system>Travis</system>
+    <url>https://travis-ci.org/x-stream/xstream</url>
+  </ciManagement>
+  <mailingLists>
+    <mailingList>
+      <name>XStream Users List</name>
+      <subscribe>xstream-user+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>xstream-user+unsubscribe@googlegroups.com</unsubscribe>
+      <post>xstream-user@googlegroups.com</post>
+      <archive>https://groups.google.com/forum/#!forum/xstream-user</archive>
+      <otherArchives>
+        <otherArchive>http://news.gmane.org/gmane.comp.java.xstream.user</otherArchive>
+        <otherArchive>http://markmail.org/search/list:org.codehaus.xstream.user</otherArchive>
+      </otherArchives>
+    </mailingList>
+    <mailingList>
+      <name>XStream Notifications List</name>
+      <subscribe>xstream-notifications+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>xstream-notifications+unsubscribe@googlegroups.com</unsubscribe>
+      <post>xstream-notifications@googlegroups.com</post>
+      <archive>https://groups.google.com/forum/#!forum/xstream-notifications</archive>
+      <otherArchives>
+        <otherArchive>http://news.gmane.org/gmane.comp.java.xstream.scm</otherArchive>
+      </otherArchives>
+    </mailingList>
+    <mailingList>
+      <name>Former (pre-2015-06) Development List</name>
+      <archive>http://news.gmane.org/gmane.comp.java.xstream.dev</archive>
+      <otherArchives>
+        <otherArchive>http://markmail.org/search/list:org.codehaus.xstream.dev</otherArchive>
+      </otherArchives>
+    </mailingList>
+    <mailingList>
+      <name>Former (pre-2015-06) Announcements List</name>
+      <archive>http://markmail.org/search/list:org.codehaus.xstream.announce</archive>
+    </mailingList>
+  </mailingLists>
 
   <dependencyManagement>
     <dependencies>
@@ -558,9 +595,10 @@
           <artifactId>maven-release-plugin</artifactId>
           <version>${version.plugin.maven.release}</version>
           <configuration>
+            <mavenExecutorId>forked-path</mavenExecutorId>
             <goals>deploy</goals>
             <autoVersionSubmodules>true</autoVersionSubmodules>
-            <!-- overwrite codehaus-parent -->
+            <useReleaseProfile>false</useReleaseProfile>
             <arguments>-Pxstream-release</arguments>
           </configuration>
         </plugin>
@@ -722,25 +760,30 @@
   </build>
 
   <distributionManagement>
-    <!--  
-      The server id codehaus-nexus-snapshots, codehaus-nexus-staging, and
-      codehaus.org must appear ~/.m2/settings.xml cf. settings-template.xml.
-      http://hausmates.codehaus.org/Codehaus+Maven+Repository+Usage+Guide
-    -->
-    <site>
-      <id>codehaus.org</id>
-      <name>Codehaus XStream Site</name>
-      <url>dav:https://dav.codehaus.org/xstream</url>
-    </site>
+    <repository>
+      <id>ossrh-staging</id>
+      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+    <snapshotRepository>
+      <id>ossrh-snapshots</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <!--site>
+      <id>github</id>
+      <url>scm:git:ssh://git@github.com/x-stream/x-stream.github.io.git</url>
+    </site-->
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/xstream/trunk</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/xstream/trunk</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/xstream/trunk</url>
+    <url>http://github.com/x-stream/xstream</url>
+    <developerConnection>scm:git:git@github.com:x-stream/xstream.git</developerConnection>
+    <connection>scm:git:https://github.com/x-stream/stream.git</connection>
+    <tag>HEAD</tag>
   </scm>
   
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     <version.java.source>1.5</version.java.source>
     <version.java.target>1.5</version.java.target>
     <version.java.enforced>[1.6,)</version.java.enforced>
