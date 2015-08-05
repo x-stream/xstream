@@ -812,7 +812,7 @@
   <scm>
     <url>http://github.com/x-stream/xstream</url>
     <developerConnection>scm:git:git@github.com:x-stream/xstream.git</developerConnection>
-    <connection>scm:git:https://github.com/x-stream/stream.git</connection>
+    <connection>scm:git:https://github.com/x-stream/xstream.git</connection>
     <tag>v-1.4.x</tag>
   </scm>
   
