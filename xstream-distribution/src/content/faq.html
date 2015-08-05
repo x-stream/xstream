@@ -148,22 +148,6 @@
 };</pre></div>
 
     <!-- ...................................................... -->
-    <h2 id="Compatibility_ConverterAnnotations">XStream 1.3 ignores suddenly annotated converters (@XStreamConverter and @XStreamConverters)?</h2>
-
-    <p>XStream treats now all annotations the same and therefore it no longer auto-detects any annotation by
-    default.  You can configure XStream to run in auto-detection mode, but be aware if the 
-    <a href="annotations-tutorial.html#AutoDetect">implications</a>.  As alternative you might register the
-    deprecated AnnotationReflectionConverter, that was used for XStream pre 1.3.x, but as drawback the functionality
-    to register a local converter with XStream.registerLocalConverter will no longer work.</p>
-
-    <!-- ...................................................... -->
-    <h2 id="Compatibility_element_sequence">XStream 1.3 suddenly has a different field order?</h2>
-
-    <p>Yes. This was announced with the last 1.2.x release and was done to support the type inheritance of XML schemas. However, XStream is delivered with the
-    <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">XStream12FieldKeySorter</a> that can be used to 
-    <a href="#Serialization_sort_fields">sort the fields</a> according XStream 1.2.2.</p>
-
-    <!-- ...................................................... -->
     <h2 id="Compatibility_WebSphere_8">WebShere 8 can no longer use XStream 1.4.x?</h2>
 
     <p>XStream has a long history to support types from recent JDKs without dropping backward compatibility.  Therefore it contains class files targeting different JDKs.
@@ -566,8 +550,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <!-- ...................................................... -->
     <h2 id="JSON_Jettison_version">Which versions of Jettison are supported?</h2>
 
-	<p>Users of Java 5 or higher can use Jettison 1.2, users of Java 1.4.2 have to use Jettison 1.0.1.  Jettison 1.1
-	nor Jettison 1.3 or higher is supported.</p>
+	<p>Users of Java 6 or higher can use Jettison 1.2.  Jettison 1.3 or higher is currently not supported.</p>
 
     <!-- ...................................................... -->
     <h2 id="JSON_deserialize_top_level_array">Why is it not possible to deserialize a JSON string starting with an array?</h2>
