@@ -171,6 +171,15 @@
     <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">XStream12FieldKeySorter</a> that can be used to 
     <a href="#Serialization_sort_fields">sort the fields</a> according XStream 1.2.2.</p>
 
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_WebSphere_8">WebShere 8 can no longer use XStream 1.4.x?</h2>
+
+    <p>XStream has a long history to support types from recent JDKs without dropping backward compatibility.  Therefore it contains class files targeting different JDKs.
+    However, WebShpere scans by default all JAR files in its classpath for annotations to support CDI independent of the presence of a beans.xml file in META-INF.  This
+    scanning fails for class files targeting a higher JDK runtime as currently used by WebSphere. Please, consult your WebSphere documentation, how to turn off the
+    scanning for individual files by providing an <a href="http://www-01.ibm.com/support/knowledgecenter/SSAW57_8.0.0/com.ibm.websphere.nd.doc/info/ae/ae/trun_app_reduce_annot.html?cp=SSAW57_8.0.0%2F1-8-12-0">amm.filter.proeprties</a>
+    file.</p>
+
 
     <!-- ****************************************************** -->
     <h1 id="Serialization">Serialization</h1>
