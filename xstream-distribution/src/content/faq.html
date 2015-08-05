@@ -109,14 +109,6 @@
 	XStream will typically work as general rule, if you process your own objects.</p>
 
     <!-- ...................................................... -->
-    <h2 id="Compatibility_Harmony">Why does XStream fail on Apache Harmony?</h2>
-
-	<p>Since JDK 5 it is possible according the Java specification to write into final fields using reflection. This is not yet 
-	supported by Harmony and therefore the PureJavaReflectionProvider fails. We have also already investigated into
-	enhanced mode in Harmony, but the Harmony JVM crashed running the unit tests. However, Harmony has been retired,
-	we will no longer make any efforts in this direction.</p>
-
-    <!-- ...................................................... -->
     <h2 id="Compatibility_unsupported_JVM">Are there plans to provide enhanced mode support to other JVMs?</h2>
     <p>Yes. <a href="mailing-lists.html">Let us know</a> which JVM you would like supported.</p>
 
