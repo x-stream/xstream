@@ -128,7 +128,7 @@
                 <td>normal</td>
             </tr>
             <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/NamedCollectionConverter.html">NamedArrayConverter</a></td>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/NamedArrayConverter.html">NamedArrayConverter</a></td>
                 <td>any kind of array</td>
                 <td class="example">
                     &lt;<i>string</i>-array&gt;<br/>
@@ -253,14 +253,14 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/NamedCollectionConverter.html">NamedCollectionConverter</a></td>
                 <td>java.util.ArrayList<br/>java.util.LinkedList<br/>java.util.HashSet<br/>java.util.Vector<br/>java.util.LinkedHashSet</td>
                 <td class="example">
-                    &lt;linked-list&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;banana&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;big-decimal&gt;12345.4555&lt;/big-decimal&gt;<br/>
-                    &lt;/linked-list&gt;
+                    &lt;fruits&gt;<br/>
+                    &nbsp;&nbsp;&lt;fruit&gt;apple&lt;/fruit&gt;<br/>
+                    &nbsp;&nbsp;&lt;fruit&gt;banana&lt;/fruit&gt;<br/>
+                    &nbsp;&nbsp;&lt;fruit&gt;orange&lt;/fruit&gt;<br/>
+                    &lt;/fruits&gt;
                 </td>
-                <td>The objects inside the collection can be any type of objects, including nested collections.  Should
-                be registered locally or for an individual Collection type.</td>
+                <td>The objects inside the collection can be of any type shared between the objects.  Should be
+                registered locally or for an individual Collection type.</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
@@ -280,7 +280,8 @@
                 </td>
                 <td>Both key and values can be any type of objects.  If key or value are written as attributes or if
                 the value is written as text of the entry element, those types must be handled by a
-                SingleValueConverter.  Should be registered locally or for an individual Map type.</td>
+                <a href="javadoc/com/thoughtworks/xstream/converters/SingleValueConverter.html">SingleValueConverter</a>.
+                Should be registered locally or for an individual Map type.</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
