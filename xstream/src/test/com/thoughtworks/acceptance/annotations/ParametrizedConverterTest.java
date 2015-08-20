@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2012, 2013, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,8 +11,11 @@
 package com.thoughtworks.acceptance.annotations;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
@@ -24,6 +27,7 @@ import com.thoughtworks.xstream.annotations.XStreamConverters;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.converters.extended.NamedCollectionConverter;
 import com.thoughtworks.xstream.converters.extended.NamedMapConverter;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import com.thoughtworks.xstream.converters.extended.ToStringConverter;
@@ -56,6 +60,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         xstream.processAnnotations(DerivedType.class);
         xstream.processAnnotations(SimpleBean.class);
         xstream.processAnnotations(ContainsMap.class);
+        xstream.processAnnotations(ContainsCollection.class);
     }
 
     public void testAnnotationForConvertersWithParameters() {
@@ -217,5 +222,29 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     
     @XStreamAlias("my-enums")
     public static class MyEnumMap extends LinkedHashMap<ContainsMap.E, String> {
+    }
+    
+    public void testAnnotatedNamedCollectionConverter() {
+        List<String> names = new ArrayList<String>(Arrays.asList("joe", "joerg", "mauro"));
+        final ContainsCollection container = new ContainsCollection(names);
+        String expected = (""
+                + "<CollCont>\n"
+                + "  <names>\n"
+                + "    <name>joe</name>\n"
+                + "    <name>joerg</name>\n"
+                + "    <name>mauro</name>\n"
+                + "  </names>\n"
+                + "</CollCont>").replace('\'', '"');
+        assertBothWays(container, expected);
+    }
+    
+    @XStreamAlias("CollCont")
+    public static class ContainsCollection extends StandardObject {
+        @XStreamConverter(value=NamedCollectionConverter.class, strings={"name"}, types={String.class}, useImplicitType = false)
+        private List<String> names;
+
+        public ContainsCollection(List<String> names) {
+            this.names = names;
+        }
     }
 }
