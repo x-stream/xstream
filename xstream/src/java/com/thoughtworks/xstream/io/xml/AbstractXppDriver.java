@@ -52,7 +52,7 @@ public abstract class AbstractXppDriver extends AbstractXmlDriver {
         try {
             return new XppReader(in, createParser(), getNameCoder());
         } catch (final XmlPullParserException e) {
-            throw new StreamException("Cannot create XmlPullParser");
+            throw new StreamException("Cannot create XmlPullParser", e);
         }
     }
 
