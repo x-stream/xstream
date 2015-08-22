@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -52,8 +52,8 @@ public abstract class AbstractXppDriver extends AbstractXmlDriver {
     public HierarchicalStreamReader createReader(Reader in) {
         try {
             return new XppReader(in, createParser(), getNameCoder());
-        } catch (XmlPullParserException e) {
-            throw new StreamException("Cannot create XmlPullParser");
+        } catch (final XmlPullParserException e) {
+            throw new StreamException("Cannot create XmlPullParser", e);
         }
     }
 
