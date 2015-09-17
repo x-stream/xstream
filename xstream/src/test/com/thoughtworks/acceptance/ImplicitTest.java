@@ -140,6 +140,10 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         c.val = new Integer(6);
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
+        implicits.separator1 = implicits.separator2 = null;
+        assertBothWays(implicits, stripSeparator(expected));
+        implicits.separator1 = implicits.separator2 = null;
+        assertBothWays(implicits, stripSeparator(expected));
     }
     
     public void testAllImplicitTypesAtOnceWithExplicitElementNames()
@@ -189,5 +193,11 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         c.val = new Integer(6);
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
+        implicits.separator1 = implicits.separator2 = null;
+        assertBothWays(implicits, stripSeparator(expected));
+    }
+    
+    private String stripSeparator(String s) {
+        return s.replaceAll(" *<separator.+</separator.+\n", "");
     }
 }
