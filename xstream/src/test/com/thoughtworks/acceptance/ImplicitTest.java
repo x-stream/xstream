@@ -33,9 +33,9 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         
         public A[] aArray = new A[2];
         public String separator1 = "--1--";
-        public List bList = new ArrayList();
+        public List<B> bList = new ArrayList<>();
         public String separator2 = "--2--";
-        public Map cMap = new LinkedHashMap<>();
+        public Map<Integer, C> cMap = new LinkedHashMap<>();
     }
     
     public void testAllImplicitTypesAtOnceWithImplicitElementTypes()
@@ -78,9 +78,9 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.aArray[1] = new AllImplicitTypes.A();
         implicits.aArray[1].val = 2;
         implicits.bList.add(new AllImplicitTypes.B());
-        ((AllImplicitTypes.B)implicits.bList.get(0)).val = 3;
+        implicits.bList.get(0).val = 3;
         implicits.bList.add(new AllImplicitTypes.B());
-        ((AllImplicitTypes.B)implicits.bList.get(1)).val = 4;
+        implicits.bList.get(1).val = 4;
         AllImplicitTypes.C c = new AllImplicitTypes.C();
         c.val = new Integer(5);
         implicits.cMap.put(c.val, c);
@@ -130,9 +130,9 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.aArray[1] = new AllImplicitTypes.A();
         implicits.aArray[1].val = 2;
         implicits.bList.add(new AllImplicitTypes.B());
-        ((AllImplicitTypes.B)implicits.bList.get(0)).val = 3;
+        implicits.bList.get(0).val = 3;
         implicits.bList.add(new AllImplicitTypes.B());
-        ((AllImplicitTypes.B)implicits.bList.get(1)).val = 4;
+        implicits.bList.get(1).val = 4;
         AllImplicitTypes.C c = new AllImplicitTypes.C();
         c.val = new Integer(5);
         implicits.cMap.put(c.val, c);
@@ -179,9 +179,9 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.aArray[1] = new AllImplicitTypes.A();
         implicits.aArray[1].val = 2;
         implicits.bList.add(new AllImplicitTypes.B());
-        ((AllImplicitTypes.B)implicits.bList.get(0)).val = 3;
+        implicits.bList.get(0).val = 3;
         implicits.bList.add(new AllImplicitTypes.B());
-        ((AllImplicitTypes.B)implicits.bList.get(1)).val = 4;
+        implicits.bList.get(1).val = 4;
         AllImplicitTypes.C c = new AllImplicitTypes.C();
         c.val = new Integer(5);
         implicits.cMap.put(c.val, c);
