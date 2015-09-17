@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,10 +11,9 @@
 package com.thoughtworks.acceptance;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
 public class ImplicitTest extends AbstractAcceptanceTest {
    
@@ -36,7 +35,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         public String separator1 = "--1--";
         public List bList = new ArrayList();
         public String separator2 = "--2--";
-        public Map cMap = new OrderRetainingMap();
+        public Map cMap = new LinkedHashMap<>();
     }
     
     public void testAllImplicitTypesAtOnceWithImplicitElementTypes()
@@ -45,7 +44,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         xstream.alias("a", AllImplicitTypes.A.class);
         xstream.alias("b", AllImplicitTypes.B.class);
         xstream.alias("c", AllImplicitTypes.C.class);
-        xstream.addDefaultImplementation(OrderRetainingMap.class, Map.class);
+        xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
         xstream.addImplicitArray(AllImplicitTypes.class, "aArray");
         xstream.addImplicitCollection(AllImplicitTypes.class, "bList");
         xstream.addImplicitMap(AllImplicitTypes.class, "cMap", AllImplicitTypes.C.class, "val");
@@ -97,7 +96,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         xstream.alias("a", AllImplicitTypes.A.class);
         xstream.alias("b", AllImplicitTypes.B.class);
         xstream.alias("c", AllImplicitTypes.C.class);
-        xstream.addDefaultImplementation(OrderRetainingMap.class, Map.class);
+        xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
         xstream.addImplicitArray(AllImplicitTypes.class, "aArray");
         xstream.addImplicitCollection(AllImplicitTypes.class, "bList", AllImplicitTypes.B.class);
         xstream.addImplicitMap(AllImplicitTypes.class, "cMap", AllImplicitTypes.C.class, "val");
@@ -146,7 +145,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
     public void testAllImplicitTypesAtOnceWithExplicitElementNames()
     {
         xstream.alias("implicits", AllImplicitTypes.class);
-        xstream.addDefaultImplementation(OrderRetainingMap.class, Map.class);
+        xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
         xstream.addImplicitArray(AllImplicitTypes.class, "aArray", "a");
         xstream.addImplicitCollection(AllImplicitTypes.class, "bList", "b", AllImplicitTypes.B.class);
         xstream.addImplicitMap(AllImplicitTypes.class, "cMap", "c", AllImplicitTypes.C.class, "val");
