@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,8 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         xstream.alias("farm", Farm.class);
         xstream.alias("animal", Animal.class);
         xstream.alias("MEGA-farm", MegaFarm.class);
+        xstream.alias("area", Area.class);
+        xstream.alias("country", Country.class);
         xstream.ignoreUnknownElements();
     }
 
@@ -510,6 +512,117 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitArray(Farm.class, "animals", "beast");
         assertBothWays(farm, expected);
+    }
+    
+    public static class Area extends Farm {
+        Animal[] animals;
+    }
+    
+    public void testWithHiddenArray() {
+        Area area = new Area();
+        ((Farm)area).animals = new Animal[2];
+        ((Farm)area).animals[0] = new Animal("Cow");
+        ((Farm)area).animals[1] = new Animal("Sheep");
+        area.animals = new Animal[2];
+        area.animals[0] = new Animal("Falcon");
+        area.animals[1] = new Animal("Sparrow");
+
+        String expected = "" +
+                "<area>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Falcon</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Sparrow</name>\n" +
+                "  </animal>\n" +
+                "</area>";
+
+        xstream.addImplicitArray(Farm.class, "animals");
+        xstream.addImplicitArray(Area.class, "animals");
+        assertBothWays(area, expected);
+    }
+    
+    public void testWithHiddenArrayAndDifferentAlias() {
+        Area area = new Area();
+        ((Farm)area).animals = new Animal[2];
+        ((Farm)area).animals[0] = new Animal("Cow");
+        ((Farm)area).animals[1] = new Animal("Sheep");
+        area.animals = new Animal[2];
+        area.animals[0] = new Animal("Falcon");
+        area.animals[1] = new Animal("Sparrow");
+
+        String expected = "" +
+                "<area>\n" +
+                "  <domesticated defined-in=\"farm\">\n" +
+                "    <name>Cow</name>\n" +
+                "  </domesticated>\n" +
+                "  <domesticated defined-in=\"farm\">\n" +
+                "    <name>Sheep</name>\n" +
+                "  </domesticated>\n" +
+                "  <wild>\n" +
+                "    <name>Falcon</name>\n" +
+                "  </wild>\n" +
+                "  <wild>\n" +
+                "    <name>Sparrow</name>\n" +
+                "  </wild>\n" +
+                "</area>";
+
+        xstream.addImplicitArray(Farm.class, "animals", "domesticated");
+        xstream.addImplicitArray(Area.class, "animals", "wild");
+        assertBothWays(area, expected);
+    }
+    
+    public static class County extends Area {
+    }
+    
+    public static class Country extends County {
+        Animal[] animals;
+    }
+    
+    public void testWithDoubleHiddenArray() {
+        Country country = new Country();
+        ((Farm)country).animals = new Animal[2];
+        ((Farm)country).animals[0] = new Animal("Cow");
+        ((Farm)country).animals[1] = new Animal("Sheep");
+        ((Area)country).animals = new Animal[2];
+        ((Area)country).animals[0] = new Animal("Falcon");
+        ((Area)country).animals[1] = new Animal("Sparrow");
+        country.animals = new Animal[2];
+        country.animals[0] = new Animal("Wale");
+        country.animals[1] = new Animal("Dolphin");
+
+        String expected = "" +
+                "<country>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"area\">\n" +
+                "    <name>Falcon</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"area\">\n" +
+                "    <name>Sparrow</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Wale</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Dolphin</name>\n" +
+                "  </animal>\n" +
+                "</country>";
+
+        xstream.addImplicitArray(Farm.class, "animals");
+        xstream.addImplicitArray(Area.class, "animals");
+        xstream.addImplicitArray(Country.class, "animals");
+        assertBothWays(country, expected);
     }
     
     static class PrimitiveArray {

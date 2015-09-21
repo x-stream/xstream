@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -57,6 +57,8 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.alias("room", Room.class);
         xstream.alias("house", House.class);
         xstream.alias("person", Person.class);
+        xstream.alias("area", Area.class);
+        xstream.alias("country", Country.class);
         xstream.ignoreUnknownElements();
     }
 
@@ -578,5 +580,122 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitCollection(Farm.class, "animals", "beast", Animal.class);
         assertBothWays(farm, expected);
+    }
+    
+    public static class Area extends Farm {
+
+        List animals = new ArrayList();
+        
+        public Area(int size) {
+            super(size);
+        }
+        
+    }
+    
+    public void testWithHiddenList() {
+        Area area = new Area(1000);
+        area.add(new Animal("Cow"));
+        area.add(new Animal("Sheep"));
+        area.animals.add(new Animal("Falcon"));
+        area.animals.add(new Animal("Sparrow"));
+
+        String expected = "" +
+                "<area>\n" +
+                "  <size>1000</size>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Falcon</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Sparrow</name>\n" +
+                "  </animal>\n" +
+                "</area>";
+
+        xstream.addImplicitCollection(Farm.class, "animals");
+        xstream.addImplicitCollection(Area.class, "animals");
+        assertBothWays(area, expected);
+    }
+    
+    public void testWithHiddenListAndDifferentAlias() {
+        Area area = new Area(1000);
+        area.add(new Animal("Cow"));
+        area.add(new Animal("Sheep"));
+        area.animals.add(new Animal("Falcon"));
+        area.animals.add(new Animal("Sparrow"));
+
+        String expected = "" +
+                "<area>\n" +
+                "  <size>1000</size>\n" +
+                "  <domesticated defined-in=\"farm\">\n" +
+                "    <name>Cow</name>\n" +
+                "  </domesticated>\n" +
+                "  <domesticated defined-in=\"farm\">\n" +
+                "    <name>Sheep</name>\n" +
+                "  </domesticated>\n" +
+                "  <wild>\n" +
+                "    <name>Falcon</name>\n" +
+                "  </wild>\n" +
+                "  <wild>\n" +
+                "    <name>Sparrow</name>\n" +
+                "  </wild>\n" +
+                "</area>";
+
+        xstream.addImplicitCollection(Farm.class, "animals", "domesticated", Animal.class);
+        xstream.addImplicitCollection(Area.class, "animals", "wild", Animal.class);
+        assertBothWays(area, expected);
+    }
+    
+    public static class County extends Area {
+
+        public County() {
+            super(10);
+        }
+    }
+    
+    public static class Country extends County {
+        List animals = new ArrayList();
+    }
+    
+    public void testWithDoubleHiddenList() {
+        Country country = new Country();
+        country.add(new Animal("Cow"));
+        country.add(new Animal("Sheep"));
+        ((Area)country).animals.add(new Animal("Falcon"));
+        ((Area)country).animals.add(new Animal("Sparrow"));
+        country.animals.add(new Animal("Wale"));
+        country.animals.add(new Animal("Dolphin"));
+
+        String expected = "" +
+                "<country>\n" +
+                "  <size>10</size>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"area\">\n" +
+                "    <name>Falcon</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"area\">\n" +
+                "    <name>Sparrow</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Wale</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Dolphin</name>\n" +
+                "  </animal>\n" +
+                "</country>";
+
+        xstream.addImplicitCollection(Farm.class, "animals");
+        xstream.addImplicitCollection(Area.class, "animals");
+        xstream.addImplicitCollection(Country.class, "animals");
+        assertBothWays(country, expected);
     }
 }
