@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.xstream.converters;
 
+import com.thoughtworks.xstream.mapper.Mapper;
+
 public interface UnmarshallingContext extends DataHolder {
 
     /**
@@ -52,4 +54,5 @@ public interface UnmarshallingContext extends DataHolder {
 
     void addCompletionCallback(Runnable work, int priority);
 
+    Mapper getMapper();
 }

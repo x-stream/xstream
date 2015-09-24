@@ -146,7 +146,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         return result;
     }
 
-    protected Mapper getMapper() {
+    public Mapper getMapper() {
         return mapper;
     }
 
