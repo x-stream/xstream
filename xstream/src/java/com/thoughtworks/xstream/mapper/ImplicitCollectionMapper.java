@@ -1,17 +1,18 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 16. February 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,13 +27,29 @@ public class ImplicitCollectionMapper extends MapperWrapper {
         super(wrapped);
     }
 
-    private final Map<Class<?>, ImplicitCollectionMapperForClass> classNameToMapper = new HashMap<Class<?>, ImplicitCollectionMapperForClass>();
+    private final Map<Class<?>, ImplicitCollectionMapperForClass> classNameToMapper =
+            new HashMap<Class<?>, ImplicitCollectionMapperForClass>();
 
-    private ImplicitCollectionMapperForClass getMapper(Class<?> definedIn) {
+    private ImplicitCollectionMapperForClass getMapper(final Class<?> declaredFor, final String fieldName) {
+        Class<?> definedIn = declaredFor;
         while (definedIn != null) {
-            final ImplicitCollectionMapperForClass mapper = classNameToMapper.get(definedIn);
+            ImplicitCollectionMapperForClass mapper = classNameToMapper.get(definedIn);
             if (mapper != null) {
                 return mapper;
+            } else { 
+                if (fieldName != null) {
+                    try {
+                        // do not continue search for a hidden field
+                        final Field field = definedIn.getDeclaredField(fieldName);
+                        if (field != null && !Modifier.isStatic(field.getModifiers())) {
+                            return null;
+                        }
+                    } catch (final SecurityException e) {
+                        throw new InitializationException("Access denied for field with implicit collection", e);
+                    } catch (final NoSuchFieldException e) {
+                        // OK, we can continue the search in the class hierarchy
+                    }
+                }
             }
             definedIn = definedIn.getSuperclass();
         }
@@ -51,7 +68,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     @Override
     public String getFieldNameForItemTypeAndName(final Class<?> definedIn, final Class<?> itemType,
             final String itemFieldName) {
-        final ImplicitCollectionMapperForClass mapper = getMapper(definedIn);
+        final ImplicitCollectionMapperForClass mapper = getMapper(definedIn, null);
         if (mapper != null) {
             return mapper.getFieldNameForItemTypeAndName(itemType, itemFieldName);
         } else {
@@ -61,7 +78,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     @Override
     public Class<?> getItemTypeForItemFieldName(final Class<?> definedIn, final String itemFieldName) {
-        final ImplicitCollectionMapperForClass mapper = getMapper(definedIn);
+        final ImplicitCollectionMapperForClass mapper = getMapper(definedIn, null);
         if (mapper != null) {
             return mapper.getItemTypeForItemFieldName(itemFieldName);
         } else {
@@ -72,7 +89,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     @Override
     public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(final Class<?> itemType,
             final String fieldName) {
-        final ImplicitCollectionMapperForClass mapper = getMapper(itemType);
+        final ImplicitCollectionMapperForClass mapper = getMapper(itemType, fieldName);
         if (mapper != null) {
             return mapper.getImplicitCollectionDefForFieldName(fieldName);
         } else {
@@ -92,15 +109,20 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     public void add(final Class<?> definedIn, final String fieldName, final String itemFieldName, Class<?> itemType,
             final String keyFieldName) {
         Field field = null;
-        Class<?> declaredIn = definedIn;
-        while (declaredIn != Object.class && definedIn != null) {
-            try {
-                field = declaredIn.getDeclaredField(fieldName);
-                break;
-            } catch (final SecurityException e) {
-                throw new InitializationException("Access denied for field with implicit collection", e);
-            } catch (final NoSuchFieldException e) {
-                declaredIn = declaredIn.getSuperclass();
+        if (definedIn != null) {
+            Class<?> declaredIn = definedIn;
+            while (declaredIn != Object.class) {
+                try {
+                    field = declaredIn.getDeclaredField(fieldName);
+                    if (!Modifier.isStatic(field.getModifiers())) {
+                        break;
+                    }
+                    field = null;
+                } catch (final SecurityException e) {
+                    throw new InitializationException("Access denied for field with implicit collection", e);
+                } catch (final NoSuchFieldException e) {
+                    declaredIn = declaredIn.getSuperclass();
+                }
             }
         }
         if (field == null) {
@@ -136,9 +158,12 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     private class ImplicitCollectionMapperForClass {
         private final Class<?> definedIn;
-        private final Map<NamedItemType, ImplicitCollectionMappingImpl> namedItemTypeToDef = new HashMap<NamedItemType, ImplicitCollectionMappingImpl>();
-        private final Map<String, ImplicitCollectionMappingImpl> itemFieldNameToDef = new HashMap<String, ImplicitCollectionMappingImpl>();
-        private final Map<String, ImplicitCollectionMappingImpl> fieldNameToDef = new HashMap<String, ImplicitCollectionMappingImpl>();
+        private final Map<NamedItemType, ImplicitCollectionMappingImpl> namedItemTypeToDef =
+                new HashMap<NamedItemType, ImplicitCollectionMappingImpl>();
+        private final Map<String, ImplicitCollectionMappingImpl> itemFieldNameToDef =
+                new HashMap<String, ImplicitCollectionMappingImpl>();
+        private final Map<String, ImplicitCollectionMappingImpl> fieldNameToDef =
+                new HashMap<String, ImplicitCollectionMappingImpl>();
 
         ImplicitCollectionMapperForClass(final Class<?> definedIn) {
             this.definedIn = definedIn;
@@ -159,8 +184,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
                     } else {
                         if (unnamed == null
                             || unnamed.getItemType() == null
-                            || def.getItemType() != null
-                            && unnamed.getItemType().isAssignableFrom(def.getItemType())) {
+                            || def.getItemType() != null && unnamed.getItemType().isAssignableFrom(def.getItemType())) {
                             unnamed = def;
                         }
                     }
@@ -169,7 +193,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             if (unnamed != null) {
                 return unnamed.getFieldName();
             } else {
-                final ImplicitCollectionMapperForClass mapper = getMapper(definedIn.getSuperclass());
+                final ImplicitCollectionMapperForClass mapper = getMapper(definedIn.getSuperclass(), null);
                 return mapper != null ? mapper.getFieldNameForItemTypeAndName(itemType, itemFieldName) : null;
             }
         }
@@ -179,7 +203,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             if (def != null) {
                 return def.getItemType();
             } else {
-                final ImplicitCollectionMapperForClass mapper = getMapper(definedIn.getSuperclass());
+                final ImplicitCollectionMapperForClass mapper = getMapper(definedIn.getSuperclass(), null);
                 return mapper != null ? mapper.getItemTypeForItemFieldName(itemFieldName) : null;
             }
         }
@@ -192,7 +216,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
                 if (mapping != null) {
                     return mapping;
                 } else {
-                    final ImplicitCollectionMapperForClass mapper = getMapper(definedIn.getSuperclass());
+                    final ImplicitCollectionMapperForClass mapper = getMapper(definedIn.getSuperclass(), null);
                     return mapper != null ? mapper.getImplicitCollectionDefByItemFieldName(itemFieldName) : null;
                 }
             }
@@ -203,7 +227,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             if (mapping != null) {
                 return mapping;
             } else {
-                final ImplicitCollectionMapperForClass mapper = getMapper(definedIn.getSuperclass());
+                final ImplicitCollectionMapperForClass mapper = getMapper(definedIn.getSuperclass(), null);
                 return mapper != null ? mapper.getImplicitCollectionDefForFieldName(fieldName) : null;
             }
         }
@@ -225,7 +249,8 @@ public class ImplicitCollectionMapper extends MapperWrapper {
         private final String keyFieldName;
 
         ImplicitCollectionMappingImpl(
-                final String fieldName, final Class<?> itemType, final String itemFieldName, final String keyFieldName) {
+                final String fieldName, final Class<?> itemType, final String itemFieldName,
+                final String keyFieldName) {
             this.fieldName = fieldName;
             this.itemFieldName = itemFieldName;
             this.itemType = itemType;

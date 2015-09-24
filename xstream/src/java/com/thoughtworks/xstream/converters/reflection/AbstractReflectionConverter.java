@@ -141,12 +141,26 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
         new Object() {
             {
+                final Map<String, Set<Mapper.ImplicitCollectionMapping>> hiddenMappers =
+                        new HashMap<String, Set<Mapper.ImplicitCollectionMapping>>();
                 for (final FieldInfo info : fields) {
                     if (info.value != null) {
                         final Field defaultField = defaultFieldDefinition.get(info.fieldName);
-                        final Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(
+                        Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(
                             defaultField.getDeclaringClass() == info.definedIn ? sourceType : info.definedIn,
                             info.fieldName);
+                        if (mapping != null) {
+                            Set<Mapper.ImplicitCollectionMapping> mappings = hiddenMappers.get(info.fieldName);
+                            if (mappings == null) {
+                                mappings = new HashSet<Mapper.ImplicitCollectionMapping>();
+                                mappings.add(mapping);
+                                hiddenMappers.put(info.fieldName, mappings);
+                            } else {
+                                if (!mappings.add(mapping)) {
+                                    mapping = null;
+                                }
+                            }
+                        }
                         if (mapping != null) {
                             if (context instanceof ReferencingMarshallingContext) {
                                 if (info.value != Collections.EMPTY_LIST
@@ -316,18 +330,18 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             final Class<?> explicitDeclaringClass = readDeclaringClass(reader);
             final Class<?> fieldDeclaringClass = explicitDeclaringClass == null ? resultType : explicitDeclaringClass;
             final String fieldName = mapper.realMember(fieldDeclaringClass, originalNodeName);
-            final Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
-                .getImplicitCollectionDefForFieldName(fieldDeclaringClass, fieldName);
+            Field field = null;//reflectionProvider.getFieldOrNull(fieldDeclaringClass, fieldName);
+            final Mapper.ImplicitCollectionMapping implicitCollectionMapping =// null; 
+                    mapper                .getImplicitCollectionDefForFieldName(fieldDeclaringClass, fieldName);
             final Object value;
             String implicitFieldName = null;
-            Field field = null;
             Class<?> type = null;
             if (implicitCollectionMapping == null) {
                 // no item of an implicit collection for this name ... do we have a field?
                 field = reflectionProvider.getFieldOrNull(fieldDeclaringClass, fieldName);
                 if (field == null) {
                     // it is not a field ... do we have a field alias?
-                    final Class<?> itemType = mapper.getItemTypeForItemFieldName(resultType, fieldName);
+                    final Class<?> itemType = mapper.getItemTypeForItemFieldName(fieldDeclaringClass, fieldName);
                     if (itemType != null) {
                         final String classAttribute = HierarchicalStreams.readClassAttribute(reader, mapper);
                         if (classAttribute != null) {
@@ -340,7 +354,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         // collection based on type only?
                         try {
                             type = mapper.realClass(originalNodeName);
-                            implicitFieldName = mapper.getFieldNameForItemTypeAndName(context.getRequiredType(), type,
+                            implicitFieldName = mapper.getFieldNameForItemTypeAndName(fieldDeclaringClass, type,
                                 originalNodeName);
                         } catch (final CannotResolveClassException e) {
                             // type stays null ...
@@ -348,7 +362,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         if (type == null || type != null && implicitFieldName == null) {
                             // either not a type or element is a type alias, but does not
                             // belong to an implicit field
-                            handleUnknownField(explicitDeclaringClass, fieldName, resultType, originalNodeName);
+                            handleUnknownField(explicitDeclaringClass, fieldName, fieldDeclaringClass, originalNodeName);
 
                             // element is unknown in declaring class, ignore it now
                             type = null;
@@ -432,7 +446,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             } else if (type != null) {
                 if (implicitFieldName == null) {
                     // look for implicit field
-                    implicitFieldName = mapper.getFieldNameForItemTypeAndName(context.getRequiredType(), value != null
+                    implicitFieldName = mapper.getFieldNameForItemTypeAndName(fieldDeclaringClass, value != null
                         ? value.getClass()
                         : Mapper.Null.class, originalNodeName);
                 }
@@ -522,7 +536,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     collection = uncheckedCollection;
                 } else {
                     final Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
-                        .getImplicitCollectionDefForFieldName(result.getClass(), fieldLocation.fieldName);
+                        .getImplicitCollectionDefForFieldName(fieldLocation.definedIn, fieldLocation.fieldName);
                     @SuppressWarnings("unchecked")
                     final Map<Object, Object> map = (Map<Object, Object>)instance;
                     collection = new MappingList(map, implicitCollectionMapping.getKeyFieldName());
