@@ -279,7 +279,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 }
 
                 // we need a converter that produces a string representation only
-                final SingleValueConverter converter = mapper.getConverterFromAttribute(classDefiningField, attrName,
+                final SingleValueConverter converter = context.getMapper().getConverterFromAttribute(classDefiningField, attrName,
                     field.getType());
                 Class<?> type = field.getType();
                 if (converter != null) {
