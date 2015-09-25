@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,31 +26,6 @@ import java.util.TreeMap;
 
 public class ImplicitMapTest extends AbstractAcceptanceTest {
 
-    public static class Farm extends StandardObject {
-        int size;
-        List animals = new ArrayList();
-
-        public Farm(int size) {
-            this.size = size;
-        }
-
-        public void add(Animal animal) {
-            animals.add(animal);
-        }
-    }
-
-    public static class Animal extends StandardObject implements Comparable {
-        String name;
-
-        public Animal(String name) {
-            this.name = name;
-        }
-
-        public int compareTo(Object o) {
-            return name.compareTo(((Animal)o).name);
-        }
-    }
-
     protected void setUp() throws Exception {
         super.setUp();
         xstream.registerConverter(new MapConverter(xstream.getMapper()) {
@@ -63,6 +38,8 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
         xstream.alias("hardware", Hardware.class);
         xstream.alias("product", Product.class);
+        xstream.alias("sample2", SampleMaps2.class);
+        xstream.alias("sample3", SampleMaps3.class);
         xstream.ignoreUnknownElements();
     }
 
@@ -477,6 +454,126 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "</sample>";
 
         xstream.addImplicitMap(SampleMaps.class, "good", "code", Software.class, "name");
+        assertBothWays(sample, expected);
+    }
+    
+    public static class SampleMaps2 extends SampleMaps {
+        public Map good = new OrderRetainingMap();
+    }
+    
+    public void testWithHiddenMap() {
+        SampleMaps2 sample = new SampleMaps2();
+        ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
+        ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
+        sample.good.put("Android", new Software("Google", "Android"));
+        sample.good.put("iOS", new Software("Apple", "iOS"));
+        sample.bad = null;
+
+        String expected = "" +
+                "<sample2>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
+                "  </software>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Microsoft</vendor>\n" +
+                "    <name>Windows</name>\n" +
+                "  </software>\n" +
+                "  <software>\n" +
+                "    <vendor>Google</vendor>\n" +
+                "    <name>Android</name>\n" +
+                "  </software>\n" +
+                "  <software>\n" +
+                "    <vendor>Apple</vendor>\n" +
+                "    <name>iOS</name>\n" +
+                "  </software>\n" +
+                "</sample2>";
+
+        xstream.addImplicitMap(SampleMaps.class, "good", Software.class, "name");
+        xstream.addImplicitMap(SampleMaps2.class, "good", Software.class, "name");
+        assertBothWays(sample, expected);
+    }
+    
+    public void testWithHiddenMapAndDifferentAlias() {
+        SampleMaps2 sample = new SampleMaps2();
+        ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
+        ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
+        sample.good.put("Android", new Software("Google", "Android"));
+        sample.good.put("iOS", new Software("Apple", "iOS"));
+        sample.bad = null;
+
+        String expected = "" +
+                "<sample2>\n" +
+                "  <code defined-in=\"sample\">\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
+                "  </code>\n" +
+                "  <code defined-in=\"sample\">\n" +
+                "    <vendor>Microsoft</vendor>\n" +
+                "    <name>Windows</name>\n" +
+                "  </code>\n" +
+                "  <mobile>\n" +
+                "    <vendor>Google</vendor>\n" +
+                "    <name>Android</name>\n" +
+                "  </mobile>\n" +
+                "  <mobile>\n" +
+                "    <vendor>Apple</vendor>\n" +
+                "    <name>iOS</name>\n" +
+                "  </mobile>\n" +
+                "</sample2>";
+
+        xstream.addImplicitMap(SampleMaps.class, "good", "code", Software.class, "name");
+        xstream.addImplicitMap(SampleMaps2.class, "good", "mobile", Software.class, "name");
+    }
+    
+    public static class IntermediateMaps extends SampleMaps2 {
+    }
+    
+    public static class SampleMaps3 extends IntermediateMaps {
+        Map good = new OrderRetainingMap();
+    }
+    
+    public void testWithDoubleHiddenList() {
+        SampleMaps3 sample = new SampleMaps3();
+        ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
+        ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
+        ((SampleMaps2)sample).good.put("Android", new Software("Google", "Android"));
+        ((SampleMaps2)sample).good.put("iOS", new Software("Apple", "iOS"));
+        sample.good.put("Oracle", new Software("Oracle", "Oracle"));
+        sample.good.put("Hana", new Software("SAP", "Hana"));
+        sample.bad = null;
+
+        String expected = "" +
+                "<sample3>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
+                "  </software>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Microsoft</vendor>\n" +
+                "    <name>Windows</name>\n" +
+                "  </software>\n" +
+                "  <software defined-in=\"sample2\">\n" +
+                "    <vendor>Google</vendor>\n" +
+                "    <name>Android</name>\n" +
+                "  </software>\n" +
+                "  <software defined-in=\"sample2\">\n" +
+                "    <vendor>Apple</vendor>\n" +
+                "    <name>iOS</name>\n" +
+                "  </software>\n" +
+                "  <software>\n" +
+                "    <vendor>Oracle</vendor>\n" +
+                "    <name>Oracle</name>\n" +
+                "  </software>\n" +
+                "  <software>\n" +
+                "    <vendor>SAP</vendor>\n" +
+                "    <name>Hana</name>\n" +
+                "  </software>\n" +
+                "</sample3>";
+
+        xstream.addImplicitMap(SampleMaps.class, "good", Software.class, "name");
+        xstream.addImplicitMap(SampleMaps2.class, "good", Software.class, "name");
+        xstream.addImplicitMap(SampleMaps3.class, "good", Software.class, "name");
         assertBothWays(sample, expected);
     }
 

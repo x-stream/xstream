@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 02. March 2006 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.reflection;
@@ -94,6 +94,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         final MarshallingContext context) {
         final List fields = new ArrayList();
         final Map defaultFieldDefinition = new HashMap();
+        final Class sourceType = source.getClass();
 
         // Attributes might be preferred to child elements ...
         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
@@ -124,7 +125,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                             throw new ConversionException("Cannot write field with name '"
                                 + fieldName
                                 + "' twice as attribute for object of type "
-                                + source.getClass().getName());
+                                + sourceType.getName());
                         }
                         final String str = converter.toString(value);
                         if (str != null) {
@@ -142,10 +143,12 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             {
                 for (Iterator fieldIter = fields.iterator(); fieldIter.hasNext();) {
                     FieldInfo info = (FieldInfo)fieldIter.next();
+                    final Field defaultField = (Field)defaultFieldDefinition.get(info.fieldName);
                     if (info.value != null) {
                         Mapper.ImplicitCollectionMapping mapping = mapper
                             .getImplicitCollectionDefForFieldName(
-                                source.getClass(), info.fieldName);
+                                defaultField.getDeclaringClass() == info.definedIn ? sourceType : info.definedIn,
+                                    info.fieldName);
                         if (mapping != null) {
                             if (context instanceof ReferencingMarshallingContext) {
                                 if (info.value != Collections.EMPTY_LIST
@@ -400,7 +403,6 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     if (field != null
                         && (fieldAlreadyChecked || (shouldUnmarshalField(field) && mapper
                             .shouldSerializeMember(field.getDeclaringClass(), fieldName)))) {
-
                         String classAttribute = HierarchicalStreams.readClassAttribute(
                             reader, mapper);
                         if (classAttribute != null) {
@@ -454,7 +456,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     implicitCollectionsForCurrentObject = new HashMap();
                 }
                 writeValueToImplicitCollection(
-                    value, implicitCollectionsForCurrentObject, result, implicitFieldName);
+                    value, implicitCollectionsForCurrentObject, result, new FieldLocation(
+                        implicitFieldName, fieldDeclaringClass));
             }
 
             reader.moveUp();
@@ -467,7 +470,12 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 Object value = entry.getValue();
                 if (value instanceof ArraysList) {
                     Object array = ((ArraysList)value).toPhysicalArray();
-                    reflectionProvider.writeField(result, (String)entry.getKey(), array, null);
+                    final FieldLocation fieldLocation = (FieldLocation)entry.getKey();
+                    final Field field = reflectionProvider.getFieldOrNull(fieldLocation.definedIn,
+                        fieldLocation.fieldName);
+                    reflectionProvider.writeField(result, fieldLocation.fieldName, array, field != null
+                            ? field.getDeclaringClass()
+                                : null);
                 }
             }
         }
@@ -501,11 +509,13 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         throw new UnknownFieldException(resultType.getName(), fieldName);
     }
 
-    private void writeValueToImplicitCollection(Object value, Map implicitCollections, Object result, String implicitFieldName) {
-        Collection collection = (Collection)implicitCollections.get(implicitFieldName);
+    private void writeValueToImplicitCollection(Object value, Map implicitCollections, Object result, final FieldLocation fieldLocation) {
+        Collection collection = (Collection)implicitCollections.get(fieldLocation);
         if (collection == null) {
-            Class physicalFieldType = reflectionProvider.getFieldType(
-                result, implicitFieldName, null);
+            final Field field = reflectionProvider.getFieldOrNull(fieldLocation.definedIn, fieldLocation.fieldName);
+            Class physicalFieldType = field != null
+                    ? field.getType()
+                        : reflectionProvider.getFieldType(result, fieldLocation.fieldName, null);
             if (physicalFieldType.isArray()) {
                 collection = new ArraysList(physicalFieldType);
             } else {
@@ -514,7 +524,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     .isAssignableFrom(fieldType))) {
                     throw new ObjectAccessException(
                         "Field "
-                            + implicitFieldName
+                            + fieldLocation.fieldName
                             + " of "
                             + result.getClass().getName()
                             + " is configured for an implicit Collection or Map, but field is of type "
@@ -528,13 +538,15 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     collection = (Collection)instance;
                 } else {
                     Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
-                        .getImplicitCollectionDefForFieldName(result.getClass(), implicitFieldName);
+                        .getImplicitCollectionDefForFieldName(result.getClass(), fieldLocation.fieldName);
                     collection = new MappingList(
                         (Map)instance, implicitCollectionMapping.getKeyFieldName());
                 }
-                reflectionProvider.writeField(result, implicitFieldName, instance, null);
+                reflectionProvider.writeField(result, fieldLocation.fieldName, instance, field != null
+                    ? field.getDeclaringClass()
+                    : null);
             }
-            implicitCollections.put(implicitFieldName, collection);
+            implicitCollections.put(fieldLocation, collection);
         }
         collection.add(value);
     }
@@ -584,16 +596,55 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         }
     }
 
-    private static class FieldInfo {
+    private static class FieldLocation {
         final String fieldName;
+        final Class<?> definedIn;
+
+        FieldLocation(final String fieldName, final Class definedIn) {
+            this.fieldName = fieldName;
+            this.definedIn = definedIn;
+        }
+
+        public int hashCode() {
+            final int prime = 7;
+            int result = 1;
+            result = prime * result + (definedIn == null ? 0 : definedIn.getName().hashCode());
+            result = prime * result + (fieldName == null ? 0 : fieldName.hashCode());
+            return result;
+        }
+
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final FieldLocation other = (FieldLocation)obj;
+            if (definedIn != other.definedIn) {
+                return false;
+            }
+            if (fieldName == null) {
+                if (other.fieldName != null) {
+                    return false;
+                }
+            } else if (!fieldName.equals(other.fieldName)) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private static class FieldInfo extends FieldLocation {
         final Class type;
-        final Class definedIn;
         final Object value;
 
-        FieldInfo(String fieldName, Class type, Class definedIn, Object value) {
-            this.fieldName = fieldName;
+        FieldInfo(final String fieldName, final Class<?> type, final Class<?> definedIn, final Object value) {
+            super(fieldName, definedIn);
             this.type = type;
-            this.definedIn = definedIn;
             this.value = value;
         }
     }
