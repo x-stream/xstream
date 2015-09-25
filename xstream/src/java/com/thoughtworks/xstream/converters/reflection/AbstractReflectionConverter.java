@@ -330,9 +330,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             final Class<?> explicitDeclaringClass = readDeclaringClass(reader);
             final Class<?> fieldDeclaringClass = explicitDeclaringClass == null ? resultType : explicitDeclaringClass;
             final String fieldName = mapper.realMember(fieldDeclaringClass, originalNodeName);
-            Field field = null;//reflectionProvider.getFieldOrNull(fieldDeclaringClass, fieldName);
-            final Mapper.ImplicitCollectionMapping implicitCollectionMapping =// null; 
-                    mapper                .getImplicitCollectionDefForFieldName(fieldDeclaringClass, fieldName);
+            Field field = null;
+            final Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
+                .getImplicitCollectionDefForFieldName(fieldDeclaringClass, fieldName);
             final Object value;
             String implicitFieldName = null;
             Class<?> type = null;
@@ -362,7 +362,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         if (type == null || type != null && implicitFieldName == null) {
                             // either not a type or element is a type alias, but does not
                             // belong to an implicit field
-                            handleUnknownField(explicitDeclaringClass, fieldName, fieldDeclaringClass, originalNodeName);
+                            handleUnknownField(explicitDeclaringClass, fieldName, fieldDeclaringClass,
+                                originalNodeName);
 
                             // element is unknown in declaring class, ignore it now
                             type = null;
