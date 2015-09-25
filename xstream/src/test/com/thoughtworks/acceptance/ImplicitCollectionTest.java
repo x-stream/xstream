@@ -680,6 +680,36 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(area, expected);
     }
     
+    public void testDoesNotPropagateToHiddenListOfSuperclass() {
+        Area area = new Area(1000);
+        area.add(new Animal("Cow"));
+        area.add(new Animal("Sheep"));
+        area.animals.add(new Animal("Falcon"));
+        area.animals.add(new Animal("Sparrow"));
+
+        String expected = "" +
+                "<area>\n" +
+                "  <size>1000</size>\n" +
+                "  <animals defined-in=\"farm\">\n" +
+                "    <animal>\n" +
+                "      <name>Cow</name>\n" +
+                "    </animal>\n" +
+                "    <animal>\n" +
+                "      <name>Sheep</name>\n" +
+                "    </animal>\n" +
+                "  </animals>\n" +
+                "  <animal>\n" +
+                "    <name>Falcon</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Sparrow</name>\n" +
+                "  </animal>\n" +
+                "</area>";
+
+        xstream.addImplicitCollection(Area.class, "animals");
+        assertBothWays(area, expected);
+    }
+    
     public static class County extends Area {
 
         public County() {

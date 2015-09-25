@@ -200,4 +200,118 @@ public class ImplicitTest extends AbstractAcceptanceTest {
     private String stripSeparator(String s) {
         return s.replaceAll(" *<separator.+</separator.+\n", "");
     }
+    
+    public static class AllHidingTypes extends AllImplicitTypes {
+        public String separator = "--X--";
+        @SuppressWarnings("hiding")
+        public String aArray = "a";
+        @SuppressWarnings("hiding")
+        public String bList = "b";
+        @SuppressWarnings("hiding")
+        public String cMap = "c";
+    }
+    
+    public static class AllHidingImplicitTypes extends AllHidingTypes {
+        @SuppressWarnings("hiding")
+        public String separator = "--H--";
+        @SuppressWarnings("hiding")
+        public A[] aArray = new A[2];
+        @SuppressWarnings("hiding")
+        public List<B> bList = new ArrayList<>();
+        @SuppressWarnings("hiding")
+        public Map<Integer, C> cMap = new LinkedHashMap<>();
+    }
+    
+    public void testHiddenImplicitTypesAtOnceWithExplicitElementNames()
+    {
+        xstream.alias("implicits", AllHidingImplicitTypes.class);
+        xstream.alias("hiding", AllHidingTypes.class);
+        xstream.alias("hidden", AllImplicitTypes.class);
+        xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
+        xstream.addImplicitArray(AllImplicitTypes.class, "aArray", "aHidden");
+        xstream.addImplicitArray(AllHidingImplicitTypes.class, "aArray", "a");
+        xstream.addImplicitCollection(AllImplicitTypes.class, "bList", "bHidden", AllImplicitTypes.B.class);
+        xstream.addImplicitCollection(AllHidingImplicitTypes.class, "bList", "b", AllImplicitTypes.B.class);
+        xstream.addImplicitMap(AllImplicitTypes.class, "cMap", "cHidden", AllImplicitTypes.C.class, "val");
+        xstream.addImplicitMap(AllHidingImplicitTypes.class, "cMap", "c", AllImplicitTypes.C.class, "val");
+        String expected = ""
+            + "<implicits>\n"
+            + "  <aHidden defined-in=\"hidden\">\n"
+            + "    <val>1</val>\n"
+            + "  </aHidden>\n"
+            + "  <aHidden defined-in=\"hidden\">\n"
+            + "    <val>2</val>\n"
+            + "  </aHidden>\n"
+            + "  <separator1>--1--</separator1>\n"
+            + "  <bHidden defined-in=\"hidden\">\n"
+            + "    <val>3</val>\n"
+            + "  </bHidden>\n"
+            + "  <bHidden defined-in=\"hidden\">\n"
+            + "    <val>4</val>\n"
+            + "  </bHidden>\n"
+            + "  <separator2>--2--</separator2>\n"
+            + "  <cHidden defined-in=\"hidden\">\n"
+            + "    <val>5</val>\n"
+            + "  </cHidden>\n"
+            + "  <cHidden defined-in=\"hidden\">\n"
+            + "    <val>6</val>\n"
+            + "  </cHidden>\n"
+            + "  <separator defined-in=\"hiding\">--X--</separator>\n"
+            + "  <aArray defined-in=\"hiding\">a</aArray>\n"
+            + "  <bList defined-in=\"hiding\">b</bList>\n"
+            + "  <cMap defined-in=\"hiding\">c</cMap>\n"
+            + "  <separator>--H--</separator>\n"
+            + "  <a>\n"
+            + "    <val>7</val>\n"
+            + "  </a>\n"
+            + "  <a>\n"
+            + "    <val>8</val>\n"
+            + "  </a>\n"
+            + "  <b>\n"
+            + "    <val>9</val>\n"
+            + "  </b>\n"
+            + "  <b>\n"
+            + "    <val>10</val>\n"
+            + "  </b>\n"
+            + "  <c>\n"
+            + "    <val>11</val>\n"
+            + "  </c>\n"
+            + "  <c>\n"
+            + "    <val>12</val>\n"
+            + "  </c>\n"
+            + "</implicits>";
+
+        AllHidingImplicitTypes implicits = new AllHidingImplicitTypes();
+        ((AllImplicitTypes)implicits).aArray[0] = new AllImplicitTypes.A();
+        ((AllImplicitTypes)implicits).aArray[0].val = 1;
+        ((AllImplicitTypes)implicits).aArray[1] = new AllImplicitTypes.A();
+        ((AllImplicitTypes)implicits).aArray[1].val = 2;
+        implicits.aArray[0] = new AllImplicitTypes.A();
+        implicits.aArray[0].val = 7;
+        implicits.aArray[1] = new AllImplicitTypes.A();
+        implicits.aArray[1].val = 8;
+        ((AllImplicitTypes)implicits).bList.add(new AllImplicitTypes.B());
+        ((AllImplicitTypes)implicits).bList.get(0).val = 3;
+        ((AllImplicitTypes)implicits).bList.add(new AllImplicitTypes.B());
+        ((AllImplicitTypes)implicits).bList.get(1).val = 4;
+        implicits.bList.add(new AllImplicitTypes.B());
+        implicits.bList.get(0).val = 9;
+        implicits.bList.add(new AllImplicitTypes.B());
+        implicits.bList.get(1).val = 10;
+        AllImplicitTypes.C c = new AllImplicitTypes.C();
+        c.val = new Integer(5);
+        ((AllImplicitTypes)implicits).cMap.put(c.val, c);
+        c = new AllImplicitTypes.C();
+        c.val = new Integer(6);
+        ((AllImplicitTypes)implicits).cMap.put(c.val, c);
+        c = new AllImplicitTypes.C();
+        c.val = new Integer(11);
+        implicits.cMap.put(c.val, c);
+        c = new AllImplicitTypes.C();
+        c.val = new Integer(12);
+        implicits.cMap.put(c.val, c);
+        assertBothWays(implicits, expected);
+        implicits.separator1 = implicits.separator2 = ((AllHidingTypes)implicits).separator = implicits.separator = null;
+        assertBothWays(implicits, stripSeparator(expected));
+    }
 }
