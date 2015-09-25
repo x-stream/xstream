@@ -549,6 +549,37 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         assertBothWays(area, expected);
     }
     
+    public void testDoesNotInheritFromHiddenArrayOfSuperclass() {
+        Area area = new Area();
+        ((Farm)area).animals = new Animal[2];
+        ((Farm)area).animals[0] = new Animal("Cow");
+        ((Farm)area).animals[1] = new Animal("Sheep");
+        area.animals = new Animal[2];
+        area.animals[0] = new Animal("Falcon");
+        area.animals[1] = new Animal("Sparrow");
+
+        String expected = "" +
+                "<area>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal defined-in=\"farm\">\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "  <animals>\n" +
+                "    <animal>\n" +
+                "      <name>Falcon</name>\n" +
+                "    </animal>\n" +
+                "    <animal>\n" +
+                "      <name>Sparrow</name>\n" +
+                "    </animal>\n" +
+                "  </animals>\n" +
+                "</area>";
+
+        xstream.addImplicitArray(Farm.class, "animals");
+        assertBothWays(area, expected);
+    }
+    
     public static class County extends Area {
     }
     

@@ -526,6 +526,46 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         xstream.addImplicitMap(SampleMaps2.class, "good", "mobile", Software.class, "name");
     }
     
+    public void testDoesNotInheritFromHiddenMapOfSuperclass() {
+        SampleMaps2 sample = new SampleMaps2();
+        ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
+        ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
+        sample.good.put("Android", new Software("Google", "Android"));
+        sample.good.put("iOS", new Software("Apple", "iOS"));
+        sample.bad = null;
+
+        String expected = "" +
+                "<sample2>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
+                "  </software>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Microsoft</vendor>\n" +
+                "    <name>Windows</name>\n" +
+                "  </software>\n" +
+                "  <good>\n" +
+                "    <entry>\n" +
+                "      <string>Android</string>\n" +
+                "      <software>\n" +
+                "        <vendor>Google</vendor>\n" +
+                "        <name>Android</name>\n" +
+                "      </software>\n" +
+                "    </entry>\n" +
+                "    <entry>\n" +
+                "      <string>iOS</string>\n" +
+                "      <software>\n" +
+                "        <vendor>Apple</vendor>\n" +
+                "        <name>iOS</name>\n" +
+                "      </software>\n" +
+                "    </entry>\n" +
+                "  </good>\n" +
+                "</sample2>";
+
+        xstream.addImplicitMap(SampleMaps.class, "good", Software.class, "name");
+        assertBothWays(sample, expected);
+    }
+    
     public static class IntermediateMaps extends SampleMaps2 {
     }
     

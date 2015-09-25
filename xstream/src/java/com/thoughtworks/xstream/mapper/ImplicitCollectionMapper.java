@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 16. February 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.core.util.Primitives;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,12 +31,27 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     // { definedIn (Class) -> (ImplicitCollectionMapperForClass) }
     private final Map classNameToMapper = new HashMap();
 
-    private ImplicitCollectionMapperForClass getMapper(Class definedIn) {
+    private ImplicitCollectionMapperForClass getMapper(final Class declaredFor, final String fieldName) {
+        Class<?> definedIn = declaredFor;
         while (definedIn != null) {
             ImplicitCollectionMapperForClass mapper = (ImplicitCollectionMapperForClass)classNameToMapper
                 .get(definedIn);
             if (mapper != null) {
                 return mapper;
+            } else { 
+                if (fieldName != null) {
+                    try {
+                        // do not continue search for a hidden field
+                        final Field field = definedIn.getDeclaredField(fieldName);
+                        if (field != null && !Modifier.isStatic(field.getModifiers())) {
+                            return null;
+                        }
+                    } catch (final SecurityException e) {
+                        throw new InitializationException("Access denied for field with implicit collection", e);
+                    } catch (final NoSuchFieldException e) {
+                        // OK, we can continue the search in the class hierarchy
+                    }
+                }
             }
             definedIn = definedIn.getSuperclass();
         }
@@ -54,7 +70,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType,
         String itemFieldName) {
-        ImplicitCollectionMapperForClass mapper = getMapper(definedIn);
+        ImplicitCollectionMapperForClass mapper = getMapper(definedIn, null);
         if (mapper != null) {
             return mapper.getFieldNameForItemTypeAndName(itemType, itemFieldName);
         } else {
@@ -63,7 +79,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     }
 
     public Class getItemTypeForItemFieldName(Class definedIn, String itemFieldName) {
-        ImplicitCollectionMapperForClass mapper = getMapper(definedIn);
+        ImplicitCollectionMapperForClass mapper = getMapper(definedIn, null);
         if (mapper != null) {
             return mapper.getItemTypeForItemFieldName(itemFieldName);
         } else {
@@ -73,7 +89,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(Class itemType,
         String fieldName) {
-        ImplicitCollectionMapperForClass mapper = getMapper(itemType);
+        ImplicitCollectionMapperForClass mapper = getMapper(itemType, null);
         if (mapper != null) {
             return mapper.getImplicitCollectionDefForFieldName(fieldName);
         } else {
@@ -177,7 +193,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             if (unnamed != null) {
                 return unnamed.getFieldName();
             } else {
-                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass());
+                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass(), null);
                 return mapper != null ? mapper.getFieldNameForItemTypeAndName(itemType, itemFieldName) : null;
             }
         }
@@ -187,7 +203,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             if (def != null) {
                 return def.getItemType();
             } else {
-                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass());
+                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass(), null);
                 return mapper != null ? mapper.getItemTypeForItemFieldName(itemFieldName) : null;
             }
         }
@@ -201,7 +217,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
                 if (mapping != null) {
                     return mapping;
                 } else {
-                    ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass());
+                    ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass(), null);
                     return mapper != null ? mapper.getImplicitCollectionDefByItemFieldName(itemFieldName) : null;
                 }
             }
@@ -212,7 +228,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
             if (mapping != null) {
                 return mapping;
             } else {
-                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass());
+                ImplicitCollectionMapperForClass mapper = ImplicitCollectionMapper.this.getMapper(definedIn.getSuperclass(), null);
                 return mapper != null ? mapper.getImplicitCollectionDefForFieldName(fieldName) : null;
             }
         }
