@@ -33,9 +33,9 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         
         public A[] aArray = new A[2];
         public String separator1 = "--1--";
-        public List<B> bList = new ArrayList<>();
+        public List<B> bList = new ArrayList<B>();
         public String separator2 = "--2--";
-        public Map<Integer, C> cMap = new LinkedHashMap<>();
+        public Map<Integer, C> cMap = new LinkedHashMap<Integer, C>();
     }
     
     public void testAllImplicitTypesAtOnceWithImplicitElementTypes()
@@ -217,9 +217,9 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         @SuppressWarnings("hiding")
         public A[] aArray = new A[2];
         @SuppressWarnings("hiding")
-        public List<B> bList = new ArrayList<>();
+        public List<B> bList = new ArrayList<B>();
         @SuppressWarnings("hiding")
-        public Map<Integer, C> cMap = new LinkedHashMap<>();
+        public Map<Integer, C> cMap = new LinkedHashMap<Integer, C>();
     }
     
     public void testHiddenImplicitTypesAtOnceWithExplicitElementNames()
