@@ -56,6 +56,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     protected transient SerializationMembers serializationMembers;
     private transient ReflectionProvider pureJavaReflectionProvider;
 
+    @SuppressWarnings("deprecation")
     public AbstractReflectionConverter(final Mapper mapper, final ReflectionProvider reflectionProvider) {
         this.mapper = mapper;
         this.reflectionProvider = reflectionProvider;
@@ -278,6 +279,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     public Object doUnmarshal(final Object result, final HierarchicalStreamReader reader,
             final UnmarshallingContext context) {
         final Class<?> resultType = result.getClass();
+        @SuppressWarnings("serial")
         final Set<FastField> seenFields = new HashSet<FastField>() {
             @Override
             public boolean add(final FastField e) {
@@ -302,9 +304,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 }
 
                 // we need a converter that produces a string representation only
-                final SingleValueConverter converter = mapper.getConverterFromAttribute(classDefiningField, attrName,
-                    field.getType());
                 Class<?> type = field.getType();
+                final SingleValueConverter converter = mapper.getConverterFromAttribute(classDefiningField, attrName,
+                    type);
                 if (converter != null) {
                     final Object value = converter.fromString(reader.getAttribute(attrAlias));
                     if (type.isPrimitive()) {
@@ -330,11 +332,11 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             final Class<?> explicitDeclaringClass = readDeclaringClass(reader);
             final Class<?> fieldDeclaringClass = explicitDeclaringClass == null ? resultType : explicitDeclaringClass;
             final String fieldName = mapper.realMember(fieldDeclaringClass, originalNodeName);
-            Field field = null;
             final Mapper.ImplicitCollectionMapping implicitCollectionMapping = mapper
                 .getImplicitCollectionDefForFieldName(fieldDeclaringClass, fieldName);
             final Object value;
             String implicitFieldName = null;
+            Field field = null;
             Class<?> type = null;
             if (implicitCollectionMapping == null) {
                 // no item of an implicit collection for this name ... do we have a field?
@@ -570,11 +572,13 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void flushCache() {
         serializationMethodInvoker.flushCache();
     }
 
+    @SuppressWarnings("deprecation")
     protected Object readResolve() {
         serializationMethodInvoker = new SerializationMethodInvoker();
         serializationMembers = serializationMethodInvoker.serializationMembers;
@@ -582,6 +586,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     }
 
     public static class DuplicateFieldException extends ConversionException {
+        private static final long serialVersionUID = 20150926L;
+
         public DuplicateFieldException(final String msg) {
             super("Duplicate field " + msg);
             add("field", msg);
@@ -589,6 +595,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     }
 
     public static class UnknownFieldException extends ConversionException {
+        private static final long serialVersionUID = 20150926L;
+
         public UnknownFieldException(final String type, final String field) {
             super("No such field " + type + "." + field);
             add("field", field);
@@ -651,6 +659,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     }
 
     private static class ArraysList extends ArrayList<Object> {
+        private static final long serialVersionUID = 20150926L;
         final Class<?> physicalFieldType;
 
         ArraysList(final Class<?> physicalFieldType) {
