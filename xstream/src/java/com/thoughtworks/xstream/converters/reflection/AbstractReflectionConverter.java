@@ -107,7 +107,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 if (!defaultFieldDefinition.containsKey(fieldName)) {
                     Class lookupType = source.getClass();
                     // See XSTR-457 and OmitFieldsTest
-                    if (definedIn != source.getClass()
+                    if (definedIn != sourceType
                         && !mapper.shouldSerializeMember(lookupType, fieldName)) {
                         lookupType = definedIn;
                     }
@@ -221,7 +221,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 Class actualType = newObj != null ? newObj.getClass() : fieldType;
                 ExtendedHierarchicalStreamWriterHelper.startNode(writer, aliasName != null
                     ? aliasName
-                    : mapper.serializedMember(source.getClass(), fieldName), actualType);
+                    : mapper.serializedMember(sourceType, fieldName), actualType);
 
                 if (newObj != null) {
                     Class defaultType = mapper.defaultImplementationOf(fieldType);

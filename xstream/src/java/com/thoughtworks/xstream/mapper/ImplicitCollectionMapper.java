@@ -89,7 +89,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     public ImplicitCollectionMapping getImplicitCollectionDefForFieldName(Class itemType,
         String fieldName) {
-        ImplicitCollectionMapperForClass mapper = getMapper(itemType, null);
+        ImplicitCollectionMapperForClass mapper = getMapper(itemType, fieldName);
         if (mapper != null) {
             return mapper.getImplicitCollectionDefForFieldName(fieldName);
         } else {
@@ -107,16 +107,20 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     public void add(Class definedIn, String fieldName, String itemFieldName, Class itemType, String keyFieldName) {
         Field field = null;
-        Class declaredIn = definedIn;
-        while (declaredIn != Object.class && definedIn != null) {
-            try {
-                field = declaredIn.getDeclaredField(fieldName);
-                break;
-            } catch (SecurityException e) {
-                throw new InitializationException(
-                    "Access denied for field with implicit collection", e);
-            } catch (NoSuchFieldException e) {
-                declaredIn = declaredIn.getSuperclass();
+        if (definedIn != null) {
+            Class<?> declaredIn = definedIn;
+            while (declaredIn != Object.class) {
+                try {
+                    field = declaredIn.getDeclaredField(fieldName);
+                    if (!Modifier.isStatic(field.getModifiers())) {
+                        break;
+                    }
+                    field = null;
+                } catch (final SecurityException e) {
+                    throw new InitializationException("Access denied for field with implicit collection", e);
+                } catch (final NoSuchFieldException e) {
+                    declaredIn = declaredIn.getSuperclass();
+                }
             }
         }
         if (field == null) {
