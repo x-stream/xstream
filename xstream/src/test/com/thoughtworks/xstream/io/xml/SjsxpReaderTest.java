@@ -48,17 +48,5 @@ public class SjsxpReaderTest extends AbstractXMLReaderTest {
         return driver.createReader(new StringReader(xml));
     }
 
-    @Override
-    public void testIsXXEVulnerable() throws Exception {
-        try {
-            super.testIsXXEVulnerable();
-        } catch (final XStreamException e) {
-            final String message = e.getMessage();
-            if (message.contains("ParseError") && message.contains("[1,1]")) {
-                throw e;
-            }
-        }
-    }
-
     // inherits tests from superclass
 }
