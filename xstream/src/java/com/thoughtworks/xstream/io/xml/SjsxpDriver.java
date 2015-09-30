@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2009, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -66,7 +66,9 @@ public class SjsxpDriver extends StaxDriver {
     protected XMLInputFactory createInputFactory() {
         Exception exception = null;
         try {
-            return (XMLInputFactory)Class.forName("com.sun.xml.internal.stream.XMLInputFactoryImpl").newInstance();
+            final XMLInputFactory instance = (XMLInputFactory)Class.forName("com.sun.xml.internal.stream.XMLInputFactoryImpl").newInstance();
+            instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+            return instance;
         } catch (final InstantiationException e) {
             exception = e;
         } catch (final IllegalAccessException e) {
