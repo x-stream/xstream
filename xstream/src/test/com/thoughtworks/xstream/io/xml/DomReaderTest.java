@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import org.w3c.dom.Document;
@@ -20,6 +21,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ public class DomReaderTest extends AbstractXMLReaderTest {
 
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        return new DomReader(buildDocument(xml));
+        return new DomDriver().createReader(new StringReader(xml));
     }
 
     private Document buildDocument(String xml) throws Exception {
@@ -82,4 +84,16 @@ public class DomReaderTest extends AbstractXMLReaderTest {
         assertEquals(0, xmlReader.getAttributeCount());
     }
 
+    @Override
+    public void testIsXXEVulnerable() throws Exception {
+        try {
+            super.testIsXXEVulnerable();
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            final String message = e.getMessage().toLowerCase();
+            if (message.contains("Package")) {
+                throw e;
+            }
+        }
+    }
 }

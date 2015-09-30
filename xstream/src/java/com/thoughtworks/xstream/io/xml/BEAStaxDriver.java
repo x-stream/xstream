@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 29. April 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml;
@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
  * A driver using the BEA StAX implementation.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4
  */
@@ -66,7 +66,9 @@ public class BEAStaxDriver extends StaxDriver {
 
     @Override
     protected XMLInputFactory createInputFactory() {
-        return new MXParserFactory();
+        final XMLInputFactory instance = new MXParserFactory();
+//        instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);
+        return instance;
     }
 
     @Override
