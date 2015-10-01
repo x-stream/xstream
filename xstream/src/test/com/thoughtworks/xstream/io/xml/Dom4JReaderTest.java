@@ -52,7 +52,7 @@ public class Dom4JReaderTest extends AbstractXMLReaderTest {
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (message.contains("Package")) {
+            if (!message.contains("DOCTYPE")) {
                 throw e;
             }
         }

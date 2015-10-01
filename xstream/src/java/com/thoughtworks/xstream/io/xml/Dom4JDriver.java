@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,7 @@ import org.dom4j.DocumentFactory;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+import org.xml.sax.SAXException;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -92,8 +93,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamReader createReader(final Reader text) {
         try {
-            final SAXReader reader = new SAXReader();
-            final Document document = reader.read(text);
+            final Document document = createReader().read(text);
             return new Dom4JReader(document, getNameCoder());
         } catch (final DocumentException e) {
             throw new StreamException(e);
@@ -103,8 +103,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamReader createReader(final InputStream in) {
         try {
-            final SAXReader reader = new SAXReader();
-            final Document document = reader.read(in);
+            final Document document = createReader().read(in);
             return new Dom4JReader(document, getNameCoder());
         } catch (final DocumentException e) {
             throw new StreamException(e);
@@ -117,8 +116,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamReader createReader(final URL in) {
         try {
-            final SAXReader reader = new SAXReader();
-            final Document document = reader.read(in);
+            final Document document = createReader().read(in);
             return new Dom4JReader(document, getNameCoder());
         } catch (final DocumentException e) {
             throw new StreamException(e);
@@ -131,8 +129,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamReader createReader(final File in) {
         try {
-            final SAXReader reader = new SAXReader();
-            final Document document = reader.read(in);
+            final Document document = createReader().read(in);
             return new Dom4JReader(document, getNameCoder());
         } catch (final DocumentException e) {
             throw new StreamException(e);
@@ -156,5 +153,22 @@ public class Dom4JDriver extends AbstractXmlDriver {
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
         final Writer writer = new OutputStreamWriter(out);
         return createWriter(writer);
+    }
+
+    /**
+     * Create and initialize the SAX reader.
+     * 
+     * @return the SAX reader instance.
+     * @throws DocumentException if DOCTYPE processing cannot be disabled
+     * @since upcoming
+     */
+    protected SAXReader createReader() throws DocumentException {
+        final SAXReader reader = new SAXReader();
+        try {
+            reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        } catch (SAXException e) {
+            throw new DocumentException("Cannot disable DOCTYPE processing", e);
+        }
+        return reader;
     }
 }
