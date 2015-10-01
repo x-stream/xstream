@@ -16,7 +16,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.input.JDOMParseException;
 import org.jdom.input.SAXBuilder;
 
 import java.io.StringReader;
@@ -50,10 +49,10 @@ public class JDomReaderTest extends AbstractXMLReaderTest {
     public void testIsXXEVulnerable() throws Exception {
         try {
             super.testIsXXEVulnerable();
-            fail("Thrown " + JDOMParseException.class.getName() + " expected");
-        } catch (final JDOMParseException e) {
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (message.contains("Package")) {
+            if (!message.contains("DOCTYPE")) {
                 throw e;
             }
         }

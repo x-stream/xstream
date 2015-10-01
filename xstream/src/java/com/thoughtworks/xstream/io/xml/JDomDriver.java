@@ -58,7 +58,7 @@ public class JDomDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamReader createReader(final Reader reader) {
         try {
-            final SAXBuilder builder = new SAXBuilder();
+            final SAXBuilder builder = createBuilder();
             final Document document = builder.build(reader);
             return new JDomReader(document, getNameCoder());
         } catch (final IOException e) {
@@ -71,7 +71,7 @@ public class JDomDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamReader createReader(final InputStream in) {
         try {
-            final SAXBuilder builder = new SAXBuilder();
+            final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
         } catch (final IOException e) {
@@ -84,7 +84,7 @@ public class JDomDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamReader createReader(final URL in) {
         try {
-            final SAXBuilder builder = new SAXBuilder();
+            final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
         } catch (final IOException e) {
@@ -97,7 +97,7 @@ public class JDomDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamReader createReader(final File in) {
         try {
-            final SAXBuilder builder = new SAXBuilder();
+            final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
         } catch (final IOException e) {
@@ -115,6 +115,18 @@ public class JDomDriver extends AbstractXmlDriver {
     @Override
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
         return new PrettyPrintWriter(new OutputStreamWriter(out));
+    }
+
+    /**
+     * Create and initialize the SAX builder.
+     * 
+     * @return the SAX builder instance.
+     * @since upcoming
+     */
+    protected SAXBuilder createBuilder() {
+        final SAXBuilder builder = new SAXBuilder();
+        builder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        return builder;
     }
 
 }
