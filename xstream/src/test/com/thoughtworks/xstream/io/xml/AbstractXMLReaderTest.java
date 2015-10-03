@@ -245,7 +245,9 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     public void testIsXXEVulnerable() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<?xml version=\"1.0\"?>\n"
                 +"<!DOCTYPE root [\n"
-                +"<!ENTITY % passwd SYSTEM \"src/test/$Package.java\">\n"
+                +"<!ENTITY % passwd SYSTEM \"file:src/test/$Package.java\">\n"
+//                +"<!ENTITY % passwd SYSTEM \"file:pom.xml\">\n"
+//                +"<!ENTITY % passwd SYSTEM \"file:/etc/passwd\">\n"
                 +"%passwd;\n"
                 +"]><string>test</string>");
         assertEquals("test", xmlReader.getValue());
