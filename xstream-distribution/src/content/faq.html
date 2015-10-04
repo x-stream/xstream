@@ -533,6 +533,15 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     path like "/doc/list/elem/field" XStream will then generate "/doc[1]/list[1]/elem[1]/field[1]". The two notations
     are transparent at deserialization time.</p>
 
+    <!-- ...................................................... -->
+    <h2 id="XML_entities">Does XStream support entities?</h2>
+
+	<p>Entity support is completely dependent on the XML parser. XStream uses by default the Xpp3 parser that does not
+	support entities at all (like the kXML2 parser). Other parsers support entities, but they might have been turned
+	off to avoid <a href="#Security_XXEVulnerability">XXE vulnerability</a>. To enable the entities again, you have to
+	overload the individual method of the
+	<a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
+	implementation that generated the parser factory.</p>
 
     <!-- ****************************************************** -->
     <h1 id="JSON">JSON specifics</h1>
@@ -661,12 +670,55 @@ XStream xstream = new XStream(driver);
     <ul>
     <li>Prevent the usage of the reflection-based converters. Register an own converter with priority LOW that claims
     to handle any type and throw a ConversionException in the marshal and unmarshal methods.</li>
-    <li>Overload XStream.setupConverters() and register only converters for the types that are allowd in your object
+    <li>Overload XStream.setupConverters() and register only converters for the types that are allowed in your object
     graph.</li>
     <li>Provide own implementations for ConverterLookup and ConverterRegistry constructing the XStream. Your
     implementation can then select the appropriate converter at lookup time on its own or prevent the registration of
     specific converters.</li>
+    <li>Since XStream 1.4.7 you have the possibility to <a href="security.html">setup rules</a> for the class types
+    that are allowed to be deserialized.</li>
     </ul>
+
+    <!-- ...................................................... -->
+    <h2 id="Security_XXEVulnerability">Is XStream XXE vulnerable?</h2>
+    
+    <p>XStream does not contain an own XML parser, therefore it depends on the parser selected with the 
+    <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
+    if the current XStream instance is <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">
+    XXE vulnerable</a> at deserialization time. However, XStream tries to deactivate the processing of external
+    entities by default. Status for the different supported XML parsers:</p>
+    
+    <table summary="Comparison of drivers regarding XEE vulnerability">
+		<tr><th>Driver</th><th>Vulnerable by default</th><th>Explanation</th></tr>
+    	<tr><td>BEAStaxDriver</td><td>yes</td><td>Setting <code>XMLInputFactory.setProperty(
+    	XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false)</code> is simply ignored.</td></tr>
+    	<tr><td>Dom4JDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
+    	entities with SAX reader in use.</td></tr>
+    	<tr><td>DomDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
+    	entities with SAX reader in use.</td></tr>
+    	<tr><td>JDomDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
+    	entities with SAX reader in use.</td></tr>
+    	<tr><td>JDom2Driver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
+    	entities with SAX reader in use.</td></tr>
+    	<tr><td>KXml2DomDriver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
+    	<tr><td>KXml2Driver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
+    	<tr><td>SjsxpDriver</td><td>no</td><td>Driver turns off support for external entities for the internal StaX
+    	parser of the Sun JDK.</td></tr>
+    	<tr><td>StandardStaxDriver</td><td>unlikely</td><td>Driver tries to turns off support for external entities for
+    	the internal StaX parser of the Java runtime. External entity support is dropped if the parser implementation
+    	respects the setting. Definitely true for Oracle JDKs.</td></tr>
+    	<tr><td>StaxDriver</td><td>unlikely</td>	<td>Driver tries to turns off support for external entities for the
+    	standard StaX parser. However, since the finally used StAX implementation is defined externally (see JDK
+    	documentation), a test should be made on the target 	platform to ensure that the parser respects the setting.</td></tr>
+    	<tr><td>WstxDriver</td><td>no</td><td>Driver tries to turns off support for external entities for the Woodstox
+    	StAX parser.</td></tr>
+    	<tr><td>XomDriver</td><td>yes</td><td>XOM uses an internal list to test for available SAX parsers on the
+    	classpath and will explicitly enable external entities, even if the SAXBuilder instance is provided manually.</td></tr>
+    </table>
+    
+    <p class="highlight">Note: Only a HierarchicalStreamReader created with the HierarchicalStreamDriver is setup to
+    avoid the XXE vulnerability. If you create such driver instances on your own, it is your task to setup the XML
+    parser instance on your own.</p>
 
     <!-- ****************************************************** -->
     <h1 id="Other_Products">Comparison to other products</h1>

@@ -63,6 +63,15 @@
 
     <p>Not yet released.</p>
 
+    <h2>Major changes</h2>
+    
+    <ul>
+    	<li>GHI:#25: Fix <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">XXE
+    	vulnerability</a>: Fixed affected drivers were Dom4JDriver, DomDriver, JDomDriver, JDom2Driver, SjsxpDriver,
+    	StandardStaxDriver and WstxDriver. Still vulnerable are BEAStaxDriver and XomDriver. Processing of (external)
+    	entities has been disabled. See <a href="faq.html#Security_XXEVulnerability">FAQ</a> for more information.</li>
+    </ul>
+
     <h2>Minor changes</h2>
 
     <ul>
@@ -88,6 +97,10 @@
     	<li>Added c.t.x.mapper.Mapper.isReferenceable(Class).</li>
     	<li>Added c.t.x.mapper.ImmutableTypesMapper.addImmutableType(Class, boolean) and deprecated
     	c.t.x.mapper.ImmutableTypesMapper.addImmutableType(Class).</li>
+    	<li>Added c.t.x.io.xml.Dom4JDriver.createReader().</li>
+    	<li>Added c.t.x.io.xml.DomDriver.createDocumentBuilderFactory().</li>
+    	<li>Added c.t.x.io.xml.JDomDriver.createBuilder().</li>
+    	<li>Added c.t.x.io.xml.JDom2Driver.createBuilder().</li>
     </ul>
 
     <h1 id="1.4.8">1.4.8</h1>
