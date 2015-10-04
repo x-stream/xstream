@@ -39,7 +39,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 public class DomDriver extends AbstractXmlDriver {
 
     private final String encoding;
-    private final DocumentBuilderFactory documentBuilderFactory;
+    private DocumentBuilderFactory documentBuilderFactory;
 
     /**
      * Construct a DomDriver.
@@ -62,12 +62,6 @@ public class DomDriver extends AbstractXmlDriver {
     public DomDriver(final String encoding, final NameCoder nameCoder) {
         super(nameCoder);
         this.encoding = encoding;
-        documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        try {
-            documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-        } catch (final ParserConfigurationException e) {
-            throw new StreamException(e);
-        }
     }
 
     /**
@@ -101,6 +95,13 @@ public class DomDriver extends AbstractXmlDriver {
 
     private HierarchicalStreamReader createReader(final InputSource source) {
         try {
+            if (documentBuilderFactory == null) {
+                synchronized (this) {
+                    if (documentBuilderFactory == null) {
+                        documentBuilderFactory = createDocumentBuilderFactory();
+                    }
+                }
+            }
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             if (encoding != null) {
                 source.setEncoding(encoding);
@@ -130,5 +131,21 @@ public class DomDriver extends AbstractXmlDriver {
         } catch (final UnsupportedEncodingException e) {
             throw new StreamException(e);
         }
+    }
+
+    /**
+     * Create the DocumentBuilderFactory instance.
+     * 
+     * @return the new instance
+     * @since upcoming
+     */
+    protected DocumentBuilderFactory createDocumentBuilderFactory() {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        } catch (final ParserConfigurationException e) {
+            throw new StreamException(e);
+        }
+        return factory;
     }
 }
