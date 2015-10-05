@@ -32,7 +32,7 @@ public class StaxReaderTest extends AbstractXMLReaderTest {
         } catch (final XStreamException e) {
             final String message = e.getMessage();
             if (!message.contains("external entity")) {
-                if (e.getCause().getClass().getName().equals("com.wutka.dtd.DTDParseException")) {
+                if (message.contains("com.wutka.dtd.DTDParseException")) {
                     System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
                 } else {
                     throw e;
