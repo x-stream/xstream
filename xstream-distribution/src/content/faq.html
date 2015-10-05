@@ -689,9 +689,10 @@ XStream xstream = new XStream(driver);
     entities by default. Status for the different supported XML parsers:</p>
     
     <table summary="Comparison of drivers regarding XEE vulnerability">
-		<tr><th>Driver</th><th>Vulnerable by default</th><th>Explanation</th></tr>
+		<tr><th>Driver</th><th>Vulnerable</th><th>Explanation</th></tr>
     	<tr><td>BEAStaxDriver</td><td>yes</td><td>Setting <code>XMLInputFactory.setProperty(
-    	XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false)</code> is simply ignored.</td></tr>
+    	XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false)</code> is only respected for general entities, but not
+    	for parameter entities.</td></tr>
     	<tr><td>Dom4JDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
     	entities with SAX reader in use.</td></tr>
     	<tr><td>DomDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
@@ -702,16 +703,15 @@ XStream xstream = new XStream(driver);
     	entities with SAX reader in use.</td></tr>
     	<tr><td>KXml2DomDriver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
     	<tr><td>KXml2Driver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
-    	<tr><td>SjsxpDriver</td><td>no</td><td>Driver turns off support for external entities for the internal StaX
-    	parser of the Sun JDK.</td></tr>
-    	<tr><td>StandardStaxDriver</td><td>unlikely</td><td>Driver tries to turns off support for external entities for
-    	the internal StaX parser of the Java runtime. External entity support is dropped if the parser implementation
-    	respects the setting. Definitely true for Oracle JDKs.</td></tr>
-    	<tr><td>StaxDriver</td><td>unlikely</td>	<td>Driver tries to turns off support for external entities for the
-    	standard StaX parser. However, since the finally used StAX implementation is defined externally (see JDK
-    	documentation), a test should be made on the target 	platform to ensure that the parser respects the setting.</td></tr>
-    	<tr><td>WstxDriver</td><td>no</td><td>Driver tries to turns off support for external entities for the Woodstox
-    	StAX parser.</td></tr>
+    	<tr><td>SjsxpDriver</td><td>no, Java 7 or higher<br/>yes, Java 6</td><td>Driver turns off support for external
+    	entities for the internal StaX 	parser of the Sun JDK, but fails for parameter entities in a Java 6 runtime.</td></tr>
+    	<tr><td>StandardStaxDriver</td><td>?</td><td>Driver tries to turns off support for external entities for
+    	the internal StaX parser of the Java runtime. Save for Oracle JDK 7 or higher.</td></tr>
+    	<tr><td>StaxDriver</td><td>?</td><td>Driver tries to turns off support for external entities for the
+    	standard StaX parser. However, the finally used StAX implementation is defined externally (see JDK
+    	documentation) and a test should be made on the target platform to ensure that the parser respects the setting.</td></tr>
+    	<tr><td>WstxDriver</td><td>no</td><td>Driver turns off support for external entities for the Woodstox StAX
+    	parser.</td></tr>
     	<tr><td>XomDriver</td><td>yes</td><td>XOM uses an internal list to test for available SAX parsers on the
     	classpath and will explicitly enable external entities, even if the SAXBuilder instance is provided manually.</td></tr>
     </table>

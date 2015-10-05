@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
@@ -22,6 +23,19 @@ public class Xpp3ReaderTest extends AbstractXMLReaderTest {
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
         return driver.createReader(new StringReader(xml));
+    }
+
+    @Override
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
+        try {
+            super.testIsXXEVulnerableWithExternalGeneralEntity();
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            final String message = e.getMessage();
+            if (!message.contains("resolve entity")) {
+                throw e;
+            }
+        }
     }
 
     // inherits tests from superclass

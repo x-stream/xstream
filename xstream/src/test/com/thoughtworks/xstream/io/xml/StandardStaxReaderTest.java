@@ -25,8 +25,8 @@ public class StandardStaxReaderTest extends AbstractXMLReaderTest {
     }
 
     @Override
-    public void testIsXXEVulnerable() throws Exception {
-        super.testIsXXEVulnerable();
+    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
+        super.testIsXXEVulnerableWithExternalParameterEntity();
     }
 
     // inherits tests from superclass

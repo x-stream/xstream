@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.io.xml;
 
 import java.io.StringReader;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import nu.xom.Builder;
@@ -47,9 +48,15 @@ public class XomReaderTest extends AbstractXMLReaderTest {
     }
 
     @Override
-    public void testIsXXEVulnerable() throws Exception {
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         // No possibility to suppress support for external entities in XOM?
-        // super.testIsXXEVulnerable();
+        // super.testIsXXEVulnerableWithExternalGeneralEntity();
+    }
+
+    @Override
+    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
+        // No possibility to suppress support for external entities in XOM?
+        // super.testIsXXEVulnerableWithExternalParameterEntity();
     }
 
     // inherits tests from superclass

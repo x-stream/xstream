@@ -242,13 +242,27 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals(content, xmlReader.getValue());
     }
     
-    public void testIsXXEVulnerable() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<?xml version=\"1.0\"?>\n"
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader(""
+                + "<?xml version=\"1.0\"?>\n"
                 +"<!DOCTYPE root [\n"
-                +"<!ENTITY % passwd SYSTEM \"file:src/test/$Package.java\">\n"
-//                +"<!ENTITY % passwd SYSTEM \"file:pom.xml\">\n"
-//                +"<!ENTITY % passwd SYSTEM \"file:/etc/passwd\">\n"
-                +"%passwd;\n"
+                +"<!ELEMENT string (#PCDATA)>\n"
+                +"<!ENTITY content SYSTEM \"file:src/test/$Package.java\">\n"
+//                +"<!ENTITY content SYSTEM \"file:pom.xml\">\n"
+//                +"<!ENTITY content SYSTEM \"file:/etc/passwd\">\n"
+                +"]><string>&content;</string>");
+        assertEquals("", xmlReader.getValue());
+    }
+    
+    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader(""
+            + "<?xml version=\"1.0\"?>\n"
+                +"<!DOCTYPE root [\n"
+                +"<!ELEMENT string (#PCDATA)>\n"
+                +"<!ENTITY % content SYSTEM \"file:src/test/$Package.java\">\n"
+//                +"<!ENTITY % content SYSTEM \"file:pom.xml\">\n"
+//                +"<!ENTITY % content SYSTEM \"file:/etc/passwd\">\n"
+                +"%content;\n"
                 +"]><string>test</string>");
         assertEquals("test", xmlReader.getValue());
     }
