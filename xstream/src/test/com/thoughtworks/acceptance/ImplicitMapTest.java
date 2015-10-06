@@ -463,6 +463,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     
     public void testWithHiddenMap() {
         SampleMaps2 sample = new SampleMaps2();
+        ((SampleMaps)sample).good = new OrderRetainingMap();
         ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
         ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
         sample.good.put("Android", new Software("Google", "Android"));
@@ -472,12 +473,12 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         String expected = "" +
                 "<sample2>\n" +
                 "  <software defined-in=\"sample\">\n" +
-                "    <vendor>Red Hat</vendor>\n" +
-                "    <name>Linux</name>\n" +
-                "  </software>\n" +
-                "  <software defined-in=\"sample\">\n" +
                 "    <vendor>Microsoft</vendor>\n" +
                 "    <name>Windows</name>\n" +
+                "  </software>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <software>\n" +
                 "    <vendor>Google</vendor>\n" +
@@ -496,6 +497,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     
     public void testWithHiddenMapAndDifferentAlias() {
         SampleMaps2 sample = new SampleMaps2();
+        ((SampleMaps)sample).good = new OrderRetainingMap();
         ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
         ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
         sample.good.put("Android", new Software("Google", "Android"));
@@ -505,12 +507,12 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         String expected = "" +
                 "<sample2>\n" +
                 "  <code defined-in=\"sample\">\n" +
-                "    <vendor>Red Hat</vendor>\n" +
-                "    <name>Linux</name>\n" +
-                "  </code>\n" +
-                "  <code defined-in=\"sample\">\n" +
                 "    <vendor>Microsoft</vendor>\n" +
                 "    <name>Windows</name>\n" +
+                "  </code>\n" +
+                "  <code defined-in=\"sample\">\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
                 "  </code>\n" +
                 "  <mobile>\n" +
                 "    <vendor>Google</vendor>\n" +
@@ -528,6 +530,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     
     public void testDoesNotInheritFromHiddenMapOfSuperclass() {
         SampleMaps2 sample = new SampleMaps2();
+        ((SampleMaps)sample).good = new OrderRetainingMap();
         ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
         ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
         sample.good.put("Android", new Software("Google", "Android"));
@@ -537,12 +540,12 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         String expected = "" +
                 "<sample2>\n" +
                 "  <software defined-in=\"sample\">\n" +
-                "    <vendor>Red Hat</vendor>\n" +
-                "    <name>Linux</name>\n" +
-                "  </software>\n" +
-                "  <software defined-in=\"sample\">\n" +
                 "    <vendor>Microsoft</vendor>\n" +
                 "    <name>Windows</name>\n" +
+                "  </software>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <good>\n" +
                 "    <entry>\n" +
@@ -568,6 +571,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     
     public void testDoesNotPropagateToHiddenMapOfSuperclass() {
         SampleMaps2 sample = new SampleMaps2();
+        ((SampleMaps)sample).good = new OrderRetainingMap();
         ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
         ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
         sample.good.put("Android", new Software("Google", "Android"));
@@ -578,17 +582,17 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "<sample2>\n" +
                 "  <good defined-in=\"sample\">\n" +
                 "    <entry>\n" +
-                "      <string>Linux</string>\n" +
-                "      <software>\n" +
-                "        <vendor>Red Hat</vendor>\n" +
-                "        <name>Linux</name>\n" +
-                "      </software>\n" +
-                "    </entry>\n" +
-                "    <entry>\n" +
                 "      <string>Windows</string>\n" +
                 "      <software>\n" +
                 "        <vendor>Microsoft</vendor>\n" +
                 "        <name>Windows</name>\n" +
+                "      </software>\n" +
+                "    </entry>\n" +
+                "    <entry>\n" +
+                "      <string>Linux</string>\n" +
+                "      <software>\n" +
+                "        <vendor>Red Hat</vendor>\n" +
+                "        <name>Linux</name>\n" +
                 "      </software>\n" +
                 "    </entry>\n" +
                 "  </good>\n" +
@@ -615,6 +619,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     
     public void testWithDoubleHiddenList() {
         SampleMaps3 sample = new SampleMaps3();
+        ((SampleMaps)sample).good = new OrderRetainingMap();
         ((SampleMaps)sample).good.put("Windows", new Software("Microsoft", "Windows"));
         ((SampleMaps)sample).good.put("Linux", new Software("Red Hat", "Linux"));
         ((SampleMaps2)sample).good.put("Android", new Software("Google", "Android"));
@@ -626,12 +631,12 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         String expected = "" +
                 "<sample3>\n" +
                 "  <software defined-in=\"sample\">\n" +
-                "    <vendor>Red Hat</vendor>\n" +
-                "    <name>Linux</name>\n" +
-                "  </software>\n" +
-                "  <software defined-in=\"sample\">\n" +
                 "    <vendor>Microsoft</vendor>\n" +
                 "    <name>Windows</name>\n" +
+                "  </software>\n" +
+                "  <software defined-in=\"sample\">\n" +
+                "    <vendor>Red Hat</vendor>\n" +
+                "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <software defined-in=\"sample2\">\n" +
                 "    <vendor>Google</vendor>\n" +
