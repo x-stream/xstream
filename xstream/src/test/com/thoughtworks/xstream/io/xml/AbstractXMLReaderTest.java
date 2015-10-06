@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -240,6 +240,15 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         String content = "<tag>the content</tag>";
         HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
         assertEquals(content, xmlReader.getValue());
+    }
+    
+    public void testIsXXEVulnerable() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<?xml version=\"1.0\"?>\n"
+                +"<!DOCTYPE root [\n"
+                +"<!ENTITY % passwd SYSTEM \"src/test/$Package.java\">\n"
+                +"%passwd;\n"
+                +"]><string>test</string>");
+        assertEquals("test", xmlReader.getValue());
     }
     
     // TODO: See XSTR-473
