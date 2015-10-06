@@ -79,7 +79,7 @@ public class XomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamReader createReader(Reader text) {
         try {
-            Document document = builder.build(text);
+            final Document document = getBuilder().build(text);
             return new XomReader(document, getNameCoder());
         } catch (ValidityException e) {
             throw new StreamException(e);
@@ -92,7 +92,7 @@ public class XomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamReader createReader(InputStream in) {
         try {
-            Document document = builder.build(in);
+            final Document document = getBuilder().build(in);
             return new XomReader(document, getNameCoder());
         } catch (ValidityException e) {
             throw new StreamException(e);
@@ -105,7 +105,7 @@ public class XomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamReader createReader(URL in) {
         try {
-            Document document = builder.build(in.toExternalForm());
+            final Document document = getBuilder().build(in.toExternalForm());
             return new XomReader(document, getNameCoder());
         } catch (ValidityException e) {
             throw new StreamException(e);
@@ -118,7 +118,7 @@ public class XomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamReader createReader(File in) {
         try {
-            Document document = builder.build(in);
+            final Document document = getBuilder().build(in);
             return new XomReader(document, getNameCoder());
         } catch (ValidityException e) {
             throw new StreamException(e);
