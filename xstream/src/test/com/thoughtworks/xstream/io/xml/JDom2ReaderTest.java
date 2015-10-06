@@ -11,6 +11,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.XStreamException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import org.jdom2.Document;
@@ -45,13 +46,36 @@ public class JDom2ReaderTest extends AbstractXMLReaderTest {
     }
 
     @Override
-    public void testIsXXEVulnerable() throws Exception {
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
-            super.testIsXXEVulnerable();
+            super.testIsXXEVulnerableWithExternalGeneralEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
             if (!message.contains("DOCTYPE")) {
+                throw e;
+            }
+        } catch (final NullPointerException e) {
+            // NPE only with Sun Java 1.6 runtime
+            if (JVM.is17()) {
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
+        try {
+            super.testIsXXEVulnerableWithExternalParameterEntity();
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            final String message = e.getMessage();
+            if (!message.contains("DOCTYPE")) {
+                throw e;
+            }
+        } catch (final NullPointerException e) {
+            // NPE only with Sun Java 1.6 runtime
+            if (JVM.is17()) {
                 throw e;
             }
         }

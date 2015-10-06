@@ -63,7 +63,9 @@ public class BEAStaxDriver extends StaxDriver {
 
     protected XMLInputFactory createInputFactory() {
         final XMLInputFactory instance = new MXParserFactory();
-//        instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);
+        instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+//        if (instance.isPropertySupported(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES))
+//            throw new IllegalStateException("Should not support external entities now!");
         return instance;
     }
 

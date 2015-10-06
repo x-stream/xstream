@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.XStreamException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import java.io.StringReader;
@@ -46,14 +47,31 @@ public class Dom4JReaderTest extends AbstractXMLReaderTest {
     }
 
     @Override
-    public void testIsXXEVulnerable() throws Exception {
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
-            super.testIsXXEVulnerable();
+            super.testIsXXEVulnerableWithExternalGeneralEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
             if (!message.contains("DOCTYPE")) {
-                throw e;
+                if (JVM.is17() || (JVM.is16() && !message.contains("Nested exception: null"))) {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
+        try {
+            super.testIsXXEVulnerableWithExternalParameterEntity();
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            final String message = e.getMessage();
+            if (!message.contains("DOCTYPE")) {
+                if (JVM.is17() || (JVM.is16() && !message.contains("Nested exception: null"))) {
+                    throw e;
+                }
             }
         }
     }

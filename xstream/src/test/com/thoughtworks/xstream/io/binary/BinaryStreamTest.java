@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.io.binary;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.copy.HierarchicalStreamCopier;
@@ -74,6 +75,19 @@ public class BinaryStreamTest extends AbstractXMLReaderTest {
             binaryReader.moveUp();
         }
 
+    }
+
+    @Override
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
+        try {
+            super.testIsXXEVulnerableWithExternalGeneralEntity();
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            final String message = e.getMessage();
+            if (!message.contains("resolve entity")) {
+                throw e;
+            }
+        }
     }
 
 }

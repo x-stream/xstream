@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
@@ -26,6 +27,19 @@ public class KXml2ReaderTest extends AbstractXMLReaderTest {
             xml = xml.replace('\t', ' ');
         }
         return driver.createReader(new StringReader(xml));
+    }
+
+    @Override
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
+        try {
+            super.testIsXXEVulnerableWithExternalGeneralEntity();
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            final String message = e.getMessage();
+            if (!message.contains("unresolved")) {
+                throw e;
+            }
+        }
     }
 
     // inherits tests from superclass

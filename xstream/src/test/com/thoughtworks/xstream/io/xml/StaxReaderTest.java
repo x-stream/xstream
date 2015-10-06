@@ -25,14 +25,30 @@ public class StaxReaderTest extends AbstractXMLReaderTest {
     }
 
     @Override
-    public void testIsXXEVulnerable() throws Exception {
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
-            super.testIsXXEVulnerable();
-            fail("Thrown " + XStreamException.class.getName() + " expected");
+            super.testIsXXEVulnerableWithExternalGeneralEntity();
         } catch (final XStreamException e) {
             final String message = e.getMessage();
             if (!message.contains("external entity")) {
                 throw e;
+            }
+        }
+    }
+
+    @Override
+    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
+        try {
+            super.testIsXXEVulnerableWithExternalParameterEntity();
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            final String message = e.getMessage();
+            if (!message.contains("external entity")) {
+                if (message.contains("com.wutka.dtd.DTDParseException")) {
+                    System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
+                } else {
+                    throw e;
+                }
             }
         }
     }

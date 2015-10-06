@@ -27,10 +27,9 @@ public class BEAStaxReaderTest extends AbstractXMLReaderTest {
     }
 
     @Override
-    public void testIsXXEVulnerable() throws Exception {
-        // Implementation wrongly claims not to handle external entities.
-        // On top it ignores XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES !!
-        // super.testIsXXEVulnerable();
+    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
+        // Implementation ignores XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES set to false.
+        // super.testIsXXEVulnerableWithExternalParameterEntity();
     }
 
     // inherits tests from superclass
