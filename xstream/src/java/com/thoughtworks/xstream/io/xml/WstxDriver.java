@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -62,7 +62,9 @@ public class WstxDriver extends StaxDriver {
     }
 
     protected XMLInputFactory createInputFactory() {
-        return new WstxInputFactory();
+        final XMLInputFactory instance = new WstxInputFactory();
+        instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        return instance;
     }
 
     protected XMLOutputFactory createOutputFactory() {

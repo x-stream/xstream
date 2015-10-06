@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 27. July 2013 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml;
@@ -28,7 +28,7 @@ import javax.xml.stream.XMLOutputFactory;
  * implementations configured in <em>lib/stax.properties</em> or registered with the Service
  * API.
  * </p>
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4.5
  */
@@ -75,7 +75,9 @@ public class StandardStaxDriver extends StaxDriver {
         try {
             Class staxInputFactory = JVM.getStaxInputFactory();
             if (staxInputFactory != null) {
-                return (XMLInputFactory)staxInputFactory.newInstance();
+                final XMLInputFactory instance = (XMLInputFactory)staxInputFactory.newInstance();
+                instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+                return instance;
             } else {
                 throw new StreamException("Java runtime has no standard XMLInputFactory implementation.", exception);
             }
