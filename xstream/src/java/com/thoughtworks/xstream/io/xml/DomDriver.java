@@ -19,6 +19,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -30,6 +32,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
@@ -136,11 +140,20 @@ public class DomDriver extends AbstractXmlDriver {
      */
     protected DocumentBuilderFactory createDocumentBuilderFactory() {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        try {
-            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-        } catch (final ParserConfigurationException e) {
-            throw new StreamException(e);
+        if (JVM.is15()) {
+            try {
+                Method method = DocumentBuilderFactory.class.getMethod("setFeature",
+                    new Class[]{ String.class, boolean.class });
+                method.invoke(factory, new Object[]{ "http://apache.org/xml/features/disallow-doctype-decl", Boolean.TRUE });
+            } catch (NoSuchMethodException e) {
+                // Ignore
+            } catch (IllegalAccessException e) {
+                throw new ObjectAccessException("Cannot set feature of DocumentBuilderFactory.", e);
+            } catch (InvocationTargetException e) {
+                throw new StreamException(e.getCause());
+            }
         }
+        factory.setExpandEntityReferences(false);
         return factory;
     }
 }

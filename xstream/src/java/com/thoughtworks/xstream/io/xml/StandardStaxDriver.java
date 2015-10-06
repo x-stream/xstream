@@ -76,7 +76,7 @@ public class StandardStaxDriver extends StaxDriver {
             Class staxInputFactory = JVM.getStaxInputFactory();
             if (staxInputFactory != null) {
                 final XMLInputFactory instance = (XMLInputFactory)staxInputFactory.newInstance();
-                instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+                instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
                 return instance;
             } else {
                 throw new StreamException("Java runtime has no standard XMLInputFactory implementation.", exception);

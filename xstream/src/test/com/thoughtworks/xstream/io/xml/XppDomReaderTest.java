@@ -76,14 +76,13 @@ public class XppDomReaderTest extends AbstractXMLReaderTest {
         assertEquals(0, xmlReader.getAttributeCount());
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (!message.contains("resolve entity")) {
+            if (message.indexOf("resolve entity") < 0) {
                 throw e;
             }
         }

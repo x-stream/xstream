@@ -153,7 +153,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         if (mapping != null) {
                             Set mappings = (Set)hiddenMappers.get(info.fieldName);
                             if (mappings == null) {
-                                mappings = new HashSet<Mapper.ImplicitCollectionMapping>();
+                                mappings = new HashSet();
                                 mappings.add(mapping);
                                 hiddenMappers.put(info.fieldName, mappings);
                             } else {
@@ -611,7 +611,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
     private static class FieldLocation {
         final String fieldName;
-        final Class<?> definedIn;
+        final Class definedIn;
 
         FieldLocation(final String fieldName, final Class definedIn) {
             this.fieldName = fieldName;
@@ -655,7 +655,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         final Class type;
         final Object value;
 
-        FieldInfo(final String fieldName, final Class<?> type, final Class<?> definedIn, final Object value) {
+        FieldInfo(final String fieldName, final Class type, final Class definedIn, final Object value) {
             super(fieldName, definedIn);
             this.type = type;
             this.value = value;

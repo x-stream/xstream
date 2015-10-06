@@ -121,21 +121,16 @@ public class FieldDictionaryTest extends TestCase {
 
         final List exceptions = Collections.synchronizedList(new ArrayList());
 
-        final Thread.UncaughtExceptionHandler exceptionHandler = new Thread.UncaughtExceptionHandler() {
-            public void uncaughtException(final Thread th, final Throwable ex) {
-                exceptions.add("Exception " + ex.getClass() + " message " + ex.getMessage() + "\n");
-            }
-        };
-
         final List types =
-                Arrays.asList(A.class, B.class, C.class, E.class, F.class, G.class, H.class, I.class, J.class,
+                Arrays.asList(new Class[] {
+                    A.class, B.class, C.class, E.class, F.class, G.class, H.class, I.class, J.class,
                     BB.class, CC.class, DD.class, EE.class, FF.class, GG.class, HH.class, II.class, JJ.class,
-                    JJJ.class, FieldDictionaryTest.class);
-        final Thread[] threads = createThreads(types);
+                    JJJ.class, FieldDictionaryTest.class
+                 });
+        final Thread[] threads = createThreads(types, exceptions);
 
         for (int i = 0; i < threads.length; ++i) {
             synchronized (threads[i]) {
-                threads[i].setUncaughtExceptionHandler(exceptionHandler);
                 threads[i].start();
                 threads[i].wait();
             }
@@ -158,10 +153,10 @@ public class FieldDictionaryTest extends TestCase {
             }
         }
 
-        assertEquals("Assertions failed or exceptions thrown", Collections.emptyList(), exceptions);
+        assertEquals("Assertions failed or exceptions thrown", Collections.EMPTY_LIST, exceptions);
     }
 
-    private Thread[] createThreads(final List types) {
+    private Thread[] createThreads(final List types, final List exceptions) {
         Collections.shuffle(types);
         final Thread[] threads = new Thread[types.size()];
         for (int i = 0; i < types.size(); i++) {
@@ -187,8 +182,8 @@ public class FieldDictionaryTest extends TestCase {
                             for(Class cls = type; cls != null; count++, cls = cls.getSuperclass());
                             assertEquals("fieldCount not equal for type " + type.getName(), count-1, fieldCount);
                         }
-                    } catch (final InterruptedException e) {
-                        fail("Exception " + e.getClass());
+                    } catch (final Exception e) {
+                        exceptions.add(e);
                     }
                 }
             };

@@ -45,7 +45,6 @@ public class JDom2ReaderTest extends AbstractXMLReaderTest {
         assertEquals("tiny", xmlReader.getNodeName());
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
@@ -63,7 +62,6 @@ public class JDom2ReaderTest extends AbstractXMLReaderTest {
         }
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalParameterEntity();

@@ -49,7 +49,6 @@ public class SjsxpReaderTest extends AbstractXMLReaderTest {
         return driver.createReader(new StringReader(xml));
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         // Fails for Java 1.6 runtime
         if (JVM.is17()) {

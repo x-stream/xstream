@@ -29,14 +29,13 @@ public class KXml2ReaderTest extends AbstractXMLReaderTest {
         return driver.createReader(new StringReader(xml));
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (!message.contains("unresolved")) {
+            if (message.indexOf("unresolved") < 0) {
                 throw e;
             }
         }

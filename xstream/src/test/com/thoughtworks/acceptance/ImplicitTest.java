@@ -205,22 +205,15 @@ public class ImplicitTest extends AbstractAcceptanceTest {
     
     public static class AllHidingTypes extends AllImplicitTypes {
         public String separator = "--X--";
-        @SuppressWarnings("hiding")
         public String aArray = "a";
-        @SuppressWarnings("hiding")
         public String bList = "b";
-        @SuppressWarnings("hiding")
         public String cMap = "c";
     }
     
     public static class AllHidingImplicitTypes extends AllHidingTypes {
-        @SuppressWarnings("hiding")
         public String separator = "--H--";
-        @SuppressWarnings("hiding")
         public A[] aArray = new A[2];
-        @SuppressWarnings("hiding")
         public List bList = new ArrayList();
-        @SuppressWarnings("hiding")
         public Map cMap = new LinkedHashMap();
     }
     

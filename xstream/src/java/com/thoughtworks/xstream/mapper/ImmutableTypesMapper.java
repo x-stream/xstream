@@ -37,7 +37,6 @@ public class ImmutableTypesMapper extends MapperWrapper {
     /**
      * @deprecated As of upcoming use {@link #addImmutableType(Class, boolean)}
      */
-    @Deprecated
     public void addImmutableType(Class type) {
         addImmutableType(type, true);
     }

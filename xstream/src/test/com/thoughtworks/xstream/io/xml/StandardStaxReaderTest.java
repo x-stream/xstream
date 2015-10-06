@@ -25,7 +25,6 @@ public class StandardStaxReaderTest extends AbstractXMLReaderTest {
         return driver.createReader(new StringReader(xml));
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         // fails for Sun JDK 1.6 runtime
         if (JVM.is17() || !JVM.getStaxInputFactory().getName().equals("com.sun.xml.internal.stream.XMLInputFactoryImpl")) {

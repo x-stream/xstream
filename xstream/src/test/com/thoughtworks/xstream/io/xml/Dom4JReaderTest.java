@@ -46,30 +46,28 @@ public class Dom4JReaderTest extends AbstractXMLReaderTest {
         assertEquals("tiny", xmlReader.getNodeName());
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (!message.contains("DOCTYPE")) {
-                if (JVM.is17() || (JVM.is16() && !message.contains("Nested exception: null"))) {
+            if (message.indexOf("DOCTYPE") < 0) {
+                if (JVM.is17() || (JVM.is16() && message.indexOf("Nested exception: null") < 0)) {
                     throw e;
                 }
             }
         }
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalParameterEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (!message.contains("DOCTYPE")) {
-                if (JVM.is17() || (JVM.is16() && !message.contains("Nested exception: null"))) {
+            if (message.indexOf("DOCTYPE") < 0) {
+                if (JVM.is17() || (JVM.is16() && message.indexOf("Nested exception: null") < 0)) {
                     throw e;
                 }
             }

@@ -108,8 +108,7 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
         public ReferenceByXPathMarshaller requestedMarshaller;
         public ReferenceByXPathUnmarshaller requestedUnmarshaller;
 
-        @Override
-        protected ReferenceByXPathUnmarshaller createUnmarshallingContext(Object root,
+        protected TreeUnmarshaller createUnmarshallingContext(Object root,
                                                                           HierarchicalStreamReader reader,
                                                                           ConverterLookup converterLookup,
                                                                           Mapper mapper) {
@@ -119,8 +118,7 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
             return requestedUnmarshaller;
         }
 
-        @Override
-        protected ReferenceByXPathMarshaller createMarshallingContext(HierarchicalStreamWriter writer,
+        protected TreeMarshaller createMarshallingContext(HierarchicalStreamWriter writer,
                                                                       ConverterLookup converterLookup,
                                                                       Mapper mapper) {
 
@@ -210,7 +208,7 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
         assertEquals(3, trackedPathsOnUnmarshal.size());
     }
 
-    private Map<Path, Object> getReferences(ReferenceByXPathUnmarshaller requestedUnmarshaller) {
+    private Map getReferences(ReferenceByXPathUnmarshaller requestedUnmarshaller) {
         try {
             Field field = AbstractReferenceUnmarshaller.class.getDeclaredField("values");
             field.setAccessible(true);

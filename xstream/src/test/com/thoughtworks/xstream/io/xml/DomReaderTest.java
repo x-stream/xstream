@@ -85,14 +85,15 @@ public class DomReaderTest extends AbstractXMLReaderTest {
         assertEquals(0, xmlReader.getAttributeCount());
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
-            fail("Thrown " + XStreamException.class.getName() + " expected");
+            if (JVM.is15()) {
+                fail("Thrown " + XStreamException.class.getName() + " expected");
+            }
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (!message.contains("DOCTYPE")) {
+            if (message.indexOf("DOCTYPE") < 0) {
                 throw e;
             }
         } catch (final NullPointerException e) {
@@ -103,14 +104,13 @@ public class DomReaderTest extends AbstractXMLReaderTest {
         }
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalParameterEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (!message.contains("DOCTYPE")) {
+            if (message.indexOf("DOCTYPE") < 0) {
                 throw e;
             }
         } catch (final NullPointerException e) {

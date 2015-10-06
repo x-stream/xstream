@@ -21,12 +21,10 @@ public class BEAStaxReaderTest extends AbstractXMLReaderTest {
     private final HierarchicalStreamDriver driver = new BEAStaxDriver();
 
     // factory method
-    @Override
     protected HierarchicalStreamReader createReader(final String xml) throws Exception {
         return driver.createReader(new StringReader(xml));
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         // Implementation ignores XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES set to false.
         // super.testIsXXEVulnerableWithExternalParameterEntity();

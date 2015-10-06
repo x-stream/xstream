@@ -18,33 +18,30 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 
 public class StaxReaderTest extends AbstractXMLReaderTest {
-    @Override
     protected HierarchicalStreamReader createReader(final String xml) throws Exception {
         final StaxDriver driver = new StaxDriver();
         return driver.createReader(new StringReader(xml));
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (!message.contains("external entity")) {
+            if (message.indexOf("external entity") < 0) {
                 throw e;
             }
         }
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalParameterEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (!message.contains("external entity")) {
-                if (message.contains("com.wutka.dtd.DTDParseException")) {
+            if (message.indexOf("external entity") < 0) {
+                if (message.indexOf("com.wutka.dtd.DTDParseException") >= 0) {
                     System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
                 } else {
                     throw e;

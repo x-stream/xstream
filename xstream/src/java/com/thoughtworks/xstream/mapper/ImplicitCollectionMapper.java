@@ -32,7 +32,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     private final Map classNameToMapper = new HashMap();
 
     private ImplicitCollectionMapperForClass getMapper(final Class declaredFor, final String fieldName) {
-        Class<?> definedIn = declaredFor;
+        Class definedIn = declaredFor;
         while (definedIn != null) {
             ImplicitCollectionMapperForClass mapper = (ImplicitCollectionMapperForClass)classNameToMapper
                 .get(definedIn);
@@ -108,7 +108,7 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     public void add(Class definedIn, String fieldName, String itemFieldName, Class itemType, String keyFieldName) {
         Field field = null;
         if (definedIn != null) {
-            Class<?> declaredIn = definedIn;
+            Class declaredIn = definedIn;
             while (declaredIn != Object.class) {
                 try {
                     field = declaredIn.getDeclaredField(fieldName);

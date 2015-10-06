@@ -24,7 +24,6 @@ import nu.xom.Element;
 public class XomReaderTest extends AbstractXMLReaderTest {
 
     // factory method
-    @Override
     protected HierarchicalStreamReader createReader(final String xml) throws Exception {
         return new XomDriver().createReader(new StringReader(xml));
     }
@@ -47,13 +46,11 @@ public class XomReaderTest extends AbstractXMLReaderTest {
         assertEquals("tiny", xmlReader.getNodeName());
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         // No possibility to suppress support for external entities in XOM?
         // super.testIsXXEVulnerableWithExternalGeneralEntity();
     }
 
-    @Override
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         // No possibility to suppress support for external entities in XOM?
         // super.testIsXXEVulnerableWithExternalParameterEntity();

@@ -59,7 +59,7 @@ public class SjsxpDriver extends StaxDriver {
         Exception exception = null;
         try {
             final XMLInputFactory instance = (XMLInputFactory)Class.forName("com.sun.xml.internal.stream.XMLInputFactoryImpl").newInstance();
-            instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+            instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
             return instance;
         } catch (final InstantiationException e) {
             exception = e;

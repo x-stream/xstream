@@ -239,7 +239,7 @@ public class StaxDriver extends AbstractXmlDriver {
      */
     protected XMLInputFactory createInputFactory() {
         final XMLInputFactory instance = XMLInputFactory.newInstance();
-        instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
         return instance;
     }
 
