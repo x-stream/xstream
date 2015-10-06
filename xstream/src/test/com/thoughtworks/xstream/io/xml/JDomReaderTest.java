@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.XStreamException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import org.jdom.Document;
@@ -55,6 +56,11 @@ public class JDomReaderTest extends AbstractXMLReaderTest {
             if (!message.contains("DOCTYPE")) {
                 throw e;
             }
+        } catch (final NullPointerException e) {
+            // NPE only with Sun Java 1.6 runtime
+            if (JVM.is17()) {
+                throw e;
+            }
         }
     }
 
@@ -66,6 +72,11 @@ public class JDomReaderTest extends AbstractXMLReaderTest {
         } catch (final XStreamException e) {
             final String message = e.getMessage();
             if (!message.contains("DOCTYPE")) {
+                throw e;
+            }
+        } catch (final NullPointerException e) {
+            // NPE only with Sun Java 1.6 runtime
+            if (JVM.is17()) {
                 throw e;
             }
         }
