@@ -32,7 +32,7 @@ public class WstxReaderTest extends AbstractXMLReaderTest {
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getMessage();
-            if (message.contains("Package")) {
+            if (!message.contains("external entity")) {
                 throw e;
             }
         }

@@ -64,7 +64,7 @@ public class DomDriver extends AbstractXmlDriver {
         this.encoding = encoding;
         documentBuilderFactory = DocumentBuilderFactory.newInstance();
         try {
-            documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
+            documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         } catch (final ParserConfigurationException e) {
             throw new StreamException(e);
         }

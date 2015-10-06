@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -90,8 +90,8 @@ public class DomReaderTest extends AbstractXMLReaderTest {
             super.testIsXXEVulnerable();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
-            final String message = e.getMessage().toLowerCase();
-            if (message.contains("Package")) {
+            final String message = e.getMessage();
+            if (!message.contains("DOCTYPE")) {
                 throw e;
             }
         }

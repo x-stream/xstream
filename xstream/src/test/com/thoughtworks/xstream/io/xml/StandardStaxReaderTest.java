@@ -10,7 +10,6 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
@@ -27,14 +26,7 @@ public class StandardStaxReaderTest extends AbstractXMLReaderTest {
 
     @Override
     public void testIsXXEVulnerable() throws Exception {
-        try {
-            super.testIsXXEVulnerable();
-        } catch (final XStreamException e) {
-            final String message = e.getMessage();
-            if (message.contains("ParseError") && message.contains("[1,1]")) {
-                throw e;
-            }
-        }
+        super.testIsXXEVulnerable();
     }
 
     // inherits tests from superclass
