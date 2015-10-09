@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.thoughtworks.xstream.core.JVM;
+
 public class FieldDictionaryTest extends TestCase {
 
     private FieldDictionary fieldDictionary;
@@ -171,8 +173,10 @@ public class FieldDictionaryTest extends TestCase {
                         final Iterator fieldIterator = fieldDictionary.fieldsFor(type);
                         int fieldCount = 0;
                         while (fieldIterator.hasNext()) {
-                            fieldCount++;
-                            fieldIterator.next();
+                            Field field = (Field)fieldIterator.next();
+                            if (JVM.is15() || !Modifier.isStatic(field.getModifiers())) {
+                                fieldCount++;
+                            }
                         }
                         
                         if (type == FieldDictionaryTest.class) {
@@ -183,6 +187,8 @@ public class FieldDictionaryTest extends TestCase {
                             assertEquals("fieldCount not equal for type " + type.getName(), count-1, fieldCount);
                         }
                     } catch (final Exception e) {
+                        exceptions.add(e);
+                    } catch (final Error e) {
                         exceptions.add(e);
                     }
                 }
