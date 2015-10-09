@@ -98,7 +98,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     public void testWithReferencedImplicitElement() {
         List list = new ArrayList();
         SampleMaps sample = new SampleMaps();
-        sample.good = new OrderRetainingMap();
+        sample.good = new LinkedHashMap();
         sample.good.put("Windows", new Software("Microsoft", "Windows"));
         sample.good.put("Linux", new Software("Red Hat", "Linux"));
         list.add(sample.good.get("Windows"));
