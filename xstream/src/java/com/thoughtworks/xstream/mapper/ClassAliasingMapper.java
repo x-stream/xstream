@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 09. April 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.core.util.Primitives;
 
 /**
  * Mapper that allows a fully qualified class name to be replaced with an alias.
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
@@ -73,10 +73,18 @@ public class ClassAliasingMapper extends MapperWrapper {
         return super.realClass(elementName);
     }
 
+    /**
+     * @deprecated As of upcoming
+     */
+    @Deprecated
     public boolean itemTypeAsAttribute(final Class<?> clazz) {
         return classToName.containsKey(clazz);
     }
 
+    /**
+     * @deprecated As of upcoming
+     */
+    @Deprecated
     public boolean aliasIsAttribute(final String name) {
         return nameToType.containsKey(name);
     }

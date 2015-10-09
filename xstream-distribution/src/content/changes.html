@@ -88,6 +88,7 @@
     	<li>JIRA:XSTR-769: Synthetic fields with references to outer class use compiler dependent names.</li>
     	<li>JIRA:XSTR-771: UUID is an immutable type by default.</li>
     	<li>GHPR:#23: Constructor of AbstractXppDriver swallows causing exception.</li>
+    	<li>GHI:#28: Fix functionality of ClassAliaslingMapper.itemTypeAsAttributes(Class).</li>
     </ul>
 
     <h2>API changes</h2>
@@ -101,6 +102,8 @@
     	<li>Added c.t.x.io.xml.DomDriver.createDocumentBuilderFactory().</li>
     	<li>Added c.t.x.io.xml.JDomDriver.createBuilder().</li>
     	<li>Added c.t.x.io.xml.JDom2Driver.createBuilder().</li>
+    	<li>Deprecated c.t.x.mapper.ClassAliaslingMapper.itemTypeAsAttributes(Class) and
+    	c.t.x.mapper.ClassAliaslingMapper.aliasIsAttribute(String). Methods never called, left-over from old refactoring.</li>
     </ul>
 
     <h1 id="1.4.8">1.4.8</h1>
