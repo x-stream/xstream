@@ -112,10 +112,10 @@ public class DomReaderTest extends AbstractXMLReaderTest {
             final String message = e.getMessage();
             if (message.indexOf("DOCTYPE") < 0) {
                 // XXE vulnerable with Sun Java 1.6 runtime
-                if (JVM.is16() || !JVM.is15()) {
+                if (JVM.is16()) {
                     throw e;
                 } else {
-                    System.err.println("DomReader is vulnerable with Java 5!");
+                    System.err.println("DomReader is vulnerable with Java 5 and 1.4!");
                 }
             }
         } catch (final NullPointerException e) {

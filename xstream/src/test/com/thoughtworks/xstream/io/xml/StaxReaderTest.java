@@ -44,7 +44,7 @@ public class StaxReaderTest extends AbstractXMLReaderTest {
             if (message.indexOf("external entity") < 0) {
                 if (JVM.is16() && message.indexOf("com.wutka.dtd.DTDParseException") >= 0) {
                     System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
-                } else if (JVM.is15() && message.replaceAll("[:space:]", "").endsWith("null")) {
+                } else if (message.replaceAll("[:space:]", "").endsWith("null")) {
                     System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
                 } else {
                     throw e;
