@@ -722,8 +722,9 @@ XStream xstream = new XStream(driver);
     	for parameter entities.</td></tr>
     	<tr><td>Dom4JDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
     	entities with SAX reader in use.</td></tr>
-    	<tr><td>DomDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
-    	entities with SAX reader in use.</td></tr>
+    	<tr><td>DomDriver</td><td>no, Java 6 or higher<br/>yes, Java 5</td><td>Driver turns off DOCTYPE processing with
+    	Java 7 runtime or higher to suppress handling of external entities with SAX reader in use. Suppress external
+    	entities only for Java 6 or lower, fails for parameterized entities.</td></tr>
     	<tr><td>JDomDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
     	entities with SAX reader in use.</td></tr>
     	<tr><td>JDom2Driver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external

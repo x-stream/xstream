@@ -88,7 +88,7 @@ public class DomReaderTest extends AbstractXMLReaderTest {
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         try {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
-            if (JVM.is15()) {
+            if (JVM.is16()) {
                 fail("Thrown " + XStreamException.class.getName() + " expected");
             }
         } catch (final XStreamException e) {
@@ -98,7 +98,7 @@ public class DomReaderTest extends AbstractXMLReaderTest {
             }
         } catch (final NullPointerException e) {
             // NPE only with Sun Java 1.6 runtime
-            if (JVM.is17()) {
+            if (JVM.is17() || !JVM.is16()) {
                 throw e;
             }
         }
@@ -111,11 +111,16 @@ public class DomReaderTest extends AbstractXMLReaderTest {
         } catch (final XStreamException e) {
             final String message = e.getMessage();
             if (message.indexOf("DOCTYPE") < 0) {
-                throw e;
+                // XXE vulnerable with Sun Java 1.6 runtime
+                if (JVM.is16() || !JVM.is15()) {
+                    throw e;
+                } else {
+                    System.err.println("DomReader is vulnerable with Java 5!");
+                }
             }
         } catch (final NullPointerException e) {
             // NPE only with Sun Java 1.6 runtime
-            if (JVM.is17()) {
+            if (JVM.is17() || !JVM.is16()) {
                 throw e;
             }
         }

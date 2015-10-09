@@ -150,7 +150,12 @@ public class DomDriver extends AbstractXmlDriver {
             } catch (IllegalAccessException e) {
                 throw new ObjectAccessException("Cannot set feature of DocumentBuilderFactory.", e);
             } catch (InvocationTargetException e) {
-                throw new StreamException(e.getCause());
+                Throwable cause = e.getCause();
+                if (JVM.is16() 
+                        || (cause instanceof ParserConfigurationException 
+                                &&  cause.getMessage().indexOf("disallow-doctype-decl") < 0)) { 
+                    throw new StreamException(cause);
+                }
             }
         }
         factory.setExpandEntityReferences(false);

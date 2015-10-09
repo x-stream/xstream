@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.io.xml;
 import java.io.StringReader;
 
 import com.thoughtworks.xstream.XStreamException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 
@@ -41,7 +42,9 @@ public class StaxReaderTest extends AbstractXMLReaderTest {
         } catch (final XStreamException e) {
             final String message = e.getMessage();
             if (message.indexOf("external entity") < 0) {
-                if (message.indexOf("com.wutka.dtd.DTDParseException") >= 0) {
+                if (JVM.is16() && message.indexOf("com.wutka.dtd.DTDParseException") >= 0) {
+                    System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
+                } else if (JVM.is15() && message.replaceAll("[:space:]", "").endsWith("null")) {
                     System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
                 } else {
                     throw e;
