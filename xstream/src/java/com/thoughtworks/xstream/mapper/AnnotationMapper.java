@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -70,8 +70,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private transient FieldAliasingMapper fieldAliasingMapper;
     private transient AttributeMapper attributeMapper;
     private transient LocalConversionMapper localConversionMapper;
-    private final Map<Class<?>, Map<List<Object>, Converter>> converterCache = new HashMap<Class<?>, Map<List<Object>, Converter>>();
-    private final Set<Class<?>> annotatedTypes = Collections.synchronizedSet(new HashSet<Class<?>>());
+    private final Map<Class<?>, Map<List<Object>, Converter>> converterCache = new HashMap<>();
+    private final Set<Class<?>> annotatedTypes = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Construct an AnnotationMapper.
@@ -91,7 +91,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         final ClassLoader classLoader = classLoaderReference.getReference();
         arguments = new Object[]{
             this, classLoaderReference, reflectionProvider, converterLookup, new JVM(),
-            classLoader != null ? classLoader : new TypedNull<ClassLoader>(ClassLoader.class)};
+            classLoader != null ? classLoader : new TypedNull<>(ClassLoader.class)};
     }
 
     /**
@@ -226,8 +226,9 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     }
 
     private void addParametrizedTypes(Type type, final Set<Class<?>> types) {
-        final Set<Type> processedTypes = new HashSet<Type>();
+        final Set<Type> processedTypes = new HashSet<>();
         final Set<Type> localTypes = new LinkedHashSet<Type>() {
+            private static final long serialVersionUID = 20151010L;
 
             @Override
             public boolean add(final Type o) {
@@ -285,8 +286,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (converterRegistry != null) {
             final XStreamConverters convertersAnnotation = type.getAnnotation(XStreamConverters.class);
             final XStreamConverter converterAnnotation = type.getAnnotation(XStreamConverter.class);
-            final List<XStreamConverter> annotations = convertersAnnotation != null ? new ArrayList<XStreamConverter>(
-                Arrays.asList(convertersAnnotation.value())) : new ArrayList<XStreamConverter>();
+            final List<XStreamConverter> annotations = convertersAnnotation != null ? new ArrayList<>(
+                Arrays.asList(convertersAnnotation.value())) : new ArrayList<>();
             if (converterAnnotation != null) {
                 annotations.add(converterAnnotation);
             }
@@ -412,11 +413,11 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private Converter cacheConverter(final XStreamConverter annotation, final Class<?> targetType) {
         Converter result = null;
         final Object[] args;
-        final List<Object> parameter = new ArrayList<Object>();
+        final List<Object> parameter = new ArrayList<>();
         if (targetType != null && annotation.useImplicitType()) {
             parameter.add(targetType);
         }
-        final List<Object> arrays = new ArrayList<Object>();
+        final List<Object> arrays = new ArrayList<>();
         arrays.add(annotation.booleans());
         arrays.add(annotation.bytes());
         arrays.add(annotation.chars());
@@ -469,7 +470,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     + (targetType != null ? " for type " + targetType.getName() : ""), e);
             }
             if (converterMapping == null) {
-                converterMapping = new HashMap<List<Object>, Converter>();
+                converterMapping = new HashMap<>();
                 converterCache.put(converterType, converterMapping);
             }
             converterMapping.put(parameter, converter);
@@ -521,6 +522,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     }
 
     private final class UnprocessedTypesSet extends LinkedHashSet<Class<?>> {
+        private static final long serialVersionUID = 20151010L;
+
         @Override
         public boolean add(Class<?> type) {
             if (type == null) {

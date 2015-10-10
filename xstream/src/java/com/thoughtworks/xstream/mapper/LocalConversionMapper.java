@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2014 XStream Committers.
+ * Copyright (C) 2007, 2008, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,7 +26,7 @@ import com.thoughtworks.xstream.core.util.FastField;
  */
 public class LocalConversionMapper extends MapperWrapper {
 
-    private final Map<FastField, Converter> localConverters = new HashMap<FastField, Converter>();
+    private final Map<FastField, Converter> localConverters = new HashMap<>();
     private transient AttributeMapper attributeMapper;
 
     /**

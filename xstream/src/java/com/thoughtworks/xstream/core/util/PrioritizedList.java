@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,7 +27,7 @@ import java.util.TreeSet;
  */
 public class PrioritizedList<E> implements Iterable<E> {
 
-    private final Set<PrioritizedItem<E>> set = new TreeSet<PrioritizedItem<E>>();
+    private final Set<PrioritizedItem<E>> set = new TreeSet<>();
     private int lowestPriority = Integer.MAX_VALUE;
     private int lastId = 0;
 
@@ -35,12 +35,12 @@ public class PrioritizedList<E> implements Iterable<E> {
         if (this.lowestPriority > priority) {
             this.lowestPriority = priority;
         }
-        this.set.add(new PrioritizedItem<E>(item, priority, ++lastId));
+        this.set.add(new PrioritizedItem<>(item, priority, ++lastId));
     }
 
     @Override
     public Iterator<E> iterator() {
-        return new PrioritizedItemIterator<E>(this.set.iterator());
+        return new PrioritizedItemIterator<>(this.set.iterator());
     }
 
     private static class PrioritizedItem<V> implements Comparable<PrioritizedItem<V>> {

@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 09. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.core.util;
@@ -26,8 +26,8 @@ import java.util.Map;
  */
 public class ObjectIdDictionary<E> {
 
-    private final Map<? super Wrapper, E> map = new HashMap<Wrapper, E>();
-    private final ReferenceQueue<Object> queue = new ReferenceQueue<Object>();
+    private final Map<? super Wrapper, E> map = new HashMap<>();
+    private final ReferenceQueue<Object> queue = new ReferenceQueue<>();
 
     private static interface Wrapper {
         @Override

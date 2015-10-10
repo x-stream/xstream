@@ -113,7 +113,7 @@ public class EnumMapper extends MapperWrapper implements Caching {
     }
 
     private Object readResolve() {
-        enumConverterMap = new HashMap<Class<?>, SingleValueConverter>();
+        enumConverterMap = new HashMap<>();
         attributeMapper = lookupMapperOfType(AttributeMapper.class);
         return this;
     }

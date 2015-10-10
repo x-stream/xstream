@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,11 +41,11 @@ public class StaticNameCoder implements NameCoder {
      * @since 1.4
      */
     public StaticNameCoder(final Map<String, String> java2Node, final Map<String, String> java2Attribute) {
-        this.java2Node = new HashMap<String, String>(java2Node);
+        this.java2Node = new HashMap<>(java2Node);
         if (java2Node == java2Attribute || java2Attribute == null) {
             this.java2Attribute = this.java2Node;
         } else {
-            this.java2Attribute = new HashMap<String, String>(java2Attribute);
+            this.java2Attribute = new HashMap<>(java2Attribute);
         }
         readResolve();
     }
@@ -85,7 +85,7 @@ public class StaticNameCoder implements NameCoder {
     }
 
     private Map<String, String> invertMap(final Map<String, String> map) {
-        final Map<String, String> inverseMap = new HashMap<String, String>(map.size());
+        final Map<String, String> inverseMap = new HashMap<>(map.size());
         for (final Map.Entry<String, String> entry : map.entrySet()) {
             inverseMap.put(entry.getValue(), entry.getKey());
         }

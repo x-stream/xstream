@@ -27,16 +27,15 @@ public class ImplicitCollectionMapper extends MapperWrapper {
         super(wrapped);
     }
 
-    private final Map<Class<?>, ImplicitCollectionMapperForClass> classNameToMapper =
-            new HashMap<Class<?>, ImplicitCollectionMapperForClass>();
+    private final Map<Class<?>, ImplicitCollectionMapperForClass> classNameToMapper = new HashMap<>();
 
     private ImplicitCollectionMapperForClass getMapper(final Class<?> declaredFor, final String fieldName) {
         Class<?> definedIn = declaredFor;
         while (definedIn != null) {
-            ImplicitCollectionMapperForClass mapper = classNameToMapper.get(definedIn);
+            final ImplicitCollectionMapperForClass mapper = classNameToMapper.get(definedIn);
             if (mapper != null) {
                 return mapper;
-            } else { 
+            } else {
                 if (fieldName != null) {
                     try {
                         // do not continue search for a hidden field
@@ -158,12 +157,9 @@ public class ImplicitCollectionMapper extends MapperWrapper {
 
     private class ImplicitCollectionMapperForClass {
         private final Class<?> definedIn;
-        private final Map<NamedItemType, ImplicitCollectionMappingImpl> namedItemTypeToDef =
-                new HashMap<NamedItemType, ImplicitCollectionMappingImpl>();
-        private final Map<String, ImplicitCollectionMappingImpl> itemFieldNameToDef =
-                new HashMap<String, ImplicitCollectionMappingImpl>();
-        private final Map<String, ImplicitCollectionMappingImpl> fieldNameToDef =
-                new HashMap<String, ImplicitCollectionMappingImpl>();
+        private final Map<NamedItemType, ImplicitCollectionMappingImpl> namedItemTypeToDef = new HashMap<>();
+        private final Map<String, ImplicitCollectionMappingImpl> itemFieldNameToDef = new HashMap<>();
+        private final Map<String, ImplicitCollectionMappingImpl> fieldNameToDef = new HashMap<>();
 
         ImplicitCollectionMapperForClass(final Class<?> definedIn) {
             this.definedIn = definedIn;

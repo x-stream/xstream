@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -81,7 +81,7 @@ class ReaderDepthState {
         attribute.name = name;
         attribute.value = value;
         if (current.attributes == null) {
-            current.attributes = new ArrayList<Attribute>();
+            current.attributes = new ArrayList<>();
         }
         current.attributes.add(attribute);
     }
@@ -124,7 +124,7 @@ class ReaderDepthState {
 
     public Iterator<String> getAttributeNames() {
         if (current.attributes == null) {
-            return Collections.<String>emptySet().iterator();
+            return Collections.<String>emptyIterator();
         } else {
             final Iterator<Attribute> attributeIterator = current.attributes.iterator();
             return new Iterator<String>() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,11 +36,11 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
  */
 public class AttributeMapper extends MapperWrapper {
 
-    private final Map<String, Class<?>> fieldNameToTypeMap = new HashMap<String, Class<?>>();
-    private final Set<Class<?>> typeSet = new HashSet<Class<?>>();
+    private final Map<String, Class<?>> fieldNameToTypeMap = new HashMap<>();
+    private final Set<Class<?>> typeSet = new HashSet<>();
     private final ConverterLookup converterLookup;
     private final ReflectionProvider reflectionProvider;
-    private final Set<Field> fieldToUseAsAttribute = new HashSet<Field>();
+    private final Set<Field> fieldToUseAsAttribute = new HashSet<>();
 
     public AttributeMapper(
             final Mapper wrapped, final ConverterLookup converterLookup, final ReflectionProvider refProvider) {

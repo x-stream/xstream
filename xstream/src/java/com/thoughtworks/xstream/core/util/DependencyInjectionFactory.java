@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (c) 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -88,7 +88,7 @@ public class DependencyInjectionFactory {
             throw new IllegalArgumentException("More than 63 arguments are not supported");
         }
         Constructor<?> bestMatchingCtor = null;
-        final ArrayList<Object> matchingDependencies = new ArrayList<Object>();
+        final ArrayList<Object> matchingDependencies = new ArrayList<>();
         List<Object> possibleMatchingDependencies = null;
         long usedDeps = 0;
         long possibleUsedDeps = 0;

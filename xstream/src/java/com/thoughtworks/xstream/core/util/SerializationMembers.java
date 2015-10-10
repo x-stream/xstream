@@ -48,9 +48,9 @@ public class SerializationMembers implements Caching {
     private static final FastField[] OBJECT_TYPE_FIELDS = {
         new FastField(Object.class, "readResolve"), new FastField(Object.class, "writeReplace"),
         new FastField(Object.class, "readObject"), new FastField(Object.class, "writeObject")};
-    private final ConcurrentMap<FastField, Method> declaredCache = new ConcurrentHashMap<FastField, Method>();
-    private final ConcurrentMap<FastField, Method> resRepCache = new ConcurrentHashMap<FastField, Method>();
-    private final ConcurrentMap<String, Map<String, ObjectStreamField>> fieldCache = new ConcurrentHashMap<String, Map<String, ObjectStreamField>>();
+    private final ConcurrentMap<FastField, Method> declaredCache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<FastField, Method> resRepCache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Map<String, ObjectStreamField>> fieldCache = new ConcurrentHashMap<>();
     {
         for (final FastField element : OBJECT_TYPE_FIELDS) {
             declaredCache.put(element, NO_METHOD);
@@ -196,7 +196,7 @@ public class SerializationMembers implements Caching {
                     field.setAccessible(true);
                     final ObjectStreamField[] fields = (ObjectStreamField[])field.get(null);
                     if (fields != null) {
-                        result = new HashMap<String, ObjectStreamField>();
+                        result = new HashMap<>();
                         for (final ObjectStreamField f : fields) {
                             result.put(f.getName(), f);
                         }

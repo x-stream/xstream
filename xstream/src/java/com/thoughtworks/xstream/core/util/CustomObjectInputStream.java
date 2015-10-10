@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,7 +27,7 @@ import com.thoughtworks.xstream.core.ClassLoaderReference;
 
 public class CustomObjectInputStream extends ObjectInputStream {
 
-    private final FastStack<StreamCallback> callbacks = new FastStack<StreamCallback>(1);
+    private final FastStack<StreamCallback> callbacks = new FastStack<>(1);
     private final ClassLoaderReference classLoaderReference;
 
     private static final String DATA_HOLDER_KEY = CustomObjectInputStream.class.getName();

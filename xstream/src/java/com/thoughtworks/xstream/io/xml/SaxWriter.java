@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -102,12 +102,12 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * only to support the mandatory feature setting and retrieval logic defined by SAX.
      * </p>
      */
-    private final Map<String, Boolean> features = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> features = new HashMap<>();
 
     /**
      * The SAX properties defined for this XMLReader.
      */
-    private final Map<String, Object> properties = new HashMap<String, Object>();
+    private final Map<String, Object> properties = new HashMap<>();
 
     private final boolean includeEnclosingDocument;
 
@@ -272,7 +272,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
                 } else {
                     // Perform a copy of the list to prevent the application to
                     // modify its content while the parse is being performed.
-                    value = Collections.unmodifiableList(new ArrayList<Object>(list));
+                    value = Collections.unmodifiableList(new ArrayList<>(list));
                 }
             } else {
                 throw new SAXNotSupportedException("Value for property \""
@@ -573,7 +573,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     // =========================================================================
 
     private int depth = 0;
-    private final List<String> elementStack = new LinkedList<String>();
+    private final List<String> elementStack = new LinkedList<>();
     private char[] buffer = new char[128];
     private boolean startTagInProgress = false;
     private final AttributesImpl attributeList = new AttributesImpl();

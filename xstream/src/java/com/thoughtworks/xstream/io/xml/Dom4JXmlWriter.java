@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,7 +42,7 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
     public Dom4JXmlWriter(final XMLWriter writer, final NameCoder nameCoder) {
         super(nameCoder);
         this.writer = writer;
-        elementStack = new FastStack<String>(16);
+        elementStack = new FastStack<>(16);
         attributes = new AttributesImpl();
         try {
             writer.startDocument();

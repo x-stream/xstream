@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,8 +41,8 @@ public class XppDom implements Serializable {
 
     public XppDom(final String name) {
         this.name = name;
-        childList = new ArrayList<XppDom>();
-        childMap = new HashMap<String, XppDom>();
+        childList = new ArrayList<>();
+        childMap = new HashMap<>();
     }
 
     // ----------------------------------------------------------------------
@@ -83,7 +83,7 @@ public class XppDom implements Serializable {
 
     public void setAttribute(final String name, final String value) {
         if (null == attributes) {
-            attributes = new HashMap<String, String>();
+            attributes = new HashMap<>();
         }
 
         attributes.put(name, value);
@@ -119,7 +119,7 @@ public class XppDom implements Serializable {
         if (null == childList) {
             return new XppDom[0];
         } else {
-            final ArrayList<XppDom> children = new ArrayList<XppDom>();
+            final ArrayList<XppDom> children = new ArrayList<>();
             final int size = childList.size();
 
             for (int i = 0; i < size; i++) {
@@ -158,7 +158,7 @@ public class XppDom implements Serializable {
     // ----------------------------------------------------------------------
 
     Object readResolve() {
-        childMap = new HashMap<String, XppDom>();
+        childMap = new HashMap<>();
         for (final XppDom element : childList) {
             childMap.put(element.getName(), element);
         }
@@ -178,8 +178,8 @@ public class XppDom implements Serializable {
      * @throws IOException if the data cannot be read
      */
     public static XppDom build(final XmlPullParser parser) throws XmlPullParserException, IOException {
-        final List<XppDom> elements = new ArrayList<XppDom>();
-        final List<StringBuilder> values = new ArrayList<StringBuilder>();
+        final List<XppDom> elements = new ArrayList<>();
+        final List<StringBuilder> values = new ArrayList<>();
         XppDom node = null;
 
         int eventType = parser.getEventType();

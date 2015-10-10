@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -34,8 +34,8 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public abstract class AbstractReferenceMarshaller<R> extends TreeMarshaller implements MarshallingContext {
 
-    private final ObjectIdDictionary<Id<R>> references = new ObjectIdDictionary<Id<R>>();
-    private final ObjectIdDictionary<Object> implicitElements = new ObjectIdDictionary<Object>();
+    private final ObjectIdDictionary<Id<R>> references = new ObjectIdDictionary<>();
+    private final ObjectIdDictionary<Object> implicitElements = new ObjectIdDictionary<>();
     private final PathTracker pathTracker = new PathTracker();
     private Path lastPath;
 
@@ -65,7 +65,7 @@ public abstract class AbstractReferenceMarshaller<R> extends TreeMarshaller impl
                 if (lastPath == null || !currentPath.isAncestor(lastPath)) {
                     fireValidReference(newReferenceKey);
                     lastPath = currentPath;
-                    references.associateId(item, new Id<R>(newReferenceKey, currentPath));
+                    references.associateId(item, new Id<>(newReferenceKey, currentPath));
                 }
                 converter.marshal(item, writer, new ReferencingMarshallingContext<R>() {
 

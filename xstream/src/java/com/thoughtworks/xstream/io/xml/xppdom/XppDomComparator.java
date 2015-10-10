@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2014 XStream Committers.
+ * Copyright (C) 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -119,7 +119,7 @@ public class XppDomComparator implements Comparator<XppDom> {
 
             xpath.append('/');
 
-            final Map<String, int[]> names = new HashMap<String, int[]>();
+            final Map<String, int[]> names = new HashMap<>();
             for (int i = 0; i < children; ++i) {
                 final XppDom child1 = dom1.getChild(i);
                 final XppDom child2 = dom2.getChild(i);

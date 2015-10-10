@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 XStream Committers.
+ * Copyright (C) 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * Created on 09. January 2014 by Joerg Schaible
@@ -42,7 +42,7 @@ public class ExplicitTypePermission implements TypePermission {
      * @since 1.4.7
      */
     public ExplicitTypePermission(String... names) {
-        this.names = names == null ? Collections.<String>emptySet() : new HashSet<String>(Arrays.asList(names));
+        this.names = names == null ? Collections.<String>emptySet() : new HashSet<>(Arrays.asList(names));
     }
 
     @Override

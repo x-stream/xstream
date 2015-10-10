@@ -38,7 +38,7 @@ public class OuterClassMapper extends MapperWrapper implements Caching {
     public OuterClassMapper(final Mapper wrapped, final String alias) {
         super(wrapped);
         this.alias = alias;
-        innerFields = new ConcurrentHashMap<String, String[]>();
+        innerFields = new ConcurrentHashMap<>();
         innerFields.put(Object.class.getName(), EMPTY_NAMES);
     }
 

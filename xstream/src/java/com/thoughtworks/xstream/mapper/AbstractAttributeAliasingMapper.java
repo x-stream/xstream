@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2014 XStream Committers.
+ * Copyright (C) 2008, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,8 +22,8 @@ import java.util.Map;
  */
 public abstract class AbstractAttributeAliasingMapper extends MapperWrapper {
 
-    protected final Map<String, String> aliasToName = new HashMap<String, String>();
-    protected transient Map<String, String> nameToAlias = new HashMap<String, String>();
+    protected final Map<String, String> aliasToName = new HashMap<>();
+    protected transient Map<String, String> nameToAlias = new HashMap<>();
 
     public AbstractAttributeAliasingMapper(final Mapper wrapped) {
         super(wrapped);
@@ -35,7 +35,7 @@ public abstract class AbstractAttributeAliasingMapper extends MapperWrapper {
     }
 
     Object readResolve() {
-        nameToAlias = new HashMap<String, String>();
+        nameToAlias = new HashMap<>();
         for (final Map.Entry<String, String> entry : aliasToName.entrySet()) {
             nameToAlias.put(entry.getValue(), entry.getKey());
         }

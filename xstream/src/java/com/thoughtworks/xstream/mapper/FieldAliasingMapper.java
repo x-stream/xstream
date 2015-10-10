@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,10 +28,10 @@ import com.thoughtworks.xstream.core.util.FastField;
  */
 public class FieldAliasingMapper extends MapperWrapper {
 
-    protected final Map<FastField, String> fieldToAliasMap = new HashMap<FastField, String>();
-    protected final Map<FastField, String> aliasToFieldMap = new HashMap<FastField, String>();
-    protected final Set<FastField> fieldsToOmit = new HashSet<FastField>();
-    protected final Set<Pattern> unknownFieldsToIgnore = new LinkedHashSet<Pattern>();
+    protected final Map<FastField, String> fieldToAliasMap = new HashMap<>();
+    protected final Map<FastField, String> aliasToFieldMap = new HashMap<>();
+    protected final Set<FastField> fieldsToOmit = new HashSet<>();
+    protected final Set<Pattern> unknownFieldsToIgnore = new LinkedHashSet<>();
 
     public FieldAliasingMapper(final Mapper wrapped) {
         super(wrapped);

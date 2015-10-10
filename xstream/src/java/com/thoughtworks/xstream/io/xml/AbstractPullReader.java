@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,11 +33,11 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
     protected static final int COMMENT = 4;
     protected static final int OTHER = 0;
 
-    private final FastStack<String> elementStack = new FastStack<String>(16);
-    private final FastStack<Event> pool = new FastStack<Event>(16);
+    private final FastStack<String> elementStack = new FastStack<>(16);
+    private final FastStack<Event> pool = new FastStack<>(16);
 
-    private final FastStack<Event> lookahead = new FastStack<Event>(4);
-    private final FastStack<Event> lookback = new FastStack<Event>(4);
+    private final FastStack<Event> lookahead = new FastStack<>(4);
+    private final FastStack<Event> lookback = new FastStack<>(4);
     private boolean marked;
 
     private static class Event {

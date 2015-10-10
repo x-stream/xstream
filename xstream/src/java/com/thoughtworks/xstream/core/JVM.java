@@ -139,7 +139,7 @@ public class JVM implements Caching {
                 throw new RuntimeException();
             }
         };
-        final SortedMap<Object, Object> map = new PresortedMap<Object, Object>(comparator);
+        final SortedMap<Object, Object> map = new PresortedMap<>(comparator);
         map.put("one", null);
         map.put("two", null);
         try {
@@ -149,7 +149,7 @@ public class JVM implements Caching {
             test = false;
         }
         optimizedTreeMapPutAll = test;
-        final SortedSet<Object> set = new PresortedSet<Object>(comparator);
+        final SortedSet<Object> set = new PresortedSet<>(comparator);
         set.addAll(map.keySet());
         try {
             new TreeSet<Object>(comparator).addAll(set);

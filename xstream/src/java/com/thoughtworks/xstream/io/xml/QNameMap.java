@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -66,10 +66,10 @@ public class QNameMap {
      */
     public synchronized void registerMapping(final QName qname, final String javaClassName) {
         if (javaToQName == null) {
-            javaToQName = Collections.synchronizedMap(new HashMap<String, QName>());
+            javaToQName = Collections.synchronizedMap(new HashMap<>());
         }
         if (qnameToJava == null) {
-            qnameToJava = Collections.synchronizedMap(new HashMap<QName, String>());
+            qnameToJava = Collections.synchronizedMap(new HashMap<>());
         }
         javaToQName.put(javaClassName, qname);
         qnameToJava.put(qname, javaClassName);

@@ -25,9 +25,9 @@ import com.thoughtworks.xstream.core.util.Primitives;
  */
 public class ClassAliasingMapper extends MapperWrapper {
 
-    private final Map<Class<?>, String> typeToName = new HashMap<Class<?>, String>();
-    private final Map<String, String> classToName = new HashMap<String, String>();
-    private transient Map<String, String> nameToType = new HashMap<String, String>();
+    private final Map<Class<?>, String> typeToName = new HashMap<>();
+    private final Map<String, String> classToName = new HashMap<>();
+    private transient Map<String, String> nameToType = new HashMap<>();
 
     public ClassAliasingMapper(final Mapper wrapped) {
         super(wrapped);
@@ -90,7 +90,7 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     private Object readResolve() {
-        nameToType = new HashMap<String, String>();
+        nameToType = new HashMap<>();
         for (final String type : classToName.keySet()) {
             nameToType.put(classToName.get(type), type);
         }

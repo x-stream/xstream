@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -68,7 +68,7 @@ public class CompositeClassLoader extends ClassLoader {
     }
 
     private final ReferenceQueue<ClassLoader> queue = new ReferenceQueue<ClassLoader>();
-    private final List<WeakReference<ClassLoader>> classLoaders = new ArrayList<WeakReference<ClassLoader>>();
+    private final List<WeakReference<ClassLoader>> classLoaders = new ArrayList<>();
 
     public CompositeClassLoader() {
         addInternal(Object.class.getClassLoader()); // bootstrap loader.
@@ -98,12 +98,12 @@ public class CompositeClassLoader extends ClassLoader {
                 refClassLoader = ref;
             }
         }
-        classLoaders.add(0, refClassLoader != null ? refClassLoader : new WeakReference<ClassLoader>(classLoader, queue));
+        classLoaders.add(0, refClassLoader != null ? refClassLoader : new WeakReference<>(classLoader, queue));
     }
 
     @Override
     public Class<?> loadClass(final String name) throws ClassNotFoundException {
-        final List<ClassLoader> copy = new ArrayList<ClassLoader>(classLoaders.size());
+        final List<ClassLoader> copy = new ArrayList<>(classLoaders.size());
         synchronized(this) {
             cleanup();
             for(final WeakReference<ClassLoader> ref : classLoaders) {

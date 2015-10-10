@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2010, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * Created on 12.10.2010 by Joerg Schaible, extracted from TreeSetConverter.
@@ -18,7 +18,7 @@ import java.util.SortedSet;
  * @author J&ouml;rg Schaible
  */
 public class PresortedSet<E> implements SortedSet<E> {
-    private final List<E> list = new ArrayList<E>();
+    private final List<E> list = new ArrayList<>();
     private final Comparator<E> comparator;
 
     public PresortedSet() {

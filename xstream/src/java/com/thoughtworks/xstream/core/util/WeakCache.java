@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,7 +42,7 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
      * @since 1.4
      */
     public WeakCache() {
-        this(new WeakHashMap<K, Reference<V>>());
+        this(new WeakHashMap<>());
     }
 
     /**
@@ -74,7 +74,7 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
     }
 
     protected Reference<V> createReference(final V value) {
-        return new WeakReference<V>(value);
+        return new WeakReference<>(value);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
 
     @Override
     public Collection<V> values() {
-        final Collection<V> collection = new ArrayList<V>();
+        final Collection<V> collection = new ArrayList<>();
         if (map.size() != 0) {
             iterate(new Visitor() {
 
@@ -130,7 +130,7 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
 
     @Override
     public Set<Map.Entry<K, V>> entrySet() {
-        final Set<Map.Entry<K, V>> set = new HashSet<Map.Entry<K, V>>();
+        final Set<Map.Entry<K, V>> set = new HashSet<>();
         if (map.size() != 0) {
             iterate(new Visitor() {
 

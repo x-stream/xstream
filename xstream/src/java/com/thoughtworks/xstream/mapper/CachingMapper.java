@@ -62,7 +62,7 @@ public class CachingMapper extends MapperWrapper implements Caching {
     }
 
     private Object readResolve() {
-        realClassCache = new ConcurrentHashMap<String, Object>(128);
+        realClassCache = new ConcurrentHashMap<>(128);
         return this;
     }
 }

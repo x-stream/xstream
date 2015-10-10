@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -74,7 +74,7 @@ public class StatefulWriter extends WriterWrapper {
      */
     public StatefulWriter(final HierarchicalStreamWriter wrapped) {
         super(wrapped);
-        attributes = new FastStack<Set<String>>(16);
+        attributes = new FastStack<>(16);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class StatefulWriter extends WriterWrapper {
         }
         state = STATE_NODE_START;
         ++balance;
-        attributes.push(new HashSet<String>());
+        attributes.push(new HashSet<>());
     }
 
     @Override
@@ -176,7 +176,7 @@ public class StatefulWriter extends WriterWrapper {
     }
 
     private Object readResolve() {
-        attributes = new FastStack<Set<String>>(16);
+        attributes = new FastStack<>(16);
         return this;
     }
 }

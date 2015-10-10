@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -68,7 +68,7 @@ public class Path {
 
     public Path(final String pathAsString) {
         // String.split() too slow. StringTokenizer too crappy.
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         int currentIndex = 0;
         int nextSeparator;
         this.pathAsString = pathAsString;
@@ -195,7 +195,7 @@ public class Path {
     }
 
     public Path apply(final Path relativePath) {
-        final FastStack<String> absoluteStack = new FastStack<String>(16);
+        final FastStack<String> absoluteStack = new FastStack<>(16);
 
         for (final String chunk : chunks) {
             absoluteStack.push(chunk);

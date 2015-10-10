@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 /**
  * An abstract implementation of a writer that calls abstract methods to build JSON structures. Note, that XStream's
  * implicit collection feature is only compatible with the syntax in {@link #EXPLICIT_MODE}.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4
  */
@@ -40,7 +40,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * <p>
      * The root node is the first level of the JSON object i.e.
      * </p>
-     * 
+     *
      * <pre>
      * { &quot;person&quot;: {
      *     &quot;name&quot;: &quot;Joe&quot;
@@ -49,7 +49,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * <p>
      * will be written without root simply as
      * </p>
-     * 
+     *
      * <pre>
      * {
      *     &quot;name&quot;: &quot;Joe&quot;
@@ -59,7 +59,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * Without a root node, the top level element might now also be an array. However, it is possible to generate
      * invalid JSON unless {@link #STRICT_MODE} is also set.
      * </p>
-     * 
+     *
      * @since 1.3.1
      */
     public static final int DROP_ROOT_MODE = 1;
@@ -69,14 +69,14 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * The mode is only useful in combination with the {@link #DROP_ROOT_MODE}. An object with a single value as first
      * node i.e.
      * </p>
-     * 
+     *
      * <pre>
      * { &quot;name&quot;: &quot;Joe&quot; }
      * </pre>
      * <p>
      * is simply written as
      * </p>
-     * 
+     *
      * <pre>
      * &quot;Joe&quot;
      * </pre>
@@ -84,7 +84,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * However, this is no longer valid JSON. Therefore you can activate {@link #STRICT_MODE} and a
      * {@link ConversionException} is thrown instead.
      * </p>
-     * 
+     *
      * @since 1.3.1
      */
     public static final int STRICT_MODE = 2;
@@ -104,7 +104,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * null, a string or integer value or again a new JSON object representing a Java object. Here an example of an
      * string array with one member, where the array and the string has an additional attribute 'id':
      * </p>
-     * 
+     *
      * <pre>
      * {&quot;string-array&quot;:[[{&quot;id&quot;:&quot;1&quot;}],[{&quot;string&quot;:[[{&quot;id&quot;:&quot;2&quot;}],[&quot;Joe&quot;]]}]]}
      * </pre>
@@ -114,7 +114,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * <p>
      * This mode cannot combined with {@link #STRICT_MODE} or {@link #DROP_ROOT_MODE}.
      * </p>
-     * 
+     *
      * @since 1.4
      */
     public static final int EXPLICIT_MODE = 4;
@@ -129,7 +129,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * <p>
      * CAUTION: A client must be aware that the element may contain a number or a string value.
      * </p>
-     * 
+     *
      * @since 1.4.5
      * @see <a href="http://ecma262-5.com/ELS5_HTML.htm#Section_8.5">ECMA Specification: The Number Type</a>
      */
@@ -153,6 +153,8 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     }
 
     private static class IllegalWriterStateException extends IllegalStateException {
+        private static final long serialVersionUID = 20151010L;
+
         public IllegalWriterStateException(final int from, final int to, final String element) {
             super("Cannot turn from state "
                 + getState(from)
@@ -202,16 +204,16 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     private static final int STATE_END_ELEMENTS = 1 << 8;
     private static final int STATE_SET_VALUE = 1 << 9;
 
-    private static final Set<Class<?>> NUMBER_TYPES = new HashSet<Class<?>>(Arrays.<Class<?>>asList(byte.class,
-        Byte.class, short.class, Short.class, int.class, Integer.class, long.class, Long.class, float.class,
-        Float.class, double.class, Double.class, BigInteger.class, BigDecimal.class));
+    private static final Set<Class<?>> NUMBER_TYPES = new HashSet<>(Arrays.<Class<?>>asList(byte.class, Byte.class,
+        short.class, Short.class, int.class, Integer.class, long.class, Long.class, float.class, Float.class,
+        double.class, Double.class, BigInteger.class, BigDecimal.class));
     private final int mode;
-    private final FastStack<StackElement> stack = new FastStack<StackElement>(16);
+    private final FastStack<StackElement> stack = new FastStack<>(16);
     private int expectedStates;
 
     /**
      * Construct a JSON writer.
-     * 
+     *
      * @since 1.4
      */
     public AbstractJsonWriter() {
@@ -220,7 +222,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
 
     /**
      * Construct a JSON writer with a special mode.
-     * 
+     *
      * @param mode a bit mask of the mode constants
      * @since 1.4
      */
@@ -230,7 +232,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
 
     /**
      * Construct a JSON writer with a special name coder.
-     * 
+     *
      * @param nameCoder the name coder to use
      * @since 1.4
      */
@@ -240,7 +242,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
 
     /**
      * Construct a JSON writer with a special mode and name coder.
-     * 
+     *
      * @param mode a bit mask of the mode constants
      * @param nameCoder the name coder to use
      * @since 1.4
@@ -533,8 +535,8 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
                     }
                     break;
                 case STATE_START_OBJECT:
-                    currentState = handleStateTransition(currentState, STATE_START_OBJECT, elementToAdd,
-                        (mode & EXPLICIT_MODE) == 0 ? "" : null);
+                    currentState = handleStateTransition(currentState, STATE_START_OBJECT, elementToAdd, (mode
+                        & EXPLICIT_MODE) == 0 ? "" : null);
                     break;
                 case STATE_END_OBJECT:
                     currentState = handleStateTransition(currentState, STATE_SET_VALUE, null, null);
@@ -597,20 +599,22 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
 
     /**
      * Method to return the appropriate JSON type for a Java type.
-     * 
+     *
      * @param clazz the type
      * @return One of the {@link Type} instances
      * @since 1.4.4
      */
     protected Type getType(final Class<?> clazz) {
-        return clazz == Mapper.Null.class ? Type.NULL : clazz == Boolean.class || clazz == Boolean.TYPE
-            ? Type.BOOLEAN
-            : NUMBER_TYPES.contains(clazz) ? Type.NUMBER : Type.STRING;
+        return clazz == Mapper.Null.class
+            ? Type.NULL
+            : clazz == Boolean.class || clazz == Boolean.TYPE
+                ? Type.BOOLEAN
+                : NUMBER_TYPES.contains(clazz) ? Type.NUMBER : Type.STRING;
     }
 
     /**
      * Method to declare various Java types to be handles as JSON array.
-     * 
+     *
      * @param clazz the type
      * @return <code>true</code> if handles as array
      * @since 1.4
@@ -620,19 +624,20 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
             && (clazz.isArray()
                 || Collection.class.isAssignableFrom(clazz)
                 || Externalizable.class.isAssignableFrom(clazz)
-                || Map.class.isAssignableFrom(clazz) || Map.Entry.class.isAssignableFrom(clazz));
+                || Map.class.isAssignableFrom(clazz)
+                || Map.Entry.class.isAssignableFrom(clazz));
     }
 
     /**
      * Start a JSON object.
-     * 
+     *
      * @since 1.4
      */
     protected abstract void startObject();
 
     /**
      * Add a label to a JSON object.
-     * 
+     *
      * @param name the label's name
      * @since 1.4
      */
@@ -640,7 +645,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
 
     /**
      * Add a value to a JSON object's label or to an array.
-     * 
+     *
      * @param value the value itself
      * @param type the JSON type
      * @since 1.4
@@ -649,28 +654,28 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
 
     /**
      * Start a JSON array.
-     * 
+     *
      * @since 1.4
      */
     protected abstract void startArray();
 
     /**
      * Prepare a JSON object or array for another element.
-     * 
+     *
      * @since 1.4
      */
     protected abstract void nextElement();
 
     /**
      * End the JSON array.
-     * 
+     *
      * @since 1.4
      */
     protected abstract void endArray();
 
     /**
      * End the JSON object.
-     * 
+     *
      * @since 1.4
      */
     protected abstract void endObject();

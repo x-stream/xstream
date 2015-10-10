@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,7 +23,7 @@ public class MapBackedDataHolder implements DataHolder {
     private final Map<Object, Object> map;
 
     public MapBackedDataHolder() {
-        this(new HashMap<Object, Object>());
+        this(new HashMap<>());
     }
 
     public MapBackedDataHolder(final Map<Object, Object> map) {

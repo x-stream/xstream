@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,8 +29,8 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  */
 public abstract class AbstractDocumentWriter extends AbstractXmlWriter implements DocumentWriter {
 
-    private final List<Object> result = new ArrayList<Object>();
-    private final FastStack<Object> nodeStack = new FastStack<Object>(16);
+    private final List<Object> result = new ArrayList<>();
+    private final FastStack<Object> nodeStack = new FastStack<>(16);
 
     /**
      * Constructs an AbstractDocumentWriter.

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 
 public abstract class AbstractDocumentReader extends AbstractXmlReader implements DocumentReader {
 
-    private final FastStack<Pointer> pointers = new FastStack<Pointer>(16);
+    private final FastStack<Pointer> pointers = new FastStack<>(16);
     private Object current;
 
     protected AbstractDocumentReader(final Object rootElement) {

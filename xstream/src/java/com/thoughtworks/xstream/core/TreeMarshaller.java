@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,7 +29,7 @@ public class TreeMarshaller implements MarshallingContext {
     protected HierarchicalStreamWriter writer;
     protected ConverterLookup converterLookup;
     private final Mapper mapper;
-    private final ObjectIdDictionary<Object> parentObjects = new ObjectIdDictionary<Object>();
+    private final ObjectIdDictionary<Object> parentObjects = new ObjectIdDictionary<>();
     private DataHolder dataHolder;
 
     public TreeMarshaller(
@@ -113,6 +113,7 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     public static class CircularReferenceException extends ConversionException {
+        private static final long serialVersionUID = 20151010L;
 
         public CircularReferenceException(final String msg) {
             super(msg);

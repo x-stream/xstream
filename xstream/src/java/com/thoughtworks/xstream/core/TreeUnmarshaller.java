@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,9 +33,9 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     protected HierarchicalStreamReader reader;
     private final ConverterLookup converterLookup;
     private final Mapper mapper;
-    private final FastStack<Class<?>> types = new FastStack<Class<?>>(16);
+    private final FastStack<Class<?>> types = new FastStack<>(16);
     private DataHolder dataHolder;
-    private final PrioritizedList<Runnable> validationList = new PrioritizedList<Runnable>();
+    private final PrioritizedList<Runnable> validationList = new PrioritizedList<>();
 
     public TreeUnmarshaller(
             final Object root, final HierarchicalStreamReader reader, final ConverterLookup converterLookup,

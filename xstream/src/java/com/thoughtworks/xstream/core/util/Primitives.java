@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2007, 2011, 2014 XStream Committers.
+ * Copyright (c) 2006, 2007, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,10 +21,10 @@ import java.util.Map;
  * @since 1.2.1
  */
 public final class Primitives {
-    private final static Map<Class<?>, Class<?>> BOX = new HashMap<Class<?>, Class<?>>();
-    private final static Map<Class<?>, Class<?>> UNBOX = new HashMap<Class<?>, Class<?>>();
-    private final static Map<String, Class<?>> NAMED_PRIMITIVE = new HashMap<String, Class<?>>();
-    private final static Map<Class<?>, Character> REPRESENTING_CHAR = new HashMap<Class<?>, Character>();
+    private final static Map<Class<?>, Class<?>> BOX = new HashMap<>();
+    private final static Map<Class<?>, Class<?>> UNBOX = new HashMap<>();
+    private final static Map<String, Class<?>> NAMED_PRIMITIVE = new HashMap<>();
+    private final static Map<Class<?>, Character> REPRESENTING_CHAR = new HashMap<>();
 
     static {
         final Class<?>[][] boxing = new Class[][]{

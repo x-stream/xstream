@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -233,7 +233,7 @@ public class TraxSource extends SAXSource {
         if (obj == null) {
             throw new IllegalArgumentException("obj");
         }
-        final List<Object> list = new ArrayList<Object>(1);
+        final List<Object> list = new ArrayList<>(1);
         list.add(obj);
 
         setSourceAsList(list);

@@ -25,8 +25,8 @@ import com.thoughtworks.xstream.InitializationException;
  */
 public class DefaultImplementationsMapper extends MapperWrapper {
 
-    private final Map<Class<?>, Class<?>> typeToImpl = new HashMap<Class<?>, Class<?>>();
-    private transient Map<Class<?>, Class<?>> implToType = new HashMap<Class<?>, Class<?>>();
+    private final Map<Class<?>, Class<?>> typeToImpl = new HashMap<>();
+    private transient Map<Class<?>, Class<?>> implToType = new HashMap<>();
 
     public DefaultImplementationsMapper(final Mapper wrapped) {
         super(wrapped);
@@ -72,7 +72,7 @@ public class DefaultImplementationsMapper extends MapperWrapper {
     }
 
     private Object readResolve() {
-        implToType = new HashMap<Class<?>, Class<?>>();
+        implToType = new HashMap<>();
         for (final Class<?> type : typeToImpl.keySet()) {
             implToType.put(typeToImpl.get(type), type);
         }

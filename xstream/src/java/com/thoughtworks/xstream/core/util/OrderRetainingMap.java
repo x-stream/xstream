@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 06. February 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.core.util;
@@ -26,9 +26,9 @@ import java.util.Set;
  */
 @Deprecated
 public class OrderRetainingMap<K, V> extends HashMap<K, V> {
-
-    private final ArraySet<K> keyOrder = new ArraySet<K>();
-    private final List<V> valueOrder = new ArrayList<V>();
+    private static final long serialVersionUID = 20151010L;
+    private final ArraySet<K> keyOrder = new ArraySet<>();
+    private final List<V> valueOrder = new ArrayList<>();
 
     public OrderRetainingMap() {
         super();
@@ -92,10 +92,12 @@ public class OrderRetainingMap<K, V> extends HashMap<K, V> {
         for (final Map.Entry<K, V> entry : super.entrySet()) {
             entries[keyOrder.indexOf(entry.getKey())] = entry;
         }
-        final Set<Map.Entry<K, V>> set = new ArraySet<Map.Entry<K, V>>();
+        final Set<Map.Entry<K, V>> set = new ArraySet<>();
         set.addAll(Arrays.asList(entries));
         return Collections.unmodifiableSet(set);
     }
 
-    private static class ArraySet<K> extends ArrayList<K> implements Set<K> {}
+    private static class ArraySet<K> extends ArrayList<K> implements Set<K> {
+        private static final long serialVersionUID = 20151010L;
+    }
 }

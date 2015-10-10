@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2014 XStream Committers.
+ * Copyright (C) 2008, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,7 @@ import java.util.TreeMap;
  */
 public class PackageAliasingMapper extends MapperWrapper implements Serializable {
 
+    private static final long serialVersionUID = 20151010L;
     private static final Comparator<String> REVERSE = new Comparator<String>() {
 
         @Override
@@ -35,8 +36,8 @@ public class PackageAliasingMapper extends MapperWrapper implements Serializable
         }
     };
 
-    private Map<String, String> packageToName = new TreeMap<String, String>(REVERSE);
-    protected transient Map<String, String> nameToPackage = new HashMap<String, String>();
+    private Map<String, String> packageToName = new TreeMap<>(REVERSE);
+    protected transient Map<String, String> nameToPackage = new HashMap<>();
 
     public PackageAliasingMapper(final Mapper wrapped) {
         super(wrapped);
@@ -90,15 +91,15 @@ public class PackageAliasingMapper extends MapperWrapper implements Serializable
     }
 
     private void writeObject(final ObjectOutputStream out) throws IOException {
-        out.writeObject(new HashMap<String, String>(packageToName));
+        out.writeObject(new HashMap<>(packageToName));
     }
 
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
-        packageToName = new TreeMap<String, String>(REVERSE);
+        packageToName = new TreeMap<>(REVERSE);
         @SuppressWarnings("unchecked")
         final Map<String, String> map = (Map<String, String>)in.readObject();
         packageToName.putAll(map);
-        nameToPackage = new HashMap<String, String>();
+        nameToPackage = new HashMap<>();
         for (final Map.Entry<String, String> entry : packageToName.entrySet()) {
             nameToPackage.put(entry.getValue(), entry.getKey());
         }

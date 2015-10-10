@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -49,6 +49,8 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
     private static final IntPair[] XML_NAME_CHAR_EXTRA_BOUNDS;
     static {
         class IntPairList extends ArrayList<IntPair> {
+            private static final long serialVersionUID = 20151010L;
+
             void add(final int min, final int max) {
                 super.add(new IntPair(min, max));
             }
@@ -282,7 +284,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
     }
 
     protected Map<String, String> createCacheMap() {
-        return new HashMap<String, String>();
+        return new HashMap<>();
     }
 
     private static class IntPair {

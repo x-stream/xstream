@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2010, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * Created on 12.10.2010 by Joerg Schaible, extracted from TreeMapConverter.
@@ -19,17 +19,19 @@ import java.util.SortedMap;
  */
 public class PresortedMap<K, V> implements SortedMap<K, V> {
 
-    private static class ArraySet<T> extends ArrayList<T> implements Set<T> {}
+    private static class ArraySet<T> extends ArrayList<T> implements Set<T> {
+        private static final long serialVersionUID = 20151010L;
+    }
 
     private final PresortedMap.ArraySet<Map.Entry<K, V>> set;
     private final Comparator<K> comparator;
 
     public PresortedMap() {
-        this(null, new ArraySet<Map.Entry<K, V>>());
+        this(null, new ArraySet<>());
     }
 
     public PresortedMap(final Comparator<K> comparator) {
-        this(comparator, new ArraySet<Map.Entry<K, V>>());
+        this(comparator, new ArraySet<>());
     }
 
     private PresortedMap(final Comparator<K> comparator, final PresortedMap.ArraySet<Map.Entry<K, V>> set) {
