@@ -32,7 +32,7 @@ import com.thoughtworks.xstream.core.util.PrioritizedList;
  */
 public class DefaultConverterLookup implements ConverterLookup, ConverterRegistry, Caching {
 
-    private final PrioritizedList<Converter> converters = new PrioritizedList<Converter>();
+    private final PrioritizedList<Converter> converters = new PrioritizedList<>();
     private transient Map<Class<?>, Converter> typeToConverterMap;
 
     public DefaultConverterLookup() {

@@ -35,7 +35,7 @@ public class PresortedMap<K, V> implements SortedMap<K, V> {
     }
 
     private PresortedMap(final Comparator<K> comparator, final PresortedMap.ArraySet<Map.Entry<K, V>> set) {
-        this.comparator = comparator != null ? comparator : new ArraySetComparator<K, V>(set);
+        this.comparator = comparator != null ? comparator : new ArraySetComparator<>(set);
         this.set = set;
     }
 
@@ -61,7 +61,7 @@ public class PresortedMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public Set<K> keySet() {
-        final Set<K> keySet = new ArraySet<K>();
+        final Set<K> keySet = new ArraySet<>();
         for (final Map.Entry<K, V> entry : set) {
             keySet.add(entry.getKey());
         }
@@ -85,7 +85,7 @@ public class PresortedMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public Collection<V> values() {
-        final Set<V> values = new ArraySet<V>();
+        final Set<V> values = new ArraySet<>();
         for (final Map.Entry<K, V> entry : set) {
             values.add(entry.getValue());
         }

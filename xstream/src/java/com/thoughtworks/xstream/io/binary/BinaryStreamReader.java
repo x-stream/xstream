@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -216,7 +216,7 @@ public class BinaryStreamReader implements ExtendedHierarchicalStreamReader {
 
     private static class IdRegistry {
 
-        private final Map<Long, String> map = new HashMap<Long, String>();
+        private final Map<Long, String> map = new HashMap<>();
 
         public void put(final long id, final String value) {
             map.put(Long.valueOf(id), value);

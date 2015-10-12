@@ -23,8 +23,8 @@ import com.thoughtworks.xstream.converters.DataHolder;
 
 public class CustomObjectOutputStream extends ObjectOutputStream {
 
-    private final FastStack<StreamCallback> callbacks = new FastStack<StreamCallback>(1);
-    private final FastStack<CustomPutField> customFields = new FastStack<CustomPutField>(1);
+    private final FastStack<StreamCallback> callbacks = new FastStack<>(1);
+    private final FastStack<CustomPutField> customFields = new FastStack<>(1);
 
     private static final String DATA_HOLDER_KEY = CustomObjectOutputStream.class.getName();
 
@@ -186,7 +186,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     private class CustomPutField extends PutField {
 
-        private final Map<String, Object> fields = new LinkedHashMap<String, Object>();
+        private final Map<String, Object> fields = new LinkedHashMap<>();
 
         public Map<String, Object> asMap() {
             return fields;

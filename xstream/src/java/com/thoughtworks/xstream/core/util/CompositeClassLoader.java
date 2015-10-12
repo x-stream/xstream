@@ -67,7 +67,7 @@ public class CompositeClassLoader extends ClassLoader {
         }
     }
 
-    private final ReferenceQueue<ClassLoader> queue = new ReferenceQueue<ClassLoader>();
+    private final ReferenceQueue<ClassLoader> queue = new ReferenceQueue<>();
     private final List<WeakReference<ClassLoader>> classLoaders = new ArrayList<>();
 
     public CompositeClassLoader() {

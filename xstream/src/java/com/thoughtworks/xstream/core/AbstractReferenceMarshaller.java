@@ -96,7 +96,7 @@ public abstract class AbstractReferenceMarshaller<R> extends TreeMarshaller impl
 
                     @Override
                     public void replace(final Object original, final Object replacement) {
-                        references.associateId(replacement, new Id<R>(newReferenceKey, currentPath));
+                        references.associateId(replacement, new Id<>(newReferenceKey, currentPath));
                     }
 
                     @Override

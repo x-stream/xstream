@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -94,7 +94,7 @@ public class BinaryStreamWriter implements ExtendedHierarchicalStreamWriter {
     private class IdRegistry {
 
         private long nextId = 0;
-        private final Map<String, Long> ids = new HashMap<String, Long>();
+        private final Map<String, Long> ids = new HashMap<>();
 
         public long getId(final String value) {
             Long id = ids.get(value);

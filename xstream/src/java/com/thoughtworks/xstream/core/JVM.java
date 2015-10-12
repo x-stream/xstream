@@ -143,7 +143,7 @@ public class JVM implements Caching {
         map.put("one", null);
         map.put("two", null);
         try {
-            new TreeMap<Object, Object>(comparator).putAll(map);
+            new TreeMap<>(comparator).putAll(map);
             test = true;
         } catch (final RuntimeException e) {
             test = false;
@@ -152,7 +152,7 @@ public class JVM implements Caching {
         final SortedSet<Object> set = new PresortedSet<>(comparator);
         set.addAll(map.keySet());
         try {
-            new TreeSet<Object>(comparator).addAll(set);
+            new TreeSet<>(comparator).addAll(set);
             test = true;
         } catch (final RuntimeException e) {
             test = false;
