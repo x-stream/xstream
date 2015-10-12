@@ -73,7 +73,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             final Mapper mapper, final ReflectionProvider reflectionProvider,
             final ClassLoaderReference classLoaderReference) {
         super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), classLoaderReference);
-        fieldCache = new HashMap<String, List<Field>>();
+        fieldCache = new HashMap<>();
     }
 
     /**
@@ -83,7 +83,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     public CGLIBEnhancedConverter(
             final Mapper mapper, final ReflectionProvider reflectionProvider, final ClassLoader classLoader) {
         super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), classLoader);
-        fieldCache = new HashMap<String, List<Field>>();
+        fieldCache = new HashMap<>();
     }
 
     /**
@@ -183,7 +183,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         final Class<?> type = source.getClass();
         List<Field> fields = fieldCache.get(type.getName());
         if (fields == null) {
-            fields = new ArrayList<Field>();
+            fields = new ArrayList<>();
             fieldCache.put(type.getName(), fields);
             for (int i = 0; true; ++i) {
                 try {
@@ -197,7 +197,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 }
             }
         }
-        final List<Callback> list = new ArrayList<Callback>();
+        final List<Callback> list = new ArrayList<>();
         for (int i = 0; i < fields.size(); ++i) {
             try {
                 final Field field = fields.get(i);
@@ -218,7 +218,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     private Map<? super Object, ? super Object> createCallbackIndexMap(final Factory source) {
         final Callback[] originalCallbacks = source.getCallbacks();
         final Callback[] reverseEngineeringCallbacks = new Callback[originalCallbacks.length];
-        final Map<? super Object, ? super Object> callbackIndexMap = new HashMap<Object, Object>();
+        final Map<? super Object, ? super Object> callbackIndexMap = new HashMap<>();
         int idxNoOp = -1;
         for (int i = 0; i < originalCallbacks.length; i++) {
             final Callback callback = originalCallbacks[i];
@@ -235,8 +235,8 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
 
         try {
             source.setCallbacks(reverseEngineeringCallbacks);
-            final Set<Class<?>> interfaces = new HashSet<Class<?>>();
-            final Set<Method> methods = new HashSet<Method>();
+            final Set<Class<?>> interfaces = new HashSet<>();
+            final Set<Method> methods = new HashSet<>();
             Class<?> type = source.getClass();
             do {
                 methods.addAll(Arrays.asList(type.getDeclaredMethods()));
@@ -355,7 +355,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         enhancer.setSuperclass((Class<?>)context.convertAnother(null, Class.class));
         reader.moveUp();
         reader.moveDown();
-        final List<Class<?>> interfaces = new ArrayList<Class<?>>();
+        final List<Class<?>> interfaces = new ArrayList<>();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             interfaces.add((Class<?>)context.convertAnother(null, mapper.realClass(reader.getNodeName())));
@@ -368,8 +368,8 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         enhancer.setUseFactory(useFactory);
         reader.moveUp();
 
-        final List<Callback> callbacksToEnhance = new ArrayList<Callback>();
-        final List<Callback> callbacks = new ArrayList<Callback>();
+        final List<Callback> callbacksToEnhance = new ArrayList<>();
+        final List<Callback> callbacks = new ArrayList<>();
         Map<Method, Integer> callbackIndexMap = null;
         reader.moveDown();
         if ("callbacks".equals(reader.getNodeName())) {
@@ -438,7 +438,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     @Override
     protected Object readResolve() {
         super.readResolve();
-        fieldCache = new HashMap<String, List<Field>>();
+        fieldCache = new HashMap<>();
         return this;
     }
 

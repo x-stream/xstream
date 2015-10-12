@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2007, 2013, 2014 XStream Committers.
+ * Copyright (C) 2007, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 01. February 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.reflection;
@@ -26,15 +26,17 @@ import com.thoughtworks.xstream.core.util.Fields;
 /**
  * An abstract converter implementation for constants of {@link java.text.AttributedCharacterIterator.Attribute} and
  * derived types.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.2.2
  */
 public class AbstractAttributedCharacterIteratorAttributeConverter<T extends AttributedCharacterIterator.Attribute>
     extends AbstractSingleValueConverter {
 
-    private static final Map<String, Map<String, ? extends AttributedCharacterIterator.Attribute>> instanceMaps = new HashMap<String, Map<String, ? extends AttributedCharacterIterator.Attribute>>();
+    private static final Map<String, Map<String, ? extends AttributedCharacterIterator.Attribute>> instanceMaps =
+            new HashMap<>();
     private static final Method getName;
+
     static {
         Method method = null;
         try {
@@ -108,7 +110,7 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
         final Map<String, T> typedMap = (Map<String, T>)instanceMaps.get(type.getName());
         attributeMap = typedMap;
         if (attributeMap == null) {
-            attributeMap = new HashMap<String, T>();
+            attributeMap = new HashMap<>();
             final Field instanceMap = Fields.locate(type, Map.class, true);
             if (instanceMap != null) {
                 try {

@@ -51,7 +51,7 @@ public class FieldDictionary implements Caching {
     }
 
     private void init() {
-        dictionaryEntries = new ConcurrentHashMap<Class<?>, DictionaryEntry>();
+        dictionaryEntries = new ConcurrentHashMap<>();
     }
 
     /**
@@ -112,7 +112,7 @@ public class FieldDictionary implements Caching {
     private DictionaryEntry buildCache(final Class<?> type) {
         Class<?> cls = type;
         DictionaryEntry lastDictionaryEntry = null;
-        final LinkedList<Class<?>> superClasses = new LinkedList<Class<?>>();
+        final LinkedList<Class<?>> superClasses = new LinkedList<>();
         while (lastDictionaryEntry == null) {
             if (Object.class.equals(cls) || cls == null) {
                 lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
@@ -140,11 +140,10 @@ public class FieldDictionary implements Caching {
     }
 
     @SuppressWarnings("deprecation")
-    private DictionaryEntry buildDictionaryEntryForClass(final Class<?> cls, final DictionaryEntry lastDictionaryEntry) {
-        final Map<String, Field> keyedByFieldName =
-                new HashMap<String, Field>(lastDictionaryEntry.getKeyedByFieldName());
-        final Map<FieldKey, Field> keyedByFieldKey =
-                new LinkedHashMap<FieldKey, Field>(lastDictionaryEntry.getKeyedByFieldKey());
+    private DictionaryEntry buildDictionaryEntryForClass(final Class<?> cls,
+            final DictionaryEntry lastDictionaryEntry) {
+        final Map<String, Field> keyedByFieldName = new HashMap<>(lastDictionaryEntry.getKeyedByFieldName());
+        final Map<FieldKey, Field> keyedByFieldKey = new LinkedHashMap<>(lastDictionaryEntry.getKeyedByFieldKey());
         final Field[] fields = cls.getDeclaredFields();
         if (JVM.reverseFieldDefinition()) {
             reverseFieldsArray(fields);
@@ -157,10 +156,10 @@ public class FieldDictionary implements Caching {
             final FieldKey fieldKey = new FieldKey(field.getName(), field.getDeclaringClass(), i);
             final Field existent = keyedByFieldName.get(field.getName());
             if (existent == null
-                    // do overwrite statics
-                    || (existent.getModifiers() & Modifier.STATIC) != 0
-                    // overwrite non-statics with non-statics only
-                    || (existent != null && (field.getModifiers() & Modifier.STATIC) == 0)) {
+                // do overwrite statics
+                || (existent.getModifiers() & Modifier.STATIC) != 0
+                // overwrite non-statics with non-statics only
+                || existent != null && (field.getModifiers() & Modifier.STATIC) == 0) {
                 keyedByFieldName.put(field.getName(), field);
             }
             keyedByFieldKey.put(fieldKey, field);

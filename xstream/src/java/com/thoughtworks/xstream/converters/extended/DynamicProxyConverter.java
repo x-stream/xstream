@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -104,7 +104,7 @@ public class DynamicProxyConverter implements Converter {
 
     @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final List<Class<?>> interfaces = new ArrayList<Class<?>>();
+        final List<Class<?>> interfaces = new ArrayList<>();
         InvocationHandler handler = null;
         Class<?> handlerType = null;
         while (reader.hasMoreChildren()) {

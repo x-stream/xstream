@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 12. April 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.javabean;
@@ -30,13 +30,13 @@ import com.thoughtworks.xstream.core.Caching;
 
 /**
  * Builds the properties maps for each bean and caches them.
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public class PropertyDictionary implements Caching {
-    private transient Map<Class<?>, Map<String, PropertyDescriptor>> propertyNameCache = Collections
-        .synchronizedMap(new HashMap<Class<?>, Map<String, PropertyDescriptor>>());
+    private transient Map<Class<?>, Map<String, PropertyDescriptor>> propertyNameCache = Collections.synchronizedMap(
+        new HashMap<>());
     private final PropertySorter sorter;
 
     public PropertyDictionary() {
@@ -52,7 +52,7 @@ public class PropertyDictionary implements Caching {
      */
     @Deprecated
     public Iterator<BeanProperty> serializablePropertiesFor(final Class<?> type) {
-        final Collection<BeanProperty> beanProperties = new ArrayList<BeanProperty>();
+        final Collection<BeanProperty> beanProperties = new ArrayList<>();
         final Collection<PropertyDescriptor> descriptors = buildMap(type).values();
         for (final PropertyDescriptor descriptor : descriptors) {
             if (descriptor.getReadMethod() != null && descriptor.getWriteMethod() != null) {
@@ -64,7 +64,7 @@ public class PropertyDictionary implements Caching {
 
     /**
      * Locates a serializable property.
-     * 
+     *
      * @param cls
      * @param name
      * @deprecated As of 1.3.1, use {@link #propertyDescriptor(Class, String)} instead
@@ -88,7 +88,7 @@ public class PropertyDictionary implements Caching {
 
     /**
      * Locates a property descriptor.
-     * 
+     *
      * @param type
      * @param name
      */
@@ -109,7 +109,7 @@ public class PropertyDictionary implements Caching {
             } catch (final IntrospectionException e) {
                 throw new ObjectAccessException("Cannot get BeanInfo of type " + type.getName(), e);
             }
-            nameMap = new LinkedHashMap<String, PropertyDescriptor>();
+            nameMap = new LinkedHashMap<>();
             final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
             for (final PropertyDescriptor descriptor : propertyDescriptors) {
                 nameMap.put(descriptor.getName(), descriptor);

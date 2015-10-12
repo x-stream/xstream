@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -59,7 +59,7 @@ public class EncodedByteArrayConverter implements Converter, SingleValueConverte
     private Object unmarshalIndividualByteElements(final HierarchicalStreamReader reader,
             final UnmarshallingContext context) {
         // have to create a temporary list because we don't know the size of the array
-        final List<Byte> bytes = new ArrayList<Byte>();
+        final List<Byte> bytes = new ArrayList<>();
         boolean firstIteration = true;
         while (firstIteration || reader.hasMoreChildren()) { // hangover from previous hasMoreChildren
             reader.moveDown();

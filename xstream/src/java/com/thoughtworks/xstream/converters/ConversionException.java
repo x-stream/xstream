@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,8 +29,9 @@ import com.thoughtworks.xstream.XStreamException;
  */
 public class ConversionException extends XStreamException implements ErrorWriter {
 
+    private static final long serialVersionUID = 20151012L;
     private static final String SEPARATOR = "\n-------------------------------";
-    private final Map<String, String> stuff = new LinkedHashMap<String, String>();
+    private final Map<String, String> stuff = new LinkedHashMap<>();
 
     public ConversionException(final String msg, final Throwable cause) {
         super(msg, cause);

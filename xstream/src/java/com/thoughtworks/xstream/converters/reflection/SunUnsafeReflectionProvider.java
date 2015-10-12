@@ -117,6 +117,6 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
     @Override
     protected void init() {
         super.init();
-        fieldOffsetCache = new ConcurrentHashMap<Field, Long>();
+        fieldOffsetCache = new ConcurrentHashMap<>();
     }
 }

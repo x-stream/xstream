@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -111,7 +111,7 @@ public class SubjectConverter extends AbstractCollectionConverter {
     };
 
     protected Set<Principal> populateSet(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Set<Principal> set = new HashSet<Principal>();
+        final Set<Principal> set = new HashSet<>();
         reader.moveDown();
         while (reader.hasMoreChildren()) {
             reader.moveDown();

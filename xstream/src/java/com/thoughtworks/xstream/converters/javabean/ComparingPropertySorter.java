@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2014 XStream Committers.
+ * Copyright (C) 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -32,7 +32,7 @@ public class ComparingPropertySorter implements PropertySorter {
 
     @Override
     public Map<String, PropertyDescriptor> sort(final Class<?> type, final Map<String, PropertyDescriptor> nameMap) {
-        final TreeMap<String, PropertyDescriptor> map = new TreeMap<String, PropertyDescriptor>(comparator);
+        final TreeMap<String, PropertyDescriptor> map = new TreeMap<>(comparator);
         map.putAll(nameMap);
         return map;
     }

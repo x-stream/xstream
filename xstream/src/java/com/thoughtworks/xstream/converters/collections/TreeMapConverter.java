@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 08. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.collections;
@@ -33,7 +33,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * <p>
  * The converter assumes that the entries in the XML are already sorted according the comparator.
  * </p>
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
@@ -66,8 +66,8 @@ public class TreeMapConverter extends MapConverter {
             final MarshallingContext context) {
         if (comparator != null) {
             writer.startNode("comparator");
-            writer.addAttribute(mapper().aliasForSystemAttribute("class"), mapper().serializedClass(
-                comparator.getClass()));
+            writer.addAttribute(mapper().aliasForSystemAttribute("class"), mapper().serializedClass(comparator
+                .getClass()));
             context.convertAnother(comparator);
             writer.endNode();
         }
@@ -75,11 +75,11 @@ public class TreeMapConverter extends MapConverter {
 
     @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        TreeMap<Object, Object> result = comparatorField != null ? new TreeMap<Object, Object>() : null;
+        TreeMap<Object, Object> result = comparatorField != null ? new TreeMap<>() : null;
         @SuppressWarnings("unchecked")
         final Comparator<Object> comparator = (Comparator<Object>)unmarshalComparator(reader, context, result);
         if (result == null) {
-            result = comparator == null ? new TreeMap<Object, Object>() : new TreeMap<Object, Object>(comparator);
+            result = comparator == null ? new TreeMap<>() : new TreeMap<>(comparator);
         }
         populateTreeMap(reader, context, result, comparator);
         return result;
@@ -113,8 +113,8 @@ public class TreeMapConverter extends MapConverter {
             comparator = null;
         }
         @SuppressWarnings("unchecked")
-        final SortedMap<Object, Object> sortedMap = new PresortedMap<Object, Object>(
-            (Comparator<Object>)(comparator != null && JVM.hasOptimizedTreeMapPutAll() ? comparator : null));
+        final SortedMap<Object, Object> sortedMap = new PresortedMap<>((Comparator<Object>)(comparator != null
+            && JVM.hasOptimizedTreeMapPutAll() ? comparator : null));
         if (inFirstElement) {
             // we are already within the first entry
             putCurrentEntryIntoMap(reader, context, result, sortedMap);

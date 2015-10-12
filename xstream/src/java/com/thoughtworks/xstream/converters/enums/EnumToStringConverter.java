@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014 XStream Committers.
+ * Copyright (C) 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -48,7 +48,7 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
     private static <T extends Enum<T>> Map<String, T> extractStringMap(final Class<T> type) {
         checkType(type);
         final EnumSet<T> values = EnumSet.allOf(type);
-        final Map<String, T> strings = new HashMap<String, T>(values.size());
+        final Map<String, T> strings = new HashMap<>(values.size());
         for (final T value : values) {
             if (strings.put(value.toString(), value) != null) {
                 throw new IllegalArgumentException("Enum type "
@@ -67,7 +67,7 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
 
     private static <T extends Enum<T>> EnumMap<T, String> buildValueMap(final Class<T> type,
             final Map<String, T> strings) {
-        final EnumMap<T, String> values = new EnumMap<T, String>(type);
+        final EnumMap<T, String> values = new EnumMap<>(type);
         for (final Map.Entry<String, T> entry : strings.entrySet()) {
             values.put(entry.getValue(), entry.getKey());
         }

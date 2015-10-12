@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -127,7 +127,7 @@ public class JavaMethodConverter implements Converter {
             }
 
             reader.moveDown();
-            final List<Class<?>> parameterTypeList = new ArrayList<Class<?>>();
+            final List<Class<?>> parameterTypeList = new ArrayList<>();
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
                 final String parameterTypeName = reader.getValue();

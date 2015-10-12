@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -60,7 +60,7 @@ public class PropertiesConverter implements Converter {
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Properties properties = (Properties)source;
-        final Map<Object, Object> map = sort ? new TreeMap<Object, Object>(properties) : properties;
+        final Map<Object, Object> map = sort ? new TreeMap<>(properties) : properties;
         for (final Map.Entry<Object, Object> entry : map.entrySet()) {
             writer.startNode("property");
             writer.addAttribute("name", entry.getKey().toString());

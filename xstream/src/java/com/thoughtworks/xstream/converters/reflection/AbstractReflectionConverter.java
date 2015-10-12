@@ -95,13 +95,13 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
     protected void doMarshal(final Object source, final HierarchicalStreamWriter writer,
             final MarshallingContext context) {
-        final List<FieldInfo> fields = new ArrayList<FieldInfo>();
-        final Map<String, Field> defaultFieldDefinition = new HashMap<String, Field>();
+        final List<FieldInfo> fields = new ArrayList<>();
+        final Map<String, Field> defaultFieldDefinition = new HashMap<>();
         final Class<?> sourceType = source.getClass();
 
         // Attributes might be preferred to child elements ...
         reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
-            final Set<String> writtenAttributes = new HashSet<String>();
+            final Set<String> writtenAttributes = new HashSet<>();
 
             @Override
             public void visit(final String fieldName, final Class<?> type, final Class<?> definedIn,
@@ -153,7 +153,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         if (mapping != null) {
                             Set<Mapper.ImplicitCollectionMapping> mappings = hiddenMappers.get(info.fieldName);
                             if (mappings == null) {
-                                mappings = new HashSet<Mapper.ImplicitCollectionMapping>();
+                                mappings = new HashSet<>();
                                 mappings.add(mapping);
                                 hiddenMappers.put(info.fieldName, mappings);
                             } else {
@@ -454,7 +454,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         : Mapper.Null.class, originalNodeName);
                 }
                 if (implicitCollectionsForCurrentObject == null) {
-                    implicitCollectionsForCurrentObject = new HashMap<FieldLocation, Collection<? super Object>>();
+                    implicitCollectionsForCurrentObject = new HashMap<>();
                 }
                 writeValueToImplicitCollection(value, implicitCollectionsForCurrentObject, result, new FieldLocation(
                     implicitFieldName, fieldDeclaringClass));
@@ -684,7 +684,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
         private final Map<Object, Object> map;
         private final String keyFieldName;
-        private final Map<Class<?>, Field> fieldCache = new HashMap<Class<?>, Field>();
+        private final Map<Class<?>, Field> fieldCache = new HashMap<>();
 
         public MappingList(final Map<Object, Object> map, final String keyFieldName) {
             this.map = map;

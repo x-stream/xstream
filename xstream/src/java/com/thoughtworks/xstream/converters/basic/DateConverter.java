@@ -59,7 +59,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
 
         final String defaultPattern = "yyyy-MM-dd HH:mm:ss.S z";
         final String defaultEraPattern = "yyyy-MM-dd G HH:mm:ss.S z";
-        final List<String> acceptablePatterns = new ArrayList<String>();
+        final List<String> acceptablePatterns = new ArrayList<>();
         final boolean utcSupported = JVM.canParseUTCDateFormat();
         DEFAULT_PATTERN = utcSupported ? defaultPattern : "yyyy-MM-dd HH:mm:ss.S 'UTC'";
         DEFAULT_ERA_PATTERN = utcSupported ? defaultEraPattern : "yyyy-MM-dd G HH:mm:ss.S 'UTC'";

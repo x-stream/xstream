@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -48,7 +48,7 @@ public class ColorConverter implements Converter {
 
     @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        final Map<String, Integer> elements = new HashMap<String, Integer>();
+        final Map<String, Integer> elements = new HashMap<>();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             elements.put(reader.getNodeName(), Integer.valueOf(reader.getValue()));

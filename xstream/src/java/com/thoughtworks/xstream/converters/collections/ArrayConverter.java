@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -52,7 +52,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
     @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         // read the items from xml into a list (the array size is not known until all items have been read)
-        final List<Object> items = new ArrayList<Object>();
+        final List<Object> items = new ArrayList<>();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             final Object item = readItem(reader, context, null); // TODO: arg, what should replace null?

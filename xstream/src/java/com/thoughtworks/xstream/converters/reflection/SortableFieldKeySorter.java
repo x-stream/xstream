@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,12 +30,12 @@ import com.thoughtworks.xstream.io.StreamException;
  */
 public class SortableFieldKeySorter implements FieldKeySorter, Caching {
 
-    private final Map<Class<?>, Comparator<FieldKey>> map = new HashMap<Class<?>, Comparator<FieldKey>>();
+    private final Map<Class<?>, Comparator<FieldKey>> map = new HashMap<>();
 
     @Override
     public Map<FieldKey, Field> sort(final Class<?> type, final Map<FieldKey, Field> keyedByFieldKey) {
         if (map.containsKey(type)) {
-            final Map<FieldKey, Field> result = new LinkedHashMap<FieldKey, Field>();
+            final Map<FieldKey, Field> result = new LinkedHashMap<>();
             final FieldKey[] fieldKeys = keyedByFieldKey.keySet().toArray(new FieldKey[keyedByFieldKey.size()]);
             Arrays.sort(fieldKeys, map.get(type));
             for (final FieldKey fieldKey : fieldKeys) {

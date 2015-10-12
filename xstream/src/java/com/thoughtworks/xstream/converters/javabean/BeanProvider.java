@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -160,7 +160,7 @@ public class BeanProvider implements JavaBeanProvider {
     }
 
     protected PropertyDescriptor[] getSerializableProperties(final Object object) {
-        final List<PropertyDescriptor> result = new ArrayList<PropertyDescriptor>();
+        final List<PropertyDescriptor> result = new ArrayList<>();
         for (final Iterator<PropertyDescriptor> iter = propertyDictionary.propertiesFor(object.getClass()); iter
             .hasNext();) {
             final PropertyDescriptor descriptor = iter.next();

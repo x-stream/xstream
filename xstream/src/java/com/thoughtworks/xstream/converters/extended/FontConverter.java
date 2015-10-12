@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -101,7 +101,7 @@ public class FontConverter implements Converter {
             reader.moveDown();
             if (!reader.getNodeName().equals("attributes")) {
                 final String classAlias = mapper.aliasForSystemAttribute("class");
-                attributes = new HashMap<TextAttribute, Object>();
+                attributes = new HashMap<>();
                 do {
                     if (!attributes.isEmpty()) {
                         reader.moveDown();

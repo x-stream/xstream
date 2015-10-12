@@ -325,7 +325,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     protected List<Class<?>> hierarchyFor(Class<?> type) {
-        final List<Class<?>> result = new ArrayList<Class<?>>();
+        final List<Class<?>> result = new ArrayList<>();
         while (type != Object.class && type != null) {
             result.add(type);
             type = type.getSuperclass();
@@ -360,7 +360,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
             @Override
             public Map<String, Object> readFieldsFromStream() {
-                final Map<String, Object> fields = new HashMap<String, Object>();
+                final Map<String, Object> fields = new HashMap<>();
                 reader.moveDown();
                 if (reader.getNodeName().equals(ELEMENT_FIELDS)) {
                     // Maintain compatibility with XStream 1.1.0

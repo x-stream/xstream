@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,11 +44,12 @@ public class TreeSetConverter extends CollectionConverter {
     private transient TreeMapConverter treeMapConverter;
     private final static Field sortedMapField;
     private final static Object constantValue;
+
     static {
         Object value = null;
         sortedMapField = JVM.hasOptimizedTreeSetAddAll() ? Fields.locate(TreeSet.class, SortedMap.class, false) : null;
         if (sortedMapField != null) {
-            final TreeSet<String> set = new TreeSet<String>();
+            final TreeSet<String> set = new TreeSet<>();
             set.add("1");
             set.add("2");
 
@@ -100,8 +101,7 @@ public class TreeSetConverter extends CollectionConverter {
         @SuppressWarnings("unchecked")
         final Comparator<Object> comparator = inFirstElement ? null : (Comparator<Object>)unmarshalledComparator;
         if (sortedMapField != null) {
-            final TreeSet<Object> possibleResult = comparator == null ? new TreeSet<Object>() : new TreeSet<Object>(
-                    comparator);
+            final TreeSet<Object> possibleResult = comparator == null ? new TreeSet<>() : new TreeSet<>(comparator);
             Object backingMap = null;
             try {
                 backingMap = sortedMapField.get(possibleResult);
@@ -118,8 +118,8 @@ public class TreeSetConverter extends CollectionConverter {
             treeMap = null;
         }
         if (treeMap == null) {
-            final PresortedSet<Object> set = new PresortedSet<Object>(comparator);
-            result = comparator == null ? new TreeSet<Object>() : new TreeSet<Object>(comparator);
+            final PresortedSet<Object> set = new PresortedSet<>(comparator);
+            result = comparator == null ? new TreeSet<>() : new TreeSet<>(comparator);
             if (inFirstElement) {
                 // we are already within the first element
                 addCurrentElementToCollection(reader, context, result, set);

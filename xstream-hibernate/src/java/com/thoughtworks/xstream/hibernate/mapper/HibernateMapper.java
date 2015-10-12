@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2007, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -34,7 +34,7 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
  */
 public class HibernateMapper extends MapperWrapper {
 
-    final private Map<Class<?>, Class<?>> collectionMap = new HashMap<Class<?>, Class<?>>();
+    final private Map<Class<?>, Class<?>> collectionMap = new HashMap<>();
 
     public HibernateMapper(final MapperWrapper mapper) {
         super(mapper);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2011, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -116,7 +116,7 @@ public class ToAttributedValueConverter implements Converter {
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Class<?> sourceType = source.getClass();
-        final Map<String, Field> defaultFieldDefinition = new HashMap<String, Field>();
+        final Map<String, Field> defaultFieldDefinition = new HashMap<>();
         final String[] tagValue = new String[1];
         final Object[] realValue = new Object[1];
         final Class<?>[] fieldType = new Class[1];
@@ -205,10 +205,10 @@ public class ToAttributedValueConverter implements Converter {
         final Object result = reflectionProvider.newInstance(context.getRequiredType());
         final Class<?> resultType = result.getClass();
 
-        final Set<FastField> seenFields = new HashSet<FastField>();
+        final Set<FastField> seenFields = new HashSet<>();
         final Iterator<String> it = reader.getAttributeNames();
 
-        final Set<String> systemAttributes = new HashSet<String>();
+        final Set<String> systemAttributes = new HashSet<>();
         systemAttributes.add(mapper.aliasForSystemAttribute("class"));
 
         // Process attributes before recursing into child elements.
