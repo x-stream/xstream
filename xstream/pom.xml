@@ -225,7 +225,7 @@
 
   <profiles>
     <profile>
-      <id>jdk18ge</id>
+      <id>jdk18-ge</id>
       <activation>
         <jdk>[1.8,)</jdk>
       </activation>
@@ -312,32 +312,6 @@
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
-              </testExcludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>jdk15-16</id>
-      <activation>
-        <jdk>[1.5,1.7)</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerArgs>
-                <arg>-XDignore.symbol.file</arg>
-              </compilerArgs>
-              <excludes>
-                <exclude>**/Lambda**</exclude>
-              </excludes>
-              <testExcludes>
-                <exclude>**/Lambda**</exclude>
-                <exclude>**/extended/*17Test*</exclude>
               </testExcludes>
             </configuration>
           </plugin>

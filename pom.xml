@@ -28,26 +28,13 @@
 
   <profiles>
     <profile>
-      <id>jdk18ge</id>
+      <id>jdk18-ge</id>
       <activation>
         <jdk>[1.8,)</jdk>
       </activation>
       <properties>
         <javadoc.xdoclint>-Xdoclint:-missing</javadoc.xdoclint>
       </properties>
-    </profile>
-    <profile>
-      <id>jdk15-ge</id>
-      <activation>
-        <jdk>[1.5,)</jdk>
-      </activation>
-      <build>
-        <plugins>
-        </plugins>
-      </build>
-      <modules>
-        <!--module>xstream-builder</module-->
-      </modules>
     </profile>
     <profile>
       <id>java</id>
