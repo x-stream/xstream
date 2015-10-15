@@ -66,10 +66,10 @@ public class QNameMap {
      */
     public synchronized void registerMapping(final QName qname, final String javaClassName) {
         if (javaToQName == null) {
-            javaToQName = Collections.synchronizedMap(new HashMap<>());
+            javaToQName = Collections.synchronizedMap(new HashMap<String, QName>());
         }
         if (qnameToJava == null) {
-            qnameToJava = Collections.synchronizedMap(new HashMap<>());
+            qnameToJava = Collections.synchronizedMap(new HashMap<QName, String>());
         }
         javaToQName.put(javaClassName, qname);
         qnameToJava.put(qname, javaClassName);

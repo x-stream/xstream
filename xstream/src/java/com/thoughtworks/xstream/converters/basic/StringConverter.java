@@ -68,7 +68,7 @@ public class StringConverter extends AbstractSingleValueConverter {
      * @since 1.4.2
      */
     public StringConverter(final int lengthLimit) {
-        this(Collections.synchronizedMap(new WeakCache<>()), lengthLimit);
+        this(Collections.synchronizedMap(new WeakCache<String, String>()), lengthLimit);
     }
 
     /**
