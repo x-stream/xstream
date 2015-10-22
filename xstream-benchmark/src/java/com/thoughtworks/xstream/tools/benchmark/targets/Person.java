@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,7 @@ import java.io.Serializable;
 
 /**
  * @see UserDefinedClassTarget
+ * @deprecated As of upcoming use JMH instead
  */
 public class Person implements Serializable {
 
