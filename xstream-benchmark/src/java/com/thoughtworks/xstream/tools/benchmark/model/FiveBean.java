@@ -17,6 +17,7 @@ package com.thoughtworks.xstream.tools.benchmark.model;
  * @since 1.4
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class FiveBean extends OneBean {
     
     private int two;

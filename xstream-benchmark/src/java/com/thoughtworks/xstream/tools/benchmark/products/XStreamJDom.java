@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.JDomDriver;
  * @see JDomDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamJDom extends XStreamDriver {
 
     public XStreamJDom() {

@@ -27,6 +27,7 @@ import java.io.Writer;
  * @see Dom4JDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamDom4J extends XStreamDriver {
 
     public XStreamDom4J() {

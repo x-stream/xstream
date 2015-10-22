@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
  * @see StaxDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamStax extends XStreamDriver {
 
     public XStreamStax() {

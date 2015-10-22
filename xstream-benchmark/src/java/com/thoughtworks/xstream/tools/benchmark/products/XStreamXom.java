@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.XomDriver;
  * @see XomDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamXom extends XStreamDriver {
 
     public XStreamXom() {

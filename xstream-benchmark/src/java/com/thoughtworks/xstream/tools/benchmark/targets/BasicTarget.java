@@ -24,6 +24,7 @@ import java.util.Locale;
  * @since 1.4
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class BasicTarget implements Target {
 
     private List list;

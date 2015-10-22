@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3DomDriver;
  * @see Xpp3DomDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamXpp3DOM extends XStreamDriver {
 
     public XStreamXpp3DOM() {

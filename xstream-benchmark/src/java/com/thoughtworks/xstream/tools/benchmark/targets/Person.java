@@ -18,6 +18,7 @@ import java.io.Serializable;
  * @see UserDefinedClassTarget
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class Person implements Serializable {
 
     public String firstName;

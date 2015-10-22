@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
  * @see BEAStaxDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamBEAStax extends XStreamDriver {
 
     public XStreamBEAStax() {

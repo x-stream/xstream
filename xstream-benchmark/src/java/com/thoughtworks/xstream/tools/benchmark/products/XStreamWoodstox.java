@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.WstxDriver;
  * @see WstxDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamWoodstox extends XStreamDriver {
 
     public XStreamWoodstox() {

@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.SjsxpDriver;
  * @see SjsxpDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamSjsxp extends XStreamDriver {
 
     public XStreamSjsxp() {

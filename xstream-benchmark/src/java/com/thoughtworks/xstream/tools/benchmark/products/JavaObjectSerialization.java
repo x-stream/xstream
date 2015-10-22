@@ -28,6 +28,7 @@ import java.io.ObjectInputStream;
  * @see ObjectInputStream
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class JavaObjectSerialization implements Product {
 
     public void serialize(Object object, OutputStream output) throws Exception {

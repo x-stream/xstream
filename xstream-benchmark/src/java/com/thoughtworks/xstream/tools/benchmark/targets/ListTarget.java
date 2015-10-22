@@ -24,6 +24,7 @@ import java.util.List;
  * @see Target
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class ListTarget implements Target {
 
     private List list = new ArrayList();

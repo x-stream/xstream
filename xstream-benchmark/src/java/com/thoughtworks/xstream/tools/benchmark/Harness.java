@@ -55,6 +55,7 @@ import java.util.Iterator;
  * @author Joe Walnes
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class Harness {
 
     private List products = new ArrayList();

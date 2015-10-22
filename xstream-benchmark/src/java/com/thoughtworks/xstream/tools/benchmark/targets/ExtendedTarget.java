@@ -28,6 +28,7 @@ import java.util.Properties;
  * @since 1.4
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class ExtendedTarget implements Target {
 
     private final static Method EQUALS;

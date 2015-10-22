@@ -22,6 +22,7 @@ import java.io.InputStream;
  * @see Harness
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public interface Product {
 
     /**

@@ -24,6 +24,7 @@ import javax.swing.*;
  * @see JTree
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class JTreeTarget implements Target {
 
     private JTree jTree = new JTree();

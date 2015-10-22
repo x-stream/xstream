@@ -30,6 +30,7 @@ import java.io.InputStream;
  * @see BinaryStreamWriter
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamBinary implements Product {
 
     private final XStream xstream;

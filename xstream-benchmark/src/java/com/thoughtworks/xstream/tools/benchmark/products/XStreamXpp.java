@@ -24,6 +24,7 @@ import com.thoughtworks.xstream.io.xml.XppDriver;
  * @see XppDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamXpp extends XStreamDriver {
 
     public XStreamXpp() {

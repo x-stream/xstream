@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
  * @see Metric
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class SerializationSpeedMetric implements Metric {
 
     private int iterations;

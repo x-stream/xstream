@@ -23,6 +23,7 @@ import java.util.Date;
  * @see Target
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class UserDefinedClassTarget implements Target {
 
     private final Person person;

@@ -33,6 +33,7 @@ package com.thoughtworks.xstream.tools.benchmark;
  * @see Harness
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public interface Reporter {
 
     /**

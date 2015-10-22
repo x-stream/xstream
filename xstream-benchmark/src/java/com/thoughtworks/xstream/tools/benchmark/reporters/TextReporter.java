@@ -27,6 +27,7 @@ import java.io.Writer;
  * @see Reporter
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class TextReporter implements Reporter {
 
     private final PrintWriter out;

@@ -21,6 +21,7 @@ import java.io.Serializable;
  * @since 1.4
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class SerializableOne implements Serializable {
     
     private static final long serialVersionUID = 1L;

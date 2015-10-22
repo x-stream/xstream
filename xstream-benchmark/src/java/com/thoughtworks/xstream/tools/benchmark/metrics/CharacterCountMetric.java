@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
  * @since 1.4
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class CharacterCountMetric implements Metric {
     
     private final char ch;

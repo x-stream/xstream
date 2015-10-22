@@ -28,6 +28,7 @@ import java.util.Date;
 /**
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class HtmlReporter implements Reporter {
 
     private final PrettyPrintWriter out;

@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.KXml2DomDriver;
  * @see KXml2DomDriver
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamKXml2DOM extends XStreamDriver {
 
     public XStreamKXml2DOM() {

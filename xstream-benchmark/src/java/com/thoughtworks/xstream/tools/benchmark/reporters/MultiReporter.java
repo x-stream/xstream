@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.tools.benchmark.Target;
  * @since 1.3
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class MultiReporter implements Reporter {
     
     private final Reporter[] reporter;

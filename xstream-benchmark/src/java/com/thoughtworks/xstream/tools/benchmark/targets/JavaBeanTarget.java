@@ -24,6 +24,7 @@ import java.util.List;
  * @since 1.4
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class JavaBeanTarget implements Target {
 
     private List list;

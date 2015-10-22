@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.tools.benchmark.Target;
  * @see Target
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class StringTarget implements Target {
 
     private final String string = "Hello World!";

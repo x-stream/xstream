@@ -30,6 +30,7 @@ import java.io.OutputStreamWriter;
  * @see CompactWriter
  * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamCompact implements Product {
 
     private final XStream xstream;
