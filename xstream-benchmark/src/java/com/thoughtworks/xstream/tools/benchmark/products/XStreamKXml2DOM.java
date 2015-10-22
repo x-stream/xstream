@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.io.xml.KXml2DomDriver;
  * @see com.thoughtworks.xstream.tools.benchmark.Product
  * @see com.thoughtworks.xstream.XStream
  * @see KXml2DomDriver
+ * @deprecated As of upcoming use JMH instead
  */
 public class XStreamKXml2DOM extends XStreamDriver {
 

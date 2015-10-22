@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.io.xml.XppDriver;
  * @see com.thoughtworks.xstream.tools.benchmark.Product
  * @see com.thoughtworks.xstream.XStream
  * @see XppDriver
+ * @deprecated As of upcoming use JMH instead
  */
 public class XStreamXpp extends XStreamDriver {
 
