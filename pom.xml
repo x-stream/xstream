@@ -225,6 +225,7 @@
   <modules>
     <module>xstream</module>
     <module>xstream-hibernate</module>
+    <module>xstream-jmh</module>
     <module>xstream-benchmark</module>
   </modules>
 
@@ -529,20 +530,19 @@
         <scope>runtime</scope>
       </dependency>
 
-      <!-- always test-scoped -->
       <dependency>
         <groupId>org.openjdk.jmh</groupId>
         <artifactId>jmh-core</artifactId>
         <version>${version.org.openjdk.jmh}</version>
-        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.openjdk.jmh</groupId>
         <artifactId>jmh-generator-annprocess</artifactId>
         <version>${version.org.openjdk.jmh}</version>
-        <scope>test</scope>
+        <scope>provided</scope>
       </dependency>
 
+      <!-- always test-scoped -->
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>

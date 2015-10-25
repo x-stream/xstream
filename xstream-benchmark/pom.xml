@@ -105,14 +105,6 @@
       <artifactId>xstream</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-generator-annprocess</artifactId>
-    </dependency>
-    <dependency>
       <groupId>net.sf.kxml</groupId>
       <artifactId>kxml2-min</artifactId>
       <scope>test</scope>
