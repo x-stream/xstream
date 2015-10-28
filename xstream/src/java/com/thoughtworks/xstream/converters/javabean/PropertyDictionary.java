@@ -36,7 +36,7 @@ import com.thoughtworks.xstream.core.Caching;
  */
 public class PropertyDictionary implements Caching {
     private transient Map<Class<?>, Map<String, PropertyDescriptor>> propertyNameCache = Collections.synchronizedMap(
-        new HashMap<>());
+        new HashMap<Class<?>, Map<String, PropertyDescriptor>>());
     private final PropertySorter sorter;
 
     public PropertyDictionary() {

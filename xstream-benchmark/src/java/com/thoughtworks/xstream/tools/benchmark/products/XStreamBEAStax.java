@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,9 @@ import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
  * @see com.thoughtworks.xstream.tools.benchmark.Product
  * @see com.thoughtworks.xstream.XStream
  * @see BEAStaxDriver
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamBEAStax extends XStreamDriver {
 
     public XStreamBEAStax() {

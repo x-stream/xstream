@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,9 @@ import java.io.InputStream;
  * @see XStream
  * @see BinaryStreamReader
  * @see BinaryStreamWriter
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamBinary implements Product {
 
     private final XStream xstream;

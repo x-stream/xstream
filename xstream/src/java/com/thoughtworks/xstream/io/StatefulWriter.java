@@ -97,7 +97,7 @@ public class StatefulWriter extends WriterWrapper {
         }
         state = STATE_NODE_START;
         ++balance;
-        attributes.push(new HashSet<>());
+        attributes.push(new HashSet<String>());
     }
 
     @Override

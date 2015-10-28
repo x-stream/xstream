@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,7 +26,9 @@ import java.io.ObjectInputStream;
  * @see Product
  * @see ObjectOutputStream
  * @see ObjectInputStream
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class JavaObjectSerialization implements Product {
 
     public void serialize(Object object, OutputStream output) throws Exception {

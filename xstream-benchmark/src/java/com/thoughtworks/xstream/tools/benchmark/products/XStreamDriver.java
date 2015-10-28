@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,7 +30,9 @@ import java.io.OutputStream;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @since 1.4
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class XStreamDriver implements Product {
 
     private final XStream xstream;

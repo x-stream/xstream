@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,7 +25,9 @@ import java.io.Writer;
  * @author Joe Walnes
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Reporter
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class TextReporter implements Reporter {
 
     private final PrintWriter out;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,9 @@ import com.thoughtworks.xstream.tools.benchmark.Target;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.3
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class MultiReporter implements Reporter {
     
     private final Reporter[] reporter;

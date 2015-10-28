@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,9 @@ package com.thoughtworks.xstream.tools.benchmark.model;
  * JavaBean class containing 5 basic types.
  * 
  * @since 1.4
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class FiveBean extends OneBean {
     
     private int two;

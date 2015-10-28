@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,9 @@ package com.thoughtworks.xstream.tools.benchmark;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @see Harness
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public interface Metric {
 
     /**

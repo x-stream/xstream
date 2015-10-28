@@ -23,9 +23,9 @@
       <li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
     </ul>
 
-	<p>Full details can be found in Jira's
-	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a> and
-	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
+	<p>Full details can be found in GitHub's
+	<a href="https://github.com/x-stream/xstream/issues?q=is%3Aissue+is%3Aclosed">Issues</a>, filter for the
+	appropriate milestone</a>.
 	</p>
 
     <h1 id="upcoming">Upcoming</h1>
@@ -70,6 +70,8 @@
     	vulnerability</a>: Fixed affected drivers were Dom4JDriver, DomDriver, JDomDriver, JDom2Driver, SjsxpDriver,
     	StandardStaxDriver and WstxDriver. Still vulnerable are BEAStaxDriver and XomDriver. Processing of (external)
     	entities has been disabled. See <a href="faq.html#Security_XXEVulnerability">FAQ</a> for more information.</li>
+    	<li>Benchmark module has been deprecated in favour of <a href="http://openjdk.java.net/projects/code-tools/jmh/">
+    	JMH (Java Microbenchmarking Harness)</a>.</li>
     </ul>
 
     <h2>Minor changes</h2>
@@ -286,7 +288,7 @@
     	<li>Current IBM JDK for Java 1.4.2 no longer has a reverse field ordering.</li>
     	<li>LongConverter supports now positive hex and octal numbers over Long.MAX_VALUE within 64 bit.</li>
     	<li>Fix: Sun14RefectionProvider ignores a provided FieldDictionary.</li>
-    	<li>JIRA:XSTR-457: Do not write 'defined-in' attribute it not needed.</li>
+    	<li>JIRA:XSTR-457: Do not write 'defined-in' attribute if not needed.</li>
     	<li>JettisonMappedXmlDriver provides better support to overwrite its create methods.</li>
     	<li>JIRA:XSTR-685: StAX based drivers (StaxDriver and JettisonMappedXmlDriver) are not closing internal input
     	stream reading from file or URL.</li>

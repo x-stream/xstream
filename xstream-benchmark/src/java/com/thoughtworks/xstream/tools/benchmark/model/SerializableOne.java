@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,9 @@ import java.io.Serializable;
  * Serializable class containing one basic types.
  * 
  * @since 1.4
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class SerializableOne implements Serializable {
     
     private static final long serialVersionUID = 1L;

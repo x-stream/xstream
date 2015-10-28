@@ -76,7 +76,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
 
     private Object readResolve() {
         // TODO: Use ConcurrentMap
-        typeToConverterMap = Collections.synchronizedMap(new WeakHashMap<>());
+        typeToConverterMap = Collections.synchronizedMap(new WeakHashMap<Class<?>, Converter>());
         return this;
     }
 }

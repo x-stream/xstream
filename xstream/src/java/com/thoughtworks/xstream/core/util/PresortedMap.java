@@ -27,11 +27,11 @@ public class PresortedMap<K, V> implements SortedMap<K, V> {
     private final Comparator<K> comparator;
 
     public PresortedMap() {
-        this(null, new ArraySet<>());
+        this(null, new ArraySet<Map.Entry<K, V>>());
     }
 
     public PresortedMap(final Comparator<K> comparator) {
-        this(comparator, new ArraySet<>());
+        this(comparator, new ArraySet<Map.Entry<K, V>>());
     }
 
     private PresortedMap(final Comparator<K> comparator, final PresortedMap.ArraySet<Map.Entry<K, V>> set) {

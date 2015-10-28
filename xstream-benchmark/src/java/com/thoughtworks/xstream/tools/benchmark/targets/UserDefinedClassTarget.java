@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,9 @@ import java.util.Date;
  * @author Joe Walnes
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Target
+ * @deprecated As of upcoming use JMH instead
  */
+@Deprecated
 public class UserDefinedClassTarget implements Target {
 
     private final Person person;

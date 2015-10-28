@@ -5,7 +5,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. November 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.mapper;
@@ -55,7 +55,7 @@ import com.thoughtworks.xstream.core.util.TypedNull;
 
 /**
  * A mapper that uses annotations to prepare the remaining mappers in the chain.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.3
  */
@@ -71,11 +71,11 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private transient AttributeMapper attributeMapper;
     private transient LocalConversionMapper localConversionMapper;
     private final Map<Class<?>, Map<List<Object>, Converter>> converterCache = new HashMap<>();
-    private final Set<Class<?>> annotatedTypes = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Class<?>> annotatedTypes = Collections.synchronizedSet(new HashSet<Class<?>>());
 
     /**
      * Construct an AnnotationMapper.
-     * 
+     *
      * @param wrapped the next {@link Mapper} in the chain
      * @since 1.4.5
      */
@@ -90,13 +90,14 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
 
         final ClassLoader classLoader = classLoaderReference.getReference();
         arguments = new Object[]{
-            this, classLoaderReference, reflectionProvider, converterLookup, new JVM(),
-            classLoader != null ? classLoader : new TypedNull<>(ClassLoader.class)};
+            this, classLoaderReference, reflectionProvider, converterLookup, new JVM(), classLoader != null
+                ? classLoader
+                : new TypedNull<>(ClassLoader.class)};
     }
 
     /**
      * Construct an AnnotationMapper.
-     * 
+     *
      * @param wrapped the next {@link Mapper} in the chain
      * @since 1.3
      * @deprecated As of 1.4.5 use
@@ -286,8 +287,9 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (converterRegistry != null) {
             final XStreamConverters convertersAnnotation = type.getAnnotation(XStreamConverters.class);
             final XStreamConverter converterAnnotation = type.getAnnotation(XStreamConverter.class);
-            final List<XStreamConverter> annotations = convertersAnnotation != null ? new ArrayList<>(
-                Arrays.asList(convertersAnnotation.value())) : new ArrayList<>();
+            final List<XStreamConverter> annotations = convertersAnnotation != null
+                ? new ArrayList<XStreamConverter>(Arrays.asList(convertersAnnotation.value()))
+                : new ArrayList<XStreamConverter>();
             if (converterAnnotation != null) {
                 annotations.add(converterAnnotation);
             }
@@ -376,7 +378,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             if (isMap) {
                 implicitCollectionMapper.add(field.getDeclaringClass(), fieldName, itemFieldName != null
                     && !"".equals(itemFieldName) ? itemFieldName : null, itemType, keyFieldName != null
-                    && !"".equals(keyFieldName) ? keyFieldName : null);
+                        && !"".equals(keyFieldName) ? keyFieldName : null);
             } else {
                 if (itemFieldName != null && !"".equals(itemFieldName)) {
                     implicitCollectionMapper.add(field.getDeclaringClass(), fieldName, itemFieldName, itemType);
