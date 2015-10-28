@@ -36,6 +36,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
@@ -59,7 +60,8 @@ public class ParserBenchmark {
         DOM(new DomDriver()), //
         Xpp3(new Xpp3Driver()), //
         kXML2(new KXml2Driver()), //
-        Binary(new BinaryStreamDriver());
+        Binary(new BinaryStreamDriver()), //
+        Jettison(new JettisonMappedXmlDriver());
 
         private final HierarchicalStreamDriver driver;
 
@@ -141,11 +143,10 @@ public class ParserBenchmark {
             }
         };
         public abstract void writeData(HierarchicalStreamWriter writer);
-
         public abstract void checkData(Object o);
     }
 
-    @Param({"Xpp3", "kXML2", "DOM", "Binary"})
+    @Param({"Xpp3", "kXML2", "DOM", "Binary", "Jettison"})
     private DriverFactory driverFactory;
     private DataFactory dataFactory;
     private byte[] data;
@@ -163,7 +164,7 @@ public class ParserBenchmark {
     public void setUp(final BenchmarkParams params) {
         final String benchmark = params.getBenchmark();
         dataFactory = DataFactory.valueOf(benchmark.substring(benchmark.lastIndexOf('.') + 6));
-        
+
         final ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * 1024);
         final HierarchicalStreamWriter writer = driver.createWriter(baos);
         dataFactory.writeData(writer);
