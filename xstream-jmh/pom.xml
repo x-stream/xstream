@@ -85,6 +85,24 @@
           <skip>true</skip>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>app</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attached</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${basedir}/src/assembly-app.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
