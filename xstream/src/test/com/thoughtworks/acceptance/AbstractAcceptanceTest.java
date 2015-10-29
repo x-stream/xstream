@@ -54,7 +54,7 @@ public abstract class AbstractAcceptanceTest extends TestCase {
                 return (HierarchicalStreamDriver)type.newInstance();
             }
         } catch (final Exception e) {
-            throw new RuntimeException("Could not load driver: " + driver);
+            throw new RuntimeException("Could not load driver: " + driver, e);
         }
         return new XppDriver();
     }
@@ -82,8 +82,9 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             return resultRoot;
 
         } catch (final TransformerException e) {
-            throw new AssertionFailedError("Cannot normalize XML: " + e.getMessage());
-            // .initCause(e); ... still JDK 1.3
+            final AssertionFailedError error = new AssertionFailedError("Cannot normalize XML: " + e.getMessage());
+            error.initCause(e);
+            throw error;
         }
     }
 
