@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -71,9 +71,8 @@ public abstract class AbstractAcceptanceTest extends TestCase {
                 Class type = Class.forName(driver);
                 return (HierarchicalStreamDriver) type.newInstance();
             }
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Could not load driver: " + driver);
+        } catch (final Exception e) {
+            throw new RuntimeException("Could not load driver: " + driver, e);
         }
         return new XppDriver();
     }
@@ -121,9 +120,10 @@ public abstract class AbstractAcceptanceTest extends TestCase {
 
             return resultRoot;
 
-        } catch (TransformerException e) {
-            throw new AssertionFailedError("Cannot normalize XML: " + e.getMessage());
-                // .initCause(e);   ... still JDK 1.3
+        } catch (final TransformerException e) {
+            final AssertionFailedError error = new AssertionFailedError("Cannot normalize XML: " + e.getMessage());
+            error.initCause(e);
+            throw error;
         }
     }
 
