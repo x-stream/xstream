@@ -47,6 +47,10 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
             <!-- overwrite codehaus-parent -->
             <version>${version.plugin.maven.enforcer}</version>
@@ -73,7 +77,7 @@
       <id>osgi</id>
       <activation>
         <file>
-            <exists>profiles/osgi</exists>
+          <exists>profiles/osgi</exists>
         </file>
       </activation>
       <build>
@@ -90,9 +94,34 @@
                 </goals>
               </execution>
             </executions>
+            <configuration>
+              <instructions combine.children="append">
+                <Export-Package>${bundle.export.package}</Export-Package>
+              </instructions>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-jar</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <archive combine.children="append">
+                    <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
+                  </archive>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
+      <properties>
+        <bundle.export.package>${project.groupId}.*;-noimport:=true</bundle.export.package>
+      </properties>
     </profile>
     <profile>
       <id>xstream-release</id>
