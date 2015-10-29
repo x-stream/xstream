@@ -46,6 +46,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
  * Benchmark for the different {@link HierarchicalStreamDriver} implementations.
  *
  * @author J&ouml;rg Schaible
+ * @since upcoming
  */
 @BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
@@ -56,11 +57,38 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 @Warmup(iterations = 3)
 public class ParserBenchmark {
 
+    /**
+     * Driver factory. Enum values used as parameter for the parser benchmark methods.
+     *
+     * @author J&ouml;rg Schaible
+     * @since upcoming
+     */
     public enum DriverFactory {
-        DOM(new DomDriver()), //
-        Xpp3(new Xpp3Driver()), //
-        kXML2(new KXml2Driver()), //
-        Binary(new BinaryStreamDriver()), //
+        /**
+         * Factory for the {@link DomDriver}.
+         *
+         * @since upcoming
+         */
+        DOM(new DomDriver()), /**
+                               * Factory for the {@link Xpp3Driver}.
+                               *
+                               * @since upcoming
+                               */
+        Xpp3(new Xpp3Driver()), /**
+                                 * Factory for the {@link KXml2Driver}.
+                                 *
+                                 * @since upcoming
+                                 */
+        kXML2(new KXml2Driver()), /**
+                                   * Factory for the {@link BinaryStreamDriver}.
+                                   *
+                                   * @since upcoming
+                                   */
+        Binary(new BinaryStreamDriver()), /**
+                                           * Factory for the {@link JettisonMappedXmlDriver}.
+                                           *
+                                           * @since upcoming
+                                           */
         Jettison(new JettisonMappedXmlDriver());
 
         private final HierarchicalStreamDriver driver;
@@ -69,12 +97,31 @@ public class ParserBenchmark {
             this.driver = driver;
         }
 
+        /**
+         * Request the driver of the instantiated factory.
+         *
+         * @return the driver
+         * @since upcoming
+         */
         public HierarchicalStreamDriver getDriver() {
             return driver;
         }
     }
 
+    /**
+     * Data factory. Enum values used as data generator and checker for the individual parser benchmark methods. Method
+     * names define the data factory to use for the benchmark.
+     *
+     * @author J&ouml;rg Schaible
+     * @since upcoming
+     */
     public enum DataFactory {
+        /**
+         * A single element with a text of 1MB characters.
+         *
+         * @author J&ouml;rg Schaible
+         * @since upcoming
+         */
         String100k {
             private int length;
             private String start;
@@ -108,9 +155,15 @@ public class ParserBenchmark {
                 final String s = String.class.cast(o);
                 assert length == s.length() : String100k + " fails length";
                 assert start.equals(s.substring(0, 100)) : String100k + " fails start";
-                assert start.equals(s.substring(length - 100)) : String100k + " fails end";
+                assert end.equals(s.substring(length - 100)) : String100k + " fails end";
             }
         },
+        /**
+         * Nested list in list structure, 500 elements deep.
+         *
+         * @author J&ouml;rg Schaible
+         * @since upcoming
+         */
         NestedList {
             private static final int DEPTH = 500;
             private List<Integer> list;
@@ -142,7 +195,20 @@ public class ParserBenchmark {
                 assert this.list.equals(list) : NestedList + " fails inner list";
             }
         };
+        /**
+         * Write the data of the factory into the writer of the hierarchical stream.
+         *
+         * @param writer the writer of the data
+         * @since upcoming
+         */
         public abstract void writeData(HierarchicalStreamWriter writer);
+
+        /**
+         * Check the deserialized object.
+         *
+         * @param o the object to check
+         * @since upcoming
+         */
         public abstract void checkData(Object o);
     }
 
@@ -153,6 +219,11 @@ public class ParserBenchmark {
     private XStream xstream;
     private HierarchicalStreamDriver driver;
 
+    /**
+     * Initialize the XStream instance and instantiate the driver for the benchmark.
+     *
+     * @since upcoming
+     */
     @Setup
     public void init() {
         xstream = new XStream();
@@ -160,6 +231,12 @@ public class ParserBenchmark {
         driver = driverFactory.getDriver();
     }
 
+    /**
+     * Setup the data to deserialize.
+     *
+     * @param params the parameters of the benchmark
+     * @since upcoming
+     */
     @Setup(Level.Trial)
     public void setUp(final BenchmarkParams params) {
         final String benchmark = params.getBenchmark();
@@ -172,12 +249,22 @@ public class ParserBenchmark {
         data = baos.toByteArray();
     }
 
+    /**
+     * Parse a deeply nested list structure. 
+     * 
+     * @since upcoming
+     */
     @Benchmark
     public void parseNestedList() {
         final Object o = xstream.unmarshal(driver.createReader(new ByteArrayInputStream(data)));
         dataFactory.checkData(o);
     }
 
+    /**
+     * Parse an element with a single big text. 
+     * 
+     * @since upcoming
+     */
     @Benchmark
     public void parseString100k() {
         final Object o = xstream.unmarshal(driver.createReader(new ByteArrayInputStream(data)));
