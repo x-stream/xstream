@@ -179,17 +179,6 @@
         <artifactId>maven-jar-plugin</artifactId>
         <executions>
           <execution>
-            <id>default-jar</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <archive combine.children="append">
-                <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
-              </archive>
-            </configuration>
-          </execution>
-          <execution>
             <goals>
               <goal>test-jar</goal>
             </goals>
@@ -206,19 +195,6 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions combine.children="append">
-            <Export-Package>!com.thoughtworks.xstream.core.util,com.thoughtworks.xstream.*;-noimport:=true</Export-Package>
-          </instructions>
-        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -334,5 +310,9 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <properties>
+    <bundle.export.package>!com.thoughtworks.xstream.core.util,com.thoughtworks.xstream.*;-noimport:=true</bundle.export.package>
+  </properties>
 
 </project>
