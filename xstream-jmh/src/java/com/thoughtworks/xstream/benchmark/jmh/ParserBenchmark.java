@@ -117,19 +117,19 @@ public class ParserBenchmark {
      */
     public enum DataFactory {
         /**
-         * A single element with a text of 1MB characters.
+         * A single element with a text of 100.000 characters.
          *
          * @author J&ouml;rg Schaible
          * @since upcoming
          */
-        String100k {
+        BigText {
             private int length;
             private String start;
             private String end;
 
             @Override
             public void writeData(final HierarchicalStreamWriter writer) {
-                int length = 1024 * 100;
+                int length = 100000;
                 final StringBuilder builder = new StringBuilder(length);
                 int i = 0;
                 while (length > 0) {
@@ -153,9 +153,9 @@ public class ParserBenchmark {
             @Override
             public void checkData(final Object o) {
                 final String s = String.class.cast(o);
-                assert length == s.length() : String100k + " fails length";
-                assert start.equals(s.substring(0, 100)) : String100k + " fails start";
-                assert end.equals(s.substring(length - 100)) : String100k + " fails end";
+                assert length == s.length() : BigText + " fails length";
+                assert start.equals(s.substring(0, 100)) : BigText + " fails start";
+                assert end.equals(s.substring(length - 100)) : BigText + " fails end";
             }
         },
         /**
@@ -164,7 +164,7 @@ public class ParserBenchmark {
          * @author J&ouml;rg Schaible
          * @since upcoming
          */
-        NestedList {
+        NestedElements {
             private static final int DEPTH = 500;
             private List<Integer> list;
 
@@ -189,10 +189,39 @@ public class ParserBenchmark {
                 List<?> list = List.class.cast(o);
                 int depth = DEPTH;
                 while (depth-- > 1) {
-                    assert list.size() == 1 : NestedList + " fails list size";
+                    assert list.size() == 1 : NestedElements + " fails list size";
                     list = List.class.cast(list.get(0));
                 }
-                assert this.list.equals(list) : NestedList + " fails inner list";
+                assert this.list.equals(list) : NestedElements + " fails inner list";
+            }
+        },
+        /**
+         * An array with 10.000 elements.
+         *
+         * @author J&ouml;rg Schaible
+         * @since upcoming
+         */
+        ManyChildren {
+            private static final int LENGTH = 10000;
+
+            @Override
+            public void writeData(final HierarchicalStreamWriter writer) {
+                int length = LENGTH;
+                writer.startNode("int-array");
+                while (length-- > 0) {
+                    writer.startNode("int");
+                    writer.setValue(String.valueOf(length));
+                    writer.endNode();
+                }
+                writer.endNode();
+            }
+
+            @Override
+            public void checkData(final Object o) {
+                final int[] array = int[].class.cast(o);
+                assert LENGTH == array.length : ManyChildren + " fails length";
+                assert LENGTH - 1 == array[0] : ManyChildren + " fails start";
+                assert 0 == array[LENGTH - 1] : ManyChildren + " fails end";
             }
         };
         /**
@@ -250,23 +279,34 @@ public class ParserBenchmark {
     }
 
     /**
-     * Parse a deeply nested list structure. 
-     * 
+     * Parse an element with a big text as value.
+     *
      * @since upcoming
      */
     @Benchmark
-    public void parseNestedList() {
+    public void parseBigText() {
         final Object o = xstream.unmarshal(driver.createReader(new ByteArrayInputStream(data)));
         dataFactory.checkData(o);
     }
 
     /**
-     * Parse an element with a single big text. 
-     * 
+     * Parse a deeply nested structure.
+     *
      * @since upcoming
      */
     @Benchmark
-    public void parseString100k() {
+    public void parseNestedElements() {
+        final Object o = xstream.unmarshal(driver.createReader(new ByteArrayInputStream(data)));
+        dataFactory.checkData(o);
+    }
+
+    /**
+     * Parse an element with a lot of simple children.
+     *
+     * @since upcoming
+     */
+    @Benchmark
+    public void parseManyChildren() {
         final Object o = xstream.unmarshal(driver.createReader(new ByteArrayInputStream(data)));
         dataFactory.checkData(o);
     }
