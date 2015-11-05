@@ -37,8 +37,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
+import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.JDom2Driver;
+import com.thoughtworks.xstream.io.xml.JDomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
+import com.thoughtworks.xstream.io.xml.WstxDriver;
+import com.thoughtworks.xstream.io.xml.XomDriver;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 
@@ -65,30 +72,76 @@ public class ParserBenchmark {
      */
     public enum DriverFactory {
         /**
+         * Factory for the {@link Xpp3Driver}.
+         *
+         * @since upcoming
+         */
+        Xpp3(new Xpp3Driver()), //
+        /**
+         * Factory for the {@link KXml2Driver}.
+         *
+         * @since upcoming
+         */
+        kXML2(new KXml2Driver()), //
+        /**
+         * Factory for the {@link StandardStaxDriver}.
+         *
+         * @since upcoming
+         */
+        JDKStax(new StandardStaxDriver()), //
+        /**
+         * Factory for the {@link WstxDriver}.
+         *
+         * @since upcoming
+         */
+        Woodstox(new WstxDriver()), //
+        /**
+         * Factory for the {@link BEAStaxDriver}.
+         *
+         * @since upcoming
+         */
+        BEAStax(new BEAStaxDriver()), //
+        /**
          * Factory for the {@link DomDriver}.
          *
          * @since upcoming
          */
-        DOM(new DomDriver()), /**
-                               * Factory for the {@link Xpp3Driver}.
-                               *
-                               * @since upcoming
-                               */
-        Xpp3(new Xpp3Driver()), /**
-                                 * Factory for the {@link KXml2Driver}.
-                                 *
-                                 * @since upcoming
-                                 */
-        kXML2(new KXml2Driver()), /**
-                                   * Factory for the {@link BinaryStreamDriver}.
-                                   *
-                                   * @since upcoming
-                                   */
-        Binary(new BinaryStreamDriver()), /**
-                                           * Factory for the {@link JettisonMappedXmlDriver}.
-                                           *
-                                           * @since upcoming
-                                           */
+        DOM(new DomDriver()), //
+        /**
+         * Factory for the {@link Dom4JDriver}.
+         *
+         * @since upcoming
+         */
+        DOM4J(new Dom4JDriver()), //
+        /**
+         * Factory for the {@link JDomDriver}.
+         *
+         * @since upcoming
+         */
+        JDom(new JDomDriver()), //
+        /**
+         * Factory for the {@link JDom2Driver}.
+         *
+         * @since upcoming
+         */
+        JDom2(new JDom2Driver()), //
+        /**
+         * Factory for the {@link XomDriver}.
+         *
+         * @since upcoming
+         */
+        Xom(new XomDriver()), //
+        /**
+         * Factory for the {@link BinaryStreamDriver}.
+         *
+         * @since upcoming
+         */
+        Binary(new BinaryStreamDriver()), //
+        /**
+         * Factory for the {@link JettisonMappedXmlDriver}.
+         *
+         * @since upcoming
+         */
         Jettison(new JettisonMappedXmlDriver());
 
         private final HierarchicalStreamDriver driver;
@@ -241,7 +294,9 @@ public class ParserBenchmark {
         public abstract void checkData(Object o);
     }
 
-    @Param({"Xpp3", "kXML2", "DOM", "Binary", "Jettison"})
+    @Param({
+        "Xpp3", "kXML2", "JDKStax", "Woodstox", "BEAStax", "DOM", "DOM4J", "JDom", "JDom2", "Xom", "Binary",
+        "Jettison"})
     private DriverFactory driverFactory;
     private DataFactory dataFactory;
     private byte[] data;
