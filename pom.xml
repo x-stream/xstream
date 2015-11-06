@@ -47,32 +47,17 @@
       </properties>
     </profile>
     <profile>
-      <id>jdk15-ge</id>
+      <!-- build with Maven 3.2.5 !!! -->
+      <id>jdk16-ge</id>
       <activation>
-        <jdk>[1.5,)</jdk>
+        <jdk>[1.6,)</jdk>
       </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>maven-bundle-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>bundle-manifest</id>
-                <phase>process-classes</phase>
-                <goals>
-                  <goal>manifest</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
       <modules>
-        <!--module>xstream-builder</module-->
+        <module>xstream-jmh</module>
       </modules>
     </profile>
     <profile>
+      <!-- build with Maven 3.0.5 !!! -->
       <id>jdk15</id>
       <activation>
         <jdk>1.5</jdk>
@@ -139,6 +124,7 @@
     <profile>
       <id>osgi</id>
       <activation>
+        <jdk>[1.5,)</jdk>
         <file>
           <exists>profiles/osgi</exists>
         </file>
@@ -225,7 +211,6 @@
   <modules>
     <module>xstream</module>
     <module>xstream-hibernate</module>
-    <module>xstream-jmh</module>
     <module>xstream-benchmark</module>
   </modules>
 

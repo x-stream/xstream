@@ -226,7 +226,7 @@ public class ParserBenchmark {
                 for (int i = 0; i < DEPTH; ++i) {
                     writer.startNode("list");
                 }
-                list = new ArrayList<>(Arrays.asList(42, 7, 3, -17));
+                list = new ArrayList<Integer>(Arrays.asList(42, 7, 3, -17));
                 for (final Integer i : list) {
                     writer.startNode("int");
                     writer.setValue(i.toString());

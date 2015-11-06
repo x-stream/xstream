@@ -13,7 +13,7 @@
   <parent>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream-parent</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.4.9-SNAPSHOT</version>
   </parent>
   <artifactId>xstream-jmh</artifactId>
   <packaging>jar</packaging>
@@ -153,4 +153,8 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
+  <properties>
+    <version.java.source>1.6</version.java.source>
+    <version.java.target>1.6</version.java.target>
+  </properties>
 </project>
