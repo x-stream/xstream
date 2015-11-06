@@ -124,7 +124,7 @@
     <profile>
       <id>osgi</id>
       <activation>
-        <jdk>[1.5,)</jdk>
+        <jdk>[1.6,)</jdk>
         <file>
           <exists>profiles/osgi</exists>
         </file>
