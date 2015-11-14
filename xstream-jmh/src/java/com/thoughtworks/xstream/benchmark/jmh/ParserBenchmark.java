@@ -249,13 +249,13 @@ public class ParserBenchmark {
             }
         },
         /**
-         * An array with 10.000 elements.
+         * An array with 1.000 elements.
          *
          * @author J&ouml;rg Schaible
          * @since upcoming
          */
         ManyChildren {
-            private static final int LENGTH = 10000;
+            private static final int LENGTH = 1000;
 
             @Override
             public void writeData(final HierarchicalStreamWriter writer) {
@@ -294,9 +294,7 @@ public class ParserBenchmark {
         public abstract void checkData(Object o);
     }
 
-    @Param({
-        "Xpp3", "kXML2", "JDKStax", "Woodstox", "BEAStax", "DOM", "DOM4J", "JDom", "JDom2", "Xom", "Binary",
-        "Jettison"})
+    @Param
     private DriverFactory driverFactory;
     private DataFactory dataFactory;
     private byte[] data;
