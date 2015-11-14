@@ -67,7 +67,7 @@ public class StringConverterBenchmark {
     public static final class NonCachingStringConverter extends AbstractSingleValueConverter {
 
         @Override
-        public boolean canConvert(final Class<?> type) {
+        public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
             return type == String.class;
         }
 
@@ -85,7 +85,7 @@ public class StringConverterBenchmark {
     public static final class InternStringConverter extends AbstractSingleValueConverter {
 
         @Override
-        public boolean canConvert(final Class<?> type) {
+        public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
             return type == String.class;
         }
 
@@ -117,12 +117,13 @@ public class StringConverterBenchmark {
          * @param lengthLimit length limit for cached strings
          * @since upcoming
          */
+        @SuppressWarnings("unchecked")
         public SynchronizedWeakCacheStringConverter(final int lengthLimit) {
-            this(Collections.synchronizedMap(new WeakCache<String, String>()), lengthLimit);
+            this(Collections.synchronizedMap(new WeakCache()), lengthLimit);
         }
 
         @Override
-        public boolean canConvert(final Class<?> type) {
+        public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
             return type.equals(String.class);
         }
 
@@ -171,7 +172,7 @@ public class StringConverterBenchmark {
         }
 
         @Override
-        public boolean canConvert(final Class<?> type) {
+        public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
             return type.equals(String.class);
         }
 
@@ -237,34 +238,28 @@ public class StringConverterBenchmark {
     public void setUp(final BenchmarkParams params) {
         final String benchmark = params.getBenchmark();
         final SingleValueConverter converter;
-        switch (benchmark.substring(StringConverterBenchmark.class.getName().length() + 1)) {
-        case "nonCaching":
+        final String name =benchmark.substring(StringConverterBenchmark.class.getName().length() + 1);
+        if ("nonCaching".equals(name)) {
             converter = new NonCachingStringConverter();
-            break;
-        case "intern":
+        } else if ("intern".equals(name)) {
             converter = new InternStringConverter();
-            break;
-        case "unlimitedSynchronizedWeakCache":
+        } else if ("unlimitedSynchronizedWeakCache".equals(name)) {
             converter = new SynchronizedWeakCacheStringConverter(Integer.MAX_VALUE);
-            break;
-        case "limitedSynchronizedWeakCache":
+        } else if ("limitedSynchronizedWeakCache".equals(name)) {
             converter = new SynchronizedWeakCacheStringConverter(UUID.randomUUID().toString().length());
-            break;
-        case "unlimitedConcurrentMap":
+        } else if ("unlimitedConcurrentMap".equals(name)) {
             converter = new SynchronizedWeakCacheStringConverter(Integer.MAX_VALUE);
-            break;
-        case "limitedConcurrentMap":
+        } else if ("limitedConcurrentMap".equals(name)) {
             converter = new SynchronizedWeakCacheStringConverter(UUID.randomUUID().toString().length());
-            break;
-        default:
+        } else {
             throw new IllegalStateException("Unsupported benchmark type: " + benchmark);
         }
         xstream = new XStream(new Xpp3Driver());
         xstream.registerConverter(converter);
 
         int chars = 0;
-        final IdentityHashMap<String, Object> map = new IdentityHashMap<>();
-        final String[] array = xstream.fromXML(xml);
+        final IdentityHashMap<String, Object> map = new IdentityHashMap<String, Object>();
+        final String[] array = (String[])xstream.fromXML(xml);
         for (final String s : array) {
             if (!map.containsKey(s)) {
                 map.put(s, this);
@@ -336,7 +331,7 @@ public class StringConverterBenchmark {
     }
 
     private void run() {
-        final String[] array = xstream.fromXML(xml);
+        final String[] array = (String[])xstream.fromXML(xml);
         assert array.length == 10000 : "array length is " + array.length;
         assert array[1].equals("1") : "2nd element was: " + array[1];
         assert array[9999].equals("100") : "last element was: " + array[9999];
