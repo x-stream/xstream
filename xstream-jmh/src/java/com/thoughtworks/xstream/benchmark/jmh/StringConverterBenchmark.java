@@ -12,7 +12,6 @@ package com.thoughtworks.xstream.benchmark.jmh;
 
 import java.io.StringWriter;
 import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -113,7 +112,7 @@ public class StringConverterBenchmark {
 
         /**
          * Constructs a SynchronizedWeakCacheStringConverter.
-         * 
+         *
          * @param lengthLimit length limit for cached strings
          * @since upcoming
          */
@@ -162,7 +161,7 @@ public class StringConverterBenchmark {
 
         /**
          * Constructs a ConcurrentHashMapStringConverter.
-         * 
+         *
          * @param lengthLimit length limit for cached strings
          * @since upcoming
          */
@@ -261,18 +260,6 @@ public class StringConverterBenchmark {
         }
         xstream = new XStream(new Xpp3Driver());
         xstream.registerConverter(converter);
-
-        int chars = 0;
-        final IdentityHashMap<String, Object> map = new IdentityHashMap<>();
-        final String[] array = xstream.fromXML(xml);
-        for (final String s : array) {
-            if (!map.containsKey(s)) {
-                map.put(s, this);
-                chars += s.length();
-            }
-        }
-
-        System.out.println("Array uses " + chars + " characters using " + converter.getClass().getSimpleName());
     }
 
     /**
