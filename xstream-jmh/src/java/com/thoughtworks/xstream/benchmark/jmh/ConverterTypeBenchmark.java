@@ -41,6 +41,8 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 
 /**
+ * Benchmark for the different converter types.
+ * 
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
