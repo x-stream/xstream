@@ -42,7 +42,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 /**
  * Benchmark for the different converter types.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
@@ -150,12 +150,10 @@ public class ConverterTypeBenchmark {
      */
     public static final class ModelConverter implements Converter {
 
-        @Override
-        public boolean canConvert(final Class<?> type) {
+        public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
             return type == Model.class;
         }
 
-        @Override
         public void marshal(final Object source, final HierarchicalStreamWriter writer,
                 final MarshallingContext context) {
             final Model type = Model.class.cast(source);
@@ -174,38 +172,30 @@ public class ConverterTypeBenchmark {
             writer.endNode();
         }
 
-        @Override
         public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
             final Model type = new Model();
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
                 final String value = reader.getValue();
-                switch (reader.getNodeName()) {
-                case "ch":
+                final String name = reader.getNodeName();
+                if (name.equals("ch")) {
                     if (value.length() != 1) {
                         throw new ConversionException("Not a single character");
                     }
                     type.setCh(value.charAt(0));
-                    break;
-                case "i":
+                } else if (name.equals("i")) {
                     type.setI(Integer.parseInt(value));
-                    break;
-                case "s":
+                } else if (name.equals("s")) {
                     type.setS(value);
-                    break;
-                case "d":
+                } else if (name.equals("d")) {
                     type.setD(Double.parseDouble(value));
-                    break;
-                case "f":
+                } else if (name.equals("f")) {
                     type.setF(Float.parseFloat(value));
-                    break;
-                case "bi":
+                } else if (name.equals("bi")) {
                     type.setBi(new BigInteger(value));
-                    break;
-                case "uuid":
+                } else if (name.equals("uuid")) {
                     type.setUuid(UUID.fromString(value));
-                    break;
-                default:
+                } else {
                     throw new ConversionException("Unkown element");
                 }
                 reader.moveUp();
@@ -238,20 +228,17 @@ public class ConverterTypeBenchmark {
     @Setup(Level.Trial)
     public void setUp(final BenchmarkParams params) {
         xstream = new XStream(new Xpp3Driver());
-        xstream.allowTypes(Model.class);
+        xstream.allowTypes(new Class[]{Model.class});
         final String benchmark = params.getBenchmark();
-        switch (benchmark.substring(ConverterTypeBenchmark.class.getName().length() + 1)) {
-        case "reflection":
+        final String name = benchmark.substring(ConverterTypeBenchmark.class.getName().length() + 1);
+        if (name.equals("reflection")) {
             xstream.registerConverter(new ReflectionConverter(xstream.getMapper(), xstream.getReflectionProvider(),
                 Model.class));
-            break;
-        case "javaBean":
+        } else if (name.equals("javaBean")) {
             xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), Model.class));
-            break;
-        case "custom":
+        } else if (name.equals("custom")) {
             xstream.registerConverter(new ModelConverter());
-            break;
-        default:
+        } else {
             throw new IllegalStateException("Unsupported benchmark type: " + benchmark);
         }
         xml = xstream.toXML(array);

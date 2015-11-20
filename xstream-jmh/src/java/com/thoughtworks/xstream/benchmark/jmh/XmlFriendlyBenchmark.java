@@ -34,7 +34,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 /**
  * Benchmark for different {@link NameCoder} implementations.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
@@ -58,22 +58,18 @@ public class XmlFriendlyBenchmark {
      */
     public static final class NoNameCoder implements NameCoder {
 
-        @Override
         public String encodeNode(final String name) {
             return name;
         }
 
-        @Override
         public String encodeAttribute(final String name) {
             return name;
         }
 
-        @Override
         public String decodeNode(final String nodeName) {
             return nodeName;
         }
 
-        @Override
         public String decodeAttribute(final String attributeName) {
             return attributeName;
         }
@@ -86,22 +82,18 @@ public class XmlFriendlyBenchmark {
      */
     public static final class DollarNameCoder implements NameCoder {
 
-        @Override
         public String encodeNode(final String name) {
             return name.replace('$', '\u00b7');
         }
 
-        @Override
         public String encodeAttribute(final String name) {
             return name.replace('$', '\u00b7');
         }
 
-        @Override
         public String decodeNode(final String nodeName) {
             return nodeName.replace('\u00b7', '$');
         }
 
-        @Override
         public String decodeAttribute(final String attributeName) {
             return attributeName.replace('\u00b7', '$');
         }
@@ -115,7 +107,6 @@ public class XmlFriendlyBenchmark {
      */
     public static final class EscapedUnderscoreNameCoder implements NameCoder {
 
-        @Override
         public String encodeNode(final String name) {
             final int length = name.length();
             final StringBuilder sb = new StringBuilder(length + 20);
@@ -135,12 +126,10 @@ public class XmlFriendlyBenchmark {
             return sb.toString();
         }
 
-        @Override
         public String encodeAttribute(final String name) {
             return encodeNode(name);
         }
 
-        @Override
         public String decodeNode(final String nodeName) {
             final int length = nodeName.length();
             final StringBuilder sb = new StringBuilder(length);
@@ -168,7 +157,6 @@ public class XmlFriendlyBenchmark {
             return sb.toString();
         }
 
-        @Override
         public String decodeAttribute(final String attributeName) {
             return decodeNode(attributeName);
         }
@@ -228,30 +216,26 @@ public class XmlFriendlyBenchmark {
     public void setUp(final BenchmarkParams params) {
         final String benchmark = params.getBenchmark();
         final NameCoder nameCoder;
-        switch (benchmark.substring(XmlFriendlyBenchmark.class.getName().length() + 1)) {
-        case "noCoding":
+        final String name = benchmark.substring(XmlFriendlyBenchmark.class.getName().length() + 1);
+        if (name.equals("noCoding")) {
             nameCoder = new NoNameCoder();
-            break;
-        case "dollarCoding":
+        } else if (name.equals("dollarCoding")) {
             nameCoder = new DollarNameCoder();
-            break;
-        case "escapedUnderscoreCoding":
+        } else if (name.equals("escapedUnderscoreCoding")) {
             nameCoder = new EscapedUnderscoreNameCoder();
-            break;
-        case "safeCoding":
+        } else if (name.equals("safeCoding")) {
             nameCoder = new XmlFriendlyNameCoder();
-            break;
-        default:
+        } else {
             throw new IllegalStateException("Unsupported benchmark type: " + benchmark);
         }
         xstream = new XStream(new Xpp3Driver(nameCoder));
-        xstream.allowTypes(_1._2._3._4._5.Unfriendly.class);
+        xstream.allowTypes(new Class[]{_1._2._3._4._5.Unfriendly.class});
         if (nameCoder.getClass() == NoNameCoder.class) {
             xstream.alias(_1._2._3._4._5.Unfriendly.class.getName().replace('$', '\u00b7'),
                 _1._2._3._4._5.Unfriendly.class);
         }
         xml = xstream.toXML(array);
-        //System.out.println(xstream.toXML(array[0]));
+        // System.out.println(xstream.toXML(array[0]));
     }
 
     /**
