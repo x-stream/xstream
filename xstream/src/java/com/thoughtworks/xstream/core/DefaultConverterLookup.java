@@ -56,10 +56,12 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     @Override
     public void registerConverter(final Converter converter, final int priority) {
         converters.add(converter, priority);
-        for (final Iterator<Class<?>> iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
-            final Class<?> type = iter.next();
-            if (converter.canConvert(type)) {
-                iter.remove();
+        synchronized (typeToConverterMap) {
+            for (final Iterator<Class<?>> iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
+                final Class<?> type = iter.next();
+                if (converter.canConvert(type)) {
+                    iter.remove();
+                }
             }
         }
     }
