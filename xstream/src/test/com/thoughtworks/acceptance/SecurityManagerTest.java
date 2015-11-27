@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -188,6 +188,7 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxGeneralEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxParameterEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxOccurLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxXMLNameLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.totalEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
