@@ -12,6 +12,8 @@ package com.thoughtworks.xstream.benchmark.jmh;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +45,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.JDom2Driver;
 import com.thoughtworks.xstream.io.xml.JDomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
 import com.thoughtworks.xstream.io.xml.WstxDriver;
 import com.thoughtworks.xstream.io.xml.XomDriver;
@@ -112,7 +115,11 @@ public class ParserBenchmark {
          *
          * @since upcoming
          */
-        DOM4J(new Dom4JDriver()), //
+        DOM4J(new Dom4JDriver() { // XML writer of DOM4J fails
+            public HierarchicalStreamWriter createWriter(final Writer out) {
+                return new PrettyPrintWriter(out, getNameCoder());
+            }
+        }), //
         /**
          * Factory for the {@link JDomDriver}.
          *
