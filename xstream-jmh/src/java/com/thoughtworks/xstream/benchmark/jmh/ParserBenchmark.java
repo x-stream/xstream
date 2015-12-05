@@ -13,7 +13,6 @@ package com.thoughtworks.xstream.benchmark.jmh;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -116,6 +115,7 @@ public class ParserBenchmark {
          * @since upcoming
          */
         DOM4J(new Dom4JDriver() { // XML writer of DOM4J fails
+            @Override
             public HierarchicalStreamWriter createWriter(final Writer out) {
                 return new PrettyPrintWriter(out, getNameCoder());
             }
