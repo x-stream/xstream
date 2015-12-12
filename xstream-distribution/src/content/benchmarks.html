@@ -128,9 +128,43 @@
       <dt>Text</dt>
       <dd>A single element with a text of 100.000 characters.</dd>
       <dt>Array</dt>
-      <dd>A single element with 1000 child elements.</dd>
+      <dd>A single element with 1.000 child elements.</dd>
       <dt>Nested</dt>
       <dd>Nested elements in 500 levels.</dd>
+    </dl>
+	
+    <h2 id="converter">Converter Type Benchmark</h2>
+
+	<p>The average throughput of 12 runs with four threads using the Xpp3 parser for a structure with 1.000 elements.
+	The different benchmark types	demonstrate the different converter types that can be used for a standard Java
+	class.</p>
+	
+    <table summary="Benchmark for different converter types of XStream">
+      <tr>
+        <th>Converter Type</th>
+        <th>Throughput</th>
+      </tr>
+      <tr>
+        <th>Custom</th>
+        <td>14419100.339</td>
+      </tr>
+      <tr>
+        <th>Java Bean</th>
+        <td>40430635.122</td>
+      </tr>
+      <tr>
+        <th>Reflection</th>
+        <td>54435826.664</td>
+      </tr>
+    </table>
+  
+    <dl>
+      <dt>Custom</dt>
+      <dd>A converter especially written for the Java type to convert.</dd>
+      <dt>Java Bean</dt>
+      <dd>Usage of the generic JavaBeanConverter, since the Java type respects the Java Bean contract.</dd>
+      <dt>Reflection</dt>
+      <dd>Usage of teh generic converter based on reflection.</dd>
     </dl>
   </body>
 </html>
