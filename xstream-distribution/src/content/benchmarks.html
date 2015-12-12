@@ -1,0 +1,137 @@
+<html>
+<!--
+ Copyright (C) 2015 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 10. December 2015 by Joerg Schaible
+ -->
+  <head>
+    <title>Benchmarks</title>
+        <style type="text/css">
+            #content td { text-align: right;}
+            #content dt { font-weight: bold;}
+        </style>
+  </head>
+
+  <body>
+    <h2 id="introduction">Introduction</h2>
+
+    <p>Benchmark results are always dependent on a very individual setup. Normally it is not useful to generalize such results
+    for every use case, but it can give you a hint. However, if you're really in the need of maximum performance, you should
+    probably create an own benchmark with your objects or even use a profiler to detect the real hot spots in your application.</p>
+
+	<p>XStream uses the Java Microbenchmark Harness (<a href="http://openjdk.java.net/projects/code-tools/jmh/">JMH</a>)
+	of the JDK Tools as benchmark framework starting with version 1.4.9. As result it contains a ZIP file
+	(xstream-jmh-&lt;version&gt;-app.zip) as new artifact containing anything required to run the benchmarks. Unpack
+	the file and use the scripts in the <em>bin</em> directory to execute the benchmarks. Use option -h to look at the
+	options	provided by JMH. You may exchange the libraries in the <em>lib</em> directory with other versions of
+	XStream or the individual parsers or you may even add new JMH benchmarks to the default ones of XStream.</p>
+	
+	<p>All benchmark values below measure the average throughput in nanosecond per operation. JMH provides additional
+	measurement options, see online help. The maximum deviation for each benchmark is recorded in the reference files
+	of	the distributed ZIP file. The benchmark is executed on Linux 4.1.12 Gentoo 64-bit system with an Intel Core i7
+	CPU 920 of 2.67 GHz. Note again, that these values are no replacement for real profiler results and they may
+    vary from run to run (see reference files) due to this machine's background processes on a single CPU. However, it
+    can give you some idea of what you can expect using different parser technologies.</p>
+	
+    <h2 id="parser">Parser Benchmark</h2>
+	
+	<p>The average throughput of 10 runs with a single thread. The different benchmark types emphasis the parser
+	efficiency for different structures.</p>
+	
+    <table summary="Benchmark for all parsers supported by XStream using different object structures">
+      <tr>
+        <th>Parser</th>
+        <th>Text</th>
+        <th>Array</th>
+        <th>Nested</th>
+      </tr>
+      <tr>
+        <th>W3C DOM (Oracle JDK 1.8.0_66)</th>
+        <td>10627482.022</td>
+        <td>56950592.783</td>
+        <td>1947210.775</td>
+      </tr>
+      <tr>
+        <th>JDOM (1.1.3)</th>
+        <td>6484785.167</td>
+        <td>7963265.050</td>
+        <td>3855229.282</td>
+      </tr>
+      <tr>
+        <th>JDOM 2 (2.0.5)</th>
+        <td>6115375.387</td>
+        <td>10515672.380</td>
+        <td>2988432.860</td>
+      </tr>
+      <tr>
+        <th>DOM4J (1.6.1)</th>
+        <td>8085330.593</td>
+        <td>86667547.833</td>
+        <td>2107639.147</td>
+      </tr>
+      <tr>
+        <th>XOM (1.1)</th>
+        <td>8985418.034</td>
+        <td>40287734.364</td>
+        <td>2468760.380</td>
+      </tr>
+      <tr>
+        <th>StAX (BEA 1.2.0)</th>
+        <td>3206437.012</td>
+        <td>1302943.469</td>
+        <td>663698.084</td>
+      </tr>
+      <tr>
+        <th>StAX (Woodstox 3.2.7)</th>
+        <td>1971383.177</td>
+        <td>1194725.141</td>
+        <td>648740.451</td>
+      </tr>
+      <tr>
+        <th>StAX (Oracle JDK 1.8.0_66)</th>
+        <td>7396845.486</td>
+        <td>1414343.414</td>
+        <td>687490.300</td>
+      </tr>
+      <tr>
+        <th>XPP (Xpp3 min 1.1.4c)</th>
+        <td>2231336.085</td>
+        <td>1335187.714</td>
+        <td>3353524.187</td>
+      </tr>
+      <tr>
+        <th>XPP (kXML2 min 2.3.0)</th>
+        <td>3484861.562</td>
+        <td>1506928.806</td>
+        <td>8612535.104</td>
+      </tr>
+      <tr>
+        <th>Binary (XStream 1.4.9)</th>
+        <td>1269866.718</td>
+        <td>1031705.091</td>
+        <td>495651.907</td>
+      </tr>
+      <tr>
+        <th>Jettison (1.2)</th>
+        <td>3327259.014</td>
+        <td>1242862.708</td>
+        <td>740427.003</td>
+      </tr>
+    </table>
+  
+    <dl>
+      <dt>Text</dt>
+      <dd>A single element with a text of 100.000 characters.</dd>
+      <dt>Array</dt>
+      <dd>A single element with 1000 child elements.</dd>
+      <dt>Nested</dt>
+      <dd>Nested elements in 500 levels.</dd>
+    </dl>
+  </body>
+</html>
+  
