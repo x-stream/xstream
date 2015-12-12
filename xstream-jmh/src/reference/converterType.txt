@@ -1,0 +1,4 @@
+Benchmark                          Mode  Cnt         Score         Error  Units
+ConverterTypeBenchmark.custom      avgt   12  14419100.339 ±  540950.629  ns/op
+ConverterTypeBenchmark.javaBean    avgt   12  40430635.122 ± 1576576.835  ns/op
+ConverterTypeBenchmark.reflection  avgt   12  54435826.664 ± 5864067.846  ns/op
