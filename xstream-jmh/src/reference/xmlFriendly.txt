@@ -1,0 +1,5 @@
+Benchmark                                     Mode  Cnt         Score        Error  Units
+XmlFriendlyBenchmark.dollarCoding             avgt   25  11055874.818 ± 335933.605  ns/op
+XmlFriendlyBenchmark.escapedUnderscoreCoding  avgt   25  13047265.881 ± 342803.872  ns/op
+XmlFriendlyBenchmark.noCoding                 avgt   25   9707182.358 ± 576284.929  ns/op
+XmlFriendlyBenchmark.safeCoding               avgt   25  10746054.106 ± 232115.652  ns/op
