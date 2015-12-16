@@ -43,7 +43,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 /**
  * Benchmark for different StringConverter implementations.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
@@ -239,7 +239,7 @@ public class StringConverterBenchmark {
     public void setUp(final BenchmarkParams params) {
         final String benchmark = params.getBenchmark();
         final SingleValueConverter converter;
-        final String name =benchmark.substring(StringConverterBenchmark.class.getName().length() + 1);
+        final String name = benchmark.substring(StringConverterBenchmark.class.getName().length() + 1);
         if ("nonCaching".equals(name)) {
             converter = new NonCachingStringConverter();
         } else if ("intern".equals(name)) {
@@ -247,11 +247,11 @@ public class StringConverterBenchmark {
         } else if ("unlimitedSynchronizedWeakCache".equals(name)) {
             converter = new SynchronizedWeakCacheStringConverter(Integer.MAX_VALUE);
         } else if ("limitedSynchronizedWeakCache".equals(name)) {
-            converter = new SynchronizedWeakCacheStringConverter(UUID.randomUUID().toString().length());
+            converter = new SynchronizedWeakCacheStringConverter(UUID.randomUUID().toString().length() + 2);
         } else if ("unlimitedConcurrentMap".equals(name)) {
             converter = new SynchronizedWeakCacheStringConverter(Integer.MAX_VALUE);
         } else if ("limitedConcurrentMap".equals(name)) {
-            converter = new SynchronizedWeakCacheStringConverter(UUID.randomUUID().toString().length());
+            converter = new SynchronizedWeakCacheStringConverter(UUID.randomUUID().toString().length() + 2);
         } else {
             throw new IllegalStateException("Unsupported benchmark type: " + benchmark);
         }
