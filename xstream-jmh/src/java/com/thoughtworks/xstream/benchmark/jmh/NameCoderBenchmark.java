@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 16.11.2015 by Joerg Schaible
+ * Created on 16. December 2015 by Joerg Schaible, renamed from XmlFriendlyBenchmark
  */
 package com.thoughtworks.xstream.benchmark.jmh;
 
@@ -45,7 +45,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 @State(Scope.Benchmark)
 @Threads(4)
 @Warmup(iterations = 3)
-public class XmlFriendlyBenchmark {
+public class NameCoderBenchmark {
 
     private XStream xstream;
     private String xml;
@@ -228,7 +228,7 @@ public class XmlFriendlyBenchmark {
     public void setUp(final BenchmarkParams params) {
         final String benchmark = params.getBenchmark();
         final NameCoder nameCoder;
-        switch (benchmark.substring(XmlFriendlyBenchmark.class.getName().length() + 1)) {
+        switch (benchmark.substring(NameCoderBenchmark.class.getName().length() + 1)) {
         case "noCoding":
             nameCoder = new NoNameCoder();
             break;
