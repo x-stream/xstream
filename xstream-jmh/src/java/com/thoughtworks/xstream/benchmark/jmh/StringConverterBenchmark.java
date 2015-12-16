@@ -43,7 +43,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 /**
  * Benchmark for different StringConverter implementations.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
