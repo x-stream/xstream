@@ -10,8 +10,8 @@
  */
 package com.thoughtworks.xstream.benchmark.jmh;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -183,8 +183,8 @@ public class NameCoderBenchmark {
      * @since upcoming
      */
     public static class CachedEscapedUnderscoreNameCoder extends EscapedUnderscoreNameCoder {
-        private final Map<String, String> encoderCache = new HashMap<String, String>();
-        private final Map<String, String> decoderCache = new HashMap<String, String>();
+        private final ConcurrentMap<String, String> encoderCache = new ConcurrentHashMap<String, String>();
+        private final ConcurrentMap<String, String> decoderCache = new ConcurrentHashMap<String, String>();
 
         @Override
         public String encodeNode(final String name) {
@@ -274,7 +274,7 @@ public class NameCoderBenchmark {
             nameCoder = new EscapedUnderscoreNameCoder();
             break;
         case "cahcedEscapedUnderscoreCoding":
-            nameCoder = new EscapedUnderscoreNameCoder();
+            nameCoder = new CachedEscapedUnderscoreNameCoder();
             break;
         case "xmlFriendlyCoding":
             nameCoder = new XmlFriendlyNameCoder();
