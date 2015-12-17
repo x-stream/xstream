@@ -36,7 +36,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 /**
  * Benchmark for different {@link NameCoder} implementations.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since upcoming
  */
@@ -183,8 +183,8 @@ public class NameCoderBenchmark {
      * @since upcoming
      */
     public static class CachedEscapedUnderscoreNameCoder extends EscapedUnderscoreNameCoder {
-        private final ConcurrentMap<String, String> encoderCache = new ConcurrentHashMap<String, String>();
-        private final ConcurrentMap<String, String> decoderCache = new ConcurrentHashMap<String, String>();
+        private final ConcurrentMap<String, String> encoderCache = new ConcurrentHashMap<>();
+        private final ConcurrentMap<String, String> decoderCache = new ConcurrentHashMap<>();
 
         @Override
         public String encodeNode(final String name) {
@@ -289,7 +289,7 @@ public class NameCoderBenchmark {
                 _1._2._3._4._5.Unfriendly.class);
         }
         xml = xstream.toXML(array);
-        //System.out.println(xstream.toXML(array[0]));
+        // System.out.println(xstream.toXML(array[0]));
     }
 
     /**
