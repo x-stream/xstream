@@ -48,11 +48,11 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
  */
 @BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
-@Measurement(iterations = 12)
+@Measurement(iterations = 16)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Benchmark)
 @Threads(4)
-@Warmup(iterations = 3)
+@Warmup(iterations = 5)
 public class ConverterTypeBenchmark {
 
     private XStream xstream;
