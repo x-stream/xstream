@@ -10,6 +10,8 @@
  */
 package com.thoughtworks.xstream.benchmark.jmh;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -105,7 +107,7 @@ public class NameCoderBenchmark {
      *
      * @since upcoming
      */
-    public static final class EscapedUnderscoreNameCoder implements NameCoder {
+    public static class EscapedUnderscoreNameCoder implements NameCoder {
 
         public String encodeNode(final String name) {
             final int length = name.length();
@@ -159,6 +161,39 @@ public class NameCoderBenchmark {
 
         public String decodeAttribute(final String attributeName) {
             return decodeNode(attributeName);
+        }
+    }
+
+    /**
+     * Cached dollar encoding with an escaped underscore, may create invalid XML for class types defined in other
+     * languages running on the JVM.
+     *
+     * @since upcoming
+     */
+    public static class CachedEscapedUnderscoreNameCoder extends EscapedUnderscoreNameCoder {
+        private final Map<String, String> encoderCache = new HashMap<String, String>();
+        private final Map<String, String> decoderCache = new HashMap<String, String>();
+
+        @Override
+        public String encodeNode(final String name) {
+            String encoded = encoderCache.get(name);
+            if (encoded == null) {
+                encoded = super.encodeNode(name);
+                encoderCache.putIfAbsent(name, encoded);
+                decoderCache.putIfAbsent(encoded, name);
+            }
+            return encoded;
+        }
+
+        @Override
+        public String decodeNode(final String nodeName) {
+            String decoded = decoderCache.get(nodeName);
+            if (decoded == null) {
+                decoded = super.decodeNode(nodeName);
+                decoderCache.putIfAbsent(nodeName, decoded);
+                encoderCache.putIfAbsent(decoded, nodeName);
+            }
+            return decoded;
         }
     }
 
@@ -223,7 +258,9 @@ public class NameCoderBenchmark {
             nameCoder = new DollarNameCoder();
         } else if (name.equals("escapedUnderscoreCoding")) {
             nameCoder = new EscapedUnderscoreNameCoder();
-        } else if (name.equals("safeCoding")) {
+        } else if (name.equals("cachedEscapedUnderscoreCoding")) {
+            nameCoder = new EscapedUnderscoreNameCoder();
+        } else if (name.equals("xmlFriendlyCoding")) {
             nameCoder = new XmlFriendlyNameCoder();
         } else {
             throw new IllegalStateException("Unsupported benchmark type: " + benchmark);
@@ -269,12 +306,22 @@ public class NameCoderBenchmark {
     }
 
     /**
-     * Safe encoding used by XStream as default, can encode any invalid XML character.
+     * Escaped underscore encoding with caching, can encode any Java identifier.
      *
      * @since upcoming
      */
     @Benchmark
-    public void safeCoding() {
+    public void cachedEscapedUnderscoreCoding() {
+        run();
+    }
+
+    /**
+     * XML friendly encoding used by XStream as default, can encode any invalid XML character.
+     *
+     * @since upcoming
+     */
+    @Benchmark
+    public void xmlFriendlyCoding() {
         run();
     }
 
