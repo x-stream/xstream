@@ -40,7 +40,7 @@
 	
     <h2 id="parser">Parser Benchmark</h2>
 	
-	<p>The values represent the average throughput of 10 runs with a single thread. The benchmarks emphasis the parser
+	<p>The values represent the average throughput of 15 runs with a single thread. The benchmarks emphasis the parser
 	efficiency for different structures.</p>
 	
     <table summary="Benchmark for all parsers supported by XStream using different object structures">
@@ -52,75 +52,75 @@
       </tr>
       <tr>
         <th>W3C DOM (Oracle JDK 1.8.0_66)</th>
-        <td>10627482.022</td>
-        <td>56950592.783</td>
-        <td>1947210.775</td>
+        <td>10037380.795</td>
+        <td>54234293.351</td>
+        <td>1917332.056</td>
       </tr>
       <tr>
         <th>JDOM (1.1.3)</th>
-        <td>6484785.167</td>
-        <td>7963265.050</td>
-        <td>3855229.282</td>
+        <td>6368317.636</td>
+        <td>7910979.223</td>
+        <td>3862796.027</td>
       </tr>
       <tr>
         <th>JDOM 2 (2.0.5)</th>
-        <td>6115375.387</td>
-        <td>10515672.380</td>
-        <td>2988432.860</td>
+        <td>5767640.105</td>
+        <td>10570210.653</td>
+        <td>2980906.727</td>
       </tr>
       <tr>
         <th>DOM4J (1.6.1)</th>
-        <td>8085330.593</td>
-        <td>86667547.833</td>
-        <td>2107639.147</td>
+        <td>7816280.084</td>
+        <td>92998322.952</td>
+        <td>2108075.646</td>
       </tr>
       <tr>
         <th>XOM (1.1)</th>
-        <td>8985418.034</td>
-        <td>40287734.364</td>
-        <td>2468760.380</td>
+        <td>7950778.533</td>
+        <td>38704485.310</td>
+        <td>2471019.743</td>
       </tr>
       <tr>
         <th>StAX (BEA 1.2.0)</th>
-        <td>3206437.012</td>
-        <td>1302943.469</td>
-        <td>663698.084</td>
+        <td>3108517.699</td>
+        <td>1310406.961</td>
+        <td>669111.164</td>
       </tr>
       <tr>
         <th>StAX (Woodstox 3.2.7)</th>
-        <td>1971383.177</td>
-        <td>1194725.141</td>
-        <td>648740.451</td>
+        <td>1884858.525</td>
+        <td>1240767.393</td>
+        <td>650470.623</td>
       </tr>
       <tr>
         <th>StAX (Oracle JDK 1.8.0_66)</th>
-        <td>7396845.486</td>
-        <td>1414343.414</td>
-        <td>687490.300</td>
+        <td>7366387.272</td>
+        <td>1334398.501</td>
+        <td>688229.709</td>
       </tr>
       <tr>
         <th>XPP (Xpp3 min 1.1.4c)</th>
-        <td>2231336.085</td>
-        <td>1335187.714</td>
-        <td>3353524.187</td>
+        <td>2109341.076</td>
+        <td>1309607.210</td>
+        <td>3301732.767</td>
       </tr>
       <tr>
         <th>XPP (kXML2 min 2.3.0)</th>
-        <td>3484861.562</td>
-        <td>1506928.806</td>
-        <td>8612535.104</td>
+        <td>3391204.266</td>
+        <td>1514514.680</td>
+        <td>8105934.241</td>
       </tr>
       <tr>
         <th>Binary (XStream 1.4.9)</th>
-        <td>1269866.718</td>
-        <td>1031705.091</td>
-        <td>495651.907</td>
+        <td>1144243.750</td>
+        <td>1062031.901</td>
+        <td>496839.565</td>
       </tr>
       <tr>
         <th>Jettison (1.2)</th>
-        <td>3327259.014</td>
-        <td>1242862.708</td>
-        <td>740427.003</td>
+        <td>3002547.220</td>
+        <td>1159238.555</td>
+        <td>682182.733</td>
       </tr>
     </table>
   
@@ -135,7 +135,7 @@
 	
     <h2 id="converterType">Converter Type Benchmark</h2>
 
-	<p>The values represent the average throughput of 12 runs with four threads using the Xpp3 parser for a structure
+	<p>The values represent the average throughput of 16 runs with four threads using the Xpp3 parser for a structure
 	with 1.000 elements. The benchmarks demonstrate the different converter types that can be used for a standard Java
 	class.</p>
 	
@@ -146,15 +146,15 @@
       </tr>
       <tr>
         <th>Custom</th>
-        <td>14419100.339</td>
+        <td>11276718.384</td>
       </tr>
       <tr>
         <th>Java Bean</th>
-        <td>40430635.122</td>
+        <td>28878706.293</td>
       </tr>
       <tr>
         <th>Reflection</th>
-        <td>54435826.664</td>
+        <td>40085786.696</td>
       </tr>
     </table>
   
@@ -169,7 +169,7 @@
 	
     <h2 id="stringConverter">String Converter Benchmark</h2>
 
-	<p>The values represent the average throughput of 12 runs with four threads using the Xpp3 parser for a structure
+	<p>The values represent the average throughput of 16 runs with four threads using the Xpp3 parser for a structure
 	with 10.000 string elements of various sizes and duplicates. The benchmarks demonstrate different implementations
 	and configurations of the StringConverter.</p>
 	
@@ -180,27 +180,27 @@
       </tr>
       <tr>
         <th>No Cache</th>
-        <td>26166199.440</td>
+        <td>19626160.696</td>
       </tr>
       <tr>
         <th>Intern</th>
-        <td>29688362.717</td>
+        <td>23060982.052</td>
       </tr>
       <tr>
         <th>ConcurrentMap (length limit)</th>
-        <td>28832519.516</td>
+        <td>21796001.29</td>
       </tr>
       <tr>
         <th>ConcurrentMap (unlimited)</th>
-        <td>28964547.730</td>
+        <td>21378299.003</td>
       </tr>
       <tr>
         <th>Sync'd WeakCache (length limit)</th>
-        <td> 29215270.315</td>
+        <td>21838410.801</td>
       </tr>
       <tr>
         <th>Sync'd WeakCache (unlimited)</th>
-        <td>29250129.329</td>
+        <td>22011251.691</td>
       </tr>
     </table>
   
@@ -241,19 +241,23 @@
       </tr>
       <tr>
         <th>No Coding</th>
-        <td>9707182.358</td>
+        <td>7299475.975</td>
       </tr>
       <tr>
         <th>Dollar Coding</th>
-        <td>11055874.818</td>
+        <td>7767196.902</td>
       </tr>
       <tr>
         <th>Escaped Underscore Coding</th>
-        <td>13047265.881</td>
+        <td>9894393.289</td>
+      </tr>
+      <tr>
+        <th>Cached Escaped Underscore Coding</th>
+        <td>7867671.962</td>
       </tr>
       <tr>
         <th>Xml Friendly Coding</th>
-        <td>10746054.106</td>
+        <td>8635501.208</td>
       </tr>
     </table>
   
@@ -273,6 +277,8 @@
       standard ASCII range. It is not possible to use a simple minus sign as replacement because it is not a valid
       first character for XML names. However, the comments about Java identifiers and JVM identifiers from the Dollar
       Coding still apply.</dd>
+      <dt>Cached Escaped Underscore Coding</dt>
+      <dd>An implementation that implements a cache for the NameCoder that escapes the underscores.</dd>
       <dt>Xml Friendly Coding</dt>
       <dd>The default implementation of XStream using a StringBuilder and a cache, encoding any character that is
       invalid for XML names. It implements also the underscore escaping for compatibility reasons with XML created by
