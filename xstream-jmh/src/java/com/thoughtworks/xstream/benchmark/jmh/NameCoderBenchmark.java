@@ -46,7 +46,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Benchmark)
 @Threads(4)
-@Warmup(iterations = 3)
+@Warmup(iterations = 5)
 public class NameCoderBenchmark {
 
     private XStream xstream;
