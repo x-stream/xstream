@@ -1,5 +1,6 @@
-Benchmark                                     Mode  Cnt         Score        Error  Units
-NameCoderBenchmark.dollarCoding             avgt   25  11055874.818 ± 335933.605  ns/op
-NameCoderBenchmark.escapedUnderscoreCoding  avgt   25  13047265.881 ± 342803.872  ns/op
-NameCoderBenchmark.noCoding                 avgt   25   9707182.358 ± 576284.929  ns/op
-NameCoderBenchmark.safeCoding               avgt   25  10746054.106 ± 232115.652  ns/op
+Benchmark                                         Mode  Cnt        Score        Error  Units
+NameCoderBenchmark.cachedEscapedUnderscoreCoding  avgt   25  7867671.962 ± 513789.786  ns/op
+NameCoderBenchmark.dollarCoding                   avgt   25  7767196.902 ± 594898.960  ns/op
+NameCoderBenchmark.escapedUnderscoreCoding        avgt   25  9894393.289 ± 556251.884  ns/op
+NameCoderBenchmark.noCoding                       avgt   25  7299475.975 ± 363895.593  ns/op
+NameCoderBenchmark.xmlFriendlyCoding              avgt   25  8635501.208 ± 703145.664  ns/op
