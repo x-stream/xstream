@@ -22,7 +22,7 @@ import java.util.List;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public class ReflectionTarget implements Target {

@@ -55,7 +55,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
  * Benchmark for the different {@link HierarchicalStreamDriver} implementations.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.9
  */
 @BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
@@ -70,49 +70,49 @@ public class ParserBenchmark {
      * Driver factory. Enum values used as parameter for the parser benchmark methods.
      *
      * @author J&ouml;rg Schaible
-     * @since upcoming
+     * @since 1.4.9
      */
     public enum DriverFactory {
         /**
          * Factory for the {@link Xpp3Driver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         Xpp3(new Xpp3Driver()), //
         /**
          * Factory for the {@link KXml2Driver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         kXML2(new KXml2Driver()), //
         /**
          * Factory for the {@link StandardStaxDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         JDKStax(new StandardStaxDriver()), //
         /**
          * Factory for the {@link WstxDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         Woodstox(new WstxDriver()), //
         /**
          * Factory for the {@link BEAStaxDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         BEAStax(new BEAStaxDriver()), //
         /**
          * Factory for the {@link DomDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         DOM(new DomDriver()), //
         /**
          * Factory for the {@link Dom4JDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         DOM4J(new Dom4JDriver() { // XML writer of DOM4J fails
             @Override
@@ -123,31 +123,31 @@ public class ParserBenchmark {
         /**
          * Factory for the {@link JDomDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         JDom(new JDomDriver()), //
         /**
          * Factory for the {@link JDom2Driver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         JDom2(new JDom2Driver()), //
         /**
          * Factory for the {@link XomDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         Xom(new XomDriver()), //
         /**
          * Factory for the {@link BinaryStreamDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         Binary(new BinaryStreamDriver()), //
         /**
          * Factory for the {@link JettisonMappedXmlDriver}.
          *
-         * @since upcoming
+         * @since 1.4.9
          */
         Jettison(new JettisonMappedXmlDriver());
 
@@ -161,7 +161,7 @@ public class ParserBenchmark {
          * Request the driver of the instantiated factory.
          *
          * @return the driver
-         * @since upcoming
+         * @since 1.4.9
          */
         public HierarchicalStreamDriver getDriver() {
             return driver;
@@ -173,14 +173,14 @@ public class ParserBenchmark {
      * names define the data factory to use for the benchmark.
      *
      * @author J&ouml;rg Schaible
-     * @since upcoming
+     * @since 1.4.9
      */
     public enum DataFactory {
         /**
          * A single element with a text of 100.000 characters.
          *
          * @author J&ouml;rg Schaible
-         * @since upcoming
+         * @since 1.4.9
          */
         BigText {
             private int length;
@@ -222,7 +222,7 @@ public class ParserBenchmark {
          * Nested list in list structure, 500 elements deep.
          *
          * @author J&ouml;rg Schaible
-         * @since upcoming
+         * @since 1.4.9
          */
         NestedElements {
             private static final int DEPTH = 500;
@@ -259,7 +259,7 @@ public class ParserBenchmark {
          * An array with 1.000 elements.
          *
          * @author J&ouml;rg Schaible
-         * @since upcoming
+         * @since 1.4.9
          */
         ManyChildren {
             private static final int LENGTH = 1000;
@@ -288,7 +288,7 @@ public class ParserBenchmark {
          * Write the data of the factory into the writer of the hierarchical stream.
          *
          * @param writer the writer of the data
-         * @since upcoming
+         * @since 1.4.9
          */
         public abstract void writeData(HierarchicalStreamWriter writer);
 
@@ -296,7 +296,7 @@ public class ParserBenchmark {
          * Check the deserialized object.
          *
          * @param o the object to check
-         * @since upcoming
+         * @since 1.4.9
          */
         public abstract void checkData(Object o);
     }
@@ -311,7 +311,7 @@ public class ParserBenchmark {
     /**
      * Initialize the XStream instance and instantiate the driver for the benchmark.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Setup
     public void init() {
@@ -324,7 +324,7 @@ public class ParserBenchmark {
      * Setup the data to deserialize.
      *
      * @param params the parameters of the benchmark
-     * @since upcoming
+     * @since 1.4.9
      */
     @Setup(Level.Trial)
     public void setUp(final BenchmarkParams params) {
@@ -341,7 +341,7 @@ public class ParserBenchmark {
     /**
      * Parse an element with a big text as value.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void parseBigText() {
@@ -352,7 +352,7 @@ public class ParserBenchmark {
     /**
      * Parse a deeply nested structure.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void parseNestedElements() {
@@ -363,7 +363,7 @@ public class ParserBenchmark {
     /**
      * Parse an element with a lot of simple children.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void parseManyChildren() {

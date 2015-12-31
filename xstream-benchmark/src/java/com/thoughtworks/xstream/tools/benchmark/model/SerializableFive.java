@@ -18,7 +18,7 @@ import java.io.ObjectOutputStream;
  * Serializable class containing 5 basic types.
  * 
  * @since 1.4
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public class SerializableFive extends SerializableOne {

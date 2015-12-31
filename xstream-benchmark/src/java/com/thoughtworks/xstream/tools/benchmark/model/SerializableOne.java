@@ -19,7 +19,7 @@ import java.io.Serializable;
  * Serializable class containing one basic types.
  * 
  * @since 1.4
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public class SerializableOne implements Serializable {

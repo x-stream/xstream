@@ -160,7 +160,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
      * 
      * @return the SAX reader instance.
      * @throws DocumentException if DOCTYPE processing cannot be disabled
-     * @since upcoming
+     * @since 1.4.9
      */
     protected SAXReader createReader() throws DocumentException {
         final SAXReader reader = new SAXReader();

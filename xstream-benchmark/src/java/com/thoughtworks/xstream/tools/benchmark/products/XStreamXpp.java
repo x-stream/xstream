@@ -22,7 +22,7 @@ import com.thoughtworks.xstream.io.xml.XppDriver;
  * @see com.thoughtworks.xstream.tools.benchmark.Product
  * @see com.thoughtworks.xstream.XStream
  * @see XppDriver
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public class XStreamXpp extends XStreamDriver {

@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
  * @see com.thoughtworks.xstream.tools.benchmark.Product
  * @see com.thoughtworks.xstream.XStream
  * @see BEAStaxDriver
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public class XStreamBEAStax extends XStreamDriver {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014 XStream Committers.
+ * Copyright (C) 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -112,7 +112,7 @@ public class JDom2Driver extends AbstractDriver {
      * Create and initialize the SAX builder.
      * 
      * @return the SAX builder instance.
-     * @since upcoming
+     * @since 1.4.9
      */
     protected SAXBuilder createBuilder() {
         final SAXBuilder builder = new SAXBuilder();

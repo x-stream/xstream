@@ -30,7 +30,7 @@ import java.io.OutputStream;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @since 1.4
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public class XStreamDriver implements Product {

@@ -21,7 +21,7 @@ package com.thoughtworks.xstream.tools.benchmark;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @see Harness
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public interface Metric {

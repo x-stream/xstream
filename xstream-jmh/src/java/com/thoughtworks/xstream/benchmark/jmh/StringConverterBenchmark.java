@@ -45,7 +45,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
  * Benchmark for different StringConverter implementations.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.9
  */
 @BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
@@ -63,7 +63,7 @@ public class StringConverterBenchmark {
      * No memory usage for cache, but any string is a separate instance after deserialization. Memory consumption of the
      * deserialized array is nearly 3 times compared to a converter that caches and reuses the strings.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public static final class NonCachingStringConverter extends AbstractSingleValueConverter {
 
@@ -81,7 +81,7 @@ public class StringConverterBenchmark {
     /**
      * Cache based on String.intern(). Uses PermGenSpace for Java 7 and below.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public static final class InternStringConverter extends AbstractSingleValueConverter {
 
@@ -100,7 +100,7 @@ public class StringConverterBenchmark {
      * Cache based on a synchronized WeakHashMap with weak keys. Ensures that the deserialized strings vanish when the
      * deserialized object is GC'ed.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public class SynchronizedWeakCacheStringConverter extends AbstractSingleValueConverter {
 
@@ -116,7 +116,7 @@ public class StringConverterBenchmark {
          * Constructs a SynchronizedWeakCacheStringConverter.
          *
          * @param lengthLimit length limit for cached strings
-         * @since upcoming
+         * @since 1.4.9
          */
         public SynchronizedWeakCacheStringConverter(final int lengthLimit) {
             this(Collections.synchronizedMap(new WeakCache<String, String>()), lengthLimit);
@@ -149,7 +149,7 @@ public class StringConverterBenchmark {
     /**
      * Cache based on a ConcurrentMap. Cache is never flushed.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public class ConcurrentHashMapStringConverter extends AbstractSingleValueConverter {
 
@@ -165,7 +165,7 @@ public class StringConverterBenchmark {
          * Constructs a ConcurrentHashMapStringConverter.
          *
          * @param lengthLimit length limit for cached strings
-         * @since upcoming
+         * @since 1.4.9
          */
         public ConcurrentHashMapStringConverter(final int lengthLimit) {
             this(new ConcurrentHashMap<String, String>(), lengthLimit);
@@ -190,7 +190,7 @@ public class StringConverterBenchmark {
     /**
      * Initialize the XML string to deserialize.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Setup
     public void init() {
@@ -232,7 +232,7 @@ public class StringConverterBenchmark {
      * Setup the data to deserialize.
      *
      * @param params the parameters of the benchmark
-     * @since upcoming
+     * @since 1.4.9
      */
     @Setup(Level.Trial)
     public void setUp(final BenchmarkParams params) {
@@ -267,7 +267,7 @@ public class StringConverterBenchmark {
     /**
      * No cache for deserialized strings, each string is an own instance.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void nonCaching() {
@@ -277,7 +277,7 @@ public class StringConverterBenchmark {
     /**
      * Any string is stored also in the String's internal memory space.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void intern() {
@@ -287,7 +287,7 @@ public class StringConverterBenchmark {
     /**
      * Any string is cached in a weak entry.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void unlimitedSynchronizedWeakCache() {
@@ -297,7 +297,7 @@ public class StringConverterBenchmark {
     /**
      * Strings of 38 characters or less are cached in a weak entry.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void limitedSynchronizedWeakCache() {
@@ -307,7 +307,7 @@ public class StringConverterBenchmark {
     /**
      * Any string is cached in a concurrent map.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void unlimitedConcurrentMap() {
@@ -317,7 +317,7 @@ public class StringConverterBenchmark {
     /**
      * Strings of 38 characters or less are cached in a concurrent map.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void limitedConcurrentMap() {

@@ -53,7 +53,7 @@ import java.util.Iterator;
  * </pre>
  *
  * @author Joe Walnes
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public class Harness {

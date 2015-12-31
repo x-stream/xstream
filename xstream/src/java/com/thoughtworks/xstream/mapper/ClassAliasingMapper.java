@@ -74,7 +74,7 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.9
      */
     @Deprecated
     public boolean itemTypeAsAttribute(final Class<?> clazz) {
@@ -82,7 +82,7 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.9
      */
     @Deprecated
     public boolean aliasIsAttribute(final String name) {

@@ -15,7 +15,7 @@ package com.thoughtworks.xstream.tools.benchmark.model;
  * JavaBean class containing one basic type.
  * 
  * @since 1.4
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 @Deprecated
 public class OneBean {
