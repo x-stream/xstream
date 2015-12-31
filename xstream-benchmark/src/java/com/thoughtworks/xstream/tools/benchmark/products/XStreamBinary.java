@@ -28,7 +28,7 @@ import java.io.InputStream;
  * @see XStream
  * @see BinaryStreamReader
  * @see BinaryStreamWriter
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class XStreamBinary implements Product {
 

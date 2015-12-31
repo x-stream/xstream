@@ -38,7 +38,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
  * Benchmark for different {@link NameCoder} implementations.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.9
  */
 @BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
@@ -56,7 +56,7 @@ public class NameCoderBenchmark {
     /**
      * No encoding, will create invalid XML for inner class types.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public static final class NoNameCoder implements NameCoder {
 
@@ -80,7 +80,7 @@ public class NameCoderBenchmark {
     /**
      * Dollar encoding, will create invalid XML for class types in the default package.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public static final class DollarNameCoder implements NameCoder {
 
@@ -105,7 +105,7 @@ public class NameCoderBenchmark {
      * Dollar encoding with an escaped underscore, may create invalid XML for class types defined in other languages
      * running on the JVM.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public static class EscapedUnderscoreNameCoder implements NameCoder {
 
@@ -168,7 +168,7 @@ public class NameCoderBenchmark {
      * Cached dollar encoding with an escaped underscore, may create invalid XML for class types defined in other
      * languages running on the JVM.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public static class CachedEscapedUnderscoreNameCoder extends EscapedUnderscoreNameCoder {
         private final ConcurrentMap<String, String> encoderCache = new ConcurrentHashMap<String, String>();
@@ -225,7 +225,7 @@ public class NameCoderBenchmark {
     /**
      * Initialize the XML string to deserialize.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Setup
     public void init() {
@@ -245,7 +245,7 @@ public class NameCoderBenchmark {
      * Setup the data to deserialize.
      *
      * @param params the parameters of the benchmark
-     * @since upcoming
+     * @since 1.4.9
      */
     @Setup(Level.Trial)
     public void setUp(final BenchmarkParams params) {
@@ -278,7 +278,7 @@ public class NameCoderBenchmark {
     /**
      * No encoding, will produce invalid XML for inner class types.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void noCoding() {
@@ -288,7 +288,7 @@ public class NameCoderBenchmark {
     /**
      * Dollar encoding, will produce invalid XML for class types in the default package.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void dollarCoding() {
@@ -298,7 +298,7 @@ public class NameCoderBenchmark {
     /**
      * Escaped underscore encoding, can encode any Java identifier.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void escapedUnderscoreCoding() {
@@ -308,7 +308,7 @@ public class NameCoderBenchmark {
     /**
      * Escaped underscore encoding with caching, can encode any Java identifier.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void cachedEscapedUnderscoreCoding() {
@@ -318,7 +318,7 @@ public class NameCoderBenchmark {
     /**
      * XML friendly encoding used by XStream as default, can encode any invalid XML character.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void xmlFriendlyCoding() {

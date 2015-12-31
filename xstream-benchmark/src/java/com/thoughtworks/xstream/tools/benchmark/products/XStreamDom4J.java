@@ -25,7 +25,7 @@ import java.io.Writer;
  * @see com.thoughtworks.xstream.tools.benchmark.Product
  * @see com.thoughtworks.xstream.XStream
  * @see Dom4JDriver
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class XStreamDom4J extends XStreamDriver {
 

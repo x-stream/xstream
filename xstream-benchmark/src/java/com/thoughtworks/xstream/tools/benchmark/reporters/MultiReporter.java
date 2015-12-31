@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.tools.benchmark.Target;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.3
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class MultiReporter implements Reporter {
     

@@ -80,14 +80,14 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.9
      */
     public boolean itemTypeAsAttribute(Class clazz) {
         return classToName.containsKey(clazz.getName());
     }
 
     /**
-     * @deprecated As of upcoming
+     * @deprecated As of 1.4.9
      */
     public boolean aliasIsAttribute(String name) {
         return nameToType.containsKey(name);

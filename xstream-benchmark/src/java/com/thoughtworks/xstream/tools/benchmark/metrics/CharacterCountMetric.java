@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream;
  *
  * @author J&ouml;rg Schaible
  * @since 1.4
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class CharacterCountMetric implements Metric {
     

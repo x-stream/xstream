@@ -25,7 +25,7 @@ import java.io.ByteArrayInputStream;
  * @author J&ouml;rg Schaible
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Metric
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class DeserializationSpeedMetric implements Metric {
 

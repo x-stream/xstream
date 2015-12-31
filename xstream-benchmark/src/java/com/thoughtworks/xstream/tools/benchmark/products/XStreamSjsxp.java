@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.xml.SjsxpDriver;
  * @see com.thoughtworks.xstream.tools.benchmark.Product
  * @see com.thoughtworks.xstream.XStream
  * @see SjsxpDriver
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class XStreamSjsxp extends XStreamDriver {
 

@@ -24,7 +24,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Converts an {@link ActivationDataFlavor}.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.9
  */
 public class ActivationDataFlavorConverter implements Converter {
 

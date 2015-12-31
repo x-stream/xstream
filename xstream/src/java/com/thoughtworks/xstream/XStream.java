@@ -1435,7 +1435,7 @@ public class XStream {
      * they appear multiple times. However, references are still supported at deserialization time.
      *
      * @throws InitializationException if no {@link ImmutableTypesMapper} is available
-     * @deprecated As of upcoming use {@link #addImmutableType(Class, boolean)}
+     * @deprecated As of 1.4.9 use {@link #addImmutableType(Class, boolean)}
      */
     public void addImmutableType(Class type) {
         addImmutableType(type, true);
@@ -1454,7 +1454,7 @@ public class XStream {
      * @param isReferenceable <code>true</code> if support at deserialization time is required for compatibility at the
      *            cost of a higher memory footprint, <code>false</code> otherwise
      * @throws InitializationException if no {@link ImmutableTypesMapper} is available
-     * @since upcoming
+     * @since 1.4.9
      */
     public void addImmutableType(final Class type, final boolean isReferenceable) {
         if (immutableTypesMapper == null) {

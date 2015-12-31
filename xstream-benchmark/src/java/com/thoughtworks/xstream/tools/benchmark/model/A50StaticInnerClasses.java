@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.tools.benchmark.model;
  * Class with static inner classes 50 levels deep.
  * 
  * @since 1.4
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class A50StaticInnerClasses {
 

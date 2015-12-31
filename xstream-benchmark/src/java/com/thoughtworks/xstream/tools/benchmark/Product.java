@@ -20,7 +20,7 @@ import java.io.InputStream;
  *
  * @author Joe Walnes
  * @see Harness
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public interface Product {
 

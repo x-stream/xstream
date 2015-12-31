@@ -15,7 +15,7 @@ package com.thoughtworks.xstream.tools.benchmark.model;
  * Class containing 5 basic types.
  * 
  * @since 1.4
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class Five extends One {
     

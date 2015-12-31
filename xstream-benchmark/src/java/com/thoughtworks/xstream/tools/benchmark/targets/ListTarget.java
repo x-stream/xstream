@@ -22,7 +22,7 @@ import java.util.List;
  * @author Joe Walnes
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Target
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class ListTarget implements Target {
 

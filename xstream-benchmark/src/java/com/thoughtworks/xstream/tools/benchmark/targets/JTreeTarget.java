@@ -22,7 +22,7 @@ import javax.swing.*;
  * @see com.thoughtworks.xstream.tools.benchmark.Harness
  * @see Target
  * @see JTree
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class JTreeTarget implements Target {
 

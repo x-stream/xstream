@@ -28,7 +28,7 @@ import java.io.OutputStreamWriter;
  * @see Product
  * @see XStream
  * @see CompactWriter
- * @deprecated As of upcoming use JMH instead
+ * @deprecated As of 1.4.9 use JMH instead
  */
 public class XStreamCompact implements Product {
 

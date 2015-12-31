@@ -49,7 +49,7 @@ public interface Mapper {
     /**
      * Whether this type is referenceable in a stream.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     boolean isReferenceable(Class type);
 

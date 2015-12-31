@@ -35,7 +35,7 @@ public class ImmutableTypesMapper extends MapperWrapper {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #addImmutableType(Class, boolean)}
+     * @deprecated As of 1.4.9 use {@link #addImmutableType(Class, boolean)}
      */
     public void addImmutableType(Class type) {
         addImmutableType(type, true);
@@ -46,7 +46,7 @@ public class ImmutableTypesMapper extends MapperWrapper {
      *
      * @param type the immutable type
      * @param isReferenceable flag for possible references
-     * @since upcoming
+     * @since 1.4.9
      */
     public void addImmutableType(final Class type, final boolean isReferenceable) {
         immutableTypes.add(type);

@@ -136,7 +136,7 @@ public class DomDriver extends AbstractXmlDriver {
      * Create the DocumentBuilderFactory instance.
      * 
      * @return the new instance
-     * @since upcoming
+     * @since 1.4.9
      */
     protected DocumentBuilderFactory createDocumentBuilderFactory() {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

@@ -44,7 +44,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
  * Benchmark for the different converter types.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.9
  */
 @BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
@@ -146,7 +146,7 @@ public class ConverterTypeBenchmark {
     /**
      * Converter for a Model.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     public static final class ModelConverter implements Converter {
 
@@ -209,7 +209,7 @@ public class ConverterTypeBenchmark {
     /**
      * Initialize the XML string to deserialize.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Setup
     public void init() {
@@ -223,7 +223,7 @@ public class ConverterTypeBenchmark {
      * Setup the data to deserialize.
      *
      * @param params the parameters of the benchmark
-     * @since upcoming
+     * @since 1.4.9
      */
     @Setup(Level.Trial)
     public void setUp(final BenchmarkParams params) {
@@ -248,7 +248,7 @@ public class ConverterTypeBenchmark {
     /**
      * Use ReflectionConverter.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void reflection() {
@@ -258,7 +258,7 @@ public class ConverterTypeBenchmark {
     /**
      * Use JavaBeanConverter.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void javaBean() {
@@ -268,7 +268,7 @@ public class ConverterTypeBenchmark {
     /**
      * Use custom converter.
      *
-     * @since upcoming
+     * @since 1.4.9
      */
     @Benchmark
     public void custom() {
