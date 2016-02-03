@@ -185,6 +185,11 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     @Override
+    public boolean isIgnoredElement(final String name) {
+        return wrapped.isIgnoredElement(name);
+    }
+
+    @Override
     public Converter getLocalConverter(final Class<?> definedIn, final String fieldName) {
         return getLocalConverterMapper.getLocalConverter(definedIn, fieldName);
     }

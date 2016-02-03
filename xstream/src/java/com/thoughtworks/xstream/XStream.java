@@ -154,6 +154,7 @@ import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
+import com.thoughtworks.xstream.mapper.ElementIgnoringMapper;
 import com.thoughtworks.xstream.mapper.EnumMapper;
 import com.thoughtworks.xstream.mapper.FieldAliasingMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
@@ -323,6 +324,7 @@ public class XStream {
     private PackageAliasingMapper packageAliasingMapper;
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
+    private ElementIgnoringMapper elementIgnoringMapper;
     private AttributeAliasingMapper attributeAliasingMapper;
     private SystemAttributeAliasingMapper systemAttributeAliasingMapper;
     private AttributeMapper attributeMapper;
@@ -562,6 +564,7 @@ public class XStream {
         mapper = new DynamicProxyMapper(mapper);
         mapper = new PackageAliasingMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
+        mapper = new ElementIgnoringMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
         mapper = new SystemAttributeAliasingMapper(mapper);
@@ -613,6 +616,7 @@ public class XStream {
     private void setupMappers() {
         packageAliasingMapper = mapper.lookupMapperOfType(PackageAliasingMapper.class);
         classAliasingMapper = mapper.lookupMapperOfType(ClassAliasingMapper.class);
+        elementIgnoringMapper = mapper.lookupMapperOfType(ElementIgnoringMapper.class);
         fieldAliasingMapper = mapper.lookupMapperOfType(FieldAliasingMapper.class);
         attributeMapper = mapper.lookupMapperOfType(AttributeMapper.class);
         attributeAliasingMapper = mapper.lookupMapperOfType(AttributeAliasingMapper.class);
@@ -1933,10 +1937,10 @@ public class XStream {
      * @since 1.4.5
      */
     public void ignoreUnknownElements(final Pattern pattern) {
-        if (fieldAliasingMapper == null) {
-            throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
+        if (elementIgnoringMapper == null) {
+            throw new InitializationException("No " + ElementIgnoringMapper.class.getName() + " available");
         }
-        fieldAliasingMapper.addFieldsToIgnore(pattern);
+        elementIgnoringMapper.addElementsToIgnore(pattern);
     }
 
     /**
