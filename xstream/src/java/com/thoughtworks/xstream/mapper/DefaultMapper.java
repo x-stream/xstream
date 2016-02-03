@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -120,6 +120,10 @@ public class DefaultMapper implements Mapper {
 
     public boolean shouldSerializeMember(Class definedIn, String fieldName) {
         return true;
+    }
+    
+    public boolean isIgnoredElement(String name) {
+        return false;
     }
 
     public String lookupName(Class type) {

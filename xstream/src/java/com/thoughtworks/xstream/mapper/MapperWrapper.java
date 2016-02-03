@@ -168,6 +168,10 @@ public abstract class MapperWrapper implements Mapper {
     public boolean shouldSerializeMember(Class definedIn, String fieldName) {
         return shouldSerializeMemberMapper.shouldSerializeMember(definedIn, fieldName);
     }
+    
+    public boolean isIgnoredElement(String name) {
+        return wrapped.isIgnoredElement(name);
+    }
 
     /**
      * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}

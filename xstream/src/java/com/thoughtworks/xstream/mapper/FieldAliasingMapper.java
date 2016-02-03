@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,8 +15,6 @@ import com.thoughtworks.xstream.core.util.FastField;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -32,10 +30,12 @@ public class FieldAliasingMapper extends MapperWrapper {
     protected final Map fieldToAliasMap = new HashMap();
     protected final Map aliasToFieldMap = new HashMap();
     protected final Set fieldsToOmit = new HashSet();
-    protected final Set unknownFieldsToIgnore = new LinkedHashSet();
+    private final ElementIgnoringMapper elementIgnoringMapper;
 
     public FieldAliasingMapper(Mapper wrapped) {
         super(wrapped);
+        elementIgnoringMapper = 
+            (ElementIgnoringMapper)lookupMapperOfType(ElementIgnoringMapper.class);
     }
 
     public void addFieldAlias(String alias, Class type, String fieldName) {
@@ -43,8 +43,13 @@ public class FieldAliasingMapper extends MapperWrapper {
         aliasToFieldMap.put(key(type, alias), fieldName);
     }
     
+    /**
+     * @deprecated As of 1.4.9 use {@link ElementIgnoringMapper#addElementsToIgnore(Pattern)}.
+     */
     public void addFieldsToIgnore(final Pattern pattern) {
-        unknownFieldsToIgnore.add(pattern);
+        if (elementIgnoringMapper != null) {
+            elementIgnoringMapper.addElementsToIgnore(pattern);
+        }
     }
 
     private Object key(Class type, String name) {
@@ -82,15 +87,8 @@ public class FieldAliasingMapper extends MapperWrapper {
     public boolean shouldSerializeMember(Class definedIn, String fieldName) {
         if (fieldsToOmit.contains(key(definedIn, fieldName))) {
             return false;
-        } else if (definedIn == Object.class && !unknownFieldsToIgnore.isEmpty()) {
-            for(Iterator iter = unknownFieldsToIgnore.iterator(); iter.hasNext();) {
-                Pattern pattern = (Pattern)iter.next();
-                if (pattern.matcher(fieldName).matches()) {
-                    return false;
-                }
-            }
         }
-        return true;
+        return super.shouldSerializeMember(definedIn, fieldName);
     }
 
     public void omitField(Class definedIn, String fieldName) {

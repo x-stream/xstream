@@ -129,6 +129,7 @@ import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.DynamicProxyMapper;
+import com.thoughtworks.xstream.mapper.ElementIgnoringMapper;
 import com.thoughtworks.xstream.mapper.FieldAliasingMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
@@ -318,6 +319,7 @@ public class XStream {
     private PackageAliasingMapper packageAliasingMapper;
     private ClassAliasingMapper classAliasingMapper;
     private FieldAliasingMapper fieldAliasingMapper;
+    private ElementIgnoringMapper elementIgnoringMapper;
     private AttributeAliasingMapper attributeAliasingMapper;
     private SystemAttributeAliasingMapper systemAttributeAliasingMapper;
     private AttributeMapper attributeMapper;
@@ -590,6 +592,7 @@ public class XStream {
         mapper = new DynamicProxyMapper(mapper);
         mapper = new PackageAliasingMapper(mapper);
         mapper = new ClassAliasingMapper(mapper);
+        mapper = new ElementIgnoringMapper(mapper);
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
         mapper = new SystemAttributeAliasingMapper(mapper);
@@ -653,6 +656,8 @@ public class XStream {
             .lookupMapperOfType(PackageAliasingMapper.class);
         classAliasingMapper = (ClassAliasingMapper)this.mapper
             .lookupMapperOfType(ClassAliasingMapper.class);
+        elementIgnoringMapper = (ElementIgnoringMapper)this.mapper
+            .lookupMapperOfType(ElementIgnoringMapper.class);
         fieldAliasingMapper = (FieldAliasingMapper)this.mapper
             .lookupMapperOfType(FieldAliasingMapper.class);
         attributeMapper = (AttributeMapper)this.mapper
@@ -2052,12 +2057,12 @@ public class XStream {
      * @since 1.4.5
      */
     public void ignoreUnknownElements(final Pattern pattern) {
-        if (fieldAliasingMapper == null) {
+        if (elementIgnoringMapper == null) {
             throw new com.thoughtworks.xstream.InitializationException("No "
-                + FieldAliasingMapper.class.getName()
+                + ElementIgnoringMapper.class.getName()
                 + " available");
         }
-        fieldAliasingMapper.addFieldsToIgnore(pattern);
+        elementIgnoringMapper.addElementsToIgnore(pattern);
     }
 
     /**
