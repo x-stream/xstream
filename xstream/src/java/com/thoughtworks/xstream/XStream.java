@@ -52,6 +52,8 @@ import java.util.TreeSet;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import org.jdom2.internal.ReflectionConstructor;
+
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -96,6 +98,7 @@ import com.thoughtworks.xstream.converters.extended.JavaFieldConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
+import com.thoughtworks.xstream.converters.extended.PathConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
@@ -748,6 +751,12 @@ public class XStream {
             alias("sql-time", JVM.loadClassForName("java.sql.Time"));
             alias("sql-date", JVM.loadClassForName("java.sql.Date"));
         }
+        
+        if (JVM.is17()) {
+        	// we instantiate a Path to get the system specific implementation instead of creating 
+        	// an alias for the interface.
+            alias("path", PathConverter.getPathClassSystemSpecific());
+        }
 
         alias("file", File.class);
         alias("locale", Locale.class);
@@ -831,6 +840,9 @@ public class XStream {
         registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
+        if (JVM.is17()) {
+            registerConverter(new PathConverter(), PRIORITY_NORMAL);
+        }
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
         if (JVM.isSQLAvailable()) {
             registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
