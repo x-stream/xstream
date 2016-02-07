@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -770,6 +770,11 @@ public class XStream {
             alias("string-builder", JVM.loadClassForName("java.lang.StringBuilder"));
             alias("uuid", JVM.loadClassForName("java.util.UUID"));
         }
+        
+        if (JVM.is17()) {
+            aliasType("path", JVM.loadClassForName("java.nio.file.Path"));
+        }
+        
         if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
             aliasDynamically("serialized-lambda", "java.lang.invoke.SerializedLambda");
         }
@@ -903,6 +908,10 @@ public class XStream {
         if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
                 PRIORITY_NORMAL, null, null);
+        }
+        if (JVM.is17()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.PathConverter",
+                    PRIORITY_NORMAL, null, null);
         }
         if (JVM.is18()) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
