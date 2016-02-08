@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
-public class PathConverterTest extends AbstractAcceptanceTest {
+public class PathConverter17Test extends AbstractAcceptanceTest {
 
     public void testConvertsToSingleString() {
 

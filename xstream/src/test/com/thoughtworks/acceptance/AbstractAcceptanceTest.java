@@ -41,7 +41,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.extended.PathConverter;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.binary.BinaryStreamWriter;
 import com.thoughtworks.xstream.io.binary.BinaryStreamReader;
@@ -92,7 +92,7 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         xstream.allowTypeHierarchy(Number.class);
         xstream.allowTypeHierarchy(TimeZone.class);
         xstream.allowTypeHierarchy(Throwable.class);
-        xstream.allowTypeHierarchy(PathConverter.getPathClassInterface());
+        xstream.allowTypeHierarchy(JVM.loadClassForName("java.nio.file.Path"));
         xstream.allowTypes(new Class[]{
             BitSet.class, Charset.class, Class.class, Currency.class, Date.class, DecimalFormatSymbols.class,
             File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class, String.class,

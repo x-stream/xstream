@@ -52,8 +52,6 @@ import java.util.TreeSet;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import org.jdom2.internal.ReflectionConstructor;
-
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -98,7 +96,6 @@ import com.thoughtworks.xstream.converters.extended.JavaFieldConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
-import com.thoughtworks.xstream.converters.extended.PathConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimeConverter;
 import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
@@ -753,9 +750,19 @@ public class XStream {
         }
         
         if (JVM.is17()) {
-        	// we instantiate a Path to get the system specific implementation instead of creating 
-        	// an alias for the interface.
-            alias("path", PathConverter.getPathClassSystemSpecific());
+        	// we instantiate a Path to get the system specific implementation instead of creating an 
+        	// alias for the interface. add Paths.get(".").getClass() as an alias. 
+        	// (e.g. sun.nio.fs.UnixPath, sun.nio.fs.WindowsFileSystem)
+        	try {
+				final Class pathsClass = JVM.loadClassForName("java.nio.file.Paths");
+				final Method getMethod = pathsClass.getDeclaredMethod("get", new Class[]{String.class, String[].class});
+				final Object pathInstance = getMethod.invoke(null, new Object[]{".", new String[0]});
+				final Class javaNioFilePathClass = pathInstance.getClass();
+	
+	            alias("path", javaNioFilePathClass);
+        	} catch (final Exception e) {
+        		// don't care. Path is not supported.
+        	}
         }
 
         alias("file", File.class);
@@ -840,9 +847,6 @@ public class XStream {
         registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
-        if (JVM.is17()) {
-            registerConverter(new PathConverter(), PRIORITY_NORMAL);
-        }
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
         if (JVM.isSQLAvailable()) {
             registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
@@ -915,6 +919,10 @@ public class XStream {
         if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
                 PRIORITY_NORMAL, null, null);
+        }
+        if (JVM.is17()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.PathConverter17",
+                    PRIORITY_NORMAL, new Class[]{}, new Object[]{});
         }
         if (JVM.is18()) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
