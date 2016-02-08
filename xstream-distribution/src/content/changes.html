@@ -54,6 +54,7 @@
     	java.math.BigInteger, java.io.File, java.net.URL, and java.awt.font.TextAttribute).</li>
     	<li>Fix: Implicit collection declaration is erroneously inherited or propagated to hidden field of same name.</li>
     	<li>GHI:#5: Support null values for JavaBean properties.</li>
+    	<li>GHI:#36: Fix NamedMapConverter, does not use SingleValueConverter of value if value is text of entry element.</li>
     	<li>GHI:#13: Own converter for javax.activation.ActivationDataFlavor, because ExternalizableConverter cannot handle
     	a type that violates the Java specification.</li>
     	<li>GHPR:#18: Minimize synchronized block in FieldDictionary.</li>

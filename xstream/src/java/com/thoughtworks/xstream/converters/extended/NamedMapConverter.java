@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -247,10 +247,10 @@ public class NamedMapConverter extends MapConverter {
         SingleValueConverter keyConverter = null;
         SingleValueConverter valueConverter = null;
         if (keyAsAttribute) {
-            keyConverter = getSingleValueConverter(keyType);
+            keyConverter = getSingleValueConverter(keyType, "key");
         }
         if (valueAsAttribute || valueName == null) {
-            valueConverter = getSingleValueConverter(valueType);
+            valueConverter = getSingleValueConverter(valueType, "value");
         }
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry)iterator.next();
@@ -287,10 +287,10 @@ public class NamedMapConverter extends MapConverter {
         SingleValueConverter keyConverter = null;
         SingleValueConverter valueConverter = null;
         if (keyAsAttribute) {
-            keyConverter = getSingleValueConverter(keyType);
+            keyConverter = getSingleValueConverter(keyType, "key");
         }
         if (valueAsAttribute || valueName == null) {
-            valueConverter = getSingleValueConverter(valueType);
+            valueConverter = getSingleValueConverter(valueType, "value");
         }
 
         while (reader.hasMoreChildren()) {
@@ -336,7 +336,7 @@ public class NamedMapConverter extends MapConverter {
                 }
                 reader.moveUp();
             } else if (!valueAsAttribute) {
-                value = reader.getValue();
+                value = valueConverter.fromString(reader.getValue());
             }
 
             target.put(key, value);
@@ -347,7 +347,7 @@ public class NamedMapConverter extends MapConverter {
         }
     }
 
-    private SingleValueConverter getSingleValueConverter(Class type) {
+    private SingleValueConverter getSingleValueConverter(Class type, String part) {
         SingleValueConverter conv = UseAttributeForEnumMapper.isEnum(type) ? enumMapper
             .getConverterFromItemType(null, type, null) : mapper().getConverterFromItemType(
             null, type, null);
@@ -356,7 +356,7 @@ public class NamedMapConverter extends MapConverter {
             if (converter instanceof SingleValueConverter) {
                 conv = (SingleValueConverter)converter;
             } else {
-                throw new ConversionException("No SingleValueConverter for key available");
+                throw new ConversionException("No SingleValueConverter for " + part +  " available");
             }
         }
         return conv;
