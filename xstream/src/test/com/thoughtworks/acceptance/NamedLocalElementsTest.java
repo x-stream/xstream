@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,9 +11,13 @@
 package com.thoughtworks.acceptance;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.SampleMaps;
@@ -384,20 +388,24 @@ public class NamedLocalElementsTest extends AbstractAcceptanceTest {
     public void testMapElementsUsingAttributeAndText() {
         xstream.registerLocalConverter(
             SampleMaps.class, "good", new NamedMapConverter(
-                xstream.getMapper(), "product", "name", String.class, null, String.class,
+                xstream.getMapper(), "product", "name", String.class, null, Date.class,
                 true, false, xstream.getConverterLookup()));
-        
+
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"), Locale.GERMANY);
+        cal.clear();
+        cal.set(2016, Calendar.FEBRUARY, 8, 20, 11, 10);
         SampleMaps maps = new SampleMaps();
         maps.bad = null;
         maps.good = new LinkedHashMap();
-        maps.good.put("SiteMesh", "com.opensymphony");
-        maps.good.put("XStream", "com.thoughtworks");
+        maps.good.put("SiteMesh", cal.getTime());
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        maps.good.put("XStream", cal.getTime());
         
         String expected = (""
             + "<maps>\n"
             + "  <products>\n"
-            + "    <product name='SiteMesh'>com.opensymphony</product>\n"
-            + "    <product name='XStream'>com.thoughtworks</product>\n"
+            + "    <product name='SiteMesh'>2016-02-08 20:11:10.0 UTC</product>\n"
+            + "    <product name='XStream'>2016-02-09 20:11:10.0 UTC</product>\n"
             + "  </products>\n"
             + "</maps>").replace('\'', '"');
         

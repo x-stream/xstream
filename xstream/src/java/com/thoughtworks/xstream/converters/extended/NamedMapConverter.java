@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014 XStream Committers.
+ * Copyright (C) 2013, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -34,7 +34,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * </p>
  * <ul>
  * <li>new NamedMapConverter(xstream.getMapper(), "entry", "key", String.class, "value", Integer.class);
- * 
+ *
  * <pre>
  * &lt;map&gt;
  *   &lt;entry&gt;
@@ -43,31 +43,31 @@ import com.thoughtworks.xstream.mapper.Mapper;
  *   &lt;/entry&gt;
  * &lt;/map&gt;
  * </pre>
- * 
+ *
  * </li>
  * <li>new NamedMapConverter(xstream.getMapper(), null, "key", String.class, "value", Integer.class);
- * 
+ *
  * <pre>
  * &lt;map&gt;
  *   &lt;key&gt;keyValue&lt;/key&gt;
  *   &lt;value&gt;0&lt;/value&gt;
  * &lt;/map&gt;
  * </pre>
- * 
+ *
  * </li>
  * <li>new NamedMapConverter(xstream.getMapper(), "entry", "key", String.class, "value", Integer.class, true, true,
  * xstream.getConverterLookup());
- * 
+ *
  * <pre>
  * &lt;map&gt;
  *   &lt;entry&gt; key=&quot;keyValue&quot; value=&quot;0&quot;/&gt;
  * &lt;/map&gt;
  * </pre>
- * 
+ *
  * </li>
  * <li>new NamedMapConverter(xstream.getMapper(), "entry", "key", String.class, "value", Integer.class, true, false,
  * xstream.getConverterLookup());
- * 
+ *
  * <pre>
  * &lt;map&gt;
  *   &lt;entry key=&quot;keyValue&quot;&gt;
@@ -75,11 +75,11 @@ import com.thoughtworks.xstream.mapper.Mapper;
  *   &lt;/entry&gt;
  * &lt;/map&gt;
  * </pre>
- * 
+ *
  * </li>
  * <li>new NamedMapConverter(xstream.getMapper(), "entry", "key", String.class, "value", Integer.class, false, true,
  * xstream.getConverterLookup());
- * 
+ *
  * <pre>
  * &lt;map&gt;
  *   &lt;entry value=&quot;0&quot;&gt;
@@ -87,20 +87,20 @@ import com.thoughtworks.xstream.mapper.Mapper;
  *   &lt;/entry&gt;
  * &lt;/map&gt;
  * </pre>
- * 
+ *
  * </li>
  * <li>new NamedMapConverter(xstream.getMapper(), "entry", "key", String.class, null, Integer.class, true, false,
  * xstream.getConverterLookup());
- * 
+ *
  * <pre>
  * &lt;map&gt;
  *   &lt;entry key=&quot;keyValue&quot;&gt;0&lt;/entry&gt;
  * &lt;/map&gt;
  * </pre>
- * 
+ *
  * </li>
  * </ul>
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4.5
  */
@@ -118,7 +118,7 @@ public class NamedMapConverter extends MapConverter {
 
     /**
      * Constructs a NamedMapConverter.
-     * 
+     *
      * @param mapper the mapper
      * @param entryName the name of the entry elements
      * @param keyName the name of the key elements
@@ -135,7 +135,7 @@ public class NamedMapConverter extends MapConverter {
 
     /**
      * Constructs a NamedMapConverter handling an explicit Map type.
-     * 
+     *
      * @param type the Map type this instance will handle
      * @param mapper the mapper
      * @param entryName the name of the entry elements
@@ -153,7 +153,7 @@ public class NamedMapConverter extends MapConverter {
 
     /**
      * Constructs a NamedMapConverter with attribute support.
-     * 
+     *
      * @param mapper the mapper
      * @param entryName the name of the entry elements
      * @param keyName the name of the key elements
@@ -174,7 +174,7 @@ public class NamedMapConverter extends MapConverter {
 
     /**
      * Constructs a NamedMapConverter with attribute support handling an explicit Map type.
-     * 
+     *
      * @param type the Map type this instance will handle
      * @param mapper the mapper
      * @param entryName the name of the entry elements
@@ -207,7 +207,8 @@ public class NamedMapConverter extends MapConverter {
         }
         if (entryName == null) {
             if (keyAsAttribute || valueAsAttribute) {
-                throw new IllegalArgumentException("Cannot write attributes to map entry, if map entry must be omitted");
+                throw new IllegalArgumentException(
+                    "Cannot write attributes to map entry, if map entry must be omitted");
             }
             if (valueName == null) {
                 throw new IllegalArgumentException("Cannot write value as text of entry, if entry must be omitted");
@@ -234,11 +235,11 @@ public class NamedMapConverter extends MapConverter {
         SingleValueConverter keyConverter = null;
         SingleValueConverter valueConverter = null;
         if (keyAsAttribute) {
-            final SingleValueConverter singleValueConverter = getSingleValueConverter(keyType);
+            final SingleValueConverter singleValueConverter = getSingleValueConverter(keyType, "key");
             keyConverter = singleValueConverter;
         }
         if (valueAsAttribute || valueName == null) {
-            final SingleValueConverter singleValueConverter = getSingleValueConverter(valueType);
+            final SingleValueConverter singleValueConverter = getSingleValueConverter(valueType, "value");
             valueConverter = singleValueConverter;
         }
         for (final Map.Entry<?, ?> entry : map.entrySet()) {
@@ -275,10 +276,10 @@ public class NamedMapConverter extends MapConverter {
         SingleValueConverter keyConverter = null;
         SingleValueConverter valueConverter = null;
         if (keyAsAttribute) {
-            keyConverter = getSingleValueConverter(keyType);
+            keyConverter = getSingleValueConverter(keyType, "key");
         }
         if (valueAsAttribute || valueName == null) {
-            valueConverter = getSingleValueConverter(valueType);
+            valueConverter = getSingleValueConverter(valueType, "value");
         }
 
         while (reader.hasMoreChildren()) {
@@ -322,7 +323,7 @@ public class NamedMapConverter extends MapConverter {
                 }
                 reader.moveUp();
             } else if (!valueAsAttribute) {
-                value = reader.getValue();
+                value = valueConverter.fromString(reader.getValue());
             }
 
             @SuppressWarnings("unchecked")
@@ -335,15 +336,16 @@ public class NamedMapConverter extends MapConverter {
         }
     }
 
-    private SingleValueConverter getSingleValueConverter(final Class<?> type) {
-        SingleValueConverter conv = Enum.class.isAssignableFrom(type) ? enumMapper.getConverterFromItemType(null, type,
-            null) : mapper().getConverterFromItemType(null, type, null);
+    private SingleValueConverter getSingleValueConverter(final Class<?> type, final String part) {
+        SingleValueConverter conv = Enum.class.isAssignableFrom(type)
+            ? enumMapper.getConverterFromItemType(null, type, null)
+            : mapper().getConverterFromItemType(null, type, null);
         if (conv == null) {
             final Converter converter = lookup.lookupConverterForType(type);
             if (converter instanceof SingleValueConverter) {
                 conv = (SingleValueConverter)converter;
             } else {
-                throw new ConversionException("No SingleValueConverter for key available");
+                throw new ConversionException("No SingleValueConverter for " + part + " available");
             }
         }
         return conv;
