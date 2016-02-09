@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,7 @@ public class StaxReaderTest extends AbstractXMLReaderTest {
         try {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
         } catch (final XStreamException e) {
-            final String message = e.getMessage();
+            final String message = e.getCause().getMessage();
             if (message.indexOf("external entity") < 0) {
                 throw e;
             }
@@ -40,7 +40,7 @@ public class StaxReaderTest extends AbstractXMLReaderTest {
             super.testIsXXEVulnerableWithExternalParameterEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
-            final String message = e.getMessage();
+            final String message = e.getCause().getMessage();
             if (message.indexOf("external entity") < 0) {
                 if (JVM.is16() && message.indexOf("com.wutka.dtd.DTDParseException") >= 0) {
                     System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
