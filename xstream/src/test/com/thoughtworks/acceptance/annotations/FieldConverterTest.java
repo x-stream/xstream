@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,12 +13,14 @@ package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -230,4 +232,24 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         assertEquals(before + 1, after);
     }
 
+    @XStreamConverter(EnumToStringConverter.class)
+    public static class InvalidForConverter {
+    }
+    
+    public void testCausingExceptionIsNotSuppressed() {
+        try {
+            toXML(new InvalidForConverter());
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            Throwable th = e;
+            for(;;) {
+                th = th.getCause();
+                assertNotNull("No causing IllegalArgumentExcetion.", th);
+                if (th instanceof IllegalArgumentException) {
+                    assertTrue("No hint for enum types only", th.getMessage().indexOf(" enum ") >= 0);
+                    break;
+                }
+            }
+        }
+    }
 }
