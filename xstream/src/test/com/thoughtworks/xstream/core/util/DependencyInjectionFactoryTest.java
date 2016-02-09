@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2007, 2009, 2010, 2011, 2012, 2014 XStream Committers.
+ * Copyright (C) 2007, 2009, 2010, 2011, 2012, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. March 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.core.util;
@@ -23,7 +23,7 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             "The message", this, new RuntimeException("JUnit"));
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message : JUnit", exception.getMessage());
+        assertEquals("The message", exception.getMessage());
         assertEquals("JUnit", ((ObjectAccessException)exception).getCause().getMessage());
         assertTrue(used.get(0));
         assertFalse(used.get(1));
@@ -42,7 +42,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             new TypedNull<String>(String.class), this, new RuntimeException("JUnit"));
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("null : JUnit", exception.getMessage());
+        assertNull(exception.getMessage());
+        assertEquals("JUnit", exception.getCause().getMessage());
         assertTrue(used.get(0));
         assertFalse(used.get(1));
         assertTrue(used.get(2));
@@ -50,8 +51,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
 
     public void testWillMatchPrimitives() {
         final BitSet used = new BitSet();
-        final String string = DependencyInjectionFactory
-            .newInstance(used, String.class, "JUnit".getBytes(), 1, this, 4);
+        final String string = DependencyInjectionFactory.newInstance(used, String.class, "JUnit".getBytes(), 1, this,
+            4);
         assertEquals("Unit", string);
         assertTrue(used.get(0));
         assertTrue(used.get(1));
@@ -64,7 +65,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             new RuntimeException("JUnit"), this, "The message");
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message : JUnit", exception.getMessage());
+        assertEquals("The message", exception.getMessage());
+        assertEquals("JUnit", exception.getCause().getMessage());
         assertTrue(used.get(0));
         assertFalse(used.get(1));
         assertTrue(used.get(2));
@@ -75,7 +77,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             new RuntimeException("JUnit"), new IllegalArgumentException("foo"), this, "The message");
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message : foo", exception.getMessage());
+        assertEquals("The message", exception.getMessage());
+        assertEquals("foo", exception.getCause().getMessage());
         assertFalse(used.get(0));
         assertTrue(used.get(1));
         assertFalse(used.get(2));
@@ -87,7 +90,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             new RuntimeException("JUnit"), "The message", "bar", new IllegalArgumentException("foo"), this);
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message : foo", exception.getMessage());
+        assertEquals("The message", exception.getMessage());
+        assertEquals("foo", exception.getCause().getMessage());
         assertFalse(used.get(0));
         assertTrue(used.get(1));
         assertFalse(used.get(2));
