@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,7 +14,6 @@ package com.thoughtworks.xstream.core;
 import com.thoughtworks.xstream.XStreamException;
 
 /**
- * JDK1.3 friendly exception that retains cause.
  * @deprecated As of 1.3, use {@link XStreamException} instead
  */
 public abstract class BaseException extends RuntimeException {
@@ -23,5 +22,7 @@ public abstract class BaseException extends RuntimeException {
         super(message);
     }
 
-    public abstract Throwable getCause();
+    protected BaseException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

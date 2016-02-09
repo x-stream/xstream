@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,15 +14,13 @@ import com.thoughtworks.xstream.core.BaseException;
 
 
 /**
- * Base exception for all thrown exceptions with XStream. JDK 1.3 friendly cause handling.
+ * Base exception for all thrown exceptions with XStream.
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @since 1.3
  */
 public class XStreamException extends BaseException {
-
-    private Throwable cause;
 
     /**
      * Default constructor.
@@ -62,12 +60,6 @@ public class XStreamException extends BaseException {
      * @since 1.3
      */
     public XStreamException(String message, Throwable cause) {
-        super(message + (cause == null ? "" : " : " + cause.getMessage()));
-        this.cause = cause;
+        super(message, cause);
     }
-
-    public Throwable getCause() {
-        return cause;
-    }
-
 }
