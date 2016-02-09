@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009, 2010, 2011, 2012 XStream Committers.
+ * Copyright (C) 2007, 2009, 2010, 2011, 2012, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ public class DependencyInjectionFactoryTest extends TestCase {
             ObjectAccessException.class, new Object[]{
                 "The message", this, new RuntimeException("JUnit")}, used);
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message : JUnit", exception.getMessage());
+        assertEquals("The message", exception.getMessage());
         assertEquals("JUnit", ((ObjectAccessException)exception).getCause().getMessage());
         assertTrue(used.get(0));
         assertFalse(used.get(1));
@@ -45,7 +45,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
             ObjectAccessException.class, new Object[]{
                 new TypedNull(String.class), this, new RuntimeException("JUnit")}, used);
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("null : JUnit", exception.getMessage());
+        assertNull(exception.getMessage());
+        assertEquals("JUnit", exception.getCause().getMessage());
         assertTrue(used.get(0));
         assertFalse(used.get(1));
         assertTrue(used.get(2));
@@ -69,7 +70,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
             ObjectAccessException.class, new Object[]{
                 new RuntimeException("JUnit"), this, "The message"}, used);
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message : JUnit", exception.getMessage());
+        assertEquals("The message", exception.getMessage());
+        assertEquals("JUnit", exception.getCause().getMessage());
         assertTrue(used.get(0));
         assertFalse(used.get(1));
         assertTrue(used.get(2));
@@ -82,7 +84,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
                 new RuntimeException("JUnit"), new IllegalArgumentException("foo"), this,
                 "The message"}, used);
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message : foo", exception.getMessage());
+        assertEquals("The message", exception.getMessage());
+        assertEquals("foo", exception.getCause().getMessage());
         assertFalse(used.get(0));
         assertTrue(used.get(1));
         assertFalse(used.get(2));
@@ -96,7 +99,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
                 new RuntimeException("JUnit"), "The message", "bar",
                 new IllegalArgumentException("foo"), this}, used);
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message : foo", exception.getMessage());
+        assertEquals("The message", exception.getMessage());
+        assertEquals("foo", exception.getCause().getMessage());
         assertFalse(used.get(0));
         assertTrue(used.get(1));
         assertFalse(used.get(2));
