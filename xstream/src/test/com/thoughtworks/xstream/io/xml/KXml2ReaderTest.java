@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -35,7 +35,7 @@ public class KXml2ReaderTest extends AbstractXMLReaderTest {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
-            final String message = e.getMessage();
+            final String message = e.getCause().getMessage();
             if (!message.contains("unresolved")) {
                 throw e;
             }

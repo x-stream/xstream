@@ -1,46 +1,46 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
+
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 import com.thoughtworks.xstream.io.xml.xppdom.XppFactory;
 
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
 
 public class XppDomReaderTest extends AbstractXMLReaderTest {
-    protected HierarchicalStreamReader createReader(String xml) throws Exception {
+    @Override
+    protected HierarchicalStreamReader createReader(final String xml) throws Exception {
         return new Xpp3DomDriver().createReader(new StringReader(xml));
     }
 
-    public void testCanReadFromElementOfLargerDocument()
-            throws Exception {
-        String xml =
-                "<big>" +
-                "  <small>" +
-                "    <tiny/>" +
-                "  </small>" +
-                "  <small-two>" +
-                "  </small-two>" +
-                "</big>";
+    public void testCanReadFromElementOfLargerDocument() throws Exception {
+        final String xml = "<big>"
+            + "  <small>"
+            + "    <tiny/>"
+            + "  </small>"
+            + "  <small-two>"
+            + "  </small-two>"
+            + "</big>";
 
-        XppDom document = XppFactory.buildDom(xml);
+        final XppDom document = XppFactory.buildDom(xml);
 
-        XppDom small = document.getChild("small");
+        final XppDom small = document.getChild("small");
 
-        HierarchicalStreamReader xmlReader = new XppDomReader(small);
+        final HierarchicalStreamReader xmlReader = new XppDomReader(small);
 
         assertEquals("small", xmlReader.getNodeName());
 
@@ -49,23 +49,24 @@ public class XppDomReaderTest extends AbstractXMLReaderTest {
         assertEquals("tiny", xmlReader.getNodeName());
     }
 
+    @Override
     public void testExposesAttributesKeysAndValuesByIndex() throws Exception {
 
         // overrides test in superclass, because XppDom does not retain order of actualAttributes.
 
-        HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
+        final HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
 
         assertEquals(3, xmlReader.getAttributeCount());
 
-        Map expectedAttributes = new HashMap();
+        final Map expectedAttributes = new HashMap();
         expectedAttributes.put("hello", "world");
         expectedAttributes.put("a", "b");
         expectedAttributes.put("c", "d");
 
-        Map actualAttributes = new HashMap();
+        final Map actualAttributes = new HashMap();
         for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
-            String name = xmlReader.getAttributeName(i);
-            String value = xmlReader.getAttribute(i);
+            final String name = xmlReader.getAttributeName(i);
+            final String value = xmlReader.getAttribute(i);
             actualAttributes.put(name, value);
         }
 
@@ -82,7 +83,7 @@ public class XppDomReaderTest extends AbstractXMLReaderTest {
             super.testIsXXEVulnerableWithExternalGeneralEntity();
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
-            final String message = e.getMessage();
+            final String message = e.getCause().getMessage();
             if (!message.contains("resolve entity")) {
                 throw e;
             }
