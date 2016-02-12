@@ -748,6 +748,22 @@ public class XStream {
             alias("sql-time", JVM.loadClassForName("java.sql.Time"));
             alias("sql-date", JVM.loadClassForName("java.sql.Date"));
         }
+        
+        if (JVM.is17()) {
+        	// we instantiate a Path to get the system specific implementation instead of creating an 
+        	// alias for the interface. add Paths.get(".").getClass() as an alias. 
+        	// (e.g. sun.nio.fs.UnixPath, sun.nio.fs.WindowsFileSystem)
+        	try {
+				final Class pathsClass = JVM.loadClassForName("java.nio.file.Paths");
+				final Method getMethod = pathsClass.getDeclaredMethod("get", new Class[]{String.class, String[].class});
+				final Object pathInstance = getMethod.invoke(null, new Object[]{".", new String[0]});
+				final Class javaNioFilePathClass = pathInstance.getClass();
+	
+	            alias("path", javaNioFilePathClass);
+        	} catch (final Exception e) {
+        		// don't care. Path is not supported.
+        	}
+        }
 
         alias("file", File.class);
         alias("locale", Locale.class);
@@ -903,6 +919,10 @@ public class XStream {
         if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
                 PRIORITY_NORMAL, null, null);
+        }
+        if (JVM.is17()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.PathConverter17",
+                    PRIORITY_NORMAL, new Class[]{}, new Object[]{});
         }
         if (JVM.is18()) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",

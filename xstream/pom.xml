@@ -315,6 +315,7 @@
               </compilerArgs>
               <excludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/*17*</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
