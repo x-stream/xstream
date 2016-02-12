@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2012, 2013, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -505,10 +505,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             if (array != null) {
                 int length = Array.getLength(array);
                 for (int i = 0; i < length; i++ ) {
-                    Object object = Array.get(array, i);
-                    if (!parameter.contains(object)) {
-                        parameter.add(object);
-                    }
+                    parameter.add(Array.get(array, i));
                 }
             }
         }
