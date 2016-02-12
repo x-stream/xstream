@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011, 2012, 2013, 2015 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2012, 2013, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -60,6 +60,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         xstream.processAnnotations(DerivedType.class);
         xstream.processAnnotations(SimpleBean.class);
         xstream.processAnnotations(ContainsMap.class);
+        xstream.processAnnotations(ContainsMap2.class);
         xstream.processAnnotations(ContainsCollection.class);
     }
 
@@ -216,6 +217,36 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         private Map<E, String> map;
 
         public ContainsMap(Map<E, String> map) {
+            this.map = map;
+        }
+    }
+
+    public void testAnnotatedNamedMapConverterWithMultipleSameArguments() {
+        xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
+        
+        final Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("FOO", "foo");
+        map.put("BAR", "bar");
+        final ContainsMap2 value = new ContainsMap2(map);
+        String expected = (""
+                + "<container-map>\n"
+                + "  <map>\n"
+                + "    <key>FOO</key>\n"
+                + "    <value>foo</value>\n"
+                + "    <key>BAR</key>\n"
+                + "    <value>bar</value>\n"
+                + "  </map>\n"
+                + "</container-map>").replace('\'', '"');
+        assertBothWays(value, expected);
+    }
+    
+    @XStreamAlias("container-map")
+    public static class ContainsMap2 extends StandardObject {
+        @XStreamConverter(value = NamedMapConverter.class, strings = {"", "key", "value"}, types = {
+            LinkedHashMap.class, String.class, String.class}, booleans = {false, false}, useImplicitType = false)
+        private Map<String, String> map;
+
+        public ContainsMap2(Map<String, String> map) {
             this.map = map;
         }
     }
