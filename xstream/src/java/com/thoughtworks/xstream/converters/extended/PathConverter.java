@@ -10,9 +10,13 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
@@ -20,6 +24,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * Converts a {@link Path} to string.
  *
  * @author Aaron Johnson
+ * @author J&ouml;rg Schaible
  */
 public class PathConverter extends AbstractSingleValueConverter {
 
@@ -30,12 +35,25 @@ public class PathConverter extends AbstractSingleValueConverter {
 
     @Override
     public Object fromString(final String str) {
-        return Paths.get(str);
+        try {
+            final URI uri = new URI(str);
+            if (uri.getScheme() == null) {
+                return Paths.get(str);
+            } else {
+                return Paths.get(uri);
+            }
+        } catch (final URISyntaxException e) {
+            throw new ConversionException(e);
+        }
     }
 
-    /** The Path.toString() method returns the path as a string already. */
     @Override
     public String toString(final Object obj) {
-        return obj.toString();
+        final Path path = (Path)obj;
+        if (path.getFileSystem() == FileSystems.getDefault()) {
+            return path.toString();
+        } else {
+            return path.toUri().toString();
+        }
     }
 }

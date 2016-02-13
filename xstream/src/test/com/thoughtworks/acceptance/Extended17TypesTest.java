@@ -10,8 +10,14 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -23,16 +29,36 @@ import com.thoughtworks.xstream.XStream;
 public class Extended17TypesTest extends AbstractAcceptanceTest {
 
     @Override
-    protected void setupSecurity(XStream xstream) {
+    protected void setupSecurity(final XStream xstream) {
         super.setupSecurity(xstream);
         xstream.allowTypeHierarchy(Path.class);
     }
 
-    /**
-     * @author Aaron Johnson
-     */
-    public void testPath() {
+    public void testPathOfDefaultFileSystem() {
         assertBothWays(Paths.get("../a/relative/path"), "<path>../a/relative/path</path>");
         assertBothWays(Paths.get("/an/absolute/path"), "<path>/an/absolute/path</path>");
+
+        final String absolutePathName = Paths.get("target").toAbsolutePath().toString();
+        final URI uri = URI.create("file://" + absolutePathName);
+        assertBothWays(Paths.get(uri), "<path>" + absolutePathName + "</path>");
+    }
+
+    public void testPathOfNonDefaultFileSystem() throws IOException {
+        final Map<String, String> env = new HashMap<String, String>();
+        env.put("create", "true");
+        final URI uri = URI.create("jar:file://"
+            + Paths.get("target/lib/proxytoys-0.2.1.jar").toAbsolutePath().toString());
+
+        FileSystem zipfs = null;
+        try {
+            zipfs = FileSystems.newFileSystem(uri, env);
+            final String entry = "/com/thoughtworks/proxy/kit/SimpleReference.class";
+            final Path path = zipfs.getPath(entry);
+            assertBothWays(path, "<path>" + uri.toString() + "!" + entry + "</path>");
+        } finally {
+            if (zipfs != null) {
+                zipfs.close();
+            }
+        }
     }
 }
