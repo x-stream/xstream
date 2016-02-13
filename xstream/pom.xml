@@ -320,6 +320,7 @@
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/acceptance/Extended17TypesTest*</exclude>
+                <exclude>**/extended/*17Test*</exclude>
               </testExcludes>
             </configuration>
           </plugin>
