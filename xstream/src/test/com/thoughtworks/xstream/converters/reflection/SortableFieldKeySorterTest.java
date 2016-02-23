@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,8 +13,8 @@ package com.thoughtworks.xstream.converters.reflection;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
-import com.thoughtworks.xstream.io.StreamException;
 
 import junit.framework.TestCase;
 
@@ -49,8 +49,8 @@ public class SortableFieldKeySorterTest extends TestCase {
         try {
             sorter.sort(Base.class, buildMap(Base.class));
             fail();
-        } catch (StreamException ex) {
-            // ok
+        } catch (ConversionException ex) {
+            assertEquals(Base.class.getName(), ex.get("sort-type"));
         }
     }
 
