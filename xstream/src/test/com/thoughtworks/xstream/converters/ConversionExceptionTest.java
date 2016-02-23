@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -43,6 +43,7 @@ public class ConversionExceptionTest extends TestCase {
         StringTokenizer tokenizer = new StringTokenizer(ex.getMessage(), "\n\r");
         tokenizer.nextToken();
         tokenizer.nextToken();
+        assertEquals("message             : Message", tokenizer.nextToken());
         assertEquals("1st                 : first", tokenizer.nextToken());
         assertEquals("2nd                 : second", tokenizer.nextToken());
         assertEquals("3rd                 : third", tokenizer.nextToken());

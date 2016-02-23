@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.core.util;
 
 import java.util.BitSet;
 
+import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 import junit.framework.TestCase;
@@ -23,8 +24,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             "The message", this, new RuntimeException("JUnit"));
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message", exception.getMessage());
-        assertEquals("JUnit", ((ObjectAccessException)exception).getCause().getMessage());
+        assertEquals("The message", ((ErrorWriter)exception).get("message"));
+        assertEquals("JUnit", ((ErrorWriter)exception).get("cause-message"));
         assertTrue(used.get(0));
         assertFalse(used.get(1));
         assertTrue(used.get(2));
@@ -42,8 +43,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             new TypedNull<String>(String.class), this, new RuntimeException("JUnit"));
         assertTrue(exception instanceof ObjectAccessException);
-        assertNull(exception.getMessage());
-        assertEquals("JUnit", exception.getCause().getMessage());
+        assertNull(((ErrorWriter)exception).get("message"));
+        assertEquals("JUnit", ((ErrorWriter)exception).get("cause-message"));
         assertTrue(used.get(0));
         assertFalse(used.get(1));
         assertTrue(used.get(2));
@@ -65,8 +66,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             new RuntimeException("JUnit"), this, "The message");
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message", exception.getMessage());
-        assertEquals("JUnit", exception.getCause().getMessage());
+        assertEquals("The message", ((ErrorWriter)exception).get("message"));
+        assertEquals("JUnit", ((ErrorWriter)exception).get("cause-message"));
         assertTrue(used.get(0));
         assertFalse(used.get(1));
         assertTrue(used.get(2));
@@ -77,8 +78,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             new RuntimeException("JUnit"), new IllegalArgumentException("foo"), this, "The message");
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message", exception.getMessage());
-        assertEquals("foo", exception.getCause().getMessage());
+        assertEquals("The message", ((ErrorWriter)exception).get("message"));
+        assertEquals("foo", ((ErrorWriter)exception).get("cause-message"));
         assertFalse(used.get(0));
         assertTrue(used.get(1));
         assertFalse(used.get(2));
@@ -90,8 +91,8 @@ public class DependencyInjectionFactoryTest extends TestCase {
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
             new RuntimeException("JUnit"), "The message", "bar", new IllegalArgumentException("foo"), this);
         assertTrue(exception instanceof ObjectAccessException);
-        assertEquals("The message", exception.getMessage());
-        assertEquals("foo", exception.getCause().getMessage());
+        assertEquals("The message", ((ErrorWriter)exception).get("message"));
+        assertEquals("foo", ((ErrorWriter)exception).get("cause-message"));
         assertFalse(used.get(0));
         assertTrue(used.get(1));
         assertFalse(used.get(2));
