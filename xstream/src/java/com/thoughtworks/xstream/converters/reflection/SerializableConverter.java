@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -32,10 +32,12 @@ import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
@@ -151,8 +153,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     ObjectStreamField field = objectStreamClass.getField(name);
                     Object value = fields.get(name);
                     if (field == null) {
-                        throw new ObjectAccessException("Class " + value.getClass().getName()
-                                + " may not write a field named '" + name + "'");
+                        throw new MissingFieldException(value.getClass().getName(), name);
                     }
                     if (value != null) {
                         ExtendedHierarchicalStreamWriterHelper.startNode(
@@ -280,7 +281,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 }
             }
         } catch (IOException e) {
-            throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+            throw new StreamException("Cannot write defaults", e);
         }
     }
 
@@ -291,21 +292,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     private Object readField(ObjectStreamField field, Class type, Object instance) {
-        try {
-            Field javaField = type.getDeclaredField(field.getName());
-            if (!javaField.isAccessible()) {
-                javaField.setAccessible(true);
-            }
-            return javaField.get(instance);
-        } catch (IllegalArgumentException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        } catch (NoSuchFieldException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        } catch (SecurityException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        }
+        Field javaField = Fields.find(type, field.getName());
+        return Fields.read(javaField, instance);
     }
 
     protected List hierarchyFor(Class type) {
@@ -426,7 +414,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         try {
                             validation.validateObject();
                         } catch (InvalidObjectException e) {
-                            throw new ObjectAccessException("Cannot validate object : " + e.getMessage(), e);
+                            throw new ObjectAccessException("Cannot validate object", e);
                         }
                     }
                 }, priority);
@@ -458,7 +446,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     try {
                         callback.defaultReadObject();
                     } catch (IOException e) {
-                        throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+                        throw new StreamException("Cannot read defaults", e);
                     }
                 }
             }

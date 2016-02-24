@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,9 +11,9 @@
  */
 package com.thoughtworks.xstream.converters.collections;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
@@ -128,7 +128,7 @@ public class TreeMapConverter extends MapConverter {
                 result.putAll(sortedMap); // will use comparator for already sorted map
             }
         } catch (final IllegalAccessException e) {
-            throw new ConversionException("Cannot set comparator of TreeMap", e);
+            throw new ObjectAccessException("Cannot set comparator of TreeMap", e);
         }
     }
 }

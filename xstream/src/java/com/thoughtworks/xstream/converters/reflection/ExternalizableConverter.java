@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,6 +25,7 @@ import com.thoughtworks.xstream.core.util.SerializationMembers;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.io.Externalizable;
@@ -124,7 +125,7 @@ public class ExternalizableConverter implements Converter {
                 externalizable.writeExternal(objectOutput);
                 objectOutput.popCallback();
             } catch (IOException e) {
-                throw new ConversionException("Cannot serialize " + source.getClass().getName() + " using Externalization", e);
+                throw new StreamException("Cannot serialize " + source.getClass().getName() + " using Externalization", e);
             }
         }
     }
@@ -168,17 +169,17 @@ public class ExternalizableConverter implements Converter {
             objectInput.popCallback();
             return serializationMembers.callReadResolve(externalizable);
         } catch (NoSuchMethodException e) {
-            throw new ConversionException("Cannot construct " + type.getClass() + ", missing default constructor", e);
+            throw new ConversionException("Missing default constructor of type", e);
         } catch (InvocationTargetException e) {
-            throw new ConversionException("Cannot construct " + type.getClass(), e);
+            throw new ConversionException("Cannot construct type", e);
         } catch (InstantiationException e) {
-            throw new ConversionException("Cannot construct " + type.getClass(), e);
+            throw new ConversionException("Cannot construct type", e);
         } catch (IllegalAccessException e) {
-            throw new ConversionException("Cannot construct " + type.getClass(), e);
+            throw new ObjectAccessException("Cannot construct type", e);
         } catch (IOException e) {
-            throw new ConversionException("Cannot externalize " + type.getClass(), e);
+            throw new StreamException("Cannot externalize " + type.getClass(), e);
         } catch (ClassNotFoundException e) {
-            throw new ConversionException("Cannot externalize " + type.getClass(), e);
+            throw new ConversionException("Cannot construct type", e);
         }
     }
 

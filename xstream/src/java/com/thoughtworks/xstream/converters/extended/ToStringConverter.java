@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,12 +27,13 @@ import java.lang.reflect.InvocationTargetException;
  * @author Paul Hammant
  */
 public class ToStringConverter extends AbstractSingleValueConverter {
+    private static final Class[] STRING_PARAMETER = {String.class};
     private final Class clazz;
     private final Constructor ctor;
 
     public ToStringConverter(Class clazz) throws NoSuchMethodException {
         this.clazz = clazz;
-        ctor = clazz.getConstructor(new Class[] {String.class});
+        ctor = clazz.getConstructor(STRING_PARAMETER);
     }
     public boolean canConvert(Class type) {
         return type.equals(clazz);
@@ -46,7 +48,7 @@ public class ToStringConverter extends AbstractSingleValueConverter {
         } catch (InstantiationException e) {
             throw new ConversionException("Unable to instantiate single String param constructor", e);
         } catch (IllegalAccessException e) {
-            throw new ConversionException("Unable to access single String param constructor", e);
+            throw new ObjectAccessException("Unable to access single String param constructor", e);
         } catch (InvocationTargetException e) {
             throw new ConversionException("Unable to target single String param constructor", e.getTargetException());
         }

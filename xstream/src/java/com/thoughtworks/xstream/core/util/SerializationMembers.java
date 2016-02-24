@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.core.Caching;
 
@@ -72,17 +73,16 @@ public class SerializationMembers implements Caching {
             final Class resultType = result.getClass();
             final Method readResolveMethod = getRRMethod(resultType, "readResolve");
             if (readResolveMethod != null) {
+                ErrorWritingException ex = null;
                 try {
                     return readResolveMethod.invoke(result, EMPTY_ARGS);
                 } catch (IllegalAccessException e) {
-                    throw new ObjectAccessException("Could not call "
-                        + resultType.getName()
-                        + ".readResolve()", e);
+                    ex = new ObjectAccessException("Cannot access method", e);
                 } catch (InvocationTargetException e) {
-                    throw new ObjectAccessException("Could not call "
-                        + resultType.getName()
-                        + ".readResolve()", e.getTargetException());
+                    ex = new ConversionException("Failed calling method", e.getTargetException());
                 }
+                ex.add("method", resultType.getName() + ".readResolve()");
+                throw ex;
             } else {
                 return result;
             }
@@ -96,17 +96,16 @@ public class SerializationMembers implements Caching {
             final Class objectType = object.getClass();
             final Method writeReplaceMethod = getRRMethod(objectType, "writeReplace");
             if (writeReplaceMethod != null) {
+                ErrorWritingException ex = null;
                 try {
                     return writeReplaceMethod.invoke(object, EMPTY_ARGS);
                 } catch (IllegalAccessException e) {
-                    throw new ObjectAccessException("Could not call "
-                        + objectType.getName()
-                        + ".writeReplace()", e);
+                    ex = new ObjectAccessException("Cannot access method", e);
                 } catch (InvocationTargetException e) {
-                    throw new ObjectAccessException("Could not call "
-                        + objectType.getName()
-                        + ".writeReplace()", e.getTargetException());
+                    ex = new ConversionException("Failed calling method", e.getTargetException());
                 }
+                ex.add("method", objectType.getName() + ".writeReplace()");
+                throw ex;
             } else {
                 return object;
             }
@@ -119,18 +118,19 @@ public class SerializationMembers implements Caching {
     }
 
     public void callReadObject(final Class type, final Object object, final ObjectInputStream stream) {
+        ErrorWritingException ex = null;
         try {
             Method readObjectMethod = getMethod(
                 type, "readObject", new Class[]{ObjectInputStream.class}, false);
             readObjectMethod.invoke(object, new Object[]{stream});
         } catch (IllegalAccessException e) {
-            throw new ConversionException("Could not call "
-                + object.getClass().getName()
-                + ".readObject()", e);
+            ex = new ObjectAccessException("Cannot access method", e);
         } catch (InvocationTargetException e) {
-            throw new ConversionException("Could not call "
-                + object.getClass().getName()
-                + ".readObject()", e.getTargetException());
+            ex = new ConversionException("Failed calling method", e.getTargetException());
+        }
+        if (ex != null) {
+            ex.add("method", object.getClass().getName() + ".readObject()");
+            throw ex;
         }
     }
 
@@ -140,18 +140,19 @@ public class SerializationMembers implements Caching {
     }
 
     public void callWriteObject(final Class type, final Object instance, final ObjectOutputStream stream) {
+        ErrorWritingException ex = null;
         try {
             Method readObjectMethod = getMethod(
                 type, "writeObject", new Class[]{ObjectOutputStream.class}, false);
             readObjectMethod.invoke(instance, new Object[]{stream});
         } catch (IllegalAccessException e) {
-            throw new ConversionException("Could not call "
-                + instance.getClass().getName()
-                + ".writeObject()", e);
+            ex = new ObjectAccessException("Cannot access method", e);
         } catch (InvocationTargetException e) {
-            throw new ConversionException("Could not call "
-                + instance.getClass().getName()
-                + ".writeObject()", e.getTargetException());
+            ex = new ConversionException("Failed calling method", e.getTargetException());
+        }
+        if (ex != null) {
+            ex.add("method", instance.getClass().getName() + ".writeObject()");
+            throw ex;
         }
     }
 
@@ -210,6 +211,7 @@ public class SerializationMembers implements Caching {
             }
             Map result = (Map)fieldCache.get(type.getName());
             if (result == null) {
+                ErrorWritingException ex = null;
                 try {
                     final Field field = type.getDeclaredField("serialPersistentFields");
                     if ((field.getModifiers() & PERSISTENT_FIELDS_MODIFIER) == PERSISTENT_FIELDS_MODIFIER) {
@@ -224,9 +226,13 @@ public class SerializationMembers implements Caching {
                     }
                 } catch (final NoSuchFieldException e) {
                 } catch (final IllegalAccessException e) {
-                    throw new ObjectAccessException("Cannot get " + type.getName() + ".serialPersistentFields.", e);
+                    ex = new ObjectAccessException("Cannot get field", e);
                 } catch (final ClassCastException e) {
-                    throw new ObjectAccessException("Cannot get " + type.getName() + ".serialPersistentFields.", e);
+                    ex = new ConversionException("Incompatible field type", e);
+                }
+                if (ex != null) {
+                    ex.add("field", type.getName() + ".serialPersistentFields");
+                    throw ex;
                 }
                 if (result == null) {
                     result = NO_FIELDS;

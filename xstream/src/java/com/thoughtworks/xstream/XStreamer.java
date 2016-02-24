@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,6 @@ import java.io.Writer;
 
 import javax.xml.datatype.DatatypeFactory;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterMatcher;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
@@ -33,6 +32,7 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -85,7 +85,7 @@ public class XStreamer {
         } catch (final ObjectStreamException e) {
             throw e;
         } catch (final IOException e) {
-            throw new ConversionException("Unexpected IO error from a StringWriter", e);
+            throw new StreamException("Unexpected IO error from a StringWriter", e);
         }
         return writer.toString();
     }
@@ -135,7 +135,7 @@ public class XStreamer {
         } catch (final ObjectStreamException e) {
             throw e;
         } catch (final IOException e) {
-            throw new ConversionException("Unexpected IO error from a StringReader", e);
+            throw new StreamException("Unexpected IO error from a StringReader", e);
         }
     }
 
@@ -157,7 +157,7 @@ public class XStreamer {
         } catch (final ObjectStreamException e) {
             throw e;
         } catch (final IOException e) {
-            throw new ConversionException("Unexpected IO error from a StringReader", e);
+            throw new StreamException("Unexpected IO error from a StringReader", e);
         }
     }
 
@@ -179,7 +179,7 @@ public class XStreamer {
         } catch (final ObjectStreamException e) {
             throw e;
         } catch (final IOException e) {
-            throw new ConversionException("Unexpected IO error from a StringReader", e);
+            throw new StreamException("Unexpected IO error from a StringReader", e);
         }
     }
 
@@ -202,7 +202,7 @@ public class XStreamer {
         } catch (final ObjectStreamException e) {
             throw e;
         } catch (final IOException e) {
-            throw new ConversionException("Unexpected IO error from a StringReader", e);
+            throw new StreamException("Unexpected IO error from a StringReader", e);
         }
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -227,7 +227,9 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
             }
         }
         // no dateFormats left to try
-        throw new ConversionException("Cannot parse date " + str);
+        ConversionException exception = new ConversionException("Cannot parse date");
+        exception.add("date", str);
+        throw exception;
     }
 
     public String toString(Object obj) {

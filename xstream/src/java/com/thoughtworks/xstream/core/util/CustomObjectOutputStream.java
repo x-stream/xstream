@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,8 +16,9 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.Map;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+import com.thoughtworks.xstream.io.StreamException;
 
 public class CustomObjectOutputStream extends ObjectOutputStream {
 
@@ -36,8 +37,10 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
                 result.pushCallback(callback);
             }
             return result;
+        } catch (SecurityException e) {
+            throw new ObjectAccessException("Cannot create CustomObjectStream", e);
         } catch (IOException e) {
-            throw new ConversionException("Cannot create CustomObjectStream", e);
+            throw new StreamException("Cannot create CustomObjectStream", e);
         }
     }
 

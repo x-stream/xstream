@@ -12,6 +12,7 @@
 package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
@@ -241,11 +242,11 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
             toXML(new InvalidForConverter());
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
-            Throwable th = e;
+            Throwable th = e.getCause();
             for(;;) {
                 th = th.getCause();
-                assertNotNull("No causing IllegalArgumentExcetion.", th);
-                if (th instanceof IllegalArgumentException) {
+                assertNotNull("No causing InitializationException.", th);
+                if (th instanceof InitializationException) {
                     assertTrue("No hint for enum types only", th.getMessage().indexOf(" enum ") >= 0);
                     break;
                 }

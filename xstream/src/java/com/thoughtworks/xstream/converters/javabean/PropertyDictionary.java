@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -107,8 +107,9 @@ public class PropertyDictionary implements Caching {
             try {
                 beanInfo = Introspector.getBeanInfo(type, Object.class);
             } catch (IntrospectionException e) {
-                throw new ObjectAccessException(
-                    "Cannot get BeanInfo of type " + type.getName(), e);
+                ObjectAccessException oaex = new ObjectAccessException("Cannot get BeanInfo of type", e);
+                oaex.add("bean-type", type.getName());
+                throw oaex;
             }
             nameMap = new OrderRetainingMap();
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();

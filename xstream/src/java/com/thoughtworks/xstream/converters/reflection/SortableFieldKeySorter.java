@@ -81,7 +81,7 @@ public class SortableFieldKeySorter implements FieldKeySorter, Caching {
             if (firstPosition == -1 || secondPosition == -1) {
                 // field not defined!!!
                 final ConversionException exception = new ConversionException(
-                    "Incomplete list of serialized fields for type.");
+                    "Incomplete list of serialized fields for type");
                 exception.add("sort-type", type.getName());
                 throw exception;
             }

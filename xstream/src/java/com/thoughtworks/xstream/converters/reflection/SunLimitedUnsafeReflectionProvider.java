@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible, factored out from SunUnsafeReflectionProvider
@@ -8,6 +8,9 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 
 import sun.misc.Unsafe;
 
@@ -70,17 +73,22 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
 
     public Object newInstance(Class type) {
         if (exception != null) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), exception);
+            ObjectAccessException ex = new ObjectAccessException("Cannot construct type", exception);
+            ex.add("construction-type", type.getName());
+            throw ex;
         }
+        ErrorWritingException ex = null;
         try {
             return unsafe.allocateInstance(type);
         } catch (SecurityException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ObjectAccessException("Cannot construct type", e);
         } catch (InstantiationException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex =  new ConversionException("Cannot construct type", e);
         } catch (IllegalArgumentException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ObjectAccessException("Cannot construct type", e);
         }
+        ex.add("construction-type", type.getName());
+        throw ex;
     }
 
     protected void validateFieldAccess(Field field) {

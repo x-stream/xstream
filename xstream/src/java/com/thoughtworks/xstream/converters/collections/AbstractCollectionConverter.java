@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,8 +13,10 @@ package com.thoughtworks.xstream.converters.collections;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -72,13 +74,17 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     protected Object createCollection(Class type) {
+        ErrorWritingException ex = null;
         Class defaultType = mapper().defaultImplementationOf(type);
         try {
             return defaultType.newInstance();
         } catch (InstantiationException e) {
-            throw new ConversionException("Cannot instantiate " + defaultType.getName(), e);
+            ex =  new ConversionException("Cannot instantiate default collection", e);
         } catch (IllegalAccessException e) {
-            throw new ConversionException("Cannot instantiate " + defaultType.getName(), e);
+            ex = new ObjectAccessException("Cannot instantiate default collection", e);
         }
+        ex.add("collection-type", type.getName());
+        ex.add("default-type", defaultType.getName());
+        throw ex;
     }
 }

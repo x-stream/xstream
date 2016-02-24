@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2013 XStream Committers.
+ * Copyright (C) 2007, 2013, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -89,14 +89,19 @@ public class AbstractAttributedCharacterIteratorAttributeConverter extends
         if (s.startsWith(className)) {
             return s.substring(className.length()+1, s.length()-1);
         }
-        throw new ConversionException("Cannot find name of attribute of type " + className, ex);
+        ConversionException exception = new ConversionException("Cannot find name of attribute", ex);
+        exception.add("attribute-type", className);
+        throw exception;
     }
 
     public Object fromString(final String str) {
         if (attributeMap.containsKey(str)) {
             return attributeMap.get(str);
         }
-        throw new ConversionException("Cannot find attribute of type " + type.getName() + " with name " + str);
+        ConversionException exception = new ConversionException("Cannot find attribute");
+        exception.add("attribute-type", type.getName());
+        exception.add("attribute-name", str);
+        throw exception;
     }
 
     private Object readResolve() {

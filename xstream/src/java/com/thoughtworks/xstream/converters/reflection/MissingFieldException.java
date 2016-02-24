@@ -32,8 +32,7 @@ public class MissingFieldException extends ObjectAccessException {
         super("Field not found in class.");
         this.className = className;
         this.fieldName = fieldName;
-        add("defining-type", className);
-        add("field-name", fieldName);
+        add("field", className + "." + fieldName);
     }
 
     /**

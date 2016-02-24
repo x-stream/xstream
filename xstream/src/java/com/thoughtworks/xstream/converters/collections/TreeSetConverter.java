@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,9 +11,9 @@
  */
 package com.thoughtworks.xstream.converters.collections;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.PresortedSet;
@@ -99,7 +99,7 @@ public class TreeSetConverter extends CollectionConverter {
             try {
                 backingMap = sortedMapField.get(possibleResult);
             } catch (IllegalAccessException e) {
-                throw new ConversionException("Cannot get backing map of TreeSet", e);
+                throw new ObjectAccessException("Cannot get backing map of TreeSet", e);
             }
             if (backingMap instanceof TreeMap) {
                 treeMap = (TreeMap)backingMap;

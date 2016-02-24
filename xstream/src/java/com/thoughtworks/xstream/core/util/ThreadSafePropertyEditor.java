@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2008 XStream Committers.
+ * Copyright (c) 2007, 2008, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,8 @@
  */
 package com.thoughtworks.xstream.core.util;
 
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 import java.beans.PropertyEditor;
@@ -44,15 +46,16 @@ public class ThreadSafePropertyEditor {
         editorType = type;
         pool = new Pool(initialPoolSize, maxPoolSize, new Pool.Factory() {
             public Object newInstance() {
+                ErrorWritingException ex = null;
                 try {
                     return editorType.newInstance();
                 } catch (InstantiationException e) {
-                    throw new ObjectAccessException("Could not call default constructor of "
-                        + editorType.getName(), e);
+                    ex = new ConversionException("Faild to call default constructor", e);
                 } catch (IllegalAccessException e) {
-                    throw new ObjectAccessException("Could not call default constructor of "
-                        + editorType.getName(), e);
+                    ex = new ObjectAccessException("Cannot call default constructor", e);
                 }
+                ex.add("construction-type", editorType.getName());
+                throw ex;
             }
 
         });

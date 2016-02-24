@@ -1,22 +1,22 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import com.thoughtworks.xstream.converters.ConversionException;
-
 import java.lang.reflect.Field;
 
+import com.thoughtworks.xstream.core.util.Fields;
+
+
 /**
- * Factory for creating StackTraceElements.
  * Factory for creating StackTraceElements.
  *
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
@@ -25,24 +25,26 @@ import java.lang.reflect.Field;
  */
 public class StackTraceElementFactory {
 
-    public StackTraceElement nativeMethodElement(String declaringClass, String methodName) {
+    public StackTraceElement nativeMethodElement(final String declaringClass, final String methodName) {
         return create(declaringClass, methodName, "Native Method", -2);
     }
 
-    public StackTraceElement unknownSourceElement(String declaringClass, String methodName) {
+    public StackTraceElement unknownSourceElement(final String declaringClass, final String methodName) {
         return create(declaringClass, methodName, "Unknown Source", -1);
     }
 
-    public StackTraceElement element(String declaringClass, String methodName, String fileName) {
+    public StackTraceElement element(final String declaringClass, final String methodName, final String fileName) {
         return create(declaringClass, methodName, fileName, -1);
     }
 
-    public StackTraceElement element(String declaringClass, String methodName, String fileName, int lineNumber) {
+    public StackTraceElement element(final String declaringClass, final String methodName, final String fileName,
+            final int lineNumber) {
         return create(declaringClass, methodName, fileName, lineNumber);
     }
 
-    protected StackTraceElement create(String declaringClass, String methodName, String fileName, int lineNumber) {
-        StackTraceElement result = new Throwable().getStackTrace()[0];
+    protected StackTraceElement create(final String declaringClass, final String methodName, final String fileName,
+            final int lineNumber) {
+        final StackTraceElement result = new Throwable().getStackTrace()[0];
         setField(result, "declaringClass", declaringClass);
         setField(result, "methodName", methodName);
         setField(result, "fileName", fileName);
@@ -50,14 +52,9 @@ public class StackTraceElementFactory {
         return result;
     }
 
-    private void setField(StackTraceElement element, String fieldName, Object value) {
-        try {
-            final Field field = StackTraceElement.class.getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(element, value);
-        } catch (Exception e) {
-            throw new ConversionException(e);
-        }
+    private void setField(final StackTraceElement element, final String fieldName, final Object value) {
+        final Field field = Fields.find(StackTraceElement.class, fieldName);
+        Fields.write(field, element, value);
     }
 
 }

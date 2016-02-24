@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -125,8 +125,8 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             } else {
                 ConversionException exception = new ConversionException(
                     "Cannot handle CGLIB enhanced proxies without factory that have multiple callbacks");
-                exception.add("proxy superclass", type.getSuperclass().getName());
-                exception.add("number of callbacks", String.valueOf(callbacks.length));
+                exception.add("proxy-superclass", type.getSuperclass().getName());
+                exception.add("number-of-callbacks", String.valueOf(callbacks.length));
                 throw exception;
             }
             writer.startNode("callbacks");
@@ -166,9 +166,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         } catch (NoSuchFieldException e) {
             // OK, ignore
         } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Access to serialVersionUID of "
-                + type.getName()
-                + " not allowed", e);
+            ObjectAccessException exception = new ObjectAccessException("Cannot access field", e);
+            exception.add("field", type.getName() + ".serialVersionUID");
+            throw exception;
         }
         if (hasInterceptor) {
             writer.startNode("instance");
@@ -202,12 +202,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 Object callback = field.get(source);
                 list.add(callback);
             } catch (IllegalAccessException e) {
-                throw new ObjectAccessException("Access to "
-                    + type.getName()
-                    + "."
-                    + CALLBACK_MARKER
-                    + i
-                    + " not allowed", e);
+                ObjectAccessException exception = new ObjectAccessException("Cannot access field", e);
+                exception.add("field", type.getName() + "." + CALLBACK_MARKER + i);
+                throw exception;
             }
         }
         return (Callback[])list.toArray(new Callback[list.size()]);
@@ -269,15 +266,15 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                         ? (Object[])null
                         : createNullArguments(parameterTypes));
                 } catch (IllegalAccessException e) {
-                    throw new ObjectAccessException("Access to "
-                        + calledMethod
-                        + " not allowed", e);
+                    ObjectAccessException exception = new ObjectAccessException("Cannot access method", e);
+                    exception.add("method", calledMethod.toString());
+                    throw exception;
                 } catch (InvocationTargetException e) {
                     // OK, ignore
                 } catch (NoSuchMethodException e) {
                     ConversionException exception = new ConversionException(
                         "CGLIB enhanced proxies wit abstract nethod that has not been implemented");
-                    exception.add("proxy superclass", type.getSuperclass().getName());
+                    exception.add("proxy-superclass", type.getSuperclass().getName());
                     exception.add("method", method.toString());
                     throw exception;
                 }
@@ -336,7 +333,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 if (iface == Callback.class) {
                     ConversionException exception = new ConversionException(
                         "Cannot handle CGLIB callback");
-                    exception.add("CGLIB callback type", callback.getClass().getName());
+                    exception.add("CGLIB-callback-type", callback.getClass().getName());
                     throw exception;
                 }
                 interfaces = iface.getInterfaces();
@@ -488,7 +485,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             if (!callbackIndexMap.containsKey(method)) {
                 ConversionException exception = new ConversionException(
                     "CGLIB callback not detected in reverse engineering");
-                exception.add("CGLIB callback", method.toString());
+                exception.add("CGLIB-callback", method.toString());
                 throw exception;
             }
             return ((Integer)callbackIndexMap.get(method)).intValue();
