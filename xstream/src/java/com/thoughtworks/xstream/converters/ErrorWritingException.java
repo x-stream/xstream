@@ -65,7 +65,7 @@ public abstract class ErrorWritingException extends XStreamException implements 
         }
         if (cause != null) {
             add("cause-exception", cause.getClass().getName());
-            add("cause-message", cause instanceof ConversionException ? ((ConversionException)cause).getShortMessage() :  cause.getMessage());
+            add("cause-message", cause instanceof ErrorWritingException ? ((ErrorWritingException)cause).getShortMessage() :  cause.getMessage());
         }
     }
 
