@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,6 +33,7 @@ import com.thoughtworks.xstream.core.util.SerializationMembers;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 
@@ -83,7 +84,8 @@ public class ExternalizableConverter implements Converter {
     }
 
     @Override
-    public void marshal(final Object original, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+    public void marshal(final Object original, final HierarchicalStreamWriter writer,
+            final MarshallingContext context) {
         final Object source = serializationMembers.callWriteReplace(original);
         if (source != original && context instanceof ReferencingMarshallingContext) {
             ((ReferencingMarshallingContext<?>)context).replace(original, source);
@@ -137,9 +139,8 @@ public class ExternalizableConverter implements Converter {
                 externalizable.writeExternal(objectOutput);
                 objectOutput.popCallback();
             } catch (final IOException e) {
-                throw new ConversionException("Cannot serialize "
-                    + source.getClass().getName()
-                    + " using Externalization", e);
+                throw new StreamException("Cannot serialize " + source.getClass().getName() + " using Externalization",
+                    e);
             }
         }
     }
@@ -183,7 +184,7 @@ public class ExternalizableConverter implements Converter {
                 @Override
                 public void close() {
                     throw new UnsupportedOperationException(
-                            "Objects are not allowed to call ObjectInput.close() from readExternal()");
+                        "Objects are not allowed to call ObjectInput.close() from readExternal()");
                 }
             };
             {
@@ -195,17 +196,17 @@ public class ExternalizableConverter implements Converter {
             }
             return serializationMembers.callReadResolve(externalizable);
         } catch (final NoSuchMethodException e) {
-            throw new ConversionException("Cannot construct " + type.getClass() + ", missing default constructor", e);
+            throw new ConversionException("Missing default constructor of type", e);
         } catch (final InvocationTargetException e) {
-            throw new ConversionException("Cannot construct " + type.getClass(), e);
+            throw new ConversionException("Cannot construct type", e);
         } catch (final InstantiationException e) {
-            throw new ConversionException("Cannot construct " + type.getClass(), e);
+            throw new ConversionException("Cannot construct type", e);
         } catch (final IllegalAccessException e) {
-            throw new ConversionException("Cannot construct " + type.getClass(), e);
+            throw new ObjectAccessException("Cannot construct type", e);
         } catch (final IOException e) {
-            throw new ConversionException("Cannot externalize " + type.getClass(), e);
+            throw new StreamException("Cannot externalize " + type.getClass(), e);
         } catch (final ClassNotFoundException e) {
-            throw new ConversionException("Cannot externalize " + type.getClass(), e);
+            throw new ConversionException("Cannot construct type", e);
         }
     }
 

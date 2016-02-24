@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 23. August 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.core.util;
@@ -17,8 +17,9 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+import com.thoughtworks.xstream.io.StreamException;
 
 
 public class CustomObjectOutputStream extends ObjectOutputStream {
@@ -39,8 +40,10 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
                 result.pushCallback(callback);
             }
             return result;
+        } catch (final SecurityException e) {
+            throw new ObjectAccessException("Cannot create CustomObjectStream", e);
         } catch (final IOException e) {
-            throw new ConversionException("Cannot create CustomObjectStream", e);
+            throw new StreamException("Cannot create CustomObjectStream", e);
         }
     }
 
@@ -59,7 +62,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
     /**
      * Warning, this object is expensive to create (due to functionality inherited from superclass). Use the static
      * fetch() method instead, wherever possible.
-     * 
+     *
      * @see #getInstance(com.thoughtworks.xstream.converters.DataHolder,
      *      com.thoughtworks.xstream.core.util.CustomObjectOutputStream.StreamCallback)
      */

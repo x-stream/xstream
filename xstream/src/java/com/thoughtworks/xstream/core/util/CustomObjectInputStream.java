@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 23. August 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.core.util;
@@ -20,9 +20,10 @@ import java.io.ObjectStreamClass;
 import java.io.StreamCorruptedException;
 import java.util.Map;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.io.StreamException;
 
 
 public class CustomObjectInputStream extends ObjectInputStream {
@@ -74,15 +75,17 @@ public class CustomObjectInputStream extends ObjectInputStream {
                 result.pushCallback(callback);
             }
             return result;
+        } catch (final SecurityException e) {
+            throw new ObjectAccessException("Cannot create CustomObjectStream", e);
         } catch (final IOException e) {
-            throw new ConversionException("Cannot create CustomObjectStream", e);
+            throw new StreamException("Cannot create CustomObjectStream", e);
         }
     }
 
     /**
      * Warning, this object is expensive to create (due to functionality inherited from superclass). Use the static
      * fetch() method instead, wherever possible.
-     * 
+     *
      * @see #getInstance(DataHolder, StreamCallback, ClassLoaderReference)
      */
     public CustomObjectInputStream(final StreamCallback callback, final ClassLoaderReference classLoaderReference)

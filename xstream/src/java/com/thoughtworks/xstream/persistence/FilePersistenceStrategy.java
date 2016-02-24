@@ -92,7 +92,7 @@ public class FilePersistenceStrategy<K, V> extends AbstractFilePersistenceStrate
         }
         final int idx = key.indexOf('@');
         if (idx < 0) {
-            final ConversionException exception = new ConversionException("Not a valid key.");
+            final ConversionException exception = new ConversionException("No valid key");
             exception.add("key", key);
             throw exception;
         }
@@ -105,7 +105,7 @@ public class FilePersistenceStrategy<K, V> extends AbstractFilePersistenceStrate
             return k;
         } else {
             final ConversionException exception = new ConversionException(
-                "No SingleValueConverter available for key type.");
+                "No SingleValueConverter available for key type");
             exception.add("key-type", type.getName());
             throw exception;
         }
@@ -141,7 +141,7 @@ public class FilePersistenceStrategy<K, V> extends AbstractFilePersistenceStrate
             return getMapper().serializedClass(type) + '@' + escape(svConverter.toString(key)) + ".xml";
         } else {
             final ConversionException exception = new ConversionException(
-                "No SingleValueConverter available for key type.");
+                "No SingleValueConverter available for key type");
             exception.add("key-type", type.getName());
             throw exception;
         }

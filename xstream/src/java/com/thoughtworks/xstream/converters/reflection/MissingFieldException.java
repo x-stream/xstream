@@ -25,7 +25,7 @@ public class MissingFieldException extends ObjectAccessException {
 
     /**
      * Construct a MissingFieldException.
-     * 
+     *
      * @param className the name of the class missing the field
      * @param fieldName the name of the missed field
      * @since 1.4.2
@@ -34,13 +34,12 @@ public class MissingFieldException extends ObjectAccessException {
         super("Field not found in class.");
         this.className = className;
         this.fieldName = fieldName;
-        add("defining-type", className);
-        add("field-name", fieldName);
+        add("field", className + "." + fieldName);
     }
 
     /**
      * Retrieve the name of the missing field.
-     * 
+     *
      * @return the field name
      * @since 1.4.2
      */
@@ -50,7 +49,7 @@ public class MissingFieldException extends ObjectAccessException {
 
     /**
      * Retrieve the name of the class with the missing field.
-     * 
+     *
      * @return the class name
      * @since 1.4.2
      */

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -59,8 +59,9 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
 
     private void write(final Field field, final Object object, final Object value) {
         if (exception != null) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(),
-                exception);
+            final ObjectAccessException ex = new ObjectAccessException("Cannot set field", exception);
+            ex.add("field", object.getClass() + "." + field.getName());
+            throw ex;
         }
         try {
             final long offset = getFieldOffset(field);
@@ -83,19 +84,20 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
                 } else if (type.equals(Boolean.TYPE)) {
                     unsafe.putBoolean(object, offset, ((Boolean)value).booleanValue());
                 } else {
-                    throw new ObjectAccessException("Could not set field "
-                            + object.getClass()
-                            + "."
-                            + field.getName()
-                            + ": Unknown type "
-                            + type);
+                    final ObjectAccessException ex = new ObjectAccessException("Cannot set field of unknown type",
+                        exception);
+                    ex.add("field", object.getClass() + "." + field.getName());
+                    ex.add("unknown-type", type.getName());
+                    throw ex;
                 }
             } else {
                 unsafe.putObject(object, offset, value);
             }
 
         } catch (final IllegalArgumentException e) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
+            final ObjectAccessException ex = new ObjectAccessException("Cannot set field", e);
+            ex.add("field", object.getClass() + "." + field.getName());
+            throw ex;
         }
     }
 

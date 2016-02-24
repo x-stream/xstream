@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.reflection;
@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.thoughtworks.xstream.core.util.Fields;
+
 
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects that
@@ -40,7 +42,7 @@ import java.util.Map;
  * constructors. Note that any code in the constructor of a class will be executed when the ObjectFactory instantiates
  * the object.
  * </p>
- * 
+ *
  * @author Joe Walnes
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
@@ -59,6 +61,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     @Override
     public Object newInstance(final Class<?> type) {
+        ObjectAccessException oaex = null;
         try {
             for (final Constructor<?> constructor : type.getDeclaredConstructors()) {
                 if (constructor.getParameterTypes().length == 0) {
@@ -71,27 +74,27 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             if (Serializable.class.isAssignableFrom(type)) {
                 return instantiateUsingSerialization(type);
             } else {
-                throw new ObjectAccessException("Cannot construct "
-                    + type.getName()
-                    + " as it does not have a no-args constructor");
+                oaex = new ObjectAccessException("Cannot construct type as it does not have a no-args constructor");
             }
         } catch (final InstantiationException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            oaex = new ObjectAccessException("Cannot construct type", e);
         } catch (final IllegalAccessException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            oaex = new ObjectAccessException("Cannot construct type", e);
         } catch (final InvocationTargetException e) {
             if (e.getTargetException() instanceof RuntimeException) {
                 throw (RuntimeException)e.getTargetException();
             } else if (e.getTargetException() instanceof Error) {
                 throw (Error)e.getTargetException();
             } else {
-                throw new ObjectAccessException("Constructor for " + type.getName() + " threw an exception", e
-                    .getTargetException());
+                oaex = new ObjectAccessException("Constructor for type threw an exception", e.getTargetException());
             }
         }
+        oaex.add("construction-type", type.getName());
+        throw oaex;
     }
 
     private Object instantiateUsingSerialization(final Class<?> type) {
+        ObjectAccessException oaex = null;
         try {
             synchronized (serializedDataCache) {
                 byte[] data = serializedDataCache.get(type);
@@ -121,10 +124,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                 return in.readObject();
             }
         } catch (final IOException e) {
-            throw new ObjectAccessException("Cannot create " + type.getName() + " by JDK serialization", e);
+            oaex = new ObjectAccessException("Cannot create type by JDK serialization", e);
         } catch (final ClassNotFoundException e) {
-            throw new ObjectAccessException("Cannot find class " + e.getMessage(), e);
+            oaex = new ObjectAccessException("Cannot find class", e);
         }
+        oaex.add("construction-type", type.getName());
+        throw oaex;
     }
 
     @Override
@@ -135,14 +140,8 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                 continue;
             }
             validateFieldAccess(field);
-            try {
-                final Object value = field.get(object);
-                visitor.visit(field.getName(), field.getType(), field.getDeclaringClass(), value);
-            } catch (final IllegalArgumentException e) {
-                throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-            } catch (final IllegalAccessException e) {
-                throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-            }
+            final Object value = Fields.read(field, object);
+            visitor.visit(field.getName(), field.getType(), field.getDeclaringClass(), value);
         }
     }
 
@@ -150,13 +149,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     public void writeField(final Object object, final String fieldName, final Object value, final Class<?> definedIn) {
         final Field field = fieldDictionary.field(object.getClass(), fieldName, definedIn);
         validateFieldAccess(field);
-        try {
-            field.set(object, value);
-        } catch (final IllegalArgumentException e) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
-        } catch (final IllegalAccessException e) {
-            throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
-        }
+        Fields.write(field, object, value);
     }
 
     @Override

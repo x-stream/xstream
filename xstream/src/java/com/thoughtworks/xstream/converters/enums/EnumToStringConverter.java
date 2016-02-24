@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,13 +15,14 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
 /**
  * A single value converter for a special enum type using its string representation.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4.5
  */
@@ -51,7 +52,7 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
         final Map<String, T> strings = new HashMap<>(values.size());
         for (final T value : values) {
             if (strings.put(value.toString(), value) != null) {
-                throw new IllegalArgumentException("Enum type "
+                throw new InitializationException("Enum type "
                     + type.getName()
                     + " does not have unique string representations for its values");
             }
@@ -61,7 +62,7 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
 
     private static <T> void checkType(final Class<T> type) {
         if (!Enum.class.isAssignableFrom(type) && type != Enum.class) {
-            throw new IllegalArgumentException("Converter can only handle enum types");
+            throw new InitializationException("Converter can only handle enum types");
         }
     }
 
@@ -91,11 +92,11 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
         }
         final T result = strings.get(str);
         if (result == null) {
-            throw new ConversionException("Invalid string representation for enum type "
-                + enumType.getName()
-                + ": <"
-                + str
-                + ">");
+            final ConversionException exception = new ConversionException(
+                "Invalid string representation for enum type");
+            exception.add("enum-type", enumType.getName());
+            exception.add("enum-string", str);
+            throw exception;
         }
         return result;
     }

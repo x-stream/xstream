@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2007, 2008, 2014 XStream Committers.
+ * Copyright (c) 2007, 2008, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 20. September 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.core.util;
 
 import java.beans.PropertyEditor;
 
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 
@@ -25,7 +27,7 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
  * The pool has a maximum capacity, to limit overhead. If all instances in the pool are in use and another is required,
  * it shall block until one becomes available.
  * </p>
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.3
  */
@@ -43,13 +45,16 @@ public class ThreadSafePropertyEditor {
         pool = new Pool<PropertyEditor>(initialPoolSize, maxPoolSize, new Pool.Factory<PropertyEditor>() {
             @Override
             public PropertyEditor newInstance() {
+                ErrorWritingException ex = null;
                 try {
                     return editorType.newInstance();
                 } catch (final InstantiationException e) {
-                    throw new ObjectAccessException("Could not call default constructor of " + editorType.getName(), e);
+                    ex = new ConversionException("Faild to call default constructor", e);
                 } catch (final IllegalAccessException e) {
-                    throw new ObjectAccessException("Could not call default constructor of " + editorType.getName(), e);
+                    ex = new ObjectAccessException("Cannot call default constructor", e);
                 }
+                ex.add("construction-type", editorType.getName());
+                throw ex;
             }
 
         });

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,17 +31,18 @@ import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 
 /**
  * Emulates the mechanism used by standard Java Serialization for classes that implement java.io.Serializable AND
  * implement or inherit a custom readObject()/writeObject() method.
- * 
  * <h3>Supported features of serialization</h3>
  * <ul>
  * <li>readObject(), writeObject()</li>
@@ -110,8 +111,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
         if (type != null
             && Serializable.class.isAssignableFrom(type)
             && !type.isInterface()
-            && (serializationMembers.supportsReadObject(type, true) || serializationMembers.supportsWriteObject(type,
-                true))) {
+            && (serializationMembers.supportsReadObject(type, true)
+                || serializationMembers.supportsWriteObject(type, true))) {
             for (final Class<?> clazz : hierarchyFor(type)) {
                 if (!Serializable.class.isAssignableFrom(clazz)) {
                     return canAccess(type);
@@ -123,7 +124,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     @Override
-    public void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
+    public void doMarshal(final Object source, final HierarchicalStreamWriter writer,
+            final MarshallingContext context) {
         final String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION);
         if (attributeName != null) {
             writer.addAttribute(attributeName, ATTRIBUTE_VALUE_CUSTOM);
@@ -161,11 +163,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     final ObjectStreamField field = objectStreamClass.getField(name);
                     final Object value = fields.get(name);
                     if (field == null) {
-                        throw new ObjectAccessException("Class "
-                            + value.getClass().getName()
-                            + " may not write a field named '"
-                            + name
-                            + "'");
+                        throw new MissingFieldException(value.getClass().getName(), name);
                     }
                     if (value != null) {
                         ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source
@@ -295,7 +293,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 }
             }
         } catch (final IOException e) {
-            throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+            throw new StreamException("Cannot write defaults", e);
         }
     }
 
@@ -306,22 +304,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
         writer.endNode();
     }
 
-    private Object readField(final ObjectStreamField field, final Class<?> type, final Object instance) {
-        try {
-            final Field javaField = type.getDeclaredField(field.getName());
-            if (!javaField.isAccessible()) {
-                javaField.setAccessible(true);
-            }
-            return javaField.get(instance);
-        } catch (final IllegalArgumentException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        } catch (final IllegalAccessException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        } catch (final NoSuchFieldException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        } catch (final SecurityException e) {
-            throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
-        }
+    private Object readField(final ObjectStreamField field, final Class type, final Object instance) {
+        final Field javaField = Fields.find(type, field.getName());
+        return Fields.read(javaField, instance);
     }
 
     protected List<Class<?>> hierarchyFor(Class<?> type) {
@@ -457,7 +442,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         try {
                             validation.validateObject();
                         } catch (final InvalidObjectException e) {
-                            throw new ObjectAccessException("Cannot validate object : " + e.getMessage(), e);
+                            throw new ObjectAccessException("Cannot validate object", e);
                         }
                     }
                 }, priority);
@@ -492,7 +477,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     try {
                         callback.defaultReadObject();
                     } catch (final IOException e) {
-                        throw new ObjectAccessException("Could not call defaultWriteObject()", e);
+                        throw new StreamException("Cannot read defaults", e);
                     }
                 }
             }
@@ -513,8 +498,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
     protected Object doUnmarshalConditionally(final Object result, final HierarchicalStreamReader reader,
             final UnmarshallingContext context) {
-        return isSerializable(result.getClass()) ? doUnmarshal(result, reader, context) : super.doUnmarshal(result,
-            reader, context);
+        return isSerializable(result.getClass())
+            ? doUnmarshal(result, reader, context)
+            : super.doUnmarshal(result, reader, context);
     }
 
     private static class UnserializableParentsReflectionProvider extends ReflectionProviderWrapper {
@@ -527,7 +513,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
         public void visitSerializableFields(final Object object, final Visitor visitor) {
             wrapped.visitSerializableFields(object, new Visitor() {
                 @Override
-                public void visit(final String name, final Class<?> type, final Class<?> definedIn, final Object value) {
+                public void visit(final String name, final Class<?> type, final Class<?> definedIn,
+                        final Object value) {
                     if (!Serializable.class.isAssignableFrom(definedIn)) {
                         visitor.visit(name, type, definedIn, value);
                     }

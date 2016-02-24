@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 26. September 2003 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.basic;
@@ -43,7 +43,7 @@ import com.thoughtworks.xstream.core.util.ThreadSafeSimpleDateFormat;
  * <p>
  * Dates in a different era are using a special default pattern that contains the era itself.
  * </p>
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
@@ -54,6 +54,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
     private static final String DEFAULT_ERA_PATTERN;
     private static final TimeZone UTC;
     private static final long ERA_START;
+
     static {
         UTC = TimeZone.getTimeZone("UTC");
 
@@ -89,6 +90,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
         cal.set(1, Calendar.JANUARY, 1);
         ERA_START = cal.getTimeInMillis();
     }
+
     private final ThreadSafeSimpleDateFormat defaultFormat;
     private final ThreadSafeSimpleDateFormat defaultEraFormat;
     private final ThreadSafeSimpleDateFormat[] acceptableFormats;
@@ -102,7 +104,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
 
     /**
      * Construct a DateConverter with standard formats, lenient set off and uses a given TimeZone for serialization.
-     * 
+     *
      * @param timeZone the TimeZone used to serialize the Date
      * @since 1.4
      */
@@ -112,7 +114,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
 
     /**
      * Construct a DateConverter with standard formats and using UTC.
-     * 
+     *
      * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
      * @since 1.3
      */
@@ -122,7 +124,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
 
     /**
      * Construct a DateConverter with lenient set off using UTC.
-     * 
+     *
      * @param defaultFormat the default format
      * @param acceptableFormats fallback formats
      */
@@ -132,7 +134,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
 
     /**
      * Construct a DateConverter with a given TimeZone and lenient set off.
-     * 
+     *
      * @param defaultFormat the default format
      * @param acceptableFormats fallback formats
      * @since 1.4
@@ -143,7 +145,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
 
     /**
      * Construct a DateConverter.
-     * 
+     *
      * @param defaultFormat the default format
      * @param acceptableFormats fallback formats
      * @param lenient the lenient setting of {@link SimpleDateFormat#setLenient(boolean)}
@@ -155,7 +157,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
 
     /**
      * Construct a DateConverter.
-     * 
+     *
      * @param defaultFormat the default format
      * @param acceptableFormats fallback formats
      * @param timeZone the TimeZone used to serialize the Date
@@ -163,13 +165,14 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      * @since 1.4
      */
     public DateConverter(
-            final String defaultFormat, final String[] acceptableFormats, final TimeZone timeZone, final boolean lenient) {
+            final String defaultFormat, final String[] acceptableFormats, final TimeZone timeZone,
+            final boolean lenient) {
         this(DEFAULT_ERA_PATTERN, defaultFormat, acceptableFormats, Locale.ENGLISH, timeZone, lenient);
     }
 
     /**
      * Construct a DateConverter.
-     * 
+     *
      * @param defaultEraFormat the default format for dates in a different era (may be <code>null</code> to drop era
      *            support)
      * @param defaultFormat the default format
@@ -226,7 +229,9 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
             }
         }
         // no dateFormats left to try
-        throw new ConversionException("Cannot parse date " + str);
+        final ConversionException exception = new ConversionException("Cannot parse date");
+        exception.add("date", str);
+        throw exception;
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible, factored out from SunUnsafeReflectionProvider
@@ -8,6 +8,9 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 
 import sun.misc.Unsafe;
 
@@ -24,7 +27,7 @@ import sun.misc.Unsafe;
  * and is used as fallback on platforms that do not provide the complete implementation level for the internals (like
  * Dalvik).
  * <p>
- * 
+ *
  * @author J&ouml;rg Schaible
  * @author Joe Walnes
  * @author Brian Slesinsky
@@ -34,6 +37,7 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
 
     protected static final Unsafe unsafe;
     protected static final Exception exception;
+
     static {
         Unsafe u = null;
         Exception ex = null;
@@ -71,17 +75,22 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
     @Override
     public Object newInstance(final Class<?> type) {
         if (exception != null) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), exception);
+            final ObjectAccessException ex = new ObjectAccessException("Cannot construct type", exception);
+            ex.add("construction-type", type.getName());
+            throw ex;
         }
+        ErrorWritingException ex = null;
         try {
             return unsafe.allocateInstance(type);
         } catch (final SecurityException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ObjectAccessException("Cannot construct type", e);
         } catch (final InstantiationException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ConversionException("Cannot construct type", e);
         } catch (final IllegalArgumentException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ObjectAccessException("Cannot construct type", e);
         }
+        ex.add("construction-type", type.getName());
+        throw ex;
     }
 
     @Override

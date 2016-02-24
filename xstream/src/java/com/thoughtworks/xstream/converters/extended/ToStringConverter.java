@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. July 2006 by Mauro Talevi
  */
 package com.thoughtworks.xstream.converters.extended;
@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 
 /**
@@ -23,7 +24,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * Converter for classes that adopt the following convention: - a constructor that takes a single string parameter - a
  * toString() that is overloaded to issue a string that is meaningful
  * </p>
- * 
+ *
  * @author Paul Hammant
  */
 public class ToStringConverter extends AbstractSingleValueConverter {
@@ -52,7 +53,7 @@ public class ToStringConverter extends AbstractSingleValueConverter {
         } catch (final InstantiationException e) {
             throw new ConversionException("Unable to instantiate single String param constructor", e);
         } catch (final IllegalAccessException e) {
-            throw new ConversionException("Unable to access single String param constructor", e);
+            throw new ObjectAccessException("Unable to access single String param constructor", e);
         } catch (final InvocationTargetException e) {
             throw new ConversionException("Unable to target single String param constructor", e.getTargetException());
         }

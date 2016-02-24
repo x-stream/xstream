@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 03. October 2005 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.extended;
@@ -30,15 +30,15 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * The converter will always serialize the calendar value in UTC and deserialize it to a value in the current default
  * time zone.
  * </p>
- * 
+ *
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  * @see <a href="http://www.iso.org/iso/home/store/catalogue_ics/catalogue_detail_ics.htm?csnumber=40874">ISO 8601</a>
  * @since 1.1.3
  */
 public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConverter {
-    private static final DateTimeFormatter[] formattersUTC = new DateTimeFormatter[]{ //
-    ISODateTimeFormat.dateTime(), //
+    private static final DateTimeFormatter[] formattersUTC = { //
+        ISODateTimeFormat.dateTime(), //
         ISODateTimeFormat.dateTimeNoMillis(), //
         ISODateTimeFormat.basicDateTime(), //
         ISODateTimeFormat.basicOrdinalDateTime(), //
@@ -58,8 +58,8 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
         ISODateTimeFormat.weekDateTime(), //
         ISODateTimeFormat.weekDateTimeNoMillis() //
     };
-    private static final DateTimeFormatter[] formattersNoUTC = new DateTimeFormatter[]{ //
-    ISODateTimeFormat.basicDate(), //
+    private static final DateTimeFormatter[] formattersNoUTC = { //
+        ISODateTimeFormat.basicDate(), //
         ISODateTimeFormat.basicOrdinalDate(), //
         ISODateTimeFormat.basicWeekDate(), //
         ISODateTimeFormat.date(), //
@@ -112,7 +112,9 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
                 // try with next formatter
             }
         }
-        throw new ConversionException("Cannot parse date " + str);
+        final ConversionException exception = new ConversionException("Cannot parse date");
+        exception.add("date", str);
+        throw exception;
     }
 
     @Override

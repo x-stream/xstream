@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (c) 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. March 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.core.util;
@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 /**
  * A dependency injection factory.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.2.2
  */
@@ -35,7 +35,7 @@ public class DependencyInjectionFactory {
      * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
      * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
      * <code>null</code> as parameter.
-     * 
+     *
      * @param type the type to create an instance of
      * @param dependencies the possible dependencies
      * @return the instantiated object
@@ -53,7 +53,7 @@ public class DependencyInjectionFactory {
      * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
      * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
      * <code>null</code> as parameter.
-     * 
+     *
      * @param type the type to create an instance of
      * @param dependencies the possible dependencies
      * @param usedDependencies bit mask set by the method for all used dependencies (may be <code>null</code>)
@@ -74,7 +74,7 @@ public class DependencyInjectionFactory {
      * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
      * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
      * <code>null</code> as parameter.
-     * 
+     *
      * @param usedDependencies bit mask set by the method for all used dependencies (may be <code>null</code>)
      * @param type the type to create an instance of
      * @param dependencies the possible dependencies
@@ -150,7 +150,7 @@ public class DependencyInjectionFactory {
                 matchingDependencies.clear();
                 usedDeps = 0;
                 for (int j = 0, k = 0; j < parameterTypes.length
-                        && parameterTypes.length + k - j <= typedDependencies.length; k++) {
+                    && parameterTypes.length + k - j <= typedDependencies.length; k++) {
                     if (parameterTypes[j].isAssignableFrom(typedDependencies[k].type)) {
                         matchingDependencies.add(typedDependencies[k].value);
                         usedDeps |= 1L << k;
@@ -183,7 +183,7 @@ public class DependencyInjectionFactory {
                             } else if (parameterType.isAssignableFrom(deps[k].type)) {
                                 // use most specific type
                                 if (assignable < 0
-                                        || deps[assignable].type != deps[k].type
+                                    || deps[assignable].type != deps[k].type
                                         && deps[assignable].type.isAssignableFrom(deps[k].type)) {
                                     assignable = k;
                                 }
@@ -217,9 +217,10 @@ public class DependencyInjectionFactory {
             if (bestMatchingCtor == null) {
                 if (possibleCtor == null) {
                     usedDeps = 0;
-                    throw new ObjectAccessException("Cannot construct "
-                            + type.getName()
-                            + ", none of the dependencies match any constructor's parameters");
+                    final ObjectAccessException ex = new ObjectAccessException(
+                        "Cannot construct type, none of the arguments match any constructor's parameters");
+                    ex.add("construction-type", type.getName());
+                    throw ex;
                 } else {
                     bestMatchingCtor = possibleCtor;
                     matchingDependencies.clear();
@@ -229,6 +230,7 @@ public class DependencyInjectionFactory {
             }
         }
 
+        Throwable th = null;
         try {
             final T instance;
             if (bestMatchingCtor == null) {
@@ -241,7 +243,7 @@ public class DependencyInjectionFactory {
             if (usedDependencies != null) {
                 usedDependencies.clear();
                 int i = 0;
-                for(long l = 1; l < usedDeps; l <<= 1, ++i) {
+                for (long l = 1; l < usedDeps; l <<= 1, ++i) {
                     if ((usedDeps & l) > 0) {
                         usedDependencies.set(i);
                     }
@@ -250,16 +252,19 @@ public class DependencyInjectionFactory {
 
             return instance;
         } catch (final InstantiationException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            th = e;
         } catch (final IllegalAccessException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            th = e;
         } catch (final InvocationTargetException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            th = e.getCause();
         } catch (final SecurityException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            th = e;
         } catch (final ExceptionInInitializerError e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            th = e;
         }
+        final ObjectAccessException ex = new ObjectAccessException("Cannot construct type", th);
+        ex.add("construction-type", type.getName());
+        throw ex;
     }
 
     private static class TypedValue {

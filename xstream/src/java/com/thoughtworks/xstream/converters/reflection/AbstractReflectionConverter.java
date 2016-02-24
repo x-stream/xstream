@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -34,6 +34,7 @@ import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
 import com.thoughtworks.xstream.core.util.ArrayIterator;
 import com.thoughtworks.xstream.core.util.FastField;
+import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.core.util.SerializationMembers;
@@ -122,18 +123,19 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 if (converter != null) {
                     final String attribute = mapper.aliasForAttribute(mapper.serializedMember(definedIn, fieldName));
                     if (value != null) {
-                        if (writtenAttributes.contains(fieldName)) { // TODO: use attribute
-                            throw new ConversionException("Cannot write field with name '"
-                                + fieldName
-                                + "' twice as attribute for object of type "
-                                + sourceType.getName());
+                        if (writtenAttributes.contains(fieldName)) {
+                            final ConversionException exception = new ConversionException(
+                                "Cannot write field as attribute for object, attribute name already in use");
+                            exception.add("field-name", fieldName);
+                            exception.add("object-type", sourceType.getName());
+                            throw exception;
                         }
                         final String str = converter.toString(value);
                         if (str != null) {
                             writer.addAttribute(attribute, str);
                         }
                     }
-                    writtenAttributes.add(fieldName); // TODO: use attribute
+                    writtenAttributes.add(fieldName);
                 } else {
                     fields.add(new FieldInfo(fieldName, type, definedIn, value));
                 }
@@ -313,10 +315,10 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         type = Primitives.box(type);
                     }
                     if (value != null && !type.isAssignableFrom(value.getClass())) {
-                        throw new ConversionException("Cannot convert type "
-                            + value.getClass().getName()
-                            + " to type "
-                            + type.getName());
+                        final ConversionException exception = new ConversionException("Cannot convert type");
+                        exception.add("source-type", value.getClass().getName());
+                        exception.add("target-type", type.getName());
+                        throw exception;
                     }
                     seenFields.add(new FastField(classDefiningField, attrName));
                     reflectionProvider.writeField(result, attrName, value, classDefiningField);
@@ -522,12 +524,11 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             } else {
                 final Class<?> fieldType = mapper.defaultImplementationOf(physicalFieldType);
                 if (!(Collection.class.isAssignableFrom(fieldType) || Map.class.isAssignableFrom(fieldType))) {
-                    throw new ObjectAccessException("Field "
-                        + fieldLocation.fieldName
-                        + " of "
-                        + result.getClass().getName()
-                        + " is configured for an implicit Collection or Map, but field is of type "
-                        + fieldType.getName());
+                    final ObjectAccessException oaex = new ObjectAccessException(
+                        "Field is configured for an implicit Collection or Map, but is of an incompatible type");
+                    oaex.add("field", result.getClass().getName() + "." + fieldLocation.fieldName);
+                    oaex.add("field-type", fieldType.getName());
+                    throw oaex;
                 }
                 if (pureJavaReflectionProvider == null) {
                     pureJavaReflectionProvider = new PureJavaReflectionProvider();
@@ -706,20 +707,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     fieldCache.put(itemType, field);
                 }
                 if (field != null) {
-                    try {
-                        final Object key = field.get(object);
-                        return map.put(key, object) == null;
-                    } catch (final IllegalArgumentException e) {
-                        throw new ObjectAccessException("Could not get field "
-                            + field.getClass()
-                            + "."
-                            + field.getName(), e);
-                    } catch (final IllegalAccessException e) {
-                        throw new ObjectAccessException("Could not get field "
-                            + field.getClass()
-                            + "."
-                            + field.getName(), e);
-                    }
+                    final Object key = Fields.read(field, object);
+                    return map.put(key, object) == null;
                 }
             } else if (object instanceof Map.Entry) {
                 @SuppressWarnings("unchecked")
@@ -727,10 +716,11 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 return map.put(entry.getKey(), entry.getValue()) == null;
             }
 
-            throw new ConversionException("Element of type "
-                + object.getClass().getName()
-                + " is not defined as entry for map of type "
-                + map.getClass().getName());
+            final ConversionException exception = new ConversionException(
+                "Element  is not defined as entry for implicit map");
+            exception.add("map-type", map.getClass().getName());
+            exception.add("element-type", object.getClass().getName());
+            throw exception;
         }
 
         @Override

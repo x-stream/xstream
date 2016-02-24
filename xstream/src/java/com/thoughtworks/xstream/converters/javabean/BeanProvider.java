@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 12. April 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.javabean;
@@ -21,6 +21,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
 
@@ -42,7 +44,7 @@ public class BeanProvider implements JavaBeanProvider {
 
     /**
      * Construct a BeanProvider with a comparator to sort the bean properties by name in the dictionary.
-     * 
+     *
      * @param propertyNameComparator the comparator
      */
     public BeanProvider(final Comparator<String> propertyNameComparator) {
@@ -51,7 +53,7 @@ public class BeanProvider implements JavaBeanProvider {
 
     /**
      * Construct a BeanProvider with a provided property dictionary.
-     * 
+     *
      * @param propertyDictionary the property dictionary to use
      * @since 1.4
      */
@@ -61,23 +63,27 @@ public class BeanProvider implements JavaBeanProvider {
 
     @Override
     public Object newInstance(final Class<?> type) {
+        ErrorWritingException ex = null;
         try {
             return type.newInstance();
         } catch (final InstantiationException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ConversionException("Cannot construct type", e);
         } catch (final IllegalAccessException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ObjectAccessException("Cannot construct type", e);
         } catch (final SecurityException e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ObjectAccessException("Cannot construct type", e);
         } catch (final ExceptionInInitializerError e) {
-            throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+            ex = new ConversionException("Cannot construct type", e);
         }
+        ex.add("construction-type", type.getName());
+        throw ex;
     }
 
     @Override
     public void visitSerializableProperties(final Object object, final JavaBeanProvider.Visitor visitor) {
         final PropertyDescriptor[] propertyDescriptors = getSerializableProperties(object);
         for (final PropertyDescriptor property : propertyDescriptors) {
+            ErrorWritingException ex = null;
             try {
                 final Method readMethod = property.getReadMethod();
                 final String name = property.getName();
@@ -87,20 +93,15 @@ public class BeanProvider implements JavaBeanProvider {
                     visitor.visit(name, property.getPropertyType(), definedIn, value);
                 }
             } catch (final IllegalArgumentException e) {
-                throw new ObjectAccessException("Could not get property "
-                    + object.getClass()
-                    + "."
-                    + property.getName(), e);
+                ex = new ConversionException("Cannot get property", e);
             } catch (final IllegalAccessException e) {
-                throw new ObjectAccessException("Could not get property "
-                    + object.getClass()
-                    + "."
-                    + property.getName(), e);
+                ex = new ObjectAccessException("Cannot access property", e);
             } catch (final InvocationTargetException e) {
-                throw new ObjectAccessException("Could not get property "
-                    + object.getClass()
-                    + "."
-                    + property.getName(), e);
+                ex = new ConversionException("Cannot get property", e.getTargetException());
+            }
+            if (ex != null) {
+                ex.add("property", object.getClass() + "." + property.getName());
+                throw ex;
             }
         }
     }
@@ -108,14 +109,19 @@ public class BeanProvider implements JavaBeanProvider {
     @Override
     public void writeProperty(final Object object, final String propertyName, final Object value) {
         final PropertyDescriptor property = getProperty(propertyName, object.getClass());
+        ErrorWritingException ex = null;
         try {
-            property.getWriteMethod().invoke(object, new Object[]{value});
+            property.getWriteMethod().invoke(object, value);
         } catch (final IllegalArgumentException e) {
-            throw new ObjectAccessException("Could not set property " + object.getClass() + "." + property.getName(), e);
+            ex = new ConversionException("Cannot set property", e);
         } catch (final IllegalAccessException e) {
-            throw new ObjectAccessException("Could not set property " + object.getClass() + "." + property.getName(), e);
+            ex = new ObjectAccessException("Cannot access property", e);
         } catch (final InvocationTargetException e) {
-            throw new ObjectAccessException("Could not set property " + object.getClass() + "." + property.getName(), e);
+            ex = new ConversionException("Cannot set property", e.getTargetException());
+        }
+        if (ex != null) {
+            ex.add("property", object.getClass() + "." + property.getName());
+            throw ex;
         }
     }
 
@@ -143,7 +149,7 @@ public class BeanProvider implements JavaBeanProvider {
 
     /**
      * Returns the default constructor, or null if none is found
-     * 
+     *
      * @param type
      * @deprecated As of 1.4.6 use {@link #newInstance(Class)} or {@link #canInstantiate(Class)} directly.
      */
