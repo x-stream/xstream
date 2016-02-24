@@ -30,7 +30,7 @@ public abstract class ErrorWritingException extends XStreamException implements 
 
     /**
      * Constructs a ReportingException.
-     * 
+     *
      * @param message
      * @since 1.4.9
      */
@@ -41,7 +41,7 @@ public abstract class ErrorWritingException extends XStreamException implements 
 
     /**
      * Constructs a ReportingException.
-     * 
+     *
      * @param cause
      * @since 1.4.9
      */
@@ -52,7 +52,7 @@ public abstract class ErrorWritingException extends XStreamException implements 
 
     /**
      * Constructs a ReportingException.
-     * 
+     *
      * @param message
      * @param cause
      * @since 1.4.9
@@ -68,8 +68,8 @@ public abstract class ErrorWritingException extends XStreamException implements 
         }
         if (cause != null) {
             add("cause-exception", cause.getClass().getName());
-            add("cause-message", cause instanceof ConversionException
-                ? ((ConversionException)cause).getShortMessage()
+            add("cause-message", cause instanceof ErrorWritingException
+                ? ((ErrorWritingException)cause).getShortMessage()
                 : cause.getMessage());
         }
     }
