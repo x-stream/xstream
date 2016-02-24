@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,9 +29,11 @@ public class MissingFieldException extends ObjectAccessException {
      * @since 1.4.2
      */
     public MissingFieldException(final String className, final String fieldName) {
-        super("No field '" + fieldName + "' found in class '" + className + "'");
+        super("Field not found in class.");
         this.className = className;
         this.fieldName = fieldName;
+        add("defining-type", className);
+        add("field-name", fieldName);
     }
 
     /**
