@@ -19,7 +19,11 @@ import com.thoughtworks.xstream.XStreamException;
 
 
 /**
+ * Abstract base class for exceptions supporting an ErrorWriter. It can be passed around to things accepting an
+ * ErrorWriter to add diagnostics.
+ *
  * @author J&ouml;rg Schaible
+ * @see ErrorWriter
  * @since 1.4.9
  */
 public abstract class ErrorWritingException extends XStreamException implements ErrorWriter {
@@ -29,9 +33,9 @@ public abstract class ErrorWritingException extends XStreamException implements 
     private final Map<String, String> stuff = new LinkedHashMap<>();
 
     /**
-     * Constructs a ReportingException.
+     * Constructs a ErrorWritingException.
      *
-     * @param message
+     * @param message the error message
      * @since 1.4.9
      */
     public ErrorWritingException(final String message) {
@@ -40,9 +44,9 @@ public abstract class ErrorWritingException extends XStreamException implements 
     }
 
     /**
-     * Constructs a ReportingException.
+     * Constructs a ErrorWritingException.
      *
-     * @param cause
+     * @param cause the causing exception
      * @since 1.4.9
      */
     public ErrorWritingException(final Throwable cause) {
@@ -51,10 +55,10 @@ public abstract class ErrorWritingException extends XStreamException implements 
     }
 
     /**
-     * Constructs a ReportingException.
+     * Constructs a ErrorWritingException.
      *
-     * @param message
-     * @param cause
+     * @param message the error message
+     * @param cause the causing exception
      * @since 1.4.9
      */
     public ErrorWritingException(final String message, final Throwable cause) {
