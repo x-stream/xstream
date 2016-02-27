@@ -19,8 +19,11 @@ import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 
 
 /**
- * @author J&ouml;rg Schaible
+ * Abstract base class for exceptions supporting an ErrorWriter. It can be passed around to things accepting an
+ * ErrorWriter to add diagnostics.
  *
+ * @author J&ouml;rg Schaible
+ * @see ErrorWriter
  * @since 1.4.9
  */
 public abstract class ErrorWritingException extends XStreamException implements ErrorWriter {
@@ -29,8 +32,9 @@ public abstract class ErrorWritingException extends XStreamException implements 
     private final Map stuff = new OrderRetainingMap();
 
     /**
-     * Constructs a ReportingException.
-     * @param message
+     * Constructs a ErrorWritingException.
+     *
+     * @param message the error message
      * @since 1.4.9
      */
     public ErrorWritingException(String message) {
@@ -39,8 +43,9 @@ public abstract class ErrorWritingException extends XStreamException implements 
     }
 
     /**
-     * Constructs a ReportingException.
-     * @param cause
+     * Constructs a ErrorWritingException.
+     *
+     * @param cause the causing exception
      * @since 1.4.9
      */
     public ErrorWritingException(Throwable cause) {
@@ -49,9 +54,10 @@ public abstract class ErrorWritingException extends XStreamException implements 
     }
 
     /**
-     * Constructs a ReportingException.
-     * @param message
-     * @param cause
+     * Constructs a ErrorWritingException.
+     *
+     * @param message the error message
+     * @param cause the causing exception
      * @since 1.4.9
      */
     public ErrorWritingException(String message, Throwable cause) {
