@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2013 XStream Committers.
+ * Copyright (C) 2011, 2013, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -56,6 +56,23 @@ public class ToAttributedValueConverter implements Converter {
     private final ReflectionProvider reflectionProvider;
     private final ConverterLookup lookup;
     private final Field valueField;
+
+    /**
+     * Creates a new ToAttributedValueConverter instance.
+     * 
+     * All field elements will be attributes, the element itself will have no value.
+     * 
+     * @param type the type that is handled by this converter instance
+     * @param mapper the mapper in use
+     * @param reflectionProvider the reflection provider in use
+     * @param lookup the converter lookup in use
+     * @since upcoming
+     */
+    public ToAttributedValueConverter(
+            final Class<?> type, final Mapper mapper, final ReflectionProvider reflectionProvider,
+            final ConverterLookup lookup) {
+        this(type, mapper, reflectionProvider, lookup, null, null);
+    }
 
     /**
      * Creates a new ToAttributedValueConverter instance.
