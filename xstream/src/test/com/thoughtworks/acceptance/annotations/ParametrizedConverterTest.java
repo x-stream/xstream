@@ -58,6 +58,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         xstream.alias("type", Type.class);
         xstream.processAnnotations(MyMap.class);
         xstream.processAnnotations(DerivedType.class);
+        xstream.processAnnotations(AttributedType.class);
         xstream.processAnnotations(SimpleBean.class);
         xstream.processAnnotations(ContainsMap.class);
         xstream.processAnnotations(ContainsMap2.class);
@@ -163,6 +164,24 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         public DerivedType(Decimal decimal, Boolean bool, E e) {
             super(decimal, bool);
             this.e = e;
+        }
+    }
+
+    public void testConverterWithoutTypeParameters() {
+        final Type value = new AttributedType(new Decimal("1.5"), new Boolean(true), "test");
+        String expected = "<attrtype decimal='1.5' boolean='true' agreement='yes' string='test'/>".replace('\'', '"');
+        assertBothWays(value, expected);
+    }
+
+    @XStreamAlias("attrtype")
+    @XStreamConverter(value=ToAttributedValueConverter.class)
+    public static class AttributedType extends Type {
+
+        private String string;
+
+        public AttributedType(Decimal decimal, Boolean bool, String string) {
+            super(decimal, bool);
+            this.string = string;
         }
     }
 
