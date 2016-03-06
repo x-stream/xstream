@@ -433,10 +433,14 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         for (final Object array : arrays) {
             if (array != null) {
                 final int length = Array.getLength(array);
-                for (int i = 0; i < length; i++ ) {
+                for (int i = 0; i < length; i++) {
                     parameter.add(Array.get(array, i));
                 }
             }
+        }
+        for (final Class<?> type : annotation.nulls()) {
+            final TypedNull<?> nullType = new TypedNull<>(type);
+            parameter.add(nullType);
         }
         final Class<? extends ConverterMatcher> converterType = annotation.value();
         Map<List<Object>, Converter> converterMapping = converterCache.get(converterType);
