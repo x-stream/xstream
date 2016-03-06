@@ -509,6 +509,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 }
             }
         }
+        for (final Class<?> type : annotation.nulls()) {
+            final TypedNull nullType = new TypedNull(type);
+            parameter.add(nullType);
+        }
         final Class<? extends ConverterMatcher> converterType = annotation.value();
         Map<List<Object>, Converter> converterMapping = converterCache.get(converterType);
         if (converterMapping != null) {
