@@ -111,7 +111,7 @@ public @interface XStreamConverter {
      * Provide null types as arguments for the converter's constructor arguments.
      * 
      * @return the types provided as null values
-     * @since upcoming
+     * @since 1.4.9
      */
     Class<?>[] nulls() default {};
 }
