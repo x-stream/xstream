@@ -66,7 +66,7 @@ public class ToAttributedValueConverter implements Converter {
      * @param mapper the mapper in use
      * @param reflectionProvider the reflection provider in use
      * @param lookup the converter lookup in use
-     * @since upcoming
+     * @since 1.4.9
      */
     public ToAttributedValueConverter(
             final Class<?> type, final Mapper mapper, final ReflectionProvider reflectionProvider,
