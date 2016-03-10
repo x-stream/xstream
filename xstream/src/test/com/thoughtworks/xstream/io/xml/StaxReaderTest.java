@@ -41,7 +41,12 @@ public class StaxReaderTest extends AbstractXMLReaderTest {
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             final String message = e.getCause().getMessage();
-            if (message.indexOf("external entity") < 0) {
+            if (JVM.is14() && message == null) {
+                if (JVM.is16()) {
+                    throw e;
+                }
+                System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
+            } else if (message.indexOf("external entity") < 0) {
                 if (JVM.is16() && message.indexOf("com.wutka.dtd.DTDParseException") >= 0) {
                     System.err.println("BEAStaxReader was selected as default StAX driver for StaxReaderTest!");
                 } else if (message.replaceAll("[:space:]", "").endsWith("null")) {

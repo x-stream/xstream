@@ -69,7 +69,7 @@ public class ToAttributedValueConverter implements Converter {
      * @since 1.4.9
      */
     public ToAttributedValueConverter(
-            final Class<?> type, final Mapper mapper, final ReflectionProvider reflectionProvider,
+            final Class type, final Mapper mapper, final ReflectionProvider reflectionProvider,
             final ConverterLookup lookup) {
         this(type, mapper, reflectionProvider, lookup, null, null);
     }
