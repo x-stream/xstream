@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -54,6 +54,7 @@
       </activation>
       <modules>
         <module>xstream-jmh</module>
+        <module>xstream-distribution</module>
       </modules>
     </profile>
     <profile>
@@ -203,7 +204,6 @@
         </property>
       </activation>
       <modules>
-        <module>xstream-distribution</module>
       </modules>
     </profile>
   </profiles>
@@ -295,6 +295,18 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-hibernate</artifactId>
+        <version>1.4.9-SNAPSHOT</version>
+        <classifier>javadoc</classifier>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream-jmh</artifactId>
+        <version>1.4.9-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream-jmh</artifactId>
         <version>1.4.9-SNAPSHOT</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
