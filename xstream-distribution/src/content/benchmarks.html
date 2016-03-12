@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2015 XStream committers.
+ Copyright (C) 2015, 2016 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -267,7 +267,7 @@
       does not contain elements with invalid XML names, because the name of the class types and members are either
       conforming or have been aliased.</dd>
       <dt>Dollar Coding</dt>
-      <dd>An implementation that uses String.replace to replace any dollar sign with '&xb7;', a valid character
+      <dd>An implementation that uses String.replace to replace any dollar sign with '&#xb7;', a valid character
       normally not used for Java identifiers. In typical Java code there are no other invalid characters used for Java
       identifiers, however, Java allows identifiers to contain a wide range of UTF-8 characters and the JVM has even
       less restrictions.</dd>
