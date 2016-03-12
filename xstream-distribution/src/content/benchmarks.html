@@ -267,10 +267,10 @@
       does not contain elements with invalid XML names, because the name of the class types and members are either
       conforming or have been aliased.</dd>
       <dt>Dollar Coding</dt>
-      <dd>An implementation that uses String.replace to replace any dollar sign with '&#xb7;', a valid character
-      normally not used for Java identifiers. In typical Java code there are no other invalid characters used for Java
-      identifiers, however, Java allows identifiers to contain a wide range of UTF-8 characters and the JVM has even
-      less restrictions.</dd>
+      <dd>An implementation that uses String.replace to replace any dollar sign with '&#xb7;' (middle dot), a valid
+      character normally not used for Java identifiers. In typical Java code there are no other invalid characters used
+      for Java identifiers, however, Java allows identifiers to contain a wide range of UTF-8 characters and the JVM
+      has even less restrictions.</dd>
       <dt>Escaped Underscore Coding</dt>
       <dd>An implementation that uses a StringBuilder to create the XML name by replacing any dollar sign with '_-' and
       escapes every plain underscore with two ones. The implementation will therefore only use characters in the
