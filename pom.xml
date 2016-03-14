@@ -146,17 +146,6 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>distribution</id>
-      <activation>
-        <property>
-          <name>!maven.javadoc.skip</name>
-        </property>
-      </activation>
-      <modules>
-        <module>xstream-distribution</module>
-      </modules>
-    </profile>
   </profiles>
 
   <modules>
@@ -164,6 +153,7 @@
     <module>xstream-hibernate</module>
     <module>xstream-jmh</module>
     <module>xstream-benchmark</module>
+    <module>xstream-distribution</module>
   </modules>
 
   <licenses>
