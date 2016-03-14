@@ -2,3 +2,8 @@ language: java
 jdk:
   - oraclejdk8
   - oraclejdk7
+install: true
+script: "mvn -V -B -e clean package"
+cache:
+    directories:
+    - $HOME/.m2
