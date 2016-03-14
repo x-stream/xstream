@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <!--
-     Copyright (C) 2006, 2007, 2010, 2015 XStream committers.
+     Copyright (C) 2006, 2007, 2010, 2015, 2016 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -21,10 +21,5 @@
       <username>your-sonatype.org-id</username>
       <password>your-sonatype.org-pwd</password>
     </server>      
-    <server>
-      <id>codehaus.org</id>
-      <username></username>
-      <password></password>
-    </server>
   </servers>
 </settings>

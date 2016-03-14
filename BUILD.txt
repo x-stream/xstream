@@ -8,7 +8,8 @@ mvn clean install
 
 Before deploying:
 
-copy settings-template.xml to ~/.m2/settings.xml adding your Codehaus DAV username and passwords.
+copy settings-template.xml to ~/.m2/settings.xml adding your Sonatype OSSRH
+username and passwords.
 
 To deploy (optionally adding sources and javadoc jars):
 mvn deploy
