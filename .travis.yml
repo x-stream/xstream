@@ -3,6 +3,7 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk6
+install: true
 script: "mvn -V -B -e clean package"
 cache:
     directories:
