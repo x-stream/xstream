@@ -3,3 +3,7 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk6
+script: "mvn -V -B -e clean package"
+cache:
+    directories:
+    - $HOME/.m2
