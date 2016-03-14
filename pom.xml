@@ -196,16 +196,6 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>distribution</id>
-      <activation>
-        <property>
-          <name>!maven.javadoc.skip</name>
-        </property>
-      </activation>
-      <modules>
-      </modules>
-    </profile>
   </profiles>
 
   <modules>
