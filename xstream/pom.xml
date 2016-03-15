@@ -14,7 +14,7 @@
   <parent>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream-parent</artifactId>
-    <version>1.4.9-SNAPSHOT</version>
+    <version>1.4.9</version>
   </parent>
   <artifactId>xstream</artifactId>
   <packaging>jar</packaging>
