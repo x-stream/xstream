@@ -59,9 +59,15 @@
     	(java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection types).</li>
     </ul>
 
+<!--
     <h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
 
     <p>Not yet released.</p>
+-->
+
+    <h1 id="1.4.9">1.4.9</h1>
+
+    <p>Released March 15, 2016.</p>
 
     <h2>Major changes</h2>
     
@@ -70,16 +76,16 @@
     	vulnerability</a>: Fixed affected drivers were Dom4JDriver, DomDriver, JDomDriver, JDom2Driver, SjsxpDriver,
     	StandardStaxDriver and WstxDriver. Still vulnerable are BEAStaxDriver and XomDriver. Processing of (external)
     	entities has been disabled. See <a href="faq.html#Security_XXEVulnerability">FAQ</a> for more information.</li>
-    	<li>Benchmark module has been deprecated in favour of <a href="http://openjdk.java.net/projects/code-tools/jmh/">
+    	<li>Benchmark module has been deprecated in favor of <a href="http://openjdk.java.net/projects/code-tools/jmh/">
     	JMH (Java Microbenchmarking Harness)</a>.</li>
-    	<li>GHI:#35: AnnotationMapper dropped silently constructor arguments for converters if they were equal.</li>
     	<li>GHI:#33 and GHPR:#38: Add converter for java.nio.file.Path (by Aaron Jonson).</li>
-    	<li>Fix: Possible concurrency problem with XomDriver.</li>
     </ul>
 
     <h2>Minor changes</h2>
 
     <ul>
+    	<li>GHI:#35: AnnotationMapper dropped silently constructor arguments for converters if they were equal.</li>
+    	<li>Fix: Possible concurrency problem with XomDriver.</li>
     	<li>JIRA:XSTR-773, GHPR:#3: Minimize memory footprint by not keeping internal references to instances of
     	immutable types.</li>
     	<li>Drop automatic reference support at deserialization time for immutable types before version 1.4 (primitive
@@ -116,7 +122,7 @@
     	<li>Added c.t.x.io.xml.JDom2Driver.createBuilder().</li>
     	<li>Added c.t.x.io.xml.XomDriver.createBuilder().</li>
     	<li>Added constructor c.t.x.converter.extended.ToAttributedValueConverter.ToAttributedValueConverter(Class,
-    	Mapper, ReflectionProvider, CovnerterLookup).</li>
+    	Mapper, ReflectionProvider, ConverterLookup).</li>
     	<li>Added abstract c.t.x.converter.ErrorWritingException as common base for c.t.x.converter.ConversionException
     	and c.t.x.converter.reflection.ObjectAccessException.</li>
     	<li>Deprecated c.t.x.io.xml.XomDriver(Builder), c.t.x.io.xml.XomDriver(Builder, NameCoder) and c.t.x.io.xml.XomDriver.getBuilder().</li>
