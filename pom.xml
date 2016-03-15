@@ -16,6 +16,7 @@
   <packaging>pom</packaging>
   <version>1.4.10-SNAPSHOT</version>
   <name>XStream Parent</name>
+  <url>http://x-stream.github.io</url>
   <description>
     XStream is a serialization library from Java objects to XML and back.
   </description>
@@ -25,6 +26,14 @@
     <name>XStream</name>
     <url>http://x-stream.github.io</url>
   </organization>
+
+  <developers>
+    <developer>
+      <id>xstream</id>
+      <name>XStream Committers</name>
+      <url>http://x-stream.github.io/team.html</url>
+    </developer>
+  </developers>
 
   <profiles>
     <profile>
