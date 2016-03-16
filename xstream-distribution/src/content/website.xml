@@ -41,7 +41,7 @@
         <name>Javadoc</name>
         <link title="XStream Core">javadoc/index.html</link>
         <link title="Hibernate Extensions">hibernate-javadoc/index.html</link>
-        <link title="JMH Module">benchmark-jmh/index.html</link>
+        <link title="JMH Module">jmh-javadoc/index.html</link>
     </section>
     <section>
         <name>Tutorials</name>
