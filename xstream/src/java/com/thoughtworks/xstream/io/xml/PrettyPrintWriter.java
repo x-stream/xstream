@@ -219,30 +219,37 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                 }
                 break;
             case '&':
-				if (Arrays.equals(text.substring(i, i + NULL.length).toCharArray(), NULL)) {
-					writer.write(NULL);
-					i = i + NULL.length - 1;
-				} else if (Arrays.equals(text.substring(i, i + AMP.length).toCharArray(), AMP)) {
-					writer.write(AMP);
-					i = i + AMP.length - 1;
-				} else if (Arrays.equals(text.substring(i, i + LT.length).toCharArray(), LT)) {
-					writer.write(LT);
-					i = i + LT.length - 1;
-				} else if (Arrays.equals(text.substring(i, i + GT.length).toCharArray(), GT)) {
-					writer.write(GT);
-					i = i + GT.length - 1;
-				} else if (Arrays.equals(text.substring(i, i + CR.length).toCharArray(), CR)) {
-					writer.write(CR);
-					i = i + CR.length - 1;
-				} else if (Arrays.equals(text.substring(i, i + QUOT.length).toCharArray(), QUOT)) {
-					writer.write(QUOT);
-					i = i + QUOT.length - 1;
-				} else if (Arrays.equals(text.substring(i, i + APOS.length).toCharArray(), APOS)) {
-					writer.write(APOS);
-					i = i + APOS.length - 1;
-				} else {
-					writer.write(AMP);
-				}
+		if (i + NULL.length <= text.length() && 
+				Arrays.equals(text.substring(i, i + NULL.length).toCharArray(), NULL)) {
+			writer.write(NULL);
+			i = i + NULL.length - 1;
+		} else if (i + AMP.length <= text.length() &&
+					Arrays.equals(text.substring(i, i + AMP.length).toCharArray(), AMP)) {
+			writer.write(AMP);
+			i = i + AMP.length - 1;
+		} else if (i + LT.length <= text.length() &&
+				Arrays.equals(text.substring(i, i + LT.length).toCharArray(), LT)) {
+			writer.write(LT);
+			i = i + LT.length - 1;
+		} else if (i + GT.length <= text.length() &&
+				Arrays.equals(text.substring(i, i + GT.length).toCharArray(), GT)) {
+			writer.write(GT);
+			i = i + GT.length - 1;
+		} else if (i + CR.length <= text.length() &&
+				Arrays.equals(text.substring(i, i + CR.length).toCharArray(), CR)) {
+			writer.write(CR);
+			i = i + CR.length - 1;
+		} else if (i + QUOT.length <= text.length() &&
+				Arrays.equals(text.substring(i, i + QUOT.length).toCharArray(), QUOT)) {
+			writer.write(QUOT);
+			i = i + QUOT.length - 1;
+		} else if (i + APOS.length <= text.length() &&
+				Arrays.equals(text.substring(i, i + APOS.length).toCharArray(), APOS)) {
+			writer.write(APOS);
+			i = i + APOS.length - 1;
+		} else {
+			writer.write(AMP);
+		}
                 break;
             case '<':
                 writer.write(LT);
