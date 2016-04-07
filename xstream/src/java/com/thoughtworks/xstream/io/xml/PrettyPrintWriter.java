@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import java.io.Writer;
+import java.util.Arrays;
 
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.core.util.QuickWriter;
