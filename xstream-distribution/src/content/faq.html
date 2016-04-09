@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -31,8 +31,16 @@
     <h1 id="Compatibility">Compatibility</h1>
 
     <!-- ...................................................... -->
-    <h2 id="Compatibility_JDK">Which JDK is required to use XStream?</h2>
-    <p>1.6 or later.</p>
+    <h2 id="Compatibility_JDK">Which Java runtime is required to run XStream?</h2>
+    <p>XStream 1.5.x requires Java 1.7 or later.  Note, that the XStream libraries contains class files targeting
+    different Java runtime versions or Java features.  These classes are loaded by reflection and only used if XStream
+    is running on an appropriate runtime environment.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_JDK">Which JDK is required to build XStream?</h2>
+    <p>XStream 1.5.x can be build still with JDK 1.7 (see BUILD.txt).  However, to support the latest features it
+    requires currently a JDK of Java 8.  Otherwise the resulting jar files will miss some classes not available on
+    earlier runtimes.  Depending on the target environment this can be useful (e.g. for Android or GAE).</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_Dependencies">Which dependencies are required to run XStream?</h2>
@@ -54,9 +62,9 @@
 
     <p>XStream will check since version 1.4.5 dynamically for a working enhanced mode if it is available based on
     undocumented internal Java runtime classes. This enhanced mode is known to be working on the Oracle/Sun, Apple, HP,
-    IBM and Blackdown 1.6 JVMs and onwards, for IcedTea 6 and onwards, for Hitachi, SAP and Diablo from 1.6 and
+    IBM and Blackdown 1.4 JVMs and onwards, for IcedTea 6 and onwards, for Hitachi, SAP and Diablo from 1.6 and
     onwards, for BEA JRockit starting with R25.1.0. Generally it works for all modern Java runtimes based on OpenJDK.
-    Android basically supports the enhanced mode as well as the Google ApplicationEngine, but the latter's security
+    Android basically supports the enhanced mode as well as the Google Application Engine, but the latter's security
     model limits the types that can be handled. Note, that an active SecurityManager might prevent the usage of the
     enhanced mode also.</p>
 
@@ -79,6 +87,9 @@
       <tr><td>Private fields</td><td>Yes</td><td>Yes</td></tr>
       <tr><td>Final fields</td><td>Yes &gt;= JDK 1.5</td><td>Yes</td></tr>
     </table>
+    
+    <p>Note, that these undocumented features are still available with Java 9, since there is currently still no public
+    functionality provided as replacement.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_XPP">Why is my application not able to create a XmlPullParser with the XppDriver since XStream 1.4?</h2>
@@ -98,6 +109,11 @@
 	treated at least as JDK 5 platform, but it e.g. does not include the java.beans package. Therefore you cannot use
 	the JavaBeanConverter. Note, that Android provides an XML Pull Parser, therefore XStream can work without
 	additional dependencies.</p>
+
+	<p>XStream contains class files targeting different Java runtime versions.  Depending on the target version of
+	Android, it is not possible to use the original XStream library directly, because it tries to convert all classes
+	of XStream to the Dalvik runtime.  You might have to build a custom version of XStream (see BUILD.txt) with a JDK
+	that is equivalent to the Java level supported by the target version of Android.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_GAE">Which limits exists for XStream in Google's Application Engine (GAE)?</h2>
@@ -680,7 +696,7 @@ XStream xstream = new XStream(driver);
     </ul>
 
     <!-- ...................................................... -->
-    <h2 id="Security_XXEVulnerability">Is XStream XXE vulnerable?</h2>
+    <h2 id="Security_XXEVulnerability">Is XStream XXE vulnerable (CVE-2016-3674)?</h2>
     
     <p>XStream does not contain an own XML parser, therefore it depends on the parser selected with the 
     <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
@@ -705,7 +721,7 @@ XStream xstream = new XStream(driver);
     	<tr><td>KXml2Driver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
     	<tr><td>SjsxpDriver</td><td>no, Java 7 or higher<br/>yes, Java 6</td><td>Driver turns off support for external
     	entities for the internal StaX 	parser of the Sun JDK, but fails for parameter entities in a Java 6 runtime.</td></tr>
-    	<tr><td>StandardStaxDriver</td><td>?</td><td>Driver tries to turns off support for external entities for
+    	<tr><td>StandardStaxDriver</td><td>?</td><td>Driver tries to turn off support for external entities for
     	the internal StaX parser of the Java runtime. Save for Oracle JDK 7 or higher.</td></tr>
     	<tr><td>StaxDriver</td><td>?</td><td>Driver tries to turns off support for external entities for the
     	standard StaX parser. However, the finally used StAX implementation is defined externally (see JDK
@@ -717,8 +733,8 @@ XStream xstream = new XStream(driver);
     </table>
     
     <p class="highlight">Note: Only a HierarchicalStreamReader created with the HierarchicalStreamDriver is setup to
-    avoid the XXE vulnerability. If you create such driver instances on your own, it is your task to setup the XML
-    parser instance on your own.</p>
+    avoid the XXE vulnerability. If you create such driver instances on your own, it is also your task to setup the XML
+    parser instance properly.</p>
 
     <!-- ****************************************************** -->
     <h1 id="Other_Products">Comparison to other products</h1>
