@@ -69,13 +69,17 @@
 
     <p>Released March 15, 2016.</p>
 
+    <p class="highlight">This maintenance release addresses also the security vulnerability CVE-2016-3674, known as XXE
+    vulnerability that can be used to expose arbitrary data from the file system when unmarshalling.</p>
+
     <h2>Major changes</h2>
     
     <ul>
     	<li>GHI:#25: Fix <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">XXE
-    	vulnerability</a>: Fixed affected drivers were Dom4JDriver, DomDriver, JDomDriver, JDom2Driver, SjsxpDriver,
-    	StandardStaxDriver and WstxDriver. Still vulnerable are BEAStaxDriver and XomDriver. Processing of (external)
-    	entities has been disabled. See <a href="faq.html#Security_XXEVulnerability">FAQ</a> for more information.</li>
+    	vulnerability (CVE-2016-3674)</a>: Fixed affected drivers were Dom4JDriver, DomDriver, JDomDriver, JDom2Driver,
+    	SjsxpDriver, StandardStaxDriver and WstxDriver. Still vulnerable are BEAStaxDriver and XomDriver. Processing of
+    	(external) entities has been disabled. See <a href="faq.html#Security_XXEVulnerability">FAQ</a> for more
+    	information.</li>
     	<li>Benchmark module has been deprecated in favor of <a href="http://openjdk.java.net/projects/code-tools/jmh/">
     	JMH (Java Microbenchmarking Harness)</a>.</li>
     	<li>GHI:#33 and GHPR:#38: Add converter for java.nio.file.Path (by Aaron Jonson).</li>
