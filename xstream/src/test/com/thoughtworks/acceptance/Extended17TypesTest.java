@@ -43,6 +43,12 @@ public class Extended17TypesTest extends AbstractAcceptanceTest {
         assertBothWays(Paths.get(uri), "<path>" + absolutePathName + "</path>");
     }
 
+    public void testPathWithSpecialCharacters() {
+        assertBothWays(Paths.get("with space"), "<path>with space</path>");
+        assertBothWays(Paths.get("with+plus"), "<path>with+plus</path>");
+        assertBothWays(Paths.get("with&ampersand"), "<path>with&amp;ampersand</path>");
+    }
+
     public void testPathOfNonDefaultFileSystem() throws IOException {
         final Map<String, String> env = new HashMap<>();
         env.put("create", "true");
