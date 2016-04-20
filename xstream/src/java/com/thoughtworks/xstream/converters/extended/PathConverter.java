@@ -43,7 +43,7 @@ public class PathConverter extends AbstractSingleValueConverter {
                 return Paths.get(uri);
             }
         } catch (final URISyntaxException e) {
-            throw new ConversionException(e);
+            return Paths.get(str);
         }
     }
 
