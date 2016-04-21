@@ -16,7 +16,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
@@ -34,7 +33,7 @@ public class PathConverter extends AbstractSingleValueConverter {
     }
 
     @Override
-    public Object fromString(final String str) {
+    public Path fromString(final String str) {
         try {
             final URI uri = new URI(str);
             if (uri.getScheme() == null) {
