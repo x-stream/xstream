@@ -263,7 +263,7 @@ public class JVM implements Caching {
      * @since 1.4
      */
     private static boolean isAndroid() {
-        return vendor.indexOf("Android") != -1;
+        return vendor.indexOf("Android") != -1; // and version 19 (4.4 KitKat) for Java 7
     }
 
     /**
