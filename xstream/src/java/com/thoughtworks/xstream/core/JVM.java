@@ -53,7 +53,7 @@ public class JVM implements Caching {
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
-    private static final float DEFAULT_JAVA_VERSION = 1.4f;
+    private static final float DEFAULT_JAVA_VERSION = 1.7f;
     private static final boolean reverseFieldOrder = false;
     private static final Class<? extends ReflectionProvider> reflectionProviderType;
 
@@ -202,7 +202,7 @@ public class JVM implements Caching {
      */
     private static final float getMajorJavaVersion() {
         try {
-            return isAndroid() ? 1.5f : Float.parseFloat(System.getProperty("java.specification.version"));
+            return isAndroid() ? 1.7f : Float.parseFloat(System.getProperty("java.specification.version"));
         } catch (final NumberFormatException e) {
             // Some JVMs may not conform to the x.y.z java.version format
             return DEFAULT_JAVA_VERSION;
