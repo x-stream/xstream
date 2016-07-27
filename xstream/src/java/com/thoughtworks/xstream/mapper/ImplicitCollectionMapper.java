@@ -18,8 +18,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 
 public class ImplicitCollectionMapper extends MapperWrapper {
@@ -31,6 +33,37 @@ public class ImplicitCollectionMapper extends MapperWrapper {
     // { definedIn (Class) -> (ImplicitCollectionMapperForClass) }
     private final Map classNameToMapper = new HashMap();
 
+    // { declaredIn (Class) -> Set(fieldName) }
+    private final Map classToFieldsSet = new HashMap();
+
+    private boolean fieldDeclaredInClass(final Class definedIn, final String fieldName) {
+        Set fieldNames = (Set) classToFieldsSet.get(definedIn);
+        if (fieldNames == null) {
+            fieldNames = new HashSet();
+            try {
+                Field[] fields = definedIn.getDeclaredFields();
+                for (int i = 0; i < fields.length; i++) {
+                    Field field = fields[i];
+                    if (!Modifier.isStatic(field.getModifiers())) {
+                        fieldNames.add(field.getName());
+                    }
+                }
+            } catch (final SecurityException e) {
+                throw new InitializationException("Access denied for field with implicit collection", e);
+            }
+            synchronized (classToFieldsSet) {
+                Set concurrentEntry = (Set) classToFieldsSet.get(definedIn);
+                if (concurrentEntry == null) {
+                    classToFieldsSet.put(definedIn, fieldNames);
+                } else {
+                    fieldNames = concurrentEntry;
+                }
+            }
+
+        }
+        return fieldNames.contains(fieldName);
+    }
+
     private ImplicitCollectionMapperForClass getMapper(final Class declaredFor, final String fieldName) {
         Class definedIn = declaredFor;
         while (definedIn != null) {
@@ -40,17 +73,11 @@ public class ImplicitCollectionMapper extends MapperWrapper {
                 return mapper;
             } else { 
                 if (fieldName != null) {
-                    try {
-                        // do not continue search for a hidden field
-                        final Field field = definedIn.getDeclaredField(fieldName);
-                        if (field != null && !Modifier.isStatic(field.getModifiers())) {
-                            return null;
-                        }
-                    } catch (final SecurityException e) {
-                        throw new InitializationException("Access denied for field with implicit collection", e);
-                    } catch (final NoSuchFieldException e) {
-                        // OK, we can continue the search in the class hierarchy
+                    // do not continue search for a hidden field
+                    if (fieldDeclaredInClass(definedIn, fieldName)) {
+                        return null;
                     }
+                    // OK, we can continue the search in the class hierarchy
                 }
             }
             definedIn = definedIn.getSuperclass();
