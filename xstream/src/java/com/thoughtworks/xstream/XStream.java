@@ -587,7 +587,7 @@ public class XStream {
         mapper = new FieldAliasingMapper(mapper);
         mapper = new AttributeAliasingMapper(mapper);
         mapper = new SystemAttributeAliasingMapper(mapper);
-        mapper = new ImplicitCollectionMapper(mapper);
+        mapper = new ImplicitCollectionMapper(mapper, reflectionProvider);
         mapper = new OuterClassMapper(mapper);
         mapper = new ArrayMapper(mapper);
         mapper = new DefaultImplementationsMapper(mapper);
