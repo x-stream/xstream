@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,37 +18,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.thoughtworks.xstream.InitializationException;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.util.Primitives;
 
 
 public class ImplicitCollectionMapper extends MapperWrapper {
 
-    public ImplicitCollectionMapper(final Mapper wrapped) {
+    private final ReflectionProvider reflectionProvider;
+
+    public ImplicitCollectionMapper(final Mapper wrapped, final ReflectionProvider reflectionProvider) {
         super(wrapped);
+        this.reflectionProvider = reflectionProvider;
     }
 
     private final Map<Class<?>, ImplicitCollectionMapperForClass> classNameToMapper = new HashMap<>();
 
     private ImplicitCollectionMapperForClass getMapper(final Class<?> declaredFor, final String fieldName) {
         Class<?> definedIn = declaredFor;
+        final Field field = fieldName != null ? reflectionProvider.getFieldOrNull(definedIn, fieldName) : null;
+        final Class<?> inheritanceStop = field != null ? field.getDeclaringClass() : null;
         while (definedIn != null) {
             final ImplicitCollectionMapperForClass mapper = classNameToMapper.get(definedIn);
             if (mapper != null) {
                 return mapper;
-            } else {
-                if (fieldName != null) {
-                    try {
-                        // do not continue search for a hidden field
-                        final Field field = definedIn.getDeclaredField(fieldName);
-                        if (field != null && !Modifier.isStatic(field.getModifiers())) {
-                            return null;
-                        }
-                    } catch (final SecurityException e) {
-                        throw new InitializationException("Access denied for field with implicit collection", e);
-                    } catch (final NoSuchFieldException e) {
-                        // OK, we can continue the search in the class hierarchy
-                    }
-                }
+            }
+            if (definedIn == inheritanceStop) {
+                break;
             }
             definedIn = definedIn.getSuperclass();
         }

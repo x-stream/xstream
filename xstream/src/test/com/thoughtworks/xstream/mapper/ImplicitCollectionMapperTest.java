@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,13 +20,14 @@ import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.SampleMaps;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.JVM;
 
 import junit.framework.TestCase;
 
 public class ImplicitCollectionMapperTest extends TestCase {
 
     private ImplicitCollectionMapper implicitCollections = new ImplicitCollectionMapper(
-        new DefaultMapper(new ClassLoaderReference(null)));
+        new DefaultMapper(new ClassLoaderReference(null)), JVM.newReflectionProvider());
 
     public void testAllowsFieldsToBeMarkedAsImplicitCollectionsToBeAdded() {
         implicitCollections.add(SampleLists.class, "good", null);
