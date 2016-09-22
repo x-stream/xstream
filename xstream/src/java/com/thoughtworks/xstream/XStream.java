@@ -294,9 +294,8 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * <h3>Thread safety</h3>
  * <p>
  * The XStream instance is thread-safe. That is, once the XStream instance has been created and configured, it may be
- * shared across multiple threads allowing objects to be serialized/deserialized concurrently.
- * <em>Note, that this only applies if annotations are not
- * auto-detected on-the-fly.</em>
+ * shared across multiple threads allowing objects to be serialized/deserialized concurrently. <em>Note, that this only
+ * applies if annotations are not auto-detected on-the-fly.</em>
  * </p>
  * <h3>Implicit collections</h3>
  * <p>
@@ -394,7 +393,8 @@ public class XStream {
      * @param hierarchicalStreamDriver the driver instance
      * @throws InitializationException in case of an initialization problem
      */
-    public XStream(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
+    public XStream(
+            final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
         this(reflectionProvider, hierarchicalStreamDriver, new ClassLoaderReference(new CompositeClassLoader()));
     }
 
@@ -533,8 +533,8 @@ public class XStream {
      */
     public XStream(
             ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
-            final ClassLoaderReference classLoaderReference, final Mapper mapper,
-            final ConverterLookup converterLookup, final ConverterRegistry converterRegistry) {
+            final ClassLoaderReference classLoaderReference, final Mapper mapper, final ConverterLookup converterLookup,
+            final ConverterRegistry converterRegistry) {
         if (reflectionProvider == null) {
             reflectionProvider = JVM.newReflectionProvider();
         }
@@ -574,14 +574,12 @@ public class XStream {
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
         if (JVM.is18()) {
-            mapper =
-                    buildMapperDynamically("com.thoughtworks.xstream.mapper.LambdaMapper", new Class[]{Mapper.class},
-                        new Object[]{mapper});
+            mapper = buildMapperDynamically("com.thoughtworks.xstream.mapper.LambdaMapper", new Class[]{Mapper.class},
+                new Object[]{mapper});
         }
         mapper = new SecurityMapper(mapper);
-        mapper =
-                new AnnotationMapper(mapper, converterRegistry, converterLookup, classLoaderReference,
-                    reflectionProvider);
+        mapper = new AnnotationMapper(mapper, converterRegistry, converterLookup, classLoaderReference,
+            reflectionProvider);
         mapper = wrapMapper((MapperWrapper)mapper);
         mapper = new CachingMapper(mapper);
         return mapper;
@@ -746,7 +744,7 @@ public class XStream {
         if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
             aliasDynamically("duration", "javax.xml.datatype.Duration");
         }
-        
+
         if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
             aliasDynamically("serialized-lambda", "java.lang.invoke.SerializedLambda");
         }
@@ -1491,10 +1489,12 @@ public class XStream {
             setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
             break;
         case XPATH_RELATIVE_REFERENCES:
-            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.RELATIVE));
+            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
+                ReferenceByXPathMarshallingStrategy.RELATIVE));
             break;
         case XPATH_ABSOLUTE_REFERENCES:
-            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.ABSOLUTE));
+            setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(
+                ReferenceByXPathMarshallingStrategy.ABSOLUTE));
             break;
         case SINGLE_NODE_XPATH_RELATIVE_REFERENCES:
             setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.RELATIVE
@@ -1622,8 +1622,10 @@ public class XStream {
 
     /**
      * Create a DataHolder that can be used to pass data to the converters. The DataHolder is provided with a call to
-     * {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)} or
-     * {@link #unmarshal(HierarchicalStreamReader, Object, DataHolder)}.
+     * {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)},
+     * {@link #unmarshal(HierarchicalStreamReader, Object, DataHolder)},
+     * {@link #createObjectInputStream(HierarchicalStreamReader, DataHolder)} or
+     * {@link #createObjectOutputStream(HierarchicalStreamWriter, String, DataHolder)}.
      *
      * @return a new {@link DataHolder}
      */
@@ -1724,15 +1726,27 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
-    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName)
             throws IOException {
+        return createObjectOutputStream(writer, rootNodeName);
+    }
+
+    /**
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since upcoming
+     */
+    @SuppressWarnings("resource")
+    public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName,
+            final DataHolder dataHolder) throws IOException {
         final StatefulWriter statefulWriter = new StatefulWriter(writer);
         statefulWriter.startNode(rootNodeName, null);
         return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
             @Override
             public void writeToStream(final Object object) {
-                marshal(object, statefulWriter);
+                marshal(object, statefulWriter, dataHolder);
             }
 
             @Override
@@ -1783,7 +1797,11 @@ public class XStream {
     }
 
     /**
-     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream. <h3>Example</h3>
+     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream.
+     * <p>
+     * It is necessary to call ObjectInputStream.close() when done, otherwise the stream might keep system resources.
+     * </p>
+     * <h3>Example</h3>
      *
      * <pre>
      * ObjectInputStream in = xstream.createObjectOutputStream(aReader);
@@ -1796,6 +1814,18 @@ public class XStream {
      * @since 1.0.3
      */
     public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader) throws IOException {
+        return createObjectInputStream(reader, null);
+    }
+
+    /**
+     * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream.
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since upcoming
+     */
+    public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader, final DataHolder dataHolder)
+            throws IOException {
         return new CustomObjectInputStream(new CustomObjectInputStream.StreamCallback() {
             @Override
             public Object readFromStream() throws EOFException {
@@ -1803,7 +1833,7 @@ public class XStream {
                     throw new EOFException();
                 }
                 reader.moveDown();
-                final Object result = unmarshal(reader);
+                final Object result = unmarshal(reader, dataHolder);
                 reader.moveUp();
                 return result;
             }

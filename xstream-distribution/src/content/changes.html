@@ -79,11 +79,14 @@
    		<li>PathConverter uses always forward slashes as path separator.</li>
     	<li>GHI:#53: SqlTimestampConverter cannot parse values without fraction.</li>
     	<li>GHI:#45: Support different time zones for SqlTimestampConverter.</li>
+    	<li>GHI:#67 and GPR:#68: Allow usage of DataHolder for createObjectInputStream and createObjectOutputStream.</li>
     </ul>
 
     <h2>API changes</h2>
     
     <ul>
+    	<li>Added c.t.x.XStream.createObjectInputStream(HierarchicalStreamReader, DataHolder) and
+    	c.t.x.XStream.createObjectOutputStream(HierarchicalStreamWriter, String, DataHolder).</li>
     	<li>Deprecated method c.t.x.core.util.JVM.is17().</li>
     </ul>
 
