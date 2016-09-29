@@ -30,6 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -41,6 +42,7 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.annotations.XStreamSerializeAs;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterMatcher;
@@ -75,6 +77,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             new HashMap<Class<?>, Map<List<Object>, Converter>>();
     private final Set<Class<?>> annotatedTypes = 
             Collections.synchronizedSet(new HashSet<Class<?>>());
+    private final Map<Class,String> serializedClass = new WeakHashMap<Class, String>();
 
     /**
      * Construct an AnnotationMapper.
@@ -124,6 +127,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (!locked) {
             processAnnotations(type);
         }
+        String name = serializedClass.get(type);
+        if (name != null) return name;
         return super.serializedClass(type);
     }
 
@@ -188,7 +193,12 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     if (type.isPrimitive()) {
                         continue;
                     }
-    
+
+                    XStreamSerializeAs a = type.getAnnotation(XStreamSerializeAs.class);
+                    if (a != null && a.value() != void.class) {
+                        serializedClass.put(type, a.value().getName());
+                    }
+
                     addParametrizedTypes(type, types);
     
                     processConverterAnnotations(type);
