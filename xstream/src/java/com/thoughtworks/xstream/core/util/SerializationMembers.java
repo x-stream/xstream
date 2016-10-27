@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ErrorWritingException;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
@@ -98,11 +99,18 @@ public class SerializationMembers implements Caching {
             if (writeReplaceMethod != null) {
                 ErrorWritingException ex = null;
                 try {
-                    return writeReplaceMethod.invoke(object, EMPTY_ARGS);
-                } catch (IllegalAccessException e) {
+                    Object replaced = writeReplaceMethod.invoke(object, EMPTY_ARGS);
+                    if (replaced != null && !object.getClass().equals(replaced.getClass())) {
+                        // call further writeReplace methods on replaced
+                        replaced = callWriteReplace(replaced);
+                    }
+                    return replaced;
+                } catch (final IllegalAccessException e) {
                     ex = new ObjectAccessException("Cannot access method", e);
                 } catch (InvocationTargetException e) {
                     ex = new ConversionException("Failed calling method", e.getTargetException());
+                } catch (final ErrorWritingException e) {
+                    ex = e;
                 }
                 ex.add("method", objectType.getName() + ".writeReplace()");
                 throw ex;
