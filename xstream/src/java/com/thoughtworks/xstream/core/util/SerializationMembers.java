@@ -91,7 +91,7 @@ public class SerializationMembers implements Caching {
     public Object callWriteReplace(final Object object) {
         Object replaced;
         replaced=callWriteReplaceMethod(object);
-        if (replaced != object) {
+        if (!object.getClass().equals(replaced.getClass())) {
         	// call further writeReplace methods on replaced.
         	// see for (;;) in java.io.ObjectOutputStream.writeObject0(Object, boolean)
         	return callWriteReplace(replaced);
