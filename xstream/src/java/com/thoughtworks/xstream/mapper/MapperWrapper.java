@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 22. January 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.mapper;
@@ -64,8 +64,7 @@ public abstract class MapperWrapper implements Mapper {
             wrapperMap.put("shouldSerializeMember", wrapper.shouldSerializeMemberMapper);
 
             final Method[] methods = wrapped.getClass().getMethods();
-            for (int i = 0; i < methods.length; ++i) {
-                final Method method = methods[i];
+            for (final Method method : methods) {
                 if (method.getDeclaringClass() != MapperWrapper.class) {
                     final String name = method.getName();
                     if (wrapperMap.containsKey(name)) {
@@ -139,7 +138,7 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     @Override
-    public boolean isReferenceable(Class<?> type) {
+    public boolean isReferenceable(final Class<?> type) {
         return isReferenceableMapper.isReferenceable(type);
     }
 
