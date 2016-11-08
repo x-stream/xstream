@@ -44,7 +44,7 @@ public abstract class MapperWrapper implements Mapper {
 
         if (wrapped instanceof MapperWrapper) {
             final MapperWrapper wrapper = (MapperWrapper)wrapped;
-            final Map wrapperMap = new HashMap();
+            final Map<String, Mapper> wrapperMap = new HashMap<>();
             wrapperMap.put("aliasForAttribute", wrapper.aliasForAttributeMapper);
             wrapperMap.put("aliasForSystemAttribute", wrapper.aliasForSystemAttributeMapper);
             wrapperMap.put("attributeForAlias", wrapper.attributeForAliasMapper);
@@ -74,23 +74,23 @@ public abstract class MapperWrapper implements Mapper {
                 }
             }
 
-            aliasForAttributeMapper = (Mapper)wrapperMap.get("aliasForAttribute");
-            aliasForSystemAttributeMapper = (Mapper)wrapperMap.get("aliasForSystemAttribute");
-            attributeForAliasMapper = (Mapper)wrapperMap.get("attributeForAlias");
-            defaultImplementationOfMapper = (Mapper)wrapperMap.get("defaultImplementationOf");
-            getConverterFromAttributeMapper = (Mapper)wrapperMap.get("getConverterFromAttribute");
-            getConverterFromItemTypeMapper = (Mapper)wrapperMap.get("getConverterFromItemType");
-            getFieldNameForItemTypeAndNameMapper = (Mapper)wrapperMap.get("getFieldNameForItemTypeAndName");
-            getImplicitCollectionDefForFieldNameMapper = (Mapper)wrapperMap.get("getImplicitCollectionDefForFieldName");
-            getItemTypeForItemFieldNameMapper = (Mapper)wrapperMap.get("getItemTypeForItemFieldName");
-            getLocalConverterMapper = (Mapper)wrapperMap.get("getLocalConverter");
-            isImmutableValueTypeMapper = (Mapper)wrapperMap.get("isImmutableValueType");
-            isReferenceableMapper = (Mapper)wrapperMap.get("isReferenceable");
-            realClassMapper = (Mapper)wrapperMap.get("realClass");
-            realMemberMapper = (Mapper)wrapperMap.get("realMember");
-            serializedClassMapper = (Mapper)wrapperMap.get("serializedClass");
-            serializedMemberMapper = (Mapper)wrapperMap.get("serializedMember");
-            shouldSerializeMemberMapper = (Mapper)wrapperMap.get("shouldSerializeMember");
+            aliasForAttributeMapper = wrapperMap.get("aliasForAttribute");
+            aliasForSystemAttributeMapper = wrapperMap.get("aliasForSystemAttribute");
+            attributeForAliasMapper = wrapperMap.get("attributeForAlias");
+            defaultImplementationOfMapper = wrapperMap.get("defaultImplementationOf");
+            getConverterFromAttributeMapper = wrapperMap.get("getConverterFromAttribute");
+            getConverterFromItemTypeMapper = wrapperMap.get("getConverterFromItemType");
+            getFieldNameForItemTypeAndNameMapper = wrapperMap.get("getFieldNameForItemTypeAndName");
+            getImplicitCollectionDefForFieldNameMapper = wrapperMap.get("getImplicitCollectionDefForFieldName");
+            getItemTypeForItemFieldNameMapper = wrapperMap.get("getItemTypeForItemFieldName");
+            getLocalConverterMapper = wrapperMap.get("getLocalConverter");
+            isImmutableValueTypeMapper = wrapperMap.get("isImmutableValueType");
+            isReferenceableMapper = wrapperMap.get("isReferenceable");
+            realClassMapper = wrapperMap.get("realClass");
+            realMemberMapper = wrapperMap.get("realMember");
+            serializedClassMapper = wrapperMap.get("serializedClass");
+            serializedMemberMapper = wrapperMap.get("serializedMember");
+            shouldSerializeMemberMapper = wrapperMap.get("shouldSerializeMember");
         } else {
             aliasForAttributeMapper = wrapped;
             aliasForSystemAttributeMapper = wrapped;
