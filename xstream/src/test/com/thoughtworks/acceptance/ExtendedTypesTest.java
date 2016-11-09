@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
@@ -23,6 +24,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class ExtendedTypesTest extends AbstractAcceptanceTest {
 
@@ -63,6 +65,14 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         timestamp.setNanos(78900);
         assertBothWays(timestamp,
                 "<sql-timestamp>1970-01-01 00:00:01.0000789</sql-timestamp>");
+    }
+
+    public void testSqlTimestampWithLocalTimeZone() {
+        xstream.registerConverter(new SqlTimestampConverter(TimeZone.getDefault()));
+        Timestamp timestamp = new Timestamp(1234);
+        timestamp.setNanos(78900);
+        assertBothWays(timestamp,
+                "<sql-timestamp>"+timestamp.toString()+"</sql-timestamp>");
     }
 
     public void testSqlTime() {
