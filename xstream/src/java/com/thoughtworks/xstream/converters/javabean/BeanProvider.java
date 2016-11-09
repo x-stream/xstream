@@ -141,8 +141,8 @@ public class BeanProvider implements JavaBeanProvider {
     @Override
     public boolean canInstantiate(final Class<?> type) {
         try {
-            return newInstance(type) != null;
-        } catch (final ObjectAccessException e) {
+            return type != null &&  newInstance(type) != null;
+        } catch (final ErrorWritingException e) {
             return false;
         }
     }
