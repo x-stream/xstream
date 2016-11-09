@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -481,5 +481,13 @@ public class JavaBeanConverterTest extends TestCase {
         } catch (JavaBeanConverter.DuplicatePropertyException expected) {
             assertEquals("normal", expected.get("property"));
         }
+    }
+    
+    public void testCanConvertDoesNotThrowException() {
+        JavaBeanConverter converter = new JavaBeanConverter(null);
+        assertTrue(converter.canConvert(SimpleBean.class));
+        assertFalse(converter.canConvert(null));
+        assertFalse(converter.canConvert(long.class));
+        assertFalse(converter.canConvert(Object[].class));
     }
 }
