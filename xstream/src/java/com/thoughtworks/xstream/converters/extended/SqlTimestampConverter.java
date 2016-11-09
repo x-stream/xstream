@@ -56,13 +56,12 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
         return type.equals(Timestamp.class);
     }
 
-    public String toString(Object obj) {
-        Timestamp timestamp = (Timestamp)obj;
-        StringBuffer buffer = new StringBuffer(format.format(timestamp)).append('.');
-        if (timestamp.getNanos() == 0) {
-            buffer.append('0');
-        } else {
-            String nanos = String.valueOf(timestamp.getNanos() + 1000000000);
+    public String toString(final Object obj) {
+        final Timestamp timestamp = (Timestamp)obj;
+        final StringBuffer buffer = new StringBuffer(format.format(timestamp));
+        if (timestamp.getNanos() != 0) {
+            buffer.append('.');
+            final String nanos = String.valueOf(timestamp.getNanos() + 1000000000);
             int last = 10;
             while (last > 2 && nanos.charAt(last-1) == '0')
                 --last;
@@ -71,19 +70,20 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
         return buffer.toString();
     }
 
-    public Object fromString(String str) {
-        int idx = str.lastIndexOf('.');
-        if (idx < 0 || str.length() - idx < 2 || str.length() - idx > 10) {
-            throw new ConversionException(
-                "Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]");
+    public Object fromString(final String str) {
+        final int idx = str.lastIndexOf('.');
+        if (idx > 0 && (str.length() - idx < 2 || str.length() - idx > 10)) {
+            throw new ConversionException("Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]");
         }
         try {
-            Timestamp timestamp = new Timestamp(format.parse(str.substring(0, idx)).getTime());
-            StringBuffer buffer = new StringBuffer(str.substring(idx + 1));
-            while(buffer.length() != 9) {
-                buffer.append('0');
+            final Timestamp timestamp = new Timestamp(format.parse(idx < 0 ? str : str.substring(0, idx)).getTime());
+            if (idx > 0) {
+                final StringBuffer buffer = new StringBuffer(str.substring(idx + 1));
+                while (buffer.length() != 9) {
+                    buffer.append('0');
+                }
+                timestamp.setNanos(Integer.parseInt(buffer.toString()));
             }
-            timestamp.setNanos(Integer.parseInt(buffer.toString()));
             return timestamp;
         } catch (NumberFormatException e) {
             throw new ConversionException(
