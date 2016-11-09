@@ -32,8 +32,6 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
 
     /**
      * Constructs a SqlTimestampConverter using UTC format.
-     *
-     * @since upcoming
      */
     public SqlTimestampConverter() {
         this(TimeZone.getTimeZone("UTC"));
