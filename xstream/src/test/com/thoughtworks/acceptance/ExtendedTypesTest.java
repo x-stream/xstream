@@ -61,6 +61,11 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testSqlTimestamp() {
+        assertBothWays(new Timestamp(1000),
+                "<sql-timestamp>1970-01-01 00:00:01</sql-timestamp>");
+    }
+
+    public void testSqlTimestampWithFraction() {
         Timestamp timestamp = new Timestamp(1234);
         timestamp.setNanos(78900);
         assertBothWays(timestamp,

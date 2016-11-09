@@ -60,10 +60,9 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
     @Override
     public String toString(final Object obj) {
         final Timestamp timestamp = (Timestamp)obj;
-        final StringBuilder buffer = new StringBuilder(format.format(timestamp)).append('.');
-        if (timestamp.getNanos() == 0) {
-            buffer.append('0');
-        } else {
+        final StringBuilder buffer = new StringBuilder(format.format(timestamp));
+        if (timestamp.getNanos() != 0) {
+            buffer.append('.');
             final String nanos = String.valueOf(timestamp.getNanos() + 1000000000);
             int last = 10;
             while (last > 2 && nanos.charAt(last - 1) == '0') {
@@ -77,16 +76,18 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
     @Override
     public Object fromString(final String str) {
         final int idx = str.lastIndexOf('.');
-        if (idx < 0 || str.length() - idx < 2 || str.length() - idx > 10) {
+        if (idx > 0 && (str.length() - idx < 2 || str.length() - idx > 10)) {
             throw new ConversionException("Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]");
         }
         try {
-            final Timestamp timestamp = new Timestamp(format.parse(str.substring(0, idx)).getTime());
-            final StringBuilder buffer = new StringBuilder(str.substring(idx + 1));
-            while (buffer.length() != 9) {
-                buffer.append('0');
+            final Timestamp timestamp = new Timestamp(format.parse(idx < 0 ? str : str.substring(0, idx)).getTime());
+            if (idx > 0) {
+                final StringBuilder buffer = new StringBuilder(str.substring(idx + 1));
+                while (buffer.length() != 9) {
+                    buffer.append('0');
+                }
+                timestamp.setNanos(Integer.parseInt(buffer.toString()));
             }
-            timestamp.setNanos(Integer.parseInt(buffer.toString()));
             return timestamp;
         } catch (final NumberFormatException e) {
             throw new ConversionException("Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]", e);
