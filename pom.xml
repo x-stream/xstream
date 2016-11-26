@@ -206,12 +206,11 @@
       </build>
     </profile>
     <profile>
-      <id>travis</id>
+      <id>coveralls</id>
       <activation>
-        <property>
-          <name>env.TRAVIS</name>
-          <value>true</value>
-        </property>
+        <file>
+          <exists>profiles/coveralls</exists>
+        </file>
       </activation>
       <build>
         <plugins>

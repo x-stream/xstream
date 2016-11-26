@@ -5,7 +5,7 @@ jdk:
   - oraclejdk7
   - openjdk6
 install: true
-script: "mvn -V -B -e clean package"
+script: "mkdir xstream/profiles/coveralls && mvn -V -B -e clean package cobertura:cobertura coveralls:report"
 cache:
     directories:
     - $HOME/.m2
