@@ -4,7 +4,7 @@ jdk:
   - oraclejdk8
   - oraclejdk7
 install: true
-script: "mvn -V -B -e clean package"
+script: "mvn -V -B -e clean package cobertura:report coveralls:report"
 cache:
     directories:
     - $HOME/.m2
