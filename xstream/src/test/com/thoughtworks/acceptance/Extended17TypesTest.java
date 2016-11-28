@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
@@ -38,8 +39,11 @@ public class Extended17TypesTest extends AbstractAcceptanceTest {
         assertBothWays(Paths.get("../a/relative/path"), "<path>../a/relative/path</path>");
         assertBothWays(Paths.get("/an/absolute/path"), "<path>/an/absolute/path</path>");
 
-        final String absolutePathName = Paths.get("target").toAbsolutePath().toString();
-        final URI uri = URI.create("file://" + absolutePathName);
+        String absolutePathName = Paths.get("target").toAbsolutePath().toString();
+        if (File.separatorChar != '/') {
+            absolutePathName = absolutePathName.replace(File.separatorChar, '/');
+        }
+        final URI uri = URI.create("file:" + absolutePathName);
         assertBothWays(Paths.get(uri), "<path>" + absolutePathName + "</path>");
     }
 
@@ -52,8 +56,8 @@ public class Extended17TypesTest extends AbstractAcceptanceTest {
     public void testPathOfNonDefaultFileSystem() throws IOException {
         final Map<String, String> env = new HashMap<>();
         env.put("create", "true");
-        final URI uri = URI.create("jar:file://"
-            + Paths.get("target/lib/proxytoys-0.2.1.jar").toAbsolutePath().toString());
+        final URI uri = URI.create("jar:"
+            + Paths.get("target/lib/proxytoys-0.2.1.jar").toAbsolutePath().toUri().toString());
 
         FileSystem zipfs = null;
         try {
