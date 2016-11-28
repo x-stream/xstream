@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
@@ -50,7 +51,12 @@ public class PathConverter extends AbstractSingleValueConverter {
     public String toString(final Object obj) {
         final Path path = (Path)obj;
         if (path.getFileSystem() == FileSystems.getDefault()) {
-            return path.toString();
+            final String localPath = path.toString();
+            if (File.separatorChar != '/') {
+                return localPath.replace(File.separatorChar, '/');
+            } else {
+                return localPath;
+            }
         } else {
             return path.toUri().toString();
         }
