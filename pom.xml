@@ -162,7 +162,6 @@
           <exists>profiles/coveralls</exists>
         </file>
       </activation>
-      </activation>
       <build>
         <plugins>
           <plugin>
