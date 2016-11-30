@@ -43,7 +43,6 @@
     <ul>
     	<li>GHPR:#15, JIRA:XSTR-727, JIRA:XSTR-772: Make use of ConcurrentHashMap.</li>
    		<li>No need for reflection in StackTraceElementFactory anymore since Java 5.</li>
-   		<li>PathConverter uses always forward slashes as path separator.</li>
     </ul>
 
     <h2>API changes</h2>
@@ -77,6 +76,7 @@
     	<li>GHI:#76 and GHPR:#77: Missing support for cascaded writeReplace calls.</li>
     	<li>GHI:#61: Regression in 1.4.9: Performance drop in ImplicitCollectionMapper.</li>
     	<li>GHI:#52: PathConverter fails for file paths with spaces.</li>
+   		<li>PathConverter uses always forward slashes as path separator.</li>
     	<li>GHI:#53: SqlTimestampConverter cannot parse values without fraction.</li>
     	<li>GHI:#45: Support different time zones for SqlTimestampConverter.</li>
     </ul>
