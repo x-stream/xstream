@@ -6,10 +6,10 @@ jdk:
 install: true
 script:
     if ( `javac -version 2>&1 | grep '1\.8\.0' > /dev/null` ); then
-      mkdir xstream/profiles/coveralls
-      mvn -V -B -e clean package cobertura:cobertura coveralls:report
+      mkdir xstream/profiles/coveralls;
+      mvn -V -B -e clean package cobertura:cobertura coveralls:report;
     else
-      mvn -V -B -e clean package
+      mvn -V -B -e clean package;
     fi
 cache:
     directories:
