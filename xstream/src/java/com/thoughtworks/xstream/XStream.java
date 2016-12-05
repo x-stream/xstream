@@ -1643,7 +1643,7 @@ public class XStream {
      * @since 1.0.3
      */
     public ObjectOutputStream createObjectOutputStream(final Writer writer) throws IOException {
-        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), "object-stream");
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), "object-stream",null);
     }
 
     /**
@@ -1658,7 +1658,7 @@ public class XStream {
      * @since 1.0.3
      */
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer) throws IOException {
-        return createObjectOutputStream(writer, "object-stream");
+        return createObjectOutputStream(writer, "object-stream",null);
     }
 
     /**
@@ -1670,7 +1670,7 @@ public class XStream {
      */
     public ObjectOutputStream createObjectOutputStream(final Writer writer, final String rootNodeName)
             throws IOException {
-        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), rootNodeName);
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), rootNodeName,null);
     }
 
     /**
@@ -1685,7 +1685,7 @@ public class XStream {
      * @since 1.3
      */
     public ObjectOutputStream createObjectOutputStream(final OutputStream out) throws IOException {
-        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), "object-stream");
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), "object-stream",null);
     }
 
     /**
@@ -1697,7 +1697,7 @@ public class XStream {
      */
     public ObjectOutputStream createObjectOutputStream(final OutputStream out, final String rootNodeName)
             throws IOException {
-        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), rootNodeName);
+        return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), rootNodeName,null);
     }
 
     /**
@@ -1725,14 +1725,17 @@ public class XStream {
      * @since 1.0.3
      */
     @SuppressWarnings("resource")
-    public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName)
+    public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName,final DataHolder dataHolder)
             throws IOException {
         final StatefulWriter statefulWriter = new StatefulWriter(writer);
         statefulWriter.startNode(rootNodeName, null);
         return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
             @Override
             public void writeToStream(final Object object) {
-                marshal(object, statefulWriter);
+            	if(dataHolder==null)
+            		marshal(object, statefulWriter);
+            	else
+            		marshal(object, statefulWriter,dataHolder);
             }
 
             @Override
