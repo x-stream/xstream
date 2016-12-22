@@ -1849,7 +1849,7 @@ public class XStream {
      */
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName)
             throws IOException {
-        return createObjectOutputStream(writer, rootNodeName);
+        return createObjectOutputStream(writer, rootNodeName, null);
     }
 
     /**
