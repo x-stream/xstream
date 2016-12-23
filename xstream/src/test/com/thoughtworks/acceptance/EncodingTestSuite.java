@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 25. June 2006 by Guilherme Silveira
  */
 package com.thoughtworks.acceptance;
@@ -19,22 +19,30 @@ import java.util.Properties;
 
 import javax.xml.stream.XMLInputFactory;
 
-import junit.framework.Assert;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.commons.lang.SystemUtils;
 
 import com.bea.xml.stream.MXParserFactory;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.JDom2Driver;
 import com.thoughtworks.xstream.io.xml.JDomDriver;
+import com.thoughtworks.xstream.io.xml.KXml2DomDriver;
+import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.WstxDriver;
 import com.thoughtworks.xstream.io.xml.XomDriver;
 import com.thoughtworks.xstream.io.xml.XppDomDriver;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+
+import junit.framework.Assert;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 
 /**
@@ -53,43 +61,50 @@ public class EncodingTestSuite extends TestSuite {
         addDriverTest(new Dom4JDriver());
         addDriverTest(new DomDriver());
         addDriverTest(new JDomDriver());
+        addDriverTest(new JDom2Driver());
         addDriverTest(new StaxDriver());
+        if (!SystemUtils.IS_OS_WINDOWS) { // see comment below for Windows
+            addDriverTest(new StandardStaxDriver());
+            addDriverTest(new BEAStaxDriver());
+            addDriverTest(new WstxDriver());
+        }
+        addDriverTest(new KXml2DomDriver());
+        addDriverTest(new KXml2Driver());
         addDriverTest(new XppDomDriver());
         addDriverTest(new XppDriver());
         addDriverTest(new XomDriver());
     }
 
-    private void test(HierarchicalStreamDriver driver, String encoding) throws IOException {
-        String headerLine = encoding != null
-            ? ("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>\n")
-            : "";
-        String xmlData = headerLine // force code format
+    private void test(final HierarchicalStreamDriver driver, final String encoding) throws IOException {
+        final String headerLine = encoding != null ? "<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>\n" : "";
+        final String xmlData = headerLine // force code format
             + "<test>\n"
             + "  <data>J\u00f6rg</data>\n"
             + "</test>";
 
-        XStream xstream = new XStream(driver);
+        final XStream xstream = new XStream(driver);
         xstream.alias("test", TestObject.class);
-        TestObject obj = new TestObject();
+        final TestObject obj = new TestObject();
         obj.data = "J\u00f6rg";
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        OutputStreamWriter writer = encoding != null
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final OutputStreamWriter writer = encoding != null
             ? new OutputStreamWriter(bos, encoding)
             : new OutputStreamWriter(bos);
         xstream.toXML(obj, writer);
         writer.close();
 
-        String generated = encoding != null ? bos.toString(encoding) : bos.toString();
+        final String generated = encoding != null ? bos.toString(encoding) : bos.toString();
         Assert.assertTrue("'" + obj.data + "' was not found", generated.indexOf(obj.data) > 0);
 
-        Object restored = xstream.fromXML(new ByteArrayInputStream(encoding != null ? xmlData
-            .getBytes(encoding) : xmlData.getBytes()));
+        final Object restored = xstream.fromXML(new ByteArrayInputStream(encoding != null
+            ? xmlData.getBytes(encoding)
+            : xmlData.getBytes()));
         Assert.assertEquals(obj, restored);
     }
 
     private void addDriverTest(final HierarchicalStreamDriver driver) {
-        String testName = getShortName(driver);
+        final String testName = getShortName(driver);
         final String allEncodingTests = System.getProperty("xstream.test.encoding.all");
         if ("true".equals(allEncodingTests)) {
             // Native encoding normally fails on most systems!!
@@ -107,8 +122,7 @@ public class EncodingTestSuite extends TestSuite {
                     try {
                         // Use BEA reference implementation for StAX
                         // (Woodstox will fail on Windows because of unknown system encoding)
-                        System.setProperty(
-                            XMLInputFactory.class.getName(), MXParserFactory.class.getName());
+                        System.setProperty(XMLInputFactory.class.getName(), MXParserFactory.class.getName());
                         test(driver, systemEncoding);
                     } finally {
                         System.setProperties(systemProperties);
@@ -128,7 +142,7 @@ public class EncodingTestSuite extends TestSuite {
         });
     }
 
-    private String getShortName(HierarchicalStreamDriver driver) {
+    private String getShortName(final HierarchicalStreamDriver driver) {
         String result = driver.getClass().getName();
         result = result.substring(result.lastIndexOf('.') + 1);
         return result;
