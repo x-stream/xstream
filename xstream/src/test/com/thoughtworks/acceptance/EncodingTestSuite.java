@@ -24,15 +24,14 @@ import org.apache.commons.lang.SystemUtils;
 import com.bea.xml.stream.MXParserFactory;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.io.xml.JDom2Driver;
 import com.thoughtworks.xstream.io.xml.JDomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2DomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
-import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.io.xml.WstxDriver;
 import com.thoughtworks.xstream.io.xml.XomDriver;
@@ -40,6 +39,7 @@ import com.thoughtworks.xstream.io.xml.XppDomDriver;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -61,10 +61,28 @@ public class EncodingTestSuite extends TestSuite {
         addDriverTest(new Dom4JDriver());
         addDriverTest(new DomDriver());
         addDriverTest(new JDomDriver());
-        addDriverTest(new JDom2Driver());
+        if (JVM.is15()) {
+            final Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.JDom2Driver");
+            try {
+                addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
+            } catch (final InstantiationException e) {
+                throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
+            } catch (final IllegalAccessException e) {
+                throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
+            }
+        }
         addDriverTest(new StaxDriver());
         if (!SystemUtils.IS_OS_WINDOWS) { // see comment below for Windows
-            addDriverTest(new StandardStaxDriver());
+            if (JVM.is16()) {
+                final Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.StandardStaxDriver");
+                try {
+                    addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
+                } catch (final InstantiationException e) {
+                    throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
+                } catch (final IllegalAccessException e) {
+                    throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
+                }
+            }
             addDriverTest(new BEAStaxDriver());
             addDriverTest(new WstxDriver());
         }

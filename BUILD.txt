@@ -4,6 +4,8 @@ For Java 1.4 build with Maven 2.0.11
 
 Before building:
 
+For Java 1.4 remove the profiles/osgi files.
+
 To build:
 
 mvn clean install

@@ -100,7 +100,6 @@ public class DriverEndToEndTestSuite extends TestSuite {
         final XStream xstream = new XStream(driver);
         xstream.registerConverter(new CollectionConverter(xstream.getMapper()) {
 
-            @Override
             public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
                 final ExtendedHierarchicalStreamReader exReader = (ExtendedHierarchicalStreamReader)reader;
                 if (exReader.peekNextChild() == null) {
@@ -164,13 +163,11 @@ public class DriverEndToEndTestSuite extends TestSuite {
     private void addDriverTest(final HierarchicalStreamDriver driver) {
         final String testName = getShortName(driver);
         addTest(new TestCase(testName + "_Object") {
-            @Override
             protected void runTest() throws Throwable {
                 testObject(driver);
             }
         });
         addTest(new TestCase(testName + "_Stream") {
-            @Override
             protected void runTest() throws Throwable {
                 testStream(driver);
             }
