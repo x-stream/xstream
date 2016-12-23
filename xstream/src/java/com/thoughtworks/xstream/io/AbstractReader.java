@@ -1,14 +1,16 @@
 /*
- * Copyright (C) 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 16. August 2009 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io;
+
+import java.util.Iterator;
 
 import com.thoughtworks.xstream.core.util.Cloneables;
 import com.thoughtworks.xstream.io.naming.NameCoder;
@@ -18,7 +20,7 @@ import com.thoughtworks.xstream.io.naming.NoNameCoder;
 /**
  * Abstract base class for all HierarchicalStreamReader implementations. Implementations of
  * {@link HierarchicalStreamReader} should rather be derived from this class then implementing the interface directly.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4
  */
@@ -28,7 +30,7 @@ public abstract class AbstractReader implements ExtendedHierarchicalStreamReader
 
     /**
      * Creates an AbstractReader with a NameCoder that does nothing.
-     * 
+     *
      * @since 1.4
      */
     protected AbstractReader() {
@@ -37,7 +39,7 @@ public abstract class AbstractReader implements ExtendedHierarchicalStreamReader
 
     /**
      * Creates an AbstractReader with a provided {@link NameCoder}.
-     * 
+     *
      * @param nameCoder the name coder used to read names from the incoming format
      * @since 1.4
      */
@@ -50,9 +52,14 @@ public abstract class AbstractReader implements ExtendedHierarchicalStreamReader
         return this;
     }
 
+    @Override
+    public Iterator<String> getAttributeNames() {
+        return new AttributeNameIterator();
+    }
+
     /**
      * Decode a node name from the target format.
-     * 
+     *
      * @param name the name in the target format
      * @return the original name
      * @since 1.4
@@ -63,7 +70,7 @@ public abstract class AbstractReader implements ExtendedHierarchicalStreamReader
 
     /**
      * Decode an attribute name from the target format.
-     * 
+     *
      * @param name the name in the target format
      * @return the original name
      * @since 1.4
@@ -74,7 +81,7 @@ public abstract class AbstractReader implements ExtendedHierarchicalStreamReader
 
     /**
      * Encode the node name again into the name of the target format. Internally used.
-     * 
+     *
      * @param name the original name
      * @return the name in the target format
      * @since 1.4
@@ -85,7 +92,7 @@ public abstract class AbstractReader implements ExtendedHierarchicalStreamReader
 
     /**
      * Encode the attribute name again into the name of the target format. Internally used.
-     * 
+     *
      * @param name the original name
      * @return the name in the target format
      * @since 1.4
@@ -97,5 +104,31 @@ public abstract class AbstractReader implements ExtendedHierarchicalStreamReader
     @Override
     public String peekNextChild() {
         throw new UnsupportedOperationException("peekNextChild");
+    }
+
+    private class AttributeNameIterator implements Iterator<String> {
+
+        private int current;
+        private final int count;
+
+        public AttributeNameIterator() {
+            count = getAttributeCount();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current < count;
+        }
+
+        @Override
+        public String next() {
+            return getAttributeName(current++);
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
     }
 }

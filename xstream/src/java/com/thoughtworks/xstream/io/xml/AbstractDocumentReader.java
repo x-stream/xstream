@@ -1,21 +1,18 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 24. April 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
 
-import java.util.Iterator;
-
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.core.util.FastStack;
-import com.thoughtworks.xstream.io.AttributeNameIterator;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
@@ -86,11 +83,6 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
 
         pointer.v++;
         reassignCurrentElement(current);
-    }
-
-    @Override
-    public Iterator<String> getAttributeNames() {
-        return new AttributeNameIterator(this);
     }
 
     @Override
