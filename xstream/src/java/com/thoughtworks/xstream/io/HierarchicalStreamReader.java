@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -51,11 +51,18 @@ public interface HierarchicalStreamReader extends ErrorReporter, Closeable {
 
     /**
      * Get the value of an attribute of the current node.
+     * <p>
+     * If no such attribute exists, the method returns null.
+     * </p>
      */
     String getAttribute(String name);
 
     /**
      * Get the value of an attribute of the current node, by index.
+     * <p>
+     * Note, the behavior of this method is dependent on the underlying parser when calling it with a non-existing
+     * index. Typically some kind of RuntimeException is thrown.
+     * </p>
      */
     String getAttribute(int index);
 
@@ -66,11 +73,19 @@ public interface HierarchicalStreamReader extends ErrorReporter, Closeable {
 
     /**
      * Name of attribute in current node.
+     * <p>
+     * Note, the behavior of this method is dependent on the underlying parser when calling it with a non-existing
+     * index. Typically some kind of RuntimeException is thrown.
+     * </p>
      */
     String getAttributeName(int index);
 
     /**
-     * Names of attributes.
+     * Iterator with the names of the attributes.
+     * <p>
+     * Note, the iterator is only valid as long as the internal state of the underlying parser is still at the start of
+     * the current element. The behavior is undefined if the parser moved on.
+     * </p>
      */
     Iterator<String> getAttributeNames();
 
