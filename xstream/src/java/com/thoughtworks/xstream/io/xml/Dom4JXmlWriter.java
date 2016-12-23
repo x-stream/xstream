@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -129,7 +129,8 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
     public void close() {
         try {
             writer.endDocument();
-        } catch (final SAXException e) {
+            writer.flush();
+        } catch (final SAXException | IOException e) {
             throw new StreamException(e);
         }
     }
