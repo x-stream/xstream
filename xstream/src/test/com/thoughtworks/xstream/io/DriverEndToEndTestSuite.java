@@ -20,8 +20,8 @@ import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -29,6 +29,7 @@ import com.thoughtworks.xstream.io.xml.JDom2Driver;
 import com.thoughtworks.xstream.io.xml.JDomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2DomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.io.xml.WstxDriver;
 import com.thoughtworks.xstream.io.xml.XomDriver;
@@ -38,7 +39,6 @@ import com.thoughtworks.xstream.io.xml.XppDomDriver;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
 import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -57,45 +57,18 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new Dom4JDriver());
         addDriverTest(new DomDriver());
         addDriverTest(new JDomDriver());
-        if (JVM.is15()) {
-            final Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.JDom2Driver");
-            try {
-                addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
-            } catch (final InstantiationException e) {
-                throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
-            } catch (final IllegalAccessException e) {
-                throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
-            }
-        }
+        addDriverTest(new JDom2Driver());
         addDriverTest(new KXml2DomDriver());
         addDriverTest(new KXml2Driver());
         addDriverTest(new StaxDriver());
-        if (JVM.is16()) {
-            final Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.StandardStaxDriver");
-            try {
-                addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
-            } catch (final InstantiationException e) {
-                throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
-            } catch (final IllegalAccessException e) {
-                throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
-            }
-        }
+        addDriverTest(new StandardStaxDriver());
         addDriverTest(new WstxDriver());
         addDriverTest(new XomDriver());
         addDriverTest(new Xpp3DomDriver());
         addDriverTest(new Xpp3Driver());
         addDriverTest(new XppDomDriver());
         addDriverTest(new XppDriver());
-        if (JVM.is14()) {
-            final Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver");
-            try {
-                addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
-            } catch (final InstantiationException e) {
-                throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
-            } catch (final IllegalAccessException e) {
-                throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
-            }
-        }
+        addDriverTest(new JettisonMappedXmlDriver());
     }
 
     private void testObject(final HierarchicalStreamDriver driver) {
@@ -108,7 +81,7 @@ public class DriverEndToEndTestSuite extends TestSuite {
             public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
                 final ExtendedHierarchicalStreamReader exReader = (ExtendedHierarchicalStreamReader)reader;
                 if (exReader.peekNextChild() == null) {
-                    return new ArrayList();
+                    return new ArrayList<Object>();
                 }
                 return super.unmarshal(reader, context);
             }
@@ -158,7 +131,8 @@ public class DriverEndToEndTestSuite extends TestSuite {
         Assert.assertEquals(1, reader.getAttributeCount());
         Assert.assertEquals("a", reader.getAttribute("A"));
         Assert.assertNull(reader.getAttribute("foo"));
-        //Assert.assertNull(reader.getAttribute(1));
+        // Assert.assertNull(reader.getAttribute(1));
+        // Assert.assertNull(reader.getAttributeName(1));
         Assert.assertFalse(reader.hasMoreChildren());
         reader.moveUp();
         Assert.assertFalse(reader.hasMoreChildren());
