@@ -69,6 +69,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private transient DefaultImplementationsMapper defaultImplementationsMapper;
     private transient ImplicitCollectionMapper implicitCollectionMapper;
     private transient FieldAliasingMapper fieldAliasingMapper;
+    private transient ElementIgnoringMapper elementIgnoringMapper;
     private transient AttributeMapper attributeMapper;
     private transient LocalConversionMapper localConversionMapper;
     private final Map<Class<?>, Map<List<Object>, Converter>> converterCache = 
@@ -457,12 +458,12 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         final XStreamOmitField omitFieldAnnotation = field
             .getAnnotation(XStreamOmitField.class);
         if (omitFieldAnnotation != null) {
-            if (fieldAliasingMapper == null) {
+            if (elementIgnoringMapper == null) {
                 throw new InitializationException("No "
-                    + FieldAliasingMapper.class.getName()
+                    + ElementIgnoringMapper.class.getName()
                     + " available");
             }
-            fieldAliasingMapper.omitField(field.getDeclaringClass(), field.getName());
+            elementIgnoringMapper.omitField(field.getDeclaringClass(), field.getName());
         }
     }
 
@@ -569,6 +570,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         defaultImplementationsMapper = (DefaultImplementationsMapper)lookupMapperOfType(DefaultImplementationsMapper.class);
         implicitCollectionMapper = (ImplicitCollectionMapper)lookupMapperOfType(ImplicitCollectionMapper.class);
         fieldAliasingMapper = (FieldAliasingMapper)lookupMapperOfType(FieldAliasingMapper.class);
+        elementIgnoringMapper = (ElementIgnoringMapper)lookupMapperOfType(ElementIgnoringMapper.class);
         attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
         localConversionMapper = (LocalConversionMapper)lookupMapperOfType(LocalConversionMapper.class);
     }

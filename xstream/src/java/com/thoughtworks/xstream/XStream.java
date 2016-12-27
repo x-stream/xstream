@@ -1724,17 +1724,11 @@ public class XStream {
     }
 
     /**
-<<<<<<< HEAD
-     * Create a DataHolder that can be used to pass data to the converters. The DataHolder is
-     * provided with a call to {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)} or
-     * {@link #unmarshal(HierarchicalStreamReader, Object, DataHolder)}.
-=======
      * Create a DataHolder that can be used to pass data to the converters. The DataHolder is provided with a call to
      * {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)},
      * {@link #unmarshal(HierarchicalStreamReader, Object, DataHolder)},
      * {@link #createObjectInputStream(HierarchicalStreamReader, DataHolder)} or
      * {@link #createObjectOutputStream(HierarchicalStreamWriter, String, DataHolder)}.
->>>>>>> 688686a... Allow to use Dataholder with createObjectOutputStream() [closes #67]
      *
      * @return a new {@link DataHolder}
      */
@@ -2020,15 +2014,15 @@ public class XStream {
      * declaring type and not necessarily the type that is converted.
      * 
      * @since 1.1.3
-     * @throws InitializationException if no {@link FieldAliasingMapper} is available
+     * @throws InitializationException if no {@link ElementIgnoringMapper} is available
      */
     public void omitField(Class definedIn, String fieldName) {
-        if (fieldAliasingMapper == null) {
+        if (elementIgnoringMapper == null) {
             throw new com.thoughtworks.xstream.InitializationException("No "
-                + FieldAliasingMapper.class.getName()
+                + ElementIgnoringMapper.class.getName()
                 + " available");
         }
-        fieldAliasingMapper.omitField(definedIn, fieldName);
+        elementIgnoringMapper.omitField(definedIn, fieldName);
     }
     
     /**

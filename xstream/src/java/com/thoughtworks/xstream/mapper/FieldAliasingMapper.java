@@ -14,14 +14,11 @@ package com.thoughtworks.xstream.mapper;
 import com.thoughtworks.xstream.core.util.FastField;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Mapper that allows a field of a specific class to be replaced with a shorter alias, or omitted
- * entirely.
+ * Mapper that allows a field of a specific class to be replaced with a shorter alias.
  *
  * @author Joe Walnes
  */
@@ -29,7 +26,6 @@ public class FieldAliasingMapper extends MapperWrapper {
 
     protected final Map fieldToAliasMap = new HashMap();
     protected final Map aliasToFieldMap = new HashMap();
-    protected final Set fieldsToOmit = new HashSet();
     private final ElementIgnoringMapper elementIgnoringMapper;
 
     public FieldAliasingMapper(Mapper wrapped) {
@@ -49,6 +45,15 @@ public class FieldAliasingMapper extends MapperWrapper {
     public void addFieldsToIgnore(final Pattern pattern) {
         if (elementIgnoringMapper != null) {
             elementIgnoringMapper.addElementsToIgnore(pattern);
+        }
+    }
+
+    /**
+     * @deprecated As of 1.4.9 use {@link ElementIgnoringMapper#omitField(Class, String)}.
+     */
+    public void omitField(Class definedIn, String fieldName) {
+        if (elementIgnoringMapper != null) {
+            elementIgnoringMapper.omitField(definedIn, fieldName);
         }
     }
 
@@ -82,16 +87,5 @@ public class FieldAliasingMapper extends MapperWrapper {
             member = (String) map.get(key(declaringType, name));
         }
         return member;
-    }
-
-    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
-        if (fieldsToOmit.contains(key(definedIn, fieldName))) {
-            return false;
-        }
-        return super.shouldSerializeMember(definedIn, fieldName);
-    }
-
-    public void omitField(Class definedIn, String fieldName) {
-        fieldsToOmit.add(key(definedIn, fieldName));
     }
 }
