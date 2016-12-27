@@ -68,6 +68,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private transient DefaultImplementationsMapper defaultImplementationsMapper;
     private transient ImplicitCollectionMapper implicitCollectionMapper;
     private transient FieldAliasingMapper fieldAliasingMapper;
+    private transient ElementIgnoringMapper elementIgnoringMapper;
     private transient AttributeMapper attributeMapper;
     private transient LocalConversionMapper localConversionMapper;
     private final Map<Class<?>, Map<List<Object>, Converter>> converterCache = new HashMap<>();
@@ -392,10 +393,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private void processOmitFieldAnnotation(final Field field) {
         final XStreamOmitField omitFieldAnnotation = field.getAnnotation(XStreamOmitField.class);
         if (omitFieldAnnotation != null) {
-            if (fieldAliasingMapper == null) {
-                throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
+            if (elementIgnoringMapper == null) {
+                throw new InitializationException("No " + ElementIgnoringMapper.class.getName() + " available");
             }
-            fieldAliasingMapper.omitField(field.getDeclaringClass(), field.getName());
+            elementIgnoringMapper.omitField(field.getDeclaringClass(), field.getName());
         }
     }
 
@@ -497,6 +498,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         defaultImplementationsMapper = lookupMapperOfType(DefaultImplementationsMapper.class);
         implicitCollectionMapper = lookupMapperOfType(ImplicitCollectionMapper.class);
         fieldAliasingMapper = lookupMapperOfType(FieldAliasingMapper.class);
+        elementIgnoringMapper = lookupMapperOfType(ElementIgnoringMapper.class);
         attributeMapper = lookupMapperOfType(AttributeMapper.class);
         localConversionMapper = lookupMapperOfType(LocalConversionMapper.class);
     }

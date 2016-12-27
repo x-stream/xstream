@@ -31,6 +31,7 @@ public abstract class MapperWrapper implements Mapper {
     private final Mapper getImplicitCollectionDefForFieldNameMapper;
     private final Mapper getItemTypeForItemFieldNameMapper;
     private final Mapper getLocalConverterMapper;
+    private final Mapper isIgnoredElementMapper;
     private final Mapper isImmutableValueTypeMapper;
     private final Mapper isReferenceableMapper;
     private final Mapper realClassMapper;
@@ -55,6 +56,7 @@ public abstract class MapperWrapper implements Mapper {
             wrapperMap.put("getImplicitCollectionDefForFieldName", wrapper.getImplicitCollectionDefForFieldNameMapper);
             wrapperMap.put("getItemTypeForItemFieldName", wrapper.getItemTypeForItemFieldNameMapper);
             wrapperMap.put("getLocalConverter", wrapper.getLocalConverterMapper);
+            wrapperMap.put("isIgnoredElement", wrapper.isIgnoredElementMapper);
             wrapperMap.put("isImmutableValueType", wrapper.isImmutableValueTypeMapper);
             wrapperMap.put("isReferenceable", wrapper.isReferenceableMapper);
             wrapperMap.put("realClass", wrapper.realClassMapper);
@@ -83,6 +85,7 @@ public abstract class MapperWrapper implements Mapper {
             getImplicitCollectionDefForFieldNameMapper = wrapperMap.get("getImplicitCollectionDefForFieldName");
             getItemTypeForItemFieldNameMapper = wrapperMap.get("getItemTypeForItemFieldName");
             getLocalConverterMapper = wrapperMap.get("getLocalConverter");
+            isIgnoredElementMapper = wrapperMap.get("isIgnoredElement");
             isImmutableValueTypeMapper = wrapperMap.get("isImmutableValueType");
             isReferenceableMapper = wrapperMap.get("isReferenceable");
             realClassMapper = wrapperMap.get("realClass");
@@ -101,6 +104,7 @@ public abstract class MapperWrapper implements Mapper {
             getImplicitCollectionDefForFieldNameMapper = wrapped;
             getItemTypeForItemFieldNameMapper = wrapped;
             getLocalConverterMapper = wrapped;
+            isIgnoredElementMapper = wrapped;
             isImmutableValueTypeMapper = wrapped;
             isReferenceableMapper = wrapped;
             realClassMapper = wrapped;
@@ -186,7 +190,7 @@ public abstract class MapperWrapper implements Mapper {
 
     @Override
     public boolean isIgnoredElement(final String name) {
-        return wrapped.isIgnoredElement(name);
+        return isIgnoredElementMapper.isIgnoredElement(name);
     }
 
     @Override

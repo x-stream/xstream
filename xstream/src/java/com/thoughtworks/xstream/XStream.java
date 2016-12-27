@@ -1902,13 +1902,13 @@ public class XStream {
      * necessarily the type that is converted.
      *
      * @since 1.1.3
-     * @throws InitializationException if no {@link FieldAliasingMapper} is available
+     * @throws InitializationException if no {@link ElementIgnoringMapper} is available
      */
     public void omitField(final Class<?> definedIn, final String fieldName) {
-        if (fieldAliasingMapper == null) {
-            throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
+        if (elementIgnoringMapper == null) {
+            throw new InitializationException("No " + ElementIgnoringMapper.class.getName() + " available");
         }
-        fieldAliasingMapper.omitField(definedIn, fieldName);
+        elementIgnoringMapper.omitField(definedIn, fieldName);
     }
 
     /**

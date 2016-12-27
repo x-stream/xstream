@@ -10,19 +10,23 @@
  */
 package com.thoughtworks.xstream.mapper;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.thoughtworks.xstream.core.util.FastField;
+
 
 /**
- * Mapper that allows an field of a specific class to be replaced with a shorter alias, or omitted entirely.
+ * Mapper that allows an field of a specific class to be omitted entirely.
  *
  * @author Joerg Schaible
  */
 public class ElementIgnoringMapper extends MapperWrapper {
 
     protected final Set<Pattern> unknownElementsToIgnore = new LinkedHashSet<>();
+    protected final Set<FastField> fieldsToOmit = new HashSet<>();
 
     public ElementIgnoringMapper(final Mapper wrapped) {
         super(wrapped);
@@ -30,6 +34,20 @@ public class ElementIgnoringMapper extends MapperWrapper {
 
     public void addElementsToIgnore(final Pattern pattern) {
         unknownElementsToIgnore.add(pattern);
+    }
+
+    public void omitField(final Class<?> definedIn, final String fieldName) {
+        fieldsToOmit.add(key(definedIn, fieldName));
+    }
+
+    @Override
+    public boolean shouldSerializeMember(final Class<?> definedIn, final String fieldName) {
+        if (fieldsToOmit.contains(key(definedIn, fieldName))) {
+            return false;
+        } else if (definedIn == Object.class && isIgnoredElement(fieldName)) {
+            return false;
+        }
+        return super.shouldSerializeMember(definedIn, fieldName);
     }
 
     @Override
@@ -42,5 +60,9 @@ public class ElementIgnoringMapper extends MapperWrapper {
             }
         }
         return super.isIgnoredElement(name);
+    }
+
+    private FastField key(final Class<?> type, final String name) {
+        return new FastField(type, name);
     }
 }

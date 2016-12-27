@@ -12,16 +12,14 @@
 package com.thoughtworks.xstream.mapper;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.core.util.FastField;
 
 
 /**
- * Mapper that allows a field of a specific class to be replaced with a shorter alias, or omitted entirely.
+ * Mapper that allows a field of a specific class to be replaced with a shorter alias.
  *
  * @author Joe Walnes
  */
@@ -29,7 +27,6 @@ public class FieldAliasingMapper extends MapperWrapper {
 
     protected final Map<FastField, String> fieldToAliasMap = new HashMap<>();
     protected final Map<FastField, String> aliasToFieldMap = new HashMap<>();
-    protected final Set<FastField> fieldsToOmit = new HashSet<>();
     private final ElementIgnoringMapper elementIgnoringMapper;
 
     public FieldAliasingMapper(final Mapper wrapped) {
@@ -54,6 +51,16 @@ public class FieldAliasingMapper extends MapperWrapper {
 
     private FastField key(final Class<?> type, final String name) {
         return new FastField(type, name);
+    }
+
+    /**
+     * @deprecated As of 1.4.9 use {@link ElementIgnoringMapper#omitField(Class, String)}.
+     */
+    @Deprecated
+    public void omitField(final Class<?> definedIn, final String fieldName) {
+        if (elementIgnoringMapper != null) {
+            elementIgnoringMapper.omitField(definedIn, fieldName);
+        }
     }
 
     @Override
@@ -84,17 +91,5 @@ public class FieldAliasingMapper extends MapperWrapper {
             member = map.get(key(declaringType, name));
         }
         return member;
-    }
-
-    @Override
-    public boolean shouldSerializeMember(final Class<?> definedIn, final String fieldName) {
-        if (fieldsToOmit.contains(key(definedIn, fieldName))) {
-            return false;
-        }
-        return super.shouldSerializeMember(definedIn, fieldName);
-    }
-
-    public void omitField(final Class<?> definedIn, final String fieldName) {
-        fieldsToOmit.add(key(definedIn, fieldName));
     }
 }
