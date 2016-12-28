@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -144,7 +144,7 @@ public class JavaBeanConverter implements Converter {
                     Object value = context.convertAnother(result, type);
                     beanProvider.writeProperty(result, propertyName, value);
                     seenProperties.add(new FastField(resultType, propertyName));
-                } else {
+                } else if (!mapper.isIgnoredElement(propertyName)) {
                     throw new MissingFieldException(resultType.getName(), propertyName);
                 }
             }

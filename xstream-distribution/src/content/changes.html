@@ -36,6 +36,7 @@
     
     <ul>
     	<li>Improve performance by minimizing call stack of mapper chain.</li>
+    	<li>GHI:#29: JavaBeanConverter does not respect ignored unknown elements.</li>
     </ul>
     
     <h2>Minor changes</h2>
@@ -57,6 +58,7 @@
     <ul>
     	<li>Added c.t.x.XStream.createObjectInputStream(HierarchicalStreamReader, DataHolder) and
     	c.t.x.XStream.createObjectOutputStream(HierarchicalStreamWriter, String, DataHolder).</li>
+    	<li>Added c.t.x.converters.javabean.PropertyDictionary.propertyDescriptorOrNull(Class, String).</li>
     	<li>Added method c.t.x.mapper.Mapper.IsIgnoredElement(String)</li>
     	<li>Added c.t.x.mapper.ElementIgnoringMapper.</li>
     	<li>Deprecated method c.t.x.mapper.FieldAliasingMapper.addFieldsToIgnore(Pattern).</li>

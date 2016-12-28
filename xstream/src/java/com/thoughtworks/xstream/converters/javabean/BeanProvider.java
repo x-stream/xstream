@@ -128,7 +128,7 @@ public class BeanProvider implements JavaBeanProvider {
     }
 
     public boolean propertyDefinedInClass(String name, Class type) {
-        return getProperty(name, type) != null;
+        return propertyDictionary.propertyDescriptorOrNull(type, name) != null;
     }
 
     /**

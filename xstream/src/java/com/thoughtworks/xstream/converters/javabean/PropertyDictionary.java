@@ -71,7 +71,7 @@ public class PropertyDictionary implements Caching {
      */
     public BeanProperty property(Class cls, String name) {
         BeanProperty beanProperty = null;
-        PropertyDescriptor descriptor = (PropertyDescriptor)buildMap(cls).get(name);
+        PropertyDescriptor descriptor = propertyDescriptorOrNull(cls, name);
         if (descriptor == null) {
             throw new MissingFieldException(cls.getName(), name);
         }
@@ -91,13 +91,26 @@ public class PropertyDictionary implements Caching {
      * 
      * @param type
      * @param name
+     * @throws MissingFieldException if property does not exist
      */
     public PropertyDescriptor propertyDescriptor(Class type, String name) {
-        PropertyDescriptor descriptor = (PropertyDescriptor)buildMap(type).get(name);
+        PropertyDescriptor descriptor = propertyDescriptorOrNull(type, name);
         if (descriptor == null) {
             throw new MissingFieldException(type.getName(), name);
         }
         return descriptor;
+    }
+
+    /**
+     * Locates a property descriptor.
+     * 
+     * @param type
+     * @param name
+     * @return {@code null} if property does not exist
+     * @since upcoming
+     */
+    public PropertyDescriptor propertyDescriptorOrNull(Class type, String name) {
+        return (PropertyDescriptor)buildMap(type).get(name);
     }
 
     private Map buildMap(Class type) {
