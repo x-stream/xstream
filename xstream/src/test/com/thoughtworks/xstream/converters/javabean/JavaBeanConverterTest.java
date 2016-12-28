@@ -365,6 +365,26 @@ public class JavaBeanConverterTest extends TestCase {
         TypesOfFields unmarshalledFields = (TypesOfFields)xstream.fromXML(xml);  
         assertEquals(fields, unmarshalledFields);
     }
+    
+    public void testIgnoresUnknownFieldsMatchingPattern() {
+        TypesOfFields fields = new TypesOfFields();
+        fields.setNormal("foo");
+        String xml = "" 
+            + "<types>\n" 
+            + "  <normal>foo</normal>\n" 
+            + "  <foo>bar</foo>\n" 
+            + "</types>";
+
+        XStream xstream = new XStream();
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
+        xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
+        xstream.alias("types", TypesOfFields.class);
+        xstream.ignoreUnknownElements("fo.*");
+
+        TypesOfFields unmarshalledFields = (TypesOfFields)xstream.fromXML(xml);  
+        assertEquals(fields, unmarshalledFields);
+    }
 
     public static class UnsafeBean {
         public String getUnsafe() {

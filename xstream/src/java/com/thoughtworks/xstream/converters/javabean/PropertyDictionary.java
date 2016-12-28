@@ -72,7 +72,7 @@ public class PropertyDictionary implements Caching {
     @Deprecated
     public BeanProperty property(final Class<?> cls, final String name) {
         BeanProperty beanProperty = null;
-        final PropertyDescriptor descriptor = buildMap(cls).get(name);
+        final PropertyDescriptor descriptor = propertyDescriptorOrNull(cls, name);
         if (descriptor == null) {
             throw new MissingFieldException(cls.getName(), name);
         }
@@ -91,13 +91,26 @@ public class PropertyDictionary implements Caching {
      *
      * @param type
      * @param name
+     * @throws MissingFieldException if property does not exist
      */
     public PropertyDescriptor propertyDescriptor(final Class<?> type, final String name) {
-        final PropertyDescriptor descriptor = buildMap(type).get(name);
+        final PropertyDescriptor descriptor = propertyDescriptorOrNull(type, name);
         if (descriptor == null) {
             throw new MissingFieldException(type.getName(), name);
         }
         return descriptor;
+    }
+
+    /**
+     * Locates a property descriptor.
+     *
+     * @param type
+     * @param name
+     * @return {@code null} if property does not exist
+     * @since upcoming
+     */
+    public PropertyDescriptor propertyDescriptorOrNull(final Class<?> type, final String name) {
+        return buildMap(type).get(name);
     }
 
     private Map<String, PropertyDescriptor> buildMap(final Class<?> type) {

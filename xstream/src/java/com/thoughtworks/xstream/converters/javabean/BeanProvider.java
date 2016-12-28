@@ -132,7 +132,7 @@ public class BeanProvider implements JavaBeanProvider {
 
     @Override
     public boolean propertyDefinedInClass(final String name, final Class<?> type) {
-        return getProperty(name, type) != null;
+        return propertyDictionary.propertyDescriptorOrNull(type, name) != null;
     }
 
     /**
@@ -141,7 +141,7 @@ public class BeanProvider implements JavaBeanProvider {
     @Override
     public boolean canInstantiate(final Class<?> type) {
         try {
-            return type != null &&  newInstance(type) != null;
+            return type != null && newInstance(type) != null;
         } catch (final ErrorWritingException e) {
             return false;
         }
