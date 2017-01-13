@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -281,16 +281,10 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
  * </table>
  * <h3>Thread safety</h3>
  * <p>
-<<<<<<< HEAD
  * The XStream instance is thread-safe. That is, once the XStream instance has been created and
  * configured, it may be shared across multiple threads allowing objects to be
  * serialized/deserialized concurrently. <em>Note, that this only applies if annotations are not 
  * auto-detected on-the-fly.</em>
-=======
- * The XStream instance is thread-safe. That is, once the XStream instance has been created and configured, it may be
- * shared across multiple threads allowing objects to be serialized/deserialized concurrently. <em>Note, that this only
- * applies if annotations are not auto-detected on-the-fly.</em>
->>>>>>> 688686a... Allow to use Dataholder with createObjectOutputStream() [closes #67]
  * </p>
  * <h3>Implicit collections</h3>
  * 
@@ -785,6 +779,14 @@ public class XStream {
             aliasType("path", JVM.loadClassForName("java.nio.file.Path"));
         }
 
+        if (JVM.is18()) {
+            alias("local-date", JVM.loadClassForName("java.time.LocalDate"));
+            alias("local-date-time", JVM.loadClassForName("java.time.LocalDateTime"));
+            alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
+            alias("offset-date-time", JVM.loadClassForName("java.time.OffsetDateTime"));
+            alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
+        }
+
         if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
             aliasDynamically("serialized-lambda", "java.lang.invoke.SerializedLambda");
         }
@@ -924,6 +926,16 @@ public class XStream {
                     PRIORITY_NORMAL, null, null);
         }
         if (JVM.is18()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OffsetDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ZonedDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
                 PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class, ClassLoaderReference.class},
                 new Object[]{mapper, reflectionProvider, classLoaderReference});
