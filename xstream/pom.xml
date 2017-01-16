@@ -216,9 +216,15 @@
               </compilerArgs>
               <excludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/LocalDateConverter.java</exclude>
+                <exclude>**/LocalDateTimeConverter.java</exclude>
+                <exclude>**/LocalTimeConverter.java</exclude>
+                <exclude>**/OffsetDateTimeConverter.java</exclude>
+                <exclude>**/ZonedDateTimeConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/Extended18TypesTest.java</exclude>
               </testExcludes>
             </configuration>
             <executions>
@@ -285,9 +291,15 @@
               </compilerArgs>
               <excludes>
                 <exclude>**/Lambda**</exclude>
+                  <exclude>**/LocalDateConverter.java</exclude>
+                  <exclude>**/LocalDateTimeConverter.java</exclude>
+                  <exclude>**/LocalTimeConverter.java</exclude>
+                  <exclude>**/OffsetDateTimeConverter.java</exclude>
+                  <exclude>**/ZonedDateTimeConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/Extended18TypesTest.java</exclude>
               </testExcludes>
             </configuration>
           </plugin>

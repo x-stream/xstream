@@ -657,6 +657,13 @@ public class XStream {
             types.add(JVM.loadClassForName("java.sql.Time"));
             types.add(JVM.loadClassForName("java.sql.Date"));
         }
+        if (JVM.is18()) {
+            types.add(JVM.loadClassForName("java.time.LocalDate"));
+            types.add(JVM.loadClassForName("java.time.LocalDateTime"));
+            types.add(JVM.loadClassForName("java.time.LocalTime"));
+            types.add(JVM.loadClassForName("java.time.OffsetDateTime"));
+            types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
+        }
         types.remove(null);
         allowTypes(types.toArray(new Class[types.size()]));
     }
@@ -737,6 +744,14 @@ public class XStream {
             alias("sql-timestamp", JVM.loadClassForName("java.sql.Timestamp"));
             alias("sql-time", JVM.loadClassForName("java.sql.Time"));
             alias("sql-date", JVM.loadClassForName("java.sql.Date"));
+        }
+
+        if (JVM.is18()) {
+            alias("local-date", JVM.loadClassForName("java.time.LocalDate"));
+            alias("local-date-time", JVM.loadClassForName("java.time.LocalDateTime"));
+            alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
+            alias("offset-date-time", JVM.loadClassForName("java.time.OffsetDateTime"));
+            alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
         }
 
         aliasType("charset", Charset.class);
@@ -826,6 +841,18 @@ public class XStream {
             registerConverter(new SqlTimestampConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
+        }
+        if (JVM.is18()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateConverter",
+                    PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateTimeConverter",
+                    PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalTimeConverter",
+                    PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OffsetDateTimeConverter",
+                    PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ZonedDateTimeConverter",
+                    PRIORITY_NORMAL, null, null);
         }
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
