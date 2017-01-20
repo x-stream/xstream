@@ -28,7 +28,7 @@ public class StaticNamecoderTest extends TestCase {
     	java2Attribute.put(TESTKEY, TESTVALUE);
     	
     	final String actualKey = staticNameCoder.decodeAttribute(TESTVALUE);
-    	assertEquals(TESTKEY, actualKey);
+    	assertEquals(TESTVALUE, actualKey);
     	
     }
 }
