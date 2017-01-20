@@ -34,7 +34,6 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     public void addClassAlias(final String name, final Class<?> type) {
-	    System.out.println("name"+name+" type"+type);
         nameToType.put(name, type.getName());
         classToName.put(type.getName(), name);
     }
