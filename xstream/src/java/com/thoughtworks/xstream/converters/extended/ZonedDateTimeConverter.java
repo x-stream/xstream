@@ -40,12 +40,10 @@ public class ZonedDateTimeConverter implements SingleValueConverter {
             .toFormatter();
     }
 
-    @Override
-    public boolean canConvert(final Class<?> type) {
+    public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
         return type.equals(ZonedDateTime.class);
     }
 
-    @Override
     public String toString(final Object obj) {
         if (obj == null) {
             return null;
@@ -55,7 +53,6 @@ public class ZonedDateTimeConverter implements SingleValueConverter {
         return FORMATTER.format(zonedDateTime);
     }
 
-    @Override
     public Object fromString(final String str) {
         try {
             return ZonedDateTime.parse(str);

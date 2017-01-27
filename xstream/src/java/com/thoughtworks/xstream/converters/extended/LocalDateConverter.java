@@ -25,7 +25,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 public class LocalDateConverter extends AbstractSingleValueConverter {
 
     @Override
-    public boolean canConvert(final Class<?> type) {
+    public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
         return type.equals(LocalDate.class);
     }
 
