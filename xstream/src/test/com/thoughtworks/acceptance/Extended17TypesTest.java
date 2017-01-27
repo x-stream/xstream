@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 XStream Committers.
+ * Copyright (C) 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,20 +20,12 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.thoughtworks.xstream.XStream;
-
 
 /**
  * @author Aaron Johnson
  * @author J&ouml;rg Schaible
  */
 public class Extended17TypesTest extends AbstractAcceptanceTest {
-
-    @Override
-    protected void setupSecurity(final XStream xstream) {
-        super.setupSecurity(xstream);
-        xstream.allowTypeHierarchy(Path.class);
-    }
 
     public void testPathOfDefaultFileSystem() {
         assertBothWays(Paths.get("../a/relative/path"), "<path>../a/relative/path</path>");
