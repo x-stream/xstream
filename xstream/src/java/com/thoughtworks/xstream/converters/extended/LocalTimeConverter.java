@@ -36,10 +36,12 @@ public class LocalTimeConverter implements SingleValueConverter {
             .toFormatter();
     }
 
+    @Override
     public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
         return type.equals(LocalTime.class);
     }
 
+    @Override
     public String toString(final Object obj) {
         if (obj == null) {
             return null;
@@ -49,6 +51,7 @@ public class LocalTimeConverter implements SingleValueConverter {
         return FORMATTER.format(localTime);
     }
 
+    @Override
     public Object fromString(final String str) {
         try {
             return LocalTime.parse(str);

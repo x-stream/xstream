@@ -17,12 +17,21 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
+
+import com.thoughtworks.xstream.XStream;
 
 
 /**
  * @author Matej Cimbora
  */
 public class Extended18TypesTest extends AbstractAcceptanceTest {
+
+    @Override
+    protected void setupSecurity(XStream xstream) {
+        super.setupSecurity(xstream);
+        xstream.allowTypeHierarchy(Temporal.class);
+    }
 
     public void testLocalDate() {
         final LocalDate localDate = LocalDate.of(2017, 10, 30);

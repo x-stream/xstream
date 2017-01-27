@@ -37,10 +37,12 @@ public class OffsetDateTimeConverter implements SingleValueConverter {
             .toFormatter();
     }
 
+    @Override
     public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
         return type.equals(OffsetDateTime.class);
     }
 
+    @Override
     public String toString(final Object obj) {
         if (obj == null) {
             return null;
@@ -50,6 +52,7 @@ public class OffsetDateTimeConverter implements SingleValueConverter {
         return FORMATTER.format(offsetDateTime);
     }
 
+    @Override
     public Object fromString(final String str) {
         try {
             return OffsetDateTime.parse(str);
