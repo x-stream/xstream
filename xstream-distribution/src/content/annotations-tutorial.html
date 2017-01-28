@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2011 XStream committers.
+ Copyright (C) 2006, 2007, 2011, 2017 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -38,9 +38,9 @@ package com.thoughtworks.xstream;
 public class Tutorial {
 
 	public static void main(String[] args) {
-		XStream stream = new XStream();
+		XStream xstream = new XStream();
 		RendezvousMessage msg = new RendezvousMessage(15);
-		System.out.println(stream.toXML(msg));
+		System.out.println(xstream.toXML(msg));
 	}
 
 }
@@ -74,10 +74,10 @@ as it would be impossible to deserialize the XML code.  Therefore we need to tel
 this type:</p>
 <div class="Source Java"><pre>
 	public static void main(String[] args) {
-		XStream stream = new XStream();
+		XStream xstream = new XStream();
 		xstream.processAnnotations(RendezvousMessage.class);
 		RendezvousMessage msg = new RendezvousMessage(15);
-		System.out.println(stream.toXML(msg));
+		System.out.println(xstream.toXML(msg));
 	}
 </pre></div>
 <p>Note that we have called the processAnnotations method of XStream.  This method registers all aliases annotations in
@@ -113,10 +113,10 @@ class RendezvousMessage {
 </pre></div>
 <div class="Source Java"><pre>
 	public static void main(String[] args) {
-		XStream stream = new XStream();
+		XStream xstream = new XStream();
 		xstream.processAnnotations(RendezvousMessage.class);
 		RendezvousMessage msg = new RendezvousMessage(15, "firstPart","secondPart");
-		System.out.println(stream.toXML(msg));
+		System.out.println(xstream.toXML(msg));
 	}
 </pre></div>
 <p>The resulting XML shows the collection name before its elements:</p>
@@ -482,10 +482,10 @@ package com.thoughtworks.xstream;
 public class Tutorial {
 
 	public static void main(String[] args) {
-		XStream stream = new XStream();
+		XStream xstream = new XStream();
 		xstream.autodetectAnnotations(true);
 		RendezvousMessage msg = new RendezvousMessage(15);
-		System.out.println(stream.toXML(msg));
+		System.out.println(xstream.toXML(msg));
 	}
 
 }
