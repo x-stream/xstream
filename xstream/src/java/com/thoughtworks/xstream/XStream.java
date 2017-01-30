@@ -34,6 +34,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -938,6 +939,7 @@ public class XStream {
         addImmutableType(URL.class, false);
         addImmutableType(File.class, false);
         addImmutableType(Class.class, false);
+        addImmutableType(Paths.get(".").getClass(), false);
 
         if (JVM.isAWTAvailable()) {
             addImmutableTypeDynamically("java.awt.font.TextAttribute", false);

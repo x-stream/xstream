@@ -63,4 +63,14 @@ public class Extended17TypesTest extends AbstractAcceptanceTest {
             }
         }
     }
+
+    public void testPathIsImmutable() {
+        Path[] array = new Path[2];
+        array[0] = array[1] = Paths.get("same");
+        assertBothWays(array, "" //
+            + "<path-array>\n" //
+            + "  <path>same</path>\n" //
+            + "  <path>same</path>\n" //
+            + "</path-array>");
+    }
 }
