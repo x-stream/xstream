@@ -952,6 +952,14 @@ public class XStream {
         addImmutableType(Collections.EMPTY_LIST.getClass(), false);
         addImmutableType(Collections.EMPTY_SET.getClass(), false);
         addImmutableType(Collections.EMPTY_MAP.getClass(), false);
+
+        if (JVM.is18()) {
+            addImmutableTypeDynamically("java.time.LocalDate", false);
+            addImmutableTypeDynamically("java.time.LocalDateTime", false);
+            addImmutableTypeDynamically("java.time.LocalTime", false);
+            addImmutableTypeDynamically("java.time.OffsetDateTime", false);
+            addImmutableTypeDynamically("java.time.ZonedDateTime", false);
+        }
     }
 
     private void addImmutableTypeDynamically(final String className, final boolean isReferenceable) {
