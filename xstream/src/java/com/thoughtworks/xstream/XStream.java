@@ -26,6 +26,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -996,6 +997,26 @@ public class XStream {
         addImmutableType(URL.class, false);
         addImmutableType(File.class, false);
         addImmutableType(Class.class, false);
+
+        if (JVM.is17()) {
+            Class type = JVM.loadClassForName("java.nio.file.Paths");
+            if (type != null) {
+                Method methodGet;
+                try {
+                    methodGet = type.getDeclaredMethod("get", new Class[] {String.class, String[].class});
+                    if (methodGet != null) {
+                        Object path = methodGet.invoke(null, new Object[]{".", new String[0]});
+                        if (path != null) {
+                            addImmutableType(path.getClass(), false);
+                        }
+                    }
+                } catch (NoSuchMethodException e) {
+                } catch (SecurityException e) {
+                } catch (IllegalAccessException e) {
+                } catch (InvocationTargetException e) {
+                }
+            }
+        }
 
         if (JVM.isAWTAvailable()) {
             addImmutableTypeDynamically("java.awt.font.TextAttribute", false);
