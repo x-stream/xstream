@@ -221,6 +221,7 @@
                 <exclude>**/LocalTimeConverter.java</exclude>
                 <exclude>**/OffsetDateTimeConverter.java</exclude>
                 <exclude>**/ZonedDateTimeConverter.java</exclude>
+                <exclude>**/ZonedIdConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
@@ -296,6 +297,7 @@
                 <exclude>**/LocalTimeConverter.java</exclude>
                 <exclude>**/OffsetDateTimeConverter.java</exclude>
                 <exclude>**/ZonedDateTimeConverter.java</exclude>
+                <exclude>**/ZonedIdConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>

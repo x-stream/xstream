@@ -25,6 +25,19 @@ import java.time.ZonedDateTime;
  */
 public class Extended18TypesTest extends AbstractAcceptanceTest {
 
+    public void testZoneOffest() {
+        assertBothWays(ZoneOffset.of("Z"), "<zone-id>Z</zone-id>");
+        assertBothWays(ZoneOffset.ofTotalSeconds(7777), "<zone-id>+02:09:37</zone-id>");
+        assertBothWays(ZoneId.ofOffset("GMT", ZoneOffset.ofTotalSeconds(7777)), "<zone-id>GMT+02:09:37</zone-id>");
+        assertBothWays(ZoneId.of("ECT", ZoneId.SHORT_IDS), "<zone-id>Europe/Paris</zone-id>");
+        assertBothWays(ZoneId.of("CET"), "<zone-id>CET</zone-id>");
+    }
+
+    public void testZoneRegion() {
+        assertBothWays(ZoneId.of("America/Caracas"), "<zone-id>America/Caracas</zone-id>");
+        assertBothWays(ZoneId.of("Europe/Berlin"), "<zone-id>Europe/Berlin</zone-id>");
+    }
+
     public void testLocalDate() {
         assertBothWays(LocalDate.of(2017, 10, 30), "<local-date>2017-10-30</local-date>");
     }
@@ -46,7 +59,7 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
         assertBothWays(LocalDateTime.of(2017, 10, 30, 20, 40, 15, 123456789),
             "<local-date-time>2017-10-30T20:40:15.123456789</local-date-time>");
         assertBothWays(LocalDateTime.of(2017, 10, 30, 20, 40, 15, 9),
-                "<local-date-time>2017-10-30T20:40:15.000000009</local-date-time>");
+            "<local-date-time>2017-10-30T20:40:15.000000009</local-date-time>");
     }
 
     public void testLocalDateTimeIsImmutable() {
@@ -80,17 +93,17 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
 
     public void testOffsetDateTime() {
         assertBothWays(OffsetDateTime.of(2017, 7, 30, 20, 40, 15, 0, ZoneOffset.ofHours(0)),
-                "<offset-date-time>2017-07-30T20:40:15Z</offset-date-time>");
+            "<offset-date-time>2017-07-30T20:40:15Z</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 7, 30, 20, 40, 15, 0, ZoneOffset.ofHours(1)),
             "<offset-date-time>2017-07-30T20:40:15+01:00</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 10, 30, 20, 40, 15, 123456789, ZoneOffset.ofHours(1)),
             "<offset-date-time>2017-10-30T20:40:15.123456789+01:00</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 10, 30, 20, 40, 15, 9, ZoneOffset.ofHours(1)),
-                "<offset-date-time>2017-10-30T20:40:15.000000009+01:00</offset-date-time>");
+            "<offset-date-time>2017-10-30T20:40:15.000000009+01:00</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 10, 30, 20, 40, 15, 1000000, ZoneOffset.ofHours(1)),
-                "<offset-date-time>2017-10-30T20:40:15.001+01:00</offset-date-time>");
+            "<offset-date-time>2017-10-30T20:40:15.001+01:00</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 10, 30, 20, 40, 15, 100000000, ZoneOffset.ofHours(1)),
-                "<offset-date-time>2017-10-30T20:40:15.1+01:00</offset-date-time>");
+            "<offset-date-time>2017-10-30T20:40:15.1+01:00</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 10, 30, 20, 40, 15, 123456789, ZoneOffset.ofHoursMinutesSeconds(1, 30,
             15)), "<offset-date-time>2017-10-30T20:40:15.123456789+01:30:15</offset-date-time>");
     }
@@ -107,17 +120,17 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
 
     public void testZonedDateTime() {
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 0, ZoneId.of("Europe/London")),
-                "<zoned-date-time>2017-10-30T20:40:15Z[Europe/London]</zoned-date-time>");
+            "<zoned-date-time>2017-10-30T20:40:15Z[Europe/London]</zoned-date-time>");
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 0, ZoneId.of("Europe/Paris")),
             "<zoned-date-time>2017-10-30T20:40:15+01:00[Europe/Paris]</zoned-date-time>");
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 123456789, ZoneId.of("Europe/Paris")),
             "<zoned-date-time>2017-10-30T20:40:15.123456789+01:00[Europe/Paris]</zoned-date-time>");
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 9, ZoneId.of("Europe/Paris")),
-                "<zoned-date-time>2017-10-30T20:40:15.000000009+01:00[Europe/Paris]</zoned-date-time>");
+            "<zoned-date-time>2017-10-30T20:40:15.000000009+01:00[Europe/Paris]</zoned-date-time>");
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 1000000, ZoneId.of("Europe/Paris")),
-                "<zoned-date-time>2017-10-30T20:40:15.001+01:00[Europe/Paris]</zoned-date-time>");
+            "<zoned-date-time>2017-10-30T20:40:15.001+01:00[Europe/Paris]</zoned-date-time>");
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 100000000, ZoneId.of("Europe/Paris")),
-                "<zoned-date-time>2017-10-30T20:40:15.1+01:00[Europe/Paris]</zoned-date-time>");
+            "<zoned-date-time>2017-10-30T20:40:15.1+01:00[Europe/Paris]</zoned-date-time>");
     }
 
     public void testZonedDateTimeIsImmutable() {
