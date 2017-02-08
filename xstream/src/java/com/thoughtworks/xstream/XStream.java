@@ -786,6 +786,7 @@ public class XStream {
             alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
             alias("offset-date-time", JVM.loadClassForName("java.time.OffsetDateTime"));
             alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
+            aliasType("zone-id", JVM.loadClassForName("java.time.ZoneId"));
         }
 
         if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
@@ -855,8 +856,21 @@ public class XStream {
             registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
-        registerConverter(
-            new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
+        if (JVM.is18()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OffsetDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ZonedDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ZoneIdConverter",
+                PRIORITY_NORMAL, null, null);
+        }
+        registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaFieldConverter(classLoaderReference), PRIORITY_NORMAL);
@@ -1043,6 +1057,7 @@ public class XStream {
             addImmutableTypeDynamically("java.time.LocalTime", false);
             addImmutableTypeDynamically("java.time.OffsetDateTime", false);
             addImmutableTypeDynamically("java.time.ZonedDateTime", false);
+            addImmutableTypeDynamically("java.time.ZonedId", false);
         }
     }
 
