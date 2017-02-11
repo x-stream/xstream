@@ -8,7 +8,7 @@
  *
  * Created on 11. February 2017 by Joerg Schaible
  */
-package com.thoughtworks.xstream.converters.extended;
+package com.thoughtworks.xstream.converters.time;
 
 import java.time.Year;
 

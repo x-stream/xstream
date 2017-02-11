@@ -26,7 +26,7 @@ import java.time.ZonedDateTime;
  * @author Matej Cimbora
  * @author J&ouml;rg Schaible
  */
-public class Extended18TypesTest extends AbstractAcceptanceTest {
+public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testZoneOffest() {
         assertBothWays(ZoneOffset.of("Z"), "<zone-id>Z</zone-id>");

@@ -8,9 +8,9 @@
  *
  * Created on 13. January 2017 by Matej Cimbora
  */
-package com.thoughtworks.xstream.converters.extended;
+package com.thoughtworks.xstream.converters.time;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -21,11 +21,11 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
 /**
- * Converts a {@link OffsetDateTime} to a string.
+ * Converts a {@link LocalDateTime} to a string.
  *
  * @author Matej Cimbora
  */
-public class OffsetDateTimeConverter implements SingleValueConverter {
+public class LocalDateTimeConverter implements SingleValueConverter {
 
     private static final DateTimeFormatter FORMATTER;
 
@@ -33,13 +33,12 @@ public class OffsetDateTimeConverter implements SingleValueConverter {
         FORMATTER = new DateTimeFormatterBuilder()
             .appendPattern("uuuu-MM-dd'T'HH:mm:ss")
             .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
-            .appendOffsetId()
             .toFormatter();
     }
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(OffsetDateTime.class);
+        return type.equals(LocalDateTime.class);
     }
 
     @Override
@@ -48,18 +47,18 @@ public class OffsetDateTimeConverter implements SingleValueConverter {
             return null;
         }
 
-        final OffsetDateTime offsetDateTime = (OffsetDateTime)obj;
-        return FORMATTER.format(offsetDateTime);
+        final LocalDateTime localDateTime = (LocalDateTime)obj;
+        return FORMATTER.format(localDateTime);
     }
 
     @Override
     public Object fromString(final String str) {
         try {
-            return OffsetDateTime.parse(str);
+            return LocalDateTime.parse(str);
         } catch (final DateTimeParseException e) {
             final ConversionException exception = new ConversionException("Cannot parse string");
             exception.add("string", str);
-            exception.add("targetType", OffsetDateTime.class.getSimpleName());
+            exception.add("targetType", LocalDateTime.class.getSimpleName());
             throw exception;
         }
     }

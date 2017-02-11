@@ -854,24 +854,24 @@ public class XStream {
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
         if (JVM.is18()) {
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OffsetDateTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OffsetTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.YearConverter", PRIORITY_NORMAL,
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
                 null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.YearMonthConverter",
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateTimeConverter",
                 PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ZonedDateTimeConverter",
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalTimeConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetDateTimeConverter",
                 PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ZoneIdConverter",
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetTimeConverter",
                 PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearMonthConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ZonedDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ZoneIdConverter", PRIORITY_NORMAL,
+                null, null);
         }
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);

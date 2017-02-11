@@ -8,9 +8,9 @@
  *
  * Created on 13. January 2017 by Matej Cimbora
  */
-package com.thoughtworks.xstream.converters.extended;
+package com.thoughtworks.xstream.converters.time;
 
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -21,28 +21,24 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
 /**
- * Converts a {@link ZonedDateTime} to a string.
+ * Converts a {@link LocalTime} to a string.
  *
  * @author Matej Cimbora
  */
-public class ZonedDateTimeConverter implements SingleValueConverter {
+public class LocalTimeConverter implements SingleValueConverter {
 
     private static final DateTimeFormatter FORMATTER;
 
     static {
         FORMATTER = new DateTimeFormatterBuilder()
-            .appendPattern("uuuu-MM-dd'T'HH:mm:ss")
+            .appendPattern("HH:mm:ss")
             .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
-            .appendOffsetId()
-            .appendLiteral("[")
-            .appendZoneId()
-            .appendLiteral("]")
             .toFormatter();
     }
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(ZonedDateTime.class);
+        return type.equals(LocalTime.class);
     }
 
     @Override
@@ -51,18 +47,18 @@ public class ZonedDateTimeConverter implements SingleValueConverter {
             return null;
         }
 
-        final ZonedDateTime zonedDateTime = (ZonedDateTime)obj;
-        return FORMATTER.format(zonedDateTime);
+        final LocalTime localTime = (LocalTime)obj;
+        return FORMATTER.format(localTime);
     }
 
     @Override
     public Object fromString(final String str) {
         try {
-            return ZonedDateTime.parse(str);
+            return LocalTime.parse(str);
         } catch (final DateTimeParseException e) {
             final ConversionException exception = new ConversionException("Cannot parse string");
             exception.add("string", str);
-            exception.add("targetType", ZonedDateTime.class.getSimpleName());
+            exception.add("targetType", LocalTime.class.getSimpleName());
             throw exception;
         }
     }
