@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -195,6 +196,47 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             + "  <offset-date-time>2017-07-30T20:40:15+01:00</offset-date-time>\n" //
             + "  <offset-date-time>2017-07-30T20:40:15+01:00</offset-date-time>\n" //
             + "</offset-date-time-array>");
+    }
+
+    public void testOffsetTime() {
+        assertBothWays(OffsetTime.of(20, 40, 0, 0, ZoneOffset.ofHours(0)), "<offset-time>20:40:00Z</offset-time>");
+        assertBothWays(OffsetTime.of(20, 40, 15, 0, ZoneOffset.ofHours(0)), "<offset-time>20:40:15Z</offset-time>");
+        assertBothWays(OffsetTime.of(20, 40, 15, 0, ZoneOffset.ofHours(1)),
+            "<offset-time>20:40:15+01:00</offset-time>");
+        assertBothWays(OffsetTime.of(20, 40, 15, 123456789, ZoneOffset.ofHours(1)),
+            "<offset-time>20:40:15.123456789+01:00</offset-time>");
+        assertBothWays(OffsetTime.of(20, 40, 15, 9, ZoneOffset.ofHours(1)),
+            "<offset-time>20:40:15.000000009+01:00</offset-time>");
+        assertBothWays(OffsetTime.of(20, 40, 15, 1000000, ZoneOffset.ofHours(1)),
+            "<offset-time>20:40:15.001+01:00</offset-time>");
+        assertBothWays(OffsetTime.of(20, 40, 15, 100000000, ZoneOffset.ofHours(1)),
+            "<offset-time>20:40:15.1+01:00</offset-time>");
+        assertBothWays(OffsetTime.of(20, 40, 15, 123456789, ZoneOffset.ofHoursMinutesSeconds(1, 30, 15)),
+            "<offset-time>20:40:15.123456789+01:30:15</offset-time>");
+        assertEquals(OffsetTime.of(20, 40, 0, 0, ZoneOffset.ofHours(0)), xstream.fromXML(
+            "<offset-time>20:40Z</offset-time>"));
+        assertEquals(OffsetTime.of(20, 40, 15, 100000000, ZoneOffset.ofHours(1)), xstream.fromXML(
+            "<offset-time>20:40:15.100+01:00</offset-time>"));
+    }
+
+    public void testOffsetTimeWithOldFormat() {
+        assertEquals(OffsetTime.of(20, 40, 0, 0, ZoneOffset.ofHours(0)), xstream.fromXML("" //
+            + "<java.time.OffsetTime resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>9</byte>\n" //
+            + "  <byte>20</byte>\n" //
+            + "  <byte>-41</byte>\n" //
+            + "  <byte>0</byte>\n" //
+            + "</java.time.OffsetTime>"));
+    }
+
+    public void testOffsetTimeIsImmutable() {
+        final OffsetTime array[] = new OffsetTime[2];
+        array[0] = array[1] = OffsetTime.of(20, 40, 15, 0, ZoneOffset.ofHours(1));
+        assertBothWays(array, "" //
+            + "<offset-time-array>\n"
+            + "  <offset-time>20:40:15+01:00</offset-time>\n" //
+            + "  <offset-time>20:40:15+01:00</offset-time>\n" //
+            + "</offset-time-array>");
     }
 
     public void testZonedDateTime() {
