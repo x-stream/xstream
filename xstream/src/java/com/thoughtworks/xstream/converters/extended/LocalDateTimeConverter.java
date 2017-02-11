@@ -46,8 +46,8 @@ public class LocalDateTimeConverter implements SingleValueConverter {
         if (obj == null) {
             return null;
         }
-        final LocalDateTime localDateTime = (LocalDateTime)obj;
 
+        final LocalDateTime localDateTime = (LocalDateTime)obj;
         return FORMATTER.format(localDateTime);
     }
 

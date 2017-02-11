@@ -47,8 +47,8 @@ public class OffsetDateTimeConverter implements SingleValueConverter {
         if (obj == null) {
             return null;
         }
-        final OffsetDateTime offsetDateTime = (OffsetDateTime)obj;
 
+        final OffsetDateTime offsetDateTime = (OffsetDateTime)obj;
         return FORMATTER.format(offsetDateTime);
     }
 
