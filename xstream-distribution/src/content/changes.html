@@ -40,6 +40,15 @@
     	and ZonedDateTime (by Matej Cimbora).</li>
     	<li>GHI:#29: JavaBeanConverter does not respect ignored unknown elements.</li>
     </ul>
+
+    <h2>Stream Compatibility</h2>
+    
+    <ul>
+    	<li>The alias <em>duration</em> for type <em>javax.xml.datatype.Duration</em> has changed to
+    	<em>xml-duration</em> due to the support of the classes in the java.time package. <em>duration</em> is now used
+    	for type	<em>java.time.Duration</em>. Simply register the alias <em>duration</em> again for type
+    	<em>javax.xml.datatype.Duration</em> if backward compatibility is required for this type.</li>
+    </ul>
     
     <h2>Minor changes</h2>
 
