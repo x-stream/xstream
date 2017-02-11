@@ -280,7 +280,7 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
 
     public void testYearMonthIsImmutable() {
         final YearMonth array[] = new YearMonth[2];
-        array[0] = array[1] = YearMonth.of(2017,2);
+        array[0] = array[1] = YearMonth.of(2017, 2);
         assertBothWays(array, "" //
             + "<year-month-array>\n"
             + "  <year-month>2017-02</year-month>\n" //

@@ -227,6 +227,7 @@
                 <exclude>**/OffsetDateTimeConverter.java</exclude>
                 <exclude>**/OffsetTimeConverter.java</exclude>
                 <exclude>**/YearConverter.java</exclude>
+                <exclude>**/YearMonthConverter.java</exclude>
                 <exclude>**/ZonedDateTimeConverter.java</exclude>
                 <exclude>**/ZoneIdConverter.java</exclude>
               </excludes>
@@ -305,6 +306,7 @@
                 <exclude>**/OffsetDateTimeConverter.java</exclude>
                 <exclude>**/OffsetTimeConverter.java</exclude>
                 <exclude>**/YearConverter.java</exclude>
+                <exclude>**/YearMonthConverter.java</exclude>
                 <exclude>**/ZonedDateTimeConverter.java</exclude>
                 <exclude>**/ZoneIdConverter.java</exclude>
               </excludes>
