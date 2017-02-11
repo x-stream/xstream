@@ -50,8 +50,8 @@ public class ZonedDateTimeConverter implements SingleValueConverter {
         if (obj == null) {
             return null;
         }
-        final ZonedDateTime zonedDateTime = (ZonedDateTime)obj;
 
+        final ZonedDateTime zonedDateTime = (ZonedDateTime)obj;
         return FORMATTER.format(zonedDateTime);
     }
 

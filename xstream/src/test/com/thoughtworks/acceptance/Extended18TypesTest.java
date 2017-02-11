@@ -69,6 +69,8 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             "<local-date-time>2017-10-30T20:40:15.123456789</local-date-time>");
         assertBothWays(LocalDateTime.of(2017, 10, 30, 20, 40, 15, 9),
             "<local-date-time>2017-10-30T20:40:15.000000009</local-date-time>");
+        assertEquals(LocalDateTime.of(2017, 7, 30, 20, 40), xstream.fromXML(
+            "<local-date-time>2017-07-30T20:40</local-date-time>"));
     }
 
     public void testLocalDateTimeIsImmutable() {
@@ -88,6 +90,7 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
         assertBothWays(LocalTime.of(10, 30, 20, 9), "<local-time>10:30:20.000000009</local-time>");
         assertBothWays(LocalTime.of(10, 30, 20, 1000000), "<local-time>10:30:20.001</local-time>");
         assertBothWays(LocalTime.of(10, 30, 20, 100000000), "<local-time>10:30:20.1</local-time>");
+        assertEquals(LocalTime.of(10, 30), xstream.fromXML("<local-time>10:30</local-time>"));
     }
 
     public void testLocalTimeIsImmutable() {
@@ -101,6 +104,8 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
     }
 
     public void testOffsetDateTime() {
+        assertBothWays(OffsetDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.ofHours(0)),
+            "<offset-date-time>2017-07-30T20:40:00Z</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 7, 30, 20, 40, 15, 0, ZoneOffset.ofHours(0)),
             "<offset-date-time>2017-07-30T20:40:15Z</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 7, 30, 20, 40, 15, 0, ZoneOffset.ofHours(1)),
@@ -115,6 +120,10 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             "<offset-date-time>2017-10-30T20:40:15.1+01:00</offset-date-time>");
         assertBothWays(OffsetDateTime.of(2017, 10, 30, 20, 40, 15, 123456789, ZoneOffset.ofHoursMinutesSeconds(1, 30,
             15)), "<offset-date-time>2017-10-30T20:40:15.123456789+01:30:15</offset-date-time>");
+        assertEquals(OffsetDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.ofHours(0)), xstream.fromXML(
+            "<offset-date-time>2017-07-30T20:40Z</offset-date-time>"));
+        assertEquals(OffsetDateTime.of(2017, 10, 30, 20, 40, 15, 100000000, ZoneOffset.ofHours(1)), xstream.fromXML(
+            "<offset-date-time>2017-10-30T20:40:15.100+01:00</offset-date-time>"));
     }
 
     public void testOffsetDateTimeIsImmutable() {
@@ -128,6 +137,8 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
     }
 
     public void testZonedDateTime() {
+        assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 0, 0, ZoneId.of("Europe/London")),
+            "<zoned-date-time>2017-10-30T20:40:00Z[Europe/London]</zoned-date-time>");
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 0, ZoneId.of("Europe/London")),
             "<zoned-date-time>2017-10-30T20:40:15Z[Europe/London]</zoned-date-time>");
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 0, ZoneId.of("Europe/Paris")),
@@ -140,6 +151,10 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             "<zoned-date-time>2017-10-30T20:40:15.001+01:00[Europe/Paris]</zoned-date-time>");
         assertBothWays(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 100000000, ZoneId.of("Europe/Paris")),
             "<zoned-date-time>2017-10-30T20:40:15.1+01:00[Europe/Paris]</zoned-date-time>");
+        assertEquals(ZonedDateTime.of(2017, 10, 30, 20, 40, 0, 0, ZoneId.of("Europe/London")), xstream.fromXML(
+            "<zoned-date-time>2017-10-30T20:40Z[Europe/London]</zoned-date-time>"));
+        assertEquals(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 100000000, ZoneId.of("Europe/Paris")), xstream.fromXML(
+            "<zoned-date-time>2017-10-30T20:40:15.100+01:00[Europe/Paris]</zoned-date-time>"));
     }
 
     public void testZonedDateTimeIsImmutable() {
