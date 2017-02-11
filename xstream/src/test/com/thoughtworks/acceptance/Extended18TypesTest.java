@@ -33,13 +33,40 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
         assertBothWays(ZoneId.of("CET"), "<zone-id>CET</zone-id>");
     }
 
+    public void testZoneOffestWithOldFormat() {
+        assertEquals(ZoneOffset.ofTotalSeconds(7777), xstream.fromXML("" //
+            + "<java.time.ZoneOffset resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>8</byte>\n" //
+            + "  <byte>127</byte>\n" //
+            + "  <int>7777</int>\n" //
+            + "</java.time.ZoneOffset>"));
+    }
+
     public void testZoneRegion() {
         assertBothWays(ZoneId.of("America/Caracas"), "<zone-id>America/Caracas</zone-id>");
         assertBothWays(ZoneId.of("Europe/Berlin"), "<zone-id>Europe/Berlin</zone-id>");
     }
 
+    public void testZoneRegionWithOldFormat() {
+        assertEquals(ZoneId.of("America/Caracas"), xstream.fromXML("" //
+            + "<java.time.ZoneRegion resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <string>America/Caracas</string>\n" //
+            + "</java.time.ZoneRegion>"));
+    }
+
     public void testLocalDate() {
         assertBothWays(LocalDate.of(2017, 10, 30), "<local-date>2017-10-30</local-date>");
+    }
+
+    public void testLocalDateWithOldFormat() {
+        assertEquals(LocalDate.of(2017, 10, 30), xstream.fromXML("" //
+            + "<java.time.LocalDate resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>3</byte>\n" //
+            + "  <int>2017</int>\n" //
+            + "  <byte>10</byte>\n" //
+            + "  <byte>30</byte>\n" //
+            + "</java.time.LocalDate>"));
     }
 
     public void testLocalDateIsImmutable() {
@@ -64,6 +91,18 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             "<local-date-time>2017-07-30T20:40</local-date-time>"));
     }
 
+    public void testLocalDateTimeWithOldFormat() {
+        assertEquals(LocalDateTime.of(2017, 7, 30, 20, 40), xstream.fromXML("" //
+            + "<java.time.LocalDateTime resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>5</byte>\n" //
+            + "  <int>2017</int>\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <byte>30</byte>\n" //
+            + "  <byte>20</byte>\n" //
+            + "  <byte>-41</byte>\n" //
+            + "</java.time.LocalDateTime>"));
+    }
+
     public void testLocalDateTimeIsImmutable() {
         final LocalDateTime[] array = new LocalDateTime[2];
         array[0] = array[1] = LocalDateTime.of(2017, 7, 30, 20, 40);
@@ -82,6 +121,15 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
         assertBothWays(LocalTime.of(10, 30, 20, 1000000), "<local-time>10:30:20.001</local-time>");
         assertBothWays(LocalTime.of(10, 30, 20, 100000000), "<local-time>10:30:20.1</local-time>");
         assertEquals(LocalTime.of(10, 30), xstream.fromXML("<local-time>10:30</local-time>"));
+    }
+
+    public void testLocalTimeWithOldFormat() {
+        assertEquals(LocalTime.of(10, 30), xstream.fromXML("" //
+            + "<java.time.LocalTime resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>4</byte>\n" //
+            + "  <byte>10</byte>\n" //
+            + "  <byte>-31</byte>\n" //
+            + "</java.time.LocalTime>"));
     }
 
     public void testLocalTimeIsImmutable() {
@@ -117,6 +165,19 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             "<offset-date-time>2017-10-30T20:40:15.100+01:00</offset-date-time>"));
     }
 
+    public void testOffsetDateTimeWithOldFormat() {
+        assertEquals(OffsetDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.ofHours(0)), xstream.fromXML("" //
+            + "<java.time.OffsetDateTime resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>10</byte>\n" //
+            + "  <int>2017</int>\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <byte>30</byte>\n" //
+            + "  <byte>20</byte>\n" //
+            + "  <byte>-41</byte>\n" //
+            + "  <byte>0</byte>\n" //
+            + "</java.time.OffsetDateTime>"));
+    }
+
     public void testOffsetDateTimeIsImmutable() {
         final OffsetDateTime array[] = new OffsetDateTime[2];
         array[0] = array[1] = OffsetDateTime.of(2017, 7, 30, 20, 40, 15, 0, ZoneOffset.ofHours(1));
@@ -146,6 +207,21 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             "<zoned-date-time>2017-10-30T20:40Z[Europe/London]</zoned-date-time>"));
         assertEquals(ZonedDateTime.of(2017, 10, 30, 20, 40, 15, 100000000, ZoneId.of("Europe/Paris")), xstream.fromXML(
             "<zoned-date-time>2017-10-30T20:40:15.100+01:00[Europe/Paris]</zoned-date-time>"));
+    }
+
+    public void testZonedDateTimeWithOldFormat() {
+        assertEquals(ZonedDateTime.of(2017, 10, 30, 20, 40, 0, 0, ZoneId.of("Europe/London")), xstream.fromXML("" //
+            + "<java.time.ZonedDateTime resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>6</byte>\n" //
+            + "  <int>2017</int>\n" //
+            + "  <byte>10</byte>\n" //
+            + "  <byte>30</byte>\n" //
+            + "  <byte>20</byte>\n" //
+            + "  <byte>-41</byte>\n" //
+            + "  <byte>0</byte>\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <string>Europe/London</string>\n" //
+            + "</java.time.ZonedDateTime>"));
     }
 
     public void testZonedDateTimeIsImmutable() {

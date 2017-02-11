@@ -664,6 +664,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.time.LocalDateTime"));
             types.add(JVM.loadClassForName("java.time.LocalTime"));
             types.add(JVM.loadClassForName("java.time.OffsetDateTime"));
+            types.add(JVM.loadClassForName("java.time.Ser"));
             types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
             allowTypeHierarchy(JVM.loadClassForName("java.time.ZoneId"));
         }
