@@ -29,7 +29,7 @@ import com.thoughtworks.xstream.XStream;
  * @author Matej Cimbora
  * @author J&ouml;rg Schaible
  */
-public class Extended18TypesTest extends AbstractAcceptanceTest {
+public class Time18TypesTest extends AbstractAcceptanceTest {
 
     @Override
     protected void setupSecurity(XStream xstream) {

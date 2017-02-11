@@ -8,9 +8,9 @@
  *
  * Created on 13. January 2017 by Matej Cimbora
  */
-package com.thoughtworks.xstream.converters.extended;
+package com.thoughtworks.xstream.converters.time;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -21,24 +21,24 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
 /**
- * Converts a {@link LocalTime} to a string.
+ * Converts a {@link LocalDateTime} to a string.
  *
  * @author Matej Cimbora
  */
-public class LocalTimeConverter implements SingleValueConverter {
+public class LocalDateTimeConverter implements SingleValueConverter {
 
     private static final DateTimeFormatter FORMATTER;
 
     static {
         FORMATTER = new DateTimeFormatterBuilder()
-            .appendPattern("HH:mm:ss")
+            .appendPattern("uuuu-MM-dd'T'HH:mm:ss")
             .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
             .toFormatter();
     }
 
     @Override
     public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
-        return type.equals(LocalTime.class);
+        return type.equals(LocalDateTime.class);
     }
 
     @Override
@@ -47,18 +47,18 @@ public class LocalTimeConverter implements SingleValueConverter {
             return null;
         }
 
-        final LocalTime localTime = (LocalTime)obj;
-        return FORMATTER.format(localTime);
+        final LocalDateTime localDateTime = (LocalDateTime)obj;
+        return FORMATTER.format(localDateTime);
     }
 
     @Override
     public Object fromString(final String str) {
         try {
-            return LocalTime.parse(str);
+            return LocalDateTime.parse(str);
         } catch (final DateTimeParseException e) {
             final ConversionException exception = new ConversionException("Cannot parse string");
             exception.add("string", str);
-            exception.add("targetType", LocalTime.class.getSimpleName());
+            exception.add("targetType", LocalDateTime.class.getSimpleName());
             throw exception;
         }
     }

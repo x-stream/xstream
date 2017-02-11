@@ -8,9 +8,9 @@
  *
  * Created on 13. January 2017 by Matej Cimbora
  */
-package com.thoughtworks.xstream.converters.extended;
+package com.thoughtworks.xstream.converters.time;
 
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -21,11 +21,11 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
 /**
- * Converts a {@link OffsetDateTime} to a string.
+ * Converts a {@link ZonedDateTime} to a string.
  *
  * @author Matej Cimbora
  */
-public class OffsetDateTimeConverter implements SingleValueConverter {
+public class ZonedDateTimeConverter implements SingleValueConverter {
 
     private static final DateTimeFormatter FORMATTER;
 
@@ -34,12 +34,15 @@ public class OffsetDateTimeConverter implements SingleValueConverter {
             .appendPattern("uuuu-MM-dd'T'HH:mm:ss")
             .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
             .appendOffsetId()
+            .appendLiteral("[")
+            .appendZoneId()
+            .appendLiteral("]")
             .toFormatter();
     }
 
     @Override
     public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
-        return type.equals(OffsetDateTime.class);
+        return type.equals(ZonedDateTime.class);
     }
 
     @Override
@@ -48,18 +51,18 @@ public class OffsetDateTimeConverter implements SingleValueConverter {
             return null;
         }
 
-        final OffsetDateTime offsetDateTime = (OffsetDateTime)obj;
-        return FORMATTER.format(offsetDateTime);
+        final ZonedDateTime zonedDateTime = (ZonedDateTime)obj;
+        return FORMATTER.format(zonedDateTime);
     }
 
     @Override
     public Object fromString(final String str) {
         try {
-            return OffsetDateTime.parse(str);
+            return ZonedDateTime.parse(str);
         } catch (final DateTimeParseException e) {
             final ConversionException exception = new ConversionException("Cannot parse string");
             exception.add("string", str);
-            exception.add("targetType", OffsetDateTime.class.getSimpleName());
+            exception.add("targetType", ZonedDateTime.class.getSimpleName());
             throw exception;
         }
     }

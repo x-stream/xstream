@@ -8,7 +8,7 @@
  *
  * Created on 13. January 2017 by Matej Cimbora
  */
-package com.thoughtworks.xstream.converters.extended;
+package com.thoughtworks.xstream.converters.time;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;

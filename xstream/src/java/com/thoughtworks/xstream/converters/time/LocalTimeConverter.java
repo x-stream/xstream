@@ -6,11 +6,11 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 11. February 2017 by Joerg Schaible
+ * Created on 13. January 2017 by Matej Cimbora
  */
-package com.thoughtworks.xstream.converters.extended;
+package com.thoughtworks.xstream.converters.time;
 
-import java.time.OffsetTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -21,12 +21,11 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
 /**
- * Converts a {@link OffsetTime} to a string.
+ * Converts a {@link LocalTime} to a string.
  *
  * @author Matej Cimbora
- * @author J&ouml;rg Schaible
  */
-public class OffsetTimeConverter implements SingleValueConverter {
+public class LocalTimeConverter implements SingleValueConverter {
 
     private static final DateTimeFormatter FORMATTER;
 
@@ -34,13 +33,12 @@ public class OffsetTimeConverter implements SingleValueConverter {
         FORMATTER = new DateTimeFormatterBuilder()
             .appendPattern("HH:mm:ss")
             .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
-            .appendOffsetId()
             .toFormatter();
     }
 
     @Override
-    public boolean canConvert(final Class type) {
-        return type.equals(OffsetTime.class);
+    public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
+        return type.equals(LocalTime.class);
     }
 
     @Override
@@ -49,18 +47,18 @@ public class OffsetTimeConverter implements SingleValueConverter {
             return null;
         }
 
-        final OffsetTime offsetTime = (OffsetTime)obj;
-        return FORMATTER.format(offsetTime);
+        final LocalTime localTime = (LocalTime)obj;
+        return FORMATTER.format(localTime);
     }
 
     @Override
     public Object fromString(final String str) {
         try {
-            return OffsetTime.parse(str);
+            return LocalTime.parse(str);
         } catch (final DateTimeParseException e) {
             final ConversionException exception = new ConversionException("Cannot parse string");
             exception.add("string", str);
-            exception.add("targetType", OffsetTime.class.getSimpleName());
+            exception.add("targetType", LocalTime.class.getSimpleName());
             throw exception;
         }
     }
