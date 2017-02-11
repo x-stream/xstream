@@ -660,6 +660,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.sql.Date"));
         }
         if (JVM.is18()) {
+            types.add(JVM.loadClassForName("java.time.Duration"));
             types.add(JVM.loadClassForName("java.time.LocalDate"));
             types.add(JVM.loadClassForName("java.time.LocalDateTime"));
             types.add(JVM.loadClassForName("java.time.LocalTime"));
@@ -754,6 +755,7 @@ public class XStream {
         }
 
         if (JVM.is18()) {
+            alias("duration", JVM.loadClassForName("java.time.Duration"));
             alias("local-date", JVM.loadClassForName("java.time.LocalDate"));
             alias("local-date-time", JVM.loadClassForName("java.time.LocalDateTime"));
             alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
@@ -772,7 +774,7 @@ public class XStream {
             aliasDynamically("auth-subject", "javax.security.auth.Subject");
         }
         if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
-            aliasDynamically("duration", "javax.xml.datatype.Duration");
+            aliasDynamically("xml-duration", "javax.xml.datatype.Duration");
         }
 
         if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
@@ -854,6 +856,8 @@ public class XStream {
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
         if (JVM.is18()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter",
+                PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateTimeConverter",
@@ -971,6 +975,7 @@ public class XStream {
         addImmutableType(Collections.EMPTY_MAP.getClass(), false);
 
         if (JVM.is18()) {
+            addImmutableTypeDynamically("java.time.Duration", false);
             addImmutableTypeDynamically("java.time.LocalDate", false);
             addImmutableTypeDynamically("java.time.LocalDateTime", false);
             addImmutableTypeDynamically("java.time.LocalTime", false);

@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -56,6 +57,38 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <byte>7</byte>\n" //
             + "  <string>America/Caracas</string>\n" //
             + "</java.time.ZoneRegion>"));
+    }
+
+    public void testDuration() {
+        assertBothWays(Duration.ofDays(1000), "<duration>PT24000H</duration>");
+        assertBothWays(Duration.ofHours(50), "<duration>PT50H</duration>");
+        assertBothWays(Duration.ofMinutes(77), "<duration>PT1H17M</duration>");
+        assertBothWays(Duration.ofSeconds(55), "<duration>PT55S</duration>");
+        assertBothWays(Duration.ofMillis(4444), "<duration>PT4.444S</duration>");
+        assertBothWays(Duration.ofNanos(123456789), "<duration>PT0.123456789S</duration>");
+        assertBothWays(Duration.ofNanos(100000000), "<duration>PT0.1S</duration>");
+        assertBothWays(Duration.ofNanos(9), "<duration>PT0.000000009S</duration>");
+        assertBothWays(Duration.ofNanos(6333123456789L), "<duration>PT1H45M33.123456789S</duration>");
+        assertBothWays(Duration.ofSeconds(-3), "<duration>PT-3S</duration>");
+    }
+
+    public void testDurationWithOldFormat() {
+        assertEquals(Duration.ofSeconds(7777), xstream.fromXML("" //
+            + "<java.time.Duration resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>1</byte>\n" //
+            + "  <long>7777</long>\n" //
+            + "  <int>0</int>\n" //
+            + "</java.time.Duration>"));
+    }
+
+    public void testDurationIsImmutable() {
+        final Duration[] array = new Duration[2];
+        array[0] = array[1] = Duration.ofHours(50);
+        assertBothWays(array, "" //
+            + "<duration-array>\n" //
+            + "  <duration>PT50H</duration>\n" //
+            + "  <duration>PT50H</duration>\n" //
+            + "</duration-array>");
     }
 
     public void testLocalDate() {
