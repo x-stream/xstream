@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.Year;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -228,6 +230,53 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             + "  <offset-time>20:40:15+01:00</offset-time>\n" //
             + "  <offset-time>20:40:15+01:00</offset-time>\n" //
             + "</offset-time-array>");
+    }
+
+    public void testYear() {
+        assertBothWays(Year.of(2017), "<year>2017</year>");
+        assertBothWays(Year.of(0), "<year>0</year>");
+        assertBothWays(Year.of(-1), "<year>-1</year>");
+    }
+
+    public void testYearWithOldFormat() {
+        assertEquals(Year.of(2017), xstream.fromXML("" //
+            + "<java.time.Year resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>11</byte>\n" //
+            + "  <int>2017</int>\n" //
+            + "</java.time.Year>"));
+    }
+
+    public void testYearIsImmutable() {
+        final Year array[] = new Year[2];
+        array[0] = array[1] = Year.of(2017);
+        assertBothWays(array, "" //
+            + "<year-array>\n"
+            + "  <year>2017</year>\n" //
+            + "  <year>2017</year>\n" //
+            + "</year-array>");
+    }
+
+    public void testYearMonth() {
+        assertBothWays(YearMonth.of(2017, 2), "<year-month>2017-02</year-month>");
+    }
+
+    public void testYearMonthWithOldFormat() {
+        assertEquals(YearMonth.of(2017, 2), xstream.fromXML("" //
+            + "<java.time.YearMonth resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>12</byte>\n" //
+            + "  <int>2017</int>\n" //
+            + "  <byte>2</byte>\n" //
+            + "</java.time.YearMonth>"));
+    }
+
+    public void testYearMonthIsImmutable() {
+        final YearMonth array[] = new YearMonth[2];
+        array[0] = array[1] = YearMonth.of(2017,2);
+        assertBothWays(array, "" //
+            + "<year-month-array>\n"
+            + "  <year-month>2017-02</year-month>\n" //
+            + "  <year-month>2017-02</year-month>\n" //
+            + "</year-month-array>");
     }
 
     public void testZonedDateTime() {

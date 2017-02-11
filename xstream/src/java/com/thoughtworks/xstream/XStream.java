@@ -666,6 +666,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.time.OffsetDateTime"));
             types.add(JVM.loadClassForName("java.time.OffsetTime"));
             types.add(JVM.loadClassForName("java.time.Ser"));
+            types.add(JVM.loadClassForName("java.time.Year"));
             types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
             allowTypeHierarchy(JVM.loadClassForName("java.time.ZoneId"));
         }
@@ -757,6 +758,7 @@ public class XStream {
             alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
             alias("offset-date-time", JVM.loadClassForName("java.time.OffsetDateTime"));
             alias("offset-time", JVM.loadClassForName("java.time.OffsetTime"));
+            alias("year", JVM.loadClassForName("java.time.Year"));
             alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
             aliasType("zone-id", JVM.loadClassForName("java.time.ZoneId"));
         }
@@ -859,6 +861,8 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OffsetDateTimeConverter",
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OffsetTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.YearConverter",
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ZonedDateTimeConverter",
                 PRIORITY_NORMAL, null, null);
@@ -968,6 +972,7 @@ public class XStream {
             addImmutableTypeDynamically("java.time.LocalTime", false);
             addImmutableTypeDynamically("java.time.OffsetDateTime", false);
             addImmutableTypeDynamically("java.time.OffsetTime", false);
+            addImmutableTypeDynamically("java.time.Year", false);
             addImmutableTypeDynamically("java.time.ZonedDateTime", false);
             addImmutableTypeDynamically("java.time.ZonedId", false);
         }
