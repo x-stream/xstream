@@ -1081,7 +1081,9 @@ public class XStream {
             addImmutableTypeDynamically("java.time.Year", false);
             addImmutableTypeDynamically("java.time.YearMonth", false);
             addImmutableTypeDynamically("java.time.ZonedDateTime", false);
-            addImmutableTypeDynamically("java.time.ZonedId", false);
+            addImmutableTypeDynamically("java.time.ZoneId", false);
+            addImmutableTypeDynamically("java.time.ZoneOffset", false);
+            addImmutableTypeDynamically("java.time.ZoneRegion", false);
         }
     }
 

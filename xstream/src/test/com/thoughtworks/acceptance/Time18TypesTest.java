@@ -58,6 +58,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "</java.time.ZoneOffset>"));
     }
 
+    public void testZoneOffestIsImmutable() {
+        final ZoneOffset[] array = new ZoneOffset[2];
+        array[0] = array[1] = ZoneOffset.of("Z");
+        assertBothWays(array, "" //
+            + "<zone-id-array>\n" //
+            + "  <zone-id>Z</zone-id>\n" //
+            + "  <zone-id>Z</zone-id>\n" //
+            + "</zone-id-array>");
+    }
+
     public void testZoneRegion() {
         assertBothWays(ZoneId.of("America/Caracas"), "<zone-id>America/Caracas</zone-id>");
         assertBothWays(ZoneId.of("Europe/Berlin"), "<zone-id>Europe/Berlin</zone-id>");
@@ -69,6 +79,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <byte>7</byte>\n" //
             + "  <string>America/Caracas</string>\n" //
             + "</java.time.ZoneRegion>"));
+    }
+
+    public void testZoneRegionIsImmutable() {
+        final ZoneId[] array = new ZoneId[2];
+        array[0] = array[1] = ZoneId.of("Europe/Rome");
+        assertBothWays(array, "" //
+            + "<zone-id-array>\n" //
+            + "  <zone-id>Europe/Rome</zone-id>\n" //
+            + "  <zone-id>Europe/Rome</zone-id>\n" //
+            + "</zone-id-array>");
     }
 
     public void testDuration() {
