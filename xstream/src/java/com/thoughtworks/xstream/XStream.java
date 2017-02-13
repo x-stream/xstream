@@ -785,6 +785,7 @@ public class XStream {
             alias("local-date", JVM.loadClassForName("java.time.LocalDate"));
             alias("local-date-time", JVM.loadClassForName("java.time.LocalDateTime"));
             alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
+            alias("month-day", JVM.loadClassForName("java.time.MonthDay"));
             alias("offset-date-time", JVM.loadClassForName("java.time.OffsetDateTime"));
             alias("offset-time", JVM.loadClassForName("java.time.OffsetTime"));
             alias("period", JVM.loadClassForName("java.time.Period"));
@@ -869,6 +870,8 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateTimeConverter",
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalTimeConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.MonthDayConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetDateTimeConverter",
                 PRIORITY_NORMAL, null, null);
@@ -1071,6 +1074,7 @@ public class XStream {
             addImmutableTypeDynamically("java.time.LocalDate", false);
             addImmutableTypeDynamically("java.time.LocalDateTime", false);
             addImmutableTypeDynamically("java.time.LocalTime", false);
+            addImmutableTypeDynamically("java.time.MonthDay", false);
             addImmutableTypeDynamically("java.time.OffsetDateTime", false);
             addImmutableTypeDynamically("java.time.OffsetTime", false);
             addImmutableTypeDynamically("java.time.Period", false);

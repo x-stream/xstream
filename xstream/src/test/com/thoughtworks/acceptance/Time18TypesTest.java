@@ -14,6 +14,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
@@ -305,6 +307,30 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <offset-time>20:40:15+01:00</offset-time>\n" //
             + "  <offset-time>20:40:15+01:00</offset-time>\n" //
             + "</offset-time-array>");
+    }
+
+    public void testMonthDay() {
+        assertBothWays(MonthDay.of(1, 13), "<month-day>--01-13</month-day>");
+        assertBothWays(MonthDay.of(2, 29), "<month-day>--02-29</month-day>");
+    }
+
+    public void testMonthDayWithOldFormat() {
+        assertEquals(MonthDay.of(Month.JANUARY, 13), xstream.fromXML("" //
+            + "<java.time.MonthDay resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>13</byte>\n" //
+            + "  <byte>1</byte>\n" //
+            + "  <byte>13</byte>\n" //
+            + "</java.time.MonthDay>"));
+    }
+
+    public void testMonthDayIsImmutable() {
+        final MonthDay array[] = new MonthDay[2];
+        array[0] = array[1] = MonthDay.of(Month.APRIL, 10);
+        assertBothWays(array, "" //
+            + "<month-day-array>\n"
+            + "  <month-day>--04-10</month-day>\n" //
+            + "  <month-day>--04-10</month-day>\n" //
+            + "</month-day-array>");
     }
 
     public void testYear() {
