@@ -666,6 +666,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.time.LocalTime"));
             types.add(JVM.loadClassForName("java.time.OffsetDateTime"));
             types.add(JVM.loadClassForName("java.time.OffsetTime"));
+            types.add(JVM.loadClassForName("java.time.Period"));
             types.add(JVM.loadClassForName("java.time.Ser"));
             types.add(JVM.loadClassForName("java.time.Year"));
             types.add(JVM.loadClassForName("java.time.YearMonth"));
@@ -761,6 +762,7 @@ public class XStream {
             alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
             alias("offset-date-time", JVM.loadClassForName("java.time.OffsetDateTime"));
             alias("offset-time", JVM.loadClassForName("java.time.OffsetTime"));
+            alias("period", JVM.loadClassForName("java.time.Period"));
             alias("year", JVM.loadClassForName("java.time.Year"));
             alias("year-month", JVM.loadClassForName("java.time.YearMonth"));
             alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
@@ -856,8 +858,8 @@ public class XStream {
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
         if (JVM.is18()) {
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter",
-                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter", PRIORITY_NORMAL,
+                null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateTimeConverter",
@@ -868,6 +870,8 @@ public class XStream {
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetTimeConverter",
                 PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.PeriodConverter", PRIORITY_NORMAL,
+                null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearMonthConverter", PRIORITY_NORMAL,
@@ -981,6 +985,7 @@ public class XStream {
             addImmutableTypeDynamically("java.time.LocalTime", false);
             addImmutableTypeDynamically("java.time.OffsetDateTime", false);
             addImmutableTypeDynamically("java.time.OffsetTime", false);
+            addImmutableTypeDynamically("java.time.Period", false);
             addImmutableTypeDynamically("java.time.Year", false);
             addImmutableTypeDynamically("java.time.YearMonth", false);
             addImmutableTypeDynamically("java.time.ZonedDateTime", false);

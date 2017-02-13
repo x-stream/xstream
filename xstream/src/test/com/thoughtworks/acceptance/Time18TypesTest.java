@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneId;
@@ -70,6 +71,7 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         assertBothWays(Duration.ofNanos(9), "<duration>PT0.000000009S</duration>");
         assertBothWays(Duration.ofNanos(6333123456789L), "<duration>PT1H45M33.123456789S</duration>");
         assertBothWays(Duration.ofSeconds(-3), "<duration>PT-3S</duration>");
+        assertBothWays(Duration.ofSeconds(-30001), "<duration>PT-8H-20M-1S</duration>");
     }
 
     public void testDurationWithOldFormat() {
@@ -89,6 +91,37 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <duration>PT50H</duration>\n" //
             + "  <duration>PT50H</duration>\n" //
             + "</duration-array>");
+    }
+
+    public void testPeriod() {
+        assertBothWays(Period.ofDays(1000), "<period>P1000D</period>");
+        assertBothWays(Period.ofWeeks(70), "<period>P490D</period>");
+        assertBothWays(Period.ofMonths(70), "<period>P70M</period>");
+        assertBothWays(Period.ofYears(2017), "<period>P2017Y</period>");
+        assertBothWays(Period.of(-5, 70, -45), "<period>P-5Y70M-45D</period>");
+        assertBothWays(Period.ofYears(0), "<period>P0D</period>");
+        assertBothWays(Period.of(1, 0, 2), "<period>P1Y2D</period>");
+        assertEquals(Period.ofDays(21), xstream.fromXML("<period>P3W</period>"));
+    }
+
+    public void testPeriodWithOldFormat() {
+        assertEquals(Period.ofDays(7777), xstream.fromXML("" //
+            + "<java.time.Period resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>14</byte>\n" //
+            + "  <int>0</int>\n" //
+            + "  <int>0</int>\n" //
+            + "  <int>7777</int>\n" //
+            + "</java.time.Period>"));
+    }
+
+    public void testPeriodIsImmutable() {
+        final Period[] array = new Period[2];
+        array[0] = array[1] = Period.ofDays(1);
+        assertBothWays(array, "" //
+            + "<period-array>\n" //
+            + "  <period>P1D</period>\n" //
+            + "  <period>P1D</period>\n" //
+            + "</period-array>");
     }
 
     public void testLocalDate() {
