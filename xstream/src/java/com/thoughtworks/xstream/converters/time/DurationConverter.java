@@ -24,7 +24,7 @@ public class DurationConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return Duration.class.isAssignableFrom(type);
+        return Duration.class == type;
     }
 
     @Override

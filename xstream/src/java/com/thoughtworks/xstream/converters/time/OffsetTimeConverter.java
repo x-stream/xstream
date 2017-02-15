@@ -40,7 +40,7 @@ public class OffsetTimeConverter implements SingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(OffsetTime.class);
+        return OffsetTime.class == type;
     }
 
     @Override

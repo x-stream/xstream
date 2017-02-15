@@ -26,7 +26,7 @@ public class LocalDateConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(LocalDate.class);
+        return LocalDate.class == type;
     }
 
     @Override

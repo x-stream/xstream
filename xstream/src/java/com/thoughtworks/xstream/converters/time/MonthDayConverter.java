@@ -24,7 +24,7 @@ public class MonthDayConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return MonthDay.class.isAssignableFrom(type);
+        return MonthDay.class == type;
     }
 
     @Override

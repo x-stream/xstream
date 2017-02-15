@@ -24,7 +24,7 @@ public class InstantConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return Instant.class.isAssignableFrom(type);
+        return Instant.class == type;
     }
 
     @Override

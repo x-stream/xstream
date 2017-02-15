@@ -42,7 +42,7 @@ public class ZonedDateTimeConverter implements SingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(ZonedDateTime.class);
+        return ZonedDateTime.class == type;
     }
 
     @Override

@@ -24,7 +24,7 @@ public class PeriodConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return Period.class.isAssignableFrom(type);
+        return Period.class == type;
     }
 
     @Override
