@@ -23,8 +23,8 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 public class MonthDayConverter extends AbstractSingleValueConverter {
 
     @Override
-    public boolean canConvert(final Class type) {
-        return MonthDay.class.isAssignableFrom(type);
+    public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
+        return MonthDay.class == type;
     }
 
     @Override

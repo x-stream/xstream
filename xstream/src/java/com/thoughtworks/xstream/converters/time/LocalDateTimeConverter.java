@@ -38,7 +38,7 @@ public class LocalDateTimeConverter implements SingleValueConverter {
 
     @Override
     public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
-        return type.equals(LocalDateTime.class);
+        return LocalDateTime.class == type;
     }
 
     @Override

@@ -23,8 +23,8 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 public class DurationConverter extends AbstractSingleValueConverter {
 
     @Override
-    public boolean canConvert(final Class type) {
-        return Duration.class.isAssignableFrom(type);
+    public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
+        return Duration.class == type;
     }
 
     @Override

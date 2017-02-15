@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 public class ZoneIdConverter extends AbstractSingleValueConverter {
 
     @Override
-    public boolean canConvert(final Class type) {
+    public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
         return ZoneId.class.isAssignableFrom(type);
     }
 

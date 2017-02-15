@@ -39,7 +39,7 @@ public class OffsetDateTimeConverter implements SingleValueConverter {
 
     @Override
     public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
-        return type.equals(OffsetDateTime.class);
+        return OffsetDateTime.class == type;
     }
 
     @Override
