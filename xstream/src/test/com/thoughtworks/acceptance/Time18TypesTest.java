@@ -11,6 +11,7 @@
 package com.thoughtworks.acceptance;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,6 +32,44 @@ import java.time.ZonedDateTime;
  * @author J&ouml;rg Schaible
  */
 public class Time18TypesTest extends AbstractAcceptanceTest {
+
+    public void testInstant() {
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneId.of("Europe/London"))),
+            "<instant>2017-07-30T19:40:00Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneId.of("Europe/Paris"))),
+            "<instant>2017-07-30T18:40:00Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 123456789, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.123456789Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100000000, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.100Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100000, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.000100Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 1000, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.000001Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.000000100Z</instant>");
+    }
+
+    public void testInstantWithOldFormat() {
+        assertEquals(Instant.parse("2017-02-15T18:49:25Z"), xstream.fromXML("" //
+            + "<java.time.ZoneOffset resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>2</byte>\n" //
+            + "  <long>1487184565</long>\n" //
+            + "  <int>0</int>\n" //
+            + "</java.time.ZoneOffset>"));
+    }
+
+    public void testInstantIsImmutable() {
+        final Instant[] array = new Instant[2];
+        array[0] = array[1] = Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.of("Z")));
+        assertBothWays(array, "" //
+            + "<instant-array>\n" //
+            + "  <instant>2017-07-30T20:40:00Z</instant>\n" //
+            + "  <instant>2017-07-30T20:40:00Z</instant>\n" //
+            + "</instant-array>");
+    }
 
     public void testZoneOffest() {
         assertBothWays(ZoneOffset.of("Z"), "<zone-id>Z</zone-id>");
