@@ -782,6 +782,7 @@ public class XStream {
 
         if (JVM.is18()) {
             alias("duration", JVM.loadClassForName("java.time.Duration"));
+            alias("instant", JVM.loadClassForName("java.time.Instant"));
             alias("local-date", JVM.loadClassForName("java.time.LocalDate"));
             alias("local-date-time", JVM.loadClassForName("java.time.LocalDateTime"));
             alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
@@ -864,6 +865,8 @@ public class XStream {
         }
         if (JVM.is18()) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.InstantConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
                 null, null);
@@ -1071,6 +1074,7 @@ public class XStream {
 
         if (JVM.is18()) {
             addImmutableTypeDynamically("java.time.Duration", false);
+            addImmutableTypeDynamically("java.time.Instant", false);
             addImmutableTypeDynamically("java.time.LocalDate", false);
             addImmutableTypeDynamically("java.time.LocalDateTime", false);
             addImmutableTypeDynamically("java.time.LocalTime", false);
