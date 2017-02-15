@@ -33,94 +33,6 @@ import java.time.ZonedDateTime;
  */
 public class Time18TypesTest extends AbstractAcceptanceTest {
 
-    public void testInstant() {
-        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.of("Z"))),
-            "<instant>2017-07-30T20:40:00Z</instant>");
-        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneId.of("Europe/London"))),
-            "<instant>2017-07-30T19:40:00Z</instant>");
-        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneId.of("Europe/Paris"))),
-            "<instant>2017-07-30T18:40:00Z</instant>");
-        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 123456789, ZoneOffset.of("Z"))),
-            "<instant>2017-07-30T20:40:00.123456789Z</instant>");
-        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100000000, ZoneOffset.of("Z"))),
-            "<instant>2017-07-30T20:40:00.100Z</instant>");
-        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100000, ZoneOffset.of("Z"))),
-            "<instant>2017-07-30T20:40:00.000100Z</instant>");
-        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 1000, ZoneOffset.of("Z"))),
-            "<instant>2017-07-30T20:40:00.000001Z</instant>");
-        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100, ZoneOffset.of("Z"))),
-            "<instant>2017-07-30T20:40:00.000000100Z</instant>");
-    }
-
-    public void testInstantWithOldFormat() {
-        assertEquals(Instant.parse("2017-02-15T18:49:25Z"), xstream.fromXML("" //
-            + "<java.time.ZoneOffset resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>2</byte>\n" //
-            + "  <long>1487184565</long>\n" //
-            + "  <int>0</int>\n" //
-            + "</java.time.ZoneOffset>"));
-    }
-
-    public void testInstantIsImmutable() {
-        final Instant[] array = new Instant[2];
-        array[0] = array[1] = Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.of("Z")));
-        assertBothWays(array, "" //
-            + "<instant-array>\n" //
-            + "  <instant>2017-07-30T20:40:00Z</instant>\n" //
-            + "  <instant>2017-07-30T20:40:00Z</instant>\n" //
-            + "</instant-array>");
-    }
-
-    public void testZoneOffest() {
-        assertBothWays(ZoneOffset.of("Z"), "<zone-id>Z</zone-id>");
-        assertBothWays(ZoneOffset.ofTotalSeconds(7777), "<zone-id>+02:09:37</zone-id>");
-        assertBothWays(ZoneId.ofOffset("GMT", ZoneOffset.ofTotalSeconds(7777)), "<zone-id>GMT+02:09:37</zone-id>");
-        assertBothWays(ZoneId.of("ECT", ZoneId.SHORT_IDS), "<zone-id>Europe/Paris</zone-id>");
-        assertBothWays(ZoneId.of("CET"), "<zone-id>CET</zone-id>");
-    }
-
-    public void testZoneOffestWithOldFormat() {
-        assertEquals(ZoneOffset.ofTotalSeconds(7777), xstream.fromXML("" //
-            + "<java.time.ZoneOffset resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>8</byte>\n" //
-            + "  <byte>127</byte>\n" //
-            + "  <int>7777</int>\n" //
-            + "</java.time.ZoneOffset>"));
-    }
-
-    public void testZoneOffestIsImmutable() {
-        final ZoneOffset[] array = new ZoneOffset[2];
-        array[0] = array[1] = ZoneOffset.of("Z");
-        assertBothWays(array, "" //
-            + "<zone-id-array>\n" //
-            + "  <zone-id>Z</zone-id>\n" //
-            + "  <zone-id>Z</zone-id>\n" //
-            + "</zone-id-array>");
-    }
-
-    public void testZoneRegion() {
-        assertBothWays(ZoneId.of("America/Caracas"), "<zone-id>America/Caracas</zone-id>");
-        assertBothWays(ZoneId.of("Europe/Berlin"), "<zone-id>Europe/Berlin</zone-id>");
-    }
-
-    public void testZoneRegionWithOldFormat() {
-        assertEquals(ZoneId.of("America/Caracas"), xstream.fromXML("" //
-            + "<java.time.ZoneRegion resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <string>America/Caracas</string>\n" //
-            + "</java.time.ZoneRegion>"));
-    }
-
-    public void testZoneRegionIsImmutable() {
-        final ZoneId[] array = new ZoneId[2];
-        array[0] = array[1] = ZoneId.of("Europe/Rome");
-        assertBothWays(array, "" //
-            + "<zone-id-array>\n" //
-            + "  <zone-id>Europe/Rome</zone-id>\n" //
-            + "  <zone-id>Europe/Rome</zone-id>\n" //
-            + "</zone-id-array>");
-    }
-
     public void testDuration() {
         assertBothWays(Duration.ofDays(1000), "<duration>PT24000H</duration>");
         assertBothWays(Duration.ofHours(50), "<duration>PT50H</duration>");
@@ -152,6 +64,44 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <duration>PT50H</duration>\n" //
             + "  <duration>PT50H</duration>\n" //
             + "</duration-array>");
+    }
+
+    public void testInstant() {
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneId.of("Europe/London"))),
+            "<instant>2017-07-30T19:40:00Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneId.of("Europe/Paris"))),
+            "<instant>2017-07-30T18:40:00Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 123456789, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.123456789Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100000000, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.100Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100000, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.000100Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 1000, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.000001Z</instant>");
+        assertBothWays(Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 100, ZoneOffset.of("Z"))),
+            "<instant>2017-07-30T20:40:00.000000100Z</instant>");
+    }
+
+    public void testInstantWithOldFormat() {
+        assertEquals(Instant.parse("2017-02-15T18:49:25Z"), xstream.fromXML("" //
+            + "<java.time.Instant resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>2</byte>\n" //
+            + "  <long>1487184565</long>\n" //
+            + "  <int>0</int>\n" //
+            + "</java.time.Instant>"));
+    }
+
+    public void testInstantIsImmutable() {
+        final Instant[] array = new Instant[2];
+        array[0] = array[1] = Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.of("Z")));
+        assertBothWays(array, "" //
+            + "<instant-array>\n" //
+            + "  <instant>2017-07-30T20:40:00Z</instant>\n" //
+            + "  <instant>2017-07-30T20:40:00Z</instant>\n" //
+            + "</instant-array>");
     }
 
     public void testPeriod() {
@@ -272,6 +222,30 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "</local-time-array>");
     }
 
+    public void testMonthDay() {
+        assertBothWays(MonthDay.of(1, 13), "<month-day>--01-13</month-day>");
+        assertBothWays(MonthDay.of(2, 29), "<month-day>--02-29</month-day>");
+    }
+
+    public void testMonthDayWithOldFormat() {
+        assertEquals(MonthDay.of(Month.JANUARY, 13), xstream.fromXML("" //
+            + "<java.time.MonthDay resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>13</byte>\n" //
+            + "  <byte>1</byte>\n" //
+            + "  <byte>13</byte>\n" //
+            + "</java.time.MonthDay>"));
+    }
+
+    public void testMonthDayIsImmutable() {
+        final MonthDay array[] = new MonthDay[2];
+        array[0] = array[1] = MonthDay.of(Month.APRIL, 10);
+        assertBothWays(array, "" //
+            + "<month-day-array>\n"
+            + "  <month-day>--04-10</month-day>\n" //
+            + "  <month-day>--04-10</month-day>\n" //
+            + "</month-day-array>");
+    }
+
     public void testOffsetDateTime() {
         assertBothWays(OffsetDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.ofHours(0)),
             "<offset-date-time>2017-07-30T20:40:00Z</offset-date-time>");
@@ -357,30 +331,6 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <offset-time>20:40:15+01:00</offset-time>\n" //
             + "  <offset-time>20:40:15+01:00</offset-time>\n" //
             + "</offset-time-array>");
-    }
-
-    public void testMonthDay() {
-        assertBothWays(MonthDay.of(1, 13), "<month-day>--01-13</month-day>");
-        assertBothWays(MonthDay.of(2, 29), "<month-day>--02-29</month-day>");
-    }
-
-    public void testMonthDayWithOldFormat() {
-        assertEquals(MonthDay.of(Month.JANUARY, 13), xstream.fromXML("" //
-            + "<java.time.MonthDay resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>13</byte>\n" //
-            + "  <byte>1</byte>\n" //
-            + "  <byte>13</byte>\n" //
-            + "</java.time.MonthDay>"));
-    }
-
-    public void testMonthDayIsImmutable() {
-        final MonthDay array[] = new MonthDay[2];
-        array[0] = array[1] = MonthDay.of(Month.APRIL, 10);
-        assertBothWays(array, "" //
-            + "<month-day-array>\n"
-            + "  <month-day>--04-10</month-day>\n" //
-            + "  <month-day>--04-10</month-day>\n" //
-            + "</month-day-array>");
     }
 
     public void testYear() {
@@ -474,5 +424,55 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <zoned-date-time>2017-10-30T20:40:15+01:00[Europe/Paris]</zoned-date-time>\n"
             + "  <zoned-date-time>2017-10-30T20:40:15+01:00[Europe/Paris]</zoned-date-time>\n"
             + "</zoned-date-time-array>");
+    }
+
+    public void testZoneOffest() {
+        assertBothWays(ZoneOffset.of("Z"), "<zone-id>Z</zone-id>");
+        assertBothWays(ZoneOffset.ofTotalSeconds(7777), "<zone-id>+02:09:37</zone-id>");
+        assertBothWays(ZoneId.ofOffset("GMT", ZoneOffset.ofTotalSeconds(7777)), "<zone-id>GMT+02:09:37</zone-id>");
+        assertBothWays(ZoneId.of("ECT", ZoneId.SHORT_IDS), "<zone-id>Europe/Paris</zone-id>");
+        assertBothWays(ZoneId.of("CET"), "<zone-id>CET</zone-id>");
+    }
+
+    public void testZoneOffestWithOldFormat() {
+        assertEquals(ZoneOffset.ofTotalSeconds(7777), xstream.fromXML("" //
+            + "<java.time.ZoneOffset resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>8</byte>\n" //
+            + "  <byte>127</byte>\n" //
+            + "  <int>7777</int>\n" //
+            + "</java.time.ZoneOffset>"));
+    }
+
+    public void testZoneOffestIsImmutable() {
+        final ZoneOffset[] array = new ZoneOffset[2];
+        array[0] = array[1] = ZoneOffset.of("Z");
+        assertBothWays(array, "" //
+            + "<zone-id-array>\n" //
+            + "  <zone-id>Z</zone-id>\n" //
+            + "  <zone-id>Z</zone-id>\n" //
+            + "</zone-id-array>");
+    }
+
+    public void testZoneRegion() {
+        assertBothWays(ZoneId.of("America/Caracas"), "<zone-id>America/Caracas</zone-id>");
+        assertBothWays(ZoneId.of("Europe/Berlin"), "<zone-id>Europe/Berlin</zone-id>");
+    }
+
+    public void testZoneRegionWithOldFormat() {
+        assertEquals(ZoneId.of("America/Caracas"), xstream.fromXML("" //
+            + "<java.time.ZoneRegion resolves-to=\"java.time.Ser\">\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <string>America/Caracas</string>\n" //
+            + "</java.time.ZoneRegion>"));
+    }
+
+    public void testZoneRegionIsImmutable() {
+        final ZoneId[] array = new ZoneId[2];
+        array[0] = array[1] = ZoneId.of("Europe/Rome");
+        assertBothWays(array, "" //
+            + "<zone-id-array>\n" //
+            + "  <zone-id>Europe/Rome</zone-id>\n" //
+            + "  <zone-id>Europe/Rome</zone-id>\n" //
+            + "</zone-id-array>");
     }
 }
