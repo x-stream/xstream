@@ -44,6 +44,17 @@ public class OffsetTimeConverter implements SingleValueConverter {
     }
 
     @Override
+    public Object fromString(final String str) {
+        try {
+            return OffsetTime.parse(str);
+        } catch (final DateTimeParseException e) {
+            final ConversionException exception = new ConversionException("Cannot parse value as offset time", e);
+            exception.add("value", str);
+            throw exception;
+        }
+    }
+
+    @Override
     public String toString(final Object obj) {
         if (obj == null) {
             return null;
@@ -52,17 +63,4 @@ public class OffsetTimeConverter implements SingleValueConverter {
         final OffsetTime offsetTime = (OffsetTime)obj;
         return FORMATTER.format(offsetTime);
     }
-
-    @Override
-    public Object fromString(final String str) {
-        try {
-            return OffsetTime.parse(str);
-        } catch (final DateTimeParseException e) {
-            final ConversionException exception = new ConversionException("Cannot parse string");
-            exception.add("string", str);
-            exception.add("targetType", OffsetTime.class.getSimpleName());
-            throw exception;
-        }
-    }
-
 }

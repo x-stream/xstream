@@ -33,6 +33,7 @@ import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 
 
 /**
@@ -95,6 +96,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         assertBothWays(Duration.ofSeconds(-30001), "<duration>PT-8H-20M-1S</duration>");
     }
 
+    public void testDurationConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<duration>PT77XS</duration>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(Duration.class.getName(), e.get("class"));
+            assertEquals("PT77XS", e.get("value"));
+        }
+    }
+
     public void testDurationWithOldFormat() {
         assertEquals(Duration.ofSeconds(7777), xstream.fromXML("" //
             + "<java.time.Duration resolves-to=\"java.time.Ser\">\n" //
@@ -133,6 +144,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             "<instant>2017-07-30T20:40:00.000000100Z</instant>");
     }
 
+    public void testInstantConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<instant>2017-07-30X20:40:00Z</instant>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(Instant.class.getName(), e.get("class"));
+            assertEquals("2017-07-30X20:40:00Z", e.get("value"));
+        }
+    }
+
     public void testInstantWithOldFormat() {
         assertEquals(Instant.parse("2017-02-15T18:49:25Z"), xstream.fromXML("" //
             + "<java.time.Instant resolves-to=\"java.time.Ser\">\n" //
@@ -163,6 +184,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         assertEquals(Period.ofDays(21), xstream.fromXML("<period>P3W</period>"));
     }
 
+    public void testPeriodConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<period>P1YXD</period>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(Period.class.getName(), e.get("class"));
+            assertEquals("P1YXD", e.get("period"));
+        }
+    }
+
     public void testPeriodWithOldFormat() {
         assertEquals(Period.ofDays(7777), xstream.fromXML("" //
             + "<java.time.Period resolves-to=\"java.time.Ser\">\n" //
@@ -185,6 +216,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testLocalDate() {
         assertBothWays(LocalDate.of(2017, 10, 30), "<local-date>2017-10-30</local-date>");
+    }
+
+    public void testLocalDateConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<local-date>2017-13-30</local-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(LocalDate.class.getName(), e.get("class"));
+            assertEquals("2017-13-30", e.get("value"));
+        }
     }
 
     public void testLocalDateWithOldFormat() {
@@ -219,6 +260,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             "<local-date-time>2017-07-30T20:40</local-date-time>"));
     }
 
+    public void testLocalDateTimeConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<local-date-time>2017-13-30T20:40:00</local-date-time>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(LocalDateTime.class.getName(), e.get("class"));
+            assertEquals("2017-13-30T20:40:00", e.get("value"));
+        }
+    }
+
     public void testLocalDateTimeWithOldFormat() {
         assertEquals(LocalDateTime.of(2017, 7, 30, 20, 40), xstream.fromXML("" //
             + "<java.time.LocalDateTime resolves-to=\"java.time.Ser\">\n" //
@@ -251,6 +302,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         assertEquals(LocalTime.of(10, 30), xstream.fromXML("<local-time>10:30</local-time>"));
     }
 
+    public void testLocalTimeConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<local-time>10:30:77</local-time>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(LocalTime.class.getName(), e.get("class"));
+            assertEquals("10:30:77", e.get("value"));
+        }
+    }
+
     public void testLocalTimeWithOldFormat() {
         assertEquals(LocalTime.of(10, 30), xstream.fromXML("" //
             + "<java.time.LocalTime resolves-to=\"java.time.Ser\">\n" //
@@ -273,6 +334,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
     public void testMonthDay() {
         assertBothWays(MonthDay.of(1, 13), "<month-day>--01-13</month-day>");
         assertBothWays(MonthDay.of(2, 29), "<month-day>--02-29</month-day>");
+    }
+
+    public void testMonthDayConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<month-day>--00-13</month-day>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(MonthDay.class.getName(), e.get("class"));
+            assertEquals("--00-13", e.get("value"));
+        }
     }
 
     public void testMonthDayWithOldFormat() {
@@ -315,6 +386,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             "<offset-date-time>2017-07-30T20:40Z</offset-date-time>"));
         assertEquals(OffsetDateTime.of(2017, 10, 30, 20, 40, 15, 100000000, ZoneOffset.ofHours(1)), xstream.fromXML(
             "<offset-date-time>2017-10-30T20:40:15.100+01:00</offset-date-time>"));
+    }
+
+    public void testOffsetDateTimeConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<offset-date-time>2017-07-30T27:40:00Z</offset-date-time>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(OffsetDateTime.class.getName(), e.get("class"));
+            assertEquals("2017-07-30T27:40:00Z", e.get("value"));
+        }
     }
 
     public void testOffsetDateTimeWithOldFormat() {
@@ -361,6 +442,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             "<offset-time>20:40:15.100+01:00</offset-time>"));
     }
 
+    public void testOffsetTimeConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<offset-time>20:77:00Z</offset-time>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(OffsetTime.class.getName(), e.get("class"));
+            assertEquals("20:77:00Z", e.get("value"));
+        }
+    }
+
     public void testOffsetTimeWithOldFormat() {
         assertEquals(OffsetTime.of(20, 40, 0, 0, ZoneOffset.ofHours(0)), xstream.fromXML("" //
             + "<java.time.OffsetTime resolves-to=\"java.time.Ser\">\n" //
@@ -387,6 +478,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         assertBothWays(Year.of(-1), "<year>-1</year>");
     }
 
+    public void testYearConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<year>Z</year>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(Year.class.getName(), e.get("class"));
+            assertEquals("Z", e.get("value"));
+        }
+    }
+
     public void testYearWithOldFormat() {
         assertEquals(Year.of(2017), xstream.fromXML("" //
             + "<java.time.Year resolves-to=\"java.time.Ser\">\n" //
@@ -407,6 +508,18 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testYearMonth() {
         assertBothWays(YearMonth.of(2017, 2), "<year-month>2017-02</year-month>");
+        assertBothWays(YearMonth.of(0, 2), "<year-month>0000-02</year-month>");
+        assertBothWays(YearMonth.of(-1, 2), "<year-month>-0001-02</year-month>");
+    }
+
+    public void testYearMonthConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<year-month>Z-02</year-month>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(YearMonth.class.getName(), e.get("class"));
+            assertEquals("Z-02", e.get("value"));
+        }
     }
 
     public void testYearMonthWithOldFormat() {
@@ -449,6 +562,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             "<zoned-date-time>2017-10-30T20:40:15.100+01:00[Europe/Paris]</zoned-date-time>"));
     }
 
+    public void testZonedDateTimeConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<zoned-date-time>2017-10-30T20:40:00Z[Europe/Bonn]</zoned-date-time>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(ZonedDateTime.class.getName(), e.get("class"));
+            assertEquals("2017-10-30T20:40:00Z[Europe/Bonn]", e.get("value"));
+        }
+    }
+
     public void testZonedDateTimeWithOldFormat() {
         assertEquals(ZonedDateTime.of(2017, 10, 30, 20, 40, 0, 0, ZoneId.of("Europe/London")), xstream.fromXML("" //
             + "<java.time.ZonedDateTime resolves-to=\"java.time.Ser\">\n" //
@@ -480,6 +603,23 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         assertBothWays(ZoneId.ofOffset("GMT", ZoneOffset.ofTotalSeconds(7777)), "<zone-id>GMT+02:09:37</zone-id>");
         assertBothWays(ZoneId.of("ECT", ZoneId.SHORT_IDS), "<zone-id>Europe/Paris</zone-id>");
         assertBothWays(ZoneId.of("CET"), "<zone-id>CET</zone-id>");
+    }
+
+    public void testZoneIdConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<zone-id>X</zone-id>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(ZoneId.class.getName(), e.get("class"));
+            assertEquals("X", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<zone-id>Europe/X</zone-id>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(ZoneId.class.getName(), e.get("class"));
+            assertEquals("Europe/X", e.get("value"));
+        }
     }
 
     public void testZoneOffestWithOldFormat() {
