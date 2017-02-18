@@ -660,6 +660,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.sql.Date"));
         }
         if (JVM.is18()) {
+            allowTypeHierarchy(JVM.loadClassForName("java.time.Clock"));
             types.add(JVM.loadClassForName("java.time.Duration"));
             types.add(JVM.loadClassForName("java.time.Instant"));
             types.add(JVM.loadClassForName("java.time.LocalDate"));
@@ -758,6 +759,10 @@ public class XStream {
         }
 
         if (JVM.is18()) {
+            alias("fixed-clock", JVM.loadClassForName("java.time.Clock$FixedClock"));
+            alias("offset-clock", JVM.loadClassForName("java.time.Clock$OffsetClock"));
+            alias("system-clock", JVM.loadClassForName("java.time.Clock$SystemClock"));
+            alias("tick-clock", JVM.loadClassForName("java.time.Clock$TickClock"));
             alias("duration", JVM.loadClassForName("java.time.Duration"));
             alias("instant", JVM.loadClassForName("java.time.Instant"));
             alias("local-date", JVM.loadClassForName("java.time.LocalDate"));
@@ -893,6 +898,7 @@ public class XStream {
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaFieldConverter(classLoaderReference), PRIORITY_NORMAL);
+
         if (JVM.isAWTAvailable()) {
             registerConverter(new FontConverter(mapper), PRIORITY_NORMAL);
             registerConverter(new ColorConverter(), PRIORITY_NORMAL);
