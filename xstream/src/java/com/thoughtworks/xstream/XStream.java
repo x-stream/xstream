@@ -776,6 +776,9 @@ public class XStream {
             alias("year-month", JVM.loadClassForName("java.time.YearMonth"));
             alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
             aliasType("zone-id", JVM.loadClassForName("java.time.ZoneId"));
+            alias("iso-field", JVM.loadClassForName("java.time.temporal.IsoFields$Field"));
+            alias("iso-unit", JVM.loadClassForName("java.time.temporal.IsoFields$Unit"));
+            alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
         }
 
         aliasType("charset", Charset.class);
@@ -1008,6 +1011,9 @@ public class XStream {
             addImmutableTypeDynamically("java.time.ZoneId", false);
             addImmutableTypeDynamically("java.time.ZoneOffset", false);
             addImmutableTypeDynamically("java.time.ZoneRegion", false);
+            addImmutableTypeDynamically("java.time.temporal.IsoFields$Field", false);
+            addImmutableTypeDynamically("java.time.temporal.IsoFields$Unit", false);
+            addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);
         }
     }
 

@@ -26,6 +26,9 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.IsoFields;
+import java.time.temporal.JulianFields;
+import java.time.temporal.TemporalField;
 
 
 /**
@@ -509,5 +512,43 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <zone-id>Europe/Rome</zone-id>\n" //
             + "  <zone-id>Europe/Rome</zone-id>\n" //
             + "</zone-id-array>");
+    }
+
+    public void testIsoFields() {
+        assertBothWays(IsoFields.DAY_OF_QUARTER, "<iso-field>DAY_OF_QUARTER</iso-field>");
+        assertBothWays(IsoFields.QUARTER_OF_YEAR, "<iso-field>QUARTER_OF_YEAR</iso-field>");
+        assertBothWays(IsoFields.QUARTER_YEARS, "<iso-unit>QUARTER_YEARS</iso-unit>");
+        assertBothWays(IsoFields.WEEK_BASED_YEAR, "<iso-field>WEEK_BASED_YEAR</iso-field>");
+        assertBothWays(IsoFields.WEEK_BASED_YEARS, "<iso-unit>WEEK_BASED_YEARS</iso-unit>");
+        assertBothWays(IsoFields.WEEK_OF_WEEK_BASED_YEAR, "<iso-field>WEEK_OF_WEEK_BASED_YEAR</iso-field>");
+    }
+
+    public void testIsoFieldsAreImmutable() {
+        final Object[] array = new Object[4];
+        array[0] = array[1] = IsoFields.DAY_OF_QUARTER;
+        array[2] = array[3] = IsoFields.QUARTER_YEARS;
+        assertBothWays(array, "" //
+            + "<object-array>\n" //
+            + "  <iso-field>DAY_OF_QUARTER</iso-field>\n" //
+            + "  <iso-field>DAY_OF_QUARTER</iso-field>\n" //
+            + "  <iso-unit>QUARTER_YEARS</iso-unit>\n" //
+            + "  <iso-unit>QUARTER_YEARS</iso-unit>\n" //
+            + "</object-array>");
+    }
+
+    public void testJulianFields() {
+        assertBothWays(JulianFields.JULIAN_DAY, "<julian-field>JULIAN_DAY</julian-field>");
+        assertBothWays(JulianFields.MODIFIED_JULIAN_DAY, "<julian-field>MODIFIED_JULIAN_DAY</julian-field>");
+        assertBothWays(JulianFields.RATA_DIE, "<julian-field>RATA_DIE</julian-field>");
+    }
+
+    public void testJulianFieldsAreImmutable() {
+        final TemporalField[] array = new TemporalField[2];
+        array[0] = array[1] = JulianFields.JULIAN_DAY;
+        assertBothWays(array, "" //
+            + "<java.time.temporal.TemporalField-array>\n" //
+            + "  <julian-field>JULIAN_DAY</julian-field>\n" //
+            + "  <julian-field>JULIAN_DAY</julian-field>\n" //
+            + "</java.time.temporal.TemporalField-array>");
     }
 }
