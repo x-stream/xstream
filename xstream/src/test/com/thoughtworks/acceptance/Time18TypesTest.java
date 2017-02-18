@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -35,6 +36,40 @@ import com.thoughtworks.xstream.XStream;
  * @author J&ouml;rg Schaible
  */
 public class Time18TypesTest extends AbstractAcceptanceTest {
+    public void testFixedClock() {
+        assertBothWays(Clock.fixed(Instant.parse("2017-02-15T18:49:25Z"), ZoneOffset.of("Z")), "" //
+            + "<fixed-clock>\n" //
+            + "  <instant>2017-02-15T18:49:25Z</instant>\n" //
+            + "  <zone>Z</zone>\n" //
+            + "</fixed-clock>");
+    }
+
+    public void testOffsetClock() {
+        assertBothWays(Clock.offset(Clock.systemUTC(), Duration.ofHours(1)), "" //
+            + "<offset-clock>\n" //
+            + "  <baseClock class=\"system-clock\">\n" //
+            + "    <zone>Z</zone>\n" //
+            + "  </baseClock>\n" //
+            + "  <offset>PT1H</offset>\n" //
+            + "</offset-clock>");
+    }
+
+    public void testSystemClock() {
+        assertBothWays(Clock.systemUTC(), "" //
+            + "<system-clock>\n" //
+            + "  <zone>Z</zone>\n" //
+            + "</system-clock>");
+    }
+
+    public void testTickClock() {
+        assertBothWays(Clock.tick(Clock.systemUTC(), Duration.ofMillis(42)), "" //
+            + "<tick-clock>\n" //
+            + "  <baseClock class=\"system-clock\">\n" //
+            + "    <zone>Z</zone>\n" //
+            + "  </baseClock>\n" //
+            + "  <tickNanos>42000000</tickNanos>\n" //
+            + "</tick-clock>");
+    }
 
     @Override
     protected void setupSecurity(XStream xstream) {
