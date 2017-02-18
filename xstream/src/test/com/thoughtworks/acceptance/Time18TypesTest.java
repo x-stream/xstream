@@ -26,6 +26,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.chrono.IsoChronology;
 import java.time.temporal.IsoFields;
 import java.time.temporal.JulianFields;
 import java.time.temporal.Temporal;
@@ -521,6 +522,28 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <zone-id>Europe/Rome</zone-id>\n" //
             + "  <zone-id>Europe/Rome</zone-id>\n" //
             + "</zone-id-array>");
+    }
+
+    public void testIsoChronology() {
+        assertBothWays(IsoChronology.INSTANCE, "<iso-chronology></iso-chronology>");
+    }
+
+    public void testIsoChronologyWithOldFormat() {
+        assertSame(IsoChronology.INSTANCE, xstream.fromXML("" //
+            + "<java.time.chrono.IsoChronology resolves-to=\"java.time.chrono.Ser\">\n" //
+            + "  <byte>1</byte>\n" //
+            + "  <string>ISO</string>\n" //
+            + "</java.time.chrono.IsoChronology>"));
+    }
+
+    public void testIsoChronologyIsImmutable() {
+        final IsoChronology[] array = new IsoChronology[2];
+        array[0] = array[1] = IsoChronology.INSTANCE;
+        assertBothWays(array, "" //
+            + "<iso-chronology-array>\n" //
+            + "  <iso-chronology></iso-chronology>\n" //
+            + "  <iso-chronology></iso-chronology>\n" //
+            + "</iso-chronology-array>");
     }
 
     public void testIsoFields() {
