@@ -11,7 +11,9 @@
 package com.thoughtworks.xstream.converters.time;
 
 import java.time.Period;
+import java.time.format.DateTimeParseException;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
@@ -29,12 +31,12 @@ public class PeriodConverter extends AbstractSingleValueConverter {
 
     @Override
     public Period fromString(final String str) {
-        return Period.parse(str);
-    }
-
-    @Override
-    public String toString(final Object obj) {
-        final Period period = (Period)obj;
-        return period.toString();
+        try {
+            return Period.parse(str);
+        } catch (final DateTimeParseException ex) {
+            final ConversionException exception = new ConversionException("Cannot parse period value", ex);
+            exception.add("period", str);
+            throw exception;
+        }
     }
 }

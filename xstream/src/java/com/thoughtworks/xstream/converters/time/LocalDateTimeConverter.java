@@ -42,6 +42,17 @@ public class LocalDateTimeConverter implements SingleValueConverter {
     }
 
     @Override
+    public Object fromString(final String str) {
+        try {
+            return LocalDateTime.parse(str);
+        } catch (final DateTimeParseException e) {
+            final ConversionException exception = new ConversionException("Cannot parse value as local date time", e);
+            exception.add("value", str);
+            throw exception;
+        }
+    }
+
+    @Override
     public String toString(final Object obj) {
         if (obj == null) {
             return null;
@@ -50,17 +61,4 @@ public class LocalDateTimeConverter implements SingleValueConverter {
         final LocalDateTime localDateTime = (LocalDateTime)obj;
         return FORMATTER.format(localDateTime);
     }
-
-    @Override
-    public Object fromString(final String str) {
-        try {
-            return LocalDateTime.parse(str);
-        } catch (final DateTimeParseException e) {
-            final ConversionException exception = new ConversionException("Cannot parse string");
-            exception.add("string", str);
-            exception.add("targetType", LocalDateTime.class.getSimpleName());
-            throw exception;
-        }
-    }
-
 }

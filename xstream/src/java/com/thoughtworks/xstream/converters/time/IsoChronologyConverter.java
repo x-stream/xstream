@@ -13,7 +13,7 @@ package com.thoughtworks.xstream.converters.time;
 import java.time.chrono.IsoChronology;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
 /**
@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  *
  * @author J&ouml;rg Schaible
  */
-public class IsoChronologyConverter extends AbstractSingleValueConverter {
+public class IsoChronologyConverter implements SingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {

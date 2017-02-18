@@ -34,9 +34,8 @@ public class LocalDateConverter extends AbstractSingleValueConverter {
         try {
             return LocalDate.parse(str);
         } catch (final DateTimeParseException e) {
-            final ConversionException exception = new ConversionException("Cannot parse string");
-            exception.add("string", str);
-            exception.add("targetType", LocalDate.class.getSimpleName());
+            final ConversionException exception = new ConversionException("Cannot parse value as local date", e);
+            exception.add("value", str);
             throw exception;
         }
     }

@@ -60,9 +60,8 @@ public class ZonedDateTimeConverter implements SingleValueConverter {
         try {
             return ZonedDateTime.parse(str);
         } catch (final DateTimeParseException e) {
-            final ConversionException exception = new ConversionException("Cannot parse string");
-            exception.add("string", str);
-            exception.add("targetType", ZonedDateTime.class.getSimpleName());
+            final ConversionException exception = new ConversionException("Cannot parse value as zoned date time", e);
+            exception.add("value", str);
             throw exception;
         }
     }

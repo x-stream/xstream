@@ -10,9 +10,12 @@
  */
 package com.thoughtworks.xstream.converters.time;
 
+import java.time.DateTimeException;
 import java.time.ZoneId;
+import java.time.zone.ZoneRulesException;
 
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
 /**
@@ -20,7 +23,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  *
  * @author J&ouml;rg Schaible
  */
-public class ZoneIdConverter extends AbstractSingleValueConverter {
+public class ZoneIdConverter implements SingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
@@ -29,11 +32,23 @@ public class ZoneIdConverter extends AbstractSingleValueConverter {
 
     @Override
     public ZoneId fromString(final String str) {
-        return ZoneId.of(str);
+        ConversionException exception;
+        try {
+            return ZoneId.of(str);
+        } catch (final ZoneRulesException e) {
+            exception = new ConversionException("Not a valid zone id", e);
+        } catch (final DateTimeException e) {
+            exception = new ConversionException("Cannot parse value as zone id", e);
+        }
+        exception.add("value", str);
+        throw exception;
     }
 
     @Override
     public String toString(final Object obj) {
+        if (obj == null) {
+            return null;
+        }
         final ZoneId zoneId = (ZoneId)obj;
         return zoneId.getId();
     }

@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.converters.time;
 
 import java.time.Year;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
@@ -29,12 +30,12 @@ public class YearConverter extends AbstractSingleValueConverter {
 
     @Override
     public Year fromString(final String str) {
-        return Year.of(Integer.parseInt(str));
-    }
-
-    @Override
-    public String toString(final Object obj) {
-        final Year year = (Year)obj;
-        return year.toString();
+        try {
+            return Year.of(Integer.parseInt(str));
+        } catch (final NumberFormatException ex) {
+            final ConversionException exception = new ConversionException("Cannot parse value as year", ex);
+            exception.add("value", str);
+            throw exception;
+        }
     }
 }

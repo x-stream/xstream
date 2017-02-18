@@ -11,7 +11,9 @@
 package com.thoughtworks.xstream.converters.time;
 
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
@@ -29,12 +31,12 @@ public class InstantConverter extends AbstractSingleValueConverter {
 
     @Override
     public Instant fromString(final String str) {
-        return Instant.parse(str);
-    }
-
-    @Override
-    public String toString(final Object obj) {
-        final Instant instant = (Instant)obj;
-        return instant.toString();
+        try {
+            return Instant.parse(str);
+        } catch (final DateTimeParseException ex) {
+            final ConversionException exception = new ConversionException("Cannot parse value as instant", ex);
+            exception.add("value", str);
+            throw exception;
+        }
     }
 }
