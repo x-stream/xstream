@@ -676,7 +676,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
             allowTypeHierarchy(JVM.loadClassForName("java.time.ZoneId"));
             types.add(JVM.loadClassForName("java.time.chrono.Ser"));
-            types.add(JVM.loadClassForName("java.time.chrono.IsoChronology"));
+            allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
         }
         types.remove(null);
         allowTypes(types.toArray(new Class[types.size()]));
@@ -778,7 +778,7 @@ public class XStream {
             alias("year-month", JVM.loadClassForName("java.time.YearMonth"));
             alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
             aliasType("zone-id", JVM.loadClassForName("java.time.ZoneId"));
-            alias("iso-chronology", JVM.loadClassForName("java.time.chrono.IsoChronology"));
+            aliasType("chronology", JVM.loadClassForName("java.time.chrono.Chronology"));
             alias("iso-field", JVM.loadClassForName("java.time.temporal.IsoFields$Field"));
             alias("iso-unit", JVM.loadClassForName("java.time.temporal.IsoFields$Unit"));
             alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
@@ -873,11 +873,11 @@ public class XStream {
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
         if (JVM.is18()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ChronologyConverter",
+                PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.InstantConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.IsoChronologyConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
                 null, null);
@@ -1016,7 +1016,11 @@ public class XStream {
             addImmutableTypeDynamically("java.time.ZoneId", false);
             addImmutableTypeDynamically("java.time.ZoneOffset", false);
             addImmutableTypeDynamically("java.time.ZoneRegion", false);
+            addImmutableTypeDynamically("java.time.chrono.HijrahChronology", false);
             addImmutableTypeDynamically("java.time.chrono.IsoChronology", false);
+            addImmutableTypeDynamically("java.time.chrono.JapaneseChronology", false);
+            addImmutableTypeDynamically("java.time.chrono.MinguoChronology", false);
+            addImmutableTypeDynamically("java.time.chrono.ThaiBuddhistChronology", false);
             addImmutableTypeDynamically("java.time.temporal.IsoFields$Field", false);
             addImmutableTypeDynamically("java.time.temporal.IsoFields$Unit", false);
             addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);

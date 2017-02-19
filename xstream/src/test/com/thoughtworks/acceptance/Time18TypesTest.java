@@ -26,7 +26,9 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.chrono.Chronology;
 import java.time.chrono.IsoChronology;
+import java.time.chrono.JapaneseChronology;
 import java.time.temporal.IsoFields;
 import java.time.temporal.JulianFields;
 import java.time.temporal.TemporalField;
@@ -656,11 +658,22 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "</zone-id-array>");
     }
 
-    public void testIsoChronology() {
-        assertBothWays(IsoChronology.INSTANCE, "<iso-chronology></iso-chronology>");
+    public void testChronology() {
+        assertBothWays(IsoChronology.INSTANCE, "<chronology>ISO</chronology>");
+        assertBothWays(JapaneseChronology.INSTANCE, "<chronology>Japanese</chronology>");
     }
 
-    public void testIsoChronologyWithOldFormat() {
+    public void testChronologyConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<chronology>Z</chronology>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(Chronology.class.getName(), e.get("class"));
+            assertEquals("Z", e.get("value"));
+        }
+    }
+
+    public void testChronologyWithOldFormat() {
         assertSame(IsoChronology.INSTANCE, xstream.fromXML("" //
             + "<java.time.chrono.IsoChronology resolves-to=\"java.time.chrono.Ser\">\n" //
             + "  <byte>1</byte>\n" //
@@ -668,14 +681,14 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "</java.time.chrono.IsoChronology>"));
     }
 
-    public void testIsoChronologyIsImmutable() {
-        final IsoChronology[] array = new IsoChronology[2];
+    public void testChronologyIsImmutable() {
+        final Chronology[] array = new Chronology[2];
         array[0] = array[1] = IsoChronology.INSTANCE;
         assertBothWays(array, "" //
-            + "<iso-chronology-array>\n" //
-            + "  <iso-chronology></iso-chronology>\n" //
-            + "  <iso-chronology></iso-chronology>\n" //
-            + "</iso-chronology-array>");
+            + "<chronology-array>\n" //
+            + "  <chronology>ISO</chronology>\n" //
+            + "  <chronology>ISO</chronology>\n" //
+            + "</chronology-array>");
     }
 
     public void testIsoFields() {

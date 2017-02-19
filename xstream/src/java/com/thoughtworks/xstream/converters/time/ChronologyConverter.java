@@ -6,44 +6,45 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 18. February 2017 by Joerg Schaible
+ * Created on 19. February 2017 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.time;
 
-import java.time.chrono.IsoChronology;
+import java.time.DateTimeException;
+import java.time.chrono.Chronology;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 
 /**
- * Converts {@link IsoChronology#INSTANCE} to an empty string.
+ * Converts a {@link Chronology} instance to a string using its id.
  *
  * @author J&ouml;rg Schaible
  */
-public class IsoChronologyConverter implements SingleValueConverter {
+public class ChronologyConverter implements SingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return IsoChronology.class == type;
+        return Chronology.class.isAssignableFrom(type);
     }
 
     @Override
-    public IsoChronology fromString(final String str) {
+    public Chronology fromString(final String str) {
         if (str == null) {
             return null;
         }
-        if (!str.isEmpty()) {
-            final ConversionException exception = new ConversionException(
-                "ISO chronology does not have a string representation");
-            exception.add("ISO chronology", str);
+        try {
+            return Chronology.of(str);
+        } catch (final DateTimeException e) {
+            final ConversionException exception = new ConversionException("Cannot parse value as chronology", e);
+            exception.add("value", str);
             throw exception;
         }
-        return IsoChronology.INSTANCE;
     }
 
     @Override
     public String toString(final Object obj) {
-        return obj == null ? null : "";
+        return obj == null ? null : ((Chronology)obj).getId();
     }
 }
