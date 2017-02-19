@@ -11,6 +11,7 @@
 package com.thoughtworks.acceptance;
 
 import java.time.Clock;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -331,6 +332,14 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <local-time>10:30:00</local-time>\n" //
             + "  <local-time>10:30:00</local-time>\n" //
             + "</local-time-array>");
+    }
+
+    public void testDayOfWeek() {
+        assertBothWays(DayOfWeek.MONDAY, "<day-of-week>MONDAY</day-of-week>");
+    }
+
+    public void testMonth() {
+        assertBothWays(Month.FEBRUARY, "<month>FEBRUARY</month>");
     }
 
     public void testMonthDay() {

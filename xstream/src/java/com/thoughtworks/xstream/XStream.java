@@ -785,11 +785,13 @@ public class XStream {
             alias("offset-clock", JVM.loadClassForName("java.time.Clock$OffsetClock"));
             alias("system-clock", JVM.loadClassForName("java.time.Clock$SystemClock"));
             alias("tick-clock", JVM.loadClassForName("java.time.Clock$TickClock"));
+            alias("day-of-week", JVM.loadClassForName("java.time.DayOfWeek"));
             alias("duration", JVM.loadClassForName("java.time.Duration"));
             alias("instant", JVM.loadClassForName("java.time.Instant"));
             alias("local-date", JVM.loadClassForName("java.time.LocalDate"));
             alias("local-date-time", JVM.loadClassForName("java.time.LocalDateTime"));
             alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
+            alias("month", JVM.loadClassForName("java.time.Month"));
             alias("month-day", JVM.loadClassForName("java.time.MonthDay"));
             alias("offset-date-time", JVM.loadClassForName("java.time.OffsetDateTime"));
             alias("offset-time", JVM.loadClassForName("java.time.OffsetTime"));
