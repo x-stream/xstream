@@ -801,6 +801,8 @@ public class XStream {
             alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
             aliasType("zone-id", JVM.loadClassForName("java.time.ZoneId"));
             aliasType("chronology", JVM.loadClassForName("java.time.chrono.Chronology"));
+            alias("chrono-field", JVM.loadClassForName("java.time.temporal.ChronoField"));
+            alias("chrono-unit", JVM.loadClassForName("java.time.temporal.ChronoUnit"));
             alias("iso-field", JVM.loadClassForName("java.time.temporal.IsoFields$Field"));
             alias("iso-unit", JVM.loadClassForName("java.time.temporal.IsoFields$Unit"));
             alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
