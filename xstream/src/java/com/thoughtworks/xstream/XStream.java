@@ -675,6 +675,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.time.YearMonth"));
             types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
             allowTypeHierarchy(JVM.loadClassForName("java.time.ZoneId"));
+            types.add(JVM.loadClassForName("java.time.chrono.HijrahDate"));
             types.add(JVM.loadClassForName("java.time.chrono.Ser"));
             allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
         }
@@ -781,6 +782,8 @@ public class XStream {
             alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
             aliasType("zone-id", JVM.loadClassForName("java.time.ZoneId"));
             aliasType("chronology", JVM.loadClassForName("java.time.chrono.Chronology"));
+            alias("hijrah-date", JVM.loadClassForName("java.time.chrono.HijrahDate"));
+            alias("hijrah-era", JVM.loadClassForName("java.time.chrono.HijrahEra"));
             alias("chrono-field", JVM.loadClassForName("java.time.temporal.ChronoField"));
             alias("chrono-unit", JVM.loadClassForName("java.time.temporal.ChronoUnit"));
             alias("iso-field", JVM.loadClassForName("java.time.temporal.IsoFields$Field"));
@@ -881,6 +884,8 @@ public class XStream {
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter", PRIORITY_NORMAL,
                 null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.HijrahDateConverter",
+                PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.InstantConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
@@ -1021,6 +1026,7 @@ public class XStream {
             addImmutableTypeDynamically("java.time.ZoneOffset", false);
             addImmutableTypeDynamically("java.time.ZoneRegion", false);
             addImmutableTypeDynamically("java.time.chrono.HijrahChronology", false);
+            addImmutableTypeDynamically("java.time.chrono.HijrahDate", false);
             addImmutableTypeDynamically("java.time.chrono.IsoChronology", false);
             addImmutableTypeDynamically("java.time.chrono.JapaneseChronology", false);
             addImmutableTypeDynamically("java.time.chrono.MinguoChronology", false);
