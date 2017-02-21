@@ -30,6 +30,8 @@ import java.time.ZonedDateTime;
 import java.time.chrono.Chronology;
 import java.time.chrono.IsoChronology;
 import java.time.chrono.JapaneseChronology;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
 import java.time.temporal.JulianFields;
 import java.time.temporal.TemporalField;
@@ -698,6 +700,14 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <chronology>ISO</chronology>\n" //
             + "  <chronology>ISO</chronology>\n" //
             + "</chronology-array>");
+    }
+
+    public void testChronoField() {
+        assertBothWays(ChronoField.ERA, "<chrono-field>ERA</chrono-field>");
+    }
+
+    public void testChronoUnit() {
+        assertBothWays(ChronoUnit.DECADES, "<chrono-unit>DECADES</chrono-unit>");
     }
 
     public void testIsoFields() {
