@@ -28,6 +28,9 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.chrono.Chronology;
+import java.time.chrono.HijrahChronology;
+import java.time.chrono.HijrahDate;
+import java.time.chrono.HijrahEra;
 import java.time.chrono.IsoChronology;
 import java.time.chrono.JapaneseChronology;
 import java.time.temporal.ChronoField;
@@ -708,6 +711,63 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <chronology>ISO</chronology>\n" //
             + "  <chronology>ISO</chronology>\n" //
             + "</chronology-array>");
+    }
+
+    public void testHijrahDate() {
+        assertBothWays(HijrahChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)),
+            "<hijrah-date>Hijrah-umalqura AH 1438-11-07</hijrah-date>");
+    }
+
+    public void testHijrahDateWithOldFormat() {
+        assertEquals(HijrahChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)), xstream.fromXML("" //
+            + "<java.time.chrono.HijrahDate resolves-to=\"java.time.chrono.Ser\">\n" //
+            + "  <byte>6</byte>\n" //
+            + "  <java.time.chrono.HijrahChronology resolves-to=\"java.time.chrono.Ser\">\n" //
+            + "    <byte>1</byte>\n" //
+            + "    <string>Hijrah-umalqura</string>\n" //
+            + "  </java.time.chrono.HijrahChronology>\n" //
+            + "  <int>1438</int>\n" //
+            + "  <byte>11</byte>\n" //
+            + "  <byte>7</byte>\n" //
+            + "</java.time.chrono.HijrahDate>"));
+    }
+
+    public void testHijrahDateConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<hijrah-date>Hijrah-X AH 1438-11-07</hijrah-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(HijrahDate.class.getName(), e.get("class"));
+            assertEquals("Hijrah-X AH 1438-11-07", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<hijrah-date>Hijrah-umalqura X 1438-11-07</hijrah-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(HijrahDate.class.getName(), e.get("class"));
+            assertEquals("Hijrah-umalqura X 1438-11-07", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<hijrah-date>Hijrah-umalqura AH 1438-42-07</hijrah-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(HijrahDate.class.getName(), e.get("class"));
+            assertEquals("Hijrah-umalqura AH 1438-42-07", e.get("value"));
+        }
+    }
+
+    public void testHijrahDateIsImmutable() {
+        final HijrahDate[] array = new HijrahDate[2];
+        array[0] = array[1] = HijrahChronology.INSTANCE.date(LocalDate.of(2017, 7, 30));
+        assertBothWays(array, "" //
+            + "<hijrah-date-array>\n" //
+            + "  <hijrah-date>Hijrah-umalqura AH 1438-11-07</hijrah-date>\n" //
+            + "  <hijrah-date>Hijrah-umalqura AH 1438-11-07</hijrah-date>\n" //
+            + "</hijrah-date-array>");
+    }
+
+    public void testHijrahEra() {
+        assertBothWays(HijrahEra.AH, "<hijrah-era>AH</hijrah-era>");
     }
 
     public void testChronoField() {
