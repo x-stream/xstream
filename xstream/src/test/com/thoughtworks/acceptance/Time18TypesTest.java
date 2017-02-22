@@ -47,6 +47,7 @@ import java.time.temporal.IsoFields;
 import java.time.temporal.JulianFields;
 import java.time.temporal.TemporalField;
 import java.time.temporal.ValueRange;
+import java.time.temporal.WeekFields;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 
@@ -1042,5 +1043,40 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "    </default>\n" //
             + "  </java.time.temporal.ValueRange>\n" //
             + "</java.time.temporal.ValueRange>"));
+    }
+
+    public void testWeekFields() {
+        assertBothWays(WeekFields.of(DayOfWeek.TUESDAY, 2), "" //
+            + "<week-fields>\n" //
+            + "  <minimalDays>2</minimalDays>\n" //
+            + "  <firstDayOfWeek>TUESDAY</firstDayOfWeek>\n" //
+            + "</week-fields>");
+        assertBothWays(WeekFields.ISO, "" //
+            + "<week-fields>\n" //
+            + "  <minimalDays>4</minimalDays>\n" //
+            + "  <firstDayOfWeek>MONDAY</firstDayOfWeek>\n" //
+            + "</week-fields>");
+    }
+
+    public void testWeekFieldsWithFieldAlias() {
+        xstream.aliasField("days", WeekFields.class, "minimalDays");
+        xstream.aliasField("week-day", WeekFields.class, "firstDayOfWeek");
+        assertBothWays(WeekFields.of(DayOfWeek.TUESDAY, 2), "" //
+            + "<week-fields>\n" //
+            + "  <days>2</days>\n" //
+            + "  <week-day>TUESDAY</week-day>\n" //
+            + "</week-fields>");
+    }
+
+    public void testWeekFieldsWithOldFormat() {
+        assertEquals(WeekFields.of(DayOfWeek.TUESDAY, 2), xstream.fromXML("" //
+            + "<java.time.temporal.WeekFields serialization=\"custom\">\n" //
+            + "  <java.time.temporal.WeekFields>\n" //
+            + "    <default>\n" //
+            + "      <minimalDays>2</minimalDays>\n" //
+            + "      <firstDayOfWeek>TUESDAY</firstDayOfWeek>\n" //
+            + "    </default>\n" //
+            + "  </java.time.temporal.WeekFields>\n" //
+            + "</java.time.temporal.WeekFields>"));
     }
 }

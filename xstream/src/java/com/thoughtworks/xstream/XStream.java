@@ -683,6 +683,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.time.chrono.Ser"));
             allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
             types.add(JVM.loadClassForName("java.time.temporal.ValueRange"));
+            types.add(JVM.loadClassForName("java.time.temporal.WeekFields"));
         }
         types.remove(null);
         allowTypes(types.toArray(new Class[types.size()]));
@@ -801,6 +802,7 @@ public class XStream {
             alias("iso-unit", JVM.loadClassForName("java.time.temporal.IsoFields$Unit"));
             alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
             alias("temporal-value-range", JVM.loadClassForName("java.time.temporal.ValueRange"));
+            alias("week-fields", JVM.loadClassForName("java.time.temporal.WeekFields"));
         }
 
         aliasType("charset", Charset.class);
@@ -923,6 +925,8 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.ThaiBuddhistDateConverter",
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.ValueRangeConverter",
+                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.WeekFieldsConverter",
                 PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearConverter", PRIORITY_NORMAL,
                 null, null);
