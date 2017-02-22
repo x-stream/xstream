@@ -33,6 +33,8 @@ import java.time.chrono.HijrahDate;
 import java.time.chrono.HijrahEra;
 import java.time.chrono.IsoChronology;
 import java.time.chrono.JapaneseChronology;
+import java.time.chrono.JapaneseDate;
+import java.time.chrono.JapaneseEra;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
@@ -768,6 +770,87 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testHijrahEra() {
         assertBothWays(HijrahEra.AH, "<hijrah-era>AH</hijrah-era>");
+    }
+
+    public void testJapaneseDate() {
+        assertBothWays(JapaneseChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)),
+            "<japanese-date>Japanese Heisei 29-07-30</japanese-date>");
+    }
+
+    public void testJapaneseDateWithOldFormat() {
+        assertEquals(JapaneseChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)), xstream.fromXML("" //
+            + "<java.time.chrono.JapaneseDate resolves-to=\"java.time.chrono.Ser\">\n" //
+            + "  <byte>4</byte>\n" //
+            + "  <int>2017</int>\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <byte>30</byte>\n" //
+            + "</java.time.chrono.JapaneseDate>"));
+    }
+
+    public void testJapaneseDateConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<japanese-date>Chinese Heisei 29-07-30</japanese-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(JapaneseDate.class.getName(), e.get("class"));
+            assertEquals("Chinese Heisei 29-07-30", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<japanese-date>Japanese Mitsubishi 29-07-30</japanese-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(JapaneseDate.class.getName(), e.get("class"));
+            assertEquals("Japanese Mitsubishi 29-07-30", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<japanese-date>Japanese Heisei 29-13-30</japanese-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(JapaneseDate.class.getName(), e.get("class"));
+            assertEquals("Japanese Heisei 29-13-30", e.get("value"));
+        }
+    }
+
+    public void testJapaneseDateIsImmutable() {
+        final JapaneseDate[] array = new JapaneseDate[2];
+        array[0] = array[1] = JapaneseChronology.INSTANCE.date(LocalDate.of(2017, 7, 30));
+        assertBothWays(array, "" //
+            + "<japanese-date-array>\n" //
+            + "  <japanese-date>Japanese Heisei 29-07-30</japanese-date>\n" //
+            + "  <japanese-date>Japanese Heisei 29-07-30</japanese-date>\n" //
+            + "</japanese-date-array>");
+    }
+
+    public void testJapaneseEra() {
+        assertBothWays(JapaneseEra.TAISHO, "<japanese-era>Taisho</japanese-era>");
+    }
+
+    public void testJapaneseEraWithOldFormat() {
+        assertEquals(JapaneseEra.TAISHO, xstream.fromXML("" //
+            + "<java.time.chrono.JapaneseEra resolves-to=\"java.time.chrono.Ser\">\n" //
+            + "  <byte>5</byte>\n" //
+            + "  <byte>0</byte>\n" //
+            + "</java.time.chrono.JapaneseEra>"));
+    }
+
+    public void testJapaneseEraConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<japanese-era>NEMO</japanese-era>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(JapaneseEra.class.getName(), e.get("class"));
+            assertEquals("NEMO", e.get("value"));
+        }
+    }
+
+    public void testJapaneseEraIsImmutable() {
+        final JapaneseEra[] array = new JapaneseEra[2];
+        array[0] = array[1] = JapaneseEra.SHOWA;
+        assertBothWays(array, "" //
+            + "<japanese-era-array>\n" //
+            + "  <japanese-era>Showa</japanese-era>\n" //
+            + "  <japanese-era>Showa</japanese-era>\n" //
+            + "</japanese-era-array>");
     }
 
     public void testChronoField() {
