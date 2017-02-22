@@ -35,6 +35,12 @@ import java.time.chrono.IsoChronology;
 import java.time.chrono.JapaneseChronology;
 import java.time.chrono.JapaneseDate;
 import java.time.chrono.JapaneseEra;
+import java.time.chrono.MinguoChronology;
+import java.time.chrono.MinguoDate;
+import java.time.chrono.MinguoEra;
+import java.time.chrono.ThaiBuddhistChronology;
+import java.time.chrono.ThaiBuddhistDate;
+import java.time.chrono.ThaiBuddhistEra;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
@@ -843,6 +849,112 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <japanese-era>Showa</japanese-era>\n" //
             + "  <japanese-era>Showa</japanese-era>\n" //
             + "</japanese-era-array>");
+    }
+
+    public void testMinguoDate() {
+        assertBothWays(MinguoChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)),
+            "<minguo-date>Minguo ROC 106-07-30</minguo-date>");
+    }
+
+    public void testMinguoDateWithOldFormat() {
+        assertEquals(MinguoChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)), xstream.fromXML("" //
+            + "<java.time.chrono.MinguoDate resolves-to=\"java.time.chrono.Ser\">\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <int>106</int>\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <byte>30</byte>\n" //
+            + "</java.time.chrono.MinguoDate>"));
+    }
+
+    public void testMinguoDateConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<minguo-date>Chinese ROC 106-07-30</minguo-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(MinguoDate.class.getName(), e.get("class"));
+            assertEquals("Chinese ROC 106-07-30", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<minguo-date>Minguo X 106-07-30</minguo-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(MinguoDate.class.getName(), e.get("class"));
+            assertEquals("Minguo X 106-07-30", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<minguo-date>Minguo ROC 106-13-30</minguo-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(MinguoDate.class.getName(), e.get("class"));
+            assertEquals("Minguo ROC 106-13-30", e.get("value"));
+        }
+    }
+
+    public void testMinguoDateIsImmutable() {
+        final MinguoDate[] array = new MinguoDate[2];
+        array[0] = array[1] = MinguoChronology.INSTANCE.date(LocalDate.of(2017, 7, 30));
+        assertBothWays(array, "" //
+            + "<minguo-date-array>\n" //
+            + "  <minguo-date>Minguo ROC 106-07-30</minguo-date>\n" //
+            + "  <minguo-date>Minguo ROC 106-07-30</minguo-date>\n" //
+            + "</minguo-date-array>");
+    }
+
+    public void testMinguoEra() {
+        assertBothWays(MinguoEra.ROC, "<minguo-era>ROC</minguo-era>");
+    }
+
+    public void testThaiBuddhistDate() {
+        assertBothWays(ThaiBuddhistChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)),
+            "<thai-buddhist-date>ThaiBuddhist BE 2560-07-30</thai-buddhist-date>");
+    }
+
+    public void testThaiBuddhistDateWithOldFormat() {
+        assertEquals(ThaiBuddhistChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)), xstream.fromXML("" //
+            + "<java.time.chrono.ThaiBuddhistDate resolves-to=\"java.time.chrono.Ser\">\n" //
+            + "  <byte>8</byte>\n" //
+            + "  <int>2560</int>\n" //
+            + "  <byte>7</byte>\n" //
+            + "  <byte>30</byte>\n" //
+            + "</java.time.chrono.ThaiBuddhistDate>"));
+    }
+
+    public void testThaiBuddhistDateConversionExceptionContainsInvalidValue() {
+        try {
+            xstream.fromXML("<thai-buddhist-date>Chinese BE 2560-07-30</thai-buddhist-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(ThaiBuddhistDate.class.getName(), e.get("class"));
+            assertEquals("Chinese BE 2560-07-30", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<thai-buddhist-date>ThaiBuddhist X 2560-07-30</thai-buddhist-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(ThaiBuddhistDate.class.getName(), e.get("class"));
+            assertEquals("ThaiBuddhist X 2560-07-30", e.get("value"));
+        }
+        try {
+            xstream.fromXML("<thai-buddhist-date>ThaiBuddhist BE 2560-13-30</thai-buddhist-date>");
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(ThaiBuddhistDate.class.getName(), e.get("class"));
+            assertEquals("ThaiBuddhist BE 2560-13-30", e.get("value"));
+        }
+    }
+
+    public void testThaiBuddhistDateIsImmutable() {
+        final ThaiBuddhistDate[] array = new ThaiBuddhistDate[2];
+        array[0] = array[1] = ThaiBuddhistChronology.INSTANCE.date(LocalDate.of(2017, 7, 30));
+        assertBothWays(array, "" //
+            + "<thai-buddhist-date-array>\n" //
+            + "  <thai-buddhist-date>ThaiBuddhist BE 2560-07-30</thai-buddhist-date>\n" //
+            + "  <thai-buddhist-date>ThaiBuddhist BE 2560-07-30</thai-buddhist-date>\n" //
+            + "</thai-buddhist-date-array>");
+    }
+
+    public void testThaiBuddhistEra() {
+        assertBothWays(ThaiBuddhistEra.BE, "<thai-buddhist-era>BE</thai-buddhist-era>");
     }
 
     public void testChronoField() {

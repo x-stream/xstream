@@ -678,6 +678,8 @@ public class XStream {
             types.add(JVM.loadClassForName("java.time.chrono.HijrahDate"));
             types.add(JVM.loadClassForName("java.time.chrono.JapaneseDate"));
             types.add(JVM.loadClassForName("java.time.chrono.JapaneseEra"));
+            types.add(JVM.loadClassForName("java.time.chrono.MinguoDate"));
+            types.add(JVM.loadClassForName("java.time.chrono.ThaiBuddhistDate"));
             types.add(JVM.loadClassForName("java.time.chrono.Ser"));
             allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
         }
@@ -788,6 +790,10 @@ public class XStream {
             alias("hijrah-era", JVM.loadClassForName("java.time.chrono.HijrahEra"));
             alias("japanese-date", JVM.loadClassForName("java.time.chrono.JapaneseDate"));
             alias("japanese-era", JVM.loadClassForName("java.time.chrono.JapaneseEra"));
+            alias("minguo-date", JVM.loadClassForName("java.time.chrono.MinguoDate"));
+            alias("minguo-era", JVM.loadClassForName("java.time.chrono.MinguoEra"));
+            alias("thai-buddhist-date", JVM.loadClassForName("java.time.chrono.ThaiBuddhistDate"));
+            alias("thai-buddhist-era", JVM.loadClassForName("java.time.chrono.ThaiBuddhistEra"));
             alias("chrono-field", JVM.loadClassForName("java.time.temporal.ChronoField"));
             alias("chrono-unit", JVM.loadClassForName("java.time.temporal.ChronoUnit"));
             alias("iso-field", JVM.loadClassForName("java.time.temporal.IsoFields$Field"));
@@ -902,6 +908,8 @@ public class XStream {
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalTimeConverter", PRIORITY_NORMAL,
                 null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.MinguoDateConverter",
+                PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.MonthDayConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetDateTimeConverter",
@@ -910,6 +918,8 @@ public class XStream {
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.PeriodConverter", PRIORITY_NORMAL,
                 null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ThaiBuddhistDateConverter",
+                PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearMonthConverter", PRIORITY_NORMAL,
@@ -1040,7 +1050,9 @@ public class XStream {
             addImmutableTypeDynamically("java.time.chrono.JapaneseDate", false);
             addImmutableTypeDynamically("java.time.chrono.JapaneseEra", false);
             addImmutableTypeDynamically("java.time.chrono.MinguoChronology", false);
+            addImmutableTypeDynamically("java.time.chrono.MinguoDate", false);
             addImmutableTypeDynamically("java.time.chrono.ThaiBuddhistChronology", false);
+            addImmutableTypeDynamically("java.time.chrono.ThaiBuddhistDate", false);
             addImmutableTypeDynamically("java.time.temporal.IsoFields$Field", false);
             addImmutableTypeDynamically("java.time.temporal.IsoFields$Unit", false);
             addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);
