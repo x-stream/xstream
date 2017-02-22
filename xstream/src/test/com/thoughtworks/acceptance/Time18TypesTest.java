@@ -46,6 +46,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
 import java.time.temporal.JulianFields;
 import java.time.temporal.TemporalField;
+import java.time.temporal.ValueRange;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 
@@ -1003,5 +1004,43 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  <julian-field>JULIAN_DAY</julian-field>\n" //
             + "  <julian-field>JULIAN_DAY</julian-field>\n" //
             + "</java.time.temporal.TemporalField-array>");
+    }
+
+    public void testValueRange() {
+        assertBothWays(ValueRange.of(0, 1, 30, 45), "" //
+            + "<temporal-value-range>\n" //
+            + "  <maxLargest>45</maxLargest>\n" //
+            + "  <maxSmallest>30</maxSmallest>\n" //
+            + "  <minLargest>1</minLargest>\n" //
+            + "  <minSmallest>0</minSmallest>\n" //
+            + "</temporal-value-range>");
+    }
+
+    public void testValueRangeWithAlias() {
+        xstream.aliasField("max", ValueRange.class, "maxLargest");
+        xstream.aliasField("max-s", ValueRange.class, "maxSmallest");
+        xstream.aliasField("min-l", ValueRange.class, "minLargest");
+        xstream.aliasField("min", ValueRange.class, "minSmallest");
+        assertBothWays(ValueRange.of(0, 1, 30, 45), "" //
+            + "<temporal-value-range>\n" //
+            + "  <max>45</max>\n" //
+            + "  <max-s>30</max-s>\n" //
+            + "  <min-l>1</min-l>\n" //
+            + "  <min>0</min>\n" //
+            + "</temporal-value-range>");
+    }
+
+    public void testValueRangeWithOldFormat() {
+        assertEquals(ValueRange.of(0, 1, 30, 45), xstream.fromXML("" //
+            + "<java.time.temporal.ValueRange serialization=\"custom\">\n" //
+            + "  <java.time.temporal.ValueRange>\n" //
+            + "    <default>\n" //
+            + "      <maxLargest>45</maxLargest>\n" //
+            + "      <maxSmallest>30</maxSmallest>\n" //
+            + "      <minLargest>1</minLargest>\n" //
+            + "      <minSmallest>0</minSmallest>\n" //
+            + "    </default>\n" //
+            + "  </java.time.temporal.ValueRange>\n" //
+            + "</java.time.temporal.ValueRange>"));
     }
 }
