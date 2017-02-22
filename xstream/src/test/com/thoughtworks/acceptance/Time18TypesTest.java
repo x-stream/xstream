@@ -53,6 +53,8 @@ import com.thoughtworks.xstream.converters.ConversionException;
 
 
 /**
+ * Test types of java.time.* package.
+ * 
  * @author Matej Cimbora
  * @author J&ouml;rg Schaible
  */
