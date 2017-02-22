@@ -10,18 +10,13 @@
  */
 package com.thoughtworks.xstream.converters.time;
 
-import java.time.DateTimeException;
+import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.Chronology;
 import java.time.chrono.HijrahChronology;
 import java.time.chrono.HijrahDate;
 import java.time.chrono.HijrahEra;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
 /**
@@ -29,17 +24,16 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  *
  * @author J&ouml;rg Schaible
  */
-public class HijrahDateConverter extends AbstractSingleValueConverter {
+public class HijrahDateConverter extends AbstractChronoLocalDateConverter<HijrahEra> {
 
-    private final static Pattern HIJRAH_PATTERN = Pattern.compile("^ (\\w+) (\\d+)-(\\d+)-(\\d+)$");
-    private final Set<HijrahChronology> hijrahChronologies;
+    private final Set<Chronology> hijrahChronologies;
 
     public HijrahDateConverter() {
         hijrahChronologies = new HashSet<>();
         final Set<Chronology> chronologies = Chronology.getAvailableChronologies();
         for (final Chronology chronology : chronologies) {
             if (chronology instanceof HijrahChronology) {
-                hijrahChronologies.add((HijrahChronology)chronology);
+                hijrahChronologies.add(chronology);
             }
         }
     }
@@ -51,37 +45,18 @@ public class HijrahDateConverter extends AbstractSingleValueConverter {
 
     @Override
     public Object fromString(final String str) {
-        if (str == null) {
-            return null;
-        }
+        return parseChronoLocalDate(str, "Hijrah", hijrahChronologies);
+    }
 
-        ConversionException exception = null;
-        for (final HijrahChronology hijrahChronology : hijrahChronologies) {
-            final String id = hijrahChronology.getId();
-            if (str.startsWith(id + ' ')) {
-                final Matcher matcher = HIJRAH_PATTERN.matcher(str.subSequence(id.length(), str.length()));
-                if (matcher.matches()) {
-                    try {
-                        HijrahEra.valueOf(matcher.group(1));
-                    } catch (final IllegalArgumentException e) {
-                        exception = new ConversionException("Cannot parse value as Hijrah date", e);
-                        break;
-                    }
-                    try {
-                        return HijrahDate.of(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3)),
-                            Integer.parseInt(matcher.group(4)));
-                    } catch (final DateTimeException e) {
-                        exception = new ConversionException("Cannot parse value as Hijrah date", e);
-                        break;
-                    }
-                }
-            }
-        }
-        if (exception == null) {
-            exception = new ConversionException("Cannot parse value as Hijrah date");
-        }
-        exception.add("value", str);
-        throw exception;
+    @Override
+    protected ChronoLocalDate chronoLocalDateOf(final HijrahEra era, final int prolepticYear, final int month,
+            final int dayOfMonth) {
+        return era != null ? HijrahDate.of(prolepticYear, month, dayOfMonth) : null;
+    }
+
+    @Override
+    protected HijrahEra eraOf(final String id) {
+        return HijrahEra.valueOf(id);
     }
 
 }
