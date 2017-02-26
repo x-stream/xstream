@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -463,6 +463,239 @@
 
             <!-- .................................................................................................. -->
             <tr>
+                <td colspan="5" class="headerRow"><h1 id="java.time">java.time</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/DurationConverter.html">DurationConverter</a></td>
+                <td>java.time.Duration</td>
+                <td class="example">
+                &lt;java.time.Duration&gt;PT24000H&lt;/java.time.Duration&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/InstantConverter.html">InstantConverter</a></td>
+                <td>java.time.Instant</td>
+                <td class="example">
+                &lt;java.time.Instant&gt;2017-07-30T20:40:00Z&lt;/java.time.Instant&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/LocalDateConverter.html">LocalDateConverter</a></td>
+                <td>java.time.LocalDate</td>
+                <td class="example">
+                &lt;java.time.LocalDate&gt;2017-10-30&lt;/java.time.LocalDate&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/LocalDateTimeConverter.html">LocalDateTimeConverter</a></td>
+                <td>java.time.LocalDateTime</td>
+                <td class="example">
+                &lt;java.time.LocalDateTime&gt;2017-10-30T20:40:15&lt;/java.time.LocalDateTime&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/LocalTimeConverter.html">LocalTimeConverter</a></td>
+                <td>java.time.LocalTime</td>
+                <td class="example">
+                &lt;java.time.LocalTime&gt;20:40:15&lt;/java.time.LocalTime&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/MonthDayConverter.html">MonthDayConverter</a></td>
+                <td>java.time.MonthDay</td>
+                <td class="example">
+                &lt;java.time.MonthDay&gt;--01-13&lt;/java.time.MonthDay&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/OffsetDateTimeConverter.html">OffsetDateTimeConverter</a></td>
+                <td>java.time.OffsetDateTime</td>
+                <td class="example">
+                &lt;java.time.OffsetDateTime&gt;2017-07-30T20:40:00Z&lt;/java.time.OffsetDateTime&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/OffsetTimeConverter.html">OffsetTimeConverter</a></td>
+                <td>java.time.OffsetTime</td>
+                <td class="example">
+                &lt;java.time.OffsetTime&gt;20:40:15+01:00&lt;/java.time.OffsetTime&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/PeriodConverter.html">PeriodConverter</a></td>
+                <td>java.time.Period</td>
+                <td class="example">
+                &lt;java.time.Period&gt;P1000D&lt;/java.time.Period&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/YearConverter.html">YearConverter</a></td>
+                <td>java.time.Year</td>
+                <td class="example">
+                &lt;java.time.Year&gt;2017&lt;/java.time.Year&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/YearMonthConverter.html">YearMonthConverter</a></td>
+                <td>java.time.YearMonth</td>
+                <td class="example">
+                &lt;java.time.YearMonth&gt;2017-02&lt;/java.time.YearMonth&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/ZonedDateTimeConverter.html">ZonedDateTimeConverter</a></td>
+                <td>java.time.ZonedDateTime</td>
+                <td class="example">
+                &lt;java.time.ZonedDateTime&gt;2017-10-30T20:40:00Z[Europe/London]&lt;/java.time.ZonedDateTime&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/ZoneIdConverter.html">ZoneIdConverter</a></td>
+                <td>java.time.ZoneId<br/>java.time.ZoneOffset<br/>java.time.ZoneRegion</td>
+                <td class="example">
+                &lt;java.time.ZoneId&gt;Z&lt;/java.time.ZoneId&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="5" class="headerRow"><h1 id="java.time.chrono">java.time.chrono</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/ChronologyConverter.html">ChronologyConverter</a></td>
+                <td>java.time.chrono.Chronology implementations</td>
+                <td class="example">
+                &lt;java.time.chrono.Chronology&gt;ISO&lt;/java.time.chrono.Chronology&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/HijrahDateConverter.html">HijrahDateConverter</a></td>
+                <td>java.time.chrono.HijrahDate</td>
+                <td class="example">
+                &lt;java.time.chrono.HijrahDate&gt;Hijrah-umalqura AH 1438-11-07&lt;/java.time.chrono.HijrahDate&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/JapaneseDateConverter.html">JapaneseDateConverter</a></td>
+                <td>java.time.chrono.JapaneseDate</td>
+                <td class="example">
+                &lt;java.time.chrono.JapaneseDate&gt;Japanese Heisei 29-07-30&lt;/java.time.chrono.JapaneseDate&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/JapaneseEraConverter.html">JapaneseDateConverter</a></td>
+                <td>java.time.chrono.JapaneseEra</td>
+                <td class="example">
+                &lt;java.time.chrono.JapaneseEra&gt;Taisho&lt;/java.time.chrono.JapaneseEra&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/MinguoDateConverter.html">MinguoDateConverter</a></td>
+                <td>java.time.chrono.MinguoDate</td>
+                <td class="example">
+                &lt;java.time.chrono.MinguoDate&gt;Minguo ROC 106-07-30&lt;/java.time.chrono.MinguoDate&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/ThaiBuddhistDateConverter.html">ThaiBuddhistDateConverter</a></td>
+                <td>java.time.chrono.ThaiBuddhistDate</td>
+                <td class="example">
+                &lt;java.time.chrono.ThaiBuddhistDate&gt;haiBuddhist BE 2560-07-30&lt;/java.time.chrono.ThaiBuddhistDate&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="5" class="headerRow"><h1 id="java.time.temporal">java.time.temporal</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/ValueRangeConverter.html">ValueRangeConverter</a></td>
+                <td>java.time.temporal.ValueRange</td>
+                <td class="example">
+                &lt;java.time.temporal.ValueRange&gt;<br/>
+				&nbsp;&nbsp;&lt;maxLargest&gt;45&lt;/maxLargest&gt;<br/>
+				&nbsp;&nbsp;&lt;maxSmallest&gt;30&lt;/maxSmallest&gt;<br/>
+				&nbsp;&nbsp;&lt;minLargest&gt;1&lt;/minLargest&gt;<br/>
+				&nbsp;&nbsp;&lt;minSmallest&gt;0&lt;/minSmallest&gt;<br/>
+				&lt;/java.time.temporal.ValueRange&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/time/WeekFieldsConverter.html">WeekFieldsConverter</a></td>
+                <td>java.time.temporal.WeekFields</td>
+                <td class="example">
+                &lt;java.time.temporal.WeekFields&gt;<br/>
+				&nbsp;&nbsp;&lt;minimalDays&gt;2&lt;/minimalDays&gt;<br/>
+				&nbsp;&nbsp;&lt;firstDayOfWeek&gt;MONDAY&lt;/firstDayOfWeek&gt;<br/>
+				&lt;/java.time.temporal.WeekFields&gt;
+                </td>
+                <td>Available with Java 8 or greater.</td>
+                <td>normal</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
                 <td colspan="5" class="headerRow"><h1 id="java.sql">java.sql</h1></td>
             </tr>
             <tr>
@@ -633,7 +866,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaClassConverter.html">JavaClassConverter</a></td>
                 <td>java.lang.Class</td>
                 <td class="example">&lt;class&gt;com.foo.MyThing&lt;/class&gt;</td>
-                <td>This converter uses the ClassLoaderReference of the XStream insatance. Can be regisreted with
+                <td>This converter uses the ClassLoaderReference of the XStream instance. Can be registered with
                 Mapper globally or locally to respect type aliases.</td>
                 <td>normal</td>
             </tr>
@@ -646,7 +879,7 @@
                     &nbsp;&nbsp;&lt;class&gt;com.foo.MyThing&lt;/class&gt;<br/>
                     &lt;/field&gt;
                 </td>
-                <td>This converter uses the ClassLoaderReference of the XStream insatance. Can be regisreted with
+                <td>This converter uses the ClassLoaderReference of the XStream instance. Can be registered with
                 Mapper globally or locally to respect type aliases.</td>
                 <td>normal</td>
             </tr>
@@ -874,7 +1107,7 @@
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/LambdaConverter.html">LambdaConverter</a></td>
-                <td>For serializable and non-serializable lambda types. Noon-serialzable lambda instances will be mapped to null, since they
+                <td>For serializable and non-serializable lambda types. Non-serializable lambda instances will be mapped to null, since they
                 contain no information for recreation. Serializable lambda types have such info, but it is specific to compiler vendor and
                 occurrence in the code. Never assume that you can deserialize such an element when you use a different version of your code
                 or a different compiler.</td>
