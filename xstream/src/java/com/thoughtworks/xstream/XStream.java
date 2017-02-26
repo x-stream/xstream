@@ -885,50 +885,6 @@ public class XStream {
             registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
-        if (JVM.is18()) {
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ChronologyConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.HijrahDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.JapaneseDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.JapaneseEraConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.InstantConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalTimeConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.MinguoDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.MonthDayConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetDateTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.PeriodConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ThaiBuddhistDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ValueRangeConverter",
-                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.WeekFieldsConverter",
-                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearMonthConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ZonedDateTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ZoneIdConverter", PRIORITY_NORMAL,
-                null, null);
-        }
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
@@ -1001,16 +957,48 @@ public class XStream {
                     PRIORITY_NORMAL, null, null);
         }
         if (JVM.is18()) {
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateConverter",
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ChronologyConverter",
                 PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalDateTimeConverter",
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.HijrahDateConverter",
                 PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.LocalTimeConverter",
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.JapaneseDateConverter",
                 PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OffsetDateTimeConverter",
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.JapaneseEraConverter",
                 PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ZonedDateTimeConverter",
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.InstantConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateTimeConverter",
                 PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalTimeConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.MinguoDateConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.MonthDayConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.PeriodConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ThaiBuddhistDateConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ValueRangeConverter",
+                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.WeekFieldsConverter",
+                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearMonthConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ZonedDateTimeConverter",
+                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ZoneIdConverter", PRIORITY_NORMAL,
+                null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
                 PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class, ClassLoaderReference.class},
                 new Object[]{mapper, reflectionProvider, classLoaderReference});

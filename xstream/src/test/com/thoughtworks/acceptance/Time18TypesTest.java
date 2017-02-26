@@ -45,7 +45,6 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
 import java.time.temporal.JulianFields;
-import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
 import java.time.temporal.ValueRange;
 import java.time.temporal.WeekFields;
@@ -61,6 +60,13 @@ import com.thoughtworks.xstream.converters.ConversionException;
  * @author J&ouml;rg Schaible
  */
 public class Time18TypesTest extends AbstractAcceptanceTest {
+
+    @Override
+    protected void setupSecurity(XStream xstream) {
+        super.setupSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[]{ "java.time.**" });
+    }
+
     public void testFixedClock() {
         assertBothWays(Clock.fixed(Instant.parse("2017-02-15T18:49:25Z"), ZoneOffset.of("Z")), "" //
             + "<fixed-clock>\n" //
@@ -94,12 +100,6 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "  </baseClock>\n" //
             + "  <tickNanos>42000000</tickNanos>\n" //
             + "</tick-clock>");
-    }
-
-    @Override
-    protected void setupSecurity(XStream xstream) {
-        super.setupSecurity(xstream);
-        xstream.allowTypeHierarchy(Temporal.class);
     }
 
     public void testDuration() {
