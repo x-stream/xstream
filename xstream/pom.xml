@@ -319,18 +319,14 @@
               </compilerArgs>
               <excludes>
                 <exclude>**/Lambda**</exclude>
-                <exclude>**/LocalDateConverter.java</exclude>
-                <exclude>**/LocalDateTimeConverter.java</exclude>
-                <exclude>**/LocalTimeConverter.java</exclude>
-                <exclude>**/OffsetDateTimeConverter.java</exclude>
-                <exclude>**/ZonedDateTimeConverter.java</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
+                <exclude>**/time/**</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
-                <exclude>**/Extended18TypesTest.java</exclude>
-                <exclude>**/acceptance/Extended17TypesTest*</exclude>
                 <exclude>**/extended/*17Test*</exclude>
+                <exclude>**/acceptance/Extended17TypesTest*</exclude>
+                <exclude>**/acceptance/*18TypesTest.java</exclude>
               </testExcludes>
             </configuration>
           </plugin>
@@ -390,15 +386,11 @@
             <configuration>
               <excludes>
                 <exclude>**/Lambda**</exclude>
-                <exclude>**/LocalDateConverter.java</exclude>
-                <exclude>**/LocalDateTimeConverter.java</exclude>
-                <exclude>**/LocalTimeConverter.java</exclude>
-                <exclude>**/OffsetDateTimeConverter.java</exclude>
-                <exclude>**/ZonedDateTimeConverter.java</exclude>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
                 <exclude>**/EnumMapper*</exclude>
                 <exclude>**/enums/*</exclude>
+                <exclude>**/time/**</exclude>
                 <exclude>**/basic/StringBuilder*</exclude>
                 <exclude>**/basic/UUID*</exclude>
                 <exclude>**/core/util/Types*</exclude>
@@ -408,7 +400,6 @@
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
-                <exclude>**/Extended18TypesTest.java</exclude>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/extended/*17Test*</exclude>
@@ -418,6 +409,7 @@
                 <exclude>**/acceptance/Basic15TypesTest*</exclude>
                 <exclude>**/acceptance/Concurrent15TypesTest*</exclude>
                 <exclude>**/acceptance/Extended17TypesTest*</exclude>
+                <exclude>**/acceptance/*18TypesTest.java</exclude>
               </testExcludes>
             </configuration>
           </plugin>
