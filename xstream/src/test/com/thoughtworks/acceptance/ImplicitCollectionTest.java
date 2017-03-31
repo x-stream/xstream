@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -54,6 +54,8 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.alias("zoo", Zoo.class);
         xstream.alias("farm", Farm.class);
         xstream.alias("animal", Animal.class);
+        xstream.alias("dog", Dog.class);
+        xstream.alias("cat", Cat.class);
         xstream.alias("room", Room.class);
         xstream.alias("house", House.class);
         xstream.alias("person", Person.class);
@@ -757,5 +759,49 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.addImplicitCollection(Area.class, "animals");
         xstream.addImplicitCollection(Country.class, "animals");
         assertBothWays(country, expected);
+    }
+
+    public static class Dog extends Animal {
+        public Dog(String name) {
+            super(name);
+        }
+    }
+
+    public static class Cat extends Animal {
+        public Cat(String name) {
+            super(name);
+        }
+    }
+
+    public void testCollectsDifferentTypesWithFieldOfSameName() {
+        Farm farm = new Farm(100);
+        farm.add(new Dog("Lessie"));
+        farm.add(new Cat("Garfield"));
+        farm.add(new Cat("Felix"));
+        farm.add(new Dog("Cujo"));
+        farm.add(new Cat("Bob"));
+
+        String expected = "" +
+                "<farm>\n" +
+                "  <size>100</size>\n" +
+                "  <dog>\n" +
+                "    <name>Lessie</name>\n" +
+                "  </dog>\n" +
+                "  <cat>\n" +
+                "    <name>Garfield</name>\n" +
+                "  </cat>\n" +
+                "  <cat>\n" +
+                "    <name>Felix</name>\n" +
+                "  </cat>\n" +
+                "  <dog>\n" +
+                "    <name>Cujo</name>\n" +
+                "  </dog>\n" +
+                "  <cat>\n" +
+                "    <name>Bob</name>\n" +
+                "  </cat>\n" +
+                "</farm>";
+
+        xstream.addImplicitCollection(Farm.class, "animals");
+        assertBothWays(farm, expected);
     }
 }

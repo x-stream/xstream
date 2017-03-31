@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013, 2014, 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,8 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         super.setUp();
         xstream.alias("farm", Farm.class);
         xstream.alias("animal", Animal.class);
+        xstream.alias("dog", Dog.class);
+        xstream.alias("cat", Cat.class);
         xstream.alias("MEGA-farm", MegaFarm.class);
         xstream.alias("area", Area.class);
         xstream.alias("country", Country.class);
@@ -686,7 +688,52 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
         xstream.addImplicitArray(Country.class, "animals");
         assertBothWays(country, expected);
     }
-    
+
+    public static class Dog extends Animal {
+        public Dog(String name) {
+            super(name);
+        }
+    }
+
+    public static class Cat extends Animal {
+        public Cat(String name) {
+            super(name);
+        }
+    }
+
+    public void testCollectsDifferentTypesWithFieldOfSameName() {
+        Farm farm = new Farm();
+        farm.animals = new Animal[] {
+            new Dog("Lessie"),
+            new Cat("Garfield"),
+            new Cat("Felix"),
+            new Dog("Cujo"),
+            new Cat("Bob")
+        };
+
+        String expected = "" +
+                "<farm>\n" +
+                "  <dog>\n" +
+                "    <name>Lessie</name>\n" +
+                "  </dog>\n" +
+                "  <cat>\n" +
+                "    <name>Garfield</name>\n" +
+                "  </cat>\n" +
+                "  <cat>\n" +
+                "    <name>Felix</name>\n" +
+                "  </cat>\n" +
+                "  <dog>\n" +
+                "    <name>Cujo</name>\n" +
+                "  </dog>\n" +
+                "  <cat>\n" +
+                "    <name>Bob</name>\n" +
+                "  </cat>\n" +
+                "</farm>";
+
+        xstream.addImplicitCollection(Farm.class, "animals");
+        assertBothWays(farm, expected);
+    }
+
     static class PrimitiveArray {
         int[] ints; 
     };
