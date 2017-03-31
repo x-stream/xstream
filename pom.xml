@@ -720,6 +720,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${version.plugin.maven.surefire}</version>
           <configuration>
+            <argLine>${surefire.argline}</argLine>
             <forkMode>once</forkMode>
             <printSummary>true</printSummary>
             <useFile>false</useFile>
@@ -918,5 +919,6 @@
     <link.javadoc.javase>http://docs.oracle.com/javase/8/docs/api/</link.javadoc.javase>
 
     <javadoc.xdoclint/>
+    <surefire.argline/>
   </properties>
 </project>
