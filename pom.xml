@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -776,6 +776,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${version.plugin.maven.surefire}</version>
           <configuration>
+            <argLine>${surefire.argline}</argLine>
             <forkMode>once</forkMode>
             <printSummary>true</printSummary>
             <useFile>false</useFile>
@@ -974,6 +975,7 @@
 
     <link.javadoc.javase>http://docs.oracle.com/javase/8/docs/api/</link.javadoc.javase>
 
-    <javadoc.xdoclint />
+    <javadoc.xdoclint/>
+    <surefire.argline/>
   </properties>
 </project>

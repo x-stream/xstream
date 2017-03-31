@@ -206,7 +206,16 @@
 
   <profiles>
     <profile>
-      <id>jdk18ge</id>
+      <id>jdk19-ge</id>
+      <activation>
+        <jdk>[1.9,)</jdk>
+      </activation>
+      <properties>
+        <surefire.argline>--add-modules java.activation --permit-illegal-access</surefire.argline>
+      </properties>
+    </profile>
+    <profile>
+      <id>jdk18-ge</id>
       <activation>
         <jdk>[1.8,)</jdk>
       </activation>
