@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible, factored out from SunUnsafeReflectionProvider
@@ -78,14 +78,18 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
             throw ex;
         }
         ErrorWritingException ex = null;
-        try {
-            return unsafe.allocateInstance(type);
-        } catch (SecurityException e) {
-            ex = new ObjectAccessException("Cannot construct type", e);
-        } catch (InstantiationException e) {
-            ex =  new ConversionException("Cannot construct type", e);
-        } catch (IllegalArgumentException e) {
-            ex = new ObjectAccessException("Cannot construct type", e);
+        if (type == void.class || type == Void.class) {
+            ex = new ConversionException("Type void cannot have an instance");
+        } else {
+            try {
+                return unsafe.allocateInstance(type);
+            } catch (final SecurityException e) {
+                ex = new ObjectAccessException("Cannot construct type", e);
+            } catch (final InstantiationException e) {
+                ex = new ConversionException("Cannot construct type", e);
+            } catch (final IllegalArgumentException e) {
+                ex = new ObjectAccessException("Cannot construct type", e);
+            }
         }
         ex.add("construction-type", type.getName());
         throw ex;
