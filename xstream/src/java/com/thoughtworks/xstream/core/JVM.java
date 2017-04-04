@@ -43,6 +43,7 @@ public class JVM implements Caching {
     private static final boolean isAWTAvailable;
     private static final boolean isSwingAvailable;
     private static final boolean isSQLAvailable;
+    private static final boolean isActivationAvailable;
     private static final boolean canAllocateWithUnsafe;
     private static final boolean canWriteWithUnsafe;
     private static final boolean optimizedTreeSetAddAll;
@@ -186,6 +187,7 @@ public class JVM implements Caching {
         isAWTAvailable = loadClassForName("java.awt.Color", false) != null;
         isSwingAvailable = loadClassForName("javax.swing.LookAndFeel", false) != null;
         isSQLAvailable = loadClassForName("java.sql.Date") != null;
+        isActivationAvailable = loadClassForName("javax.activation.ActivationDataFlavor") != null;
     }
 
     /**
@@ -437,6 +439,15 @@ public class JVM implements Caching {
     }
 
     /**
+     * Checks if Activation is available.
+     *
+     * @since 1.4.x
+     */
+    public static boolean isActivationAvailable() {
+        return isActivationAvailable;
+    }
+
+    /**
      * Checks if Swing is available.
      * 
      * @since 1.4.5
@@ -566,6 +577,7 @@ public class JVM implements Caching {
         System.out.println("Supports AWT: " + isAWTAvailable());
         System.out.println("Supports Swing: " + isSwingAvailable());
         System.out.println("Supports SQL: " + isSQLAvailable());
+        System.out.println("Supports Activation: " + isActivationAvailable());
         System.out.println("Java Beans EventHandler present: " + (loadClassForName("java.beans.EventHandler") != null));
         System.out.println("Standard StAX XMLInputFactory: " + staxInputFactory);
         System.out.println("Standard StAX XMLOutputFactory: " + staxOutputFactory);
