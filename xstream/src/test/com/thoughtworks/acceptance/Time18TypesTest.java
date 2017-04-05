@@ -82,6 +82,10 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
             + "<system-clock>\n" //
             + "  <zone>Z</zone>\n" //
             + "</system-clock>");
+        assertBothWays(Clock.system(ZoneId.of("Europe/Berlin")), "" //
+            + "<system-clock>\n" //
+            + "  <zone>Europe/Berlin</zone>\n" //
+            + "</system-clock>");
     }
 
     public void testTickClock() {
