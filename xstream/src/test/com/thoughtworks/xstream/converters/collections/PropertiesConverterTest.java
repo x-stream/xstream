@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,35 +11,23 @@
  */
 package com.thoughtworks.xstream.converters.collections;
 
-import com.thoughtworks.xstream.XStream;
-
-import junit.framework.TestCase;
+import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
 import java.util.Properties;
 
-public class PropertiesConverterTest extends TestCase {
+public class PropertiesConverterTest extends AbstractAcceptanceTest {
 
     public void testConvertsPropertiesObjectToShortKeyValueElements() {
-        Properties in = new Properties();
-        in.setProperty("hello", "world");
-        in.setProperty("foo", "cheese");
+        Properties properties = new Properties();
+        properties.setProperty("hello", "world");
+        properties.setProperty("foo", "cheese");
 
-        String expectedXML = "" +
+        String expected = "" +
                 "<properties>\n" +
                 "  <property name=\"hello\" value=\"world\"/>\n" +
                 "  <property name=\"foo\" value=\"cheese\"/>\n" +
                 "</properties>";
-        XStream xstream = new XStream();
-        String actualXML = xstream.toXML(in);
-        assertEquals(expectedXML, actualXML);
-
-        Properties expectedOut = new Properties();
-        expectedOut.setProperty("hello", "world");
-        expectedOut.setProperty("foo", "cheese");
-        Properties actualOut = (Properties) xstream.fromXML(actualXML);
-        assertEquals(in, actualOut);
-        assertEquals(in.toString(), actualOut.toString());
-
+        assertBothWaysNormalized(properties, expected, "properties", "property", "@name");
     }
 
     public void testIncludesDefaultProperties() {
@@ -54,7 +42,7 @@ public class PropertiesConverterTest extends TestCase {
         assertEquals("Unexpected overriden property", "999", override.getProperty("port"));
         assertEquals("Unexpected default property", "localhost", override.getProperty("host"));
 
-        String expectedXML = "" +
+        String expected = "" +
                 "<properties>\n" +
                 "  <property name=\"port\" value=\"999\"/>\n" +
                 "  <defaults>\n" +
@@ -63,11 +51,7 @@ public class PropertiesConverterTest extends TestCase {
                 "  </defaults>\n" +
                 "</properties>";
 
-        XStream xstream = new XStream();
-        String actualXML = xstream.toXML(override);
-        assertEquals(expectedXML, actualXML);
-
-        Properties out = (Properties) xstream.fromXML(actualXML);
+        Properties out = (Properties) assertBothWays(override, expected);
         assertEquals("Unexpected overriden property", "999", out.getProperty("port"));
         assertEquals("Unexpected default property", "localhost", out.getProperty("host"));
         assertEquals(override, out);
@@ -82,7 +66,7 @@ public class PropertiesConverterTest extends TestCase {
         override.setProperty("port", "999");
         override.setProperty("domain", "codehaus.org");
 
-        String expectedXML = "" +
+        String expected = "" +
                 "<properties>\n" +
                 "  <property name=\"domain\" value=\"codehaus.org\"/>\n" +
                 "  <property name=\"port\" value=\"999\"/>\n" +
@@ -92,12 +76,8 @@ public class PropertiesConverterTest extends TestCase {
                 "  </defaults>\n" +
                 "</properties>";
 
-        XStream xstream = new XStream();
         xstream.registerConverter(new PropertiesConverter(true));
-        String actualXML = xstream.toXML(override);
-        assertEquals(expectedXML, actualXML);
-
-        Properties out = (Properties) xstream.fromXML(actualXML);
+        Properties out = (Properties) assertBothWays(override, expected);
         assertEquals("Unexpected overriden property", "999", out.getProperty("port"));
         assertEquals("Unexpected default property", "localhost", out.getProperty("host"));
         assertEquals(override, out);
