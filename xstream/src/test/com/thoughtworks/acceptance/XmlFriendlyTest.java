@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -249,7 +249,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "      <percent>%</percent>\n"
                 + "      <serialVersionOnStream>3</serialVersionOnStream>\n"
                 + "      <zeroDigit>0</zeroDigit>\n"
-                + "      <NaN>\ufffd</NaN>\n"
+                + "      <NaN>NaN</NaN>\n"
                 + "      <currencySymbol>\u20ac</currencySymbol>\n"
                 + "      <exponentialSeparator>E</exponentialSeparator>\n"
                 + "      <infinity>\u221e</infinity>\n"
@@ -260,6 +260,8 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "</java.text.DecimalFormatSymbols>";
         }
         final DecimalFormatSymbols format = new DecimalFormatSymbols(Locale.GERMANY);
+        format.setNaN("NaN");
+        assertEquals("EUR", format.getInternationalCurrencySymbol());
         assertBothWays(format, xml);
     }
 
