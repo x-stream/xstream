@@ -985,6 +985,8 @@ public class XStream {
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.PeriodConverter", PRIORITY_NORMAL,
                 null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.time.SystemClockConverter",
+                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.ThaiBuddhistDateConverter",
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.ValueRangeConverter",
