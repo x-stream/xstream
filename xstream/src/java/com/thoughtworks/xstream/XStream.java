@@ -758,7 +758,11 @@ public class XStream {
             alias("awt-color", JVM.loadClassForName("java.awt.Color", false));
             alias("awt-font", JVM.loadClassForName("java.awt.Font", false));
             alias("awt-text-attribute", JVM.loadClassForName("java.awt.font.TextAttribute"));
-            alias("activation-data-flavor", JVM.loadClassForName("javax.activation.ActivationDataFlavor"));
+        }
+
+        Class<?> type = JVM.loadClassForName("javax.activation.ActivationDataFlavor");
+        if (type != null) {
+            alias("activation-data-flavor", type);
         }
 
         if (JVM.isSQLAvailable()) {
