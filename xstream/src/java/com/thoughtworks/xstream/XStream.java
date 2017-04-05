@@ -740,12 +740,11 @@ public class XStream {
             alias("awt-color", JVM.loadClassForName("java.awt.Color", false));
             alias("awt-font", JVM.loadClassForName("java.awt.Font", false));
             alias("awt-text-attribute", JVM.loadClassForName("java.awt.font.TextAttribute"));
-            
-            // only available in Java 5 when javax.activation:activation is available on CP
-            Class type = JVM.loadClassForName("javax.activation.ActivationDataFlavor");
-            if (type != null) {
-                alias("activation-data-flavor", type);
-            }
+        }
+
+        Class type = JVM.loadClassForName("javax.activation.ActivationDataFlavor");
+        if (type != null) {
+            alias("activation-data-flavor", type);
         }
 
         if (JVM.isSQLAvailable()) {
