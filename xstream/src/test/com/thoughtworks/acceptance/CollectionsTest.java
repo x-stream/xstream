@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -270,7 +270,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         properties.setProperty("1", "I");
         properties.setProperty("3", "III");
 
-        assertBothWays(properties,
+        assertBothWaysNormalized(properties,
                 "<properties>\n" +
                 "  <property name=\"3\" value=\"III\"/>\n" + 
                 "  <property name=\"1\" value=\"I\"/>\n" + 
@@ -278,7 +278,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
                 "    <property name=\"2\" value=\"two\"/>\n" + 
                 "    <property name=\"1\" value=\"one\"/>\n" + 
                 "  </defaults>\n" +
-                "</properties>");
+                "</properties>", "properties", "property", "@name");
     }
     
     public void testUnmodifiableList() {
