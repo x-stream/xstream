@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,7 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
         xstream.alias("thing", WithNamedList.class);
         xstream.addImplicitCollection(WithNamedList.class, "things");
 
-        final List reference = Arrays.asList(new String[]{"A", "B", "C", "D"});
+        final List reference = new ArrayList(Arrays.asList(new String[]{"A", "B", "C", "D"}));
         final WithNamedList[] namedLists = new WithNamedList[5];
         for (int i = 0; i < namedLists.length; ++i) {
             namedLists[i] = new WithNamedList("Name " + (i + 1));
@@ -45,7 +46,7 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
             }
         };
 
-        final Object object = Arrays.asList(namedLists);
+        final Object object = new ArrayList(Arrays.asList(namedLists));
         final String xml = xstream.toXML(object);
         final int[] counter = new int[1];
         counter[0] = 0;
