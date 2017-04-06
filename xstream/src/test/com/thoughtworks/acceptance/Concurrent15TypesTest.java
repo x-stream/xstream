@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2015 XStream Committers.
+ * Copyright (C) 2012, 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.core.JVM;
 
 
@@ -42,22 +43,17 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
     public void testDerivedConcurrentHashMap() {
         if (JVM.is18()) {
             xstream.alias("derived-map", DerivedConcurrentHashMap.class);
+            xstream.registerConverter(new MapConverter(xstream.getMapper(), DerivedConcurrentHashMap.class));
 
             Map<Object, Object> map = new DerivedConcurrentHashMap();
             map.put("test", "JUnit");
 
             String xml = ""
-                + "<derived-map serialization=\"custom\">\n"
-                + "  <unserializable-parents/>\n"
-                + "  <concurrent-hash-map>\n"
-                + "    <default>\n"
-                + "      <segmentMask>15</segmentMask>\n"
-                + "    </default>\n"
+                + "<derived-map>\n"
+                + "  <entry>\n"
                 + "    <string>test</string>\n"
                 + "    <string>JUnit</string>\n"
-                + "    <null/>\n"
-                + "    <null/>\n"
-                + "  </concurrent-hash-map>\n"
+                + "  </entry>\n"
                 + "</derived-map>";
 
             assertBothWays(map, xml);
