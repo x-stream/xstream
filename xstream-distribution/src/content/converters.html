@@ -166,7 +166,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/StringBuildererConverter.html">StringBuilderConverter</a></td>
                 <td>java.lang.StringBuilder</td>
                 <td class="example">&lt;string-builder&gt;hello world&lt;/string-builder&gt;</td>
-                <td>Available under Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or greater.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -183,7 +183,7 @@
                     &nbsp;&nbsp;&lt;/stack-trace&gt;<br/>
                     &lt;/java.io.IOException&gt;
                 </td>
-                <td>This is only available under Java 1.4 or greater. It retains the full stack trace, including that of any
+                <td>This is only available with Java 1.4 or greater. It retains the full stack trace, including that of any
                 nested exceptions. The stack trace elements are handled by the
                 <a href="javadoc/com/thoughtworks/xstream/converters/extended/StackTraceElementConverter.html">StackTraceElementConverter</a>.</td>
                 <td>normal</td>
@@ -192,7 +192,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumConverter.html">EnumConverter</a></td>
                 <td>java.lang.Enum</td>
                 <td class="example">&lt;java.lang.annotation.RetentionPolicy&gt;<br/>CLASS<br/>&lt;/java.lang.annotation.RetentionPolicy&gt;</td>
-                <td>Available under Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or greater.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -200,7 +200,7 @@
                 <td>java.lang.Enum</td>
                 <td>The Converter must be initialized with an Enum type and an optional mapping between strings and enum values. By default
                 it will use the Enum's string representation as value.</td>
-                <td>Available under Java 1.5 or greater. Must be registered explicitly for the Enum type or locally.</td>
+                <td>Available with Java 1.5 or greater. Must be registered explicitly for the Enum type or locally.</td>
                 <td>&nbsp;</td>
             </tr>
 
@@ -411,14 +411,14 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CurrencyConverter.html">CurrencyConverter</a></td>
                 <td>java.util.Currency</td>
                 <td class="example">&lt;currency&gt;USD&lt;/currency&gt;</td>
-                <td>Available under Java 1.4 or greater.</td>
+                <td>Available with Java 1.4 or greater.</td>
                 <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/UUIDConverter.html">UUIDConverter</a></td>
                 <td>java.util.UUID</td>
                 <td class="example">&lt;uuid&gt;ca05f023-e07f-4956-a6ef-14ddd23df47b&lt;/uuid&gt;</td>
-                <td>Available under Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or greater.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -435,7 +435,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&lt;string&gt;sky&lt;/string&gt;<br/>
                 &nbsp;&nbsp;&lt;/entry&gt;<br/>
                 &lt;/enum-map&gt;</td>
-                <td>Available under Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or greater.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -445,7 +445,7 @@
                 &lt;enum-set enum-type=&quot;simple&quot;&gt;<br/>
                 &nbsp;&nbsp;GREEN,BLUE<br/>
                 &lt;/enum-set&gt;</td>
-                <td>Available under Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or greater.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -457,7 +457,7 @@
 				&nbsp;&nbsp;&lt;flags&gt;0&lt;/flags&gt;<br/>
 				&lt;/java.util.regex.Pattern&gt;
                 </td>
-                <td>Available under Java 1.4 or greater.</td>
+                <td>Available with Java 1.4 or greater.</td>
                 <td>normal</td>
             </tr>
 
@@ -851,14 +851,14 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CharsetConverter.html">CharsetConverter</a></td>
                 <td>java.nio.charset.Charset</td>
                 <td class="example">&lt;charset&gt;US-ASCII&lt;/charset&gt;</td>
-                <td>Available under Java 1.4 or greater.</td>
+                <td>Available with Java 1.4 or greater.</td>
                 <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/PathConverter.html">PathConverter</a></td>
                 <td>java.nio.file.Path</td>
                 <td class="example">&lt;path&gt;../dir/file.txt&lt;/path&gt;</td>
-                <td>Available under Java 1.7 or greater.</td>
+                <td>Available with Java 7 or greater.</td>
                 <td>normal</td>
             </tr>
 
@@ -1016,7 +1016,7 @@
                     &nbsp;&nbsp;&lt;representationClass&gt;java.io.InputStream&lt;/representationClass&gt;<br/>
                     &lt;/activation-data-flavor&gt;
                 </td>
-                <td>Available under Java 1.6 or greater. Only automatically registered if runtime has AWT support.<br/>
+                <td>Available with Java 6 or greater. Only automatically registered if runtime has AWT support.<br/>
                 <td>normal</td>
             </tr>
             
@@ -1061,7 +1061,7 @@
 				&nbsp;&nbsp;&lt;readOnly&gt;false&lt;/readOnly&gt;<br/>
 				&lt;/auth-subject&gt;<br/>
                 </td>
-                <td>Available under Java 1.4 or greater. This converter does not serialize any credentials but only the principals.</td>
+                <td>Available with Java 1.4 or greater. This converter does not serialize any credentials but only the principals.</td>
                 <td>normal</td>
             </tr>
 
@@ -1080,7 +1080,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/DurationConverter.html">DurationConverter</a></td>
                 <td>javax.xml.datatype.Duration</td>
                 <td class="example">&lt;duration&gt;PT1H2M&lt;/duration&gt;</td>
-                <td>Available under Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or greater.</td>
                 <td>normal</td>
             </tr>
 
@@ -1112,7 +1112,7 @@
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/ExternalizableConverter.html">ExternalizableConverter</a></td>
                 <td>java.io.Externalizable</td>
-                <td>The Converter is used for any JDK-externalizable types, if not handled by a specialized Converter.</td>
+                <td>The Converter is used for any externalizable type, if not handled by a specialized Converter.</td>
                 <td>&nbsp;</td>
                 <td>low</td>
             </tr>
@@ -1123,7 +1123,7 @@
                 occurrence in the code. Never assume that you can deserialize such an element when you use a different version of your code
                 or a different compiler.</td>
                 <td>&nbsp;</td>
-                <td>Only automatically registered for Java 8.</td>
+                <td>Available with Java 8 or greater.</td>
                 <td>normal</td>
             </tr>
             <tr>
