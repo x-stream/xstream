@@ -1126,11 +1126,10 @@
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/LambdaConverter.html">LambdaConverter</a></td>
-                <td>For serializable and non-serializable lambda types. Non-serializable lambda instances will be mapped to null, since they
-                contain no information for recreation. Serializable lambda types have such info, but it is specific to compiler vendor and
-                occurrence in the code. Never assume that you can deserialize such an element when you use a different version of your code
-                or a different compiler.</td>
-                <td>&nbsp;</td>
+                <td>For serializable lambda types.</td>
+                <td>Non-serializable lambda instances will be mapped to null, since they contain no information for recreation. Serializable
+                lambda types have such info, but it is specific to compiler vendor and occurrence in the code. Never assume that you can
+                deserialize such an element when you use a different version of your code or a different compiler.</td>
                 <td>Available with Java 8 or greater.</td>
                 <td>normal</td>
             </tr>
