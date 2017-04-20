@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,14 +11,11 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 
 public class ReflectionConverter extends AbstractReflectionConverter {
 
-    // Might be missing in Android
-    private final static Class<?> eventHandlerType = JVM.loadClassForName("java.beans.EventHandler");
     private Class<?> type;
 
     public ReflectionConverter(final Mapper mapper, final ReflectionProvider reflectionProvider) {
@@ -40,7 +37,6 @@ public class ReflectionConverter extends AbstractReflectionConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return (this.type != null && this.type == type || this.type == null && type != null && type != eventHandlerType)
-            && canAccess(type);
+        return (this.type != null && this.type == type || this.type == null && type != null) && canAccess(type);
     }
 }
