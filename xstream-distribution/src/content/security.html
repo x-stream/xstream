@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2014, 2015 XStream committers.
+ Copyright (C) 2014, 2015, 2017 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -25,7 +25,7 @@
  	security problem.</p>
  
 	<p>The XML provided to XStream for conversion to a Java object can be manipulated to inject objects into the
- 	unmarshalled object graph, which were not present at marshalling time. An attacker could exploit this to execute
+ 	unmarshalled object graph, which were not present at marshalling time.  An attacker could exploit this to execute
  	arbitrary code or shell commands in the context of the server running the XStream process.  This issue is
  	identified by CVE-2013-7285.</p>
  
@@ -60,28 +60,28 @@
 	call to the ProcessBuilder's <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ProcessBuilder.html#start()">start()</a>
 	method allows an attacker to call shell commands.  Knowing how to define such an attack is the only prerequisite.</p>
          
-	<p>Starting with XStream 1.4.7, an instance of the EventHandler is no longer handled by default.  You have to
- 	explicitly register a ReflectionConverter for the EventHandler type, if your application has the requirement to
- 	persist such an object.  However, you still have to take special care regarding the location of the persisted data,
- 	and how your application can ensure its integrity.</p>
+ 	<p>More scenarios have been identified for types that are already delivered with the Java runtime.  Looking at 
+ 	well-known and commonly used Java libraries libraries such as ASM, CGLIB, or Groovy, the possibility for more
+ 	exploits is very high.</p>
          
-	<p class=highlight>Note: this vulnerability is not even a special problem of XStream.  XML being deserialized by
- 	XStream acts here like a script, and the scenario above can be created with any script that is executed within a
+	<p class=highlight>Note: These vulnerabilities are not even a special problem of XStream.  XML being deserialized
+	by XStream acts here like a script, and the scenario above can be created with any script that is executed within a
  	Java runtime (e.g. using its JavaScript interpreter) if someone is able to manipulate it externally.  The key
  	message for application developers is that deserializing arbitrary user-supplied content is a dangerous proposition
- 	in all cases.</p>
+ 	in all cases. The best approach to prevent such an attach is a <a href="#example">white list</a>, i.e. the
+ 	deserialization mechanism should only allow explicit types.</p>
     
     <h2 id="explicit">Explicit Security</h2>
     
-	<p>While XStream implicitly avoids the vulnerability scenario with the EventHandler class, there might be other
-	combinations with types from well-known and commonly-used Java libraries such as ASM, CGLIB, Groovy, or even in
-	the Java runtime, that are currently simply unknown.</p>
-     
 	<p>Starting with XStream 1.4.7, it is possible to define <a href="#framework">permissions</a> for types, to check
-	the type of an object that should be unmarshalled. Those permissions can be used to allow or deny types explicitly.
-	With these permissions it is at least not possible to inject unexpected types into an object graph. Any application
-	that deserializes data from an external source should at least use this feature to limit the danger of arbitrary
-	command execution.</p>
+	the type of an object that should be unmarshalled. Those permissions can be used to allow or deny types explicitly
+	With these permissions it is at least not possible to inject unexpected types into an object graph. The security
+	framework supports the setup of a black or white listing scenario. Any application should use this feature to limit
+	the danger of arbitrary command execution if it deserializes data from an external source.</p>
+	
+	<p>XStream itself sets up a white list by default, i.e. it blocks all classes except those types it has explicit
+	converters for.  Nonetheless, it is still the better approach to maintain an own white list for an XStream
+	instance.  A black list scenario should be avoided in general, because it provides a false sense of security.</p>
          
 	<p class=highlight>Apart from value manipulations, this implementation still allows the injection of allowed
 	objects at wrong locations, e.g. inserting an integer into a list of strings.</p>
@@ -92,9 +92,9 @@
     <h2 id="validation">XML Validation</h2>
 
 	<p>XML itself supports input validation using a schema and a validating parser.  With XStream, you can use e.g. a
-	StAX parser for validation, but it will take some effort to ensure that the XML read and written by XStream matches
-	the schema in first place. Typically you will have to write some custom converters, but it can be worth the effort
-	depending on the use case.</p>
+	DOM parser for validation, but it will take some effort to ensure that the XML read and written by XStream matches
+	the schema in first place, because XStream uses additionally own attributes. Typically you will have to write some
+	custom converters, but it can be worth the effort depending on the use case.</p>
 
     <h1 id="framework">Security Framework</h1>
 
@@ -174,8 +174,13 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	    <td>Allow types explicitly by name.</td>
 	    <td>&nbsp;</td>
 	    <td>java.io.File, java.nio.charset.Charset, java.util.BitSet, java.lang.Class, java.lang.Object,
-	    java.lang.StackTraceElement, java.lang.String, java.lang.StringBuffer, java.lang.StringBuilder, java.net.URL,
-	    java.net.URI, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.text.DecimalFormatSymbols,
+	    java.lang.StackTraceElement, java.lang.String, java.lang.StringBuffer, java.lang.StringBuilder, java.net.URI,
+	    java.net.URL, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.text.DecimalFormatSymbols,
+	    java.time.Duration, java.time.Instant, java.time.LocalDate, java.time.LocalDateTime, java.time.LocalTime,
+	    java.time.MonthDay, java.time.OffsetDateTime, java.time.OffsetTime, java.time.Period, java.time.Ser,
+	    java.time.Year, java.time.YearMonth, java.time.ZonedDateTime, java.time.chrono.HijrahDate, 
+	    java.time.chrono.JapaneseDate, java.time.chrono.JapaneseEra, java.time.chrono.MinguoDate, java.time.chrono.Ser,
+	    java.time.chrono.ThaiBuddhistDate, java.time.temporal.ValueRange, java.time.temporal.WeekFields,
 	    java.util.Currency, java.util.Date, java.util.Locale, java.util.regex.Pattern, java.util.UUID</td>
 	</tr>
 	<tr>
@@ -205,7 +210,8 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/PrimitiveTypePermission.html">PrimitiveTypePermission</a></td>
-	    <td>Allow any primitive type and its boxed counterpart (incl void).  You may use the PRIMITIVES instance directly.</td>
+	    <td>Allow any primitive type and its boxed counterpart (excluding void).  You may use the PRIMITIVES instance
+	    directly.</td>
 	    <td>&nbsp;</td>
 	    <td>yes</td>
 	</tr>
@@ -225,8 +231,9 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/TypeHierarchyPermission.html">TypeHierarchyPermission</a></td>
 	    <td>Allow types of a hierarchy.</td>
 	    <td>&nbsp;</td>
-	    <td>java.lang.Enum, java.lang.Number, java.lang.Throwable, java.lang.reflect.Member, java.util.Calendar,
-	    java.util.Collection, java.util.Map, java.util.Map.Entry, java.util.TimeZone</td>
+	    <td>java.lang.Enum, java.lang.Number, java.lang.Throwable, java.lang.reflect.Member, java.nio.file.Path,
+	    java.time.Clock, java.time.ZoneId, java.time.chrono.Chronology, java.util.Calendar, java.util.Collection,
+	    java.util.Map, java.util.Map.Entry, java.util.TimeZone</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/WildcardTypePermission.html">WildcardTypePermission</a></td>
@@ -236,7 +243,7 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	</tr>
     </table>
 
-    <h2 id="example">Example Code</h2>
+    <h2 id="example">Example Code White Listing</h2>
 
 	<p>XStream uses the default permissions from the table above.  You may either clear out this default
 	and register your own permissions to activate the security framework simply add your own permissions on top of it
