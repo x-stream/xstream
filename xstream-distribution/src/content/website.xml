@@ -44,6 +44,11 @@
         <link title="JMH Module">jmh-javadoc/index.html</link>
     </section>
     <section>
+        <name>Vulnerabilities</name>
+        <page>CVE-2017-7957.html</page>
+        <page>CVE-2013-7285.html</page>
+    </section>
+    <section>
         <name>Tutorials</name>
         <page>tutorial.html</page>
         <page>alias-tutorial.html</page>
