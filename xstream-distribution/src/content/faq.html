@@ -142,7 +142,7 @@
     for details. Actually XStream's converters try to check since version 1.4.6 any critical operation, before they
     claim to be able to handle a type. As consequence XStream can behave differently running under a SecurityManager.
     E.g. if the SecurityManager does not permit to create an instance for a derived class of ObjectOutputStream, the 
-    SerializationConverter will not handle any type and the ReflecitonConverter will take over (as long it has proper
+    SerializationConverter will not handle any type and the ReflectionConverter will take over (as long it has proper
     rights for its own reflection-based operations).</p>
 
     <!-- ...................................................... -->
@@ -668,9 +668,9 @@ XStream xstream = new XStream(driver);
     <!-- ...................................................... -->
     <h2 id="Security_EventHandler">Why does XStream not convert an java.beans.EventHandler?</h2>
     
-    <p>Since XStream verison 1.4.7 it does no longer handle an
+    <p>Since XStream version 1.4.7 it does no longer handle an
     <a href="http://docs.oracle.com/javase/7/docs/api/java/beans/EventHandler.html">EventHandler</a> automatically.
-    Such an instance can be used to initiate calls on arbitray instances at deserialization time e.g. 
+    Such an instance can be used to initiate calls on arbitrary instances at deserialization time e.g. 
     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ProcessBuilder.html#start()">ProcessBuilder.start()</a>
     You can register a ReflectionConverter instance explicitly for the EventHandler if you need support for such
     instances.</p>
@@ -695,12 +695,21 @@ XStream xstream = new XStream(driver);
     </ul>
 
     <!-- ...................................................... -->
+    <h2 id="Security_VulnerabilityWarning">XStream suddenly emits a vulnerability warning!</h2>
+
+    <p>If the security framework has not been initialized, XStream will emit such a warning since version 1.4.10.  You
+    use the <a href="security.html">security rules</a> to setup a white list of class types that will be processed.</p>
+    
+    <p>For XStream 1.4.x you may call the setupDefaultSecurity method to initialize a XStream instance in the same way
+    as it will be done for XStream 1.5.x.  This means also a compatibility preparation for XStream 1.5.x.</p> 
+
+    <!-- ...................................................... -->
     <h2 id="Security_XXEVulnerability">Is XStream XXE vulnerable (CVE-2016-3674)?</h2>
     
     <p>XStream does not contain an own XML parser, therefore it depends on the parser selected with the 
     <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
     if the current XStream instance is <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">
-    XXE vulnerable</a> at deserialization time. However, XStream tries to deactivate the processing of external
+    XXE vulnerable</a> at deserialization time.  However, XStream tries to deactivate the processing of external
     entities by default. Status for the different supported XML parsers:</p>
     
     <table summary="Comparison of drivers regarding XEE vulnerability">
@@ -710,8 +719,9 @@ XStream xstream = new XStream(driver);
     	for parameter entities.</td></tr>
     	<tr><td>Dom4JDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
     	entities with SAX reader in use.</td></tr>
-    	<tr><td>DomDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
-    	entities with SAX reader in use.</td></tr>
+    	<tr><td>DomDriver</td><td>no, Java 6 or higher<br/>yes, Java 5</td><td>Driver turns off DOCTYPE processing with
+    	Java 7 runtime or higher to suppress handling of external entities with SAX reader in use.  Suppress external
+    	entities only for Java 6 or lower, fails for parameterized entities.</td></tr>
     	<tr><td>JDomDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
     	entities with SAX reader in use.</td></tr>
     	<tr><td>JDom2Driver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
@@ -719,11 +729,11 @@ XStream xstream = new XStream(driver);
     	<tr><td>KXml2DomDriver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
     	<tr><td>KXml2Driver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
     	<tr><td>SjsxpDriver</td><td>no, Java 7 or higher<br/>yes, Java 6</td><td>Driver turns off support for external
-    	entities for the internal StaX 	parser of the Sun JDK, but fails for parameter entities in a Java 6 runtime.</td></tr>
+    	entities for the internal StaX parser of the Sun JDK, but fails for parameter entities in a Java 6 runtime.</td></tr>
     	<tr><td>StandardStaxDriver</td><td>?</td><td>Driver tries to turn off support for external entities for
-    	the internal StaX parser of the Java runtime. Save for Oracle JDK 7 or higher.</td></tr>
+    	the internal StaX parser of the Java runtime.  Save for Oracle JDK 7 or higher.</td></tr>
     	<tr><td>StaxDriver</td><td>?</td><td>Driver tries to turns off support for external entities for the
-    	standard StaX parser. However, the finally used StAX implementation is defined externally (see JDK
+    	standard StaX parser.  However, the finally used StAX implementation is defined externally (see JDK
     	documentation) and a test should be made on the target platform to ensure that the parser respects the setting.</td></tr>
     	<tr><td>WstxDriver</td><td>no</td><td>Driver turns off support for external entities for the Woodstox StAX
     	parser.</td></tr>
@@ -732,7 +742,7 @@ XStream xstream = new XStream(driver);
     </table>
     
     <p class="highlight">Note: Only a HierarchicalStreamReader created with the HierarchicalStreamDriver is setup to
-    avoid the XXE vulnerability. If you create such driver instances on your own, it is also your task to setup the XML
+    avoid the XXE vulnerability.  If you create such driver instances on your own, it is also your task to setup the XML
     parser instance properly.</p>
 
     <!-- ****************************************************** -->

@@ -689,6 +689,22 @@ public class XStream {
         allowTypes(types.toArray(new Class[types.size()]));
     }
 
+    /**
+     * Setup the security framework of a XStream instance.
+     * <p>
+     * This method was a pure helper method for XStream 1.4.x. It initializes an XStream instance with a white list of
+     * well-known and simply types of the Java runtime as it is done in XStream 1.5.x by default. This method will do
+     * nothing.
+     * </p>
+     * 
+     * @param xstream
+     * @since 1.4.10
+     * @deprecated As of upcoming, since it is superfluous in XStream 1.5.x
+     */
+    public static void setupDefaultSecurity(final XStream xstream) {
+        // Do intentionally nothing
+    }
+
     protected void setupAliases() {
         if (classAliasingMapper == null) {
             return;
