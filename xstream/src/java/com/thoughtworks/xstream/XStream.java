@@ -58,8 +58,10 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.basic.BigDecimalConverter;
 import com.thoughtworks.xstream.converters.basic.BigIntegerConverter;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
@@ -324,6 +326,8 @@ public class XStream {
     private LocalConversionMapper localConversionMapper;
     private SecurityMapper securityMapper;
     private AnnotationConfiguration annotationConfiguration;
+
+    private transient boolean insecureWarning;
 
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
@@ -681,6 +685,7 @@ public class XStream {
         }
         
         addPermission(AnyTypePermission.ANY);
+        insecureWarning = true;
     }
 
     protected void setupAliases() {
@@ -847,6 +852,7 @@ public class XStream {
         registerConverter(
             new SerializableConverter(mapper, reflectionProvider, classLoaderReference), PRIORITY_LOW);
         registerConverter(new ExternalizableConverter(mapper, classLoaderReference), PRIORITY_LOW);
+        registerConverter(new InternalBlackList(), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
         registerConverter(new IntConverter(), PRIORITY_NORMAL);
@@ -1364,6 +1370,10 @@ public class XStream {
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root, DataHolder dataHolder) {
         try {
+            if (insecureWarning) {
+                insecureWarning = false;
+                System.err.println("Security framework of XStream not initialized, XStream is probably vulnerable.");
+            }
             return marshallingStrategy.unmarshal(
                 root, reader, dataHolder, converterLookup, mapper);
 
@@ -2240,6 +2250,7 @@ public class XStream {
      */
     public void addPermission(TypePermission permission) {
         if (securityMapper != null) {
+            insecureWarning &= permission != NoTypePermission.NONE;
             securityMapper.addPermission(permission);
         }
     }
@@ -2411,6 +2422,29 @@ public class XStream {
          */
         public InitializationException(String message) {
             super(message);
+        }
+    }
+
+    private class InternalBlackList implements Converter {
+
+        public boolean canConvert(final Class type) {
+            return (type == void.class || type == Void.class)
+                || (insecureWarning
+                    && type != null
+                    && (type.getName().equals("java.beans.EventHandler")
+                        || type.getName().endsWith("$LazyIterator")
+                        || type.getName().startsWith("javax.crypto.")));
+        }
+
+        @Override
+        public void marshal(final Object source, final HierarchicalStreamWriter writer,
+                final MarshallingContext context) {
+            throw new ConversionException("Security alert. Marshalling rejected.");
+        }
+
+        @Override
+        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
+            throw new ConversionException("Security alert. Unmarshalling rejected.");
         }
     }
 }
