@@ -39,6 +39,9 @@
 		<li>GPR:#82, JIRA:XSTR-774: Add converters for types of java.time, java.time.chrono, and java.time.temporal
 			packages (converters for LocalDate, LocalDateTime, LocalTime, OffsetDateTime, and ZonedDateTime by Matej Cimbora).</li>
 		<li>GHI:#29: JavaBeanConverter does not respect ignored unknown elements.</li>
+		<li>Add XStream.setupDefaultSecurity to initialize security framework with defaults of XStream 1.5.x.</li>
+		<li>Emit error warning if security framework has not been initialized and the XStream instance is vulnerable to
+		known exploits.</li>
 	</ul>
 
 	<h2>Stream Compatibility</h2>
@@ -71,6 +74,7 @@
 	<h2>API changes</h2>
 
 	<ul>
+		<li>Added c.t.x.XStream.setupDefaultSecurity(XStream).</li>
 		<li>Added c.t.x.XStream.createObjectInputStream(HierarchicalStreamReader, DataHolder) and
 			c.t.x.XStream.createObjectOutputStream(HierarchicalStreamWriter, String, DataHolder).</li>
 		<li>Added c.t.x.converters.javabean.PropertyDictionary.propertyDescriptorOrNull(Class, String).</li>

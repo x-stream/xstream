@@ -27,20 +27,26 @@ import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -48,6 +54,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -145,9 +152,13 @@ import com.thoughtworks.xstream.mapper.SecurityMapper;
 import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 import com.thoughtworks.xstream.security.AnyTypePermission;
+import com.thoughtworks.xstream.security.ArrayTypePermission;
 import com.thoughtworks.xstream.security.ExplicitTypePermission;
+import com.thoughtworks.xstream.security.InterfaceTypePermission;
 import com.thoughtworks.xstream.security.NoPermission;
 import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.NullPermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import com.thoughtworks.xstream.security.RegExpTypePermission;
 import com.thoughtworks.xstream.security.TypeHierarchyPermission;
 import com.thoughtworks.xstream.security.TypePermission;
@@ -686,6 +697,104 @@ public class XStream {
         
         addPermission(AnyTypePermission.ANY);
         insecureWarning = true;
+    }
+
+    /**
+     * Setup the security framework of a XStream instance.
+     * <p>
+     * This method is a pure helper method for XStream 1.4.x. It initializes an XStream instance with a white list of
+     * well-known and simply types of the Java runtime as it is done in XStream 1.5.x by default. This method will do
+     * therefore nothing in XStream 1.5.
+     * </p>
+     * 
+     * @param xstream
+     * @since 1.4.10
+     */
+    public static void setupDefaultSecurity(final XStream xstream) {
+        if (xstream.insecureWarning) {
+            xstream.addPermission(NoTypePermission.NONE);
+            xstream.addPermission(NullPermission.NULL);
+            xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+            xstream.addPermission(ArrayTypePermission.ARRAYS);
+            xstream.addPermission(InterfaceTypePermission.INTERFACES);
+            xstream.allowTypeHierarchy(Calendar.class);
+            xstream.allowTypeHierarchy(Collection.class);
+            xstream.allowTypeHierarchy(Map.class);
+            xstream.allowTypeHierarchy(Map.Entry.class);
+            xstream.allowTypeHierarchy(Member.class);
+            xstream.allowTypeHierarchy(Number.class);
+            xstream.allowTypeHierarchy(Throwable.class);
+            xstream.allowTypeHierarchy(TimeZone.class);
+
+            Class type = JVM.loadClassForName("java.lang.Enum");
+            if (type != null) {
+                xstream.allowTypeHierarchy(type);
+            }
+            type = JVM.loadClassForName("java.nio.file.Path");
+            if (type != null) {
+                xstream.allowTypeHierarchy(type);
+            }
+
+            final Set types = new HashSet<>();
+            types.add(BitSet.class);
+            types.add(Charset.class);
+            types.add(Class.class);
+            types.add(Currency.class);
+            types.add(Date.class);
+            types.add(DecimalFormatSymbols.class);
+            types.add(File.class);
+            types.add(Locale.class);
+            types.add(Object.class);
+            types.add(Pattern.class);
+            types.add(StackTraceElement.class);
+            types.add(String.class);
+            types.add(StringBuffer.class);
+            types.add(JVM.loadClassForName("java.lang.StringBuilder"));
+            types.add(URL.class);
+            types.add(URI.class);
+            types.add(JVM.loadClassForName("java.util.UUID"));
+            if (JVM.isSQLAvailable()) {
+                types.add(JVM.loadClassForName("java.sql.Timestamp"));
+                types.add(JVM.loadClassForName("java.sql.Time"));
+                types.add(JVM.loadClassForName("java.sql.Date"));
+            }
+            if (JVM.is18()) {
+                xstream.allowTypeHierarchy(JVM.loadClassForName("java.time.Clock"));
+                types.add(JVM.loadClassForName("java.time.Duration"));
+                types.add(JVM.loadClassForName("java.time.Instant"));
+                types.add(JVM.loadClassForName("java.time.LocalDate"));
+                types.add(JVM.loadClassForName("java.time.LocalDateTime"));
+                types.add(JVM.loadClassForName("java.time.LocalTime"));
+                types.add(JVM.loadClassForName("java.time.MonthDay"));
+                types.add(JVM.loadClassForName("java.time.OffsetDateTime"));
+                types.add(JVM.loadClassForName("java.time.OffsetTime"));
+                types.add(JVM.loadClassForName("java.time.Period"));
+                types.add(JVM.loadClassForName("java.time.Ser"));
+                types.add(JVM.loadClassForName("java.time.Year"));
+                types.add(JVM.loadClassForName("java.time.YearMonth"));
+                types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
+                xstream.allowTypeHierarchy(JVM.loadClassForName("java.time.ZoneId"));
+                types.add(JVM.loadClassForName("java.time.chrono.HijrahDate"));
+                types.add(JVM.loadClassForName("java.time.chrono.JapaneseDate"));
+                types.add(JVM.loadClassForName("java.time.chrono.JapaneseEra"));
+                types.add(JVM.loadClassForName("java.time.chrono.MinguoDate"));
+                types.add(JVM.loadClassForName("java.time.chrono.ThaiBuddhistDate"));
+                types.add(JVM.loadClassForName("java.time.chrono.Ser"));
+                xstream.allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
+                types.add(JVM.loadClassForName("java.time.temporal.ValueRange"));
+                types.add(JVM.loadClassForName("java.time.temporal.WeekFields"));
+            }
+            types.remove(null);
+
+            final Iterator iter = types.iterator();
+            final Class[] classes = new Class[types.size()];
+            for (int i = 0; i < classes.length; ++i) {
+                classes[i] = (Class)iter.next();
+            }
+            xstream.allowTypes(classes);
+        } else {
+            throw new IllegalArgumentException("Security framework of XStream instance already initialized");
+        }
     }
 
     protected void setupAliases() {
