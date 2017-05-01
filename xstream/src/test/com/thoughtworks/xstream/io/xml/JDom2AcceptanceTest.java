@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,6 +31,8 @@ public class JDom2AcceptanceTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         xstream = new XStream();
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {"com.thoughtworks.acceptance.someobjects.*"});
         xstream.alias("x", X.class);
     }
 

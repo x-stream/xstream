@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,8 +41,14 @@ public class ISO8601SqlTimestampConverterTest extends TestCase {
         super.tearDown();
     }
 
-    public void testISO8601SqlTimestamp() {
+    private XStream createXStream() {
         XStream xs = new XStream();
+        XStream.setupDefaultSecurity(xs);
+        return xs;
+    }
+
+    public void testISO8601SqlTimestamp() {
+        XStream xs = createXStream();
         xs.registerConverter(converter);
 
         long currentTime = System.currentTimeMillis();
@@ -59,7 +65,7 @@ public class ISO8601SqlTimestampConverterTest extends TestCase {
     }
 
     public void testISO8601SqlTimestampWith1Milli() {
-        XStream xs = new XStream();
+        XStream xs = createXStream();
         xs.registerConverter(converter);
 
         long currentTime = (System.currentTimeMillis() / 1000 * 1000) + 1;
@@ -76,7 +82,7 @@ public class ISO8601SqlTimestampConverterTest extends TestCase {
     }
 
     public void testISO8601SqlTimestampWithNanos() {
-        XStream xs = new XStream();
+        XStream xs = createXStream();
         xs.registerConverter(converter);
 
         Timestamp ts1 = new Timestamp(System.currentTimeMillis());

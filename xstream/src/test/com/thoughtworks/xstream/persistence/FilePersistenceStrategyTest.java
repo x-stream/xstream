@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 XStream Committers.
+ * Copyright (C) 2008, 2009, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import junit.framework.TestCase;
 
@@ -56,71 +59,77 @@ public class FilePersistenceStrategyTest extends TestCase {
         dir.delete();
     }
 
+    private XStream createXStream() {
+        XStream xstream = new XStream(new DomDriver());
+        XStream.setupDefaultSecurity(xstream);
+        return xstream;
+    }
+
     public void testConcatenatesXmlExtensionWhileGettingAFilename() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("string@guilherme.xml", strategy.getName("guilherme"));
     }
 
     public void testConcatenatesXmlExtensionWhileExtractingAKey() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("guilherme", strategy.extractKey("string@guilherme.xml"));
     }
 
     public void testEscapesNonAcceptableCharacterWhileExtractingAKey() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("../guilherme", strategy.extractKey("string@..%2Fguilherme.xml"));
     }
 
     public void testEscapesNonAcceptableCharacterWhileGettingAFilename() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("string@..%2Fguilherme.xml", strategy.getName("../guilherme"));
     }
 
     public void testEscapesUTF8NonAcceptableCharacterWhileGettingAFilename() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("string@\u5377guilherme.xml", strategy.getName("\u5377guilherme"));
     }
 
     public void testEscapesUTF8NonAcceptableCharacterWhileExtractingAKey() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("\u5377guilherme", strategy.extractKey("string@\u5377guilherme.xml"));
     }
 
     public void testEscapesPercentageWhileGettingAFilename() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("string@%25guilherme.xml", strategy.getName("%guilherme"));
     }
 
     public void testEscapesPercentageWhileExtractingAKey() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("%guilherme", strategy.extractKey("string@%25guilherme.xml"));
     }
 
     public void testEscapesNullKeyWhileGettingAFileName() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("null@null.xml", strategy.getName(null));
     }
 
     public void testRestoresTypeOfKey() throws MalformedURLException {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals(new URL("http://xstream.codehaus.org"), strategy
             .extractKey("url@http%3A%2F%2Fxstream.codehaus.org.xml"));
     }
 
     public void testEscapesNullKeyWhileExtractingKey() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertNull(strategy.extractKey("null@null.xml"));
     }
 
     public void testWritesASingleFile() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         File file = new File(baseDir, "string@guilherme.xml");
         assertTrue(file.isFile());
     }
 
     public void testWritesTwoFiles() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");
         assertTrue(new File(baseDir, "string@guilherme.xml").isFile());
@@ -128,7 +137,7 @@ public class FilePersistenceStrategyTest extends TestCase {
     }
 
     public void testRemovesAWrittenFile() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         assertTrue(new File(baseDir, "string@guilherme.xml").isFile());
         String aCuteString = (String)strategy.remove("guilherme");
@@ -137,48 +146,48 @@ public class FilePersistenceStrategyTest extends TestCase {
     }
 
     public void testRemovesAnInvalidFile() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         String aCuteString = (String)strategy.remove("guilherme");
         assertNull(aCuteString);
     }
 
     public void testHasZeroLength() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals(0, strategy.size());
     }
 
     public void testHasOneItem() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         assertEquals(1, strategy.size());
     }
 
     public void testHasTwoItems() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");
         assertEquals(2, strategy.size());
     }
 
     public void testIsNotEmpty() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         assertEquals("Map should not be empty", 1, strategy.size());
     }
 
     public void testDoesNotContainKey() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertFalse(strategy.containsKey("guilherme"));
     }
 
     public void testContainsKey() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         assertTrue(strategy.containsKey("guilherme"));
     }
 
     public void testGetsAFile() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         assertTrue(new File(baseDir, "string@guilherme.xml").isFile());
         String aCuteString = (String)strategy.get("guilherme");
@@ -186,13 +195,13 @@ public class FilePersistenceStrategyTest extends TestCase {
     }
 
     public void testGetsAnInvalidFile() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         String aCuteString = (String)strategy.get("guilherme");
         assertNull(aCuteString);
     }
 
     public void testRewritesASingleFile() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         File file = new File(baseDir, "string@guilherme.xml");
         assertTrue(file.isFile());
@@ -201,7 +210,7 @@ public class FilePersistenceStrategyTest extends TestCase {
     }
 
     public void testIsEmpty() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         assertEquals("Map should be empty", 0, strategy.size());
     }
 
@@ -209,7 +218,7 @@ public class FilePersistenceStrategyTest extends TestCase {
         Map original = new HashMap();
         original.put("guilherme", "aCuteString");
         original.put("silveira", "anotherCuteString");
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");
         for (Iterator iter = original.keySet().iterator(); iter.hasNext();) {
@@ -218,7 +227,7 @@ public class FilePersistenceStrategyTest extends TestCase {
     }
 
     public void testIteratesOverEntryAndChecksItsKeyWithAnotherInstance() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");
         FilePersistenceStrategy built = new FilePersistenceStrategy(baseDir);
@@ -229,7 +238,7 @@ public class FilePersistenceStrategyTest extends TestCase {
     }
 
     public void testRemovesAnItemThroughIteration() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");
         for (Iterator iter = strategy.iterator(); iter.hasNext();) {
@@ -242,14 +251,14 @@ public class FilePersistenceStrategyTest extends TestCase {
     }
 
     public void testRewritesAFile() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         strategy.put("guilherme", "anotherCuteString");
         assertEquals("anotherCuteString", strategy.get("guilherme"));
     }
 
     public void testPutReturnsTheOldValueWhenRewritingAFile() {
-        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir);
+        FilePersistenceStrategy strategy = new FilePersistenceStrategy(baseDir, createXStream());
         strategy.put("guilherme", "aCuteString");
         assertEquals("aCuteString", strategy.put("guilherme", "anotherCuteString"));
     }

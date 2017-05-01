@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.thoughtworks.xstream.XStream;
+
 import junit.framework.TestCase;
 
 
@@ -31,6 +32,7 @@ public class EnumToStringConverterTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         xstream = new XStream();
+        XStream.setupDefaultSecurity(xstream);
         xstream.alias("simple", SimpleEnum.class);
         xstream.alias("big", BigEnum.class);
         xstream.alias("polymorphic", PolymorphicEnum.class);

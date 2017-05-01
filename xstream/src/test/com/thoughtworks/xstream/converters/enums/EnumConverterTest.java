@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.converters.enums;
 
 import com.thoughtworks.xstream.XStream;
+
 import junit.framework.TestCase;
 
 // ***** READ THIS *****
@@ -29,6 +30,7 @@ public class EnumConverterTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         xstream = new XStream();
+        XStream.setupDefaultSecurity(xstream);
         xstream.alias("simple", SimpleEnum.class);
         xstream.alias("polymorphic", PolymorphicEnum.class);
     }

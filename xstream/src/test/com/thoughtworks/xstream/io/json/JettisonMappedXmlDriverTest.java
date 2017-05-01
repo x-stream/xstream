@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2010, 2011, 2013, 2016 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2010, 2011, 2013, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -58,6 +58,9 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         super.setUp();
         TimeZoneChanger.change("UTC");
         xstream = new XStream(new JettisonMappedXmlDriver());
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[]{
+            getClass().getName() + "$*", "com.thoughtworks.acceptance.objects.*"});
         xstream.alias("category", Category.class);
         xstream.alias("product", Product.class);
     }
@@ -91,6 +94,8 @@ public class JettisonMappedXmlDriverTest extends TestCase {
             Configuration config = new Configuration();
             setTypeConverter.invoke(config, new Object[]{typeConverter});
             xstream = new XStream(new JettisonMappedXmlDriver(config));
+            XStream.setupDefaultSecurity(xstream);
+            xstream.allowTypesByWildcard(new String[]{"com.thoughtworks.acceptance.objects.*"});
             xstream.alias("product", Product.class);
             Product product = new Product("Banana", "123", 23.00);
             String result = xstream.toXML(product);

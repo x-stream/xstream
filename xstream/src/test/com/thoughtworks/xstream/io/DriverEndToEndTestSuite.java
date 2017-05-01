@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -98,6 +98,8 @@ public class DriverEndToEndTestSuite extends TestSuite {
 
     private void testObject(final HierarchicalStreamDriver driver) {
         final XStream xstream = new XStream(driver);
+        xstream.setupDefaultSecurity(xstream);
+        xstream.allowTypes(new Class[] { SampleLists.class });
         xstream.registerConverter(new CollectionConverter(xstream.getMapper()) {
 
             public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
@@ -179,5 +181,4 @@ public class DriverEndToEndTestSuite extends TestSuite {
         result = result.substring(result.lastIndexOf('.') + 1);
         return result;
     }
-
 }

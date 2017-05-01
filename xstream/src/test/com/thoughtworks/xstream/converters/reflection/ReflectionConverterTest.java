@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -46,7 +46,7 @@ public class ReflectionConverterTest extends TestCase {
     public void testSerializesAllPrimitiveFieldsInACustomObject() {
         World world = new World();
 
-        XStream xstream = new XStream(new XppDriver());
+        XStream xstream = createXStream();
         xstream.alias("world", World.class);
 
         String expected =
@@ -71,6 +71,12 @@ public class ReflectionConverterTest extends TestCase {
         assertEquals(expected, xstream.toXML(world));
     }
 
+    private XStream createXStream() {
+        XStream xstream = new XStream(new XppDriver());
+        XStream.setupDefaultSecurity(xstream);
+        return xstream;
+    }
+
     public static class TypesOfFields extends StandardObject {
         String normal = "normal";
         transient String trans = "transient";
@@ -84,7 +90,7 @@ public class ReflectionConverterTest extends TestCase {
                 "  <normal>normal</normal>\n" +
                 "</types>";
 
-        XStream xstream = new XStream(new XppDriver());
+        XStream xstream = createXStream();
         xstream.alias("types", TypesOfFields.class);
 
         String xml = xstream.toXML(fields);
@@ -93,7 +99,8 @@ public class ReflectionConverterTest extends TestCase {
     }
     
     public void testCanBeOverloadedToDeserializeTransientFields() {
-        XStream xstream = new XStream(new XppDriver());
+        XStream xstream = createXStream();
+        xstream.allowTypesByWildcard(new String[] {getClass().getName()+"$*"});
         xstream.alias("types", TypesOfFields.class);
         xstream.registerConverter(new ReflectionConverter(xstream.getMapper(), xstream
             .getReflectionProvider()) {
@@ -118,7 +125,7 @@ public class ReflectionConverterTest extends TestCase {
     }
 
     public void testCustomConverterCanBeInstantiatedAndRegisteredWithDesiredPriority() {
-        XStream xstream = new XStream(new XppDriver());
+        XStream xstream = createXStream();
         // using default mapper instead of XStream#buildMapper()
         Mapper mapper = new DefaultMapper(new ClassLoaderReference(new CompositeClassLoader()));
         // AttributeMapper required by ReflectionConverter

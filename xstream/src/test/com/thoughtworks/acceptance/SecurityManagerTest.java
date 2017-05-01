@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2015, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -205,7 +205,8 @@ public class SecurityManagerTest extends TestCase {
     }
 
     private void assertBothWays() {
-
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {"com.thoughtworks.acceptance.objects.*"});
         xstream.alias("software", Software.class);
 
         final Software sw = new Software("jw", "xstr");

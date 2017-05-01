@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -82,8 +82,11 @@ public class XStreamerTest extends AbstractAcceptanceTest {
     public void testCanSerializeSelfContained() throws ClassNotFoundException, ObjectStreamException {
         final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
         xstream.alias("software", OpenSourceSoftware.class);
+        final TypePermission[] permissions = XStreamer.getDefaultPermissions();
+        for(int i = 0; i < permissions.length; ++i)
+            xstream.addPermission(permissions[i]);
         String xml = new XStreamer().toXML(xstream, oos);
-        assertEquals(oos, new XStreamer().fromXML(xml));
+        assertEquals(oos, new XStreamer().fromXML(xml, XStreamer.getDefaultPermissions()));
     }
     
     private String normalizedXStreamXML(String xml) throws TransformerException {

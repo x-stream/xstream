@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,8 +18,14 @@ import java.util.Comparator;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 
-
 public class JavaBeanConverterTest extends TestCase {
+
+    private XStream createXStream() {
+        XStream xstream = new XStream();
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {getClass().getName()+"$*"});
+        return xstream;
+    }
 
     // Different JDK versions deliver properties in different order - so sort them!
     static class StringComparator implements Comparator {
@@ -172,7 +178,7 @@ public class JavaBeanConverterTest extends TestCase {
     public void testSerializesAllPrimitiveFieldsInACustomObject() {
         World world = new World();
 
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
             new StringComparator())), XStream.PRIORITY_LOW);
         xstream.alias("world", World.class);
@@ -205,7 +211,7 @@ public class JavaBeanConverterTest extends TestCase {
         World world = new World();
         world.setAString(null);
 
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
             new StringComparator())), XStream.PRIORITY_LOW);
         xstream.alias("world", World.class);
@@ -286,7 +292,7 @@ public class JavaBeanConverterTest extends TestCase {
             + "  <trans>transient</trans>\n"
             + "</types>";
 
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
             new StringComparator())), -20);
         xstream.alias("types", TypesOfFields.class);
@@ -321,7 +327,7 @@ public class JavaBeanConverterTest extends TestCase {
             + "  </member>\n"
             + "</bean>";
 
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("bean", SimpleBean.class);
 
@@ -333,7 +339,7 @@ public class JavaBeanConverterTest extends TestCase {
         TypesOfFields fields = new TypesOfFields();
         String expected = "<types/>";
 
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("types", TypesOfFields.class);
         xstream.omitField(TypesOfFields.class, "trans");
@@ -352,7 +358,7 @@ public class JavaBeanConverterTest extends TestCase {
             + "  <foo>bar</foo>\n" 
             + "</types>";
 
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("types", TypesOfFields.class);
         xstream.omitField(TypesOfFields.class, "foo");
@@ -371,7 +377,7 @@ public class JavaBeanConverterTest extends TestCase {
             + "  <foo>bar</foo>\n" 
             + "</types>";
 
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("types", TypesOfFields.class);
         xstream.ignoreUnknownElements("fo.*");
@@ -393,7 +399,7 @@ public class JavaBeanConverterTest extends TestCase {
         UnsafeBean bean = new UnsafeBean();
         String expected = "<unsafeBean/>";
 
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.alias("unsafeBean", UnsafeBean.class);
         xstream.omitField(UnsafeBean.class, "unsafe");
@@ -446,7 +452,7 @@ public class JavaBeanConverterTest extends TestCase {
     }
 
     public void testDoesNotSerializeOmittedInheritedFields() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(
             new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         xstream.omitField(Person.class, "lastName");
@@ -462,7 +468,7 @@ public class JavaBeanConverterTest extends TestCase {
     }
 
     public void testUseAliasInheritedFields() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(
             new JavaBeanConverter(xstream.getMapper(), new BeanProvider(
                 new StringComparator())), XStream.PRIORITY_LOW);
@@ -481,7 +487,7 @@ public class JavaBeanConverterTest extends TestCase {
     }
 
     public void testFailsFastIfPropertyIsDefinedTwice() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.registerConverter(
             new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_LOW);
         String input = ""

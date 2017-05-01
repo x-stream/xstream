@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
+import com.thoughtworks.xstream.security.NoTypePermission;
 
 
 public class OmitFieldsTest extends AbstractAcceptanceTest {
@@ -163,6 +164,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
                 return new OmitFieldsWithMyPrefixMapper(next);
             }
         };
+        xstream.addPermission(NoTypePermission.NONE); // clear out defaults
 
         xstream.allowTypes(new Class[]{AnotherThing.class});
         xstream.alias("thing", AnotherThing.class);

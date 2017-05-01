@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2014 XStream Committers.
+ * Copyright (C) 2007, 2014, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,13 @@ import java.io.Serializable;
  * @author J&ouml;rg Schaible
  */
 public class SerializableConverterTest extends TestCase {
+
+    private XStream createXStream() {
+        XStream xstream = new XStream();
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {getClass().getName()+"$*"});
+        return xstream;
+    }
 
     static class SimpleType extends StandardObject {
         private String one;
@@ -58,7 +65,7 @@ public class SerializableConverterTest extends TestCase {
     }
     
     public void testCanOmitFieldAtSerialization() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("simple", SimpleType.class);
         xstream.omitField(SimpleType.class, "two");
         
@@ -80,7 +87,7 @@ public class SerializableConverterTest extends TestCase {
     }
     
     public void testCanOmitFieldAtDeserialization() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("simple", SimpleType.class);
         xstream.omitField(SimpleType.class, "two");
         xstream.omitField(SimpleType.class, "x");
@@ -124,7 +131,7 @@ public class SerializableConverterTest extends TestCase {
     }
     
     public void testCanOmitInheritedFieldAtSerialization() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("extended", ExtendedType.class);
         xstream.alias("simple", SimpleType.class);
         xstream.omitField(SimpleType.class, "two");
@@ -153,7 +160,7 @@ public class SerializableConverterTest extends TestCase {
     }
     
     public void testCanOmitInheritedFieldAtDeserialization() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("extended", ExtendedType.class);
         xstream.alias("simple", SimpleType.class);
         xstream.omitField(SimpleType.class, "two");
@@ -225,7 +232,7 @@ public class SerializableConverterTest extends TestCase {
     }
     
     public void testCanOmitNamedFieldAtSerialization() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("simple", SimpleNamedFieldsType.class);
         xstream.omitField(SimpleNamedFieldsType.class, "s2");
         
@@ -247,7 +254,7 @@ public class SerializableConverterTest extends TestCase {
     }
     
     public void testCanOmitNamedFieldAtDeserialization() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("simple", SimpleNamedFieldsType.class);
         xstream.omitField(SimpleNamedFieldsType.class, "s2");
         xstream.omitField(SimpleNamedFieldsType.class, "x");
@@ -271,7 +278,7 @@ public class SerializableConverterTest extends TestCase {
     }
     
     public void testCanAliasField() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("simple", SimpleType.class);
         xstream.aliasField("s2", SimpleType.class, "two");
         
@@ -296,7 +303,7 @@ public class SerializableConverterTest extends TestCase {
     }
 
     public void testCanAliasNamedField() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("simple", SimpleNamedFieldsType.class);
         xstream.aliasField("two", SimpleNamedFieldsType.class, "s2");
         
@@ -325,7 +332,7 @@ public class SerializableConverterTest extends TestCase {
     }
     
     public void testCanHandleFieldsDeclaredWithSerializableInterface() {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream();
         xstream.alias("sertype", SerializableType.class);
         xstream.useAttributeFor(SerializableType.class, "serializable");
         
