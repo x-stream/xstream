@@ -697,11 +697,8 @@ XStream xstream = new XStream(driver);
     <!-- ...................................................... -->
     <h2 id="Security_VulnerabilityWarning">XStream suddenly emits a vulnerability warning!</h2>
 
-    <p>If the security framework has not been initialized, XStream will emit such a warning since version 1.4.10.  You
-    use the <a href="security.html">security rules</a> to setup a white list of class types that will be processed.</p>
-    
-    <p>For XStream 1.4.x you may call the setupDefaultSecurity method to initialize a XStream instance in the same way
-    as it will be done for XStream 1.5.x.  This means also a compatibility preparation for XStream 1.5.x.</p> 
+    <p>That was the case for XStream 1.4.x if the security framework has not been initialized. XStream 1.5.x
+    initializes automatically a white list for well-known types of the Java runtime.</p>
 
     <!-- ...................................................... -->
     <h2 id="Security_XXEVulnerability">Is XStream XXE vulnerable (CVE-2016-3674)?</h2>
