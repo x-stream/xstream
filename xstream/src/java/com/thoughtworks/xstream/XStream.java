@@ -735,7 +735,7 @@ public class XStream {
                 xstream.allowTypeHierarchy(type);
             }
 
-            final Set types = new HashSet<>();
+            final Set types = new HashSet();
             types.add(BitSet.class);
             types.add(Charset.class);
             types.add(Class.class);
