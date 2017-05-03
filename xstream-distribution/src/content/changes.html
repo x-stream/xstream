@@ -64,9 +64,14 @@
 
 	<p>Not yet released.</p>
 
+	<p class="highlight">This maintenance release addresses also the security vulnerability <a href="CVE-2017-7957.html">
+	    CVE-2017-7957</a>, used for a Denial of Service attack by crashing the Java runtime.</p>
+
 	<h2>Major changes</h2>
 
 	<ul>
+		<li>Fix PrimitiveTypePermission to reject type <em>void</em> to prevent CVE-2017-7957 with an initialized
+		security framework.</li>
 		<li>Improve performance by minimizing call stack of mapper chain.</li>
 		<li>GPR:#82, JIRA:XSTR-774: Add converters for types of java.time, java.time.chrono, and java.time.temporal
 			packages (converters for LocalDate, LocalDateTime, LocalTime, OffsetDateTime, and ZonedDateTime by Matej Cimbora).</li>
@@ -121,8 +126,9 @@
 
 	<p>Released March 15, 2016.</p>
 
-	<p class="highlight">This maintenance release addresses also the security vulnerability CVE-2016-3674, known as XXE
-		vulnerability that can be used to expose arbitrary data from the file system when unmarshalling.</p>
+	<p class="highlight">This maintenance release addresses also the security vulnerability <a href="CVE-2016-3674.html">
+	    CVE-2016-3674</a>, known as XXE vulnerability that can be used to expose arbitrary data from the file system
+	    when unmarshalling.</p>
 
 	<h2>Major changes</h2>
 
@@ -239,8 +245,8 @@
 
 	<p>Released February 8, 2014.</p>
 
-	<p class="highlight">This maintenance release addresses mainly the security vulnerability CVE-2013-7285, an
-		arbitrary execution of commands when unmarshalling.</p>
+	<p class="highlight">This maintenance release addresses mainly the security vulnerability <a href="CVE-2013-7285.html">
+	    CVE-2013-7285</a>, an arbitrary execution of commands when unmarshalling.</p>
 
 	<h2>Major changes</h2>
 
