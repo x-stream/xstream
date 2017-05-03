@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 XStream Committers.
+ * Copyright (C) 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -49,6 +49,9 @@ import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
 import com.thoughtworks.xstream.io.xml.WstxDriver;
 import com.thoughtworks.xstream.io.xml.XomDriver;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.security.ArrayTypePermission;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 
 
 /**
@@ -316,6 +319,10 @@ public class ParserBenchmark {
     @Setup
     public void init() {
         xstream = new XStream();
+        xstream.addPermission(NoTypePermission.NONE);
+        xstream.addPermission(ArrayTypePermission.ARRAYS);
+        xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xstream.allowTypes(List.class, String.class);
         xstream.setMode(XStream.NO_REFERENCES);
         driver = driverFactory.getDriver();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 XStream Committers.
+ * Copyright (C) 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,6 +39,8 @@ import com.thoughtworks.xstream.core.util.WeakCache;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.security.ArrayTypePermission;
+import com.thoughtworks.xstream.security.NoTypePermission;
 
 
 /**
@@ -261,6 +263,9 @@ public class StringConverterBenchmark {
             throw new IllegalStateException("Unsupported benchmark type: " + benchmark);
         }
         xstream = new XStream(new Xpp3Driver());
+        xstream.addPermission(NoTypePermission.NONE);
+        xstream.addPermission(ArrayTypePermission.ARRAYS);
+        xstream.allowTypes(String.class);
         xstream.registerConverter(converter);
     }
 
