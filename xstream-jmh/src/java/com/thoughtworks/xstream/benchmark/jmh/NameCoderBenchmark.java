@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 XStream Committers.
+ * Copyright (C) 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -32,6 +32,9 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.security.ArrayTypePermission;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 
 
 /**
@@ -266,7 +269,10 @@ public class NameCoderBenchmark {
             throw new IllegalStateException("Unsupported benchmark type: " + benchmark);
         }
         xstream = new XStream(new Xpp3Driver(nameCoder));
-        xstream.allowTypes(new Class[]{_1._2._3._4._5.Unfriendly.class});
+        xstream.addPermission(NoTypePermission.NONE);
+        xstream.addPermission(ArrayTypePermission.ARRAYS);
+        xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xstream.allowTypes(new Class[]{_1._2._3._4._5.Unfriendly.class, String.class});
         if (nameCoder.getClass() == NoNameCoder.class) {
             xstream.alias(_1._2._3._4._5.Unfriendly.class.getName().replace('$', '\u00b7'),
                 _1._2._3._4._5.Unfriendly.class);

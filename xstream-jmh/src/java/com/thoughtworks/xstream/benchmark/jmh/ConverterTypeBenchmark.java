@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 XStream Committers.
+ * Copyright (C) 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -38,6 +38,9 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.security.ArrayTypePermission;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 
 
 /**
@@ -228,7 +231,10 @@ public class ConverterTypeBenchmark {
     @Setup(Level.Trial)
     public void setUp(final BenchmarkParams params) {
         xstream = new XStream(new Xpp3Driver());
-        xstream.allowTypes(new Class[]{Model.class});
+        xstream.addPermission(NoTypePermission.NONE);
+        xstream.addPermission(ArrayTypePermission.ARRAYS);
+        xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xstream.allowTypes(new Class[]{Model.class, String.class, BigInteger.class, UUID.class});
         final String benchmark = params.getBenchmark();
         final String name = benchmark.substring(ConverterTypeBenchmark.class.getName().length() + 1);
         if (name.equals("reflection")) {
