@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.core;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -45,13 +46,26 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         if (cachedConverter != null) {
             return cachedConverter;
         }
+
+        final Map<String, String> errors = new LinkedHashMap<>();
         for (final Converter converter : converters) {
-            if (converter.canConvert(type)) {
-                return converter;
+            try {
+                if (converter.canConvert(type)) {
+                    return converter;
+                }
+            } catch (final RuntimeException | LinkageError e) {
+                errors.put(converter.getClass().getName(), e.getMessage());
             }
         }
-        final ConversionException exception = new ConversionException("No converter specified");
+
+        final ConversionException exception = new ConversionException(errors.isEmpty()
+            ? "No converter specified"
+            : "No converter available");
         exception.add("type", type.getName());
+        for (final Map.Entry<String, String> entry : errors.entrySet()) {
+            exception.add("converter", entry.getKey());
+            exception.add("message", entry.getValue());
+        }
         throw exception;
     }
 
@@ -60,8 +74,12 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         converters.add(converter, priority);
         for (final Iterator<Class<?>> iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
             final Class<?> type = iter.next();
-            if (converter.canConvert(type)) {
-                iter.remove();
+            try {
+                if (converter.canConvert(type)) {
+                    iter.remove();
+                }
+            } catch (final RuntimeException | LinkageError e) {
+                // ignore
             }
         }
     }
