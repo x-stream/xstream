@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.converters.basic.NullConverter;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 
 
@@ -46,7 +47,8 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
             return cachedConverter;
         }
         for (final Converter converter : converters) {
-            if (converter.canConvert(type)) {
+            if ((converter instanceof NullConverter && converter.canConvert(type))
+                    || (type != null && converter.canConvert(type))) {
                 return converter;
             }
         }
@@ -60,7 +62,8 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         converters.add(converter, priority);
         for (final Iterator<Class<?>> iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
             final Class<?> type = iter.next();
-            if (converter.canConvert(type)) {
+            if ((converter instanceof NullConverter && converter.canConvert(type))
+                    || (type != null && converter.canConvert(type))) {
                 iter.remove();
             }
         }
