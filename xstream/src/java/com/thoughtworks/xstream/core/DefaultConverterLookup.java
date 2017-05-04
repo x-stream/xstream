@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -50,16 +51,33 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         if (cachedConverter != null) {
             return cachedConverter;
         }
+
+        final Map errors = new LinkedHashMap();
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {
             Converter converter = (Converter) iterator.next();
-            if (converter.canConvert(type)) {
-                typeToConverterMap.put(type, converter);
-                return converter;
+            try {
+                if (converter.canConvert(type)) {
+                    typeToConverterMap.put(type, converter);
+                    return converter;
+                }
+            } catch (final RuntimeException e) {
+                errors.put(converter.getClass().getName(), e.getMessage());
+            } catch (final LinkageError e) {
+                errors.put(converter.getClass().getName(), e.getMessage());
             }
         }
-        ConversionException exception = new ConversionException("No converter specified");
+
+        final ConversionException exception = new ConversionException(errors.isEmpty()
+            ? "No converter specified"
+            : "No converter available");
         exception.add("type", type.getName());
+        iterator = errors.entrySet().iterator();
+        while (iterator.hasNext()) {
+            final Map.Entry entry = (Map.Entry)iterator.next();
+            exception.add("converter", entry.getKey().toString());
+            exception.add("message", entry.getValue().toString());
+        }
         throw exception;
     }
     
@@ -67,8 +85,14 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         converters.add(converter, priority);
         for (Iterator iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
             Class type = (Class) iter.next();
-            if (converter.canConvert(type)) {
-                iter.remove();
+            try {
+                if (converter.canConvert(type)) {
+                    iter.remove();
+                }
+            } catch (final RuntimeException e) {
+                // ignore
+            } catch (final LinkageError e) {
+                // ignore
             }
         }
     }
