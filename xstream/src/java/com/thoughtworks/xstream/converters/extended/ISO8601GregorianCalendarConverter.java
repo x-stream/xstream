@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,17 +11,12 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import java.util.Calendar;
+import java.lang.reflect.InvocationTargetException;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-
-import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.core.JVM;
 
 
 /**
@@ -37,89 +32,39 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * @since 1.1.3
  */
 public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConverter {
-    private static final DateTimeFormatter[] formattersUTC = { //
-        ISODateTimeFormat.dateTime(), //
-        ISODateTimeFormat.dateTimeNoMillis(), //
-        ISODateTimeFormat.basicDateTime(), //
-        ISODateTimeFormat.basicOrdinalDateTime(), //
-        ISODateTimeFormat.basicOrdinalDateTimeNoMillis(), //
-        ISODateTimeFormat.basicTime(), //
-        ISODateTimeFormat.basicTimeNoMillis(), //
-        ISODateTimeFormat.basicTTime(), //
-        ISODateTimeFormat.basicTTimeNoMillis(), //
-        ISODateTimeFormat.basicWeekDateTime(), //
-        ISODateTimeFormat.basicWeekDateTimeNoMillis(), //
-        ISODateTimeFormat.ordinalDateTime(), //
-        ISODateTimeFormat.ordinalDateTimeNoMillis(), //
-        ISODateTimeFormat.time(), //
-        ISODateTimeFormat.timeNoMillis(), //
-        ISODateTimeFormat.tTime(), //
-        ISODateTimeFormat.tTimeNoMillis(), //
-        ISODateTimeFormat.weekDateTime(), //
-        ISODateTimeFormat.weekDateTimeNoMillis() //
-    };
-    private static final DateTimeFormatter[] formattersNoUTC = { //
-        ISODateTimeFormat.basicDate(), //
-        ISODateTimeFormat.basicOrdinalDate(), //
-        ISODateTimeFormat.basicWeekDate(), //
-        ISODateTimeFormat.date(), //
-        ISODateTimeFormat.dateHour(), //
-        ISODateTimeFormat.dateHourMinute(), //
-        ISODateTimeFormat.dateHourMinuteSecond(), //
-        ISODateTimeFormat.dateHourMinuteSecondFraction(), //
-        ISODateTimeFormat.dateHourMinuteSecondMillis(), //
-        ISODateTimeFormat.hour(), //
-        ISODateTimeFormat.hourMinute(), //
-        ISODateTimeFormat.hourMinuteSecond(), //
-        ISODateTimeFormat.hourMinuteSecondFraction(), //
-        ISODateTimeFormat.hourMinuteSecondMillis(), //
-        ISODateTimeFormat.ordinalDate(), //
-        ISODateTimeFormat.weekDate(), //
-        ISODateTimeFormat.year(), //
-        ISODateTimeFormat.yearMonth(), //
-        ISODateTimeFormat.yearMonthDay(), //
-        ISODateTimeFormat.weekyear(), //
-        ISODateTimeFormat.weekyearWeek(), //
-        ISODateTimeFormat.weekyearWeekDay() //
-    };
+    private final SingleValueConverter converter;
+
+    public ISO8601GregorianCalendarConverter() {
+        SingleValueConverter svConverter = null;
+        final Class<? extends SingleValueConverter> type = JVM.<SingleValueConverter>loadClassForName(JVM.is18()
+            ? "com.thoughtworks.xstream.core.util.ISO8601JavaTimeConverter"
+            : "com.thoughtworks.xstream.core.util.ISO8601JodaTimeConverter");
+        try {
+            svConverter = type.getDeclaredConstructor().newInstance();
+        } catch (final
+                InstantiationException
+                | IllegalAccessException
+                | IllegalArgumentException
+                | InvocationTargetException
+                | NoSuchMethodException
+                | SecurityException e) {
+            // ignore
+        }
+        converter = svConverter;
+    }
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(GregorianCalendar.class);
+        return converter != null && type.equals(GregorianCalendar.class);
     }
 
     @Override
     public Object fromString(final String str) {
-        for (final DateTimeFormatter formatter : formattersUTC) {
-            try {
-                final DateTime dt = formatter.parseDateTime(str);
-                final Calendar calendar = dt.toGregorianCalendar();
-                calendar.setTimeZone(TimeZone.getDefault());
-                return calendar;
-            } catch (final IllegalArgumentException e) {
-                // try with next formatter
-            }
-        }
-        final DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
-        for (final DateTimeFormatter element : formattersNoUTC) {
-            try {
-                final DateTimeFormatter formatter = element.withZone(dateTimeZone);
-                final DateTime dt = formatter.parseDateTime(str);
-                final Calendar calendar = dt.toGregorianCalendar();
-                calendar.setTimeZone(TimeZone.getDefault());
-                return calendar;
-            } catch (final IllegalArgumentException e) {
-                // try with next formatter
-            }
-        }
-        final ConversionException exception = new ConversionException("Cannot parse date");
-        exception.add("date", str);
-        throw exception;
+        return converter.fromString(str);
     }
 
     @Override
     public String toString(final Object obj) {
-        final DateTime dt = new DateTime(obj);
-        return dt.toString(formattersUTC[0]);
+        return converter.toString(obj);
     }
 }

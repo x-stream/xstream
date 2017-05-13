@@ -226,6 +226,7 @@
               <excludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/time/**</exclude>
+                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
@@ -307,6 +308,7 @@
               <excludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/time/**</exclude>
+                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>

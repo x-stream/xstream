@@ -1,110 +1,344 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 03. October 2005 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.extended;
-
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.testutil.TimeZoneChanger;
-
-import junit.framework.TestCase;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
+
+import org.joda.time.DateTime;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
+
+import junit.framework.TestCase;
+
 
 public class ISO8601GregorianCalendarConverterTest extends TestCase {
 
+    private Locale locale;
     private ISO8601GregorianCalendarConverter converter;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         converter = new ISO8601GregorianCalendarConverter();
-        
+        locale = Locale.getDefault();
+        Locale.setDefault(Locale.GERMANY);
+
         // Ensure that this test always run as if it were in the timezone of Panama.
         // This prevents failures when running the tests in different zones.
         // Note: 'America/Panama' has no relevance - it was just a randomly chosen zone.
         TimeZoneChanger.change("America/Panama");
     }
 
+    @Override
     protected void tearDown() throws Exception {
         TimeZoneChanger.reset();
+        Locale.setDefault(locale);
         super.tearDown();
     }
 
     public void testRetainsDetailDownToMillisecondLevel() {
         // setup
-        Calendar in = Calendar.getInstance();
+        final Calendar in = Calendar.getInstance();
 
         // execute
-        String text = converter.toString(in);
-        Calendar out = (Calendar) converter.fromString(text);
+        final String text = converter.toString(in);
+        final Calendar out = (Calendar)converter.fromString(text);
 
         // verify
-        assertEquals(in, out);
+        assertEquals(in.getTime(), out.getTime());
     }
-    
+
     public void testSavedTimeIsInUTC() {
-        Calendar in = Calendar.getInstance();
+        final Calendar in = Calendar.getInstance();
         final String iso8601;
         iso8601 = new DateTime(in).toString();
-        String converterXML =  converter.toString(in);
+        final String converterXML = converter.toString(in);
         assertEquals(iso8601, converterXML);
-        
-        Calendar out = (Calendar) converter.fromString(converterXML);
-        assertEquals(in, out);
+
+        final Calendar out = (Calendar)converter.fromString(converterXML);
+        assertEquals(in.getTime(), out.getTime());
     }
-    
+
     public void testCanLoadTimeInDifferentTimeZone() {
-        Calendar in = Calendar.getInstance();
-        String converterXML =  converter.toString(in);
+        final Calendar in = Calendar.getInstance();
+        final String converterXML = converter.toString(in);
 
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Moscow"));
-        Calendar timeInMoscow = Calendar.getInstance();
+        final Calendar timeInMoscow = Calendar.getInstance();
         timeInMoscow.setTime(in.getTime());
-        Calendar out = (Calendar) converter.fromString(converterXML);
-        assertEquals(timeInMoscow, out);
+        final Calendar out = (Calendar)converter.fromString(converterXML);
+        assertEquals(timeInMoscow.getTime(), out.getTime());
     }
-    
+
+    public void testParsesBasicDateTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 4, 7, 19, 11, 22);
+        Calendar out = (Calendar)converter.fromString("20170508T001122Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("20170508T001122.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(2017, 3, 20, 19, 11, 22);
+    }
+
+    public void testParsesBasicOrdinalDateTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 20, 19, 11, 22);
+        Calendar out = (Calendar)converter.fromString("2017111T001122Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("2017111T001122.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(1970, 0, 1, 13, 11, 22);
+    }
+
+    public void testParsesBasicTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(1970, 0, 1, 13, 11, 22);
+        Calendar out = (Calendar)converter.fromString("181122Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("181122.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesBasicTTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(1970, 0, 1, 13, 11, 22);
+        Calendar out = (Calendar)converter.fromString("T181122Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("T181122.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesBasicWeekDateTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 4, 8, 13, 11, 22);
+        Calendar out = (Calendar)converter.fromString("2017W191T181122Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("2017W191T181122.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesBasicDate() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 21);
+        final Calendar out = (Calendar)converter.fromString("20170421");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesBasicOrdinalDate() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 21);
+        final Calendar out = (Calendar)converter.fromString("2017111");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesBasicWeekDate() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 21);
+        final Calendar out = (Calendar)converter.fromString("2017W165");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardDateTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 4, 7, 19, 11, 22);
+        Calendar out = (Calendar)converter.fromString("2017-05-08T00:11:22Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("2017-05-08T00:11:22.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardOrdinalDateTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 20, 19, 11, 22);
+        Calendar out = (Calendar)converter.fromString("2017-111T00:11:22Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("2017-111T00:11:22.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(1970, 0, 1, 13, 11, 22);
+        Calendar out = (Calendar)converter.fromString("18:11:22Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("18:11:22.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardTTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(1970, 0, 1, 13, 11, 22);
+        Calendar out = (Calendar)converter.fromString("T18:11:22Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("T18:11:22.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardWeekDateTime() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 4, 8, 13, 11, 22);
+        Calendar out = (Calendar)converter.fromString("2017-W19-1T18:11:22Z");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 300);
+        out = (Calendar)converter.fromString("2017-W19-1T18:11:22.300Z");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardDate() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 21);
+        final Calendar out = (Calendar)converter.fromString("2017-04-21");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardOrdinalDate() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 21);
+        final Calendar out = (Calendar)converter.fromString("2017-111");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardWeekDate() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 21);
+        final Calendar out = (Calendar)converter.fromString("2017-W16-5");
+        assertEquals(expected.getTime(), out.getTime());
+
+    }
+
+    public void testParsesStandardDateTimeFragment() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(2017, 3, 21);
+        expected.set(Calendar.HOUR, 11);
+        Calendar out = (Calendar)converter.fromString("2017-04-21T11");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MINUTE, 22);
+        out = (Calendar)converter.fromString("2017-04-21T11:22");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.SECOND, 33);
+        out = (Calendar)converter.fromString("2017-04-21T11:22:33");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 44);
+        out = (Calendar)converter.fromString("2017-04-21T11:22:33.044");
+        assertEquals(expected.getTime(), out.getTime());
+        out = (Calendar)converter.fromString("2017-04-21T11:22:33.044777888");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardTimeFragment() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(Calendar.HOUR, 11);
+        Calendar out = (Calendar)converter.fromString("11");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MINUTE, 22);
+        out = (Calendar)converter.fromString("11:22");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.SECOND, 33);
+        out = (Calendar)converter.fromString("11:22:33");
+        assertEquals(expected.getTime(), out.getTime());
+        expected.set(Calendar.MILLISECOND, 44);
+        out = (Calendar)converter.fromString("11:22:33.044");
+        assertEquals(expected.getTime(), out.getTime());
+        out = (Calendar)converter.fromString("11:22:33.044777888");
+        assertEquals(expected.getTime(), out.getTime());
+    }
+
+    public void testParsesStandardDateFragment() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(Calendar.YEAR, 2017);
+        Calendar out = (Calendar)converter.fromString("2017");
+        assertEquals(expected.getTime(), out.getTime());
+        if (JVM.is18()) { // Java 8 passes, Joda-Time fails
+            expected.set(Calendar.MONTH, 3);
+            out = (Calendar)converter.fromString("2017-04");
+            assertEquals(expected.getTime(), out.getTime());
+        }
+    }
+
+    public void testParsesStandardWeekDateFragment() {
+        final Calendar expected = Calendar.getInstance();
+        expected.clear();
+        expected.set(Calendar.YEAR, 2017);
+        if (!JVM.is18()) { // TODO: Java 8 fails here, Joda-Time passes
+            expected.set(Calendar.DAY_OF_MONTH, 17);
+            final Calendar out = (Calendar)converter.fromString("2017-W16");
+            assertEquals(expected.getTime(), out.getTime());
+        }
+    }
+
     public void testCalendarWithExplicitTimeZone() {
-        Calendar timeInMoscow = Calendar.getInstance();
+        final Calendar timeInMoscow = Calendar.getInstance();
         timeInMoscow.set(2010, 6, 3, 10, 20, 36);
         timeInMoscow.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-        
-        String converterXML =  converter.toString(timeInMoscow);
-        Calendar out = (Calendar) converter.fromString(converterXML);
+
+        final String converterXML = converter.toString(timeInMoscow);
+        final Calendar out = (Calendar)converter.fromString(converterXML);
         assertEquals(timeInMoscow.getTimeInMillis(), out.getTimeInMillis());
-        
+
         out.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-        assertEquals(timeInMoscow, out);
+        assertEquals(timeInMoscow.getTime(), out.getTime());
     }
 
     public void testIsThreadSafe() throws InterruptedException {
-        final List results = Collections.synchronizedList(new ArrayList());
+        final List<String> results = Collections.synchronizedList(new ArrayList<>());
         final ISO8601GregorianCalendarConverter converter = new ISO8601GregorianCalendarConverter();
         final Object monitor = new Object();
         final int numberOfCallsPerThread = 20;
         final int numberOfThreads = 20;
 
         // spawn some concurrent threads, that hammer the converter
-        Runnable runnable = new Runnable() {
+        final Runnable runnable = new Runnable() {
+            @Override
             public void run() {
                 for (int i = 0; i < numberOfCallsPerThread; i++) {
                     try {
                         converter.fromString("1993-02-14T13:10:30");
                         results.add("PASS");
-                    } catch (ConversionException e) {
+                    } catch (final ConversionException e) {
                         results.add("FAIL");
                     } finally {
                         synchronized (monitor) {
