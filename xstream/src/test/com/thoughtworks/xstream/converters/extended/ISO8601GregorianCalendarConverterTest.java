@@ -324,7 +324,7 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
     }
 
     public void testIsThreadSafe() throws InterruptedException {
-        final List<String> results = Collections.synchronizedList(new ArrayList<>());
+        final List<String> results = Collections.synchronizedList(new ArrayList<String>());
         final ISO8601GregorianCalendarConverter converter = new ISO8601GregorianCalendarConverter();
         final Object monitor = new Object();
         final int numberOfCallsPerThread = 20;
