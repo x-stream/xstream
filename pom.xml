@@ -53,6 +53,7 @@
       </activation>
       <properties>
         <javadoc.xdoclint>-Xdoclint:-missing</javadoc.xdoclint>
+        <version.plugin.felix.bundle>2.5.4</version.plugin.felix.bundle>
       </properties>
     </profile>
     <profile>

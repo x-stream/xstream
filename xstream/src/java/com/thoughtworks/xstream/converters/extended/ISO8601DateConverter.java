@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,9 @@ package com.thoughtworks.xstream.converters.extended;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
 /**
@@ -22,19 +25,20 @@ import java.util.Date;
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  */
-public class ISO8601DateConverter extends ISO8601GregorianCalendarConverter {
+public class ISO8601DateConverter extends AbstractSingleValueConverter {
+    private final ISO8601GregorianCalendarConverter converter = new ISO8601GregorianCalendarConverter();
 
     public boolean canConvert(Class type) {
-        return type.equals(Date.class);
+        return type.equals(Date.class) && converter.canConvert(GregorianCalendar.class);
     }
 
     public Object fromString(String str) {
-        return ((Calendar)super.fromString(str)).getTime();
+        return ((Calendar)converter.fromString(str)).getTime();
     }
 
     public String toString(Object obj) {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime((Date)obj);
-        return super.toString(calendar);
+        return converter.toString(calendar);
     }
 }

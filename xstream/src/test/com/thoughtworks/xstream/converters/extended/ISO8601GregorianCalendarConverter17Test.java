@@ -1,5 +1,5 @@
 /*
- * 2013 XStream Committers.
+ * 2013, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -46,7 +46,7 @@ public class ISO8601GregorianCalendarConverter17Test extends TestCase {
             
             String converterXML =  converter.toString(in);
             Calendar out = (Calendar) converter.fromString(converterXML);
-            assertEquals(in, out);
+            assertEquals(in.getTime(), out.getTime());
         } finally {
             Locale.setDefault(defaultLocale);
             Locale.setDefault(defaultLocaleForFormat);

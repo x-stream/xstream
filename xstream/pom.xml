@@ -231,6 +231,7 @@
               <excludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/time/**</exclude>
+                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
@@ -245,8 +246,11 @@
                   <target>1.8</target>
                   <excludes>
                     <exclude>foo</exclude>
+                    <exclude>foo</exclude>
+                    <exclude>foo</exclude>
                   </excludes>
                   <testExcludes>
+                    <exclude>foo</exclude>
                     <exclude>foo</exclude>
                   </testExcludes>
                 </configuration>
@@ -313,6 +317,7 @@
               <excludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/time/**</exclude>
+                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
@@ -341,6 +346,7 @@
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
                 <exclude>**/time/**</exclude>
+                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
@@ -411,6 +417,7 @@
                 <exclude>**/EnumMapper*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/time/**</exclude>
+                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
                 <exclude>**/basic/StringBuilder*</exclude>
                 <exclude>**/basic/UUID*</exclude>
                 <exclude>**/core/util/Types*</exclude>
