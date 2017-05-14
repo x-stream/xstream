@@ -300,9 +300,8 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
     public void testParsesStandardWeekDateFragment() {
         final Calendar expected = Calendar.getInstance();
         expected.clear();
-        expected.set(Calendar.YEAR, 2017);
         if (!JVM.is18()) { // TODO: Java 8 fails here, Joda-Time passes
-            expected.set(Calendar.DAY_OF_MONTH, 17);
+            expected.set(2017, 3, 17);
             final Calendar out = (Calendar)converter.fromString("2017-W16");
             assertEquals(expected.getTime(), out.getTime());
         }
