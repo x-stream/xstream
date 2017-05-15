@@ -21,6 +21,7 @@ import java.util.Collections;
  * Converts a {@link java.time.chrono.JapaneseDate} to a string.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class JapaneseDateConverter extends AbstractChronoLocalDateConverter<JapaneseEra> {
 

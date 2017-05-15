@@ -34,7 +34,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  * @see <a href="http://www.iso.org/iso/home/store/catalogue_ics/catalogue_detail_ics.htm?csnumber=40874">ISO 8601</a>
- * @since upcoming
+ * @since 1.4.10
  */
 public class ISO8601JodaTimeConverter extends AbstractSingleValueConverter {
     private static final DateTimeFormatter[] formattersUTC = { //

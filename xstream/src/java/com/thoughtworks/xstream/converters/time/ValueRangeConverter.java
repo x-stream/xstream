@@ -28,11 +28,17 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * minSmallest.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class ValueRangeConverter implements Converter {
 
     private final Mapper mapper;
 
+    /**
+     * Constructs a ValueRangeConverter instance.
+     * 
+     * @param mapper the Mapper instance
+     */
     public ValueRangeConverter(final Mapper mapper) {
         this.mapper = mapper;
 
@@ -62,7 +68,7 @@ public class ValueRangeConverter implements Converter {
         final Map<String, Long> elements = new HashMap<>();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            
+
             final String name = reader.getNodeName();
             elements.put(oldFormat ? name : mapper.realMember(ValueRange.class, name), Long.valueOf(reader.getValue()));
             reader.moveUp();

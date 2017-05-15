@@ -21,6 +21,7 @@ import java.util.Collections;
  * Converts a {@link java.time.chrono.ThaiBuddhistDate} to a string.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class ThaiBuddhistDateConverter extends AbstractChronoLocalDateConverter<ThaiBuddhistEra> {
 

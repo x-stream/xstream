@@ -26,6 +26,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * Abstract base class for converters handling derived classes of {@link java.time.chrono.ChronoLocalDate} instances.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 abstract class AbstractChronoLocalDateConverter<E extends Era> extends AbstractSingleValueConverter {
     protected abstract ChronoLocalDate chronoLocalDateOf(final E era, final int prolepticYear, final int month,

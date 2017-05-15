@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * Converts a {@link YearMonth} instance to string.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class YearMonthConverter extends AbstractSingleValueConverter {
 

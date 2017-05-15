@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * Converts a {@link JapaneseEra} instance to a string using its id.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class JapaneseEraConverter extends AbstractSingleValueConverter {
 

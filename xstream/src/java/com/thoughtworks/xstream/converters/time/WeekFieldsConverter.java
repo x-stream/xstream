@@ -27,11 +27,17 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * Converts a {@link WeekFields} instance, using two nested elements: minimalDays and minSmallest.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class WeekFieldsConverter implements Converter {
 
     private final Mapper mapper;
 
+    /**
+     * Constructs a WeekFieldsConverter instance.
+     * 
+     * @param mapper the Mapper instance
+     */
     public WeekFieldsConverter(final Mapper mapper) {
         this.mapper = mapper;
 

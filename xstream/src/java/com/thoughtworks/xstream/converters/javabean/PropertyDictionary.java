@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -107,7 +107,7 @@ public class PropertyDictionary implements Caching {
      * @param type
      * @param name
      * @return {@code null} if property does not exist
-     * @since upcoming
+     * @since 1.4.10
      */
     public PropertyDescriptor propertyDescriptorOrNull(Class type, String name) {
         return (PropertyDescriptor)buildMap(type).get(name);

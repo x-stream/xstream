@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2012, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2012, 2014, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -46,7 +46,7 @@ public class SqlTimestampConverter extends AbstractSingleValueConverter {
      * </p>
      *
      * @param timeZone the time zone used for the format
-     * @since upcoming
+     * @since 1.4.10
      */
     public SqlTimestampConverter(final TimeZone timeZone) {
         format = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss", timeZone, 0, 5, false);
