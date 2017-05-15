@@ -57,6 +57,15 @@
       </properties>
     </profile>
     <profile>
+      <id>jdk16</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <properties>
+        <version.org.openjdk.jmh>1.16</version.org.openjdk.jmh>
+      </properties>
+    </profile>
+    <profile>
       <!-- build with Maven 3.2.5 !!! -->
       <id>jdk16-ge</id>
       <activation>
