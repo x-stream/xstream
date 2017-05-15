@@ -228,7 +228,7 @@ public class ParserBenchmark {
          * @since 1.4.9
          */
         NestedElements {
-            private static final int DEPTH = 500;
+            private static final int DEPTH = 1000;
             private List<Integer> list;
 
             @Override
