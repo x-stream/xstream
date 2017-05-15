@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
  * Converts a {@link Chronology} instance to a string using its id.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class ChronologyConverter implements SingleValueConverter {
 

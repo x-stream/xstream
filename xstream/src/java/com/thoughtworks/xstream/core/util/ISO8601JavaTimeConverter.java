@@ -45,7 +45,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  *
  * @author J&ouml;rg Schaible
  * @see <a href="http://www.iso.org/iso/home/store/catalogue_ics/catalogue_detail_ics.htm?csnumber=40874">ISO 8601</a>
- * @since upcoming
+ * @since 1.4.10
  */
 public class ISO8601JavaTimeConverter extends AbstractSingleValueConverter {
     private static final DateTimeFormatter STD_DATE_TIME = new DateTimeFormatterBuilder()

@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
  * Converts a {@link ZoneId} instance to string.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class ZoneIdConverter implements SingleValueConverter {
 

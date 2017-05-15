@@ -25,6 +25,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
  *
  * @author Matej Cimbora
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class OffsetTimeConverter implements SingleValueConverter {
 

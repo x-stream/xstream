@@ -1905,7 +1905,7 @@ public class XStream {
      *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
-     * @since upcoming
+     * @since 1.4.10
      */
     @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName,
@@ -1991,7 +1991,7 @@ public class XStream {
      *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
-     * @since upcoming
+     * @since 1.4.10
      */
     public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader, final DataHolder dataHolder)
             throws IOException {

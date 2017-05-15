@@ -24,6 +24,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
  * Converts a {@link OffsetDateTime} to a string.
  *
  * @author Matej Cimbora
+ * @since 1.4.10
  */
 public class OffsetDateTimeConverter implements SingleValueConverter {
 

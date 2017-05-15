@@ -23,11 +23,15 @@ import java.util.Set;
  * Converts a {@link java.time.chrono.HijrahDate} to a string.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class HijrahDateConverter extends AbstractChronoLocalDateConverter<HijrahEra> {
 
     private final Set<Chronology> hijrahChronologies;
 
+    /**
+     * Constructs a HijrahDateConverter instance.
+     */
     public HijrahDateConverter() {
         hijrahChronologies = new HashSet<>();
         final Set<Chronology> chronologies = Chronology.getAvailableChronologies();

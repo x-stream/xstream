@@ -26,12 +26,18 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * Converts a system {@link Clock}, using zone as nested element.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.10
  */
 public class SystemClockConverter implements Converter {
 
     private final Mapper mapper;
     private final Class<?> type;
 
+    /**
+     * Constructs a SystemClockConverter instance.
+     * 
+     * @param mapper the Mapper instance
+     */
     public SystemClockConverter(final Mapper mapper) {
         this.mapper = mapper;
         type = Clock.systemUTC().getClass();

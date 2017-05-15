@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * Converts a {@link java.time.LocalDate} to a string.
  *
  * @author Matej Cimbora
+ * @since 1.4.10
  */
 public class LocalDateConverter extends AbstractSingleValueConverter {
 
