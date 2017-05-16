@@ -43,7 +43,7 @@ done
 
 # * Set options
 # *************
-JAVA_OPTS="$JAVA_OPTS -Xmx1024m"
+JAVA_OPTS="$JAVA_OPTS -Xmx2048m -Xss4m"
 
 # * Main class
 # ************
