@@ -46,7 +46,7 @@ call :APP_CP_append "config"
 
 @REM * Set options
 @REM *************
-set JAVA_OPTS=%JAVA_OPTS% -Xmx1024m
+set JAVA_OPTS=%JAVA_OPTS% -Xmx2048m -Xss4m
 
 
 @REM * Main class
