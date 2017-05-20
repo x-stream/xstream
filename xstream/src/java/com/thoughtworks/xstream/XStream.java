@@ -2545,13 +2545,11 @@ public class XStream {
                         || type.getName().startsWith("javax.crypto.")));
         }
 
-        @Override
         public void marshal(final Object source, final HierarchicalStreamWriter writer,
                 final MarshallingContext context) {
             throw new ConversionException("Security alert. Marshalling rejected.");
         }
 
-        @Override
         public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
             throw new ConversionException("Security alert. Unmarshalling rejected.");
         }

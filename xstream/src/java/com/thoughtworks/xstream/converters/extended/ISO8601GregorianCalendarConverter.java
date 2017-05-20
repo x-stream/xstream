@@ -20,9 +20,8 @@ import com.thoughtworks.xstream.core.JVM;
 
 
 /**
- * A GregorianCalendarConverter conforming to the ISO8601 standard. The converter will always
- * serialize the calendar value in UTC and deserialize it to a value in the current default time
- * zone.
+ * A GregorianCalendarConverter conforming to the ISO8601 standard. The converter will always serialize the calendar
+ * value in UTC and deserialize it to a value in the current default time zone.
  * 
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
@@ -30,6 +29,8 @@ import com.thoughtworks.xstream.core.JVM;
  * @since 1.1.3
  */
 public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConverter {
+    private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
+    private final static Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     private final SingleValueConverter converter;
 
     public ISO8601GregorianCalendarConverter() {
@@ -38,7 +39,8 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
             ? "com.thoughtworks.xstream.core.util.ISO8601JavaTimeConverter"
             : "com.thoughtworks.xstream.core.util.ISO8601JodaTimeConverter");
         try {
-            svConverter = (SingleValueConverter)type.getDeclaredConstructor().newInstance();
+            svConverter = (SingleValueConverter)type.getDeclaredConstructor(EMPTY_CLASS_ARRAY).newInstance(
+                EMPTY_OBJECT_ARRAY);
         } catch (final InstantiationException e) {
             // ignore
         } catch (final IllegalAccessException e) {
@@ -55,7 +57,6 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
         return converter != null && type.equals(GregorianCalendar.class);
     }
 
-    @Override
     public Object fromString(final String str) {
         return converter.fromString(str);
     }

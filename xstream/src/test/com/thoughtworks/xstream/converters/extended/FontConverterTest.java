@@ -22,6 +22,8 @@ import junit.framework.TestSuite;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.font.TextAttribute;
+import java.awt.font.TransformAttribute;
+import java.awt.geom.AffineTransform;
 import java.util.Map;
 
 public class FontConverterTest extends TestCase {
@@ -43,7 +45,7 @@ public class FontConverterTest extends TestCase {
         // fonts should be serializable also with pure Java
         xstream = new XStream(new PureJavaReflectionProvider());
         XStream.setupDefaultSecurity(xstream);
-        xstream.allowTypes(new Class[] {Font.class, TextAttribute.class});
+        xstream.allowTypes(new Class[] {Font.class, TextAttribute.class, TransformAttribute.class, AffineTransform.class});
         in = new Font("Arial", Font.BOLD, 20);
     }
 

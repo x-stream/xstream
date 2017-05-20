@@ -89,7 +89,8 @@ public class ISO8601JodaTimeConverter extends AbstractSingleValueConverter {
     }
 
     public Object fromString(final String str) {
-        for (final DateTimeFormatter formatter : formattersUTC) {
+        for (int i = 0; i < formattersUTC.length ; ++i) {
+            final DateTimeFormatter formatter = formattersUTC[i];
             try {
                 final DateTime dt = formatter.parseDateTime(str);
                 final Calendar calendar = dt.toGregorianCalendar();
@@ -100,7 +101,8 @@ public class ISO8601JodaTimeConverter extends AbstractSingleValueConverter {
             }
         }
         final DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
-        for (final DateTimeFormatter element : formattersNoUTC) {
+        for (int i = 0; i < formattersNoUTC.length ; ++i) {
+            final DateTimeFormatter element = formattersNoUTC[i];
             try {
                 final DateTimeFormatter formatter = element.withZone(dateTimeZone);
                 final DateTime dt = formatter.parseDateTime(str);
