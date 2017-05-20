@@ -1,10 +1,7 @@
-For Java 6 or higher build with Maven 3.2.5 or higher
+For Java 7, 8, or 9 build with Maven 3.3.9 or higher
+For Java 6 or higher build with Maven 3.2.5
 For Java 5 build with Maven 3.0.5
 For Java 1.4 build with Maven 2.0.11
-
-Before building:
-
-For Java 1.4 remove the profiles/osgi files.
 
 To build:
 
