@@ -108,11 +108,13 @@
 		<li>Dom4JXmlWriter does not flush writer at endDocument().</li>
 		<li>Path is an immutable type.</li>
 		<li>GPR:#65: Protect converter lookup against runtime errors.</li>
+		<li>Current Java 9 implementation reports itself as version 9 now.</li>
 	</ul>
 
 	<h2>API changes</h2>
 
 	<ul>
+		<li>Added c.t.x.util.JVM.is9().</li>
 		<li>Added c.t.x.XStream.setupDefaultSecurity(XStream).</li>
 		<li>Added c.t.x.XStream.createObjectInputStream(HierarchicalStreamReader, DataHolder) and
 			c.t.x.XStream.createObjectOutputStream(HierarchicalStreamWriter, String, DataHolder).</li>
@@ -122,6 +124,7 @@
 		<li>Deprecated method c.t.x.mapper.FieldAliasingMapper.addFieldsToIgnore(Pattern).</li>
 		<li>Deprecated method c.t.x.mapper.FieldAliasingMapper.omitField(Class, String).</li>
 		<li>Deprecated method c.t.x.core.util.JVM.is17().</li>
+		<li>Deprecated method c.t.x.core.util.JVM.is19().</li>
 	</ul>
 
 	<h1 id="1.4.9">1.4.9</h1>
