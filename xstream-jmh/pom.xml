@@ -24,7 +24,7 @@
     <profile>
       <id>jdk19-ge</id>
       <activation>
-        <jdk>[1.9,)</jdk>
+        <jdk>[9,)</jdk>
       </activation>
       <build>
         <plugins>

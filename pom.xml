@@ -39,7 +39,7 @@
     <profile>
       <id>jdk19</id>
       <activation>
-        <jdk>1.9</jdk>
+        <jdk>9</jdk>
       </activation>
       <properties>
         <version.java.source>1.6</version.java.source>

@@ -232,9 +232,17 @@ public class JVM implements Caching {
 
     /**
      * @since 1.4.8
+     * @deprecated As of upcoming use {@link #is9()}
      */
     public static boolean is19() {
         return majorJavaVersion >= 1.9f;
+    }
+
+    /**
+     * @since 1.4.10
+     */
+    public static boolean is9() {
+        return majorJavaVersion >= 9f;
     }
 
     private static boolean isIBM() {
