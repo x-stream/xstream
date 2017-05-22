@@ -41,7 +41,7 @@
 		<li>Fix PrimitiveTypePermission to reject type <em>void</em> to prevent CVE-2017-7957 with an initialized
 		security framework.</li>
 		<li>Improve performance by minimizing call stack of mapper chain.</li>
-		<li>GPR:#82, JIRA:XSTR-774: Add converters for types of java.time, java.time.chrono, and java.time.temporal
+		<li>GHPR:#82, JIRA:XSTR-774: Add converters for types of java.time, java.time.chrono, and java.time.temporal
 			packages (converters for LocalDate, LocalDateTime, LocalTime, OffsetDateTime, and ZonedDateTime by Matej Cimbora).</li>
 		<li>GHI:#29: JavaBeanConverter does not respect ignored unknown elements.</li>
 		<li>Add XStream.setupDefaultSecurity to initialize security framework with defaults of XStream 1.5.x.</li>
@@ -71,11 +71,11 @@
 		<li>PathConverter uses always forward slashes as path separator.</li>
 		<li>GHI:#53: SqlTimestampConverter cannot parse values without fraction.</li>
 		<li>GHI:#45: Support different time zones for SqlTimestampConverter.</li>
-		<li>GHI:#67 and GPR:#68: Allow usage of DataHolder for createObjectInputStream and createObjectOutputStream.</li>
+		<li>GHI:#67 and GHPR:#68: Allow usage of DataHolder for createObjectInputStream and createObjectOutputStream.</li>
 		<li>GHI:#75: Use java.time.* package instead of Joda-Time.</li>
 		<li>Dom4JXmlWriter does not flush writer at endDocument().</li>
 		<li>Path is an immutable type.</li>
-		<li>GPR:#65: Protect converter lookup against runtime errors.</li>
+		<li>GHPR:#65: Protect converter lookup against runtime errors.</li>
 		<li>Current Java 9 implementation reports itself as version 9 now.</li>
 	</ul>
 
