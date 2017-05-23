@@ -113,6 +113,9 @@
 	Android, it is not possible to use the original XStream library directly, because it tries to convert all classes
 	of XStream to the Dalvik runtime.  You might have to build a custom version of XStream (see BUILD.txt) with a JDK
 	that is equivalent to the Java level supported by the target version of Android.</p>
+	
+	<p>Since XStream 1.4.10 an additional artifact is deployed to the Central Maven Repository with <em>-java7</em>
+	appended to the version that explicitly does not contain any Java 8 related stuff.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_GAE">Which limits exists for XStream in Google's Application Engine (GAE)?</h2>
