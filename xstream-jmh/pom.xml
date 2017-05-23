@@ -13,7 +13,7 @@
   <parent>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream-parent</artifactId>
-    <version>1.4.10</version>
+    <version>1.4.11-SNAPSHOT</version>
   </parent>
   <artifactId>xstream-jmh</artifactId>
   <packaging>jar</packaging>
