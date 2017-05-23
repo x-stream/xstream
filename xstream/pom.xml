@@ -316,6 +316,14 @@
               </testExcludes>
             </configuration>
           </plugin>
+          <plugin><!-- required for Maven Central -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <source>1.7</source>
+              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
     </profile>
