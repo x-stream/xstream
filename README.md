@@ -27,3 +27,6 @@ The complete source for XStream is bundled in the -src archive.  This includes:
 * Hibernate module [xstream-hibernate]
 * Web site [xstream-distribution]
 
+## Change History
+
+Change history can be found at: (http://x-stream.github.io/changes.html).
