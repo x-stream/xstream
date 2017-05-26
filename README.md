@@ -14,16 +14,16 @@ greatly improve the performance of XStream.
 ## Documentation
 Documentation can be found at [GitHub](http://x-stream.github.io).  This
 includes:
-* Introduction and tutorial
-* JavaDoc
-* Change log
-* Frequently asked questions
+* [Introduction](http://x-stream.github.io) and [Tutorials](http://x-stream.github.io/tutorial.html)
+* [JavaDoc](http://x-stream.github.io/javadoc/index.html)
+* [Change History](http://x-stream.github.io/changes.html)
+* [Frequently Asked Questions](http://x-stream.github.io/faq.html)
 
 ## Source
 The complete source for XStream is bundled in the -src archive.  This includes:
 * Main API [xstream/src/java]
-* Unit tests [xstream/src/test]
-* Maven build files [pom.xml] 
-* Hibernate module [xstream-hibernate]
-* Web site [xstream-distribution]
+* Unit Tests [xstream/src/test]
+* Maven Build Files [pom.xml]
+* Hibernate Module [xstream-hibernate]
+* Website [xstream-distribution]
 
