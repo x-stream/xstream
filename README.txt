@@ -17,20 +17,20 @@ greatly improve the performance of XStream.
 
 Documentation can be found at http://x-stream.github.io.  This
 includes:
- * Introduction and tutorial
+ * Introduction and Tutorials
  * JavaDoc
- * Change log
- * Frequently asked questions
+ * Change History
+ * Frequently Asked Questions
 
 --[ Source ]-------------------------------------------------
 
 The complete source for XStream is bundled in the -src archive.
 This includes:
  * Main API [xstream/src/java]
- * Unit tests [xstream/src/test]
- * Maven build files [pom.xml] 
- * Hibernate module [xstream-hibernate]
- * Web site [xstream-distribution]
+ * Unit Tests [xstream/src/test]
+ * Maven Build Files [pom.xml]
+ * Hibernate Module [xstream-hibernate]
+ * Website [xstream-distribution]
 
 -------------------------------------------------------------
 
