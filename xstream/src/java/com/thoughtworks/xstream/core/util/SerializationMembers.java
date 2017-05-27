@@ -89,7 +89,21 @@ public class SerializationMembers implements Caching {
     }
 
     public Object callWriteReplace(final Object object) {
-        if (object == null) {
+        Object replaced;
+        replaced=callWriteReplaceMethod(object);
+        if (!object.getClass().equals(replaced.getClass())) {
+        	// call further writeReplace methods on replaced.
+        	// see for (;;) in java.io.ObjectOutputStream.writeObject0(Object, boolean)
+        	return callWriteReplace(replaced);
+        }
+        return replaced;
+    }
+
+	/**
+	 *
+	 */
+	private Object callWriteReplaceMethod(final Object object) {
+		if (object == null) {
             return null;
         } else {
             final Class<? extends Object> objectType = object.getClass();
@@ -116,7 +130,7 @@ public class SerializationMembers implements Caching {
                 return object;
             }
         }
-    }
+	}
 
     public boolean supportsReadObject(final Class<?> type, final boolean includeBaseClasses) {
         return getMethod(type, "readObject", includeBaseClasses, ObjectInputStream.class) != null;
