@@ -71,7 +71,6 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         try {
             types.push(type);
             final Object result = converter.unmarshal(reader, this);
-            types.popSilently();
             return result;
         } catch (final ConversionException conversionException) {
             addInformationTo(conversionException, type, converter, parent);
@@ -80,6 +79,8 @@ public class TreeUnmarshaller implements UnmarshallingContext {
             final ConversionException conversionException = new ConversionException(e);
             addInformationTo(conversionException, type, converter, parent);
             throw conversionException;
+        } finally {
+            types.popSilently();
         }
     }
 
