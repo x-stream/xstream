@@ -90,4 +90,25 @@ public class Base64EncoderTest extends AbstractAcceptanceTest {
         assertByteArrayEquals(input, encoder.decode(expected));
     }
 
+    public void testInitializeStringBufferWithExpectedSizeUsing6BytesInput() throws Exception {
+        byte input[] = {1, 2, 3, 4, 5, 6};
+        assertEquals(encoder.encode(input).length(), encoder.computeResultingStringSize(input));
+    }
+
+    public void testInitializeStringBufferWithExpectedSizeUsing1BytesInput() throws Exception {
+        byte input[] = {1};
+        assertEquals(encoder.encode(input).length(), encoder.computeResultingStringSize(input));
+    }
+
+    public void testInitializeStringBufferWithExpectedSizeUsing4BytesInput() throws Exception {
+        byte input[] = {1, 2, 3, 4};
+        assertEquals(encoder.encode(input).length(), encoder.computeResultingStringSize(input));
+    }
+    
+    public void testInitializeStringBufferWithExpectedSizeUsing140BytesInput() throws Exception {
+        byte input[] = new byte[140];
+        for (int i = 0; i < 139; i++) input[i] = (byte) (i + 1);
+        assertEquals(encoder.encode(input).length(), encoder.computeResultingStringSize(input));
+    }
+
 }
