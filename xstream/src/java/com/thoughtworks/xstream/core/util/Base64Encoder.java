@@ -56,7 +56,8 @@ public class Base64Encoder {
     }
 
     public String encode(byte[] input) {
-        StringBuffer result = new StringBuffer();
+        int stringSize = computeResultingStringSize(input);
+        StringBuffer result = new StringBuffer(stringSize);
         int outputCharCount = 0;
         for (int i = 0; i < input.length; i += 3) {
             int remaining = Math.min(3, input.length - i);
@@ -64,7 +65,16 @@ public class Base64Encoder {
             for (int j = 0; j < 4; j++) result.append(remaining + 1 > j ? SIXTY_FOUR_CHARS[0x3f & oneBigNumber >> 6 * (3 - j)] : '=');
             if ((outputCharCount += 4) % 76 == 0) result.append('\n');
         }
-        return result.toString();
+        String s = result.toString();
+        return s;
+    }
+
+    //package private for testing purpose
+    int computeResultingStringSize(byte[] input) {
+        int stringSize = (input.length / 3) + (input.length % 3 == 0 ? 0 : 1);
+        stringSize *= 4;
+        stringSize += (stringSize / 76);
+        return stringSize;
     }
 
     public byte[] decode(String input) {
