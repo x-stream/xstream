@@ -276,7 +276,7 @@ public class NameCoderBenchmark {
         case "escapedUnderscoreCoding":
             nameCoder = new EscapedUnderscoreNameCoder();
             break;
-        case "cahcedEscapedUnderscoreCoding":
+        case "cachedEscapedUnderscoreCoding":
             nameCoder = new CachedEscapedUnderscoreNameCoder();
             break;
         case "xmlFriendlyCoding":
