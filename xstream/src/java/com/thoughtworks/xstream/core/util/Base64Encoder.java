@@ -57,7 +57,7 @@ public class Base64Encoder {
 
     public String encode(byte[] input) {
         int stringSize = computeResultingStringSize(input);
-        StringBuffer result = new StringBuffer(stringSize);
+        StringBuilder result = new StringBuilder(stringSize);
         int outputCharCount = 0;
         for (int i = 0; i < input.length; i += 3) {
             int remaining = Math.min(3, input.length - i);
