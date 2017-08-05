@@ -508,6 +508,16 @@
         <version>${version.org.openjdk.jmh}</version>
         <scope>provided</scope>
       </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${version.commons.codec}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.brsanthu</groupId>
+        <artifactId>migbase64</artifactId>
+        <version>${version.com.brsanthu.migbase64}</version>
+      </dependency>
 
       <!-- always test-scoped -->
       <dependency>
@@ -887,8 +897,10 @@
     <version.org.apache.maven.wagon.webdev>1.0-beta-2</version.org.apache.maven.wagon.webdev>
 
     <version.cglib.nodep>2.2</version.cglib.nodep>
+    <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
     <version.com.megginson.sax.xml-writer>0.2</version.com.megginson.sax.xml-writer>
     <version.commons.cli>1.1</version.commons.cli>
+    <version.commons.codec>1.10</version.commons.codec>
     <version.commons.io>1.4</version.commons.io>
     <version.commons.lang>2.4</version.commons.lang>
     <version.dom4j>1.6.1</version.dom4j>
