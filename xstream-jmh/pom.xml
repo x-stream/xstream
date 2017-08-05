@@ -73,6 +73,25 @@
         </plugins>
       </reporting>
     </profile>
+    <profile>
+      <id>jdk17-le</id>
+      <activation>
+        <jdk>(,1.7]</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/Base64**</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <build>
@@ -121,6 +140,14 @@
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-generator-annprocess</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.brsanthu</groupId>
+      <artifactId>migbase64</artifactId>
     </dependency>
     <!-- parser -->
     <dependency>
