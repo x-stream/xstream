@@ -29,6 +29,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 
+import com.thoughtworks.xstream.core.StringCodec;
 import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 
@@ -69,25 +70,25 @@ public class Base64Benchmark {
      *
      * @since upcoming
      */
-    public static enum Coder {
+    public static enum Codec implements StringCodec {
         /**
-         * XStream's own coder.
+         * XStream's own codec.
          */
         xstreamInternal {
-            final private Base64Encoder coder = new Base64Encoder();
+            final private Base64Encoder codec = new Base64Encoder();
 
             @Override
             public byte[] decode(final String base64) {
-                return coder.decode(base64);
+                return codec.decode(base64);
             }
 
             @Override
             public String encode(final byte[] data) {
-                return coder.encode(data);
+                return codec.encode(data);
             }
         },
         /**
-         * Coder of JAXB, part of the Java runtime since 1.6.
+         * Codec of JAXB, part of the Java runtime since 1.6.
          */
         dataTypeConverter {
 
@@ -103,7 +104,7 @@ public class Base64Benchmark {
 
         },
         /**
-         * Official Coder the Java runtime since 1.8.
+         * Official codec of the Java runtime since 1.8.
          */
         javaUtil {
             final private java.util.Base64.Decoder decoder = java.util.Base64.getDecoder();
@@ -120,7 +121,7 @@ public class Base64Benchmark {
             }
         },
         /**
-         * Coder of Apache Commons Codec.
+         * Codec of Apache Commons Codec.
          */
         commonsCodec {
 
@@ -135,7 +136,7 @@ public class Base64Benchmark {
             }
         },
         /**
-         * Coder of MiGBase64, repackaged by brsanthu.
+         * Codec of MiGBase64, repackaged by brsanthu.
          */
         migBase {
 
@@ -150,24 +151,6 @@ public class Base64Benchmark {
             }
 
         };
-
-        /**
-         * Decode the provided base64 encoded string.
-         *
-         * @param base64 the encoded string
-         * @return the decoded data
-         * @since upcoming
-         */
-        public abstract byte[] decode(String base64);
-
-        /**
-         * Encode the provided data.
-         *
-         * @param data the data to encode
-         * @return the data encoded in base64 as string
-         * @since upcoming
-         */
-        public abstract String encode(byte[] data);
     }
 
     /**
@@ -190,7 +173,7 @@ public class Base64Benchmark {
         big(1024 * 1024);
         private Data(final int length) {
             data = getRandomBytes(length);
-            base64 = Coder.xstreamInternal.encode(data).replace("\n", "");
+            base64 = Codec.xstreamInternal.encode(data).replace("\n", "");
         }
 
         private final String base64;
@@ -223,18 +206,18 @@ public class Base64Benchmark {
             for (int i = 0; i < lengths.length; ++i) {
                 final int length = lengths[i];
                 final byte[] orig = getRandomBytes(length);
-                for (final Coder coder : EnumSet.allOf(Coder.class)) {
+                for (final Codec codec : EnumSet.allOf(Codec.class)) {
                     if (base64[i] == null) {
-                        base64[i] = coder.encode(orig).replace("\n", "");
-                        data[i] = coder.decode(base64[i]);
+                        base64[i] = codec.encode(orig).replace("\n", "");
+                        data[i] = codec.decode(base64[i]);
                         assert Arrays.equals(data[i], orig);
                     } else {
-                        assert base64[i].equals(coder.encode(orig)) : "Base64 differs for "
-                            + coder
+                        assert base64[i].equals(codec.encode(orig)) : "Base64 differs for "
+                            + codec
                             + ": <"
                             + base64[i]
                             + "> vs. <"
-                            + coder.encode(orig)
+                            + codec.encode(orig)
                             + ">";
                     }
                 }
@@ -252,7 +235,7 @@ public class Base64Benchmark {
     }
 
     @Param
-    private Coder coder;
+    private Codec codec;
     @Param
     private Operation operation;
     @Param
@@ -267,10 +250,10 @@ public class Base64Benchmark {
     public void run() {
         switch (operation) {
         case encode:
-            coder.encode(data.getData());
+            codec.encode(data.getData());
             break;
         case decode:
-            coder.decode(data.getBase64());
+            codec.decode(data.getBase64());
             break;
         }
     }
