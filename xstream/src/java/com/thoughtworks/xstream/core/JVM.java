@@ -175,7 +175,9 @@ public class JVM implements Caching {
         }
         canParseISO8601TimeZoneInDateFormat = test;
         try {
-            test = new CustomObjectOutputStream(null) != null;
+            @SuppressWarnings("resource")
+            final CustomObjectOutputStream stream = new CustomObjectOutputStream(null);
+            test = stream != null;
         } catch (final RuntimeException e) {
             test = false;
         } catch (final IOException e) {
@@ -237,6 +239,7 @@ public class JVM implements Caching {
      * @since 1.4
      * @deprecated As of 1.4.10, minimal JDK version will be 1.7 for next major release
      */
+    @Deprecated
     public static boolean is17() {
         return majorJavaVersion >= 1.7f;
     }
@@ -252,6 +255,7 @@ public class JVM implements Caching {
      * @since 1.4.8
      * @deprecated As of upcoming use {@link #is9()}
      */
+    @Deprecated
     public static boolean is19() {
         return majorJavaVersion >= 1.9f;
     }
