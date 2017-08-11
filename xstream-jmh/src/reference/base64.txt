@@ -1,4 +1,4 @@
-Benchmark                      (coder)  (data)  (operation)  Mode  Cnt         Score        Error  Units
+Benchmark                      (codec)  (data)  (operation)  Mode  Cnt         Score        Error  Units
 Base64Benchmark.run    xstreamInternal   small       encode  avgt   16       412,587 ±      5,909  ns/op
 Base64Benchmark.run    xstreamInternal   small       decode  avgt   16       355,179 ±      6,739  ns/op
 Base64Benchmark.run    xstreamInternal  medium       encode  avgt   16     92168,010 ±   1171,041  ns/op

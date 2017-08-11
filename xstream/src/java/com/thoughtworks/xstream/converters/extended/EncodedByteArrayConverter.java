@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 03. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.extended;
@@ -16,7 +16,8 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.basic.ByteConverter;
-import com.thoughtworks.xstream.core.util.Base64Encoder;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.StringCodec;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -25,15 +26,32 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Converts a byte array to a single Base64 encoding string.
+ * Converts a byte array by default to a single Base64 encoding string.
  *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
 public class EncodedByteArrayConverter implements Converter, SingleValueConverter {
 
-    private static final Base64Encoder base64 = new Base64Encoder();
     private static final ByteConverter byteConverter = new ByteConverter();
+    private final StringCodec codec;
+
+    /**
+     * Constructs an EncodedByteArrayConverter. Initializes the converter with a Base64 codec.
+     */
+    public EncodedByteArrayConverter() {
+        this(JVM.getBase64Codec());
+    }
+
+    /**
+     * Constructs an EncodedByteArrayConverter with a provided string codec.
+     *
+     * @param stringCodec the codec to encode and decode the data as string
+     * @since upcoming
+     */
+    public EncodedByteArrayConverter(final StringCodec stringCodec) {
+        codec = stringCodec;
+    }
 
     public boolean canConvert(Class type) {
         return type.isArray() && type.getComponentType().equals(byte.class);
@@ -73,11 +91,11 @@ public class EncodedByteArrayConverter implements Converter, SingleValueConverte
         return result;
     }
 
-    public String toString(Object obj) {
-        return base64.encode((byte[]) obj);
+    public String toString(final Object obj) {
+        return codec.encode((byte[])obj);
     }
 
-    public Object fromString(String str) {
-        return base64.decode(str);
+    public Object fromString(final String str) {
+        return codec.decode(str);
     }
 }
