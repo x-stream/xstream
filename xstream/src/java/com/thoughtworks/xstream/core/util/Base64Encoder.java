@@ -23,11 +23,13 @@ import com.thoughtworks.xstream.core.StringCodec;
  * Encodes binary data to plain text as Base64.
  * <p>
  * Despite there being a gazillion other Base64 implementations out there, this has been written as part of XStream as
- * it forms a core part but is too trivial to warrant an extra dependency.
+ * it forms a core part but is too trivial to warrant an extra dependency. Recent Java Runtimes (since Java 6) provide
+ * an own Base64 codec though.
  * </p>
  * <p>
- * This meets the standard as described in <a href="http://www.freesoft.org/CIE/RFC/1521/7.htm">RFC 1521, section
- * 5.2</a>, allowing other Base64 tools to manipulate the data.
+ * By default it will not insert line breaks to support Base64 values also as attribute values. However, the standard as
+ * described in <a href="http://www.freesoft.org/CIE/RFC/1521/7.htm">RFC 1521, section 5.2</a> requires line breaks,
+ * allowing other Base64 tools to manipulate the data. You can configure the Base64Encoder to be RFC compliant.
  * </p>
  *
  * @author Joe Walnes
@@ -69,13 +71,13 @@ public class Base64Encoder implements StringCodec {
     /**
      * Constructs a Base64Encoder.
      * <p>
-     * The encoder will insert line breaks after 76 characters to be compliant to RFC 1521.
+     * The encoder will not insert any line breaks.
      * </p>
      *
      * @since upcoming
      */
     public Base64Encoder() {
-        this(true);
+        this(false);
     }
 
     /**
