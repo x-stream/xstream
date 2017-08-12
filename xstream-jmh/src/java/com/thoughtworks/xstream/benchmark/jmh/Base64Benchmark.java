@@ -75,7 +75,7 @@ public class Base64Benchmark {
          * XStream's own codec.
          */
         xstreamInternal {
-            final private Base64Encoder codec = new Base64Encoder();
+            final private Base64Encoder codec = new Base64Encoder(false);
 
             @Override
             public byte[] decode(final String base64) {
@@ -173,7 +173,7 @@ public class Base64Benchmark {
         big(1024 * 1024);
         private Data(final int length) {
             data = getRandomBytes(length);
-            base64 = Codec.xstreamInternal.encode(data).replace("\n", "");
+            base64 = Codec.xstreamInternal.encode(data);
         }
 
         private final String base64;
@@ -208,7 +208,7 @@ public class Base64Benchmark {
                 final byte[] orig = getRandomBytes(length);
                 for (final Codec codec : EnumSet.allOf(Codec.class)) {
                     if (base64[i] == null) {
-                        base64[i] = codec.encode(orig).replace("\n", "");
+                        base64[i] = codec.encode(orig);
                         data[i] = codec.decode(base64[i]);
                         assert Arrays.equals(data[i], orig);
                     } else {
