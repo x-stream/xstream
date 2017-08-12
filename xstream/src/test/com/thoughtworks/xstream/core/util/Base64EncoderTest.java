@@ -16,7 +16,7 @@ import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
 public class Base64EncoderTest extends AbstractAcceptanceTest {
 
-    private final Base64Encoder encoder = new Base64Encoder();
+    private Base64Encoder encoder = new Base64Encoder();
 
     public void testEncodesEntireByteArrayAsString() {
         final byte input[] = "hello world".getBytes();
@@ -38,9 +38,20 @@ public class Base64EncoderTest extends AbstractAcceptanceTest {
         assertByteArrayEquals(input, encoder.decode(expected));
     }
 
-    public void testExacltly76Chars() {
+    public void testExactly76Chars() {
         final byte input[] = "hello world. hello world. hello world. hello world. hello".getBytes();
         final String expected = "aGVsbG8gd29ybGQuIGhlbGxvIHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIGhlbGxv";
+        assertEquals(expected, encoder.encode(input));
+        assertByteArrayEquals(input, encoder.decode(expected));
+    }
+
+    public void testModeWithoutLineWraps() {
+        final byte input[] =
+                "hello world. hello world. hello world. hello world. hello world. hello world. hello world. "
+                    .getBytes();
+        final String expected = "aGVsbG8gd29ybGQuIGhlbGxvIHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIGhlbGxv"
+            + "IHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIA==";
+        encoder = new Base64Encoder(false);
         assertEquals(expected, encoder.encode(input));
         assertByteArrayEquals(input, encoder.decode(expected));
     }
