@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,6 +31,13 @@ public class Base64EncoderTest extends AbstractAcceptanceTest {
                 + "IHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIGhlbGxvIHdvcmxkLiBoZWxsbyB3b3Js\n"
                 + "ZC4gaGVsbG8gd29ybGQuIGhlbGxvIHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIGhl\n"
                 + "bGxvIHdvcmxkLiA=";
+        assertEquals(expected, encoder.encode(input));
+        assertByteArrayEquals(input, encoder.decode(expected));
+    }
+
+    public void testExacltly76Chars() {
+        byte input[] = ("hello world. hello world. hello world. hello world. hello").getBytes();
+        String expected = "aGVsbG8gd29ybGQuIGhlbGxvIHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIGhlbGxv";
         assertEquals(expected, encoder.encode(input));
         assertByteArrayEquals(input, encoder.decode(expected));
     }
