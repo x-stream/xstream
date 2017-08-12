@@ -109,7 +109,7 @@ public class Extended14TypesTest extends AbstractAcceptanceTest {
                 "  <principals>\n" +
                 "    <javax.security.auth.x500.X500Principal serialization=\"custom\">\n" +
                 "      <javax.security.auth.x500.X500Principal>\n" +
-                "        <byte-array>MDYxEDAOBgNVBAsTB1hTdHJlYW0xFTATBgNVBAoTDFRob3VnaHR3b3JrczELMAkGA1UEBhMCdWs=\n</byte-array>\n" +
+                "        <byte-array>MDYxEDAOBgNVBAsTB1hTdHJlYW0xFTATBgNVBAoTDFRob3VnaHR3b3JrczELMAkGA1UEBhMCdWs=</byte-array>\n" +
                 "      </javax.security.auth.x500.X500Principal>\n" +
                 "    </javax.security.auth.x500.X500Principal>\n" +
                 "  </principals>\n" +
