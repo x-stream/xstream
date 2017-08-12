@@ -322,6 +322,7 @@
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/Base64JavaUtilCodecTest.java</exclude>
                 <exclude>**/*18TypesTest.java</exclude>
               </testExcludes>
             </configuration>
@@ -361,6 +362,7 @@
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/*17Test*</exclude>
+                <exclude>**/Base64JavaUtilCodecTest.java</exclude>
                 <exclude>**/acceptance/Extended17TypesTest*</exclude>
                 <exclude>**/acceptance/*18TypesTest.java</exclude>
               </testExcludes>
@@ -394,6 +396,8 @@
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/*17Test*</exclude>
+                <exclude>**/Base64JavaUtilCodecTest.java</exclude>
+                <exclude>**/Base64JAXBCodecTest.java</exclude>
                 <exclude>**/acceptance/Extended17TypesTest*</exclude>
                 <exclude>**/acceptance/*18TypesTest.java</exclude>
               </testExcludes>

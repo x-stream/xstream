@@ -22,7 +22,7 @@ import com.thoughtworks.xstream.core.StringCodec;
  * @since upcoming
  */
 public class Base64JavaUtilCodec implements StringCodec {
-    final private Base64.Decoder decoder = Base64.getDecoder();
+    final private Base64.Decoder decoder = Base64.getMimeDecoder();
     final private Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
