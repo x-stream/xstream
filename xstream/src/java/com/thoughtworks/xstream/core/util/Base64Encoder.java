@@ -26,8 +26,8 @@ import com.thoughtworks.xstream.core.StringCodec;
  * it forms a core part but is too trivial to warrant an extra dependency.
  * </p>
  * <p>
- * This meets the standard as described in RFC 1521, section 5.2 <http://www.freesoft.org/CIE/RFC/1521/7.htm>, allowing
- * other Base64 tools to manipulate the data.
+ * This meets the standard as described in <a href="http://www.freesoft.org/CIE/RFC/1521/7.htm">RFC 1521, section
+ * 5.2</a>, allowing other Base64 tools to manipulate the data.
  * </p>
  *
  * @author Joe Walnes
