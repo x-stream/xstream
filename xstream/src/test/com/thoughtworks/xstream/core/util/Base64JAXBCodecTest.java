@@ -16,7 +16,7 @@ import com.thoughtworks.xstream.core.StringCodec;
 
 public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
 
-    private StringCodec encoder = new Base64JavaUtilCodec();
+    private StringCodec encoder = new Base64JAXBCodec();
 
     public void testEncodesEntireByteArrayAsString() {
         final byte input[] = "hello world".getBytes();
