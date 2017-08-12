@@ -72,6 +72,14 @@
 		XStream's own one.</li>
 	</ul>
 
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The EncodedByteArrayConverter will now use an encoder by default that does no longer add line breaks as
+		normally required by the RFC 1521 after 76 characters making it also easier to use the converter for
+		attributes. This will not affect XStream's Base64 decoder.</li>
+	</ul>
+
 	<h2>API changes</h2>
 
 	<ul>

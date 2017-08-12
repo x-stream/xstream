@@ -16,7 +16,7 @@ import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
 public class Base64EncoderTest extends AbstractAcceptanceTest {
 
-    private Base64Encoder encoder = new Base64Encoder();
+    private Base64Encoder encoder = new Base64Encoder(true);
 
     public void testEncodesEntireByteArrayAsString() {
         final byte input[] = "hello world".getBytes();
@@ -54,6 +54,42 @@ public class Base64EncoderTest extends AbstractAcceptanceTest {
         encoder = new Base64Encoder(false);
         assertEquals(expected, encoder.encode(input));
         assertByteArrayEquals(input, encoder.decode(expected));
+    }
+
+    public void testDecodesLinesWithLF() {
+        final byte data[] =
+                "hello world. hello world. hello world. hello world. hello world. hello world. hello world. "
+                    .getBytes();
+        final String input = "aGVsbG8gd29ybGQuIGhlbGxvIHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIGhlbGxv\n"
+            + "IHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIA==";
+        encoder = new Base64Encoder(false);
+        assertByteArrayEquals(data, encoder.decode(input));
+    }
+
+    public void testDecodesLinesWithCRLF() {
+        final byte data[] =
+                "hello world. hello world. hello world. hello world. hello world. hello world. hello world. "
+                    .getBytes();
+        final String input = "aGVsbG8gd29ybGQuIGhlbGxvIHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIGhlbGxv\r\n"
+            + "IHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIA==";
+        encoder = new Base64Encoder(false);
+        assertByteArrayEquals(data, encoder.decode(input));
+    }
+
+    public void testDecodesUnwrappedLines() {
+        final byte data[] =
+                "hello world. hello world. hello world. hello world. hello world. hello world. hello world. "
+                    .getBytes();
+        final String input = "aGVsbG8gd29ybGQuIGhlbGxvIHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIGhlbGxv"
+            + "IHdvcmxkLiBoZWxsbyB3b3JsZC4gaGVsbG8gd29ybGQuIA==";
+        encoder = new Base64Encoder(false);
+        assertByteArrayEquals(data, encoder.decode(input));
+    }
+
+    public void testDecodesShortLines() {
+        final byte data[] = "hello world".getBytes();
+        final String input = "aGVs\nbG8g\nd29y\nbGQ=";
+        assertByteArrayEquals(data, encoder.decode(input));
     }
 
     public void testPadsSingleMissingByteWhenNotMultipleOfThree() {
