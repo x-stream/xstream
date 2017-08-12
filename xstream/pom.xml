@@ -313,6 +313,7 @@
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/Base64JavaUtilCodecTest.java</exclude>
                 <exclude>**/*18TypesTest.java</exclude>
               </testExcludes>
             </configuration>
