@@ -58,11 +58,34 @@ public class Base64Encoder implements StringCodec {
     private static final char[] SIXTY_FOUR_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
         .toCharArray();
     private static final int[] REVERSE_MAPPING = new int[123];
+    private final boolean lineBreaks;
 
     static {
         for (int i = 0; i < SIXTY_FOUR_CHARS.length; i++) {
             REVERSE_MAPPING[SIXTY_FOUR_CHARS[i]] = i + 1;
         }
+    }
+
+    /**
+     * Constructs a Base64Encoder.
+     * <p>
+     * The encoder will insert line breaks after 76 characters to be compliant to RFC 1521.
+     * </p>
+     *
+     * @since upcoming
+     */
+    public Base64Encoder() {
+        this(true);
+    }
+
+    /**
+     * Constructs a Base64Encoder.
+     *
+     * @param lineBreaks flag to insert line breaks
+     * @since upcoming
+     */
+    public Base64Encoder(final boolean lineBreaks) {
+        this.lineBreaks = lineBreaks;
     }
 
     public String encode(final byte[] input) {
@@ -77,7 +100,7 @@ public class Base64Encoder implements StringCodec {
             for (int j = 0; j < 4; j++) {
                 result.append(remaining + 1 > j ? SIXTY_FOUR_CHARS[0x3f & oneBigNumber >> 6 * (3 - j)] : '=');
             }
-            if ((outputCharCount += 4) % 76 == 0 && i + 3 < input.length) {
+            if (lineBreaks && (outputCharCount += 4) % 76 == 0 && i + 3 < input.length) {
                 result.append('\n');
             }
         }
@@ -89,7 +112,9 @@ public class Base64Encoder implements StringCodec {
     int computeResultingStringSize(final byte[] input) {
         int stringSize = input.length / 3 + (input.length % 3 == 0 ? 0 : 1);
         stringSize *= 4;
-        stringSize += stringSize / 76;
+        if (lineBreaks) {
+            stringSize += stringSize / 76;
+        }
         return stringSize;
     }
 
