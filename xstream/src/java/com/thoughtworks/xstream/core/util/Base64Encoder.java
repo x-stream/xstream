@@ -77,7 +77,7 @@ public class Base64Encoder implements StringCodec {
             for (int j = 0; j < 4; j++) {
                 result.append(remaining + 1 > j ? SIXTY_FOUR_CHARS[0x3f & oneBigNumber >> 6 * (3 - j)] : '=');
             }
-            if ((outputCharCount += 4) % 76 == 0 && i+3 < input.length) {
+            if ((outputCharCount += 4) % 76 == 0 && i + 3 < input.length) {
                 result.append('\n');
             }
         }
