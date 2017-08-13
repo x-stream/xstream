@@ -11,6 +11,8 @@
 package com.thoughtworks.xstream.core.util;
 
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 
 import com.thoughtworks.xstream.core.StringCodec;
 
@@ -22,8 +24,32 @@ import com.thoughtworks.xstream.core.StringCodec;
  * @since upcoming
  */
 public class Base64JavaUtilCodec implements StringCodec {
-    final private Base64.Decoder decoder = Base64.getMimeDecoder();
-    final private Base64.Encoder encoder = Base64.getEncoder();
+    final private Base64.Decoder decoder;
+    final private Base64.Encoder encoder;
+
+    /**
+     * Constructs a Base64JavaUtilCodec.
+     * <p>
+     * The implementation will use a basic encoder and a MIME decoder by default.
+     * </p>
+     * 
+     * @since upcoming
+     */
+    public Base64JavaUtilCodec() {
+        this(Base64.getEncoder(), Base64.getMimeDecoder());
+    }
+
+    /**
+     * Constructs a Base64JavaUtilCodec with provided encoder and decoder.
+     * 
+     * @param encoder the encoder instance
+     * @param decoder the decoder instance
+     * @since upcoming
+     */
+    public Base64JavaUtilCodec(Encoder encoder, Decoder decoder) {
+        this.encoder = encoder;
+        this.decoder = decoder;
+    }
 
     @Override
     public byte[] decode(final String base64) {
