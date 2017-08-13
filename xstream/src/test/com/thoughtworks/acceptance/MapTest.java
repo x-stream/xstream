@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,7 +14,6 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
-import com.thoughtworks.xstream.core.JVM;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -196,24 +195,15 @@ public class MapTest extends AbstractAcceptanceTest {
     }
     
     public void testSynchronizedMap() {
-        final String expected;
-        if (JVM.is15()) {
-            expected = "" +
-                "<java.util.Collections_-SynchronizedMap serialization=\"custom\">\n" +
-                "  <java.util.Collections_-SynchronizedMap>\n" +
-                "    <default>\n" +
-                "      <m/>\n" +
-                "      <mutex class=\"java.util.Collections$SynchronizedMap\" reference=\"../../..\"/>\n" +
-                "    </default>\n" +
-                "  </java.util.Collections_-SynchronizedMap>\n" +
-                "</java.util.Collections_-SynchronizedMap>";
-        } else {
-            expected = "" + 
-                "<java.util.Collections_-SynchronizedMap>\n" + 
-                "  <m/>\n" + 
-                "  <mutex class=\"java.util.Collections$SynchronizedMap\" reference=\"..\"/>\n" + 
-                "</java.util.Collections_-SynchronizedMap>";
-        }
+        final String expected = "" +
+            "<java.util.Collections_-SynchronizedMap serialization=\"custom\">\n" +
+            "  <java.util.Collections_-SynchronizedMap>\n" +
+            "    <default>\n" +
+            "      <m/>\n" +
+            "      <mutex class=\"java.util.Collections$SynchronizedMap\" reference=\"../../..\"/>\n" +
+            "    </default>\n" +
+            "  </java.util.Collections_-SynchronizedMap>\n" +
+            "</java.util.Collections_-SynchronizedMap>";
 
         assertBothWays(Collections.synchronizedMap(new HashMap()), expected);
     }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -35,7 +35,6 @@ import com.thoughtworks.acceptance.objects.OwnerOfExternalizable;
 import com.thoughtworks.acceptance.objects.Replaced;
 import com.thoughtworks.acceptance.objects.SomethingExternalizable;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.core.JVM;
 
 import junit.framework.TestCase;
 
@@ -386,18 +385,15 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public void testColor() {
-        boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
-        if (!isHeadless || JVM.is15()) {
-            Color color = Color.black;
-            String expected = normalizeExpectation("" // 
-                + "{'awt-color': {\n"
-                + "  'red': 0,\n"
-                + "  'green': 0,\n"
-                + "  'blue': 0,\n"
-                + "  'alpha': 255\n"
-                + "}}");
-            assertEquals(expected, xstream.toXML(color));
-        }
+        Color color = Color.black;
+        String expected = normalizeExpectation("" // 
+            + "{'awt-color': {\n"
+            + "  'red': 0,\n"
+            + "  'green': 0,\n"
+            + "  'blue': 0,\n"
+            + "  'alpha': 255\n"
+            + "}}");
+        assertEquals(expected, xstream.toXML(color));
     }
 
     public void testDoesHandleQuotesAndEscapes() {

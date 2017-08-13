@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 XStream Committers.
+ * Copyright (C) 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,7 +10,6 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
@@ -23,14 +22,6 @@ public class StandardStaxReaderTest extends AbstractXMLReaderTest {
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
         return driver.createReader(new StringReader(xml));
-    }
-
-    @Override
-    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
-        // fails for Sun JDK 1.6 runtime
-        if (JVM.is17() || !JVM.getStaxInputFactory().getName().equals("com.sun.xml.internal.stream.XMLInputFactoryImpl")) {
-            super.testIsXXEVulnerableWithExternalParameterEntity();
-        }
     }
 
     // inherits tests from superclass

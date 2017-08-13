@@ -386,15 +386,12 @@ public class JVM implements Caching {
      */
     @SuppressWarnings("unchecked")
     public static Class<? extends XMLInputFactory> getStaxInputFactory() throws ClassNotFoundException {
-        if (is16()) {
-            if (isIBM()) {
-                return (Class<? extends XMLInputFactory>)Class.forName("com.ibm.xml.xlxp.api.stax.XMLInputFactoryImpl");
-            } else {
-                return (Class<? extends XMLInputFactory>)Class.forName(
-                    "com.sun.xml.internal.stream.XMLInputFactoryImpl");
-            }
+        if (isIBM()) {
+            return (Class<? extends XMLInputFactory>)Class.forName("com.ibm.xml.xlxp.api.stax.XMLInputFactoryImpl");
+        } else {
+            return (Class<? extends XMLInputFactory>)Class.forName(
+                "com.sun.xml.internal.stream.XMLInputFactoryImpl");
         }
-        return null;
     }
 
     /**
@@ -411,16 +408,13 @@ public class JVM implements Caching {
      */
     @SuppressWarnings("unchecked")
     public static Class<? extends XMLOutputFactory> getStaxOutputFactory() throws ClassNotFoundException {
-        if (is16()) {
-            if (isIBM()) {
-                return (Class<? extends XMLOutputFactory>)Class.forName(
-                    "com.ibm.xml.xlxp.api.stax.XMLOutputFactoryImpl");
-            } else {
-                return (Class<? extends XMLOutputFactory>)Class.forName(
-                    "com.sun.xml.internal.stream.XMLOutputFactoryImpl");
-            }
+        if (isIBM()) {
+            return (Class<? extends XMLOutputFactory>)Class.forName(
+                "com.ibm.xml.xlxp.api.stax.XMLOutputFactoryImpl");
+        } else {
+            return (Class<? extends XMLOutputFactory>)Class.forName(
+                "com.sun.xml.internal.stream.XMLOutputFactoryImpl");
         }
-        return null;
     }
 
     /**
@@ -446,7 +440,7 @@ public class JVM implements Caching {
     }
 
     private static boolean canUseSunUnsafeReflectionProvider() {
-        return canAllocateWithUnsafe && is14();
+        return canAllocateWithUnsafe;
     }
 
     private static boolean canUseSunLimitedUnsafeReflectionProvider() {

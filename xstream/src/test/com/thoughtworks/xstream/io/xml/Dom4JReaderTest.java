@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,7 +12,6 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.XStreamException;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import java.io.StringReader;
@@ -54,9 +53,7 @@ public class Dom4JReaderTest extends AbstractXMLReaderTest {
         } catch (final XStreamException e) {
             final String message = e.getCause().getMessage();
             if (!message.contains("DOCTYPE")) {
-                if (JVM.is17() || (JVM.is16() && !message.contains("Nested exception: null"))) {
-                    throw e;
-                }
+                throw e;
             }
         }
     }
@@ -69,9 +66,7 @@ public class Dom4JReaderTest extends AbstractXMLReaderTest {
         } catch (final XStreamException e) {
             final String message = e.getCause().getMessage();
             if (!message.contains("DOCTYPE")) {
-                if (JVM.is17() || (JVM.is16() && !message.contains("Nested exception: null"))) {
-                    throw e;
-                }
+                throw e;
             }
         }
     }

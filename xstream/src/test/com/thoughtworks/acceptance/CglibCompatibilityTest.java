@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,6 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.reflection.CGLIBEnhancedConverter;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.mapper.CGLIBMapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import com.thoughtworks.xstream.security.CGLIBProxyTypePermission;
@@ -336,11 +335,10 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
             + "  </instance>\n"
             + "</CGLIB-enhanced-proxy>");
 
-        // JDK 1.3 has different threshold and capacity algorithms
         int idx = xml.toString().indexOf(THRESHOLD_PARAM);
-        xml.replace(idx, idx + THRESHOLD_PARAM.length(), JVM.is14() ? "12" : "8");
+        xml.replace(idx, idx + THRESHOLD_PARAM.length(), "12");
         idx = xml.toString().indexOf(CAPACITY_PARAM);
-        xml.replace(idx, idx + CAPACITY_PARAM.length(), JVM.is14() ? "16" : "11");
+        xml.replace(idx, idx + CAPACITY_PARAM.length(), "16");
 
         Map serialized = (Map)assertBothWays(orig, xml.toString());
         assertEquals(orig.toString(), serialized.toString());

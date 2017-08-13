@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -9,8 +9,6 @@
  * Created on 28. October 2008 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
-
-import com.thoughtworks.xstream.core.JVM;
 
 import junit.framework.TestSuite;
 
@@ -42,48 +40,42 @@ public class BufferedImagesTest extends AbstractAcceptanceTest {
     }
 
     public void testInBWCanBeMarshalled() throws IOException {
-        boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
-        if (!isHeadless || JVM.is15()) {
-            final BufferedImage image = new BufferedImage(3, 3, BufferedImage.TYPE_BYTE_BINARY);
-            final Graphics2D graphics = image.createGraphics();
-            graphics.setBackground(Color.WHITE);
-            graphics.clearRect(0, 0, 2, 2);
-            graphics.setColor(Color.BLACK);
-            graphics.drawLine(0, 0, 2, 2);
-    
-            final ByteArrayOutputStream baosOriginal = new ByteArrayOutputStream();
-            ImageIO.write(image, "tiff", baosOriginal);
-    
-            xstream.alias("image", BufferedImage.class);
-            final String xml = xstream.toXML(image);
-    
-            final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
-            ImageIO.write((RenderedImage)xstream.fromXML(xml), "tiff", baosSerialized);
-    
-            assertArrayEquals(baosOriginal.toByteArray(), baosSerialized.toByteArray());
-        }
+        final BufferedImage image = new BufferedImage(3, 3, BufferedImage.TYPE_BYTE_BINARY);
+        final Graphics2D graphics = image.createGraphics();
+        graphics.setBackground(Color.WHITE);
+        graphics.clearRect(0, 0, 2, 2);
+        graphics.setColor(Color.BLACK);
+        graphics.drawLine(0, 0, 2, 2);
+
+        final ByteArrayOutputStream baosOriginal = new ByteArrayOutputStream();
+        ImageIO.write(image, "tiff", baosOriginal);
+
+        xstream.alias("image", BufferedImage.class);
+        final String xml = xstream.toXML(image);
+
+        final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
+        ImageIO.write((RenderedImage)xstream.fromXML(xml), "tiff", baosSerialized);
+
+        assertArrayEquals(baosOriginal.toByteArray(), baosSerialized.toByteArray());
     }
 
     public void testInRGBACanBeMarshalled() throws IOException {
-        boolean isHeadless = Boolean.valueOf(System.getProperty("java.awt.headless", "false")).booleanValue();
-        if (!isHeadless || JVM.is15()) {
-            final BufferedImage image = new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB);
-            final Graphics2D graphics = image.createGraphics();
-            graphics.setBackground(Color.WHITE);
-            graphics.clearRect(0, 0, 2, 2);
-            graphics.setColor(Color.RED);
-            graphics.drawLine(0, 0, 2, 2);
-    
-            final ByteArrayOutputStream baosOriginal = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baosOriginal);
-    
-            xstream.alias("image", BufferedImage.class);
-            final String xml = xstream.toXML(image);
-    
-            final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
-            ImageIO.write((RenderedImage)xstream.fromXML(xml), "png", baosSerialized);
-    
-            assertArrayEquals(baosOriginal.toByteArray(), baosSerialized.toByteArray());
-        }
+        final BufferedImage image = new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D graphics = image.createGraphics();
+        graphics.setBackground(Color.WHITE);
+        graphics.clearRect(0, 0, 2, 2);
+        graphics.setColor(Color.RED);
+        graphics.drawLine(0, 0, 2, 2);
+
+        final ByteArrayOutputStream baosOriginal = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", baosOriginal);
+
+        xstream.alias("image", BufferedImage.class);
+        final String xml = xstream.toXML(image);
+
+        final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
+        ImageIO.write((RenderedImage)xstream.fromXML(xml), "png", baosSerialized);
+
+        assertArrayEquals(baosOriginal.toByteArray(), baosSerialized.toByteArray());
     }
 }

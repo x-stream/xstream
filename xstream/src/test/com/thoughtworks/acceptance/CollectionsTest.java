@@ -15,7 +15,6 @@ import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.core.JVM;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,34 +132,22 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     }
 
     public void testSyncronizedList() {
-        final String xml;
-        if (JVM.is15()) {
-            xml = 
-                "<java.util.Collections_-SynchronizedList serialization=\"custom\">\n" +
-                "  <java.util.Collections_-SynchronizedCollection>\n" +
-                "    <default>\n" +
-                "      <c class=\"linked-list\">\n" +
-                "        <string>hi</string>\n" +
-                "      </c>\n" +
-                "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
-                "    </default>\n" +
-                "  </java.util.Collections_-SynchronizedCollection>\n" +
-                "  <java.util.Collections_-SynchronizedList>\n" +
-                "    <default>\n" +
-                "      <list class=\"linked-list\" reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
-                "    </default>\n" +
-                "  </java.util.Collections_-SynchronizedList>\n" +
-                "</java.util.Collections_-SynchronizedList>";
-        } else {
-            xml = 
-                "<java.util.Collections_-SynchronizedList>\n" +
-                "  <c class=\"linked-list\">\n" +
-                "    <string>hi</string>\n" +
-                "  </c>\n" +
-                "  <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"..\"/>\n" +
-                "  <list class=\"linked-list\" reference=\"../c\"/>\n" +
-                "</java.util.Collections_-SynchronizedList>";
-        }
+        final String xml = "" + 
+            "<java.util.Collections_-SynchronizedList serialization=\"custom\">\n" +
+            "  <java.util.Collections_-SynchronizedCollection>\n" +
+            "    <default>\n" +
+            "      <c class=\"linked-list\">\n" +
+            "        <string>hi</string>\n" +
+            "      </c>\n" +
+            "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
+            "    </default>\n" +
+            "  </java.util.Collections_-SynchronizedCollection>\n" +
+            "  <java.util.Collections_-SynchronizedList>\n" +
+            "    <default>\n" +
+            "      <list class=\"linked-list\" reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
+            "    </default>\n" +
+            "  </java.util.Collections_-SynchronizedList>\n" +
+            "</java.util.Collections_-SynchronizedList>";
 
         // synchronized list has circular reference
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
@@ -172,34 +159,22 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     }
 
     public void testSyncronizedArrayList() {
-        final String xml;
-        if (JVM.is15()) {
-            xml = 
-                "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\" serialization=\"custom\">\n" +
-                "  <java.util.Collections_-SynchronizedCollection>\n" +
-                "    <default>\n" +
-                "      <c class=\"list\">\n" +
-                "        <string>hi</string>\n" +
-                "      </c>\n" +
-                "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
-                "    </default>\n" +
-                "  </java.util.Collections_-SynchronizedCollection>\n" +
-                "  <java.util.Collections_-SynchronizedList>\n" +
-                "    <default>\n" +
-                "      <list reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
-                "    </default>\n" +
-                "  </java.util.Collections_-SynchronizedList>\n" +
-                "</java.util.Collections_-SynchronizedRandomAccessList>";
-        } else {
-            xml = 
-                "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\">\n" +
-                "  <c class=\"list\">\n" +
-                "    <string>hi</string>\n" +
-                "  </c>\n" +
-                "  <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"..\"/>\n" +
-                "  <list reference=\"../c\"/>\n" +
-                "</java.util.Collections_-SynchronizedRandomAccessList>";
-        }
+        final String xml = "" + 
+            "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\" serialization=\"custom\">\n" +
+            "  <java.util.Collections_-SynchronizedCollection>\n" +
+            "    <default>\n" +
+            "      <c class=\"list\">\n" +
+            "        <string>hi</string>\n" +
+            "      </c>\n" +
+            "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
+            "    </default>\n" +
+            "  </java.util.Collections_-SynchronizedCollection>\n" +
+            "  <java.util.Collections_-SynchronizedList>\n" +
+            "    <default>\n" +
+            "      <list reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
+            "    </default>\n" +
+            "  </java.util.Collections_-SynchronizedList>\n" +
+            "</java.util.Collections_-SynchronizedRandomAccessList>";
 
         // synchronized list has circular reference
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
@@ -370,7 +345,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         final Collection set = map.entrySet();
         xstream.alias("entry-set", set.getClass());
 
-        if (JVM.is16() && System.getProperty("java.vm.vendor").indexOf("IBM") >= 0) {
+        if (System.getProperty("java.vm.vendor").indexOf("IBM") >= 0) {
             assertBothWays(set,
                 "<entry-set>\n" +
                 "  <associatedMap>\n" +

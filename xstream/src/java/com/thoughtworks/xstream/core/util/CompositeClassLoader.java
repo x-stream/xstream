@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,8 +18,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.thoughtworks.xstream.core.JVM;
 
 /**
  * ClassLoader that is composed of other classloaders. Each loader will be used to try to load the particular class, until
@@ -53,17 +51,15 @@ import com.thoughtworks.xstream.core.JVM;
  */
 public class CompositeClassLoader extends ClassLoader {
     static {
-        if (JVM.is17()) {
-            // see http://www.cs.duke.edu/csed/java/jdk1.7/technotes/guides/lang/cl-mt.html
-            try {
-                final Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
-                if (!m.isAccessible()) {
-                    m.setAccessible(true);
-                }
-                m.invoke(null);
-            } catch (final Exception e) {
-                // ignore errors, JVM will synchronize class for Java 7 or higher
+        // see http://www.cs.duke.edu/csed/java/jdk1.7/technotes/guides/lang/cl-mt.html
+        try {
+            final Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
+            if (!m.isAccessible()) {
+                m.setAccessible(true);
             }
+            m.invoke(null);
+        } catch (final Exception e) {
+            // ignore errors, JVM will synchronize class for Java 7 or higher
         }
     }
 

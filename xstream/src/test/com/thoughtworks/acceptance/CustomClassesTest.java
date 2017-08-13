@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,6 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.XppReader;
 
 import java.io.StringReader;
@@ -156,11 +155,7 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
                 "</friend>";
 
         SamplePerson person = (SamplePerson)xstream.fromXML(xml);
-        if (JVM.is14()) {
-            assertNull(person.aComment);
-        } else {
-            assertEquals("", person.aComment);
-        }
+        assertNull(person.aComment);
     }
     
     static class Joe extends SamplePerson {
@@ -181,11 +176,7 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
                 "</joe>";
 
         Joe joe = (Joe)xstream.fromXML(xml);
-        if (JVM.is14()) {
-            assertNull(joe.aComment);
-        } else {
-            assertEquals("", joe.aComment);
-        }
+        assertNull(joe.aComment);
     }
 
     public void testCustomObjectWillNotUnmarshalTransientFieldsFromAttributes() {
@@ -201,21 +192,13 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
         // without attribute definition
         SamplePerson person = (SamplePerson)xstream.fromXML(xml);
-        if (JVM.is14()) {
-            assertNull(person.aComment);
-        } else {
-            assertEquals("", person.aComment);
-        }
+        assertNull(person.aComment);
 
         xstream.useAttributeFor("aComment", String.class);
 
         // with attribute definition
         person = (SamplePerson)xstream.fromXML(xml);
-        if (JVM.is14()) {
-            assertNull(person.aComment);
-        } else {
-            assertEquals("", person.aComment);
-        }
+        assertNull(person.aComment);
     }
 
     public void testNullObjectsDoNotHaveFieldsWritten() {

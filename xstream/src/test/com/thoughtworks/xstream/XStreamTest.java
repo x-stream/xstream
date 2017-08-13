@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,6 @@ import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
@@ -142,8 +141,6 @@ public class XStreamTest extends TestCase {
     }
 
     public void testUnmarshalsClassWithoutDefaultConstructor() {
-        if (!JVM.is14()) return;
-
         String xml =
                 "<funny>" +
                 "  <i>999</i>" +
@@ -187,8 +184,6 @@ public class XStreamTest extends TestCase {
     }
 
     public void testCanHandleNonStaticPrivateInnerClass() {
-        if (!JVM.is14()) return;
-
         NonStaticInnerClass obj = new NonStaticInnerClass();
         obj.field = 3;
 

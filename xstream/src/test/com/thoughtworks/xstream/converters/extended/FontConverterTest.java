@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,6 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.core.JVM;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -61,12 +60,6 @@ public class FontConverterTest extends TestCase {
         // assert
         Map inAttributes = in.getAttributes();
         Map outAttributes = out.getAttributes();
-
-        // these attributes don't have a valid .equals() method (bad Sun!), so we can't use them in the test.
-        if (!JVM.is16()) { // it seems even old 1.5 JDKs fail here (Codehaus Bamboo)
-            inAttributes.remove(TextAttribute.TRANSFORM);
-            outAttributes.remove(TextAttribute.TRANSFORM);
-        }
 
         assertEquals(inAttributes, outAttributes);
     }

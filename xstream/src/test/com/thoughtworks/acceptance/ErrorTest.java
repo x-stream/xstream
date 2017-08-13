@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,7 +12,6 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.StreamException;
 
 public class ErrorTest extends AbstractAcceptanceTest {
@@ -38,13 +37,8 @@ public class ErrorTest extends AbstractAcceptanceTest {
         } catch (ConversionException e) {
             assertEquals("java.lang.NumberFormatException",
                     e.get("cause-exception"));
-            if (JVM.is14()) {
-                assertEquals("For input string: \"another string\"",
-                        e.get("cause-message"));
-            } else {
-                assertEquals("another string",
-                        e.get("cause-message"));
-            }
+            assertEquals("For input string: \"another string\"",
+                    e.get("cause-message"));
             assertEquals(Integer.class.getName(),
                     e.get("class"));
             assertEquals("/thing/two",
