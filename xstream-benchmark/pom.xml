@@ -58,9 +58,9 @@
       </reporting>
     </profile>
     <profile>
-      <id>jdk15-ge</id>
+      <id>jdk16-ge</id>
       <activation>
-        <jdk>[1.5,)</jdk>
+        <jdk>[1.6,)</jdk>
       </activation>
       <build>
         <plugins>
