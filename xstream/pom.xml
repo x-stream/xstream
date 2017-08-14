@@ -481,6 +481,8 @@
                 <exclude>**/extended/*17Test*</exclude>
                 <exclude>**/reflection/SunLimitedUnsafeReflectionProviderTest*</exclude>
                 <exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
+                <exclude>**/Base64JavaUtilCodecTest.java</exclude>
+                <exclude>**/Base64JAXBCodecTest.java</exclude>
                 <exclude>**/io/xml/JDom2*Test*</exclude>
                 <exclude>**/acceptance/Basic15TypesTest*</exclude>
                 <exclude>**/acceptance/Concurrent15TypesTest*</exclude>
