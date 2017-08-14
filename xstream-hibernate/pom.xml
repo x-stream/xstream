@@ -29,7 +29,7 @@
         <jdk>[9,)</jdk>
       </activation>
       <properties>
-        <surefire.argline>--permit-illegal-access</surefire.argline>
+        <surefire.argline>--illegal-access=permit</surefire.argline>
       </properties>
     </profile>
     <profile>
