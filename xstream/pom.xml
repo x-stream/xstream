@@ -206,7 +206,7 @@
         <jdk>[9,)</jdk>
       </activation>
       <properties>
-        <surefire.argline>--add-modules java.activation --permit-illegal-access</surefire.argline>
+        <surefire.argline>--add-modules java.activation,java.xml.bind --illegal-access=permit</surefire.argline>
       </properties>
     </profile>
     <profile>
