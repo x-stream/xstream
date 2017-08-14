@@ -314,9 +314,9 @@
       </dependency>
 
       <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${version.commons.lang}</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${version.commons.lang3}</version>
       </dependency>
 
       <dependency>
@@ -902,7 +902,7 @@
     <version.commons.cli>1.1</version.commons.cli>
     <version.commons.codec>1.10</version.commons.codec>
     <version.commons.io>1.4</version.commons.io>
-    <version.commons.lang>2.4</version.commons.lang>
+    <version.commons.lang3>3.6</version.commons.lang3>
     <version.dom4j>1.6.1</version.dom4j>
     <version.hsqldb>2.2.8</version.hsqldb>
     <version.javaassist>3.12.1.GA</version.javaassist>

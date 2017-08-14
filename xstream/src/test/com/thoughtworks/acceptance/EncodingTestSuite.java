@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014, 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,7 @@ import java.util.Properties;
 
 import javax.xml.stream.XMLInputFactory;
 
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.SystemUtils;
 
 import com.bea.xml.stream.MXParserFactory;
 import com.thoughtworks.acceptance.objects.StandardObject;
