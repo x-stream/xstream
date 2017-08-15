@@ -783,6 +783,11 @@
           <artifactId>coveralls-maven-plugin</artifactId>
           <version>${version.plugin.eluder.coveralls}</version>
         </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${version.plugin.jacoco}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -870,6 +875,7 @@
     <version.plugin.maven.surefire>2.4.3</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>1.5</version.plugin.mojo.build-helper>
     <version.plugin.eluder.coveralls>4.2.0</version.plugin.eluder.coveralls>
+    <version.plugin.jacoco>0.7.9</version.plugin.jacoco>
 
     <version.org.apache.maven.wagon.webdev>1.0-beta-2</version.org.apache.maven.wagon.webdev>
 
