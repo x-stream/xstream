@@ -293,7 +293,7 @@
               <detectJavaApiLink>false</detectJavaApiLink>
               <source>1.8</source>
               <links>
-                <link>${link.javadoc.javase}</link>
+                <link>${javadoc.link.javase}</link>
               </links>
             </configuration>
           </plugin>
