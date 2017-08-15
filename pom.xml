@@ -726,6 +726,11 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>${version.plugin.maven.jxr}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
           <version>${version.plugin.maven.release}</version>
           <configuration>
@@ -816,11 +821,6 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>${version.plugin.mojo.build-helper}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>jxr-maven-plugin</artifactId>
-          <version>${version.plugin.mojo.jxr}</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.xsite</groupId>
@@ -929,13 +929,13 @@
     <version.plugin.maven.install>2.2</version.plugin.maven.install>
     <version.plugin.maven.jar>2.2</version.plugin.maven.jar>
     <version.plugin.maven.javadoc>2.10</version.plugin.maven.javadoc>
+    <version.plugin.maven.jxr>2.5</version.plugin.maven.jxr>
     <version.plugin.maven.release>2.1</version.plugin.maven.release>
     <version.plugin.maven.resources>2.2</version.plugin.maven.resources>
     <version.plugin.maven.site>2.0-beta-6</version.plugin.maven.site>
     <version.plugin.maven.source>2.1.2</version.plugin.maven.source>
     <version.plugin.maven.surefire>2.4.3</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>1.5</version.plugin.mojo.build-helper>
-    <version.plugin.mojo.jxr>2.0-beta-1</version.plugin.mojo.jxr>
     <version.plugin.eluder.coveralls>4.2.0</version.plugin.eluder.coveralls>
 
     <version.org.apache.maven.wagon.webdev>1.0-beta-2</version.org.apache.maven.wagon.webdev>
