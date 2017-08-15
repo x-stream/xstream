@@ -165,20 +165,18 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <configuration>
+              <formats>
+                <format>xml</format>
+              </formats>
+              <aggregate>true</aggregate>
+            </configuration>
           </plugin>
           <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <executions>
-                <execution>
-                    <id>prepare-agent</id>
-                    <goals>
-                        <goal>prepare-agent</goal>
-                    </goals>
-                </execution>
-            </executions>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
           </plugin>
         </plugins>
       </build>
@@ -768,6 +766,18 @@
           <version>${version.plugin.mojo.build-helper}</version>
         </plugin>
         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>${version.plugin.mojo.cobertura}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>clean</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
           <groupId>org.codehaus.xsite</groupId>
           <artifactId>xsite-maven-plugin</artifactId>
           <version>${version.plugin.codehaus.xsite}</version>
@@ -794,11 +804,6 @@
           <groupId>org.eluder.coveralls</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
           <version>${version.plugin.eluder.coveralls}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>${version.plugin.jacoco}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -886,8 +891,8 @@
     <version.plugin.maven.source>2.1.2</version.plugin.maven.source>
     <version.plugin.maven.surefire>2.4.3</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>1.5</version.plugin.mojo.build-helper>
+    <version.plugin.mojo.cobertura>2.7</version.plugin.mojo.cobertura>
     <version.plugin.eluder.coveralls>4.2.0</version.plugin.eluder.coveralls>
-    <version.plugin.jacoco>0.7.9</version.plugin.jacoco>
 
     <version.org.apache.maven.wagon.webdev>1.0-beta-2</version.org.apache.maven.wagon.webdev>
 
