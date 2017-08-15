@@ -776,6 +776,13 @@
               </goals>
             </execution>
           </executions>
+          <dependencies>
+            <dependency>
+              <groupId>net.sourceforge.cobertura</groupId>
+              <artifactId>cobertura</artifactId>
+              <version>${version.net.sourceforge.cobertura}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.codehaus.xsite</groupId>
@@ -910,6 +917,7 @@
     <version.joda-time>1.6</version.joda-time>
     <version.junit>3.8.1</version.junit>
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
+    <version.net.sourceforge.cobertura>2.1.1</version.net.sourceforge.cobertura>
     <version.org.codehaus.jettison>1.2</version.org.codehaus.jettison>
     <version.org.codehaus.woodstox.asl>3.2.7</version.org.codehaus.woodstox.asl>
     <version.org.hibernate.core>4.2.5.Final</version.org.hibernate.core>
