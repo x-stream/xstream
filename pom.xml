@@ -644,7 +644,7 @@
             <additionalparam>${javadoc.xdoclint}</additionalparam>
             <source>${version.java.source}</source>
             <links>
-              <link>${link.javadoc.javase}</link>
+              <link>${javadoc.link.javase}</link>
             </links>
             <archive>
               <manifest>
@@ -905,7 +905,7 @@
     <version.xom>1.1</version.xom>
     <version.xpp3>1.1.4c</version.xpp3>
 
-    <link.javadoc.javase>http://docs.oracle.com/javase/8/docs/api/</link.javadoc.javase>
+    <javadoc.link.javase>http://docs.oracle.com/javase/8/docs/api/</javadoc.link.javase>
 
     <javadoc.xdoclint/>
     <surefire.argline/>
