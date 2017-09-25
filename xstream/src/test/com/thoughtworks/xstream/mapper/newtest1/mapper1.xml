@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.mapper1" >
+
+<!-- Result Map 数据库映射到实体类  , single table result -->
+<resultMap id="mapArticle" type="com.test.dao.Mapper1" >
+	<id     column="no"       property="articleNo"/>
+	<result column="title"       property="title"/>
+</resultMap> 
+
+<select id="getPrimaryKey" resultType="java.lang.Long">
+	select S_ARTICLE.nextval from dual
+</select>
+
+
+<insert id="insert1" >
+	select S_ARTICLE.nextval from dual
+</insert>
+
+<update id="updateArticleBody" parameterType="com.test.db.entity.Article" >
+	update bus_article article
+	<set>
+		update_time = #{article.updateTime, jdbcType=VARCHAR}
+		body =#{article.body, jdbcType=VARCHAR} 
+	</set> 
+	where article_no=#{article.articleNo}
+	<include refid="filterByOperatorForWrite"></include>
+</update>
+
+<delete id="deleteArticle" parameterType="com.test.db.entity.Article">
+    delete from BUS_ARTICLE article where article_no=#{article.articleNo} 
+    <include refid="filterByOperatorForWrite"/>
+</delete>
+
+
+</mapper>
