@@ -2,11 +2,16 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.test.dao.mapper1" >
 
-<!-- Result Map 数据库映射到实体类  , single table result -->
 <resultMap id="mapArticle" type="com.test.dao.Mapper1" >
-	<id     column="no"       property="articleNo"/>
+	<id     column="no1"       property="articleNo"/>
 	<result column="title"       property="title"/>
 </resultMap> 
+
+<resultMap id="map2" type="com.test.dao.Mapper1" >
+	<id     column="no2"       property="articleNo"/>
+	<result column="title"       property="title"/>
+</resultMap> 
+
 
 <select id="getPrimaryKey" resultType="java.lang.Long">
 	select S_ARTICLE.nextval from dual

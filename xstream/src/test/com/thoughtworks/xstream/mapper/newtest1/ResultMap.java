@@ -32,6 +32,7 @@ public class ResultMap {
 	
 	public String toString() {
 		String ret = id + " " + type + " \n";
+		ret = ret + " " + id1 + "\n";
 		if(results!=null) {
 			for(int i=0;i<results.size();i++) {
 				ret = ret + results.get(i).toString();

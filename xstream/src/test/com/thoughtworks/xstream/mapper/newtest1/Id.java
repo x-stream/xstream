@@ -13,6 +13,10 @@ public class Id {
 	@XStreamAsAttribute	
 	public String property;
 	
+	public String toString() {
+		return this.column + " " + this.property;
+	}
+	
 	
 	public String getColumn() {
 		return column;

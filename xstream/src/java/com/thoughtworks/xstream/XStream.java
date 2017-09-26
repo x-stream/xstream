@@ -1385,7 +1385,7 @@ public class XStream {
         }
         packageAliasingMapper.addPackageAlias(name, pkgName);
     }
-
+    
     /**
      * Create an alias for a field name.
      *
@@ -1395,10 +1395,24 @@ public class XStream {
      * @throws InitializationException if no {@link FieldAliasingMapper} is available
      */
     public void aliasField(final String alias, final Class<?> definedIn, final String fieldName) {
+    	aliasField(alias, false, definedIn, fieldName);
+    }
+
+
+    /**
+     * Create an alias for a field name.
+     *
+     * @param alias the alias itself
+     * @param isAttr is attribute or not
+     * @param definedIn the type that declares the field
+     * @param fieldName the name of the field
+     * @throws InitializationException if no {@link FieldAliasingMapper} is available
+     */
+    public void aliasField(final String alias, final boolean isAttr, final Class<?> definedIn, final String fieldName) {
         if (fieldAliasingMapper == null) {
             throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
         }
-        fieldAliasingMapper.addFieldAlias(alias, definedIn, fieldName);
+        fieldAliasingMapper.addFieldAlias(alias, isAttr, definedIn, fieldName);
     }
 
     /**
@@ -1442,7 +1456,7 @@ public class XStream {
      * @since 1.2.2
      */
     public void aliasAttribute(final Class<?> definedIn, final String attributeName, final String alias) {
-        aliasField(alias, definedIn, attributeName);
+        aliasField(alias, true, definedIn, attributeName);
         useAttributeFor(definedIn, attributeName);
     }
 
