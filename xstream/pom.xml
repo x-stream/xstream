@@ -239,15 +239,8 @@
                 <configuration>
                   <source>1.8</source>
                   <target>1.8</target>
-                  <excludes>
-                    <exclude>foo</exclude>
-                    <exclude>foo</exclude>
-                    <exclude>foo</exclude>
-                  </excludes>
-                  <testExcludes>
-                    <exclude>foo</exclude>
-                    <exclude>foo</exclude>
-                  </testExcludes>
+                  <excludes combine.self="override"/>
+                  <textExcludes combine.self="override"/>
                 </configuration>
                 <goals>
                   <goal>compile</goal>
