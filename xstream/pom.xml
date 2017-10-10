@@ -232,27 +232,54 @@
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/time/**</exclude>
                 <exclude>**/ISO8601JavaTimeConverter.java</exclude>
+                <exclude>**/annotations/*</exclude>
+                <exclude>**/AnnotationMapper*</exclude>
+                <exclude>**/enums/*</exclude>
+                <exclude>**/EnumMapper*</exclude>
+                <exclude>**/*15.java</exclude>
+                <exclude>**/PathConverter.java</exclude>
+                <exclude>**/Base64*Codec.java</exclude>
+                <exclude>**/Types.java</exclude>
+                <exclude>**/JDom2*.java</exclude>
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/*18TypesTest.java</exclude>
+                <exclude>**/*17TypesTest.java</exclude>
+                <exclude>**/*15TypesTest.java</exclude>
+                <exclude>**/FieldDictionaryTest.java</exclude>
+                <exclude>**/annotations/*</exclude>
+                <exclude>**/enums/*</exclude>
               </testExcludes>
             </configuration>
             <executions>
               <execution>
+                <id>compile-jdk15</id>
+                <configuration>
+                  <source>${version.java.5}</source>
+                  <target>${version.java.5}</target>
+                  <excludes combine.self="override">
+                    <exclude>**/Lambda**</exclude>
+                    <exclude>**/time/**</exclude>
+                    <exclude>**/ISO8601JavaTimeConverter.java</exclude>
+                  </excludes>
+                  <testExcludes combine.self="override">
+                    <exclude>**/Lambda**</exclude>
+                    <exclude>**/*18TypesTest.java</exclude>
+                  </testExcludes>
+                </configuration>
+                <goals>
+                  <goal>compile</goal>
+                  <goal>testCompile</goal>
+                </goals>
+              </execution>
+               <execution>
                 <id>compile-jdk18</id>
                 <configuration>
                   <source>1.8</source>
                   <target>1.8</target>
-                  <excludes>
-                    <exclude>foo</exclude>
-                    <exclude>foo</exclude>
-                    <exclude>foo</exclude>
-                  </excludes>
-                  <testExcludes>
-                    <exclude>foo</exclude>
-                    <exclude>foo</exclude>
-                  </testExcludes>
+                  <excludes combine.self="override"/>
+                  <textExcludes combine.self="override"/>
                 </configuration>
                 <goals>
                   <goal>compile</goal>

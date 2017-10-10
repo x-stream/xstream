@@ -42,6 +42,7 @@
         <jdk>9</jdk>
       </activation>
       <properties>
+        <version.java.5>1.6</version.java.5>
         <version.java.source>1.6</version.java.source>
         <version.java.target>1.6</version.java.target>
         <version.plugin.maven.enforcer>3.0.0-M1</version.plugin.maven.enforcer>
@@ -55,6 +56,16 @@
       <properties>
         <javadoc.xdoclint>-Xdoclint:-missing</javadoc.xdoclint>
         <version.plugin.felix.bundle>2.5.4</version.plugin.felix.bundle>
+      </properties>
+    </profile>
+    <profile>
+      <id>jdk18</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <properties>
+        <version.java.source>1.4</version.java.source>
+        <version.java.target>1.4</version.java.target>
       </properties>
     </profile>
     <profile>
@@ -941,6 +952,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+    <version.java.5>1.5</version.java.5>
     <version.java.source>1.5</version.java.source>
     <version.java.target>1.5</version.java.target>
     <version.java.enforced>[1.4,)</version.java.enforced>
