@@ -1,8 +1,8 @@
 language: java
 sudo: false
 addons:
-  - apt:
-    - packages:
+  apt:
+    packages:
       - openjdk-6-jdk
 jdk:
   - oraclejdk8
