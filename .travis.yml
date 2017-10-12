@@ -8,13 +8,14 @@ jdk:
   - oraclejdk8
   - openjdk7
   - openjdk6
-before_install:
-  - wget https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip -P ./target
-  - unzip -qq ./target/apache-maven-3.2.5-bin.zip -d ./target
-  - export M2_HOME=$PWD/target/apache-maven-3.2.5
-  - export PATH=$M2_HOME/bin:$PATH
 install: true
 script:
+    if ( `javac -version 2>&1 | grep '1\.6\.0' > /dev/null` ); then
+      wget https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip -P ./target
+      unzip -qq ./target/apache-maven-3.2.5-bin.zip -d ./target
+      export M2_HOME=$PWD/target/apache-maven-3.2.5
+      export PATH=$M2_HOME/bin:$PATH
+    fi
     if ( `javac -version 2>&1 | grep '1\.8\.0' > /dev/null` ); then
       mkdir -p xstream/profiles/coveralls;
       mkdir -p xstream-hibernate/profiles/coveralls;
@@ -23,5 +24,5 @@ script:
       mvn -V -B -e clean package;
     fi
 cache:
-    directories:
+  directories:
     - $HOME/.m2
