@@ -13,13 +13,12 @@ package com.thoughtworks.acceptance;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Properties;
 
 import javax.xml.stream.XMLInputFactory;
-
-import org.apache.commons.lang.SystemUtils;
 
 import com.bea.xml.stream.MXParserFactory;
 import com.thoughtworks.acceptance.objects.StandardObject;
@@ -72,7 +71,7 @@ public class EncodingTestSuite extends TestSuite {
             }
         }
         addDriverTest(new StaxDriver());
-        if (!SystemUtils.IS_OS_WINDOWS) { // see comment below for Windows
+        if (File.separatorChar == '\\') { // see comment below for Windows
             if (JVM.is16()) {
                 final Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.StandardStaxDriver");
                 try {
