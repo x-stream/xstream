@@ -31,18 +31,20 @@ public class Extended17TypesTest extends AbstractAcceptanceTest {
         assertBothWays(Paths.get("../a/relative/path"), "<path>../a/relative/path</path>");
         assertBothWays(Paths.get("/an/absolute/path"), "<path>/an/absolute/path</path>");
 
-        String absolutePathName = Paths.get("target").toAbsolutePath().toString();
+        final Path absolutePath = Paths.get("target").toAbsolutePath();
+        String absolutePathName = absolutePath.toString();
         if (File.separatorChar != '/') {
             absolutePathName = absolutePathName.replace(File.separatorChar, '/');
         }
-        final URI uri = URI.create("file:" + absolutePathName);
-        assertBothWays(Paths.get(uri), "<path>" + absolutePathName + "</path>");
+        final Path path = Paths.get(absolutePath.toUri());
+        assertBothWays(path, "<path>" + absolutePathName + "</path>");
     }
 
     public void testPathWithSpecialCharacters() {
         assertBothWays(Paths.get("with space"), "<path>with space</path>");
         assertBothWays(Paths.get("with+plus"), "<path>with+plus</path>");
         assertBothWays(Paths.get("with&ampersand"), "<path>with&amp;ampersand</path>");
+        assertBothWays(Paths.get("with%20encoding"), "<path>with%20encoding</path>");
     }
 
     public void testPathOfNonDefaultFileSystem() throws IOException {
