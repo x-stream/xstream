@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 XStream Committers.
+ * Copyright (C) 2016, 2017 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,9 +14,11 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
@@ -36,14 +38,18 @@ public class PathConverter extends AbstractSingleValueConverter {
     @Override
     public Path fromString(final String str) {
         try {
-            final URI uri = new URI(str);
-            if (uri.getScheme() == null) {
+            try {
+                final URI uri = new URI(str);
+                if (uri.getScheme() == null || uri.getScheme().length() == 1) {
+                    return Paths.get(File.separatorChar != '/' ? str.replace('/', File.separatorChar) : str);
+                } else {
+                    return Paths.get(uri);
+                }
+            } catch (final URISyntaxException e) {
                 return Paths.get(str);
-            } else {
-                return Paths.get(uri);
             }
-        } catch (final URISyntaxException e) {
-            return Paths.get(str);
+        } catch (final InvalidPathException e) {
+            throw new ConversionException(e);
         }
     }
 
