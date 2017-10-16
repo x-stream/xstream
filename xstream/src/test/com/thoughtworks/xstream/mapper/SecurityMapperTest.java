@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.QuickWriter;
+import com.thoughtworks.xstream.security.AnyAnnotationTypePermission;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
 import com.thoughtworks.xstream.security.ExplicitTypePermission;
@@ -204,4 +206,40 @@ public class SecurityMapperTest extends TestCase {
             assertEquals(Foo$_1.class.getName(), e.getMessage());
         }
     }
+
+    public void testNamesWithAnyAnnotation() {
+        @XStreamAlias("AliasedFoo") class AliasedFoo {}
+        class NonAnnotatedFoo {}
+        @XStreamAlias("OtherAliasedFoo") class OtherAliasedFoo {
+            class NestedNonAnnotatedFoo {}
+        }
+        final Class<?> anonymous = new Object() {}.getClass();
+        register(String.class, JVM.class, QuickWriter.class,
+                AliasedFoo.class, NonAnnotatedFoo.class,
+                OtherAliasedFoo.class, OtherAliasedFoo.NestedNonAnnotatedFoo.class,
+                anonymous);
+        mapper.addPermission(new AnyAnnotationTypePermission());
+        assertForbiddenClass(String.class);
+        assertForbiddenClass(JVM.class);
+        assertForbiddenClass(QuickWriter.class);
+        assertAcceptedClass(AliasedFoo.class);
+        assertForbiddenClass(NonAnnotatedFoo.class);
+        assertAcceptedClass(OtherAliasedFoo.class);
+        assertForbiddenClass(OtherAliasedFoo.NestedNonAnnotatedFoo.class);
+        assertForbiddenClass(anonymous);
+    }
+
+    private void assertAcceptedClass(Class<?> type) {
+        assertSame(type, mapper.realClass(type.getName()));
+    }
+
+    private void assertForbiddenClass(Class<?> type) {
+        try {
+            mapper.realClass(type.getName());
+            fail("Thrown " + ForbiddenClassException.class.getName() + " expected");
+        } catch (final ForbiddenClassException e) {
+            assertEquals(type.getName(), e.getMessage());
+        }
+    }
+
 }
