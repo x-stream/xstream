@@ -227,18 +227,19 @@ public class SecurityMapperTest extends TestCase {
         assertAcceptedClass(OtherAliasedFoo.class);
         assertForbiddenClass(OtherAliasedFoo.NestedNonAnnotatedFoo.class);
         assertForbiddenClass(anonymous);
+        assertForbiddenClass(null);
     }
 
     private void assertAcceptedClass(Class<?> type) {
-        assertSame(type, mapper.realClass(type.getName()));
+        assertSame(type, mapper.realClass((type == null) ? null : type.getName()));
     }
 
     private void assertForbiddenClass(Class<?> type) {
         try {
-            mapper.realClass(type.getName());
+            mapper.realClass((type == null) ? null : type.getName());
             fail("Thrown " + ForbiddenClassException.class.getName() + " expected");
         } catch (final ForbiddenClassException e) {
-            assertEquals(type.getName(), e.getMessage());
+            assertEquals((type == null) ? "null" : type.getName(), e.getMessage());
         }
     }
 
