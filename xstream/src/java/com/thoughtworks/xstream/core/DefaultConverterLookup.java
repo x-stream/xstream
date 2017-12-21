@@ -15,14 +15,15 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.core.util.Cloneables;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
+
 
 /**
  * The default implementation of converters lookup.
@@ -35,19 +36,33 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
 
     private final PrioritizedList converters = new PrioritizedList();
     private transient Map typeToConverterMap;
+    private Map serializationMap = null;
 
     public DefaultConverterLookup() {
-    	readResolve();
+        this(new HashMap());
+    }
+
+    /**
+     * Constructs a DefaultConverterLookup with a provided map.
+     *
+     * @param map the map to use
+     * @throws NullPointerException if map is null
+     * @since upcoming
+     */
+    public DefaultConverterLookup(Map map) {
+        typeToConverterMap = map;
+        typeToConverterMap.clear();
     }
 
     /**
      * @deprecated As of 1.3, use {@link #DefaultConverterLookup()}
      */
     public DefaultConverterLookup(Mapper mapper) {
+        this();
     }
 
     public Converter lookupConverterForType(Class type) {
-        Converter cachedConverter = (Converter) typeToConverterMap.get(type);
+        Converter cachedConverter = type != null ? (Converter)typeToConverterMap.get(type.getName()) : null;
         if (cachedConverter != null) {
             return cachedConverter;
         }
@@ -55,10 +70,12 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         final Map errors = new LinkedHashMap();
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {
-            Converter converter = (Converter) iterator.next();
+            Converter converter = (Converter)iterator.next();
             try {
                 if (converter.canConvert(type)) {
-                    typeToConverterMap.put(type, converter);
+                    if (type != null) {
+                        typeToConverterMap.put(type.getName(), converter);
+                    }
                     return converter;
                 }
             } catch (final RuntimeException e) {
@@ -80,36 +97,32 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         }
         throw exception;
     }
-    
+
     public void registerConverter(Converter converter, int priority) {
+        typeToConverterMap.clear();
         converters.add(converter, priority);
-        for (Iterator iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
-            Class type = (Class) iter.next();
-            try {
-                if (converter.canConvert(type)) {
-                    iter.remove();
-                }
-            } catch (final RuntimeException e) {
-                // ignore
-            } catch (final LinkageError e) {
-                // ignore
-            }
-        }
     }
-    
+
     public void flushCache() {
         typeToConverterMap.clear();
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {
-            Converter converter = (Converter) iterator.next();
+            Converter converter = (Converter)iterator.next();
             if (converter instanceof Caching) {
                 ((Caching)converter).flushCache();
             }
         }
     }
 
+    private Object writeReplace() {
+        serializationMap = (Map)Cloneables.cloneIfPossible(typeToConverterMap);
+        serializationMap.clear();
+        return this;
+    }
+
     private Object readResolve() {
-        typeToConverterMap = Collections.synchronizedMap(new WeakHashMap());
+        typeToConverterMap = serializationMap == null ? new HashMap() : serializationMap;
+        serializationMap = null;
         return this;
     }
 }
