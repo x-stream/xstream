@@ -11,16 +11,15 @@
  */
 package com.thoughtworks.xstream.core;
 
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.core.util.Cloneables;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 
 
@@ -34,15 +33,28 @@ import com.thoughtworks.xstream.core.util.PrioritizedList;
 public class DefaultConverterLookup implements ConverterLookup, ConverterRegistry, Caching {
 
     private final PrioritizedList<Converter> converters = new PrioritizedList<>();
-    private transient Map<Class<?>, Converter> typeToConverterMap;
+    private transient Map<String, Converter> typeToConverterMap;
+    private Map<String, Converter> serializationMap = null;
 
     public DefaultConverterLookup() {
-        readResolve();
+        this(new HashMap<>());
+    }
+
+    /**
+     * Constructs a DefaultConverterLookup with a provided map.
+     *
+     * @param map the map to use
+     * @throws NullPointerException if map is null
+     * @since upcoming
+     */
+    public DefaultConverterLookup(final Map<String, Converter> map) {
+        typeToConverterMap = map;
+        typeToConverterMap.clear();
     }
 
     @Override
     public Converter lookupConverterForType(final Class<?> type) {
-        final Converter cachedConverter = typeToConverterMap.get(type);
+        final Converter cachedConverter = type != null ? typeToConverterMap.get(type.getName()) : null;
         if (cachedConverter != null) {
             return cachedConverter;
         }
@@ -51,6 +63,9 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         for (final Converter converter : converters) {
             try {
                 if (converter.canConvert(type)) {
+                    if (type != null) {
+                        typeToConverterMap.put(type.getName(), converter);
+                    }
                     return converter;
                 }
             } catch (final RuntimeException | LinkageError e) {
@@ -71,17 +86,8 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
 
     @Override
     public void registerConverter(final Converter converter, final int priority) {
+        typeToConverterMap.clear();
         converters.add(converter, priority);
-        for (final Iterator<Class<?>> iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
-            final Class<?> type = iter.next();
-            try {
-                if (converter.canConvert(type)) {
-                    iter.remove();
-                }
-            } catch (final RuntimeException | LinkageError e) {
-                // ignore
-            }
-        }
     }
 
     @Override
@@ -94,9 +100,15 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         }
     }
 
+    private Object writeReplace() {
+        serializationMap = Cloneables.cloneIfPossible(typeToConverterMap);
+        serializationMap.clear();
+        return this;
+    }
+
     private Object readResolve() {
-        // TODO: Use ConcurrentMap
-        typeToConverterMap = Collections.synchronizedMap(new WeakHashMap<Class<?>, Converter>());
+        typeToConverterMap = serializationMap == null ? new HashMap<>() : serializationMap;
+        serializationMap = null;
         return this;
     }
 }
