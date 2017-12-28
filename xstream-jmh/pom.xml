@@ -22,7 +22,7 @@
 
   <profiles>
     <profile>
-      <id>jdk19-ge</id>
+      <id>jdk9-ge</id>
       <activation>
         <jdk>[9,)</jdk>
       </activation>
