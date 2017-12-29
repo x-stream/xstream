@@ -288,6 +288,13 @@ public class JVM implements Caching {
         return majorJavaVersion >= 9f;
     }
 
+    /**
+     * @since upcoming
+     */
+    public static boolean is10() {
+        return majorJavaVersion >= 10f;
+    }
+
     private static boolean isIBM() {
         return vendor.indexOf("IBM") != -1;
     }
@@ -389,8 +396,7 @@ public class JVM implements Caching {
         if (isIBM()) {
             return (Class<? extends XMLInputFactory>)Class.forName("com.ibm.xml.xlxp.api.stax.XMLInputFactoryImpl");
         } else {
-            return (Class<? extends XMLInputFactory>)Class.forName(
-                "com.sun.xml.internal.stream.XMLInputFactoryImpl");
+            return (Class<? extends XMLInputFactory>)Class.forName("com.sun.xml.internal.stream.XMLInputFactoryImpl");
         }
     }
 
@@ -409,11 +415,9 @@ public class JVM implements Caching {
     @SuppressWarnings("unchecked")
     public static Class<? extends XMLOutputFactory> getStaxOutputFactory() throws ClassNotFoundException {
         if (isIBM()) {
-            return (Class<? extends XMLOutputFactory>)Class.forName(
-                "com.ibm.xml.xlxp.api.stax.XMLOutputFactoryImpl");
+            return (Class<? extends XMLOutputFactory>)Class.forName("com.ibm.xml.xlxp.api.stax.XMLOutputFactoryImpl");
         } else {
-            return (Class<? extends XMLOutputFactory>)Class.forName(
-                "com.sun.xml.internal.stream.XMLOutputFactoryImpl");
+            return (Class<? extends XMLOutputFactory>)Class.forName("com.sun.xml.internal.stream.XMLOutputFactoryImpl");
         }
     }
 
