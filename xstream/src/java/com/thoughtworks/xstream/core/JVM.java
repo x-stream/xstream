@@ -265,6 +265,13 @@ public class JVM implements Caching {
         return majorJavaVersion >= 9f;
     }
 
+    /**
+     * @since upcoming
+     */
+    public static boolean is10() {
+        return majorJavaVersion >= 10f;
+    }
+
     private static boolean isIBM() {
     	return vendor.indexOf("IBM") != -1;
     }
