@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014 XStream Committers.
+ * Copyright (C) 2013, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -66,7 +66,18 @@ public class NamedCollectionConverter extends CollectionConverter {
     }
 
     @Override
-    protected void writeItem(final Object item, final MarshallingContext context, final HierarchicalStreamWriter writer) {
+    protected void writeCompleteItem(final Object item, final MarshallingContext context,
+            final HierarchicalStreamWriter writer) {
+        writeItem(item, context, writer);
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #writeCompleteItem(Object, MarshallingContext, HierarchicalStreamWriter)}
+     *             instead.
+     */
+    @Deprecated
+    @Override
+    protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         final Class<?> itemType = item == null ? Mapper.Null.class : item.getClass();
         ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, itemType);
         if (!itemType.equals(type)) {
@@ -82,7 +93,7 @@ public class NamedCollectionConverter extends CollectionConverter {
     }
 
     @Override
-    protected Object readItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
+    protected Object readBareItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
             final Object current) {
         final String className = HierarchicalStreams.readClassAttribute(reader, mapper());
         final Class<?> itemType = className == null ? type : mapper().realClass(className);

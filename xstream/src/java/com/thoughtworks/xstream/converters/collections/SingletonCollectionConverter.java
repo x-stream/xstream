@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2014 XStream Committers.
+ * Copyright (C) 2011, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -49,9 +49,7 @@ public class SingletonCollectionConverter extends CollectionConverter {
 
     @Override
     public Collection<?> unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        reader.moveDown();
-        final Object item = readItem(reader, context, null);
-        reader.moveUp();
+        final Object item = readCompleteItem(reader, context, null);
         return context.getRequiredType() == LIST ? Collections.singletonList(item) : Collections.singleton(item);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2014 XStream Committers.
+ * Copyright (C) 2011, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -53,13 +53,8 @@ public class SingletonMapConverter extends MapConverter {
     @Override
     public Map<?, ?> unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         reader.moveDown();
-        reader.moveDown();
-        final Object key = readItem(reader, context, null);
-        reader.moveUp();
-
-        reader.moveDown();
-        final Object value = readItem(reader, context, null);
-        reader.moveUp();
+        final Object key = readCompleteItem(reader, context, null);
+        final Object value = readCompleteItem(reader, context, null);
         reader.moveUp();
 
         return Collections.singletonMap(key, value);

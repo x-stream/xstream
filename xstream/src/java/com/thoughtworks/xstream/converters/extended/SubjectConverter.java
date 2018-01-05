@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -60,7 +60,7 @@ public class SubjectConverter extends AbstractCollectionConverter {
             final MarshallingContext context) {
         writer.startNode("principals");
         for (final Principal principal : principals) {
-            writeItem(principal, context, writer);
+            writeCompleteItem(principal, context, writer);
         }
         writer.endNode();
     };
@@ -114,9 +114,7 @@ public class SubjectConverter extends AbstractCollectionConverter {
         final Set<Principal> set = new HashSet<>();
         reader.moveDown();
         while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            final Principal principal = (Principal)readItem(reader, context, set);
-            reader.moveUp();
+            final Principal principal = (Principal)readCompleteItem(reader, context, set);
             set.add(principal);
         }
         reader.moveUp();

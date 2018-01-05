@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -79,7 +79,7 @@ public class TreeMapConverter extends MapConverter {
         @SuppressWarnings("unchecked")
         final Comparator<Object> comparator = (Comparator<Object>)unmarshalComparator(reader, context, result);
         if (result == null) {
-            result = comparator == null ? new TreeMap<>() : new TreeMap<>(comparator);
+            result = comparator == null || comparator == NULL_MARKER ? new TreeMap<>() : new TreeMap<>(comparator);
         }
         populateTreeMap(reader, context, result, comparator);
         return result;
