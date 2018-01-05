@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -54,7 +54,7 @@ public class SubjectConverter extends AbstractCollectionConverter {
         writer.startNode("principals");
         for (final Iterator iter = principals.iterator(); iter.hasNext();) {
             final Object principal = iter.next(); // pre jdk 1.4 a Principal was also in javax.security
-            writeItem(principal, context, writer);
+            writeCompleteItem(principal, context, writer);
         }
         writer.endNode();
     };
@@ -102,10 +102,8 @@ public class SubjectConverter extends AbstractCollectionConverter {
         Set set = new HashSet();
         reader.moveDown();
         while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            Object elementl = readItem(reader, context, set);
-            reader.moveUp();
-            set.add(elementl);
+            final Object principal = readCompleteItem(reader, context, set);
+            set.add(principal);
         }
         reader.moveUp();
         return set;

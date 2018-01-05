@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -150,7 +150,7 @@ public class TreeSetConverter extends CollectionConverter {
 
             protected void putCurrentEntryIntoMap(HierarchicalStreamReader reader, UnmarshallingContext context,
                 Map map, Map target) {
-                Object key = readItem(reader, context, map);
+                final Object key = readItem(reader, context, map);  // call readBareItem when deprecated method is removed
                 target.put(key, key);
             }
         };

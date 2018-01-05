@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -75,8 +75,8 @@ public class MapConverter extends AbstractCollectionConverter {
             Map.Entry entry = (Map.Entry) iterator.next();
             ExtendedHierarchicalStreamWriterHelper.startNode(writer, entryName, entry.getClass());
 
-            writeItem(entry.getKey(), context, writer);
-            writeItem(entry.getValue(), context, writer);
+            writeCompleteItem(entry.getKey(), context, writer);
+            writeCompleteItem(entry.getValue(), context, writer);
 
             writer.endNode();
         }
@@ -102,14 +102,8 @@ public class MapConverter extends AbstractCollectionConverter {
 
     protected void putCurrentEntryIntoMap(HierarchicalStreamReader reader, UnmarshallingContext context,
         Map map, Map target) {
-        reader.moveDown();
-        Object key = readItem(reader, context, map);
-        reader.moveUp();
-
-        reader.moveDown();
-        Object value = readItem(reader, context, map);
-        reader.moveUp();
-
+        final Object key = readCompleteItem(reader, context, map);
+        final Object value = readCompleteItem(reader, context, map);
         target.put(key, value);
     }
 

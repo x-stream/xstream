@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,8 +41,8 @@ public class ArrayConverter extends AbstractCollectionConverter {
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         int length = Array.getLength(source);
         for (int i = 0; i < length; i++) {
-            Object item = Array.get(source, i);
-            writeItem(item, context, writer);
+            final Object item = Array.get(source, i);
+            writeCompleteItem(item, context, writer);
         }
 
     }
@@ -51,10 +51,8 @@ public class ArrayConverter extends AbstractCollectionConverter {
         // read the items from xml into a list
         List items = new ArrayList();
         while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            Object item = readItem(reader, context, null); // TODO: arg, what should replace null?
+            final Object item = readCompleteItem(reader, context, null); // TODO: arg, what should replace null?
             items.add(item);
-            reader.moveUp();
         }
         // now convertAnother the list into an array
         // (this has to be done as a separate list as the array size is not

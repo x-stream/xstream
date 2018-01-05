@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -71,7 +71,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
         Collection collection = (Collection) source;
         for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
             Object item = iterator.next();
-            writeItem(item, context, writer);
+            writeCompleteItem(item, context, writer);
         }
     }
 
@@ -95,7 +95,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
 
     protected void addCurrentElementToCollection(HierarchicalStreamReader reader, UnmarshallingContext context,
         Collection collection, Collection target) {
-        Object item = readItem(reader, context, collection);
+        final Object item = readItem(reader, context, collection); // call readBareItem when deprecated method is removed
         target.add(item);
     }
 

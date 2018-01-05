@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -51,26 +51,102 @@ public abstract class AbstractCollectionConverter implements Converter {
 
     public abstract Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context);
 
-
-
+    /**
+     * @deprecated As of upcoming use {@link #writeCompleteItem(Object, MarshallingContext, HierarchicalStreamWriter)}
+     *             instead.
+     */
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
         // PUBLISHED API METHOD! If changing signature, ensure backwards compatibility.
         if (item == null) {
             // todo: this is duplicated in TreeMarshaller.start()
-            String name = mapper().serializedClass(null);
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, Mapper.Null.class);
-            writer.endNode();
+            writeNullItem(context, writer);
         } else {
             String name = mapper().serializedClass(item.getClass());
             ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, item.getClass());
-            context.convertAnother(item);
+            writeBareItem(item, context, writer);
             writer.endNode();
         }
     }
 
-    protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context, Object current) {
+    /**
+     * Write an item of the collection into the writer including surrounding tags.
+     *
+     * @param item the item to write
+     * @param context the current marshalling context
+     * @param writer the target writer
+     * @since upcoming
+     */
+    protected void writeCompleteItem(final Object item, final MarshallingContext context,
+            final HierarchicalStreamWriter writer) {
+        writeItem(item, context, writer);
+    }
+
+    /**
+     * Write the bare item of the collection into the writer.
+     *
+     * @param item the item to write
+     * @param context the current marshalling context
+     * @param writer the target writer
+     * @since upcoming
+     */
+    protected void writeBareItem(final Object item, final MarshallingContext context,
+            final HierarchicalStreamWriter writer) {
+        context.convertAnother(item);
+    }
+
+    /**
+     * Write a null item of the collection into the writer. The method readItem should be able to process the written
+     * data i.e. it has to write the tags or may not write anything at all.
+     *
+     * @param context the current marshalling context
+     * @param writer the target writer
+     * @since upcoming
+     */
+    protected void writeNullItem(final MarshallingContext context, final HierarchicalStreamWriter writer) {
+        final String name = mapper().serializedClass(null);
+        ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, Mapper.Null.class);
+        writer.endNode();
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #readBareItem(HierarchicalStreamReader, UnmarshallingContext, Object)} or
+     *             {@link #readCompleteItem(HierarchicalStreamReader, UnmarshallingContext, Object)} instead.
+     */
+    protected Object readItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
+            final Object current) {
+        return readBareItem(reader, context, current);
+    }
+
+    /**
+     * Read a bare item of the collection from the reader.
+     *
+     * @param reader the source reader
+     * @param context the unmarshalling context
+     * @param current the target collection (if already available)
+     * @return the read item
+     * @since upcoming
+     */
+    protected Object readBareItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
+            final Object current) {
         Class type = HierarchicalStreams.readClassType(reader, mapper());
         return context.convertAnother(current, type);
+    }
+
+    /**
+     * Read an item of the collection including the tags from the reader.
+     *
+     * @param reader the source reader
+     * @param context the unmarshalling context
+     * @param current the target collection (if already available)
+     * @return the read item
+     * @since upcoming
+     */
+    protected Object readCompleteItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
+            final Object current) {
+        reader.moveDown();
+        final Object result = readItem(reader, context, current);
+        reader.moveUp();
+        return result;
     }
 
     protected Object createCollection(Class type) {

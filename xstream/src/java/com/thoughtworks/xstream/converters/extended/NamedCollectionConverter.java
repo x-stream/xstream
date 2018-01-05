@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 XStream Committers.
+ * Copyright (C) 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -62,8 +62,17 @@ public class NamedCollectionConverter extends CollectionConverter {
         this.type = itemType;
     }
 
+    protected void writeCompleteItem(final Object item, final MarshallingContext context,
+            final HierarchicalStreamWriter writer) {
+        writeItem(item, context, writer);
+    }
+
+    /**
+     * @deprecated As of upcoming use {@link #writeCompleteItem(Object, MarshallingContext, HierarchicalStreamWriter)}
+     *             instead.
+     */
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
-        Class itemType = item == null ? Mapper.Null.class : item.getClass();
+        final Class itemType = item == null ? Mapper.Null.class : item.getClass();
         ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, itemType);
         if (!itemType.equals(type)) {
             String attributeName = mapper().aliasForSystemAttribute("class");
@@ -77,9 +86,10 @@ public class NamedCollectionConverter extends CollectionConverter {
         writer.endNode();
     }
 
-    protected Object readItem(HierarchicalStreamReader reader, UnmarshallingContext context, Object current) {
-        String className = HierarchicalStreams.readClassAttribute(reader, mapper());
-        Class itemType = className == null ? type : mapper().realClass(className);
+    protected Object readBareItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
+            final Object current) {
+        final String className = HierarchicalStreams.readClassAttribute(reader, mapper());
+        final Class itemType = className == null ? type : mapper().realClass(className);
         if (Mapper.Null.class.equals(itemType)) {
             return null;
         } else {
