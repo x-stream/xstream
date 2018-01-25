@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -140,7 +140,7 @@ public class DomDriver extends AbstractXmlDriver {
      */
     protected DocumentBuilderFactory createDocumentBuilderFactory() {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        if (JVM.is15()) {
+        if (JVM.isVersion(5)) {
             try {
                 Method method = DocumentBuilderFactory.class.getMethod("setFeature",
                     new Class[]{ String.class, boolean.class });
@@ -151,7 +151,7 @@ public class DomDriver extends AbstractXmlDriver {
                 throw new ObjectAccessException("Cannot set feature of DocumentBuilderFactory.", e);
             } catch (InvocationTargetException e) {
                 Throwable cause = e.getCause();
-                if (JVM.is16() 
+                if (JVM.isVersion(6)
                         || (cause instanceof ParserConfigurationException 
                                 &&  cause.getMessage().indexOf("disallow-doctype-decl") < 0)) { 
                     throw new StreamException(cause);

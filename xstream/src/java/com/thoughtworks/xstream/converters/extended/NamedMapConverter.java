@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2016 XStream Committers.
+ * Copyright (C) 2013, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -208,7 +208,7 @@ public class NamedMapConverter extends MapConverter {
         this.keyAsAttribute = keyAsAttribute;
         this.valueAsAttribute = valueAsAttribute;
         this.lookup = lookup;
-        enumMapper = JVM.is15() ? UseAttributeForEnumMapper.createEnumMapper(mapper) : null;
+        enumMapper = JVM.isVersion(5) ? UseAttributeForEnumMapper.createEnumMapper(mapper) : null;
 
         if (keyType == null || valueType == null) {
             throw new IllegalArgumentException("Class types of key and value are mandatory");

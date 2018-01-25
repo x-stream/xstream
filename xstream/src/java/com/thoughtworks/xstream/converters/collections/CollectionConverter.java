@@ -13,7 +13,6 @@ package com.thoughtworks.xstream.converters.collections;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -64,7 +64,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
             || type.equals(HashSet.class)
             || type.equals(LinkedList.class)
             || type.equals(Vector.class) 
-            || (JVM.is14() && type.getName().equals("java.util.LinkedHashSet"));
+            || type.equals(LinkedHashSet.class);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

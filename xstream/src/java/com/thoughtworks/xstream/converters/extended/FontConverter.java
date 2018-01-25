@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -113,7 +113,7 @@ public class FontConverter implements Converter {
         } else {
             attributes = Collections.EMPTY_MAP;
         }
-        if (!JVM.is16()) {
+        if (!JVM.isVersion(6)) {
             for (Iterator iter = attributes.values().iterator(); iter.hasNext(); ) {
                 if (iter.next() == null) {
                     iter.remove();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2015, 2017 XStream Committers.
+ * Copyright (C) 2012, 2015, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,7 +41,7 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
     }
 
     public void testDerivedConcurrentHashMap() {
-        if (JVM.is18()) {
+        if (JVM.isVersion(8)) {
             xstream.alias("derived-map", DerivedConcurrentHashMap.class);
             xstream.registerConverter(new MapConverter(xstream.getMapper(), DerivedConcurrentHashMap.class));
 

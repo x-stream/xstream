@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2013 Joerg Schaible.
+ * Copyright (C) 2012, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * Created on 08.06.2012 by Joerg Schaible
@@ -47,7 +47,7 @@ public class Hibernate {
 
     private static Class loadHibernateEnversType(String name) {
         Class type = null;
-        if (JVM.is15()) {
+        if (JVM.isVersion(5)) {
             try {
                 type = HibernateProxy.class.getClassLoader().loadClass(name);
             } catch (ClassNotFoundException e) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -53,7 +53,7 @@ import com.thoughtworks.xstream.core.JVM;
  */
 public class CompositeClassLoader extends ClassLoader {
     static {
-        if (JVM.is17()) {
+        if (JVM.isVersion(7)) {
             // see http://www.cs.duke.edu/csed/java/jdk1.7/technotes/guides/lang/cl-mt.html
             try {
                 Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable", (Class[])null);

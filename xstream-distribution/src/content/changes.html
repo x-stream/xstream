@@ -43,7 +43,8 @@
 		<li>GHI:#97: Support to run out of the box in a Java 1.4 runtime is established again.</li>
 		<li>Provide methods in AbstractCollectionConverter that read and write in a balanced way from and to the
 		hierarchical stream.</li>
-		<li>Detect Java 10.</li>
+		<li>New future-proof method JVM.isVersion to detect major version of Java runtime (incl. Java 10) as
+		replacement for individual JVM.isXY methods.</li>
 	</ul>
 
 	<h2>Stream compatibility</h2>
@@ -71,7 +72,9 @@
 		<li>Deprecated c.t.x.converters.extended.NamedCollectionConverter.writeItem(Object, MarshallingContext, HierarchicalStreamWriter).</li>
 		<li>Added c.t.x.core.DefaultConverterLookup(Map).</li>
 		<li>Added c.t.x.core.util.JVM.getBase64Codec().</li>
-		<li>Added c.t.x.core.util.JVM.isJava10().</li>
+		<li>Added c.t.x.core.util.JVM.isVersion().</li>
+		<li>Deprecated c.t.x.core.util.JVM.is18().</li>
+		<li>Deprecated c.t.x.core.util.JVM.is9().</li>
 		<li>Added c.t.x.core.util.StingCodec.</li>
 	</ul>
 
