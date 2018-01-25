@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2013, 2014 Joerg Schaible.
+ * Copyright (C) 2012, 2013, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * Created on 08.06.2012 by Joerg Schaible
