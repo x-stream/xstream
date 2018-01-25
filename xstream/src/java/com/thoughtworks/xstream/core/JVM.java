@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -237,7 +237,7 @@ public class JVM implements Caching {
      */
     @Deprecated
     public static boolean is14() {
-        return majorJavaVersion >= 1.4f;
+        return isVersion(4);
     }
 
     /**
@@ -245,7 +245,7 @@ public class JVM implements Caching {
      */
     @Deprecated
     public static boolean is15() {
-        return majorJavaVersion >= 1.5f;
+        return isVersion(5);
     }
 
     /**
@@ -253,7 +253,7 @@ public class JVM implements Caching {
      */
     @Deprecated
     public static boolean is16() {
-        return majorJavaVersion >= 1.6f;
+        return isVersion(6);
     }
 
     /**
@@ -262,19 +262,21 @@ public class JVM implements Caching {
      */
     @Deprecated
     public static boolean is17() {
-        return majorJavaVersion >= 1.7f;
+        return isVersion(7);
     }
 
     /**
      * @since 1.4
+     * @deprecated As of upcoming use {@link #isVersion(int)}.
      */
+    @Deprecated
     public static boolean is18() {
-        return majorJavaVersion >= 1.8f;
+        return isVersion(8);
     }
 
     /**
      * @since 1.4.8
-     * @deprecated As of upcoming use {@link #is9()}
+     * @deprecated As of 1.4.10 use {@link #isVersion(int)}.
      */
     @Deprecated
     public static boolean is19() {
@@ -283,16 +285,26 @@ public class JVM implements Caching {
 
     /**
      * @since 1.4.10
+     * @deprecated As of upcoming use {@link #isVersion(int)}
      */
+    @Deprecated
     public static boolean is9() {
-        return majorJavaVersion >= 9f;
+        return isVersion(9);
     }
 
     /**
+     * Checks current runtime against provided major Java version.
+     *
+     * @param version the requested major Java version
+     * @return true if current runtime is at least the provided major version
      * @since upcoming
      */
-    public static boolean is10() {
-        return majorJavaVersion >= 10f;
+    public static boolean isVersion(final int version) {
+        if (version < 1) {
+            throw new IllegalArgumentException("Java version range starts with at least 1.");
+        }
+        final float v = majorJavaVersion < 9 ? 1f + version * 0.1f : version;
+        return majorJavaVersion >= v;
     }
 
     private static boolean isIBM() {
@@ -424,7 +436,7 @@ public class JVM implements Caching {
     /**
      * Get an available Base64 implementation. Prefers java.util.Base64 over DataTypeConverter from JAXB over XStream's
      * own implementation.
-     * 
+     *
      * @return a Base64 codec implementation
      * @since upcoming
      */

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -577,7 +577,7 @@ public class XStream {
         mapper = new EnumMapper(mapper);
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
-        if (JVM.is18()) {
+        if (JVM.isVersion(8)) {
             mapper = buildMapperDynamically("com.thoughtworks.xstream.mapper.LambdaMapper", new Class[]{Mapper.class},
                 new Object[]{mapper});
         }
@@ -659,7 +659,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.sql.Time"));
             types.add(JVM.loadClassForName("java.sql.Date"));
         }
-        if (JVM.is18()) {
+        if (JVM.isVersion(8)) {
             allowTypeHierarchy(JVM.loadClassForName("java.time.Clock"));
             types.add(JVM.loadClassForName("java.time.Duration"));
             types.add(JVM.loadClassForName("java.time.Instant"));
@@ -787,7 +787,7 @@ public class XStream {
             alias("sql-date", JVM.loadClassForName("java.sql.Date"));
         }
 
-        if (JVM.is18()) {
+        if (JVM.isVersion(8)) {
             alias("fixed-clock", JVM.loadClassForName("java.time.Clock$FixedClock"));
             alias("offset-clock", JVM.loadClassForName("java.time.Clock$OffsetClock"));
             alias("system-clock", JVM.loadClassForName("java.time.Clock$SystemClock"));
@@ -913,7 +913,7 @@ public class XStream {
             registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
-        if (JVM.is18()) {
+        if (JVM.isVersion(8)) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.ChronologyConverter",
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter", PRIORITY_NORMAL,
@@ -985,7 +985,7 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
                 PRIORITY_NORMAL, null, null);
         }
-        if (JVM.is18()) {
+        if (JVM.isVersion(8)) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
                 PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class, ClassLoaderReference.class},
                 new Object[]{mapper, reflectionProvider, classLoaderReference});
@@ -1057,7 +1057,7 @@ public class XStream {
         addImmutableType(Collections.EMPTY_SET.getClass(), false);
         addImmutableType(Collections.EMPTY_MAP.getClass(), false);
 
-        if (JVM.is18()) {
+        if (JVM.isVersion(8)) {
             addImmutableTypeDynamically("java.time.Duration", false);
             addImmutableTypeDynamically("java.time.Instant", false);
             addImmutableTypeDynamically("java.time.LocalDate", false);

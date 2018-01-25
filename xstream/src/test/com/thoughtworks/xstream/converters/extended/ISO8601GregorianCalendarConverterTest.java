@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -292,7 +292,7 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
         expected.set(Calendar.YEAR, 2017);
         Calendar out = (Calendar)converter.fromString("2017");
         assertEquals(expected.getTime(), out.getTime());
-        if (JVM.is18()) { // Java 8 passes, Joda-Time fails
+        if (JVM.isVersion(8)) { // Java 8 passes, Joda-Time fails
             expected.set(Calendar.MONTH, 3);
             out = (Calendar)converter.fromString("2017-04");
             assertEquals(expected.getTime(), out.getTime());
@@ -302,7 +302,7 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
     public void testParsesStandardWeekDateFragment() {
         final Calendar expected = Calendar.getInstance();
         expected.clear();
-        if (!JVM.is18()) { // TODO: Java 8 fails here, Joda-Time passes
+        if (!JVM.isVersion(8)) { // TODO: Java 8 fails here, Joda-Time passes
             expected.set(2017, 3, 17);
             final Calendar out = (Calendar)converter.fromString("2017-W16");
             assertEquals(expected.getTime(), out.getTime());
