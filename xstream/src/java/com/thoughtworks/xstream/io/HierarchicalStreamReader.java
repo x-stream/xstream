@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,14 @@ public interface HierarchicalStreamReader extends ErrorReporter, Closeable {
      * Does the node have any more children remaining that have not yet been read?
      */
     boolean hasMoreChildren();
+
+    /**
+     * Peek the name of the next child. In situation where {@link #hasMoreChildren()} returns true, peek the tag name of
+     * the child.
+     *
+     * @since 1.4.2
+     */
+    String peekNextChild();
 
     /**
      * Select the current child as current node. A call to this function must be balanced with a call to
