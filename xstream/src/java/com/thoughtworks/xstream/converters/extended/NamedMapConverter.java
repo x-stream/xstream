@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014, 2016 XStream Committers.
+ * Copyright (C) 2013, 2014, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -246,7 +245,7 @@ public class NamedMapConverter extends MapConverter {
             final Object key = entry.getKey();
             final Object value = entry.getValue();
             if (entryName != null) {
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, entryName, entry.getClass());
+                writer.startNode(entryName, entry.getClass());
                 if (keyConverter != null && key != null) {
                     writer.addAttribute(keyName, keyConverter.toString(key));
                 }
@@ -354,7 +353,7 @@ public class NamedMapConverter extends MapConverter {
     protected void writeItem(final String name, final Class<?> type, final Object item,
             final MarshallingContext context, final HierarchicalStreamWriter writer) {
         final Class<?> itemType = item == null ? Mapper.Null.class : item.getClass();
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, itemType);
+        writer.startNode(name, itemType);
         if (!itemType.equals(type)) {
             final String attributeName = mapper().aliasForSystemAttribute("class");
             if (attributeName != null) {

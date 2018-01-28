@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,7 +16,6 @@ import java.time.ZoneId;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -35,7 +34,7 @@ public class SystemClockConverter implements Converter {
 
     /**
      * Constructs a SystemClockConverter instance.
-     * 
+     *
      * @param mapper the Mapper instance
      */
     public SystemClockConverter(final Mapper mapper) {
@@ -51,7 +50,7 @@ public class SystemClockConverter implements Converter {
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Clock clock = (Clock)source;
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(Clock.class, "zone"), null);
+        writer.startNode(mapper.serializedMember(Clock.class, "zone"), null);
         context.convertAnother(clock.getZone());
         writer.endNode();
     }

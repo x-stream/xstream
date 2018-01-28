@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,7 +33,6 @@ import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
@@ -143,8 +142,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     writer.startNode(ELEMENT_NULL);
                     writer.endNode();
                 } else {
-                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(object.getClass()),
-                        object.getClass());
+                    writer.startNode(mapper.serializedClass(object.getClass()), object.getClass());
                     context.convertAnother(object);
                     writer.endNode();
                 }
@@ -166,8 +164,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         throw new MissingFieldException(value.getClass().getName(), name);
                     }
                     if (value != null) {
-                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source
-                            .getClass(), name), value.getClass());
+                        writer.startNode(mapper.serializedMember(source.getClass(), name), value.getClass());
                         if (field.getType() != value.getClass() && !field.getType().isPrimitive()) {
                             final String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
                             if (attributeName != null) {
@@ -207,8 +204,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         }
 
                         final Class<?> actualType = value.getClass();
-                        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source
-                            .getClass(), field.getName()), actualType);
+                        writer.startNode(mapper.serializedMember(source.getClass(), field.getName()), actualType);
                         final Class<?> defaultType = mapper.defaultImplementationOf(field.getType());
                         if (!actualType.equals(defaultType)) {
                             final String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
@@ -304,7 +300,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
         writer.endNode();
     }
 
-    private Object readField(final ObjectStreamField field, final Class type, final Object instance) {
+    private Object readField(final ObjectStreamField field, final Class<?> type, final Object instance) {
         final Field javaField = Fields.find(type, field.getName());
         return Fields.read(javaField, instance);
     }

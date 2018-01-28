@@ -1,12 +1,13 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015, 2018
+ *  XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 15. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.core;
@@ -19,7 +20,6 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
@@ -77,8 +77,7 @@ public class TreeMarshaller implements MarshallingContext {
             writer.startNode(mapper.serializedClass(null));
             writer.endNode();
         } else {
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(item.getClass()), item
-                .getClass());
+            writer.startNode(mapper.serializedClass(item.getClass()), item.getClass());
             convertAnother(item);
             writer.endNode();
         }

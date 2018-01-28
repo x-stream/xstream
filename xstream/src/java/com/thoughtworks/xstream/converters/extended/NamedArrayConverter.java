@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2013, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,6 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -30,7 +29,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * <p>
  * To be used as local converter.
  * </p>
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4.6
  */
@@ -42,7 +41,7 @@ public class NamedArrayConverter implements Converter {
 
     /**
      * Construct a NamedArrayConverter.
-     * 
+     *
      * @param arrayType
      * @param mapper
      * @param itemName
@@ -67,10 +66,10 @@ public class NamedArrayConverter implements Converter {
         final int length = Array.getLength(source);
         for (int i = 0; i < length; ++i) {
             final Object item = Array.get(source, i);
-            final Class<?> itemType = item == null ? Mapper.Null.class : arrayType.getComponentType().isPrimitive()
-                ? Primitives.unbox(item.getClass())
-                : item.getClass();
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, itemName, itemType);
+            final Class<?> itemType = item == null
+                ? Mapper.Null.class
+                : arrayType.getComponentType().isPrimitive() ? Primitives.unbox(item.getClass()) : item.getClass();
+            writer.startNode(itemName, itemType);
             if (!itemType.equals(arrayType.getComponentType())) {
                 final String attributeName = mapper.aliasForSystemAttribute("class");
                 if (attributeName != null) {

@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 24. July 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.extended;
@@ -17,7 +17,6 @@ import java.util.TimeZone;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -28,7 +27,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Note that although it currently only contains one field, it nests it inside a child element, to allow for other
  * fields to be stored in the future.
  * </p>
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
@@ -42,11 +41,11 @@ public class GregorianCalendarConverter implements Converter {
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final GregorianCalendar calendar = (GregorianCalendar)source;
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, "time", long.class);
+        writer.startNode("time", long.class);
         final long timeInMillis = calendar.getTimeInMillis();
         writer.setValue(String.valueOf(timeInMillis));
         writer.endNode();
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, "timezone", String.class);
+        writer.startNode("timezone", String.class);
         writer.setValue(calendar.getTimeZone().getID());
         writer.endNode();
     }

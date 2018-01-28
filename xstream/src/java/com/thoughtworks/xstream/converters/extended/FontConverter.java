@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 08. July 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.extended;
@@ -24,7 +24,6 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -40,7 +39,7 @@ public class FontConverter implements Converter {
 
     /**
      * Constructs a FontConverter.
-     * 
+     *
      * @deprecated As of 1.4.5
      */
     @Deprecated
@@ -50,7 +49,7 @@ public class FontConverter implements Converter {
 
     /**
      * Constructs a FontConverter.
-     * 
+     *
      * @param mapper
      * @since 1.4.5
      */
@@ -80,7 +79,7 @@ public class FontConverter implements Converter {
                 final String name = textAttributeConverter.toString(entry.getKey());
                 final Object value = entry.getValue();
                 final Class<?> type = value != null ? value.getClass() : Mapper.Null.class;
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, type);
+                writer.startNode(name, type);
                 writer.addAttribute(classAlias, mapper.serializedClass(type));
                 if (value != null) {
                     context.convertAnother(value);
@@ -107,7 +106,8 @@ public class FontConverter implements Converter {
                         reader.moveDown();
                     }
                     final Class<?> type = mapper.realClass(reader.getAttribute(classAlias));
-                    final TextAttribute attribute = (TextAttribute)textAttributeConverter.fromString(reader.getNodeName());
+                    final TextAttribute attribute = (TextAttribute)textAttributeConverter.fromString(reader
+                        .getNodeName());
                     final Object value = type == Mapper.Null.class ? null : context.convertAnother(null, type);
                     attributes.put(attribute, value);
                     reader.moveUp();

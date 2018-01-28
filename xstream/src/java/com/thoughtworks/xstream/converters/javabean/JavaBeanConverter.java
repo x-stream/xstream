@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
 import com.thoughtworks.xstream.core.util.FastField;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -87,7 +86,7 @@ public class JavaBeanConverter implements Converter {
                 final Class<?> actualType = newObj.getClass();
                 final Class<?> defaultType = mapper.defaultImplementationOf(fieldType);
                 final String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, actualType);
+                writer.startNode(serializedMember, actualType);
                 if (!actualType.equals(defaultType) && classAttributeName != null) {
                     writer.addAttribute(classAttributeName, mapper.serializedClass(actualType));
                 }
@@ -98,7 +97,7 @@ public class JavaBeanConverter implements Converter {
 
             private void writeNullField(final String propertyName) {
                 final String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, Mapper.Null.class);
+                writer.startNode(serializedMember, Mapper.Null.class);
                 writer.addAttribute(classAttributeName, mapper.serializedClass(Mapper.Null.class));
                 writer.endNode();
             }

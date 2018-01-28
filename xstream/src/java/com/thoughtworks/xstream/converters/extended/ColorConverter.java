@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 01. October 2003 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.extended;
@@ -18,14 +18,13 @@ import java.util.Map;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 
 /**
  * Converts an AWT {@link Color}, using four nested elements: red, green, blue, alpha.
- * 
+ *
  * @author Joe Walnes
  */
 public class ColorConverter implements Converter {
@@ -60,7 +59,7 @@ public class ColorConverter implements Converter {
     }
 
     private void write(final String fieldName, final int value, final HierarchicalStreamWriter writer) {
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, fieldName, int.class);
+        writer.startNode(fieldName, int.class);
         writer.setValue(String.valueOf(value));
         writer.endNode();
     }

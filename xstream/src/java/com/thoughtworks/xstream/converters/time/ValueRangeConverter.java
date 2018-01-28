@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,7 +17,6 @@ import java.util.Map;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -36,7 +35,7 @@ public class ValueRangeConverter implements Converter {
 
     /**
      * Constructs a ValueRangeConverter instance.
-     * 
+     *
      * @param mapper the Mapper instance
      */
     public ValueRangeConverter(final Mapper mapper) {
@@ -83,8 +82,7 @@ public class ValueRangeConverter implements Converter {
     }
 
     private void write(final String fieldName, final long value, final HierarchicalStreamWriter writer) {
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(ValueRange.class, fieldName),
-            long.class);
+        writer.startNode(mapper.serializedMember(ValueRange.class, fieldName), long.class);
         writer.setValue(String.valueOf(value));
         writer.endNode();
     }

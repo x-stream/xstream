@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 26. September 2003 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.collections;
@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -35,7 +34,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * Supports {@link HashMap}, {@link Hashtable}, {@link LinkedHashMap}, {@link ConcurrentHashMap} and
  * sun.font.AttributeMap.
  * </p>
- * 
+ *
  * @see com.thoughtworks.xstream.converters.extended.NamedMapConverter
  * @author Joe Walnes
  */
@@ -49,7 +48,7 @@ public class MapConverter extends AbstractCollectionConverter {
 
     /**
      * Construct a MapConverter for a special Map type.
-     * 
+     *
      * @param mapper the mapper
      * @param type the type to handle
      * @since 1.4.5
@@ -82,7 +81,7 @@ public class MapConverter extends AbstractCollectionConverter {
         final Map<?, ?> map = (Map<?, ?>)source;
         final String entryName = mapper().serializedClass(Map.Entry.class);
         for (final Map.Entry<?, ?> entry : map.entrySet()) {
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, entryName, entry.getClass());
+            writer.startNode(entryName, entry.getClass());
 
             writeCompleteItem(entry.getKey(), context, writer);
             writeCompleteItem(entry.getValue(), context, writer);

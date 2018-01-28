@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,8 +31,7 @@ public abstract class WriterWrapper implements ExtendedHierarchicalStreamWriter 
 
     @Override
     public void startNode(final String name, final Class<?> clazz) {
-
-        ((ExtendedHierarchicalStreamWriter)wrapped).startNode(name, clazz);
+        wrapped.startNode(name, clazz);
     }
 
     @Override

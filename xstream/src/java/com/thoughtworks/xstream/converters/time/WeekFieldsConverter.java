@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,7 +17,6 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter.UnknownFieldException;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -35,7 +34,7 @@ public class WeekFieldsConverter implements Converter {
 
     /**
      * Constructs a WeekFieldsConverter instance.
-     * 
+     *
      * @param mapper the Mapper instance
      */
     public WeekFieldsConverter(final Mapper mapper) {
@@ -51,12 +50,10 @@ public class WeekFieldsConverter implements Converter {
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final WeekFields weekFields = (WeekFields)source;
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(WeekFields.class,
-            "minimalDays"), int.class);
+        writer.startNode(mapper.serializedMember(WeekFields.class, "minimalDays"), int.class);
         writer.setValue(String.valueOf(weekFields.getMinimalDaysInFirstWeek()));
         writer.endNode();
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(WeekFields.class,
-            "firstDayOfWeek"), DayOfWeek.class);
+        writer.startNode(mapper.serializedMember(WeekFields.class, "firstDayOfWeek"), DayOfWeek.class);
         context.convertAnother(weekFields.getFirstDayOfWeek());
         writer.endNode();
     }

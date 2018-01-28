@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,7 +30,6 @@ import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.SerializationMembers;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
@@ -106,8 +105,7 @@ public class ExternalizableConverter implements Converter {
                             writer.startNode("null");
                             writer.endNode();
                         } else {
-                            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(object
-                                .getClass()), object.getClass());
+                            writer.startNode(mapper.serializedClass(object.getClass()), object.getClass());
                             context.convertAnother(object);
                             writer.endNode();
                         }

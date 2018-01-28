@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -38,7 +38,6 @@ import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.core.util.SerializationMembers;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
@@ -196,8 +195,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                                         ? mapping.getItemFieldName()
                                         : mapper.serializedClass(Map.Entry.class);
                                     final Map.Entry<?, ?> entry = (Map.Entry<?, ?>)obj;
-                                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, entryName, entry
-                                        .getClass());
+                                    writer.startNode(entryName, entry.getClass());
                                     writeItem(entry.getKey(), context, writer);
                                     writeItem(entry.getValue(), context, writer);
                                     writer.endNode();
@@ -222,9 +220,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             void writeField(final String fieldName, final String aliasName, final Class<?> fieldType,
                     final Class<?> definedIn, final Object newObj) {
                 final Class<?> actualType = newObj != null ? newObj.getClass() : fieldType;
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, aliasName != null
-                    ? aliasName
-                    : mapper.serializedMember(sourceType, fieldName), actualType);
+                writer.startNode(aliasName != null ? aliasName : mapper.serializedMember(sourceType, fieldName),
+                    actualType);
 
                 if (newObj != null) {
                     final Class<?> defaultType = mapper.defaultImplementationOf(fieldType);
@@ -255,11 +252,11 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             void writeItem(final Object item, final MarshallingContext context, final HierarchicalStreamWriter writer) {
                 if (item == null) {
                     final String name = mapper.serializedClass(null);
-                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, Mapper.Null.class);
+                    writer.startNode(name, Mapper.Null.class);
                     writer.endNode();
                 } else {
                     final String name = mapper.serializedClass(item.getClass());
-                    ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, item.getClass());
+                    writer.startNode(name, item.getClass());
                     context.convertAnother(item);
                     writer.endNode();
                 }

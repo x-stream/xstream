@@ -16,7 +16,6 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -27,7 +26,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * <p>
  * To be used as local converter. Note, suppress the usage of the implicit type argument, if registered with annotation.
  * </p>
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4.5
  */
@@ -38,7 +37,7 @@ public class NamedCollectionConverter extends CollectionConverter {
 
     /**
      * Constructs a NamedCollectionConverter.
-     * 
+     *
      * @param mapper the mapper
      * @param itemName the name of the items
      * @param itemType the base type of the items
@@ -50,7 +49,7 @@ public class NamedCollectionConverter extends CollectionConverter {
 
     /**
      * Constructs a NamedCollectionConverter handling an explicit Collection type.
-     * 
+     *
      * @param type the Collection type to handle
      * @param mapper the mapper
      * @param itemName the name of the items
@@ -77,9 +76,10 @@ public class NamedCollectionConverter extends CollectionConverter {
      */
     @Deprecated
     @Override
-    protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
+    protected void writeItem(final Object item, final MarshallingContext context,
+            final HierarchicalStreamWriter writer) {
         final Class<?> itemType = item == null ? Mapper.Null.class : item.getClass();
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, itemType);
+        writer.startNode(name, itemType);
         if (!itemType.equals(type)) {
             final String attributeName = mapper().aliasForSystemAttribute("class");
             if (attributeName != null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,7 +29,6 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.CGLIBMapper;
@@ -105,7 +104,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Class<?> type = source.getClass();
         final boolean hasFactory = Factory.class.isAssignableFrom(type);
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, "type", type);
+        writer.startNode("type", type);
         context.convertAnother(type.getSuperclass());
         writer.endNode();
         writer.startNode("interfaces");
@@ -114,8 +113,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             if (interface1 == Factory.class) {
                 continue;
             }
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(interface1.getClass()),
-                interface1.getClass());
+            writer.startNode(mapper.serializedClass(interface1.getClass()), interface1.getClass());
             context.convertAnother(interface1);
             writer.endNode();
         }
@@ -148,8 +146,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 writer.endNode();
             } else {
                 hasInterceptor = hasInterceptor || MethodInterceptor.class.isAssignableFrom(callback.getClass());
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedClass(callback.getClass()),
-                    callback.getClass());
+                writer.startNode(mapper.serializedClass(callback.getClass()), callback.getClass());
                 context.convertAnother(callback);
                 writer.endNode();
             }
@@ -163,7 +160,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 field.setAccessible(true);
             }
             final long serialVersionUID = field.getLong(null);
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, "serialVersionUID", String.class);
+            writer.startNode("serialVersionUID", String.class);
             writer.setValue(String.valueOf(serialVersionUID));
             writer.endNode();
         } catch (final NoSuchFieldException e) {

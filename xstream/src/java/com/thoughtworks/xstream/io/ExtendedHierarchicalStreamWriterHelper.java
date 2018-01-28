@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,12 +11,17 @@
  */
 package com.thoughtworks.xstream.io;
 
+/**
+ * @deprecated As of upcoming, this helper is no longer required since version 1.5.0.
+ */
+@Deprecated
 public class ExtendedHierarchicalStreamWriterHelper {
+
+    /**
+     * @deprecated As of upcoming, use {@link HierarchicalStreamWriter#startNode(String, Class)} directly. This helper
+     *             is no longer required since version 1.5.0.
+     */
     public static void startNode(final HierarchicalStreamWriter writer, final String name, final Class<?> clazz) {
-        if (writer instanceof ExtendedHierarchicalStreamWriter) {
-            ((ExtendedHierarchicalStreamWriter)writer).startNode(name, clazz);
-        } else {
-            writer.startNode(name);
-        }
+        writer.startNode(name, clazz);
     }
 }

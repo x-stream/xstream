@@ -18,7 +18,6 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -67,7 +66,7 @@ public abstract class AbstractCollectionConverter implements Converter {
             writeNullItem(context, writer);
         } else {
             final String name = mapper().serializedClass(item.getClass());
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, item.getClass());
+            writer.startNode(name, item.getClass());
             writeBareItem(item, context, writer);
             writer.endNode();
         }
@@ -109,7 +108,7 @@ public abstract class AbstractCollectionConverter implements Converter {
      */
     protected void writeNullItem(final MarshallingContext context, final HierarchicalStreamWriter writer) {
         final String name = mapper().serializedClass(null);
-        ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, Mapper.Null.class);
+        writer.startNode(name, Mapper.Null.class);
         writer.endNode();
     }
 
