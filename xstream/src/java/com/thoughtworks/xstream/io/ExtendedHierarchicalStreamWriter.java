@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.io;
 
 /**
  * @author Paul Hammant
+ * @deprecated As of upcoming, this interface will be merged into parent with version 1.5.0.
  */
 public interface ExtendedHierarchicalStreamWriter extends HierarchicalStreamWriter {
 
