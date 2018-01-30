@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -71,11 +71,16 @@ public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller 
         } else {
             final R currentReferenceKey = getCurrentReferenceKey();
             parentStack.push(currentReferenceKey);
-            result = super.convert(parent, type, converter);
-            if (currentReferenceKey != null) {
-                values.put(currentReferenceKey, result == null ? NULL : result);
+            Object localResult = null;
+            try {
+                localResult = super.convert(parent, type, converter);
+            } finally {
+                result = localResult;
+                if (currentReferenceKey != null) {
+                    values.put(currentReferenceKey, result == null ? NULL : result);
+                }
+                parentStack.popSilently();
             }
-            parentStack.popSilently();
         }
         return result;
     }

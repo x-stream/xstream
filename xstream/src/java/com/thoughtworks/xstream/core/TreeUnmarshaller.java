@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -58,7 +58,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
             converter = converterLookup.lookupConverterForType(type);
         } else {
             if (!converter.canConvert(type)) {
-                final ConversionException e = new ConversionException("Explicit selected converter cannot handle type");
+                final ConversionException e = new ConversionException("Explicitly selected converter cannot handle type");
                 e.add("item-type", type.getName());
                 e.add("converter-type", converter.getClass().getName());
                 throw e;
@@ -68,11 +68,9 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     }
 
     protected Object convert(final Object parent, final Class<?> type, final Converter converter) {
+        types.push(type);
         try {
-            types.push(type);
-            final Object result = converter.unmarshal(reader, this);
-            types.popSilently();
-            return result;
+            return converter.unmarshal(reader, this);
         } catch (final ConversionException conversionException) {
             addInformationTo(conversionException, type, converter, parent);
             throw conversionException;
@@ -80,6 +78,8 @@ public class TreeUnmarshaller implements UnmarshallingContext {
             final ConversionException conversionException = new ConversionException(e);
             addInformationTo(conversionException, type, converter, parent);
             throw conversionException;
+        } finally {
+            types.popSilently();
         }
     }
 
