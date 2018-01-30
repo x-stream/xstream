@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,13 +14,16 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.MarshallingStrategy;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshaller;
 import com.thoughtworks.xstream.core.ReferenceByIdUnmarshaller;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.ReaderWrapper;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.testutil.CallLog;
@@ -174,6 +177,60 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         } catch (EOFException expectedException) {
             // good
         }
+    }
+
+    private static class LevelTrackingReader extends ReaderWrapper {
+        private int level;
+        protected LevelTrackingReader(HierarchicalStreamReader reader) {
+            super(reader);
+        }
+
+        public void moveDown() {
+            ++level;
+            super.moveDown();
+        }
+
+        public void moveUp() {
+            super.moveUp();
+            --level;
+        }
+
+        public int getLevel() {
+            return level;
+        }
+    }
+
+    public void testFailSafeDeserialization() throws IOException, ClassNotFoundException {
+        final String xml = ""
+            + "<object-stream>\n"
+            + "  <string>top</string>\n"
+            + "  <list>\n"
+            + "    <string>first</string>\n"
+            + "    <int-array>\n"
+            + "      <int>1</int>\n"
+            + "      <int>invalid</int>\n" // deserialization will fail here
+            + "      <int>3</int>\n"
+            + "    </int-array>\n"
+            + "    <string>last</string>\n"
+            + "  </list>\n"
+            + "  <string>bottom</string>\n"
+            + "</object-stream>";
+
+        final LevelTrackingReader reader = new LevelTrackingReader(new Xpp3Driver().createReader(new StringReader(xml)));
+        final ObjectInputStream ois = xstream.createObjectInputStream(reader);
+        final int level = reader.getLevel();
+        assertEquals("top", ois.readObject());
+        try {
+            ois.readObject();
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(3, reader.getLevel() - level);
+            do {
+                reader.moveUp();
+            } while (level != reader.getLevel());
+        }
+        assertEquals("bottom", ois.readObject());
+        ois.close();
     }
 
     public void testObjectOutputStreamPropagatesCloseAndFlushEvents() throws IOException {
