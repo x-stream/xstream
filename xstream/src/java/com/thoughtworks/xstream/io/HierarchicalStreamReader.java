@@ -32,7 +32,7 @@ public interface HierarchicalStreamReader extends ErrorReporter, Closeable {
      * Peek the name of the next child. In situation where {@link #hasMoreChildren()} returns true, peek the tag name of
      * the child.
      *
-     * @since 1.4.2
+     * @since upcoming, was originally added in 1.4.2 to ExtendedHierarchicalStreamReader.
      */
     String peekNextChild();
 

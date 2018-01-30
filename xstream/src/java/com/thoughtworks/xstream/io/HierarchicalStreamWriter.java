@@ -21,6 +21,9 @@ public interface HierarchicalStreamWriter extends Closeable {
 
     void startNode(String name);
 
+    /**
+     * @since upcoming, was originally added to ExtendedHierarchicalStreamWriter.
+     */
     void startNode(String name, Class<?> clazz);
 
     void addAttribute(String name, String value);
