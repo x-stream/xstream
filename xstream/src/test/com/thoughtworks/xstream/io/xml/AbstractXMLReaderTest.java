@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     public void testStartsAtRootTag() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<hello/>");
         assertEquals("hello", xmlReader.getNodeName());
+        xmlReader.close();
     }
 
     public void testCanNavigateDownChildTagsByIndex() throws Exception {
@@ -71,6 +72,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveUp(); // a
 
         assertFalse(xmlReader.hasMoreChildren());
+        xmlReader.close();
     }
 
     public void testChildTagsCanBeMixedWithOtherNodes() throws Exception {
@@ -87,6 +89,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveUp();
 
         assertFalse(xmlReader.hasMoreChildren());
+        xmlReader.close();
     }
 
     public void testAttributesCanBeFetchedFromTags() throws Exception {
@@ -104,6 +107,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertNull(xmlReader.getAttribute("two"));
         assertEquals("3", xmlReader.getAttribute("three"));
 
+        xmlReader.close();
     }
 
     public void testTextCanBeExtractedFromTag() throws Exception {
@@ -117,12 +121,14 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveDown();
         assertEquals("more&&more;", xmlReader.getValue());
         xmlReader.moveUp();
+        xmlReader.close();
     }
 
     public void testDoesNotIgnoreWhitespaceAroundText() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<root> hello world </root>");
 
         assertEquals(" hello world ", xmlReader.getValue());
+        xmlReader.close();
     }
 
     public void testReturnsEmptyStringForEmptyTags() throws Exception {
@@ -131,6 +137,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         String text = xmlReader.getValue();
         assertNotNull(text);
         assertEquals("", text);
+        xmlReader.close();
     }
 
     public void testReturnsLastResultForHasMoreChildrenIfCalledRepeatedlyWithoutMovingNode() throws Exception {
@@ -139,6 +146,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals("row", xmlReader.getNodeName());
         assertTrue(xmlReader.hasMoreChildren()); // this is OK
         assertTrue(xmlReader.hasMoreChildren()); // this fails
+        xmlReader.close();
     }
 
     public void testExposesAttributesKeysAndValuesByIndex() throws Exception {
@@ -157,18 +165,19 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveDown();
         assertEquals("empty", xmlReader.getNodeName());
         assertEquals(0, xmlReader.getAttributeCount());
+        xmlReader.close();
     }
 
     public void testExposesAttributesKeysAsIterator() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
 
-        Set expected = new HashSet();
+        Set<String> expected = new HashSet<>();
         expected.add("hello");
         expected.add("a");
         expected.add("c");
 
-        Set actual = new HashSet();
-        Iterator iterator;
+        Set<String> actual = new HashSet<>();
+        Iterator<String> iterator;
 
         iterator = xmlReader.getAttributeNames();
         while(iterator.hasNext()) {
@@ -182,6 +191,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
             actual.add(iterator.next());
         }
         assertEquals(expected, actual);
+        xmlReader.close();
     }
 
     public void testAllowsValueToBeReadWithoutDisturbingChildren() throws Exception {
@@ -210,6 +220,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         xmlReader.moveUp(); // at: /root
 
         assertFalse(xmlReader.hasMoreChildren());
+        xmlReader.close();
     }
 
     public void testExposesTextValueOfCurrentElementButNotChildren() throws Exception {
@@ -219,27 +230,32 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals("hello", xmlReader.getValue());
         xmlReader.moveDown();
         assertEquals("FNARR", xmlReader.getValue());
+        xmlReader.close();
     }
 
     public void testCanReadLineFeedInString() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<string>a\nb</string>");
         assertEquals("a\nb", xmlReader.getValue());
+        xmlReader.close();
     }
 
     public void testCanReadEncodedAttribute() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<string __attr='value'/>");
         assertEquals("value", xmlReader.getAttribute("_attr"));
+        xmlReader.close();
     }
 
     public void testCanReadAttributeWithEncodedWhitespace() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<string attr='  A\r\t\nB  C&#x9;&#xa;&#xd;  '/>");
         assertEquals("  A   B  C\t\n\r  ", xmlReader.getAttribute("attr"));
+        xmlReader.close();
     }
 
     public void testCanReadCDATAWithEmbeddedTags() throws Exception {
         String content = "<tag>the content</tag>";
         HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
         assertEquals(content, xmlReader.getValue());
+        xmlReader.close();
     }
     
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
@@ -252,6 +268,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
 //                +"<!ENTITY content SYSTEM \"file:/etc/passwd\">\n"
                 +"]><string>&content;</string>");
         assertEquals("", xmlReader.getValue());
+        xmlReader.close();
     }
     
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
@@ -265,11 +282,13 @@ public abstract class AbstractXMLReaderTest extends TestCase {
                 +"%content;\n"
                 +"]><string>test</string>");
         assertEquals("test", xmlReader.getValue());
+        xmlReader.close();
     }
     
     // TODO: See XSTR-473
     public void todoTestCanReadNullValueInString() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<string>&#x0;</string>");
         assertEquals("\u0000", xmlReader.getValue());
+        xmlReader.close();
     }
 }
