@@ -45,6 +45,11 @@ public abstract class ReaderWrapper implements ExtendedHierarchicalStreamReader 
     }
 
     @Override
+    public int getLevel() {
+        return wrapped.getLevel();
+    }
+
+    @Override
     public String getNodeName() {
         return wrapped.getNodeName();
     }

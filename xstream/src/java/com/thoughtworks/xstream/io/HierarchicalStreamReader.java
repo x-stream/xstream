@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io;
@@ -46,6 +46,15 @@ public interface HierarchicalStreamReader extends ErrorReporter, Closeable {
      * Select the parent node as current node.
      */
     void moveUp();
+
+    /**
+     * Retrieve the current nesting level. The method counts the number of unbalanced calls to {@link #moveDown()} and
+     * {@link #moveUp()}.
+     *
+     * @return the current nesting level
+     * @since upcoming
+     */
+    int getLevel();
 
     /**
      * Get the name of the current node.
@@ -121,12 +130,12 @@ public interface HierarchicalStreamReader extends ErrorReporter, Closeable {
      * <p>
      * For example:
      * </p>
-     * 
+     *
      * <pre>
      * MySpecificReader mySpecificReader = (MySpecificReader)reader; <b>// INCORRECT!</b>
      * mySpecificReader.doSomethingSpecific();
      * </pre>
-     * 
+     *
      * <pre>
      * MySpecificReader mySpecificReader = (MySpecificReader)reader.underlyingReader();  <b>// CORRECT!</b>
      * mySpecificReader.doSomethingSpecific();

@@ -31,6 +31,7 @@ import java.util.zip.InflaterInputStream;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.MarshallingStrategy;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshaller;
@@ -180,6 +181,41 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             // good
         }
 
+        ois.close();
+    }
+
+    public void testFailSafeDeserialization() throws IOException, ClassNotFoundException {
+        final String xml = ""
+            + "<object-stream>\n"
+            + "  <string>top</string>\n"
+            + "  <list>\n"
+            + "    <string>first</string>\n"
+            + "    <int-array>\n"
+            + "      <int>1</int>\n"
+            + "      <int>invalid</int>\n" // deserialization will fail here
+            + "      <int>3</int>\n"
+            + "    </int-array>\n"
+            + "    <string>last</string>\n"
+            + "  </list>\n"
+            + "  <string>bottom</string>\n"
+            + "</object-stream>";
+
+        @SuppressWarnings("resource")
+        final HierarchicalStreamReader reader = new Xpp3Driver().createReader(new StringReader(xml));
+        final ObjectInputStream ois = xstream.createObjectInputStream(reader);
+        final int level = reader.getLevel();
+        assertEquals(1, level);
+        assertEquals("top", ois.readObject());
+        try {
+            ois.readObject();
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(4, reader.getLevel());
+            do {
+                reader.moveUp();
+            } while (level != reader.getLevel());
+        }
+        assertEquals("bottom", ois.readObject());
         ois.close();
     }
 

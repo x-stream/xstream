@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,6 +33,7 @@ class ReaderDepthState {
         List<Attribute> attributes;
         boolean hasMoreChildren;
         State parent;
+        int level;
     }
 
     private static class Attribute {
@@ -45,11 +46,16 @@ class ReaderDepthState {
     public void push() {
         final State newState = new State();
         newState.parent = current;
+        newState.level = getLevel() + 1;
         current = newState;
     }
 
     public void pop() {
         current = current.parent;
+    }
+
+    public int getLevel() {
+        return current != null ? current.level : 0;
     }
 
     public String getName() {

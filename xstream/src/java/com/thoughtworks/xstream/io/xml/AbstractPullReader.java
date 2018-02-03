@@ -117,6 +117,11 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
         }
     }
 
+    @Override
+    public int getLevel() {
+        return elementStack.size();
+    }
+
     private void move() {
         final Event event = readEvent();
         pool.push(event);

@@ -36,6 +36,8 @@
 
 	<ul>
 		<li>Usage of Java generic types. Most code bases will still compile without change.</li>
+		<li>Support for fail-safe deserialization unless the parser is not directly involved (I/O or syntax error) as
+		combination of new method getLevel() of HierarchicalStreamReader and GHPR:#91.</li>
 	</ul>
 
 	<h2>Minor changes</h2>
@@ -52,6 +54,7 @@
 		<li>Remove any stuff deprecated in XStream 1.2.x.</li>
 		<li>Merge functionality of ExtendedHierarchicalStreamReader into HierarchicalStreamReader.</li>
 		<li>Merge functionality of ExtendedHierarchicalStreamWriter into HierarchicalStreamWriter.</li>
+		<li>Added c.t.x.io.HierarchicalStreamReader.getLevel()</li>
 		<li>Deprecated obsolete method c.t.x.XStream.setupDefaultSecurity.</li>
 	</ul>
 
