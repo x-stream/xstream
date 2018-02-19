@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,14 +15,25 @@ import java.util.regex.Pattern;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
+
 public class RegexPatternConverterTest extends AbstractAcceptanceTest {
 
-	public void testHandlesSimplePattern() {
-		Pattern root = Pattern.compile(".*");
-		String xml = "<java.util.regex.Pattern>\n"
-				+ "  <pattern>.*</pattern>\n" + "  <flags>0</flags>\n"
-				+ "</java.util.regex.Pattern>";
-		assertBothWays(root, xml);
-	}
+    public void testHandlesSimplePattern() {
+        Pattern root = Pattern.compile(".*");
+        String xml = "<java.util.regex.Pattern>\n" //
+            + "  <pattern>.*</pattern>\n" //
+            + "  <flags>0</flags>\n" //
+            + "</java.util.regex.Pattern>";
+        assertBothWays(root, xml);
+    }
+
+    public void testHandlesPatternWithStartAndEnd() {
+        Pattern root = Pattern.compile("^[a-z0-9]{8}$");
+        String xml = "<java.util.regex.Pattern>\n" //
+            + "  <pattern>^[a-z0-9]{8}$</pattern>\n" //
+            + "  <flags>0</flags>\n" //
+            + "</java.util.regex.Pattern>";
+        assertBothWays(root, xml);
+    }
 
 }
