@@ -360,4 +360,38 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
         assertSame(alice, jane.secretary);
     }
+
+    public void testReadUnsignedValuesFromInputStream() throws IOException {
+        final Writer writer = new StringWriter();
+        final ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
+        oos.writeByte(1);
+        oos.writeByte(-1);
+        oos.writeByte(Byte.MIN_VALUE);
+        oos.writeShort(1);
+        oos.writeShort(-1);
+        oos.writeShort(Short.MIN_VALUE);
+        oos.close();
+
+        final String expectedXml = ""
+            + "<object-stream>\n"
+            + "  <byte>1</byte>\n"
+            + "  <byte>-1</byte>\n"
+            + "  <byte>-128</byte>\n"
+            + "  <short>1</short>\n"
+            + "  <short>-1</short>\n"
+            + "  <short>-32768</short>\n"
+            + "</object-stream>";
+
+        assertEquals(expectedXml, writer.toString());
+
+        final ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(writer.toString()));
+        assertEquals(1, ois.readUnsignedByte());
+        assertEquals(255, ois.readUnsignedByte());
+        assertEquals(128, ois.readUnsignedByte());
+        assertEquals(1, ois.readUnsignedShort());
+        assertEquals(65535, ois.readUnsignedShort());
+        assertEquals(32768, ois.readUnsignedShort());
+
+        ois.close();
+    }
 }

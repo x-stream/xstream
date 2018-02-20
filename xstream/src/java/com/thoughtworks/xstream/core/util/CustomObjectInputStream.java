@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -136,11 +136,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     public int readUnsignedByte() throws IOException {
-        int b = ((Byte)peekCallback().readFromStream()).byteValue();
-        if (b < 0) {
-            b += Byte.MAX_VALUE;
-        }
-        return b;
+        return ((Byte)peekCallback().readFromStream()).intValue() & 0xff;
     }
 
     public int readInt() throws IOException {
@@ -168,11 +164,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     public int readUnsignedShort() throws IOException {
-        int b = ((Short)peekCallback().readFromStream()).shortValue();
-        if (b < 0) {
-            b += Short.MAX_VALUE;
-        }
-        return b;
+        return ((Short)peekCallback().readFromStream()).intValue() & 0xffff;
     }
 
     public String readUTF() throws IOException {
