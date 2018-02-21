@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2014 XStream Committers.
+ * Copyright (c) 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,7 +37,8 @@ public class Pool<T> {
         this.factory = factory;
     }
 
-    private T[] newArray(final int capacity, final T... t) {
+    @SafeVarargs
+    private final T[] newArray(final int capacity, final T... t) {
         return Arrays.copyOf(t, capacity);
     }
 
@@ -45,7 +46,6 @@ public class Pool<T> {
         T result;
         synchronized (this) {
             if (pool == null) {
-                @SuppressWarnings("unchecked")
                 final T[] all = newArray(maxPoolSize);
                 pool = all;
                 for (nextAvailable = initialPoolSize; nextAvailable > 0;) {

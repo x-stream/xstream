@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 XStream Committers.
+ * Copyright (C) 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible
@@ -15,6 +15,8 @@ import com.thoughtworks.xstream.XStreamException;
  * @since 1.4.7
  */
 public class ForbiddenClassException extends XStreamException {
+
+    private static final long serialVersionUID = 10407L;
 
     /**
      * Construct a ForbiddenClassException.

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -91,7 +91,7 @@ public class Fields {
         }
     }
 
-    private static ObjectAccessException wrap(final String message, final Class type, final String name,
+    private static ObjectAccessException wrap(final String message, final Class<?> type, final String name,
             final Throwable ex) {
         final ObjectAccessException exception = new ObjectAccessException(message, ex);
         exception.add("field", type.getName() + "." + name);

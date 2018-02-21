@@ -107,6 +107,7 @@ public class JavaBeanConverter implements Converter {
     @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final Object result = instantiateNewInstance(context);
+        @SuppressWarnings("serial")
         final Set<FastField> seenProperties = new HashSet<FastField>() {
             @Override
             public boolean add(final FastField e) {
@@ -166,6 +167,8 @@ public class JavaBeanConverter implements Converter {
      * @since 1.4.2
      */
     public static class DuplicatePropertyException extends ConversionException {
+        private static final long serialVersionUID = 10402L;
+
         public DuplicatePropertyException(final String msg) {
             super("Duplicate property " + msg);
             add("property", msg);

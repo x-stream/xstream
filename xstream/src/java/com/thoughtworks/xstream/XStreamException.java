@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2013, 2016 XStream Committers.
+ * Copyright (C) 2007, 2008, 2013, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,6 +18,7 @@ package com.thoughtworks.xstream;
  * @since 1.3
  */
 public class XStreamException extends RuntimeException {
+    private static final long serialVersionUID = 10400L;
 
     /**
      * Default constructor.

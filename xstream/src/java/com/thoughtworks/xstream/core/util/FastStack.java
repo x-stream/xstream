@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,12 +26,12 @@ public final class FastStack<T> {
     private int pointer;
 
     public FastStack(final int initialCapacity) {
-        @SuppressWarnings("unchecked")
         final T[] array = getArray(initialCapacity);
         stack = array;
     }
 
-    private T[] getArray(final int capacity, final T... t) {
+    @SafeVarargs
+    private final T[] getArray(final int capacity, final T... t) {
         return Arrays.copyOf(t, capacity);
     }
 
@@ -80,7 +80,6 @@ public final class FastStack<T> {
     }
 
     private void resizeStack(final int newCapacity) {
-        @SuppressWarnings("unchecked")
         final T[] newStack = getArray(newCapacity);
         System.arraycopy(stack, 0, newStack, 0, Math.min(pointer, newCapacity));
         stack = newStack;

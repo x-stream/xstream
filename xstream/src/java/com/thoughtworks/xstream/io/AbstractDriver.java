@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -60,6 +60,7 @@ public abstract class AbstractDriver implements HierarchicalStreamDriver {
         }
     }
 
+    @SuppressWarnings("resource")
     @Override
     public HierarchicalStreamReader createReader(final File in) {
         try {
