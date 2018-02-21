@@ -2360,11 +2360,6 @@ public class XStream {
      */
     public void addPermission(TypePermission permission) {
         if (securityMapper != null) {
-            if (permission == AnyTypePermission.ANY)
-                securityInitialized = false;
-            else if (permission == NoTypePermission.NONE) {
-                securityInitialized = true;
-            }
             securityInitialized = true;
             securityMapper.addPermission(permission);
         }
