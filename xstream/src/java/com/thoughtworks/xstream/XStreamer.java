@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,7 +36,6 @@ import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
-import com.thoughtworks.xstream.security.AnyTypePermission;
 import com.thoughtworks.xstream.security.TypeHierarchyPermission;
 import com.thoughtworks.xstream.security.TypePermission;
 import com.thoughtworks.xstream.security.WildcardTypePermission;
@@ -252,7 +251,7 @@ public class XStreamer {
      */
     public Object fromXML(final HierarchicalStreamDriver driver, final Reader xml)
             throws IOException, ClassNotFoundException {
-        return fromXML(driver, xml, new TypePermission[]{AnyTypePermission.ANY});
+        return fromXML(driver, xml, PERMISSIONS);
     }
 
     /**
