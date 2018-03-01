@@ -104,8 +104,14 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
             super(wrapped);
         }
 
+        @Override
         public String serializedClass(Class type) {
             return type.getName().replaceFirst(".*\\.", "");
+        }
+
+        @Override
+        public String serializedClass(Object item) {
+            return serializedClass(item.getClass());
         }
     }
     

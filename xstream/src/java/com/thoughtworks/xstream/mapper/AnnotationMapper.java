@@ -37,6 +37,7 @@ import com.thoughtworks.xstream.annotations.XStreamAliasType;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
+import com.thoughtworks.xstream.annotations.XStreamExcludeEmpty;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -50,6 +51,7 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
+import com.thoughtworks.xstream.core.util.EmptyFieldChecker;
 import com.thoughtworks.xstream.core.util.TypedNull;
 
 
@@ -128,6 +130,14 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     }
 
     @Override
+    public String serializedClass(final Object item) {
+        if (!locked) {
+            processAnnotation(item.getClass(), item);
+        }
+        return super.serializedClass(item.getClass());
+    }
+
+    @Override
     public Class<?> defaultImplementationOf(final Class<?> type) {
         if (!locked) {
             processAnnotation(type);
@@ -166,17 +176,25 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         processTypes(types);
     }
 
-    private void processAnnotation(final Class<?> initialType) {
+    private void processAnnotation(final Class<?> initialType, Object item) {
         if (initialType == null) {
             return;
         }
 
         final Set<Class<?>> types = new UnprocessedTypesSet();
         types.add(initialType);
-        processTypes(types);
+        processTypes(types, item);
+    }
+
+    private void processAnnotation(final Class<?> initialType) {
+        processAnnotation(initialType, null);
     }
 
     private void processTypes(final Set<Class<?>> types) {
+        processTypes(types, null);
+    }
+
+    private void processTypes(final Set<Class<?>> types, Object item) {
         while (!types.isEmpty()) {
             final Iterator<Class<?>> iter = types.iterator();
             final Class<?> type = iter.next();
@@ -219,6 +237,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                         processImplicitAnnotation(field);
                         processOmitFieldAnnotation(field);
                         processLocalConverterAnnotation(field);
+                        processExcludeEmptyAnnotation(field, item);
                     }
                 } finally {
                     annotatedTypes.add(type);
@@ -410,6 +429,16 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 }
                 localConversionMapper.registerLocalConverter(field.getDeclaringClass(), field.getName(), converter);
             }
+        }
+    }
+
+    private void processExcludeEmptyAnnotation(final Field field, Object item) {
+        final XStreamExcludeEmpty annotation = field.getAnnotation(XStreamExcludeEmpty.class);
+        if (annotation != null && item != null) {
+            if (elementIgnoringMapper == null) {
+                throw new InitializationException("No " + ElementIgnoringMapper.class.getName() + " available");
+            }
+            EmptyFieldChecker.checkAndOmitIfEmpty(elementIgnoringMapper, field, item);
         }
     }
 

@@ -53,6 +53,11 @@ public class DynamicProxyMapper extends MapperWrapper {
     }
 
     @Override
+    public String serializedClass(Object item) {
+        return serializedClass(item.getClass());
+    }
+
+    @Override
     public Class<?> realClass(final String elementName) {
         if (elementName.equals(alias)) {
             return DynamicProxy.class;

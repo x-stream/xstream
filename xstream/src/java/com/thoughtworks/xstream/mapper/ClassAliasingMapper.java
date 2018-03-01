@@ -59,6 +59,11 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     @Override
+    public String serializedClass(Object item) {
+        return serializedClass(item.getClass());
+    }
+
+    @Override
     public Class<?> realClass(String elementName) {
         final String mappedName = nameToType.get(elementName);
 

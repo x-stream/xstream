@@ -27,6 +27,11 @@ public interface Mapper {
     String serializedClass(Class<?> type);
 
     /**
+     * How an item and underlying class should be represented in its serialized form.
+     */
+    String serializedClass(Object item);
+
+    /**
      * How a serialized class representation should be mapped back to a real class.
      */
     Class<?> realClass(String elementName);
