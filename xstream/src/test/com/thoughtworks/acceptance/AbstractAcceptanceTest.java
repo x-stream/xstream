@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -64,19 +64,18 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         xstream.allowTypesByWildcard(this.getClass().getName() + "$*");
     }
 
-    protected Object assertBothWaysNormalized(final Object root, final String xml, final String match,
+    protected <T> T assertBothWaysNormalized(final Object root, final String xml, final String match,
             final String templateSelect, final String sortSelect) {
         try {
-            // First, serialize the object to XML and check it matches the expected XML.
+            // first, serialize the object to XML and check it matches the expected XML.
             final String resultXml = normalizedXML(toXML(root), new String[]{match}, templateSelect, sortSelect);
             assertEquals(normalizedXML(xml, new String[]{match}, templateSelect, sortSelect), resultXml);
 
-            // Now deserialize the XML back into the object and check it equals the original
-            // object.
-            final Object resultRoot = xstream.fromXML(resultXml);
+            // now deserialize the XML back into the object and check it equals the original object.
+            final T resultRoot = xstream.fromXML(resultXml);
             assertObjectsEqual(root, resultRoot);
 
-            // While we're at it, let's check the binary serialization works...
+            // while we're at it, let's check the binary serialization works...
             assertBinarySerialization(root);
 
             return resultRoot;
@@ -88,17 +87,17 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         }
     }
 
-    protected Object assertBothWays(final Object root, final String xml) {
+    protected <T> T assertBothWays(final Object root, final String xml) {
 
-        // First, serialize the object to XML and check it matches the expected XML.
+        // first, serialize the object to XML and check it matches the expected XML.
         final String resultXml = toXML(root);
         assertEquals(xml, resultXml);
 
-        // Now deserialize the XML back into the object and check it equals the original object.
-        final Object resultRoot = xstream.fromXML(resultXml);
+        // now deserialize the XML back into the object and check it equals the original object.
+        final T resultRoot = xstream.fromXML(resultXml);
         assertObjectsEqual(root, resultRoot);
 
-        // While we're at it, let's check the binary serialization works...
+        // while we're at it, let's check the binary serialization works...
         assertBinarySerialization(root);
 
         return resultRoot;
@@ -106,20 +105,20 @@ public abstract class AbstractAcceptanceTest extends TestCase {
 
     @SuppressWarnings("resource")
     private void assertBinarySerialization(final Object root) {
-        // Serialize as binary
+        // serialize as binary
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         xstream.marshal(root, new BinaryStreamWriter(outputStream));
 
-        // Deserialize the binary and check it equals the original object.
+        // deserialize the binary and check it equals the original object.
         final ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
         final Object binaryResult = xstream.unmarshal(new BinaryStreamReader(inputStream));
         assertObjectsEqual(root, binaryResult);
     }
 
-    protected Object assertWithAsymmetricalXml(final Object root, final String inXml, final String outXml) {
+    protected <T> T assertWithAsymmetricalXml(final Object root, final String inXml, final String outXml) {
         final String resultXml = toXML(root);
         assertEquals(outXml, resultXml);
-        final Object resultRoot = xstream.fromXML(inXml);
+        final T resultRoot = xstream.fromXML(inXml);
         assertObjectsEqual(root, resultRoot);
         return resultRoot;
     }
@@ -183,7 +182,8 @@ public abstract class AbstractAcceptanceTest extends TestCase {
     }
 
     protected String normalizedXML(final String xml, final String[] matches, final String templateSelect,
-            final String sortSelect) throws TransformerException {
+            final String sortSelect)
+            throws TransformerException {
         final StringBuilder match = new StringBuilder();
         for (int i = 0; i < matches.length; i++) {
             if (i > 0) {

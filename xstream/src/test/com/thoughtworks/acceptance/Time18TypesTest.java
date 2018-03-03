@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -61,40 +61,40 @@ import com.thoughtworks.xstream.converters.ConversionException;
 public class Time18TypesTest extends AbstractAcceptanceTest {
     public void testFixedClock() {
         assertBothWays(Clock.fixed(Instant.parse("2017-02-15T18:49:25Z"), ZoneOffset.of("Z")), "" //
-            + "<fixed-clock>\n" //
-            + "  <instant>2017-02-15T18:49:25Z</instant>\n" //
-            + "  <zone>Z</zone>\n" //
+            + "<fixed-clock>\n"
+            + "  <instant>2017-02-15T18:49:25Z</instant>\n"
+            + "  <zone>Z</zone>\n"
             + "</fixed-clock>");
     }
 
     public void testOffsetClock() {
         assertBothWays(Clock.offset(Clock.systemUTC(), Duration.ofHours(1)), "" //
-            + "<offset-clock>\n" //
-            + "  <baseClock class=\"system-clock\">\n" //
-            + "    <zone>Z</zone>\n" //
-            + "  </baseClock>\n" //
-            + "  <offset>PT1H</offset>\n" //
+            + "<offset-clock>\n"
+            + "  <baseClock class=\"system-clock\">\n"
+            + "    <zone>Z</zone>\n"
+            + "  </baseClock>\n"
+            + "  <offset>PT1H</offset>\n"
             + "</offset-clock>");
     }
 
     public void testSystemClock() {
         assertBothWays(Clock.systemUTC(), "" //
-            + "<system-clock>\n" //
-            + "  <zone>Z</zone>\n" //
+            + "<system-clock>\n"
+            + "  <zone>Z</zone>\n"
             + "</system-clock>");
         assertBothWays(Clock.system(ZoneId.of("Europe/Berlin")), "" //
-            + "<system-clock>\n" //
-            + "  <zone>Europe/Berlin</zone>\n" //
+            + "<system-clock>\n"
+            + "  <zone>Europe/Berlin</zone>\n"
             + "</system-clock>");
     }
 
     public void testTickClock() {
         assertBothWays(Clock.tick(Clock.systemUTC(), Duration.ofMillis(42)), "" //
-            + "<tick-clock>\n" //
-            + "  <baseClock class=\"system-clock\">\n" //
-            + "    <zone>Z</zone>\n" //
-            + "  </baseClock>\n" //
-            + "  <tickNanos>42000000</tickNanos>\n" //
+            + "<tick-clock>\n"
+            + "  <baseClock class=\"system-clock\">\n"
+            + "    <zone>Z</zone>\n"
+            + "  </baseClock>\n"
+            + "  <tickNanos>42000000</tickNanos>\n"
             + "</tick-clock>");
     }
 
@@ -124,10 +124,10 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testDurationWithOldFormat() {
         assertEquals(Duration.ofSeconds(7777), xstream.fromXML("" //
-            + "<java.time.Duration resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>1</byte>\n" //
-            + "  <long>7777</long>\n" //
-            + "  <int>0</int>\n" //
+            + "<java.time.Duration resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>1</byte>\n"
+            + "  <long>7777</long>\n"
+            + "  <int>0</int>\n"
             + "</java.time.Duration>"));
     }
 
@@ -135,9 +135,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final Duration[] array = new Duration[2];
         array[0] = array[1] = Duration.ofHours(50);
         assertBothWays(array, "" //
-            + "<duration-array>\n" //
-            + "  <duration>PT50H</duration>\n" //
-            + "  <duration>PT50H</duration>\n" //
+            + "<duration-array>\n"
+            + "  <duration>PT50H</duration>\n"
+            + "  <duration>PT50H</duration>\n"
             + "</duration-array>");
     }
 
@@ -172,10 +172,10 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testInstantWithOldFormat() {
         assertEquals(Instant.parse("2017-02-15T18:49:25Z"), xstream.fromXML("" //
-            + "<java.time.Instant resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>2</byte>\n" //
-            + "  <long>1487184565</long>\n" //
-            + "  <int>0</int>\n" //
+            + "<java.time.Instant resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>2</byte>\n"
+            + "  <long>1487184565</long>\n"
+            + "  <int>0</int>\n"
             + "</java.time.Instant>"));
     }
 
@@ -183,9 +183,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final Instant[] array = new Instant[2];
         array[0] = array[1] = Instant.from(ZonedDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.of("Z")));
         assertBothWays(array, "" //
-            + "<instant-array>\n" //
-            + "  <instant>2017-07-30T20:40:00Z</instant>\n" //
-            + "  <instant>2017-07-30T20:40:00Z</instant>\n" //
+            + "<instant-array>\n"
+            + "  <instant>2017-07-30T20:40:00Z</instant>\n"
+            + "  <instant>2017-07-30T20:40:00Z</instant>\n"
             + "</instant-array>");
     }
 
@@ -212,11 +212,11 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testPeriodWithOldFormat() {
         assertEquals(Period.ofDays(7777), xstream.fromXML("" //
-            + "<java.time.Period resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>14</byte>\n" //
-            + "  <int>0</int>\n" //
-            + "  <int>0</int>\n" //
-            + "  <int>7777</int>\n" //
+            + "<java.time.Period resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>14</byte>\n"
+            + "  <int>0</int>\n"
+            + "  <int>0</int>\n"
+            + "  <int>7777</int>\n"
             + "</java.time.Period>"));
     }
 
@@ -224,9 +224,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final Period[] array = new Period[2];
         array[0] = array[1] = Period.ofDays(1);
         assertBothWays(array, "" //
-            + "<period-array>\n" //
-            + "  <period>P1D</period>\n" //
-            + "  <period>P1D</period>\n" //
+            + "<period-array>\n"
+            + "  <period>P1D</period>\n"
+            + "  <period>P1D</period>\n"
             + "</period-array>");
     }
 
@@ -246,11 +246,11 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testLocalDateWithOldFormat() {
         assertEquals(LocalDate.of(2017, 10, 30), xstream.fromXML("" //
-            + "<java.time.LocalDate resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>3</byte>\n" //
-            + "  <int>2017</int>\n" //
-            + "  <byte>10</byte>\n" //
-            + "  <byte>30</byte>\n" //
+            + "<java.time.LocalDate resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>3</byte>\n"
+            + "  <int>2017</int>\n"
+            + "  <byte>10</byte>\n"
+            + "  <byte>30</byte>\n"
             + "</java.time.LocalDate>"));
     }
 
@@ -258,9 +258,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final LocalDate[] array = new LocalDate[2];
         array[0] = array[1] = LocalDate.of(2017, 10, 30);
         assertBothWays(array, "" //
-            + "<local-date-array>\n" //
-            + "  <local-date>2017-10-30</local-date>\n" //
-            + "  <local-date>2017-10-30</local-date>\n" //
+            + "<local-date-array>\n"
+            + "  <local-date>2017-10-30</local-date>\n"
+            + "  <local-date>2017-10-30</local-date>\n"
             + "</local-date-array>");
     }
 
@@ -288,13 +288,13 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testLocalDateTimeWithOldFormat() {
         assertEquals(LocalDateTime.of(2017, 7, 30, 20, 40), xstream.fromXML("" //
-            + "<java.time.LocalDateTime resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>5</byte>\n" //
-            + "  <int>2017</int>\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <byte>30</byte>\n" //
-            + "  <byte>20</byte>\n" //
-            + "  <byte>-41</byte>\n" //
+            + "<java.time.LocalDateTime resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>5</byte>\n"
+            + "  <int>2017</int>\n"
+            + "  <byte>7</byte>\n"
+            + "  <byte>30</byte>\n"
+            + "  <byte>20</byte>\n"
+            + "  <byte>-41</byte>\n"
             + "</java.time.LocalDateTime>"));
     }
 
@@ -302,9 +302,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final LocalDateTime[] array = new LocalDateTime[2];
         array[0] = array[1] = LocalDateTime.of(2017, 7, 30, 20, 40);
         assertBothWays(array, "" //
-            + "<local-date-time-array>\n" //
-            + "  <local-date-time>2017-07-30T20:40:00</local-date-time>\n" //
-            + "  <local-date-time>2017-07-30T20:40:00</local-date-time>\n" //
+            + "<local-date-time-array>\n"
+            + "  <local-date-time>2017-07-30T20:40:00</local-date-time>\n"
+            + "  <local-date-time>2017-07-30T20:40:00</local-date-time>\n"
             + "</local-date-time-array>");
     }
 
@@ -330,10 +330,10 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testLocalTimeWithOldFormat() {
         assertEquals(LocalTime.of(10, 30), xstream.fromXML("" //
-            + "<java.time.LocalTime resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>4</byte>\n" //
-            + "  <byte>10</byte>\n" //
-            + "  <byte>-31</byte>\n" //
+            + "<java.time.LocalTime resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>4</byte>\n"
+            + "  <byte>10</byte>\n"
+            + "  <byte>-31</byte>\n"
             + "</java.time.LocalTime>"));
     }
 
@@ -342,8 +342,8 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         array[0] = array[1] = LocalTime.of(10, 30);
         assertBothWays(array, "" //
             + "<local-time-array>\n"
-            + "  <local-time>10:30:00</local-time>\n" //
-            + "  <local-time>10:30:00</local-time>\n" //
+            + "  <local-time>10:30:00</local-time>\n"
+            + "  <local-time>10:30:00</local-time>\n"
             + "</local-time-array>");
     }
 
@@ -372,10 +372,10 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testMonthDayWithOldFormat() {
         assertEquals(MonthDay.of(Month.JANUARY, 13), xstream.fromXML("" //
-            + "<java.time.MonthDay resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>13</byte>\n" //
-            + "  <byte>1</byte>\n" //
-            + "  <byte>13</byte>\n" //
+            + "<java.time.MonthDay resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>13</byte>\n"
+            + "  <byte>1</byte>\n"
+            + "  <byte>13</byte>\n"
             + "</java.time.MonthDay>"));
     }
 
@@ -384,8 +384,8 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         array[0] = array[1] = MonthDay.of(Month.APRIL, 10);
         assertBothWays(array, "" //
             + "<month-day-array>\n"
-            + "  <month-day>--04-10</month-day>\n" //
-            + "  <month-day>--04-10</month-day>\n" //
+            + "  <month-day>--04-10</month-day>\n"
+            + "  <month-day>--04-10</month-day>\n"
             + "</month-day-array>");
     }
 
@@ -424,14 +424,14 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testOffsetDateTimeWithOldFormat() {
         assertEquals(OffsetDateTime.of(2017, 7, 30, 20, 40, 0, 0, ZoneOffset.ofHours(0)), xstream.fromXML("" //
-            + "<java.time.OffsetDateTime resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>10</byte>\n" //
-            + "  <int>2017</int>\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <byte>30</byte>\n" //
-            + "  <byte>20</byte>\n" //
-            + "  <byte>-41</byte>\n" //
-            + "  <byte>0</byte>\n" //
+            + "<java.time.OffsetDateTime resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>10</byte>\n"
+            + "  <int>2017</int>\n"
+            + "  <byte>7</byte>\n"
+            + "  <byte>30</byte>\n"
+            + "  <byte>20</byte>\n"
+            + "  <byte>-41</byte>\n"
+            + "  <byte>0</byte>\n"
             + "</java.time.OffsetDateTime>"));
     }
 
@@ -440,8 +440,8 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         array[0] = array[1] = OffsetDateTime.of(2017, 7, 30, 20, 40, 15, 0, ZoneOffset.ofHours(1));
         assertBothWays(array, "" //
             + "<offset-date-time-array>\n"
-            + "  <offset-date-time>2017-07-30T20:40:15+01:00</offset-date-time>\n" //
-            + "  <offset-date-time>2017-07-30T20:40:15+01:00</offset-date-time>\n" //
+            + "  <offset-date-time>2017-07-30T20:40:15+01:00</offset-date-time>\n"
+            + "  <offset-date-time>2017-07-30T20:40:15+01:00</offset-date-time>\n"
             + "</offset-date-time-array>");
     }
 
@@ -478,11 +478,11 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testOffsetTimeWithOldFormat() {
         assertEquals(OffsetTime.of(20, 40, 0, 0, ZoneOffset.ofHours(0)), xstream.fromXML("" //
-            + "<java.time.OffsetTime resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>9</byte>\n" //
-            + "  <byte>20</byte>\n" //
-            + "  <byte>-41</byte>\n" //
-            + "  <byte>0</byte>\n" //
+            + "<java.time.OffsetTime resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>9</byte>\n"
+            + "  <byte>20</byte>\n"
+            + "  <byte>-41</byte>\n"
+            + "  <byte>0</byte>\n"
             + "</java.time.OffsetTime>"));
     }
 
@@ -491,8 +491,8 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         array[0] = array[1] = OffsetTime.of(20, 40, 15, 0, ZoneOffset.ofHours(1));
         assertBothWays(array, "" //
             + "<offset-time-array>\n"
-            + "  <offset-time>20:40:15+01:00</offset-time>\n" //
-            + "  <offset-time>20:40:15+01:00</offset-time>\n" //
+            + "  <offset-time>20:40:15+01:00</offset-time>\n"
+            + "  <offset-time>20:40:15+01:00</offset-time>\n"
             + "</offset-time-array>");
     }
 
@@ -514,9 +514,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testYearWithOldFormat() {
         assertEquals(Year.of(2017), xstream.fromXML("" //
-            + "<java.time.Year resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>11</byte>\n" //
-            + "  <int>2017</int>\n" //
+            + "<java.time.Year resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>11</byte>\n"
+            + "  <int>2017</int>\n"
             + "</java.time.Year>"));
     }
 
@@ -525,8 +525,8 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         array[0] = array[1] = Year.of(2017);
         assertBothWays(array, "" //
             + "<year-array>\n"
-            + "  <year>2017</year>\n" //
-            + "  <year>2017</year>\n" //
+            + "  <year>2017</year>\n"
+            + "  <year>2017</year>\n"
             + "</year-array>");
     }
 
@@ -548,10 +548,10 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testYearMonthWithOldFormat() {
         assertEquals(YearMonth.of(2017, 2), xstream.fromXML("" //
-            + "<java.time.YearMonth resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>12</byte>\n" //
-            + "  <int>2017</int>\n" //
-            + "  <byte>2</byte>\n" //
+            + "<java.time.YearMonth resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>12</byte>\n"
+            + "  <int>2017</int>\n"
+            + "  <byte>2</byte>\n"
             + "</java.time.YearMonth>"));
     }
 
@@ -560,8 +560,8 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         array[0] = array[1] = YearMonth.of(2017, 2);
         assertBothWays(array, "" //
             + "<year-month-array>\n"
-            + "  <year-month>2017-02</year-month>\n" //
-            + "  <year-month>2017-02</year-month>\n" //
+            + "  <year-month>2017-02</year-month>\n"
+            + "  <year-month>2017-02</year-month>\n"
             + "</year-month-array>");
     }
 
@@ -598,16 +598,16 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testZonedDateTimeWithOldFormat() {
         assertEquals(ZonedDateTime.of(2017, 10, 30, 20, 40, 0, 0, ZoneId.of("Europe/London")), xstream.fromXML("" //
-            + "<java.time.ZonedDateTime resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>6</byte>\n" //
-            + "  <int>2017</int>\n" //
-            + "  <byte>10</byte>\n" //
-            + "  <byte>30</byte>\n" //
-            + "  <byte>20</byte>\n" //
-            + "  <byte>-41</byte>\n" //
-            + "  <byte>0</byte>\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <string>Europe/London</string>\n" //
+            + "<java.time.ZonedDateTime resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>6</byte>\n"
+            + "  <int>2017</int>\n"
+            + "  <byte>10</byte>\n"
+            + "  <byte>30</byte>\n"
+            + "  <byte>20</byte>\n"
+            + "  <byte>-41</byte>\n"
+            + "  <byte>0</byte>\n"
+            + "  <byte>7</byte>\n"
+            + "  <string>Europe/London</string>\n"
             + "</java.time.ZonedDateTime>"));
     }
 
@@ -648,10 +648,10 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testZoneOffestWithOldFormat() {
         assertEquals(ZoneOffset.ofTotalSeconds(7777), xstream.fromXML("" //
-            + "<java.time.ZoneOffset resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>8</byte>\n" //
-            + "  <byte>127</byte>\n" //
-            + "  <int>7777</int>\n" //
+            + "<java.time.ZoneOffset resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>8</byte>\n"
+            + "  <byte>127</byte>\n"
+            + "  <int>7777</int>\n"
             + "</java.time.ZoneOffset>"));
     }
 
@@ -659,9 +659,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final ZoneOffset[] array = new ZoneOffset[2];
         array[0] = array[1] = ZoneOffset.of("Z");
         assertBothWays(array, "" //
-            + "<zone-id-array>\n" //
-            + "  <zone-id>Z</zone-id>\n" //
-            + "  <zone-id>Z</zone-id>\n" //
+            + "<zone-id-array>\n"
+            + "  <zone-id>Z</zone-id>\n"
+            + "  <zone-id>Z</zone-id>\n"
             + "</zone-id-array>");
     }
 
@@ -672,9 +672,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testZoneRegionWithOldFormat() {
         assertEquals(ZoneId.of("America/Caracas"), xstream.fromXML("" //
-            + "<java.time.ZoneRegion resolves-to=\"java.time.Ser\">\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <string>America/Caracas</string>\n" //
+            + "<java.time.ZoneRegion resolves-to=\"java.time.Ser\">\n"
+            + "  <byte>7</byte>\n"
+            + "  <string>America/Caracas</string>\n"
             + "</java.time.ZoneRegion>"));
     }
 
@@ -682,9 +682,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final ZoneId[] array = new ZoneId[2];
         array[0] = array[1] = ZoneId.of("Europe/Rome");
         assertBothWays(array, "" //
-            + "<zone-id-array>\n" //
-            + "  <zone-id>Europe/Rome</zone-id>\n" //
-            + "  <zone-id>Europe/Rome</zone-id>\n" //
+            + "<zone-id-array>\n"
+            + "  <zone-id>Europe/Rome</zone-id>\n"
+            + "  <zone-id>Europe/Rome</zone-id>\n"
             + "</zone-id-array>");
     }
 
@@ -705,9 +705,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testChronologyWithOldFormat() {
         assertSame(IsoChronology.INSTANCE, xstream.fromXML("" //
-            + "<java.time.chrono.IsoChronology resolves-to=\"java.time.chrono.Ser\">\n" //
-            + "  <byte>1</byte>\n" //
-            + "  <string>ISO</string>\n" //
+            + "<java.time.chrono.IsoChronology resolves-to=\"java.time.chrono.Ser\">\n"
+            + "  <byte>1</byte>\n"
+            + "  <string>ISO</string>\n"
             + "</java.time.chrono.IsoChronology>"));
     }
 
@@ -715,9 +715,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final Chronology[] array = new Chronology[2];
         array[0] = array[1] = IsoChronology.INSTANCE;
         assertBothWays(array, "" //
-            + "<chronology-array>\n" //
-            + "  <chronology>ISO</chronology>\n" //
-            + "  <chronology>ISO</chronology>\n" //
+            + "<chronology-array>\n"
+            + "  <chronology>ISO</chronology>\n"
+            + "  <chronology>ISO</chronology>\n"
             + "</chronology-array>");
     }
 
@@ -728,15 +728,15 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testHijrahDateWithOldFormat() {
         assertEquals(HijrahChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)), xstream.fromXML("" //
-            + "<java.time.chrono.HijrahDate resolves-to=\"java.time.chrono.Ser\">\n" //
-            + "  <byte>6</byte>\n" //
-            + "  <java.time.chrono.HijrahChronology resolves-to=\"java.time.chrono.Ser\">\n" //
-            + "    <byte>1</byte>\n" //
-            + "    <string>Hijrah-umalqura</string>\n" //
-            + "  </java.time.chrono.HijrahChronology>\n" //
-            + "  <int>1438</int>\n" //
-            + "  <byte>11</byte>\n" //
-            + "  <byte>7</byte>\n" //
+            + "<java.time.chrono.HijrahDate resolves-to=\"java.time.chrono.Ser\">\n"
+            + "  <byte>6</byte>\n"
+            + "  <java.time.chrono.HijrahChronology resolves-to=\"java.time.chrono.Ser\">\n"
+            + "    <byte>1</byte>\n"
+            + "    <string>Hijrah-umalqura</string>\n"
+            + "  </java.time.chrono.HijrahChronology>\n"
+            + "  <int>1438</int>\n"
+            + "  <byte>11</byte>\n"
+            + "  <byte>7</byte>\n"
             + "</java.time.chrono.HijrahDate>"));
     }
 
@@ -768,9 +768,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final HijrahDate[] array = new HijrahDate[2];
         array[0] = array[1] = HijrahChronology.INSTANCE.date(LocalDate.of(2017, 7, 30));
         assertBothWays(array, "" //
-            + "<hijrah-date-array>\n" //
-            + "  <hijrah-date>Hijrah-umalqura AH 1438-11-07</hijrah-date>\n" //
-            + "  <hijrah-date>Hijrah-umalqura AH 1438-11-07</hijrah-date>\n" //
+            + "<hijrah-date-array>\n"
+            + "  <hijrah-date>Hijrah-umalqura AH 1438-11-07</hijrah-date>\n"
+            + "  <hijrah-date>Hijrah-umalqura AH 1438-11-07</hijrah-date>\n"
             + "</hijrah-date-array>");
     }
 
@@ -785,11 +785,11 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testJapaneseDateWithOldFormat() {
         assertEquals(JapaneseChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)), xstream.fromXML("" //
-            + "<java.time.chrono.JapaneseDate resolves-to=\"java.time.chrono.Ser\">\n" //
-            + "  <byte>4</byte>\n" //
-            + "  <int>2017</int>\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <byte>30</byte>\n" //
+            + "<java.time.chrono.JapaneseDate resolves-to=\"java.time.chrono.Ser\">\n"
+            + "  <byte>4</byte>\n"
+            + "  <int>2017</int>\n"
+            + "  <byte>7</byte>\n"
+            + "  <byte>30</byte>\n"
             + "</java.time.chrono.JapaneseDate>"));
     }
 
@@ -821,9 +821,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final JapaneseDate[] array = new JapaneseDate[2];
         array[0] = array[1] = JapaneseChronology.INSTANCE.date(LocalDate.of(2017, 7, 30));
         assertBothWays(array, "" //
-            + "<japanese-date-array>\n" //
-            + "  <japanese-date>Japanese Heisei 29-07-30</japanese-date>\n" //
-            + "  <japanese-date>Japanese Heisei 29-07-30</japanese-date>\n" //
+            + "<japanese-date-array>\n"
+            + "  <japanese-date>Japanese Heisei 29-07-30</japanese-date>\n"
+            + "  <japanese-date>Japanese Heisei 29-07-30</japanese-date>\n"
             + "</japanese-date-array>");
     }
 
@@ -833,9 +833,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testJapaneseEraWithOldFormat() {
         assertEquals(JapaneseEra.TAISHO, xstream.fromXML("" //
-            + "<java.time.chrono.JapaneseEra resolves-to=\"java.time.chrono.Ser\">\n" //
-            + "  <byte>5</byte>\n" //
-            + "  <byte>0</byte>\n" //
+            + "<java.time.chrono.JapaneseEra resolves-to=\"java.time.chrono.Ser\">\n"
+            + "  <byte>5</byte>\n"
+            + "  <byte>0</byte>\n"
             + "</java.time.chrono.JapaneseEra>"));
     }
 
@@ -853,9 +853,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final JapaneseEra[] array = new JapaneseEra[2];
         array[0] = array[1] = JapaneseEra.SHOWA;
         assertBothWays(array, "" //
-            + "<japanese-era-array>\n" //
-            + "  <japanese-era>Showa</japanese-era>\n" //
-            + "  <japanese-era>Showa</japanese-era>\n" //
+            + "<japanese-era-array>\n"
+            + "  <japanese-era>Showa</japanese-era>\n"
+            + "  <japanese-era>Showa</japanese-era>\n"
             + "</japanese-era-array>");
     }
 
@@ -866,11 +866,11 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testMinguoDateWithOldFormat() {
         assertEquals(MinguoChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)), xstream.fromXML("" //
-            + "<java.time.chrono.MinguoDate resolves-to=\"java.time.chrono.Ser\">\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <int>106</int>\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <byte>30</byte>\n" //
+            + "<java.time.chrono.MinguoDate resolves-to=\"java.time.chrono.Ser\">\n"
+            + "  <byte>7</byte>\n"
+            + "  <int>106</int>\n"
+            + "  <byte>7</byte>\n"
+            + "  <byte>30</byte>\n"
             + "</java.time.chrono.MinguoDate>"));
     }
 
@@ -902,9 +902,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final MinguoDate[] array = new MinguoDate[2];
         array[0] = array[1] = MinguoChronology.INSTANCE.date(LocalDate.of(2017, 7, 30));
         assertBothWays(array, "" //
-            + "<minguo-date-array>\n" //
-            + "  <minguo-date>Minguo ROC 106-07-30</minguo-date>\n" //
-            + "  <minguo-date>Minguo ROC 106-07-30</minguo-date>\n" //
+            + "<minguo-date-array>\n"
+            + "  <minguo-date>Minguo ROC 106-07-30</minguo-date>\n"
+            + "  <minguo-date>Minguo ROC 106-07-30</minguo-date>\n"
             + "</minguo-date-array>");
     }
 
@@ -919,11 +919,11 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
 
     public void testThaiBuddhistDateWithOldFormat() {
         assertEquals(ThaiBuddhistChronology.INSTANCE.date(LocalDate.of(2017, 7, 30)), xstream.fromXML("" //
-            + "<java.time.chrono.ThaiBuddhistDate resolves-to=\"java.time.chrono.Ser\">\n" //
-            + "  <byte>8</byte>\n" //
-            + "  <int>2560</int>\n" //
-            + "  <byte>7</byte>\n" //
-            + "  <byte>30</byte>\n" //
+            + "<java.time.chrono.ThaiBuddhistDate resolves-to=\"java.time.chrono.Ser\">\n"
+            + "  <byte>8</byte>\n"
+            + "  <int>2560</int>\n"
+            + "  <byte>7</byte>\n"
+            + "  <byte>30</byte>\n"
             + "</java.time.chrono.ThaiBuddhistDate>"));
     }
 
@@ -955,9 +955,9 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final ThaiBuddhistDate[] array = new ThaiBuddhistDate[2];
         array[0] = array[1] = ThaiBuddhistChronology.INSTANCE.date(LocalDate.of(2017, 7, 30));
         assertBothWays(array, "" //
-            + "<thai-buddhist-date-array>\n" //
-            + "  <thai-buddhist-date>ThaiBuddhist BE 2560-07-30</thai-buddhist-date>\n" //
-            + "  <thai-buddhist-date>ThaiBuddhist BE 2560-07-30</thai-buddhist-date>\n" //
+            + "<thai-buddhist-date-array>\n"
+            + "  <thai-buddhist-date>ThaiBuddhist BE 2560-07-30</thai-buddhist-date>\n"
+            + "  <thai-buddhist-date>ThaiBuddhist BE 2560-07-30</thai-buddhist-date>\n"
             + "</thai-buddhist-date-array>");
     }
 
@@ -987,11 +987,11 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         array[0] = array[1] = IsoFields.DAY_OF_QUARTER;
         array[2] = array[3] = IsoFields.QUARTER_YEARS;
         assertBothWays(array, "" //
-            + "<object-array>\n" //
-            + "  <iso-field>DAY_OF_QUARTER</iso-field>\n" //
-            + "  <iso-field>DAY_OF_QUARTER</iso-field>\n" //
-            + "  <iso-unit>QUARTER_YEARS</iso-unit>\n" //
-            + "  <iso-unit>QUARTER_YEARS</iso-unit>\n" //
+            + "<object-array>\n"
+            + "  <iso-field>DAY_OF_QUARTER</iso-field>\n"
+            + "  <iso-field>DAY_OF_QUARTER</iso-field>\n"
+            + "  <iso-unit>QUARTER_YEARS</iso-unit>\n"
+            + "  <iso-unit>QUARTER_YEARS</iso-unit>\n"
             + "</object-array>");
     }
 
@@ -1005,19 +1005,19 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         final TemporalField[] array = new TemporalField[2];
         array[0] = array[1] = JulianFields.JULIAN_DAY;
         assertBothWays(array, "" //
-            + "<java.time.temporal.TemporalField-array>\n" //
-            + "  <julian-field>JULIAN_DAY</julian-field>\n" //
-            + "  <julian-field>JULIAN_DAY</julian-field>\n" //
+            + "<java.time.temporal.TemporalField-array>\n"
+            + "  <julian-field>JULIAN_DAY</julian-field>\n"
+            + "  <julian-field>JULIAN_DAY</julian-field>\n"
             + "</java.time.temporal.TemporalField-array>");
     }
 
     public void testValueRange() {
         assertBothWays(ValueRange.of(0, 1, 30, 45), "" //
-            + "<temporal-value-range>\n" //
-            + "  <maxLargest>45</maxLargest>\n" //
-            + "  <maxSmallest>30</maxSmallest>\n" //
-            + "  <minLargest>1</minLargest>\n" //
-            + "  <minSmallest>0</minSmallest>\n" //
+            + "<temporal-value-range>\n"
+            + "  <maxLargest>45</maxLargest>\n"
+            + "  <maxSmallest>30</maxSmallest>\n"
+            + "  <minLargest>1</minLargest>\n"
+            + "  <minSmallest>0</minSmallest>\n"
             + "</temporal-value-range>");
     }
 
@@ -1027,38 +1027,38 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         xstream.aliasField("min-l", ValueRange.class, "minLargest");
         xstream.aliasField("min", ValueRange.class, "minSmallest");
         assertBothWays(ValueRange.of(0, 1, 30, 45), "" //
-            + "<temporal-value-range>\n" //
-            + "  <max>45</max>\n" //
-            + "  <max-s>30</max-s>\n" //
-            + "  <min-l>1</min-l>\n" //
-            + "  <min>0</min>\n" //
+            + "<temporal-value-range>\n"
+            + "  <max>45</max>\n"
+            + "  <max-s>30</max-s>\n"
+            + "  <min-l>1</min-l>\n"
+            + "  <min>0</min>\n"
             + "</temporal-value-range>");
     }
 
     public void testValueRangeWithOldFormat() {
         assertEquals(ValueRange.of(0, 1, 30, 45), xstream.fromXML("" //
-            + "<java.time.temporal.ValueRange serialization=\"custom\">\n" //
-            + "  <java.time.temporal.ValueRange>\n" //
-            + "    <default>\n" //
-            + "      <maxLargest>45</maxLargest>\n" //
-            + "      <maxSmallest>30</maxSmallest>\n" //
-            + "      <minLargest>1</minLargest>\n" //
-            + "      <minSmallest>0</minSmallest>\n" //
-            + "    </default>\n" //
-            + "  </java.time.temporal.ValueRange>\n" //
+            + "<java.time.temporal.ValueRange serialization=\"custom\">\n"
+            + "  <java.time.temporal.ValueRange>\n"
+            + "    <default>\n"
+            + "      <maxLargest>45</maxLargest>\n"
+            + "      <maxSmallest>30</maxSmallest>\n"
+            + "      <minLargest>1</minLargest>\n"
+            + "      <minSmallest>0</minSmallest>\n"
+            + "    </default>\n"
+            + "  </java.time.temporal.ValueRange>\n"
             + "</java.time.temporal.ValueRange>"));
     }
 
     public void testWeekFields() {
         assertBothWays(WeekFields.of(DayOfWeek.TUESDAY, 2), "" //
-            + "<week-fields>\n" //
-            + "  <minimalDays>2</minimalDays>\n" //
-            + "  <firstDayOfWeek>TUESDAY</firstDayOfWeek>\n" //
+            + "<week-fields>\n"
+            + "  <minimalDays>2</minimalDays>\n"
+            + "  <firstDayOfWeek>TUESDAY</firstDayOfWeek>\n"
             + "</week-fields>");
         assertBothWays(WeekFields.ISO, "" //
-            + "<week-fields>\n" //
-            + "  <minimalDays>4</minimalDays>\n" //
-            + "  <firstDayOfWeek>MONDAY</firstDayOfWeek>\n" //
+            + "<week-fields>\n"
+            + "  <minimalDays>4</minimalDays>\n"
+            + "  <firstDayOfWeek>MONDAY</firstDayOfWeek>\n"
             + "</week-fields>");
     }
 
@@ -1066,21 +1066,21 @@ public class Time18TypesTest extends AbstractAcceptanceTest {
         xstream.aliasField("days", WeekFields.class, "minimalDays");
         xstream.aliasField("week-day", WeekFields.class, "firstDayOfWeek");
         assertBothWays(WeekFields.of(DayOfWeek.TUESDAY, 2), "" //
-            + "<week-fields>\n" //
-            + "  <days>2</days>\n" //
-            + "  <week-day>TUESDAY</week-day>\n" //
+            + "<week-fields>\n"
+            + "  <days>2</days>\n"
+            + "  <week-day>TUESDAY</week-day>\n"
             + "</week-fields>");
     }
 
     public void testWeekFieldsWithOldFormat() {
         assertEquals(WeekFields.of(DayOfWeek.TUESDAY, 2), xstream.fromXML("" //
-            + "<java.time.temporal.WeekFields serialization=\"custom\">\n" //
-            + "  <java.time.temporal.WeekFields>\n" //
-            + "    <default>\n" //
-            + "      <minimalDays>2</minimalDays>\n" //
-            + "      <firstDayOfWeek>TUESDAY</firstDayOfWeek>\n" //
-            + "    </default>\n" //
-            + "  </java.time.temporal.WeekFields>\n" //
+            + "<java.time.temporal.WeekFields serialization=\"custom\">\n"
+            + "  <java.time.temporal.WeekFields>\n"
+            + "    <default>\n"
+            + "      <minimalDays>2</minimalDays>\n"
+            + "      <firstDayOfWeek>TUESDAY</firstDayOfWeek>\n"
+            + "    </default>\n"
+            + "  </java.time.temporal.WeekFields>\n"
             + "</java.time.temporal.WeekFields>"));
     }
 }

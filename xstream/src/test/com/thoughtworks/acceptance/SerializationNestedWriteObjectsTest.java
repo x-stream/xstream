@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2006, 2007, 2010, 2012, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 12. June 2006 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
@@ -23,24 +23,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
-import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
 /**
  * <p>
- * A class {@link Serializable} {@link Parent} class implements
- * <code>writeObject()</code> and holds a {@link Child} class that also
- * implements <code>writeObject()</code>
+ * A class {@link Serializable} {@link Parent} class implements <code>writeObject()</code> and holds a {@link Child}
+ * class that also implements <code>writeObject()</code>
  * </p>
- * 
+ *
  * @author <a href="mailto:cleclerc@pobox.com">Cyrille Le Clerc</a>
  */
 public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest {
 
     public static class Child implements Serializable {
 
+        private static final long serialVersionUID = 200606L;
+
         private int i = 3;
 
-        public Child(int i) {
+        public Child(final int i) {
             this.i = i;
         }
 
@@ -48,23 +48,24 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
             return i;
         }
 
-        private void readObject(java.io.ObjectInputStream in) throws IOException,
-                ClassNotFoundException {
+        private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
             in.defaultReadObject();
         }
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             out.defaultWriteObject();
         }
     }
 
     public static class Parent implements Serializable {
 
-        private String name;
+        private static final long serialVersionUID = 200606L;
+
+        private final String name;
 
         private transient Child child;
 
-        public Parent(String name, Child child) {
+        public Parent(final String name, final Child child) {
             this.name = name;
             this.child = child;
         }
@@ -77,14 +78,13 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
             return name;
         }
 
-        private void readObject(java.io.ObjectInputStream in) throws IOException,
-                ClassNotFoundException {
-            this.child = (Child) in.readObject();
+        private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+            child = (Child)in.readObject();
             in.defaultReadObject();
         }
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
-            out.writeObject(this.child);
+        private void writeObject(final ObjectOutputStream out) throws IOException {
+            out.writeObject(child);
             out.defaultWriteObject();
         }
     }
@@ -93,28 +93,28 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("parent", Parent.class);
         xstream.alias("child", Child.class);
 
-        String sourceXml = ""
-                + "<object-stream>\n"
-                + "  <parent serialization=\"custom\">\n"
-                + "    <parent>\n"
-                + "      <child serialization=\"custom\">\n"
-                + "        <child>\n"
-                + "          <default>\n"
-                + "            <i>1</i>\n"
-                + "          </default>\n"
-                + "        </child>\n"
-                + "      </child>\n"
-                + "      <default>\n"
-                + "        <name>ze-name</name>\n"
-                + "      </default>\n"
-                + "    </parent>\n"
-                + "  </parent>\n"
-                + "</object-stream>";
+        final String sourceXml = ""
+            + "<object-stream>\n"
+            + "  <parent serialization=\"custom\">\n"
+            + "    <parent>\n"
+            + "      <child serialization=\"custom\">\n"
+            + "        <child>\n"
+            + "          <default>\n"
+            + "            <i>1</i>\n"
+            + "          </default>\n"
+            + "        </child>\n"
+            + "      </child>\n"
+            + "      <default>\n"
+            + "        <name>ze-name</name>\n"
+            + "      </default>\n"
+            + "    </parent>\n"
+            + "  </parent>\n"
+            + "</object-stream>";
 
-        ObjectInputStream objectInputStream = xstream.createObjectInputStream(new StringReader(
-                sourceXml));
+        @SuppressWarnings("resource")
+        final ObjectInputStream objectInputStream = xstream.createObjectInputStream(new StringReader(sourceXml));
 
-        Parent parent = (Parent) objectInputStream.readObject();
+        final Parent parent = (Parent)objectInputStream.readObject();
 
         assertEquals("ze-name", parent.getName());
         assertEquals(1, parent.getChild().getI());
@@ -124,30 +124,30 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("parent", Parent.class);
         xstream.alias("child", Child.class);
 
-        String expectedXml = ""
-                + "<object-stream>\n"
-                + "  <parent serialization=\"custom\">\n"
-                + "    <parent>\n"
-                + "      <child serialization=\"custom\">\n"
-                + "        <child>\n"
-                + "          <default>\n"
-                + "            <i>1</i>\n"
-                + "          </default>\n"
-                + "        </child>\n"
-                + "      </child>\n"
-                + "      <default>\n"
-                + "        <name>ze-name</name>\n"
-                + "      </default>\n"
-                + "    </parent>\n"
-                + "  </parent>\n"
-                + "</object-stream>";
+        final String expectedXml = ""
+            + "<object-stream>\n"
+            + "  <parent serialization=\"custom\">\n"
+            + "    <parent>\n"
+            + "      <child serialization=\"custom\">\n"
+            + "        <child>\n"
+            + "          <default>\n"
+            + "            <i>1</i>\n"
+            + "          </default>\n"
+            + "        </child>\n"
+            + "      </child>\n"
+            + "      <default>\n"
+            + "        <name>ze-name</name>\n"
+            + "      </default>\n"
+            + "    </parent>\n"
+            + "  </parent>\n"
+            + "</object-stream>";
 
-        Parent parent = new Parent("ze-name", new Child(1));
-        StringWriter stringWriter = new StringWriter();
-        ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter);
+        final Parent parent = new Parent("ze-name", new Child(1));
+        final StringWriter stringWriter = new StringWriter();
+        final ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter);
         os.writeObject(parent);
         os.close();
-        String actualXml = stringWriter.getBuffer().toString();
+        final String actualXml = stringWriter.getBuffer().toString();
         assertEquals(expectedXml, actualXml);
     }
 
@@ -156,23 +156,23 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("parent", Parent.class);
         xstream.alias("child", Child.class);
 
-        String expected = ""
-                + "<parent serialization=\"custom\">\n"
-                + "  <parent>\n"
-                + "    <child serialization=\"custom\">\n"
-                + "      <child>\n"
-                + "        <default>\n"
-                + "          <i>1</i>\n"
-                + "        </default>\n"
-                + "      </child>\n"
-                + "    </child>\n"
-                + "    <default>\n"
-                + "      <name>ze-name</name>\n"
-                + "    </default>\n"
-                + "  </parent>\n"
-                + "</parent>";
+        final String expected = ""
+            + "<parent serialization=\"custom\">\n"
+            + "  <parent>\n"
+            + "    <child serialization=\"custom\">\n"
+            + "      <child>\n"
+            + "        <default>\n"
+            + "          <i>1</i>\n"
+            + "        </default>\n"
+            + "      </child>\n"
+            + "    </child>\n"
+            + "    <default>\n"
+            + "      <name>ze-name</name>\n"
+            + "    </default>\n"
+            + "  </parent>\n"
+            + "</parent>";
 
-        Parent parent = new Parent("ze-name", new Child(1));
+        final Parent parent = new Parent("ze-name", new Child(1));
 
         assertBothWays(parent, expected);
     }
@@ -181,7 +181,7 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
 
         private String s;
 
-        public RawString(String s) {
+        public RawString(final String s) {
             this.s = s;
         }
 
@@ -189,24 +189,24 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
             return s;
         }
 
-        private void readObject(java.io.ObjectInputStream in) throws IOException {
-            int i = in.read();
-            byte[] b = new byte[i];
+        private void readObject(final java.io.ObjectInputStream in) throws IOException {
+            final int i = in.read();
+            final byte[] b = new byte[i];
             in.read(b);
             s = new String(b);
         }
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
-            byte[] b = s.getBytes();
+        private void writeObject(final ObjectOutputStream out) throws IOException {
+            final byte[] b = s.getBytes();
             out.write(b.length);
             out.write(b);
         }
     }
-    
+
     public void testCanHandleRawBytes() throws IOException, ClassNotFoundException {
         xstream.alias("raw", RawString.class);
 
-        String expectedXml = ""
+        final String expectedXml = ""
             + "<root>\n"
             + "  <raw serialization=\"custom\">\n"
             + "    <raw>\n"
@@ -216,44 +216,55 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
             + "  </raw>\n"
             + "</root>";
 
-        StringWriter stringWriter = new StringWriter();
-        ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter, "root");
+        final StringWriter stringWriter = new StringWriter();
+        final ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter, "root");
         os.writeObject(new RawString("XStream"));
         os.close();
-        String actualXml = stringWriter.getBuffer().toString();
+        final String actualXml = stringWriter.getBuffer().toString();
         assertEquals(expectedXml, actualXml);
-        
-        ObjectInputStream objectInputStream = xstream.createObjectInputStream(new StringReader(actualXml));
 
-        RawString rawString = (RawString) objectInputStream.readObject();
+        @SuppressWarnings("resource")
+        final ObjectInputStream objectInputStream = xstream.createObjectInputStream(new StringReader(actualXml));
+
+        final RawString rawString = (RawString)objectInputStream.readObject();
         assertEquals("XStream", rawString.getS());
     }
-    
-    static class Store implements Serializable {
-        List store;
+
+    static class Store<T> implements Serializable {
+        private static final long serialVersionUID = 201011L;
+        List<T> store;
+
         public Store() {
-            store = new ArrayList();
+            store = new ArrayList<>();
         }
-        private void writeObject(ObjectOutputStream out) throws IOException {
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             out.defaultWriteObject();
         }
     }
-    static class OtherStore extends Store {
+
+    static class OtherStore<T> extends Store<T> {
+        private static final long serialVersionUID = 201011L;
+
         private Object readResolve() {
-            if (this.store instanceof LinkedList) {
-                Store replacement = new MyStore();
+            if (store instanceof LinkedList) {
+                final Store<T> replacement = new MyStore<>();
                 replacement.store = store;
                 return replacement;
             }
             return this;
         }
     }
-    static class MyStore extends OtherStore {
+
+    static class MyStore<T> extends OtherStore<T> {
+        private static final long serialVersionUID = 201011L;
+
         public MyStore() {
-            store = new LinkedList();
+            store = new LinkedList<>();
         }
+
         private Object writeReplace() {
-            Store replacement = new OtherStore();
+            final Store<T> replacement = new OtherStore<>();
             replacement.store = store;
             return replacement;
         }
@@ -264,49 +275,49 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         xstream.alias("my", MyStore.class);
         xstream.alias("other", OtherStore.class);
 
-        String expectedXml = ""
-                + "<store-array>\n"
-                + "  <my resolves-to=\"other\" serialization=\"custom\">\n"
-                + "    <store>\n"
-                + "      <default>\n"
-                + "        <store class=\"linked-list\">\n"
-                + "          <string>one</string>\n"
-                + "        </store>\n"
-                + "      </default>\n"
-                + "    </store>\n"
-                + "  </my>\n"
-                + "  <other serialization=\"custom\">\n"
-                + "    <store>\n"
-                + "      <default>\n"
-                + "        <store>\n"
-                + "          <string>two</string>\n"
-                + "        </store>\n"
-                + "      </default>\n"
-                + "    </store>\n"
-                + "  </other>\n"
-                + "</store-array>";
+        final String expectedXml = ""
+            + "<store-array>\n"
+            + "  <my resolves-to=\"other\" serialization=\"custom\">\n"
+            + "    <store>\n"
+            + "      <default>\n"
+            + "        <store class=\"linked-list\">\n"
+            + "          <string>one</string>\n"
+            + "        </store>\n"
+            + "      </default>\n"
+            + "    </store>\n"
+            + "  </my>\n"
+            + "  <other serialization=\"custom\">\n"
+            + "    <store>\n"
+            + "      <default>\n"
+            + "        <store>\n"
+            + "          <string>two</string>\n"
+            + "        </store>\n"
+            + "      </default>\n"
+            + "    </store>\n"
+            + "  </other>\n"
+            + "</store-array>";
 
-        Store[] stores = new Store[]{
-            new MyStore(),
-            new OtherStore()
-        };
+        @SuppressWarnings("unchecked")
+        final Store<String>[] stores = new Store[]{new MyStore<String>(), new OtherStore<String>()};
         stores[0].store.add("one");
         stores[1].store.add("two");
-        
+
         assertBothWays(stores, expectedXml);
     }
 
-	static class MoscowCalendar extends GregorianCalendar {
-		public MoscowCalendar() {
-			super(TimeZone.getTimeZone("Europe/Moscow"));
-		}
-	}
+    static class MoscowCalendar extends GregorianCalendar {
+        private static final long serialVersionUID = 201202L;
 
-	public void testNestedSerializationOfDefaultType() {
-	    Calendar in = new MoscowCalendar();
-	    in.setTimeInMillis(44444);
-	    String xml = xstream.toXML(in);
-	    Calendar out = (Calendar) xstream.fromXML(xml);
-	    assertEquals(in.getTime(), out.getTime());
-	}
+        public MoscowCalendar() {
+            super(TimeZone.getTimeZone("Europe/Moscow"));
+        }
+    }
+
+    public void testNestedSerializationOfDefaultType() {
+        final Calendar in = new MoscowCalendar();
+        in.setTimeInMillis(44444);
+        final String xml = xstream.toXML(in);
+        final Calendar out = (Calendar)xstream.fromXML(xml);
+        assertEquals(in.getTime(), out.getTime());
+    }
 }

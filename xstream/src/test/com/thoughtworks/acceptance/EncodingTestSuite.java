@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2014, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014, 2016, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -53,6 +53,7 @@ import junit.framework.TestSuite;
 public class EncodingTestSuite extends TestSuite {
 
     public static class TestObject extends StandardObject {
+        private static final long serialVersionUID = 200801L;
         private String data;
     }
 

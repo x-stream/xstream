@@ -1,29 +1,30 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
- * Created on 30. July 2011 by Joerg Schaible by merging 
+ *
+ * Created on 30. July 2011 by Joerg Schaible by merging
  * RelativeSingleNodeXPathCircularReferenceTest and
  * RelativeSingleNodeXPathDuplicateReferenceTest.
  */
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.mapper.Mapper;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 
 public class RelativeSingleNodeXPathReferenceTest extends AbstractReferenceTest {
 
     // tests inherited from superclass
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         xstream.setMode(XStream.SINGLE_NODE_XPATH_RELATIVE_REFERENCES);
@@ -31,15 +32,15 @@ public class RelativeSingleNodeXPathReferenceTest extends AbstractReferenceTest 
 
     public void testXmlContainsReferencePaths() {
 
-        Thing sameThing = new Thing("hello");
-        Thing anotherThing = new Thing("hello");
+        final Thing sameThing = new Thing("hello");
+        final Thing anotherThing = new Thing("hello");
 
-        List list = new ArrayList();
+        final List<Thing> list = new ArrayList<>();
         list.add(sameThing);
         list.add(sameThing);
         list.add(anotherThing);
 
-        String expected = ""
+        final String expected = ""
             + "<list>\n"
             + "  <thing>\n"
             + "    <field>hello</field>\n"
@@ -54,9 +55,9 @@ public class RelativeSingleNodeXPathReferenceTest extends AbstractReferenceTest 
     }
 
     public void testTree() {
-        TreeElement root = new TreeElement("X");
-        TreeElement left = new TreeElement("Y");
-        TreeElement right = new TreeElement("Z");
+        final TreeElement root = new TreeElement("X");
+        final TreeElement left = new TreeElement("Y");
+        final TreeElement right = new TreeElement("Z");
         root.left = left;
         root.right = right;
         left.left = new TreeElement(root.name);
@@ -64,7 +65,7 @@ public class RelativeSingleNodeXPathReferenceTest extends AbstractReferenceTest 
         right.left = left.left;
 
         xstream.alias("elem", TreeElement.class);
-        String expected = ""
+        final String expected = ""
             + "<elem>\n"
             + "  <name>X</name>\n"
             + "  <left>\n"
@@ -85,8 +86,9 @@ public class RelativeSingleNodeXPathReferenceTest extends AbstractReferenceTest 
         assertEquals(expected, xstream.toXML(root));
     }
 
+    @Override
     public void testReplacedReference() {
-        String expectedXml = ""
+        final String expectedXml = ""
             + "<element>\n"
             + "  <data>parent</data>\n"
             + "  <children>\n"
@@ -100,15 +102,15 @@ public class RelativeSingleNodeXPathReferenceTest extends AbstractReferenceTest 
 
         replacedReference(expectedXml);
     }
-    
+
     public void testCanReferenceDeserializedNullValues() {
         xstream.alias("test", Mapper.Null.class);
-        String xml = ""
-                + "<list>\n"
-                + "  <test/>\n"
-                + "  <test reference=\"../test[1]\"/>\n"
-                + "</list>";
-        List list = (List)xstream.fromXML(xml);
+        final String xml = "" //
+            + "<list>\n"
+            + "  <test/>\n"
+            + "  <test reference=\"../test[1]\"/>\n"
+            + "</list>";
+        final List<?> list = xstream.fromXML(xml);
         assertEquals(2, list.size());
         assertNull(list.get(0));
         assertNull(list.get(1));

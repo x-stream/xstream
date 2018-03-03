@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2013, 2015 XStream Committers.
+ * Copyright (C) 2013, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 22. April 2013 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
@@ -15,31 +15,31 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class ImplicitTest extends AbstractAcceptanceTest {
-   
+
     public static class AllImplicitTypes {
-        
+
         public static class A {
             public int val;
         }
-        
+
         public static class B {
             public int val;
         }
-        
+
         public static class C {
             public Integer val;
         }
-        
+
         public A[] aArray = new A[2];
         public String separator1 = "--1--";
         public List<B> bList = new ArrayList<B>();
         public String separator2 = "--2--";
         public Map<Integer, C> cMap = new LinkedHashMap<Integer, C>();
     }
-    
-    public void testAllImplicitTypesAtOnceWithImplicitElementTypes()
-    {
+
+    public void testAllImplicitTypesAtOnceWithImplicitElementTypes() {
         xstream.alias("implicits", AllImplicitTypes.class);
         xstream.alias("a", AllImplicitTypes.A.class);
         xstream.alias("b", AllImplicitTypes.B.class);
@@ -48,7 +48,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         xstream.addImplicitArray(AllImplicitTypes.class, "aArray");
         xstream.addImplicitCollection(AllImplicitTypes.class, "bList");
         xstream.addImplicitMap(AllImplicitTypes.class, "cMap", AllImplicitTypes.C.class, "val");
-        String expected = ""
+        final String expected = ""
             + "<implicits>\n"
             + "  <a>\n"
             + "    <val>1</val>\n"
@@ -72,7 +72,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
             + "  </c>\n"
             + "</implicits>";
 
-        AllImplicitTypes implicits = new AllImplicitTypes();
+        final AllImplicitTypes implicits = new AllImplicitTypes();
         implicits.aArray[0] = new AllImplicitTypes.A();
         implicits.aArray[0].val = 1;
         implicits.aArray[1] = new AllImplicitTypes.A();
@@ -89,9 +89,8 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
     }
-    
-    public void testAllImplicitTypesAtOnceWithExplicitElementTypes()
-    {
+
+    public void testAllImplicitTypesAtOnceWithExplicitElementTypes() {
         xstream.alias("implicits", AllImplicitTypes.class);
         xstream.alias("a", AllImplicitTypes.A.class);
         xstream.alias("b", AllImplicitTypes.B.class);
@@ -100,7 +99,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         xstream.addImplicitArray(AllImplicitTypes.class, "aArray");
         xstream.addImplicitCollection(AllImplicitTypes.class, "bList", AllImplicitTypes.B.class);
         xstream.addImplicitMap(AllImplicitTypes.class, "cMap", AllImplicitTypes.C.class, "val");
-        String expected = ""
+        final String expected = ""
             + "<implicits>\n"
             + "  <a>\n"
             + "    <val>1</val>\n"
@@ -124,7 +123,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
             + "  </c>\n"
             + "</implicits>";
 
-        AllImplicitTypes implicits = new AllImplicitTypes();
+        final AllImplicitTypes implicits = new AllImplicitTypes();
         implicits.aArray[0] = new AllImplicitTypes.A();
         implicits.aArray[0].val = 1;
         implicits.aArray[1] = new AllImplicitTypes.A();
@@ -145,15 +144,14 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.separator1 = implicits.separator2 = null;
         assertBothWays(implicits, stripSeparator(expected));
     }
-    
-    public void testAllImplicitTypesAtOnceWithExplicitElementNames()
-    {
+
+    public void testAllImplicitTypesAtOnceWithExplicitElementNames() {
         xstream.alias("implicits", AllImplicitTypes.class);
         xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
         xstream.addImplicitArray(AllImplicitTypes.class, "aArray", "a");
         xstream.addImplicitCollection(AllImplicitTypes.class, "bList", "b", AllImplicitTypes.B.class);
         xstream.addImplicitMap(AllImplicitTypes.class, "cMap", "c", AllImplicitTypes.C.class, "val");
-        String expected = ""
+        final String expected = ""
             + "<implicits>\n"
             + "  <a>\n"
             + "    <val>1</val>\n"
@@ -177,7 +175,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
             + "  </c>\n"
             + "</implicits>";
 
-        AllImplicitTypes implicits = new AllImplicitTypes();
+        final AllImplicitTypes implicits = new AllImplicitTypes();
         implicits.aArray[0] = new AllImplicitTypes.A();
         implicits.aArray[0].val = 1;
         implicits.aArray[1] = new AllImplicitTypes.A();
@@ -196,11 +194,11 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.separator1 = implicits.separator2 = null;
         assertBothWays(implicits, stripSeparator(expected));
     }
-    
-    private String stripSeparator(String s) {
+
+    private String stripSeparator(final String s) {
         return s.replaceAll(" *<separator.+</separator.+\n", "");
     }
-    
+
     public static class AllHidingTypes extends AllImplicitTypes {
         public String separator = "--X--";
         @SuppressWarnings("hiding")
@@ -210,7 +208,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         @SuppressWarnings("hiding")
         public String cMap = "c";
     }
-    
+
     public static class AllHidingImplicitTypes extends AllHidingTypes {
         @SuppressWarnings("hiding")
         public String separator = "--H--";
@@ -221,9 +219,8 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         @SuppressWarnings("hiding")
         public Map<Integer, C> cMap = new LinkedHashMap<Integer, C>();
     }
-    
-    public void testHiddenImplicitTypesAtOnceWithExplicitElementNames()
-    {
+
+    public void testHiddenImplicitTypesAtOnceWithExplicitElementNames() {
         xstream.alias("implicits", AllHidingImplicitTypes.class);
         xstream.alias("hiding", AllHidingTypes.class);
         xstream.alias("hidden", AllImplicitTypes.class);
@@ -234,7 +231,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         xstream.addImplicitCollection(AllHidingImplicitTypes.class, "bList", "b", AllImplicitTypes.B.class);
         xstream.addImplicitMap(AllImplicitTypes.class, "cMap", "cHidden", AllImplicitTypes.C.class, "val");
         xstream.addImplicitMap(AllHidingImplicitTypes.class, "cMap", "c", AllImplicitTypes.C.class, "val");
-        String expected = ""
+        final String expected = ""
             + "<implicits>\n"
             + "  <aHidden defined-in=\"hidden\">\n"
             + "    <val>1</val>\n"
@@ -281,7 +278,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
             + "  </c>\n"
             + "</implicits>";
 
-        AllHidingImplicitTypes implicits = new AllHidingImplicitTypes();
+        final AllHidingImplicitTypes implicits = new AllHidingImplicitTypes();
         ((AllImplicitTypes)implicits).aArray[0] = new AllImplicitTypes.A();
         ((AllImplicitTypes)implicits).aArray[0].val = 1;
         ((AllImplicitTypes)implicits).aArray[1] = new AllImplicitTypes.A();
@@ -311,7 +308,8 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         c.val = new Integer(12);
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
-        implicits.separator1 = implicits.separator2 = ((AllHidingTypes)implicits).separator = implicits.separator = null;
+        implicits.separator1 = implicits.separator2 = ((AllHidingTypes)implicits).separator = implicits.separator =
+                null;
         assertBothWays(implicits, stripSeparator(expected));
     }
 }

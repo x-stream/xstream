@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,13 +24,13 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
         final String xml = xstream.toXML(inner);
 
         final String expectedXml = ""
-                + "<com.thoughtworks.acceptance.Outer_-Inner>\n"
-                + "  <innerName>THE-INNER-NAME</innerName>\n"
-                + "  <outer-class>\n"
-                + "    <inner reference=\"../..\"/>\n"
-                + "    <outerName>THE-OUTER-NAME</outerName>\n"
-                + "  </outer-class>\n"
-                + "</com.thoughtworks.acceptance.Outer_-Inner>";
+            + "<com.thoughtworks.acceptance.Outer_-Inner>\n"
+            + "  <innerName>THE-INNER-NAME</innerName>\n"
+            + "  <outer-class>\n"
+            + "    <inner reference=\"../..\"/>\n"
+            + "    <outerName>THE-OUTER-NAME</outerName>\n"
+            + "  </outer-class>\n"
+            + "</com.thoughtworks.acceptance.Outer_-Inner>";
         assertEquals(expectedXml, xml);
 
         final Outer.Inner newInner = (Outer.Inner)xstream.fromXML(xml);
@@ -38,6 +38,7 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
         assertEquals("Hello from THE-INNER-NAME (inside THE-OUTER-NAME)", newInner.getMessage());
     }
 
+    @SuppressWarnings("unused")
     public static class OuterType {
         private final String outerName = "Outer Name";
         public InnerType inner = new InnerType();
@@ -65,10 +66,12 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
                     class Dynamic4 extends Dynamic1.Dynamic2 {
                         private final String name4 = "Name 4";
                         private final Dynamic5 dyn5 = new Dynamic5();
+
                         class Dynamic5 {
                             private final String name5 = "Name 5";
                         }
-                        Dynamic4(Dynamic1 outer) {
+
+                        Dynamic4(final Dynamic1 outer) {
                             outer.super();
                         }
                     }
@@ -84,37 +87,37 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
         final OuterType outer = new OuterType();
 
         final String expectedXml = ""
-                + "<inner>\n"
-                + "  <innerName>Inner Name</innerName>\n"
-                + "  <outer-class>\n"
-                + "    <outerName>Outer Name</outerName>\n"
-                + "    <inner reference=\"../..\"/>\n"
-                + "    <dyn1>\n"
-                + "      <name1>Name 1</name1>\n"
-                + "      <outer-class reference=\"../../..\"/>\n"
-                + "    </dyn1>\n"
-                + "    <dyn2>\n"
-                + "      <name2>Name 2</name2>\n"
-                + "      <outer-class reference=\"../../dyn1\"/>\n"
-                + "    </dyn2>\n"
-                + "    <dyn3>\n"
-                + "      <name2>Name 2</name2>\n"
-                + "      <outer-class reference=\"../../dyn1\"/>\n"
-                + "      <name3>Name 3</name3>\n"
-                + "      <dyn4 class=\"com.thoughtworks.acceptance.InnerClassesTest$OuterType$InnerType$Dynamic3$1Dynamic4\">\n"
-                + "        <name2>Name 2</name2>\n"
-                + "        <outer-class defined-in=\"com.thoughtworks.acceptance.InnerClassesTest$OuterType$InnerType$Dynamic1$Dynamic2\" reference=\"../../../dyn1\"/>\n"
-                + "        <name4>Name 4</name4>\n"
-                + "        <dyn5>\n"
-                + "          <name5>Name 5</name5>\n"
-                + "          <outer-class reference=\"../..\"/>\n"
-                + "        </dyn5>\n"
-                + "        <outer-class reference=\"../..\"/>\n"
-                + "      </dyn4>\n"
-                + "      <outer-class-1 reference=\"../../..\"/>\n"
-                + "    </dyn3>\n"
-                + "  </outer-class>\n"
-                + "</inner>";
+            + "<inner>\n"
+            + "  <innerName>Inner Name</innerName>\n"
+            + "  <outer-class>\n"
+            + "    <outerName>Outer Name</outerName>\n"
+            + "    <inner reference=\"../..\"/>\n"
+            + "    <dyn1>\n"
+            + "      <name1>Name 1</name1>\n"
+            + "      <outer-class reference=\"../../..\"/>\n"
+            + "    </dyn1>\n"
+            + "    <dyn2>\n"
+            + "      <name2>Name 2</name2>\n"
+            + "      <outer-class reference=\"../../dyn1\"/>\n"
+            + "    </dyn2>\n"
+            + "    <dyn3>\n"
+            + "      <name2>Name 2</name2>\n"
+            + "      <outer-class reference=\"../../dyn1\"/>\n"
+            + "      <name3>Name 3</name3>\n"
+            + "      <dyn4 class=\"com.thoughtworks.acceptance.InnerClassesTest$OuterType$InnerType$Dynamic3$1Dynamic4\">\n"
+            + "        <name2>Name 2</name2>\n"
+            + "        <outer-class defined-in=\"com.thoughtworks.acceptance.InnerClassesTest$OuterType$InnerType$Dynamic1$Dynamic2\" reference=\"../../../dyn1\"/>\n"
+            + "        <name4>Name 4</name4>\n"
+            + "        <dyn5>\n"
+            + "          <name5>Name 5</name5>\n"
+            + "          <outer-class reference=\"../..\"/>\n"
+            + "        </dyn5>\n"
+            + "        <outer-class reference=\"../..\"/>\n"
+            + "      </dyn4>\n"
+            + "      <outer-class-1 reference=\"../../..\"/>\n"
+            + "    </dyn3>\n"
+            + "  </outer-class>\n"
+            + "</inner>";
 
         assertBothWays(outer.inner, expectedXml);
     }

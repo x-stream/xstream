@@ -1,15 +1,18 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 04. October 2004 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
+
+import java.io.StringReader;
+import java.io.StringWriter;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -18,62 +21,64 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.XppReader;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 
-import java.io.StringReader;
-import java.io.StringWriter;
 
 public class DataHolderTest extends AbstractAcceptanceTest {
 
-    class StringWithPrefixConverter implements Converter {
+    static class StringWithPrefixConverter implements Converter {
 
-        public boolean canConvert(Class type) {
+        @Override
+        public boolean canConvert(final Class<?> type) {
             return type == String.class;
         }
 
-        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-            String prefix = (String) context.get("prefix");
+        @Override
+        public void marshal(final Object source, final HierarchicalStreamWriter writer,
+                final MarshallingContext context) {
+            final String prefix = (String)context.get("prefix");
             if (prefix != null) {
                 writer.addAttribute("prefix", prefix);
             }
             writer.setValue(source.toString());
         }
 
-        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        @Override
+        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
             context.put("saw-this", reader.getAttribute("can-you-see-me"));
             return reader.getValue();
         }
 
     }
 
+    @SuppressWarnings("resource")
     public void testCanBePassedInToMarshallerExternally() {
         // setup
         xstream.registerConverter(new StringWithPrefixConverter());
-        StringWriter writer = new StringWriter();
-        DataHolder dataHolder = xstream.newDataHolder();
+        final StringWriter writer = new StringWriter();
+        final DataHolder dataHolder = xstream.newDataHolder();
 
         // execute
         dataHolder.put("prefix", "additional stuff");
         xstream.marshal("something", new PrettyPrintWriter(writer), dataHolder);
 
         // verify
-        String expected = "<string prefix=\"additional stuff\">something</string>";
+        final String expected = "<string prefix=\"additional stuff\">something</string>";
         assertEquals(expected, writer.toString());
     }
 
     public void testCanBePassedInToUnmarshallerExternally() {
         // setup
         xstream.registerConverter(new StringWithPrefixConverter());
-        DataHolder dataHolder = xstream.newDataHolder();
+        final DataHolder dataHolder = xstream.newDataHolder();
 
         // execute
-        String xml = "<string can-you-see-me=\"yes\">something</string>";
-        Object result = xstream.unmarshal(new XppReader(new StringReader(xml)), null, dataHolder);
+        final String xml = "<string can-you-see-me=\"yes\">something</string>";
+        final String result = xstream.<String>unmarshal(new XppDriver().createReader(new StringReader(xml)), null,
+            dataHolder);
 
         // verify
         assertEquals("something", result);
         assertEquals("yes", dataHolder.get("saw-this"));
     }
-
-
 }

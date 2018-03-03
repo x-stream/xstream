@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -9,6 +9,12 @@
  * Created on 24. November 2008 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.Software;
@@ -20,21 +26,17 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.persistence.FilePersistenceStrategy;
 import com.thoughtworks.xstream.persistence.XmlArrayList;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Tests the persistence package.
- * 
+ *
  * @author J&ouml;rg Schaible
  */
 public class PersistenceTest extends AbstractAcceptanceTest {
 
     private File dir;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         dir = new File("target/test-storage");
@@ -42,6 +44,7 @@ public class PersistenceTest extends AbstractAcceptanceTest {
         cleanUp();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         cleanUp();
         dir.delete();
@@ -49,32 +52,36 @@ public class PersistenceTest extends AbstractAcceptanceTest {
     }
 
     private void cleanUp() {
-        File[] files = dir.listFiles();
-        for(int i = 0; i < files.length; ++i) {
-            if (files[i].isFile()) {
-                files[i].delete();
+        final File[] files = dir.listFiles();
+        for (final File file : files) {
+            if (file.isFile()) {
+                file.delete();
             }
         }
     }
 
     private final class PersistenceArrayListConverter implements Converter {
-        public void marshal(Object source, HierarchicalStreamWriter writer,
-            MarshallingContext context) {
-            final XmlArrayList list = new XmlArrayList(new FilePersistenceStrategy(dir, xstream));
+        @Override
+        public void marshal(final Object source, final HierarchicalStreamWriter writer,
+                final MarshallingContext context) {
+            final XmlArrayList<Object> list = new XmlArrayList<>(new FilePersistenceStrategy<Integer, Object>(dir,
+                xstream));
             context.convertAnother(dir);
-            list.addAll((Collection)source);
+            list.addAll((Collection<?>)source);
         }
 
-        public Object unmarshal(HierarchicalStreamReader reader,
-            UnmarshallingContext context) {
+        @Override
+        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
             final File directory = (File)context.convertAnother(null, File.class);
-            final XmlArrayList persistentList = new XmlArrayList(new FilePersistenceStrategy(directory, xstream));
-            final ArrayList list = new ArrayList(persistentList);
-            //persistentList.clear(); // remove files
+            final XmlArrayList<Object> persistentList = new XmlArrayList<>(new FilePersistenceStrategy<Integer, Object>(
+                directory, xstream));
+            final ArrayList<Object> list = new ArrayList<>(persistentList);
+            // persistentList.clear(); // remove files
             return list;
         }
 
-        public boolean canConvert(Class type) {
+        @Override
+        public boolean canConvert(final Class<?> type) {
             return type == ArrayList.class;
         }
     }
@@ -83,26 +90,28 @@ public class PersistenceTest extends AbstractAcceptanceTest {
         xstream.alias("lists", SampleLists.class);
         xstream.alias("software", Software.class);
         xstream.registerLocalConverter(SampleLists.class, "good", new PersistenceArrayListConverter());
-        
-        SampleLists lists = new SampleLists();
+
+        final SampleLists<Object, ?> lists = new SampleLists<>();
         lists.good.add("Guilherme");
         lists.good.add(new Integer(1970));
         lists.good.add(new Software("Codehaus", "XStream"));
 
-        String expected = "" +
-                "<lists>\n" +
-                "  <good>" + dir.getPath() + "</good>\n" +
-                "  <bad class=\"list\"/>\n" + 
-                "</lists>";
+        final String expected = ""
+            + "<lists>\n"
+            + "  <good>"
+            + dir.getPath()
+            + "</good>\n"
+            + "  <bad class=\"list\"/>\n"
+            + "</lists>";
 
-        // assumes 'lists' is serialized first 
-        SampleLists serialized = (SampleLists)assertBothWays(lists, expected);
-        
-        // compare original list and list written in separate XML file 
+        // assumes 'lists' is serialized first
+        final SampleLists<Object, ?> serialized = assertBothWays(lists, expected);
+
+        // compare original list and list written in separate XML file
         assertEquals(lists.good, serialized.good);
-        
+
         // retrieve value from external file
-        FileInputStream inputStream = new FileInputStream(new File(dir, "int@2.xml"));
+        final FileInputStream inputStream = new FileInputStream(new File(dir, "int@2.xml"));
         try {
             assertEquals(lists.good.get(2), xstream.fromXML(inputStream));
         } finally {

@@ -1,24 +1,14 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014, 2015, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 24. March 2006 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
-
-import com.thoughtworks.acceptance.objects.Software;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FilePermission;
@@ -28,15 +18,24 @@ import java.security.CodeSource;
 import java.security.Permission;
 import java.security.Policy;
 import java.security.cert.Certificate;
-import java.util.Iterator;
 import java.util.PropertyPermission;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
+
+import junit.framework.TestCase;
 
 
 /**
- * Test XStream with an active SecurityManager. Note, that it is intentional, that this test is
- * not derived from AbstractAcceptanceTest to avoid loaded classes before the SecurityManager is
- * in action. Also run each fixture in its own to avoid side-effects.
- * 
+ * Test XStream with an active SecurityManager. Note, that it is intentional, that this test is not derived from
+ * AbstractAcceptanceTest to avoid loaded classes before the SecurityManager is in action. Also run each fixture in its
+ * own to avoid side-effects.
+ *
  * @author J&ouml;rg Schaible
  */
 public class SecurityManagerTest extends TestCase {
@@ -45,43 +44,45 @@ public class SecurityManagerTest extends TestCase {
     private DynamicSecurityManager sm;
     private CodeSource source;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         System.setSecurityManager(null);
         source = new CodeSource(new File("target").toURI().toURL(), (Certificate[])null);
 
         sm = new DynamicSecurityManager();
-        Policy policy = Policy.getPolicy();
+        final Policy policy = Policy.getPolicy();
         sm.setPermissions(source, policy.getPermissions(source));
         sm.addPermission(source, new RuntimePermission("setSecurityManager"));
-        
-        File mainClasses = new File(System.getProperty("user.dir"), "target/classes/-");
-        File testClasses = new File(System.getProperty("user.dir"), "target/test-classes/-");
-        String[] javaClassPath = StringUtils.split(System.getProperty("java.class.path"), File.pathSeparatorChar);
-        File javaHome = new File(System.getProperty("java.home"), "-");
-        
+
+        final File mainClasses = new File(System.getProperty("user.dir"), "target/classes/-");
+        final File testClasses = new File(System.getProperty("user.dir"), "target/test-classes/-");
+        final String[] javaClassPath = StringUtils.split(System.getProperty("java.class.path"), File.pathSeparatorChar);
+        final File javaHome = new File(System.getProperty("java.home"), "-");
+
         // necessary permission start here
         sm.addPermission(source, new FilePermission(mainClasses.toString(), "read"));
         sm.addPermission(source, new FilePermission(testClasses.toString(), "read"));
         sm.addPermission(source, new FilePermission(javaHome.toString(), "read"));
-        for (int i = 0; i < javaClassPath.length; ++i) {
-            if (javaClassPath[i].endsWith(".jar")) {
-                sm.addPermission(source, new FilePermission(javaClassPath[i], "read"));
+        for (final String element : javaClassPath) {
+            if (element.endsWith(".jar")) {
+                sm.addPermission(source, new FilePermission(element, "read"));
             }
         }
     }
 
+    @Override
     protected void tearDown() throws Exception {
         System.setSecurityManager(null);
         super.tearDown();
     }
 
+    @Override
     protected void runTest() throws Throwable {
         try {
             super.runTest();
-        } catch(Throwable e) {
-            for (final Iterator iter = sm.getFailedPermissions().iterator(); iter.hasNext();) {
-                final Permission permission = (Permission)iter.next();
+        } catch (final Throwable e) {
+            for (final Permission permission : sm.getFailedPermissions()) {
                 System.out.println("SecurityException: Permission " + permission.toString());
             }
             throw e;
@@ -118,8 +119,8 @@ public class SecurityManagerTest extends TestCase {
         System.setSecurityManager(sm);
 
         xstream = new XStream();
-        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
-        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName() + ".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName() + "$*");
 
         assertBothWays();
     }
@@ -153,8 +154,8 @@ public class SecurityManagerTest extends TestCase {
         System.setSecurityManager(sm);
 
         xstream = new XStream(new PureJavaReflectionProvider());
-        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
-        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName() + ".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName() + "$*");
 
         assertBothWays();
     }
@@ -168,10 +169,12 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
         sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
-        sm.addPermission(source, new PropertyPermission("com.sun.org.apache.xerces.internal.xni.parser.XMLParserConfiguration", "read"));
+        sm.addPermission(source, new PropertyPermission(
+            "com.sun.org.apache.xerces.internal.xni.parser.XMLParserConfiguration", "read"));
         sm.addPermission(source, new PropertyPermission("elementAttributeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("entityExpansionLimit", "read"));
-        sm.addPermission(source, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check", "read"));
+        sm.addPermission(source, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check",
+            "read"));
         sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
         sm.addPermission(source, new PropertyPermission("java.nio.file.spi.DefaultFileSystemProvider", "read"));
@@ -204,8 +207,8 @@ public class SecurityManagerTest extends TestCase {
         System.setSecurityManager(sm);
 
         xstream = new XStream(new PureJavaReflectionProvider(), new DomDriver());
-        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName()+".*objects.**");
-        xstream.allowTypesByWildcard(this.getClass().getName()+"$*");
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName() + ".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName() + "$*");
 
         assertBothWays();
     }
@@ -215,17 +218,18 @@ public class SecurityManagerTest extends TestCase {
         xstream.alias("software", Software.class);
 
         final Software sw = new Software("jw", "xstr");
-        final String xml = "<software>\n"
-                + "  <vendor>jw</vendor>\n"
-                + "  <name>xstr</name>\n"
-                + "</software>";
+        final String xml = ""//
+            + "<software>\n"
+            + "  <vendor>jw</vendor>\n"
+            + "  <name>xstr</name>\n"
+            + "</software>";
 
-        String resultXml = xstream.toXML(sw);
+        final String resultXml = xstream.toXML(sw);
         assertEquals(xml, resultXml);
-        Object resultRoot = xstream.fromXML(resultXml);
+        final Object resultRoot = xstream.fromXML(resultXml);
         if (!sw.equals(resultRoot)) {
-            assertEquals("Object deserialization failed", "DESERIALIZED OBJECT\n"
-                    + xstream.toXML(sw), "DESERIALIZED OBJECT\n" + xstream.toXML(resultRoot));
+            assertEquals("Object deserialization failed", "DESERIALIZED OBJECT\n" + xstream.toXML(sw),
+                "DESERIALIZED OBJECT\n" + xstream.toXML(resultRoot));
         }
     }
 }

@@ -1,17 +1,15 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 02. February 2005 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
-
-import com.thoughtworks.xstream.testutil.CallLog;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,9 +19,12 @@ import java.io.ObjectInputValidation;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import com.thoughtworks.xstream.testutil.CallLog;
+
+
 public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
-    // static so it can be accessed by objects under test, without them needing a reference back to the testcase
+    // static so it can be accessed by objects under test, without them needing a reference back to the test case
     private static CallLog log = new CallLog();
 
     @Override
@@ -31,19 +32,20 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         super.setUp();
         log.reset();
     }
-   
 
     // --- Sample class hierarchy
 
-    public static class PrivateBase implements Serializable{
+    public static class PrivateBase implements Serializable {
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private static final long serialVersionUID = 200502L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("PrivateBase.writeObject() start");
             out.defaultWriteObject();
             log.actual("PrivateBase.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("PrivateBase.readObject() start");
             in.defaultReadObject();
             log.actual("PrivateBase.readObject() end");
@@ -60,15 +62,17 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class PrivateChildOwnRR extends PrivateBase implements Serializable{
+    public static class PrivateChildOwnRR extends PrivateBase implements Serializable {
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private static final long serialVersionUID = 200502L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("PrivateChildOwnRR.writeObject() start");
             out.defaultWriteObject();
             log.actual("PrivateChildOwnRR.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("PrivateChildOwnRR.readObject() start");
             in.defaultReadObject();
             log.actual("PrivateChildOwnRR.readObject() end");
@@ -85,30 +89,34 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class PrivateChildNoRR extends PrivateBase implements Serializable{
+    public static class PrivateChildNoRR extends PrivateBase implements Serializable {
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private static final long serialVersionUID = 201410L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("PrivateChildNoRR.writeObject() start");
             out.defaultWriteObject();
             log.actual("PrivateChildNoRR.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("PrivateChildNoRR.readObject() start");
             in.defaultReadObject();
             log.actual("PrivateChildNoRR.readObject() end");
         }
     }
-    
-    public static class ProtectedBase implements Serializable{
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+    public static class ProtectedBase implements Serializable {
+
+        private static final long serialVersionUID = 201410L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("ProtectedBase.writeObject() start");
             out.defaultWriteObject();
             log.actual("ProtectedBase.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("ProtectedBase.readObject() start");
             in.defaultReadObject();
             log.actual("ProtectedBase.readObject() end");
@@ -125,15 +133,17 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class ProtectedChildOwnRR extends ProtectedBase implements Serializable{
+    public static class ProtectedChildOwnRR extends ProtectedBase implements Serializable {
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private static final long serialVersionUID = 201410L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("ProtectedChildOwnRR.writeObject() start");
             out.defaultWriteObject();
             log.actual("ProtectedChildOwnRR.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("ProtectedChildOwnRR.readObject() start");
             in.defaultReadObject();
             log.actual("ProtectedChildOwnRR.readObject() end");
@@ -152,30 +162,34 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class ProtectedChildInheritedRR extends ProtectedBase implements Serializable{
+    public static class ProtectedChildInheritedRR extends ProtectedBase implements Serializable {
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private static final long serialVersionUID = 201410L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("ProtectedChildInheritedRR.writeObject() start");
             out.defaultWriteObject();
             log.actual("ProtectedChildInheritedRR.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("ProtectedChildInheritedRR.readObject() start");
             in.defaultReadObject();
             log.actual("ProtectedChildInheritedRR.readObject() end");
         }
     }
-    
-    public static class PackageBase implements Serializable{
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+    public static class PackageBase implements Serializable {
+
+        private static final long serialVersionUID = 201410L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("PackageBase.writeObject() start");
             out.defaultWriteObject();
             log.actual("PackageBase.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("PackageBase.readObject() start");
             in.defaultReadObject();
             log.actual("PackageBase.readObject() end");
@@ -192,15 +206,17 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class PackageChildOwnRR extends PackageBase implements Serializable{
+    public static class PackageChildOwnRR extends PackageBase implements Serializable {
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private static final long serialVersionUID = 201410L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("PackageChildOwnRR.writeObject() start");
             out.defaultWriteObject();
             log.actual("PackageChildOwnRR.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("PackageChildOwnRR.readObject() start");
             in.defaultReadObject();
             log.actual("PackageChildOwnRR.readObject() end");
@@ -219,15 +235,17 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class PackageChildInheritedRR extends PackageBase implements Serializable{
+    public static class PackageChildInheritedRR extends PackageBase implements Serializable {
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private static final long serialVersionUID = 201410L;
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             log.actual("PackageChildInheritedRR.writeObject() start");
             out.defaultWriteObject();
             log.actual("PackageChildInheritedRR.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             log.actual("PackageChildInheritedRR.readObject() start");
             in.defaultReadObject();
             log.actual("PackageChildInheritedRR.readObject() end");
@@ -236,16 +254,16 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     // --- Convenience wrappers around Java Object Serialization
 
-    private byte[] javaSerialize(Object object) throws IOException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(bytes);
+    private byte[] javaSerialize(final Object object) throws IOException {
+        final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        final ObjectOutputStream objectOutputStream = new ObjectOutputStream(bytes);
         objectOutputStream.writeObject(object);
         objectOutputStream.close();
         return bytes.toByteArray();
     }
 
-    private Object javaDeserialize(byte[] data) throws IOException, ClassNotFoundException {
-        ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(data));
+    private Object javaDeserialize(final byte[] data) throws IOException, ClassNotFoundException {
+        final ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(data));
         return objectInputStream.readObject();
     }
 
@@ -431,7 +449,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testJavaDeserializationOwnPrivateRR() throws IOException, ClassNotFoundException {
         // setup
-        byte[] data = javaSerialize(new PrivateChildOwnRR());
+        final byte[] data = javaSerialize(new PrivateChildOwnRR());
         log.reset();
 
         // expectations
@@ -450,7 +468,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testJavaDeserializationNoRR() throws IOException, ClassNotFoundException {
         // setup
-        byte[] data = javaSerialize(new PrivateChildNoRR());
+        final byte[] data = javaSerialize(new PrivateChildNoRR());
         log.reset();
 
         // expectations
@@ -468,7 +486,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testJavaDeserializationOwnProtectedRR() throws IOException, ClassNotFoundException {
         // setup
-        byte[] data = javaSerialize(new ProtectedChildOwnRR());
+        final byte[] data = javaSerialize(new ProtectedChildOwnRR());
         log.reset();
 
         // expectations
@@ -487,7 +505,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testJavaDeserializationInheritedRR() throws IOException, ClassNotFoundException {
         // setup
-        byte[] data = javaSerialize(new ProtectedChildInheritedRR());
+        final byte[] data = javaSerialize(new ProtectedChildInheritedRR());
         log.reset();
 
         // expectations
@@ -506,7 +524,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testJavaDeserializationOwnPackageRR() throws IOException, ClassNotFoundException {
         // setup
-        byte[] data = javaSerialize(new PackageChildOwnRR());
+        final byte[] data = javaSerialize(new PackageChildOwnRR());
         log.reset();
 
         // expectations
@@ -525,7 +543,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testJavaDeserializationInheritedPackageRR() throws IOException, ClassNotFoundException {
         // setup
-        byte[] data = javaSerialize(new PackageChildInheritedRR());
+        final byte[] data = javaSerialize(new PackageChildInheritedRR());
         log.reset();
 
         // expectations
@@ -544,7 +562,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testXStreamDeserializationOwnPrivateRR() {
         // setup
-        String data = xstream.toXML(new PrivateChildOwnRR());
+        final String data = xstream.toXML(new PrivateChildOwnRR());
         log.reset();
 
         // expectations
@@ -563,7 +581,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testXStreamDeserializationNoRR() {
         // setup
-        String data = xstream.toXML(new PrivateChildNoRR());
+        final String data = xstream.toXML(new PrivateChildNoRR());
         log.reset();
 
         // expectations
@@ -581,7 +599,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testXStreamDeserializationOwnProtectedRR() {
         // setup
-        String data = xstream.toXML(new ProtectedChildOwnRR());
+        final String data = xstream.toXML(new ProtectedChildOwnRR());
         log.reset();
 
         // expectations
@@ -600,7 +618,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testXStreamDeserializationInheritedRR() {
         // setup
-        String data = xstream.toXML(new ProtectedChildInheritedRR());
+        final String data = xstream.toXML(new ProtectedChildInheritedRR());
         log.reset();
 
         // expectations
@@ -619,7 +637,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testXStreamDeserializationOwnPackageRR() {
         // setup
-        String data = xstream.toXML(new PackageChildOwnRR());
+        final String data = xstream.toXML(new PackageChildOwnRR());
         log.reset();
 
         // expectations
@@ -638,7 +656,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testXStreamDeserializationInheritedPackageRR() {
         // setup
-        String data = xstream.toXML(new PackageChildInheritedRR());
+        final String data = xstream.toXML(new PackageChildInheritedRR());
         log.reset();
 
         // expectations
@@ -657,9 +675,11 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public static class ParentNotTransient implements Serializable {
 
+        private static final long serialVersionUID = 200502L;
+
         public int somethingNotTransient;
 
-        public ParentNotTransient(int somethingNotTransient) {
+        public ParentNotTransient(final int somethingNotTransient) {
             this.somethingNotTransient = somethingNotTransient;
         }
 
@@ -667,14 +687,16 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public static class ChildWithTransient extends ParentNotTransient implements Serializable {
 
+        private static final long serialVersionUID = 200502L;
+
         public transient int somethingTransient;
 
-        public ChildWithTransient(int somethingNotTransient, int somethingTransient) {
+        public ChildWithTransient(final int somethingNotTransient, final int somethingTransient) {
             super(somethingNotTransient);
             this.somethingTransient = somethingTransient;
         }
 
-        private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream s) throws IOException, ClassNotFoundException {
             s.defaultReadObject();
             somethingTransient = 99999;
         }
@@ -684,69 +706,75 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         xstream.alias("parent", ParentNotTransient.class);
         xstream.alias("child", ChildWithTransient.class);
 
-        Object in = new ChildWithTransient(10, 22222);
-        String expectedXml = ""
-                + "<child serialization=\"custom\">\n"
-                + "  <parent>\n"
-                + "    <default>\n"
-                + "      <somethingNotTransient>10</somethingNotTransient>\n"
-                + "    </default>\n"
-                + "  </parent>\n"
-                + "  <child>\n"
-                + "    <default/>\n"
-                + "  </child>\n"
-                + "</child>";
+        final Object in = new ChildWithTransient(10, 22222);
+        final String expectedXml = ""
+            + "<child serialization=\"custom\">\n"
+            + "  <parent>\n"
+            + "    <default>\n"
+            + "      <somethingNotTransient>10</somethingNotTransient>\n"
+            + "    </default>\n"
+            + "  </parent>\n"
+            + "  <child>\n"
+            + "    <default/>\n"
+            + "  </child>\n"
+            + "</child>";
 
-        String xml = xstream.toXML(in);
+        final String xml = xstream.toXML(in);
         assertEquals(expectedXml, xml);
 
-        ChildWithTransient childWithTransient = (ChildWithTransient) xstream.fromXML(xml);
+        final ChildWithTransient childWithTransient = (ChildWithTransient)xstream.fromXML(xml);
 
         assertEquals(10, childWithTransient.somethingNotTransient);
         assertEquals(99999, childWithTransient.somethingTransient);
     }
 
-
     public static class SomethingThatValidates implements Serializable {
 
-        private void readObject(ObjectInputStream s) throws IOException {
+        private static final long serialVersionUID = 200502L;
+
+        private void readObject(final ObjectInputStream s) throws IOException {
 
             final int LOW_PRIORITY = -5;
             final int MEDIUM_PRIORITY = 0;
             final int HIGH_PRIORITY = 5;
 
             s.registerValidation(new ObjectInputValidation() {
+                @Override
                 public void validateObject() {
                     log.actual("validateObject() medium priority 1");
                 }
             }, MEDIUM_PRIORITY);
 
             s.registerValidation(new ObjectInputValidation() {
+                @Override
                 public void validateObject() {
                     log.actual("validateObject() high priority");
                 }
             }, HIGH_PRIORITY);
 
             s.registerValidation(new ObjectInputValidation() {
+                @Override
                 public void validateObject() {
                     log.actual("validateObject() low priority");
                 }
             }, LOW_PRIORITY);
 
             s.registerValidation(new ObjectInputValidation() {
+                @Override
                 public void validateObject() {
                     log.actual("validateObject() medium priority 2");
                 }
             }, MEDIUM_PRIORITY);
         }
-        
+
         private Object readResolve() {
             log.actual("readResolve()");
             return this;
         }
     }
 
-    public void testJavaSerializationValidatesObjectIsCalledInPriorityOrder() throws IOException, ClassNotFoundException {
+    public void testJavaSerializationValidatesObjectIsCalledInPriorityOrder()
+            throws IOException, ClassNotFoundException {
         // expect
         log.expect("readResolve()");
         log.expect("validateObject() high priority");
@@ -785,20 +813,22 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
     }
 
     public static class CustomSerializableChild extends UnserializableParent implements Serializable {
+
+        private static final long serialVersionUID = 200602L;
+
         public int y;
 
         public CustomSerializableChild() {
             y = 10;
         }
 
-        private void writeObject(ObjectOutputStream stream) throws IOException {
+        private void writeObject(final ObjectOutputStream stream) throws IOException {
             log.actual("Child.writeObject() start");
             stream.defaultWriteObject();
             log.actual("Child.writeObject() end");
         }
 
-        private void readObject(ObjectInputStream stream)
-                throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
             log.actual("Child.readObject() start");
             stream.defaultReadObject();
             log.actual("Child.readObject() end");
@@ -819,25 +849,26 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         xstream.alias("parent", UnserializableParent.class);
         xstream.alias("child", CustomSerializableChild.class);
 
-        CustomSerializableChild child = new CustomSerializableChild();
-        String expected = ""
-                + "<child serialization=\"custom\">\n"
-                + "  <unserializable-parents>\n"
-                + "    <x>5</x>\n"
-                + "  </unserializable-parents>\n"
-                + "  <child>\n"
-                + "    <default>\n"
-                + "      <y>10</y>\n"
-                + "    </default>\n"
-                + "  </child>\n"
-                + "</child>";
+        final CustomSerializableChild child = new CustomSerializableChild();
+        final String expected = ""
+            + "<child serialization=\"custom\">\n"
+            + "  <unserializable-parents>\n"
+            + "    <x>5</x>\n"
+            + "  </unserializable-parents>\n"
+            + "  <child>\n"
+            + "    <default>\n"
+            + "      <y>10</y>\n"
+            + "    </default>\n"
+            + "  </child>\n"
+            + "</child>";
 
-        CustomSerializableChild serialized =(CustomSerializableChild)assertBothWays(child, expected);
+        final CustomSerializableChild serialized = (CustomSerializableChild)assertBothWays(child, expected);
         assertEquals(5, serialized.x);
         assertEquals(10, serialized.y);
     }
-    
+
     public static class SerializableGrandChild extends CustomSerializableChild implements Serializable {
+        private static final long serialVersionUID = 200604L;
         public int z;
 
         public SerializableGrandChild() {
@@ -845,31 +876,31 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
             z = 42;
         }
     }
-    
+
     public void testUnserializableParentsAreWrittenOnlyOnce() {
         xstream.alias("parent", UnserializableParent.class);
         xstream.alias("child", CustomSerializableChild.class);
         xstream.alias("grandchild", SerializableGrandChild.class);
-        
-        SerializableGrandChild grandChild = new SerializableGrandChild();
-        String expected = ""
-                + "<grandchild serialization=\"custom\">\n"
-                + "  <unserializable-parents>\n"
-                + "    <x>5</x>\n"
-                + "  </unserializable-parents>\n"
-                + "  <child>\n"
-                + "    <default>\n"
-                + "      <y>10</y>\n"
-                + "    </default>\n"
-                + "  </child>\n"
-                + "  <grandchild>\n"
-                + "    <default>\n"
-                + "      <z>42</z>\n"
-                + "    </default>\n"
-                + "  </grandchild>\n"
-                + "</grandchild>";
 
-        SerializableGrandChild serialized =(SerializableGrandChild)assertBothWays(grandChild, expected);
+        final SerializableGrandChild grandChild = new SerializableGrandChild();
+        final String expected = ""
+            + "<grandchild serialization=\"custom\">\n"
+            + "  <unserializable-parents>\n"
+            + "    <x>5</x>\n"
+            + "  </unserializable-parents>\n"
+            + "  <child>\n"
+            + "    <default>\n"
+            + "      <y>10</y>\n"
+            + "    </default>\n"
+            + "  </child>\n"
+            + "  <grandchild>\n"
+            + "    <default>\n"
+            + "      <z>42</z>\n"
+            + "    </default>\n"
+            + "  </grandchild>\n"
+            + "</grandchild>";
+
+        final SerializableGrandChild serialized = (SerializableGrandChild)assertBothWays(grandChild, expected);
         assertEquals(5, serialized.x);
         assertEquals(10, serialized.y);
         assertEquals(42, serialized.z);
@@ -890,7 +921,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     public void testXStreamDeserializationForObjectsWithUnserializableParents() {
         // setup
-        String data = xstream.toXML(new CustomSerializableChild());
+        final String data = xstream.toXML(new CustomSerializableChild());
         log.reset();
 
         // expectations

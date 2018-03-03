@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2014, 2015, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2014, 2015, 2016, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,6 +33,8 @@ import com.thoughtworks.acceptance.objects.StandardObject;
 public class WriteReplaceTest extends AbstractAcceptanceTest {
 
     public static class Thing extends StandardObject implements Serializable {
+
+        private static final long serialVersionUID = 200408L;
 
         int a;
         int b;
@@ -95,7 +97,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
         xstream.alias("original-class", Original.class);
         xstream.alias("replaced-class", Replaced.class);
 
-        final List in = new ArrayList();
+        final List<Original> in = new ArrayList<>();
         in.add(new Original("hello world"));
 
         final String expectedXml = ""
@@ -109,6 +111,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     }
 
     public static class Container extends StandardObject {
+        private static final long serialVersionUID = 200810L;
         Original original;
     }
 
@@ -180,7 +183,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
         xstream.alias("original-class", Original.class);
         xstream.alias("replaced-class", Replaced.class);
 
-        final List in = new ArrayList();
+        final List<Original> in = new ArrayList<>();
         in.add(new Original("hello world"));
 
         final String xml = ""
@@ -230,6 +233,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     }
 
     public static class OriginalSerializable extends StandardObject {
+        private static final long serialVersionUID = 200502L;
         String originalValue;
 
         public OriginalSerializable() {
@@ -249,6 +253,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     }
 
     public static class ReplacedSerializable extends StandardObject {
+        private static final long serialVersionUID = 200502L;
         String replacedValue;
 
         public ReplacedSerializable() {
@@ -350,6 +355,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     }
 
     public static class OriginalThing extends StandardObject {
+        private static final long serialVersionUID = 201611L;
         private final String value;
 
         public OriginalThing() {
@@ -388,14 +394,14 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
             return new OriginalThing(value);
         }
     }
-    
+
     public void testCascadedWriteReplace() {
         xstream.alias("original-thing", OriginalThing.class);
         xstream.alias("intermediate-thing", IntermediateThing.class);
         xstream.alias("replaced-thing", ReplacedThing.class);
 
         final OriginalThing in = new OriginalThing("hello world");
-        
+
         final String expectedXml = ""
             + "<original-thing resolves-to=\"replaced-thing\">\n"
             + "  <value>hello world</value>\n"
