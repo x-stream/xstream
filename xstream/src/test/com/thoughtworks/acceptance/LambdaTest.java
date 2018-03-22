@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014, 2015 XStream Committers.
+ * Copyright (C) 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -69,7 +69,7 @@ public class LambdaTest extends AbstractAcceptanceTest {
 
         assertBothWaysNormalized(keeper, expected);
 
-        // ... deserialization fails if code was compiled with compiler of different vendor 
+        // ... deserialization fails if code was compiled with compiler of different vendor
         // Object resultRoot = xstream.fromXML(expected);
         // assertNotNull(resultRoot);
     }
@@ -114,7 +114,8 @@ public class LambdaTest extends AbstractAcceptanceTest {
     public interface SerializableCallable<T> extends X, Serializable, Callable<T> {}
 
     public void testLambdaArray() {
-        Object[] lambdas = {
+        @SuppressWarnings("unchecked")
+        final Object[] lambdas = {
             (Callable<String> & Serializable)() -> "result", (SerializableCallable<String>)() -> "result",
             (Runnable & Serializable)() -> run(), (X & Serializable & Callable<String>)() -> "result",
             (Runnable)() -> run(), null};

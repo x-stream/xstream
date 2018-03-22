@@ -1,20 +1,15 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 01. October 2003 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
-
-import com.thoughtworks.acceptance.objects.Hardware;
-import com.thoughtworks.acceptance.objects.SampleLists;
-import com.thoughtworks.acceptance.objects.Software;
-import com.thoughtworks.xstream.XStream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,10 +25,16 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
+import com.thoughtworks.acceptance.objects.Hardware;
+import com.thoughtworks.acceptance.objects.SampleLists;
+import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.xstream.XStream;
+
+
 public class CollectionsTest extends AbstractAcceptanceTest {
 
     public void testListsCanContainCustomObjects() {
-        SampleLists lists = new SampleLists();
+        final SampleLists<Object, Object> lists = new SampleLists<>();
         lists.good.add(new Software("apache", "geronimo"));
         lists.good.add(new Software("caucho", "resin"));
         lists.good.add(new Hardware("risc", "strong-arm"));
@@ -43,143 +44,143 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
         xstream.alias("hardware", Hardware.class);
 
-        String expected = "" +
-                "<lists>\n" +
-                "  <good>\n" +
-                "    <software>\n" +
-                "      <vendor>apache</vendor>\n" +
-                "      <name>geronimo</name>\n" +
-                "    </software>\n" +
-                "    <software>\n" +
-                "      <vendor>caucho</vendor>\n" +
-                "      <name>resin</name>\n" +
-                "    </software>\n" +
-                "    <hardware>\n" +
-                "      <arch>risc</arch>\n" +
-                "      <name>strong-arm</name>\n" +
-                "    </hardware>\n" +
-                "  </good>\n" +
-                "  <bad class=\"list\">\n" +
-                "    <software>\n" +
-                "      <vendor>apache</vendor>\n" +
-                "      <name>jserv</name>\n" +
-                "    </software>\n" +
-                "  </bad>\n" +
-                "</lists>";
+        final String expected = ""
+            + "<lists>\n"
+            + "  <good>\n"
+            + "    <software>\n"
+            + "      <vendor>apache</vendor>\n"
+            + "      <name>geronimo</name>\n"
+            + "    </software>\n"
+            + "    <software>\n"
+            + "      <vendor>caucho</vendor>\n"
+            + "      <name>resin</name>\n"
+            + "    </software>\n"
+            + "    <hardware>\n"
+            + "      <arch>risc</arch>\n"
+            + "      <name>strong-arm</name>\n"
+            + "    </hardware>\n"
+            + "  </good>\n"
+            + "  <bad class=\"list\">\n"
+            + "    <software>\n"
+            + "      <vendor>apache</vendor>\n"
+            + "      <name>jserv</name>\n"
+            + "    </software>\n"
+            + "  </bad>\n"
+            + "</lists>";
 
         assertBothWays(lists, expected);
     }
 
     public void testListsCanContainBasicObjects() {
-        SampleLists lists = new SampleLists();
+        final SampleLists<Object, ?> lists = new SampleLists<>();
         lists.good.add("hello");
         lists.good.add(new Integer(3));
         lists.good.add(Boolean.TRUE);
 
         xstream.alias("lists", SampleLists.class);
 
-        String expected = "" +
-                "<lists>\n" +
-                "  <good>\n" +
-                "    <string>hello</string>\n" +
-                "    <int>3</int>\n" +
-                "    <boolean>true</boolean>\n" +
-                "  </good>\n" +
-                "  <bad class=\"list\"/>\n" +
-                "</lists>";
+        final String expected = ""
+            + "<lists>\n"
+            + "  <good>\n"
+            + "    <string>hello</string>\n"
+            + "    <int>3</int>\n"
+            + "    <boolean>true</boolean>\n"
+            + "  </good>\n"
+            + "  <bad class=\"list\"/>\n"
+            + "</lists>";
 
         assertBothWays(lists, expected);
     }
 
     public void testListCanBeRootObject() {
-        Collection list = new ArrayList();
+        final Collection<String> list = new ArrayList<>();
         list.add("hi");
         list.add("bye");
 
-        String expected = "" +
-                "<list>\n" +
-                "  <string>hi</string>\n" +
-                "  <string>bye</string>\n" +
-                "</list>";
+        final String expected = "" //
+            + "<list>\n"
+            + "  <string>hi</string>\n"
+            + "  <string>bye</string>\n"
+            + "</list>";
 
         assertBothWays(list, expected);
     }
 
     public void testSetCanBeRootObject() {
-        Collection set = new HashSet();
+        final Collection<String> set = new HashSet<>();
         set.add("hi");
         set.add("bye");
 
-        String expected = "" +
-                "<set>\n" +
-                "  <string>hi</string>\n" +
-                "  <string>bye</string>\n" +
-                "</set>";
+        final String expected = "" //
+            + "<set>\n"
+            + "  <string>hi</string>\n"
+            + "  <string>bye</string>\n"
+            + "</set>";
 
         assertBothWaysNormalized(set, expected, "set", "string", null);
     }
 
     public void testVector() {
-        Vector vector = new Vector();
+        final Vector<String> vector = new Vector<>();
         vector.addElement("a");
         vector.addElement("b");
 
-        assertBothWays(vector,
-                "<vector>\n" +
-                "  <string>a</string>\n" +
-                "  <string>b</string>\n" +
-                "</vector>");
+        assertBothWays(vector, ""//
+            + "<vector>\n"
+            + "  <string>a</string>\n"
+            + "  <string>b</string>\n"
+            + "</vector>");
     }
 
     public void testSyncronizedList() {
-        final String xml = "" + 
-            "<java.util.Collections_-SynchronizedList serialization=\"custom\">\n" +
-            "  <java.util.Collections_-SynchronizedCollection>\n" +
-            "    <default>\n" +
-            "      <c class=\"linked-list\">\n" +
-            "        <string>hi</string>\n" +
-            "      </c>\n" +
-            "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
-            "    </default>\n" +
-            "  </java.util.Collections_-SynchronizedCollection>\n" +
-            "  <java.util.Collections_-SynchronizedList>\n" +
-            "    <default>\n" +
-            "      <list class=\"linked-list\" reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
-            "    </default>\n" +
-            "  </java.util.Collections_-SynchronizedList>\n" +
-            "</java.util.Collections_-SynchronizedList>";
+        final String xml = ""
+            + "<java.util.Collections_-SynchronizedList serialization=\"custom\">\n"
+            + "  <java.util.Collections_-SynchronizedCollection>\n"
+            + "    <default>\n"
+            + "      <c class=\"linked-list\">\n"
+            + "        <string>hi</string>\n"
+            + "      </c>\n"
+            + "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n"
+            + "    </default>\n"
+            + "  </java.util.Collections_-SynchronizedCollection>\n"
+            + "  <java.util.Collections_-SynchronizedList>\n"
+            + "    <default>\n"
+            + "      <list class=\"linked-list\" reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n"
+            + "    </default>\n"
+            + "  </java.util.Collections_-SynchronizedList>\n"
+            + "</java.util.Collections_-SynchronizedList>";
 
         // synchronized list has circular reference
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
-        List list = Collections.synchronizedList(new LinkedList());
+        final List<String> list = Collections.synchronizedList(new LinkedList<String>());
         list.add("hi");
 
         assertBothWays(list, xml);
     }
 
     public void testSyncronizedArrayList() {
-        final String xml = "" + 
-            "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\" serialization=\"custom\">\n" +
-            "  <java.util.Collections_-SynchronizedCollection>\n" +
-            "    <default>\n" +
-            "      <c class=\"list\">\n" +
-            "        <string>hi</string>\n" +
-            "      </c>\n" +
-            "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
-            "    </default>\n" +
-            "  </java.util.Collections_-SynchronizedCollection>\n" +
-            "  <java.util.Collections_-SynchronizedList>\n" +
-            "    <default>\n" +
-            "      <list reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
-            "    </default>\n" +
-            "  </java.util.Collections_-SynchronizedList>\n" +
-            "</java.util.Collections_-SynchronizedRandomAccessList>";
+        final String xml = ""
+            + "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\" serialization=\"custom\">\n"
+            + "  <java.util.Collections_-SynchronizedCollection>\n"
+            + "    <default>\n"
+            + "      <c class=\"list\">\n"
+            + "        <string>hi</string>\n"
+            + "      </c>\n"
+            + "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n"
+            + "    </default>\n"
+            + "  </java.util.Collections_-SynchronizedCollection>\n"
+            + "  <java.util.Collections_-SynchronizedList>\n"
+            + "    <default>\n"
+            + "      <list reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n"
+            + "    </default>\n"
+            + "  </java.util.Collections_-SynchronizedList>\n"
+            + "</java.util.Collections_-SynchronizedRandomAccessList>";
 
         // synchronized list has circular reference
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
-        List list = Collections.synchronizedList(new ArrayList());
+        final List<String> list = Collections.synchronizedList(new ArrayList<String>());
         list.add("hi");
 
         assertBothWays(list, xml);
@@ -194,25 +195,25 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     }
 
     public void testEmptyListIsImmutable() {
-        List list = new ArrayList();
+        final List<List<?>> list = new ArrayList<>();
         list.add(Collections.EMPTY_LIST);
         list.add(Collections.EMPTY_LIST);
-        assertBothWays(list, 
-            "<list>\n" +
-            "  <empty-list/>\n" +
-            "  <empty-list/>\n" +
-            "</list>");
+        assertBothWays(list, ""//
+            + "<list>\n"
+            + "  <empty-list/>\n"
+            + "  <empty-list/>\n"
+            + "</list>");
     }
 
     public void testEmptySetIsImmutable() {
-        List list = new ArrayList();
+        final List<Set<?>> list = new ArrayList<>();
         list.add(Collections.EMPTY_SET);
         list.add(Collections.EMPTY_SET);
-        assertBothWays(list, 
-            "<list>\n" +
-            "  <empty-set/>\n" +
-            "  <empty-set/>\n" +
-            "</list>");
+        assertBothWays(list, ""//
+            + "<list>\n"
+            + "  <empty-set/>\n"
+            + "  <empty-set/>\n"
+            + "</list>");
     }
 
     public void testEmptyListIsSingleton() {
@@ -222,149 +223,149 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     public void testEmptySetIsSingleton() {
         assertSame(Collections.EMPTY_SET, xstream.fromXML("<empty-set/>"));
     }
-    
+
     public void testSingletonList() {
-        assertBothWays(Collections.singletonList("XStream"), 
-            "<singleton-list>\n" +
-            "  <string>XStream</string>\n" +
-            "</singleton-list>");
+        assertBothWays(Collections.singletonList("XStream"), ""//
+            + "<singleton-list>\n"
+            + "  <string>XStream</string>\n"
+            + "</singleton-list>");
     }
-    
+
     public void testSingletonSet() {
-        assertBothWays(Collections.singleton("XStream"), 
-            "<singleton-set>\n" +
-            "  <string>XStream</string>\n" +
-            "</singleton-set>");
+        assertBothWays(Collections.singleton("XStream"), ""//
+            + "<singleton-set>\n"
+            + "  <string>XStream</string>\n"
+            + "</singleton-set>");
     }
 
     public void testPropertiesWithDefaults() {
-        Properties defaults = new Properties();
+        final Properties defaults = new Properties();
         defaults.setProperty("1", "one");
         defaults.setProperty("2", "two");
-        Properties properties = new Properties(defaults);
+        final Properties properties = new Properties(defaults);
         properties.setProperty("1", "I");
         properties.setProperty("3", "III");
 
-        assertBothWaysNormalized(properties,
-                "<properties>\n" +
-                "  <property name=\"3\" value=\"III\"/>\n" + 
-                "  <property name=\"1\" value=\"I\"/>\n" + 
-                "  <defaults>\n" + 
-                "    <property name=\"2\" value=\"two\"/>\n" + 
-                "    <property name=\"1\" value=\"one\"/>\n" + 
-                "  </defaults>\n" +
-                "</properties>", "properties", "property", "@name");
+        assertBothWaysNormalized(properties, ""//
+            + "<properties>\n"
+            + "  <property name=\"3\" value=\"III\"/>\n"
+            + "  <property name=\"1\" value=\"I\"/>\n"
+            + "  <defaults>\n"
+            + "    <property name=\"2\" value=\"two\"/>\n"
+            + "    <property name=\"1\" value=\"one\"/>\n"
+            + "  </defaults>\n"
+            + "</properties>", "properties", "property", "@name");
     }
-    
+
     public void testUnmodifiableList() {
         // unmodifiable list has duplicate references
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("hi");
         list = Collections.unmodifiableList(list);
 
-        assertBothWays(list,
-                "<java.util.Collections_-UnmodifiableRandomAccessList resolves-to=\"java.util.Collections$UnmodifiableList\">\n" +
-                "  <c class=\"list\">\n" +
-                "    <string>hi</string>\n" +
-                "  </c>\n" +
-                "  <list reference=\"../c\"/>\n" +
-                "</java.util.Collections_-UnmodifiableRandomAccessList>");
+        assertBothWays(list, ""
+            + "<java.util.Collections_-UnmodifiableRandomAccessList resolves-to=\"java.util.Collections$UnmodifiableList\">\n"
+            + "  <c class=\"list\">\n"
+            + "    <string>hi</string>\n"
+            + "  </c>\n"
+            + "  <list reference=\"../c\"/>\n"
+            + "</java.util.Collections_-UnmodifiableRandomAccessList>");
     }
 
     public void testLinkedHashSetRetainsOrdering() {
-        Set set = new LinkedHashSet();
+        final Set<String> set = new LinkedHashSet<>();
         set.add("Z");
         set.add("C");
         set.add("X");
 
-        LinkedHashSet result = (LinkedHashSet) assertBothWays(set,
-                "<linked-hash-set>\n" +
-                "  <string>Z</string>\n" +
-                "  <string>C</string>\n" +
-                "  <string>X</string>\n" +
-                "</linked-hash-set>");
+        final LinkedHashSet<String> result = assertBothWays(set, ""//
+            + "<linked-hash-set>\n"
+            + "  <string>Z</string>\n"
+            + "  <string>C</string>\n"
+            + "  <string>X</string>\n"
+            + "</linked-hash-set>");
 
-        Object[] values = result.toArray();
+        final Object[] values = result.toArray();
         assertEquals("Z", values[0]);
         assertEquals("C", values[1]);
         assertEquals("X", values[2]);
     }
 
     public void testListFromArrayAsList() {
-        List list = Arrays.asList(new String[] {"hi", "bye"});
+        final List<String> list = Arrays.asList(new String[]{"hi", "bye"});
 
-        assertBothWays(list,
-                "<java.util.Arrays_-ArrayList>\n" +
-                "  <a class=\"string-array\">\n" +
-                "    <string>hi</string>\n" +
-                "    <string>bye</string>\n" +
-                "  </a>\n" +
-                "</java.util.Arrays_-ArrayList>");
+        assertBothWays(list, ""//
+            + "<java.util.Arrays_-ArrayList>\n"
+            + "  <a class=\"string-array\">\n"
+            + "    <string>hi</string>\n"
+            + "    <string>bye</string>\n"
+            + "  </a>\n"
+            + "</java.util.Arrays_-ArrayList>");
     }
-    
+
     public void testKeySetOfHashMapCanBeSerialized() {
-        final Map map = new HashMap();
+        final Map<String, ?> map = new HashMap<>();
         map.put("JUnit", null);
-        final Collection set = map.keySet();
+        final Collection<String> set = map.keySet();
 
         xstream.alias("key-set", set.getClass());
 
-        assertBothWays(set,
-                "<key-set>\n" +
-                "  <outer-class>\n" +
-                "    <entry>\n" +
-                "      <string>JUnit</string>\n" +
-                "      <null/>\n" +
-                "    </entry>\n" +
-                "  </outer-class>\n" +
-                "</key-set>");
+        assertBothWays(set, ""//
+            + "<key-set>\n"
+            + "  <outer-class>\n"
+            + "    <entry>\n"
+            + "      <string>JUnit</string>\n"
+            + "      <null/>\n"
+            + "    </entry>\n"
+            + "  </outer-class>\n"
+            + "</key-set>");
     }
 
     public void testValueSetOfHashMapCanBeSerialized() {
-        final Map map = new HashMap();
+        final Map<Boolean, String> map = new HashMap<>();
         map.put(Boolean.TRUE, "JUnit");
-        final Collection set = map.values();
+        final Collection<String> set = map.values();
         xstream.alias("value-set", set.getClass());
 
-        assertBothWays(set,
-                "<value-set>\n" +
-                "  <outer-class>\n" +
-                "    <entry>\n" +
-                "      <boolean>true</boolean>\n" +
-                "      <string>JUnit</string>\n" +
-                "    </entry>\n" +
-                "  </outer-class>\n" +
-                "</value-set>");
+        assertBothWays(set, ""//
+            + "<value-set>\n"
+            + "  <outer-class>\n"
+            + "    <entry>\n"
+            + "      <boolean>true</boolean>\n"
+            + "      <string>JUnit</string>\n"
+            + "    </entry>\n"
+            + "  </outer-class>\n"
+            + "</value-set>");
     }
 
     public void testEntrySetOfHashMapCanBeSerialized() {
-        final Map map = new HashMap();
+        final Map<Boolean, String> map = new HashMap<>();
         map.put(Boolean.TRUE, "JUnit");
-        final Collection set = map.entrySet();
+        final Collection<Map.Entry<Boolean, String>> set = map.entrySet();
         xstream.alias("entry-set", set.getClass());
 
         if (System.getProperty("java.vm.vendor").indexOf("IBM") >= 0) {
-            assertBothWays(set,
-                "<entry-set>\n" +
-                "  <associatedMap>\n" +
-                "    <entry>\n" +
-                "      <boolean>true</boolean>\n" +
-                "      <string>JUnit</string>\n" +
-                "    </entry>\n" +
-                "  </associatedMap>\n" +
-                "</entry-set>");
+            assertBothWays(set, ""//
+                + "<entry-set>\n"
+                + "  <associatedMap>\n"
+                + "    <entry>\n"
+                + "      <boolean>true</boolean>\n"
+                + "      <string>JUnit</string>\n"
+                + "    </entry>\n"
+                + "  </associatedMap>\n"
+                + "</entry-set>");
         } else {
-            assertBothWays(set,
-                    "<entry-set>\n" +
-                    "  <outer-class>\n" +
-                    "    <entry>\n" +
-                    "      <boolean>true</boolean>\n" +
-                    "      <string>JUnit</string>\n" +
-                    "    </entry>\n" +
-                    "  </outer-class>\n" +
-                    "</entry-set>");
+            assertBothWays(set, ""//
+                + "<entry-set>\n"
+                + "  <outer-class>\n"
+                + "    <entry>\n"
+                + "      <boolean>true</boolean>\n"
+                + "      <string>JUnit</string>\n"
+                + "    </entry>\n"
+                + "  </outer-class>\n"
+                + "</entry-set>");
         }
     }
 }

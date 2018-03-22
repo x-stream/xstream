@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,8 +16,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SampleLists extends StandardObject {
-    public List good = new ArrayList();
-    public Collection bad = new ArrayList();
+public class SampleLists<G,B> extends StandardObject {
+    private static final long serialVersionUID = 200309L;
+    public List<G> good = new ArrayList<>();
+    public Collection<B> bad = new ArrayList<>();
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 14. March 2006 by Joerg Schaible
  */
 package com.thoughtworks.xstream.testutil;
@@ -20,7 +20,6 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,30 +29,28 @@ import java.util.Map;
  */
 public class DynamicSecurityManager extends SecurityManager {
 
-    private Map permissions = new HashMap();
+    private final Map<CodeSource, PermissionCollection> permissions = new HashMap<>();
     private AccessControlContext acc = null;
-    private List failedPermissions = new ArrayList();
+    private final List<Permission> failedPermissions = new ArrayList<>();
 
     public void addPermission(final CodeSource codeSource, final Permission permission) {
-        PermissionCollection permissionCollection = (PermissionCollection)permissions
-                .get(codeSource);
+        PermissionCollection permissionCollection = permissions.get(codeSource);
         if (permissionCollection == null) {
             permissionCollection = new Permissions();
             permissions.put(codeSource, permissionCollection);
         }
         permissionCollection.add(permission);
-//        updateACC();
+// updateACC();
     }
 
-    public void setPermissions(
-            final CodeSource codeSource, final PermissionCollection permissionCollection) {
+    public void setPermissions(final CodeSource codeSource, final PermissionCollection permissionCollection) {
         if (permissionCollection == null) {
             if (permissions.remove(codeSource) != null) {
-//                updateACC();
+// updateACC();
             }
         } else {
             if (permissions.put(codeSource, permissionCollection) != null) {
-//                updateACC();
+// updateACC();
             }
         }
     }
@@ -64,28 +61,27 @@ public class DynamicSecurityManager extends SecurityManager {
         } else {
             final ProtectionDomain[] domains = new ProtectionDomain[permissions.size()];
             int i = 0;
-            for (final Iterator iter = permissions.keySet().iterator(); iter.hasNext();) {
-                final CodeSource codeSource = (CodeSource)iter.next();
-                final PermissionCollection permissionCollection = (PermissionCollection)permissions
-                        .get(codeSource);
+            for (final CodeSource codeSource : permissions.keySet()) {
+                final PermissionCollection permissionCollection = permissions.get(codeSource);
                 domains[i++] = new ProtectionDomain(codeSource, permissionCollection);
             }
             acc = new AccessControlContext(domains);
         }
     }
-    
+
     public void setReadOnly() {
         updateACC();
     }
 
-    public void checkPermission(Permission perm) {
+    @Override
+    public void checkPermission(final Permission perm) {
         if (acc != null) {
             // Ughhh. Eclipse class path leak :-/
             if (perm instanceof FilePermission && "read".equals(perm.getActions())) {
-                String name = perm.getName();
-                if (name.indexOf("org.eclipse.osgi") > 0 
-                        && (name.endsWith("javax.xml.parsers.DocumentBuilderFactory")
-                                || name.endsWith("javax.xml.datatype.DatatypeFactory"))) {
+                final String name = perm.getName();
+                if (name.indexOf("org.eclipse.osgi") > 0
+                    && (name.endsWith("javax.xml.parsers.DocumentBuilderFactory")
+                        || name.endsWith("javax.xml.datatype.DatatypeFactory"))) {
                     return;
                 }
             }
@@ -98,7 +94,7 @@ public class DynamicSecurityManager extends SecurityManager {
         }
     }
 
-    public List getFailedPermissions() {
+    public List<Permission> getFailedPermissions() {
         return Collections.unmodifiableList(failedPermissions);
     }
 }

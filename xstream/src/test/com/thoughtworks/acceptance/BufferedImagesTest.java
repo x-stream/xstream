@@ -1,18 +1,14 @@
 /*
- * Copyright (C) 2008, 2017 XStream Committers.
+ * Copyright (C) 2008, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 28. October 2008 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
-
-import junit.framework.TestSuite;
-
-import javax.imageio.ImageIO;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -21,21 +17,23 @@ import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+import junit.framework.TestSuite;
+
 
 /**
- * Tests with buffered images.
- * 
- * Note, these tests are deactivated by default. They normally work at first sight, but they are highly dangerous,
- * since some of the serialized objects contain member variables that reference native memory. Typical result is
- * a JVM crash somewhat later because of double freed memory. 
- * 
+ * Tests with buffered images. Note, these tests are deactivated by default. They normally work at first sight, but they
+ * are highly dangerous, since some of the serialized objects contain member variables that reference native memory.
+ * Typical result is a JVM crash somewhat later because of double freed memory.
+ *
  * @author J&ouml;rg Schaible
  */
 public class BufferedImagesTest extends AbstractAcceptanceTest {
-    
+
     public static TestSuite suite() {
         final TestSuite suite = new TestSuite("BufferedImagesSuite");
-        //suite.addTestSuite(BufferedImagesTest.class);
+        // suite.addTestSuite(BufferedImagesTest.class);
         return suite;
     }
 
@@ -54,7 +52,7 @@ public class BufferedImagesTest extends AbstractAcceptanceTest {
         final String xml = xstream.toXML(image);
 
         final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
-        ImageIO.write((RenderedImage)xstream.fromXML(xml), "tiff", baosSerialized);
+        ImageIO.write(xstream.<RenderedImage>fromXML(xml), "tiff", baosSerialized);
 
         assertArrayEquals(baosOriginal.toByteArray(), baosSerialized.toByteArray());
     }
@@ -74,7 +72,7 @@ public class BufferedImagesTest extends AbstractAcceptanceTest {
         final String xml = xstream.toXML(image);
 
         final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
-        ImageIO.write((RenderedImage)xstream.fromXML(xml), "png", baosSerialized);
+        ImageIO.write(xstream.<RenderedImage>fromXML(xml), "png", baosSerialized);
 
         assertArrayEquals(baosOriginal.toByteArray(), baosSerialized.toByteArray());
     }

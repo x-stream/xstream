@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2006, 2007, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 22. March 2006 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
@@ -29,24 +29,26 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
         xstream.alias("thing", WithNamedList.class);
         xstream.addImplicitCollection(WithNamedList.class, "things");
 
-        final List reference = new ArrayList(Arrays.asList(new String[]{"A", "B", "C", "D"}));
-        final WithNamedList[] namedLists = new WithNamedList[5];
+        final List<String> reference = new ArrayList<>(Arrays.asList(new String[]{"A", "B", "C", "D"}));
+        @SuppressWarnings("unchecked")
+        final WithNamedList<Object>[] namedLists = new WithNamedList[5];
         for (int i = 0; i < namedLists.length; ++i) {
-            namedLists[i] = new WithNamedList("Name " + (i + 1));
+            namedLists[i] = new WithNamedList<Object>("Name " + (i + 1));
             namedLists[i].things.add(new Software("walnes", "XStream 1." + i));
             namedLists[i].things.add(reference);
             namedLists[i].things.add(new RuntimeException("JUnit " + i)); // a Serializable
         }
 
-        final Map exceptions = new HashMap();
+        final Map<Throwable, String> exceptions = new HashMap<>();
         final ThreadGroup tg = new ThreadGroup(getName()) {
-            public void uncaughtException(Thread t, Throwable e) {
+            @Override
+            public void uncaughtException(final Thread t, final Throwable e) {
                 exceptions.put(e, t.getName());
                 super.uncaughtException(t, e);
             }
         };
 
-        final Object object = new ArrayList(Arrays.asList(namedLists));
+        final Object object = new ArrayList<>(Arrays.asList(namedLists));
         final String xml = xstream.toXML(object);
         final int[] counter = new int[1];
         counter[0] = 0;
@@ -54,6 +56,7 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
         for (int i = 0; i < threads.length; ++i) {
             threads[i] = new Thread(tg, "JUnit Thread " + i) {
 
+                @Override
                 public void run() {
                     int i = 0;
                     try {
@@ -65,7 +68,7 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
                             assertBothWays(object, xml);
                             ++i;
                         }
-                    } catch (InterruptedException e) {
+                    } catch (final InterruptedException e) {
                         fail("Unexpected InterruptedException");
                     }
                     synchronized (counter) {
@@ -76,27 +79,27 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
             };
         }
 
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].start();
-                threads[i].wait();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.start();
+                thread.wait();
             }
         }
 
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].notifyAll();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.notifyAll();
             }
         }
 
         Thread.sleep(1000);
 
-        for (int i = 0; i < threads.length; ++i) {
-            threads[i].interrupt();
+        for (final Thread thread : threads) {
+            thread.interrupt();
         }
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].join();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.join();
             }
         }
 

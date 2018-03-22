@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 26. September 2003 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
@@ -56,7 +56,7 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testNullCharacter() {
-        assertEquals(new Character('\0'), xstream.fromXML("<char null=\"true\"/>")); // pre XStream 1.3 
+        assertEquals(new Character('\0'), xstream.fromXML("<char null=\"true\"/>")); // pre XStream 1.3
         assertBothWays(new Character('\0'), "<char></char>");
     }
 
@@ -75,21 +75,21 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testStringBuffer() {
-        StringBuffer buffer = new StringBuffer();
+        final StringBuffer buffer = new StringBuffer();
         buffer.append("woo");
-        String xml = xstream.toXML(buffer);
+        final String xml = xstream.toXML(buffer);
         assertEquals(xml, "<string-buffer>woo</string-buffer>");
-        StringBuffer out = (StringBuffer)xstream.fromXML(xml);
+        final StringBuffer out = xstream.fromXML(xml);
         assertEquals("woo", out.toString());
     }
 
     public void testBigInteger() {
-        BigInteger bigInteger = new BigInteger("1234567890123456");
+        final BigInteger bigInteger = new BigInteger("1234567890123456");
         assertBothWays(bigInteger, "<big-int>1234567890123456</big-int>");
     }
 
     public void testBigDecimal() {
-        BigDecimal bigDecimal = new BigDecimal("1234567890123456.987654321");
+        final BigDecimal bigDecimal = new BigDecimal("1234567890123456.987654321");
         assertBothWays(bigDecimal, "<big-decimal>1234567890123456.987654321</big-decimal>");
     }
 
@@ -98,7 +98,7 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testNumberFormats() {
-        assertEquals(1.0, ((Double)xstream.fromXML("<double>1</double>")).doubleValue(), 0.001);
-        assertEquals(1.0f, ((Float)xstream.fromXML("<float>1</float>")).floatValue(), 0.001);
+        assertEquals(1.0, xstream.<Double>fromXML("<double>1</double>").doubleValue(), 0.001);
+        assertEquals(1.0f, xstream.<Float>fromXML("<float>1</float>").floatValue(), 0.001);
     }
 }

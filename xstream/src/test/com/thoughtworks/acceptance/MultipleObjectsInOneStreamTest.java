@@ -46,9 +46,8 @@ import com.thoughtworks.xstream.testutil.CallLog;
 
 public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
-    @SuppressWarnings("serial")
     public static class Person extends StandardObject {
-
+        private static final long serialVersionUID = 200412L;
         @SuppressWarnings("unused")
         private final String firstName;
         @SuppressWarnings("unused")

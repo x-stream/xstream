@@ -1,14 +1,22 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 08. April 2006 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
+
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -27,81 +35,81 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import net.sf.cglib.proxy.NoOp;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * @author J&ouml;rg Schaible
  */
 public class CglibCompatibilityTest extends AbstractAcceptanceTest {
 
+    @Override
     protected XStream createXStream() {
-        XStream xstream = new XStream(createDriver()) {
-            protected MapperWrapper wrapMapper(MapperWrapper next) {
+        final XStream xstream = new XStream(createDriver()) {
+            @Override
+            protected MapperWrapper wrapMapper(final MapperWrapper next) {
                 return new CGLIBMapper(next);
             }
         };
         setupSecurity(xstream);
         xstream.addPermission(CGLIBProxyTypePermission.PROXIES);
-        xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstream
-            .getReflectionProvider(), xstream.getClassLoaderReference()));
+        xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstream.getReflectionProvider(),
+            xstream.getClassLoaderReference()));
         return xstream;
     }
 
-    public static class DelegatingHandler implements InvocationHandler, Serializable {
-        private Object delegate;
+    public static class DelegatingHandler<T> implements InvocationHandler, Serializable {
+        private static final long serialVersionUID = 200604L;
+        private final T delegate;
 
-        public DelegatingHandler(Object delegate) {
+        public DelegatingHandler(final T delegate) {
             this.delegate = delegate;
         }
 
-        public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
+        @Override
+        public Object invoke(final Object obj, final Method method, final Object[] args) throws Throwable {
             return method.invoke(delegate, args);
         }
     }
 
-    public static class DelegatingInterceptor implements MethodInterceptor, Serializable,
-        Runnable {
-        private Object delegate;
+    public static class DelegatingInterceptor<T> implements MethodInterceptor, Serializable, Runnable {
+        private static final long serialVersionUID = 200812L;
+        private final T delegate;
 
-        public DelegatingInterceptor(Object delegate) {
+        public DelegatingInterceptor(final T delegate) {
             this.delegate = delegate;
         }
 
-        public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
-            throws Throwable {
+        @Override
+        public Object intercept(final Object obj, final Method method, final Object[] args, final MethodProxy proxy)
+                throws Throwable {
             return method.invoke(delegate, args);
         }
 
+        @Override
         public void run() {
         }
     }
 
-    public static class DelegatingDispatcher implements Dispatcher, Serializable {
-        private Object delegate;
+    public static class DelegatingDispatcher<T> implements Dispatcher, Serializable {
+        private static final long serialVersionUID = 200812L;
+        private final T delegate;
 
-        public DelegatingDispatcher(Object delegate) {
+        public DelegatingDispatcher(final T delegate) {
             this.delegate = delegate;
         }
 
+        @Override
         public Object loadObject() throws Exception {
             return delegate;
         }
     }
 
-    public void testSupportsClassBasedProxiesWithFactory()
-        throws NullPointerException, MalformedURLException {
+    public void testSupportsClassBasedProxiesWithFactory() throws NullPointerException, MalformedURLException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(HashMap.class);
-        enhancer.setCallback(new DelegatingHandler(new HashMap()));
+        enhancer.setCallback(new DelegatingHandler<>(new HashMap<String, Object>()));
         enhancer.setUseFactory(true); // true by default
-        final Map orig = (Map)enhancer.create();
+        @SuppressWarnings("unchecked")
+        final Map<String, Object> orig = (Map<String, Object>)enhancer.create();
         final URL url = new URL("http://xstream.codehaus.org");
         orig.put("URL", url);
         final String xml = ""
@@ -119,17 +127,17 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
             + "  </com.thoughtworks.acceptance.CglibCompatibilityTest_-DelegatingHandler>\n"
             + "</CGLIB-enhanced-proxy>";
 
-        final Map serialized = (Map)assertBothWays(orig, xml);
+        final Map<String, Object> serialized = assertBothWays(orig, xml);
         assertEquals(url, serialized.get("URL"));
     }
 
-    public void testSupportsClassBasedProxiesWithoutFactory()
-        throws NullPointerException, MalformedURLException {
+    public void testSupportsClassBasedProxiesWithoutFactory() throws NullPointerException, MalformedURLException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(HashMap.class);
-        enhancer.setCallback(new DelegatingHandler(new HashMap()));
+        enhancer.setCallback(new DelegatingHandler<>(new HashMap<String, Object>()));
         enhancer.setUseFactory(false);
-        final Map orig = (Map)enhancer.create();
+        @SuppressWarnings("unchecked")
+        final Map<String, Object> orig = (Map<String, Object>)enhancer.create();
         final URL url = new URL("http://xstream.codehaus.org");
         orig.put("URL", url);
         final String xml = ""
@@ -147,17 +155,16 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
             + "  </com.thoughtworks.acceptance.CglibCompatibilityTest_-DelegatingHandler>\n"
             + "</CGLIB-enhanced-proxy>";
 
-        final Map serialized = (Map)assertBothWays(orig, xml);
+        final Map<String, Object> serialized = assertBothWays(orig, xml);
         assertEquals(url, serialized.get("URL"));
     }
 
-    public void testSupportForClassBasedProxyWithAdditionalInterface()
-        throws NullPointerException {
+    public void testSupportForClassBasedProxyWithAdditionalInterface() throws NullPointerException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(HashMap.class);
         enhancer.setCallback(NoOp.INSTANCE);
         enhancer.setInterfaces(new Class[]{Runnable.class});
-        final Map orig = (Map)enhancer.create();
+        final Map<?, ?> orig = (Map<?, ?>)enhancer.create();
         final String xml = ""
             + "<CGLIB-enhanced-proxy>\n"
             + "  <type>java.util.HashMap</type>\n"
@@ -178,7 +185,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         final Enhancer enhancer = new Enhancer();
         enhancer.setCallback(NoOp.INSTANCE);
         enhancer.setInterfaces(new Class[]{Map.class, Runnable.class});
-        final Map orig = (Map)enhancer.create();
+        final Map<?, ?> orig = (Map<?, ?>)enhancer.create();
         final String xml = ""
             + "<CGLIB-enhanced-proxy>\n"
             + "  <type>java.lang.Object</type>\n"
@@ -195,17 +202,17 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         assertTrue(serialized instanceof Runnable);
     }
 
-    public void testSupportProxiesUsingFactoryWithMultipleCallbacks()
-        throws NullPointerException {
+    public void testSupportProxiesUsingFactoryWithMultipleCallbacks() throws NullPointerException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setCallbacks(new Callback[]{
 
-            new DelegatingInterceptor(null), new DelegatingHandler(null),
-            new DelegatingDispatcher(null), NoOp.INSTANCE});
+            new DelegatingInterceptor<>(null), new DelegatingHandler<>(null), new DelegatingDispatcher<>(null),
+            NoOp.INSTANCE});
         enhancer.setCallbackFilter(new CallbackFilter() {
             int i = 1;
 
-            public int accept(Method method) {
+            @Override
+            public int accept(final Method method) {
                 if (method.getDeclaringClass() == Runnable.class) {
                     return 0;
                 }
@@ -216,9 +223,9 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         enhancer.setUseFactory(true);
         final Runnable orig = (Runnable)enhancer.create();
         final String xml = xstream.toXML(orig);
-        final Factory deserialized = (Factory)xstream.fromXML(xml);
+        final Factory deserialized = xstream.fromXML(xml);
         assertTrue("Not a Runnable anymore", deserialized instanceof Runnable);
-        Callback[] callbacks = deserialized.getCallbacks();
+        final Callback[] callbacks = deserialized.getCallbacks();
         assertEquals(4, callbacks.length);
         assertTrue(callbacks[0] instanceof DelegatingInterceptor);
         assertTrue(callbacks[1] instanceof DelegatingHandler);
@@ -226,17 +233,17 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         assertTrue(callbacks[3] instanceof NoOp);
     }
 
-    public void testThrowsExceptionForProxiesNotUsingFactoryWithMultipleCallbacks()
-        throws NullPointerException {
+    public void testThrowsExceptionForProxiesNotUsingFactoryWithMultipleCallbacks() throws NullPointerException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setCallbacks(new Callback[]{
 
-            new DelegatingInterceptor(null), new DelegatingHandler(null),
-            new DelegatingDispatcher(null), NoOp.INSTANCE});
+            new DelegatingInterceptor<>(null), new DelegatingHandler<>(null), new DelegatingDispatcher<>(null),
+            NoOp.INSTANCE});
         enhancer.setCallbackFilter(new CallbackFilter() {
             int i = 1;
 
-            public int accept(Method method) {
+            @Override
+            public int accept(final Method method) {
                 if (method.getDeclaringClass() == Runnable.class) {
                     return 0;
                 }
@@ -250,7 +257,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
             xstream.toXML(orig);
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
-            
+
         }
     }
 
@@ -258,7 +265,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(HashMap.class);
         enhancer.setCallback(NoOp.INSTANCE);
-        final HashMap orig = (HashMap)enhancer.create();
+        final HashMap<?, ?> orig = (HashMap<?, ?>)enhancer.create();
         ((Factory)orig).setCallback(0, null);
         final String xml = ""
             + "<CGLIB-enhanced-proxy>\n"
@@ -272,7 +279,7 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
     }
 
     public void testSupportsSerialVersionUID()
-        throws NullPointerException, NoSuchFieldException, IllegalAccessException {
+            throws NullPointerException, NoSuchFieldException, IllegalAccessException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setCallback(NoOp.INSTANCE);
         enhancer.setInterfaces(new Class[]{Runnable.class});
@@ -297,8 +304,9 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
 
     public static class InterceptingHandler implements MethodInterceptor {
 
-        public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
-            throws Throwable {
+        @Override
+        public Object intercept(final Object obj, final Method method, final Object[] args, final MethodProxy proxy)
+                throws Throwable {
             return proxy.invokeSuper(obj, args);
         }
     }
@@ -306,13 +314,13 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
     private final static String THRESHOLD_PARAM = "$THRESHOLD$";
     private final static String CAPACITY_PARAM = "$CAPACITY$";
 
-    public void testSupportsInterceptedClassBasedProxies()
-        throws NullPointerException, MalformedURLException {
+    public void testSupportsInterceptedClassBasedProxies() throws NullPointerException, MalformedURLException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(HashMap.class);
         enhancer.setCallback(new InterceptingHandler());
         enhancer.setUseFactory(true);
-        final Map orig = (Map)enhancer.create();
+        @SuppressWarnings("unchecked")
+        final Map<String, Object> orig = (Map<String, Object>)enhancer.create();
         orig.put("URL", new URL("http://xstream.codehaus.org"));
         final StringBuffer xml = new StringBuffer(""
             + "<CGLIB-enhanced-proxy>\n"
@@ -340,22 +348,22 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
         idx = xml.toString().indexOf(CAPACITY_PARAM);
         xml.replace(idx, idx + CAPACITY_PARAM.length(), "16");
 
-        Map serialized = (Map)assertBothWays(orig, xml.toString());
+        final Map<String, Object> serialized = assertBothWays(orig, xml.toString());
         assertEquals(orig.toString(), serialized.toString());
     }
 
     public static class ClassWithProxyMember {
         Runnable runnable;
-        Map map;
+        Map<?, ?> map;
     };
 
     public void testSupportsProxiesAsFieldMember() throws NullPointerException {
-        ClassWithProxyMember expected = new ClassWithProxyMember();
+        final ClassWithProxyMember expected = new ClassWithProxyMember();
         xstream.alias("with-proxy", ClassWithProxyMember.class);
         final Enhancer enhancer = new Enhancer();
         enhancer.setCallback(NoOp.INSTANCE);
         enhancer.setInterfaces(new Class[]{Map.class, Runnable.class});
-        final Map orig = (Map)enhancer.create();
+        final Map<?, ?> orig = (Map<?, ?>)enhancer.create();
         expected.runnable = (Runnable)orig;
         expected.map = orig;
         final String xml = ""
@@ -379,8 +387,9 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
     public void testProxyTypeCanBeAliased() throws MalformedURLException {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(HashMap.class);
-        enhancer.setCallback(new DelegatingHandler(new HashMap()));
-        final Map orig = (Map)enhancer.create();
+        enhancer.setCallback(new DelegatingHandler<>(new HashMap<String, Object>()));
+        @SuppressWarnings("unchecked")
+        final Map<String, Object> orig = (Map<String, Object>)enhancer.create();
         orig.put("URL", new URL("http://xstream.codehaus.org"));
         xstream.aliasType("cglib", Map.class);
         final String expected = ""

@@ -1,25 +1,27 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 26. September 2003 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
 
+import java.io.StringReader;
+
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
-import com.thoughtworks.xstream.io.xml.XppReader;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 
-import java.io.StringReader;
 
 public class CustomClassesTest extends AbstractAcceptanceTest {
 
     public static class SamplePerson extends StandardObject {
+        private static final long serialVersionUID = 200309L;
         int anInt;
         String firstName;
         String lastName;
@@ -27,33 +29,37 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
     }
 
     public void testCustomObjectWithBasicFields() {
-
         xstream.alias("friend", SamplePerson.class);
 
-        SamplePerson person = new SamplePerson();
+        final SamplePerson person = new SamplePerson();
         person.anInt = 3;
         person.firstName = "Joe";
         person.lastName = "Walnes";
 
-        String expected =
-                "<friend>\n" +
-                "  <anInt>3</anInt>\n" +
-                "  <firstName>Joe</firstName>\n" +
-                "  <lastName>Walnes</lastName>\n" +
-                "</friend>";
+        final String expected = ""
+            + "<friend>\n"
+            + "  <anInt>3</anInt>\n"
+            + "  <firstName>Joe</firstName>\n"
+            + "  <lastName>Walnes</lastName>\n"
+            + "</friend>";
 
         assertBothWays(person, expected);
-
     }
 
     public static class SamplePersonHolder {
         String aString;
         SamplePerson brother;
 
-        public boolean equals(Object obj) {
-            SamplePersonHolder containerObject = (SamplePersonHolder) obj;
+        @Override
+        public boolean equals(final Object obj) {
+            final SamplePersonHolder containerObject = (SamplePersonHolder)obj;
             return (aString == null ? containerObject.aString == null : aString.equals(containerObject.aString))
-                    && brother.equals(containerObject.brother);
+                && brother.equals(containerObject.brother);
+        }
+
+        @Override
+        public int hashCode() {
+            return (aString == null ? 0 : aString.hashCode()) | (brother == null ? 0 : brother.hashCode());
         }
     }
 
@@ -61,79 +67,77 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
         xstream.alias("friend", SamplePerson.class);
         xstream.alias("personHolder", SamplePersonHolder.class);
 
-        SamplePersonHolder personHolder = new SamplePersonHolder();
+        final SamplePersonHolder personHolder = new SamplePersonHolder();
         personHolder.aString = "hello world";
 
-        SamplePerson person = new SamplePerson();
+        final SamplePerson person = new SamplePerson();
         person.anInt = 3;
         person.firstName = "Joe";
         person.lastName = "Walnes";
 
         personHolder.brother = person;
 
-        String expected =
-                "<personHolder>\n" +
-                "  <aString>hello world</aString>\n" +
-                "  <brother>\n" +
-                "    <anInt>3</anInt>\n" +
-                "    <firstName>Joe</firstName>\n" +
-                "    <lastName>Walnes</lastName>\n" +
-                "  </brother>\n" +
-                "</personHolder>";
+        final String expected = ""
+            + "<personHolder>\n"
+            + "  <aString>hello world</aString>\n"
+            + "  <brother>\n"
+            + "    <anInt>3</anInt>\n"
+            + "    <firstName>Joe</firstName>\n"
+            + "    <lastName>Walnes</lastName>\n"
+            + "  </brother>\n"
+            + "</personHolder>";
 
         assertBothWays(personHolder, expected);
-
     }
 
     public void testCustomObjectWithCustomObjectFieldsSetToNull() {
         xstream.alias("friend", SamplePerson.class);
         xstream.alias("personHolder", SamplePersonHolder.class);
 
-        SamplePersonHolder personHolder = new SamplePersonHolder();
+        final SamplePersonHolder personHolder = new SamplePersonHolder();
         personHolder.aString = null;
 
-        SamplePerson person = new SamplePerson();
+        final SamplePerson person = new SamplePerson();
         person.anInt = 3;
         person.firstName = "Joe";
         person.lastName = null;
 
         personHolder.brother = person;
 
-        String expected =
-                "<personHolder>\n" +
-                "  <brother>\n" +
-                "    <anInt>3</anInt>\n" +
-                "    <firstName>Joe</firstName>\n" +
-                "  </brother>\n" +
-                "</personHolder>";
+        final String expected = ""
+            + "<personHolder>\n"
+            + "  <brother>\n"
+            + "    <anInt>3</anInt>\n"
+            + "    <firstName>Joe</firstName>\n"
+            + "  </brother>\n"
+            + "</personHolder>";
 
         assertBothWays(personHolder, expected);
-
     }
 
     public void testCustomObjectCanBeInstantiatedExternallyBeforeDeserialization() {
         xstream.alias("friend", SamplePerson.class);
         xstream.alias("personHolder", SamplePersonHolder.class);
 
-        String xml =
-                "<personHolder>\n" +
-                "  <aString>hello world</aString>\n" +
-                "  <brother>\n" +
-                "    <anInt>3</anInt>\n" +
-                "    <firstName>Joe</firstName>\n" +
-                "    <lastName>Walnes</lastName>\n" +
-                "  </brother>\n" +
-                "</personHolder>";
+        final String xml = ""
+            + "<personHolder>\n"
+            + "  <aString>hello world</aString>\n"
+            + "  <brother>\n"
+            + "    <anInt>3</anInt>\n"
+            + "    <firstName>Joe</firstName>\n"
+            + "    <lastName>Walnes</lastName>\n"
+            + "  </brother>\n"
+            + "</personHolder>";
 
         // execute
-        SamplePersonHolder alreadyInstantiated = new SamplePersonHolder();
-        xstream.unmarshal(new XppReader(new StringReader(xml)), alreadyInstantiated);
+        final SamplePersonHolder alreadyInstantiated = new SamplePersonHolder();
+        xstream.unmarshal(new XppDriver().createReader(new StringReader(xml)), alreadyInstantiated);
 
         // verify
-        SamplePersonHolder expectedResult = new SamplePersonHolder();
+        final SamplePersonHolder expectedResult = new SamplePersonHolder();
         expectedResult.aString = "hello world";
 
-        SamplePerson expectedPerson = new SamplePerson();
+        final SamplePerson expectedPerson = new SamplePerson();
         expectedPerson.anInt = 3;
         expectedPerson.firstName = "Joe";
         expectedPerson.lastName = "Walnes";
@@ -143,102 +147,97 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
     }
 
     public void testCustomObjectWillNotUnmarshalTransientFields() {
-
         xstream.alias("friend", SamplePerson.class);
 
-        String xml =
-                "<friend>\n" +
-                "  <anInt>3</anInt>\n" +
-                "  <firstName>Joe</firstName>\n" +
-                "  <lastName>Walnes</lastName>\n" +
-                "  <aComment>XStream Despot</aComment>\n" +
-                "</friend>";
+        final String xml = "<friend>\n"
+            + "  <anInt>3</anInt>\n"
+            + "  <firstName>Joe</firstName>\n"
+            + "  <lastName>Walnes</lastName>\n"
+            + "  <aComment>XStream Despot</aComment>\n"
+            + "</friend>";
 
-        SamplePerson person = (SamplePerson)xstream.fromXML(xml);
+        final SamplePerson person = xstream.fromXML(xml);
         assertNull(person.aComment);
     }
-    
+
     static class Joe extends SamplePerson {
+        private static final long serialVersionUID = 200703L;
         boolean aBoolean;
     }
 
     public void testCustomObjectWillNotUnmarshalInheritedTransientFields() {
-
         xstream.alias("joe", Joe.class);
 
-        String xml =
-                "<joe>\n" +
-                "  <anInt>3</anInt>\n" +
-                "  <firstName>Joe</firstName>\n" +
-                "  <lastName>Walnes</lastName>\n" +
-                "  <aComment>XStream Despot</aComment>\n" +
-                "  <aBoolean>true</aBoolean>\n" +
-                "</joe>";
+        final String xml = ""
+            + "<joe>\n"
+            + "  <anInt>3</anInt>\n"
+            + "  <firstName>Joe</firstName>\n"
+            + "  <lastName>Walnes</lastName>\n"
+            + "  <aComment>XStream Despot</aComment>\n"
+            + "  <aBoolean>true</aBoolean>\n"
+            + "</joe>";
 
-        Joe joe = (Joe)xstream.fromXML(xml);
+        final Joe joe = xstream.fromXML(xml);
         assertNull(joe.aComment);
     }
 
     public void testCustomObjectWillNotUnmarshalTransientFieldsFromAttributes() {
-
         xstream.alias("friend", SamplePerson.class);
 
-        String xml =
-                "<friend aComment='XStream Despot'>\n" +
-                "  <anInt>3</anInt>\n" +
-                "  <firstName>Joe</firstName>\n" +
-                "  <lastName>Walnes</lastName>\n" +
-                "</friend>";
+        final String xml = ""
+            + "<friend aComment='XStream Despot'>\n"
+            + "  <anInt>3</anInt>\n"
+            + "  <firstName>Joe</firstName>\n"
+            + "  <lastName>Walnes</lastName>\n"
+            + "</friend>";
 
         // without attribute definition
-        SamplePerson person = (SamplePerson)xstream.fromXML(xml);
+        SamplePerson person = xstream.fromXML(xml);
         assertNull(person.aComment);
 
         xstream.useAttributeFor("aComment", String.class);
 
         // with attribute definition
-        person = (SamplePerson)xstream.fromXML(xml);
+        person = xstream.fromXML(xml);
         assertNull(person.aComment);
     }
 
     public void testNullObjectsDoNotHaveFieldsWritten() {
-
         xstream.alias("cls", WithSomeFields.class);
 
-        WithSomeFields obj = new WithSomeFields();
-
-        String expected = "<cls/>";
-
+        final WithSomeFields obj = new WithSomeFields();
+        final String expected = "<cls/>";
         assertBothWays(obj, expected);
     }
 
     public void testEmptyStringsAreNotTreatedAsNulls() {
         xstream.alias("cls", WithSomeFields.class);
 
-        WithSomeFields obj = new WithSomeFields();
+        final WithSomeFields obj = new WithSomeFields();
         obj.b = "";
 
-        String expected = "" +
-                "<cls>\n" +
-                "  <b></b>\n" +
-                "</cls>";
+        final String expected = ""//
+            + "<cls>\n"
+            + "  <b></b>\n"
+            + "</cls>";
 
         assertBothWays(obj, expected);
     }
 
     public static class WithSomeFields extends StandardObject {
+        private static final long serialVersionUID = 200310L;
         Object a;
         String b;
     }
 
     public void testNullsAreDistinguishedFromEmptyStrings() {
-        LotsOfStrings in = new LotsOfStrings();
+        final LotsOfStrings in = new LotsOfStrings();
         in.a = ".";
         in.b = "";
         in.c = null;
 
-        String xml = xstream.toXML(in);
-        LotsOfStrings out = (LotsOfStrings) xstream.fromXML(xml);
+        final String xml = xstream.toXML(in);
+        final LotsOfStrings out = xstream.fromXML(xml);
 
         assertEquals(".", out.a);
         assertEquals("", out.b);
@@ -252,56 +251,54 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
     }
 
     public void testFieldWithObjectType() {
-        String expected = "" +
-                "<thing>\n" +
-                "  <one>1.0</one>\n" +
-                "  <two class=\"double\">2.0</two>\n" +
-                "</thing>";
+        final String expected = ""
+            + "<thing>\n"
+            + "  <one>1.0</one>\n"
+            + "  <two class=\"double\">2.0</two>\n"
+            + "</thing>";
         xstream.alias("thing", FieldWithObjectType.class);
 
         assertBothWays(new FieldWithObjectType(), expected);
     }
 
     public static class FieldWithObjectType extends StandardObject {
+        private static final long serialVersionUID = 200403L;
         Double one = new Double(1.0);
         Object two = new Double(2.0);
     }
 
     public void testFailsFastIfFieldIsDefinedTwice() {
-        String input = "" +
-                "<thing>\n" +
-                "  <one>1.0</one>\n" +
-                "  <one>2.0</one>\n" +
-                "</thing>";
+        final String input = "" //
+            + "<thing>\n"
+            + "  <one>1.0</one>\n"
+            + "  <one>2.0</one>\n"
+            + "</thing>";
         xstream.alias("thing", FieldWithObjectType.class);
 
         try {
-
             xstream.fromXML(input);
             fail("Expected exception");
-
-        } catch (ReflectionConverter.DuplicateFieldException expected) {
+        } catch (final ReflectionConverter.DuplicateFieldException expected) {
             assertEquals("one", expected.get("field"));
         }
     }
-    
+
     public static class TransientInitializingClass extends StandardObject {
+        private static final long serialVersionUID = 200603L;
         private transient String s = "";
+
         private Object readResolve() {
-            this.s = "foo";
+            s = "foo";
             return this;
         }
     }
 
     public void testCustomObjectWithTransientFieldInitialization() {
-
         xstream.alias("tran", TransientInitializingClass.class);
 
-        TransientInitializingClass tran = new TransientInitializingClass();
-
-        String expected = "<tran/>";
-
-        TransientInitializingClass serialized = (TransientInitializingClass)assertBothWays(tran, expected);
+        final TransientInitializingClass tran = new TransientInitializingClass();
+        final String expected = "<tran/>";
+        final TransientInitializingClass serialized = assertBothWays(tran, expected);
         assertEquals("foo", serialized.s);
     }
 }

@@ -1,34 +1,34 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 26. September 2003 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
-
-import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
-import com.thoughtworks.acceptance.objects.StandardObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
+import com.thoughtworks.acceptance.objects.StandardObject;
+
 
 public class InheritanceTest extends AbstractAcceptanceTest {
     public void testHandlesInheritanceHierarchies() {
-        OpenSourceSoftware openSourceSoftware = new OpenSourceSoftware("apache", "geronimo", "license");
-        String xml =
-                "<oss>\n" +
-                "  <vendor>apache</vendor>\n" +
-                "  <name>geronimo</name>\n" +
-                "  <license>license</license>\n" +
-                "</oss>";
+        final OpenSourceSoftware openSourceSoftware = new OpenSourceSoftware("apache", "geronimo", "license");
+        final String xml = ""//
+            + "<oss>\n"
+            + "  <vendor>apache</vendor>\n"
+            + "  <name>geronimo</name>\n"
+            + "  <license>license</license>\n"
+            + "</oss>";
 
         xstream.alias("oss", OpenSourceSoftware.class);
         assertBothWays(openSourceSoftware, xml);
@@ -37,10 +37,7 @@ public class InheritanceTest extends AbstractAcceptanceTest {
     public static class ParentClass {
         private String name;
 
-        public ParentClass() {
-        }
-
-        public ParentClass(String name) {
+        public ParentClass(final String name) {
             this.name = name;
         }
 
@@ -52,24 +49,28 @@ public class InheritanceTest extends AbstractAcceptanceTest {
     public static class ChildClass extends ParentClass {
         private String name;
 
-        public ChildClass() {
-        }
-
-        public ChildClass(String parentName, String childName) {
+        public ChildClass(final String parentName, final String childName) {
             super(parentName);
-            this.name = childName;
+            name = childName;
         }
 
         public String getChildName() {
             return name;
         }
 
+        @Override
         public String toString() {
             return getParentName() + "/" + getChildName();
         }
 
-        public boolean equals(Object obj) {
+        @Override
+        public boolean equals(final Object obj) {
             return toString().equals(obj.toString());
+        }
+
+        @Override
+        public int hashCode() {
+            return getParentName().hashCode() | getChildName().hashCode();
         }
     }
 
@@ -77,16 +78,16 @@ public class InheritanceTest extends AbstractAcceptanceTest {
         xstream.alias("parent", ParentClass.class);
         xstream.alias("child", ChildClass.class);
 
-        ChildClass child = new ChildClass("PARENT", "CHILD");
+        final ChildClass child = new ChildClass("PARENT", "CHILD");
         // sanity checks
         assertEquals("PARENT", child.getParentName());
         assertEquals("CHILD", child.getChildName());
 
-        String expected = "" +
-                "<child>\n" +
-                "  <name defined-in=\"parent\">PARENT</name>\n" +
-                "  <name>CHILD</name>\n" +
-                "</child>";
+        final String expected = ""
+            + "<child>\n"
+            + "  <name defined-in=\"parent\">PARENT</name>\n"
+            + "  <name>CHILD</name>\n"
+            + "</child>";
 
         assertBothWays(child, expected);
     }
@@ -94,74 +95,70 @@ public class InheritanceTest extends AbstractAcceptanceTest {
     public static class StaticChildClass extends ParentClass {
         private static String name = "CHILD";
 
-        public StaticChildClass() {
-        }
-
-        public StaticChildClass(String parentName) {
+        public StaticChildClass(final String parentName) {
             super(parentName);
         }
     }
-    
+
     public void testHandlesStaticFieldInChildDoesNotHideFieldInParent() {
         xstream.alias("child", StaticChildClass.class);
 
-        StaticChildClass child = new StaticChildClass("PARENT");
-        String expected = "" +
-                "<child>\n" +
-                "  <name>PARENT</name>\n" +
-                "</child>";
+        final StaticChildClass child = new StaticChildClass("PARENT");
+        final String expected = "" + "<child>\n" + "  <name>PARENT</name>\n" + "</child>";
 
         assertBothWays(child, expected);
         assertEquals("PARENT", child.getParentName());
         assertEquals("CHILD", StaticChildClass.name);
     }
 
-    public static class ParentA extends StandardObject {
-        private List stuff = new ArrayList();
+    public static class ParentA<T> extends StandardObject {
+        private static final long serialVersionUID = 200405L;
+        private final List<T> stuff = new ArrayList<>();
 
-        public List getParentStuff() {
+        public List<T> getParentStuff() {
             return stuff;
         }
     }
 
-    public static class ChildA extends ParentA {
-        private Map stuff = new HashMap();
+    public static class ChildA<K, V, T> extends ParentA<T> {
+        private static final long serialVersionUID = 200405L;
+        private final Map<K, V> stuff = new HashMap<>();
 
-        public Map getChildStuff() {
+        public Map<K, V> getChildStuff() {
             return stuff;
         }
 
-        public boolean equals(Object obj) {
-            ChildA a = (ChildA) obj;
+        @Override
+        public boolean equals(final Object obj) {
+            final ChildA<?, ?, ?> a = (ChildA<?, ?, ?>)obj;
             if (!getChildStuff().getClass().equals(a.getChildStuff().getClass())) {
                 return false;
             }
             if (!getParentStuff().getClass().equals(a.getParentStuff().getClass())) {
                 return false;
             }
-            return getChildStuff().equals(a.getChildStuff())
-                    && getParentStuff().equals(a.getParentStuff());
+            return getChildStuff().equals(a.getChildStuff()) && getParentStuff().equals(a.getParentStuff());
         }
     }
 
     public void testHiddenFieldsWithDifferentType() {
         xstream.alias("child-a", ChildA.class);
         xstream.alias("parent-a", ParentA.class);
-        ChildA childA = new ChildA();
+        final ChildA<String, String, String> childA = new ChildA<>();
         childA.getChildStuff().put("hello", "world");
         childA.getParentStuff().add("woo");
-        String expected = "" +
-                "<child-a>\n" +
-                "  <stuff defined-in=\"parent-a\">\n" +
-                "    <string>woo</string>\n" +
-                "  </stuff>\n" +
-                "  <stuff>\n" +
-                "    <entry>\n" +
-                "      <string>hello</string>\n" +
-                "      <string>world</string>\n" +
-                "    </entry>\n" +
-                "  </stuff>\n" +
-                "</child-a>";
+        final String expected = ""
+            + "<child-a>\n"
+            + "  <stuff defined-in=\"parent-a\">\n"
+            + "    <string>woo</string>\n"
+            + "  </stuff>\n"
+            + "  <stuff>\n"
+            + "    <entry>\n"
+            + "      <string>hello</string>\n"
+            + "      <string>world</string>\n"
+            + "    </entry>\n"
+            + "  </stuff>\n"
+            + "</child-a>";
         assertBothWays(childA, expected);
     }
 }

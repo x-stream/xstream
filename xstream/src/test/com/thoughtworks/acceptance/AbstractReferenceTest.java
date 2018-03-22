@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. July 2011 by Joerg Schaible by merging AbstractCircularReferenceTest,
  * AbstractDuplicateReferenceTest, AbstractNestedCircularReferenceTest and
  * AbstractReplacedReferenceTest.
@@ -27,46 +27,47 @@ import com.thoughtworks.xstream.core.AbstractReferenceMarshaller;
 
 
 public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         xstream.alias("person", Person.class);
         xstream.alias("thing", Thing.class);
-        xstream.allowTypesByWildcard(AbstractReferenceTest.class.getName()+"$*");
+        xstream.allowTypesByWildcard(AbstractReferenceTest.class.getName() + "$*");
     }
 
     public void testReferencesAreWorking() {
 
-        Thing sameThing = new Thing("hello");
-        Thing anotherThing = new Thing("hello");
+        final Thing sameThing = new Thing("hello");
+        final Thing anotherThing = new Thing("hello");
 
-        List list = new ArrayList();
+        final List<Thing> list = new ArrayList<>();
         list.add(sameThing);
         list.add(sameThing);
         list.add(anotherThing);
 
-        String xml = xstream.toXML(list);
-        List result = (List)xstream.fromXML(xml);
+        final String xml = xstream.toXML(list);
+        final List<Thing> result = xstream.fromXML(xml);
 
         assertEquals(list, result);
     }
 
     public void testReferencesAreTheSameObjectWhenDeserialized() {
 
-        Thing sameThing = new Thing("hello");
-        Thing anotherThing = new Thing("hello");
+        final Thing sameThing = new Thing("hello");
+        final Thing anotherThing = new Thing("hello");
 
-        List list = new ArrayList();
+        final List<Thing> list = new ArrayList<>();
         list.add(sameThing);
         list.add(sameThing);
         list.add(anotherThing);
 
-        String xml = xstream.toXML(list);
-        List result = (List)xstream.fromXML(xml);
+        final String xml = xstream.toXML(list);
+        final List<Thing> result = xstream.fromXML(xml);
 
-        Thing t0 = (Thing)result.get(0);
-        Thing t1 = (Thing)result.get(1);
-        Thing t2 = (Thing)result.get(2);
-        
+        final Thing t0 = result.get(0);
+        final Thing t1 = result.get(1);
+        final Thing t2 = result.get(2);
+
         assertSame(t0, t1);
 
         t0.field = "bye";
@@ -78,52 +79,51 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
     }
 
     public static class Thing extends StandardObject {
+        private static final long serialVersionUID = 201107L;
         public String field;
 
-        public Thing() {
-        }
-
-        public Thing(String field) {
+        public Thing(final String field) {
             this.field = field;
         }
     }
 
-    public static class MultRef {
-        public Object s1 = new Object();
-        public Object s2 = s1;
+    public static class MultRef<T> {
+        @SuppressWarnings("unchecked")
+        public T s1 = (T)new Object();
+        public T s2 = s1;
     }
 
     public void testMultipleReferencesToObjectsWithNoChildren() {
-        MultRef in = new MultRef();
+        final MultRef<?> in = new MultRef<>();
         assertSame(in.s1, in.s2);
 
-        String xml = xstream.toXML(in);
-        MultRef out = (MultRef)xstream.fromXML(xml);
+        final String xml = xstream.toXML(in);
+        final MultRef<?> out = xstream.fromXML(xml);
 
         assertSame(out.s1, out.s2);
     }
 
     public void testReferencesNotUsedForImmutableValueTypes() {
-        MultRef in = new MultRef();
+        final MultRef<Integer> in = new MultRef<>();
         in.s1 = new Integer(4);
         in.s2 = in.s1;
 
-        String xml = xstream.toXML(in);
-        MultRef out = (MultRef)xstream.fromXML(xml);
+        final String xml = xstream.toXML(in);
+        final MultRef<Integer> out = xstream.fromXML(xml);
 
         assertEquals(out.s1, out.s2);
         assertNotSame(out.s1, out.s2);
     }
 
     public void testReferencesUsedForMutableValueTypes() {
-        MultRef in = new MultRef();
+        final MultRef<StringBuffer> in = new MultRef<>();
         in.s1 = new StringBuffer("hi");
         in.s2 = in.s1;
 
-        String xml = xstream.toXML(in);
-        MultRef out = (MultRef)xstream.fromXML(xml);
+        final String xml = xstream.toXML(in);
+        final MultRef<StringBuffer> out = xstream.fromXML(xml);
 
-        StringBuffer buffer = (StringBuffer)out.s2;
+        final StringBuffer buffer = out.s2;
         buffer.append("bye");
 
         assertEquals("hibye", out.s1.toString());
@@ -133,8 +133,9 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
     public void testReferencesToImplicitCollectionIsNotPossible() {
         xstream.alias("strings", WithNamedList.class);
         xstream.addImplicitCollection(WithNamedList.class, "things");
-        WithNamedList[] wls = new WithNamedList[]{
-            new WithNamedList("foo"), new WithNamedList("bar")};
+        @SuppressWarnings("unchecked")
+        final WithNamedList<String>[] wls = new WithNamedList[]{
+            new WithNamedList<String>("foo"), new WithNamedList<String>("bar")};
         wls[0].things.add("Hello");
         wls[0].things.add("Daniel");
         wls[1].things = wls[0].things;
@@ -142,8 +143,8 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         try {
             xstream.toXML(wls);
             fail("Thrown "
-                + AbstractReferenceMarshaller.ReferencedImplicitElementException.class
-                    .getName() + " expected");
+                + AbstractReferenceMarshaller.ReferencedImplicitElementException.class.getName()
+                + " expected");
         } catch (final AbstractReferenceMarshaller.ReferencedImplicitElementException e) {
             // OK
         }
@@ -152,14 +153,15 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
     public void testReferencesToElementsOfImplicitCollectionIsPossible() {
         xstream.alias("strings", WithNamedList.class);
         xstream.addImplicitCollection(WithNamedList.class, "things");
-        WithNamedList[] wls = new WithNamedList[]{
-            new WithNamedList("foo"), new WithNamedList("bar")};
+        @SuppressWarnings("unchecked")
+        final WithNamedList<Object>[] wls = new WithNamedList[]{
+            new WithNamedList<String>("foo"), new WithNamedList<String>("bar")};
         wls[0].things.add("Hello");
         wls[0].things.add("Daniel");
         wls[1].things.add(wls[0]);
 
-        String xml = xstream.toXML(wls);
-        WithNamedList[] out = (WithNamedList[])xstream.fromXML(xml);
+        final String xml = xstream.toXML(wls);
+        final WithNamedList<Object>[] out = xstream.fromXML(xml);
 
         assertSame(out[0], out[1].things.get(0));
     }
@@ -167,20 +169,21 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
     public void testReferencesToElementsOfNthImplicitCollectionIsPossible() {
         xstream.alias("strings", WithNamedList.class);
         xstream.addImplicitCollection(WithNamedList.class, "things");
-        WithNamedList[] wls = new WithNamedList[]{
-            new WithNamedList("foo"), new WithNamedList("bar"), new WithNamedList("foobar")};
+        @SuppressWarnings("unchecked")
+        final WithNamedList<Object>[] wls = new WithNamedList[]{
+            new WithNamedList<String>("foo"), new WithNamedList<String>("bar"), new WithNamedList<String>("foobar")};
         wls[1].things.add("Hello");
         wls[1].things.add("Daniel");
         wls[2].things.add(wls[1]);
 
-        String xml = xstream.toXML(wls);
-        WithNamedList[] out = (WithNamedList[])xstream.fromXML(xml);
+        final String xml = xstream.toXML(wls);
+        final WithNamedList<Object>[] out = xstream.fromXML(xml);
 
         assertSame(out[1], out[2].things.get(0));
     }
 
     public void testThrowsForInvalidReference() {
-        String xml = "" //
+        final String xml = "" //
             + "<list>\n"
             + "  <thing>\n"
             + "    <field>Hello</field>\n"
@@ -201,11 +204,8 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         public Person likes;
         public Person loathes;
 
-        public Person() {
-        }
-
-        public Person(String name) {
-            this.firstname = name;
+        public Person(final String name) {
+            firstname = name;
         }
     }
 
@@ -213,7 +213,7 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         String name;
         LinkedElement next;
 
-        LinkedElement(String name) {
+        LinkedElement(final String name) {
             this.name = name;
         }
     }
@@ -223,26 +223,26 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         TreeElement left;
         TreeElement right;
 
-        TreeElement(StringBuffer name) {
+        TreeElement(final StringBuffer name) {
             this.name = name;
         }
 
-        TreeElement(String name) {
+        TreeElement(final String name) {
             this.name = new StringBuffer(name);
         }
     }
 
     public void testCircularReference() {
-        Person bob = new Person("bob");
-        Person jane = new Person("jane");
+        final Person bob = new Person("bob");
+        final Person jane = new Person("jane");
         bob.likes = jane;
         jane.likes = bob;
 
-        String xml = xstream.toXML(bob);
+        final String xml = xstream.toXML(bob);
 
-        Person bobOut = (Person)xstream.fromXML(xml);
+        final Person bobOut = xstream.fromXML(xml);
         assertEquals("bob", bobOut.firstname);
-        Person janeOut = bobOut.likes;
+        final Person janeOut = bobOut.likes;
 
         assertEquals("jane", janeOut.firstname);
 
@@ -251,21 +251,21 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
     }
 
     public void testCircularReferenceToSelf() {
-        Person bob = new Person("bob");
+        final Person bob = new Person("bob");
         bob.likes = bob;
 
-        String xml = xstream.toXML(bob);
+        final String xml = xstream.toXML(bob);
 
-        Person bobOut = (Person)xstream.fromXML(xml);
+        final Person bobOut = xstream.fromXML(xml);
         assertEquals("bob", bobOut.firstname);
         assertSame(bobOut, bobOut.likes);
     }
 
     public void testDeepCircularReferences() {
-        Person bob = new Person("bob");
-        Person jane = new Person("jane");
-        Person ann = new Person("ann");
-        Person poo = new Person("poo");
+        final Person bob = new Person("bob");
+        final Person jane = new Person("jane");
+        final Person ann = new Person("ann");
+        final Person poo = new Person("poo");
 
         bob.likes = jane;
         bob.loathes = ann;
@@ -276,11 +276,11 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         jane.likes = jane;
         jane.loathes = bob;
 
-        String xml = xstream.toXML(bob);
-        Person bobOut = (Person)xstream.fromXML(xml);
-        Person janeOut = bobOut.likes;
-        Person annOut = bobOut.loathes;
-        Person pooOut = annOut.loathes;
+        final String xml = xstream.toXML(bob);
+        final Person bobOut = xstream.fromXML(xml);
+        final Person janeOut = bobOut.likes;
+        final Person annOut = bobOut.loathes;
+        final Person pooOut = annOut.loathes;
 
         assertEquals("bob", bobOut.firstname);
         assertEquals("jane", janeOut.firstname);
@@ -298,27 +298,28 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
     }
 
     public static class WeirdThing implements Serializable {
+        private static final long serialVersionUID = 201107L;
         public transient Object anotherObject;
-        private NestedThing nestedThing = new NestedThing();
+        final NestedThing nestedThing = new NestedThing();
 
-        private void readObject(ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             in.defaultReadObject();
             anotherObject = in.readObject();
         }
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             out.defaultWriteObject();
             out.writeObject(anotherObject);
         }
 
         private class NestedThing implements Serializable {
-            private void readObject(ObjectInputStream in)
-                throws IOException, ClassNotFoundException {
+            private static final long serialVersionUID = 201107L;
+
+            private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
                 in.defaultReadObject();
             }
 
-            private void writeObject(ObjectOutputStream out) throws IOException {
+            private void writeObject(final ObjectOutputStream out) throws IOException {
                 out.defaultWriteObject();
             }
 
@@ -343,59 +344,76 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         // AbstractNestedCircularReferenceTest$WeirdThing$NestedThing$this$1.
 
         // setup
-        WeirdThing in = new WeirdThing();
+        final WeirdThing in = new WeirdThing();
         in.anotherObject = in;
 
-        String xml = xstream.toXML(in);
+        final String xml = xstream.toXML(in);
         // System.out.println(xml + "\n");
 
         // execute
-        WeirdThing out = (WeirdThing)xstream.fromXML(xml);
+        final WeirdThing out = xstream.fromXML(xml);
 
         // verify
         assertSame(out, out.anotherObject);
     }
 
     public static class TreeData implements Serializable {
+        private static final long serialVersionUID = 201107L;
         String data;
         TreeData parent;
-        List children;
+        List<TreeData> children;
 
-        public TreeData(String data) {
+        public TreeData(final String data) {
             this.data = data;
-            children = new ArrayList();
+            children = new ArrayList<>();
         }
 
-        private TreeData(TreeData clone) {
+        private TreeData(final TreeData clone) {
             data = clone.data;
             parent = clone.parent;
             children = clone.children;
         }
 
-        public void add(TreeData child) {
+        public void add(final TreeData child) {
             child.parent = this;
             children.add(child);
         }
 
+        @Override
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((this.children == null) ? 0 : this.children.hashCode());
-            result = prime * result + ((this.data == null) ? 0 : this.data.hashCode());
+            result = prime * result + (children == null ? 0 : children.hashCode());
+            result = prime * result + (data == null ? 0 : data.hashCode());
             return result;
         }
 
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null) return false;
-            if (!(obj instanceof TreeData)) return false;
-            TreeData other = (TreeData)obj;
-            if (this.children == null) {
-                if (other.children != null) return false;
-            } else if (!this.children.equals(other.children)) return false;
-            if (this.data == null) {
-                if (other.data != null) return false;
-            } else if (!this.data.equals(other.data)) return false;
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (!(obj instanceof TreeData)) {
+                return false;
+            }
+            final TreeData other = (TreeData)obj;
+            if (children == null) {
+                if (other.children != null) {
+                    return false;
+                }
+            } else if (!children.equals(other.children)) {
+                return false;
+            }
+            if (data == null) {
+                if (other.data != null) {
+                    return false;
+                }
+            } else if (!data.equals(other.data)) {
+                return false;
+            }
             return true;
         }
 
@@ -409,9 +427,10 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
 
     public abstract void testReplacedReference();
 
-    public void replacedReference(String expectedXml) {
-        TreeData parent = new TreeData("parent");
+    public void replacedReference(final String expectedXml) {
+        final TreeData parent = new TreeData("parent");
         parent.add(new TreeData("child") {
+            private static final long serialVersionUID = 201107L;
             // anonymous type
         });
 
@@ -419,95 +438,96 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         xstream.alias("anonymous-element", parent.children.get(0).getClass());
 
         assertEquals(expectedXml, xstream.toXML(parent));
-        TreeData clone = (TreeData)xstream.fromXML(expectedXml);
+        final TreeData clone = xstream.fromXML(expectedXml);
         assertEquals(parent, clone);
     }
 
     static class Email extends StandardObject {
+        private static final long serialVersionUID = 201107L;
         String email;
-        private final Email alias;
+        final Email alias;
 
-        Email(String email) {
+        Email(final String email) {
             this(email, null);
         }
-        Email(String email, Email alias) {
+
+        Email(final String email, final Email alias) {
             this.email = email;
             this.alias = alias;
         }
     }
 
     static class EmailList extends StandardObject {
-        List addresses = new ArrayList();
+        private static final long serialVersionUID = 201107L;
+        List<Email> addresses = new ArrayList<>();
         Email main;
     }
 
     public void testReferenceElementInImplicitCollection() {
-        EmailList emails = new EmailList();
+        final EmailList emails = new EmailList();
         emails.addresses.add(new Email("private@joewalnes.com"));
         emails.addresses.add(new Email("joe@joewalnes.com"));
         emails.addresses.add(new Email("joe.walnes@thoughtworks.com"));
-        emails.addresses.add(new Email("joe@thoughtworks.com", (Email)emails.addresses.get(2)));
-        emails.main = (Email)emails.addresses.get(1);
+        emails.addresses.add(new Email("joe@thoughtworks.com", emails.addresses.get(2)));
+        emails.main = emails.addresses.get(1);
 
         xstream.addImplicitCollection(EmailList.class, "addresses", "address", Email.class);
-        String xml = xstream.toXML(emails);
+        final String xml = xstream.toXML(emails);
         assertEquals(emails, xstream.fromXML(xml));
     }
 
     static class EmailArray extends StandardObject {
+        private static final long serialVersionUID = 201107L;
         Email[] addresses;
         Email main;
     }
 
     public void testReferenceElementInImplicitArrays() {
-        EmailArray emails = new EmailArray();
-        Email alias = new Email("joe.walnes@thoughtworks.com");
+        final EmailArray emails = new EmailArray();
+        final Email alias = new Email("joe.walnes@thoughtworks.com");
         emails.addresses = new Email[]{
-            new Email("private@joewalnes.com"),
-            new Email("joe@joewalnes.com"),
-            alias,
-            new Email("joe@thoughtworks.com", alias)
-        };
+            new Email("private@joewalnes.com"), new Email("joe@joewalnes.com"), alias, new Email("joe@thoughtworks.com",
+                alias)};
         emails.main = emails.addresses[1];
 
         xstream.addImplicitArray(EmailArray.class, "addresses", "address");
-        String xml = xstream.toXML(emails);
+        final String xml = xstream.toXML(emails);
         assertEquals(emails, xstream.fromXML(xml));
     }
-    
+
     public void testImmutableInstancesAreNotReferenced() {
         xstream.addImmutableType(Thing.class, false);
 
-        Thing sameThing = new Thing("hello");
-        Thing anotherThing = new Thing("hello");
+        final Thing sameThing = new Thing("hello");
+        final Thing anotherThing = new Thing("hello");
 
-        List list = new ArrayList();
+        final List<Thing> list = new ArrayList<>();
         list.add(sameThing);
         list.add(sameThing);
         list.add(anotherThing);
 
-        String xml = xstream.toXML(list);
-        List result = (List)xstream.fromXML(xml);
+        final String xml = xstream.toXML(list);
+        final List<Thing> result = xstream.fromXML(xml);
 
-        Thing t0 = (Thing)result.get(0);
-        Thing t1 = (Thing)result.get(1);
-        Thing t2 = (Thing)result.get(2);
-        
+        final Thing t0 = result.get(0);
+        final Thing t1 = result.get(1);
+        result.get(2);
+
         assertEquals(t0, t1);
         assertNotSame(t0, t1);
     }
-    
+
     public void testImmutableInstancesCanBeDereferenced() {
 
-        Thing sameThing = new Thing("hello");
-        Thing anotherThing = new Thing("hello");
+        final Thing sameThing = new Thing("hello");
+        final Thing anotherThing = new Thing("hello");
 
-        List list = new ArrayList();
+        final List<Thing> list = new ArrayList<>();
         list.add(sameThing);
         list.add(sameThing);
         list.add(anotherThing);
 
-        String xml = xstream.toXML(list);
+        final String xml = xstream.toXML(list);
 
         xstream.addImmutableType(Thing.class, false);
 
@@ -520,12 +540,12 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
 
         xstream.addImmutableType(Thing.class, true);
 
-        List result = (List)xstream.fromXML(xml);
+        final List<Thing> result = xstream.fromXML(xml);
 
-        Thing t0 = (Thing)result.get(0);
-        Thing t1 = (Thing)result.get(1);
-        Thing t2 = (Thing)result.get(2);
-        
+        final Thing t0 = result.get(0);
+        final Thing t1 = result.get(1);
+        result.get(2);
+
         assertEquals(t0, t1);
         assertSame(t0, t1);
     }

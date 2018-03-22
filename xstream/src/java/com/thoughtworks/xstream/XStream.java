@@ -696,11 +696,12 @@ public class XStream {
      * well-known and simply types of the Java runtime as it is done in XStream 1.5.x by default. This method will do
      * nothing.
      * </p>
-     * 
+     *
      * @param xstream
      * @since 1.4.10
      * @deprecated As of upcoming, since it is superfluous in XStream 1.5.x
      */
+    @Deprecated
     public static void setupDefaultSecurity(final XStream xstream) {
         // Do intentionally nothing
     }
@@ -776,7 +777,7 @@ public class XStream {
             alias("awt-text-attribute", JVM.loadClassForName("java.awt.font.TextAttribute"));
         }
 
-        Class<?> type = JVM.loadClassForName("javax.activation.ActivationDataFlavor");
+        final Class<?> type = JVM.loadClassForName("javax.activation.ActivationDataFlavor");
         if (type != null) {
             alias("activation-data-flavor", type);
         }
@@ -1909,7 +1910,8 @@ public class XStream {
      */
     @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName,
-            final DataHolder dataHolder) throws IOException {
+            final DataHolder dataHolder)
+            throws IOException {
         final StatefulWriter statefulWriter = new StatefulWriter(writer);
         statefulWriter.startNode(rootNodeName, null);
         return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
