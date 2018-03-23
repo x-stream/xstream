@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,9 +22,9 @@ import java.util.List;
  */
 public class HandlerManager
 {
-    List handlers;
+    List<Handler> handlers;
 
-    public List getHandlers()
+    public List<Handler> getHandlers()
     {
         return handlers;
     }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,9 @@ package com.thoughtworks.acceptance.someobjects;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
 
+
 public class X extends StandardObject {
+    private static final long serialVersionUID = 200310L;
     public String aStr;
     public int anInt;
     public Y innerObj;

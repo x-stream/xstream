@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 05. July 2011 by Joerg Schaible, factored out of ExternalizableTest.
  */
 package com.thoughtworks.acceptance.objects;
@@ -27,24 +27,26 @@ public class SomethingExternalizable extends StandardObject implements Externali
     public SomethingExternalizable() {
     }
 
-    public SomethingExternalizable(String first, String last) {
+    public SomethingExternalizable(final String first, final String last) {
         this.first = first;
         this.last = last;
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    @Override
+    public void writeExternal(final ObjectOutput out) throws IOException {
         out.writeInt(first.length());
         out.writeObject(first + last);
         out.writeObject(nothing);
         out.writeObject(constant);
     }
 
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        int offset = in.readInt();
-        String full = (String) in.readObject();
+    @Override
+    public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+        final int offset = in.readInt();
+        final String full = (String)in.readObject();
         first = full.substring(0, offset);
         last = full.substring(offset);
-        nothing = (String) in.readObject();
-        constant = (String) in.readObject();
+        nothing = (String)in.readObject();
+        constant = (String)in.readObject();
     }
 }

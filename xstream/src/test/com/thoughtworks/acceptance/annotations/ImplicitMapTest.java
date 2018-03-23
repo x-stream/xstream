@@ -1,14 +1,18 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 05. August 2011 by Joerg Schaible
  */
 package com.thoughtworks.acceptance.annotations;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.acceptance.objects.StandardObject;
@@ -17,28 +21,24 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 
 /**
  * Test for annotations mapping implicit maps.
- * 
+ *
  * @author J&ouml;rg Schaible
  */
 public class ImplicitMapTest extends AbstractAcceptanceTest {
 
     @Override
     protected XStream createXStream() {
-        XStream xstream = super.createXStream();
+        final XStream xstream = super.createXStream();
         xstream.autodetectAnnotations(true);
         xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
         return xstream;
     }
 
     public void testAnnotation() {
-        String expected = ""
+        final String expected = ""
             + "<root>\n"
             + "  <software>\n"
             + "    <vendor>Microsoft</vendor>\n"
@@ -49,14 +49,14 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
             + "    <name>Linux</name>\n"
             + "  </software>\n"
             + "</root>";
-        ImplicitRootOne implicitRoot = new ImplicitRootOne();
+        final ImplicitRootOne implicitRoot = new ImplicitRootOne();
         implicitRoot.getValues().put("Windows", new Software("Microsoft", "Windows"));
         implicitRoot.getValues().put("Linux", new Software("Red Hat", "Linux"));
         assertBothWays(implicitRoot, expected);
     }
 
     public void testAnnotationWithItemFieldName() {
-        String expected = ""
+        final String expected = ""
             + "<root>\n"
             + "  <value>\n"
             + "    <vendor>Microsoft</vendor>\n"
@@ -67,7 +67,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
             + "    <name>Linux</name>\n"
             + "  </value>\n"
             + "</root>";
-        ImplicitRootTwo implicitRoot = new ImplicitRootTwo();
+        final ImplicitRootTwo implicitRoot = new ImplicitRootTwo();
         implicitRoot.getValues().put("Windows", new Software("Microsoft", "Windows"));
         implicitRoot.getValues().put("Linux", new Software("Red Hat", "Linux"));
         assertBothWays(implicitRoot, expected);
@@ -76,13 +76,13 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     @XStreamAlias("root")
     public static class ImplicitRootOne {
         @XStreamImplicit(keyFieldName = "name")
-        private Map<String, Software> values = new LinkedHashMap<String, Software>();
+        private Map<String, Software> values = new LinkedHashMap<>();
 
         public Map<String, Software> getValues() {
             return values;
         }
 
-        public void setValues(Map<String, Software> values) {
+        public void setValues(final Map<String, Software> values) {
             this.values = values;
         }
     }
@@ -90,32 +90,32 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     @XStreamAlias("root")
     public static class ImplicitRootTwo {
         @XStreamImplicit(keyFieldName = "name", itemFieldName = "value")
-        private Map<String, Software> values = new LinkedHashMap<String, Software>();
+        private Map<String, Software> values = new LinkedHashMap<>();
 
         public Map<String, Software> getValues() {
             return values;
         }
 
-        public void setValues(Map<String, Software> values) {
+        public void setValues(final Map<String, Software> values) {
             this.values = values;
         }
     }
 
     @XStreamAlias("implicit")
     public static class ImplicitParameterizedType<T> {
-        @XStreamImplicit(itemFieldName = "line", keyFieldName="id")
-        private LinkedHashMap<T,Point<T>> signatureLines;
+        @XStreamImplicit(itemFieldName = "line", keyFieldName = "id")
+        private LinkedHashMap<T, Point<T>> signatureLines;
     }
 
     @XStreamAlias("point")
     public static class Point<T> {
         @XStreamAsAttribute
-        private int x;
+        private final int x;
         @XStreamAsAttribute
-        private int y;
-        private final T id;
+        private final int y;
+        final T id;
 
-        public Point(T id, int x, int y) {
+        public Point(final T id, final int x, final int y) {
             this.id = id;
             this.x = x;
             this.y = y;
@@ -123,28 +123,28 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationHandlesParameterizedTypes() {
-        String xml = ""
+        final String xml = ""
             + "<implicit>\n"
             + "  <line x=\"33\" y=\"11\">\n"
             + "    <id class=\"long\">42</id>\n"
             + "  </line>\n"
             + "</implicit>";
-        ImplicitParameterizedType<Long> root = new ImplicitParameterizedType<Long>();
-        root.signatureLines = new LinkedHashMap<Long, Point<Long>>();
-        root.signatureLines.put(42L, new Point<Long>(42L, 33, 11));
+        final ImplicitParameterizedType<Long> root = new ImplicitParameterizedType<Long>();
+        root.signatureLines = new LinkedHashMap<>();
+        root.signatureLines.put(42L, new Point<>(42L, 33, 11));
         assertBothWays(root, xml);
     }
 
     @XStreamAlias("type")
     public static class ParametrizedTypeIsInterface {
-        @XStreamImplicit(keyFieldName="name")
-        private Map<String, Code> map = new LinkedHashMap<String, Code>();
+        @XStreamImplicit(keyFieldName = "name")
+        private final Map<String, Code> map = new LinkedHashMap<>();
     }
 
     public void testWorksForTypesThatAreInterfaces() {
-        ParametrizedTypeIsInterface type = new ParametrizedTypeIsInterface();
+        final ParametrizedTypeIsInterface type = new ParametrizedTypeIsInterface();
         type.map.put("Windows", new Software("Microsoft", "Windows"));
-        String xml = "" //
+        final String xml = "" //
             + "<type>\n" //
             + "  <software>\n"
             + "    <vendor>Microsoft</vendor>\n"
@@ -156,18 +156,20 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
 
     @XStreamAlias("untyped")
     private static class Untyped {
-        @XStreamImplicit(keyFieldName="name")
-        private Map map = new HashMap();
+        @SuppressWarnings("rawtypes")
+        @XStreamImplicit(keyFieldName = "name")
+        private final Map map = new HashMap();
 
+        @SuppressWarnings("unchecked")
         public Untyped() {
             map.put("Windows", new Software("Microsoft", "Windows"));
         }
     }
 
     public void testCanHandleUntypedCollections() {
-        Untyped untyped = new Untyped();
-        String xml = "" //
-            + "<untyped>\n" //
+        final Untyped untyped = new Untyped();
+        final String xml = "" //
+            + "<untyped>\n"
             + "  <software>\n"
             + "    <vendor>Microsoft</vendor>\n"
             + "    <name>Windows</name>\n"
@@ -175,19 +177,19 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
             + "</untyped>";
         assertBothWays(untyped, xml);
     }
-    
+
     public interface Code {}
 
     @XStreamAlias("software")
     public static class Software extends StandardObject implements Code {
-
+        private static final long serialVersionUID = 201108L;
         public String vendor;
         public String name;
 
         public Software() {
         }
 
-        public Software(String vendor, String name) {
+        public Software(final String vendor, final String name) {
             this.vendor = vendor;
             this.name = name;
         }

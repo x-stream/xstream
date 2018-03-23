@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 02. March 2006 by Mauro Talevi
  */
 package com.thoughtworks.acceptance.annotations;
@@ -28,20 +28,21 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * Tests for using annotations to override field converters
- * 
+ *
  * @author Guilherme Silveira
  * @author Mauro Talevi
  * @author J&ouml;rg Schaible
  */
 public class FieldConverterTest extends AbstractAcceptanceTest {
-    
+
     @Override
     protected XStream createXStream() {
-        XStream xstream = super.createXStream();
+        final XStream xstream = super.createXStream();
         xstream.autodetectAnnotations(true);
         return xstream;
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         xstream.alias("annotatedTask", TaskWithAnnotations.class);
@@ -109,6 +110,11 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
                 && ((TaskWithAnnotations)obj).name2.equals(name2)
                 && ((TaskWithAnnotations)obj).name3.equals(name3);
         }
+
+        @Override
+        public int hashCode() {
+            return name1.hashCode() | name2.hashCode() | name3.hashCode();
+        }
     }
 
     public static class DerivedTask extends TaskWithAnnotations {
@@ -138,42 +144,50 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
 
         @Override
         public boolean equals(final Object obj) {
-            return obj != null
-                && TaskContainer.class.equals(obj.getClass())
-                && task.equals(((TaskContainer)obj).task);
+            return obj != null && TaskContainer.class.equals(obj.getClass()) && task.equals(((TaskContainer)obj).task);
+        }
+
+        @Override
+        public int hashCode() {
+            return task.hashCode();
         }
     }
 
     public static class FirstConverter implements Converter {
 
+        @Override
         public void marshal(final Object source, final HierarchicalStreamWriter writer,
-            final MarshallingContext context) {
+                final MarshallingContext context) {
             final String str = source.toString();
             writer.addAttribute("str", str);
         }
 
-        public Object unmarshal(final HierarchicalStreamReader reader,
-            final UnmarshallingContext context) {
+        @Override
+        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
             final String str = reader.getAttribute("str");
             return str;
         }
 
-        public boolean canConvert(final Class type) {
+        @Override
+        public boolean canConvert(final Class<?> type) {
             return type.equals(String.class);
         }
     }
 
     public static class SecondaryConverter implements SingleValueConverter {
 
-        public boolean canConvert(final Class type) {
+        @Override
+        public boolean canConvert(final Class<?> type) {
             return type.equals(String.class);
         }
 
-        public Object fromString(String value) {
+        @Override
+        public Object fromString(final String value) {
             return value.substring(1, value.length() - 1);
         }
 
-        public String toString(Object source) {
+        @Override
+        public String toString(final Object source) {
             return "_" + source.toString() + "_";
         }
     }
@@ -183,18 +197,21 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         private static int total = 0;
 
         public CustomConverter() {
-            total++ ;
+            total++;
         }
 
-        public void marshal(Object source, HierarchicalStreamWriter writer,
-            MarshallingContext context) {
+        @Override
+        public void marshal(final Object source, final HierarchicalStreamWriter writer,
+                final MarshallingContext context) {
         }
 
-        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        @Override
+        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
             return null;
         }
 
-        public boolean canConvert(Class type) {
+        @Override
+        public boolean canConvert(final Class<?> type) {
             return type.equals(Double.class);
         }
 
@@ -202,48 +219,47 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
 
     public static class Account {
         @XStreamConverter(CustomConverter.class)
-        private Double value;
+        private final Double value;
 
         public Account() {
-            this.value = Math.random();
+            value = Math.random();
         }
     }
 
     public static class Client {
         @XStreamConverter(CustomConverter.class)
-        private Double value;
+        private final Double value;
 
         public Client() {
-            this.value = Math.random();
+            value = Math.random();
         }
     }
 
     public void testAreCachedPerField() {
-        int before = CustomConverter.total;
+        final int before = CustomConverter.total;
         toXML(new Account());
-        int after = CustomConverter.total;
+        final int after = CustomConverter.total;
         assertEquals(before + 1, after);
     }
 
     public void testAreCachedPerFieldInDifferentContexts() {
-        int before = CustomConverter.total;
+        final int before = CustomConverter.total;
         toXML(new Account());
         toXML(new Client());
-        int after = CustomConverter.total;
+        final int after = CustomConverter.total;
         assertEquals(before + 1, after);
     }
 
     @XStreamConverter(EnumToStringConverter.class)
-    public static class InvalidForConverter {
-    }
-    
+    public static class InvalidForConverter {}
+
     public void testCausingExceptionIsNotSuppressed() {
         try {
             toXML(new InvalidForConverter());
             fail("Thrown " + XStreamException.class.getName() + " expected");
         } catch (final XStreamException e) {
             Throwable th = e.getCause();
-            for(;;) {
+            for (;;) {
                 th = th.getCause();
                 assertNotNull("No causing InitializationException.", th);
                 if (th instanceof InitializationException) {

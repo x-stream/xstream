@@ -1,20 +1,15 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 16. September 2005 by Mauro Talevi
  */
 package com.thoughtworks.acceptance.annotations;
-
-import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamInclude;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,20 +17,25 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamInclude;
+
 
 /**
  * Tests for annotation detection.
- * 
+ *
  * @author Chung-Onn Cheong
  * @author Mauro Talevi
  * @author Guilherme Silveira
  * @author J&ouml;rg Schaible
  */
 public class AnnotationsTest extends AbstractAcceptanceTest {
-    
+
     @Override
     protected XStream createXStream() {
-        XStream xstream = super.createXStream();
+        final XStream xstream = super.createXStream();
         xstream.autodetectAnnotations(true);
         return xstream;
     }
@@ -43,7 +43,7 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     @XStreamAlias("param")
     public static class ParameterizedContainer {
 
-        private ParameterizedType<InternalType> type;
+        final ParameterizedType<InternalType> type;
 
         public ParameterizedContainer() {
             type = new ParameterizedType<InternalType>(new InternalType());
@@ -54,7 +54,7 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     @XStreamAlias("param")
     public static class DoubleParameterizedContainer {
 
-        private ArrayList<ArrayList<InternalType>> list;
+        private final ArrayList<ArrayList<InternalType>> list;
 
         public DoubleParameterizedContainer() {
             list = new ArrayList<ArrayList<InternalType>>();
@@ -63,17 +63,20 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         }
 
     }
-    
+
     @XStreamAlias("second")
     public static class InternalType {
         @XStreamAlias("aliased")
-        private String original = "value";
+        private final String original = "value";
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof InternalType
-                ? original.equals(((InternalType)obj).original)
-                : false;
+        public boolean equals(final Object obj) {
+            return obj instanceof InternalType ? original.equals(((InternalType)obj).original) : false;
+        }
+
+        @Override
+        public int hashCode() {
+            return original.hashCode();
         }
 
     }
@@ -81,21 +84,25 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     @XStreamAlias("typeAlias")
     public static class ParameterizedType<T> {
         @XStreamAlias("fieldAlias")
-        private T object;
+        private final T object;
 
-        public ParameterizedType(T object) {
+        public ParameterizedType(final T object) {
             this.object = object;
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof ParameterizedType ? object
-                .equals(((ParameterizedType)obj).object) : false;
+        public boolean equals(final Object obj) {
+            return obj instanceof ParameterizedType ? object.equals(((ParameterizedType<?>)obj).object) : false;
+        }
+
+        @Override
+        public int hashCode() {
+            return object.hashCode();
         }
     }
 
     public void testAreDetectedInParameterizedTypes() {
-        String xml = ""
+        final String xml = ""
             + "<param>\n"
             + "  <type>\n"
             + "    <fieldAlias class=\"second\">\n"
@@ -107,7 +114,7 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     }
 
     public void testAreDetectedInNestedParameterizedTypes() {
-        String xml = ""
+        final String xml = ""
             + "<param>\n"
             + "  <list>\n"
             + "    <list>\n"
@@ -121,9 +128,8 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     }
 
     public void testAreDetectedInArrays() {
-        InternalType[] internalTypes = new InternalType[]{
-            new InternalType(), new InternalType()};
-        String xml = ""
+        final InternalType[] internalTypes = new InternalType[]{new InternalType(), new InternalType()};
+        final String xml = ""
             + "<second-array>\n"
             + "  <second>\n"
             + "    <aliased>value</aliased>\n"
@@ -136,9 +142,10 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     }
 
     public void testAreDetectedInParametrizedArrays() {
-        ParameterizedType<String>[] types = new ParameterizedType[]{
+        @SuppressWarnings("unchecked")
+        final ParameterizedType<String>[] types = new ParameterizedType[]{
             new ParameterizedType<String>("foo"), new ParameterizedType<String>("bar")};
-        String xml = ""
+        final String xml = ""
             + "<typeAlias-array>\n"
             + "  <typeAlias>\n"
             + "    <fieldAlias class=\"string\">foo</fieldAlias>\n"
@@ -149,11 +156,11 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
             + "</typeAlias-array>";
         assertBothWays(types, xml);
     }
-    
+
     public void testAreDetectedInJDKCollection() {
-        List<InternalType> list = new ArrayList<InternalType>();
+        final List<InternalType> list = new ArrayList<InternalType>();
         list.add(new InternalType());
-        String xml = ""
+        final String xml = ""
             + "<list>\n"
             + "  <second>\n"
             + "    <aliased>value</aliased>\n"
@@ -165,10 +172,10 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     public void testForClassIsDetectedAtDeserialization() {
         // must preprocess annotations here
         xstream.processAnnotations(InternalType.class);
-        InternalType internalType = new InternalType();
-        String xml = "" // 
-            + "<second>\n" // 
-            + "  <aliased>value</aliased>\n" // 
+        final InternalType internalType = new InternalType();
+        final String xml = "" //
+            + "<second>\n" //
+            + "  <aliased>value</aliased>\n" //
             + "</second>";
         assertEquals(internalType, xstream.fromXML(xml));
     }
@@ -177,30 +184,29 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         // must preprocess annotations here
         xstream.processAnnotations(InternalType.class);
         xstream.ignoreUnknownElements();
-        InternalType internalType = new InternalType();
-        String xml = ""
+        final InternalType internalType = new InternalType();
+        final String xml = ""
             + "<root>\n"
             + "  <second>\n"
             + "    <aliased>value</aliased>\n"
             + "    <none>1</none>\n"
             + "  </second>\n"
             + "</root>";
-        ObjectInputStream in = xstream.createObjectInputStream(new StringReader(xml));
+        final ObjectInputStream in = xstream.createObjectInputStream(new StringReader(xml));
         assertEquals(internalType, in.readObject());
         in.close();
     }
 
     @XStreamInclude({InternalType.class})
-    interface Include {
-    }
+    interface Include {}
 
     public void testCanBeIncluded() {
         // must preprocess annotations from marker interface with inclusion
         xstream.processAnnotations(Include.class);
-        InternalType internalType = new InternalType();
-        String xml = "" // 
-            + "<second>\n" // 
-            + "  <aliased>value</aliased>\n" // 
+        final InternalType internalType = new InternalType();
+        final String xml = "" //
+            + "<second>\n" //
+            + "  <aliased>value</aliased>\n" //
             + "</second>";
         assertEquals(internalType, xstream.fromXML(xml));
     }

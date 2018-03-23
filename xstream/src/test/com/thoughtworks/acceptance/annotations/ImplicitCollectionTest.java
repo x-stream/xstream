@@ -1,14 +1,19 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 01. December 2006 by Joerg Schaible
  */
 package com.thoughtworks.acceptance.annotations;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.InitializationException;
@@ -16,15 +21,11 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
  * Test for annotations mapping implicit collections.
- * 
+ *
  * @author Lucio Benfante
  * @author J&ouml;rg Schaible
  */
@@ -32,30 +33,22 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
     @Override
     protected XStream createXStream() {
-        XStream xstream = super.createXStream();
+        final XStream xstream = super.createXStream();
         xstream.autodetectAnnotations(true);
         return xstream;
     }
 
     public void testAnnotation() {
-        String expected = ""
-            + "<root>\n"
-            + "  <string>one</string>\n"
-            + "  <string>two</string>\n"
-            + "</root>";
-        ImplicitRootOne implicitRoot = new ImplicitRootOne();
+        final String expected = "" + "<root>\n" + "  <string>one</string>\n" + "  <string>two</string>\n" + "</root>";
+        final ImplicitRootOne implicitRoot = new ImplicitRootOne();
         implicitRoot.getValues().add("one");
         implicitRoot.getValues().add("two");
         assertBothWays(implicitRoot, expected);
     }
 
     public void testAnnotationWithItemFieldName() {
-        String expected = ""
-            + "<root>\n"
-            + "  <value>one</value>\n"
-            + "  <value>two</value>\n"
-            + "</root>";
-        ImplicitRootTwo implicitRoot = new ImplicitRootTwo();
+        final String expected = "" + "<root>\n" + "  <value>one</value>\n" + "  <value>two</value>\n" + "</root>";
+        final ImplicitRootTwo implicitRoot = new ImplicitRootTwo();
         implicitRoot.getValues().add("one");
         implicitRoot.getValues().add("two");
         assertBothWays(implicitRoot, expected);
@@ -73,13 +66,13 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     @XStreamAlias("root")
     public static class ImplicitRootOne {
         @XStreamImplicit()
-        private List<String> values = new ArrayList<String>();
+        private List<String> values = new ArrayList<>();
 
         public List<String> getValues() {
             return values;
         }
 
-        public void setValues(List<String> values) {
+        public void setValues(final List<String> values) {
             this.values = values;
         }
     }
@@ -87,13 +80,13 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     @XStreamAlias("root")
     public static class ImplicitRootTwo {
         @XStreamImplicit(itemFieldName = "value")
-        private List<String> values = new ArrayList<String>();
+        private List<String> values = new ArrayList<>();
 
         public List<String> getValues() {
             return values;
         }
 
-        public void setValues(List<String> values) {
+        public void setValues(final List<String> values) {
             this.values = values;
         }
     }
@@ -107,7 +100,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             return value;
         }
 
-        public void setValue(String value) {
+        public void setValue(final String value) {
             this.value = value;
         }
     }
@@ -121,26 +114,26 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     @XStreamAlias("point")
     public static class Point {
         @XStreamAsAttribute
-        private int x;
+        private final int x;
         @XStreamAsAttribute
-        private int y;
+        private final int y;
 
-        public Point(int x, int y) {
+        public Point(final int x, final int y) {
             this.x = x;
             this.y = y;
         }
     }
 
     public void testAnnotationHandlesParameterizedTypes() {
-        String xml = ""
+        final String xml = ""
             + "<implicit>\n"
             + "  <line>\n"
             + "    <point x=\"33\" y=\"11\"/>\n"
             + "  </line>\n"
             + "</implicit>";
-        ImplicitParameterizedType root = new ImplicitParameterizedType();
-        root.signatureLines = new ArrayList<ArrayList<Point>>();
-        root.signatureLines.add(new ArrayList<Point>());
+        final ImplicitParameterizedType root = new ImplicitParameterizedType();
+        root.signatureLines = new ArrayList<>();
+        root.signatureLines.add(new ArrayList<>());
         root.signatureLines.get(0).add(new Point(33, 11));
         assertBothWays(root, xml);
     }
@@ -148,35 +141,37 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     @XStreamAlias("type")
     public static class ParametrizedTypeIsInterface {
         @XStreamImplicit()
-        private ArrayList<Map> list = new ArrayList<Map>();
+        private ArrayList<Map<?, ?>> list = new ArrayList<>();
     }
 
     public void testWorksForTypesThatAreInterfaces() {
-        ParametrizedTypeIsInterface type = new ParametrizedTypeIsInterface();
-        type.list = new ArrayList<Map>();
-        type.list.add(new HashMap());
-        String xml = "" //
-            + "<type>\n" // 
-            + "  <map/>\n" //
+        final ParametrizedTypeIsInterface type = new ParametrizedTypeIsInterface();
+        type.list = new ArrayList<>();
+        type.list.add(new HashMap<>());
+        final String xml = "" //
+            + "<type>\n"
+            + "  <map/>\n"
             + "</type>";
         assertBothWays(type, xml);
     }
 
     @XStreamAlias("untyped")
     private static class Untyped {
+        @SuppressWarnings("rawtypes")
         @XStreamImplicit
-        private List list = new ArrayList();
+        private final List list = new ArrayList();
 
+        @SuppressWarnings("unchecked")
         public Untyped() {
             list.add("1");
         }
     }
 
     public void testCanHandleUntypedCollections() {
-        Untyped untyped = new Untyped();
-        String xml = "" //
-            + "<untyped>\n" //
-            + "  <string>1</string>\n" //
+        final Untyped untyped = new Untyped();
+        final String xml = "" //
+            + "<untyped>\n"
+            + "  <string>1</string>\n"
             + "</untyped>";
         assertBothWays(untyped, xml);
     }

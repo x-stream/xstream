@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,7 @@
  */
 package com.thoughtworks.acceptance.objects;
 
-
 public class OwnerOfExternalizable extends StandardObject {
+    private static final long serialVersionUID = 201107L;
     public SomethingExternalizable target;
 }

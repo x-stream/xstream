@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,8 +14,8 @@
  */
 package com.thoughtworks.acceptance.objects;
 
-
 public class Replaced extends StandardObject {
+    private static final long serialVersionUID = 200810L;
     String replacedValue;
 
     public Replaced() {

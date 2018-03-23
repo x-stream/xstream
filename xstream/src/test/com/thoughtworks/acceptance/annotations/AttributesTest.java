@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2007, 2014 XStream Committers.
+ * Copyright (C) 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 23. November 2007 by Joerg Schaible
  */
 package com.thoughtworks.acceptance.annotations;
@@ -22,17 +22,17 @@ import com.thoughtworks.xstream.converters.extended.ToStringConverter;
 
 /**
  * Tests annotations defining fields to be rendered as attributes.
- * 
+ *
  * @author Chung-Onn Cheong
  * @author Mauro Talevi
  * @author Guilherme Silveira
  * @author J&ouml;rg Schaible
  */
 public class AttributesTest extends AbstractAcceptanceTest {
-    
+
     @Override
     protected XStream createXStream() {
-        XStream xstream = super.createXStream();
+        final XStream xstream = super.createXStream();
         xstream.autodetectAnnotations(true);
         return xstream;
     }
@@ -44,9 +44,9 @@ public class AttributesTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotation() {
-        AnnotatedAttribute value = new AnnotatedAttribute();
+        final AnnotatedAttribute value = new AnnotatedAttribute();
         value.myField = "hello";
-        String expected = "<annotated myField=\"hello\"/>";
+        final String expected = "<annotated myField=\"hello\"/>";
         assertBothWays(value, expected);
     }
 
@@ -58,68 +58,69 @@ public class AttributesTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationInCombinationWithAlias() {
-        AnnotatedAliasedAttribute value = new AnnotatedAliasedAttribute();
+        final AnnotatedAliasedAttribute value = new AnnotatedAliasedAttribute();
         value.myField = "hello";
-        String expected = "<annotated field=\"hello\"/>";
+        final String expected = "<annotated field=\"hello\"/>";
         assertBothWays(value, expected);
     }
-    
+
+    @SuppressWarnings("unused")
     @XStreamAlias("annotated")
     public static class AnnotatedAttributeParameterized<T> implements Serializable {
+        private static final long serialVersionUID = 201401L;
         @XStreamAsAttribute
         private String myField;
     }
 
     public void testAnnotationInParameterizedClass() {
-        AnnotatedAttributeParameterized<String> value = new AnnotatedAttributeParameterized<String>();
+        final AnnotatedAttributeParameterized<String> value = new AnnotatedAttributeParameterized<String>();
         value.myField = "hello";
-        String expected = "<annotated myField=\"hello\"/>";
+        final String expected = "<annotated myField=\"hello\"/>";
         assertBothWays(value, expected);
     }
-    
+
     @XStreamAlias("annotated")
     public static class AnnotatedGenericAttributeParameterized<T> implements Serializable {
+        private static final long serialVersionUID = 201401L;
         @XStreamAsAttribute
         private T myField;
     }
 
     public void testAnnotationAtGenericTypeInParameterizedClass() {
-        AnnotatedGenericAttributeParameterized<String> value = new AnnotatedGenericAttributeParameterized<String>();
+        final AnnotatedGenericAttributeParameterized<String> value =
+                new AnnotatedGenericAttributeParameterized<String>();
         value.myField = "hello";
-        String expected = ""
-            + "<annotated>\n"
-            + "  <myField class=\"string\">hello</myField>\n"
-            + "</annotated>";
+        final String expected = "" + "<annotated>\n" + "  <myField class=\"string\">hello</myField>\n" + "</annotated>";
         assertBothWays(value, expected);
     }
-    
+
     @XStreamAlias("annotated")
     public static class AnnotatedGenericAttributeBounded<T extends Serializable> implements Serializable {
+        private static final long serialVersionUID = 201401L;
         @XStreamAsAttribute
         private T myField;
     }
 
     public void testAnnotationAtGenericTypeInBoundedClass() {
-        AnnotatedGenericAttributeBounded<String> value = new AnnotatedGenericAttributeBounded<String>();
+        final AnnotatedGenericAttributeBounded<String> value = new AnnotatedGenericAttributeBounded<String>();
         value.myField = "hello";
-        String expected = ""
-            + "<annotated>\n"
-            + "  <myField class=\"string\">hello</myField>\n"
-            + "</annotated>";
+        final String expected = "" + "<annotated>\n" + "  <myField class=\"string\">hello</myField>\n" + "</annotated>";
         assertBothWays(value, expected);
     }
- 
+
     @XStreamAlias("annotated")
     public static class AnnotatedGenericAttributeAndConverterParameterized<T> implements Serializable {
+        private static final long serialVersionUID = 201401L;
         @XStreamAsAttribute
-        @XStreamConverter(value=ToStringConverter.class, useImplicitType=false, types={String.class})
+        @XStreamConverter(value = ToStringConverter.class, useImplicitType = false, types = {String.class})
         private T myField;
     }
 
     public void testAnnotationAtGenericTypeWithLocalConverterInParameterizedClass() {
-        AnnotatedGenericAttributeAndConverterParameterized<String> value = new AnnotatedGenericAttributeAndConverterParameterized<String>();
+        final AnnotatedGenericAttributeAndConverterParameterized<String> value =
+                new AnnotatedGenericAttributeAndConverterParameterized<String>();
         value.myField = "hello";
-        String expected = "<annotated myField=\"hello\"/>";
+        final String expected = "<annotated myField=\"hello\"/>";
         assertBothWays(value, expected);
     }
 }

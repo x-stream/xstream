@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. May 2004 by Joe Walnes
  */
 package com.thoughtworks.acceptance.objects;
@@ -16,10 +16,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class StatusEnum implements Serializable, Comparable {
 
+public class StatusEnum implements Serializable, Comparable<StatusEnum> {
+    private static final long serialVersionUID = 200405L;
     private static int nextOrdinal = 0;
-    private int ordinal = nextOrdinal++;
+    private final int ordinal = nextOrdinal++;
 
     public static final StatusEnum STARTED = new StatusEnum("STARTED");
 
@@ -27,26 +28,25 @@ public class StatusEnum implements Serializable, Comparable {
 
     private static final StatusEnum[] PRIVATE_VALUES = {STARTED, FINISHED};
 
-    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(PRIVATE_VALUES));
+    public static final List<StatusEnum> VALUES = Collections.unmodifiableList(Arrays.asList(PRIVATE_VALUES));
 
     private String name; // for debug only
 
-    private StatusEnum() {
-    }
-
-    private StatusEnum(String name) {
+    private StatusEnum(final String name) {
         this.name = name;
     }
 
+    @Override
     public String toString() {
         return name;
     }
 
-    public int compareTo(Object o) {
-        return ordinal - ((StatusEnum) o).ordinal;
+    @Override
+    public int compareTo(final StatusEnum o) {
+        return ordinal - o.ordinal;
     }
 
     private Object readResolve() {
-        return PRIVATE_VALUES[ordinal]; //Canonicalize
+        return PRIVATE_VALUES[ordinal]; // Canonicalize
     }
 }

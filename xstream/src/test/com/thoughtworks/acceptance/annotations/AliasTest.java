@@ -1,14 +1,19 @@
 /*
- * Copyright (C) 2007, 2013 XStream Committers.
+ * Copyright (C) 2007, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 23. November 2007 by Joerg Schaible
  */
 package com.thoughtworks.acceptance.annotations;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
@@ -25,15 +30,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 
 /**
  * Tests annotations defining aliases for classes or fields.
- * 
+ *
  * @author Chung-Onn Cheong
  * @author Mauro Talevi
  * @author Guilherme Silveira
@@ -43,16 +43,16 @@ public class AliasTest extends AbstractAcceptanceTest {
 
     @Override
     protected XStream createXStream() {
-        XStream xstream = super.createXStream();
+        final XStream xstream = super.createXStream();
         xstream.autodetectAnnotations(true);
         return xstream;
     }
 
     public void testAnnotationForClassWithAnnotatedConverter() {
-        Map<String, Person> map = new HashMap<String, Person>();
+        final Map<String, Person> map = new HashMap<String, Person>();
         map.put("first person", new Person("john doe"));
         map.put("second person", new Person("jane doe"));
-        String xml = ""
+        final String xml = ""
             + "<map>\n"
             + "  <entry>\n"
             + "    <string>second person</string>\n"
@@ -67,9 +67,9 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationForFieldWithAliasCycle() {
-        Cycle cycle = new Cycle();
+        final Cycle cycle = new Cycle();
         cycle.internal = cycle;
-        String xml = "" // 
+        final String xml = "" //
             + "<cycle>\n" //
             + "  <oops reference=\"..\"/>\n" //
             + "</cycle>";
@@ -83,11 +83,11 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationForField() {
-        List<String> nickNames = new ArrayList<String>();
+        final List<String> nickNames = new ArrayList<String>();
         nickNames.add("johnny");
         nickNames.add("jack");
-        CustomPerson person = new CustomPerson("john", "doe", 25, nickNames);
-        String expectedXml = ""
+        final CustomPerson person = new CustomPerson("john", "doe", 25, nickNames);
+        final String expectedXml = ""
             + "<person>\n"
             + "  <first-name>john</first-name>\n"
             + "  <last-name>doe</last-name>\n"
@@ -112,21 +112,24 @@ public class AliasTest extends AbstractAcceptanceTest {
         List<String> nickNames;
 
         public CustomPerson(
-            String firstName, String lastName, int ageInYears, List<String> nickNames) {
+                final String firstName, final String lastName, final int ageInYears, final List<String> nickNames) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.ageInYears = ageInYears;
             this.nickNames = nickNames;
         }
 
-        public boolean equals(Object obj) {
-            if ((obj == null) || !(obj instanceof CustomPerson)) return false;
+        @Override
+        public boolean equals(final Object obj) {
+            if (obj == null || !(obj instanceof CustomPerson)) {
+                return false;
+            }
             return toString().equals(obj.toString());
         }
 
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb
                 .append("firstName:")
                 .append(firstName)
@@ -139,6 +142,10 @@ public class AliasTest extends AbstractAcceptanceTest {
             return sb.toString();
         }
 
+        @Override
+        public int hashCode() {
+            return toString().hashCode();
+        }
     }
 
     @XStreamAlias("person")
@@ -147,23 +154,30 @@ public class AliasTest extends AbstractAcceptanceTest {
         String name;
         AddressBookInfo addressBook;
 
-        public Person(String name) {
+        public Person(final String name) {
             this.name = name;
             addressBook = new AddressBook();
         }
 
-        public boolean equals(Object obj) {
-            if ((obj == null) || !(obj instanceof Person)) return false;
+        @Override
+        public boolean equals(final Object obj) {
+            if (obj == null || !(obj instanceof Person)) {
+                return false;
+            }
             return addressBook.equals(((Person)obj).addressBook);
         }
 
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append("name:").append(name).append("addresbook:").append(addressBook);
             return sb.toString();
         }
 
+        @Override
+        public int hashCode() {
+            return toString().hashCode();
+        }
     }
 
     @XStreamAlias(value = "addressbook-info", impl = AddressBook.class)
@@ -185,20 +199,29 @@ public class AliasTest extends AbstractAcceptanceTest {
             addresses.add(new Address("Office Address", 222));
         }
 
+        @Override
         public List<AddressInfo> getAddresses() {
             return addresses;
         }
 
-        public void setAddresses(List<AddressInfo> addresses) {
+        @Override
+        public void setAddresses(final List<AddressInfo> addresses) {
             this.addresses = addresses;
 
         }
 
-        public boolean equals(Object obj) {
-            if ((obj == null) || !(obj instanceof AddressBookInfo)) return false;
+        @Override
+        public boolean equals(final Object obj) {
+            if (obj == null || !(obj instanceof AddressBookInfo)) {
+                return false;
+            }
             return addresses.containsAll(((AddressBookInfo)obj).getAddresses());
         }
 
+        @Override
+        public int hashCode() {
+            return addresses.hashCode();
+        }
     }
 
     @XStreamAlias(value = "addressinfoAlias", impl = Address.class)
@@ -211,18 +234,20 @@ public class AliasTest extends AbstractAcceptanceTest {
     @XStreamAlias(value = "addressAlias")
     public static class Address implements AddressInfo {
 
-        private String addr;
-        private int zipcode;
+        private final String addr;
+        private final int zipcode;
 
-        public Address(String addr, int zipcode) {
+        public Address(final String addr, final int zipcode) {
             this.addr = addr;
             this.zipcode = zipcode;
         }
 
+        @Override
         public String addr() {
             return addr;
         }
 
+        @Override
         public int zipcode() {
             return zipcode;
         }
@@ -233,24 +258,27 @@ public class AliasTest extends AbstractAcceptanceTest {
         public PersonConverter() {
         }
 
-        public String toString(Object obj) {
+        public String toString(final Object obj) {
             return ((Person)obj).name;
         }
 
-        public Object fromString(String str) {
+        public Object fromString(final String str) {
             return new Person(str);
         }
 
-        public boolean canConvert(Class type) {
+        @Override
+        public boolean canConvert(final Class<?> type) {
             return type == Person.class;
         }
 
-        public void marshal(Object source, HierarchicalStreamWriter writer,
-            MarshallingContext context) {
+        @Override
+        public void marshal(final Object source, final HierarchicalStreamWriter writer,
+                final MarshallingContext context) {
             writer.setValue(toString(source));
         }
 
-        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        @Override
+        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
             return fromString(reader.getValue());
         }
     }
@@ -264,16 +292,16 @@ public class AliasTest extends AbstractAcceptanceTest {
     public void testAnnotationForFieldWithAttributeDefinitionForFieldType() {
         xstream.alias("dash", Dash.class);
         xstream.useAttributeFor(int.class);
-        String xml = "<dash camel-case=\"5\"/>";
+        final String xml = "<dash camel-case=\"5\"/>";
         assertBothWays(new Dash(), xml);
     }
 
     public static abstract class Aged {
         @XStreamAlias("age")
         @XStreamAsAttribute
-        private Integer id;
+        private final Integer id;
 
-        Aged(Integer id) {
+        Aged(final Integer id) {
             this.id = id;
         }
     }
@@ -282,59 +310,65 @@ public class AliasTest extends AbstractAcceptanceTest {
     public static class AgedThing extends Aged {
 
         @XStreamAsAttribute
-        private String name;
+        private final String name;
 
-        AgedThing(String name, Integer id) {
+        AgedThing(final String name, final Integer id) {
             super(id);
             this.name = name;
         }
     }
 
     public void testAnnotationIsInheritedTogetherWithAsAttribute() {
-        String xml = "<thing age=\"99\" name=\"Name\"/>";
+        final String xml = "<thing age=\"99\" name=\"Name\"/>";
         assertBothWays(new AgedThing("Name", 99), xml);
     }
-    
+
     @XStreamAliasType("any")
     public static abstract class Base {
         String type = getClass().getName();
     }
-    public static class A extends Base {
-    }
-    public static class B extends Base {
-    }
-    public static class BB extends B {
-    }
-    
+
+    public static class A extends Base {}
+
+    public static class B extends Base {}
+
+    public static class BB extends B {}
+
     public void testAnnotationForATypeAlias() {
         xstream.registerConverter(new SingleValueConverter() {
             Mapper mapper = xstream.getMapper();
-            public boolean canConvert(Class type) {
+
+            @Override
+            public boolean canConvert(final Class<?> type) {
                 return Base.class.isAssignableFrom(type);
             }
-            public String toString(Object obj) {
+
+            @Override
+            public String toString(final Object obj) {
                 return ((Base)obj).type;
             }
-            public Object fromString(String str) {
-                Class realClass = mapper.realClass(str);
+
+            @Override
+            public Object fromString(final String str) {
+                final Class<?> realClass = mapper.realClass(str);
                 try {
                     return realClass.newInstance();
-                } catch (InstantiationException e) {
+                } catch (final InstantiationException e) {
                     throw new ConversionException(e);
-                } catch (IllegalAccessException e) {
+                } catch (final IllegalAccessException e) {
                     throw new ConversionException(e);
                 }
             }
         });
 
-        Base[] array = new Base[]{ new A(), new B(), new BB()};
+        final Base[] array = new Base[]{new A(), new B(), new BB()};
 
-        String expectedXml = ""
-                + "<any-array>\n"
-                + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$A</any>\n"
-                + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$B</any>\n"
-                + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$BB</any>\n"
-                + "</any-array>";
+        final String expectedXml = ""
+            + "<any-array>\n"
+            + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$A</any>\n"
+            + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$B</any>\n"
+            + "  <any>com.thoughtworks.acceptance.annotations.AliasTest$BB</any>\n"
+            + "</any-array>";
         assertBothWays(array, expectedXml);
     }
 }
