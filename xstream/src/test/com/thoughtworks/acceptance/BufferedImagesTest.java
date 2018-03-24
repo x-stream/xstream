@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -51,7 +52,7 @@ public class BufferedImagesTest extends AbstractAcceptanceTest {
         final String xml = xstream.toXML(image);
 
         final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
-        ImageIO.write(xstream.fromXML(xml), "tiff", baosSerialized);
+        ImageIO.write(xstream.<RenderedImage>fromXML(xml), "tiff", baosSerialized);
 
         assertArrayEquals(baosOriginal.toByteArray(), baosSerialized.toByteArray());
     }
@@ -71,7 +72,7 @@ public class BufferedImagesTest extends AbstractAcceptanceTest {
         final String xml = xstream.toXML(image);
 
         final ByteArrayOutputStream baosSerialized = new ByteArrayOutputStream();
-        ImageIO.write(xstream.fromXML(xml), "png", baosSerialized);
+        ImageIO.write(xstream.<RenderedImage>fromXML(xml), "png", baosSerialized);
 
         assertArrayEquals(baosOriginal.toByteArray(), baosSerialized.toByteArray());
     }

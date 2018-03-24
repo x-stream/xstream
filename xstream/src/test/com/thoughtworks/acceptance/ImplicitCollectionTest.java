@@ -420,7 +420,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         private final Set<Animal> animals;
 
         public Zoo() {
-            this(new HashSet<>());
+            this(new HashSet<Animal>());
         }
 
         public Zoo(final Set<Animal> set) {
@@ -469,7 +469,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     }
 
     public void testWithSortedSet() {
-        final Zoo zoo = new Zoo(new TreeSet<>());
+        final Zoo zoo = new Zoo(new TreeSet<Animal>());
         zoo.add(new Animal("Lion"));
         zoo.add(new Animal("Ape"));
 

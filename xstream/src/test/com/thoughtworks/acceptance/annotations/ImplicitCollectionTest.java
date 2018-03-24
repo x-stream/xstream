@@ -39,7 +39,11 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotation() {
-        final String expected = "" + "<root>\n" + "  <string>one</string>\n" + "  <string>two</string>\n" + "</root>";
+        final String expected = "" //
+            + "<root>\n"
+            + "  <string>one</string>\n"
+            + "  <string>two</string>\n"
+            + "</root>";
         final ImplicitRootOne implicitRoot = new ImplicitRootOne();
         implicitRoot.getValues().add("one");
         implicitRoot.getValues().add("two");
@@ -47,7 +51,11 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationWithItemFieldName() {
-        final String expected = "" + "<root>\n" + "  <value>one</value>\n" + "  <value>two</value>\n" + "</root>";
+        final String expected = "" //
+            + "<root>\n"
+            + "  <value>one</value>\n"
+            + "  <value>two</value>\n"
+            + "</root>";
         final ImplicitRootTwo implicitRoot = new ImplicitRootTwo();
         implicitRoot.getValues().add("one");
         implicitRoot.getValues().add("two");
@@ -133,7 +141,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             + "</implicit>";
         final ImplicitParameterizedType root = new ImplicitParameterizedType();
         root.signatureLines = new ArrayList<>();
-        root.signatureLines.add(new ArrayList<>());
+        root.signatureLines.add(new ArrayList<Point>());
         root.signatureLines.get(0).add(new Point(33, 11));
         assertBothWays(root, xml);
     }
