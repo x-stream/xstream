@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -58,7 +59,8 @@ public class Dom4JDriver extends AbstractXmlDriver {
     /**
      * @since 1.4
      */
-    public Dom4JDriver(final DocumentFactory documentFactory, final OutputFormat outputFormat, final NameCoder nameCoder) {
+    public Dom4JDriver(
+            final DocumentFactory documentFactory, final OutputFormat outputFormat, final NameCoder nameCoder) {
         super(nameCoder);
         this.documentFactory = documentFactory;
         this.outputFormat = outputFormat;
@@ -70,7 +72,8 @@ public class Dom4JDriver extends AbstractXmlDriver {
      */
     @Deprecated
     public Dom4JDriver(
-            final DocumentFactory documentFactory, final OutputFormat outputFormat, final XmlFriendlyReplacer replacer) {
+            final DocumentFactory documentFactory, final OutputFormat outputFormat,
+            final XmlFriendlyReplacer replacer) {
         this(documentFactory, outputFormat, (NameCoder)replacer);
     }
 
@@ -149,9 +152,12 @@ public class Dom4JDriver extends AbstractXmlDriver {
         return writer[0];
     }
 
+    @SuppressWarnings("resource")
     @Override
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
-        final Writer writer = new OutputStreamWriter(out);
+        final String encoding = getOutputFormat() != null ? getOutputFormat().getEncoding() : null;
+        final Charset charset = encoding != null && Charset.isSupported(encoding) ? Charset.forName(encoding) : null;
+        final Writer writer = charset != null ? new OutputStreamWriter(out, charset) : new OutputStreamWriter(out);
         return createWriter(writer);
     }
 
