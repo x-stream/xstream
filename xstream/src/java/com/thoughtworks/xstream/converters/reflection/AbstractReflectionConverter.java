@@ -141,83 +141,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             }
         });
 
-        new Object() {
-            {
-                final Map<String, Set<Mapper.ImplicitCollectionMapping>> hiddenMappers =
-                        new HashMap<String, Set<Mapper.ImplicitCollectionMapping>>();
-                for (final FieldInfo info : fields) {
-                    if (info.value != null) {
-                        final Field defaultField = defaultFieldDefinition.get(info.fieldName);
-                        Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(
-                            defaultField.getDeclaringClass() == info.definedIn ? sourceType : info.definedIn,
-                            info.fieldName);
-                        if (mapping != null) {
-                            Set<Mapper.ImplicitCollectionMapping> mappings = hiddenMappers.get(info.fieldName);
-                            if (mappings == null) {
-                                mappings = new HashSet<>();
-                                mappings.add(mapping);
-                                hiddenMappers.put(info.fieldName, mappings);
-                            } else {
-                                if (!mappings.add(mapping)) {
-                                    mapping = null;
-                                }
-                            }
-                        }
-                        if (mapping != null) {
-                            if (context instanceof ReferencingMarshallingContext) {
-                                if (info.value != Collections.EMPTY_LIST
-                                    && info.value != Collections.EMPTY_SET
-                                    && info.value != Collections.EMPTY_MAP) {
-                                    final ReferencingMarshallingContext<?> refContext =
-                                            (ReferencingMarshallingContext<?>)context;
-                                    refContext.registerImplicit(info.value);
-                                }
-                            }
-                            final boolean isCollection = info.value instanceof Collection;
-                            final boolean isMap = info.value instanceof Map;
-                            final boolean isEntry = isMap && mapping.getKeyFieldName() == null;
-                            final boolean isArray = info.value.getClass().isArray();
-                            for (final Iterator<?> iter = isArray
-                                ? new ArrayIterator(info.value)
-                                : isCollection
-                                    ? ((Collection<?>)info.value).iterator()
-                                    : isEntry
-                                        ? ((Map<?, ?>)info.value).entrySet().iterator()
-                                        : ((Map<?, ?>)info.value).values().iterator(); iter.hasNext();) {
-                                final Object obj = iter.next();
-                                final String itemName;
-                                final Class<?> itemType;
-                                if (obj == null) {
-                                    itemType = Object.class;
-                                    itemName = mapper.serializedClass(null);
-                                } else if (isEntry) {
-                                    final String entryName = mapping.getItemFieldName() != null
-                                        ? mapping.getItemFieldName()
-                                        : mapper.serializedClass(Map.Entry.class);
-                                    final Map.Entry<?, ?> entry = (Map.Entry<?, ?>)obj;
-                                    writer.startNode(entryName, entry.getClass());
-                                    writeItem(entry.getKey(), context, writer);
-                                    writeItem(entry.getValue(), context, writer);
-                                    writer.endNode();
-                                    continue;
-                                } else if (mapping.getItemFieldName() != null) {
-                                    itemType = mapping.getItemType();
-                                    itemName = mapping.getItemFieldName();
-                                } else {
-                                    itemType = obj.getClass();
-                                    itemName = mapper.serializedClass(itemType);
-                                }
-                                writeField(info.fieldName, itemName, itemType, info.definedIn, obj);
-                            }
-                        } else {
-                            writeField(info.fieldName, null, info.type, info.definedIn, info.value);
-                        }
-                    }
-                }
-
-            }
-
-            void writeField(final String fieldName, final String aliasName, final Class<?> fieldType,
+        final FieldMarshaller fieldMarshaller = new FieldMarshaller() {
+            @Override
+            public void writeField(final String fieldName, final String aliasName, final Class<?> fieldType,
                     final Class<?> definedIn, final Object newObj) {
                 final Class<?> actualType = newObj != null ? newObj.getClass() : fieldType;
                 writer.startNode(aliasName != null ? aliasName : mapper.serializedMember(sourceType, fieldName),
@@ -249,7 +175,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 writer.endNode();
             }
 
-            void writeItem(final Object item, final MarshallingContext context, final HierarchicalStreamWriter writer) {
+            @Override
+            public void writeItem(final Object item) {
                 if (item == null) {
                     final String name = mapper.serializedClass(null);
                     writer.startNode(name, Mapper.Null.class);
@@ -262,6 +189,77 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 }
             }
         };
+
+        final Map<String, Set<Mapper.ImplicitCollectionMapping>> hiddenMappers =
+                new HashMap<String, Set<Mapper.ImplicitCollectionMapping>>();
+        for (final FieldInfo info : fields) {
+            if (info.value != null) {
+                final Field defaultField = defaultFieldDefinition.get(info.fieldName);
+                Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(defaultField
+                    .getDeclaringClass() == info.definedIn ? sourceType : info.definedIn, info.fieldName);
+                if (mapping != null) {
+                    Set<Mapper.ImplicitCollectionMapping> mappings = hiddenMappers.get(info.fieldName);
+                    if (mappings == null) {
+                        mappings = new HashSet<>();
+                        mappings.add(mapping);
+                        hiddenMappers.put(info.fieldName, mappings);
+                    } else {
+                        if (!mappings.add(mapping)) {
+                            mapping = null;
+                        }
+                    }
+                }
+                if (mapping != null) {
+                    if (context instanceof ReferencingMarshallingContext) {
+                        if (info.value != Collections.EMPTY_LIST
+                            && info.value != Collections.EMPTY_SET
+                            && info.value != Collections.EMPTY_MAP) {
+                            final ReferencingMarshallingContext<?> refContext =
+                                    (ReferencingMarshallingContext<?>)context;
+                            refContext.registerImplicit(info.value);
+                        }
+                    }
+                    final boolean isCollection = info.value instanceof Collection;
+                    final boolean isMap = info.value instanceof Map;
+                    final boolean isEntry = isMap && mapping.getKeyFieldName() == null;
+                    final boolean isArray = info.value.getClass().isArray();
+                    for (final Iterator<?> iter = isArray
+                        ? new ArrayIterator(info.value)
+                        : isCollection
+                            ? ((Collection<?>)info.value).iterator()
+                            : isEntry
+                                ? ((Map<?, ?>)info.value).entrySet().iterator()
+                                : ((Map<?, ?>)info.value).values().iterator(); iter.hasNext();) {
+                        final Object obj = iter.next();
+                        final String itemName;
+                        final Class<?> itemType;
+                        if (obj == null) {
+                            itemType = Object.class;
+                            itemName = mapper.serializedClass(null);
+                        } else if (isEntry) {
+                            final String entryName = mapping.getItemFieldName() != null
+                                ? mapping.getItemFieldName()
+                                : mapper.serializedClass(Map.Entry.class);
+                            final Map.Entry<?, ?> entry = (Map.Entry<?, ?>)obj;
+                            writer.startNode(entryName, entry.getClass());
+                            fieldMarshaller.writeItem(entry.getKey());
+                            fieldMarshaller.writeItem(entry.getValue());
+                            writer.endNode();
+                            continue;
+                        } else if (mapping.getItemFieldName() != null) {
+                            itemType = mapping.getItemType();
+                            itemName = mapping.getItemFieldName();
+                        } else {
+                            itemType = obj.getClass();
+                            itemName = mapper.serializedClass(itemType);
+                        }
+                        fieldMarshaller.writeField(info.fieldName, itemName, itemType, info.definedIn, obj);
+                    }
+                } else {
+                    fieldMarshaller.writeField(info.fieldName, null, info.type, info.definedIn, info.value);
+                }
+            }
+        }
     }
 
     protected void marshallField(final MarshallingContext context, final Object newObj, final Field field) {
@@ -654,6 +652,13 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             this.type = type;
             this.value = value;
         }
+    }
+
+    private interface FieldMarshaller {
+        void writeItem(final Object item);
+
+        void writeField(final String fieldName, final String aliasName, final Class<?> fieldType,
+                final Class<?> definedIn, final Object newObj);
     }
 
     private static class ArraysList extends ArrayList<Object> {
