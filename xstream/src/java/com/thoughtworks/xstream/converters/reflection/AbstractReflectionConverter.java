@@ -660,8 +660,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
     private interface FieldMarshaller {
         void writeItem(final Object item);
-        void writeField(final String fieldName, final String aliasName, final Class<?> fieldType,
-                final Class<?> definedIn, final Object newObj);
+        void writeField(final String fieldName, final String aliasName, final Class fieldType,
+                final Class definedIn, final Object newObj);
     }
 
     private static class ArraysList extends ArrayList {
