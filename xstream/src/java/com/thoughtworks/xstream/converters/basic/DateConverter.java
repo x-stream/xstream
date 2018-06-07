@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -201,7 +201,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
     }
 
     public boolean canConvert(Class type) {
-        return type.equals(Date.class);
+        return type == Date.class;
     }
 
     public Object fromString(String str) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,7 +36,7 @@ public class ToStringConverter extends AbstractSingleValueConverter {
         ctor = clazz.getConstructor(STRING_PARAMETER);
     }
     public boolean canConvert(Class type) {
-        return type.equals(clazz);
+        return type == clazz;
     }
     public String toString(Object obj) {
         return obj == null ? null : obj.toString();

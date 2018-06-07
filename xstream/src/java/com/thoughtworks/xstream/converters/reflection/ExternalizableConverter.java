@@ -76,7 +76,7 @@ public class ExternalizableConverter implements Converter {
     }
 
     public boolean canConvert(Class type) {
-        return JVM.canCreateDerivedObjectOutputStream() && Externalizable.class.isAssignableFrom(type);
+        return type != null && JVM.canCreateDerivedObjectOutputStream() && Externalizable.class.isAssignableFrom(type);
     }
 
     public void marshal(final Object original, final HierarchicalStreamWriter writer, final MarshallingContext context) {

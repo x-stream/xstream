@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ import java.io.File;
 public class FileConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
-        return type.equals(File.class);
+        return type == File.class;
     }
 
     public Object fromString(String str) {

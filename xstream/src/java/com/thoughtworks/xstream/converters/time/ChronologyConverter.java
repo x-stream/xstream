@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,7 +27,7 @@ public class ChronologyConverter implements SingleValueConverter {
 
     @Override
     public boolean canConvert(@SuppressWarnings("rawtypes") final Class type) {
-        return Chronology.class.isAssignableFrom(type);
+        return type != null && Chronology.class.isAssignableFrom(type);
     }
 
     @Override

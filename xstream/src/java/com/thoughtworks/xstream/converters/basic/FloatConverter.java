@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ package com.thoughtworks.xstream.converters.basic;
 public class FloatConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
-        return type.equals(float.class) || type.equals(Float.class);
+        return type == float.class || type == Float.class;
     }
 
     public Object fromString(String str) {

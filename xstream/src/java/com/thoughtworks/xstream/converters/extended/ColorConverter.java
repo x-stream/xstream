@@ -33,7 +33,7 @@ public class ColorConverter implements Converter {
     public boolean canConvert(Class type) {
         // String comparison is used here because Color.class loads the class which in turns instantiates AWT,
         // which is nasty if you don't want it.
-        return type.getName().equals("java.awt.Color");
+        return type != null && type.getName().equals("java.awt.Color");
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

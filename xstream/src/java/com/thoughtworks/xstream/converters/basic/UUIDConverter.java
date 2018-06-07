@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,7 +23,7 @@ import java.util.UUID;
 public class UUIDConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
-        return type.equals(UUID.class);
+        return type == UUID.class;
     }
 
     public Object fromString(String str) {

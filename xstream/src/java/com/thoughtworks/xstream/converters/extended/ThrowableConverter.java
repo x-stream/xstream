@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -46,7 +46,7 @@ public class ThrowableConverter implements Converter {
     }
 
     public boolean canConvert(final Class type) {
-        return Throwable.class.isAssignableFrom(type);
+        return type != null && Throwable.class.isAssignableFrom(type);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

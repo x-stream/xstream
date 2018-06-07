@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 XStream Committers.
+ * Copyright (C) 2010, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 public class URIConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
-        return type.equals(URI.class);
+        return type == URI.class;
     }
 
     public Object fromString(String str) {

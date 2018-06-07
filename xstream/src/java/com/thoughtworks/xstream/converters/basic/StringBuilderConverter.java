@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,6 +22,6 @@ public class StringBuilderConverter extends AbstractSingleValueConverter {
     }
 
     public boolean canConvert(Class type) {
-        return type.equals(StringBuilder.class);
+        return type == StringBuilder.class;
     }
 }

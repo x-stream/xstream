@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2011 XStream Committers.
+ * Copyright (C) 2007, 2008, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -48,8 +48,8 @@ public class DurationConverter extends AbstractSingleValueConverter {
         this.factory = factory;
     }
 
-    public boolean canConvert(Class c) {
-        return factory != null && Duration.class.isAssignableFrom(c);
+    public boolean canConvert(Class type) {
+        return factory != null && type != null && Duration.class.isAssignableFrom(type);
     }
 
     public Object fromString(String s) {

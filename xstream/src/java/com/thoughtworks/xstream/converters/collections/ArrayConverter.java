@@ -35,7 +35,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
     }
 
     public boolean canConvert(Class type) {
-        return type.isArray();
+        return type != null && type.isArray();
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

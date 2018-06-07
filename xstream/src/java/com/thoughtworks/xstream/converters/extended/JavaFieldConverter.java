@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2013 XStream Committers.
+ * Copyright (C) 2009, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -61,7 +61,7 @@ public class JavaFieldConverter implements Converter {
     }
 
     public boolean canConvert(Class type) {
-        return type.equals(Field.class);
+        return type == Field.class;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

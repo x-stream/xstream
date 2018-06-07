@@ -39,7 +39,7 @@ public class SubjectConverter extends AbstractCollectionConverter {
     }
 
     public boolean canConvert(Class type) {
-        return type.equals(Subject.class);
+        return type == Subject.class;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class CharConverter implements Converter, SingleValueConverter {
 
     public boolean canConvert(Class type) {
-        return type.equals(char.class) || type.equals(Character.class);
+        return type == char.class || type == Character.class;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

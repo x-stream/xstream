@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 public class SqlDateConverter extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
-        return type.equals(Date.class);
+        return type == Date.class;
     }
 
     public Object fromString(String str) {

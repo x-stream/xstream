@@ -32,7 +32,7 @@ import java.util.TimeZone;
 public class GregorianCalendarConverter implements Converter {
 
     public boolean canConvert(Class type) {
-        return type.equals(GregorianCalendar.class);
+        return type == GregorianCalendar.class;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

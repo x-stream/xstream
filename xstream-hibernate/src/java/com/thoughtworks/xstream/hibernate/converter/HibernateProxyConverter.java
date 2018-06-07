@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2011 XStream Committers.
+ * Copyright (C) 2007, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,7 +30,7 @@ import org.hibernate.proxy.HibernateProxy;
 public class HibernateProxyConverter implements Converter {
     public boolean canConvert(final Class clazz) {
         // be responsible for Hibernate proxy.
-        return HibernateProxy.class.isAssignableFrom(clazz);
+        return clazz != null && HibernateProxy.class.isAssignableFrom(clazz);
     }
 
     public void marshal(final Object object, final HierarchicalStreamWriter writer,

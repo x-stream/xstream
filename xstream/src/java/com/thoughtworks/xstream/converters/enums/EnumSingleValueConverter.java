@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2010, 2013 XStream Committers.
+ * Copyright (C) 2008, 2009, 2010, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,7 +33,7 @@ public class EnumSingleValueConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(Class type) {
-        return enumType.isAssignableFrom(type);
+        return type != null && enumType.isAssignableFrom(type);
     }
 
     @Override
