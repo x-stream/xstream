@@ -10,10 +10,6 @@
  * Created on 18. March 2005 by Joe Walnes
  */
 
-// ***** READ THIS *****
-// This class will only compile with JDK 1.5.0 or above as it test Java enums.
-// If you are using an earlier version of Java, just don't try to build this class. XStream should work fine without it.
-
 package com.thoughtworks.xstream.converters.enums;
 
 import com.thoughtworks.xstream.converters.Converter;
