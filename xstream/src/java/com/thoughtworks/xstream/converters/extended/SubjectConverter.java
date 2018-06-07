@@ -44,7 +44,7 @@ public class SubjectConverter extends AbstractCollectionConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(Subject.class);
+        return type == Subject.class;
     }
 
     @Override

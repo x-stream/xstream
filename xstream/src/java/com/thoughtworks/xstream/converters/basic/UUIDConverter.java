@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2014 XStream Committers.
+ * Copyright (C) 2008, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,7 +24,7 @@ public class UUIDConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(UUID.class);
+        return type == UUID.class;
     }
 
     @Override

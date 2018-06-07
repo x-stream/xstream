@@ -66,7 +66,8 @@ public class FontConverter implements Converter {
     public boolean canConvert(final Class<?> type) {
         // String comparison is used here because Font.class loads the class which in turns instantiates AWT,
         // which is nasty if you don't want it.
-        return type.getName().equals("java.awt.Font") || type.getName().equals("javax.swing.plaf.FontUIResource");
+        return type != null
+            && (type.getName().equals("java.awt.Font") || type.getName().equals("javax.swing.plaf.FontUIResource"));
     }
 
     @Override

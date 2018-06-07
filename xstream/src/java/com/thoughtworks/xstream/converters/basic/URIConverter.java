@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, 2014 XStream Committers.
+ * Copyright (C) 2010, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,7 +25,7 @@ public class URIConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(URI.class);
+        return type == URI.class;
     }
 
     @Override

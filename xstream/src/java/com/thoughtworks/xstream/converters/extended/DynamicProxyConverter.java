@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -77,7 +77,7 @@ public class DynamicProxyConverter implements Converter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(DynamicProxyMapper.DynamicProxy.class) || Proxy.isProxyClass(type);
+        return type != null && (type.equals(DynamicProxyMapper.DynamicProxy.class) || Proxy.isProxyClass(type));
     }
 
     @Override

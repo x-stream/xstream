@@ -79,7 +79,7 @@ public class ExternalizableConverter implements Converter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return JVM.canCreateDerivedObjectOutputStream() && Externalizable.class.isAssignableFrom(type);
+        return type != null && JVM.canCreateDerivedObjectOutputStream() && Externalizable.class.isAssignableFrom(type);
     }
 
     @Override

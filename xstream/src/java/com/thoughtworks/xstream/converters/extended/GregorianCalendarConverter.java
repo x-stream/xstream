@@ -35,7 +35,7 @@ public class GregorianCalendarConverter implements Converter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(GregorianCalendar.class);
+        return type == GregorianCalendar.class;
     }
 
     @Override

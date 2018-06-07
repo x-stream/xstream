@@ -55,7 +55,7 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return converter != null && type.equals(GregorianCalendar.class);
+        return converter != null && type == GregorianCalendar.class;
     }
 
     @Override

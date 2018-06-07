@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,7 @@ public class ByteConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(byte.class) || type.equals(Byte.class);
+        return type == byte.class || type == Byte.class;
     }
 
     @Override

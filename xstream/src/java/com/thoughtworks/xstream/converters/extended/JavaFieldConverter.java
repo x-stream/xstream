@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2013, 2014 XStream Committers.
+ * Copyright (C) 2009, 2013, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -70,7 +70,7 @@ public class JavaFieldConverter implements Converter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(Field.class);
+        return type == Field.class;
     }
 
     @Override

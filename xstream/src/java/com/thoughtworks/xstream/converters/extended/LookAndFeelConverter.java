@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2013, 2014 XStream Committers.
+ * Copyright (C) 2007, 2008, 2013, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,6 +44,6 @@ public class LookAndFeelConverter extends ReflectionConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return LookAndFeel.class.isAssignableFrom(type) && canAccess(type);
+        return type != null && LookAndFeel.class.isAssignableFrom(type) && canAccess(type);
     }
 }

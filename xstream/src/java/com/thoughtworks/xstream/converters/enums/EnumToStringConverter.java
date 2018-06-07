@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2013, 2014, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -77,7 +77,7 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return enumType.isAssignableFrom(type);
+        return type != null && enumType.isAssignableFrom(type);
     }
 
     @Override

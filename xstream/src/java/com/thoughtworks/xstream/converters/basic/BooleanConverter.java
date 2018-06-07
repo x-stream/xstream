@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,9 +20,7 @@ package com.thoughtworks.xstream.converters.basic;
 public class BooleanConverter extends AbstractSingleValueConverter {
 
     public static final BooleanConverter TRUE_FALSE = new BooleanConverter("true", "false", false);
-
     public static final BooleanConverter YES_NO = new BooleanConverter("yes", "no", false);
-
     public static final BooleanConverter BINARY = new BooleanConverter("1", "0", true);
 
     private final String positive;
@@ -49,7 +47,7 @@ public class BooleanConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(boolean.class) || type.equals(Boolean.class);
+        return type == boolean.class || type == Boolean.class;
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,7 +31,7 @@ public class ISO8601DateConverter extends AbstractSingleValueConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.equals(Date.class) && converter.canConvert(GregorianCalendar.class);
+        return type == Date.class && converter.canConvert(GregorianCalendar.class);
     }
 
     @Override

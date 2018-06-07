@@ -36,7 +36,7 @@ public class ArrayConverter extends AbstractCollectionConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type.isArray();
+        return type != null && type.isArray();
     }
 
     @Override

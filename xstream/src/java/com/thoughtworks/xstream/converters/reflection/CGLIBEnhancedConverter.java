@@ -96,7 +96,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return Enhancer.isEnhanced(type) && type.getName().indexOf(DEFAULT_NAMING_MARKER) > 0
+        return type != null && Enhancer.isEnhanced(type) && type.getName().indexOf(DEFAULT_NAMING_MARKER) > 0
             || type == CGLIBMapper.Marker.class;
     }
 
