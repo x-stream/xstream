@@ -881,22 +881,22 @@
     <version.plugin.codehaus.xsite>1.2.1</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>2.5.4</version.plugin.felix.bundle>
     <version.plugin.maven.antrun>1.1</version.plugin.maven.antrun>
-    <version.plugin.maven.assembly>2.1</version.plugin.maven.assembly>
-    <version.plugin.maven.clean>2.2</version.plugin.maven.clean>
-    <version.plugin.maven.compiler>3.1</version.plugin.maven.compiler>
-    <version.plugin.maven.dependency>2.1</version.plugin.maven.dependency>
+    <version.plugin.maven.assembly>3.1.0</version.plugin.maven.assembly>
+    <version.plugin.maven.clean>3.1.0</version.plugin.maven.clean>
+    <version.plugin.maven.compiler>3.7.0</version.plugin.maven.compiler>
+    <version.plugin.maven.dependency>3.1.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>2.3</version.plugin.maven.deploy>
     <version.plugin.maven.enforcer>3.0.0-M1</version.plugin.maven.enforcer>
-    <version.plugin.maven.gpg>1.4</version.plugin.maven.gpg>
-    <version.plugin.maven.install>2.2</version.plugin.maven.install>
-    <version.plugin.maven.jar>2.2</version.plugin.maven.jar>
-    <version.plugin.maven.javadoc>2.10</version.plugin.maven.javadoc>
+    <version.plugin.maven.gpg>1.6</version.plugin.maven.gpg>
+    <version.plugin.maven.install>2.5.2</version.plugin.maven.install>
+    <version.plugin.maven.jar>3.1.0</version.plugin.maven.jar>
+    <version.plugin.maven.javadoc>3.0.1</version.plugin.maven.javadoc>
     <version.plugin.maven.jxr>2.5</version.plugin.maven.jxr>
     <version.plugin.maven.release>2.1</version.plugin.maven.release>
     <version.plugin.maven.resources>2.2</version.plugin.maven.resources>
     <version.plugin.maven.site>2.0-beta-6</version.plugin.maven.site>
     <version.plugin.maven.source>2.1.2</version.plugin.maven.source>
-    <version.plugin.maven.surefire>2.4.3</version.plugin.maven.surefire>
+    <version.plugin.maven.surefire>2.21.0</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>1.5</version.plugin.mojo.build-helper>
     <version.plugin.mojo.cobertura>2.7</version.plugin.mojo.cobertura>
     <version.plugin.eluder.coveralls>4.2.0</version.plugin.eluder.coveralls>
