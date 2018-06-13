@@ -9,11 +9,13 @@ jdk:
   - oraclejdk8
   - openjdk7
   - openjdk6
+before_install: true
 install: true
 script:
-    echo "JAVA_HOME: $JAVA_HOME";
-    echo "JDK_HOME: $JDK_HOME";
-    echo "PATH: $PATH";
+    bash -c 'echo "JAVA_HOME: $JAVA_HOME"'
+    bash -c 'echo "JDK_HOME: $JDK_HOME"'
+    bash -c 'echo "PATH: $PATH"'
+    env
     if ( `javac -version 2>&1 | grep '1\.6\.0' > /dev/null` ); then
       wget https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip -P ./target;
       unzip -qq ./target/apache-maven-3.2.5-bin.zip -d ./target;
