@@ -37,9 +37,9 @@
 
   <profiles>
     <profile>
-      <id>jdk19</id>
+      <id>jdk9ge</id>
       <activation>
-        <jdk>9</jdk>
+        <jdk>[9,</jdk>
       </activation>
       <properties>
         <version.java.5>1.6</version.java.5>
