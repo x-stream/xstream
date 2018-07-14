@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.io;
 
-import java.io.Closeable;
 import java.util.Iterator;
 
 import com.thoughtworks.xstream.converters.ErrorReporter;
@@ -21,7 +20,7 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 /**
  * @author Joe Walnes
  */
-public interface HierarchicalStreamReader extends ErrorReporter, Closeable {
+public interface HierarchicalStreamReader extends ErrorReporter, AutoCloseable {
 
     /**
      * Does the node have any more children remaining that have not yet been read?
