@@ -1,21 +1,15 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2012, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2012, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 22. February 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.basic;
-
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.core.JVM;
-import com.thoughtworks.xstream.testutil.TimeZoneChanger;
-
-import junit.framework.TestCase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,21 +23,29 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
+
+import junit.framework.TestCase;
+
 
 public class DateConverterTest extends TestCase {
 
     private DateConverter converter = new DateConverter();
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
         // Ensure that this test always run as if it were in the IST timezone.
         // This prevents failures when running the tests in different zones.
-        // Note: 'IST' has no relevance - it was just a randomly chosen zone 
+        // Note: 'IST' has no relevance - it was just a randomly chosen zone
         // without daylight saving.
         TimeZoneChanger.change("IST");
     }
 
+    @Override
     protected void tearDown() throws Exception {
         TimeZoneChanger.reset();
         super.tearDown();
@@ -51,11 +53,11 @@ public class DateConverterTest extends TestCase {
 
     public void testRetainsDetailDownToMillisecondLevel() {
         // setup
-        Date in = new Date();
+        final Date in = new Date();
 
         // execute
-        String text = converter.toString(in);
-        Date out = (Date)converter.fromString(text);
+        final String text = converter.toString(in);
+        final Date out = (Date)converter.fromString(text);
 
         // verify
         assertEquals(in, out);
@@ -65,44 +67,44 @@ public class DateConverterTest extends TestCase {
 
     public void testUnmarshalsOldXStreamDatesThatLackMillisecond() {
         converter = new DateConverter((TimeZone)null); // use default TZ
-        Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
+        final Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
 
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04 EST"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04EST"));
-        
+
         TimeZone.setDefault(TimeZone.getTimeZone("EST")); // Need correct local time, no TZ info in string
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 PM"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04PM"));
     }
 
     public void testUnmarshalsDatesWithDifferentTimeZones() {
-        converter = new DateConverter(true); // Needed by JDK 5 running on Codehaus' Bamboo installation 
-        Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
+        converter = new DateConverter(true); // Needed by JDK 5 running on Codehaus' Bamboo installation
+        final Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
 
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 GMT-05:00"));
         assertEquals(expected, converter.fromString("2004-02-22 20:16:04.0 UTC"));
         assertEquals(expected, converter.fromString("2004-02-23 01:46:04.0 IST"));
         assertEquals(expected, converter.fromString("2004-02-23 01:46:04.0 GMT+05:30"));
-        
+
         if (JVM.canParseISO8601TimeZoneInDateFormat()) {
             // W3C subset of ISO 8601 date time representations
             assertEquals(expected, converter.fromString("2004-02-22T15:16:04-05:00"));
             assertEquals(expected, converter.fromString("2004-02-22T20:16:04Z"));
             assertEquals(expected, converter.fromString("2004-02-22T20:16:04.0Z"));
-            expected.setTime(expected.getTime()-4000);
+            expected.setTime(expected.getTime() - 4000);
             assertEquals(expected, converter.fromString("2004-02-22T15:16-05:00"));
         }
     }
 
     public void testUnmarshalsDateWithDifferentDefaultTimeZones() throws ParseException {
         converter = new DateConverter((TimeZone)null); // use default TZ
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2004, Calendar.FEBRUARY, 23, 1, 46, 4);
-        Date date = cal.getTime();
-        String strIST = converter.toString(date);
+        final Date date = cal.getTime();
+        final String strIST = converter.toString(date);
         assertEquals("2004-02-23 01:46:04.0 IST", strIST);
         // select arbitrary TZ
         TimeZone.setDefault(TimeZone.getTimeZone("EST"));
@@ -128,20 +130,21 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testIsThreadSafe() throws InterruptedException {
-        final List results = Collections.synchronizedList(new ArrayList());
+        final List<String> results = Collections.synchronizedList(new ArrayList<String>());
         final DateConverter converter = new DateConverter();
         final Object monitor = new Object();
         final int numberOfCallsPerThread = 20;
         final int numberOfThreads = 20;
 
         // spawn some concurrent threads, that hammer the converter
-        Runnable runnable = new Runnable() {
+        final Runnable runnable = new Runnable() {
+            @Override
             public void run() {
                 for (int i = 0; i < numberOfCallsPerThread; i++) {
                     try {
                         converter.fromString("2004-02-22 15:16:04.0 EST");
                         results.add("PASS");
-                    } catch (ConversionException e) {
+                    } catch (final ConversionException e) {
                         results.add("FAIL");
                     } finally {
                         synchronized (monitor) {
@@ -165,23 +168,23 @@ public class DateConverterTest extends TestCase {
         assertTrue("Nothing suceeded", results.contains("PASS"));
         assertFalse("At least one attempt failed", results.contains("FAIL"));
     }
-    
+
     public void testDatesInNonLenientMode() {
-        String[] dateFormats = new String[] { "yyyyMMdd", "yyyy-MM-dd'T'HH:mm:ss'Z'", "yyyy-MM-dd" };
+        final String[] dateFormats = new String[]{"yyyyMMdd", "yyyy-MM-dd'T'HH:mm:ss'Z'", "yyyy-MM-dd"};
         converter = new DateConverter("yyyy-MM-dd'T'HH:mm:ss.S'Z'", dateFormats);
-        Date expected = (Date)converter.fromString("2004-02-22T15:16:04.0Z");
+        final Date expected = (Date)converter.fromString("2004-02-22T15:16:04.0Z");
         assertEquals(expected, converter.fromString("2004-02-22T15:16:04Z"));
     }
-    
+
     public void testDatesInLenientMode() {
         converter = new DateConverter("yyyy-MM-dd HH:mm:ss.S z", new String[0], true);
-        Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 IST");
+        final Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 IST");
         assertEquals(expected, converter.fromString("2004-02-21 39:16:04.0 IST"));
     }
-    
+
     public void testDatesIn70sInTimeZoneGMT() throws ParseException {
         converter = new DateConverter((TimeZone)null); // use default TZ
-        
+
         final String pattern = "yyyy-MM-dd HH:mm:ss.S z";
         final SimpleDateFormat format;
 
@@ -189,63 +192,59 @@ public class DateConverterTest extends TestCase {
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         final String[] expected = new String[]{
-            "1970-01-01 11:20:34.0 GMT",
-            "1971-01-01 11:20:34.0 GMT",
-            "1972-01-01 11:20:34.0 GMT",
-            "1973-01-01 11:20:34.0 GMT",
-            "1974-01-01 11:20:34.0 GMT",
-        };
+            "1970-01-01 11:20:34.0 GMT", "1971-01-01 11:20:34.0 GMT", "1972-01-01 11:20:34.0 GMT",
+            "1973-01-01 11:20:34.0 GMT", "1974-01-01 11:20:34.0 GMT",};
 
         final String[] actual = new String[expected.length];
-        for (int i = 0; i < actual.length; i++ ) {
-            final String converted = converter.toString((Date)format.parseObject(expected[i]));
-            // Note, XStream's string representation of the date is in IST 
+        for (int i = 0; i < actual.length; i++) {
+            final String converted = converter.toString(format.parseObject(expected[i]));
+            // Note, XStream's string representation of the date is in IST
             actual[i] = format.format(converter.fromString(converted));
         }
-        
+
         assertEquals(Arrays.asList(expected).toString(), Arrays.asList(actual).toString());
     }
 
     public void testDatesWithAmbiguous3LetterTimeZones() {
         TimeZone.setDefault(TimeZone.getTimeZone("Australia/Brisbane")); // EST also used e.g. for America/Toronto
-        Date expected = new Date(0);
+        final Date expected = new Date(0);
         assertEquals(expected, converter.fromString(converter.toString(expected)));
     }
 
     public void testDatesWithEpoche() {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals(GregorianCalendar.AD, cal.get(Calendar.ERA));
         cal.clear();
         cal.set(1, Calendar.JANUARY, 1);
         cal.add(Calendar.MILLISECOND, -1);
-        Date date = cal.getTime();
+        final Date date = cal.getTime();
         assertEquals("0001-12-31 BC 23:59:59.999 UTC", converter.toString(date));
         assertEquals(date, converter.fromString("0001-12-31 BC 23:59:59.999 UTC"));
         cal.add(Calendar.MILLISECOND, 1);
         assertEquals(cal.getTime(), converter.fromString("0001-01-01 AD 00:00:00.000 UTC"));
     }
-    
+
     public void testDatesWithEnglishLocaleOfDefault() {
-        converter = new DateConverter(null, "EEEE, dd MMMM yyyy z", 
-            null, Locale.ENGLISH, TimeZone.getTimeZone("UTC"), false);
-        Calendar cal = Calendar.getInstance();
+        converter = new DateConverter(null, "EEEE, dd MMMM yyyy z", null, Locale.ENGLISH, TimeZone.getTimeZone("UTC"),
+            false);
+        final Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
         cal.clear();
         cal.set(2000, Calendar.JANUARY, 1);
-        Date date = cal.getTime();
+        final Date date = cal.getTime();
         assertEquals("Saturday, 01 January 2000 UTC", converter.toString(date));
         assertEquals(date, converter.fromString("Saturday, 01 January 2000 UTC"));
     }
-    
+
     public void testDatesWithGermanLocale() {
-        converter = new DateConverter(null, "EEEE, dd MMMM yyyy z", 
-            null, Locale.GERMAN, TimeZone.getTimeZone("UTC"), false);
-        Calendar cal = Calendar.getInstance();
+        converter = new DateConverter(null, "EEEE, dd MMMM yyyy z", null, Locale.GERMAN, TimeZone.getTimeZone("UTC"),
+            false);
+        final Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
         cal.clear();
         cal.set(2000, Calendar.JANUARY, 1);
-        Date date = cal.getTime();
+        final Date date = cal.getTime();
         assertEquals("Samstag, 01 Januar 2000 UTC", converter.toString(date));
         assertEquals(date, converter.fromString("Samstag, 01 Januar 2000 UTC"));
     }

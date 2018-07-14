@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,7 +27,7 @@ public class GregorianCalendarConverterTest extends TestCase {
         final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         final XStream xstream = new XStream();
         final String xml = xstream.toXML(cal);
-        final Calendar serialized = (Calendar)xstream.fromXML(xml);
+        final Calendar serialized = xstream.<Calendar>fromXML(xml);
         assertEquals(cal, serialized);
     }
 

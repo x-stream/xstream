@@ -1,23 +1,23 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 20. September 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.extended;
+
+import java.beans.PropertyEditorSupport;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 import junit.framework.TestCase;
-
-import java.beans.PropertyEditorSupport;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -27,40 +27,43 @@ public class PropertyEditorCapableConverterTest extends TestCase {
 
     public static class SoftwarePropertyEditor extends PropertyEditorSupport {
 
+        @Override
         public String getAsText() {
-            Software software = (Software)getValue();
+            final Software software = (Software)getValue();
             return software.vendor + ":" + software.name;
         }
 
-        public void setAsText(String text) throws IllegalArgumentException {
-            int idx = text.indexOf(':');
+        @Override
+        public void setAsText(final String text) throws IllegalArgumentException {
+            final int idx = text.indexOf(':');
             setValue(new Software(text.substring(0, idx), text.substring(idx + 1)));
         }
 
     }
 
     public void testCanBeUsedForCustomTypes() {
-        Software software = new Software("Joe Walnes", "XStream");
-        SingleValueConverter converter = new PropertyEditorCapableConverter(
-            SoftwarePropertyEditor.class, Software.class);
+        final Software software = new Software("Joe Walnes", "XStream");
+        final SingleValueConverter converter = new PropertyEditorCapableConverter(SoftwarePropertyEditor.class,
+            Software.class);
         assertTrue(converter.canConvert(Software.class));
         assertEquals("Joe Walnes:XStream", converter.toString(software));
         assertEquals(software, converter.fromString("Joe Walnes:XStream"));
     }
 
     public void testConcurrentConversion() throws InterruptedException {
-        final SingleValueConverter converter = new PropertyEditorCapableConverter(
-            SoftwarePropertyEditor.class, Software.class);
+        final SingleValueConverter converter = new PropertyEditorCapableConverter(SoftwarePropertyEditor.class,
+            Software.class);
 
-        final Map exceptions = new HashMap();
+        final Map<Throwable, String> exceptions = new HashMap<Throwable, String>();
         final ThreadGroup tg = new ThreadGroup(getName()) {
-            public void uncaughtException(Thread t, Throwable e) {
+            @Override
+            public void uncaughtException(final Thread t, final Throwable e) {
                 exceptions.put(e, t.getName());
                 super.uncaughtException(t, e);
             }
         };
 
-        final Map references = new HashMap();
+        final Map<String, Software> references = new HashMap<String, Software>();
         final int[] counter = new int[1];
         counter[0] = 0;
         final Thread[] threads = new Thread[10];
@@ -69,6 +72,7 @@ public class PropertyEditorCapableConverterTest extends TestCase {
             references.put(name, new Software("JUnit Thread", Integer.toString(i)));
             threads[i] = new Thread(tg, name) {
 
+                @Override
                 public void run() {
                     int i = 0;
                     try {
@@ -76,16 +80,14 @@ public class PropertyEditorCapableConverterTest extends TestCase {
                             notifyAll();
                             wait();
                         }
-                        final Software software = (Software)references.get(Thread
-                            .currentThread()
-                            .getName());
+                        final Software software = references.get(Thread.currentThread().getName());
                         while (i < 1000 && !interrupted()) {
-                            String formatted = converter.toString(software);
+                            final String formatted = converter.toString(software);
                             Thread.yield();
                             assertEquals(software, converter.fromString(formatted));
                             ++i;
                         }
-                    } catch (InterruptedException e) {
+                    } catch (final InterruptedException e) {
                         fail("Unexpected InterruptedException");
                     }
                     synchronized (counter) {
@@ -96,33 +98,32 @@ public class PropertyEditorCapableConverterTest extends TestCase {
             };
         }
 
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].start();
-                threads[i].wait();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.start();
+                thread.wait();
             }
         }
 
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].notifyAll();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.notifyAll();
             }
         }
 
         Thread.sleep(1000);
 
-        for (int i = 0; i < threads.length; ++i) {
-            threads[i].interrupt();
+        for (final Thread thread : threads) {
+            thread.interrupt();
         }
-        for (int i = 0; i < threads.length; ++i) {
-            synchronized (threads[i]) {
-                threads[i].join();
+        for (final Thread thread : threads) {
+            synchronized (thread) {
+                thread.join();
             }
         }
 
         assertEquals("Exceptions have been thrown: " + exceptions, 0, exceptions.size());
-        assertTrue(
-            "Each thread should have made at least 1 conversion", counter[0] >= threads.length);
+        assertTrue("Each thread should have made at least 1 conversion", counter[0] >= threads.length);
     }
 
 }

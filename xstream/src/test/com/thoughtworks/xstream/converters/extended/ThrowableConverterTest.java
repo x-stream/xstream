@@ -1,20 +1,21 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 29. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.extended;
 
+import java.math.BigDecimal;
+
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
 
-import java.math.BigDecimal;
 
 /**
  * @author <a href="mailto:boxley@thoughtworks.com">B. K. Oxley (binkley)</a>
@@ -22,54 +23,61 @@ import java.math.BigDecimal;
 public class ThrowableConverterTest extends AbstractAcceptanceTest {
 
     public void testDeserializesThrowable() {
-        Throwable expected = new Throwable();
-        Throwable result = (Throwable) xstream.fromXML(xstream.toXML(expected));
+        final Throwable expected = new Throwable();
+        final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
         assertThrowableEquals(expected, result);
     }
 
     public void testDeserializesException() {
-        Exception expected = new Exception();
-        Throwable result = (Throwable) xstream.fromXML(xstream.toXML(expected));
+        final Exception expected = new Exception();
+        final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
         assertThrowableEquals(expected, result);
     }
 
     public void testIncludesMessage() {
-        Throwable expected = new Throwable("A MESSAGE");
-        Throwable result = (Throwable) xstream.fromXML(xstream.toXML(expected));
+        final Throwable expected = new Throwable("A MESSAGE");
+        final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
         assertThrowableEquals(expected, result);
     }
 
     public void testIncludesCause() {
-        Throwable expected = new Throwable(new Throwable());
-        Throwable result = (Throwable) xstream.fromXML(xstream.toXML(expected));
+        final Throwable expected = new Throwable(new Throwable());
+        final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
         assertThrowableEquals(expected, result);
     }
 
     public void testIncludesCauseAndMessage() {
-        Throwable expected = new Throwable("MESSAGE", new Throwable("CAUSE MESSAGE"));
-        Throwable result = (Throwable) xstream.fromXML(xstream.toXML(expected));
+        final Throwable expected = new Throwable("MESSAGE", new Throwable("CAUSE MESSAGE"));
+        final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
         assertThrowableEquals(expected, result);
     }
 
     public void testIncludesStackTrace() {
         try {
             throw new Exception();
-        } catch (Exception exception) {
-            Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
+        } catch (final Exception exception) {
+            final Throwable result = (Throwable)xstream.fromXML(xstream.toXML(exception));
             assertThrowableEquals(exception, result);
         }
     }
 
     public static class MyException extends Exception {
-        private BigDecimal number;
+        private static final long serialVersionUID = 200405L;
+        private final BigDecimal number;
 
-        public MyException(String msg, BigDecimal number) {
+        public MyException(final String msg, final BigDecimal number) {
             super(msg);
             this.number = number;
         }
 
-        public boolean equals(Object o) {
+        @Override
+        public boolean equals(final Object o) {
             return super.equals(o) && o instanceof MyException && number.equals(((MyException)o).number);
+        }
+
+        @Override
+        public int hashCode() {
+            return number.hashCode() | super.hashCode();
         }
 
     }
@@ -77,42 +85,41 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
     public void testSerializesExtraFields() {
         try {
             throw new MyException("A MESSAGE", new BigDecimal(123.4));
-        } catch (MyException exception) {
-            Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
+        } catch (final MyException exception) {
+            final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(exception));
             assertThrowableEquals(exception, result);
         }
     }
-    
+
     public void testSerializesWithNoSelfReferenceForUninitializedCauseInJdk14() {
         xstream.setMode(XStream.NO_REFERENCES);
         try {
             throw new RuntimeException("Without cause");
-        } catch (RuntimeException exception) {
-            Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
-            assertThrowableEquals(exception, result);
-            assertNull(exception.getCause());
-            assertNull(result.getCause());
-        }
-    }
-    
-    public void testSerializesWithInitializedCauseInJdk14() {
-        xstream.setMode(XStream.NO_REFERENCES);
-        try {
-            throw new RuntimeException("Without cause", null);
-        } catch (RuntimeException exception) {
-            Throwable result = (Throwable) xstream.fromXML(xstream.toXML(exception));
+        } catch (final RuntimeException exception) {
+            final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(exception));
             assertThrowableEquals(exception, result);
             assertNull(exception.getCause());
             assertNull(result.getCause());
         }
     }
 
-    private static void assertThrowableEquals(final Throwable a,
-                                              final Throwable b) {
+    public void testSerializesWithInitializedCauseInJdk14() {
+        xstream.setMode(XStream.NO_REFERENCES);
+        try {
+            throw new RuntimeException("Without cause", null);
+        } catch (final RuntimeException exception) {
+            final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(exception));
+            assertThrowableEquals(exception, result);
+            assertNull(exception.getCause());
+            assertNull(result.getCause());
+        }
+    }
+
+    private static void assertThrowableEquals(final Throwable a, final Throwable b) {
         assertBoth(a, b, new MoreAssertions() {
-            public void assertMoreSafely(final Object a,
-                                         final Object b) {
-                final Throwable ta = (Throwable) a, tb = (Throwable) b;
+            @Override
+            public void assertMoreSafely(final Object a, final Object b) {
+                final Throwable ta = (Throwable)a, tb = (Throwable)b;
                 assertEquals(ta.getClass(), tb.getClass());
                 assertEquals(ta.getMessage(), tb.getMessage());
                 assertThrowableEquals(ta.getCause(), tb.getCause());
@@ -122,19 +129,19 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
     }
 
     private static void assertArrayEquals(final Object[] expected, final Object[] actual) {
-        StringBuffer expectedJoined = new StringBuffer();
-        StringBuffer actualJoined = new StringBuffer();
-        for (int i = 0; i < expected.length; i++) {
-            expectedJoined.append(expected[i]).append('\n');
+        final StringBuffer expectedJoined = new StringBuffer();
+        final StringBuffer actualJoined = new StringBuffer();
+        for (final Object element : expected) {
+            expectedJoined.append(element).append('\n');
         }
-        for (int i = 0; i < actual.length; i++) {
+        for (final Object element : actual) {
             // JRockit adds ":???" for invalid line number
-            actualJoined.append(actual[i].toString().replaceFirst(":\\?\\?\\?", "")).append('\n');
+            actualJoined.append(element.toString().replaceFirst(":\\?\\?\\?", "")).append('\n');
         }
         assertEquals(expectedJoined.toString(), actualJoined.toString());
     }
 
-    private static void assertBoth(Object a, Object b, MoreAssertions moreAssertions) {
+    private static void assertBoth(final Object a, final Object b, final MoreAssertions moreAssertions) {
         if (null == a) {
             if (null == b) {
                 return;

@@ -1,22 +1,22 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 03. October 2005 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.extended;
+
+import java.sql.Timestamp;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import junit.framework.TestCase;
-
-import java.sql.Timestamp;
 
 
 /**
@@ -26,6 +26,7 @@ import java.sql.Timestamp;
 public class ISO8601SqlTimestampConverterTest extends TestCase {
     private ISO8601SqlTimestampConverter converter;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         converter = new ISO8601SqlTimestampConverter();
@@ -36,62 +37,61 @@ public class ISO8601SqlTimestampConverterTest extends TestCase {
         TimeZoneChanger.change("EST");
     }
 
+    @Override
     protected void tearDown() throws Exception {
         TimeZoneChanger.reset();
         super.tearDown();
     }
 
     public void testISO8601SqlTimestamp() {
-        XStream xs = new XStream();
+        final XStream xs = new XStream();
         xs.registerConverter(converter);
 
-        long currentTime = System.currentTimeMillis();
+        final long currentTime = System.currentTimeMillis();
 
-        Timestamp ts1 = new Timestamp(currentTime);
-        String xmlString = xs.toXML(ts1);
+        final Timestamp ts1 = new Timestamp(currentTime);
+        final String xmlString = xs.toXML(ts1);
 
-        Timestamp ts2 = (Timestamp)xs.fromXML(xmlString);
+        final Timestamp ts2 = xs.<Timestamp>fromXML(xmlString);
 
         assertEquals("ISO Timestamp Converted is not the same ", ts1, ts2);
-        assertEquals(
-                "Current time not equal to converted timestamp", currentTime,
-                (ts2.getTime() / 1000) * 1000 + ts2.getNanos() / 1000000);
+        assertEquals("Current time not equal to converted timestamp", currentTime, ts2.getTime() / 1000 * 1000
+            + ts2.getNanos() / 1000000);
     }
 
     public void testISO8601SqlTimestampWith1Milli() {
-        XStream xs = new XStream();
+        final XStream xs = new XStream();
         xs.registerConverter(converter);
 
-        long currentTime = (System.currentTimeMillis() / 1000 * 1000) + 1;
+        final long currentTime = System.currentTimeMillis() / 1000 * 1000 + 1;
 
-        Timestamp ts1 = new Timestamp(currentTime);
-        String xmlString = xs.toXML(ts1);
+        final Timestamp ts1 = new Timestamp(currentTime);
+        final String xmlString = xs.toXML(ts1);
 
-        Timestamp ts2 = (Timestamp)xs.fromXML(xmlString);
+        final Timestamp ts2 = xs.<Timestamp>fromXML(xmlString);
 
         assertEquals("ISO Timestamp Converted is not the same ", ts1, ts2);
-        assertEquals(
-                "Current time not equal to converted timestamp", currentTime,
-                (ts2.getTime() / 1000) * 1000 + ts2.getNanos() / 1000000);
+        assertEquals("Current time not equal to converted timestamp", currentTime, ts2.getTime() / 1000 * 1000
+            + ts2.getNanos() / 1000000);
     }
 
     public void testISO8601SqlTimestampWithNanos() {
-        XStream xs = new XStream();
+        final XStream xs = new XStream();
         xs.registerConverter(converter);
 
-        Timestamp ts1 = new Timestamp(System.currentTimeMillis());
+        final Timestamp ts1 = new Timestamp(System.currentTimeMillis());
         ts1.setNanos(987654321);
-        String xmlString = xs.toXML(ts1);
+        final String xmlString = xs.toXML(ts1);
 
-        Timestamp ts2 = (Timestamp)xs.fromXML(xmlString);
+        final Timestamp ts2 = xs.<Timestamp>fromXML(xmlString);
 
         assertEquals("ISO Timestamp Converted is not the same ", ts1, ts2);
         assertEquals("Nanos are not equal", ts1.getNanos(), ts2.getNanos());
     }
 
     public void testTimestampWithoutFraction() {
-        String isoFormat = "1993-02-14T13:10:30-05:00";
-        Timestamp out = (Timestamp)converter.fromString(isoFormat);
+        final String isoFormat = "1993-02-14T13:10:30-05:00";
+        final Timestamp out = (Timestamp)converter.fromString(isoFormat);
         assertEquals("1993-02-14T13:10:30.000000000-05:00", converter.toString(out));
     }
 }
