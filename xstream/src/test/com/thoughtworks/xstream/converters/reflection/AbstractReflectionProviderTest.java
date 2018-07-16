@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 14. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.reflection;
@@ -14,12 +14,14 @@ package com.thoughtworks.xstream.converters.reflection;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
+
 public abstract class AbstractReflectionProviderTest extends MockObjectTestCase {
 
     protected ReflectionProvider reflectionProvider;
 
     public abstract ReflectionProvider createReflectionProvider();
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         reflectionProvider = createReflectionProvider();
@@ -34,8 +36,9 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
     }
 
     public static class WithFields {
+        @SuppressWarnings("unused")
         private int a;
-        private int b = 2;
+        private final int b = 2;
 
         public int getParentB() {
             return b;
@@ -44,51 +47,43 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
 
     public void testVisitsEachFieldInClass() {
         // setup
-        Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
+        final Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
-        mockBlock.expects(once())
-                .method("visit")
-                .with(eq("a"), eq(int.class), eq(WithFields.class), ANYTHING);
-        mockBlock.expects(once())
-                .method("visit")
-                .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING);
+        mockBlock.expects(once()).method("visit").with(eq("a"), eq(int.class), eq(WithFields.class), ANYTHING);
+        mockBlock.expects(once()).method("visit").with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING);
 
         // execute
-        reflectionProvider.visitSerializableFields(new WithFields(), (ReflectionProvider.Visitor) mockBlock.proxy());
+        reflectionProvider.visitSerializableFields(new WithFields(), (ReflectionProvider.Visitor)mockBlock.proxy());
 
         // verify
         mockBlock.verify();
     }
 
     public static class SubClassWithFields extends WithFields {
+        @SuppressWarnings("unused")
         private int c;
     }
 
     public void testVisitsEachFieldInHeirarchy() {
         // setup
-        Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
+        final Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
-        mockBlock.expects(once())
-                .method("visit")
-                .with(eq("a"), eq(int.class), eq(WithFields.class), ANYTHING);
-        mockBlock.expects(once())
-                .method("visit")
-                .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING);
-        mockBlock.expects(once())
-                .method("visit")
-                .with(eq("c"), eq(int.class), eq(SubClassWithFields.class), ANYTHING);
+        mockBlock.expects(once()).method("visit").with(eq("a"), eq(int.class), eq(WithFields.class), ANYTHING);
+        mockBlock.expects(once()).method("visit").with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING);
+        mockBlock.expects(once()).method("visit").with(eq("c"), eq(int.class), eq(SubClassWithFields.class), ANYTHING);
 
         // execute
-        reflectionProvider.visitSerializableFields(new SubClassWithFields(), (ReflectionProvider.Visitor) mockBlock.proxy());
+        reflectionProvider.visitSerializableFields(new SubClassWithFields(), (ReflectionProvider.Visitor)mockBlock
+            .proxy());
 
         // verify
         mockBlock.verify();
     }
 
     public static class SubClassWithHiddenFields extends WithFields {
-        private int b = 3;
+        private final int b = 3;
 
         public int getChildB() {
             return b;
@@ -97,54 +92,49 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
 
     public void testVisitsFieldsHiddenBySubclass() {
         // setup
-        Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
+        final Mock mockBlock = new Mock(ReflectionProvider.Visitor.class);
 
         // expect
-        mockBlock.expects(once())
-                .method("visit")
-                .with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING)
-                .id("first");
-        mockBlock.expects(once())
-                .method("visit")
-                .with(eq("b"), eq(int.class), eq(SubClassWithHiddenFields.class), ANYTHING)
-                .after("first");
-        mockBlock.expects(once())
-                .method("visit")
-                .with(eq("a"), ANYTHING, ANYTHING, ANYTHING);
+        mockBlock.expects(once()).method("visit").with(eq("b"), eq(int.class), eq(WithFields.class), ANYTHING).id(
+            "first");
+        mockBlock
+            .expects(once())
+            .method("visit")
+            .with(eq("b"), eq(int.class), eq(SubClassWithHiddenFields.class), ANYTHING)
+            .after("first");
+        mockBlock.expects(once()).method("visit").with(eq("a"), ANYTHING, ANYTHING, ANYTHING);
 
         // execute
-        reflectionProvider.visitSerializableFields(new SubClassWithHiddenFields(), (ReflectionProvider.Visitor) mockBlock.proxy());
+        reflectionProvider.visitSerializableFields(new SubClassWithHiddenFields(), (ReflectionProvider.Visitor)mockBlock
+            .proxy());
 
         // verify
         mockBlock.verify();
     }
 
     public void testWritesHiddenFields() {
-        SubClassWithHiddenFields o = new SubClassWithHiddenFields();
+        final SubClassWithHiddenFields o = new SubClassWithHiddenFields();
         reflectionProvider.writeField(o, "b", new Integer(10), null);
         reflectionProvider.writeField(o, "b", new Integer(20), WithFields.class);
         assertEquals(10, o.getChildB());
         assertEquals(20, o.getParentB());
     }
 
-    protected void assertCanCreate(Class type) {
-        Object result = reflectionProvider.newInstance(type);
+    protected void assertCanCreate(final Class<?> type) {
+        final Object result = reflectionProvider.newInstance(type);
         assertEquals(type, result.getClass());
     }
 
-    protected void assertCannotCreate(Class type) {
+    protected void assertCannotCreate(final Class<?> type) {
         try {
             reflectionProvider.newInstance(type);
             fail("Should not have been able to newInstance " + type);
-        } catch (ObjectAccessException goodException) {
+        } catch (final ObjectAccessException goodException) {
         }
     }
 
-    public static class PublicStaticInnerClass {
-    }
+    public static class PublicStaticInnerClass {}
 
 }
 
-class OuterClass {
-}
-
+class OuterClass {}

@@ -7,18 +7,33 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 01. October 2003 by Joe Walnes
+ * Created on 01. October 2003 by Joe Walnes, merged with Extended14TypesTest and Extended17TypesTest
  */
 package com.thoughtworks.acceptance;
 
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.Principal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Currency;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
+
+import javax.security.auth.Subject;
+import javax.security.auth.x500.X500Principal;
 
 import org.jdom.Element;
 
@@ -146,5 +161,137 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
             + "</org.jdom.Element>";
 
         assertBothWays(element, expected);
+    }
+
+    public void testLocaleWithVariant() {
+        assertBothWays(new Locale("zh", "CN", "cc"), "<locale>zh_CN_cc</locale>");
+        assertBothWays(new Locale("zh", "", "cc"), "<locale>zh__cc</locale>");
+    }
+
+    public void testCurrency() {
+        assertBothWays(Currency.getInstance("USD"), "<currency>USD</currency>");
+    }
+
+    public void testGregorianCalendar() {
+        final Calendar in = Calendar.getInstance();
+        in.setTimeZone(TimeZone.getTimeZone("AST"));
+        in.setTimeInMillis(44444);
+        final String expected = ""
+            + "<gregorian-calendar>\n"
+            + "  <time>44444</time>\n"
+            + "  <timezone>AST</timezone>\n"
+            + "</gregorian-calendar>";
+        final Calendar out = assertBothWays(in, expected);
+        assertEquals(in.getTime(), out.getTime());
+        assertEquals(TimeZone.getTimeZone("AST"), out.getTimeZone());
+    }
+
+    public void testGregorianCalendarCompat() { // compatibility to 1.1.2 and below
+        final Calendar in = Calendar.getInstance();
+        in.setTimeInMillis(44444);
+        final String oldXML = "" + "<gregorian-calendar>\n" + "  <time>44444</time>\n" + "</gregorian-calendar>";
+        final Calendar out = xstream.fromXML(oldXML);
+        assertEquals(in.getTime(), out.getTime());
+        assertEquals(TimeZone.getTimeZone("EST"), out.getTimeZone());
+    }
+
+    public void testRegexPattern() {
+        // setup
+        final Pattern pattern = Pattern.compile("^[ae]*$", Pattern.MULTILINE | Pattern.UNIX_LINES);
+        final String expectedXml = ""
+            + "<java.util.regex.Pattern>\n"
+            + "  <pattern>^[ae]*$</pattern>\n"
+            + "  <flags>9</flags>\n"
+            + "</java.util.regex.Pattern>";
+
+        // execute
+        final String actualXml = xstream.toXML(pattern);
+        final Pattern result = xstream.fromXML(actualXml);
+
+        // verify
+        assertEquals(expectedXml, actualXml);
+        assertEquals(pattern.pattern(), result.pattern());
+        assertEquals(pattern.flags(), result.flags());
+
+        assertFalse("regex should not hava matched", result.matcher("oooo").matches());
+        assertTrue("regex should have matched", result.matcher("aeae").matches());
+    }
+
+    public void testSubject() {
+        xstream.allowTypes(Subject.class);
+        xstream.allowTypeHierarchy(Principal.class);
+
+        final Subject subject = new Subject();
+        final Principal principal = new X500Principal("c=uk, o=Thoughtworks, ou=XStream");
+        subject.getPrincipals().add(principal);
+        final String expectedXml = ""
+            + "<auth-subject>\n"
+            + "  <principals>\n"
+            + "    <javax.security.auth.x500.X500Principal serialization=\"custom\">\n"
+            + "      <javax.security.auth.x500.X500Principal>\n"
+            + "        <byte-array>MDYxEDAOBgNVBAsTB1hTdHJlYW0xFTATBgNVBAoTDFRob3VnaHR3b3JrczELMAkGA1UEBhMCdWs=</byte-array>\n"
+            + "      </javax.security.auth.x500.X500Principal>\n"
+            + "    </javax.security.auth.x500.X500Principal>\n"
+            + "  </principals>\n"
+            + "  <readOnly>false</readOnly>\n"
+            + "</auth-subject>";
+
+        assertBothWays(subject, expectedXml);
+    }
+
+    public void testCharset() {
+        final Charset charset = Charset.forName("utf-8");
+        final String expectedXml = "<charset>UTF-8</charset>";
+
+        assertBothWays(charset, expectedXml);
+    }
+
+    public void testPathOfDefaultFileSystem() {
+        assertBothWays(Paths.get("../a/relative/path"), "<path>../a/relative/path</path>");
+        assertBothWays(Paths.get("/an/absolute/path"), "<path>/an/absolute/path</path>");
+
+        final Path absolutePath = Paths.get("target").toAbsolutePath();
+        String absolutePathName = absolutePath.toString();
+        if (File.separatorChar != '/') {
+            absolutePathName = absolutePathName.replace(File.separatorChar, '/');
+        }
+        final Path path = Paths.get(absolutePath.toUri());
+        assertBothWays(path, "<path>" + absolutePathName + "</path>");
+    }
+
+    public void testPathWithSpecialCharacters() {
+        assertBothWays(Paths.get("with space"), "<path>with space</path>");
+        assertBothWays(Paths.get("with+plus"), "<path>with+plus</path>");
+        assertBothWays(Paths.get("with&ampersand"), "<path>with&amp;ampersand</path>");
+        assertBothWays(Paths.get("with%20encoding"), "<path>with%20encoding</path>");
+    }
+
+    public void testPathOfNonDefaultFileSystem() throws IOException {
+        final Map<String, String> env = new HashMap<>();
+        env.put("create", "true");
+        final URI uri = URI.create("jar:"
+            + Paths.get("target/lib/proxytoys-0.2.1.jar").toAbsolutePath().toUri().toString());
+
+        FileSystem zipfs = null;
+        try {
+            zipfs = FileSystems.newFileSystem(uri, env);
+            final String entry = "/com/thoughtworks/proxy/kit/SimpleReference.class";
+            final Path path = zipfs.getPath(entry);
+            assertBothWays(path, "<path>" + uri.toString() + "!" + entry + "</path>");
+        } finally {
+            if (zipfs != null) {
+                zipfs.close();
+            }
+        }
+    }
+
+    public void testPathIsImmutable() {
+        final Path[] array = new Path[2];
+        array[0] = array[1] = Paths.get("same");
+        assertBothWays(array, "" //
+            + "<path-array>\n" //
+            + "  <path>same</path>\n" //
+            + "  <path>same</path>\n" //
+            + "</path-array>");
     }
 }

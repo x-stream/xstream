@@ -1,25 +1,25 @@
 /*
- * Copyright (C) 2007, 2014 XStream Committers.
+ * Copyright (C) 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 29. July 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.reflection;
-
-import com.thoughtworks.acceptance.objects.StandardObject;
-import com.thoughtworks.xstream.XStream;
-
-import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
+
+import com.thoughtworks.acceptance.objects.StandardObject;
+import com.thoughtworks.xstream.XStream;
+
+import junit.framework.TestCase;
 
 
 /**
@@ -28,41 +28,41 @@ import java.io.Serializable;
 public class SerializableConverterTest extends TestCase {
 
     static class SimpleType extends StandardObject {
+        private static final long serialVersionUID = 200707L;
         private String one;
         private String two;
 
         public String getOne() {
-            return this.one;
+            return one;
         }
 
-        public void setOne(String one) {
+        public void setOne(final String one) {
             this.one = one;
         }
 
         public String getTwo() {
-            return this.two;
+            return two;
         }
 
-        public void setTwo(String two) {
+        public void setTwo(final String two) {
             this.two = two;
         }
-        
+
         private void writeObject(final ObjectOutputStream out) throws IOException {
             out.defaultWriteObject();
         }
 
-        private void readObject(final ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             in.defaultReadObject();
         }
     }
-    
+
     public void testCanOmitFieldAtSerialization() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.alias("simple", SimpleType.class);
         xstream.omitField(SimpleType.class, "two");
-        
-        String expected = ""
+
+        final String expected = ""
             + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
@@ -70,23 +70,23 @@ public class SerializableConverterTest extends TestCase {
             + "    </default>\n"
             + "  </simple>\n"
             + "</simple>";
-        
-        SimpleType simple = new SimpleType();
+
+        final SimpleType simple = new SimpleType();
         simple.setOne("one");
         simple.setTwo("two");
-        
-        String xml = xstream.toXML(simple);
+
+        final String xml = xstream.toXML(simple);
         assertEquals(expected, xml);
     }
-    
+
     public void testCanOmitFieldAtDeserialization() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.allowTypes(SimpleType.class);
         xstream.alias("simple", SimpleType.class);
         xstream.omitField(SimpleType.class, "two");
         xstream.omitField(SimpleType.class, "x");
-        
-        String xml = ""
+
+        final String xml = ""
             + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
@@ -95,42 +95,42 @@ public class SerializableConverterTest extends TestCase {
             + "    </default>\n"
             + "  </simple>\n"
             + "</simple>";
-        
-        SimpleType simple = new SimpleType();
+
+        final SimpleType simple = new SimpleType();
         simple.setOne("one");
-        
-        SimpleType serialized = (SimpleType)xstream.fromXML(xml);
+
+        final SimpleType serialized = xstream.<SimpleType>fromXML(xml);
         assertEquals(simple, serialized);
     }
-    
+
     static class ExtendedType extends SimpleType {
+        private static final long serialVersionUID = 200707L;
         private String three;
 
         public String getThree() {
-            return this.three;
+            return three;
         }
 
-        public void setThree(String three) {
+        public void setThree(final String three) {
             this.three = three;
         }
-        
+
         private void writeObject(final ObjectOutputStream out) throws IOException {
             out.defaultWriteObject();
         }
 
-        private void readObject(final ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             in.defaultReadObject();
         }
     }
-    
+
     public void testCanOmitInheritedFieldAtSerialization() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.alias("extended", ExtendedType.class);
         xstream.alias("simple", SimpleType.class);
         xstream.omitField(SimpleType.class, "two");
-        
-        String expected = ""
+
+        final String expected = ""
             + "<extended serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
@@ -143,25 +143,25 @@ public class SerializableConverterTest extends TestCase {
             + "    </default>\n"
             + "  </extended>\n"
             + "</extended>";
-        
-        ExtendedType extended = new ExtendedType();
+
+        final ExtendedType extended = new ExtendedType();
         extended.setOne("one");
         extended.setTwo("two");
         extended.setThree("three");
-        
-        String xml = xstream.toXML(extended);
+
+        final String xml = xstream.toXML(extended);
         assertEquals(expected, xml);
     }
-    
+
     public void testCanOmitInheritedFieldAtDeserialization() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.allowTypes(SimpleType.class, ExtendedType.class);
         xstream.alias("extended", ExtendedType.class);
         xstream.alias("simple", SimpleType.class);
         xstream.omitField(SimpleType.class, "two");
         xstream.omitField(SimpleType.class, "x");
-        
-        String xml = ""
+
+        final String xml = ""
             + "<extended serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
@@ -175,64 +175,63 @@ public class SerializableConverterTest extends TestCase {
             + "    </default>\n"
             + "  </extended>\n"
             + "</extended>";
-        
-        ExtendedType extended = new ExtendedType();
+
+        final ExtendedType extended = new ExtendedType();
         extended.setOne("one");
         extended.setThree("three");
-        
-        SimpleType serialized = (SimpleType)xstream.fromXML(xml);
+
+        final SimpleType serialized = xstream.<SimpleType>fromXML(xml);
         assertEquals(extended, serialized);
     }
 
     public static class SimpleNamedFieldsType extends StandardObject implements Serializable {
+        private static final long serialVersionUID = 200708L;
 
         private String one;
         private String two;
 
         public String getOne() {
-            return this.one;
+            return one;
         }
 
-        public void setOne(String one) {
+        public void setOne(final String one) {
             this.one = one;
         }
 
         public String getTwo() {
-            return this.two;
+            return two;
         }
 
-        public void setTwo(String two) {
+        public void setTwo(final String two) {
             this.two = two;
         }
 
         private static final ObjectStreamField[] serialPersistentFields = {
-            new ObjectStreamField("s1", String.class),
-            new ObjectStreamField("s2", String.class),
-        };
+            new ObjectStreamField("s1", String.class), new ObjectStreamField("s2", String.class),};
 
-        private void writeObject(ObjectOutputStream out) throws IOException {
+        private void writeObject(final ObjectOutputStream out) throws IOException {
             // don't call defaultWriteObject()
-            ObjectOutputStream.PutField fields = out.putFields();
+            final ObjectOutputStream.PutField fields = out.putFields();
             fields.put("s1", one);
             fields.put("s2", two);
             out.writeFields();
         }
 
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
             // don't call defaultReadObject()
-            ObjectInputStream.GetField fields = in.readFields();
-            one = (String) fields.get("s1", "1");
-            two = (String) fields.get("s2", "2");
+            final ObjectInputStream.GetField fields = in.readFields();
+            one = (String)fields.get("s1", "1");
+            two = (String)fields.get("s2", "2");
         }
     }
-    
+
     public void testCanOmitNamedFieldAtSerialization() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.allowTypes(SimpleNamedFieldsType.class);
         xstream.alias("simple", SimpleNamedFieldsType.class);
         xstream.omitField(SimpleNamedFieldsType.class, "s2");
-        
-        String expected = ""
+
+        final String expected = ""
             + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
@@ -240,23 +239,23 @@ public class SerializableConverterTest extends TestCase {
             + "    </default>\n"
             + "  </simple>\n"
             + "</simple>";
-        
-        SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
+
+        final SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
         simple.setOne("one");
         simple.setTwo("two");
-        
-        String xml = xstream.toXML(simple);
+
+        final String xml = xstream.toXML(simple);
         assertEquals(expected, xml);
     }
-    
+
     public void testCanOmitNamedFieldAtDeserialization() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.allowTypes(SimpleNamedFieldsType.class);
         xstream.alias("simple", SimpleNamedFieldsType.class);
         xstream.omitField(SimpleNamedFieldsType.class, "s2");
         xstream.omitField(SimpleNamedFieldsType.class, "x");
-        
-        String xml = ""
+
+        final String xml = ""
             + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
@@ -265,22 +264,22 @@ public class SerializableConverterTest extends TestCase {
             + "    </default>\n"
             + "  </simple>\n"
             + "</simple>";
-        
-        SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
+
+        final SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
         simple.setOne("one");
         simple.setTwo("2");
-        
-        SimpleNamedFieldsType serialized = (SimpleNamedFieldsType)xstream.fromXML(xml);
+
+        final SimpleNamedFieldsType serialized = (SimpleNamedFieldsType)xstream.fromXML(xml);
         assertEquals(simple, serialized);
     }
-    
+
     public void testCanAliasField() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.allowTypes(SimpleType.class);
         xstream.alias("simple", SimpleType.class);
         xstream.aliasField("s2", SimpleType.class, "two");
-        
-        String expected = ""
+
+        final String expected = ""
             + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
@@ -289,24 +288,24 @@ public class SerializableConverterTest extends TestCase {
             + "    </default>\n"
             + "  </simple>\n"
             + "</simple>";
-        
-        SimpleType simple = new SimpleType();
+
+        final SimpleType simple = new SimpleType();
         simple.setOne("one");
         simple.setTwo("two");
-        
-        String xml = xstream.toXML(simple);
+
+        final String xml = xstream.toXML(simple);
         assertEquals(expected, xml);
-        SimpleType serialized = (SimpleType)xstream.fromXML(xml);
+        final SimpleType serialized = xstream.<SimpleType>fromXML(xml);
         assertEquals(simple, serialized);
     }
 
     public void testCanAliasNamedField() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.allowTypes(SimpleNamedFieldsType.class);
         xstream.alias("simple", SimpleNamedFieldsType.class);
         xstream.aliasField("two", SimpleNamedFieldsType.class, "s2");
-        
-        String expected = ""
+
+        final String expected = ""
             + "<simple serialization=\"custom\">\n"
             + "  <simple>\n"
             + "    <default>\n"
@@ -315,38 +314,39 @@ public class SerializableConverterTest extends TestCase {
             + "    </default>\n"
             + "  </simple>\n"
             + "</simple>";
-        
-        SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
+
+        final SimpleNamedFieldsType simple = new SimpleNamedFieldsType();
         simple.setOne("one");
         simple.setTwo("two");
-        
-        String xml = xstream.toXML(simple);
+
+        final String xml = xstream.toXML(simple);
         assertEquals(expected, xml);
-        SimpleNamedFieldsType serialized = (SimpleNamedFieldsType)xstream.fromXML(xml);
+        final SimpleNamedFieldsType serialized = xstream.<SimpleNamedFieldsType>fromXML(xml);
         assertEquals(simple, serialized);
     }
-    
+
     public static class SerializableType implements Serializable {
+        private static final long serialVersionUID = 201401L;
         public Serializable serializable;
     }
-    
+
     public void testCanHandleFieldsDeclaredWithSerializableInterface() {
-        XStream xstream = new XStream();
+        final XStream xstream = new XStream();
         xstream.allowTypes(SerializableType.class);
         xstream.alias("sertype", SerializableType.class);
         xstream.useAttributeFor(SerializableType.class, "serializable");
-        
-        String expected = ""
+
+        final String expected = ""
             + "<sertype>\n"
             + "  <serializable class=\"string\">String</serializable>\n"
             + "</sertype>";
-        
-        SerializableType s = new SerializableType();
+
+        final SerializableType s = new SerializableType();
         s.serializable = "String";
-        
-        String xml = xstream.toXML(s);
+
+        final String xml = xstream.toXML(s);
         assertEquals(expected, xml);
-        SerializableType serialized = (SerializableType)xstream.fromXML(xml);
+        final SerializableType serialized = xstream.<SerializableType>fromXML(xml);
         assertEquals(s.serializable, serialized.serializable);
     }
 }

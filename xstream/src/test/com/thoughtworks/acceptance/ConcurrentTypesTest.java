@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 21. March 2012 by Joerg Schaible
+ * Created on 17. July 2018 by Joerg Schaible, renamed from Concurrent15TypesTest
  */
 package com.thoughtworks.acceptance;
 
@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.core.JVM;
 
 
-public class Concurrent15TypesTest extends AbstractAcceptanceTest {
+public class ConcurrentTypesTest extends AbstractAcceptanceTest {
 
     public void testConcurrentHashMap() {
         final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<String, String>();

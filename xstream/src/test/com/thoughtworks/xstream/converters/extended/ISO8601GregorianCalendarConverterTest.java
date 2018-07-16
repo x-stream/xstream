@@ -7,13 +7,14 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 03. October 2005 by Joerg Schaible
+ * Created on 03. October 2005 by Joerg Schaible, merged with ISO8601GregorianCalendarConverter17Test
  */
 package com.thoughtworks.xstream.converters.extended;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -360,5 +361,24 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
 
         assertTrue("Nothing succeded", results.contains("PASS"));
         assertFalse("At least one attempt failed", results.contains("FAIL"));
+    }
+
+    public void testCanLoadTimeWithDefaultDifferentLocaleForFormat() {
+        final ISO8601GregorianCalendarConverter converter = new ISO8601GregorianCalendarConverter();
+
+        final Locale defaultLocale = Locale.getDefault();
+        final Locale defaultLocaleForFormat = Locale.getDefault(Locale.Category.FORMAT);
+        try {
+            Locale.setDefault(Locale.US);
+            Locale.setDefault(Locale.Category.FORMAT, Locale.GERMANY);
+            final Calendar in = new GregorianCalendar(2013, Calendar.JUNE, 17, 16, 0, 0);
+
+            final String converterXML = converter.toString(in);
+            final Calendar out = (Calendar)converter.fromString(converterXML);
+            assertEquals(in.getTime(), out.getTime());
+        } finally {
+            Locale.setDefault(defaultLocale);
+            Locale.setDefault(defaultLocaleForFormat);
+        }
     }
 }

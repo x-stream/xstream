@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible, factored out from SunUnsafeReflectionProviderTest
@@ -11,6 +11,7 @@ public class SunLimitedUnsafeReflectionProviderTest extends AbstractReflectionPr
 
     // inherits tests from superclass
 
+    @Override
     public ReflectionProvider createReflectionProvider() {
         return new SunLimitedUnsafeReflectionProvider();
     }
@@ -41,7 +42,7 @@ public class SunLimitedUnsafeReflectionProviderTest extends AbstractReflectionPr
     }
 
     public void testCanWriteFinalFields() {
-        WithFinalFields thingy = new WithFinalFields();
+        final WithFinalFields thingy = new WithFinalFields();
         reflectionProvider.writeField(thingy, "finalField", "zero", WithFinalFields.class);
         assertEquals("zero", thingy.finalField);
 
@@ -84,7 +85,7 @@ public class SunLimitedUnsafeReflectionProviderTest extends AbstractReflectionPr
             throw new IllegalStateException("ctor");
         }
 
-        public Unistantiatable(String s) {
+        public Unistantiatable(final String s) {
             throw new IllegalStateException("ctor(String)");
         }
     }

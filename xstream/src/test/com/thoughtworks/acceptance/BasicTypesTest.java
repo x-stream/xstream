@@ -7,12 +7,13 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 26. September 2003 by Joe Walnes
+ * Created on 26. September 2003 by Joe Walnes, merged with Basic15TypesTest
  */
 package com.thoughtworks.acceptance;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.UUID;
 
 
 public class BasicTypesTest extends AbstractAcceptanceTest {
@@ -100,5 +101,19 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     public void testNumberFormats() {
         assertEquals(1.0, xstream.<Double>fromXML("<double>1</double>").doubleValue(), 0.001);
         assertEquals(1.0f, xstream.<Float>fromXML("<float>1</float>").floatValue(), 0.001);
+    }
+
+    public void testUUID() {
+        final UUID uuid = UUID.randomUUID();
+        assertBothWays(uuid, "<uuid>" + uuid + "</uuid>");
+    }
+
+    public void testStringBuilder() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("woo");
+        final String xml = xstream.toXML(builder);
+        assertEquals(xml, "<string-builder>woo</string-builder>");
+        final StringBuilder out = xstream.fromXML(xml);
+        assertEquals("woo", out.toString());
     }
 }
