@@ -38,7 +38,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
     public static class WithFields {
         @SuppressWarnings("unused")
         private int a;
-        private final int b = 2;
+        private int b = 2;
 
         public int getParentB() {
             return b;
@@ -83,7 +83,7 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
     }
 
     public static class SubClassWithHiddenFields extends WithFields {
-        private final int b = 3;
+        private int b = 3;
 
         public int getChildB() {
             return b;
