@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 XStream Committers.
+ * Copyright (C) 2009, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,13 +21,14 @@ import junit.framework.TestCase;
 public class QuickWriterTest extends TestCase {
 
     public void testUnbuffered() {
-        StringWriter stringWriter = new StringWriter();
-        QuickWriter writer = new QuickWriter(stringWriter, 0);
-        writer.write("Joe");
-        assertEquals(stringWriter.toString(), "Joe");
-        writer.write(' ');
-        assertEquals(stringWriter.toString(), "Joe ");
-        writer.write("Walnes".toCharArray());
-        assertEquals(stringWriter.toString(), "Joe Walnes");
+        final StringWriter stringWriter = new StringWriter();
+        try (QuickWriter writer = new QuickWriter(stringWriter, 0)) {
+            writer.write("Joe");
+            assertEquals(stringWriter.toString(), "Joe");
+            writer.write(' ');
+            assertEquals(stringWriter.toString(), "Joe ");
+            writer.write("Walnes".toCharArray());
+            assertEquals(stringWriter.toString(), "Joe Walnes");
+        }
     }
 }

@@ -1,22 +1,23 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. May 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
 
+
 public class ObjectIdDictionaryTest extends TestCase {
 
     public void testMapsIdsToObjectReferences() {
-        final ObjectIdDictionary dict = new ObjectIdDictionary();
+        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<String>();
         final Object a = new Object();
         final Object b = new Object();
         final Object c = new Object();
@@ -29,7 +30,7 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testTreatsObjectsThatAreEqualButNotSameInstanceAsDifferentReference() {
-        final ObjectIdDictionary dict = new ObjectIdDictionary();
+        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<String>();
         final Integer a = new Integer(3);
         final Integer b = new Integer(3);
         dict.associateId(a, "id a");
@@ -39,7 +40,7 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testEntriesAreGarbageCollected() throws InterruptedException {
-        final ObjectIdDictionary dict = new ObjectIdDictionary();
+        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<String>();
 
         int counter = 0;
         for (; counter < 1000; ++counter) {
@@ -51,11 +52,7 @@ public class ObjectIdDictionaryTest extends TestCase {
                 Thread.sleep(10);
             }
         }
-        int size = dict.size();
-        assertTrue("Dictionary did not shrink; "
-            + counter
-            + " distinct objects; "
-            + size
-            + " size", dict.size() < 250);
+        final int size = dict.size();
+        assertTrue("Dictionary did not shrink; " + counter + " distinct objects; " + size + " size", dict.size() < 250);
     }
 }

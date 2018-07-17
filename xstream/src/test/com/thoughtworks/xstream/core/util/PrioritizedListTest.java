@@ -6,33 +6,34 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 06. February 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.core.util;
 
+import java.util.Iterator;
+
 import junit.framework.TestCase;
 
-import java.util.Iterator;
 
 public class PrioritizedListTest extends TestCase {
 
-    private void assertNextEquals(Object expected, Iterator iterator) {
+    private void assertNextEquals(final Object expected, final Iterator<String> iterator) {
         assertTrue("Expected to pull of another item from iterator : " + expected, iterator.hasNext());
         assertEquals(expected, iterator.next());
     }
 
-    private void assertNoMore(Iterator iterator) {
+    private void assertNoMore(final Iterator<?> iterator) {
         assertFalse("Should be no more items in iterator", iterator.hasNext());
     }
 
     public void testIteratesOverElementsInReverseOrderTheyWereAdded() {
-        PrioritizedList list = new PrioritizedList();
+        final PrioritizedList<String> list = new PrioritizedList<String>();
         list.add("one", 0);
         list.add("two", 0);
         list.add("three", 0);
 
-        Iterator iterator = list.iterator();
+        final Iterator<String> iterator = list.iterator();
         assertNextEquals("three", iterator);
         assertNextEquals("two", iterator);
         assertNextEquals("one", iterator);
@@ -40,14 +41,14 @@ public class PrioritizedListTest extends TestCase {
     }
 
     public void testHandlesMultipleIsolatedIterators() {
-        PrioritizedList list = new PrioritizedList();
+        final PrioritizedList<String> list = new PrioritizedList<String>();
         list.add("one", 0);
         list.add("two", 0);
 
-        Iterator iteratorOne = list.iterator();
+        final Iterator<String> iteratorOne = list.iterator();
         assertNextEquals("two", iteratorOne);
 
-        Iterator iteratorTwo = list.iterator();
+        final Iterator<String> iteratorTwo = list.iterator();
         assertNextEquals("one", iteratorOne);
 
         assertNextEquals("two", iteratorTwo);
@@ -58,7 +59,7 @@ public class PrioritizedListTest extends TestCase {
     }
 
     public void testIteratesOverHighestPriorityItemsFirst() {
-        PrioritizedList list = new PrioritizedList();
+        final PrioritizedList<String> list = new PrioritizedList<String>();
         list.add("medium one", 0);
         list.add("high one", 1);
         list.add("low one", -1);
@@ -70,7 +71,7 @@ public class PrioritizedListTest extends TestCase {
         list.add("very low", -4);
         list.add("VERY VERY low", -100);
 
-        Iterator iterator = list.iterator();
+        final Iterator<String> iterator = list.iterator();
         assertNextEquals("VERY VERY high", iterator);
         assertNextEquals("very high", iterator);
         assertNextEquals("high two", iterator);

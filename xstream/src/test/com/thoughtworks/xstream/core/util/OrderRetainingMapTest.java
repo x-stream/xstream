@@ -1,43 +1,47 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 06. February 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.core.util;
 
-import junit.framework.TestCase;
-
 import java.util.Iterator;
 import java.util.Map;
 
-public class OrderRetainingMapTest extends TestCase {
-    private Map map;
+import junit.framework.TestCase;
 
-    private void assertNextEquals(Object expected, Iterator iterator) {
+
+public class OrderRetainingMapTest extends TestCase {
+    private Map<String, String> map;
+
+    private void assertNextEquals(final Object expected, final Iterator<String> iterator) {
         assertTrue("Expected to pull of another item from iterator : " + expected, iterator.hasNext());
         assertEquals(expected, iterator.next());
     }
 
-    private void assertNextEntryEquals(Object expectedKey, Object expectedValue, Iterator iterator) {
-        assertTrue("Expected to pull of another item from iterator : " + expectedKey + "=" + expectedValue, iterator.hasNext());
-        Map.Entry actual = (Map.Entry) iterator.next();
+    private void assertNextEntryEquals(final Object expectedKey, final Object expectedValue,
+            final Iterator<Map.Entry<String, String>> iterator) {
+        assertTrue("Expected to pull of another item from iterator : " + expectedKey + "=" + expectedValue, iterator
+            .hasNext());
+        final Map.Entry<String, String> actual = iterator.next();
         assertEquals(expectedKey, actual.getKey());
         assertEquals(expectedValue, actual.getValue());
     }
 
-    private void assertNoMore(Iterator iterator) {
+    private void assertNoMore(final Iterator<?> iterator) {
         assertFalse("Should be no more items in iterator", iterator.hasNext());
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
-        map = new OrderRetainingMap();
+        map = new OrderRetainingMap<String, String>();
         map.put("one", "ONE");
         map.put("two", "TWO");
         map.put("three", "THREE");
@@ -45,7 +49,7 @@ public class OrderRetainingMapTest extends TestCase {
     }
 
     public void testMaintainsOrderOfKeySet() {
-        Iterator keySetIterator = map.keySet().iterator();
+        final Iterator<String> keySetIterator = map.keySet().iterator();
         assertNextEquals("one", keySetIterator);
         assertNextEquals("two", keySetIterator);
         assertNextEquals("three", keySetIterator);
@@ -54,7 +58,7 @@ public class OrderRetainingMapTest extends TestCase {
     }
 
     public void testMaintainsOrderOfValues() {
-        Iterator valuesIterator = map.values().iterator();
+        final Iterator<String> valuesIterator = map.values().iterator();
         assertNextEquals("ONE", valuesIterator);
         assertNextEquals("TWO", valuesIterator);
         assertNextEquals("THREE", valuesIterator);
@@ -63,7 +67,7 @@ public class OrderRetainingMapTest extends TestCase {
     }
 
     public void testMaintainsOrderOfEntries() {
-        Iterator entrySetIterator = map.entrySet().iterator();
+        final Iterator<Map.Entry<String, String>> entrySetIterator = map.entrySet().iterator();
         assertNextEntryEquals("one", "ONE", entrySetIterator);
         assertNextEntryEquals("two", "TWO", entrySetIterator);
         assertNextEntryEquals("three", "THREE", entrySetIterator);
@@ -72,7 +76,9 @@ public class OrderRetainingMapTest extends TestCase {
     }
 
     public void testMaintainsOrderOfEntriesAfterCopyCtor() {
-        Iterator entrySetIterator = new OrderRetainingMap(map).entrySet().iterator();
+        final Iterator<Map.Entry<String, String>> entrySetIterator = new OrderRetainingMap<String, String>(map)
+            .entrySet()
+            .iterator();
         assertNextEntryEquals("one", "ONE", entrySetIterator);
         assertNextEntryEquals("two", "TWO", entrySetIterator);
         assertNextEntryEquals("three", "THREE", entrySetIterator);
