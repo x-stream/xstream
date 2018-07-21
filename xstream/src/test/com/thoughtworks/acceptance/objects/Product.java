@@ -18,7 +18,7 @@ public class Product {
     String name;
     String id;
     double price;
-    ArrayList<String> tags;
+    ArrayList<?> tags;
 
     public Product(final String name, final String id, final double price) {
         super();
@@ -51,11 +51,12 @@ public class Product {
         this.price = price;
     }
 
-    public ArrayList<String> getTags() {
-        return tags;
+    @SuppressWarnings("unchecked")
+    public <T> ArrayList<T> getTags() {
+        return (ArrayList<T>)tags;
     }
 
-    public void setTags(final ArrayList<String> tags) {
+    public <T> void setTags(final ArrayList<T> tags) {
         this.tags = tags;
     }
 
@@ -116,8 +117,8 @@ public class Product {
         String ret = "[" + name + ", " + id + ", " + price;
         if (tags != null) {
             ret += "\n{";
-            for (final String tag : tags) {
-                ret += tag + "\n";
+            for (final Object tag : tags) {
+                ret += tag.toString() + "\n";
             }
             ret += "}";
         }

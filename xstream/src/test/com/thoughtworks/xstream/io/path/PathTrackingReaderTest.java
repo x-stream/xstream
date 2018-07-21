@@ -1,37 +1,34 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 03. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.path;
+
+import java.io.Reader;
+import java.io.StringReader;
+
+import org.xmlpull.mxp1.MXParser;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.XppReader;
 
 import junit.framework.TestCase;
 
-import org.xmlpull.mxp1.MXParser;
-
-import java.io.Reader;
-import java.io.StringReader;
 
 public class PathTrackingReaderTest extends TestCase {
 
     public void testDecoratesReaderAndTracksPath() {
-        Reader input = new StringReader("" +
-                "<a>" +
-                "  <b><c/></b>" +
-                "  <b/>" +
-                "  <d/>" +
-                "</a>");
+        final Reader input = new StringReader("" + "<a>" + "  <b><c/></b>" + "  <b/>" + "  <d/>" + "</a>");
+        @SuppressWarnings("resource")
         HierarchicalStreamReader reader = new XppReader(input, new MXParser());
-        PathTracker pathTracker = new PathTracker();
+        final PathTracker pathTracker = new PathTracker();
 
         reader = new PathTrackingReader(reader, pathTracker);
         assertEquals(new Path("/a"), pathTracker.getPath());
@@ -56,14 +53,12 @@ public class PathTrackingReaderTest extends TestCase {
         reader.moveUp();
         assertEquals(new Path("/a"), pathTracker.getPath());
     }
-    
+
     public void testPathsAreDecodedInTracker() {
-        Reader input = new StringReader("" +
-                "<a>" +
-                "  <b__1/>" +
-                "</a>");
+        final Reader input = new StringReader("" + "<a>" + "  <b__1/>" + "</a>");
+        @SuppressWarnings("resource")
         HierarchicalStreamReader reader = new XppReader(input, new MXParser());
-        PathTracker pathTracker = new PathTracker();
+        final PathTracker pathTracker = new PathTracker();
 
         reader = new PathTrackingReader(reader, pathTracker);
         assertEquals(new Path("/a"), pathTracker.getPath());

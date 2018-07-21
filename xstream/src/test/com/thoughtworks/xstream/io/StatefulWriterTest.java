@@ -1,21 +1,21 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 15. March 2006 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 
 import junit.framework.TestCase;
-
-import java.io.IOException;
-import java.io.StringWriter;
 
 
 /**
@@ -26,6 +26,8 @@ public class StatefulWriterTest extends TestCase {
     private StatefulWriter writer;
     private StringWriter stringWriter;
 
+    @SuppressWarnings("resource")
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         stringWriter = new StringWriter();
@@ -51,7 +53,7 @@ public class StatefulWriterTest extends TestCase {
             assertTrue(e.getCause() instanceof IllegalStateException);
         }
     }
-    
+
     public void testCanOnlyWriteAttributesToOpenNode() {
         try {
             writer.addAttribute("test", "true");
@@ -87,7 +89,7 @@ public class StatefulWriterTest extends TestCase {
         }
         writer.endNode();
     }
-    
+
     public void testCanWriteValueOnlyToOpenNode() {
         try {
             writer.setValue("test");
@@ -104,7 +106,7 @@ public class StatefulWriterTest extends TestCase {
             assertTrue(e.getCause() instanceof IllegalStateException);
         }
     }
-    
+
     public void testCannotOpenNodeInValue() {
         writer.startNode("junit");
         writer.setValue("test");
@@ -115,7 +117,7 @@ public class StatefulWriterTest extends TestCase {
             assertTrue(e.getCause() instanceof IllegalStateException);
         }
     }
-    
+
     public void testCanCloseInFinally() {
         try {
             writer.endNode();
@@ -124,7 +126,7 @@ public class StatefulWriterTest extends TestCase {
             writer.close();
         }
     }
-    
+
     public void testCannotWriteAfterClose() {
         writer.close();
         try {
@@ -158,12 +160,12 @@ public class StatefulWriterTest extends TestCase {
             assertTrue(e.getCause() instanceof IOException);
         }
     }
-    
+
     public void testCanCloseTwice() {
         writer.close();
         writer.close();
     }
-    
+
     public void testCaresAboutNestingLevelWritingAttributes() {
         writer.startNode("junit");
         writer.addAttribute("test", "true");

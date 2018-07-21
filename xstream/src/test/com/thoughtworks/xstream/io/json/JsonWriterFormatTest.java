@@ -14,7 +14,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
@@ -31,7 +31,6 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.extended.ToStringConverter;
-import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.json.JsonWriter.Format;
@@ -56,6 +55,8 @@ public class JsonWriterFormatTest extends TestCase {
     private final String json;
 
     public static class YString extends Y {
+        private static final long serialVersionUID = 201101L;
+
         public YString(final String y) {
             yField = y;
         }
@@ -68,7 +69,7 @@ public class JsonWriterFormatTest extends TestCase {
 
     private final static class HandlerConverter implements Converter {
         @Override
-        public boolean canConvert(final Class type) {
+        public boolean canConvert(final Class<?> type) {
             return type == Handler.class;
         }
 
@@ -143,6 +144,7 @@ public class JsonWriterFormatTest extends TestCase {
     }
 
     private void writeJSON(final Writer writer, final int mode, final JsonWriter.Format format) {
+        @SuppressWarnings("resource")
         final JsonWriter jsonWriter = new JsonWriter(writer, mode, format, 0);
         try {
             xstream.marshal(target, jsonWriter);
@@ -152,12 +154,12 @@ public class JsonWriterFormatTest extends TestCase {
     }
 
     public static Test suite() {
-        final Map modes = new OrderRetainingMap();
+        final Map<String, Integer> modes = new LinkedHashMap<String, Integer>();
         modes.put("optimized", new Integer(0));
         modes.put("noRoot", new Integer(AbstractJsonWriter.DROP_ROOT_MODE));
         modes.put("explicit", new Integer(AbstractJsonWriter.EXPLICIT_MODE));
 
-        final Map formats = new OrderRetainingMap();
+        final Map<String, JsonWriter.Format> formats = new LinkedHashMap<String, JsonWriter.Format>();
         formats.put("Minimal", new JsonWriter.Format(new char[0], new char[0],
             JsonWriter.Format.COMPACT_EMPTY_ELEMENT));
         formats.put("Pretty", new JsonWriter.Format("  ".toCharArray(), "\n".toCharArray(),
@@ -173,12 +175,12 @@ public class JsonWriterFormatTest extends TestCase {
         x.innerObj = new YString("Y");
         final X emptyX = new X();
         emptyX.innerObj = new Y();
-        final SampleLists lists = new SampleLists();
-        lists.good = new LinkedList();
+        final SampleLists<String, X> lists = new SampleLists<String, X>();
+        lists.good = new LinkedList<String>();
         lists.good.add("XStream");
-        lists.bad = new TreeSet();
+        lists.bad = new TreeSet<X>();
         lists.bad.add(new X());
-        final Map targets = new OrderRetainingMap();
+        final Map<String, Object> targets = new LinkedHashMap<String, Object>();
         targets.put("String", "text");
         targets.put("CharSequenceArray", new CharSequence[]{"text", new StringBuffer("buffer"), null});
         targets.put("CharSequenceArray+ID", new CharSequence[]{"text", new StringBuffer("buffer"), null});
@@ -190,10 +192,10 @@ public class JsonWriterFormatTest extends TestCase {
         targets.put("X", x);
         targets.put("EmptyX", emptyX);
         targets.put("Collections", lists);
-        targets.put("EmptyList", new ArrayList());
+        targets.put("EmptyList", new ArrayList<Object>());
         targets.put("CustomConverter", new Handler(new Protocol("ldap")));
 
-        final Map results = new HashMap();
+        final Map<String, String> results = new HashMap<String, String>();
         results.put("optimizedMinimalString", "{'string':'text'}");
         results.put("optimizedPrettyString", "{'string': 'text'}");
         results.put("optimizedCompactString", "{'string': 'text'}");
@@ -363,20 +365,17 @@ public class JsonWriterFormatTest extends TestCase {
             "{'h': [\n  [],\n  [\n    {\n      'str': [\n        [],\n        [\n          'test'\n        ]\n      ]\n    },\n    {\n      'protocol': [\n        [],\n        [\n          {\n            'id': [\n              [],\n              [\n                'ldap'\n              ]\n            ]\n          }\n        ]\n      ]\n    },\n    {\n      'i': [\n        [],\n        [\n          42\n        ]\n      ]\n    }\n  ]\n]}");
 
         final TestSuite suite = new TestSuite(JsonWriterFormatTest.class.getName());
-        for (final Iterator iterMode = modes.entrySet().iterator(); iterMode.hasNext();) {
-            final Map.Entry entryMode = (Map.Entry)iterMode.next();
-            final String modeName = (String)entryMode.getKey();
-            final int mode = ((Integer)entryMode.getValue()).intValue();
-            for (final Iterator iterFormat = formats.entrySet().iterator(); iterFormat.hasNext();) {
-                final Map.Entry entryFormat = (Map.Entry)iterFormat.next();
-                final String formatName = (String)entryFormat.getKey();
-                final JsonWriter.Format format = (JsonWriter.Format)entryFormat.getValue();
-                for (final Iterator iterTarget = targets.entrySet().iterator(); iterTarget.hasNext();) {
-                    final Map.Entry entryTarget = (Map.Entry)iterTarget.next();
-                    final String targetName = (String)entryTarget.getKey();
+        for (final Map.Entry<String, Integer> entryMode : modes.entrySet()) {
+            final String modeName = entryMode.getKey();
+            final int mode = entryMode.getValue().intValue();
+            for (final Map.Entry<String, JsonWriter.Format> entryFormat : formats.entrySet()) {
+                final String formatName = entryFormat.getKey();
+                final JsonWriter.Format format = entryFormat.getValue();
+                for (final Map.Entry<String, Object> entryTarget : targets.entrySet()) {
+                    final String targetName = entryTarget.getKey();
                     final Object target = entryTarget.getValue();
                     final String name = modeName + formatName + targetName;
-                    final String result = ((String)results.get(name)).replace('\'', '"');
+                    final String result = results.get(name).replace('\'', '"');
 
                     suite.addTest(new JsonWriterFormatTest(name, target, result, mode, format));
                 }

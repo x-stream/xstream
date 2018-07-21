@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 22. June 2006 by Mauro Talevi
  */
 package com.thoughtworks.xstream.io.json;
@@ -40,28 +40,25 @@ import junit.framework.TestCase;
 
 
 /**
- * Some of these test cases are taken from example JSON listed at
- * http://www.json.org/example.html
- * 
+ * Some of these test cases are taken from example JSON listed at http://www.json.org/example.html
+ *
  * @author Paul Hammant
  * @author J&ouml;rg Schaible
  */
 public class JsonHierarchicalStreamDriverTest extends TestCase {
     protected XStream xstream;
 
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         xstream = new XStream(createDriver());
     }
-    
+
     protected JsonHierarchicalStreamDriver createDriver() {
         return new JsonHierarchicalStreamDriver();
     }
-    
-    protected String normalizeExpectation(String expected) {
+
+    protected String normalizeExpectation(final String expected) {
         return expected.replace('\'', '"');
     }
 
@@ -69,7 +66,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         try {
             new JsonHierarchicalStreamDriver().createReader((Reader)null);
             fail("should have barfed");
-        } catch (UnsupportedOperationException uoe) {
+        } catch (final UnsupportedOperationException uoe) {
             // expected
         }
     }
@@ -78,14 +75,14 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         try {
             new JsonHierarchicalStreamDriver().createReader((InputStream)null);
             fail("should have barfed");
-        } catch (UnsupportedOperationException uoe) {
+        } catch (final UnsupportedOperationException uoe) {
             // expected
         }
     }
 
     public void testCanMarshalSimpleTypes() {
 
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'innerMessage': {\n"
             + "  'long1': 5,\n"
             + "  'long2': 42,\n"
@@ -121,7 +118,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         xstream.alias("innerMessage", Message.class);
 
-        Message message = new Message("hello");
+        final Message message = new Message("hello");
         message.long1 = 5L;
         message.long2 = new Long(42);
         message.int1 = 2;
@@ -139,10 +136,9 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         message.double1 = 2.1;
         message.double2 = new Double(2.2);
         message.bigInt = new BigInteger(new byte[]{(byte)1, (byte)0xFF});
-        message.bigDec = new BigDecimal(314).divide(
-            new BigDecimal(100), 2, BigDecimal.ROUND_FLOOR);
+        message.bigDec = new BigDecimal(314).divide(new BigDecimal(100), 2, BigDecimal.ROUND_FLOOR);
 
-        Message message2 = new Message("bonjour");
+        final Message message2 = new Message("bonjour");
         message2.int1 = 3;
 
         message.innerMessage = message2;
@@ -172,7 +168,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         BigDecimal bigDec;
         Message innerMessage;
 
-        public Message(String greeting) {
+        public Message(final String greeting) {
             this.greeting = greeting;
         }
     }
@@ -198,7 +194,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         + "        'value': 'Close',\n"
         + "        'onclick': 'CloseDoc()'\n"
         + "      }";
-    protected String expectedMenuEnd = "" + "    ]\n" + "  }\n" + "}}";
+    protected String expectedMenuEnd = "" //
+        + "    ]\n"
+        + "  }\n"
+        + "}}";
     protected String expected = "" //
         + expectedMenuStart
         + "\n"
@@ -207,7 +206,8 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         + expectedOpen
         + ",\n"
         + expectedClose
-        + "\n" + expectedMenuEnd;
+        + "\n"
+        + expectedMenuEnd;
 
     public void testCanMarshalLists() {
 
@@ -216,7 +216,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xstream.alias("menu", MenuWithList.class);
         xstream.alias("menuitem", MenuItem.class);
 
-        MenuWithList menu = new MenuWithList();
+        final MenuWithList menu = new MenuWithList();
 
         assertEquals(normalizeExpectation(expected), xstream.toXML(menu));
     }
@@ -226,7 +226,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xstream.alias("menu", MenuWithArray.class);
         xstream.alias("menuitem", MenuItem.class);
 
-        MenuWithArray menu = new MenuWithArray();
+        final MenuWithArray menu = new MenuWithArray();
 
         assertEquals(normalizeExpectation(expected), xstream.toXML(menu));
     }
@@ -238,9 +238,9 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xstream.alias("menu", MenuWithSet.class);
         xstream.alias("menuitem", MenuItem.class);
 
-        MenuWithSet menu = new MenuWithSet();
+        final MenuWithSet menu = new MenuWithSet();
 
-        String json = xstream.toXML(menu);
+        final String json = xstream.toXML(menu);
         assertTrue(json.startsWith(normalizeExpectation(expectedMenuStart)));
         assertTrue(json.indexOf(expectedNew.replace('\'', '"')) > 0);
         assertTrue(json.indexOf(expectedOpen.replace('\'', '"')) > 0);
@@ -255,9 +255,9 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public static class PopupWithList {
-        List menuitem;
+        List<MenuItem> menuitem;
         {
-            menuitem = new ArrayList();
+            menuitem = new ArrayList<MenuItem>();
             menuitem.add(new MenuItem("New", "CreateNewDoc()"));
             menuitem.add(new MenuItem("Open", "OpenDoc()"));
             menuitem.add(new MenuItem("Close", "CloseDoc()"));
@@ -272,8 +272,8 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
     public static class PopupWithArray {
         MenuItem[] menuitem = new MenuItem[]{
-            new MenuItem("New", "CreateNewDoc()"), new MenuItem("Open", "OpenDoc()"),
-            new MenuItem("Close", "CloseDoc()")};
+            new MenuItem("New", "CreateNewDoc()"), new MenuItem("Open", "OpenDoc()"), new MenuItem("Close",
+                "CloseDoc()")};
     }
 
     public static class MenuWithSet {
@@ -283,9 +283,9 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public static class PopupWithSet {
-        Set menuitem;
+        Set<MenuItem> menuitem;
         {
-            menuitem = new HashSet();
+            menuitem = new HashSet<MenuItem>();
             menuitem.add(new MenuItem("New", "CreateNewDoc()"));
             menuitem.add(new MenuItem("Open", "OpenDoc()"));
             menuitem.add(new MenuItem("Close", "CloseDoc()"));
@@ -297,11 +297,12 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         public String value; // assume unique
         public String onclick;
 
-        public MenuItem(String value, String onclick) {
+        public MenuItem(final String value, final String onclick) {
             this.value = value;
             this.onclick = onclick;
         }
 
+        @Override
         public int hashCode() {
             return value.hashCode();
         }
@@ -312,7 +313,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         // This also from http://www.expected.org/example.html
 
-        String expected = normalizeExpectation("" // 
+        final String expected = normalizeExpectation("" //
             + "{'widget': {\n"
             + "  'debug': 'on',\n"
             + "  'window': {\n"
@@ -345,7 +346,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xstream.alias("image", Image.class);
         xstream.alias("text", Text.class);
 
-        Widget widget = new Widget();
+        final Widget widget = new Widget();
 
         assertEquals(expected, xstream.toXML(widget));
 
@@ -385,8 +386,8 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public void testColor() {
-        Color color = Color.black;
-        String expected = normalizeExpectation("" // 
+        final Color color = Color.black;
+        final String expected = normalizeExpectation("" //
             + "{'awt-color': {\n"
             + "  'red': 0,\n"
             + "  'green': 0,\n"
@@ -397,9 +398,8 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public void testDoesHandleQuotesAndEscapes() {
-        String[] strings = new String[]{
-            "last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
-        String expected = normalizeExpectation(""
+        final String[] strings = new String[]{"last\"", "\"first", "\"between\"", "around \"\" it", "back\\slash",};
+        final String expected = normalizeExpectation(""
             + "{'string-array': [\n"
             + "  'last\\\"',\n"
             + "  '\\\"first',\n"
@@ -411,28 +411,28 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public void testDoesEscapeValuesAccordingRfc4627() {
-        String expected = normalizeExpectation("{'string': '\\u0000\\u0001\\u001f \uffee'}");
+        final String expected = normalizeExpectation("{'string': '\\u0000\\u0001\\u001f \uffee'}");
         assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
     }
 
     public void testSimpleInteger() {
-        String expected = normalizeExpectation("{'int': 123}");
+        final String expected = normalizeExpectation("{'int': 123}");
         assertEquals(expected, xstream.toXML(new Integer(123)));
     }
 
     public void testBracesAndSquareBracketsAreNotEscaped() {
-        String expected = normalizeExpectation("{'string': '..{}[],,'}");
+        final String expected = normalizeExpectation("{'string': '..{}[],,'}");
         assertEquals(expected, xstream.toXML("..{}[],,"));
     }
 
     public void testCanMarshalSimpleTypesWithNullMembers() {
-        Msg message = new Msg("hello");
-        Msg message2 = new Msg(null);
+        final Msg message = new Msg("hello");
+        final Msg message2 = new Msg(null);
         message.innerMessage = message2;
 
         xstream.alias("innerMessage", Msg.class);
 
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'innerMessage': {\n"
             + "  'greeting': 'hello',\n"
             + "  'innerMessage': {}\n"
@@ -444,7 +444,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         String greeting;
         Msg innerMessage;
 
-        public Msg(String greeting) {
+        public Msg(final String greeting) {
             this.greeting = greeting;
         }
     }
@@ -452,7 +452,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testCanMarshalElementWithEmptyArray() {
         xstream.alias("element", ElementWithEmptyArray.class);
 
-        String expected = normalizeExpectation("" // 
+        final String expected = normalizeExpectation("" //
             + "{'element': {\n"
             + "  'array': []\n"
             + "}}");
@@ -464,39 +464,41 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     public void testCanMarshalJavaMap() {
-        String entry1 = "" // entry 1
+        final String entry1 = "" // entry 1
             + "  [\n"
             + "    'one',\n"
             + "    1\n"
             + "  ]";
-        String entry2 = "" // entry 2
+        final String entry2 = "" // entry 2
             + "  [\n"
             + "    'two',\n"
             + "    2\n"
             + "  ]";
 
-        final Map map = new HashMap();
+        final Map<String, Integer> map = new HashMap<String, Integer>();
         map.put("one", new Integer(1));
         map.put("two", new Integer(2));
-        String actual = xstream.toXML(map);
-        int idx1 = actual.indexOf("one");
-        int idx2 = actual.indexOf("two");
+        final String actual = xstream.toXML(map);
+        final int idx1 = actual.indexOf("one");
+        final int idx2 = actual.indexOf("two");
 
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'map': [\n"
-            + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
-            + ((idx1 < idx2 ? entry2 : entry1) + "\n") // no comma
-        + "]}");
+            + (idx1 < idx2 ? entry1 : entry2)
+            + ",\n"
+            + (idx1 < idx2 ? entry2 : entry1)
+            + "\n" // no comma
+            + "]}");
         assertEquals(expected, actual);
     }
 
     public void testCanMarshalProperties() {
-        String entry1 = "" // entry 1
+        final String entry1 = "" // entry 1
             + "  {\n"
             + "    '@name': 'one',\n"
             + "    '@value': '1'\n"
             + "  }";
-        String entry2 = "" // entry 2
+        final String entry2 = "" // entry 2
             + "  {\n"
             + "    '@name': 'two',\n"
             + "    '@value': '2'\n"
@@ -505,59 +507,63 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         final Properties properties = new Properties();
         properties.setProperty("one", "1");
         properties.setProperty("two", "2");
-        String actual = xstream.toXML(properties);
-        int idx1 = actual.indexOf("one");
-        int idx2 = actual.indexOf("two");
+        final String actual = xstream.toXML(properties);
+        final int idx1 = actual.indexOf("one");
+        final int idx2 = actual.indexOf("two");
 
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'properties': [\n"
-            + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
-            + ((idx1 < idx2 ? entry2 : entry1) + "\n") // no comma
-        + "]}");
+            + (idx1 < idx2 ? entry1 : entry2)
+            + ",\n"
+            + (idx1 < idx2 ? entry2 : entry1)
+            + "\n" // no comma
+            + "]}");
         assertEquals(expected, actual);
     }
 
-    final static class MapHolder {
-        private Map map = new HashMap();
+    final static class MapHolder<K, V> {
+        private final Map<K, V> map = new HashMap<K, V>();
     }
 
     public void testCanMarshalNestedMap() {
         xstream.alias("holder", MapHolder.class);
-        String entry1 = "" // entry 1
+        final String entry1 = "" // entry 1
             + "    [\n"
             + "      'one',\n"
             + "      1\n"
             + "    ]";
-        String entry2 = "" // entry 2
+        final String entry2 = "" // entry 2
             + "    [\n"
             + "      'two',\n"
             + "      2\n"
             + "    ]";
 
-        final MapHolder holder = new MapHolder();
+        final MapHolder<String, Integer> holder = new MapHolder<String, Integer>();
         holder.map.put("one", new Integer(1));
         holder.map.put("two", new Integer(2));
-        String actual = xstream.toXML(holder);
-        int idx1 = actual.indexOf("one");
-        int idx2 = actual.indexOf("two");
+        final String actual = xstream.toXML(holder);
+        final int idx1 = actual.indexOf("one");
+        final int idx2 = actual.indexOf("two");
 
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'holder': {\n"
             + "  'map': [\n"
-            + ((idx1 < idx2 ? entry1 : entry2) + ",\n")
-            + ((idx1 < idx2 ? entry2 : entry1) + "\n")
+            + (idx1 < idx2 ? entry1 : entry2)
+            + ",\n"
+            + (idx1 < idx2 ? entry2 : entry1)
+            + "\n"
             + "  ]\n" // no comma
-        + "}}");
+            + "}}");
         assertEquals(expected, actual);
     }
 
-    static class CollectionKeeper {
-        Collection coll = new ArrayList();
+    static class CollectionKeeper<E> {
+        Collection<E> coll = new ArrayList<E>();
     }
 
     public void testIgnoresAttributeForCollectionMember() {
         xstream.alias("keeper", CollectionKeeper.class);
-        String expected = normalizeExpectation("" //
+        final String expected = normalizeExpectation("" //
             + "{'keeper': {\n"
             + "  'coll': [\n"
             + "    'one',\n"
@@ -565,7 +571,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "  ]\n"
             + "}}");
 
-        final CollectionKeeper holder = new CollectionKeeper();
+        final CollectionKeeper<String> holder = new CollectionKeeper<String>();
         holder.coll.add("one");
         holder.coll.add("two");
         assertEquals(expected, xstream.toXML(holder));
@@ -576,7 +582,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         xstream.alias("window", Window.class);
         xstream.useAttributeFor("width", int.class);
         xstream.useAttributeFor("height", int.class);
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'window': {\n"
             + "  '@width': '500',\n"
             + "  '@height': '500',\n"
@@ -593,12 +599,12 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         String firstName;
         String lastName;
         Calendar dateOfBirth;
-        Map titles = new TreeMap();
+        Map<String, String> titles = new TreeMap<String, String>();
     }
 
     public void testCanWriteEmbeddedCalendar() {
         xstream.alias("person", Person.class);
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'list': [\n"
             + "  {\n"
             + "    'firstName': 'Joe',\n"
@@ -616,14 +622,14 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "  }\n"
             + "]}");
 
-        Person person = new Person();
+        final Person person = new Person();
         person.firstName = "Joe";
         person.lastName = "Walnes";
         person.dateOfBirth = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
         person.dateOfBirth.clear();
         person.dateOfBirth.set(1900, Calendar.DECEMBER, 31);
         person.titles.put("1", "Mr");
-        List list = new ArrayList();
+        final List<Person> list = new ArrayList<Person>();
         list.add(person);
         assertEquals(expected, xstream.toXML(list));
     }
@@ -635,57 +641,57 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
     public void testSupportsAllConvertersWithASingleValue() throws MalformedURLException {
         xstream.alias("sv", SingleValue.class);
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'sv': {\n"
             + "  'l': 4711,\n"
             + "  'url': 'http://localhost:8888'\n"
             + "}}");
 
-        SingleValue value = new SingleValue();
+        final SingleValue value = new SingleValue();
         value.l = 4711;
         value.url = new URL("http://localhost:8888");
         assertEquals(expected, xstream.toXML(value));
     }
-    
+
     static class SystemAttributes {
         String name;
         Object object;
         Original original;
     }
-    
+
     public void testWillWriteTagValueAsDefaultValueIfNecessary() {
         xstream.alias("sa", SystemAttributes.class);
         xstream.alias("original", Original.class);
         xstream.alias("replaced", Replaced.class);
 
-        SystemAttributes sa = new SystemAttributes();
+        final SystemAttributes sa = new SystemAttributes();
         sa.name = "joe";
         sa.object = "walnes";
         sa.original = new Original("hello world");
 
-        String expected = normalizeExpectation(""
-                + "{'sa': {\n"
-                + "  'name': 'joe',\n"
-                + "  'object': {\n"
-                + "    '@class': 'string',\n"
-                + "    '$': 'walnes'\n" 
-                +"  },\n"
-                + "  'original': {\n"
-                + "    '@resolves-to': 'replaced',\n"
-                + "    'replacedValue': 'HELLO WORLD'\n"
-                + "  }\n"
-                + "}}");
+        final String expected = normalizeExpectation(""
+            + "{'sa': {\n"
+            + "  'name': 'joe',\n"
+            + "  'object': {\n"
+            + "    '@class': 'string',\n"
+            + "    '$': 'walnes'\n"
+            + "  },\n"
+            + "  'original': {\n"
+            + "    '@resolves-to': 'replaced',\n"
+            + "    'replacedValue': 'HELLO WORLD'\n"
+            + "  }\n"
+            + "}}");
 
         assertEquals(expected, xstream.toXML(sa));
     }
-    
+
     public void testRealTypeIsHonoredWhenWritingTheValue() {
         xstream.alias("sa", SystemAttributes.class);
 
-        List list = new ArrayList();
+        final List<String> list = new ArrayList<String>();
         list.add("joe");
         list.add("mauro");
-        SystemAttributes[] sa = new SystemAttributes[2];
+        final SystemAttributes[] sa = new SystemAttributes[2];
         sa[0] = new SystemAttributes();
         sa[0].name = "year";
         sa[0].object = new Integer(2000);
@@ -693,32 +699,32 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         sa[1].name = "names";
         sa[1].object = list;
 
-        String expected = normalizeExpectation(""
-                + "{'sa-array': [\n"
-                + "  {\n"
-                + "    'name': 'year',\n"
-                + "    'object': {\n"
-                + "      '@class': 'int',\n"
-                + "      '$': 2000\n" 
-                + "    }\n"
-                + "  },\n"
-                + "  {\n"
-                + "    'name': 'names',\n"
-                + "    'object': [\n"
-                + "      'joe',\n" 
-                + "      'mauro'\n" 
-                + "    ]\n"
-                + "  }\n"
-                + "]}");
+        final String expected = normalizeExpectation(""
+            + "{'sa-array': [\n"
+            + "  {\n"
+            + "    'name': 'year',\n"
+            + "    'object': {\n"
+            + "      '@class': 'int',\n"
+            + "      '$': 2000\n"
+            + "    }\n"
+            + "  },\n"
+            + "  {\n"
+            + "    'name': 'names',\n"
+            + "    'object': [\n"
+            + "      'joe',\n"
+            + "      'mauro'\n"
+            + "    ]\n"
+            + "  }\n"
+            + "]}");
 
         assertEquals(expected, xstream.toXML(sa));
     }
 
     public void testCanMarshalExternalizable() {
         xstream.alias("ext", SomethingExternalizable.class);
-        
-        SomethingExternalizable in = new SomethingExternalizable("Joe", "Walnes");
-        String expected = normalizeExpectation(""
+
+        final SomethingExternalizable in = new SomethingExternalizable("Joe", "Walnes");
+        final String expected = normalizeExpectation(""
             + "{'ext': [\n"
             + "  3,\n"
             + "  'JoeWalnes',\n"
@@ -731,10 +737,10 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
     public void testCanMarshalEmbeddedExternalizable() {
         xstream.alias("owner", OwnerOfExternalizable.class);
-        
-        OwnerOfExternalizable in = new OwnerOfExternalizable();
+
+        final OwnerOfExternalizable in = new OwnerOfExternalizable();
         in.target = new SomethingExternalizable("Joe", "Walnes");
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'owner': {\n"
             + "  'target': [\n"
             + "    3,\n"

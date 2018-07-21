@@ -1,14 +1,18 @@
 /*
- * Copyright (C) 2008, 2011, 2012 XStream Committers.
+ * Copyright (C) 2008, 2011, 2012, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 06. November 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.json;
+
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.thoughtworks.acceptance.objects.Original;
 import com.thoughtworks.acceptance.objects.Replaced;
@@ -16,20 +20,16 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
- * Some of these test cases are taken from example JSON listed at
- * http://www.json.org/example.html
- * 
+ * Some of these test cases are taken from example JSON listed at http://www.json.org/example.html
+ *
  * @author Paul Hammant
  * @author J&ouml;rg Schaible
  */
 public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriverTest {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         xstream.aliasSystemAttribute(null, "class");
@@ -37,21 +37,25 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
         xstream.aliasSystemAttribute(null, "defined-in");
     }
 
+    @Override
     protected JsonHierarchicalStreamDriver createDriver() {
         return new JsonHierarchicalStreamDriver() {
 
-            public HierarchicalStreamWriter createWriter(Writer out) {
+            @SuppressWarnings("static-access")
+            @Override
+            public HierarchicalStreamWriter createWriter(final Writer out) {
                 // no root and allow invalid JSON for single values as root object
                 return new JsonWriter(out, JsonWriter.DROP_ROOT_MODE);
             }
         };
     }
 
+    @Override
     protected String normalizeExpectation(final String expected) {
-        return super.normalizeExpectation(expected.substring(
-            expected.indexOf(": ") + 2, expected.length() - 1));
+        return super.normalizeExpectation(expected.substring(expected.indexOf(": ") + 2, expected.length() - 1));
     }
 
+    @Override
     public void testCanMarshalSets() {
         // This from http://www.json.org/example.html
         xstream.alias("menu", MenuWithSet.class);
@@ -64,29 +68,30 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
         assertTrue(json.indexOf(expectedNew.replace('\'', '"')) > 0);
         assertTrue(json.indexOf(expectedOpen.replace('\'', '"')) > 0);
         assertTrue(json.indexOf(expectedClose.replace('\'', '"')) > 0);
-        assertTrue(json.endsWith(expectedMenuEnd.replace('\'', '"').substring(
-            0, expectedMenuEnd.length() - 1)));
+        assertTrue(json.endsWith(expectedMenuEnd.replace('\'', '"').substring(0, expectedMenuEnd.length() - 1)));
     }
 
+    @Override
     public void testBracesAndSquareBracketsAreNotEscaped() {
-        final String expected = ("" // 
+        final String expected = ("" //
             + "[\n"
             + "  '..{}[],,'\n"
             + "]").replace('\'', '"');
         assertEquals(expected, xstream.toXML(new String[]{"..{}[],,"}));
     }
 
+    @Override
     public void testWillWriteTagValueAsDefaultValueIfNecessary() {
         xstream.alias("sa", SystemAttributes.class);
         xstream.alias("original", Original.class);
         xstream.alias("replaced", Replaced.class);
 
-        SystemAttributes sa = new SystemAttributes();
+        final SystemAttributes sa = new SystemAttributes();
         sa.name = "joe";
         sa.object = "walnes";
         sa.original = new Original("hello world");
 
-        String expected = normalizeExpectation(""
+        final String expected = normalizeExpectation(""
             + "{'sa': {\n"
             + "  'name': 'joe',\n"
             + "  'object': 'walnes',\n"
@@ -98,13 +103,14 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
         assertEquals(expected, xstream.toXML(sa));
     }
 
+    @Override
     public void testRealTypeIsHonoredWhenWritingTheValue() {
         xstream.alias("sa", SystemAttributes.class);
 
-        List list = new ArrayList();
+        final List<String> list = new ArrayList<String>();
         list.add("joe");
         list.add("mauro");
-        SystemAttributes[] sa = new SystemAttributes[2];
+        final SystemAttributes[] sa = new SystemAttributes[2];
         sa[0] = new SystemAttributes();
         sa[0].name = "year";
         sa[0].object = new Integer(2000);
@@ -112,20 +118,20 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
         sa[1].name = "names";
         sa[1].object = list;
 
-        String expected = normalizeExpectation(""
-                + "{'sa-array': [\n"
-                + "  {\n"
-                + "    'name': 'year',\n"
-                + "    'object': 2000\n" 
-                + "  },\n"
-                + "  {\n"
-                + "    'name': 'names',\n"
-                + "    'object': [\n"
-                + "      'joe',\n" 
-                + "      'mauro'\n" 
-                + "    ]\n"
-                + "  }\n"
-                + "]}");
+        final String expected = normalizeExpectation(""
+            + "{'sa-array': [\n"
+            + "  {\n"
+            + "    'name': 'year',\n"
+            + "    'object': 2000\n"
+            + "  },\n"
+            + "  {\n"
+            + "    'name': 'names',\n"
+            + "    'object': [\n"
+            + "      'joe',\n"
+            + "      'mauro'\n"
+            + "    ]\n"
+            + "  }\n"
+            + "]}");
 
         assertEquals(expected, xstream.toXML(sa));
     }
@@ -133,7 +139,9 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
     public void testStrictJSON() {
         xstream = new XStream(new JsonHierarchicalStreamDriver() {
 
-            public HierarchicalStreamWriter createWriter(Writer out) {
+            @SuppressWarnings("static-access")
+            @Override
+            public HierarchicalStreamWriter createWriter(final Writer out) {
                 // do not allow invalid JSON
                 return new JsonWriter(out, JsonWriter.DROP_ROOT_MODE | JsonWriter.STRICT_MODE);
             }
