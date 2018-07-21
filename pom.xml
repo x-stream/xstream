@@ -918,13 +918,6 @@
         </configuration>
       </plugin>
     </plugins>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav</artifactId>
-        <version>${version.org.apache.maven.wagon.webdev}</version>
-      </extension>
-    </extensions>
   </build>
 
   <distributionManagement>
@@ -979,8 +972,6 @@
     <version.plugin.mojo.build-helper>1.5</version.plugin.mojo.build-helper>
     <version.plugin.mojo.cobertura>2.7</version.plugin.mojo.cobertura>
     <version.plugin.eluder.coveralls>4.2.0</version.plugin.eluder.coveralls>
-
-    <version.org.apache.maven.wagon.webdev>1.0-beta-2</version.org.apache.maven.wagon.webdev>
 
     <version.cglib.nodep>2.2</version.cglib.nodep>
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
