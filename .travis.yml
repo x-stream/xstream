@@ -17,7 +17,7 @@ script:
       unzip -qq ./target/apache-maven-3.2.5-bin.zip -d ./target;
       export M2_HOME=$PWD/target/apache-maven-3.2.5;
       export PATH=$M2_HOME/bin:$JAVA_HOME/bin:$PATH;
-      export SETTINGS="-f .travis.settings.xml";
+      export SETTINGS="-s .travis.settings.xml";
     fi;
     if [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ]; then
       mkdir -p xstream/profiles/coveralls;
