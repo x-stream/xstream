@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,25 +19,5 @@ package com.thoughtworks.xstream.converters.extended;
  * @deprecated As of 1.4.8, it is an internal helper class
  */
 @Deprecated
-public class StackTraceElementFactory {
-
-    public StackTraceElement nativeMethodElement(String declaringClass, String methodName) {
-        return create(declaringClass, methodName, "Native Method", -2);
-    }
-
-    public StackTraceElement unknownSourceElement(String declaringClass, String methodName) {
-        return create(declaringClass, methodName, "Unknown Source", -1);
-    }
-
-    public StackTraceElement element(String declaringClass, String methodName, String fileName) {
-        return create(declaringClass, methodName, fileName, -1);
-    }
-
-    public StackTraceElement element(String declaringClass, String methodName, String fileName, int lineNumber) {
-        return create(declaringClass, methodName, fileName, lineNumber);
-    }
-
-    private StackTraceElement create(String declaringClass, String methodName, String fileName, int lineNumber) {
-        return new StackTraceElement(declaringClass, methodName, fileName, lineNumber);
-    }
+public class StackTraceElementFactory extends StackTraceElementConverter.StackTraceElementFactory {
 }

@@ -20,7 +20,8 @@ import com.thoughtworks.acceptance.AbstractAcceptanceTest;
  */
 public class StackTraceElementConverterTest extends AbstractAcceptanceTest {
 
-    private final StackTraceElementFactory factory = new StackTraceElementFactory();
+    private final StackTraceElementConverter.StackTraceElementFactory factory =
+            new StackTraceElementConverter.StackTraceElementFactory();
 
     public void testSerializesStackTraceElement() {
         final StackTraceElement trace = factory.unknownSourceElement("com.blah.SomeClass", "someMethod");
