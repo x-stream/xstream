@@ -37,7 +37,7 @@
 
   <profiles>
     <profile>
-      <id>jdk9ge</id>
+      <id>jdk9-ge</id>
       <activation>
         <jdk>[9,</jdk>
       </activation>
@@ -49,7 +49,7 @@
       </properties>
     </profile>
     <profile>
-      <id>jdk18ge</id>
+      <id>jdk18-ge</id>
       <activation>
         <jdk>[1.8,)</jdk>
       </activation>
