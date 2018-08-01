@@ -178,6 +178,7 @@
             <configuration>
               <instructions combine.children="append">
                 <Export-Package>${bundle.export.package}</Export-Package>
+                <Import-Package>${bundle.import.package}</Import-Package>
               </instructions>
             </configuration>
           </plugin>
@@ -202,6 +203,7 @@
       </build>
       <properties>
         <bundle.export.package>${project.groupId}.*;-noimport:=true</bundle.export.package>
+        <bundle.import.package>*</bundle.import.package>
       </properties>
     </profile>
     <profile>
