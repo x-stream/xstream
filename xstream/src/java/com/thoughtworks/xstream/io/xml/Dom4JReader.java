@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,8 @@ package com.thoughtworks.xstream.io.xml;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 import java.util.List;
+
+import org.dom4j.Branch;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -21,7 +23,14 @@ public class Dom4JReader extends AbstractDocumentReader {
 
     private Element currentElement;
 
-    public Dom4JReader(Element rootElement) {
+    /**
+     * @since upcoming
+     */
+    public Dom4JReader(final Branch branch) {
+        this(branch instanceof Element ? (Element)branch : ((Document)branch).getRootElement());
+    }
+
+    public Dom4JReader(final Element rootElement) {
         this(rootElement, new XmlFriendlyNameCoder());
     }
 
