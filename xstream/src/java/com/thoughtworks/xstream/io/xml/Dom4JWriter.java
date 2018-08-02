@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,7 +18,7 @@ import org.dom4j.Element;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
-public class Dom4JWriter extends AbstractDocumentWriter {
+public class Dom4JWriter extends AbstractDocumentWriter<Branch, Element> {
 
     private final DocumentFactory documentFactory;
 
@@ -90,7 +90,7 @@ public class Dom4JWriter extends AbstractDocumentWriter {
     }
 
     @Override
-    protected Object createNode(final String name) {
+    protected Element createNode(final String name) {
         final Element element = documentFactory.createElement(encodeNode(name));
         final Branch top = top();
         if (top != null) {
@@ -110,6 +110,6 @@ public class Dom4JWriter extends AbstractDocumentWriter {
     }
 
     private Branch top() {
-        return (Branch)getCurrent();
+        return getCurrent();
     }
 }

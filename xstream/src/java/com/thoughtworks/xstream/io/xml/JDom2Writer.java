@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014 XStream Committers.
+ * Copyright (C) 2013, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 /**
  * @since 1.4.5
  */
-public class JDom2Writer extends AbstractDocumentWriter {
+public class JDom2Writer extends AbstractDocumentWriter<Element, Element> {
 
     private final JDOMFactory documentFactory;
 
@@ -75,7 +75,7 @@ public class JDom2Writer extends AbstractDocumentWriter {
     }
 
     @Override
-    protected Object createNode(final String name) {
+    protected Element createNode(final String name) {
         final Element element = documentFactory.element(encodeNode(name));
         final Element parent = top();
         if (parent != null) {
@@ -98,6 +98,6 @@ public class JDom2Writer extends AbstractDocumentWriter {
      * @since 1.4.5
      */
     private Element top() {
-        return (Element)getCurrent();
+        return getCurrent();
     }
 }

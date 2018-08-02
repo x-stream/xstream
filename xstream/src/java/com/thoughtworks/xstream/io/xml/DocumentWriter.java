@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author J&ouml;rg Schaible
  * @since 1.2.1
  */
-public interface DocumentWriter extends HierarchicalStreamWriter {
+public interface DocumentWriter<E> extends HierarchicalStreamWriter {
 
     /**
      * Retrieve a {@link List} with the top elements.
@@ -35,5 +35,5 @@ public interface DocumentWriter extends HierarchicalStreamWriter {
      * @return a {@link List} with top nodes
      * @since 1.2.1
      */
-    List<Object> getTopLevelNodes();
+    List<E> getTopLevelNodes();
 }

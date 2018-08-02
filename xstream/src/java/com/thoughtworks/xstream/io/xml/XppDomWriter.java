@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 
-public class XppDomWriter extends AbstractDocumentWriter {
+public class XppDomWriter extends AbstractDocumentWriter<XppDom, XppDom> {
     public XppDomWriter() {
         this(null, new XmlFriendlyNameCoder());
     }
@@ -60,11 +60,11 @@ public class XppDomWriter extends AbstractDocumentWriter {
     }
 
     public XppDom getConfiguration() {
-        return (XppDom)getTopLevelNodes().get(0);
+        return getTopLevelNodes().get(0);
     }
 
     @Override
-    protected Object createNode(final String name) {
+    protected XppDom createNode(final String name) {
         final XppDom newNode = new XppDom(encodeNode(name));
         final XppDom top = top();
         if (top != null) {
@@ -84,6 +84,6 @@ public class XppDomWriter extends AbstractDocumentWriter {
     }
 
     private XppDom top() {
-        return (XppDom)getCurrent();
+        return getCurrent();
     }
 }

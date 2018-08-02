@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,7 +17,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 
 
-public class XomWriter extends AbstractDocumentWriter {
+public class XomWriter extends AbstractDocumentWriter<Element, Element> {
 
     /**
      * @since 1.2.1
@@ -47,7 +47,7 @@ public class XomWriter extends AbstractDocumentWriter {
     }
 
     @Override
-    protected Object createNode(final String name) {
+    protected Element createNode(final String name) {
         final Element newNode = new Element(encodeNode(name));
         final Element top = top();
         if (top != null) {
@@ -67,6 +67,6 @@ public class XomWriter extends AbstractDocumentWriter {
     }
 
     private Element top() {
-        return (Element)getCurrent();
+        return getCurrent();
     }
 }
