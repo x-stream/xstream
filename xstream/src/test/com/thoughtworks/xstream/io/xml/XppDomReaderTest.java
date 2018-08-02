@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,8 @@ public class XppDomReaderTest extends AbstractXMLReaderTest {
     }
 
     public void testCanReadFromElementOfLargerDocument() throws Exception {
-        final String xml = "<big>"
+        final String xml = ""
+            + "<big>"
             + "  <small>"
             + "    <tiny/>"
             + "  </small>"
@@ -37,16 +38,13 @@ public class XppDomReaderTest extends AbstractXMLReaderTest {
             + "</big>";
 
         final XppDom document = XppFactory.buildDom(xml);
-
         final XppDom small = document.getChild("small");
 
-        final HierarchicalStreamReader xmlReader = new XppDomReader(small);
-
-        assertEquals("small", xmlReader.getNodeName());
-
-        xmlReader.moveDown();
-
-        assertEquals("tiny", xmlReader.getNodeName());
+        try (final HierarchicalStreamReader xmlReader = new XppDomReader(small)) {
+            assertEquals("small", xmlReader.getNodeName());
+            xmlReader.moveDown();
+            assertEquals("tiny", xmlReader.getNodeName());
+        }
     }
 
     @Override
@@ -54,27 +52,29 @@ public class XppDomReaderTest extends AbstractXMLReaderTest {
 
         // overrides test in superclass, because XppDom does not retain order of actualAttributes.
 
-        final HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
+        try (final HierarchicalStreamReader xmlReader = createReader(
+            "<node hello='world' a='b' c='d'><empty/></node>")) {
 
-        assertEquals(3, xmlReader.getAttributeCount());
+            assertEquals(3, xmlReader.getAttributeCount());
 
-        final Map expectedAttributes = new HashMap();
-        expectedAttributes.put("hello", "world");
-        expectedAttributes.put("a", "b");
-        expectedAttributes.put("c", "d");
+            final Map<String, String> expectedAttributes = new HashMap<>();
+            expectedAttributes.put("hello", "world");
+            expectedAttributes.put("a", "b");
+            expectedAttributes.put("c", "d");
 
-        final Map actualAttributes = new HashMap();
-        for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
-            final String name = xmlReader.getAttributeName(i);
-            final String value = xmlReader.getAttribute(i);
-            actualAttributes.put(name, value);
+            final Map<String, String> actualAttributes = new HashMap<>();
+            for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
+                final String name = xmlReader.getAttributeName(i);
+                final String value = xmlReader.getAttribute(i);
+                actualAttributes.put(name, value);
+            }
+
+            assertEquals(expectedAttributes, actualAttributes);
+
+            xmlReader.moveDown();
+            assertEquals("empty", xmlReader.getNodeName());
+            assertEquals(0, xmlReader.getAttributeCount());
         }
-
-        assertEquals(expectedAttributes, actualAttributes);
-
-        xmlReader.moveDown();
-        assertEquals("empty", xmlReader.getNodeName());
-        assertEquals(0, xmlReader.getAttributeCount());
     }
 
     @Override

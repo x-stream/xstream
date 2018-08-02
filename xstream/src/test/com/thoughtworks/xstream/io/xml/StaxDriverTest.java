@@ -1,26 +1,26 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. July 2006 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml;
-
-import com.bea.xml.stream.MXParserFactory;
-import com.bea.xml.stream.XMLOutputFactoryBase;
-import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.StreamException;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+
+import com.bea.xml.stream.MXParserFactory;
+import com.bea.xml.stream.XMLOutputFactoryBase;
+import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.StreamException;
 
 
 /**
@@ -31,16 +31,18 @@ public class StaxDriverTest extends AbstractAcceptanceTest {
         public boolean createStaxWriterCalled = false;
         public boolean createStaxReaderCalled = false;
 
-        public StaxWriter createStaxWriter(XMLStreamWriter out) throws StreamException {
+        @Override
+        public StaxWriter createStaxWriter(final XMLStreamWriter out) throws StreamException {
             createStaxWriterCalled = true;
             try {
                 return super.createStaxWriter(out);
-            } catch (XMLStreamException e) {
+            } catch (final XMLStreamException e) {
                 throw new StreamException(e);
             }
         }
 
-        public AbstractPullReader createStaxReader(XMLStreamReader in) {
+        @Override
+        public AbstractPullReader createStaxReader(final XMLStreamReader in) {
             createStaxReaderCalled = true;
             return super.createStaxReader(in);
         }

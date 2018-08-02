@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,6 @@ package com.thoughtworks.xstream.io.xml;
 
 import java.io.StringReader;
 
-import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import nu.xom.Builder;
@@ -41,10 +40,11 @@ public class XomReaderTest extends AbstractXMLReaderTest {
         final Document document = new Builder().build(new StringReader(xml));
         final Element element = document.getRootElement().getFirstChildElement("small");
 
-        final HierarchicalStreamReader xmlReader = new XomReader(element);
-        assertEquals("small", xmlReader.getNodeName());
-        xmlReader.moveDown();
-        assertEquals("tiny", xmlReader.getNodeName());
+        try (final HierarchicalStreamReader xmlReader = new XomReader(element)) {
+            assertEquals("small", xmlReader.getNodeName());
+            xmlReader.moveDown();
+            assertEquals("tiny", xmlReader.getNodeName());
+        }
     }
 
     @Override

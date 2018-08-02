@@ -1,27 +1,29 @@
 /*
- * Copyright (C) 2011, 2015, 2016 XStream Committers.
+ * Copyright (C) 2011, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. September 2011 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml;
+
+import java.io.StringReader;
 
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-import java.io.StringReader;
 
 public class Xpp3ReaderTest extends AbstractXMLReaderTest {
-    
-    private HierarchicalStreamDriver driver = new Xpp3Driver();
+
+    private final HierarchicalStreamDriver driver = new Xpp3Driver();
 
     // factory method
-    protected HierarchicalStreamReader createReader(String xml) throws Exception {
+    @Override
+    protected HierarchicalStreamReader createReader(final String xml) throws Exception {
         return driver.createReader(new StringReader(xml));
     }
 

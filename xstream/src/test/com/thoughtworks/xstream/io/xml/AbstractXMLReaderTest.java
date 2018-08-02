@@ -6,18 +6,19 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import junit.framework.TestCase;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 public abstract class AbstractXMLReaderTest extends TestCase {
 
@@ -25,13 +26,13 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     protected abstract HierarchicalStreamReader createReader(String xml) throws Exception;
 
     public void testStartsAtRootTag() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<hello/>");
+        final HierarchicalStreamReader xmlReader = createReader("<hello/>");
         assertEquals("hello", xmlReader.getNodeName());
         xmlReader.close();
     }
 
     public void testCanNavigateDownChildTagsByIndex() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<a><b><ooh/></b><b><aah/></b></a>");
+        final HierarchicalStreamReader xmlReader = createReader("<a><b><ooh/></b><b><aah/></b></a>");
 
         assertEquals(1, xmlReader.getLevel());
         assertEquals("a", xmlReader.getNodeName());
@@ -86,7 +87,8 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testChildTagsCanBeMixedWithOtherNodes() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<!-- xx --><a> <hello/> <!-- x --> getValue <world/></a>");
+        final HierarchicalStreamReader xmlReader = createReader(
+            "<!-- xx --><a> <hello/> <!-- x --> getValue <world/></a>");
 
         assertTrue(xmlReader.hasMoreChildren());
         xmlReader.moveDown();
@@ -103,10 +105,10 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testAttributesCanBeFetchedFromTags() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("" +
-                "<hello one=\"1\" two=\"2\">" +
-                "  <child three=\"3\"/>" +
-                "</hello>"); // /hello
+        final HierarchicalStreamReader xmlReader = createReader(""
+            + "<hello one=\"1\" two=\"2\">"
+            + "  <child three=\"3\"/>"
+            + "</hello>"); // /hello
 
         assertEquals("1", xmlReader.getAttribute("one"));
         assertEquals("2", xmlReader.getAttribute("two"));
@@ -121,8 +123,8 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testTextCanBeExtractedFromTag() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader(
-        	"<root><a>some<!-- ignore me --> getValue!</a><b><![CDATA[more&&more;]]></b></root>");
+        final HierarchicalStreamReader xmlReader = createReader(
+            "<root><a>some<!-- ignore me --> getValue!</a><b><![CDATA[more&&more;]]></b></root>");
 
         xmlReader.moveDown();
         assertEquals("some getValue!", xmlReader.getValue());
@@ -135,23 +137,23 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testDoesNotIgnoreWhitespaceAroundText() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<root> hello world </root>");
+        final HierarchicalStreamReader xmlReader = createReader("<root> hello world </root>");
 
         assertEquals(" hello world ", xmlReader.getValue());
         xmlReader.close();
     }
 
     public void testReturnsEmptyStringForEmptyTags() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<root></root>");
+        final HierarchicalStreamReader xmlReader = createReader("<root></root>");
 
-        String text = xmlReader.getValue();
+        final String text = xmlReader.getValue();
         assertNotNull(text);
         assertEquals("", text);
         xmlReader.close();
     }
 
     public void testReturnsLastResultForHasMoreChildrenIfCalledRepeatedlyWithoutMovingNode() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<row><cells></cells></row>");
+        final HierarchicalStreamReader xmlReader = createReader("<row><cells></cells></row>");
 
         assertEquals("row", xmlReader.getNodeName());
         assertTrue(xmlReader.hasMoreChildren()); // this is OK
@@ -160,7 +162,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testExposesAttributesKeysAndValuesByIndex() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
+        final HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
 
         assertEquals(3, xmlReader.getAttributeCount());
 
@@ -179,25 +181,25 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testExposesAttributesKeysAsIterator() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
+        final HierarchicalStreamReader xmlReader = createReader("<node hello='world' a='b' c='d'><empty/></node>");
 
-        Set<String> expected = new HashSet<>();
+        final Set<String> expected = new HashSet<>();
         expected.add("hello");
         expected.add("a");
         expected.add("c");
 
-        Set<String> actual = new HashSet<>();
+        final Set<String> actual = new HashSet<>();
         Iterator<String> iterator;
 
         iterator = xmlReader.getAttributeNames();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             actual.add(iterator.next());
         }
         assertEquals(expected, actual);
 
-        // again, to check iteration is repeatable 
+        // again, to check iteration is repeatable
         iterator = xmlReader.getAttributeNames();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             actual.add(iterator.next());
         }
         assertEquals(expected, actual);
@@ -205,8 +207,8 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testAllowsValueToBeReadWithoutDisturbingChildren() throws Exception {
-        HierarchicalStreamReader xmlReader
-                = createReader("<root><child></child><sibling>text2</sibling></root>"); // at: /root
+        final HierarchicalStreamReader xmlReader = createReader("<root><child></child><sibling>text2</sibling></root>"); // at:
+                                                                                                                         // /root
 
         assertEquals("root", xmlReader.getNodeName());
         assertEquals("", xmlReader.getValue());
@@ -234,8 +236,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testExposesTextValueOfCurrentElementButNotChildren() throws Exception {
-        HierarchicalStreamReader xmlReader
-                = createReader("<root>hello<child>FNARR</child></root>");
+        final HierarchicalStreamReader xmlReader = createReader("<root>hello<child>FNARR</child></root>");
 
         assertEquals("hello", xmlReader.getValue());
         xmlReader.moveDown();
@@ -245,59 +246,60 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testCanReadLineFeedInString() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<string>a\nb</string>");
+        final HierarchicalStreamReader xmlReader = createReader("<string>a\nb</string>");
         assertEquals("a\nb", xmlReader.getValue());
         xmlReader.close();
     }
 
     public void testCanReadEncodedAttribute() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<string __attr='value'/>");
+        final HierarchicalStreamReader xmlReader = createReader("<string __attr='value'/>");
         assertEquals("value", xmlReader.getAttribute("_attr"));
         xmlReader.close();
     }
 
     public void testCanReadAttributeWithEncodedWhitespace() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<string attr='  A\r\t\nB  C&#x9;&#xa;&#xd;  '/>");
+        final HierarchicalStreamReader xmlReader = createReader("<string attr='  A\r\t\nB  C&#x9;&#xa;&#xd;  '/>");
         assertEquals("  A   B  C\t\n\r  ", xmlReader.getAttribute("attr"));
         xmlReader.close();
     }
 
     public void testCanReadCDATAWithEmbeddedTags() throws Exception {
-        String content = "<tag>the content</tag>";
-        HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
+        final String content = "<tag>the content</tag>";
+        final HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
         assertEquals(content, xmlReader.getValue());
         xmlReader.close();
     }
-    
+
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader(""
-                + "<?xml version=\"1.0\"?>\n"
-                +"<!DOCTYPE root [\n"
-                +"<!ELEMENT string (#PCDATA)>\n"
-                +"<!ENTITY content SYSTEM \"file:src/test/$Package.java\">\n"
-//                +"<!ENTITY content SYSTEM \"file:pom.xml\">\n"
-//                +"<!ENTITY content SYSTEM \"file:/etc/passwd\">\n"
-                +"]><string>&content;</string>");
+        final HierarchicalStreamReader xmlReader = createReader(""
+            + "<?xml version=\"1.0\"?>\n"
+            + "<!DOCTYPE root [\n"
+            + "<!ELEMENT string (#PCDATA)>\n"
+            + "<!ENTITY content SYSTEM \"file:src/test/$Package.java\">\n"
+            // +"<!ENTITY content SYSTEM \"file:pom.xml\">\n"
+            // +"<!ENTITY content SYSTEM \"file:/etc/passwd\">\n"
+            + "]><string>&content;</string>");
         assertEquals("", xmlReader.getValue());
         xmlReader.close();
     }
-    
+
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader(""
+        final HierarchicalStreamReader xmlReader = createReader(""
             + "<?xml version=\"1.0\"?>\n"
-                +"<!DOCTYPE root [\n"
-                +"<!ELEMENT string (#PCDATA)>\n"
-                +"<!ENTITY % content SYSTEM \"file:src/test/$Package.java\">\n"
-//                +"<!ENTITY % content SYSTEM \"file:pom.xml\">\n"
-//                +"<!ENTITY % content SYSTEM \"file:/etc/passwd\">\n"
-                +"%content;\n"
-                +"]><string>test</string>");
+            + "<!DOCTYPE root [\n"
+            + "<!ELEMENT string (#PCDATA)>\n"
+            + "<!ENTITY % content SYSTEM \"file:src/test/$Package.java\">\n"
+            // +"<!ENTITY % content SYSTEM \"file:pom.xml\">\n"
+            // +"<!ENTITY % content SYSTEM \"file:/etc/passwd\">\n"
+            + "%content;\n"
+            + "]><string>test</string>");
         assertEquals("test", xmlReader.getValue());
         xmlReader.close();
     }
-    
+
     public void testCanSkipStructures() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<a><b1><c><string><![CDATA[skip]]></string></c></b1><b2><aah/></b2><b3>OK</b3></a>");
+        final HierarchicalStreamReader xmlReader = createReader(
+            "<a><b1><c><string><![CDATA[skip]]></string></c></b1><b2><aah/></b2><b3>OK</b3></a>");
         xmlReader.moveDown();
         xmlReader.moveDown();
         assertEquals("c", xmlReader.getNodeName());
@@ -328,7 +330,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
 
     // TODO: See XSTR-473
     public void todoTestCanReadNullValueInString() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<string>&#x0;</string>");
+        final HierarchicalStreamReader xmlReader = createReader("<string>&#x0;</string>");
         assertEquals("\u0000", xmlReader.getValue());
         xmlReader.close();
     }

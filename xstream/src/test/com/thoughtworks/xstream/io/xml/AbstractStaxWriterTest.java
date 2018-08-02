@@ -1,24 +1,25 @@
 /*
- * Copyright (C) 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 03. November 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml;
+
+import java.io.StringWriter;
+
+import javax.xml.namespace.QName;
+
+import org.apache.oro.text.perl.Perl5Util;
 
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
 
-import org.apache.oro.text.perl.Perl5Util;
-
-import javax.xml.namespace.QName;
-
-import java.io.StringWriter;
 
 public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
 
@@ -26,11 +27,12 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
     protected Perl5Util perlUtil;
     protected StaxDriver staxDriver;
     private X testInput;
-    
+
     protected abstract String getXMLHeader();
 
     protected abstract StaxDriver getStaxDriver();
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         staxDriver = getStaxDriver();
@@ -47,25 +49,27 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
     }
 
     public void testNamespacedXmlWithPrefix() throws Exception {
-        QNameMap qnameMap = new QNameMap();
-        QName qname = new QName("http://foo.com", "alias", "foo");
+        final QNameMap qnameMap = new QNameMap();
+        final QName qname = new QName("http://foo.com", "alias", "foo");
         qnameMap.registerMapping(qname, X.class);
 
-        String expected = "<foo:alias xmlns:foo=\"http://foo.com\"><aStr xmlns=\"\">zzz</aStr><anInt xmlns=\"\">9</anInt><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></foo:alias>";
+        final String expected =
+                "<foo:alias xmlns:foo=\"http://foo.com\"><aStr xmlns=\"\">zzz</aStr><anInt xmlns=\"\">9</anInt><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></foo:alias>";
         marshalWithBothRepairingModes(qnameMap, expected);
     }
 
     public void testNamespacedXmlWithoutPrefix() throws Exception {
-        QNameMap qnameMap = new QNameMap();
-        QName qname = new QName("http://foo.com", "bar");
+        final QNameMap qnameMap = new QNameMap();
+        final QName qname = new QName("http://foo.com", "bar");
         qnameMap.registerMapping(qname, X.class);
 
-        String expected = "<bar xmlns=\"http://foo.com\"><aStr xmlns=\"\">zzz</aStr><anInt xmlns=\"\">9</anInt><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></bar>";
+        final String expected =
+                "<bar xmlns=\"http://foo.com\"><aStr xmlns=\"\">zzz</aStr><anInt xmlns=\"\">9</anInt><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></bar>";
         marshalWithBothRepairingModes(qnameMap, expected);
     }
 
     public void testNamespacedXmlWithPrefixTwice() throws Exception {
-        QNameMap qnameMap = new QNameMap();
+        final QNameMap qnameMap = new QNameMap();
         QName qname = new QName("http://foo.com", "alias", "foo");
         qnameMap.registerMapping(qname, X.class);
 
@@ -75,29 +79,30 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         qname = new QName("http://bar.com", "alias2", "bar");
         qnameMap.registerMapping(qname, "anInt");
 
-        String expected = "<foo:alias xmlns:foo=\"http://foo.com\"><bar:alias1 xmlns:bar=\"http://bar.com\">zzz</bar:alias1><bar:alias2 xmlns:bar=\"http://bar.com\">9</bar:alias2><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></foo:alias>";
+        final String expected =
+                "<foo:alias xmlns:foo=\"http://foo.com\"><bar:alias1 xmlns:bar=\"http://bar.com\">zzz</bar:alias1><bar:alias2 xmlns:bar=\"http://bar.com\">9</bar:alias2><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></foo:alias>";
         marshalWithBothRepairingModes(qnameMap, expected);
     }
 
-    protected void marshalWithBothRepairingModes(QNameMap qnameMap, String expected) {
+    protected void marshalWithBothRepairingModes(final QNameMap qnameMap, final String expected) {
         marshalNonRepairing(qnameMap, expected);
         marshalRepairing(qnameMap, expected);
     }
 
-    protected void marshalRepairing(QNameMap qnameMap, String expected) {
+    protected void marshalRepairing(final QNameMap qnameMap, final String expected) {
         marshall(qnameMap, true);
         assertXmlProducedIs(expected);
     }
 
-    protected void marshalNonRepairing(QNameMap qnameMap, String expected) {
+    protected void marshalNonRepairing(final QNameMap qnameMap, final String expected) {
         marshall(qnameMap, false);
         assertXmlProducedIs(expected);
     }
 
-    protected void marshall(QNameMap qnameMap, boolean repairNamespaceMode) {
+    protected void marshall(final QNameMap qnameMap, final boolean repairNamespaceMode) {
         staxDriver.setRepairingNamespace(repairNamespaceMode);
         staxDriver.setQnameMap(qnameMap);
-        XStream xstream = new XStream(staxDriver);
+        final XStream xstream = new XStream(staxDriver);
         buffer = new StringWriter();
         xstream.toXML(testInput, buffer);
     }

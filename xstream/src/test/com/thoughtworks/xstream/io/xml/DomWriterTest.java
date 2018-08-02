@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 05. September 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -20,10 +20,12 @@ import org.w3c.dom.Element;
 import com.thoughtworks.xstream.io.copy.HierarchicalStreamCopier;
 import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
-public class DomWriterTest extends AbstractDocumentWriterTest {
+
+public class DomWriterTest extends AbstractDocumentWriterTest<Element> {
 
     private Document document;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -32,49 +34,52 @@ public class DomWriterTest extends AbstractDocumentWriterTest {
         writer = new DomWriter(document);
     }
 
-    protected DocumentReader createDocumentReaderFor(final Object node) {
-        return new DomReader((Element)node);
+    @Override
+    protected DocumentReader createDocumentReaderFor(final Element node) {
+        return new DomReader(node);
     }
 
     // inherits tests from superclass
-    
+
     public void testCanWriteIntoArbitraryNode() {
-        Element root = document.createElement("root"); 
+        final Element root = document.createElement("root");
         document.appendChild(root);
-        Element a = document.createElement("a");
+        final Element a = document.createElement("a");
         root.appendChild(a);
         writer = new DomWriter(a, document, new XmlFriendlyNameCoder());
-        
+
         final XppDom xppRoot = new XppDom("root");
-        XppDom xppA = new XppDom("a");
+        final XppDom xppA = new XppDom("a");
         xppRoot.addChild(xppA);
-        XppDom xppB = new XppDom("b");
+        final XppDom xppB = new XppDom("b");
         xppA.addChild(xppB);
         xppB.setAttribute("attr", "foo");
-        
+
         assertDocumentProducedIs(xppA, xppB);
-        XppDomWriter xppDomWriter = new XppDomWriter();
-        new HierarchicalStreamCopier().copy(createDocumentReaderFor(document.getDocumentElement()), xppDomWriter);
-        assertTrue(equals(xppRoot, xppDomWriter.getConfiguration()));
+        try (final XppDomWriter xppDomWriter = new XppDomWriter()) {
+            new HierarchicalStreamCopier().copy(createDocumentReaderFor(document.getDocumentElement()), xppDomWriter);
+            assertTrue(equals(xppRoot, xppDomWriter.getConfiguration()));
+        }
     }
 
     public void testCanWriteIntoArbitraryNodeAgain() {
-        Element root = document.createElement("root"); 
+        final Element root = document.createElement("root");
         document.appendChild(root);
-        Element a = document.createElement("a");
+        final Element a = document.createElement("a");
         root.appendChild(a);
         writer = new DomWriter(a);
-        
+
         final XppDom xppRoot = new XppDom("root");
-        XppDom xppA = new XppDom("a");
+        final XppDom xppA = new XppDom("a");
         xppRoot.addChild(xppA);
-        XppDom xppB = new XppDom("b");
+        final XppDom xppB = new XppDom("b");
         xppA.addChild(xppB);
         xppB.setAttribute("attr", "foo");
-        
+
         assertDocumentProducedIs(xppA, xppB);
-        XppDomWriter xppDomWriter = new XppDomWriter();
-        new HierarchicalStreamCopier().copy(createDocumentReaderFor(document.getDocumentElement()), xppDomWriter);
-        assertTrue(equals(xppRoot, xppDomWriter.getConfiguration()));
+        try (final XppDomWriter xppDomWriter = new XppDomWriter()) {
+            new HierarchicalStreamCopier().copy(createDocumentReaderFor(document.getDocumentElement()), xppDomWriter);
+            assertTrue(equals(xppRoot, xppDomWriter.getConfiguration()));
+        }
     }
 }

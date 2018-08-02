@@ -1,48 +1,51 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2016, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 09. September 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.XStreamException;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import java.io.StringReader;
 
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
-import java.io.StringReader;
+import com.thoughtworks.xstream.XStreamException;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+
 
 public class JDomReaderTest extends AbstractXMLReaderTest {
 
     // factory method
-    protected HierarchicalStreamReader createReader(String xml) throws Exception {
+    @Override
+    protected HierarchicalStreamReader createReader(final String xml) throws Exception {
         return new JDomDriver().createReader(new StringReader(xml));
     }
 
     public void testCanReadFromElementOfLargerDocument() throws Exception {
-        String xml ="" +
-                "<big>" +
-                "  <small>" +
-                "    <tiny/>" +
-                "  </small>" +
-                "  <small-two>" +
-                "  </small-two>" +
-                "</big>";
-        Document document = new SAXBuilder().build(new StringReader(xml));
-        Element element = document.getRootElement().getChild("small");
+        final String xml = ""
+            + "<big>"
+            + "  <small>"
+            + "    <tiny/>"
+            + "  </small>"
+            + "  <small-two>"
+            + "  </small-two>"
+            + "</big>";
+        final Document document = new SAXBuilder().build(new StringReader(xml));
+        final Element element = document.getRootElement().getChild("small");
 
-        HierarchicalStreamReader xmlReader = new JDomReader(element);
-        assertEquals("small", xmlReader.getNodeName());
-        xmlReader.moveDown();
-        assertEquals("tiny", xmlReader.getNodeName());
+        try (final HierarchicalStreamReader xmlReader = new JDomReader(element)) {
+            assertEquals("small", xmlReader.getNodeName());
+            xmlReader.moveDown();
+            assertEquals("tiny", xmlReader.getNodeName());
+        }
     }
 
     @Override

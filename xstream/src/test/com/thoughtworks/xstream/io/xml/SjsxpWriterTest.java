@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. September 2011 by Joerg Schaible, renamed from SjsxpStaxWriterTest
  */
 package com.thoughtworks.xstream.io.xml;
@@ -15,6 +15,7 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
+
 public final class SjsxpWriterTest extends AbstractStaxWriterTest {
     final static String className = "com.sun.xml.internal.stream.XMLOutputFactoryImpl";
 
@@ -22,19 +23,22 @@ public final class SjsxpWriterTest extends AbstractStaxWriterTest {
         try {
             Class.forName(className);
             return new TestSuite(SjsxpWriterTest.class);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             return new TestCase(SjsxpWriterTest.class.getName() + ": not available") {
-        
+
+                @Override
                 public int countTestCases() {
                     return 1;
                 }
-        
-                public void run(TestResult result) {
+
+                @Override
+                public void run(final TestResult result) {
                 }
             };
         }
     }
 
+    @Override
     protected void assertXmlProducedIs(String expected) {
         if (!staxDriver.isRepairingNamespace()) {
             expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
@@ -48,10 +52,12 @@ public final class SjsxpWriterTest extends AbstractStaxWriterTest {
         assertEquals(expected, buffer.toString());
     }
 
+    @Override
     protected String getXMLHeader() {
         return "<?xml version=\"1.0\" ?>";
     }
 
+    @Override
     protected StaxDriver getStaxDriver() {
         return new SjsxpDriver();
     }

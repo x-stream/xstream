@@ -1,35 +1,38 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.StringWriter;
+
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.StreamException;
-
-import java.io.StringWriter;
 
 
 public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     private StringWriter buffer;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         buffer = new StringWriter();
         writer = new PrettyPrintWriter(buffer, "  ");
     }
 
-    protected void assertXmlProducedIs(String expected) {
+    @Override
+    protected void assertXmlProducedIs(final String expected) {
         assertEquals(expected, buffer.toString());
     }
 
+    @Override
     public void testSupportsNestedElements() { // Note: This overrides a test in superclass to
         // include indentation
 
@@ -53,7 +56,7 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
 
         writer.endNode();
 
-        String expected = ""
+        final String expected = ""
             + "<hello>\n"
             + "  <world id=\"one\">\n"
             + "    <one>potato</one>\n"
@@ -65,6 +68,7 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs(expected);
     }
 
+    @Override
     public void testAttributesAreResettedForNewNode() { // Note: This overrides a test in
         // superclass to include indentation
         writer.startNode("work");
@@ -77,7 +81,7 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         writer.endNode();
         writer.endNode();
 
-        String expected = ""
+        final String expected = ""
             + "<work>\n"
             + "  <person firstname=\"Joe\" lastname=\"Walnes\"/>\n"
             + "  <project XStream=\"Codehaus\"/>\n"
@@ -88,11 +92,13 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
 
     public void testAllowsUserToOverrideTextAndAttributeEscapingRules() {
         writer = new PrettyPrintWriter(buffer, "  ") {
-            protected void writeAttributeValue(QuickWriter writer, String text) {
+            @Override
+            protected void writeAttributeValue(final QuickWriter writer, final String text) {
                 writer.write(replace(text, '&', "_&_"));
             }
 
-            protected void writeText(QuickWriter writer, String text) {
+            @Override
+            protected void writeText(final QuickWriter writer, final String text) {
                 writer.write(replace(text, '&', "AND"));
             }
         };
@@ -106,7 +112,7 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     }
 
     public void testSupportsUserDefinedEOL() {
-        writer = new PrettyPrintWriter(buffer, "\t"){
+        writer = new PrettyPrintWriter(buffer, "\t") {
             @Override
             protected String getNewLine() {
                 return "\r";
@@ -121,6 +127,7 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs("<element>\r\t<empty/>\r</element>");
     }
 
+    @Override
     public void testSupportsEmptyNestedTags() {
         writer.startNode("parent");
         writer.startNode("child");
@@ -164,7 +171,7 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     public void testSupportsOnlyValidControlCharactersInXml1_0Mode() {
         writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_0);
         writer.startNode("tag");
-        String ctrl = ""
+        final String ctrl = ""
             + "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007"
             + "\u0008\u0009\n\u000b\u000c\r\u000e\u000f"
             + "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017"
@@ -175,8 +182,8 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
             + "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097"
             + "\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f"
             + "";
-        for (int i = 0; i < ctrl.length(); i++ ) {
-            char c = ctrl.charAt(i);
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
             try {
                 writer.setValue(new Character(c).toString());
                 if (c != '\t' && c != '\n' && c != '\r' && c < '\u007f') {
@@ -197,7 +204,7 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     public void testSupportsOnlyValidControlCharactersInXml1_1Mode() {
         writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_1);
         writer.startNode("tag");
-        String ctrl = ""
+        final String ctrl = ""
             + "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007"
             + "\u0008\u0009\n\u000b\u000c\r\u000e\u000f"
             + "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017"
@@ -208,8 +215,8 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
             + "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097"
             + "\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f"
             + "";
-        for (int i = 0; i < ctrl.length(); i++ ) {
-            char c = ctrl.charAt(i);
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
             try {
                 writer.setValue(new Character(c).toString());
                 if (c == 0) {
@@ -233,9 +240,9 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     public void testSupportsInvalidUnicodeCharacterslInQuirksMode() {
         writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_QUIRKS);
         writer.startNode("tag");
-        String ctrl = "\ud7ff\ud800\udfff\ue000\ufffd\ufffe\uffff";
-        for (int i = 0; i < ctrl.length(); i++ ) {
-            char c = ctrl.charAt(i);
+        final String ctrl = "\ud7ff\ud800\udfff\ue000\ufffd\ufffe\uffff";
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
             writer.setValue(new Character(c).toString());
         }
         writer.endNode();
@@ -245,12 +252,12 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     public void testThrowsForInvalidUnicodeCharacterslInXml1_0Mode() {
         writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_0);
         writer.startNode("tag");
-        String ctrl = "\ud7ff\ud800\udfff\ue000\ufffd\ufffe\uffff";
-        for (int i = 0; i < ctrl.length(); i++ ) {
-            char c = ctrl.charAt(i);
+        final String ctrl = "\ud7ff\ud800\udfff\ue000\ufffd\ufffe\uffff";
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
             try {
                 writer.setValue(new Character(c).toString());
-                if ((c >= '\ud800' && c < '\udfff') || c == '\ufffe' || c == '\uffff') {
+                if (c >= '\ud800' && c < '\udfff' || c == '\ufffe' || c == '\uffff') {
                     fail("Thrown "
                         + StreamException.class.getName()
                         + " for character value "
@@ -268,12 +275,12 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
     public void testThrowsForInvalidUnicodeCharacterslInXml1_1Mode() {
         writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_1);
         writer.startNode("tag");
-        String ctrl = "\ud7ff\ud800\udfff\ue000\ufffd\ufffe\uffff";
-        for (int i = 0; i < ctrl.length(); i++ ) {
-            char c = ctrl.charAt(i);
+        final String ctrl = "\ud7ff\ud800\udfff\ue000\ufffd\ufffe\uffff";
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
             try {
                 writer.setValue(new Character(c).toString());
-                if ((c >= '\ud800' && c < '\udfff') || c == '\ufffe' || c == '\uffff') {
+                if (c >= '\ud800' && c < '\udfff' || c == '\ufffe' || c == '\uffff') {
                     fail("Thrown "
                         + StreamException.class.getName()
                         + " for character value "
@@ -288,8 +295,8 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs("<tag>&#xd7ff;\ue000\ufffd</tag>");
     }
 
-    private String replace(String in, char what, String with) {
-        int pos = in.indexOf(what);
+    private String replace(final String in, final char what, final String with) {
+        final int pos = in.indexOf(what);
         if (pos == -1) {
             return in;
         } else {

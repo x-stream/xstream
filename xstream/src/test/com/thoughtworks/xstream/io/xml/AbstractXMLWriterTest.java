@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 05. September 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -15,23 +15,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import junit.framework.TestCase;
 
+
 public abstract class AbstractXMLWriterTest extends TestCase {
 
     protected HierarchicalStreamWriter writer;
 
     protected abstract void assertXmlProducedIs(String expected);
 
-    // String.replaceAll is JDK 1.4
-    protected String replaceAll(String s, final String occurance, final String replacement) {
-        final int len = occurance.length();
-        final int inc = len - replacement.length();
-        int i = -inc;
-        final StringBuffer buff = new StringBuffer(s);
-        // StringBuffer has no indexOf in JDK 1.3
-        while((i = buff.toString().indexOf(occurance, i + inc)) >= 0) {
-            buff.replace(i, i + len, replacement);
-        }
-        return buff.toString();
+    protected String replaceAll(final String s, final String occurance, final String replacement) {
+        return s.replaceAll(occurance, replacement);
     }
 
     public void testProducesXmlElements() {
@@ -92,7 +84,8 @@ public abstract class AbstractXMLWriterTest extends TestCase {
         writer.endNode();
         writer.endNode();
 
-        assertXmlProducedIs("<work><person firstname=\"Joe\" lastname=\"Walnes\"/><project XStream=\"Codehaus\"/></work>");
+        assertXmlProducedIs(
+            "<work><person firstname=\"Joe\" lastname=\"Walnes\"/><project XStream=\"Codehaus\"/></work>");
     }
 
     public void testEscapesXmlUnfriendlyCharacters() {
@@ -109,10 +102,11 @@ public abstract class AbstractXMLWriterTest extends TestCase {
         writer.setValue("  one\ntwo\rthree\r\nfour\n\r  five\tsix  ");
         writer.endNode();
 
-        assertXmlProducedIs("<evil>  one\n"
-                + "two&#xd;three&#xd;\n"
-                + "four\n"
-                + "&#xd;  five\tsix  </evil>");
+        assertXmlProducedIs("" //
+            + "<evil>  one\n"
+            + "two&#xd;three&#xd;\n"
+            + "four\n"
+            + "&#xd;  five\tsix  </evil>");
     }
 
     public void testEscapesWhitespaceCharactersInAttribute() {
