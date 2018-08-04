@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 public class XppReaderTest extends AbstractXMLReaderTest {
     @Override
     protected HierarchicalStreamReader createReader(final String xml) throws Exception {
-        return new XppReader(new StringReader(xml));
+        return new XppReader(new StringReader(xml), XppDriver.createDefaultParser());
     }
 
     @Override
