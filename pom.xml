@@ -377,11 +377,12 @@
         <groupId>stax</groupId>
         <artifactId>stax</artifactId>
         <version>${version.stax}</version>
-      </dependency>
-      <dependency>
-        <groupId>stax</groupId>
-        <artifactId>stax-api</artifactId>
-        <version>${version.stax.api}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
