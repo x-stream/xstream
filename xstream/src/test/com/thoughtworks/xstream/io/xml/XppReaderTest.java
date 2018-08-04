@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2016, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,7 +18,7 @@ import java.io.StringReader;
 
 public class XppReaderTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        return new XppReader(new StringReader(xml));
+        return new XppReader(new StringReader(xml), XppDriver.createDefaultParser());
     }
 
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {

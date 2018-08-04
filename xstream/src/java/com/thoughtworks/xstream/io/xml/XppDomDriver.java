@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,12 +11,11 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.naming.NameCoder;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
+
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
  * A {@link HierarchicalStreamDriver} for XPP DOM using the XmlPullParserFactory to locate an parser.
@@ -26,8 +25,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
  */
 public class XppDomDriver extends AbstractXppDomDriver {
 
-    private static XmlPullParserFactory factory;
-    
     public XppDomDriver() {
         super(new XmlFriendlyNameCoder());
     }
@@ -47,13 +44,7 @@ public class XppDomDriver extends AbstractXppDomDriver {
         super(replacer);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected synchronized XmlPullParser createParser() throws XmlPullParserException {
-        if (factory == null) {
-            factory = XmlPullParserFactory.newInstance(null, XppDomDriver.class);
-        }
-        return factory.newPullParser();
+        return XppDriver.createDefaultParser();
     }
 }
