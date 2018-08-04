@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,9 +23,13 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  *
  * @author J&ouml;rg Schaible
  * @since 1.4
+ * @deprecated As of upcoming use StandardStaxDriver or WstxStaxDriver instead. BEA StAX implementation is outdated,
+ *             unmaintained and has security issues.
  */
+@Deprecated
 public class BEAStaxDriver extends StaxDriver {
 
+    @Deprecated
     public BEAStaxDriver() {
         super();
     }
@@ -41,10 +45,12 @@ public class BEAStaxDriver extends StaxDriver {
     /**
      * @since 1.4.6
      */
+    @Deprecated
     public BEAStaxDriver(final QNameMap qnameMap, final NameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
+    @Deprecated
     public BEAStaxDriver(final QNameMap qnameMap) {
         super(qnameMap);
     }
@@ -60,6 +66,7 @@ public class BEAStaxDriver extends StaxDriver {
     /**
      * @since 1.4.6
      */
+    @Deprecated
     public BEAStaxDriver(final NameCoder nameCoder) {
         super(nameCoder);
     }
