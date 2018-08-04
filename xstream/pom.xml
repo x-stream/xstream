@@ -79,11 +79,13 @@
       <optional>true</optional>
     </dependency>
 
+<!-- Registers itself as Service like Xpp3
     <dependency>
       <groupId>net.sf.kxml</groupId>
       <artifactId>kxml2</artifactId>
       <optional>true</optional>
     </dependency>
+-->
 
     <dependency>
       <groupId>xpp3</groupId>
