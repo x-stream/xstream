@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  *
  * @author J&ouml;rg Schaible
  * @since 1.4
- * @deprecated As of upcoming use StandardStaxDriver or WstxStaxDriver instead. BEA StAX implementation is outdated,
+ * @deprecated As of upcoming use {@link StandardStaxDriver} or {@link WstxDriver} instead. BEA StAX implementation is outdated,
  *             unmaintained and has security issues.
  */
 @Deprecated
@@ -44,12 +44,16 @@ public class BEAStaxDriver extends StaxDriver {
 
     /**
      * @since 1.4.6
+     * @deprecated As of upcoming use {@link StandardStaxDriver} or {@link WstxDriver} instead.
      */
     @Deprecated
     public BEAStaxDriver(final QNameMap qnameMap, final NameCoder nameCoder) {
         super(qnameMap, nameCoder);
     }
 
+    /**
+     * @deprecated As of upcoming use {@link StandardStaxDriver} or {@link WstxDriver} instead.
+     */
     @Deprecated
     public BEAStaxDriver(final QNameMap qnameMap) {
         super(qnameMap);
@@ -65,6 +69,7 @@ public class BEAStaxDriver extends StaxDriver {
 
     /**
      * @since 1.4.6
+     * @deprecated As of upcoming use {@link StandardStaxDriver} or {@link WstxDriver} instead.
      */
     @Deprecated
     public BEAStaxDriver(final NameCoder nameCoder) {
