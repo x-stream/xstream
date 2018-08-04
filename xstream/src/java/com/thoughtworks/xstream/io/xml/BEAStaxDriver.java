@@ -25,10 +25,11 @@ import javax.xml.stream.XMLOutputFactory;
  * @deprecated As of upcoming use {@link StandardStaxDriver} or {@link WstxDriver} instead. BEA StAX implementation is
  *              outdated, unmaintained and has security issues.
  */
-@Deprecated
 public class BEAStaxDriver extends StaxDriver {
 
-    @Deprecated
+    /**
+     * @deprecated As of upcoming use {@link StandardStaxDriver} or {@link WstxDriver} instead.
+     */
     public BEAStaxDriver() {
         super();
     }
