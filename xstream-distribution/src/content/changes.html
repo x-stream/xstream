@@ -55,6 +55,8 @@
 		<li>GHI:#115: Dom4JDriver ignores character set of Dom4J configuration creating a Writer.</li>
 		<li>GHI:#116: Make converters null safe.</li>
 		<li>Add XppDriver.createDefaultParser for a simpler access to the default XmlPullParserFactory.</li>
+		<li>Old BEA reference implementation of StAX is outdated, unmaintained and has security issues, therefore
+		XStream's driver has been deprecated.</li>
 	</ul>
 
 	<h2>Stream compatibility</h2>
@@ -88,6 +90,7 @@
 		<li>Deprecated c.t.x.io.ExtendedHierarchicalStreamReader.</li>
 		<li>Deprecated c.t.x.io.ExtendedHierarchicalStreamWriter.</li>
 		<li>Deprecated c.t.x.io.ExtendedHierarchicalStreamWriterHelper.</li>
+		<li>Deprecated c.t.x.io.xml.BEAStaxDriver.</li>
 		<li>Added c.t.x.io.xml.Dom4JReader.Dom4JReader(Branch).</li>
 		<li>Added c.t.x.io.xml.XppDriver.createDefaultParser().</li>
 		<li>Added c.t.x.core.util.StingCodec.</li>
