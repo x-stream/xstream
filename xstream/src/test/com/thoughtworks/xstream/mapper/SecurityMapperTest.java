@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 XStream Committers.
+ * Copyright (C) 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * Created on 09. January 2014 by Joerg Schaible
@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 
 /**
  * Tests the {@link SecurityMapper} and the {@link TypePermission} implementations.
- * 
+ *
  * @author J&ouml;rg Schaible
  */
 public class SecurityMapperTest extends TestCase {
@@ -44,7 +44,7 @@ public class SecurityMapperTest extends TestCase {
         classMap = new HashMap<String, Class<?>>();
         mapper = new SecurityMapper(new MapperWrapper(null) {
             @Override
-            public Class realClass(final String elementName) {
+            public Class<?> realClass(final String elementName) {
                 return classMap.get(elementName);
             }
         });
