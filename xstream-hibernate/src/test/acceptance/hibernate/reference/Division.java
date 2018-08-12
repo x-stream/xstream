@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 25. March 2011 by Jaime Metcher
  */
 package acceptance.hibernate.reference;
@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class Division extends BaseDomainObject {
 
-    private Set departments = new HashSet(0);
+    private final Set<Department> departments = new HashSet<Department>(0);
 
     protected Division() {
     }
@@ -28,7 +28,7 @@ public class Division extends BaseDomainObject {
         this.name = name;
     }
 
-    public Set getDepartments() {
+    public Set<Department> getDepartments() {
         return departments;
     }
 

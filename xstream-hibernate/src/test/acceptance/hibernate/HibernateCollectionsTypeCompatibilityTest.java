@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2011, 2012 XStream Committers.
+ * Copyright (C) 2011, 2012, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 11. October 2011 by Joerg Schaible
  */
 
@@ -29,41 +29,46 @@ import com.thoughtworks.xstream.hibernate.util.Hibernate;
 public class HibernateCollectionsTypeCompatibilityTest extends AbstractHibernateAcceptanceTest {
 
     public void testPersistentBag() {
-        assertXmlEquals(new ArrayList(), newHibernateCollection(Hibernate.PersistentBag, Collections.EMPTY_LIST));
+        assertXmlEquals(new ArrayList<Object>(), newHibernateCollection(Hibernate.PersistentBag, Collections
+            .emptyList()));
     }
 
     public void testPersistentList() {
-        assertXmlEquals(new ArrayList(), newHibernateCollection(Hibernate.PersistentList, Collections.EMPTY_LIST));
+        assertXmlEquals(new ArrayList<Object>(), newHibernateCollection(Hibernate.PersistentList, Collections
+            .emptyList()));
     }
 
     public void testPersistentMap() {
-        assertXmlEquals(new HashMap(), newHibernateCollection(Hibernate.PersistentMap, Collections.EMPTY_MAP));
+        assertXmlEquals(new HashMap<Object, Object>(), newHibernateCollection(Hibernate.PersistentMap, Collections
+            .emptyMap()));
     }
 
     public void testPersistentSet() {
-        assertXmlEquals(new HashSet(), newHibernateCollection(Hibernate.PersistentSet, Collections.EMPTY_SET));
+        assertXmlEquals(new HashSet<Object>(), newHibernateCollection(Hibernate.PersistentSet, Collections.emptySet()));
     }
 
     public void testPersistentSortedMap() {
-        assertXmlEquals(new TreeMap(), newHibernateCollection(Hibernate.PersistentSortedMap, new TreeMap()));
+        assertXmlEquals(new TreeMap<Object, Object>(), newHibernateCollection(Hibernate.PersistentSortedMap,
+            new TreeMap<Object, Object>()));
     }
 
     public void testPersistentSortedSet() {
-        assertXmlEquals(new TreeSet(), newHibernateCollection(Hibernate.PersistentSortedSet, new TreeSet()));
+        assertXmlEquals(new TreeSet<Object>(), newHibernateCollection(Hibernate.PersistentSortedSet,
+            new TreeSet<Object>()));
     }
-    
-    private Object newHibernateCollection(Class type, Object secondArg) {
+
+    private Object newHibernateCollection(final Class<?> type, final Object secondArg) {
         Object instance = null;
-        Constructor[] ctors = type.getConstructors();
-        for(int i = 0; i < ctors.length; ++i) {
-            if (ctors[i].getParameterTypes().length == 2) {
+        final Constructor<?>[] ctors = type.getConstructors();
+        for (final Constructor<?> ctor : ctors) {
+            if (ctor.getParameterTypes().length == 2) {
                 try {
-                    instance = ctors[i].newInstance(new Object[]{null, secondArg});
-                } catch (InstantiationException e) {
+                    instance = ctor.newInstance(null, secondArg);
+                } catch (final InstantiationException e) {
                     e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                } catch (final IllegalAccessException e) {
                     e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (final InvocationTargetException e) {
                     e.printStackTrace();
                 }
                 break;
@@ -73,7 +78,7 @@ public class HibernateCollectionsTypeCompatibilityTest extends AbstractHibernate
         return instance;
     }
 
-    private void assertXmlEquals(Object reference, Object hibernateCollection) {
+    private void assertXmlEquals(final Object reference, final Object hibernateCollection) {
         final String expectedXml = xstream.toXML(reference);
         final String loadedXml = xstream.toXML(hibernateCollection);
         assertEquals(expectedXml, loadedXml);

@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2011, 2012 XStream Committers.
+ * Copyright (C) 2011, 2012, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 25. March 2011 by Jaime Metcher
  */
 
 package acceptance.hibernate;
+
+import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxy;
 
 import acceptance.hibernate.reference.BaseDomainObject;
 import acceptance.hibernate.reference.Department;
 import acceptance.hibernate.reference.Division;
 import acceptance.hibernate.reference.Person;
 import acceptance.hibernate.reference.Site;
-
-import org.hibernate.Session;
-import org.hibernate.proxy.HibernateProxy;
 
 
 /**
@@ -27,6 +27,7 @@ import org.hibernate.proxy.HibernateProxy;
  */
 public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // don't write the primary keys in this test
@@ -37,6 +38,7 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
         xstream.alias("site", Site.class);
     }
 
+    @Override
     protected void tearDown() {
         try {
             final Session session = getSessionFactory().getCurrentSession();
@@ -44,7 +46,7 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
             final Division div = (Division)session.createQuery("from Division").uniqueResult();
             session.delete(div);
             session.getTransaction().commit();
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             e.printStackTrace();
         }
     }
@@ -72,8 +74,8 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
         final Session session = getSessionFactory().getCurrentSession();
         session.beginTransaction();
         final Division loaded = (Division)session.createQuery("from Division").uniqueResult();
-        final Department dept = (Department)loaded.getDepartments().iterator().next();
-        final Person person = (Person)dept.getPeople().iterator().next();
+        final Department dept = loaded.getDepartments().iterator().next();
+        final Person person = dept.getPeople().iterator().next();
         final Site site = person.getSite();
         assertTrue(HibernateProxy.class.isAssignableFrom(site.getClass()));
         final String loadedXml = xstream.toXML(site);
@@ -114,12 +116,9 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
         final Division div = new Division("Div1");
         final Department dep = new Department("Dep1", div);
         final Site site = new Site("Site1");
-        /*
-         * This save is necessitated by the fact that Hibernate's transitive persistence is
-         * depth-first and does not do a full graph analysis. Therefore it would be possible for
-         * Hibernate to try to save the person record before the site record, which would throw
-         * an error if the person.site FK is non-nullable.
-         */
+        /* This save is necessitated by the fact that Hibernate's transitive persistence is depth-first and does not do
+         * a full graph analysis. Therefore it would be possible for Hibernate to try to save the person record before
+         * the site record, which would throw an error if the person.site FK is non-nullable. */
         session.save(site);
         new Person("Tom", dep, site);
         session.save(div);

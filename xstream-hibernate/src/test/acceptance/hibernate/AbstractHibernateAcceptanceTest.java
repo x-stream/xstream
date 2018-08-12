@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,10 @@
  */
 package acceptance.hibernate;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.internal.BootstrapServiceRegistryImpl;
+
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
@@ -19,9 +23,6 @@ import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedSet
 import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
 import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
 
 /**
@@ -49,22 +50,21 @@ public abstract class AbstractHibernateAcceptanceTest extends AbstractAcceptance
         super();
     }
 
+    @Override
     protected XStream createXStream() {
         final XStream xstream = new XStream() {
 
+            @Override
             protected MapperWrapper wrapMapper(final MapperWrapper next) {
                 return new HibernateMapper(next);
             }
 
         };
         xstream.registerConverter(new HibernateProxyConverter());
-        xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream
-            .getMapper()));
+        xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
-        xstream
-            .registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
-        xstream
-            .registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
 
         return xstream;
     }
