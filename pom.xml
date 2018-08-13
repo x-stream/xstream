@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -238,16 +238,6 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>cobertura-maven-plugin</artifactId>
-            <configuration>
-              <formats>
-                <format>xml</format>
-              </formats>
-              <aggregate>true</aggregate>
-            </configuration>
-          </plugin>
           <plugin>
             <groupId>org.eluder.coveralls</groupId>
             <artifactId>coveralls-maven-plugin</artifactId>
@@ -827,7 +817,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${version.plugin.maven.surefire}</version>
           <configuration>
-            <argLine>${surefire.argline}</argLine>
             <forkMode>once</forkMode>
             <printSummary>true</printSummary>
             <useFile>false</useFile>
@@ -856,25 +845,6 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>${version.plugin.mojo.build-helper}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>cobertura-maven-plugin</artifactId>
-          <version>${version.plugin.mojo.cobertura}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>clean</goal>
-              </goals>
-            </execution>
-          </executions>
-          <dependencies>
-            <dependency>
-              <groupId>net.sourceforge.cobertura</groupId>
-              <artifactId>cobertura</artifactId>
-              <version>${version.net.sourceforge.cobertura}</version>
-            </dependency>
-          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.codehaus.xsite</groupId>
@@ -989,7 +959,6 @@
     <version.plugin.maven.source>2.1.2</version.plugin.maven.source>
     <version.plugin.maven.surefire>2.4.3</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>1.5</version.plugin.mojo.build-helper>
-    <version.plugin.mojo.cobertura>2.7</version.plugin.mojo.cobertura>
     <version.plugin.eluder.coveralls>4.2.0</version.plugin.eluder.coveralls>
     <version.plugin.jacoco>0.8.1</version.plugin.jacoco>
 
@@ -1008,7 +977,6 @@
     <version.joda-time>1.6</version.joda-time>
     <version.junit>3.8.1</version.junit>
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
-    <version.net.sourceforge.cobertura>2.1.1</version.net.sourceforge.cobertura>
     <version.org.codehaus.jettison>1.2</version.org.codehaus.jettison>
     <version.org.codehaus.woodstox.asl>3.2.7</version.org.codehaus.woodstox.asl>
     <version.org.hibernate.core>4.2.5.Final</version.org.hibernate.core>
@@ -1030,7 +998,8 @@
     <javadoc.link.javase>http://docs.oracle.com/javase/8/docs/api/</javadoc.link.javase>
     <surefire.illegal.access>permit</surefire.illegal.access>
 
-    <javadoc.xdoclint />
-    <surefire.argline />
+    <argLine>${surefire.argline}</argLine>
+    <javadoc.xdoclint/>
+    <surefire.argline/>
   </properties>
 </project>
