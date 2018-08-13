@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -150,6 +150,9 @@ public class FieldDictionary implements Caching {
         }
         for (int i = 0; i < fields.length; i++) {
             final Field field = fields[i];
+            if (field.isSynthetic() && field.getName().startsWith("$jacoco")) {
+                continue;
+            }
             if (!field.isAccessible()) {
                 field.setAccessible(true);
             }
