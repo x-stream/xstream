@@ -867,7 +867,7 @@
     <version.plugin.maven.assembly>2.1</version.plugin.maven.assembly>
     <version.plugin.maven.clean>2.2</version.plugin.maven.clean>
     <version.plugin.maven.compiler>3.1</version.plugin.maven.compiler>
-    <version.plugin.maven.dependency>2.1</version.plugin.maven.dependency>
+    <version.plugin.maven.dependency>3.1.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>2.3</version.plugin.maven.deploy>
     <version.plugin.maven.enforcer>3.0.0-M1</version.plugin.maven.enforcer>
     <version.plugin.maven.gpg>1.4</version.plugin.maven.gpg>
