@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -53,7 +53,10 @@ public class NativeFieldKeySorterTest extends TestCase {
         while (!cls.equals(Object.class)) {
             Field[] fields = cls.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
+                final Field field = fields[i];
+                if (field.isSynthetic() && field.getName().startsWith("$jacoco")) {
+                    continue;
+                }
                 map.put(new FieldKey(field.getName(), cls, i), field);
             }
             cls = cls.getSuperclass();
