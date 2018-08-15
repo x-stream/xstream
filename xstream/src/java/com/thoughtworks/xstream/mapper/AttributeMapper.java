@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -107,8 +107,8 @@ public class AttributeMapper extends MapperWrapper {
         } else if (fieldNameToTypeMap.get(fieldName) == type) {
             return true;
         } else if (fieldName != null && definedIn != null) {
-            Field field = reflectionProvider.getField(definedIn, fieldName);
-            return fieldToUseAsAttribute.contains(field);
+            final Field field = reflectionProvider.getFieldOrNull(definedIn, fieldName);
+            return field != null && fieldToUseAsAttribute.contains(field);
         }
         return false;
     }
@@ -140,8 +140,8 @@ public class AttributeMapper extends MapperWrapper {
      * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute) {
-        Field field = reflectionProvider.getField(definedIn, attribute);
-        return getConverterFromAttribute(definedIn, attribute, field.getType());
+        final Field field = reflectionProvider.getFieldOrNull(definedIn, attribute);
+        return field != null ? getConverterFromAttribute(definedIn, attribute, field.getType()) : null;
     }
 
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type) {
@@ -160,8 +160,10 @@ public class AttributeMapper extends MapperWrapper {
      * @param field the field itself
      * @since 1.2.2
      */
-    public void addAttributeFor(Field field) {
-        fieldToUseAsAttribute.add(field);
+    public void addAttributeFor(final Field field) {
+        if (field != null) {
+            fieldToUseAsAttribute.add(field);
+        }
     }
 
     /**
@@ -169,10 +171,9 @@ public class AttributeMapper extends MapperWrapper {
      * 
      * @param definedIn the declaring class of the field
      * @param fieldName the name of the field
-     * @throws IllegalArgumentException if the field does not exist
      * @since 1.3
      */
     public void addAttributeFor(Class definedIn, String fieldName) {
-        fieldToUseAsAttribute.add(reflectionProvider.getField(definedIn, fieldName));
+        addAttributeFor(reflectionProvider.getField(definedIn, fieldName));
     }
 }
