@@ -335,7 +335,7 @@
       </dependency>
 
       <dependency>
-        <groupId>dom4j</groupId>
+        <groupId>org.dom4j</groupId>
         <artifactId>dom4j</artifactId>
         <version>${version.dom4j}</version>
         <exclusions>
@@ -891,7 +891,7 @@
     <version.commons.codec>1.10</version.commons.codec>
     <version.commons.io>1.4</version.commons.io>
     <version.commons.lang3>3.6</version.commons.lang3>
-    <version.dom4j>1.6.1</version.dom4j>
+    <version.dom4j>2.0.2</version.dom4j>
     <version.hsqldb>2.2.8</version.hsqldb>
     <version.javaassist>3.12.1.GA</version.javaassist>
     <version.jmock>1.0.1</version.jmock>
