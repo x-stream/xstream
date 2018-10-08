@@ -469,6 +469,22 @@
       </dependency>
 
       <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>javax.activation-api</artifactId>
+        <version>${version.javax.activation.api}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>javax.annotation-api</artifactId>
+        <version>${version.javax.annotation.api}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>${version.javax.xml.bind.api}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>${version.org.hibernate.core}</version>
@@ -894,6 +910,9 @@
     <version.dom4j>1.6.1</version.dom4j>
     <version.hsqldb>2.2.8</version.hsqldb>
     <version.javaassist>3.12.1.GA</version.javaassist>
+    <version.javax.activation.api>1.2.0</version.javax.activation.api>
+    <version.javax.annotation.api>1.3.2</version.javax.annotation.api>
+    <version.javax.xml.bind.api>2.3.1</version.javax.xml.bind.api>
     <version.jmock>1.0.1</version.jmock>
     <version.joda-time>1.6</version.joda-time>
     <version.junit>3.8.1</version.junit>
@@ -905,7 +924,7 @@
     <version.org.jdom>1.1.3</version.org.jdom>
     <version.org.jdom2>2.0.5</version.org.jdom2>
     <version.org.json>20080701</version.org.json>
-    <version.org.openjdk.jmh>1.19</version.org.openjdk.jmh>
+    <version.org.openjdk.jmh>1.21</version.org.openjdk.jmh>
     <version.org.slf4j>1.6.1</version.org.slf4j>
     <version.oro>2.0.8</version.oro>
     <version.stax>1.2.0</version.stax>
