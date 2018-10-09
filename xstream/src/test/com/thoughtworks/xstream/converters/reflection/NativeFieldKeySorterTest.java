@@ -54,7 +54,7 @@ public class NativeFieldKeySorterTest extends TestCase {
             Field[] fields = cls.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
                 final Field field = fields[i];
-                if (field.isSynthetic() && field.getName().startsWith("$jacoco")) {
+                if (field.getName().startsWith("$jacoco")) {
                     continue;
                 }
                 map.put(new FieldKey(field.getName(), cls, i), field);

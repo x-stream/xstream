@@ -529,6 +529,7 @@
                 <exclude>**/basic/StringBuilder*</exclude>
                 <exclude>**/basic/UUID*</exclude>
                 <exclude>**/core/util/Types*</exclude>
+                <exclude>**/reflection/*15*</exclude>
                 <exclude>**/extended/*15*</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
                 <exclude>**/io/xml/JDom2*</exclude>

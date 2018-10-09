@@ -35,6 +35,7 @@ public class FieldDictionary implements Caching {
         Collections.EMPTY_MAP);
 
     private transient Map dictionaryEntries;
+    private transient FieldUtil fieldUtil;
     private final FieldKeySorter sorter;
 
     public FieldDictionary() {
@@ -48,6 +49,14 @@ public class FieldDictionary implements Caching {
 
     private void init() {
         dictionaryEntries = new HashMap();
+        if (JVM.is15())
+            try {
+                fieldUtil = (FieldUtil)JVM.loadClassForName("com.thoughtworks.xstream.converters.reflection.FieldUtil15", true).newInstance();
+            } catch (Exception e) {
+                ;
+            }
+        if (fieldUtil == null)
+            fieldUtil = new FieldUtil14();
     }
 
     /**
@@ -160,7 +169,7 @@ public class FieldDictionary implements Caching {
         }
         for (int i = 0; i < fields.length; i++) {
             final Field field = fields[i];
-            if (field.isSynthetic() && field.getName().startsWith("$jacoco")) {
+            if (fieldUtil.isSynthetic(field) && field.getName().startsWith("$jacoco")) {
                 continue;
             }
             if (!field.isAccessible()) {
@@ -195,6 +204,10 @@ public class FieldDictionary implements Caching {
     protected Object readResolve() {
         init();
         return this;
+    }
+
+    interface FieldUtil {
+        boolean isSynthetic(Field field);
     }
 
     private static final class DictionaryEntry {
