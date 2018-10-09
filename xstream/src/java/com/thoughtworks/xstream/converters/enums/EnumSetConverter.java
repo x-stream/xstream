@@ -46,7 +46,6 @@ public class EnumSetConverter implements Converter {
         this.mapper = mapper;
     }
 
-    @Override
     public boolean canConvert(Class type) {
         return typeField != null && type != null && EnumSet.class.isAssignableFrom(type);
     }

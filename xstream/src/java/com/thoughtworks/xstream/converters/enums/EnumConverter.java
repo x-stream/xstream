@@ -30,7 +30,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
  */
 public class EnumConverter implements Converter {
 
-    @Override
     public boolean canConvert(Class type) {
         return type != null && type.isEnum() || Enum.class.isAssignableFrom(type);
     }
