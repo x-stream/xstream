@@ -6,7 +6,7 @@ addons:
       - openjdk-6-jdk
 jdk:
   - openjdk11
-  - oraclejdk10
+  - openjdk10
   - oraclejdk9
   - oraclejdk8
   - openjdk7
