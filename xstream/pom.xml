@@ -14,7 +14,7 @@
   <parent>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream-parent</artifactId>
-    <version>1.4.11-SNAPSHOT</version>
+    <version>1.4.11</version>
   </parent>
   <artifactId>xstream</artifactId>
   <packaging>jar</packaging>
@@ -310,8 +310,8 @@
                 <configuration>
                   <source>1.8</source>
                   <target>1.8</target>
-                  <excludes combine.self="override"/>
-                  <textExcludes combine.self="override"/>
+                  <excludes combine.self="override" />
+                  <textExcludes combine.self="override" />
                 </configuration>
                 <goals>
                   <goal>compile</goal>

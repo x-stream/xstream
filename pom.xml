@@ -14,7 +14,7 @@
   <groupId>com.thoughtworks.xstream</groupId>
   <artifactId>xstream-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.4.11-SNAPSHOT</version>
+  <version>1.4.11</version>
   <name>XStream Parent</name>
   <url>http://x-stream.github.io</url>
   <description>
@@ -321,12 +321,12 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
         <classifier>tests</classifier>
         <type>test-jar</type>
         <scope>test</scope>
@@ -334,43 +334,43 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-hibernate</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-hibernate</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-jmh</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-jmh</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-benchmark</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-benchmark</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
       </dependency>
@@ -1010,7 +1010,7 @@
     <surefire.illegal.access>permit</surefire.illegal.access>
 
     <argLine>${surefire.argline}</argLine>
-    <javadoc.xdoclint/>
-    <surefire.argline/>
+    <javadoc.xdoclint />
+    <surefire.argline />
   </properties>
 </project>
