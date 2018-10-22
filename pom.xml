@@ -934,7 +934,7 @@
     <version.plugin.codehaus.xsite>1.2.1</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>3.5.1</version.plugin.felix.bundle>
     <version.plugin.maven.antrun>1.8</version.plugin.maven.antrun>
-    <version.plugin.maven.assembly>2.1</version.plugin.maven.assembly>
+    <version.plugin.maven.assembly>3.1.0</version.plugin.maven.assembly>
     <version.plugin.maven.clean>3.1.0</version.plugin.maven.clean>
     <version.plugin.maven.compiler>3.8.0</version.plugin.maven.compiler>
     <version.plugin.maven.dependency>3.1.1</version.plugin.maven.dependency>
