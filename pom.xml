@@ -949,7 +949,7 @@
     <version.plugin.maven.resources>3.1.0</version.plugin.maven.resources>
     <version.plugin.maven.site>2.0-beta-6</version.plugin.maven.site>
     <version.plugin.maven.source>3.0.1</version.plugin.maven.source>
-    <version.plugin.maven.surefire>2.4.3</version.plugin.maven.surefire>
+    <version.plugin.maven.surefire>2.22.1</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>3.0.0</version.plugin.mojo.build-helper>
     <version.plugin.mojo.flatten>1.0.1</version.plugin.mojo.flatten>
     <version.plugin.eluder.coveralls>4.2.0</version.plugin.eluder.coveralls>
