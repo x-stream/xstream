@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013, 2014, 2015, 2016, 2017 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -73,16 +73,14 @@
 
     <h1 id="news">Latest News</h1>
 
-   <h2 id="1.4.10"><b>May 23, 2017</b> XStream 1.4.10 released</h2>
+    <h2 id="1.4.11"><b>October 23, 2018</b> XStream 1.4.11 released</h2>
 
-      <p class="highlight">This maintenance release addresses the security vulnerability <a href="CVE-2017-7957.html">
-      CVE-2017-7957</a>, a possibility for a denial of service attack.  All previous versions are affected.</p>
+      <p class="highlight">This maintenance release addresses again the security vulnerability <a href="CVE-2013-7285.html">
+	    CVE-2013-7285</a>, an arbitrary execution of commands when unmarshalling for XStream instances with
+	    uninitialized security framework. Only 1.4.10 with uninitialized security framework was affected.</p>
 
-      <p>XStream supports now the java.time.* package of Java 8 with various new converters.</p>
-
-      <p>Emit warning message if XStream instance is still running with an uninitialized security framework.</p>
-
-      <p>Provide separate XStream artifact without stuff for Java 8.</p>
+      <p>New future-proof method JVM.isVersion to detect major version of Java runtime (incl. Java 10) as
+		replacement for individual JVM.isXY methods.</p>
 
       <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
 

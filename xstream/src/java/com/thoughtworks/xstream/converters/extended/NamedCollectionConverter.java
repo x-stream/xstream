@@ -71,7 +71,7 @@ public class NamedCollectionConverter extends CollectionConverter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #writeCompleteItem(Object, MarshallingContext, HierarchicalStreamWriter)}
+     * @deprecated As of 1.4.11 use {@link #writeCompleteItem(Object, MarshallingContext, HierarchicalStreamWriter)}
      *             instead.
      */
     @Deprecated

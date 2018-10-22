@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -38,7 +38,7 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
  * EncodedByteArrayConverter.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.11
  */
 @BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
@@ -52,7 +52,7 @@ public class Base64Benchmark {
     /**
      * Enumeration for the operation of the base 64 coder.
      *
-     * @since upcoming
+     * @since 1.4.11
      */
     public static enum Operation {
         /**
@@ -68,7 +68,7 @@ public class Base64Benchmark {
     /**
      * Enumeration for the different base 64 coder.
      *
-     * @since upcoming
+     * @since 1.4.11
      */
     public static enum Codec implements StringCodec {
         /**
@@ -156,7 +156,7 @@ public class Base64Benchmark {
     /**
      * Enumeration for the different data sets.
      *
-     * @since upcoming
+     * @since 1.4.11
      */
     public static enum Data {
         /**
@@ -183,7 +183,7 @@ public class Base64Benchmark {
          * Get the encoded data as string.
          *
          * @return the encoded string
-         * @since upcoming
+         * @since 1.4.11
          */
         public String getBase64() {
             return base64;
@@ -193,7 +193,7 @@ public class Base64Benchmark {
          * Get the data to encode
          *
          * @return the data
-         * @since upcoming
+         * @since 1.4.11
          */
         public byte[] getData() {
             return data;
@@ -244,7 +244,7 @@ public class Base64Benchmark {
     /**
      * Encode and decode data.
      *
-     * @since upcoming
+     * @since 1.4.11
      */
     @Benchmark
     public void run() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.core.StringCodec;
  * Base64 codec implementation based on java.util.Base64.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.11
  */
 public class Base64JavaUtilCodec implements StringCodec {
     final private Base64.Decoder decoder;
@@ -31,7 +31,7 @@ public class Base64JavaUtilCodec implements StringCodec {
      * The implementation will use a basic encoder and a MIME decoder by default.
      * </p>
      *
-     * @since upcoming
+     * @since 1.4.11
      */
     public Base64JavaUtilCodec() {
         this(Base64.getEncoder(), Base64.getMimeDecoder());
@@ -42,7 +42,7 @@ public class Base64JavaUtilCodec implements StringCodec {
      *
      * @param encoder the encoder instance
      * @param decoder the decoder instance
-     * @since upcoming
+     * @since 1.4.11
      */
     public Base64JavaUtilCodec(final Base64.Encoder encoder, final Base64.Decoder decoder) {
         this.encoder = encoder;

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -74,7 +74,7 @@ public class Base64Encoder implements StringCodec {
      * The encoder will not insert any line breaks.
      * </p>
      *
-     * @since upcoming
+     * @since 1.4.11
      */
     public Base64Encoder() {
         this(false);
@@ -84,7 +84,7 @@ public class Base64Encoder implements StringCodec {
      * Constructs a Base64Encoder.
      *
      * @param lineBreaks flag to insert line breaks
-     * @since upcoming
+     * @since 1.4.11
      */
     public Base64Encoder(final boolean lineBreaks) {
         this.lineBreaks = lineBreaks;

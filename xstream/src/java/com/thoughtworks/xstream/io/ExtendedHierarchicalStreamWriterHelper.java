@@ -12,15 +12,16 @@
 package com.thoughtworks.xstream.io;
 
 /**
- * @deprecated As of upcoming, this helper is no longer required since version 1.5.0.
+ * @deprecated As of 1.4.11, this helper is no longer required since version 1.5.0.
  */
 @Deprecated
 public class ExtendedHierarchicalStreamWriterHelper {
 
     /**
-     * @deprecated As of upcoming, use {@link HierarchicalStreamWriter#startNode(String, Class)} directly. This helper
-     *             is no longer required since version 1.5.0.
+     * @deprecated As of 1.4.11, with version 1.5.0 use {@link HierarchicalStreamWriter#startNode(String, Class)}
+     *             directly. This helper will be no longer required.
      */
+    @Deprecated
     public static void startNode(final HierarchicalStreamWriter writer, final String name, final Class<?> clazz) {
         writer.startNode(name, clazz);
     }

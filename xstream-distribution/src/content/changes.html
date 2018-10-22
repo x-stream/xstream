@@ -67,19 +67,25 @@
 		<li>No support for Hibernate 3 collections.</li>
 	</ul>
 
+<!--
 	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
 
 	<p>Not yet released.</p>
+-->
+
+	<h1 id="1.4.11">1.4.11</h1>
+
+	<p>Released October 23, 2018.</p>
 
 	<p class="highlight">This maintenance release addresses again the security vulnerability <a href="CVE-2013-7285.html">
 	    CVE-2013-7285</a>, an arbitrary execution of commands when unmarshalling for XStream instances with
-	    uninitialized security framework.</p>
+	    uninitialized security framework. Only 1.4.10 uninitialized security framework was affected.</p>
 
 	<h2>Minor changes</h2>
 
 	<ul>
 		<li>GHPR:#91, GHPR:#106: Clean-up data stacks in UnmarshallingContext implementations in case of exception (by
-		Märt Bakhoff).</li>
+		Mä&auml;rt Bakhoff).</li>
 		<li>GHI:#2: Unneeded contention in DefaultConverterLookup.</li>
 		<li>GHI:#94: Fix PathConverter containing absolute Windows paths.</li>
 		<li>GHI:#105: XStream's ObjectInputStream returns wrong values for readUnsignedByte and readUnsignedShort.</li>
@@ -104,7 +110,7 @@
 
 	<ul>
 		<li>The EncodedByteArrayConverter will now use an encoder by default that does no longer add line breaks as
-		normally required by the RFC 1521 after 76 characters making it also easier to use the converter for
+		normally required by the RFC 1521 after 76 characters, making it also easier to use the converter for
 		attributes. This will not affect XStream's Base64 decoder.</li>
 	</ul>
 

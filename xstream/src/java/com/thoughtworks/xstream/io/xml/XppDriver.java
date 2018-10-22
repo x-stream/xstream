@@ -55,7 +55,7 @@ public class XppDriver extends AbstractXppDriver {
      *
      * @return a new instance of an XML Pull Parser
      * @throws XmlPullParserException if the creation of a new parser fails.
-     * @since upcoming
+     * @since 1.4.11
      */
     public static synchronized XmlPullParser createDefaultParser() throws XmlPullParserException {
         if (factory == null) {

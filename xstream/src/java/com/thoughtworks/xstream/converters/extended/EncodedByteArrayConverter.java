@@ -47,7 +47,7 @@ public class EncodedByteArrayConverter implements Converter, SingleValueConverte
      * Constructs an EncodedByteArrayConverter with a provided string codec.
      *
      * @param stringCodec the codec to encode and decode the data as string
-     * @since upcoming
+     * @since 1.4.11
      */
     public EncodedByteArrayConverter(final StringCodec stringCodec) {
         codec = stringCodec;

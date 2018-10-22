@@ -267,7 +267,7 @@ public class JVM implements Caching {
 
     /**
      * @since 1.4
-     * @deprecated As of upcoming use {@link #isVersion(int)}.
+     * @deprecated As of 1.4.11 use {@link #isVersion(int)}.
      */
     @Deprecated
     public static boolean is18() {
@@ -285,7 +285,7 @@ public class JVM implements Caching {
 
     /**
      * @since 1.4.10
-     * @deprecated As of upcoming use {@link #isVersion(int)}
+     * @deprecated As of 1.4.11 use {@link #isVersion(int)}
      */
     @Deprecated
     public static boolean is9() {
@@ -297,7 +297,7 @@ public class JVM implements Caching {
      *
      * @param version the requested major Java version
      * @return true if current runtime is at least the provided major version
-     * @since upcoming
+     * @since 1.4.11
      */
     public static boolean isVersion(final int version) {
         if (version < 1) {
@@ -438,7 +438,7 @@ public class JVM implements Caching {
      * own implementation.
      *
      * @return a Base64 codec implementation
-     * @since upcoming
+     * @since 1.4.11
      */
     public static StringCodec getBase64Codec() {
         return base64Codec;
