@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.core.StringCodec;
  * Base64 codec implementation based on JAXB.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.11
  */
 public class Base64JAXBCodec implements StringCodec {
 

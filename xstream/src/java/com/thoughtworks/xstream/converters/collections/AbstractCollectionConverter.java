@@ -52,7 +52,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     public abstract Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context);
 
     /**
-     * @deprecated As of upcoming use {@link #writeCompleteItem(Object, MarshallingContext, HierarchicalStreamWriter)}
+     * @deprecated As of 1.4.11 use {@link #writeCompleteItem(Object, MarshallingContext, HierarchicalStreamWriter)}
      *             instead.
      */
     protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
@@ -74,7 +74,7 @@ public abstract class AbstractCollectionConverter implements Converter {
      * @param item the item to write
      * @param context the current marshalling context
      * @param writer the target writer
-     * @since upcoming
+     * @since 1.4.11
      */
     protected void writeCompleteItem(final Object item, final MarshallingContext context,
             final HierarchicalStreamWriter writer) {
@@ -87,7 +87,7 @@ public abstract class AbstractCollectionConverter implements Converter {
      * @param item the item to write
      * @param context the current marshalling context
      * @param writer the target writer
-     * @since upcoming
+     * @since 1.4.11
      */
     protected void writeBareItem(final Object item, final MarshallingContext context,
             final HierarchicalStreamWriter writer) {
@@ -100,7 +100,7 @@ public abstract class AbstractCollectionConverter implements Converter {
      *
      * @param context the current marshalling context
      * @param writer the target writer
-     * @since upcoming
+     * @since 1.4.11
      */
     protected void writeNullItem(final MarshallingContext context, final HierarchicalStreamWriter writer) {
         final String name = mapper().serializedClass(null);
@@ -109,7 +109,7 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     /**
-     * @deprecated As of upcoming use {@link #readBareItem(HierarchicalStreamReader, UnmarshallingContext, Object)} or
+     * @deprecated As of 1.4.11 use {@link #readBareItem(HierarchicalStreamReader, UnmarshallingContext, Object)} or
      *             {@link #readCompleteItem(HierarchicalStreamReader, UnmarshallingContext, Object)} instead.
      */
     protected Object readItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
@@ -124,7 +124,7 @@ public abstract class AbstractCollectionConverter implements Converter {
      * @param context the unmarshalling context
      * @param current the target collection (if already available)
      * @return the read item
-     * @since upcoming
+     * @since 1.4.11
      */
     protected Object readBareItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
             final Object current) {
@@ -139,7 +139,7 @@ public abstract class AbstractCollectionConverter implements Converter {
      * @param context the unmarshalling context
      * @param current the target collection (if already available)
      * @return the read item
-     * @since upcoming
+     * @since 1.4.11
      */
     protected Object readCompleteItem(final HierarchicalStreamReader reader, final UnmarshallingContext context,
             final Object current) {

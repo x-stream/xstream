@@ -47,7 +47,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
      *
      * @param map the map to use
      * @throws NullPointerException if map is null
-     * @since upcoming
+     * @since 1.4.11
      */
     public DefaultConverterLookup(Map map) {
         typeToConverterMap = map;

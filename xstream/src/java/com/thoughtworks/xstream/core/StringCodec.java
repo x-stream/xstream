@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,7 +14,7 @@ package com.thoughtworks.xstream.core;
  * Interface for an encoder and decoder of data to string values and back.
  * 
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.11
  */
 public interface StringCodec {
 
@@ -23,7 +23,7 @@ public interface StringCodec {
      *
      * @param encoded the encoded string
      * @return the decoded data
-     * @since upcoming
+     * @since 1.4.11
      */
     byte[] decode(String encoded);
 
@@ -32,7 +32,7 @@ public interface StringCodec {
      *
      * @param data the data to encode
      * @return the data encoded as string
-     * @since upcoming
+     * @since 1.4.11
      */
     String encode(byte[] data);
 }

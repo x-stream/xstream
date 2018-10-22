@@ -24,7 +24,7 @@ public class Dom4JReader extends AbstractDocumentReader {
     private Element currentElement;
 
     /**
-     * @since upcoming
+     * @since 1.4.11
      */
     public Dom4JReader(final Branch branch) {
         this(branch instanceof Element ? (Element)branch : ((Document)branch).getRootElement());
