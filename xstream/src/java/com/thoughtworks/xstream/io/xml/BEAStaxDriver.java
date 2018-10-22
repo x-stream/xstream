@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  *
  * @author J&ouml;rg Schaible
  * @since 1.4
- * @deprecated As of upcoming use {@link StandardStaxDriver} or {@link WstxDriver} instead. BEA StAX implementation is outdated,
+ * @deprecated As of 1.4.11 use {@link StandardStaxDriver} or {@link WstxDriver} instead. BEA StAX implementation is outdated,
  *             unmaintained and has security issues.
  */
 @Deprecated
