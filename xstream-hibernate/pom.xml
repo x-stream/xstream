@@ -45,23 +45,6 @@
           </plugin>
         </plugins>
       </build>
-      <reporting>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>${version.plugin.maven.javadoc}</version>
-            <configuration>
-              <additionalparam>${javadoc.xdoclint}</additionalparam>
-              <detectJavaApiLink>false</detectJavaApiLink>
-              <source>${version.java.source}</source>
-              <links>
-                <link>${javadoc.link.javase}</link>
-              </links>
-            </configuration>
-          </plugin>
-        </plugins>
-      </reporting>
     </profile>
   </profiles>
 
