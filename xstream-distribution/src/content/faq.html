@@ -35,12 +35,17 @@
     <p>XStream 1.4.x requires Java 1.4 or later.  Note, that the XStream libraries contains class files targeting
     different Java runtime versions or Java features.  These classes are loaded by reflection and only used if XStream
     is running on an appropriate runtime environment.</p>
+    <p>Environments that load all class files of a Java archive can fail with this approach, the
+    <a href="Compatibility_Android">Android runtime</a> is such an example. You can build your own version of XStream
+    with a <a href="#Compatibility_JDK">lower JDK</a> then.</p>
+    <p>For Java 9 and later you will currently have to permit the now illegal access for XStream to operate.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_JDK">Which JDK is required to build XStream?</h2>
     <p>XStream 1.4.x can be build still with JDK 1.4 (see BUILD.txt).  However, to support the latest features it
-    requires currently a JDK of Java 8.  Otherwise the resulting jar files will miss some classes not available on
+    requires currently a JDK of Java 8.  Otherwise the resulting jar file will miss some class files not available on
     earlier runtimes.  Depending on the target environment this can be useful (e.g. for Android or GAE).</p>
+    <p>Note, that such Java archives will fail on higher Java runtimes then.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_Dependencies">Which dependencies are required to run XStream?</h2>
@@ -48,6 +53,7 @@
     However it depends on the use case. XStream will run without dependencies using the DOM driver on all Java runtimes
     or the StAX driver in combination with Java 6 or greater. See the list of <a 
     href="download.html#optional-deps">optional dependencies</a>.</p>
+    <p>Note, that XStream's manifest contains OSGi entries that declare all dependencies as optional.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_JVMs">Does XStream behave differently across different JVMs?</h2>
@@ -66,6 +72,7 @@
     starting with R25.1.0. Generally it works for all modern Java runtimes based on OpenJDK.  Android basically supports
     the enhanced mode as well as the Google Application Engine, but the latter's security model limits the types that
     can be handled. Note, that an active SecurityManager might prevent the usage of the enhanced mode also.</p>
+    <p>Since Java 9 it is required to permit the now illegal access.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_enhanced_mode_advantage">What are the advantages of using enhanced mode over pure Java mode?</h2>
@@ -86,9 +93,26 @@
       <tr><td>Private fields</td><td>Yes</td><td>Yes</td></tr>
       <tr><td>Final fields</td><td>Yes &gt;= JDK 1.5</td><td>Yes</td></tr>
     </table>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_illegal_reflective_access">Java runtime warns me about an illegal reflective access by XStream!</h2>
+
+    <p>Yes, this is normal. A big part of XStream is reflection based and there is currently no replacement for the
+    complete required functionality. You will have to permit this access currently, otherwise XStream will not work.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_no_module">Why does XStream not even declare an automated module name?</h2>
+
+    <p>Such a declaration would move XStream automatically into the module class path. However, in this environment a
+    lot of functionality does no longer work. Therefore it is on purpose that XStream stays currently in the unnamed
+    module.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_JPMS">Will XStream support the Java Platform Module System (JPMS)?</h2>
     
-    <p>Note, that these undocumented features are still available with Java 9, since there is currently no public
-    functionality provided as replacement.</p>
+    <p>At some point definitely. However, you will have to accept a limited functionality only, comparable to the pure
+    Java mode. The access model is very restrictive and XStream will no longer be able to marshal all types of the Java
+    runtime like now.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_XPP">Why is my application not able to create a XmlPullParser with the XppDriver since XStream 1.4?</h2>
