@@ -186,6 +186,7 @@ public class JVM implements Caching {
             try {
                 base64 = (StringCodec)base64Class.newInstance();
             } catch (final Exception e) {
+            } catch (final Error e) {
             }
         }
         if (base64 == null) {
