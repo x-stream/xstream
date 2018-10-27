@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,9 +105,9 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
         assertSame(out.s1, out.s2);
     }
 
-    public void testReferencesNotUsedForImmutableValueTypes() {
-        final MultRef<Integer> in = new MultRef<>();
-        in.s1 = new Integer(4);
+    public void testReferencesNotUsedForImmutableValueTypes() throws URISyntaxException {
+        final MultRef<URI> in = new MultRef<>();
+        in.s1 = new URI("urn:xstream:1.5");
         in.s2 = in.s1;
 
         final String xml = xstream.toXML(in);

@@ -51,9 +51,9 @@ public class CharConverter implements Converter, SingleValueConverter {
     @Override
     public Object fromString(final String str) {
         if (str.length() == 0) {
-            return new Character('\0');
+            return Character.valueOf('\0');
         } else {
-            return new Character(str.charAt(0));
+            return Character.valueOf(str.charAt(0));
         }
     }
 

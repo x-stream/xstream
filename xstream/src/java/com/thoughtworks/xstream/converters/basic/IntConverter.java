@@ -29,7 +29,7 @@ public class IntConverter extends AbstractSingleValueConverter {
         if (value < Integer.MIN_VALUE || value > 0xFFFFFFFFl) {
             throw new NumberFormatException("For input string: \"" + str + '"');
         }
-        return new Integer((int)value);
+        return Integer.valueOf((int)value);
     }
 
 }
