@@ -856,6 +856,25 @@
     </pluginManagement>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-maven-version</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>${version.maven.enforced}</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
@@ -930,6 +949,7 @@
     <version.java.source>1.7</version.java.source>
     <version.java.target>1.7</version.java.target>
     <version.java.enforced>[1.7,)</version.java.enforced>
+    <version.maven.enforced>[3.3.9,)</version.maven.enforced>
 
     <version.plugin.codehaus.xsite>1.2.1</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>3.5.1</version.plugin.felix.bundle>
