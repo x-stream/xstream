@@ -643,13 +643,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-eclipse-plugin</artifactId>
-          <configuration>
-            <downloadSources>true</downloadSources>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
           <version>${version.plugin.maven.enforcer}</version>
         </plugin>
@@ -843,6 +836,14 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>io.wcm.devops.maven.plugins</groupId>
+          <artifactId>eclipse-maven-plugin</artifactId>
+          <version>${version.plugin.io.wcm.devops.eclipse}</version>
+          <configuration>
+            <downloadSources>true</downloadSources>
+          </configuration>
+        </plugin>
+        <plugin>
           <groupId>org.eluder.coveralls</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
           <version>${version.plugin.eluder.coveralls}</version>
@@ -972,6 +973,7 @@
     <version.plugin.maven.surefire>3.0.0-M1</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>3.0.0</version.plugin.mojo.build-helper>
     <version.plugin.mojo.flatten>1.0.1</version.plugin.mojo.flatten>
+    <version.plugin.io.wcm.devops.eclipse>3.1.0</version.plugin.io.wcm.devops.eclipse>
     <version.plugin.eluder.coveralls>4.3.0</version.plugin.eluder.coveralls>
     <version.plugin.jacoco>0.8.2</version.plugin.jacoco>
 
