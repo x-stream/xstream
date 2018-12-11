@@ -51,8 +51,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.codehaus.woodstox</groupId>
-      <artifactId>wstx-asl</artifactId>
+      <groupId>com.fasterxml.woodstox</groupId>
+      <artifactId>woodstox-core</artifactId>
       <optional>true</optional>
     </dependency>
 
