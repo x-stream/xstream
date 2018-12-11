@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -65,6 +65,7 @@ public class StaxReader extends AbstractPullReader {
             case XMLStreamConstants.END_DOCUMENT:
             case XMLStreamConstants.END_ELEMENT:
                 return END_NODE;
+            case XMLStreamConstants.CDATA:
             case XMLStreamConstants.CHARACTERS:
                 return TEXT;
             case XMLStreamConstants.COMMENT:
