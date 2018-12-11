@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -55,19 +55,20 @@ public class StaxReader extends AbstractPullReader {
     
     protected int pullNextEvent() {
         try {
-            switch(in.next()) {
-                case XMLStreamConstants.START_DOCUMENT:
-                case XMLStreamConstants.START_ELEMENT:
-                    return START_NODE;
-                case XMLStreamConstants.END_DOCUMENT:
-                case XMLStreamConstants.END_ELEMENT:
-                    return END_NODE;
-                case XMLStreamConstants.CHARACTERS:
-                    return TEXT;
-                case XMLStreamConstants.COMMENT:
-                    return COMMENT;
-                default:
-                    return OTHER;
+            switch (in.next()) {
+            case XMLStreamConstants.START_DOCUMENT:
+            case XMLStreamConstants.START_ELEMENT:
+                return START_NODE;
+            case XMLStreamConstants.END_DOCUMENT:
+            case XMLStreamConstants.END_ELEMENT:
+                return END_NODE;
+            case XMLStreamConstants.CDATA:
+            case XMLStreamConstants.CHARACTERS:
+                return TEXT;
+            case XMLStreamConstants.COMMENT:
+                return COMMENT;
+            default:
+                return OTHER;
             }
         } catch (XMLStreamException e) {
             throw new StreamException(e);
