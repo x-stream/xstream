@@ -993,7 +993,7 @@
     <version.org.hibernate.core>4.2.5.Final</version.org.hibernate.core>
     <version.org.hibernate.envers>${version.org.hibernate.core}</version.org.hibernate.envers>
     <version.org.jdom>1.1.3</version.org.jdom>
-    <version.org.jdom2>2.0.5</version.org.jdom2>
+    <version.org.jdom2>2.0.6</version.org.jdom2>
     <version.org.json>20080701</version.org.json>
     <version.org.openjdk.jmh>1.21</version.org.openjdk.jmh>
     <version.org.slf4j>1.6.1</version.org.slf4j>
