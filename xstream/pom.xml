@@ -133,12 +133,6 @@
     </dependency>
 
     <dependency>
-      <groupId>oro</groupId>
-      <artifactId>oro</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <scope>test</scope>

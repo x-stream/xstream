@@ -14,8 +14,6 @@ import java.io.StringWriter;
 
 import javax.xml.namespace.QName;
 
-import org.apache.oro.text.perl.Perl5Util;
-
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
@@ -24,7 +22,6 @@ import com.thoughtworks.xstream.XStream;
 public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
 
     protected StringWriter buffer;
-    protected Perl5Util perlUtil;
     protected StaxDriver staxDriver;
     private X testInput;
 
@@ -39,7 +36,6 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         staxDriver.setRepairingNamespace(false);
         buffer = new StringWriter();
         writer = staxDriver.createWriter(buffer);
-        perlUtil = new Perl5Util();
 
         testInput = new X();
         testInput.anInt = 9;

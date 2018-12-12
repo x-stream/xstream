@@ -41,9 +41,9 @@ public final class SjsxpWriterTest extends AbstractStaxWriterTest {
     @Override
     protected void assertXmlProducedIs(String expected) {
         if (!staxDriver.isRepairingNamespace()) {
-            expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
+            expected = expected.replaceAll(" xmlns=\"\"", "");
         }
-        expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
+        expected = expected.replaceAll("<(\\w+)([^>]*)/>", "<$1$2></$1>");
         expected = replaceAll(expected, "&#xd;", "\r");
         // attributes are not properly escaped
         expected = replaceAll(expected, "&#xa;", "\n");

@@ -465,12 +465,6 @@
       </dependency>
 
       <dependency>
-        <groupId>oro</groupId>
-        <artifactId>oro</artifactId>
-        <version>${version.oro}</version>
-      </dependency>
-
-      <dependency>
         <groupId>org.json</groupId>
         <artifactId>json</artifactId>
         <version>${version.org.json}</version>
@@ -1003,7 +997,6 @@
     <version.org.json>20080701</version.org.json>
     <version.org.openjdk.jmh>1.21</version.org.openjdk.jmh>
     <version.org.slf4j>1.6.1</version.org.slf4j>
-    <version.oro>2.0.8</version.oro>
     <version.stax>1.2.0</version.stax>
     <version.stax.api>1.0.1</version.stax.api>
     <version.xerces.impl>2.8.1</version.xerces.impl>
