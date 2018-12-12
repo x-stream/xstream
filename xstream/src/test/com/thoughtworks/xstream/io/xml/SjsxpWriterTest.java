@@ -44,10 +44,10 @@ public final class SjsxpWriterTest extends AbstractStaxWriterTest {
             expected = expected.replaceAll(" xmlns=\"\"", "");
         }
         expected = expected.replaceAll("<(\\w+)([^>]*)/>", "<$1$2></$1>");
-        expected = replaceAll(expected, "&#xd;", "\r");
+        expected = expected.replace("&#xd;", "\r");
         // attributes are not properly escaped
-        expected = replaceAll(expected, "&#xa;", "\n");
-        expected = replaceAll(expected, "&#x9;", "\t");
+        expected = expected.replace("&#xa;", "\n");
+        expected = expected.replace("&#x9;", "\t");
         expected = getXMLHeader() + expected;
         assertEquals(expected, buffer.toString());
     }

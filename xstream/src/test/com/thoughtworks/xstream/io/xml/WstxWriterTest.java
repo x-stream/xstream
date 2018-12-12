@@ -21,8 +21,8 @@ public final class WstxWriterTest extends AbstractStaxWriterTest {
         if (!staxDriver.isRepairingNamespace() || expected.matches("<\\w+:\\w+ xmlns:\\w+=.+")) {
             expected = expected.replaceAll(" xmlns=\"\"", "");
         }
-        expected = replaceAll(expected, "&#x0D;", "&#xd;");
-        expected = replaceAll(expected, "&gt;", ">"); // unusual behavior in Woodstox, but allowed in spec
+        expected = expected.replace("&#x0D;", "&#xd;");
+        expected = expected.replace("&gt;", ">"); // unusual behavior in Woodstox, but allowed in spec
         expected = getXMLHeader() + expected;
         assertEquals(expected, buffer.toString());
     }

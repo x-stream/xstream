@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,10 +21,6 @@ public abstract class AbstractXMLWriterTest extends TestCase {
     protected HierarchicalStreamWriter writer;
 
     protected abstract void assertXmlProducedIs(String expected);
-
-    protected String replaceAll(final String s, final String occurance, final String replacement) {
-        return s.replaceAll(occurance, replacement);
-    }
 
     public void testProducesXmlElements() {
         writer.startNode("hello");

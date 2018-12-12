@@ -15,9 +15,9 @@ public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
     protected void assertXmlProducedIs(String expected) {
         expected = expected.replaceAll(" xmlns=\"\"", "");
         expected = expected.replaceAll("<(\\w+)([^>]*)/>", "<$1$2></$1>");
-        expected = replaceAll(expected, "&#xd;", "&#13;");
-        expected = replaceAll(expected, "&#xa;", "&#10;");
-        expected = replaceAll(expected, "&#x9;", "&#9;");
+        expected = expected.replace("&#xd;", "&#13;");
+        expected = expected.replace("&#xa;", "&#10;");
+        expected = expected.replace("&#x9;", "&#9;");
         expected = getXMLHeader() + expected;
         assertEquals(expected, buffer.toString());
     }

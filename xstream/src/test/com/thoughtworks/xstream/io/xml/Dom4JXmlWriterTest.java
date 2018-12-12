@@ -38,10 +38,10 @@ public class Dom4JXmlWriterTest extends AbstractXMLWriterTest {
     @Override
     protected void assertXmlProducedIs(String expected) {
         writer.close();
-        expected = replaceAll(expected, "&#xd;", "\r");
+        expected = expected.replace("&#xd;", "\r");
         // attributes are not properly escaped
-        expected = replaceAll(expected, "&#xa;", "\n");
-        expected = replaceAll(expected, "&#x9;", "\t");
+        expected = expected.replace("&#xa;", "\n");
+        expected = expected.replace("&#x9;", "\t");
         assertEquals(expected, out.toString());
     }
 }
