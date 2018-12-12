@@ -16,10 +16,10 @@ import javax.xml.stream.XMLOutputFactory;
 
 public final class WstxWriterTest extends AbstractStaxWriterTest {
     protected void assertXmlProducedIs(String expected) {
-        if (!staxDriver.isRepairingNamespace() || perlUtil.match("#<\\w+:\\w+(>| xmlns:\\w+=)#", expected)) {
-            expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
+        if (!staxDriver.isRepairingNamespace() || expected.matches("<\\w+:\\w+ xmlns:\\w+=.+")) {
+            expected = expected.replaceAll(" xmlns=\"\"", "");
         }
-        expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2 />#g", expected);
+        expected = expected.replaceAll("<(\\w+)([^>]*)/>", "<$1$2 />");
         expected = replaceAll(expected, "&#x0D;", "&#xd;");
         expected = replaceAll(expected, "&gt;", ">"); // Woodstox bug !!
         expected = getXMLHeader() + expected;

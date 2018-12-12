@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,20 +10,17 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.StringWriter;
+
+import javax.xml.namespace.QName;
+
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
 
-import org.apache.oro.text.perl.Perl5Util;
-
-import javax.xml.namespace.QName;
-
-import java.io.StringWriter;
-
 public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
 
     protected StringWriter buffer;
-    protected Perl5Util perlUtil;
     protected StaxDriver staxDriver;
     private X testInput;
     
@@ -37,7 +34,6 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         staxDriver.setRepairingNamespace(false);
         buffer = new StringWriter();
         writer = staxDriver.createWriter(buffer);
-        perlUtil = new Perl5Util();
 
         testInput = new X();
         testInput.anInt = 9;

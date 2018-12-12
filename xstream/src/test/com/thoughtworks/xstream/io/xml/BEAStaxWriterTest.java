@@ -12,8 +12,8 @@ package com.thoughtworks.xstream.io.xml;
 
 public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
     protected void assertXmlProducedIs(String expected) {
-        expected = perlUtil.substitute("s# xmlns=\"\"##g", expected);
-        expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
+        expected = expected.replaceAll(" xmlns=\"\"", "");
+        expected = expected.replaceAll("<(\\w+)([^>]*)/>", "<$1$2></$1>");
         expected = replaceAll(expected, "&#xd;", "&#13;");
         expected = replaceAll(expected, "&#xa;", "&#10;");
         expected = replaceAll(expected, "&#x9;", "&#9;");
