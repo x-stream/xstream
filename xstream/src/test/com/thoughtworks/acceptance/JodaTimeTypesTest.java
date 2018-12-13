@@ -30,11 +30,11 @@ public class JodaTimeTypesTest extends AbstractAcceptanceTest {
             + "  <iLocalMillis>1215043200000</iLocalMillis>\n"
             + "  <iChronology class=\"org.joda.time.chrono.ISOChronology\" resolves-to=\"org.joda.time.chrono.ISOChronology$Stub\" serialization=\"custom\">\n"
             + "    <org.joda.time.chrono.ISOChronology_-Stub>\n"
-            + "      <org.joda.time.tz.FixedDateTimeZone resolves-to=\"org.joda.time.DateTimeZone$Stub\" serialization=\"custom\">\n"
+            + "      <org.joda.time.UTCDateTimeZone resolves-to=\"org.joda.time.DateTimeZone$Stub\" serialization=\"custom\">\n"
             + "        <org.joda.time.DateTimeZone_-Stub>\n"
             + "          <string>UTC</string>\n"
             + "        </org.joda.time.DateTimeZone_-Stub>\n"
-            + "      </org.joda.time.tz.FixedDateTimeZone>\n"
+            + "      </org.joda.time.UTCDateTimeZone>\n"
             + "    </org.joda.time.chrono.ISOChronology_-Stub>\n"
             + "  </iChronology>\n"
             + "</org.joda.time.LocalDate>";
