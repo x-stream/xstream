@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2010, 2011, 2013, 2016, 2017 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2010, 2011, 2013, 2016, 2017, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -165,7 +165,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
     }
 
-    public void testSingletonListWithSimpleObject() {
+    public void testListWithOneSimpleObject() {
         ArrayList list1 = new ArrayList();
         list1.add("one");
         String json = xstream.toXML(list1);
@@ -186,6 +186,19 @@ public class JettisonMappedXmlDriverTest extends TestCase {
             ? "{'list':[{'string':['one','two','three']}]}"
             : "{'list':{'string':['one','two','three']}}").replace('\'', '"'), json);
         ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+
+    public void testListWithDifferentSimpleObjects() {
+        final ArrayList list1 = new ArrayList();
+        list1.add("one");
+        list1.add(new Integer(2));
+        list1.add(new Float(3.3f));
+        final String json = xstream.toXML(list1);
+        assertEquals((JVM.is15()
+            ? "{'list':[{'string':'one','int':2,'float':3.3}]}"
+            : "{'list':{'string':['one'],'int':2,'float':3.3}}").replace('\'', '"'), json);
+        final ArrayList list2 = (ArrayList)xstream.fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
 
@@ -277,7 +290,6 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     public void testArrayList() {
         if (JVM.is15()) {
             ArrayList list1 = new ArrayList();
-            list1.clear();
             list1.add(new Integer(12));
 
             list1.add("string");
