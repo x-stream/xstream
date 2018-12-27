@@ -157,7 +157,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
     }
 
-    public void testSingletonListWithSimpleObject() {
+    public void testListWithOneSimpleObject() {
         final ArrayList<String> list1 = new ArrayList<String>();
         list1.add("one");
         final String json = xstream.toXML(list1);
@@ -174,6 +174,17 @@ public class JettisonMappedXmlDriverTest extends TestCase {
         final String json = xstream.toXML(list1);
         assertEquals("{'list':[{'string':['one','two','three']}]}".replace('\'', '"'), json);
         final ArrayList<String> list2 = xstream.<ArrayList<String>>fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+
+    public void testListWithDifferentSimpleObjects() {
+        final ArrayList<Object> list1 = new ArrayList<Object>();
+        list1.add("one");
+        list1.add(Integer.valueOf(2));
+        list1.add(Float.valueOf(3.3f));
+        final String json = xstream.toXML(list1);
+        assertEquals("{'list':[{'string':'one','int':2,'float':3.3}]}".replace('\'', '"'), json);
+        final ArrayList<Object> list2 = xstream.<ArrayList<Object>>fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }
 
@@ -255,13 +266,10 @@ public class JettisonMappedXmlDriverTest extends TestCase {
 
     public void testArrayList() {
         final ArrayList<Object> list1 = new ArrayList<Object>();
-        list1.clear();
         list1.add(new Integer(12));
-
         list1.add("string");
         list1.add(new Integer(13));
         final String json = xstream.toXML(list1);
-
         final ArrayList<?> list2 = xstream.<ArrayList<?>>fromXML(json);
         assertEquals(json, xstream.toXML(list2));
     }

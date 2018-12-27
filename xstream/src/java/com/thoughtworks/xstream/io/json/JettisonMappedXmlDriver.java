@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2008, 2009, 2010, 2011, 2013, 2014 XStream Committers.
+ * Copyright (c) 2007, 2008, 2009, 2010, 2011, 2013, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -51,7 +51,7 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
      * Construct a JettisonMappedXmlDriver.
      */
     public JettisonMappedXmlDriver() {
-        this(new Configuration());
+        this(null);
     }
 
     /**
@@ -75,7 +75,8 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
      * @param useSerializeAsArray flag to use XStream's hints for collections and arrays
      * @since 1.4
      */
-    public JettisonMappedXmlDriver(final Configuration config, final boolean useSerializeAsArray) {
+    public JettisonMappedXmlDriver(Configuration config, final boolean useSerializeAsArray) {
+        config = config == null ? new Configuration() : config;
         mof = new MappedXMLOutputFactory(config);
         mif = new MappedXMLInputFactory(config);
         convention = new MappedNamespaceConvention(config);
