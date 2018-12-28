@@ -5,6 +5,7 @@ For Java 1.4 build with Maven 2.0.11
 
 To build:
 
+For Java 1.4: rm */profiles/osgi
 mvn clean install
 
 Before deploying:
