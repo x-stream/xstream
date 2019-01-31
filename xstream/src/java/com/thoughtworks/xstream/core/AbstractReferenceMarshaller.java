@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2014, 2015, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2014, 2015, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.core.util.ObjectIdDictionary;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.path.Path;
@@ -32,7 +31,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * @author Mauro Talevi
  * @since 1.2
  */
-public abstract class AbstractReferenceMarshaller<R> extends TreeMarshaller implements MarshallingContext {
+public abstract class AbstractReferenceMarshaller<R> extends TreeMarshaller {
 
     private final ObjectIdDictionary<Id<R>> references = new ObjectIdDictionary<>();
     private final ObjectIdDictionary<Object> implicitElements = new ObjectIdDictionary<>();
