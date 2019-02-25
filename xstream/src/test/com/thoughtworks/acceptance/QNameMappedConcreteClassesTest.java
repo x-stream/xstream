@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,14 +21,14 @@ import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.WstxDriver;
 
 
 public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
-    public static final String XML_HEADER = "<?xml version='1.0' encoding='utf-8'?>";
+    public static final String XML_HEADER = "<?xml version='1.0' encoding='UTF-8'?>";
 
     protected QNameMap qnameMap;
     protected String namespace = getDefaultNS(WithList.class);
@@ -44,7 +44,7 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
         final String expected = ""
             + XML_HEADER
             + "<w:withList xmlns:w=\"java://com.thoughtworks.acceptance.someobjects\">"
-            + "<things></things>"
+            + /**/ "<things/>"
             + "</w:withList>";
 
         assertBothWays(withList, expected);
@@ -59,7 +59,7 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
         final String expected = XML_HEADER
             + "<withList xmlns=\"java://com.thoughtworks.acceptance.someobjects\">"
-            + "<things></things>"
+            + /**/ "<things/>"
             + "</withList>";
 
         assertBothWays(withList, expected);
@@ -76,7 +76,7 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
         final String expected = XML_HEADER
             + "<x:withList xmlns:x=\"java://com.thoughtworks.acceptance.someobjects\">"
-            + "<x:things></x:things>"
+            + /**/ "<x:things/>"
             + "</x:withList>";
 
         assertBothWays(withList, expected);
@@ -92,7 +92,7 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
         final String expected = XML_HEADER
             + "<w:withList xmlns:w=\"java://com.thoughtworks.acceptance.someobjects\">"
-            + "<f:things xmlns:f=\"urn:foo\"></f:things>"
+            + /**/ "<f:things xmlns:f=\"urn:foo\"/>"
             + "</w:withList>";
 
         assertBothWays(withList, expected);
@@ -113,12 +113,38 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
 
         final String expected = XML_HEADER
             + "<h:handler xmlns:h=\"java://com.thoughtworks.acceptance.someobjects1\">"
-            + "<aStr>foo</aStr>"
-            + "<anInt>42</anInt>"
-            + "<p:protocol xmlns:p=\"java://com.thoughtworks.acceptance.someobjects2\">"
-            + "<yField>YField</yField>"
-            + "</p:protocol>"
+            + /**/ "<aStr>foo</aStr>"
+            + /**/ "<anInt>42</anInt>"
+            + /**/ "<p:protocol xmlns:p=\"java://com.thoughtworks.acceptance.someobjects2\">"
+            + /**//**/ "<yField>YField</yField>"
+            + /**/ "</p:protocol>"
             + "</h:handler>";
+
+        assertBothWays(x, expected);
+    }
+
+    public void testUsingDifferentNamespacesSameAliases() {
+        xstream.alias("handler", X.class);
+        xstream.aliasField("protocol", X.class, "innerObj");
+
+        qnameMap.setDefaultNamespace(getDefaultNS(Handler.class));
+        qnameMap.registerMapping(new QName(getDefaultNS(String.class)+1, "item"), "aStr");
+        qnameMap.registerMapping(new QName(getDefaultNS(Integer.class)+2, "item"), "anInt");
+
+        final X x = new X();
+        x.aStr = "foo";
+        x.anInt = 42;
+        x.innerObj = new Y();
+        x.innerObj.yField = "YField";
+
+        final String expected = XML_HEADER
+            + "<handler xmlns=\"java://com.thoughtworks.acceptance.someobjects\">"
+            + /**/ "<item xmlns=\"java://java.lang1\">foo</item>"
+            + /**/ "<item xmlns=\"java://java.lang2\">42</item>"
+            + /**/ "<protocol>"
+            + /**//**/ "<yField>YField</yField>"
+            + /**/ "</protocol>"
+            + "</handler>";
 
         assertBothWays(x, expected);
     }
@@ -127,7 +153,7 @@ public class QNameMappedConcreteClassesTest extends AbstractAcceptanceTest {
     protected HierarchicalStreamDriver createDriver() {
         // careful, called from inside base class constructor
         qnameMap = new QNameMap();
-        final StaxDriver driver = new BEAStaxDriver(qnameMap); //TODO: Test for all StAX drivers
+        final StaxDriver driver = new WstxDriver(qnameMap); //TODO: Test for all StAX drivers
         driver.setRepairingNamespace(false);
         return driver;
     }
