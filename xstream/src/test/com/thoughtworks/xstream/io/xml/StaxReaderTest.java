@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2016, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,17 +11,13 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import java.io.StringReader;
-
 import com.thoughtworks.xstream.XStreamException;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 
-public class StaxReaderTest extends AbstractXMLReaderTest {
+public class StaxReaderTest extends AbstractStaxReaderTest {
     @Override
-    protected HierarchicalStreamReader createReader(final String xml) throws Exception {
-        final StaxDriver driver = new StaxDriver();
-        return driver.createReader(new StringReader(xml));
+    protected StaxDriver createDriver(final QNameMap qnameMap) {
+        return new StaxDriver(qnameMap);
     }
 
     @Override

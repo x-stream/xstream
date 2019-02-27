@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009, 2011, 2018 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -49,8 +49,14 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         final QName qname = new QName("http://foo.com", "alias", "foo");
         qnameMap.registerMapping(qname, X.class);
 
-        final String expected =
-                "<foo:alias xmlns:foo=\"http://foo.com\"><aStr xmlns=\"\">zzz</aStr><anInt xmlns=\"\">9</anInt><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></foo:alias>";
+        final String expected = "" //
+            + "<foo:alias xmlns:foo=\"http://foo.com\">"
+            + /**/ "<aStr xmlns=\"\">zzz</aStr>"
+            + /**/ "<anInt xmlns=\"\">9</anInt>"
+            + /**/ "<innerObj xmlns=\"\">"
+            + /**//**/ "<yField>ooo</yField>"
+            + /**/ "</innerObj>"
+            + "</foo:alias>";
         marshalWithBothRepairingModes(qnameMap, expected);
     }
 
@@ -59,8 +65,14 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         final QName qname = new QName("http://foo.com", "bar");
         qnameMap.registerMapping(qname, X.class);
 
-        final String expected =
-                "<bar xmlns=\"http://foo.com\"><aStr xmlns=\"\">zzz</aStr><anInt xmlns=\"\">9</anInt><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></bar>";
+        final String expected = "" //
+            + "<bar xmlns=\"http://foo.com\">"
+            + /**/ "<aStr xmlns=\"\">zzz</aStr>"
+            + /**/ "<anInt xmlns=\"\">9</anInt>"
+            + /**/ "<innerObj xmlns=\"\">"
+            + /**//**/ "<yField>ooo</yField>"
+            + /**/ "</innerObj>"
+            + "</bar>";
         marshalWithBothRepairingModes(qnameMap, expected);
     }
 
@@ -75,8 +87,35 @@ public abstract class AbstractStaxWriterTest extends AbstractXMLWriterTest {
         qname = new QName("http://bar.com", "alias2", "bar");
         qnameMap.registerMapping(qname, "anInt");
 
-        final String expected =
-                "<foo:alias xmlns:foo=\"http://foo.com\"><bar:alias1 xmlns:bar=\"http://bar.com\">zzz</bar:alias1><bar:alias2 xmlns:bar=\"http://bar.com\">9</bar:alias2><innerObj xmlns=\"\"><yField>ooo</yField></innerObj></foo:alias>";
+        final String expected = "" //
+            + "<foo:alias xmlns:foo=\"http://foo.com\">"
+            + /**/ "<bar:alias1 xmlns:bar=\"http://bar.com\">zzz</bar:alias1>"
+            + /**/ "<bar:alias2 xmlns:bar=\"http://bar.com\">9</bar:alias2>"
+            + /**/ "<innerObj xmlns=\"\">"
+            + /**//**/ "<yField>ooo</yField>"
+            + /**/ "</innerObj>"
+            + "</foo:alias>";
+        marshalWithBothRepairingModes(qnameMap, expected);
+    }
+
+    public void testNamespacedXmlWithSameAlias() throws Exception {
+        final QNameMap qnameMap = new QNameMap();
+        qnameMap.setDefaultNamespace("http://foobar.com");
+
+        QName qname = new QName("http://foo.com", "alias", "foo");
+        qnameMap.registerMapping(qname, "aStr");
+
+        qname = new QName("http://bar.com", "alias", "bar");
+        qnameMap.registerMapping(qname, "anInt");
+
+        final String expected = "" //
+            + "<com.thoughtworks.acceptance.someobjects.X xmlns=\"http://foobar.com\">"
+            + /**/ "<foo:alias xmlns:foo=\"http://foo.com\">zzz</foo:alias>"
+            + /**/ "<bar:alias xmlns:bar=\"http://bar.com\">9</bar:alias>"
+            + /**/ "<innerObj>"
+            + /**//**/ "<yField>ooo</yField>"
+            + /**/ "</innerObj>"
+            + "</com.thoughtworks.acceptance.someobjects.X>";
         marshalWithBothRepairingModes(qnameMap, expected);
     }
 

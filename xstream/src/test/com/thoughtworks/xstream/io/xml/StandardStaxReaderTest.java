@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2017, 2018 XStream Committers.
+ * Copyright (C) 2015, 2017, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,20 +10,11 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import java.io.StringReader;
+public class StandardStaxReaderTest extends AbstractStaxReaderTest {
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-
-
-public class StandardStaxReaderTest extends AbstractXMLReaderTest {
-
-    private final HierarchicalStreamDriver driver = new StandardStaxDriver();
-
-    // factory method
     @Override
-    protected HierarchicalStreamReader createReader(final String xml) throws Exception {
-        return driver.createReader(new StringReader(xml));
+    protected StaxDriver createDriver(final QNameMap qnameMap) {
+        return new StandardStaxDriver(qnameMap);
     }
 
     // inherits tests from superclass

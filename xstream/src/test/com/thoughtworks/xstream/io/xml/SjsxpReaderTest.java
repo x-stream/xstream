@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2015. 2017, 2018 XStream Committers.
+ * Copyright (C) 2011, 2015. 2017, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,18 +10,13 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import java.io.StringReader;
-
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 
-public class SjsxpReaderTest extends AbstractXMLReaderTest {
+public class SjsxpReaderTest extends AbstractStaxReaderTest {
     final static String className = "com.sun.xml.internal.stream.XMLInputFactoryImpl";
 
     public static Test suite() {
@@ -43,12 +38,9 @@ public class SjsxpReaderTest extends AbstractXMLReaderTest {
         }
     }
 
-    private final HierarchicalStreamDriver driver = new SjsxpDriver();
-
-    // factory method
     @Override
-    protected HierarchicalStreamReader createReader(final String xml) throws Exception {
-        return driver.createReader(new StringReader(xml));
+    protected StaxDriver createDriver(final QNameMap qnameMap) {
+        return new SjsxpDriver(qnameMap);
     }
 
     // inherits tests from superclass

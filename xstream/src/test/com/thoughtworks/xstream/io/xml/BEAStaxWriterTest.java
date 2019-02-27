@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011, 2018 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -9,6 +9,9 @@
  * Created on 03. November 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.xml;
+
+import java.util.Arrays;
+
 
 public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
     @Override
@@ -34,8 +37,10 @@ public final class BEAStaxWriterTest extends AbstractStaxWriterTest {
 
     @Override
     protected void marshalRepairing(final QNameMap qnameMap, final String expected) {
-        // repairing mode fails for BEA's reference implementation in this case
-        if (!getName().equals("testNamespacedXmlWithPrefixTwice")) {
+        // repairing mode fails for BEA's reference implementation in these cases
+        if (!(Arrays
+            .asList("testNamespacedXmlWithPrefixTwice", "testNamespacedXmlWithSameAlias")
+            .contains(getName()))) {
             super.marshalRepairing(qnameMap, expected);
         }
     }
