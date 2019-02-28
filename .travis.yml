@@ -15,7 +15,7 @@ install: true
 script:
     echo $JAVA_HOME;
     echo $TRAVIS_JDK_VERSION;
-    if [[ $JAVA_HOME =*java-6* ]]; then
+    if [[ $JAVA_HOME == *java-6* ]]; then
         jdk_switcher use openjdk6;
     fi;
     java -version;
