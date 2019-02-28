@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2014, 2015, 2017 XStream committers.
+ Copyright (C) 2014, 2015, 2017, 2019 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -83,12 +83,15 @@
 	<p>XStream itself sets up a white list by default, i.e. it blocks all classes except those types it has explicit
 	converters for.  Nonetheless, it is still the better approach to maintain an own white list for an XStream
 	instance.  A black list scenario should be avoided in general, because it provides a false sense of security.</p>
-         
-	<p class=highlight>Apart from value manipulations, this implementation still allows the injection of allowed
-	objects at wrong locations, e.g. inserting an integer into a list of strings.</p>
+
+	<p class=highlight>Note: If a white listed type contains itself other members that are handled by XStream, you
+	will have to white list those member's types also.</p>
          
 	<p>Separate to the XStream security framework, it has always been possible to overwrite the setupConverter method
 	of XStream to register only the required converters.</p>
+         
+	<p class=highlight>Apart from value manipulations, this implementation still allows the injection of allowed
+	objects at wrong locations, e.g. inserting an integer into a list of strings.</p>
     
     <h2 id="validation">XML Validation</h2>
 
@@ -149,7 +152,7 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	    <th>Permission</th>
 	    <th>Description</th>
 	    <th>Example</th>
-	    <th>Default</th>
+	    <th width="50%">Default</th>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/AnyTypePermission.html">AnyTypePermission</a></td>
