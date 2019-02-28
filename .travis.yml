@@ -1,5 +1,5 @@
 language: java
-sudo: false
+sudo: required
 addons:
   apt:
     packages:
@@ -13,6 +13,13 @@ jdk:
   - openjdk6
 install: true
 script:
+    echo $JAVA_HOME
+    echo $TRAVIS_JDK_VERSION
+    if [[ $JAVA_HOME =*java-6* ]]; then
+        jdk_switcher use openjdk6;
+    fi
+    java -version
+    echo $TRAVIS_JDK_VERSION
     if [ "$TRAVIS_JDK_VERSION" == "openjdk6" ]; then
       wget https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip -P ./target;
       unzip -qq ./target/apache-maven-3.2.5-bin.zip -d ./target;
