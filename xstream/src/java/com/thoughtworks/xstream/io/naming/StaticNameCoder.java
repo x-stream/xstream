@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2015, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,7 @@ import java.util.Map;
  * <p>
  * The provided map should contain a mapping between the name of the Java type or field to the proper element in the
  * target format. If a name cannot be found in the map, it is assumed not to be mapped at all. Note that the values of
- * the map should be unique also, otherwise the decoding will produce wrong results.
+ * the map should be unique also, otherwise the decoding is undefined and will produce wrong results.
  * </p>
  * 
  * @author J&ouml;rg Schaible
