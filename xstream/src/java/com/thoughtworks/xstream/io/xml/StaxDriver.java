@@ -1,16 +1,17 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 29. September 2004 by James Strachan
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,7 +39,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 
 /**
  * A driver using the StAX API to create XML reader and writer.
- * 
+ *
  * @author James Strachan
  * @author J&ouml;rg Schaible
  * @version $Revision$
@@ -90,19 +91,23 @@ public class StaxDriver extends AbstractXmlDriver {
         this(new QNameMap(), (NameCoder)replacer);
     }
 
+    @SuppressWarnings("resource")
     @Override
     public HierarchicalStreamReader createReader(final Reader xml) {
         try {
-            return createStaxReader(createParser(xml));
+            final HierarchicalStreamReader reader = createStaxReader(createParser(xml));
+            return wrapReader(xml, reader);
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         }
     }
 
+    @SuppressWarnings("resource")
     @Override
     public HierarchicalStreamReader createReader(final InputStream in) {
         try {
-            return createStaxReader(createParser(in));
+            final HierarchicalStreamReader reader = createStaxReader(createParser(in));
+            return wrapReader(in, reader);
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         }
@@ -116,18 +121,7 @@ public class StaxDriver extends AbstractXmlDriver {
             stream = in.openStream();
             final HierarchicalStreamReader reader = createStaxReader(createParser(new StreamSource(stream, in
                 .toExternalForm())));
-            return new ReaderWrapper(reader) {
-
-                @Override
-                public void close() {
-                    super.close();
-                    try {
-                        stream.close();
-                    } catch (final IOException e) {
-                        // ignore
-                    }
-                }
-            };
+            return wrapReader(stream, reader);
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         } catch (final IOException e) {
@@ -144,23 +138,27 @@ public class StaxDriver extends AbstractXmlDriver {
             final HierarchicalStreamReader reader = createStaxReader(createParser(new StreamSource(stream, in
                 .toURI()
                 .toASCIIString())));
-            return new ReaderWrapper(reader) {
-
-                @Override
-                public void close() {
-                    super.close();
-                    try {
-                        stream.close();
-                    } catch (final IOException e) {
-                        // ignore
-                    }
-                }
-            };
+            return wrapReader(stream, reader);
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         } catch (final FileNotFoundException e) {
             throw new StreamException(e);
         }
+    }
+
+    private ReaderWrapper wrapReader(final Closeable in, final HierarchicalStreamReader reader) {
+        return new ReaderWrapper(reader) {
+
+            @Override
+            public void close() {
+                super.close();
+                try {
+                    in.close();
+                } catch (final IOException e) {
+                    // ignore
+                }
+            }
+        };
     }
 
     @Override
@@ -226,8 +224,8 @@ public class StaxDriver extends AbstractXmlDriver {
      * @since 1.2
      */
     public void setRepairingNamespace(final boolean repairing) {
-        getOutputFactory().setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES,
-            repairing ? Boolean.TRUE : Boolean.FALSE);
+        getOutputFactory()
+            .setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, repairing ? Boolean.TRUE : Boolean.FALSE);
     }
 
     // Implementation methods
