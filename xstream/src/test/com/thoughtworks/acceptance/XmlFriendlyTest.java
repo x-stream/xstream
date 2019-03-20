@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -143,7 +143,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
             + "<unusual>\n"
             + "  <_.00b5__>a</_.00b5__>\n"
             + "  <___.00b5>b</___.00b5>\n"
-            + "  <_.00a2_.00a5€_.00a3äöüß>c</_.00a2_.00a5€_.00a3äöüß>\n"
+            + "  <_.00a2_.00a5_.20ac_.00a3äöüß>c</_.00a2_.00a5_.20ac_.00a3äöüß>\n"
             + "</unusual>";
         assertBothWays(in, expected);
     }
