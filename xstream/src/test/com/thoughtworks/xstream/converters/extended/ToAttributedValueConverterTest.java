@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2013, 2014, 2018 XStream Committers.
+ * Copyright (C) 2011, 2013, 2014, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,11 +30,11 @@ import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.TreeMarshaller;
 import com.thoughtworks.xstream.core.TreeUnmarshaller;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.mapper.DefaultImplementationsMapper;
@@ -67,7 +67,7 @@ public class ToAttributedValueConverterTest extends TestCase {
         mapper = new DefaultImplementationsMapper(new ArrayMapper(classAliasingMapper));
 
         reflectionProvider = new SunUnsafeReflectionProvider();
-        driver = new XppDriver();
+        driver = DefaultDriver.create();
 
         converterLookup = new DefaultConverterLookup();
         converterLookup.registerConverter(new SingleValueConverterWrapper(new StringConverter()), 0);

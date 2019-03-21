@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2014, 2018 XStream Committers.
+ * Copyright (C) 2007, 2014, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,22 +11,22 @@
 package com.thoughtworks.acceptance;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 
 
 public class XmlFriendlyDollarOnlyTest extends XmlFriendlyTest {
 
     @Override
     protected XStream createXStream() {
-        final XStream xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
+        final XStream xstream = new XStream(DefaultDriver.create(new XmlFriendlyNameCoder("_-", "_")));
         setupSecurity(xstream);
         xstream.allowTypesByWildcard(getClass().getSuperclass().getName() + "$*");
         return xstream;
     }
 
     @Override
-    protected <T> T  assertBothWays(final Object root, final String xml) {
+    protected <T> T assertBothWays(final Object root, final String xml) {
         return super.assertBothWays(root, xml.replaceAll("__", "_"));
     }
 }

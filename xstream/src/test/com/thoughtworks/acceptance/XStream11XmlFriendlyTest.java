@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,15 +13,15 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.xml.XStream11XmlFriendlyReplacer;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 
 
 public class XStream11XmlFriendlyTest extends AbstractAcceptanceTest {
 
     @Override
     protected XStream createXStream() {
-        final XStream xstream = new XStream(new XppDriver(new XStream11XmlFriendlyReplacer())) {
+        final XStream xstream = new XStream(DefaultDriver.create(new XStream11XmlFriendlyReplacer())) {
             @Override
             protected boolean useXStream11XmlFriendlyMapper() {
                 return true;

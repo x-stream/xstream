@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2014, 2015, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2014, 2015, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,10 +24,10 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.binary.BinaryStreamReader;
 import com.thoughtworks.xstream.io.binary.BinaryStreamWriter;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -56,7 +56,7 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         } catch (final Exception e) {
             throw new RuntimeException("Could not load driver: " + driver, e);
         }
-        return new XppDriver();
+        return DefaultDriver.create();
     }
 
     protected void setupSecurity(final XStream xstream) {
@@ -198,26 +198,27 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             sort.append('"');
         }
 
-        final String stylesheet = String.format(""
-            + "<?xml version=\"1.0\"?>\n"
-            + "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n"
-            + "<xsl:template match=\"%1$s\">\n"
-            + "   <xsl:copy>\n"
-            + "           <xsl:apply-templates select=\"%2$s\">\n"
-            + "                   <xsl:sort%3$s/>\n"
-            + "           </xsl:apply-templates>\n"
-            + "   </xsl:copy>\n"
-            + "</xsl:template>\n"
-            + "<xsl:template match=\"@*|node()\">\n"
-            + "   <xsl:copy>\n"
-            + "           <xsl:apply-templates select=\"@*|node()\"/>\n"
-            + "   </xsl:copy>\n"
-            + "</xsl:template>\n"
-            + "</xsl:stylesheet>", match, templateSelect, sort);
+        final String stylesheet = String
+            .format(""
+                + "<?xml version=\"1.0\"?>\n"
+                + "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n"
+                + "<xsl:template match=\"%1$s\">\n"
+                + "   <xsl:copy>\n"
+                + "           <xsl:apply-templates select=\"%2$s\">\n"
+                + "                   <xsl:sort%3$s/>\n"
+                + "           </xsl:apply-templates>\n"
+                + "   </xsl:copy>\n"
+                + "</xsl:template>\n"
+                + "<xsl:template match=\"@*|node()\">\n"
+                + "   <xsl:copy>\n"
+                + "           <xsl:apply-templates select=\"@*|node()\"/>\n"
+                + "   </xsl:copy>\n"
+                + "</xsl:template>\n"
+                + "</xsl:stylesheet>", match, templateSelect, sort);
 
         final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        final Transformer transformer = transformerFactory.newTransformer(new StreamSource(new StringReader(
-            stylesheet)));
+        final Transformer transformer = transformerFactory
+            .newTransformer(new StreamSource(new StringReader(stylesheet)));
         final StringWriter writer = new StringWriter();
         transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(writer));
         return writer.toString();

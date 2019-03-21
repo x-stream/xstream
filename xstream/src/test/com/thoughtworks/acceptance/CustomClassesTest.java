@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,7 +15,7 @@ import java.io.StringReader;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
-import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 
 
 public class CustomClassesTest extends AbstractAcceptanceTest {
@@ -131,7 +131,7 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
         // execute
         final SamplePersonHolder alreadyInstantiated = new SamplePersonHolder();
-        xstream.unmarshal(new XppDriver().createReader(new StringReader(xml)), alreadyInstantiated);
+        xstream.unmarshal(DefaultDriver.create().createReader(new StringReader(xml)), alreadyInstantiated);
 
         // verify
         final SamplePersonHolder expectedResult = new SamplePersonHolder();

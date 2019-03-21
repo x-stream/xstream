@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,11 +30,11 @@ import com.thoughtworks.xstream.converters.javabean.JavaBeanProvider;
 import com.thoughtworks.xstream.converters.reflection.FieldKeySorter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.security.TypeHierarchyPermission;
 import com.thoughtworks.xstream.security.TypePermission;
@@ -52,15 +52,22 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
 public class XStreamer {
 
     private final static TypePermission[] PERMISSIONS = {
-        new TypeHierarchyPermission(ConverterMatcher.class), new TypeHierarchyPermission(Mapper.class),
-        new TypeHierarchyPermission(XStream.class), new TypeHierarchyPermission(ReflectionProvider.class),
-        new TypeHierarchyPermission(JavaBeanProvider.class), new TypeHierarchyPermission(FieldKeySorter.class),
-        new TypeHierarchyPermission(ConverterLookup.class), new TypeHierarchyPermission(ConverterRegistry.class),
-        new TypeHierarchyPermission(HierarchicalStreamDriver.class), new TypeHierarchyPermission(
-            MarshallingStrategy.class), new TypeHierarchyPermission(MarshallingContext.class),
-        new TypeHierarchyPermission(UnmarshallingContext.class), new TypeHierarchyPermission(NameCoder.class),
-        new TypeHierarchyPermission(TypePermission.class), new WildcardTypePermission(JVM.class.getPackage().getName()
-            + ".**"), new TypeHierarchyPermission(DatatypeFactory.class) // required by DurationConverter
+        new TypeHierarchyPermission(ConverterMatcher.class), //
+        new TypeHierarchyPermission(Mapper.class), //
+        new TypeHierarchyPermission(XStream.class), //
+        new TypeHierarchyPermission(ReflectionProvider.class), //
+        new TypeHierarchyPermission(JavaBeanProvider.class), //
+        new TypeHierarchyPermission(FieldKeySorter.class), //
+        new TypeHierarchyPermission(ConverterLookup.class), //
+        new TypeHierarchyPermission(ConverterRegistry.class), //
+        new TypeHierarchyPermission(HierarchicalStreamDriver.class), //
+        new TypeHierarchyPermission(MarshallingStrategy.class), //
+        new TypeHierarchyPermission(MarshallingContext.class), //
+        new TypeHierarchyPermission(UnmarshallingContext.class), //
+        new TypeHierarchyPermission(NameCoder.class), //
+        new TypeHierarchyPermission(TypePermission.class), //
+        new WildcardTypePermission(JVM.class.getPackage().getName() + ".**"), //
+        new TypeHierarchyPermission(DatatypeFactory.class) // required by DurationConverter
     };
 
     /**
@@ -210,7 +217,7 @@ public class XStreamer {
      * @see #toXML(XStream, Object, Writer)
      */
     public <T> T fromXML(final Reader xml) throws IOException, ClassNotFoundException {
-        return fromXML(new XppDriver(), xml);
+        return fromXML(DefaultDriver.create(), xml);
     }
 
     /**
@@ -227,7 +234,7 @@ public class XStreamer {
      */
     public <T> T fromXML(final Reader xml, final TypePermission... permissions)
             throws IOException, ClassNotFoundException {
-        return fromXML(new XppDriver(), xml, permissions);
+        return fromXML(DefaultDriver.create(), xml, permissions);
     }
 
     /**

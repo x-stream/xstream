@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -140,12 +140,12 @@ import com.thoughtworks.xstream.core.TreeMarshallingStrategy;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.core.util.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StatefulWriter;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.AnnotationMapper;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
@@ -353,27 +353,27 @@ public class XStream {
     /**
      * Constructs a default XStream.
      * <p>
-     * The instance will use the {@link XppDriver} as default and tries to determine the best match for the
-     * {@link ReflectionProvider} on its own.
+     * The instance will use the {@link com.thoughtworks.xstream.io.xml.XppDriver} as default and tries to determine the
+     * best match for the {@link ReflectionProvider} on its own.
      * </p>
      *
      * @throws InitializationException in case of an initialization problem
      */
     public XStream() {
-        this(new XppDriver());
+        this(DefaultDriver.create());
     }
 
     /**
      * Constructs an XStream with a special {@link ReflectionProvider}.
      * <p>
-     * The instance will use the {@link XppDriver} as default.
+     * The instance will use the {@link com.thoughtworks.xstream.io.xml.XppDriver} as default.
      * </p>
      *
      * @param reflectionProvider the reflection provider to use or <em>null</em> for best matching reflection provider
      * @throws InitializationException in case of an initialization problem
      */
     public XStream(final ReflectionProvider reflectionProvider) {
-        this(reflectionProvider, new XppDriver());
+        this(reflectionProvider, DefaultDriver.create());
     }
 
     /**
@@ -651,9 +651,12 @@ public class XStream {
         allowTypeHierarchy(Path.class);
 
         final Set<Class<?>> types = new HashSet<>();
-        types.addAll(Arrays.<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
-            DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
-            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
+        types
+            .addAll(Arrays
+                .<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
+                    DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class,
+                    StackTraceElement.class, String.class, StringBuffer.class, StringBuilder.class, URL.class,
+                    URI.class, UUID.class));
         if (JVM.isSQLAvailable()) {
             types.add(JVM.loadClassForName("java.sql.Timestamp"));
             types.add(JVM.loadClassForName("java.sql.Time"));

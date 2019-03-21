@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import com.thoughtworks.xstream.ReadOnlyXStream;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.binary.BinaryStreamWriter;
 import com.thoughtworks.xstream.io.binary.BinaryStreamReader;
@@ -54,7 +55,7 @@ public abstract class AbstractBuilderAcceptanceTest extends TestCase {
         catch (Exception e) {
             throw new RuntimeException("Could not load driver: " + driver);
         }
-        return new XppDriver();
+        return DefaultDriver.create();
     }
 
     protected Object assertBothWaysNormalized(Object root, String xml, final String match,

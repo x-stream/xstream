@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,10 +36,10 @@ import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshaller;
 import com.thoughtworks.xstream.core.ReferenceByIdUnmarshaller;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.testutil.CallLog;
 
@@ -91,7 +91,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             + "</people>", buffer.toString());
 
         // deserialize
-        final HierarchicalStreamReader reader = new Xpp3Driver().createReader(new StringReader(buffer.toString()));
+        final HierarchicalStreamReader reader = DefaultDriver.create().createReader(new StringReader(buffer.toString()));
 
         assertTrue("should be another object to read (1)", reader.hasMoreChildren());
         reader.moveDown();
@@ -200,7 +200,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             + "</object-stream>";
 
         @SuppressWarnings("resource")
-        final HierarchicalStreamReader reader = new Xpp3Driver().createReader(new StringReader(xml));
+        final HierarchicalStreamReader reader = DefaultDriver.create().createReader(new StringReader(xml));
         final ObjectInputStream ois = xstream.createObjectInputStream(reader);
         final int level = reader.getLevel();
         assertEquals(1, level);
@@ -254,7 +254,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
-    public void testObjectInputStreamPropegatesCloseEvent() throws IOException {
+    public void testObjectInputStreamPropagatesCloseEvent() throws IOException {
         // setup
         final CallLog log = new CallLog();
         final Reader loggingReader = new StringReader("<int>1</int>") {

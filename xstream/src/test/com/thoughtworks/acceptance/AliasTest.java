@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,9 +25,9 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.extended.JavaClassConverter;
 import com.thoughtworks.xstream.converters.extended.JavaFieldConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -60,7 +60,7 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
 
     public void testWithUnderscore() {
-        xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
+        xstream = new XStream(DefaultDriver.create(new XmlFriendlyNameCoder("_-", "_")));
         setupSecurity(xstream);
         final String xml = ""//
             + "<X_alias>\n"

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,10 +18,10 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 
 
 public class DataHolderTest extends AbstractAcceptanceTest {
@@ -74,8 +74,8 @@ public class DataHolderTest extends AbstractAcceptanceTest {
 
         // execute
         final String xml = "<string can-you-see-me=\"yes\">something</string>";
-        final String result = xstream.<String>unmarshal(new XppDriver().createReader(new StringReader(xml)), null,
-            dataHolder);
+        final String result = xstream
+            .<String>unmarshal(DefaultDriver.create().createReader(new StringReader(xml)), null, dataHolder);
 
         // verify
         assertEquals("something", result);
