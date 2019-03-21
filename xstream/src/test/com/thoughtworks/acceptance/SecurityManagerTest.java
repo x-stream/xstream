@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@ package com.thoughtworks.acceptance;
 
 import java.io.File;
 import java.io.FilePermission;
+import java.io.SerializablePermission;
 import java.lang.reflect.ReflectPermission;
 import java.net.NetPermission;
 import java.security.CodeSource;
@@ -26,6 +27,8 @@ import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.SimpleStaxDriver;
+import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
 
 import junit.framework.TestCase;
@@ -67,6 +70,9 @@ public class SecurityManagerTest extends TestCase {
         for (final String element : javaClassPath) {
             if (element.endsWith(".jar")) {
                 sm.addPermission(source, new FilePermission(element, "read"));
+            } else {
+                sm.addPermission(source, new FilePermission(element + "/META-INF/services/java.time.chrono.AbstractChronology", "read"));
+                sm.addPermission(source, new FilePermission(element + "/META-INF/services/java.time.chrono.Chronology", "read"));
             }
         }
     }
@@ -89,7 +95,56 @@ public class SecurityManagerTest extends TestCase {
         }
     }
 
-    public void testSerializeWithXppDriverAndSun14ReflectionProviderAndActiveSecurityManager() {
+    public void testSerializeWithSimpleStaxDriverAndSunUnsafeReflectionProviderAndActiveSecurityManager() {
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.com.sun.xml.internal.stream"));
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
+        sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
+        sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("fileSystemProvider"));
+        sm.addPermission(source, new RuntimePermission("getClassLoader"));
+        sm.addPermission(source, new RuntimePermission("getProtectionDomain"));
+        sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
+        sm.addPermission(source, new PropertyPermission("elementAttributeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("entityExpansionLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.locale.providers", "read"));
+        sm.addPermission(source, new PropertyPermission("java.nio.file.spi.DefaultFileSystemProvider", "read"));
+        sm.addPermission(source, new PropertyPermission("java.util.Arrays.useLegacyMergeSort", "read"));
+        sm.addPermission(source, new PropertyPermission("java.util.currency.data", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalDTD", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalSchema", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
+        sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.internal.lambda.dumpProxyClasses", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.elementAttributeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.entityExpansionLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.entityReplacementLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxElementDepth", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxGeneralEntitySizeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxOccurLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxParameterEntitySizeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxXMLNameLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.totalEntitySizeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.io.serialization.extendedDebugInfo", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.jnu.encoding", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
+        sm.addPermission(source, new PropertyPermission("user.dir", "read"));
+        sm.addPermission(source, new PropertyPermission("user.timezone", "read,write"));
+        sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
+        sm.addPermission(source, new NetPermission("specifyStreamHandler"));
+        sm.addPermission(source, new SerializablePermission("enableSubclassImplementation"));
+        sm.setReadOnly();
+        System.setSecurityManager(sm);
+
+        xstream = new XStream(new SimpleStaxDriver());
+
+        assertBothWays();
+    }
+
+    public void testSerializeWithXppDriverAndSunUnsafeReflectionProviderAndActiveSecurityManager() {
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.reflect"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
@@ -97,17 +152,25 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
         sm.addPermission(source, new RuntimePermission("fileSystemProvider"));
+        sm.addPermission(source, new RuntimePermission("getClassLoader"));
+        sm.addPermission(source, new RuntimePermission("getProtectionDomain"));
         sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
         sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
         sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.locale.providers", "read"));
         sm.addPermission(source, new PropertyPermission("java.nio.file.spi.DefaultFileSystemProvider", "read"));
         sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("java.util.Arrays.useLegacyMergeSort", "read"));
+        sm.addPermission(source, new PropertyPermission("java.util.currency.data", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.internal.lambda.dumpProxyClasses", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.io.serialization.extendedDebugInfo", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.jnu.encoding", "read"));
         sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
         sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
         sm.addPermission(source, new PropertyPermission("user.country", "read"));
@@ -115,12 +178,11 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("user.timezone", "read,write"));
         sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
         sm.addPermission(source, new NetPermission("specifyStreamHandler"));
+        sm.addPermission(source, new SerializablePermission("enableSubclassImplementation"));
         sm.setReadOnly();
         System.setSecurityManager(sm);
 
-        xstream = new XStream();
-        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName() + ".*objects.**");
-        xstream.allowTypesByWildcard(this.getClass().getName() + "$*");
+        xstream = new XStream(new Xpp3Driver());
 
         assertBothWays();
     }
@@ -132,17 +194,24 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
         sm.addPermission(source, new RuntimePermission("fileSystemProvider"));
+        sm.addPermission(source, new RuntimePermission("getClassLoader"));
+        sm.addPermission(source, new RuntimePermission("getProtectionDomain"));
         sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
         sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.locale.providers", "read"));
         sm.addPermission(source, new PropertyPermission("java.nio.file.spi.DefaultFileSystemProvider", "read"));
         sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("java.util.Arrays.useLegacyMergeSort", "read"));
+        sm.addPermission(source, new PropertyPermission("java.util.currency.data", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.internal.lambda.dumpProxyClasses", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
         sm.addPermission(source, new PropertyPermission("sun.io.serialization.extendedDebugInfo", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.jnu.encoding", "read"));
         sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
         sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
         sm.addPermission(source, new PropertyPermission("user.country", "read"));
@@ -150,22 +219,24 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("user.timezone", "read,write"));
         sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
         sm.addPermission(source, new NetPermission("specifyStreamHandler"));
+        sm.addPermission(source, new SerializablePermission("enableSubclassImplementation"));
         sm.setReadOnly();
         System.setSecurityManager(sm);
 
-        xstream = new XStream(new PureJavaReflectionProvider());
-        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName() + ".*objects.**");
-        xstream.allowTypesByWildcard(this.getClass().getName() + "$*");
+        xstream = new XStream(new PureJavaReflectionProvider(), new Xpp3Driver());
 
         assertBothWays();
     }
 
     public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
         sm.addPermission(source, new RuntimePermission("createClassLoader"));
         sm.addPermission(source, new RuntimePermission("fileSystemProvider"));
+        sm.addPermission(source, new RuntimePermission("getClassLoader"));
+        sm.addPermission(source, new RuntimePermission("getProtectionDomain"));
         sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
         sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
@@ -179,8 +250,11 @@ public class SecurityManagerTest extends TestCase {
                 "read"));
         sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.locale.providers", "read"));
         sm.addPermission(source, new PropertyPermission("java.nio.file.spi.DefaultFileSystemProvider", "read"));
         sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("java.util.Arrays.useLegacyMergeSort", "read"));
+        sm.addPermission(source, new PropertyPermission("java.util.currency.data", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.parsers.DocumentBuilderFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.parsers.SAXParserFactory", "read"));
@@ -188,6 +262,7 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalSchema", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.useCatalog", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.internal.lambda.dumpProxyClasses", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.cdataChunkSize", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.elementAttributeLimit", "read"));
@@ -203,6 +278,8 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("jdk.xml.totalEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.io.serialization.extendedDebugInfo", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.jnu.encoding", "read"));
         sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
         sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
         sm.addPermission(source, new PropertyPermission("user.country", "read"));
@@ -210,18 +287,18 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("user.timezone", "read,write"));
         sm.addPermission(source, new NetPermission("specifyStreamHandler"));
         sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
+        sm.addPermission(source, new SerializablePermission("enableSubclassImplementation"));
         sm.setReadOnly();
         System.setSecurityManager(sm);
 
         xstream = new XStream(new PureJavaReflectionProvider(), new DomDriver());
-        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName() + ".*objects.**");
-        xstream.allowTypesByWildcard(this.getClass().getName() + "$*");
 
         assertBothWays();
     }
 
     private void assertBothWays() {
-
+        xstream.allowTypesByWildcard(AbstractAcceptanceTest.class.getPackage().getName() + ".*objects.**");
+        xstream.allowTypesByWildcard(this.getClass().getName() + "$*");
         xstream.alias("software", Software.class);
 
         final Software sw = new Software("jw", "xstr");

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2016, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2016, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,6 +29,7 @@ import com.thoughtworks.xstream.io.xml.JDom2Driver;
 import com.thoughtworks.xstream.io.xml.JDomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2DomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.SimpleStaxDriver;
 import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.io.xml.WstxDriver;
@@ -62,6 +63,7 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new KXml2Driver());
         addDriverTest(new StaxDriver());
         addDriverTest(new StandardStaxDriver());
+        addDriverTest(new SimpleStaxDriver());
         addDriverTest(new WstxDriver());
         addDriverTest(new XomDriver());
         addDriverTest(new Xpp3DomDriver());
