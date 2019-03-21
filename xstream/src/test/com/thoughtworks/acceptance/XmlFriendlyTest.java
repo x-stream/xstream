@@ -128,7 +128,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
         private static final long serialVersionUID = 201107L;
         String µ_;
         String _µ;
-        String ¢¥€£äöüß;
+        String ¢¥€£äöüßᚥ;
     }
 
     public void testSupportsFieldsWithUnusualChars() {
@@ -137,13 +137,13 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
         final WithUnusualCharacters in = new WithUnusualCharacters();
         in.µ_ = "a";
         in._µ = "b";
-        in.¢¥€£äöüß = "c";
+        in.¢¥€£äöüßᚥ = "c";
 
         final String expected = ""
             + "<unusual>\n"
             + "  <_.00b5__>a</_.00b5__>\n"
             + "  <___.00b5>b</___.00b5>\n"
-            + "  <_.00a2_.00a5_.20ac_.00a3äöüß>c</_.00a2_.00a5_.20ac_.00a3äöüß>\n"
+            + "  <_.00a2_.00a5_.20ac_.00a3äöüß_.16a5>c</_.00a2_.00a5_.20ac_.00a3äöüß_.16a5>\n"
             + "</unusual>";
         assertBothWays(in, expected);
     }
@@ -175,10 +175,6 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
 
     public void testCanDealWithUtfText() {
         assertBothWays("J\u00F6rg", "<string>J\u00F6rg</string>");
-    }
-
-    public void testCanDealWithNullCharactersInText() {
-        assertBothWays("X\0Y", "<string>X&#x0;Y</string>");
     }
 
     public void testEscapesXmlUnfriendlyChars() {

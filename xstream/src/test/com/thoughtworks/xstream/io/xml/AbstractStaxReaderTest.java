@@ -30,7 +30,7 @@ public abstract class AbstractStaxReaderTest extends AbstractXMLReaderTest {
     protected abstract StaxDriver createDriver(QNameMap qnameMap);
 
     @Override
-    protected final HierarchicalStreamReader createReader(final String xml) throws Exception {
+    protected HierarchicalStreamReader createReader(final String xml) throws Exception {
         return createReader(new QNameMap(), xml);
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015, 2016, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2016, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,8 @@
 package com.thoughtworks.xstream.io.xml;
 
 import java.io.StringReader;
+
+import org.xmlpull.mxp1.MXParser;
 
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -33,6 +35,14 @@ public class XppReaderTest extends AbstractXMLReaderTest {
             if (!message.contains("resolve entity")) {
                 throw e;
             }
+        }
+    }
+    
+    @Override
+    public void testSupportsFieldsWithSpecialCharsInXml11() throws Exception {
+        // no support for XML 1.1 if XPP implementation is Xpp3
+        if (!(XppDriver.createDefaultParser() instanceof MXParser)) {
+            super.testSupportsFieldsWithSpecialCharsInXml11();
         }
     }
 

@@ -11,6 +11,7 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.XStreamException;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 
 public class WstxReaderTest extends AbstractStaxReaderTest {
@@ -18,6 +19,17 @@ public class WstxReaderTest extends AbstractStaxReaderTest {
     @Override
     protected StaxDriver createDriver(final QNameMap qnameMap) {
         return new WstxDriver(qnameMap);
+    }
+
+    @Override
+    protected HierarchicalStreamReader createReader(final String xml) throws Exception {
+        final String prefix = getName().endsWith("ISOControlCharactersInValue") ? XML_1_1_HEADER : "";
+        return super.createReader(prefix + xml);
+    }
+
+    @Override
+    protected String getSpecialCharsInJavaNamesForXml10() {
+        return super.getSpecialCharsInJavaNamesForXml10_4th();
     }
 
     @Override
@@ -44,6 +56,16 @@ public class WstxReaderTest extends AbstractStaxReaderTest {
                 throw e;
             }
         }
+    }
+
+    @Override
+    public void testNullCharacterInValue() throws Exception {
+        // Is not possible, null value is invalid in XML
+    }
+
+    @Override
+    public void testNonUnicodeCharacterInValue() throws Exception {
+        // Is not possible, character is invalid in XML
     }
 
     // inherits tests from superclass

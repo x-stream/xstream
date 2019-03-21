@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2015, 2016, 2018 XStream Committers.
+ * Copyright (C) 2011, 2015, 2016, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -38,6 +38,11 @@ public class Xpp3ReaderTest extends AbstractXMLReaderTest {
                 throw e;
             }
         }
+    }
+    
+    @Override
+    public void testSupportsFieldsWithSpecialCharsInXml11() throws Exception {
+        // no support for XML 1.1
     }
 
     // inherits tests from superclass

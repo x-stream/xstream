@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,11 @@ public class XomReaderTest extends AbstractXMLReaderTest {
     @Override
     protected HierarchicalStreamReader createReader(final String xml) throws Exception {
         return new XomDriver().createReader(new StringReader(xml));
+    }
+    
+    @Override
+    protected String getSpecialCharsInJavaNamesForXml10() {
+        return super.getSpecialCharsInJavaNamesForXml10_4th();
     }
 
     public void testCanReadFromElementOfLargerDocument() throws Exception {
@@ -59,6 +64,30 @@ public class XomReaderTest extends AbstractXMLReaderTest {
         // super.testIsXXEVulnerableWithExternalParameterEntity();
     }
 
-    // inherits tests from superclass
+    @Override
+    public void testNullCharacterInValue() throws Exception {
+        // Is not possible, null value is invalid in XML
+    }
+    
+    @Override
+    public void testSupportsFieldsWithSpecialCharsInXml11() throws Exception {
+        // no support for XML 1.1
+    }
 
+    @Override
+    public void testNonUnicodeCharacterInValue() throws Exception {
+        // not possible, character is invalid in XML
+    }
+
+    @Override
+    public void testNonUnicodeCharacterInCDATA() throws Exception {
+        // not possible, character is invalid in XML
+    }
+    
+    @Override
+    public void testISOControlCharactersInValue() throws Exception {
+        // not possible, only supported in XML 1.1
+    }
+
+    // inherits tests from superclass
 }

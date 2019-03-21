@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2015, 2016, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2015, 2016, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,15 +15,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 
-import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.copy.HierarchicalStreamCopier;
-import com.thoughtworks.xstream.io.xml.AbstractXMLReaderTest;
+import com.thoughtworks.xstream.io.xml.AbstractReaderTest;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 
-public class BinaryStreamTest extends AbstractXMLReaderTest {
+public class BinaryStreamTest extends AbstractReaderTest {
 
     private final HierarchicalStreamCopier copier = new HierarchicalStreamCopier();
 
@@ -80,18 +79,4 @@ public class BinaryStreamTest extends AbstractXMLReaderTest {
             }
         }
     }
-
-    @Override
-    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
-        try {
-            super.testIsXXEVulnerableWithExternalGeneralEntity();
-            fail("Thrown " + XStreamException.class.getName() + " expected");
-        } catch (final XStreamException e) {
-            final String message = e.getCause().getMessage();
-            if (!message.contains("resolve entity")) {
-                throw e;
-            }
-        }
-    }
-
 }

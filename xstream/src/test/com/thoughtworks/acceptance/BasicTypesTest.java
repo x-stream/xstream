@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2013, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -61,18 +61,9 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
         assertBothWays(new Character('\0'), "<char></char>");
     }
 
-    public void testNonUnicodeCharacter() {
-        assertBothWays(new Character('\uffff'), "<char>&#xffff;</char>");
-    }
-
     public void testStrings() {
         assertBothWays("hello world", "<string>hello world</string>");
         assertBothWays("-0770", "<string>-0770</string>");
-    }
-
-    public void testStringsWithISOControlCharacter() {
-        assertBothWays("hello\u0004world", "<string>hello&#x4;world</string>");
-        assertBothWays("hello\u0096world", "<string>hello&#x96;world</string>");
     }
 
     public void testStringBuffer() {
