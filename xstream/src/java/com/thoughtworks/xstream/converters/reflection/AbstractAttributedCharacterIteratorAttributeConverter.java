@@ -41,7 +41,7 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
         Method method = null;
         try {
             method = AttributedCharacterIterator.Attribute.class.getDeclaredMethod("getName", (Class[])null);
-            if (!method.isAccessible()) {
+            if (!method.isAccessible() && !method.getDeclaringClass().getName().startsWith("java.")) {
                 method.setAccessible(true);
             }
         } catch (final SecurityException e) {

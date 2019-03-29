@@ -36,7 +36,7 @@ public class Fields {
                     }
                 }
             }
-            if (field != null && !field.isAccessible()) {
+            if (field != null && !field.isAccessible() && !field.getDeclaringClass().getName().startsWith("java.")) {
                 field.setAccessible(true);
             }
         } catch (final SecurityException e) {
@@ -50,7 +50,7 @@ public class Fields {
     public static Field find(final Class<?> type, final String name) {
         try {
             final Field result = type.getDeclaredField(name);
-            if (!result.isAccessible()) {
+            if (!result.isAccessible() && !result.getDeclaringClass().getName().startsWith("java.")) {
                 result.setAccessible(true);
             }
             return result;
