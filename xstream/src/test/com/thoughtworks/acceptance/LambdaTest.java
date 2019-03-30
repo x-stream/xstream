@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014, 2015, 2018 XStream Committers.
+ * Copyright (C) 2014, 2015, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,9 @@ package com.thoughtworks.acceptance;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 
 
@@ -198,5 +201,36 @@ public class LambdaTest extends AbstractAcceptanceTest {
     private String normalizeLambda(final String xml) {
         // unify compiler specific name for implMethodName, Eclipse uses always "lambda$0"
         return xml.replaceAll(">lambda\\$[^<]+<", ">lambda\\$0<");
+    }
+
+    public void testTreeSetWithLambda() {
+        final Set<String> set = new TreeSet<String>(Comparator.<String>comparingInt(s -> -s.length()));
+        set.add("L");
+        set.add("XXL");
+        set.add("XL");
+
+        final String expected = ""
+            + "<sorted-set>\n"
+            + "  <comparator class=\"java.util.Comparator\" resolves-to=\"serialized-lambda\">\n"
+            + "    <capturingClass>java.util.Comparator</capturingClass>\n"
+            + "    <functionalInterfaceClass>java/util/Comparator</functionalInterfaceClass>\n"
+            + "    <functionalInterfaceMethodName>compare</functionalInterfaceMethodName>\n"
+            + "    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Ljava/lang/Object;)I</functionalInterfaceMethodSignature>\n"
+            + "    <implClass>java/util/Comparator</implClass>\n"
+            + "    <implMethodName>lambda$0</implMethodName>\n"
+            + "    <implMethodSignature>(Ljava/util/function/ToIntFunction;Ljava/lang/Object;Ljava/lang/Object;)I</implMethodSignature>\n"
+            + "    <implMethodKind>6</implMethodKind>\n"
+            + "    <instantiatedMethodType>(Ljava/lang/Object;Ljava/lang/Object;)I</instantiatedMethodType>\n"
+            + "    <capturedArgs>\n"
+            + "      <null/>\n"
+            + "    </capturedArgs>\n"
+            + "  </comparator>\n"
+            + "  <string>XXL</string>\n"
+            + "  <string>XL</string>\n"
+            + "  <string>L</string>\n"
+            + "</sorted-set>";
+        xstream.allowTypes(SerializedLambda.class);
+        
+        assertBothWaysNormalized(set, expected);
     }
 }
