@@ -155,9 +155,9 @@ public class JsonWriterFormatTest extends TestCase {
 
     public static Test suite() {
         final Map<String, Integer> modes = new LinkedHashMap<>();
-        modes.put("optimized", new Integer(0));
-        modes.put("noRoot", new Integer(AbstractJsonWriter.DROP_ROOT_MODE));
-        modes.put("explicit", new Integer(AbstractJsonWriter.EXPLICIT_MODE));
+        modes.put("optimized", 0);
+        modes.put("noRoot", AbstractJsonWriter.DROP_ROOT_MODE);
+        modes.put("explicit", AbstractJsonWriter.EXPLICIT_MODE);
 
         final Map<String, JsonWriter.Format> formats = new LinkedHashMap<>();
         formats.put("Minimal", new JsonWriter.Format(new char[0], new char[0],
@@ -365,22 +365,22 @@ public class JsonWriterFormatTest extends TestCase {
             "{'h': [\n  [],\n  [\n    {\n      'str': [\n        [],\n        [\n          'test'\n        ]\n      ]\n    },\n    {\n      'protocol': [\n        [],\n        [\n          {\n            'id': [\n              [],\n              [\n                'ldap'\n              ]\n            ]\n          }\n        ]\n      ]\n    },\n    {\n      'i': [\n        [],\n        [\n          42\n        ]\n      ]\n    }\n  ]\n]}");
 
         final TestSuite suite = new TestSuite(JsonWriterFormatTest.class.getName());
-        for (final Map.Entry<String, Integer> entryMode : modes.entrySet()) {
-            final String modeName = entryMode.getKey();
-            final int mode = entryMode.getValue().intValue();
-            for (final Map.Entry<String, JsonWriter.Format> entryFormat : formats.entrySet()) {
-                final String formatName = entryFormat.getKey();
-                final JsonWriter.Format format = entryFormat.getValue();
-                for (final Map.Entry<String, Object> entryTarget : targets.entrySet()) {
-                    final String targetName = entryTarget.getKey();
-                    final Object target = entryTarget.getValue();
-                    final String name = modeName + formatName + targetName;
-                    final String result = results.get(name).replace('\'', '"');
-
-                    suite.addTest(new JsonWriterFormatTest(name, target, result, mode, format));
-                }
-            }
-        }
+	modes.entrySet().forEach((entryMode) -> {
+	    final String modeName = entryMode.getKey();
+	    final int mode = entryMode.getValue();
+	    formats.entrySet().forEach((entryFormat) -> {
+		final String formatName = entryFormat.getKey();
+		final JsonWriter.Format format = entryFormat.getValue();
+		targets.entrySet().forEach((entryTarget) -> {
+		    final String targetName = entryTarget.getKey();
+		    final Object target = entryTarget.getValue();
+		    final String name = modeName + formatName + targetName;
+		    final String result = results.get(name).replace('\'', '"');
+		    
+		    suite.addTest(new JsonWriterFormatTest(name, target, result, mode, format));
+		});
+	    });
+	});
 
         return suite;
     }

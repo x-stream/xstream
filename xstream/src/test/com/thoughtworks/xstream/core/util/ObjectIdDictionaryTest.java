@@ -31,8 +31,8 @@ public class ObjectIdDictionaryTest extends TestCase {
 
     public void testTreatsObjectsThatAreEqualButNotSameInstanceAsDifferentReference() {
         final ObjectIdDictionary<String> dict = new ObjectIdDictionary<>();
-        final Integer a = new Integer(3);
-        final Integer b = new Integer(3);
+        final Integer a = 3;
+        final Integer b = 3;
         dict.associateId(a, "id a");
         dict.associateId(b, "id b");
         assertEquals("id a", dict.lookupId(a));

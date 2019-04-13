@@ -41,9 +41,9 @@ public class OrderRetainingMap<K, V> extends HashMap<K, V> {
 
     @Override
     public void putAll(final Map<? extends K, ? extends V> m) {
-        for (final Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
-            put(entry.getKey(), entry.getValue());
-        }
+	m.entrySet().forEach((entry) -> {
+	    put(entry.getKey(), entry.getValue());
+	});
     }
 
     @Override
@@ -89,9 +89,9 @@ public class OrderRetainingMap<K, V> extends HashMap<K, V> {
     public Set<Map.Entry<K, V>> entrySet() {
         @SuppressWarnings("unchecked")
         final Map.Entry<K, V>[] entries = new Map.Entry[size()];
-        for (final Map.Entry<K, V> entry : super.entrySet()) {
-            entries[keyOrder.indexOf(entry.getKey())] = entry;
-        }
+	super.entrySet().forEach((entry) -> {
+	    entries[keyOrder.indexOf(entry.getKey())] = entry;
+	});
         final Set<Map.Entry<K, V>> set = new ArraySet<>();
         set.addAll(Arrays.asList(entries));
         return Collections.unmodifiableSet(set);

@@ -218,7 +218,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
             if (value == null) {
                 value = Boolean.FALSE;
             }
-            return value.booleanValue();
+            return value;
         } else {
             throw new SAXNotRecognizedException(name);
         }

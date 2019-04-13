@@ -35,11 +35,9 @@ public class HijrahDateConverter extends AbstractChronoLocalDateConverter<Hijrah
     public HijrahDateConverter() {
         hijrahChronologies = new HashSet<>();
         final Set<Chronology> chronologies = Chronology.getAvailableChronologies();
-        for (final Chronology chronology : chronologies) {
-            if (chronology instanceof HijrahChronology) {
-                hijrahChronologies.add(chronology);
-            }
-        }
+	chronologies.stream().filter((chronology) -> (chronology instanceof HijrahChronology)).forEachOrdered((chronology) -> {
+	    hijrahChronologies.add(chronology);
+	});
     }
 
     @Override

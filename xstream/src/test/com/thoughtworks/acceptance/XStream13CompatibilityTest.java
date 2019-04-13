@@ -48,8 +48,8 @@ public class XStream13CompatibilityTest extends AbstractAcceptanceTest {
             + "  </entry>\n"
             + "</tree-map>";
         final TreeMap<String, Integer> expected = new TreeMap<>();
-        expected.put("two", new Integer(2));
-        expected.put("one", new Integer(1));
+        expected.put("two", 2);
+        expected.put("one", 1);
         assertEquals(expected, xstream.fromXML(in));
     }
 }

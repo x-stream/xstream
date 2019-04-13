@@ -29,14 +29,17 @@ public class JTreeTarget implements Target {
 
     private JTree jTree = new JTree();
 
+    @Override
     public String toString() {
         return "JTree";
     }
 
+    @Override
     public Object target() {
         return jTree;
     }
 
+    @Override
     public boolean isEqual(Object other) {
         // TODO: Check if JTrees are equal. -Joe 
         return true;

@@ -25,11 +25,11 @@ public class IntConverter extends AbstractSingleValueConverter {
 
     @Override
     public Object fromString(final String str) {
-        final long value = Long.decode(str).longValue();
+        final long value = Long.decode(str);
         if (value < Integer.MIN_VALUE || value > 0xFFFFFFFFl) {
             throw new NumberFormatException("For input string: \"" + str + '"');
         }
-        return Integer.valueOf((int)value);
+        return (int)value;
     }
 
 }

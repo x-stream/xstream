@@ -39,9 +39,7 @@ public class ExtendedTarget implements Target {
         try {
             method = Object.class.getMethod("equals", new Class[]{Object.class});
             field = ExtendedTarget.class.getDeclaredField("list");
-        } catch (NoSuchMethodException e) {
-            throw new ExceptionInInitializerError(e);
-        } catch (NoSuchFieldException e) {
+        } catch (NoSuchMethodException | NoSuchFieldException e) {
             throw new ExceptionInInitializerError(e);
         } 
         EQUALS = method;
@@ -69,25 +67,29 @@ public class ExtendedTarget implements Target {
         list.add(properties);
     }
     
+    @Override
     public boolean isEqual(Object other) {
         return list.equals(other);
     }
 
+    @Override
     public Object target() {
         return list;
     }
 
+    @Override
     public String toString() {
         return "Standard Converters";
     }
     
     static class RunnableInvocationHandler implements InvocationHandler {
 
+	@Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (method.equals(EQUALS)) {
-                return new Boolean(args[0] instanceof Runnable);
+                return args[0] instanceof Runnable;
             } else if (method.getName().equals("hashCode")) {
-                return new Integer(System.identityHashCode(proxy));
+                return System.identityHashCode(proxy);
             } else if (method.getName().equals("toString")) {
                 return "Proxy" + System.identityHashCode(proxy);
             } else if (method.getName().equals("getClass")) {

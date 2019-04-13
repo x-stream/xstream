@@ -93,7 +93,7 @@ public class PersistenceTest extends AbstractAcceptanceTest {
 
         final SampleLists<Object, ?> lists = new SampleLists<>();
         lists.good.add("Guilherme");
-        lists.good.add(new Integer(1970));
+        lists.good.add(1970);
         lists.good.add(new Software("Codehaus", "XStream"));
 
         final String expected = ""

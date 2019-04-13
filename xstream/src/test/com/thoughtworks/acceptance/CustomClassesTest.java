@@ -263,8 +263,8 @@ public class CustomClassesTest extends AbstractAcceptanceTest {
 
     public static class FieldWithObjectType extends StandardObject {
         private static final long serialVersionUID = 200403L;
-        Double one = new Double(1.0);
-        Object two = new Double(2.0);
+        Double one = 1.0;
+        Object two = 2.0;
     }
 
     public void testFailsFastIfFieldIsDefinedTwice() {

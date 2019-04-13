@@ -45,14 +45,17 @@ public class JavaBeanTarget implements Target {
         list.add(five);
     }
     
+    @Override
     public boolean isEqual(Object other) {
         return list.equals(other);
     }
 
+    @Override
     public Object target() {
         return list;
     }
 
+    @Override
     public String toString() {
         return "JavaBean Converter";
     }

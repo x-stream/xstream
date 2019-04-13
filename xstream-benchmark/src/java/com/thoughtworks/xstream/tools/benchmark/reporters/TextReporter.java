@@ -83,7 +83,7 @@ public class TextReporter implements Reporter {
     }
 
     private String pad(String value) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(value);
         while (result.length() < 50) {
             result.append('.');

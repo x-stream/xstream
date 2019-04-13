@@ -294,19 +294,19 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             if (converterAnnotation != null) {
                 annotations.add(converterAnnotation);
             }
-            for (final XStreamConverter annotation : annotations) {
-                final Converter converter = cacheConverter(annotation, converterAnnotation != null ? type : null);
-                if (converter != null) {
-                    if (converterAnnotation != null || converter.canConvert(type)) {
-                        converterRegistry.registerConverter(converter, annotation.priority());
-                    } else {
-                        throw new InitializationException("Converter "
-                            + annotation.value().getName()
-                            + " cannot handle annotated class "
-                            + type.getName());
-                    }
-                }
-            }
+	    annotations.forEach((annotation) -> {
+		final Converter converter = cacheConverter(annotation, converterAnnotation != null ? type : null);
+		if (converter != null) {
+		    if (converterAnnotation != null || converter.canConvert(type)) {
+			converterRegistry.registerConverter(converter, annotation.priority());
+		    } else {
+			throw new InitializationException("Converter "
+				+ annotation.value().getName()
+				+ " cannot handle annotated class "
+				+ type.getName());
+		    }
+		}
+	    });
         }
     }
 
@@ -431,14 +431,12 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         arrays.add(annotation.shorts());
         arrays.add(annotation.strings());
         arrays.add(annotation.types());
-        for (final Object array : arrays) {
-            if (array != null) {
-                final int length = Array.getLength(array);
-                for (int i = 0; i < length; i++) {
-                    parameter.add(Array.get(array, i));
-                }
-            }
-        }
+	arrays.stream().filter((array) -> (array != null)).forEachOrdered((array) -> {
+	    final int length = Array.getLength(array);
+	    for (int i = 0; i < length; i++) {
+		parameter.add(Array.get(array, i));
+	    }
+	});
         for (final Class<?> type : annotation.nulls()) {
             final TypedNull<?> nullType = new TypedNull<>(type);
             parameter.add(nullType);

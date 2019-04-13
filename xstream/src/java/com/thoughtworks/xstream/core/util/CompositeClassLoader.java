@@ -102,12 +102,9 @@ public class CompositeClassLoader extends ClassLoader {
         final List<ClassLoader> copy = new ArrayList<>(classLoaders.size());
         synchronized(this) {
             cleanup();
-            for(final WeakReference<ClassLoader> ref : classLoaders) {
-                final ClassLoader cl = ref.get();
-                if (cl != null) {
-                    copy.add(cl);
-                }
-            }
+	    classLoaders.stream().map((ref) -> ref.get()).filter((cl) -> (cl != null)).forEachOrdered((cl) -> {
+		copy.add(cl);
+	    });
         }
 
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();

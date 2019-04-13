@@ -32,51 +32,51 @@ public class MultiReporter implements Reporter {
     }
 
     public void endBenchmark() {
-        for (int i = 0; i < reporter.length; i++) {
-            reporter[i].endBenchmark();
-        }
+	for (Reporter reporter1 : reporter) {
+	    reporter1.endBenchmark();
+	}
     }
 
     public void endMetric(Metric metric) {
-        for (int i = 0; i < reporter.length; i++) {
-            reporter[i].endMetric(metric);
-        }
+	for (Reporter reporter1 : reporter) {
+	    reporter1.endMetric(metric);
+	}
     }
 
     public void endTarget(Target target) {
-        for (int i = 0; i < reporter.length; i++) {
-            reporter[i].endTarget(target);
-        }
+	for (Reporter reporter1 : reporter) {
+	    reporter1.endTarget(target);
+	}
     }
 
     public void metricFailed(Product product, Exception e) {
-        for (int i = 0; i < reporter.length; i++) {
-            reporter[i].metricFailed(product, e);
-        }
+	for (Reporter reporter1 : reporter) {
+	    reporter1.metricFailed(product, e);
+	}
     }
 
     public void metricRecorded(Product product, double result) {
-        for (int i = 0; i < reporter.length; i++) {
-            reporter[i].metricRecorded(product, result);
-        }
+	for (Reporter reporter1 : reporter) {
+	    reporter1.metricRecorded(product, result);
+	}
     }
 
     public void startBenchmark() {
-        for (int i = 0; i < reporter.length; i++) {
-            reporter[i].startBenchmark();
-        }
+	for (Reporter reporter1 : reporter) {
+	    reporter1.startBenchmark();
+	}
     }
 
     public void startMetric(Metric metric) {
-        for (int i = 0; i < reporter.length; i++) {
-            reporter[i].startMetric(metric);
-        }
+	for (Reporter reporter1 : reporter) {
+	    reporter1.startMetric(metric);
+	}
     }
 
     public void startTarget(Target target) {
-        for (int i = 0; i < reporter.length; i++) {
-            reporter[i].startTarget(target);
-        }
+	for (Reporter reporter1 : reporter) {
+	    reporter1.startTarget(target);
+	}
     }
 
 }

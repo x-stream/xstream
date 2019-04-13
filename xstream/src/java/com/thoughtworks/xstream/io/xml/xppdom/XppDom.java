@@ -159,9 +159,9 @@ public class XppDom implements Serializable {
 
     Object readResolve() {
         childMap = new HashMap<>();
-        for (final XppDom element : childList) {
-            childMap.put(element.getName(), element);
-        }
+	childList.forEach((element) -> {
+	    childMap.put(element.getName(), element);
+	});
         return this;
     }
 

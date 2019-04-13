@@ -41,10 +41,12 @@ public class SerializableOne implements Serializable {
         in.defaultReadObject();
     }
 
+    @Override
     public boolean equals(Object obj) {
         return one.equals(((SerializableOne)obj).one);
     }
 
+    @Override
     public int hashCode() {
         return one.hashCode() >>> 1;
     }

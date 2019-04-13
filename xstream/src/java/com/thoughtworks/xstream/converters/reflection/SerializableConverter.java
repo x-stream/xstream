@@ -154,27 +154,24 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 final ObjectStreamClass objectStreamClass = ObjectStreamClass.lookup(currentType);
 
                 writer.startNode(ELEMENT_DEFAULT);
-                for (final String name : fields.keySet()) {
-                    if (!mapper.shouldSerializeMember(currentType, name)) {
-                        continue;
-                    }
-                    final ObjectStreamField field = objectStreamClass.getField(name);
-                    final Object value = fields.get(name);
-                    if (field == null) {
-                        throw new MissingFieldException(value.getClass().getName(), name);
-                    }
-                    if (value != null) {
-                        writer.startNode(mapper.serializedMember(source.getClass(), name), value.getClass());
-                        if (field.getType() != value.getClass() && !field.getType().isPrimitive()) {
-                            final String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
-                            if (attributeName != null) {
-                                writer.addAttribute(attributeName, mapper.serializedClass(value.getClass()));
-                            }
-                        }
-                        context.convertAnother(value);
-                        writer.endNode();
-                    }
-                }
+		fields.keySet().stream().filter((name) -> !(!mapper.shouldSerializeMember(currentType, name))).forEachOrdered((name) -> {
+		    final ObjectStreamField field = objectStreamClass.getField(name);
+		    final Object value = fields.get(name);
+		    if (field == null) {
+			throw new MissingFieldException(value.getClass().getName(), name);
+		    }
+		    if (value != null) {
+			writer.startNode(mapper.serializedMember(source.getClass(), name), value.getClass());
+			if (field.getType() != value.getClass() && !field.getType().isPrimitive()) {
+			    final String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
+			    if (attributeName != null) {
+				writer.addAttribute(attributeName, mapper.serializedClass(value.getClass()));
+			    }
+			}
+			context.convertAnother(value);
+			writer.endNode();
+		    }
+		});
                 writer.endNode();
             }
 

@@ -117,9 +117,7 @@ public class Product {
         String ret = "[" + name + ", " + id + ", " + price;
         if (tags != null) {
             ret += "\n{";
-            for (final Object tag : tags) {
-                ret += tag.toString() + "\n";
-            }
+	    ret = tags.stream().map((tag) -> tag.toString() + "\n").reduce(ret, String::concat);
             ret += "}";
         }
         ret += "]";

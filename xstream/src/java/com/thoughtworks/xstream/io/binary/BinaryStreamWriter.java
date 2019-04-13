@@ -99,11 +99,11 @@ public class BinaryStreamWriter implements ExtendedHierarchicalStreamWriter {
         public long getId(final String value) {
             Long id = ids.get(value);
             if (id == null) {
-                id = Long.valueOf(++nextId);
+                id = ++nextId;
                 ids.put(value, id);
-                write(new Token.MapIdToValue(id.longValue(), value));
+                write(new Token.MapIdToValue(id, value));
             }
-            return id.longValue();
+            return id;
         }
 
     }

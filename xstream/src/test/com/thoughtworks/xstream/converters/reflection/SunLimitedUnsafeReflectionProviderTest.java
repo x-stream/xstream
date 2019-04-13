@@ -46,25 +46,25 @@ public class SunLimitedUnsafeReflectionProviderTest extends AbstractReflectionPr
         reflectionProvider.writeField(thingy, "finalField", "zero", WithFinalFields.class);
         assertEquals("zero", thingy.finalField);
 
-        reflectionProvider.writeField(thingy, "finalInt", new Integer(1), WithFinalFields.class);
+        reflectionProvider.writeField(thingy, "finalInt", 1, WithFinalFields.class);
         assertEquals(1, thingy.finalInt);
 
         reflectionProvider.writeField(thingy, "finalLong", new Long(2), WithFinalFields.class);
         assertEquals(2, thingy.finalLong);
 
-        reflectionProvider.writeField(thingy, "finalShort", new Short((short)3), WithFinalFields.class);
+        reflectionProvider.writeField(thingy, "finalShort", (short)3, WithFinalFields.class);
         assertEquals(3, thingy.finalShort);
 
-        reflectionProvider.writeField(thingy, "finalChar", new Character('4'), WithFinalFields.class);
+        reflectionProvider.writeField(thingy, "finalChar", '4', WithFinalFields.class);
         assertEquals('4', thingy.finalChar);
 
-        reflectionProvider.writeField(thingy, "finalByte", new Byte((byte)5), WithFinalFields.class);
+        reflectionProvider.writeField(thingy, "finalByte", (byte)5, WithFinalFields.class);
         assertEquals(5, thingy.finalByte);
 
         reflectionProvider.writeField(thingy, "finalFloat", new Float(0.6), WithFinalFields.class);
         assertEquals(0.6f, thingy.finalFloat, 0.0);
 
-        reflectionProvider.writeField(thingy, "finalDouble", new Double(0.7), WithFinalFields.class);
+        reflectionProvider.writeField(thingy, "finalDouble", 0.7, WithFinalFields.class);
         assertEquals(0.7, thingy.finalDouble, 0.0);
 
         reflectionProvider.writeField(thingy, "finalBoolean", true, WithFinalFields.class);

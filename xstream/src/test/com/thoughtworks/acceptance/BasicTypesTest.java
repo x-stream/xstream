@@ -19,13 +19,13 @@ import java.util.UUID;
 public class BasicTypesTest extends AbstractAcceptanceTest {
 
     public void testPrimitiveNumbers() {
-        assertBothWays(new Integer(99), "<int>99</int>");
-        assertBothWays(new Integer(-99), "<int>-99</int>");
-        assertBothWays(new Integer(0), "<int>0</int>");
-        assertBothWays(new Float(-123.45f), "<float>-123.45</float>");
-        assertBothWays(new Double(-1234567890.12345), "<double>-1.23456789012345E9</double>");
-        assertBothWays(new Long(123456789123456L), "<long>123456789123456</long>");
-        assertBothWays(new Short((short)123), "<short>123</short>");
+        assertBothWays(99, "<int>99</int>");
+        assertBothWays(-99, "<int>-99</int>");
+        assertBothWays(0, "<int>0</int>");
+        assertBothWays(-123.45f, "<float>-123.45</float>");
+        assertBothWays(-1234567890.12345, "<double>-1.23456789012345E9</double>");
+        assertBothWays(123456789123456L, "<long>123456789123456</long>");
+        assertBothWays((short)123, "<short>123</short>");
     }
 
     public void testDifferentBaseIntegers() {
@@ -50,15 +50,15 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testOtherPrimitives() {
-        assertBothWays(new Character('z'), "<char>z</char>");
+        assertBothWays('z', "<char>z</char>");
         assertBothWays(Boolean.TRUE, "<boolean>true</boolean>");
         assertBothWays(Boolean.FALSE, "<boolean>false</boolean>");
-        assertBothWays(new Byte((byte)44), "<byte>44</byte>");
+        assertBothWays((byte)44, "<byte>44</byte>");
     }
 
     public void testNullCharacter() {
         assertEquals(new Character('\0'), xstream.fromXML("<char null=\"true\"/>")); // pre XStream 1.3
-        assertBothWays(new Character('\0'), "<char></char>");
+        assertBothWays('\0', "<char></char>");
     }
 
     public void testStrings() {
@@ -90,8 +90,8 @@ public class BasicTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testNumberFormats() {
-        assertEquals(1.0, xstream.<Double>fromXML("<double>1</double>").doubleValue(), 0.001);
-        assertEquals(1.0f, xstream.<Float>fromXML("<float>1</float>").floatValue(), 0.001);
+        assertEquals(1.0, xstream.<Double>fromXML("<double>1</double>"), 0.001);
+        assertEquals(1.0f, xstream.<Float>fromXML("<float>1</float>"), 0.001);
     }
 
     public void testUUID() {

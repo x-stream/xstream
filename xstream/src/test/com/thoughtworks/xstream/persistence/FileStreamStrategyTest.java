@@ -205,9 +205,9 @@ public class FileStreamStrategyTest extends TestCase {
         final FileStreamStrategy<String> strategy = new FileStreamStrategy<>(baseDir);
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");
-        for (final String key : original.keySet()) {
-            assertTrue(strategy.containsKey(key));
-        }
+	original.keySet().forEach((key) -> {
+	    assertTrue(strategy.containsKey(key));
+	});
     }
 
     // actually an acceptance test?

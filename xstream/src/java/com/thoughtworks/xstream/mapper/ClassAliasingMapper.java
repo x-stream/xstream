@@ -91,12 +91,12 @@ public class ClassAliasingMapper extends MapperWrapper {
 
     private Object readResolve() {
         nameToType = new HashMap<>();
-        for (final String type : classToName.keySet()) {
-            nameToType.put(classToName.get(type), type);
-        }
-        for (final Class<?> type : typeToName.keySet()) {
-            nameToType.put(typeToName.get(type), type.getName());
-        }
+	classToName.keySet().forEach((type) -> {
+	    nameToType.put(classToName.get(type), type);
+	});
+	typeToName.keySet().forEach((type) -> {
+	    nameToType.put(typeToName.get(type), type.getName());
+	});
         return this;
     }
 }

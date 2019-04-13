@@ -51,7 +51,7 @@ public class CustomConverterTest extends AbstractAcceptanceTest {
         Double d;
 
         public DoubleWrapper(final double d) {
-            this.d = new Double(d);
+            this.d = d;
         }
     }
 

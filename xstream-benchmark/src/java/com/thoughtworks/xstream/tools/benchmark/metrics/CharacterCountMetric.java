@@ -32,6 +32,7 @@ public class CharacterCountMetric implements Metric {
         this.ch = ch;
     }
 
+    @Override
     public double run(Product product, Target target) throws Exception {
         return run(product, target.target());
     }
@@ -39,6 +40,7 @@ public class CharacterCountMetric implements Metric {
     /**
      *@deprecated since 1.3
      */
+    @Override
     public double run(Product product, Object object) throws Exception {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         product.serialize(object, buffer);
@@ -52,14 +54,17 @@ public class CharacterCountMetric implements Metric {
         return counter;
     }
 
+    @Override
     public String toString() {
         return "Character count for '" + ch + "'";
     }
 
+    @Override
     public String unit() {
         return "characters";
     }
 
+    @Override
     public boolean biggerIsBetter() {
         return false;
     }

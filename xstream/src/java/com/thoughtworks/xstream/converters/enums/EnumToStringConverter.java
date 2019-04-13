@@ -50,13 +50,11 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
         checkType(type);
         final EnumSet<T> values = EnumSet.allOf(type);
         final Map<String, T> strings = new HashMap<>(values.size());
-        for (final T value : values) {
-            if (strings.put(value.toString(), value) != null) {
-                throw new InitializationException("Enum type "
-                    + type.getName()
-                    + " does not have unique string representations for its values");
-            }
-        }
+	values.stream().filter((value) -> (strings.put(value.toString(), value) != null)).forEachOrdered((_item) -> {
+	    throw new InitializationException("Enum type "
+		    + type.getName()
+		    + " does not have unique string representations for its values");
+	});
         return strings;
     }
 
@@ -69,9 +67,9 @@ public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValu
     private static <T extends Enum<T>> EnumMap<T, String> buildValueMap(final Class<T> type,
             final Map<String, T> strings) {
         final EnumMap<T, String> values = new EnumMap<>(type);
-        for (final Map.Entry<String, T> entry : strings.entrySet()) {
-            values.put(entry.getValue(), entry.getKey());
-        }
+	strings.entrySet().forEach((entry) -> {
+	    values.put(entry.getValue(), entry.getKey());
+	});
         return values;
     }
 

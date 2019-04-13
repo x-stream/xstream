@@ -32,8 +32,7 @@ public final class Primitives {
             {Integer.TYPE, Integer.class}, {Long.TYPE, Long.class}, {Float.TYPE, Float.class},
             {Double.TYPE, Double.class}, {Boolean.TYPE, Boolean.class}, {Void.TYPE, Void.class},};
         final Character[] representingChars = {
-            new Character('B'), new Character('C'), new Character('S'), new Character('I'), new Character('J'),
-            new Character('F'), new Character('D'), new Character('Z'), null};
+	    'B', 'C', 'S', 'I', 'J', 'F', 'D', 'Z', null};
         for (int i = 0; i < boxing.length; i++) {
             final Class<?> primitiveType = boxing[i][0];
             final Class<?> boxedType = boxing[i][1];
@@ -95,6 +94,6 @@ public final class Primitives {
      */
     static public char representingChar(final Class<?> type) {
         final Character ch = REPRESENTING_CHAR.get(type);
-        return ch == null ? 0 : ch.charValue();
+        return ch == null ? 0 : ch;
     }
 }

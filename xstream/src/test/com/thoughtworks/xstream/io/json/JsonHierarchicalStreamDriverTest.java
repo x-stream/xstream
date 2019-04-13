@@ -122,19 +122,19 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         message.long1 = 5L;
         message.long2 = new Long(42);
         message.int1 = 2;
-        message.int2 = new Integer(3);
+        message.int2 = 3;
         message.short1 = (short)6;
-        message.short2 = new Short((short)7);
+        message.short2 = (short)7;
         message.byte1 = (byte)8;
-        message.byte2 = new Byte((byte)9);
+        message.byte2 = (byte)9;
         message.bool1 = true;
         message.bool2 = Boolean.FALSE;
         message.char1 = 'A';
-        message.char2 = new Character('B');
+        message.char2 = 'B';
         message.float1 = 1.1f;
-        message.float2 = new Float(1.2f);
+        message.float2 = 1.2f;
         message.double1 = 2.1;
-        message.double2 = new Double(2.2);
+        message.double2 = 2.2;
         message.bigInt = new BigInteger(new byte[]{(byte)1, (byte)0xFF});
         message.bigDec = new BigDecimal(314).divide(new BigDecimal(100), 2, BigDecimal.ROUND_FLOOR);
 
@@ -417,7 +417,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
     public void testSimpleInteger() {
         final String expected = normalizeExpectation("{'int': 123}");
-        assertEquals(expected, xstream.toXML(new Integer(123)));
+        assertEquals(expected, xstream.toXML(123));
     }
 
     public void testBracesAndSquareBracketsAreNotEscaped() {
@@ -476,8 +476,8 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "  ]";
 
         final Map<String, Integer> map = new HashMap<>();
-        map.put("one", new Integer(1));
-        map.put("two", new Integer(2));
+        map.put("one", 1);
+        map.put("two", 2);
         final String actual = xstream.toXML(map);
         final int idx1 = actual.indexOf("one");
         final int idx2 = actual.indexOf("two");
@@ -539,8 +539,8 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "    ]";
 
         final MapHolder<String, Integer> holder = new MapHolder<>();
-        holder.map.put("one", new Integer(1));
-        holder.map.put("two", new Integer(2));
+        holder.map.put("one", 1);
+        holder.map.put("two", 2);
         final String actual = xstream.toXML(holder);
         final int idx1 = actual.indexOf("one");
         final int idx2 = actual.indexOf("two");
@@ -694,7 +694,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         final SystemAttributes[] sa = new SystemAttributes[2];
         sa[0] = new SystemAttributes();
         sa[0].name = "year";
-        sa[0].object = new Integer(2000);
+        sa[0].object = 2000;
         sa[1] = new SystemAttributes();
         sa[1].name = "names";
         sa[1].object = list;

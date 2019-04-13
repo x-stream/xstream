@@ -48,7 +48,7 @@ public class SampleDynamicProxy implements InvocationHandler {
 	    case "equals":
 		return recursion || equals(args[0]) ? Boolean.TRUE : Boolean.FALSE;
 	    case "hashCode":
-		return new Integer(System.identityHashCode(proxy));
+		return System.identityHashCode(proxy);
 	    default:
 		return aField;
 	}

@@ -42,7 +42,7 @@ public class ArraysTest extends AbstractAcceptanceTest {
     }
 
     public void testBoxedTypeArray() {
-        Integer[] array = new Integer[]{new Integer(1), new Integer(2)};
+        Integer[] array = new Integer[]{1, 2};
 
         String expected = "" //
             + "<java.lang.Integer-array>\n"
@@ -77,7 +77,7 @@ public class ArraysTest extends AbstractAcceptanceTest {
 
     public void testArrayOfMixedTypes() {
 
-        Object[] array = new Number[]{new Long(2), new Integer(3)};
+        Object[] array = new Number[]{new Long(2), 3};
 
         String expected = "" //
             + "<number-array>\n"

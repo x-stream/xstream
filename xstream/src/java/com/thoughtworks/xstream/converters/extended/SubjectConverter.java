@@ -59,9 +59,9 @@ public class SubjectConverter extends AbstractCollectionConverter {
     protected void marshalPrincipals(final Set<Principal> principals, final HierarchicalStreamWriter writer,
             final MarshallingContext context) {
         writer.startNode("principals");
-        for (final Principal principal : principals) {
-            writeCompleteItem(principal, context, writer);
-        }
+	principals.forEach((principal) -> {
+	    writeCompleteItem(principal, context, writer);
+	});
         writer.endNode();
     };
 

@@ -282,10 +282,10 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 }
             }
             if (idxNoOp >= 0) {
-                final Integer idx = Integer.valueOf(idxNoOp);
-                for (final Method method : methods) {
-                    callbackIndexMap.put(method, idx);
-                }
+                final Integer idx = idxNoOp;
+		methods.forEach((method) -> {
+		    callbackIndexMap.put(method, idx);
+		});
             }
         } finally {
             source.setCallbacks(originalCallbacks);
@@ -301,11 +301,11 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             final Class<?> type = parameterTypes[i];
             if (type.isPrimitive()) {
                 if (type == byte.class) {
-                    arguments[i] = new Byte((byte)0);
+                    arguments[i] = (byte)0;
                 } else if (type == short.class) {
-                    arguments[i] = new Short((short)0);
+                    arguments[i] = (short)0;
                 } else if (type == int.class) {
-                    arguments[i] = new Integer(0);
+                    arguments[i] = 0;
                 } else if (type == long.class) {
                     arguments[i] = new Long(0);
                 } else if (type == float.class) {
@@ -313,7 +313,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 } else if (type == double.class) {
                     arguments[i] = new Double(0);
                 } else if (type == char.class) {
-                    arguments[i] = new Character('\0');
+                    arguments[i] = '\0';
                 } else {
                     arguments[i] = Boolean.FALSE;
                 }
@@ -361,7 +361,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         enhancer.setInterfaces(interfaces.toArray(new Class[interfaces.size()]));
         reader.moveUp();
         reader.moveDown();
-        final boolean useFactory = Boolean.valueOf(reader.getValue()).booleanValue();
+        final boolean useFactory = Boolean.valueOf(reader.getValue());
         enhancer.setUseFactory(useFactory);
         reader.moveUp();
 
@@ -462,7 +462,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         public ReverseEngineeringInvocationHandler(
                 final int index, final Map<? super Object, ? super Object> indexMap) {
             this.indexMap = indexMap;
-            this.index = Integer.valueOf(index);
+            this.index = index;
         }
 
         @Override
@@ -488,7 +488,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 exception.add("CGLIB-callback", method.toString());
                 throw exception;
             }
-            return callbackIndexMap.get(method).intValue();
+            return callbackIndexMap.get(method);
         }
 
     }

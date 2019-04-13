@@ -73,9 +73,9 @@ public class DefaultImplementationsMapper extends MapperWrapper {
 
     private Object readResolve() {
         implToType = new HashMap<>();
-        for (final Class<?> type : typeToImpl.keySet()) {
-            implToType.put(typeToImpl.get(type), type);
-        }
+	typeToImpl.keySet().forEach((type) -> {
+	    implToType.put(typeToImpl.get(type), type);
+	});
         return this;
     }
 }

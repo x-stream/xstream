@@ -88,7 +88,7 @@ public class EncodedByteArrayConverter implements Converter, SingleValueConverte
         // copy into real array
         final byte[] result = new byte[bytes.size()];
         for (int i = 0; i < result.length; ++i) {
-            result[i] = bytes.get(i).byteValue();
+            result[i] = bytes.get(i);
         }
         return result;
     }

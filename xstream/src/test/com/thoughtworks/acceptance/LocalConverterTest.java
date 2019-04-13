@@ -86,7 +86,7 @@ public class LocalConverterTest extends AbstractAcceptanceTest {
 
         @Override
         public Object fromString(final String value) {
-            return new Integer(Integer.parseInt(value, 16));
+            return Integer.parseInt(value, 16);
         }
 
         @Override

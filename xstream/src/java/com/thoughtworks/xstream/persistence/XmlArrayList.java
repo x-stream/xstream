@@ -36,7 +36,7 @@ public class XmlArrayList<V> extends AbstractList<V> {
     public V set(final int index, final V element) {
         rangeCheck(index);
         final V value = get(index);
-        map.put(Integer.valueOf(index), element);
+        map.put(index, element);
         return value;
     }
 
@@ -48,9 +48,9 @@ public class XmlArrayList<V> extends AbstractList<V> {
         }
         final int to = index != size ? index - 1 : index;
         for (int i = size; i > to; i--) {
-            map.put(Integer.valueOf(i + 1), map.get(Integer.valueOf(i)));
+            map.put(i + 1,map.get(i));
         }
-        map.put(new Integer(index), element);
+        map.put(index, element);
     }
 
     private void rangeCheck(final int index) {
@@ -63,18 +63,18 @@ public class XmlArrayList<V> extends AbstractList<V> {
     @Override
     public V get(final int index) {
         rangeCheck(index);
-        return map.get(Integer.valueOf(index));
+        return map.get(index);
     }
 
     @Override
     public V remove(final int index) {
         final int size = size();
         rangeCheck(index);
-        final V value = map.get(Integer.valueOf(index));
+        final V value = map.get(index);
         for (int i = index; i < size - 1; i++) {
-            map.put(Integer.valueOf(i), map.get(Integer.valueOf(i + 1)));
+            map.put(i,map.get(i + 1));
         }
-        map.remove(Integer.valueOf(size - 1));
+        map.remove(size - 1);
         return value;
     }
 

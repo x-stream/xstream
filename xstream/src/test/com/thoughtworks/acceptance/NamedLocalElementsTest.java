@@ -148,7 +148,7 @@ public class NamedLocalElementsTest extends AbstractAcceptanceTest {
         final SampleMaps<Object, Number, ?, ?> maps = new SampleMaps<>();
         maps.bad = null;
         maps.good = new LinkedHashMap<>();
-        maps.good.put("SiteMesh", new Integer(42));
+        maps.good.put("SiteMesh", 42);
         maps.good.put(new StringBuffer("XStream"), new Double(42));
 
         final String expected = (""
@@ -511,7 +511,7 @@ public class NamedLocalElementsTest extends AbstractAcceptanceTest {
             .getMapper(), "item"));
 
         final Arrays arrays = new Arrays();
-        arrays.objects = new Object[]{"joe", Boolean.TRUE, Integer.valueOf(47)};
+        arrays.objects = new Object[]{"joe", Boolean.TRUE, 47};
 
         final String expected = (""
             + "<arrays>\n"

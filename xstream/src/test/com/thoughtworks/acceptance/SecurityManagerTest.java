@@ -88,9 +88,9 @@ public class SecurityManagerTest extends TestCase {
         try {
             super.runTest();
         } catch (final Throwable e) {
-            for (final Permission permission : sm.getFailedPermissions()) {
-                System.out.println("SecurityException: Permission " + permission.toString());
-            }
+	    sm.getFailedPermissions().forEach((permission) -> {
+		System.out.println("SecurityException: Permission " + permission.toString());
+	    });
             throw e;
         }
     }

@@ -54,6 +54,7 @@ public class DeserializationSpeedMetric implements Metric {
         this.validate = validate;
     }
 
+    @Override
     public double run(Product product, Target target) throws Exception {
 
         // Serialize once (because we need something to deserialize).
@@ -83,6 +84,7 @@ public class DeserializationSpeedMetric implements Metric {
     /**
      *@deprecated since 1.3
      */
+    @Override
     public double run(Product product, Object object) throws Exception {
 
         // Serialize once (because we need something to deserialize).
@@ -103,14 +105,17 @@ public class DeserializationSpeedMetric implements Metric {
         return (end - start);
     }
 
+    @Override
     public String unit() {
         return "ms";
     }
 
+    @Override
     public boolean biggerIsBetter() {
         return false;
     }
 
+    @Override
     public String toString() {
         return "Deserialization speed (" + iterations + " iteration" + (iterations == 1 ? "" : "s") + ")";
     }

@@ -74,7 +74,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     public void testListsCanContainBasicObjects() {
         final SampleLists<Object, ?> lists = new SampleLists<>();
         lists.good.add("hello");
-        lists.good.add(new Integer(3));
+        lists.good.add(3);
         lists.good.add(Boolean.TRUE);
 
         xstream.alias("lists", SampleLists.class);

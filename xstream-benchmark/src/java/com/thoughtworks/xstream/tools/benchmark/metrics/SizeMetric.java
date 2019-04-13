@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 @Deprecated
 public class SizeMetric implements Metric {
 
+    @Override
     public double run(Product product, Target target) throws Exception {
         return run(product, target.target());
     }
@@ -35,20 +36,24 @@ public class SizeMetric implements Metric {
     /**
      *@deprecated since 1.3
      */
+    @Override
     public double run(Product product, Object object) throws Exception {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         product.serialize(object, buffer);
         return buffer.size();
     }
 
+    @Override
     public String toString() {
         return "Size of serialized data";
     }
 
+    @Override
     public String unit() {
         return "bytes";
     }
 
+    @Override
     public boolean biggerIsBetter() {
         return false;
     }

@@ -68,21 +68,21 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
             final Class<?> type = field.getType();
             if (type.isPrimitive()) {
                 if (type.equals(Integer.TYPE)) {
-                    unsafe.putInt(object, offset, ((Integer)value).intValue());
+                    unsafe.putInt(object, offset, ((Integer)value));
                 } else if (type.equals(Long.TYPE)) {
-                    unsafe.putLong(object, offset, ((Long)value).longValue());
+                    unsafe.putLong(object, offset, ((Long)value));
                 } else if (type.equals(Short.TYPE)) {
-                    unsafe.putShort(object, offset, ((Short)value).shortValue());
+                    unsafe.putShort(object, offset, ((Short)value));
                 } else if (type.equals(Character.TYPE)) {
-                    unsafe.putChar(object, offset, ((Character)value).charValue());
+                    unsafe.putChar(object, offset, ((Character)value));
                 } else if (type.equals(Byte.TYPE)) {
-                    unsafe.putByte(object, offset, ((Byte)value).byteValue());
+                    unsafe.putByte(object, offset, ((Byte)value));
                 } else if (type.equals(Float.TYPE)) {
-                    unsafe.putFloat(object, offset, ((Float)value).floatValue());
+                    unsafe.putFloat(object, offset, ((Float)value));
                 } else if (type.equals(Double.TYPE)) {
-                    unsafe.putDouble(object, offset, ((Double)value).doubleValue());
+                    unsafe.putDouble(object, offset, ((Double)value));
                 } else if (type.equals(Boolean.TYPE)) {
-                    unsafe.putBoolean(object, offset, ((Boolean)value).booleanValue());
+                    unsafe.putBoolean(object, offset, ((Boolean)value));
                 } else {
                     final ObjectAccessException ex = new ObjectAccessException("Cannot set field of unknown type",
                         exception);
@@ -104,11 +104,11 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
     private long getFieldOffset(final Field f) {
         Long l = fieldOffsetCache.get(f);
         if (l == null) {
-            fieldOffsetCache.putIfAbsent(f, Long.valueOf(unsafe.objectFieldOffset(f)));
+            fieldOffsetCache.putIfAbsent(f, unsafe.objectFieldOffset(f));
             l = fieldOffsetCache.get(f);
         }
 
-        return l.longValue();
+        return l;
     }
 
     private Object readResolve() {

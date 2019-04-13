@@ -54,9 +54,7 @@ public class Category<T> {
         String ret = "[" + name + ", " + id;
         if (products != null) {
             ret += "\n{";
-            for (final T product : products) {
-                ret += product + "\n";
-            }
+	    ret = products.stream().map((product) -> product + "\n").reduce(ret, String::concat);
             ret += "}";
         }
         ret += "]";

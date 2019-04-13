@@ -38,14 +38,17 @@ public class ListTarget implements Target {
        }
     }
 
+    @Override
     public String toString() {
         return "List of " + list.size() + " user defined objects";
     }
 
+    @Override
     public Object target() {
         return list;
     }
 
+    @Override
     public boolean isEqual(Object other) {
         return list.equals(other);
     }

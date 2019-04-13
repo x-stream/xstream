@@ -113,7 +113,7 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
         final SystemAttributes[] sa = new SystemAttributes[2];
         sa[0] = new SystemAttributes();
         sa[0].name = "year";
-        sa[0].object = new Integer(2000);
+        sa[0].object = 2000;
         sa[1] = new SystemAttributes();
         sa[1].name = "names";
         sa[1].object = list;
@@ -147,7 +147,7 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
             }
         });
         try {
-            xstream.toXML(new Integer(123));
+            xstream.toXML(123);
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
             // OK

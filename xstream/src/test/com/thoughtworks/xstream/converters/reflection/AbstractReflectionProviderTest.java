@@ -114,8 +114,8 @@ public abstract class AbstractReflectionProviderTest extends MockObjectTestCase 
 
     public void testWritesHiddenFields() {
         final SubClassWithHiddenFields o = new SubClassWithHiddenFields();
-        reflectionProvider.writeField(o, "b", new Integer(10), null);
-        reflectionProvider.writeField(o, "b", new Integer(20), WithFields.class);
+        reflectionProvider.writeField(o, "b", 10, null);
+        reflectionProvider.writeField(o, "b", 20, WithFields.class);
         assertEquals(10, o.getChildB());
         assertEquals(20, o.getParentB());
     }

@@ -76,9 +76,8 @@ public class ValueRangeConverter implements Converter {
             reader.moveUp();
             reader.moveUp();
         }
-        return ValueRange.of(elements.get("minSmallest").longValue(), elements.get("minLargest").longValue(), elements
-            .get("maxSmallest")
-            .longValue(), elements.get("maxLargest").longValue());
+        return ValueRange.of(elements.get("minSmallest"), elements.get("minLargest"), elements
+		.get("maxSmallest"), elements.get("maxLargest"));
     }
 
     private void write(final String fieldName, final long value, final HierarchicalStreamWriter writer) {

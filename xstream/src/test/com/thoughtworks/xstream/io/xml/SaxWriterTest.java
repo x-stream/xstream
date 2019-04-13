@@ -114,9 +114,9 @@ public class SaxWriterTest extends TestCase {
 
             writer.setContentHandler(outputter);
 
-            xstream.marshal(new Integer(1), writer);
-            xstream.marshal(new Integer(2), writer);
-            xstream.marshal(new Integer(3), writer);
+            xstream.marshal(1, writer);
+            xstream.marshal(2, writer);
+            xstream.marshal(3, writer);
         }
 
         assertEquals(expected, buffer.toString());

@@ -62,6 +62,6 @@ public class BooleanConverter extends AbstractSingleValueConverter {
     @Override
     public String toString(final Object obj) {
         final Boolean value = (Boolean)obj;
-        return obj == null ? null : value.booleanValue() ? positive : negative;
+        return obj == null ? null : value ? positive : negative;
     }
 }

@@ -99,42 +99,42 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     @Override
     public void writeBoolean(final boolean val) throws IOException {
-        peekCallback().writeToStream(Boolean.valueOf(val));
+        peekCallback().writeToStream(val);
     }
 
     @Override
     public void writeByte(final int val) throws IOException {
-        peekCallback().writeToStream(Byte.valueOf((byte)val));
+        peekCallback().writeToStream((byte)val);
     }
 
     @Override
     public void writeInt(final int val) throws IOException {
-        peekCallback().writeToStream(Integer.valueOf(val));
+        peekCallback().writeToStream(val);
     }
 
     @Override
     public void writeChar(final int val) throws IOException {
-        peekCallback().writeToStream(Character.valueOf((char)val));
+        peekCallback().writeToStream((char)val);
     }
 
     @Override
     public void writeDouble(final double val) throws IOException {
-        peekCallback().writeToStream(Double.valueOf(val));
+        peekCallback().writeToStream(val);
     }
 
     @Override
     public void writeFloat(final float val) throws IOException {
-        peekCallback().writeToStream(Float.valueOf(val));
+        peekCallback().writeToStream(val);
     }
 
     @Override
     public void writeLong(final long val) throws IOException {
-        peekCallback().writeToStream(Long.valueOf(val));
+        peekCallback().writeToStream(val);
     }
 
     @Override
     public void writeShort(final int val) throws IOException {
-        peekCallback().writeToStream(Short.valueOf((short)val));
+        peekCallback().writeToStream((short)val);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     @Override
     public void write(final int val) throws IOException {
-        peekCallback().writeToStream(Byte.valueOf((byte)val));
+        peekCallback().writeToStream((byte)val);
     }
 
     @Override

@@ -51,10 +51,10 @@ public class XmlSet<V> extends AbstractSet<V> {
 
     private Long findEmptyKey() {
         long i = System.currentTimeMillis();
-        while (map.containsKey(Long.valueOf(i))) {
+        while (map.containsKey(i)) {
             i++;
         }
-        return Long.valueOf(i);
+        return i;
     }
 
 }

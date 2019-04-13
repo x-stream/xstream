@@ -213,7 +213,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
             + "    <cocoo>2</cocoo>\n"
             + "  </things>\n"
             + "</wl>");
-        assertEquals(new ArrayList<>(Arrays.asList(new Integer[]{new Integer(1), new Integer(2)})), wl.things);
+        assertEquals(new ArrayList<>(Arrays.asList(new Integer[]{1, 2})), wl.things);
         assertTrue(wl.things instanceof LinkedList);
     }
 }

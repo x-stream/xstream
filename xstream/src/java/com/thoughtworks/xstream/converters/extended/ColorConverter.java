@@ -53,9 +53,8 @@ public class ColorConverter implements Converter {
             elements.put(reader.getNodeName(), Integer.valueOf(reader.getValue()));
             reader.moveUp();
         }
-        return new Color(elements.get("red").intValue(), elements.get("green").intValue(), elements
-            .get("blue")
-            .intValue(), elements.get("alpha").intValue());
+        return new Color(elements.get("red"), elements.get("green"), elements
+		.get("blue"), elements.get("alpha"));
     }
 
     private void write(final String fieldName, final int value, final HierarchicalStreamWriter writer) {

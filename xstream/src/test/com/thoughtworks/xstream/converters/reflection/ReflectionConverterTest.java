@@ -29,9 +29,9 @@ public class ReflectionConverterTest extends TestCase {
     public static class World extends StandardObject {
         private static final long serialVersionUID = 200501L;
         int anInt = 1;
-        Integer anInteger = new Integer(2);
+        Integer anInteger = 2;
         char anChar = 'a';
-        Character anCharacter = new Character('w');
+        Character anCharacter = 'w';
         boolean anBool = true;
         Boolean anBoolean = false;
         byte aByte = 4;

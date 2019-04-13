@@ -37,9 +37,9 @@ public class JavaBeanConverterTest extends TestCase {
         private static final long serialVersionUID = 200504L;
 
         int anInt = 1;
-        Integer anInteger = new Integer(2);
+        Integer anInteger = 2;
         char aChar = 'a';
-        Character aCharacter = new Character('w');
+        Character aCharacter = 'w';
         boolean aBool = true;
         Boolean aBoolean = false;
         byte aByte = 4;

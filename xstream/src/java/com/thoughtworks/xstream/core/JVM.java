@@ -110,10 +110,10 @@ public class JVM implements Caching {
                     final Test t = (Test)provider.newInstance(Test.class);
                     try {
                         provider.writeField(t, "o", "object", Test.class);
-                        provider.writeField(t, "c", new Character('c'), Test.class);
-                        provider.writeField(t, "b", new Byte((byte)1), Test.class);
-                        provider.writeField(t, "s", new Short((short)1), Test.class);
-                        provider.writeField(t, "i", new Integer(1), Test.class);
+                        provider.writeField(t, "c", 'c', Test.class);
+                        provider.writeField(t, "b", (byte)1, Test.class);
+                        provider.writeField(t, "s", (short)1, Test.class);
+                        provider.writeField(t, "i", 1, Test.class);
                         provider.writeField(t, "l", new Long(1), Test.class);
                         provider.writeField(t, "f", new Float(1), Test.class);
                         provider.writeField(t, "d", new Double(1), Test.class);

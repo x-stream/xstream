@@ -180,8 +180,8 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     public void testListWithDifferentSimpleObjects() {
         final ArrayList<Object> list1 = new ArrayList<>();
         list1.add("one");
-        list1.add(Integer.valueOf(2));
-        list1.add(Float.valueOf(3.3f));
+        list1.add(2);
+        list1.add(3.3f);
         final String json = xstream.toXML(list1);
         assertEquals("{'list':[{'string':'one','int':2,'float':3.3}]}".replace('\'', '"'), json);
         final ArrayList<Object> list2 = xstream.<ArrayList<Object>>fromXML(json);
@@ -266,9 +266,9 @@ public class JettisonMappedXmlDriverTest extends TestCase {
 
     public void testArrayList() {
         final ArrayList<Object> list1 = new ArrayList<>();
-        list1.add(new Integer(12));
+        list1.add(12);
         list1.add("string");
-        list1.add(new Integer(13));
+        list1.add(13);
         final String json = xstream.toXML(list1);
         final ArrayList<?> list2 = xstream.<ArrayList<?>>fromXML(json);
         assertEquals(json, xstream.toXML(list2));

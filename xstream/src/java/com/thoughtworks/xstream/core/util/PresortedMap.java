@@ -62,9 +62,9 @@ public class PresortedMap<K, V> implements SortedMap<K, V> {
     @Override
     public Set<K> keySet() {
         final Set<K> keySet = new ArraySet<>();
-        for (final Map.Entry<K, V> entry : set) {
-            keySet.add(entry.getKey());
-        }
+	set.forEach((entry) -> {
+	    keySet.add(entry.getKey());
+	});
         return keySet;
     }
 
@@ -86,9 +86,9 @@ public class PresortedMap<K, V> implements SortedMap<K, V> {
     @Override
     public Collection<V> values() {
         final Set<V> values = new ArraySet<>();
-        for (final Map.Entry<K, V> entry : set) {
-            values.add(entry.getValue());
-        }
+	set.forEach((entry) -> {
+	    values.add(entry.getValue());
+	});
         return values;
     }
 
@@ -141,11 +141,9 @@ public class PresortedMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public void putAll(final Map<? extends K, ? extends V> m) {
-        for (final Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
-            @SuppressWarnings("unchecked")
-            final Map.Entry<K, V> e = (Map.Entry<K, V>)entry;
-            set.add(e);
-        }
+	m.entrySet().stream().map((entry) -> (Map.Entry<K, V>)entry).forEachOrdered((e) -> {
+	    set.add(e);
+	});
     }
 
     @Override

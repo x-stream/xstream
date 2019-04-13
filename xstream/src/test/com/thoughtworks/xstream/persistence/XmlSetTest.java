@@ -149,9 +149,9 @@ public class XmlSetTest extends TestCase {
         set.add("guilherme");
         set.add("silveira");
         final XmlSet<String> built = new XmlSet<>(strategy);
-        for (final String entry : set) {
-            assertTrue(built.contains(entry));
-        }
+	set.forEach((entry) -> {
+	    assertTrue(built.contains(entry));
+	});
     }
 
     public void testIteratesOverEntrySetContainingTwoItems() {
@@ -159,9 +159,9 @@ public class XmlSetTest extends TestCase {
         set.add("guilherme");
         set.add("silveira");
         final Set<String> built = new HashSet<>();
-        for (final String entry : set) {
-            built.add(entry);
-        }
+	set.forEach((entry) -> {
+	    built.add(entry);
+	});
         assertEquals(set, built);
     }
 

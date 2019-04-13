@@ -26,11 +26,11 @@ public class ByteConverter extends AbstractSingleValueConverter {
 
     @Override
     public Object fromString(final String str) {
-        final int value = Integer.decode(str).intValue();
+        final int value = Integer.decode(str);
         if(value < Byte.MIN_VALUE || value > 0xFF) {
             throw new NumberFormatException("For input string: \"" + str + '"');
         }
-        return Byte.valueOf((byte)value);
+        return (byte)value;
     }
 
 }

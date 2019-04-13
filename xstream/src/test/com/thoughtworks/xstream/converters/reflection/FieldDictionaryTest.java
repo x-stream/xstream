@@ -142,10 +142,12 @@ public class FieldDictionaryTest extends TestCase {
         final CyclicBarrier gate = new CyclicBarrier(types.size() + 1);
         final List<Thread> threads = createThreads(gate, types);
 
-        for (final Thread thread : threads) {
-            thread.setUncaughtExceptionHandler(exceptionHandler);
-            thread.start();
-        }
+	threads.stream().map((thread) -> {
+	    thread.setUncaughtExceptionHandler(exceptionHandler);
+	    return thread;
+	}).forEachOrdered((thread) -> {
+	    thread.start();
+	});
         gate.await();
 
         for (final Thread thread : threads) {

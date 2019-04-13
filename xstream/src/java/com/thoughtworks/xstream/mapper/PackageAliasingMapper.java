@@ -94,8 +94,8 @@ public class PackageAliasingMapper extends MapperWrapper implements Serializable
         final Map<String, String> map = (Map<String, String>)in.readObject();
         packageToName.putAll(map);
         nameToPackage = new HashMap<>();
-        for (final Map.Entry<String, String> entry : packageToName.entrySet()) {
-            nameToPackage.put(entry.getValue(), entry.getKey());
-        }
+	packageToName.entrySet().forEach((entry) -> {
+	    nameToPackage.put(entry.getValue(), entry.getKey());
+	});
     }
 }

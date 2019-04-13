@@ -82,10 +82,10 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.bList.add(new AllImplicitTypes.B());
         implicits.bList.get(1).val = 4;
         AllImplicitTypes.C c = new AllImplicitTypes.C();
-        c.val = new Integer(5);
+        c.val = 5;
         implicits.cMap.put(c.val, c);
         c = new AllImplicitTypes.C();
-        c.val = new Integer(6);
+        c.val = 6;
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
     }
@@ -133,10 +133,10 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.bList.add(new AllImplicitTypes.B());
         implicits.bList.get(1).val = 4;
         AllImplicitTypes.C c = new AllImplicitTypes.C();
-        c.val = new Integer(5);
+        c.val = 5;
         implicits.cMap.put(c.val, c);
         c = new AllImplicitTypes.C();
-        c.val = new Integer(6);
+        c.val = 6;
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
         implicits.separator1 = implicits.separator2 = null;
@@ -185,10 +185,10 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.bList.add(new AllImplicitTypes.B());
         implicits.bList.get(1).val = 4;
         AllImplicitTypes.C c = new AllImplicitTypes.C();
-        c.val = new Integer(5);
+        c.val = 5;
         implicits.cMap.put(c.val, c);
         c = new AllImplicitTypes.C();
-        c.val = new Integer(6);
+        c.val = 6;
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
         implicits.separator1 = implicits.separator2 = null;
@@ -296,16 +296,16 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         implicits.bList.add(new AllImplicitTypes.B());
         implicits.bList.get(1).val = 10;
         AllImplicitTypes.C c = new AllImplicitTypes.C();
-        c.val = new Integer(5);
+        c.val = 5;
         implicits.cMap.put(c.val, c);
         c = new AllImplicitTypes.C();
-        c.val = new Integer(6);
+        c.val = 6;
         implicits.cMap.put(c.val, c);
         c = new AllImplicitTypes.C();
-        c.val = new Integer(11);
+        c.val = 11;
         implicits.cMap.put(c.val, c);
         c = new AllImplicitTypes.C();
-        c.val = new Integer(12);
+        c.val = 12;
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
         implicits.separator1 = implicits.separator2 = implicits.separator = implicits.separator =

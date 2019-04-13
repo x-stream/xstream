@@ -166,9 +166,9 @@ public class XmlMapTest extends TestCase {
         map.put("guilherme", "aCuteString");
         map.put("silveira", "anotherCuteString");
         final XmlMap<String, String> built = new XmlMap<>(strategy);
-        for (final Map.Entry<String, String> entry : map.entrySet()) {
-            assertTrue(built.containsKey(entry.getKey()));
-        }
+	map.entrySet().forEach((entry) -> {
+	    assertTrue(built.containsKey(entry.getKey()));
+	});
     }
 
     // actually an acceptance test?
@@ -177,9 +177,9 @@ public class XmlMapTest extends TestCase {
         map.put("guilherme", "aCuteString");
         map.put("silveira", "anotherCuteString");
         final XmlMap<String, String> built = new XmlMap<>(strategy);
-        for (final Map.Entry<String, String> entry : map.entrySet()) {
-            assertTrue(built.containsValue(entry.getValue()));
-        }
+	map.entrySet().forEach((entry) -> {
+	    assertTrue(built.containsValue(entry.getValue()));
+	});
     }
 
     public void testIteratesOverEntrySetContainingTwoItems() {
@@ -187,9 +187,9 @@ public class XmlMapTest extends TestCase {
         map.put("guilherme", "aCuteString");
         map.put("silveira", "anotherCuteString");
         final Map<String, String> built = new HashMap<>();
-        for (final Map.Entry<String, String> entry : map.entrySet()) {
-            built.put(entry.getKey(), entry.getValue());
-        }
+	map.entrySet().forEach((entry) -> {
+	    built.put(entry.getKey(), entry.getValue());
+	});
         assertEquals(map, built);
     }
 

@@ -362,14 +362,14 @@ public class XStreamTest extends TestCase {
 
     public void testObjectOutputStreamCloseTwice() throws IOException {
         final ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
-        oout.writeObject(new Integer(1));
+        oout.writeObject(1);
         oout.close();
         oout.close();
     }
 
     public void testObjectOutputStreamCloseAndFlush() throws IOException {
         final ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
-        oout.writeObject(new Integer(1));
+        oout.writeObject(1);
         oout.close();
         try {
             oout.flush();
@@ -381,10 +381,10 @@ public class XStreamTest extends TestCase {
 
     public void testObjectOutputStreamCloseAndWrite() throws IOException {
         final ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
-        oout.writeObject(new Integer(1));
+        oout.writeObject(1);
         oout.close();
         try {
-            oout.writeObject(new Integer(2));
+            oout.writeObject(2);
             fail("Closing and writing should throw a StreamException");
         } catch (final StreamException e) {
             // ok

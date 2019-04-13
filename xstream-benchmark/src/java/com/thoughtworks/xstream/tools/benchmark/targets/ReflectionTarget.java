@@ -37,14 +37,17 @@ public class ReflectionTarget implements Target {
         list.add(new Five("1", 2, true, '4', new StringBuffer("5")));
     }
     
+    @Override
     public boolean isEqual(Object other) {
         return list.equals(other);
     }
 
+    @Override
     public Object target() {
         return list;
     }
 
+    @Override
     public String toString() {
         return "Reflection Converter";
     }

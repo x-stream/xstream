@@ -31,16 +31,19 @@ import java.io.ObjectInputStream;
 @Deprecated
 public class JavaObjectSerialization implements Product {
 
+    @Override
     public void serialize(Object object, OutputStream output) throws Exception {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
         objectOutputStream.writeObject(object);
     }
 
+    @Override
     public Object deserialize(InputStream input) throws Exception {
         ObjectInputStream objectInputStream = new ObjectInputStream(input);
         return objectInputStream.readObject();
     }
 
+    @Override
     public String toString() {
         return "Java object serialization";
     }

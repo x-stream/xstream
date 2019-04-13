@@ -31,26 +31,29 @@ public class BasicTarget implements Target {
     
     public BasicTarget() {
         list = new ArrayList();
-        list.add(new Integer(1));
-        list.add(new Byte((byte)2));
-        list.add(new Short((short)3));
+        list.add(1);
+        list.add((byte)2);
+        list.add((short)3);
         list.add(new Long(4));
         list.add("Profile");
         list.add(Boolean.TRUE);
-        list.add(new Float(1.2f));
+        list.add(1.2f);
         list.add(new Double(1.2f));
         list.add(new File("profile.txt"));
         list.add(Locale.ENGLISH);
     }
     
+    @Override
     public boolean isEqual(Object other) {
         return list.equals(other);
     }
 
+    @Override
     public Object target() {
         return list;
     }
 
+    @Override
     public String toString() {
         return "SingleValue Converters";
     }

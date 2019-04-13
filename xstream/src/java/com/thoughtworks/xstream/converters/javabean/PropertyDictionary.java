@@ -54,11 +54,9 @@ public class PropertyDictionary implements Caching {
     public Iterator<BeanProperty> serializablePropertiesFor(final Class<?> type) {
         final Collection<BeanProperty> beanProperties = new ArrayList<>();
         final Collection<PropertyDescriptor> descriptors = buildMap(type).values();
-        for (final PropertyDescriptor descriptor : descriptors) {
-            if (descriptor.getReadMethod() != null && descriptor.getWriteMethod() != null) {
-                beanProperties.add(new BeanProperty(type, descriptor.getName(), descriptor.getPropertyType()));
-            }
-        }
+	descriptors.stream().filter((descriptor) -> (descriptor.getReadMethod() != null && descriptor.getWriteMethod() != null)).forEachOrdered((descriptor) -> {
+	    beanProperties.add(new BeanProperty(type, descriptor.getName(), descriptor.getPropertyType()));
+	});
         return beanProperties.iterator();
     }
 

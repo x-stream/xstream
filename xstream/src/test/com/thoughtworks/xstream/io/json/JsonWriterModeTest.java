@@ -56,7 +56,7 @@ public class JsonWriterModeTest extends TestCase {
         x.innerObj.yField = "Y";
 
         target = new ArrayList<>(Arrays.asList(new Object[]{
-            new Object[][]{new Object[0]}, null, new Integer(42), new Long(Long.MAX_VALUE), new Y(), x.innerObj,
+            new Object[][]{new Object[0]}, null, 42, Long.MAX_VALUE, new Y(), x.innerObj,
             new ArrayList<>(), new CharSequence[]{
                 "JUnit", "XStream", new StringBuffer("JSON"), new StringBuffer("JScript")}, x,}));
 

@@ -26,14 +26,17 @@ public class StringTarget implements Target {
 
     private final String string = "Hello World!";
 
+    @Override
     public String toString() {
         return "Simple string";
     }
 
+    @Override
     public Object target() {
         return string;
     }
 
+    @Override
     public boolean isEqual(Object other) {
         return string.equals(other);
     }

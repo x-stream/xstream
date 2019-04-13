@@ -224,11 +224,11 @@ public class BinaryStreamReader implements ExtendedHierarchicalStreamReader {
         private final Map<Long, String> map = new HashMap<>();
 
         public void put(final long id, final String value) {
-            map.put(Long.valueOf(id), value);
+            map.put(id, value);
         }
 
         public String get(final long id) {
-            final String result = map.get(Long.valueOf(id));
+            final String result = map.get(id);
             if (result == null) {
                 throw new StreamException("Unknown ID : " + id);
             } else {

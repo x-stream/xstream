@@ -240,7 +240,7 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
 
         final MyHashtable<String, Object> in2 = new MyHashtable<>("hi");
         in2.put("cheese", "curry");
-        in2.put("apple", new Integer(3));
+        in2.put("apple", 3);
         final String xml2 = xstream.toXML(in2);
         assertObjectsEqual(in2, xstream.fromXML(xml2));
     }

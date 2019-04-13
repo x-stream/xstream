@@ -65,12 +65,12 @@ public abstract class AbstractDocumentWriterTest<E> extends TestCase {
         final List<E> nodes = writer.getTopLevelNodes();
         final Deque<XppDom> deque = new ArrayDeque<>(Arrays.asList(expected));
         assertEquals(expected.length, nodes.size());
-        for (final E node : nodes) {
-            try (final XppDomWriter xpp3 = new XppDomWriter()) {
-                copier.copy(createDocumentReaderFor(node), xpp3);
-                assertTrue(equals(deque.pollFirst(), xpp3.getConfiguration()));
-            }
-        }
+	nodes.forEach((node) -> {
+	    try (final XppDomWriter xpp3 = new XppDomWriter()) {
+		copier.copy(createDocumentReaderFor(node), xpp3);
+		assertTrue(equals(deque.pollFirst(), xpp3.getConfiguration()));
+	    }
+	});
     }
 
     public void testProducesDomElements() {
@@ -131,11 +131,11 @@ public abstract class AbstractDocumentWriterTest<E> extends TestCase {
 
         final List<E> nodes = writer.getTopLevelNodes();
         assertEquals(1, nodes.size());
-        for (final E node : nodes) {
-            try (final XppDomWriter xpp3 = new XppDomWriter()) {
-                copier.copy(createDocumentReaderFor(node), xpp3);
-                assertTrue(equals(expected, xpp3.getConfiguration()));
-            }
-        }
+	nodes.forEach((node) -> {
+	    try (final XppDomWriter xpp3 = new XppDomWriter()) {
+		copier.copy(createDocumentReaderFor(node), xpp3);
+		assertTrue(equals(expected, xpp3.getConfiguration()));
+	    }
+	});
     }
 }

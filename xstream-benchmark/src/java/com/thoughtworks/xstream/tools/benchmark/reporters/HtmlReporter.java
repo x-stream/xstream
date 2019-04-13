@@ -57,7 +57,7 @@ public class HtmlReporter implements Reporter {
     }
 
     private String css() {
-        StringBuffer css = new StringBuffer("\n");
+        StringBuilder css = new StringBuilder("\n");
         css.append("body, h1, h2, h3, td { font-family: arial; }\n");
         css.append("h1 { text-align: center; }\n");
         css.append("table, h3 { margin-left: 40px; }\n");

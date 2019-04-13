@@ -35,14 +35,17 @@ public class UserDefinedClassTarget implements Target {
         person.dateOfBirth = new Date();
     }
 
+    @Override
     public String toString() {
         return "User defined class";
     }
 
+    @Override
     public Object target() {
         return person;
     }
 
+    @Override
     public boolean isEqual(Object other) {
         return person.equals(other);
     }

@@ -68,9 +68,7 @@ public class BeanProvider implements JavaBeanProvider {
             return type.newInstance();
         } catch (final InstantiationException | ExceptionInInitializerError e) {
             ex = new ConversionException("Cannot construct type", e);
-        } catch (final IllegalAccessException e) {
-            ex = new ObjectAccessException("Cannot construct type", e);
-        } catch (final SecurityException e) {
+        } catch (final IllegalAccessException | SecurityException e) {
             ex = new ObjectAccessException("Cannot construct type", e);
         }
         ex.add("construction-type", type.getName());

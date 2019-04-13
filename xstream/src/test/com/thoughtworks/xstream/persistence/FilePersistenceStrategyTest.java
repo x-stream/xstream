@@ -213,9 +213,9 @@ public class FilePersistenceStrategyTest extends TestCase {
         final FilePersistenceStrategy<String, String> strategy = new FilePersistenceStrategy<>(baseDir);
         strategy.put("guilherme", "aCuteString");
         strategy.put("silveira", "anotherCuteString");
-        for (final String key : original.keySet()) {
-            assertTrue(strategy.containsKey(key));
-        }
+	original.keySet().forEach((key) -> {
+	    assertTrue(strategy.containsKey(key));
+	});
     }
 
     public void testIteratesOverEntryAndChecksItsKeyWithAnotherInstance() {

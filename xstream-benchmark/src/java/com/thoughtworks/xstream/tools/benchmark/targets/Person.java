@@ -25,6 +25,7 @@ public class Person implements Serializable {
     public String lastName;
     public Date dateOfBirth;
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -36,6 +37,7 @@ public class Person implements Serializable {
         return !(lastName != null ? !lastName.equals(person.lastName) : person.lastName != null);
     }
 
+    @Override
     public int hashCode() {
         int result;
         result = (firstName != null ? firstName.hashCode() : 0);

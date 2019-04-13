@@ -26,10 +26,12 @@ public class One {
         this.one = one;
     }
 
+    @Override
     public boolean equals(Object obj) {
         return one.equals(((One)obj).one);
     }
 
+    @Override
     public int hashCode() {
         return one.hashCode() >>> 1;
     }

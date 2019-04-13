@@ -50,7 +50,7 @@ public class XmlArrayListTest extends TestCase {
     public void testWritesASingleObjectInFirstPosition() {
         final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
-        assertTrue(strategy.map.containsKey(new Integer(0)));
+        assertTrue(strategy.map.containsKey(0));
     }
 
     public void testWritesTwoObjects() {
@@ -59,16 +59,16 @@ public class XmlArrayListTest extends TestCase {
         xmlList.add("silveira");
         assertTrue(strategy.map.containsValue("guilherme"));
         assertTrue(strategy.map.containsValue("silveira"));
-        assertTrue(strategy.map.containsKey(new Integer(0)));
-        assertTrue(strategy.map.containsKey(new Integer(1)));
+        assertTrue(strategy.map.containsKey(0));
+        assertTrue(strategy.map.containsKey(1));
     }
 
     public void testWritesTwoObjectsGuaranteesItsEnumerationOrder() {
         final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
-        assertEquals("guilherme", strategy.map.get(new Integer(0)));
-        assertEquals("silveira", strategy.map.get(new Integer(1)));
+        assertEquals("guilherme", strategy.map.get(0));
+        assertEquals("silveira", strategy.map.get(1));
     }
 
     public void testWritesASecondObjectInAPositionHigherThanTheListsSize() {
@@ -225,9 +225,9 @@ public class XmlArrayListTest extends TestCase {
         xmlList.add("guilherme");
         xmlList.add("silveira");
         final XmlArrayList<String> built = new XmlArrayList<>(strategy);
-        for (Object entry : xmlList) {
-            assertTrue(built.contains(entry));
-        }
+	xmlList.forEach((entry) -> {
+	    assertTrue(built.contains(entry));
+	});
     }
 
     public void testIteratesOverEntrySetContainingTwoItems() {
@@ -235,9 +235,9 @@ public class XmlArrayListTest extends TestCase {
         xmlList.add("guilherme");
         xmlList.add("silveira");
         final List<String> built = new ArrayList<>();
-        for (String entry : xmlList) {
-            built.add(entry);
-        }
+	xmlList.forEach((entry) -> {
+	    built.add(entry);
+	});
         assertEquals(xmlList, built);
     }
 

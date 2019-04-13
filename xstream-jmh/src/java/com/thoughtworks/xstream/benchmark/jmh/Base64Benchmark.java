@@ -227,7 +227,7 @@ public class Base64Benchmark {
         private static byte[] getRandomBytes(final int length) {
             final char[] ch = new char[length];
             for (int j = 0; j < length; ++j) {
-                ch[j] = Character.valueOf((char)(Math.round(Math.random() * 254) + 1));
+                ch[j] = (char)(Math.round(Math.random() * 254) + 1);
             }
             final byte[] orig = new String(ch).getBytes(StandardCharsets.UTF_8);
             return orig;

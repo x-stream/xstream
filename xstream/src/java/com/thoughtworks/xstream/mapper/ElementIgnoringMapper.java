@@ -53,11 +53,9 @@ public class ElementIgnoringMapper extends MapperWrapper {
     @Override
     public boolean isIgnoredElement(final String name) {
         if (!unknownElementsToIgnore.isEmpty()) {
-            for (final Pattern pattern : unknownElementsToIgnore) {
-                if (pattern.matcher(name).matches()) {
-                    return true;
-                }
-            }
+	    if (unknownElementsToIgnore.stream().anyMatch((pattern) -> (pattern.matcher(name).matches()))) {
+		return true;
+	    }
         }
         return super.isIgnoredElement(name);
     }

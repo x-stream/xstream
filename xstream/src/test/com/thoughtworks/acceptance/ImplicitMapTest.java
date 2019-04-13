@@ -784,7 +784,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     public void testCanUsePrimitiveAsKey() {
         final SampleMaps<Double, Product, ?, ?> sample = new SampleMaps<>();
         sample.good = new LinkedHashMap<>();
-        sample.good.put(new Double(399.99), new Product("iPhone", "i", 399.99));
+        sample.good.put(399.99, new Product("iPhone", "i", 399.99));
 
         final String expected = ""
             + "<sample>\n"
