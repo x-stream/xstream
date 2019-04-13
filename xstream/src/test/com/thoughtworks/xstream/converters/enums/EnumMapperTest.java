@@ -79,7 +79,7 @@ public class EnumMapperTest extends TestCase {
     }
 
     public void testEnumsAreImmutable() {
-        final List<Enum<?>> in = new ArrayList<Enum<?>>();
+        final List<Enum<?>> in = new ArrayList<>();
         in.add(SimpleEnum.GREEN);
         in.add(SimpleEnum.GREEN);
         in.add(PolymorphicEnum.A);

@@ -41,16 +41,13 @@ public class CachingMapper extends MapperWrapper implements Caching {
             if (cached instanceof Class) {
                 return (Class<?>)cached;
             }
-            throw (XStreamException)cached;
+            throw (RuntimeException)cached;
         }
 
         try {
             realClassCache.putIfAbsent(elementName, super.realClass(elementName));
             return (Class<?>)realClassCache.get(elementName);
-        } catch (final ForbiddenClassException e) {
-            realClassCache.putIfAbsent(elementName, e);
-            throw e;
-        } catch (final CannotResolveClassException e) {
+        } catch (final ForbiddenClassException | CannotResolveClassException e) {
             realClassCache.putIfAbsent(elementName, e);
             throw e;
         }

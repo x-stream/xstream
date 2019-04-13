@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectInputValidation;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
@@ -256,9 +255,9 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     private byte[] javaSerialize(final Object object) throws IOException {
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        final ObjectOutputStream objectOutputStream = new ObjectOutputStream(bytes);
-        objectOutputStream.writeObject(object);
-        objectOutputStream.close();
+	try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(bytes)) {
+	    objectOutputStream.writeObject(object);
+	}
         return bytes.toByteArray();
     }
 
@@ -738,33 +737,21 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
             final int MEDIUM_PRIORITY = 0;
             final int HIGH_PRIORITY = 5;
 
-            s.registerValidation(new ObjectInputValidation() {
-                @Override
-                public void validateObject() {
-                    log.actual("validateObject() medium priority 1");
-                }
-            }, MEDIUM_PRIORITY);
+            s.registerValidation(() -> {
+		log.actual("validateObject() medium priority 1");
+	    }, MEDIUM_PRIORITY);
 
-            s.registerValidation(new ObjectInputValidation() {
-                @Override
-                public void validateObject() {
-                    log.actual("validateObject() high priority");
-                }
-            }, HIGH_PRIORITY);
+            s.registerValidation(() -> {
+		log.actual("validateObject() high priority");
+	    }, HIGH_PRIORITY);
 
-            s.registerValidation(new ObjectInputValidation() {
-                @Override
-                public void validateObject() {
-                    log.actual("validateObject() low priority");
-                }
-            }, LOW_PRIORITY);
+            s.registerValidation(() -> {
+		log.actual("validateObject() low priority");
+	    }, LOW_PRIORITY);
 
-            s.registerValidation(new ObjectInputValidation() {
-                @Override
-                public void validateObject() {
-                    log.actual("validateObject() medium priority 2");
-                }
-            }, MEDIUM_PRIORITY);
+            s.registerValidation(() -> {
+		log.actual("validateObject() medium priority 2");
+	    }, MEDIUM_PRIORITY);
         }
 
         private Object readResolve() {

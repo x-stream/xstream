@@ -47,8 +47,8 @@ public class SecurityMapper extends MapperWrapper {
     public SecurityMapper(final Mapper wrapped, final TypePermission... permissions) {
         super(wrapped);
         this.permissions = permissions == null //
-            ? new ArrayList<TypePermission>()
-            : new ArrayList<TypePermission>(Arrays.asList(permissions));
+            ? new ArrayList<>()
+            : new ArrayList<>(Arrays.asList(permissions));
     }
 
     /**

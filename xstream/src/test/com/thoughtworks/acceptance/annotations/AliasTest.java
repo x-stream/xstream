@@ -49,7 +49,7 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationForClassWithAnnotatedConverter() {
-        final Map<String, Person> map = new HashMap<String, Person>();
+        final Map<String, Person> map = new HashMap<>();
         map.put("first person", new Person("john doe"));
         map.put("second person", new Person("jane doe"));
         final String xml = ""
@@ -83,7 +83,7 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationForField() {
-        final List<String> nickNames = new ArrayList<String>();
+        final List<String> nickNames = new ArrayList<>();
         nickNames.add("johnny");
         nickNames.add("jack");
         final CustomPerson person = new CustomPerson("john", "doe", 25, nickNames);
@@ -194,7 +194,7 @@ public class AliasTest extends AbstractAcceptanceTest {
         private List<AddressInfo> addresses;
 
         public AddressBook() {
-            addresses = new ArrayList<AddressInfo>();
+            addresses = new ArrayList<>();
             addresses.add(new Address("Home Address", 111));
             addresses.add(new Address("Office Address", 222));
         }
@@ -353,9 +353,7 @@ public class AliasTest extends AbstractAcceptanceTest {
                 final Class<?> realClass = mapper.realClass(str);
                 try {
                     return realClass.newInstance();
-                } catch (final InstantiationException e) {
-                    throw new ConversionException(e);
-                } catch (final IllegalAccessException e) {
+                } catch (final InstantiationException | IllegalAccessException e) {
                     throw new ConversionException(e);
                 }
             }

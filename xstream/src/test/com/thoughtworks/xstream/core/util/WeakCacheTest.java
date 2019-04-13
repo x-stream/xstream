@@ -33,7 +33,7 @@ import junit.framework.TestCase;
 public class WeakCacheTest extends TestCase {
 
     public void testIsAMap() {
-        final Map<String, String> map = new WeakCache<String, String>();
+        final Map<String, String> map = new WeakCache<>();
         assertEquals(0, map.size());
         assertNull(map.put("key", "value"));
         assertEquals(1, map.size());
@@ -45,7 +45,7 @@ public class WeakCacheTest extends TestCase {
         assertEquals("value", map.entrySet().iterator().next().getValue());
         assertEquals("key", map.entrySet().iterator().next().getKey());
         assertEquals("value", map.put("key", "test"));
-        final Map<String, String> copy = new HashMap<String, String>(map);
+        final Map<String, String> copy = new HashMap<>(map);
         assertEquals("test", map.remove("key"));
         assertEquals(0, map.size());
         map.putAll(copy);
@@ -57,10 +57,10 @@ public class WeakCacheTest extends TestCase {
 
     public void testEntriesAreRemovedIfKeyIsGarbageCollected() throws InterruptedException {
         String key = new String("key");
-        final ReferenceQueue<String> refQueue = new ReferenceQueue<String>();
-        final Reference<String> ref = new PhantomReference<String>(key, refQueue);
+        final ReferenceQueue<String> refQueue = new ReferenceQueue<>();
+        final Reference<String> ref = new PhantomReference<>(key, refQueue);
 
-        final Map<String, String> map = new WeakCache<String, String>();
+        final Map<String, String> map = new WeakCache<>();
         map.put(key, "value");
         key = null;
 
@@ -76,10 +76,10 @@ public class WeakCacheTest extends TestCase {
 
     public void testSelfReferencingEntriesAreRemovedIfKeyIsGarbageCollected() throws InterruptedException {
         String key = new String("key");
-        final ReferenceQueue<String> refQueue = new ReferenceQueue<String>();
-        final Reference<String> ref = new PhantomReference<String>(key, refQueue);
+        final ReferenceQueue<String> refQueue = new ReferenceQueue<>();
+        final Reference<String> ref = new PhantomReference<>(key, refQueue);
 
-        final Map<String, Set<String>> map = new WeakCache<String, Set<String>>();
+        final Map<String, Set<String>> map = new WeakCache<>();
         map.put(key, Collections.singleton(key));
         key = null;
 
@@ -95,10 +95,10 @@ public class WeakCacheTest extends TestCase {
 
     public void testEntriesAreRemovedIfValueIsGarbageCollected() throws InterruptedException {
         String value = new String("value");
-        final ReferenceQueue<String> refQueue = new ReferenceQueue<String>();
-        final Reference<String> ref = new PhantomReference<String>(value, refQueue);
+        final ReferenceQueue<String> refQueue = new ReferenceQueue<>();
+        final Reference<String> ref = new PhantomReference<>(value, refQueue);
 
-        final Map<String, String> map = new WeakCache<String, String>();
+        final Map<String, String> map = new WeakCache<>();
         map.put("key", value);
         value = null;
 
@@ -115,10 +115,10 @@ public class WeakCacheTest extends TestCase {
     public void testSelfReferencingEntriesAreRemovedIfValueIsGarbageCollected() throws InterruptedException {
         final String key = new String("key");
         Set<String> value = Collections.singleton(key);
-        final ReferenceQueue<Set<String>> refQueue = new ReferenceQueue<Set<String>>();
-        final Reference<Set<String>> ref = new PhantomReference<Set<String>>(value, refQueue);
+        final ReferenceQueue<Set<String>> refQueue = new ReferenceQueue<>();
+        final Reference<Set<String>> ref = new PhantomReference<>(value, refQueue);
 
-        final Map<String, Set<String>> map = new WeakCache<String, Set<String>>();
+        final Map<String, Set<String>> map = new WeakCache<>();
         map.put(key, value);
         value = null;
 
@@ -142,10 +142,10 @@ public class WeakCacheTest extends TestCase {
         Class<?> simpleReferenceType = Class.forName("com.thoughtworks.proxy.kit.SimpleReference", true, classLoader);
         Field instance = simpleReferenceType.getDeclaredField("instance");
 
-        final ReferenceQueue<Field> refQueue = new ReferenceQueue<Field>();
-        final Reference<Field> ref = new PhantomReference<Field>(instance, refQueue);
+        final ReferenceQueue<Field> refQueue = new ReferenceQueue<>();
+        final Reference<Field> ref = new PhantomReference<>(instance, refQueue);
 
-        final Map<Class<?>, Field> map = new WeakCache<Class<?>, Field>();
+        final Map<Class<?>, Field> map = new WeakCache<>();
         map.put(simpleReferenceType, instance);
         simpleReferenceType = null;
         instance = null;
@@ -168,10 +168,10 @@ public class WeakCacheTest extends TestCase {
 
     public void testCanUseDifferentMapImplementation() throws InterruptedException {
         String value = new String("value");
-        final ReferenceQueue<String> refQueue = new ReferenceQueue<String>();
-        final Reference<String> ref = new PhantomReference<String>(value, refQueue);
+        final ReferenceQueue<String> refQueue = new ReferenceQueue<>();
+        final Reference<String> ref = new PhantomReference<>(value, refQueue);
 
-        final Map<String, String> map = new WeakCache<String, String>(new TreeMap<String, Reference<String>>());
+        final Map<String, String> map = new WeakCache<>(new TreeMap<>());
         map.put("key", value);
         value = null;
 

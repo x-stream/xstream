@@ -30,13 +30,13 @@ public class XmlSetTest extends TestCase {
     }
 
     public void testWritesASingleObject() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         assertTrue(strategy.map.containsValue("guilherme"));
     }
 
     public void testWritesTwoObjects() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         set.add("silveira");
         assertTrue(strategy.map.containsValue("guilherme"));
@@ -44,7 +44,7 @@ public class XmlSetTest extends TestCase {
     }
 
     public void testRemovesAWrittenObject() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         assertTrue(strategy.map.containsValue("guilherme"));
         final boolean changed = set.remove("guilherme");
@@ -53,60 +53,60 @@ public class XmlSetTest extends TestCase {
     }
 
     public void testRemovesAnInvalidObject() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         final boolean removed = set.remove("guilherme");
         assertFalse(removed);
     }
 
     public void testHasZeroLength() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         assertEquals(0, set.size());
     }
 
     public void testHasOneItem() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         assertEquals(1, set.size());
     }
 
     public void testHasTwoItems() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         set.add("silveira");
         assertEquals(2, set.size());
     }
 
     public void testIsNotEmpty() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         assertFalse("set should not be empty", set.isEmpty());
     }
 
     public void testDoesNotContainKey() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         assertFalse(set.contains("guilherme"));
     }
 
     public void testContainsKey() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         assertTrue(set.contains("guilherme"));
     }
 
     public void testGetsAnObject() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         final Object onlyValue = set.iterator().next();
         assertEquals("guilherme", onlyValue);
     }
 
     public void testIsEmpty() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         assertTrue("set should be empty", set.isEmpty());
     }
 
     public void testClearsItsObjects() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         set.add("silveira");
         set.clear();
@@ -114,30 +114,30 @@ public class XmlSetTest extends TestCase {
     }
 
     public void testPutsAllAddsTwoItems() {
-        final Set<String> original = new HashSet<String>();
+        final Set<String> original = new HashSet<>();
         original.add("guilherme");
         original.add("silveira");
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.addAll(original);
         assertEquals(2, set.size());
     }
 
     public void testContainsASpecificValue() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         assertTrue(set.contains("guilherme"));
     }
 
     public void testDoesNotContainASpecificValue() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         assertFalse(set.contains("zzzz"));
     }
 
     public void testEntrySetContainsAllItems() {
-        final Set<String> original = new HashSet<String>();
+        final Set<String> original = new HashSet<>();
         original.add("guilherme");
         original.add("silveira");
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         set.add("silveira");
         assertTrue(set.containsAll(original));
@@ -145,20 +145,20 @@ public class XmlSetTest extends TestCase {
 
     // actually an acceptance test?
     public void testIteratesOverEntryAndChecksWithAnotherInstance() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         set.add("silveira");
-        final XmlSet<String> built = new XmlSet<String>(strategy);
+        final XmlSet<String> built = new XmlSet<>(strategy);
         for (final String entry : set) {
             assertTrue(built.contains(entry));
         }
     }
 
     public void testIteratesOverEntrySetContainingTwoItems() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         set.add("silveira");
-        final Set<String> built = new HashSet<String>();
+        final Set<String> built = new HashSet<>();
         for (final String entry : set) {
             built.add(entry);
         }
@@ -166,7 +166,7 @@ public class XmlSetTest extends TestCase {
     }
 
     public void testRemovesAnItemThroughIteration() {
-        final XmlSet<String> set = new XmlSet<String>(strategy);
+        final XmlSet<String> set = new XmlSet<>(strategy);
         set.add("guilherme");
         set.add("silveira");
         for (final Iterator<String> iter = set.iterator(); iter.hasNext();) {
@@ -180,7 +180,7 @@ public class XmlSetTest extends TestCase {
 
     private static class MockedStrategy implements PersistenceStrategy<Long, String> {
 
-        private final Map<Long, String> map = new HashMap<Long, String>();
+        private final Map<Long, String> map = new HashMap<>();
 
         @Override
         public Iterator<Map.Entry<Long, String>> iterator() {

@@ -41,7 +41,7 @@ public class SecurityMapperTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        classMap = new HashMap<String, Class<?>>();
+        classMap = new HashMap<>();
         mapper = new SecurityMapper(new MapperWrapper(null) {
             @Override
             public Class<?> realClass(final String elementName) {

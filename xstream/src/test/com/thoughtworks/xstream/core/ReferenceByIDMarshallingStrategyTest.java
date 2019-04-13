@@ -44,7 +44,7 @@ public class ReferenceByIDMarshallingStrategyTest extends AbstractAcceptanceTest
 
     static class List {
         public Object o;
-        public ArrayList<Object> list = new ArrayList<Object>();
+        public ArrayList<Object> list = new ArrayList<>();
     }
 
     public void testIgnoresImplicitCollectionAtAnyFieldPosition() {

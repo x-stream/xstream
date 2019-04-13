@@ -90,15 +90,19 @@ public class TreeMapConverter extends MapConverter {
         final Comparator<?> comparator;
         if (reader.hasMoreChildren()) {
             reader.moveDown();
-            if (reader.getNodeName().equals("comparator")) {
-                final Class<?> comparatorClass = HierarchicalStreams.readClassType(reader, mapper());
-                comparator = (Comparator<?>)context.convertAnother(result, comparatorClass);
-            } else if (reader.getNodeName().equals("no-comparator")) { // pre 1.4 format
-                comparator = null;
-            } else {
-                // we are already within the first entry
-                return NULL_MARKER;
-            }
+	    switch (reader.getNodeName()) {
+	    	case "comparator":
+		    final Class<?> comparatorClass = HierarchicalStreams.readClassType(reader, mapper());
+		    comparator = (Comparator<?>)context.convertAnother(result, comparatorClass);
+		    break;
+	    	case "no-comparator":
+		    // pre 1.4 format
+		    comparator = null;
+		    break;
+	    	default:
+		    // we are already within the first entry
+		    return NULL_MARKER;
+	    }
             reader.moveUp();
         } else {
             comparator = null;

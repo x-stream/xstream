@@ -45,13 +45,13 @@ public class XStream12CompatibilityTest extends AbstractAcceptanceTest {
         String name;
 
         ChildClass(final String parent, final String child) {
-            ((ParentClass)this).name = parent;
+            this.name = parent;
             name = child;
         }
 
         @Override
         public String toString() {
-            return ((ParentClass)this).name + "/" + name;
+            return this.name + "/" + name;
         }
     }
 

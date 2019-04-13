@@ -73,7 +73,7 @@ public class AttributesTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationInParameterizedClass() {
-        final AnnotatedAttributeParameterized<String> value = new AnnotatedAttributeParameterized<String>();
+        final AnnotatedAttributeParameterized<String> value = new AnnotatedAttributeParameterized<>();
         value.myField = "hello";
         final String expected = "<annotated myField=\"hello\"/>";
         assertBothWays(value, expected);
@@ -88,7 +88,7 @@ public class AttributesTest extends AbstractAcceptanceTest {
 
     public void testAnnotationAtGenericTypeInParameterizedClass() {
         final AnnotatedGenericAttributeParameterized<String> value =
-                new AnnotatedGenericAttributeParameterized<String>();
+                new AnnotatedGenericAttributeParameterized<>();
         value.myField = "hello";
         final String expected = "" + "<annotated>\n" + "  <myField class=\"string\">hello</myField>\n" + "</annotated>";
         assertBothWays(value, expected);
@@ -102,7 +102,7 @@ public class AttributesTest extends AbstractAcceptanceTest {
     }
 
     public void testAnnotationAtGenericTypeInBoundedClass() {
-        final AnnotatedGenericAttributeBounded<String> value = new AnnotatedGenericAttributeBounded<String>();
+        final AnnotatedGenericAttributeBounded<String> value = new AnnotatedGenericAttributeBounded<>();
         value.myField = "hello";
         final String expected = "" + "<annotated>\n" + "  <myField class=\"string\">hello</myField>\n" + "</annotated>";
         assertBothWays(value, expected);
@@ -118,7 +118,7 @@ public class AttributesTest extends AbstractAcceptanceTest {
 
     public void testAnnotationAtGenericTypeWithLocalConverterInParameterizedClass() {
         final AnnotatedGenericAttributeAndConverterParameterized<String> value =
-                new AnnotatedGenericAttributeAndConverterParameterized<String>();
+                new AnnotatedGenericAttributeAndConverterParameterized<>();
         value.myField = "hello";
         final String expected = "<annotated myField=\"hello\"/>";
         assertBothWays(value, expected);

@@ -324,30 +324,27 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
     }
 
     public void testIsThreadSafe() throws InterruptedException {
-        final List<String> results = Collections.synchronizedList(new ArrayList<String>());
+        final List<String> results = Collections.synchronizedList(new ArrayList<>());
         final ISO8601GregorianCalendarConverter converter = new ISO8601GregorianCalendarConverter();
         final Object monitor = new Object();
         final int numberOfCallsPerThread = 20;
         final int numberOfThreads = 20;
 
         // spawn some concurrent threads, that hammer the converter
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < numberOfCallsPerThread; i++) {
-                    try {
-                        converter.fromString("1993-02-14T13:10:30");
-                        results.add("PASS");
-                    } catch (final ConversionException e) {
-                        results.add("FAIL");
-                    } finally {
-                        synchronized (monitor) {
-                            monitor.notifyAll();
-                        }
-                    }
-                }
-            }
-        };
+        final Runnable runnable = () -> {
+	    for (int i = 0; i < numberOfCallsPerThread; i++) {
+		try {
+		    converter.fromString("1993-02-14T13:10:30");
+		    results.add("PASS");
+		} catch (final ConversionException e) {
+		    results.add("FAIL");
+		} finally {
+		    synchronized (monitor) {
+			monitor.notifyAll();
+		    }
+		}
+	    }
+	};
         for (int i = 0; i < numberOfThreads; i++) {
             new Thread(runnable).start();
         }

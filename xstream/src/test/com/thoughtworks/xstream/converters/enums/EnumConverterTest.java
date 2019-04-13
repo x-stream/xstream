@@ -57,11 +57,11 @@ public class EnumConverterTest extends TestCase {
 
         in = PolymorphicEnum.A;
         out = xstream.<PolymorphicEnum>fromXML(xstream.toXML(in));
-        assertEquals("apple", ((Fruit)out).fruit()); // see Bug ID: 6522780
+        assertEquals("apple", out.fruit()); // see Bug ID: 6522780
 
         in = PolymorphicEnum.B;
         out = xstream.<PolymorphicEnum>fromXML(xstream.toXML(in));
-        assertEquals("banana", ((Fruit)out).fruit()); // see Bug ID: 6522780
+        assertEquals("banana", out.fruit()); // see Bug ID: 6522780
     }
 
 }

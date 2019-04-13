@@ -43,7 +43,7 @@ public class TreeUnmarshallerTest extends AbstractAcceptanceTest {
         private List<AddressInfo> addresses;
 
         public AddressBook() {
-            addresses = new ArrayList<AddressInfo>();
+            addresses = new ArrayList<>();
             final AddressInfo addr = new Address("Home", "Home");
             final AddressInfo addr1 = new Address("Office", "Office");
             addresses.add(addr);

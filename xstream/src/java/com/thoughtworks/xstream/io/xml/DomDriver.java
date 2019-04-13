@@ -108,13 +108,7 @@ public class DomDriver extends AbstractXmlDriver {
             }
             final Document document = documentBuilder.parse(source);
             return new DomReader(document, getNameCoder());
-        } catch (final FactoryConfigurationError e) {
-            throw new StreamException(e);
-        } catch (final ParserConfigurationException e) {
-            throw new StreamException(e);
-        } catch (final SAXException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final FactoryConfigurationError | ParserConfigurationException | SAXException | IOException e) {
             throw new StreamException(e);
         }
     }

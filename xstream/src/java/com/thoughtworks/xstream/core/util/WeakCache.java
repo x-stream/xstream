@@ -79,51 +79,34 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
 
     @Override
     public boolean containsValue(final Object value) {
-        final Boolean result = (Boolean)iterate(new Visitor() {
-
-            @Override
-            public Object visit(final Object element) {
-                return element.equals(value) ? Boolean.TRUE : null;
-            }
-
-        }, Visitor.Type.value);
+        final Boolean result = (Boolean)iterate((final Object element) -> element.equals(value) ? Boolean.TRUE : null, Visitor.Type.value);
         return result == Boolean.TRUE;
     }
 
     @Override
     public int size() {
-        if (map.size() == 0) {
+        if (map.isEmpty()) {
             return 0;
         }
         final int i[] = new int[1];
         i[0] = 0;
-        iterate(new Visitor() {
-
-            @Override
-            public Object visit(final Object element) {
-                ++i[0];
-                return null;
-            }
-
-        }, Visitor.Type.key);
+        iterate((final Object element) -> {
+	    ++i[0];
+	    return null;
+	}, Visitor.Type.key);
         return i[0];
     }
 
     @Override
     public Collection<V> values() {
         final Collection<V> collection = new ArrayList<>();
-        if (map.size() != 0) {
-            iterate(new Visitor() {
-
-                @Override
-                public Object visit(final Object element) {
-                    @SuppressWarnings("unchecked")
-                    final V value = (V)element;
-                    collection.add(value);
-                    return null;
-                }
-
-            }, Visitor.Type.value);
+        if (!map.isEmpty()) {
+            iterate((final Object element) -> {
+		@SuppressWarnings("unchecked")
+		final V value = (V)element;
+		collection.add(value);
+		return null;
+	    }, Visitor.Type.value);
         }
         return collection;
     }
@@ -131,36 +114,31 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
     @Override
     public Set<Map.Entry<K, V>> entrySet() {
         final Set<Map.Entry<K, V>> set = new HashSet<>();
-        if (map.size() != 0) {
-            iterate(new Visitor() {
-
-                @Override
-                public Object visit(final Object element) {
-                    @SuppressWarnings("unchecked")
-                    final Map.Entry<K, Reference<V>> entry = (Map.Entry<K, Reference<V>>)element;
-                    set.add(new Map.Entry<K, V>() {
-
-                        @Override
-                        public K getKey() {
-                            return entry.getKey();
-                        }
-
-                        @Override
-                        public V getValue() {
-                            return entry.getValue().get();
-                        }
-
-                        @Override
-                        public V setValue(final V value) {
-                            final Reference<V> reference = entry.setValue(createReference(value));
-                            return reference != null ? reference.get() : null;
-                        }
-
-                    });
-                    return null;
-                }
-
-            }, Visitor.Type.entry);
+        if (!map.isEmpty()) {
+            iterate((final Object element) -> {
+		@SuppressWarnings("unchecked")
+		final Map.Entry<K, Reference<V>> entry = (Map.Entry<K, Reference<V>>)element;
+		set.add(new Map.Entry<K, V>() {
+		    
+		    @Override
+		    public K getKey() {
+			return entry.getKey();
+		    }
+		    
+		    @Override
+		    public V getValue() {
+			return entry.getValue().get();
+		    }
+		    
+		    @Override
+		    public V setValue(final V value) {
+			final Reference<V> reference = entry.setValue(createReference(value));
+			return reference != null ? reference.get() : null;
+		    }
+		    
+		});
+		return null;
+	    }, Visitor.Type.entry);
         }
         return set;
     }

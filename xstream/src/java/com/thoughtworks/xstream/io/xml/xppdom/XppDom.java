@@ -78,7 +78,7 @@ public class XppDom implements Serializable {
     }
 
     public String getAttribute(final String name) {
-        return null != attributes ? (String)attributes.get(name) : null;
+        return null != attributes ? attributes.get(name) : null;
     }
 
     public void setAttribute(final String name, final String value) {
@@ -111,7 +111,7 @@ public class XppDom implements Serializable {
         if (null == childList) {
             return new XppDom[0];
         } else {
-            return childList.toArray(new XppDom[0]);
+            return childList.toArray(new XppDom[childList.size()]);
         }
     }
 
@@ -129,7 +129,7 @@ public class XppDom implements Serializable {
                 }
             }
 
-            return children.toArray(new XppDom[0]);
+            return children.toArray(new XppDom[children.size()]);
         }
     }
 
@@ -184,48 +184,50 @@ public class XppDom implements Serializable {
 
         int eventType = parser.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {
-            if (eventType == XmlPullParser.START_TAG) {
-                final String rawName = parser.getName();
-
-                // Use XppDom when deprecated Xpp3Dom is removed
-                final XppDom child = new Xpp3Dom(rawName);
-
-                final int depth = elements.size();
-                if (depth > 0) {
-                    final XppDom parent = elements.get(depth - 1);
-                    parent.addChild(child);
-                }
-
-                elements.add(child);
-                values.add(new StringBuilder());
-
-                final int attributesSize = parser.getAttributeCount();
-                for (int i = 0; i < attributesSize; i++) {
-                    final String name = parser.getAttributeName(i);
-                    final String value = parser.getAttributeValue(i);
-                    child.setAttribute(name, value);
-                }
-            } else if (eventType == XmlPullParser.TEXT) {
-                final int depth = values.size() - 1;
-                final StringBuilder valueBuffer = values.get(depth);
-                valueBuffer.append(parser.getText());
-            } else if (eventType == XmlPullParser.END_TAG) {
-                final int depth = elements.size() - 1;
-                final XppDom finalNode = elements.remove(depth);
-                final String accumulatedValue = values.remove(depth).toString();
-
-                String finishedValue;
-                if (0 == accumulatedValue.length()) {
-                    finishedValue = null;
-                } else {
-                    finishedValue = accumulatedValue;
-                }
-
-                finalNode.setValue(finishedValue);
-                if (0 == depth) {
-                    node = finalNode;
-                }
-            }
+	    switch (eventType) {
+	    	case XmlPullParser.START_TAG:
+		    {
+			final String rawName = parser.getName();
+			// Use XppDom when deprecated Xpp3Dom is removed
+			final XppDom child = new Xpp3Dom(rawName);
+			final int depth = elements.size();
+			if (depth > 0) {
+			    final XppDom parent = elements.get(depth - 1);
+			    parent.addChild(child);
+			}	elements.add(child);
+			values.add(new StringBuilder());
+			final int attributesSize = parser.getAttributeCount();
+			for (int i = 0; i < attributesSize; i++) {
+			    final String name = parser.getAttributeName(i);
+			    final String value = parser.getAttributeValue(i);
+			    child.setAttribute(name, value);
+			}	break;
+		    }
+	    	case XmlPullParser.TEXT:
+		    {
+			final int depth = values.size() - 1;
+			final StringBuilder valueBuffer = values.get(depth);
+			valueBuffer.append(parser.getText());
+			break;
+		    }
+	    	case XmlPullParser.END_TAG:
+		    {
+			final int depth = elements.size() - 1;
+			final XppDom finalNode = elements.remove(depth);
+			final String accumulatedValue = values.remove(depth).toString();
+			String finishedValue;
+			if (0 == accumulatedValue.length()) {
+			    finishedValue = null;
+			} else {
+			    finishedValue = accumulatedValue;
+			}	finalNode.setValue(finishedValue);
+			if (0 == depth) {
+			    node = finalNode;
+			}	break;
+		    }
+	    	default:
+		    break;
+	    }
 
             eventType = parser.next();
         }

@@ -476,17 +476,7 @@ public class XStream {
             final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver driver,
             final ClassLoaderReference classLoader, final Mapper mapper,
             final DefaultConverterLookup defaultConverterLookup) {
-        this(reflectionProvider, driver, classLoader, mapper, new ConverterLookup() {
-            @Override
-            public Converter lookupConverterForType(final Class<?> type) {
-                return defaultConverterLookup.lookupConverterForType(type);
-            }
-        }, new ConverterRegistry() {
-            @Override
-            public void registerConverter(final Converter converter, final int priority) {
-                defaultConverterLookup.registerConverter(converter, priority);
-            }
-        });
+        this(reflectionProvider, driver, classLoader, mapper, defaultConverterLookup::lookupConverterForType, defaultConverterLookup::registerConverter);
     }
 
     /**
@@ -595,9 +585,7 @@ public class XStream {
             final Class<?> type = Class.forName(className, false, classLoaderReference.getReference());
             final Constructor<?> constructor = type.getConstructor(constructorParamTypes);
             return (Mapper)constructor.newInstance(constructorParamValues);
-        } catch (final Exception e) {
-            throw new InitializationException("Could not instantiate mapper : " + className, e);
-        } catch (final LinkageError e) {
+        } catch (final Exception | LinkageError e) {
             throw new InitializationException("Could not instantiate mapper : " + className, e);
         }
     }
@@ -1009,9 +997,7 @@ public class XStream {
             } else if (instance instanceof SingleValueConverter) {
                 registerConverter((SingleValueConverter)instance, priority);
             }
-        } catch (final Exception e) {
-            throw new InitializationException("Could not instantiate converter : " + className, e);
-        } catch (final LinkageError e) {
+        } catch (final Exception | LinkageError e) {
             throw new InitializationException("Could not instantiate converter : " + className, e);
         }
     }
@@ -1267,11 +1253,8 @@ public class XStream {
      * @since 1.4
      */
     public <T> T fromXML(final File file, final T root) {
-        final HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file);
-        try {
+        try (HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file)) {
             return unmarshal(reader, root);
-        } finally {
-            reader.close();
         }
     }
 

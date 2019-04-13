@@ -44,11 +44,10 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
-        } catch (final SecurityException e) {
-            // ignore for now
-        } catch (final NoSuchMethodException e) {
+        } catch (final SecurityException | NoSuchMethodException e) {
             // ignore for now
         }
+	// ignore for now
         getName = method;
     }
 
@@ -83,9 +82,7 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
         if (getName != null) {
             try {
                 return (String)getName.invoke(attribute);
-            } catch (final IllegalAccessException e) {
-                ex = e;
-            } catch (final InvocationTargetException e) {
+            } catch (final IllegalAccessException | InvocationTargetException e) {
                 ex = e;
             }
         }
@@ -143,11 +140,7 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
                             attributeMap.put(toString(attribute), attribute);
                         }
                     }
-                } catch (final SecurityException e) {
-                    attributeMap.clear();
-                } catch (final ObjectAccessException e) {
-                    attributeMap.clear();
-                } catch (final NoClassDefFoundError e) {
+                } catch (final SecurityException | ObjectAccessException | NoClassDefFoundError e) {
                     attributeMap.clear();
                 }
             }

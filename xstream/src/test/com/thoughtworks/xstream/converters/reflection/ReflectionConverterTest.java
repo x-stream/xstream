@@ -33,7 +33,7 @@ public class ReflectionConverterTest extends TestCase {
         char anChar = 'a';
         Character anCharacter = new Character('w');
         boolean anBool = true;
-        Boolean anBoolean = new Boolean(false);
+        Boolean anBoolean = false;
         byte aByte = 4;
         Byte aByteClass = new Byte("5");
         short aShort = 6;

@@ -106,13 +106,10 @@ public class XStreamer {
      */
     public void toXML(final XStream xstream, final Object obj, final Writer out) throws IOException {
         final XStream outer = new XStream();
-        final ObjectOutputStream oos = outer.createObjectOutputStream(out);
-        try {
+        try (ObjectOutputStream oos = outer.createObjectOutputStream(out)) {
             oos.writeObject(xstream);
             oos.flush();
             xstream.toXML(obj, out);
-        } finally {
-            oos.close();
         }
     }
 
@@ -270,10 +267,9 @@ public class XStreamer {
             outer.addPermission(permission);
         }
         final HierarchicalStreamReader reader = driver.createReader(xml);
-        final ObjectInputStream configIn = outer.createObjectInputStream(reader);
-        try {
+        try (ObjectInputStream configIn = outer.createObjectInputStream(reader)) {
             final XStream configured = (XStream)configIn.readObject();
-            final ObjectInputStream in = configured.createObjectInputStream(reader);
+            ObjectInputStream in = configured.createObjectInputStream(reader);
             try {
                 @SuppressWarnings("unchecked")
                 final T t = (T)in.readObject();
@@ -281,8 +277,6 @@ public class XStreamer {
             } finally {
                 in.close();
             }
-        } finally {
-            configIn.close();
         }
     }
 

@@ -34,7 +34,7 @@ public class EnumCustomConverterTest extends TestCase {
     }
 
     public void testCanBeUsedDirectly() {
-        xstream.registerConverter(new PolymorphicEnumConverter<PolymorphicEnum>(PolymorphicEnum.class));
+        xstream.registerConverter(new PolymorphicEnumConverter<>(PolymorphicEnum.class));
         final String expectedXml = "<polymorphic>b</polymorphic>";
         final PolymorphicEnum in = PolymorphicEnum.B;
         assertEquals(expectedXml, xstream.toXML(in));
@@ -42,7 +42,7 @@ public class EnumCustomConverterTest extends TestCase {
     }
 
     public void testCanBeUsedForMember() {
-        xstream.registerConverter(new PolymorphicEnumConverter<PolymorphicEnum>(PolymorphicEnum.class));
+        xstream.registerConverter(new PolymorphicEnumConverter<>(PolymorphicEnum.class));
         xstream.alias("type", TypeWithEnums.class);
         xstream.autodetectAnnotations(true);
         final String expectedXml = "" // force format
@@ -61,7 +61,7 @@ public class EnumCustomConverterTest extends TestCase {
     }
 
     public void testCanBeUsedForAttribute() {
-        xstream.registerConverter(new PolymorphicEnumConverter<PolymorphicEnum>(PolymorphicEnum.class));
+        xstream.registerConverter(new PolymorphicEnumConverter<>(PolymorphicEnum.class));
         xstream.alias("type", TypeWithEnums.class);
         xstream.useAttributeFor(PolymorphicEnum.class);
         xstream.autodetectAnnotations(true);
@@ -80,7 +80,7 @@ public class EnumCustomConverterTest extends TestCase {
     }
 
     public void testCanBeUsedLocallyForAttribute() {
-        xstream.registerLocalConverter(TypeWithEnums.class, "poly", new PolymorphicEnumConverter<PolymorphicEnum>(
+        xstream.registerLocalConverter(TypeWithEnums.class, "poly", new PolymorphicEnumConverter<>(
             PolymorphicEnum.class));
         xstream.alias("type", TypeWithEnums.class);
         xstream.useAttributeFor(PolymorphicEnum.class);

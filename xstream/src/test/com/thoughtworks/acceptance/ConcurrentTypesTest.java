@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.core.JVM;
 public class ConcurrentTypesTest extends AbstractAcceptanceTest {
 
     public void testConcurrentHashMap() {
-        final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<String, String>();
+        final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
         map.put("walnes", "joe");
         final String xml = xstream.toXML(map);
         final String expected = ""

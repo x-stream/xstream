@@ -46,7 +46,7 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         final ParameterizedType<InternalType> type;
 
         public ParameterizedContainer() {
-            type = new ParameterizedType<InternalType>(new InternalType());
+            type = new ParameterizedType<>(new InternalType());
         }
 
     }
@@ -57,8 +57,8 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
         private final ArrayList<ArrayList<InternalType>> list;
 
         public DoubleParameterizedContainer() {
-            list = new ArrayList<ArrayList<InternalType>>();
-            list.add(new ArrayList<InternalType>());
+            list = new ArrayList<>();
+            list.add(new ArrayList<>());
             list.get(0).add(new InternalType());
         }
 
@@ -144,7 +144,7 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     public void testAreDetectedInParametrizedArrays() {
         @SuppressWarnings("unchecked")
         final ParameterizedType<String>[] types = new ParameterizedType[]{
-            new ParameterizedType<String>("foo"), new ParameterizedType<String>("bar")};
+            new ParameterizedType<>("foo"), new ParameterizedType<>("bar")};
         final String xml = ""
             + "<typeAlias-array>\n"
             + "  <typeAlias>\n"
@@ -158,7 +158,7 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
     }
 
     public void testAreDetectedInJDKCollection() {
-        final List<InternalType> list = new ArrayList<InternalType>();
+        final List<InternalType> list = new ArrayList<>();
         list.add(new InternalType());
         final String xml = ""
             + "<list>\n"
@@ -192,9 +192,9 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
             + "    <none>1</none>\n"
             + "  </second>\n"
             + "</root>";
-        final ObjectInputStream in = xstream.createObjectInputStream(new StringReader(xml));
-        assertEquals(internalType, in.readObject());
-        in.close();
+	try (ObjectInputStream in = xstream.createObjectInputStream(new StringReader(xml))) {
+	    assertEquals(internalType, in.readObject());
+	}
     }
 
     @XStreamInclude({InternalType.class})

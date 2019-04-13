@@ -57,7 +57,7 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
         final Thing b = new Thing("b");
         final Thing c = b;
 
-        final List<Thing> list = new ArrayList<Thing>();
+        final List<Thing> list = new ArrayList<>();
         list.add(a);
         list.add(b);
         list.add(c);
@@ -83,7 +83,7 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
         final Thing b = new Thing("b");
         final Thing c = b;
 
-        final List<Thing> list = new ArrayList<Thing>();
+        final List<Thing> list = new ArrayList<>();
         list.add(a);
         list.add(b);
         list.add(c);
@@ -138,7 +138,7 @@ public class ReferenceByXPathMarshallingStrategyTest extends AbstractAcceptanceT
         xstream.setMarshallingStrategy(marshallingStrategy);
 
         // setup document
-        final List<URL> list = new ArrayList<URL>();
+        final List<URL> list = new ArrayList<>();
         final URL url = new URL("http://jira.codehaus.org/browse");
         list.add(url);
         list.add(url);

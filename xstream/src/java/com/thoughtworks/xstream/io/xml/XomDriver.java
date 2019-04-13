@@ -111,9 +111,7 @@ public class XomDriver extends AbstractXmlDriver {
             return new XomReader(document, getNameCoder());
         } catch (final ValidityException e) {
             throw new StreamException(e);
-        } catch (final ParsingException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final ParsingException | IOException e) {
             throw new StreamException(e);
         }
     }
@@ -125,9 +123,7 @@ public class XomDriver extends AbstractXmlDriver {
             return new XomReader(document, getNameCoder());
         } catch (final ValidityException e) {
             throw new StreamException(e);
-        } catch (final ParsingException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final ParsingException | IOException e) {
             throw new StreamException(e);
         }
     }
@@ -139,9 +135,7 @@ public class XomDriver extends AbstractXmlDriver {
             return new XomReader(document, getNameCoder());
         } catch (final ValidityException e) {
             throw new StreamException(e);
-        } catch (final ParsingException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final ParsingException | IOException e) {
             throw new StreamException(e);
         }
     }
@@ -153,9 +147,7 @@ public class XomDriver extends AbstractXmlDriver {
             return new XomReader(document, getNameCoder());
         } catch (final ValidityException e) {
             throw new StreamException(e);
-        } catch (final ParsingException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final ParsingException | IOException e) {
             throw new StreamException(e);
         }
     }

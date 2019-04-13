@@ -73,13 +73,18 @@ public class WeekFieldsConverter implements Converter {
             final String name = oldFormat
                 ? reader.getNodeName()
                 : mapper.realMember(WeekFields.class, reader.getNodeName());
-            if ("minimalDays".equals(name)) {
-                minimalDays = Integer.parseInt(reader.getValue());
-            } else if ("firstDayOfWeek".equals(name)) {
-                firstDayOfWeek = (DayOfWeek)context.convertAnother(null, DayOfWeek.class);
-            } else {
-                throw new UnknownFieldException(WeekFields.class.getName(), name);
-            }
+            if (null == name) {
+		throw new UnknownFieldException(WeekFields.class.getName(), name);
+	    } else switch (name) {
+	    	case "minimalDays":
+		    minimalDays = Integer.parseInt(reader.getValue());
+		    break;
+	    	case "firstDayOfWeek":
+		    firstDayOfWeek = (DayOfWeek)context.convertAnother(null, DayOfWeek.class);
+		    break;
+	    	default:
+		    throw new UnknownFieldException(WeekFields.class.getName(), name);
+	    }
             reader.moveUp();
         }
         if (oldFormat) {

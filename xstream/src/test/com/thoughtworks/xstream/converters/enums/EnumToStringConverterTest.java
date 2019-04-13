@@ -33,13 +33,13 @@ public class EnumToStringConverterTest extends TestCase {
         xstream.alias("big", BigEnum.class);
         xstream.alias("polymorphic", PolymorphicEnum.class);
 
-        final Map<String, SimpleEnum> map = new HashMap<String, SimpleEnum>();
+        final Map<String, SimpleEnum> map = new HashMap<>();
         map.put("0xff0000", SimpleEnum.RED);
         map.put("0x00ff00", SimpleEnum.GREEN);
         map.put("0x0000ff", SimpleEnum.BLUE);
-        xstream.registerConverter(new EnumToStringConverter<SimpleEnum>(SimpleEnum.class, map));
-        xstream.registerConverter(new EnumToStringConverter<BigEnum>(BigEnum.class));
-        xstream.registerConverter(new EnumToStringConverter<PolymorphicEnum>(PolymorphicEnum.class));
+        xstream.registerConverter(new EnumToStringConverter<>(SimpleEnum.class, map));
+        xstream.registerConverter(new EnumToStringConverter<>(BigEnum.class));
+        xstream.registerConverter(new EnumToStringConverter<>(PolymorphicEnum.class));
     }
 
     public void testMapsEnumToProvidedStringValue() {

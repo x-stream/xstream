@@ -19,18 +19,18 @@ import junit.framework.TestCase;
 
 public class CloneablesTest extends TestCase {
     public void testCloneOfCloneable() {
-        final TypedNull<String> stringNull = new CloneableTypedNull<String>(String.class);
+        final TypedNull<String> stringNull = new CloneableTypedNull<>(String.class);
         final TypedNull<String> stringNullClone = Cloneables.clone(stringNull);
         assertSame(String.class, stringNullClone.getType());
     }
 
     public void testCloneOfNotCloneable() {
-        final TypedNull<String> stringNull = new TypedNull<String>(String.class);
+        final TypedNull<String> stringNull = new TypedNull<>(String.class);
         assertNull(Cloneables.clone(stringNull));
     }
 
     public void testCloneOfUncloneable() {
-        final TypedNull<String> stringNull = new UncloneableTypedNull<String>(String.class);
+        final TypedNull<String> stringNull = new UncloneableTypedNull<>(String.class);
         try {
             Cloneables.clone(stringNull);
             fail("Thrown " + ObjectAccessException.class.getName() + " expected");
@@ -40,7 +40,7 @@ public class CloneablesTest extends TestCase {
     }
 
     public void testPossibleCloneOfCloneable() {
-        final TypedNull<String> stringNull = new CloneableTypedNull<String>(String.class);
+        final TypedNull<String> stringNull = new CloneableTypedNull<>(String.class);
         final TypedNull<String> stringNullClone = Cloneables.cloneIfPossible(stringNull);
         assertSame(String.class, stringNullClone.getType());
     }
@@ -56,7 +56,7 @@ public class CloneablesTest extends TestCase {
     }
 
     public void testPossibleCloneOfNotCloneable() {
-        final TypedNull<String> stringNull = new TypedNull<String>(String.class);
+        final TypedNull<String> stringNull = new TypedNull<>(String.class);
         assertSame(stringNull, Cloneables.cloneIfPossible(stringNull));
     }
 

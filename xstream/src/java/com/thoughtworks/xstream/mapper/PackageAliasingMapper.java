@@ -28,13 +28,7 @@ import java.util.TreeMap;
 public class PackageAliasingMapper extends MapperWrapper implements Serializable {
 
     private static final long serialVersionUID = 20151010L;
-    private static final Comparator<String> REVERSE = new Comparator<String>() {
-
-        @Override
-        public int compare(final String o1, final String o2) {
-            return o2.compareTo(o1);
-        }
-    };
+    private static final Comparator<String> REVERSE = (final String o1, final String o2) -> o2.compareTo(o1);
 
     private Map<String, String> packageToName = new TreeMap<>(REVERSE);
     protected transient Map<String, String> nameToPackage = new HashMap<>();

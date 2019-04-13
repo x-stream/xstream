@@ -15,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Comparator;
 import java.util.List;
 
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
@@ -97,12 +96,7 @@ public class DependencyInjectionFactory {
             // sort available ctors according their arity
             final Constructor<?>[] ctors = type.getConstructors();
             if (ctors.length > 1) {
-                Arrays.sort(ctors, new Comparator<Constructor<?>>() {
-                    @Override
-                    public int compare(final Constructor<?> o1, final Constructor<?> o2) {
-                        return o2.getParameterTypes().length - o1.getParameterTypes().length;
-                    }
-                });
+                Arrays.sort(ctors, (final Constructor<?> o1, final Constructor<?> o2) -> o2.getParameterTypes().length - o1.getParameterTypes().length);
             }
 
             final TypedValue[] typedDependencies = new TypedValue[dependencies.length];
@@ -251,16 +245,10 @@ public class DependencyInjectionFactory {
             }
 
             return instance;
-        } catch (final InstantiationException e) {
-            th = e;
-        } catch (final IllegalAccessException e) {
+        } catch (final InstantiationException | IllegalAccessException | SecurityException | ExceptionInInitializerError e) {
             th = e;
         } catch (final InvocationTargetException e) {
             th = e.getCause();
-        } catch (final SecurityException e) {
-            th = e;
-        } catch (final ExceptionInInitializerError e) {
-            th = e;
         }
         final ObjectAccessException ex = new ObjectAccessException("Cannot construct type", th);
         ex.add("construction-type", type.getName());

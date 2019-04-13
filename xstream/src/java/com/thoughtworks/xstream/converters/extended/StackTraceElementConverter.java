@@ -78,18 +78,19 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
             final String declaringClass = matcher.group(1);
             final String methodName = matcher.group(2);
             final String fileName = matcher.group(3);
-            if (fileName.equals("Unknown Source")) {
-                return FACTORY.unknownSourceElement(declaringClass, methodName);
-            } else if (fileName.equals("Native Method")) {
-                return FACTORY.nativeMethodElement(declaringClass, methodName);
-            } else {
-                if (matcher.group(4) != null) {
-                    final int lineNumber = Integer.parseInt(matcher.group(5));
-                    return FACTORY.element(declaringClass, methodName, fileName, lineNumber);
-                } else {
-                    return FACTORY.element(declaringClass, methodName, fileName);
-                }
-            }
+	    switch (fileName) {
+	    	case "Unknown Source":
+		    return FACTORY.unknownSourceElement(declaringClass, methodName);
+	    	case "Native Method":
+		    return FACTORY.nativeMethodElement(declaringClass, methodName);
+	    	default:
+		    if (matcher.group(4) != null) {
+			final int lineNumber = Integer.parseInt(matcher.group(5));
+			return FACTORY.element(declaringClass, methodName, fileName, lineNumber);
+		    } else {
+			return FACTORY.element(declaringClass, methodName, fileName);
+		    }
+	    }
         } else {
             throw new ConversionException("Could not parse StackTraceElement : " + str);
         }

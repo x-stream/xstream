@@ -50,6 +50,7 @@ public class XStreamDriver implements Product {
         this.xstream = new XStream(driver);
         this.xstream.registerConverter(new JavaBeanConverter(this.xstream.getMapper()) {
 
+	    @Override
             public boolean canConvert(Class type) {
                 return type == OneBean.class || type == FiveBean.class;
             }
@@ -58,14 +59,17 @@ public class XStreamDriver implements Product {
         this.desc = desc;
     }
 
+    @Override
     public void serialize(Object object, OutputStream output) throws Exception {
         xstream.toXML(object, output);
     }
 
+    @Override
     public Object deserialize(InputStream input) throws Exception {
         return xstream.fromXML(input);
     }
 
+    @Override
     public String toString() {
         return "XStream (" + desc + ")";
     }

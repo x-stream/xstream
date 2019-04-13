@@ -64,7 +64,7 @@ public class PersistenceTest extends AbstractAcceptanceTest {
         @Override
         public void marshal(final Object source, final HierarchicalStreamWriter writer,
                 final MarshallingContext context) {
-            final XmlArrayList<Object> list = new XmlArrayList<>(new FilePersistenceStrategy<Integer, Object>(dir,
+            final XmlArrayList<Object> list = new XmlArrayList<>(new FilePersistenceStrategy<>(dir,
                 xstream));
             context.convertAnother(dir);
             list.addAll((Collection<?>)source);
@@ -73,7 +73,7 @@ public class PersistenceTest extends AbstractAcceptanceTest {
         @Override
         public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
             final File directory = (File)context.convertAnother(null, File.class);
-            final XmlArrayList<Object> persistentList = new XmlArrayList<>(new FilePersistenceStrategy<Integer, Object>(
+            final XmlArrayList<Object> persistentList = new XmlArrayList<>(new FilePersistenceStrategy<>(
                 directory, xstream));
             final ArrayList<Object> list = new ArrayList<>(persistentList);
             // persistentList.clear(); // remove files
@@ -110,12 +110,9 @@ public class PersistenceTest extends AbstractAcceptanceTest {
         // compare original list and list written in separate XML file
         assertEquals(lists.good, serialized.good);
 
-        // retrieve value from external file
-        final FileInputStream inputStream = new FileInputStream(new File(dir, "int@2.xml"));
-        try {
+        try ( // retrieve value from external file
+		FileInputStream inputStream = new FileInputStream(new File(dir, "int@2.xml"))) {
             assertEquals(lists.good.get(2), xstream.fromXML(inputStream));
-        } finally {
-            inputStream.close();
         }
     }
 }

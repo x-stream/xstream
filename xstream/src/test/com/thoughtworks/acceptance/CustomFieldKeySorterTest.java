@@ -11,7 +11,6 @@
 package com.thoughtworks.acceptance;
 
 import java.lang.reflect.Field;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -69,13 +68,7 @@ public class CustomFieldKeySorterTest extends AbstractAcceptanceTest {
     private static class AlphabeticalFieldkeySorter implements FieldKeySorter {
         @Override
         public Map<FieldKey, Field> sort(final Class<?> type, final Map<FieldKey, Field> keyedByFieldKey) {
-            final Map<FieldKey, Field> map = new TreeMap<>(new Comparator<FieldKey>() {
-
-                @Override
-                public int compare(final FieldKey fieldKey1, final FieldKey fieldKey2) {
-                    return fieldKey1.getFieldName().compareTo(fieldKey2.getFieldName());
-                }
-            });
+            final Map<FieldKey, Field> map = new TreeMap<>((final FieldKey fieldKey1, final FieldKey fieldKey2) -> fieldKey1.getFieldName().compareTo(fieldKey2.getFieldName()));
             map.putAll(keyedByFieldKey);
             return map;
         }

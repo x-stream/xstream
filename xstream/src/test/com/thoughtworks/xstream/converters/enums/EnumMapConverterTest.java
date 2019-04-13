@@ -30,7 +30,7 @@ public class EnumMapConverterTest extends TestCase {
 
     public void testIncludesEnumTypeInSerializedForm() {
         xstream.alias("simple", SimpleEnum.class);
-        final EnumMap<SimpleEnum, String> map = new EnumMap<SimpleEnum, String>(SimpleEnum.class);
+        final EnumMap<SimpleEnum, String> map = new EnumMap<>(SimpleEnum.class);
         map.put(SimpleEnum.BLUE, "sky");
         map.put(SimpleEnum.GREEN, "grass");
 

@@ -33,7 +33,7 @@ public class ConcurrencyTest extends AbstractAcceptanceTest {
         @SuppressWarnings("unchecked")
         final WithNamedList<Object>[] namedLists = new WithNamedList[5];
         for (int i = 0; i < namedLists.length; ++i) {
-            namedLists[i] = new WithNamedList<Object>("Name " + (i + 1));
+            namedLists[i] = new WithNamedList<>("Name " + (i + 1));
             namedLists[i].things.add(new Software("walnes", "XStream 1." + i));
             namedLists[i].things.add(reference);
             namedLists[i].things.add(new RuntimeException("JUnit " + i)); // a Serializable

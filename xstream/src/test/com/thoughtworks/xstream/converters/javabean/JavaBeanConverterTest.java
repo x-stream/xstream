@@ -41,7 +41,7 @@ public class JavaBeanConverterTest extends TestCase {
         char aChar = 'a';
         Character aCharacter = new Character('w');
         boolean aBool = true;
-        Boolean aBoolean = new Boolean(false);
+        Boolean aBoolean = false;
         byte aByte = 4;
         Byte aByteClass = new Byte("5");
         short aShort = 6;

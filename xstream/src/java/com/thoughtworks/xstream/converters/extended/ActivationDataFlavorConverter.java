@@ -65,17 +65,21 @@ public class ActivationDataFlavorConverter implements Converter {
             reader.moveDown();
             
             final String elementName = reader.getNodeName();
-            if (elementName.equals("mimeType")) {
-                mimeType = reader.getValue();
-            } else if (elementName.equals("humanRepresentableName")) {
-                name = reader.getValue();
-            } else if (elementName.equals("representationClass")) {
-                type = (Class<?>)context.convertAnother(null, Class.class);
-            } else {
-                final ConversionException exception = new ConversionException("Unknown child element");
-                exception.add("element", reader.getNodeName());
-                throw exception;
-            }
+	    switch (elementName) {
+	    	case "mimeType":
+		    mimeType = reader.getValue();
+		    break;
+	    	case "humanRepresentableName":
+		    name = reader.getValue();
+		    break;
+	    	case "representationClass":
+		    type = (Class<?>)context.convertAnother(null, Class.class);
+		    break;
+	    	default:
+		    final ConversionException exception = new ConversionException("Unknown child element");
+		    exception.add("element", reader.getNodeName());
+		    throw exception;
+	    }
             reader.moveUp();
         }
         ActivationDataFlavor dataFlavor = null;
@@ -87,9 +91,7 @@ public class ActivationDataFlavorConverter implements Converter {
             } else {
                 dataFlavor = new ActivationDataFlavor(type, mimeType, name);
             }
-        } catch (final IllegalArgumentException ex) {
-            throw new ConversionException(ex);
-        } catch (final NullPointerException ex) {
+        } catch (final IllegalArgumentException | NullPointerException ex) {
             throw new ConversionException(ex);
         }
         return dataFlavor;

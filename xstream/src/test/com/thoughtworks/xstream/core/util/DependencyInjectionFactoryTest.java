@@ -41,7 +41,7 @@ public class DependencyInjectionFactoryTest extends TestCase {
     public void testWillMatchNullValue() {
         final BitSet used = new BitSet();
         final Exception exception = DependencyInjectionFactory.newInstance(used, ObjectAccessException.class,
-            new TypedNull<String>(String.class), this, new RuntimeException("JUnit"));
+            new TypedNull<>(String.class), this, new RuntimeException("JUnit"));
         assertTrue(exception instanceof ObjectAccessException);
         assertNull(((ErrorWriter)exception).get("message"));
         assertEquals("JUnit", ((ErrorWriter)exception).get("cause-message"));

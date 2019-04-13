@@ -154,12 +154,12 @@ public class JsonWriterFormatTest extends TestCase {
     }
 
     public static Test suite() {
-        final Map<String, Integer> modes = new LinkedHashMap<String, Integer>();
+        final Map<String, Integer> modes = new LinkedHashMap<>();
         modes.put("optimized", new Integer(0));
         modes.put("noRoot", new Integer(AbstractJsonWriter.DROP_ROOT_MODE));
         modes.put("explicit", new Integer(AbstractJsonWriter.EXPLICIT_MODE));
 
-        final Map<String, JsonWriter.Format> formats = new LinkedHashMap<String, JsonWriter.Format>();
+        final Map<String, JsonWriter.Format> formats = new LinkedHashMap<>();
         formats.put("Minimal", new JsonWriter.Format(new char[0], new char[0],
             JsonWriter.Format.COMPACT_EMPTY_ELEMENT));
         formats.put("Pretty", new JsonWriter.Format("  ".toCharArray(), "\n".toCharArray(),
@@ -175,12 +175,12 @@ public class JsonWriterFormatTest extends TestCase {
         x.innerObj = new YString("Y");
         final X emptyX = new X();
         emptyX.innerObj = new Y();
-        final SampleLists<String, X> lists = new SampleLists<String, X>();
-        lists.good = new LinkedList<String>();
+        final SampleLists<String, X> lists = new SampleLists<>();
+        lists.good = new LinkedList<>();
         lists.good.add("XStream");
-        lists.bad = new TreeSet<X>();
+        lists.bad = new TreeSet<>();
         lists.bad.add(new X());
-        final Map<String, Object> targets = new LinkedHashMap<String, Object>();
+        final Map<String, Object> targets = new LinkedHashMap<>();
         targets.put("String", "text");
         targets.put("CharSequenceArray", new CharSequence[]{"text", new StringBuffer("buffer"), null});
         targets.put("CharSequenceArray+ID", new CharSequence[]{"text", new StringBuffer("buffer"), null});
@@ -192,10 +192,10 @@ public class JsonWriterFormatTest extends TestCase {
         targets.put("X", x);
         targets.put("EmptyX", emptyX);
         targets.put("Collections", lists);
-        targets.put("EmptyList", new ArrayList<Object>());
+        targets.put("EmptyList", new ArrayList<>());
         targets.put("CustomConverter", new Handler(new Protocol("ldap")));
 
-        final Map<String, String> results = new HashMap<String, String>();
+        final Map<String, String> results = new HashMap<>();
         results.put("optimizedMinimalString", "{'string':'text'}");
         results.put("optimizedPrettyString", "{'string': 'text'}");
         results.put("optimizedCompactString", "{'string': 'text'}");

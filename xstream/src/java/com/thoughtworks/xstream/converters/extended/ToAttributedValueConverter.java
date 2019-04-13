@@ -138,63 +138,56 @@ public class ToAttributedValueConverter implements Converter {
         final Object[] realValue = new Object[1];
         final Class<?>[] fieldType = new Class[1];
         final Class<?>[] definingType = new Class[1];
-        reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
-            @Override
-            public void visit(final String fieldName, final Class<?> type, final Class<?> definedIn, final Object value) {
-                if (!mapper.shouldSerializeMember(definedIn, fieldName)) {
-                    return;
-                }
-
-                final FastField field = new FastField(definedIn, fieldName);
-                final String alias = mapper.serializedMember(definedIn, fieldName);
-                if (!defaultFieldDefinition.containsKey(alias)) {
-                    final Class<?> lookupType = sourceType;
-                    defaultFieldDefinition.put(alias, reflectionProvider.getField(lookupType, fieldName));
-                } else if (!fieldIsEqual(field)) {
-                    final ConversionException exception = new ConversionException(
-                        "Cannot write attribute twice for object");
-                    exception.add("alias", alias);
-                    exception.add("type", sourceType.getName());
-                    throw exception;
-                }
-
-                ConverterMatcher converter = Enum.class.isAssignableFrom(type) ? (ConverterMatcher)enumMapper
-                    .getConverterFromItemType(null, type, null) : (ConverterMatcher)mapper.getLocalConverter(definedIn,
-                    fieldName);
-                if (converter == null) {
-                    converter = lookup.lookupConverterForType(type);
-                }
-
-                if (value != null) {
-                    final boolean isValueField = valueField != null && fieldIsEqual(field);
-                    if (isValueField) {
-                        definingType[0] = definedIn;
-                        fieldType[0] = type;
-                        realValue[0] = value;
-                        tagValue[0] = STRUCTURE_MARKER;
-                    }
-                    if (converter instanceof SingleValueConverter) {
-                        final String str = ((SingleValueConverter)converter).toString(value);
-
-                        if (isValueField) {
-                            tagValue[0] = str;
-                        } else {
-                            if (str != null) {
-                                writer.addAttribute(alias, str);
-                            }
-                        }
-                    } else {
-                        if (!isValueField) {
-                            final ConversionException exception = new ConversionException(
-                                "Cannot write element as attribute");
-                            exception.add("alias", alias);
-                            exception.add("type", sourceType.getName());
-                            throw exception;
-                        }
-                    }
-                }
-            }
-        });
+        reflectionProvider.visitSerializableFields(source, (final String fieldName, final Class<?> type1, final Class<?> definedIn, final Object value) -> {
+	    if (!mapper.shouldSerializeMember(definedIn, fieldName)) {
+		return;
+	    }
+	    final FastField field = new FastField(definedIn, fieldName);
+	    final String alias = mapper.serializedMember(definedIn, fieldName);
+	    if (!defaultFieldDefinition.containsKey(alias)) {
+		final Class<?> lookupType = sourceType;
+		defaultFieldDefinition.put(alias, reflectionProvider.getField(lookupType, fieldName));
+	    } else if (!fieldIsEqual(field)) {
+		final ConversionException exception = new ConversionException(
+			"Cannot write attribute twice for object");
+		exception.add("alias", alias);
+		exception.add("type", sourceType.getName());
+		throw exception;
+	    }
+	    ConverterMatcher converter = Enum.class.isAssignableFrom(type1) ? enumMapper.getConverterFromItemType(null, type1, null) : mapper.getLocalConverter(definedIn,
+		    fieldName);
+	    if (converter == null) {
+		converter = lookup.lookupConverterForType(type1);
+	    }
+	    if (value != null) {
+		final boolean isValueField = valueField != null && fieldIsEqual(field);
+		if (isValueField) {
+		    definingType[0] = definedIn;
+		    fieldType[0] = type1;
+		    realValue[0] = value;
+		    tagValue[0] = STRUCTURE_MARKER;
+		}
+		if (converter instanceof SingleValueConverter) {
+		    final String str = ((SingleValueConverter)converter).toString(value);
+		    
+		    if (isValueField) {
+			tagValue[0] = str;
+		    } else {
+			if (str != null) {
+			    writer.addAttribute(alias, str);
+			}
+		    }
+		} else {
+		    if (!isValueField) {
+			final ConversionException exception = new ConversionException(
+				"Cannot write element as attribute");
+			exception.add("alias", alias);
+			exception.add("type", sourceType.getName());
+			throw exception;
+		    }
+		}
+	    }
+	});
 
         if (tagValue[0] != null) {
             final Class<?> actualType = realValue[0].getClass();
@@ -244,9 +237,9 @@ public class ToAttributedValueConverter implements Converter {
 
                 Class<?> type = field.getType();
                 final Class<?> declaringClass = field.getDeclaringClass();
-                ConverterMatcher converter = Enum.class.isAssignableFrom(type) ? (ConverterMatcher)enumMapper
-                    .getConverterFromItemType(null, type, null) : (ConverterMatcher)mapper.getLocalConverter(
-                    declaringClass, fieldName);
+                ConverterMatcher converter = Enum.class.isAssignableFrom(type) ? enumMapper
+			.getConverterFromItemType(null, type, null) : mapper.getLocalConverter(
+				declaringClass, fieldName);
                 if (converter == null) {
                     converter = lookup.lookupConverterForType(type);
                 }

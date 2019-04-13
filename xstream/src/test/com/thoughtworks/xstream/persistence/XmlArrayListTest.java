@@ -28,17 +28,17 @@ public class XmlArrayListTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        strategy = new MockedStrategy<String>();
+        strategy = new MockedStrategy<>();
     }
 
     public void testWritesASingleObject() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         assertTrue(strategy.map.containsValue("guilherme"));
     }
 
     public void testWritesASingleObjectInANegativePosition() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         try {
             xmlList.add(-1, "guilherme");
             fail();
@@ -48,13 +48,13 @@ public class XmlArrayListTest extends TestCase {
     }
 
     public void testWritesASingleObjectInFirstPosition() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         assertTrue(strategy.map.containsKey(new Integer(0)));
     }
 
     public void testWritesTwoObjects() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         assertTrue(strategy.map.containsValue("guilherme"));
@@ -64,7 +64,7 @@ public class XmlArrayListTest extends TestCase {
     }
 
     public void testWritesTwoObjectsGuaranteesItsEnumerationOrder() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         assertEquals("guilherme", strategy.map.get(new Integer(0)));
@@ -72,7 +72,7 @@ public class XmlArrayListTest extends TestCase {
     }
 
     public void testWritesASecondObjectInAPositionHigherThanTheListsSize() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         try {
             xmlList.add("silveira");
             xmlList.add(3, "guilherme");
@@ -83,82 +83,82 @@ public class XmlArrayListTest extends TestCase {
     }
 
     public void testRemovesAWrittenObject() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         assertTrue(xmlList.remove("guilherme"));
         assertFalse(strategy.map.containsValue("guilherme"));
     }
 
     public void testRemovesAWrittenObjectImplyingInAChangeInTheList() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         final boolean changed = xmlList.remove("guilherme");
         assertTrue(changed);
     }
 
     public void testRemovesAnInvalidObjectWithoutAffectingTheList() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         final boolean removed = xmlList.remove("guilherme");
         assertFalse(removed);
     }
 
     public void testHasZeroLengthWhenInstantiated() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         assertEquals(0, xmlList.size());
     }
 
     public void testHasOneItem() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         assertEquals(1, xmlList.size());
     }
 
     public void testHasTwoItems() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         assertEquals(2, xmlList.size());
     }
 
     public void testIsNotEmpty() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         assertFalse(xmlList.isEmpty());
     }
 
     public void testDoesNotContainKey() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         assertFalse(xmlList.contains("guilherme"));
     }
 
     public void testContainsKey() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         assertTrue(xmlList.contains("guilherme"));
     }
 
     public void testGetsAnObject() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         final Object onlyValue = xmlList.iterator().next();
         assertEquals("guilherme", onlyValue);
     }
 
     public void testGetsTheFirstObject() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         assertEquals("guilherme", xmlList.get(0));
     }
 
     public void testGetsTheSecondObject() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         assertEquals("silveira", xmlList.get(1));
     }
 
     public void testInsertsAnObjectInTheMiddleOfTheList() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         xmlList.add(1, "de azevedo");
@@ -168,7 +168,7 @@ public class XmlArrayListTest extends TestCase {
     }
 
     public void testIteratingGuaranteesItsEnumeration() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         final Iterator<String> it = xmlList.iterator();
@@ -177,12 +177,12 @@ public class XmlArrayListTest extends TestCase {
     }
 
     public void testIsEmpty() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         assertTrue(xmlList.isEmpty());
     }
 
     public void testClearsItsObjects() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         xmlList.clear();
@@ -190,30 +190,30 @@ public class XmlArrayListTest extends TestCase {
     }
 
     public void testPutsAllAddsTwoItems() {
-        final Set<String> original = new HashSet<String>();
+        final Set<String> original = new HashSet<>();
         original.add("guilherme");
         original.add("silveira");
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.addAll(original);
         assertEquals(2, xmlList.size());
     }
 
     public void testContainsASpecificValue() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         assertTrue(xmlList.contains("guilherme"));
     }
 
     public void testDoesNotContainASpecificValue() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         assertFalse(xmlList.contains("zzzz"));
     }
 
     public void testEntrySetContainsAllItems() {
-        final Set<String> original = new HashSet<String>();
+        final Set<String> original = new HashSet<>();
         original.add("guilherme");
         original.add("silveira");
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         assertTrue(xmlList.containsAll(original));
@@ -221,20 +221,20 @@ public class XmlArrayListTest extends TestCase {
 
     // actually an acceptance test?
     public void testIteratesOverEntryAndChecksWithAnotherInstance() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
-        final XmlArrayList<String> built = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> built = new XmlArrayList<>(strategy);
         for (Object entry : xmlList) {
             assertTrue(built.contains(entry));
         }
     }
 
     public void testIteratesOverEntrySetContainingTwoItems() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
-        final List<String> built = new ArrayList<String>();
+        final List<String> built = new ArrayList<>();
         for (String entry : xmlList) {
             built.add(entry);
         }
@@ -242,7 +242,7 @@ public class XmlArrayListTest extends TestCase {
     }
 
     public void testRemovesAnItemThroughIteration() {
-        final XmlArrayList<String> xmlList = new XmlArrayList<String>(strategy);
+        final XmlArrayList<String> xmlList = new XmlArrayList<>(strategy);
         xmlList.add("guilherme");
         xmlList.add("silveira");
         for (final Iterator<String> iter = xmlList.iterator(); iter.hasNext();) {
@@ -256,7 +256,7 @@ public class XmlArrayListTest extends TestCase {
 
     private static class MockedStrategy<V> implements PersistenceStrategy<Integer, V> {
 
-        private final Map<Integer, V> map = new HashMap<Integer, V>();
+        private final Map<Integer, V> map = new HashMap<>();
 
         @Override
         public Iterator<Map.Entry<Integer, V>> iterator() {

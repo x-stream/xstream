@@ -55,9 +55,9 @@ public class JsonWriterModeTest extends TestCase {
         x.innerObj = new Y();
         x.innerObj.yField = "Y";
 
-        target = new ArrayList<Object>(Arrays.asList(new Object[]{
+        target = new ArrayList<>(Arrays.asList(new Object[]{
             new Object[][]{new Object[0]}, null, new Integer(42), new Long(Long.MAX_VALUE), new Y(), x.innerObj,
-            new ArrayList<Object>(), new CharSequence[]{
+            new ArrayList<>(), new CharSequence[]{
                 "JUnit", "XStream", new StringBuffer("JSON"), new StringBuffer("JScript")}, x,}));
 
         xstream = new XStream();
@@ -85,13 +85,13 @@ public class JsonWriterModeTest extends TestCase {
             if (names == null) {
                 return JSONObject.getNames(object2) == null;
             }
-            if (new HashSet<String>(Arrays.asList(names)).equals(new HashSet<String>(Arrays.asList(JSONObject.getNames(
+            if (new HashSet<>(Arrays.asList(names)).equals(new HashSet<>(Arrays.asList(JSONObject.getNames(
                 object2))))) {
-                for (int i = 0; i < names.length; i++) {
-                    if (!equals(object1.get(names[i]), object2.get(names[i]))) {
-                        return false;
-                    }
-                }
+		for (String name : names) {
+		    if (!equals(object1.get(name), object2.get(name))) {
+			return false;
+		    }
+		}
                 return true;
             }
         } catch (final JSONException e) {

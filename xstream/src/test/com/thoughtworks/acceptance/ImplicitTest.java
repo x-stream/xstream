@@ -34,9 +34,9 @@ public class ImplicitTest extends AbstractAcceptanceTest {
 
         public A[] aArray = new A[2];
         public String separator1 = "--1--";
-        public List<B> bList = new ArrayList<B>();
+        public List<B> bList = new ArrayList<>();
         public String separator2 = "--2--";
-        public Map<Integer, C> cMap = new LinkedHashMap<Integer, C>();
+        public Map<Integer, C> cMap = new LinkedHashMap<>();
     }
 
     public void testAllImplicitTypesAtOnceWithImplicitElementTypes() {
@@ -215,9 +215,9 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         @SuppressWarnings("hiding")
         public A[] aArray = new A[2];
         @SuppressWarnings("hiding")
-        public List<B> bList = new ArrayList<B>();
+        public List<B> bList = new ArrayList<>();
         @SuppressWarnings("hiding")
-        public Map<Integer, C> cMap = new LinkedHashMap<Integer, C>();
+        public Map<Integer, C> cMap = new LinkedHashMap<>();
     }
 
     public void testHiddenImplicitTypesAtOnceWithExplicitElementNames() {
@@ -279,28 +279,28 @@ public class ImplicitTest extends AbstractAcceptanceTest {
             + "</implicits>";
 
         final AllHidingImplicitTypes implicits = new AllHidingImplicitTypes();
-        ((AllImplicitTypes)implicits).aArray[0] = new AllImplicitTypes.A();
-        ((AllImplicitTypes)implicits).aArray[0].val = 1;
-        ((AllImplicitTypes)implicits).aArray[1] = new AllImplicitTypes.A();
-        ((AllImplicitTypes)implicits).aArray[1].val = 2;
+        implicits.aArray[0] = new AllImplicitTypes.A();
+        implicits.aArray[0].val = 1;
+        implicits.aArray[1] = new AllImplicitTypes.A();
+        implicits.aArray[1].val = 2;
         implicits.aArray[0] = new AllImplicitTypes.A();
         implicits.aArray[0].val = 7;
         implicits.aArray[1] = new AllImplicitTypes.A();
         implicits.aArray[1].val = 8;
-        ((AllImplicitTypes)implicits).bList.add(new AllImplicitTypes.B());
-        ((AllImplicitTypes)implicits).bList.get(0).val = 3;
-        ((AllImplicitTypes)implicits).bList.add(new AllImplicitTypes.B());
-        ((AllImplicitTypes)implicits).bList.get(1).val = 4;
+        implicits.bList.add(new AllImplicitTypes.B());
+        implicits.bList.get(0).val = 3;
+        implicits.bList.add(new AllImplicitTypes.B());
+        implicits.bList.get(1).val = 4;
         implicits.bList.add(new AllImplicitTypes.B());
         implicits.bList.get(0).val = 9;
         implicits.bList.add(new AllImplicitTypes.B());
         implicits.bList.get(1).val = 10;
         AllImplicitTypes.C c = new AllImplicitTypes.C();
         c.val = new Integer(5);
-        ((AllImplicitTypes)implicits).cMap.put(c.val, c);
+        implicits.cMap.put(c.val, c);
         c = new AllImplicitTypes.C();
         c.val = new Integer(6);
-        ((AllImplicitTypes)implicits).cMap.put(c.val, c);
+        implicits.cMap.put(c.val, c);
         c = new AllImplicitTypes.C();
         c.val = new Integer(11);
         implicits.cMap.put(c.val, c);
@@ -308,7 +308,7 @@ public class ImplicitTest extends AbstractAcceptanceTest {
         c.val = new Integer(12);
         implicits.cMap.put(c.val, c);
         assertBothWays(implicits, expected);
-        implicits.separator1 = implicits.separator2 = ((AllHidingTypes)implicits).separator = implicits.separator =
+        implicits.separator1 = implicits.separator2 = implicits.separator = implicits.separator =
                 null;
         assertBothWays(implicits, stripSeparator(expected));
     }

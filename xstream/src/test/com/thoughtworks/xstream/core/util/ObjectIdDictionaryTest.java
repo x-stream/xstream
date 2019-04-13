@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 public class ObjectIdDictionaryTest extends TestCase {
 
     public void testMapsIdsToObjectReferences() {
-        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<String>();
+        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<>();
         final Object a = new Object();
         final Object b = new Object();
         final Object c = new Object();
@@ -30,7 +30,7 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testTreatsObjectsThatAreEqualButNotSameInstanceAsDifferentReference() {
-        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<String>();
+        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<>();
         final Integer a = new Integer(3);
         final Integer b = new Integer(3);
         dict.associateId(a, "id a");
@@ -40,7 +40,7 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testEntriesAreGarbageCollected() throws InterruptedException {
-        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<String>();
+        final ObjectIdDictionary<String> dict = new ObjectIdDictionary<>();
 
         int counter = 0;
         for (; counter < 1000; ++counter) {

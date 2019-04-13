@@ -60,11 +60,7 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
     public boolean hasMoreChildren() {
         final Pointer pointer = pointers.peek();
 
-        if (pointer.v < getChildCount()) {
-            return true;
-        } else {
-            return false;
-        }
+	return pointer.v < getChildCount();
     }
 
     @Override

@@ -68,11 +68,7 @@ public class FieldKey {
         if (!declaringClass.equals(fieldKey.declaringClass)) {
             return false;
         }
-        if (!fieldName.equals(fieldKey.fieldName)) {
-            return false;
-        }
-
-        return true;
+        return fieldName.equals(fieldKey.fieldName);
     }
 
     @Override

@@ -191,7 +191,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         };
 
         final Map<String, Set<Mapper.ImplicitCollectionMapping>> hiddenMappers =
-                new HashMap<String, Set<Mapper.ImplicitCollectionMapping>>();
+                new HashMap<>();
         for (final FieldInfo info : fields) {
             if (info.value != null) {
                 final Field defaultField = defaultFieldDefinition.get(info.fieldName);
@@ -226,7 +226,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     for (final Iterator<?> iter = isArray
                         ? new ArrayIterator(info.value)
                         : isCollection
-                            ? ((Collection<?>)info.value).iterator()
+                            ? ((Iterable<?>)info.value).iterator()
                             : isEntry
                                 ? ((Map<?, ?>)info.value).entrySet().iterator()
                                 : ((Map<?, ?>)info.value).values().iterator(); iter.hasNext();) {

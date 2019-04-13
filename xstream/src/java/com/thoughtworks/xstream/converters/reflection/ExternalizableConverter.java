@@ -195,16 +195,12 @@ public class ExternalizableConverter implements Converter {
             return serializationMembers.callReadResolve(externalizable);
         } catch (final NoSuchMethodException e) {
             throw new ConversionException("Missing default constructor of type", e);
-        } catch (final InvocationTargetException e) {
-            throw new ConversionException("Cannot construct type", e);
-        } catch (final InstantiationException e) {
+        } catch (final InvocationTargetException | InstantiationException | ClassNotFoundException e) {
             throw new ConversionException("Cannot construct type", e);
         } catch (final IllegalAccessException e) {
             throw new ObjectAccessException("Cannot construct type", e);
         } catch (final IOException e) {
             throw new StreamException("Cannot externalize " + type.getClass(), e);
-        } catch (final ClassNotFoundException e) {
-            throw new ConversionException("Cannot construct type", e);
         }
     }
 

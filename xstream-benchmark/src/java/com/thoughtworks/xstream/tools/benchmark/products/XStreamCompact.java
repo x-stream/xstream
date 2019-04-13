@@ -39,14 +39,17 @@ public class XStreamCompact implements Product {
         this.xstream = new XStream(new XppDriver());
     }
 
+    @Override
     public void serialize(Object object, OutputStream output) throws Exception {
         xstream.marshal(object, new CompactWriter(new OutputStreamWriter(output)));
     }
 
+    @Override
     public Object deserialize(InputStream input) throws Exception {
         return xstream.fromXML(input);
     }
 
+    @Override
     public String toString() {
         return "XStream (Compact XML)";
     }

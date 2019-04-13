@@ -39,14 +39,17 @@ public class XStreamBinary implements Product {
         this.xstream = new XStream();
     }
 
+    @Override
     public void serialize(Object object, OutputStream output) throws Exception {
         xstream.marshal(object, new BinaryStreamWriter(output));
     }
 
+    @Override
     public Object deserialize(InputStream input) throws Exception {
         return xstream.unmarshal(new BinaryStreamReader(input));
     }
 
+    @Override
     public String toString() {
         return "XStream (binary format)";
     }

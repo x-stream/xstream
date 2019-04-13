@@ -272,16 +272,10 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         final URI uri = URI.create("jar:"
             + Paths.get("target/lib/proxytoys-0.2.1.jar").toAbsolutePath().toUri().toString());
 
-        FileSystem zipfs = null;
-        try {
-            zipfs = FileSystems.newFileSystem(uri, env);
+        try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
             final String entry = "/com/thoughtworks/proxy/kit/SimpleReference.class";
             final Path path = zipfs.getPath(entry);
             assertBothWays(path, "<path>" + uri.toString() + "!" + entry + "</path>");
-        } finally {
-            if (zipfs != null) {
-                zipfs.close();
-            }
         }
     }
 

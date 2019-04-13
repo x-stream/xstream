@@ -76,9 +76,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             } else {
                 oaex = new ObjectAccessException("Cannot construct type as it does not have a no-args constructor");
             }
-        } catch (final InstantiationException e) {
-            oaex = new ObjectAccessException("Cannot construct type", e);
-        } catch (final IllegalAccessException e) {
+        } catch (final InstantiationException | IllegalAccessException e) {
             oaex = new ObjectAccessException("Cannot construct type", e);
         } catch (final InvocationTargetException e) {
             if (e.getTargetException() instanceof RuntimeException) {

@@ -205,7 +205,7 @@ public class MapTest extends AbstractAcceptanceTest {
             + "  </java.util.Collections_-SynchronizedMap>\n"
             + "</java.util.Collections_-SynchronizedMap>";
 
-        assertBothWays(Collections.synchronizedMap(new HashMap<Object, Object>()), expected);
+        assertBothWays(Collections.synchronizedMap(new HashMap<>()), expected);
     }
 
     public void testUnmodifiableMap() {
@@ -214,7 +214,7 @@ public class MapTest extends AbstractAcceptanceTest {
             + "  <m/>\n"
             + "</java.util.Collections_-UnmodifiableMap>";
 
-        assertBothWays(Collections.unmodifiableMap(new HashMap<Object, Object>()), expected);
+        assertBothWays(Collections.unmodifiableMap(new HashMap<>()), expected);
     }
 
     public void testEmptyMap() {

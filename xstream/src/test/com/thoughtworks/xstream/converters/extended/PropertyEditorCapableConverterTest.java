@@ -54,7 +54,7 @@ public class PropertyEditorCapableConverterTest extends TestCase {
         final SingleValueConverter converter = new PropertyEditorCapableConverter(SoftwarePropertyEditor.class,
             Software.class);
 
-        final Map<Throwable, String> exceptions = new HashMap<Throwable, String>();
+        final Map<Throwable, String> exceptions = new HashMap<>();
         final ThreadGroup tg = new ThreadGroup(getName()) {
             @Override
             public void uncaughtException(final Thread t, final Throwable e) {
@@ -63,7 +63,7 @@ public class PropertyEditorCapableConverterTest extends TestCase {
             }
         };
 
-        final Map<String, Software> references = new HashMap<String, Software>();
+        final Map<String, Software> references = new HashMap<>();
         final int[] counter = new int[1];
         counter[0] = 0;
         final Thread[] threads = new Thread[10];

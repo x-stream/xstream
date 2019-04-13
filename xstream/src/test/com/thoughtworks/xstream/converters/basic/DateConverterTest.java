@@ -66,7 +66,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testUnmarshalsOldXStreamDatesThatLackMillisecond() {
-        converter = new DateConverter((TimeZone)null); // use default TZ
+        converter = new DateConverter(null); // use default TZ
         final Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
 
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
@@ -99,7 +99,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testUnmarshalsDateWithDifferentDefaultTimeZones() throws ParseException {
-        converter = new DateConverter((TimeZone)null); // use default TZ
+        converter = new DateConverter(null); // use default TZ
         final Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2004, Calendar.FEBRUARY, 23, 1, 46, 4);
@@ -130,30 +130,27 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testIsThreadSafe() throws InterruptedException {
-        final List<String> results = Collections.synchronizedList(new ArrayList<String>());
+        final List<String> results = Collections.synchronizedList(new ArrayList<>());
         final DateConverter converter = new DateConverter();
         final Object monitor = new Object();
         final int numberOfCallsPerThread = 20;
         final int numberOfThreads = 20;
 
         // spawn some concurrent threads, that hammer the converter
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < numberOfCallsPerThread; i++) {
-                    try {
-                        converter.fromString("2004-02-22 15:16:04.0 EST");
-                        results.add("PASS");
-                    } catch (final ConversionException e) {
-                        results.add("FAIL");
-                    } finally {
-                        synchronized (monitor) {
-                            monitor.notifyAll();
-                        }
-                    }
-                }
-            }
-        };
+        final Runnable runnable = () -> {
+	    for (int i = 0; i < numberOfCallsPerThread; i++) {
+		try {
+		    converter.fromString("2004-02-22 15:16:04.0 EST");
+		    results.add("PASS");
+		} catch (final ConversionException e) {
+		    results.add("FAIL");
+		} finally {
+		    synchronized (monitor) {
+			monitor.notifyAll();
+		    }
+		}
+	    }
+	};
         for (int i = 0; i < numberOfThreads; i++) {
             new Thread(runnable).start();
         }
@@ -183,7 +180,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testDatesIn70sInTimeZoneGMT() throws ParseException {
-        converter = new DateConverter((TimeZone)null); // use default TZ
+        converter = new DateConverter(null); // use default TZ
 
         final String pattern = "yyyy-MM-dd HH:mm:ss.S z";
         final SimpleDateFormat format;

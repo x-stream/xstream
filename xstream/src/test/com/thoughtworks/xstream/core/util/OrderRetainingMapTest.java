@@ -41,7 +41,7 @@ public class OrderRetainingMapTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        map = new OrderRetainingMap<String, String>();
+        map = new OrderRetainingMap<>();
         map.put("one", "ONE");
         map.put("two", "TWO");
         map.put("three", "THREE");
@@ -76,7 +76,7 @@ public class OrderRetainingMapTest extends TestCase {
     }
 
     public void testMaintainsOrderOfEntriesAfterCopyCtor() {
-        final Iterator<Map.Entry<String, String>> entrySetIterator = new OrderRetainingMap<String, String>(map)
+        final Iterator<Map.Entry<String, String>> entrySetIterator = new OrderRetainingMap<>(map)
             .entrySet()
             .iterator();
         assertNextEntryEquals("one", "ONE", entrySetIterator);

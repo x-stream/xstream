@@ -447,15 +447,11 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
 
         @Override
         public void visitSerializableFields(final Object object, final Visitor visitor) {
-            wrapped.visitSerializableFields(object, new Visitor() {
-                @Override
-                public void visit(final String name, final Class<?> type, final Class<?> definedIn,
-                        final Object value) {
-                    if (!name.startsWith("CGLIB$")) {
-                        visitor.visit(name, type, definedIn, value);
-                    }
-                }
-            });
+            wrapped.visitSerializableFields(object, (final String name, final Class<?> type, final Class<?> definedIn, final Object value) -> {
+		if (!name.startsWith("CGLIB$")) {
+		    visitor.visit(name, type, definedIn, value);
+		}
+	    });
         }
     }
 

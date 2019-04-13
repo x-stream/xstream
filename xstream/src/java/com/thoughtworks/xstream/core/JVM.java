@@ -95,9 +95,7 @@ public class JVM implements Caching {
             final Method allocateInstance = unsafeClass.getDeclaredMethod("allocateInstance", new Class[]{Class.class});
             allocateInstance.setAccessible(true);
             test = allocateInstance.invoke(unsafe, new Object[]{Test.class}) != null;
-        } catch (final Exception e) {
-            test = false;
-        } catch (final Error e) {
+        } catch (final Exception | Error e) {
             test = false;
         }
         canAllocateWithUnsafe = test;
@@ -121,9 +119,7 @@ public class JVM implements Caching {
                         provider.writeField(t, "d", new Double(1), Test.class);
                         provider.writeField(t, "bool", Boolean.TRUE, Test.class);
                         test = true;
-                    } catch (final IncompatibleClassChangeError e) {
-                        cls = null;
-                    } catch (final ObjectAccessException e) {
+                    } catch (final IncompatibleClassChangeError | ObjectAccessException e) {
                         cls = null;
                     }
                     if (cls == null) {
@@ -137,12 +133,9 @@ public class JVM implements Caching {
         }
         reflectionProviderType = type;
         canWriteWithUnsafe = test;
-        final Comparator<Object> comparator = new Comparator<Object>() {
-            @Override
-            public int compare(final Object o1, final Object o2) {
-                throw new RuntimeException();
-            }
-        };
+        final Comparator<Object> comparator = (final Object o1, final Object o2) -> {
+	    throw new RuntimeException();
+	};
         final SortedMap<Object, Object> map = new PresortedMap<>(comparator);
         map.put("one", null);
         map.put("two", null);
@@ -172,9 +165,7 @@ public class JVM implements Caching {
         try {
             new SimpleDateFormat("X").parse("Z");
             test = true;
-        } catch (final ParseException e) {
-            test = false;
-        } catch (final IllegalArgumentException e) {
+        } catch (final ParseException | IllegalArgumentException e) {
             test = false;
         }
         canParseISO8601TimeZoneInDateFormat = test;
@@ -182,9 +173,7 @@ public class JVM implements Caching {
             @SuppressWarnings("resource")
             final CustomObjectOutputStream stream = new CustomObjectOutputStream(null);
             test = stream != null;
-        } catch (final RuntimeException e) {
-            test = false;
-        } catch (final IOException e) {
+        } catch (final RuntimeException | IOException e) {
             test = false;
         }
         canCreateDerivedObjectOutputStream = test;
@@ -202,8 +191,7 @@ public class JVM implements Caching {
         if (base64Class != null) {
             try {
                 base64 = base64Class.newInstance();
-            } catch (final Exception e) {
-            } catch (final Error e) {
+            } catch (final Exception | Error e) {
             }
         }
         if (base64 == null) {
@@ -309,14 +297,14 @@ public class JVM implements Caching {
     }
 
     private static boolean isIBM() {
-        return vendor.indexOf("IBM") != -1;
+        return vendor.contains("IBM");
     }
 
     /**
      * @since 1.4
      */
     private static boolean isAndroid() {
-        return vendor.indexOf("Android") != -1; // and version 19 (4.4 KitKat) for Java 7
+        return vendor.contains("Android"); // and version 19 (4.4 KitKat) for Java 7
     }
 
     /**
@@ -355,9 +343,7 @@ public class JVM implements Caching {
             final Class<? extends T> clazz = (Class<? extends T>)Class.forName(name, initialize, JVM.class
                 .getClassLoader());
             return clazz;
-        } catch (final LinkageError e) {
-            return null;
-        } catch (final ClassNotFoundException e) {
+        } catch (final LinkageError | ClassNotFoundException e) {
             return null;
         }
     }

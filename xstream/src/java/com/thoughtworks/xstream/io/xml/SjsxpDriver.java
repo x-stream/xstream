@@ -69,11 +69,7 @@ public class SjsxpDriver extends StaxDriver {
             final XMLInputFactory instance = (XMLInputFactory)Class.forName("com.sun.xml.internal.stream.XMLInputFactoryImpl").newInstance();
             instance.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
             return instance;
-        } catch (final InstantiationException e) {
-            exception = e;
-        } catch (final IllegalAccessException e) {
-            exception = e;
-        } catch (final ClassNotFoundException e) {
+        } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             exception = e;
         }
         throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLInputFaqctory instance.", exception);
@@ -88,11 +84,7 @@ public class SjsxpDriver extends StaxDriver {
         Exception exception = null;
         try {
             return (XMLOutputFactory)Class.forName("com.sun.xml.internal.stream.XMLOutputFactoryImpl").newInstance();
-        } catch (final InstantiationException e) {
-            exception = e;
-        } catch (final IllegalAccessException e) {
-            exception = e;
-        } catch (final ClassNotFoundException e) {
+        } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             exception = e;
         }
         throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLOutputFaqctory instance.", exception);

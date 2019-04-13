@@ -107,7 +107,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     }
 
     private Object readResolve() {
-        typeToConverterMap = serializationMap == null ? new HashMap<String, Converter>() : serializationMap;
+        typeToConverterMap = serializationMap == null ? new HashMap<>() : serializationMap;
         serializationMap = null;
         return this;
     }

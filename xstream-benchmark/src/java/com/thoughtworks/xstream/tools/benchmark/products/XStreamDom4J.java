@@ -33,6 +33,7 @@ public class XStreamDom4J extends XStreamDriver {
     public XStreamDom4J() {
         super(new Dom4JDriver() {
 
+	    @Override
             public HierarchicalStreamWriter createWriter(Writer out) {
                 return new PrettyPrintWriter(out);
             }

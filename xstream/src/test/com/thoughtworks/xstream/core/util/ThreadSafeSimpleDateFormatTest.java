@@ -38,7 +38,7 @@ public class ThreadSafeSimpleDateFormatTest extends TestCase {
             .getTimeZone("UTC"), 2, 4, false);
         final Date now = new Date();
 
-        final Map<Throwable, String> exceptions = new HashMap<Throwable, String>();
+        final Map<Throwable, String> exceptions = new HashMap<>();
         final ThreadGroup tg = new ThreadGroup(getName()) {
             @Override
             public void uncaughtException(final Thread t, final Throwable e) {

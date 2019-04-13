@@ -97,7 +97,7 @@ public class FieldDictionary implements Caching {
      */
     public Field fieldOrNull(final Class<?> cls, final String name, final Class<?> definedIn) {
         final Map<?, Field> fields = buildMap(cls, definedIn != null);
-        final Field field = fields.get(definedIn != null ? (Object)new FieldKey(name, definedIn, -1) : (Object)name);
+        final Field field = fields.get(definedIn != null ? new FieldKey(name, definedIn, -1) : name);
         return field;
     }
 

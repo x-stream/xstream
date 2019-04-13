@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 public class FastStackTest extends TestCase {
 
     public void test() {
-        final FastStack<String> stack = new FastStack<String>(2);
+        final FastStack<String> stack = new FastStack<>(2);
 
         stack.push("a");
         stack.push("b");

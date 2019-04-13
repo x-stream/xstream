@@ -99,10 +99,10 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void testWriteHierarchy() {
-        final Category<Product> category = new Category<Product>("fruit", "111");
-        final ArrayList<Product> products = new ArrayList<Product>();
+        final Category<Product> category = new Category<>("fruit", "111");
+        final ArrayList<Product> products = new ArrayList<>();
         final Product banana = new Product("Banana", "123", 23.01);
-        final ArrayList<String> bananaTags = new ArrayList<String>();
+        final ArrayList<String> bananaTags = new ArrayList<>();
         bananaTags.add("yellow");
         bananaTags.add("fresh");
         bananaTags.add("tasty");
@@ -127,9 +127,9 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     public void testObjectStream() throws IOException, ClassNotFoundException {
         final Product product = new Product("Banana", "123", 23.00);
         final StringWriter writer = new StringWriter();
-        final ObjectOutputStream oos = xstream.createObjectOutputStream(writer, "oos");
-        oos.writeObject(product);
-        oos.close();
+	try (ObjectOutputStream oos = xstream.createObjectOutputStream(writer, "oos")) {
+	    oos.writeObject(product);
+	}
         final String json = writer.toString();
         assertEquals("{\"oos\":" + SIMPLE + "}", json);
         try (final ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(json))) {
@@ -158,7 +158,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void testListWithOneSimpleObject() {
-        final ArrayList<String> list1 = new ArrayList<String>();
+        final ArrayList<String> list1 = new ArrayList<>();
         list1.add("one");
         final String json = xstream.toXML(list1);
         assertEquals("{'list':[{'string':'one'}]}".replace('\'', '"'), json);
@@ -167,7 +167,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void testListWithSimpleObjects() {
-        final ArrayList<String> list1 = new ArrayList<String>();
+        final ArrayList<String> list1 = new ArrayList<>();
         list1.add("one");
         list1.add("two");
         list1.add("three");
@@ -178,7 +178,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void testListWithDifferentSimpleObjects() {
-        final ArrayList<Object> list1 = new ArrayList<Object>();
+        final ArrayList<Object> list1 = new ArrayList<>();
         list1.add("one");
         list1.add(Integer.valueOf(2));
         list1.add(Float.valueOf(3.3f));
@@ -190,7 +190,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
 
     public void testSingletonListWithComplexObject() {
         final Product product = new Product("Banana", "123", 23.00);
-        final ArrayList<Product> list1 = new ArrayList<Product>();
+        final ArrayList<Product> list1 = new ArrayList<>();
         list1.add(product);
         final String json = xstream.toXML(list1);
         assertEquals("{'list':[{'product':{'name':'Banana','id':123,'price':23}}]}".replace('\'', '"'), json);
@@ -199,11 +199,11 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void testListWithComplexNestedObjects() {
-        final ArrayList<Product> list1 = new ArrayList<Product>();
+        final ArrayList<Product> list1 = new ArrayList<>();
         list1.add(new Product("Banana", "123", 23.00));
         list1.add(new Product("Apple", "47", 11.00));
         list1.add(new Product("Orange", "100", 42.00));
-        final ArrayList<Product> tags = new ArrayList<Product>();
+        final ArrayList<Product> tags = new ArrayList<>();
         list1.get(1).setTags(tags);
         tags.add(new Product("Braeburn", "47.1", 10.00));
         final String json = xstream.toXML(list1);
@@ -215,7 +215,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void todoTestEmptyList() {
-        final ArrayList<?> list1 = new ArrayList<Object>();
+        final ArrayList<?> list1 = new ArrayList<>();
         final String json = xstream.toXML(list1);
         assertEquals("{'list':[]}".replace('\'', '"'), json);
         final ArrayList<?> list2 = xstream.<ArrayList<?>>fromXML(json);
@@ -255,7 +255,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void testEmbeddedXml() {
-        final ArrayList<String> list1 = new ArrayList<String>();
+        final ArrayList<String> list1 = new ArrayList<>();
         list1.add("<xml attribute=\"foo\"><![CDATA[&quot;\"\'<>]]></xml>");
         final String json = xstream.toXML(list1);
         assertEquals("{\"list\":[{\"string\":\"<xml attribute=\\\"foo\\\"><![CDATA[&quot;\\\"'<>]]><\\/xml>\"}]}",
@@ -265,7 +265,7 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     }
 
     public void testArrayList() {
-        final ArrayList<Object> list1 = new ArrayList<Object>();
+        final ArrayList<Object> list1 = new ArrayList<>();
         list1.add(new Integer(12));
         list1.add("string");
         list1.add(new Integer(13));

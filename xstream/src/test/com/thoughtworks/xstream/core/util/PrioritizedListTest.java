@@ -28,7 +28,7 @@ public class PrioritizedListTest extends TestCase {
     }
 
     public void testIteratesOverElementsInReverseOrderTheyWereAdded() {
-        final PrioritizedList<String> list = new PrioritizedList<String>();
+        final PrioritizedList<String> list = new PrioritizedList<>();
         list.add("one", 0);
         list.add("two", 0);
         list.add("three", 0);
@@ -41,7 +41,7 @@ public class PrioritizedListTest extends TestCase {
     }
 
     public void testHandlesMultipleIsolatedIterators() {
-        final PrioritizedList<String> list = new PrioritizedList<String>();
+        final PrioritizedList<String> list = new PrioritizedList<>();
         list.add("one", 0);
         list.add("two", 0);
 
@@ -59,7 +59,7 @@ public class PrioritizedListTest extends TestCase {
     }
 
     public void testIteratesOverHighestPriorityItemsFirst() {
-        final PrioritizedList<String> list = new PrioritizedList<String>();
+        final PrioritizedList<String> list = new PrioritizedList<>();
         list.add("medium one", 0);
         list.add("high one", 1);
         list.add("low one", -1);

@@ -257,7 +257,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public static class PopupWithList {
         List<MenuItem> menuitem;
         {
-            menuitem = new ArrayList<MenuItem>();
+            menuitem = new ArrayList<>();
             menuitem.add(new MenuItem("New", "CreateNewDoc()"));
             menuitem.add(new MenuItem("Open", "OpenDoc()"));
             menuitem.add(new MenuItem("Close", "CloseDoc()"));
@@ -285,7 +285,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public static class PopupWithSet {
         Set<MenuItem> menuitem;
         {
-            menuitem = new HashSet<MenuItem>();
+            menuitem = new HashSet<>();
             menuitem.add(new MenuItem("New", "CreateNewDoc()"));
             menuitem.add(new MenuItem("Open", "OpenDoc()"));
             menuitem.add(new MenuItem("Close", "CloseDoc()"));
@@ -475,7 +475,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "    2\n"
             + "  ]";
 
-        final Map<String, Integer> map = new HashMap<String, Integer>();
+        final Map<String, Integer> map = new HashMap<>();
         map.put("one", new Integer(1));
         map.put("two", new Integer(2));
         final String actual = xstream.toXML(map);
@@ -522,7 +522,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     final static class MapHolder<K, V> {
-        private final Map<K, V> map = new HashMap<K, V>();
+        private final Map<K, V> map = new HashMap<>();
     }
 
     public void testCanMarshalNestedMap() {
@@ -538,7 +538,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "      2\n"
             + "    ]";
 
-        final MapHolder<String, Integer> holder = new MapHolder<String, Integer>();
+        final MapHolder<String, Integer> holder = new MapHolder<>();
         holder.map.put("one", new Integer(1));
         holder.map.put("two", new Integer(2));
         final String actual = xstream.toXML(holder);
@@ -558,7 +558,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     }
 
     static class CollectionKeeper<E> {
-        Collection<E> coll = new ArrayList<E>();
+        Collection<E> coll = new ArrayList<>();
     }
 
     public void testIgnoresAttributeForCollectionMember() {
@@ -571,7 +571,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "  ]\n"
             + "}}");
 
-        final CollectionKeeper<String> holder = new CollectionKeeper<String>();
+        final CollectionKeeper<String> holder = new CollectionKeeper<>();
         holder.coll.add("one");
         holder.coll.add("two");
         assertEquals(expected, xstream.toXML(holder));
@@ -599,7 +599,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         String firstName;
         String lastName;
         Calendar dateOfBirth;
-        Map<String, String> titles = new TreeMap<String, String>();
+        Map<String, String> titles = new TreeMap<>();
     }
 
     public void testCanWriteEmbeddedCalendar() {
@@ -629,7 +629,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         person.dateOfBirth.clear();
         person.dateOfBirth.set(1900, Calendar.DECEMBER, 31);
         person.titles.put("1", "Mr");
-        final List<Person> list = new ArrayList<Person>();
+        final List<Person> list = new ArrayList<>();
         list.add(person);
         assertEquals(expected, xstream.toXML(list));
     }
@@ -688,7 +688,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
     public void testRealTypeIsHonoredWhenWritingTheValue() {
         xstream.alias("sa", SystemAttributes.class);
 
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         list.add("joe");
         list.add("mauro");
         final SystemAttributes[] sa = new SystemAttributes[2];

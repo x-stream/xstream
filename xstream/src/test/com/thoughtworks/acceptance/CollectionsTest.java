@@ -153,7 +153,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         // synchronized list has circular reference
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
-        final List<String> list = Collections.synchronizedList(new LinkedList<String>());
+        final List<String> list = Collections.synchronizedList(new LinkedList<>());
         list.add("hi");
 
         assertBothWays(list, xml);
@@ -180,7 +180,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         // synchronized list has circular reference
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 
-        final List<String> list = Collections.synchronizedList(new ArrayList<String>());
+        final List<String> list = Collections.synchronizedList(new ArrayList<>());
         list.add("hi");
 
         assertBothWays(list, xml);
@@ -346,7 +346,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         final Collection<Map.Entry<Boolean, String>> set = map.entrySet();
         xstream.alias("entry-set", set.getClass());
 
-        if (System.getProperty("java.vm.vendor").indexOf("IBM") >= 0) {
+        if (System.getProperty("java.vm.vendor").contains("IBM")) {
             assertBothWays(set, ""//
                 + "<entry-set>\n"
                 + "  <associatedMap>\n"

@@ -208,25 +208,25 @@ public class StringConverterBenchmark {
         }
 
         final StringWriter stringWriter = new StringWriter();
-        final PrettyPrintWriter writer = new CompactWriter(stringWriter);
-        writer.startNode("string-array");
-        for (int i = 0; i < 10000; ++i) {
-            writer.startNode("string");
-            final String s;
-            if ((i & 1) == 1) {
-                s = array[(i >> 1) % 100];
-            } else if ((i & 2) == 2) {
-                s = array[100 + (i >> 2) % 100];
-            } else if ((i & 4) == 4) {
-                s = array[200 + (i >> 3) % 100];
-            } else {
-                s = "Random UUID: " + UUID.randomUUID().toString();
-            }
-            writer.setValue(s);
-            writer.endNode();
-        }
-        writer.endNode();
-        writer.close();
+	try (PrettyPrintWriter writer = new CompactWriter(stringWriter)) {
+	    writer.startNode("string-array");
+	    for (int i = 0; i < 10000; ++i) {
+		writer.startNode("string");
+		final String s;
+		if ((i & 1) == 1) {
+		    s = array[(i >> 1) % 100];
+		} else if ((i & 2) == 2) {
+		    s = array[100 + (i >> 2) % 100];
+		} else if ((i & 4) == 4) {
+		    s = array[200 + (i >> 3) % 100];
+		} else {
+		    s = "Random UUID: " + UUID.randomUUID().toString();
+		}
+		writer.setValue(s);
+		writer.endNode();
+	    }
+	    writer.endNode();
+	}
         xml = stringWriter.toString();
     }
 

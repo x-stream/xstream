@@ -255,33 +255,34 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      */
     @Override
     public void setProperty(final String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
-        if (name.equals(CONFIGURED_XSTREAM_PROPERTY)) {
-            if (!(value instanceof XStream)) {
-                throw new SAXNotSupportedException("Value for property \""
-                    + CONFIGURED_XSTREAM_PROPERTY
-                    + "\" must be a non-null XStream object");
-            }
-        } else if (name.equals(SOURCE_OBJECT_LIST_PROPERTY)) {
-            if (value instanceof List) {
-                final List<?> list = (List<?>)value;
-
-                if (list.isEmpty()) {
-                    throw new SAXNotSupportedException("Value for property \""
-                        + SOURCE_OBJECT_LIST_PROPERTY
-                        + "\" shall not be an empty list");
-                } else {
-                    // Perform a copy of the list to prevent the application to
-                    // modify its content while the parse is being performed.
-                    value = Collections.unmodifiableList(new ArrayList<>(list));
-                }
-            } else {
-                throw new SAXNotSupportedException("Value for property \""
-                    + SOURCE_OBJECT_LIST_PROPERTY
-                    + "\" must be a non-null List object");
-            }
-        } else {
-            throw new SAXNotRecognizedException(name);
-        }
+	switch (name) {
+	    case CONFIGURED_XSTREAM_PROPERTY:
+		if (!(value instanceof XStream)) {
+		    throw new SAXNotSupportedException("Value for property \""
+			    + CONFIGURED_XSTREAM_PROPERTY
+			    + "\" must be a non-null XStream object");
+		}	break;
+	    case SOURCE_OBJECT_LIST_PROPERTY:
+		if (value instanceof List) {
+		    final List<?> list = (List<?>)value;
+		    
+		    if (list.isEmpty()) {
+			throw new SAXNotSupportedException("Value for property \""
+				+ SOURCE_OBJECT_LIST_PROPERTY
+				+ "\" shall not be an empty list");
+		    } else {
+			// Perform a copy of the list to prevent the application to
+			// modify its content while the parse is being performed.
+			value = Collections.unmodifiableList(new ArrayList<>(list));
+		    }
+		} else {
+		    throw new SAXNotSupportedException("Value for property \""
+			    + SOURCE_OBJECT_LIST_PROPERTY
+			    + "\" must be a non-null List object");
+		}	break;
+	    default:
+		throw new SAXNotRecognizedException(name);
+	}
         properties.put(name, value);
     }
 

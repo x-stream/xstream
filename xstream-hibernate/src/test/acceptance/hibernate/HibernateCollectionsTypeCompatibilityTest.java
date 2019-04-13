@@ -64,11 +64,7 @@ public class HibernateCollectionsTypeCompatibilityTest extends AbstractHibernate
             if (ctor.getParameterTypes().length == 2) {
                 try {
                     instance = ctor.newInstance(null, secondArg);
-                } catch (final InstantiationException e) {
-                    e.printStackTrace();
-                } catch (final IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (final InvocationTargetException e) {
+                } catch (final InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
                 break;

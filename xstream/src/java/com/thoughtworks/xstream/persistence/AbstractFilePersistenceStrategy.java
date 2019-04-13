@@ -156,13 +156,10 @@ public abstract class AbstractFilePersistenceStrategy<K, V> implements Persisten
     private void writeFile(final File file, final Object value) {
         try {
             final FileOutputStream out = new FileOutputStream(file);
-            final Writer writer = encoding != null
-                ? new OutputStreamWriter(out, encoding)
-                : new OutputStreamWriter(out);
-            try {
+            try (Writer writer = encoding != null
+		    ? new OutputStreamWriter(out, encoding)
+		    : new OutputStreamWriter(out)) {
                 xstream.toXML(value, writer);
-            } finally {
-                writer.close();
             }
         } catch (final IOException e) {
             throw new StreamException(e);
@@ -176,13 +173,10 @@ public abstract class AbstractFilePersistenceStrategy<K, V> implements Persisten
     private V readFile(final File file) {
         try {
             final FileInputStream in = new FileInputStream(file);
-            final Reader reader = encoding != null ? new InputStreamReader(in, encoding) : new InputStreamReader(in);
-            try {
+            try (Reader reader = encoding != null ? new InputStreamReader(in, encoding) : new InputStreamReader(in)) {
                 @SuppressWarnings("unchecked")
                 final V value = (V)xstream.fromXML(reader);
                 return value;
-            } finally {
-                reader.close();
             }
         } catch (final FileNotFoundException e) {
             // not found... file.exists might generate a sync problem

@@ -141,7 +141,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             + "</implicit>";
         final ImplicitParameterizedType root = new ImplicitParameterizedType();
         root.signatureLines = new ArrayList<>();
-        root.signatureLines.add(new ArrayList<Point>());
+        root.signatureLines.add(new ArrayList<>());
         root.signatureLines.get(0).add(new Point(33, 11));
         assertBothWays(root, xml);
     }

@@ -67,10 +67,10 @@ public class SunLimitedUnsafeReflectionProviderTest extends AbstractReflectionPr
         reflectionProvider.writeField(thingy, "finalDouble", new Double(0.7), WithFinalFields.class);
         assertEquals(0.7, thingy.finalDouble, 0.0);
 
-        reflectionProvider.writeField(thingy, "finalBoolean", new Boolean(true), WithFinalFields.class);
+        reflectionProvider.writeField(thingy, "finalBoolean", true, WithFinalFields.class);
         assertEquals(true, thingy.finalBoolean);
 
-        reflectionProvider.writeField(thingy, "finalBoolean", new Boolean(false), null);
+        reflectionProvider.writeField(thingy, "finalBoolean", false, null);
         assertEquals(false, thingy.finalBoolean);
     }
 

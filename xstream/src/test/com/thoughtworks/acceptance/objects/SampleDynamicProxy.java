@@ -44,13 +44,14 @@ public class SampleDynamicProxy implements InvocationHandler {
 
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        if (method.getName().equals("equals")) {
-            return recursion || equals(args[0]) ? Boolean.TRUE : Boolean.FALSE;
-        } else if (method.getName().equals("hashCode")) {
-            return new Integer(System.identityHashCode(proxy));
-        } else {
-            return aField;
-        }
+	switch (method.getName()) {
+	    case "equals":
+		return recursion || equals(args[0]) ? Boolean.TRUE : Boolean.FALSE;
+	    case "hashCode":
+		return new Integer(System.identityHashCode(proxy));
+	    default:
+		return aField;
+	}
     }
 
     @Override

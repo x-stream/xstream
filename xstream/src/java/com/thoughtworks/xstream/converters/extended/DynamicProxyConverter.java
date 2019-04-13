@@ -40,12 +40,7 @@ public class DynamicProxyConverter implements Converter {
     private final ClassLoaderReference classLoaderReference;
     private final Mapper mapper;
     private static final Field HANDLER = Fields.locate(Proxy.class, InvocationHandler.class, false);
-    private static final InvocationHandler DUMMY = new InvocationHandler() {
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-            return null;
-        }
-    };
+    private static final InvocationHandler DUMMY = (final Object proxy, final Method method, final Object[] args) -> null;
 
     /**
      * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}

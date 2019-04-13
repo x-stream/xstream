@@ -129,7 +129,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
             + "    <id class=\"long\">42</id>\n"
             + "  </line>\n"
             + "</implicit>";
-        final ImplicitParameterizedType<Long> root = new ImplicitParameterizedType<Long>();
+        final ImplicitParameterizedType<Long> root = new ImplicitParameterizedType<>();
         root.signatureLines = new LinkedHashMap<>();
         root.signatureLines.put(42L, new Point<>(42L, 33, 11));
         assertBothWays(root, xml);

@@ -339,9 +339,9 @@ public class ParserBenchmark {
         dataFactory = DataFactory.valueOf(benchmark.substring(benchmark.lastIndexOf('.') + 6));
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * 1024);
-        final HierarchicalStreamWriter writer = driver.createWriter(baos);
-        dataFactory.writeData(writer);
-        writer.close();
+	try (HierarchicalStreamWriter writer = driver.createWriter(baos)) {
+	    dataFactory.writeData(writer);
+	}
         data = baos.toByteArray();
     }
 

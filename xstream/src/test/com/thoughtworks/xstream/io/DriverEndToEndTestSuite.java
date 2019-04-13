@@ -82,14 +82,14 @@ public class DriverEndToEndTestSuite extends TestSuite {
             @Override
             public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
                 if (reader.peekNextChild() == null) {
-                    return new ArrayList<Object>();
+                    return new ArrayList<>();
                 }
                 return super.unmarshal(reader, context);
             }
 
         });
 
-        final SampleLists<String, Boolean> in = new SampleLists<String, Boolean>();
+        final SampleLists<String, Boolean> in = new SampleLists<>();
         in.good.add("one");
         in.good.add("two");
         in.good.add("three");
@@ -104,18 +104,18 @@ public class DriverEndToEndTestSuite extends TestSuite {
 
     private void testStream(final HierarchicalStreamDriver driver) {
         final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        final HierarchicalStreamWriter writer = driver.createWriter(buffer);
-        writer.startNode("root");
-        writer.startNode("child1");
-        writer.startNode("baby");
-        writer.endNode();
-        writer.endNode();
-        writer.startNode("child2");
-        writer.addAttribute("A", "a");
-        writer.setValue("v");
-        writer.endNode();
-        writer.endNode();
-        writer.close();
+	try (HierarchicalStreamWriter writer = driver.createWriter(buffer)) {
+	    writer.startNode("root");
+	    writer.startNode("child1");
+	    writer.startNode("baby");
+	    writer.endNode();
+	    writer.endNode();
+	    writer.startNode("child2");
+	    writer.addAttribute("A", "a");
+	    writer.setValue("v");
+	    writer.endNode();
+	    writer.endNode();
+	}
 
         final HierarchicalStreamReader reader = driver.createReader(new ByteArrayInputStream(buffer.toByteArray()));
         Assert.assertEquals("root", reader.getNodeName());

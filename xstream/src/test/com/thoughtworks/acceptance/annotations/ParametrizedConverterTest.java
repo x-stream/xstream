@@ -117,7 +117,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
      * converterCache on AnnotationMapper is functioning properly.
      */
     public void testSameConverterWithDifferentType() {
-        final Type value = new Type(new Decimal("1.5"), new Boolean(true));
+        final Type value = new Type(new Decimal("1.5"), true);
         final String expected = ""
             + "<type>\n"
             + "  <decimal>1.5</decimal>\n"
@@ -154,7 +154,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testConverterRequiringNull() {
-        final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true), DerivedType.E.FOO);
+        final Type value = new DerivedType(new Decimal("1.5"), true, DerivedType.E.FOO);
         final String expected = "<dtype boolean='true' agreement='yes' enum='FOO'>1.5</dtype>".replace('\'', '"');
         assertBothWays(value, expected);
     }
@@ -168,7 +168,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testConverterWithSecondTypeParameter() {
-        final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true), DerivedType.E.FOO);
+        final Type value = new DerivedType(new Decimal("1.5"), true, DerivedType.E.FOO);
         final String expected = "<dtype boolean='true' agreement='yes' enum='FOO'>1.5</dtype>".replace('\'', '"');
         assertBothWays(value, expected);
     }
@@ -190,7 +190,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testConverterWithAllAttributes() {
-        final Type value = new DerivedType2(new Decimal("1.5"), new Boolean(true), DerivedType2.E.FOO);
+        final Type value = new DerivedType2(new Decimal("1.5"), true, DerivedType2.E.FOO);
         final String expected = "<dtype2 decimal='1.5' boolean='true' agreement='yes' enum='FOO'/>".replace('\'', '"');
         assertBothWays(value, expected);
     }

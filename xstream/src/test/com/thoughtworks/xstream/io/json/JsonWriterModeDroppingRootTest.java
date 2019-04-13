@@ -107,7 +107,7 @@ public class JsonWriterModeDroppingRootTest extends JsonHierarchicalStreamDriver
     public void testRealTypeIsHonoredWhenWritingTheValue() {
         xstream.alias("sa", SystemAttributes.class);
 
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         list.add("joe");
         list.add("mauro");
         final SystemAttributes[] sa = new SystemAttributes[2];

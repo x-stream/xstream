@@ -469,7 +469,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
     }
 
     public void testWithSortedSet() {
-        final Zoo zoo = new Zoo(new TreeSet<Animal>());
+        final Zoo zoo = new Zoo(new TreeSet<>());
         zoo.add(new Animal("Lion"));
         zoo.add(new Animal("Ape"));
 
@@ -569,7 +569,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             xstream.addImplicitCollection(Animal.class, "name");
             fail("Thrown " + InitializationException.class.getName() + " expected");
         } catch (final InitializationException e) {
-            assertTrue(e.getMessage().indexOf("declares no collection") >= 0);
+            assertTrue(e.getMessage().contains("declares no collection"));
         }
     }
 
@@ -757,8 +757,8 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         final Country country = new Country();
         country.add(new Animal("Cow"));
         country.add(new Animal("Sheep"));
-        ((Area)country).animals.add(new Animal("Falcon"));
-        ((Area)country).animals.add(new Animal("Sparrow"));
+        country.animals.add(new Animal("Falcon"));
+        country.animals.add(new Animal("Sparrow"));
         country.animals.add(new Animal("Wale"));
         country.animals.add(new Animal("Dolphin"));
 

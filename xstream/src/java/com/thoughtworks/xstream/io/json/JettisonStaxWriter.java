@@ -38,7 +38,7 @@ import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 public class JettisonStaxWriter extends StaxWriter {
 
     private final MappedNamespaceConvention convention;
-    private final Deque<String> stack = new ArrayDeque<String>();
+    private final Deque<String> stack = new ArrayDeque<>();
 
     /**
      * @since 1.4
