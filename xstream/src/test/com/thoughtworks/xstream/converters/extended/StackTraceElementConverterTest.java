@@ -41,6 +41,12 @@ public class StackTraceElementConverterTest extends AbstractAcceptanceTest {
         assertBothWays(trace, expectedXml);
     }
 
+    public void testIncludesDebugInformationWithUnusualFilenames() {
+        final StackTraceElement trace = factory.element("com.blah.SomeClass", "someMethod", "jar:file:/tmp/x-1.0.jar!/com/blah/SomeClass.groovy", 22);
+        final String expectedXml = "<trace>com.blah.SomeClass.someMethod(jar:file:/tmp/x-1.0.jar!/com/blah/SomeClass.groovy:22)</trace>";
+        assertBothWays(trace, expectedXml);
+    }
+
     public void testIncludesNativeMethods() {
         final StackTraceElement trace = factory.nativeMethodElement("com.blah.SomeClass", "someMethod");
         final String expectedXml = "<trace>com.blah.SomeClass.someMethod(Native Method)</trace>";
