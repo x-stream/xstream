@@ -143,8 +143,7 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             } else {
                 // assertEquals(expected.getClass(), actual.getClass());
                 if (!expected.equals(actual)) {
-                    assertEquals("Object deserialization failed", "DESERIALIZED OBJECT\n" + xstream.toXML(expected),
-                        "DESERIALIZED OBJECT\n" + xstream.toXML(actual));
+                    assertEquals(xstream.toXML(expected) + " vs. " + xstream.toXML(actual), expected, actual);
                 }
             }
         }
