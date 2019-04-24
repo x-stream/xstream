@@ -33,7 +33,7 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
     // |-------1------| |--2--| |----3-----| |4|
     // (Note group 4 is optional is optional and only present if a colon char exists.)
 
-    private static final Pattern PATTERN = Pattern.compile("^(.+)\\.([^\\(]+)\\(([^:]*)(:(\\d+))?\\)$");
+    private static final Pattern PATTERN = Pattern.compile("^(.+)\\.([^\\(]+)\\((.*?)(:(\\d+))?\\)$");
     private static final StackTraceElementFactory FACTORY = new StackTraceElementFactory();
 
     static class StackTraceElementFactory {
