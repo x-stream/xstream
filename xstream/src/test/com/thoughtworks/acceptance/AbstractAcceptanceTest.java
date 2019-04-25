@@ -28,6 +28,7 @@ import com.thoughtworks.xstream.core.util.DefaultDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.binary.BinaryStreamReader;
 import com.thoughtworks.xstream.io.binary.BinaryStreamWriter;
+import junit.framework.Assert;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -131,7 +132,13 @@ public abstract class AbstractAcceptanceTest extends TestCase {
     }
 
     /**
-     * More descriptive version of assertEquals
+     * XStream-specific variant of {@link Assert#assertEquals(Object, Object)}.
+     * While a positive {@link Object#equals} suffices for the comparison to pass,
+     * it also suffices for the XStream serialized form to be identical.
+     * This is commonly necessary when running {@link #assertBothWays(Object, String)}
+     * on a type which does not happen to override {@link Object#equals}.
+     * More subtly, it also reduces the strength of test coverage for lossy converters:
+     * those which can round-trip to an object that actually has different state than the original.
      */
     protected void assertObjectsEqual(final Object expected, final Object actual) {
         if (expected == null) {
@@ -141,9 +148,9 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             if (actual.getClass().isArray()) {
                 assertArrayEquals(expected, actual);
             } else {
-                // assertEquals(expected.getClass(), actual.getClass());
                 if (!expected.equals(actual)) {
-                    assertEquals(xstream.toXML(expected) + " vs. " + xstream.toXML(actual), expected, actual);
+                    assertEquals("Object deserialization failed", "DESERIALIZED OBJECT\n" + xstream.toXML(expected),
+                        "DESERIALIZED OBJECT\n" + xstream.toXML(actual));
                 }
             }
         }
