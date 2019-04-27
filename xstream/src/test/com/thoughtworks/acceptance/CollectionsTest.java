@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2017, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -346,7 +346,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         final Collection<Map.Entry<Boolean, String>> set = map.entrySet();
         xstream.alias("entry-set", set.getClass());
 
-        if (System.getProperty("java.vm.vendor").indexOf("IBM") >= 0) {
+        if (System.getProperty("java.vm.vendor").contains("IBM")) {
             assertBothWays(set, ""//
                 + "<entry-set>\n"
                 + "  <associatedMap>\n"

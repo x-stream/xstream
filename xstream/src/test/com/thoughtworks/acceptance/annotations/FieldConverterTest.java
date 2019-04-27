@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2016, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -263,7 +263,7 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
                 th = th.getCause();
                 assertNotNull("No causing InitializationException.", th);
                 if (th instanceof InitializationException) {
-                    assertTrue("No hint for enum types only", th.getMessage().indexOf(" enum ") >= 0);
+                    assertTrue("No hint for enum types only", th.getMessage().contains(" enum "));
                     break;
                 }
             }
