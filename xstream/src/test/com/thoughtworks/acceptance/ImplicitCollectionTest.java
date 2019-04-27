@@ -569,7 +569,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
             xstream.addImplicitCollection(Animal.class, "name");
             fail("Thrown " + InitializationException.class.getName() + " expected");
         } catch (final InitializationException e) {
-            assertTrue(e.getMessage().indexOf("declares no collection") >= 0);
+            assertTrue(e.getMessage().contains("declares no collection"));
         }
     }
 

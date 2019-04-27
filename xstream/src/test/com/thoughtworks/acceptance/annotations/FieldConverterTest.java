@@ -263,7 +263,7 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
                 th = th.getCause();
                 assertNotNull("No causing InitializationException.", th);
                 if (th instanceof InitializationException) {
-                    assertTrue("No hint for enum types only", th.getMessage().indexOf(" enum ") >= 0);
+                    assertTrue("No hint for enum types only", th.getMessage().contains(" enum "));
                     break;
                 }
             }

@@ -346,7 +346,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         final Collection<Map.Entry<Boolean, String>> set = map.entrySet();
         xstream.alias("entry-set", set.getClass());
 
-        if (System.getProperty("java.vm.vendor").indexOf("IBM") >= 0) {
+        if (System.getProperty("java.vm.vendor").contains("IBM")) {
             assertBothWays(set, ""//
                 + "<entry-set>\n"
                 + "  <associatedMap>\n"

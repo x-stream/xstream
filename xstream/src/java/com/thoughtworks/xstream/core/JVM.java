@@ -309,14 +309,14 @@ public class JVM implements Caching {
     }
 
     private static boolean isIBM() {
-        return vendor.indexOf("IBM") != -1;
+        return vendor.contains("IBM");
     }
 
     /**
      * @since 1.4
      */
     private static boolean isAndroid() {
-        return vendor.indexOf("Android") != -1; // and version 19 (4.4 KitKat) for Java 7
+        return vendor.contains("Android"); // and version 19 (4.4 KitKat) for Java 7
     }
 
     /**

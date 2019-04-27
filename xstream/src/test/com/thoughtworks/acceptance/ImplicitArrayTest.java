@@ -409,7 +409,7 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
             xstream.addImplicitArray(Animal.class, "name");
             fail("Thrown " + InitializationException.class.getName() + " expected");
         } catch (final InitializationException e) {
-            assertTrue(e.getMessage().indexOf("declares no collection") >= 0);
+            assertTrue(e.getMessage().contains("declares no collection"));
         }
     }
 
@@ -418,7 +418,7 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
             xstream.addImplicitArray(Aquarium.class, "fish", Farm.class);
             fail("Thrown " + InitializationException.class.getName() + " expected");
         } catch (final InitializationException e) {
-            assertTrue(e.getMessage().indexOf("array type is not compatible") >= 0);
+            assertTrue(e.getMessage().contains("array type is not compatible"));
         }
     }
 

@@ -222,7 +222,7 @@ public class ToAttributedValueConverterTest extends TestCase {
             new TreeMarshaller(compactWriter, converterLookup, mapper).start(x, null);
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
-            assertTrue(e.getMessage().indexOf("innerObj") >= 0);
+            assertTrue(e.getMessage().contains("innerObj"));
         }
     }
 }
