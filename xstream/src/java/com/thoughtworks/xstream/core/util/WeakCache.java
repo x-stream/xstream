@@ -92,7 +92,7 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
 
     @Override
     public int size() {
-        if (map.size() == 0) {
+        if (map.isEmpty()) {
             return 0;
         }
         final int i[] = new int[1];
@@ -112,7 +112,7 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
     @Override
     public Collection<V> values() {
         final Collection<V> collection = new ArrayList<>();
-        if (map.size() != 0) {
+        if (!map.isEmpty()) {
             iterate(new Visitor() {
 
                 @Override
@@ -131,7 +131,7 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
     @Override
     public Set<Map.Entry<K, V>> entrySet() {
         final Set<Map.Entry<K, V>> set = new HashSet<>();
-        if (map.size() != 0) {
+        if (!map.isEmpty()) {
             iterate(new Visitor() {
 
                 @Override
