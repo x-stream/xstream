@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,12 +27,11 @@ public class DurationConverterTest extends TestCase {
     public void testConversion() throws Exception {
         final SingleValueConverter converter = new DurationConverter();
         DatatypeFactory factory = DatatypeFactory.newInstance();
-        for (int i = 0; i < STRINGS.length; i++) {
-            final String s = STRINGS[i];
-            Duration o = factory.newDuration(s);
-            assertEquals(s, converter.toString(o));
-            assertEquals(o, converter.fromString(s));
-        }
+	for (String s : STRINGS) {
+	    Duration o = factory.newDuration(s);
+	    assertEquals(s, converter.toString(o));
+	    assertEquals(o, converter.fromString(s));
+	}
     }
 
 }
