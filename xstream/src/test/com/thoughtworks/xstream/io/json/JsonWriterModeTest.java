@@ -87,11 +87,11 @@ public class JsonWriterModeTest extends TestCase {
             }
             if (new HashSet<String>(Arrays.asList(names)).equals(new HashSet<String>(Arrays.asList(JSONObject.getNames(
                 object2))))) {
-                for (int i = 0; i < names.length; i++) {
-                    if (!equals(object1.get(names[i]), object2.get(names[i]))) {
-                        return false;
-                    }
-                }
+		for (String name : names) {
+		    if (!equals(object1.get(name), object2.get(name))) {
+			return false;
+		    }
+		}
                 return true;
             }
         } catch (final JSONException e) {
