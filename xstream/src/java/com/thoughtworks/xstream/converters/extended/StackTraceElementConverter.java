@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -33,17 +33,21 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
     // |-------1------| |--2--| |----3-----| |4|
     // (Note group 4 is optional is optional and only present if a colon char exists.)
 
-    private static final Pattern PATTERN = Pattern.compile("^(.+)\\.([^\\(]+)\\((.*?)(:(\\d+))?\\)$");
+    private static final Pattern PATTERN = Pattern.compile("^(.+)\\.([^\\(]+)\\((.*?)(:(-?\\d+))?\\)$");
     private static final StackTraceElementFactory FACTORY = new StackTraceElementFactory();
 
     static class StackTraceElementFactory {
 
         public StackTraceElement nativeMethodElement(String declaringClass, String methodName) {
-            return create(declaringClass, methodName, "Native Method", -2);
+            return create(declaringClass, methodName, null, -2);
+        }
+
+        public StackTraceElement nativeMethodElement(String declaringClass, String methodName, String fileName) {
+            return create(declaringClass, methodName, fileName, -2);
         }
 
         public StackTraceElement unknownSourceElement(String declaringClass, String methodName) {
-            return create(declaringClass, methodName, "Unknown Source", -1);
+            return create(declaringClass, methodName, null, -1);
         }
 
         public StackTraceElement element(String declaringClass, String methodName, String fileName) {
@@ -57,6 +61,17 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
         private StackTraceElement create(String declaringClass, String methodName, String fileName, int lineNumber) {
             return new StackTraceElement(declaringClass, methodName, fileName, lineNumber);
         }
+
+        private String toString(final Object obj) {
+            if (obj == null)
+                return null;
+            StackTraceElement element = StackTraceElement.class.cast(obj);
+            if (element.isNativeMethod() && element.getFileName() != null) {
+                return String
+                    .format("%s.%s(%s:-2)", element.getClassName(), element.getMethodName(), element.getFileName());
+            }
+            return obj.toString();
+        }
     }
 
     @Override
@@ -66,7 +81,7 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
 
     @Override
     public String toString(final Object obj) {
-        final String s = super.toString(obj);
+        final String s = FACTORY.toString(obj);
         // JRockit adds ":???" for invalid line number
         return s.replaceFirst(":\\?\\?\\?", "");
     }
