@@ -131,7 +131,7 @@ public abstract class AbstractAcceptanceTest extends TestCase {
     }
 
     /**
-     * More descriptive version of assertEquals
+     * Alternative version of assertEquals comparing the XML representation of the two objects.
      */
     protected void assertObjectsEqual(final Object expected, final Object actual) {
         if (expected == null) {
