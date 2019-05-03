@@ -937,27 +937,27 @@
     <version.plugin.codehaus.xsite>1.3</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>3.5.1</version.plugin.felix.bundle>
     <version.plugin.maven.antrun>1.8</version.plugin.maven.antrun>
-    <version.plugin.maven.assembly>3.1.0</version.plugin.maven.assembly>
+    <version.plugin.maven.assembly>3.1.1</version.plugin.maven.assembly>
     <version.plugin.maven.clean>3.1.0</version.plugin.maven.clean>
-    <version.plugin.maven.compiler>3.8.0</version.plugin.maven.compiler>
+    <version.plugin.maven.compiler>3.8.1</version.plugin.maven.compiler>
     <version.plugin.maven.dependency>3.1.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>3.0.0-M1</version.plugin.maven.deploy>
     <version.plugin.maven.enforcer>3.0.0-M2</version.plugin.maven.enforcer>
     <version.plugin.maven.gpg>1.6</version.plugin.maven.gpg>
     <version.plugin.maven.install>3.0.0-M1</version.plugin.maven.install>
     <version.plugin.maven.jar>3.1.1</version.plugin.maven.jar>
-    <version.plugin.maven.javadoc>3.0.1</version.plugin.maven.javadoc>
+    <version.plugin.maven.javadoc>3.1.0</version.plugin.maven.javadoc>
     <version.plugin.maven.jxr>3.0.0</version.plugin.maven.jxr>
     <version.plugin.maven.release>2.5.3</version.plugin.maven.release>
     <version.plugin.maven.resources>3.1.0</version.plugin.maven.resources>
     <version.plugin.maven.site>3.7.1</version.plugin.maven.site>
     <version.plugin.maven.source>3.0.1</version.plugin.maven.source>
-    <version.plugin.maven.surefire>3.0.0-M2</version.plugin.maven.surefire>
+    <version.plugin.maven.surefire>3.0.0-M3</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>3.0.0</version.plugin.mojo.build-helper>
-    <version.plugin.mojo.flatten>1.0.1</version.plugin.mojo.flatten>
+    <version.plugin.mojo.flatten>1.1.0</version.plugin.mojo.flatten>
     <version.plugin.io.wcm.devops.eclipse>3.1.0</version.plugin.io.wcm.devops.eclipse>
     <version.plugin.eluder.coveralls>4.3.0</version.plugin.eluder.coveralls>
-    <version.plugin.jacoco>0.8.2</version.plugin.jacoco>
+    <version.plugin.jacoco>0.8.3</version.plugin.jacoco>
 
     <version.cglib.nodep>2.2</version.cglib.nodep>
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
