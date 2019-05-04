@@ -115,6 +115,7 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalDTD", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.accessExternalSchema", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.useCatalog", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.internal.lambda.dumpProxyClasses", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.elementAttributeLimit", "read"));
@@ -125,6 +126,7 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxParameterEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxXMLNameLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.overrideDefaultParser", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.totalEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("sun.io.serialization.extendedDebugInfo", "read"));
