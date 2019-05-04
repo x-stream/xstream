@@ -43,12 +43,16 @@
 	<h2>Minor changes</h2>
 
 	<ul>
-		<li>Switch Woodstox parser dependency from org.codehaus.woodstox:wstx-asl to com.fasterxml.woodstox:woodstox-core.</li>
+		<li>Switch Woodstox parser dependency from org.codehaus.woodstox:wstx-asl to
+		com.fasterxml.woodstox:woodstox-core.</li>
 		<li>GHPR:#15, JIRA:XSTR-727, JIRA:XSTR-772: Make use of ConcurrentHashMap.</li>
 		<li>GHI:#134: Possible reuse of instances for Byte, Character, Short, Integer and Long while unmarshalling.</li>
 		<li>GHPR:#145: FileName parameter of StackTraceElement can be used for other source code units than file,
 		converter handles this.</li>
-		<li>StackTraceElementConverter keeps now information about the source code unit for native methods if available.</li>
+		<li>StackTraceElementConverter keeps now information about the source code unit for native methods if
+		available.</li>
+		<li>StackTraceElementConverter keeps for Java 9 or higher information about the class loader and module name
+		and its version.</li>
 		<li>The file name of unmarshalled StackTraceElement instances is no longer set to <em>Unknown Source</em> or
 		<em>Native Method</em>.</li>
 		<li>No need for reflection in StackTraceElementFactory anymore since Java 5.</li>
@@ -73,7 +77,8 @@
 
 	<ul>
 		<li>Drop automatic reference support at deserialization time for immutable types declared in the 1.4.x version
-			series (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection types).</li>
+			series (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection
+			types).</li>
 		<li>No support for Hibernate 3 collections.</li>
 	</ul>
 

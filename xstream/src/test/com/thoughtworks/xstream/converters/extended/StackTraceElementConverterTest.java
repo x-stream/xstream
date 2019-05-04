@@ -62,8 +62,7 @@ public class StackTraceElementConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testNativeMethodsWithSourceCodeUnit() {
-        final StackTraceElement trace = factory
-            .nativeMethodElement("com.blah.SomeClass", "someMethod", "SomeClass.java");
+        final StackTraceElement trace = factory.element("com.blah.SomeClass", "someMethod", "SomeClass.java", -2);
         final String expectedXml = "<trace>com.blah.SomeClass.someMethod(SomeClass.java:-2)</trace>";
         assertBothWays(trace, expectedXml);
         final StackTraceElement unmarshalled = assertBothWays(trace, expectedXml);

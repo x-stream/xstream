@@ -235,9 +235,9 @@
       </properties>
     </profile>
     <profile>
-      <id>jdk18-ge</id>
+      <id>jdk9-ge</id>
       <activation>
-        <jdk>[1.8,)</jdk>
+        <jdk>[9,)</jdk>
       </activation>
       <build>
         <plugins>
@@ -286,6 +286,40 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs>
+                <arg>-XDignore.symbol.file</arg>
+              </compilerArgs>
+              <excludes>
+                <exclude>**/Lambda**</exclude>
+                <exclude>**/time/**</exclude>
+                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
+              </excludes>
+              <testExcludes>
+                <exclude>**/Lambda**</exclude>
+                <exclude>**/*9Test.java</exclude>
+                <exclude>**/*18TypesTest.java</exclude>
+              </testExcludes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>compile-jdk18</id>
+                <configuration>
+                  <source>1.8</source>
+                  <target>1.8</target>
+                  <excludes combine.self="override"/>
+                  <textExcludes combine.self="override"/>
+                </configuration>
+                <goals>
+                  <goal>compile</goal>
+                  <goal>testCompile</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
               <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
@@ -317,6 +351,7 @@
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/Base64JavaUtilCodecTest.java</exclude>
+                <exclude>**/*9Test.java</exclude>
                 <exclude>**/*18TypesTest.java</exclude>
               </testExcludes>
             </configuration>
