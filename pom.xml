@@ -467,31 +467,25 @@
       </dependency>
 
       <dependency>
-        <groupId>xml-apis</groupId>
-        <artifactId>xml-apis</artifactId>
-        <version>${version.xml-apis}</version>
-      </dependency>
-
-      <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
         <version>${version.xerces.impl}</version>
       </dependency>
 
       <dependency>
-        <groupId>javax.activation</groupId>
-        <artifactId>javax.activation-api</artifactId>
-        <version>${version.javax.activation.api}</version>
+        <groupId>jakarta.activation</groupId>
+        <artifactId>jakarta.activation-api</artifactId>
+        <version>${version.jakarta.activation.api}</version>
       </dependency>
       <dependency>
-        <groupId>javax.annotation</groupId>
-        <artifactId>javax.annotation-api</artifactId>
-        <version>${version.javax.annotation.api}</version>
+        <groupId>jakarta.annotation</groupId>
+        <artifactId>jakarta.annotation-api</artifactId>
+        <version>${version.jakarta.annotation.api}</version>
       </dependency>
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>${version.javax.xml.bind.api}</version>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>${version.jakarta.xml.bind.api}</version>
       </dependency>
 
       <dependency>
@@ -967,10 +961,10 @@
     <version.commons.codec>1.11</version.commons.codec>
     <version.commons.lang3>3.8.1</version.commons.lang3>
     <version.hsqldb>2.2.8</version.hsqldb>
+    <version.jakarta.activation.api>1.2.1</version.jakarta.activation.api>
+    <version.jakarta.annotation.api>1.3.4</version.jakarta.annotation.api>
+    <version.jakarta.xml.bind.api>2.3.2</version.jakarta.xml.bind.api>
     <version.javaassist>3.12.1.GA</version.javaassist>
-    <version.javax.activation.api>1.2.0</version.javax.activation.api>
-    <version.javax.annotation.api>1.3.2</version.javax.annotation.api>
-    <version.javax.xml.bind.api>2.3.1</version.javax.xml.bind.api>
     <version.jmock>1.0.1</version.jmock>
     <version.joda-time>2.10.1</version.joda-time>
     <version.junit>3.8.1</version.junit>
@@ -986,9 +980,7 @@
     <version.org.openjdk.jmh>1.21</version.org.openjdk.jmh>
     <version.org.slf4j>1.6.1</version.org.slf4j>
     <version.stax>1.2.0</version.stax>
-    <version.stax.api>1.0.1</version.stax.api>
     <version.xerces.impl>2.8.1</version.xerces.impl>
-    <version.xml-apis>1.3.04</version.xml-apis>
     <version.xmlpull>1.1.3.1</version.xmlpull>
     <version.xom>1.3.2</version.xom>
     <version.xpp3>1.1.4c</version.xpp3>
