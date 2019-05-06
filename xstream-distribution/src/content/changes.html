@@ -49,6 +49,7 @@
 		<li>GHI:#134: Possible reuse of instances for Byte, Character, Short, Integer and Long while unmarshalling.</li>
 		<li>GHPR:#145: FileName parameter of StackTraceElement can be used for other source code units than file,
 		converter handles this.</li>
+		<li>GHI:#4: Cannot add suppressed exception to unmarshalled Throwable.</li>
 		<li>StackTraceElementConverter keeps now information about the source code unit for native methods if
 		available.</li>
 		<li>StackTraceElementConverter keeps for Java 9 or higher information about the class loader and module name
@@ -71,14 +72,18 @@
 		<li>Added c.t.x.io.xml.SimpleStaxDriver.</li>
 		<li>Added c.t.x.io.HierarchicalStreamReader.getLevel()</li>
 		<li>Deprecated obsolete method c.t.x.XStream.setupDefaultSecurity.</li>
+		<li>Added c.t.x.converters.extended.ThrowableConverter.ThrowableConverter(Mapper, ConverterLookup).</li>
+		<li>Deprecated c.t.x.converters.extended.ThrowableConverter.ThrowableConverter(ConverterLookup).</li>
 	</ul>
 
 	<h2>Stream compatibility</h2>
 
 	<ul>
 		<li>Drop automatic reference support at deserialization time for immutable types declared in the 1.4.x version
-			series (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection
-			types).</li>
+		series (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection
+		types).</li>
+		<li>ThrowableConverter uses by default now format of SerializableConverter, but can still read old format of
+		1.4.x version.</li>
 		<li>No support for Hibernate 3 collections.</li>
 	</ul>
 

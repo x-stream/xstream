@@ -881,7 +881,7 @@ public class XStream {
         registerConverter(new StringConverter(), PRIORITY_NORMAL);
         registerConverter(new StringBufferConverter(), PRIORITY_NORMAL);
         registerConverter(new StringBuilderConverter(), PRIORITY_NORMAL);
-        registerConverter(new ThrowableConverter(converterLookup), PRIORITY_NORMAL);
+        registerConverter(new ThrowableConverter(mapper, converterLookup), PRIORITY_NORMAL);
         registerConverter(new StackTraceElementConverter(), PRIORITY_NORMAL);
         registerConverter(new DateConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
