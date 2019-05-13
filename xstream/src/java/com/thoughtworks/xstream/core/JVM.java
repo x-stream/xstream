@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,6 +44,7 @@ public class JVM implements Caching {
     private static final boolean isAWTAvailable;
     private static final boolean isSwingAvailable;
     private static final boolean isSQLAvailable;
+    private static final boolean isUnnamedModule;
     private static final boolean canAllocateWithUnsafe;
     private static final boolean canWriteWithUnsafe;
     private static final boolean optimizedTreeSetAddAll;
@@ -85,6 +86,11 @@ public class JVM implements Caching {
     }
 
     static {
+        final Exception exception = new RuntimeException();
+        exception.fillInStackTrace();
+        final StackTraceElement[] stackTrace = exception.getStackTrace();
+        isUnnamedModule = !stackTrace[0].toString().contains("xstream@"); // Java 9: getModule() == null
+    
         boolean test = true;
         Object unsafe = null;
         try {
@@ -352,8 +358,8 @@ public class JVM implements Caching {
     public static <T> Class<? extends T> loadClassForName(final String name, final boolean initialize) {
         try {
             @SuppressWarnings("unchecked")
-            final Class<? extends T> clazz = (Class<? extends T>)Class.forName(name, initialize, JVM.class
-                .getClassLoader());
+            final Class<? extends T> clazz = (Class<? extends T>)Class
+                .forName(name, initialize, JVM.class.getClassLoader());
             return clazz;
         } catch (final LinkageError e) {
             return null;
@@ -520,6 +526,16 @@ public class JVM implements Caching {
     }
 
     /**
+     * Checks for running in the unnamed module for Java 9 or greater.
+     * 
+     * @return true for Java 8 or later or when XStream is running as part of the unnamed module in Java 9 or higher
+     * @since upcoming
+     */
+    public static boolean isUnnamedModule() {
+        return isUnnamedModule;
+    }
+
+    /**
      * Checks if the JVM supports SQL.
      *
      * @deprecated As of 1.4.5 use {@link #isSQLAvailable()}
@@ -616,6 +632,7 @@ public class JVM implements Caching {
         System.out.println("java.vendor: " + System.getProperty("java.vendor"));
         System.out.println("java.vm.name: " + System.getProperty("java.vm.name"));
         System.out.println("Version: " + majorJavaVersion);
+        System.out.println("XStream in unnamed module: " + isUnnamedModule());
         System.out.println("XStream support for enhanced Mode: " + canUseSunUnsafeReflectionProvider());
         System.out.println("XStream support for reduced Mode: " + canUseSunLimitedUnsafeReflectionProvider());
         System.out.println("Supports AWT: " + isAWTAvailable());
@@ -630,7 +647,7 @@ public class JVM implements Caching {
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());
         System.out.println("Can create derive ObjectOutputStream: " + canCreateDerivedObjectOutputStream());
         System.out.println("Reverse field order detected for JDK: " + reverseJDK);
-        System.out.println("Reverse field order detected (only if JVM class itself has been compiled): "
-            + reverseLocal);
+        System.out
+            .println("Reverse field order detected (only if JVM class itself has been compiled): " + reverseLocal);
     }
 }
