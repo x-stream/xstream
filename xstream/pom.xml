@@ -191,6 +191,7 @@
                 <manifestEntries>
                   <Specification-Title>${project.name} Test</Specification-Title>
                   <Implementation-Title>${project.name} Test</Implementation-Title>
+                  <Bundle-License>BSD-3-Clause</Bundle-License>
                 </manifestEntries>
               </archive>
             </configuration>

@@ -223,7 +223,7 @@
 
   <licenses>
     <license>
-      <name>BSD style</name>
+      <name>BSD-3-Clause</name>
       <url>http://x-stream.github.io/license.html</url>
       <distribution>repo</distribution>
     </license>
@@ -646,6 +646,7 @@
               </manifest>
               <manifestEntries>
                 <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version>
+                <Bundle-License>BSD-3-Clause</Bundle-License>
                 <Automatic-Module-Name>${jar.module.name}</Automatic-Module-Name>
                 <X-Compile-Source>${version.java.source}</X-Compile-Source>
                 <X-Compile-Target>${version.java.target}</X-Compile-Target>
@@ -682,6 +683,7 @@
               </manifest>
               <manifestEntries>
                 <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version>
+                <Bundle-License>BSD-3-Clause</Bundle-License>
               </manifestEntries>
             </archive>
           </configuration>
@@ -739,6 +741,7 @@
                 <Bundle-SymbolicName>${project.artifactId}.sources</Bundle-SymbolicName>
                 <Bundle-Vendor>${project.organization.name} Sources</Bundle-Vendor>
                 <Bundle-Version>${project.info.osgiVersion} Sources</Bundle-Version>
+                <Bundle-License>BSD-3-Clause</Bundle-License>
                 <Eclipse-SourceBundle>${project.artifactId};version=${project.info.osgiVersion}</Eclipse-SourceBundle>
                 <X-Compile-Source>${version.java.source}</X-Compile-Source>
                 <X-Compile-Target>${version.java.target}</X-Compile-Target>
@@ -805,6 +808,7 @@
             <instructions>
               <_nouses>true</_nouses>
               <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+              <Bundle-License>BSD-3-Clause</Bundle-License>
               <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version><!-- FELIX-3392 -->
             </instructions>
             <archive>
