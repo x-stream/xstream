@@ -394,7 +394,16 @@
 
   <properties>
     <bundle.export.package>!com.thoughtworks.xstream.core.util,com.thoughtworks.xstream.*;-noimport:=true</bundle.export.package>
-    <bundle.import.package>org.xmlpull.mxp1;resolution:=optional,org.xmlpull.v1;resolution:=optional,*</bundle.import.package>
+    <bundle.import.package>
+        org.xmlpull.mxp1;resolution:=optional,
+        org.xmlpull.v1;resolution:=optional,
+        com.ibm.*;resolution:=optional,
+        com.sun.*;resolution:=optional,
+        javax.*;resolution:=optional,
+        org.xml.*;resolution:=optional,
+        sun.*;resolution:=optional,
+        *
+    </bundle.import.package>
   </properties>
 
 </project>
