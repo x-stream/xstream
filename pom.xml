@@ -864,6 +864,7 @@
           <configuration>
             <manifestLocation>${project.build.directory}/OSGi</manifestLocation>
             <instructions>
+              <_noee>true</_noee>
               <_nouses>true</_nouses>
               <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
               <Bundle-License>BSD-3-Clause</Bundle-License>
