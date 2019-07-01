@@ -588,7 +588,7 @@
 
   <properties>
     <bundle.export.package>!com.thoughtworks.xstream.core.util,com.thoughtworks.xstream.*;-noimport:=true</bundle.export.package>
-    <bundle.import.package>org.xmlpull.mxp1;resolution:=optional,org.xmlpull.v1;resolution:=optional,*</bundle.import.package>
+    <bundle.import.package>org.xmlpull.mxp1;resolution:=optional,org.xmlpull.v1;resolution:=optional,com.ibm.xml.xlxp.api.stax;resolution:=optional,com.sun.xml.internal.stream;resolution:=optional,javax.xml.bind;version="[2.3,3)";resolution:=optional,*</bundle.import.package>
   </properties>
 
 </project>
