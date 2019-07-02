@@ -68,7 +68,7 @@ public class SjsxpDriver extends StaxDriver {
         } catch (ClassNotFoundException e) {
             exception = e;
         }
-        throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLInputFaqctory instance.", exception);
+        throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLInputFactory instance.", exception);
     }
 
     /**
@@ -85,7 +85,7 @@ public class SjsxpDriver extends StaxDriver {
         } catch (ClassNotFoundException e) {
             exception = e;
         }
-        throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLOutputFaqctory instance.", exception);
+        throw new StreamException("Cannot create SJSXP (Sun JDK 6 StAX) XMLOutputFactory instance.", exception);
     }
 
 }
