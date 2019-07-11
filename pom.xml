@@ -263,6 +263,7 @@
     <module>xstream</module>
     <module>xstream-hibernate</module>
     <module>xstream-benchmark</module>
+    <module>xstream-its</module>
   </modules>
 
   <licenses>
@@ -617,6 +618,70 @@
         <scope>test</scope>
       </dependency>
 
+      <!-- Pax Exam Dependencies -->
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-junit4</artifactId>
+        <version>${version.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-invoker-junit</artifactId>
+        <version>${version.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-container-native</artifactId>
+        <version>${version.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-inject</artifactId>
+        <version>${version.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-extender-service</artifactId>
+        <version>${version.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Preferred link because it does not require an mvn url handler implicitely. -->
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-link-mvn</artifactId>
+        <version>${version.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-atinject_1.0_spec</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-link-assembly</artifactId>
+        <version>${version.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.framework</artifactId>
+        <version>${version.felix}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -887,6 +952,10 @@
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>${version.plugin.jacoco}</version>
         </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.22.0</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -978,6 +1047,7 @@
     <version.commons.io>1.4</version.commons.io>
     <version.commons.lang>2.4</version.commons.lang>
     <version.dom4j>1.6.1</version.dom4j>
+    <version.felix>4.4.1</version.felix>
     <version.hsqldb>2.2.8</version.hsqldb>
     <version.javaassist>3.12.1.GA</version.javaassist>
     <version.javax.activation>1.1.1</version.javax.activation>
@@ -996,6 +1066,7 @@
     <version.org.json>20080701</version.org.json>
     <version.org.openjdk.jmh>1.21</version.org.openjdk.jmh>
     <version.org.slf4j>1.6.1</version.org.slf4j>
+    <version.pax.exam>4.4.0</version.pax.exam>
     <version.stax>1.2.0</version.stax>
     <version.stax.api>1.0.1</version.stax.api>
     <version.xerces.impl>2.8.1</version.xerces.impl>
