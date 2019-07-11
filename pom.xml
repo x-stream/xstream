@@ -952,6 +952,10 @@
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>${version.plugin.jacoco}</version>
         </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.22.0</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
