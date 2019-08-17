@@ -143,12 +143,9 @@ public class JVM implements Caching {
         }
         reflectionProviderType = type;
         canWriteWithUnsafe = test;
-        final Comparator<Object> comparator = new Comparator<Object>() {
-            @Override
-            public int compare(final Object o1, final Object o2) {
-                throw new RuntimeException();
-            }
-        };
+        final Comparator<Object> comparator = (final Object o1, final Object o2) -> {
+			throw new RuntimeException();
+		};
         final SortedMap<Object, Object> map = new PresortedMap<>(comparator);
         map.put("one", null);
         map.put("two", null);

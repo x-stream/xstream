@@ -131,12 +131,9 @@ public class FieldDictionaryTest extends TestCase {
 
         final List<String> exceptions = Collections.synchronizedList(new ArrayList<String>());
 
-        final Thread.UncaughtExceptionHandler exceptionHandler = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(final Thread th, final Throwable ex) {
-                exceptions.add("Exception " + ex.getClass() + " message " + ex.getMessage() + "\n");
-            }
-        };
+        final Thread.UncaughtExceptionHandler exceptionHandler = (final Thread th, final Throwable ex) -> {
+			exceptions.add("Exception " + ex.getClass() + " message " + ex.getMessage() + "\n");
+		};
 
         final List<Class<?>> types =
                 Arrays.asList(A.class, B.class, C.class, E.class, F.class, G.class, H.class, I.class, J.class,

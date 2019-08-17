@@ -33,14 +33,9 @@ public class TreeMapAndTreeSetTest extends AbstractAcceptanceTest {
 
     public static class UnusedComparator implements Comparator<String> {
 
-        private final static Comparator<String> THROWING_COMPARATOR = new Comparator<String>() {
-
-            @Override
-            public int compare(final String o1, final String o2) {
-                throw new UnsupportedOperationException();
-            }
-
-        };
+        private final static Comparator<String> THROWING_COMPARATOR = (final String o1, final String o2) -> {
+			throw new UnsupportedOperationException();
+		};
 
         @Override
         public int compare(final String o1, final String o2) {

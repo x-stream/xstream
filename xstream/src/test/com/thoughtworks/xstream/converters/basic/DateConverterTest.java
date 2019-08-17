@@ -137,23 +137,20 @@ public class DateConverterTest extends TestCase {
         final int numberOfThreads = 20;
 
         // spawn some concurrent threads, that hammer the converter
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < numberOfCallsPerThread; i++) {
-                    try {
-                        converter.fromString("2004-02-22 15:16:04.0 EST");
-                        results.add("PASS");
-                    } catch (final ConversionException e) {
-                        results.add("FAIL");
-                    } finally {
-                        synchronized (monitor) {
-                            monitor.notifyAll();
-                        }
-                    }
-                }
-            }
-        };
+        final Runnable runnable = () -> {
+			for (int i = 0; i < numberOfCallsPerThread; i++) {
+				try {
+					converter.fromString("2004-02-22 15:16:04.0 EST");
+					results.add("PASS");
+				} catch (final ConversionException e) {
+					results.add("FAIL");
+				} finally {
+					synchronized (monitor) {
+						monitor.notifyAll();
+					}
+				}
+			}
+		};
         for (int i = 0; i < numberOfThreads; i++) {
             new Thread(runnable).start();
         }

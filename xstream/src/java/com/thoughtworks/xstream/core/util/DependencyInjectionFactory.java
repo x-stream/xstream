@@ -97,12 +97,7 @@ public class DependencyInjectionFactory {
             // sort available ctors according their arity
             final Constructor<?>[] ctors = type.getConstructors();
             if (ctors.length > 1) {
-                Arrays.sort(ctors, new Comparator<Constructor<?>>() {
-                    @Override
-                    public int compare(final Constructor<?> o1, final Constructor<?> o2) {
-                        return o2.getParameterTypes().length - o1.getParameterTypes().length;
-                    }
-                });
+                Arrays.sort(ctors, (final Constructor<?> o1, final Constructor<?> o2) -> o2.getParameterTypes().length - o1.getParameterTypes().length);
             }
 
             final TypedValue[] typedDependencies = new TypedValue[dependencies.length];

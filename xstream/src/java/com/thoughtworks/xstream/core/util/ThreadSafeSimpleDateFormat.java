@@ -51,15 +51,11 @@ public class ThreadSafeSimpleDateFormat {
             final int maxPoolSize, final boolean lenient) {
         formatString = format;
         this.timeZone = timeZone;
-        pool = new Pool<DateFormat>(initialPoolSize, maxPoolSize, new Pool.Factory<DateFormat>() {
-            @Override
-            public SimpleDateFormat newInstance() {
-                final SimpleDateFormat dateFormat = new SimpleDateFormat(formatString, locale);
-                dateFormat.setLenient(lenient);
-                return dateFormat;
-            }
-
-        });
+        pool = new Pool<DateFormat>(initialPoolSize, maxPoolSize, () -> {
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(formatString, locale);
+			dateFormat.setLenient(lenient);
+			return dateFormat;
+		});
     }
 
     public String format(final Date date) {

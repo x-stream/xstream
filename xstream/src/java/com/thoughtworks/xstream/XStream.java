@@ -481,12 +481,7 @@ public class XStream {
             public Converter lookupConverterForType(final Class<?> type) {
                 return defaultConverterLookup.lookupConverterForType(type);
             }
-        }, new ConverterRegistry() {
-            @Override
-            public void registerConverter(final Converter converter, final int priority) {
-                defaultConverterLookup.registerConverter(converter, priority);
-            }
-        });
+        }, defaultConverterLookup::registerConverter);
     }
 
     /**

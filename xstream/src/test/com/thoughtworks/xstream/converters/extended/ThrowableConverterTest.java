@@ -196,17 +196,15 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
     }
 
     private static void assertThrowableEquals(final Throwable a, final Throwable b) {
-        assertBoth(a, b, new MoreAssertions() {
-            @Override
-            public void assertMoreSafely(final Object a, final Object b) {
-                final Throwable ta = (Throwable)a, tb = (Throwable)b;
-                assertEquals(ta.getClass(), tb.getClass());
-                assertEquals(ta.getMessage(), tb.getMessage());
-                assertThrowableEquals(ta.getCause(), tb.getCause());
-                assertArrayEquals(ta.getStackTrace(), tb.getStackTrace());
-                assertArrayEquals(ta.getSuppressed(), tb.getSuppressed());
-            }
-        });
+        assertBoth(a, b, (final Object a1, final Object b1) -> {
+			final Throwable ta = (Throwable) a1;
+			final Throwable tb = (Throwable) b1;
+			assertEquals(ta.getClass(), tb.getClass());
+			assertEquals(ta.getMessage(), tb.getMessage());
+			assertThrowableEquals(ta.getCause(), tb.getCause());
+			assertArrayEquals(ta.getStackTrace(), tb.getStackTrace());
+			assertArrayEquals(ta.getSuppressed(), tb.getSuppressed());
+		});
     }
 
     private static void assertArrayEquals(final Object[] expected, final Object[] actual) {

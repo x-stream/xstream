@@ -432,16 +432,13 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
             @Override
             public void registerValidation(final ObjectInputValidation validation, final int priority) {
-                context.addCompletionCallback(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            validation.validateObject();
-                        } catch (final InvalidObjectException e) {
-                            throw new ObjectAccessException("Cannot validate object", e);
-                        }
-                    }
-                }, priority);
+                context.addCompletionCallback(() -> {
+					try {
+						validation.validateObject();
+					} catch (final InvalidObjectException e) {
+						throw new ObjectAccessException("Cannot validate object", e);
+					}
+				}, priority);
             }
 
             @Override
@@ -507,15 +504,11 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
         @Override
         public void visitSerializableFields(final Object object, final Visitor visitor) {
-            wrapped.visitSerializableFields(object, new Visitor() {
-                @Override
-                public void visit(final String name, final Class<?> type, final Class<?> definedIn,
-                        final Object value) {
-                    if (!Serializable.class.isAssignableFrom(definedIn)) {
-                        visitor.visit(name, type, definedIn, value);
-                    }
-                }
-            });
+            wrapped.visitSerializableFields(object, (final String name, final Class<?> type, final Class<?> definedIn, final Object value) -> {
+				if (!Serializable.class.isAssignableFrom(definedIn)) {
+					visitor.visit(name, type, definedIn, value);
+				}
+			});
         }
     }
 }

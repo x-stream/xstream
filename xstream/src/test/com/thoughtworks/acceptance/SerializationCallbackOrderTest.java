@@ -738,33 +738,21 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
             final int MEDIUM_PRIORITY = 0;
             final int HIGH_PRIORITY = 5;
 
-            s.registerValidation(new ObjectInputValidation() {
-                @Override
-                public void validateObject() {
-                    log.actual("validateObject() medium priority 1");
-                }
-            }, MEDIUM_PRIORITY);
+            s.registerValidation(() -> {
+				log.actual("validateObject() medium priority 1");
+			}, MEDIUM_PRIORITY);
 
-            s.registerValidation(new ObjectInputValidation() {
-                @Override
-                public void validateObject() {
-                    log.actual("validateObject() high priority");
-                }
-            }, HIGH_PRIORITY);
+            s.registerValidation(() -> {
+				log.actual("validateObject() high priority");
+			}, HIGH_PRIORITY);
 
-            s.registerValidation(new ObjectInputValidation() {
-                @Override
-                public void validateObject() {
-                    log.actual("validateObject() low priority");
-                }
-            }, LOW_PRIORITY);
+            s.registerValidation(() -> {
+				log.actual("validateObject() low priority");
+			}, LOW_PRIORITY);
 
-            s.registerValidation(new ObjectInputValidation() {
-                @Override
-                public void validateObject() {
-                    log.actual("validateObject() medium priority 2");
-                }
-            }, MEDIUM_PRIORITY);
+            s.registerValidation(() -> {
+				log.actual("validateObject() medium priority 2");
+			}, MEDIUM_PRIORITY);
         }
 
         private Object readResolve() {
