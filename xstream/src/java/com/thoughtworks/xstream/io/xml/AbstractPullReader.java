@@ -154,13 +154,17 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
     private Event readRealEvent() {
         final Event event = pool.hasStuff() ? (Event)pool.pop() : new Event();
         event.type = pullNextEvent();
-        if (event.type == TEXT) {
-            event.value = pullText();
-        } else if (event.type == START_NODE) {
-            event.value = pullElementName();
-        } else {
-            event.value = null;
-        }
+		switch (event.type) {
+		case TEXT:
+			event.value = pullText();
+			break;
+		case START_NODE:
+			event.value = pullElementName();
+			break;
+		default:
+			event.value = null;
+			break;
+		}
         return event;
     }
 

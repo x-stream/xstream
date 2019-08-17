@@ -71,13 +71,17 @@ public class AbstractXmlFriendlyMapper extends MapperWrapper {
         final int length = fieldName.length();
         for (int i = 0; i < length; i++) {
             final char c = fieldName.charAt(i);
-            if (c == '$') {
-                result.append(dollarReplacementInField);
-            } else if (c == '_') {
-                result.append(underscoreReplacementInField);
-            } else {
-                result.append(c);
-            }
+			switch (c) {
+			case '$':
+				result.append(dollarReplacementInField);
+				break;
+			case '_':
+				result.append(underscoreReplacementInField);
+				break;
+			default:
+				result.append(c);
+				break;
+			}
         }
         return result.toString();
     }
