@@ -78,7 +78,7 @@ public class XppDom implements Serializable {
     }
 
     public String getAttribute(final String name) {
-        return null != attributes ? (String)attributes.get(name) : null;
+        return null != attributes ? attributes.get(name) : null;
     }
 
     public void setAttribute(final String name, final String value) {

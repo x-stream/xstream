@@ -158,9 +158,9 @@ public class ToAttributedValueConverter implements Converter {
                     throw exception;
                 }
 
-                ConverterMatcher converter = Enum.class.isAssignableFrom(type) ? (ConverterMatcher)enumMapper
-                    .getConverterFromItemType(null, type, null) : (ConverterMatcher)mapper.getLocalConverter(definedIn,
-                    fieldName);
+                ConverterMatcher converter = Enum.class.isAssignableFrom(type) ? enumMapper
+					.getConverterFromItemType(null, type, null) : mapper.getLocalConverter(definedIn,
+						fieldName);
                 if (converter == null) {
                     converter = lookup.lookupConverterForType(type);
                 }
@@ -244,9 +244,9 @@ public class ToAttributedValueConverter implements Converter {
 
                 Class<?> type = field.getType();
                 final Class<?> declaringClass = field.getDeclaringClass();
-                ConverterMatcher converter = Enum.class.isAssignableFrom(type) ? (ConverterMatcher)enumMapper
-                    .getConverterFromItemType(null, type, null) : (ConverterMatcher)mapper.getLocalConverter(
-                    declaringClass, fieldName);
+                ConverterMatcher converter = Enum.class.isAssignableFrom(type) ? enumMapper
+					.getConverterFromItemType(null, type, null) : mapper.getLocalConverter(
+						declaringClass, fieldName);
                 if (converter == null) {
                     converter = lookup.lookupConverterForType(type);
                 }

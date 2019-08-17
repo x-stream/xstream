@@ -91,7 +91,7 @@ public class LocalConverterTest extends AbstractAcceptanceTest {
 
         @Override
         public String toString(final Object obj) {
-            return Integer.toHexString(((Integer)obj).intValue());
+            return Integer.toHexString(((Number)obj).intValue());
         }
     }
 

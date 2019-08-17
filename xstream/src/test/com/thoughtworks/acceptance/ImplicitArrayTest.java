@@ -465,9 +465,9 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
 
     public void testWithHiddenArray() {
         final Area area = new Area();
-        ((Farm)area).animals = new Animal[2];
-        ((Farm)area).animals[0] = new Animal("Cow");
-        ((Farm)area).animals[1] = new Animal("Sheep");
+        area.animals = new Animal[2];
+        area.animals[0] = new Animal("Cow");
+        area.animals[1] = new Animal("Sheep");
         area.animals = new Animal[2];
         area.animals[0] = new Animal("Falcon");
         area.animals[1] = new Animal("Sparrow");
@@ -495,9 +495,9 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
 
     public void testWithHiddenArrayAndDifferentAlias() {
         final Area area = new Area();
-        ((Farm)area).animals = new Animal[2];
-        ((Farm)area).animals[0] = new Animal("Cow");
-        ((Farm)area).animals[1] = new Animal("Sheep");
+        area.animals = new Animal[2];
+        area.animals[0] = new Animal("Cow");
+        area.animals[1] = new Animal("Sheep");
         area.animals = new Animal[2];
         area.animals[0] = new Animal("Falcon");
         area.animals[1] = new Animal("Sparrow");
@@ -525,9 +525,9 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
 
     public void testDoesNotInheritFromHiddenArrayOfSuperclass() {
         final Area area = new Area();
-        ((Farm)area).animals = new Animal[2];
-        ((Farm)area).animals[0] = new Animal("Cow");
-        ((Farm)area).animals[1] = new Animal("Sheep");
+        area.animals = new Animal[2];
+        area.animals[0] = new Animal("Cow");
+        area.animals[1] = new Animal("Sheep");
         area.animals = new Animal[2];
         area.animals[0] = new Animal("Falcon");
         area.animals[1] = new Animal("Sparrow");
@@ -556,9 +556,9 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
 
     public void testDoesNotPropagateToHiddenArrayOfSuperclass() {
         final Area area = new Area();
-        ((Farm)area).animals = new Animal[2];
-        ((Farm)area).animals[0] = new Animal("Cow");
-        ((Farm)area).animals[1] = new Animal("Sheep");
+        area.animals = new Animal[2];
+        area.animals[0] = new Animal("Cow");
+        area.animals[1] = new Animal("Sheep");
         area.animals = new Animal[2];
         area.animals[0] = new Animal("Falcon");
         area.animals[1] = new Animal("Sparrow");
@@ -597,12 +597,12 @@ public class ImplicitArrayTest extends AbstractAcceptanceTest {
 
     public void testWithDoubleHiddenArray() {
         final Country country = new Country();
-        ((Farm)country).animals = new Animal[2];
-        ((Farm)country).animals[0] = new Animal("Cow");
-        ((Farm)country).animals[1] = new Animal("Sheep");
-        ((Area)country).animals = new Animal[2];
-        ((Area)country).animals[0] = new Animal("Falcon");
-        ((Area)country).animals[1] = new Animal("Sparrow");
+        country.animals = new Animal[2];
+        country.animals[0] = new Animal("Cow");
+        country.animals[1] = new Animal("Sheep");
+        country.animals = new Animal[2];
+        country.animals[0] = new Animal("Falcon");
+        country.animals[1] = new Animal("Sparrow");
         country.animals = new Animal[2];
         country.animals[0] = new Animal("Wale");
         country.animals[1] = new Animal("Dolphin");

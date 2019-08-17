@@ -117,10 +117,10 @@ public abstract class Token {
         }
         switch (idType) {
         case ID_ONE_BYTE:
-            out.writeByte((byte)id + Byte.MIN_VALUE);
+            out.writeByte((int)id + Byte.MIN_VALUE);
             break;
         case ID_TWO_BYTES:
-            out.writeShort((short)id + Short.MIN_VALUE);
+            out.writeShort((int)id + Short.MIN_VALUE);
             break;
         case ID_FOUR_BYTES:
             out.writeInt((int)id + Integer.MIN_VALUE);
@@ -180,7 +180,7 @@ public abstract class Token {
                 idType = ID_ONE_BYTE;
             } else if (id <= Short.MAX_VALUE - Short.MIN_VALUE) {
                 idType = ID_TWO_BYTES;
-            } else if (id <= (long)Integer.MAX_VALUE - (long)Integer.MIN_VALUE) { // cast to long to prevent overflow
+            } else if (id <= Integer.MAX_VALUE - (long)Integer.MIN_VALUE) { // cast to long to prevent overflow
                 idType = ID_FOUR_BYTES;
             } else {
                 idType = ID_EIGHT_BYTES;

@@ -262,7 +262,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                     }
                     callbackIndexMap.put(null, method);
                     calledMethod.invoke(source, parameterTypes == null
-                        ? (Object[])null
+                        ? null
                         : createNullArguments(parameterTypes));
                 } catch (final IllegalAccessException e) {
                     final ObjectAccessException exception = new ObjectAccessException("Cannot access method", e);

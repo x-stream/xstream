@@ -151,7 +151,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
     @Override
     public byte readByte() throws IOException {
-        return ((Byte)peekCallback().readFromStream()).byteValue();
+        return ((Number)peekCallback().readFromStream()).byteValue();
     }
 
     @Override
@@ -161,7 +161,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
     @Override
     public int readInt() throws IOException {
-        return ((Integer)peekCallback().readFromStream()).intValue();
+        return ((Number)peekCallback().readFromStream()).intValue();
     }
 
     @Override
@@ -171,22 +171,22 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
     @Override
     public float readFloat() throws IOException {
-        return ((Float)peekCallback().readFromStream()).floatValue();
+        return ((Number)peekCallback().readFromStream()).floatValue();
     }
 
     @Override
     public double readDouble() throws IOException {
-        return ((Double)peekCallback().readFromStream()).doubleValue();
+        return ((Number)peekCallback().readFromStream()).doubleValue();
     }
 
     @Override
     public long readLong() throws IOException {
-        return ((Long)peekCallback().readFromStream()).longValue();
+        return ((Number)peekCallback().readFromStream()).longValue();
     }
 
     @Override
     public short readShort() throws IOException {
-        return ((Short)peekCallback().readFromStream()).shortValue();
+        return ((Number)peekCallback().readFromStream()).shortValue();
     }
 
     @Override
@@ -259,7 +259,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
         @Override
         public byte get(final String name, final byte val) {
-            return defaulted(name) ? val : ((Byte)get(name)).byteValue();
+            return defaulted(name) ? val : ((Number)get(name)).byteValue();
         }
 
         @Override
@@ -269,27 +269,27 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
         @Override
         public double get(final String name, final double val) {
-            return defaulted(name) ? val : ((Double)get(name)).doubleValue();
+            return defaulted(name) ? val : ((Number)get(name)).doubleValue();
         }
 
         @Override
         public float get(final String name, final float val) {
-            return defaulted(name) ? val : ((Float)get(name)).floatValue();
+            return defaulted(name) ? val : ((Number)get(name)).floatValue();
         }
 
         @Override
         public int get(final String name, final int val) {
-            return defaulted(name) ? val : ((Integer)get(name)).intValue();
+            return defaulted(name) ? val : ((Number)get(name)).intValue();
         }
 
         @Override
         public long get(final String name, final long val) {
-            return defaulted(name) ? val : ((Long)get(name)).longValue();
+            return defaulted(name) ? val : ((Number)get(name)).longValue();
         }
 
         @Override
         public short get(final String name, final short val) {
-            return defaulted(name) ? val : ((Short)get(name)).shortValue();
+            return defaulted(name) ? val : ((Number)get(name)).shortValue();
         }
 
         @Override

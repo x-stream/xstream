@@ -757,8 +757,8 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         final Country country = new Country();
         country.add(new Animal("Cow"));
         country.add(new Animal("Sheep"));
-        ((Area)country).animals.add(new Animal("Falcon"));
-        ((Area)country).animals.add(new Animal("Sparrow"));
+        country.animals.add(new Animal("Falcon"));
+        country.animals.add(new Animal("Sparrow"));
         country.animals.add(new Animal("Wale"));
         country.animals.add(new Animal("Dolphin"));
 

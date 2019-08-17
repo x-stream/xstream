@@ -41,7 +41,7 @@ public class CachingMapper extends MapperWrapper implements Caching {
             if (cached instanceof Class) {
                 return (Class<?>)cached;
             }
-            throw (XStreamException)cached;
+            throw (RuntimeException)cached;
         }
 
         try {

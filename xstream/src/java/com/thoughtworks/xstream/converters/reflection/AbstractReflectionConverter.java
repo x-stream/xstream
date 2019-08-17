@@ -226,7 +226,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     for (final Iterator<?> iter = isArray
                         ? new ArrayIterator(info.value)
                         : isCollection
-                            ? ((Collection<?>)info.value).iterator()
+                            ? ((Iterable<?>)info.value).iterator()
                             : isEntry
                                 ? ((Map<?, ?>)info.value).entrySet().iterator()
                                 : ((Map<?, ?>)info.value).values().iterator(); iter.hasNext();) {

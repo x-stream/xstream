@@ -38,7 +38,7 @@ public class LambdaTest extends AbstractAcceptanceTest {
 
     public void testLambdaExpression() {
         final LambdaKeeper keeper = new LambdaKeeper();
-        keeper.keep((Callable<String>)() -> "result");
+        keeper.keep(() -> "result");
 
         final String expected = "" + "<keeper>\n" + "  <callable class=\"null\"/>\n" + "</keeper>";
         xstream.alias("keeper", LambdaKeeper.class);
@@ -50,7 +50,7 @@ public class LambdaTest extends AbstractAcceptanceTest {
 
     public void testSerializableLambdaExpression() {
         final LambdaKeeper keeper = new LambdaKeeper();
-        keeper.keep((Callable<String> & Serializable)() -> "result");
+        keeper.keep(() -> "result");
 
         final String expected = ""
             + "<keeper>\n"
@@ -79,7 +79,7 @@ public class LambdaTest extends AbstractAcceptanceTest {
 
     public void testReferencedLambdaExpression() {
         final LambdaKeeper keeper = new LambdaKeeper();
-        keeper.keep((Callable<String> & Serializable)() -> "result");
+        keeper.keep(() -> "result");
         keeper.reference();
 
         final String expected = ""

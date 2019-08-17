@@ -66,7 +66,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testUnmarshalsOldXStreamDatesThatLackMillisecond() {
-        converter = new DateConverter((TimeZone)null); // use default TZ
+        converter = new DateConverter(null); // use default TZ
         final Date expected = (Date)converter.fromString("2004-02-22 15:16:04.0 EST");
 
         assertEquals(expected, converter.fromString("2004-02-22 15:16:04.0 EST"));
@@ -99,7 +99,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testUnmarshalsDateWithDifferentDefaultTimeZones() throws ParseException {
-        converter = new DateConverter((TimeZone)null); // use default TZ
+        converter = new DateConverter(null); // use default TZ
         final Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2004, Calendar.FEBRUARY, 23, 1, 46, 4);
@@ -183,7 +183,7 @@ public class DateConverterTest extends TestCase {
     }
 
     public void testDatesIn70sInTimeZoneGMT() throws ParseException {
-        converter = new DateConverter((TimeZone)null); // use default TZ
+        converter = new DateConverter(null); // use default TZ
 
         final String pattern = "yyyy-MM-dd HH:mm:ss.S z";
         final SimpleDateFormat format;
