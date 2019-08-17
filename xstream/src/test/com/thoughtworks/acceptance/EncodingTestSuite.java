@@ -90,11 +90,11 @@ public class EncodingTestSuite extends TestSuite {
         obj.data = "J\u00f6rg";
 
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        final OutputStreamWriter writer = encoding != null
-            ? new OutputStreamWriter(bos, encoding)
-            : new OutputStreamWriter(bos);
-        xstream.toXML(obj, writer);
-        writer.close();
+		try (OutputStreamWriter writer = encoding != null
+			? new OutputStreamWriter(bos, encoding)
+			: new OutputStreamWriter(bos)) {
+			xstream.toXML(obj, writer);
+		}
 
         final String generated = encoding != null ? bos.toString(encoding) : bos.toString();
         Assert.assertTrue("'" + obj.data + "' was not found", generated.indexOf(obj.data) > 0);

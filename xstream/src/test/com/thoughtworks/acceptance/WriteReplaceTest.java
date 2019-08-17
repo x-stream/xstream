@@ -62,9 +62,9 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
 
         // ensure that Java serialization does not cause endless loop for a Thing
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(thing);
-        oos.close();
+		try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+			oos.writeObject(thing);
+		}
 
         final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         final ObjectInputStream ios = new ObjectInputStream(bais);

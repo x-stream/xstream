@@ -19,78 +19,75 @@ public abstract class AbstractXMLReaderTest extends AbstractReaderTest {
     public static String XML_1_1_HEADER = "<?xml version=\"1.1\"?>";
 
     public void testChildTagsCanBeMixedWithOtherNodes() throws Exception {
-        final HierarchicalStreamReader xmlReader = createReader(
-            "<!-- xx --><a> <hello/> <!-- x --> getValue <world/></a>");
-
-        assertTrue(xmlReader.hasMoreChildren());
-        xmlReader.moveDown();
-        assertEquals("hello", xmlReader.getNodeName());
-        xmlReader.moveUp();
-
-        assertTrue(xmlReader.hasMoreChildren());
-        xmlReader.moveDown();
-        assertEquals("world", xmlReader.getNodeName());
-        xmlReader.moveUp();
-
-        assertFalse(xmlReader.hasMoreChildren());
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader(
+			"<!-- xx --><a> <hello/> <!-- x --> getValue <world/></a>")) {
+			assertTrue(xmlReader.hasMoreChildren());
+			xmlReader.moveDown();
+			assertEquals("hello", xmlReader.getNodeName());
+			xmlReader.moveUp();
+			
+			assertTrue(xmlReader.hasMoreChildren());
+			xmlReader.moveDown();
+			assertEquals("world", xmlReader.getNodeName());
+			xmlReader.moveUp();
+			
+			assertFalse(xmlReader.hasMoreChildren());
+		}
     }
 
     public void testTextCanBeExtractedFromTag() throws Exception {
-        final HierarchicalStreamReader xmlReader = createReader(
-            "<root><a>some<!-- ignore me --> getValue!</a><b><![CDATA[more&&more;]]></b></root>");
-
-        xmlReader.moveDown();
-        assertEquals("some getValue!", xmlReader.getValue());
-        xmlReader.moveUp();
-
-        xmlReader.moveDown();
-        assertEquals("more&&more;", xmlReader.getValue());
-        xmlReader.moveUp();
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader(
+			"<root><a>some<!-- ignore me --> getValue!</a><b><![CDATA[more&&more;]]></b></root>")) {
+			xmlReader.moveDown();
+			assertEquals("some getValue!", xmlReader.getValue());
+			xmlReader.moveUp();
+			
+			xmlReader.moveDown();
+			assertEquals("more&&more;", xmlReader.getValue());
+			xmlReader.moveUp();
+		}
     }
 
     public void testReturnsEmptyStringForEmptyTags() throws Exception {
-        final HierarchicalStreamReader xmlReader = createReader("<root></root>");
-
-        final String text = xmlReader.getValue();
-        assertNotNull(text);
-        assertEquals("", text);
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader("<root></root>")) {
+			final String text = xmlReader.getValue();
+			assertNotNull(text);
+			assertEquals("", text);
+		}
     }
 
     public void testCanReadCDATAWithEmbeddedTags() throws Exception {
         final String content = "<tag>the content</tag>";
-        final HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
-        assertEquals(content, xmlReader.getValue());
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>")) {
+			assertEquals(content, xmlReader.getValue());
+		}
     }
 
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
-        final HierarchicalStreamReader xmlReader = createReader(""
-            + "<?xml version=\"1.0\"?>\n"
-            + "<!DOCTYPE root [\n"
-            + "<!ELEMENT string (#PCDATA)>\n"
-            + "<!ENTITY content SYSTEM \"file:src/test/$Package.java\">\n"
-            // +"<!ENTITY content SYSTEM \"file:pom.xml\">\n"
-            // +"<!ENTITY content SYSTEM \"file:/etc/passwd\">\n"
-            + "]><string>&content;</string>");
-        assertEquals("", xmlReader.getValue());
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader(""
+			+ "<?xml version=\"1.0\"?>\n"
+			+ "<!DOCTYPE root [\n"
+			+ "<!ELEMENT string (#PCDATA)>\n"
+			+ "<!ENTITY content SYSTEM \"file:src/test/$Package.java\">\n"
+			// +"<!ENTITY content SYSTEM \"file:pom.xml\">\n"
+			// +"<!ENTITY content SYSTEM \"file:/etc/passwd\">\n"
+			+ "]><string>&content;</string>")) {
+			assertEquals("", xmlReader.getValue());
+		}
     }
 
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
-        final HierarchicalStreamReader xmlReader = createReader(""
-            + "<?xml version=\"1.0\"?>\n"
-            + "<!DOCTYPE root [\n"
-            + "<!ELEMENT string (#PCDATA)>\n"
-            + "<!ENTITY % content SYSTEM \"file:src/test/$Package.java\">\n"
-            // +"<!ENTITY % content SYSTEM \"file:pom.xml\">\n"
-            // +"<!ENTITY % content SYSTEM \"file:/etc/passwd\">\n"
-            + "%content;\n"
-            + "]><string>test</string>");
-        assertEquals("test", xmlReader.getValue());
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader(""
+			+ "<?xml version=\"1.0\"?>\n"
+			+ "<!DOCTYPE root [\n"
+			+ "<!ELEMENT string (#PCDATA)>\n"
+			+ "<!ENTITY % content SYSTEM \"file:src/test/$Package.java\">\n"
+			// +"<!ENTITY % content SYSTEM \"file:pom.xml\">\n"
+			// +"<!ENTITY % content SYSTEM \"file:/etc/passwd\">\n"
+			+ "%content;\n"
+			+ "]><string>test</string>")) {
+			assertEquals("test", xmlReader.getValue());
+		}
     }
 
     // valid chars of Java names: sharp s, auml, ash, omega, cyrillic D, runic W, euro
@@ -138,22 +135,22 @@ public abstract class AbstractXMLReaderTest extends AbstractReaderTest {
     }
 
     public void testNonUnicodeCharacterInValue() throws Exception {
-        final HierarchicalStreamReader xmlReader = createReader("<string>&#xffff;</string>");
-        assertEquals("\uffff", xmlReader.getValue());
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader("<string>&#xffff;</string>")) {
+			assertEquals("\uffff", xmlReader.getValue());
+		}
     }
 
     public void testNonUnicodeCharacterInCDATA() throws Exception {
         final String content = "\uffff";
-        final HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
-        assertEquals(content, xmlReader.getValue());
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>")) {
+			assertEquals(content, xmlReader.getValue());
+		}
     }
 
     public void testISOControlCharactersInValue() throws Exception {
-        final HierarchicalStreamReader xmlReader = createReader("<string>hello&#x4;-&#x96;world</string>");
-        assertEquals("hello\u0004-\u0096world", xmlReader.getValue());
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader("<string>hello&#x4;-&#x96;world</string>")) {
+			assertEquals("hello\u0004-\u0096world", xmlReader.getValue());
+		}
     }
     
     // inherits tests from superclass

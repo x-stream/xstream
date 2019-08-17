@@ -65,14 +65,14 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         xstream.alias("person", Person.class);
         final StringWriter buffer = new StringWriter();
 
-        // serialize
-        final HierarchicalStreamWriter writer = new PrettyPrintWriter(buffer);
-        writer.startNode("people");
-        xstream.marshal(new Person("Postman", "Pat"), writer);
-        xstream.marshal(new Person("Bob", "Builder"), writer);
-        xstream.marshal(new Person("Tinky", "Winky"), writer);
-        writer.endNode();
-        writer.close();
+		try ( // serialize
+			HierarchicalStreamWriter writer = new PrettyPrintWriter(buffer)) {
+			writer.startNode("people");
+			xstream.marshal(new Person("Postman", "Pat"), writer);
+			xstream.marshal(new Person("Bob", "Builder"), writer);
+			xstream.marshal(new Person("Tinky", "Winky"), writer);
+			writer.endNode();
+		}
 
         assertEquals(""
             + "<people>\n"
@@ -116,11 +116,11 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         final Writer writer = new StringWriter();
         xstream.alias("software", Software.class);
 
-        final ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
-        oos.writeInt(123);
-        oos.writeObject("hello");
-        oos.writeObject(new Software("tw", "xs"));
-        oos.close();
+		try (ObjectOutputStream oos = xstream.createObjectOutputStream(writer)) {
+			oos.writeInt(123);
+			oos.writeObject("hello");
+			oos.writeObject(new Software("tw", "xs"));
+		}
 
         final String expectedXml = ""
             + "<object-stream>\n"
@@ -156,12 +156,12 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             Deflater.BEST_COMPRESSION)), "UTF-8");
         xstream.alias("software", Software.class);
 
-        final ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
-        oos.writeInt(123);
-        oos.writeObject("hello");
-        oos.writeObject(new Software("tw", "xs"));
-        oos.flush();
-        oos.close();
+		try (ObjectOutputStream oos = xstream.createObjectOutputStream(writer)) {
+			oos.writeInt(123);
+			oos.writeObject("hello");
+			oos.writeObject(new Software("tw", "xs"));
+			oos.flush();
+		}
 
         final byte[] data = baos.toByteArray();
         assertTrue("Too less data: " + data.length, data.length > 2);
@@ -201,22 +201,21 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
         @SuppressWarnings("resource")
         final HierarchicalStreamReader reader = DefaultDriver.create().createReader(new StringReader(xml));
-        final ObjectInputStream ois = xstream.createObjectInputStream(reader);
-        final int level = reader.getLevel();
-        assertEquals(1, level);
-        assertEquals("top", ois.readObject());
-        try {
-            ois.readObject();
-            fail("Thrown " + ConversionException.class.getName() + " expected");
-        } catch (final ConversionException e) {
-            assertEquals(4, reader.getLevel());
-            do {
-                reader.moveUp();
-            } while (level != reader.getLevel());
-        }
-        assertEquals("bottom", ois.readObject());
-        ois.close();
-    }
+        try (ObjectInputStream ois = xstream.createObjectInputStream(reader)) {
+			final int level = reader.getLevel();
+			assertEquals(1, level);
+			assertEquals("top", ois.readObject());
+			try {
+				ois.readObject();
+				fail("Thrown " + ConversionException.class.getName() + " expected");
+			} catch (final ConversionException e) {
+				assertEquals(4, reader.getLevel());
+				do {
+					reader.moveUp();
+				} while (level != reader.getLevel());
+			}
+			assertEquals("bottom", ois.readObject());
+        }    }
 
     public void testObjectOutputStreamPropagatesCloseAndFlushEvents() throws IOException {
         // setup
@@ -245,10 +244,10 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         log.expect("flush");
         log.expect("close");
 
-        // execute
-        final ObjectOutputStream objectOutputStream = xstream.createObjectOutputStream(loggingWriter);
-        objectOutputStream.flush();
-        objectOutputStream.close();
+		try ( // execute
+			ObjectOutputStream objectOutputStream = xstream.createObjectOutputStream(loggingWriter)) {
+			objectOutputStream.flush();
+		}
 
         // verify
         log.verify();
@@ -285,10 +284,10 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
         // Serialize the two individual objects.
         final StringWriter writer = new StringWriter();
-        final ObjectOutputStream out = xstream.createObjectOutputStream(writer);
-        out.writeObject(alice);
-        out.writeObject(jane);
-        out.close();
+		try (ObjectOutputStream out = xstream.createObjectOutputStream(writer)) {
+			out.writeObject(alice);
+			out.writeObject(jane);
+		}
 
         // Deserialize the two objects.
         final ObjectInputStream in = xstream.createObjectInputStream(new StringReader(writer.toString()));
@@ -334,10 +333,10 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
         // Serialize the two individual objects.
         final StringWriter writer = new StringWriter();
-        final ObjectOutputStream out = xstream.createObjectOutputStream(writer);
-        out.writeObject(alice);
-        out.writeObject(jane);
-        out.close();
+		try (ObjectOutputStream out = xstream.createObjectOutputStream(writer)) {
+			out.writeObject(alice);
+			out.writeObject(jane);
+		}
 
         // Deserialize the two objects.
         final ObjectInputStream in = xstream.createObjectInputStream(new StringReader(writer.toString()));
@@ -350,14 +349,14 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
     public void testReadUnsignedValuesFromInputStream() throws IOException {
         final Writer writer = new StringWriter();
-        final ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
-        oos.writeByte(1);
-        oos.writeByte(-1);
-        oos.writeByte(Byte.MIN_VALUE);
-        oos.writeShort(1);
-        oos.writeShort(-1);
-        oos.writeShort(Short.MIN_VALUE);
-        oos.close();
+		try (ObjectOutputStream oos = xstream.createObjectOutputStream(writer)) {
+			oos.writeByte(1);
+			oos.writeByte(-1);
+			oos.writeByte(Byte.MIN_VALUE);
+			oos.writeShort(1);
+			oos.writeShort(-1);
+			oos.writeShort(Short.MIN_VALUE);
+		}
 
         final String expectedXml = ""
             + "<object-stream>\n"

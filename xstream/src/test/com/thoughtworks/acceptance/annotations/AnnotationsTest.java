@@ -192,9 +192,9 @@ public class AnnotationsTest extends AbstractAcceptanceTest {
             + "    <none>1</none>\n"
             + "  </second>\n"
             + "</root>";
-        final ObjectInputStream in = xstream.createObjectInputStream(new StringReader(xml));
-        assertEquals(internalType, in.readObject());
-        in.close();
+		try (ObjectInputStream in = xstream.createObjectInputStream(new StringReader(xml))) {
+			assertEquals(internalType, in.readObject());
+		}
     }
 
     @XStreamInclude({InternalType.class})

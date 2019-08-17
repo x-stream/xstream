@@ -127,9 +127,9 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     public void testObjectStream() throws IOException, ClassNotFoundException {
         final Product product = new Product("Banana", "123", 23.00);
         final StringWriter writer = new StringWriter();
-        final ObjectOutputStream oos = xstream.createObjectOutputStream(writer, "oos");
-        oos.writeObject(product);
-        oos.close();
+		try (ObjectOutputStream oos = xstream.createObjectOutputStream(writer, "oos")) {
+			oos.writeObject(product);
+		}
         final String json = writer.toString();
         assertEquals("{\"oos\":" + SIMPLE + "}", json);
         try (final ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(json))) {

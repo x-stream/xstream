@@ -256,9 +256,9 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
     private byte[] javaSerialize(final Object object) throws IOException {
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        final ObjectOutputStream objectOutputStream = new ObjectOutputStream(bytes);
-        objectOutputStream.writeObject(object);
-        objectOutputStream.close();
+		try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(bytes)) {
+			objectOutputStream.writeObject(object);
+		}
         return bytes.toByteArray();
     }
 

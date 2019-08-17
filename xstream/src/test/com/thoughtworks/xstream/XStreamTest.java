@@ -416,9 +416,9 @@ public class XStreamTest extends TestCase {
         final File dir = new File("target/test-data");
         dir.mkdirs();
         final File file = new File(dir, "test.xml");
-        final FileOutputStream fos = new FileOutputStream(file);
-        fos.write(xml.getBytes("UTF-8"));
-        fos.close();
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			fos.write(xml.getBytes("UTF-8"));
+		}
         return file;
     }
 }

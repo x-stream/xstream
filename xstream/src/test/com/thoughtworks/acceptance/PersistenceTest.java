@@ -110,12 +110,9 @@ public class PersistenceTest extends AbstractAcceptanceTest {
         // compare original list and list written in separate XML file
         assertEquals(lists.good, serialized.good);
 
-        // retrieve value from external file
-        final FileInputStream inputStream = new FileInputStream(new File(dir, "int@2.xml"));
-        try {
+        try ( // retrieve value from external file
+			FileInputStream inputStream = new FileInputStream(new File(dir, "int@2.xml"))) {
             assertEquals(lists.good.get(2), xstream.fromXML(inputStream));
-        } finally {
-            inputStream.close();
         }
     }
 }

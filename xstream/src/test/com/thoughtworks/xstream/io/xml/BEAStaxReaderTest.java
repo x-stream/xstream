@@ -42,9 +42,9 @@ public class BEAStaxReaderTest extends AbstractStaxReaderTest {
 
     public void testISOControlCharactersInCDATA() throws Exception {
         final String content = "hello\u0004-\u0096world";
-        final HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
-        assertEquals(content, xmlReader.getValue());
-        xmlReader.close();
+		try (HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>")) {
+			assertEquals(content, xmlReader.getValue());
+		}
     }
 
     // inherits tests from superclass

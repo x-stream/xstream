@@ -1267,11 +1267,8 @@ public class XStream {
      * @since 1.4
      */
     public <T> T fromXML(final File file, final T root) {
-        final HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file);
-        try {
+        try (HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file)) {
             return unmarshal(reader, root);
-        } finally {
-            reader.close();
         }
     }
 

@@ -104,18 +104,18 @@ public class DriverEndToEndTestSuite extends TestSuite {
 
     private void testStream(final HierarchicalStreamDriver driver) {
         final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        final HierarchicalStreamWriter writer = driver.createWriter(buffer);
-        writer.startNode("root");
-        writer.startNode("child1");
-        writer.startNode("baby");
-        writer.endNode();
-        writer.endNode();
-        writer.startNode("child2");
-        writer.addAttribute("A", "a");
-        writer.setValue("v");
-        writer.endNode();
-        writer.endNode();
-        writer.close();
+		try (HierarchicalStreamWriter writer = driver.createWriter(buffer)) {
+			writer.startNode("root");
+			writer.startNode("child1");
+			writer.startNode("baby");
+			writer.endNode();
+			writer.endNode();
+			writer.startNode("child2");
+			writer.addAttribute("A", "a");
+			writer.setValue("v");
+			writer.endNode();
+			writer.endNode();
+		}
 
         final HierarchicalStreamReader reader = driver.createReader(new ByteArrayInputStream(buffer.toByteArray()));
         Assert.assertEquals("root", reader.getNodeName());
