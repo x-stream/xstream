@@ -36,6 +36,8 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param root
+	 * @param nameCoder
      * @since 1.4
      */
     public JDomReader(final Element root, final NameCoder nameCoder) {
@@ -43,6 +45,8 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param nameCoder
      * @since 1.4
      */
     public JDomReader(final Document document, final NameCoder nameCoder) {
@@ -50,6 +54,8 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param root
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link JDomReader#JDomReader(Element, NameCoder)} instead.
      */
@@ -59,6 +65,8 @@ public class JDomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link JDomReader#JDomReader(Document, NameCoder)} instead.
      */

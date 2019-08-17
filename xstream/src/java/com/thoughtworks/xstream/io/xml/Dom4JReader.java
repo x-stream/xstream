@@ -26,6 +26,7 @@ public class Dom4JReader extends AbstractDocumentReader {
     private Element currentElement;
 
     /**
+	 * @param branch
      * @since 1.4.11
      */
     public Dom4JReader(final Branch branch) {
@@ -41,6 +42,8 @@ public class Dom4JReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param rootElement
+	 * @param nameCoder
      * @since 1.4
      */
     public Dom4JReader(final Element rootElement, final NameCoder nameCoder) {
@@ -48,6 +51,8 @@ public class Dom4JReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param nameCoder
      * @since 1.4
      */
     public Dom4JReader(final Document document, final NameCoder nameCoder) {
@@ -55,6 +60,8 @@ public class Dom4JReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param rootElement
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link Dom4JReader#Dom4JReader(Element, NameCoder)} instead
      */
@@ -64,6 +71,8 @@ public class Dom4JReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link Dom4JReader#Dom4JReader(Document, NameCoder)} instead
      */

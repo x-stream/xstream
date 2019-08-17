@@ -14,9 +14,10 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 
 /**
- * A single value converter for a special enum type. Converter is internally automatically instantiated for enum types.
+ * A single value converter for a special enum type.Converter is internally automatically instantiated for enum types.
  * 
  * @author J&ouml;rg Schaible
+ * @param <T>
  * @since 1.3
  */
 public class EnumSingleValueConverter<T extends Enum<T>> extends AbstractSingleValueConverter {

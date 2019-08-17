@@ -23,33 +23,47 @@ public interface Mapper {
 
     /**
      * How a class name should be represented in its serialized form.
+	 * @param type
+	 * @return 
      */
     String serializedClass(Class<?> type);
 
     /**
      * How a serialized class representation should be mapped back to a real class.
+	 * @param elementName
+	 * @return 
      */
     Class<?> realClass(String elementName);
 
     /**
      * How a class member should be represented in its serialized form.
+	 * @param type
+	 * @param memberName
+	 * @return 
      */
     String serializedMember(Class<?> type, String memberName);
 
     /**
      * How a serialized member representation should be mapped back to a real member.
+	 * @param type
+	 * @param serialized
+	 * @return 
      */
     String realMember(Class<?> type, String serialized);
 
     /**
-     * Whether this type is a simple immutable value (int, boolean, String, URL, etc). Immutable types will be
-     * repeatedly written in the serialized stream, instead of using object references.
+     * Whether this type is a simple immutable value (int, boolean, String, URL, etc).Immutable types will be
+ repeatedly written in the serialized stream, instead of using object references.
+	 * @param type
+	 * @return 
      */
     boolean isImmutableValueType(Class<?> type);
 
     /**
      * Whether this type is referenceable in a stream.
      *
+	 * @param type
+	 * @return 
      * @since 1.4.9
      */
     boolean isReferenceable(Class<?> type);
@@ -89,6 +103,7 @@ public interface Mapper {
      * @param definedIn owning type
      * @param itemType item type
      * @param itemFieldName optional item element name
+	 * @return 
      */
     String getFieldNameForItemTypeAndName(Class<?> definedIn, Class<?> itemType, String itemFieldName);
 
@@ -99,6 +114,9 @@ public interface Mapper {
     /**
      * Determine whether a specific member should be serialized.
      *
+	 * @param definedIn
+	 * @param fieldName
+	 * @return 
      * @since 1.1.3
      */
     boolean shouldSerializeMember(Class<?> definedIn, String fieldName);
@@ -106,6 +124,8 @@ public interface Mapper {
     /**
      * Whether this name can be ignored.
      *
+	 * @param name
+	 * @return 
      * @since 1.4.9
      */
     boolean isIgnoredElement(String name);
@@ -140,6 +160,7 @@ public interface Mapper {
      *
      * @param definedIn the field's parent
      * @param attribute the attribute name
+	 * @return 
      * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     @Deprecated
@@ -151,6 +172,7 @@ public interface Mapper {
      * @param definedIn the field's parent
      * @param attribute the attribute name
      * @param type the type the converter should create
+	 * @return 
      * @since 1.3.1
      */
     SingleValueConverter getConverterFromAttribute(Class<?> definedIn, String attribute, Class<?> type);

@@ -447,6 +447,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
      *
      * @param dollarReplacement
      * @param escapeCharReplacement
+	 * @param hexPrefix
      * @since 1.4
      */
     public XmlFriendlyNameCoder(

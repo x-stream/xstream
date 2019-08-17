@@ -34,6 +34,8 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * 
  * @author Guilherme Silveira
  * @author Joerg Schaible
+ * @param <K>
+ * @param <V>
  * @since 1.3.1
  */
 public abstract class AbstractFilePersistenceStrategy<K, V> implements PersistenceStrategy<K, V> {

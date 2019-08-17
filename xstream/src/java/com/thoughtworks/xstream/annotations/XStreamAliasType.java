@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 public @interface XStreamAliasType {
     /**
      * The name of the type alias.
+	 * @return 
      */
     public String value();
 }

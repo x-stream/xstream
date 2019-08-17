@@ -240,6 +240,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.4, minimal JDK version is 1.4 already
      */
     @Deprecated
@@ -248,6 +249,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.4, minimal JDK version will be 1.7 for next major release
      */
     @Deprecated
@@ -256,6 +258,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.4, minimal JDK version will be 1.7 for next major release
      */
     @Deprecated
@@ -264,6 +267,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @since 1.4
      * @deprecated As of 1.4.10, minimal JDK version will be 1.7 for next major release
      */
@@ -273,6 +277,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @since 1.4
      * @deprecated As of 1.4.11 use {@link #isVersion(int)}.
      */
@@ -282,6 +287,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @since 1.4.8
      * @deprecated As of 1.4.10 use {@link #isVersion(int)}.
      */
@@ -291,6 +297,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @since 1.4.10
      * @deprecated As of 1.4.11 use {@link #isVersion(int)}
      */
@@ -332,6 +339,9 @@ public class JVM implements Caching {
      * use the user provided or the default {@link ClassLoader}.
      * </p>
      *
+	 * @param <T>
+	 * @param name
+	 * @return 
      * @since 1.4.5
      */
     public static <T> Class<? extends T> loadClassForName(final String name) {
@@ -339,6 +349,9 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @param <T>
+	 * @param name
+	 * @return 
      * @deprecated As of 1.4.5 use {@link #loadClassForName(String)}
      */
     @Deprecated
@@ -353,6 +366,10 @@ public class JVM implements Caching {
      * use the user provided or the default {@link ClassLoader}.
      * </p>
      *
+	 * @param <T>
+	 * @param name
+	 * @param initialize
+	 * @return 
      * @since 1.4.5
      */
     public static <T> Class<? extends T> loadClassForName(final String name, final boolean initialize) {
@@ -369,6 +386,10 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @param <T>
+	 * @param name
+	 * @param initialize
+	 * @return 
      * @since 1.4.4
      * @deprecated As of 1.4.5 use {@link #loadClassForName(String, boolean)}
      */
@@ -452,6 +473,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.5 use {@link #newReflectionProvider()}
      */
     @Deprecated
@@ -471,6 +493,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.5
      */
     @Deprecated
@@ -481,6 +504,7 @@ public class JVM implements Caching {
     /**
      * Checks if AWT is available.
      *
+	 * @return 
      * @since 1.4.5
      */
     public static boolean isAWTAvailable() {
@@ -490,6 +514,7 @@ public class JVM implements Caching {
     /**
      * Checks if the JVM supports AWT.
      *
+	 * @return 
      * @deprecated As of 1.4.5 use {@link #isAWTAvailable()}
      */
     @Deprecated
@@ -500,6 +525,7 @@ public class JVM implements Caching {
     /**
      * Checks if Swing is available.
      *
+	 * @return 
      * @since 1.4.5
      */
     public static boolean isSwingAvailable() {
@@ -509,6 +535,7 @@ public class JVM implements Caching {
     /**
      * Checks if the JVM supports Swing.
      *
+	 * @return 
      * @deprecated As of 1.4.5 use {@link #isSwingAvailable()}
      */
     @Deprecated
@@ -519,6 +546,7 @@ public class JVM implements Caching {
     /**
      * Checks if SQL is available.
      *
+	 * @return 
      * @since 1.4.5
      */
     public static boolean isSQLAvailable() {
@@ -538,6 +566,7 @@ public class JVM implements Caching {
     /**
      * Checks if the JVM supports SQL.
      *
+	 * @return 
      * @deprecated As of 1.4.5 use {@link #isSQLAvailable()}
      */
     @Deprecated
@@ -548,6 +577,7 @@ public class JVM implements Caching {
     /**
      * Checks if TreeSet.addAll is optimized for SortedSet argument.
      *
+	 * @return 
      * @since 1.4
      */
     public static boolean hasOptimizedTreeSetAddAll() {
@@ -557,6 +587,7 @@ public class JVM implements Caching {
     /**
      * Checks if TreeMap.putAll is optimized for SortedMap argument.
      *
+	 * @return 
      * @since 1.4
      */
     public static boolean hasOptimizedTreeMapPutAll() {
@@ -568,6 +599,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @since 1.4.8
      */
     public static boolean canParseISO8601TimeZoneInDateFormat() {
@@ -575,6 +607,7 @@ public class JVM implements Caching {
     }
 
     /**
+	 * @return 
      * @since 1.4.6
      */
     public static boolean canCreateDerivedObjectOutputStream() {

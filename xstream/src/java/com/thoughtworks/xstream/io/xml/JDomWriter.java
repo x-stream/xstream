@@ -26,6 +26,9 @@ public class JDomWriter extends AbstractDocumentWriter<Element, Element> {
     private final JDOMFactory documentFactory;
 
     /**
+	 * @param container
+	 * @param nameCoder
+	 * @param factory
      * @since 1.4
      */
     public JDomWriter(final Element container, final JDOMFactory factory, final NameCoder nameCoder) {
@@ -34,6 +37,9 @@ public class JDomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param container
+	 * @param replacer
+	 * @param factory
      * @since 1.2
      * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(Element, JDOMFactory, NameCoder)} instead.
      */
@@ -47,6 +53,8 @@ public class JDomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param factory
+	 * @param nameCoder
      * @since 1.4
      */
     public JDomWriter(final JDOMFactory factory, final NameCoder nameCoder) {
@@ -54,6 +62,8 @@ public class JDomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param factory
+	 * @param replacer
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(JDOMFactory, NameCoder)} instead.
      */
@@ -67,6 +77,8 @@ public class JDomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param container
+	 * @param nameCoder
      * @since 1.4
      */
     public JDomWriter(final Element container, final NameCoder nameCoder) {
@@ -74,6 +86,8 @@ public class JDomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param container
+	 * @param replacer
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link JDomWriter#JDomWriter(Element, NameCoder)} instead.
      */

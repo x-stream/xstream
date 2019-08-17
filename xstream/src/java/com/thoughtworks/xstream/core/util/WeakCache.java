@@ -23,10 +23,12 @@ import java.util.WeakHashMap;
 
 
 /**
- * A HashMap implementation with weak references values and by default for the key. When the value is garbage collected,
- * the key will also vanish from the map.
+ * A HashMap implementation with weak references values and by default for the key.When the value is garbage collected,
+ the key will also vanish from the map.
  * 
  * @author J&ouml;rg Schaible
+ * @param <K>
+ * @param <V>
  * @since 1.4
  */
 public class WeakCache<K, V> extends AbstractMap<K, V> {

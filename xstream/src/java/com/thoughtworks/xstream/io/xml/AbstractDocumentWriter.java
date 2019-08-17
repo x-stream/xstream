@@ -18,13 +18,15 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
 /**
- * A generic {@link com.thoughtworks.xstream.io.HierarchicalStreamWriter} for DOM writer implementations. The
- * implementation manages a list of top level DOM nodes. Every time the last node is closed on the node stack, the next
- * started node is added to the list. This list can be retrieved using the {@link DocumentWriter#getTopLevelNodes()}
+ * A generic {@link com.thoughtworks.xstream.io.HierarchicalStreamWriter} for DOM writer implementations.The
+ implementation manages a list of top level DOM nodes.Every time the last node is closed on the node stack, the next
+ started node is added to the list. This list can be retrieved using the {@link DocumentWriter#getTopLevelNodes()}
  * method.
  *
  * @author Laurent Bihanic
  * @author J&ouml;rg Schaible
+ * @param <R>
+ * @param <E>
  * @since 1.2.1
  */
 public abstract class AbstractDocumentWriter<R, E extends R> extends AbstractXmlWriter implements DocumentWriter<R> {
@@ -94,6 +96,7 @@ public abstract class AbstractDocumentWriter<R, E extends R> extends AbstractXml
     }
 
     /**
+	 * @return 
      * @since 1.2.1
      */
     protected final R getCurrent() {

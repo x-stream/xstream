@@ -29,6 +29,8 @@ public class CannotResolveClassException extends XStreamException {
     }
 
     /**
+	 * @param className
+	 * @param cause
      * @since 1.4.2
      */
     public CannotResolveClassException(final String className, final Throwable cause) {

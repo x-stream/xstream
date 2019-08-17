@@ -26,6 +26,7 @@ public class ClassLoaderReference extends ClassLoader {
     private transient ClassLoader reference;
 
     /**
+	 * @param reference
      * @deprecated As of 1.4.5 use
      *             {@link com.thoughtworks.xstream.core.ClassLoaderReference#ClassLoaderReference(ClassLoader)} instead
      */
@@ -45,6 +46,7 @@ public class ClassLoaderReference extends ClassLoader {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.5 use {@link com.thoughtworks.xstream.core.ClassLoaderReference#getReference()} instead
      */
     @Deprecated
@@ -53,6 +55,7 @@ public class ClassLoaderReference extends ClassLoader {
     }
 
     /**
+	 * @param reference
      * @deprecated As of 1.4.5 use {@link com.thoughtworks.xstream.core.ClassLoaderReference#setReference(ClassLoader)}
      *             instead
      */

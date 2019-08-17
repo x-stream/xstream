@@ -137,6 +137,8 @@ public class BeanProvider implements JavaBeanProvider {
 
     /**
      * Returns true if the Bean provider can instantiate the specified class
+	 * @param type
+	 * @return 
      */
     @Override
     public boolean canInstantiate(final Class<?> type) {
@@ -151,6 +153,7 @@ public class BeanProvider implements JavaBeanProvider {
      * Returns the default constructor, or null if none is found
      *
      * @param type
+	 * @return 
      * @deprecated As of 1.4.6 use {@link #newInstance(Class)} or {@link #canInstantiate(Class)} directly.
      */
     @Deprecated

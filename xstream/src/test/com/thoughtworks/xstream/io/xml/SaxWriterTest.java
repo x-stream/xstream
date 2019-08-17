@@ -187,6 +187,7 @@ public class SaxWriterTest extends TestCase {
      * <p/>
      * This method ensures SAXWriter indeed checks the list content prior starting the parse.
      * </p>
+	 * @throws java.lang.Exception
      */
     public void testEmptySourceListAtParse() throws Exception {
         final TraxSource traxSource = new TraxSource();

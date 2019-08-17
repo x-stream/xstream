@@ -35,6 +35,8 @@ public class SjsxpDriver extends StaxDriver {
     }
 
     /**
+	 * @param qnameMap
+	 * @param nameCoder
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(QNameMap, XmlFriendlyNameCoder)}
      */
     @Deprecated
@@ -43,6 +45,7 @@ public class SjsxpDriver extends StaxDriver {
     }
 
     /**
+	 * @param qnameMap
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(QNameMap)}
      */
     @Deprecated
@@ -51,6 +54,7 @@ public class SjsxpDriver extends StaxDriver {
     }
 
     /**
+	 * @param nameCoder
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#StandardStaxDriver(XmlFriendlyNameCoder)}
      */
     @Deprecated
@@ -59,6 +63,7 @@ public class SjsxpDriver extends StaxDriver {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#createInputFactory()}
      */
     @Deprecated
@@ -80,6 +85,7 @@ public class SjsxpDriver extends StaxDriver {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.5 use {@link StandardStaxDriver#createOutputFactory()}
      */
     @Deprecated

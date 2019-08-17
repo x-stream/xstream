@@ -27,6 +27,7 @@ public interface ConverterMatcher {
      * Determines whether the converter can marshal a particular type.
      * 
      * @param type the Class representing the object type to be converted
+	 * @return 
      */
     boolean canConvert(Class<?> type);
 

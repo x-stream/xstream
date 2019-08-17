@@ -73,6 +73,9 @@ public class XStreamer {
     /**
      * Serialize an object including the XStream to a pretty-printed XML String.
      *
+	 * @param xstream
+	 * @param obj
+	 * @return 
      * @throws ObjectStreamException if the XML contains non-serializable elements
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be serialized
      * @since 1.2
@@ -100,6 +103,9 @@ public class XStreamer {
      * PureReflectionConverter work with a JDK less than 1.5.
      * </p>
      *
+	 * @param xstream
+	 * @param out
+	 * @param obj
      * @throws IOException if an error occurs reading from the Writer.
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be serialized
      * @since 1.2
@@ -117,10 +123,12 @@ public class XStreamer {
     }
 
     /**
-     * Deserialize a self-contained XStream with object from a String. The method will use internally an XppDriver to
-     * load the contained XStream instance with default permissions.
+     * Deserialize a self-contained XStream with object from a String.The method will use internally an XppDriver to
+ load the contained XStream instance with default permissions.
      *
+	 * @param <T>
      * @param xml the XML data
+	 * @return 
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws ObjectStreamException if the XML contains non-deserializable elements
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
@@ -138,11 +146,13 @@ public class XStreamer {
     }
 
     /**
-     * Deserialize a self-contained XStream with object from a String. The method will use internally an XppDriver to
-     * load the contained XStream instance.
+     * Deserialize a self-contained XStream with object from a String.The method will use internally an XppDriver to
+ load the contained XStream instance.
      *
+	 * @param <T>
      * @param xml the XML data
      * @param permissions the permissions to use (ensure that they include the defaults)
+	 * @return 
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws ObjectStreamException if the XML contains non-deserializable elements
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
@@ -163,8 +173,10 @@ public class XStreamer {
     /**
      * Deserialize a self-contained XStream with object from a String.
      *
+	 * @param <T>
      * @param driver the implementation to use
      * @param xml the XML data
+	 * @return 
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws ObjectStreamException if the XML contains non-deserializable elements
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
@@ -185,9 +197,11 @@ public class XStreamer {
     /**
      * Deserialize a self-contained XStream with object from a String.
      *
+	 * @param <T>
      * @param driver the implementation to use
      * @param xml the XML data
      * @param permissions the permissions to use (ensure that they include the defaults)
+	 * @return 
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws ObjectStreamException if the XML contains non-deserializable elements
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
@@ -206,10 +220,12 @@ public class XStreamer {
     }
 
     /**
-     * Deserialize a self-contained XStream with object from an XML Reader. The method will use internally an XppDriver
-     * to load the contained XStream instance with default permissions.
+     * Deserialize a self-contained XStream with object from an XML Reader.The method will use internally an XppDriver
+ to load the contained XStream instance with default permissions.
      *
+	 * @param <T>
      * @param xml the {@link Reader} providing the XML data
+	 * @return 
      * @throws IOException if an error occurs reading from the Reader.
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
@@ -221,11 +237,13 @@ public class XStreamer {
     }
 
     /**
-     * Deserialize a self-contained XStream with object from an XML Reader. The method will use internally an XppDriver
-     * to load the contained XStream instance.
+     * Deserialize a self-contained XStream with object from an XML Reader.The method will use internally an XppDriver
+ to load the contained XStream instance.
      *
+	 * @param <T>
      * @param xml the {@link Reader} providing the XML data
      * @param permissions the permissions to use (ensure that they include the defaults)
+	 * @return 
      * @throws IOException if an error occurs reading from the Reader.
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
@@ -240,8 +258,10 @@ public class XStreamer {
     /**
      * Deserialize a self-contained XStream with object from an XML Reader.
      *
+	 * @param <T>
      * @param driver the implementation to use
      * @param xml the {@link Reader} providing the XML data
+	 * @return 
      * @throws IOException if an error occurs reading from the Reader.
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
@@ -255,9 +275,11 @@ public class XStreamer {
     /**
      * Deserialize a self-contained XStream with object from an XML Reader.
      *
+	 * @param <T>
      * @param driver the implementation to use
      * @param xml the {@link Reader} providing the XML data
      * @param permissions the permissions to use (ensure that they include the defaults)
+	 * @return 
      * @throws IOException if an error occurs reading from the Reader.
      * @throws ClassNotFoundException if a class in the XML stream cannot be found
      * @throws com.thoughtworks.xstream.XStreamException if the object cannot be deserialized
@@ -293,6 +315,7 @@ public class XStreamer {
      * references to other types, you will have to add permission for those types on your own.
      * </p>
      *
+	 * @return 
      * @since 1.4.7
      */
     public static TypePermission[] getDefaultPermissions() {

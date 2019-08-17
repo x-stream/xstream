@@ -30,12 +30,13 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 public class DependencyInjectionFactory {
 
     /**
-     * Create an instance with dependency injection. The given dependencies are used to match the parameters of the
-     * constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
-     * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
-     * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
-     * <code>null</code> as parameter.
+     * Create an instance with dependency injection.The given dependencies are used to match the parameters of the
+ constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
+ matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
+ match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
+     * <code>null
      *
+	 * @param <T>
      * @param type the type to create an instance of
      * @param dependencies the possible dependencies
      * @return the instantiated object
@@ -48,12 +49,13 @@ public class DependencyInjectionFactory {
     }
 
     /**
-     * Create an instance with dependency injection. The given dependencies are used to match the parameters of the
-     * constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
-     * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
-     * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
-     * <code>null</code> as parameter.
+     * Create an instance with dependency injection.The given dependencies are used to match the parameters of the
+ constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
+ matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
+ match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
+     * <code>null
      *
+	 * @param <T>
      * @param type the type to create an instance of
      * @param dependencies the possible dependencies
      * @param usedDependencies bit mask set by the method for all used dependencies (may be <code>null</code>)
@@ -69,12 +71,13 @@ public class DependencyInjectionFactory {
     }
 
     /**
-     * Create an instance with dependency injection. The given dependencies are used to match the parameters of the
-     * constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
-     * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
-     * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
-     * <code>null</code> as parameter.
+     * Create an instance with dependency injection.The given dependencies are used to match the parameters of the
+ constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
+ matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
+ match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
+     * <code>null
      *
+	 * @param <T>
      * @param usedDependencies bit mask set by the method for all used dependencies (may be <code>null</code>)
      * @param type the type to create an instance of
      * @param dependencies the possible dependencies

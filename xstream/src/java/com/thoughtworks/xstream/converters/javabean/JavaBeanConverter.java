@@ -56,7 +56,8 @@ public class JavaBeanConverter implements Converter {
     }
 
     /**
-     * Checks if the bean provider can instantiate this type. If you need less strict checks, subclass JavaBeanConverter
+     * Checks if the bean provider can instantiate this type.If you need less strict checks, subclass JavaBeanConverter
+	 * @return 
      */
     @Override
     public boolean canConvert(final Class<?> type) {

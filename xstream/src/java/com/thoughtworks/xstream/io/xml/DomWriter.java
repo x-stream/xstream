@@ -34,6 +34,8 @@ public class DomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param document
+	 * @param nameCoder
      * @since 1.4
      */
     public DomWriter(final Document document, final NameCoder nameCoder) {
@@ -41,6 +43,9 @@ public class DomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param element
+	 * @param nameCoder
+	 * @param document
      * @since 1.4
      */
     public DomWriter(final Element element, final Document document, final NameCoder nameCoder) {
@@ -50,6 +55,8 @@ public class DomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param rootElement
+	 * @param nameCoder
      * @since 1.4
      */
     public DomWriter(final Element rootElement, final NameCoder nameCoder) {
@@ -57,6 +64,8 @@ public class DomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param document
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Document, NameCoder)} instead.
      */
@@ -66,6 +75,9 @@ public class DomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param element
+	 * @param replacer
+	 * @param document
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Element, Document, NameCoder)} instead.
      */
@@ -75,6 +87,8 @@ public class DomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param rootElement
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link DomWriter#DomWriter(Element, NameCoder)} instead.
      */

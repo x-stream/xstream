@@ -18,6 +18,8 @@ import java.util.Map;
  * A key to a persistent storage and vice-versa strategy interface.
  * 
  * @author Guilherme Silveira
+ * @param <K>
+ * @param <V>
  * @since 1.3.1
  */
 public interface PersistenceStrategy<K,V> {

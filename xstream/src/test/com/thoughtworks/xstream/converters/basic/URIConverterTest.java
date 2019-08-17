@@ -50,6 +50,7 @@ public class URIConverterTest extends AbstractAcceptanceTest {
 
     /**
      * Test of fromString method, of class URIConverter.
+	 * @throws java.lang.Exception
      */
     public void testFromString() throws Exception {
         final URIConverter instance = new URIConverter();

@@ -54,6 +54,9 @@ public abstract class AbstractCollectionConverter implements Converter {
     public abstract Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context);
 
     /**
+	 * @param item
+	 * @param writer
+	 * @param context
      * @deprecated As of 1.4.11 use {@link #writeCompleteItem(Object, MarshallingContext, HierarchicalStreamWriter)}
      *             instead.
      */
@@ -113,6 +116,10 @@ public abstract class AbstractCollectionConverter implements Converter {
     }
 
     /**
+	 * @param reader
+	 * @param current
+	 * @param context
+	 * @return 
      * @deprecated As of 1.4.11 use {@link #readBareItem(HierarchicalStreamReader, UnmarshallingContext, Object)} or
      *             {@link #readCompleteItem(HierarchicalStreamReader, UnmarshallingContext, Object)} instead.
      */

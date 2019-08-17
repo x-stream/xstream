@@ -23,6 +23,9 @@ public class Dom4JWriter extends AbstractDocumentWriter<Branch, Element> {
     private final DocumentFactory documentFactory;
 
     /**
+	 * @param root
+	 * @param nameCoder
+	 * @param factory
      * @since 1.4
      */
     public Dom4JWriter(final Branch root, final DocumentFactory factory, final NameCoder nameCoder) {
@@ -31,6 +34,8 @@ public class Dom4JWriter extends AbstractDocumentWriter<Branch, Element> {
     }
 
     /**
+	 * @param factory
+	 * @param nameCoder
      * @since 1.4
      */
     public Dom4JWriter(final DocumentFactory factory, final NameCoder nameCoder) {
@@ -38,6 +43,8 @@ public class Dom4JWriter extends AbstractDocumentWriter<Branch, Element> {
     }
 
     /**
+	 * @param root
+	 * @param nameCoder
      * @since 1.4
      */
     public Dom4JWriter(final Branch root, final NameCoder nameCoder) {
@@ -45,6 +52,9 @@ public class Dom4JWriter extends AbstractDocumentWriter<Branch, Element> {
     }
 
     /**
+	 * @param root
+	 * @param replacer
+	 * @param factory
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link Dom4JWriter#Dom4JWriter(Branch, DocumentFactory, NameCoder)} instead.
      */
@@ -54,6 +64,8 @@ public class Dom4JWriter extends AbstractDocumentWriter<Branch, Element> {
     }
 
     /**
+	 * @param factory
+	 * @param replacer
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link Dom4JWriter#Dom4JWriter(DocumentFactory, NameCoder)} instead.
      */
@@ -63,6 +75,7 @@ public class Dom4JWriter extends AbstractDocumentWriter<Branch, Element> {
     }
 
     /**
+	 * @param documentFactory
      * @since 1.2.1
      */
     public Dom4JWriter(final DocumentFactory documentFactory) {
@@ -70,6 +83,8 @@ public class Dom4JWriter extends AbstractDocumentWriter<Branch, Element> {
     }
 
     /**
+	 * @param root
+	 * @param replacer
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link Dom4JWriter#Dom4JWriter(Branch, NameCoder)} instead
      */

@@ -17,6 +17,7 @@ public class TypeHierarchyPermission implements TypePermission {
     private Class<?> type;
 
     /**
+	 * @param type
      * @since 1.4.7
      */
     public TypeHierarchyPermission(Class<?> type) {

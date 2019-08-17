@@ -31,6 +31,8 @@ public class XomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param parentElement
+	 * @param nameCoder
      * @since 1.4
      */
     public XomWriter(final Element parentElement, final NameCoder nameCoder) {
@@ -38,6 +40,8 @@ public class XomWriter extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param parentElement
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link XomWriter#XomWriter(Element, NameCoder)} instead
      */

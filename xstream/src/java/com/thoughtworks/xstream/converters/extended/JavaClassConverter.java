@@ -42,6 +42,7 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
     }
 
     /**
+	 * @param classLoader
      * @deprecated As of 1.4.5 use {@link #JavaClassConverter(ClassLoaderReference)}
      */
     @Deprecated

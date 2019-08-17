@@ -179,6 +179,7 @@ public final class XmlHeaderAwareReader extends Reader {
     }
 
     /**
+	 * @return 
      * @see InputStreamReader#getEncoding()
      * @since 1.3
      */

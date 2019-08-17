@@ -23,6 +23,8 @@ public class CompactWriter extends PrettyPrintWriter {
     }
 
     /**
+	 * @param writer
+	 * @param mode
      * @since 1.3
      */
     public CompactWriter(final Writer writer, final int mode) {
@@ -30,6 +32,8 @@ public class CompactWriter extends PrettyPrintWriter {
     }
 
     /**
+	 * @param writer
+	 * @param nameCoder
      * @since 1.4
      */
     public CompactWriter(final Writer writer, final NameCoder nameCoder) {
@@ -37,6 +41,9 @@ public class CompactWriter extends PrettyPrintWriter {
     }
 
     /**
+	 * @param writer
+	 * @param nameCoder
+	 * @param mode
      * @since 1.4
      */
     public CompactWriter(final Writer writer, final int mode, final NameCoder nameCoder) {
@@ -44,6 +51,8 @@ public class CompactWriter extends PrettyPrintWriter {
     }
 
     /**
+	 * @param writer
+	 * @param replacer
      * @deprecated As of 1.4 use {@link CompactWriter#CompactWriter(Writer, NameCoder)} instead.
      */
     @Deprecated
@@ -52,6 +61,9 @@ public class CompactWriter extends PrettyPrintWriter {
     }
 
     /**
+	 * @param writer
+	 * @param replacer
+	 * @param mode
      * @since 1.3
      * @deprecated As of 1.4 use {@link CompactWriter#CompactWriter(Writer, int, NameCoder)} instead.
      */

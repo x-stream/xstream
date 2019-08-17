@@ -41,6 +41,13 @@ public class JettisonStaxWriter extends StaxWriter {
     private final Deque<String> stack = new ArrayDeque<String>();
 
     /**
+	 * @param qnameMap
+	 * @param convention
+	 * @param out
+	 * @param nameCoder
+	 * @param writeEnclosingDocument
+	 * @param namespaceRepairingMode
+	 * @throws javax.xml.stream.XMLStreamException
      * @since 1.4
      */
     public JettisonStaxWriter(
@@ -52,6 +59,13 @@ public class JettisonStaxWriter extends StaxWriter {
     }
 
     /**
+	 * @param qnameMap
+	 * @param convention
+	 * @param out
+	 * @param replacer
+	 * @param writeEnclosingDocument
+	 * @param namespaceRepairingMode
+	 * @throws javax.xml.stream.XMLStreamException
      * @deprecated As of 1.4 use
      *             {@link JettisonStaxWriter#JettisonStaxWriter(QNameMap, XMLStreamWriter, boolean, boolean, NameCoder, MappedNamespaceConvention)}
      *             instead
@@ -81,6 +95,11 @@ public class JettisonStaxWriter extends StaxWriter {
     }
 
     /**
+	 * @param qnameMap
+	 * @param convention
+	 * @param out
+	 * @param nameCoder
+	 * @throws javax.xml.stream.XMLStreamException
      * @since 1.4
      */
     public JettisonStaxWriter(

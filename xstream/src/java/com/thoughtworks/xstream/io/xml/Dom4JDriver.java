@@ -45,6 +45,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     public Dom4JDriver(final NameCoder nameCoder) {
@@ -57,6 +58,9 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param documentFactory
+	 * @param nameCoder
+	 * @param outputFormat
      * @since 1.4
      */
     public Dom4JDriver(
@@ -67,6 +71,9 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param documentFactory
+	 * @param replacer
+	 * @param outputFormat
      * @since 1.2
      * @deprecated As of 1.4, use {@link Dom4JDriver#Dom4JDriver(DocumentFactory, OutputFormat, NameCoder)} instead.
      */
@@ -114,6 +121,8 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param in
+	 * @return 
      * @since 1.4
      */
     @Override
@@ -127,6 +136,8 @@ public class Dom4JDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param in
+	 * @return 
      * @since 1.4
      */
     @Override

@@ -31,6 +31,7 @@ public class Sun14ReflectionProvider extends SunUnsafeReflectionProvider {
     }
 
     /**
+	 * @param dic
      * @deprecated As of 1.4.7 use {@link SunUnsafeReflectionProvider#SunUnsafeReflectionProvider(FieldDictionary)}
      */
     @Deprecated

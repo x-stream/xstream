@@ -31,6 +31,8 @@ public class WstxDriver extends StaxDriver {
     }
 
     /**
+	 * @param qnameMap
+	 * @param nameCoder
      * @deprecated As of 1.4.6 use {@link #WstxDriver(QNameMap, NameCoder)}
      */
     @Deprecated
@@ -39,6 +41,8 @@ public class WstxDriver extends StaxDriver {
     }
 
     /**
+	 * @param qnameMap
+	 * @param nameCoder
      * @since 1.4.6
      */
     public WstxDriver(final QNameMap qnameMap, final NameCoder nameCoder) {
@@ -50,6 +54,7 @@ public class WstxDriver extends StaxDriver {
     }
 
     /**
+	 * @param nameCoder
      * @deprecated As of 1.4.6 use {@link #WstxDriver(NameCoder)}
      */
     @Deprecated
@@ -58,6 +63,7 @@ public class WstxDriver extends StaxDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4.6
      */
     public WstxDriver(final NameCoder nameCoder) {

@@ -21,6 +21,7 @@ public class XppDomWriter extends AbstractDocumentWriter<XppDom, XppDom> {
     }
 
     /**
+	 * @param parent
      * @since 1.2.1
      */
     public XppDomWriter(final XppDom parent) {
@@ -28,6 +29,7 @@ public class XppDomWriter extends AbstractDocumentWriter<XppDom, XppDom> {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     public XppDomWriter(final NameCoder nameCoder) {
@@ -35,6 +37,8 @@ public class XppDomWriter extends AbstractDocumentWriter<XppDom, XppDom> {
     }
 
     /**
+	 * @param parent
+	 * @param nameCoder
      * @since 1.4
      */
     public XppDomWriter(final XppDom parent, final NameCoder nameCoder) {
@@ -42,6 +46,7 @@ public class XppDomWriter extends AbstractDocumentWriter<XppDom, XppDom> {
     }
 
     /**
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link XppDomWriter#XppDomWriter(NameCoder)} instead
      */
@@ -51,6 +56,8 @@ public class XppDomWriter extends AbstractDocumentWriter<XppDom, XppDom> {
     }
 
     /**
+	 * @param parent
+	 * @param replacer
      * @since 1.2.1
      * @deprecated As of 1.4 use {@link XppDomWriter#XppDomWriter(XppDom, NameCoder)} instead.
      */

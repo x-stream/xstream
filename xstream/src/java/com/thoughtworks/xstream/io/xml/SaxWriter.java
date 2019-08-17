@@ -112,6 +112,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     private final boolean includeEnclosingDocument;
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     public SaxWriter(final NameCoder nameCoder) {
@@ -119,6 +120,8 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     }
 
     /**
+	 * @param includeEnclosingDocument
+	 * @param nameCoder
      * @since 1.4
      */
     public SaxWriter(final boolean includeEnclosingDocument, final NameCoder nameCoder) {
@@ -127,6 +130,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     }
 
     /**
+	 * @param replacer
      * @deprecated As of 1.4 use {@link SaxWriter#SaxWriter(NameCoder)} instead.
      */
     @Deprecated
@@ -135,6 +139,8 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     }
 
     /**
+	 * @param includeEnclosingDocument
+	 * @param replacer
      * @deprecated As of 1.4 use {@link SaxWriter#SaxWriter(boolean, NameCoder)} instead.
      */
     @Deprecated

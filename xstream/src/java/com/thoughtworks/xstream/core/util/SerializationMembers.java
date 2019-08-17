@@ -64,6 +64,8 @@ public class SerializationMembers implements Caching {
 
     /**
      * Resolves an object as native serialization does by calling readResolve(), if available.
+	 * @param result
+	 * @return 
      */
     public Object callReadResolve(final Object result) {
         if (result == null) {

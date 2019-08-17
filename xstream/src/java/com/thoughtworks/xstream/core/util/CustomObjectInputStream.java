@@ -47,6 +47,9 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     /**
+	 * @param whereFrom
+	 * @param callback
+	 * @return 
      * @deprecated As of 1.4 use {@link #getInstance(DataHolder, StreamCallback, ClassLoader)}
      */
     @Deprecated
@@ -56,6 +59,10 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     /**
+	 * @param whereFrom
+	 * @param classLoader
+	 * @param callback
+	 * @return 
      * @deprecated As of 1.4.5 use {@link #getInstance(DataHolder, StreamCallback, ClassLoaderReference)}
      */
     @Deprecated
@@ -83,9 +90,12 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     /**
-     * Warning, this object is expensive to create (due to functionality inherited from superclass). Use the static
-     * fetch() method instead, wherever possible.
+     * Warning, this object is expensive to create (due to functionality inherited from superclass).Use the static
+ fetch() method instead, wherever possible.
      *
+	 * @param callback
+	 * @param classLoaderReference
+	 * @throws java.io.IOException
      * @see #getInstance(DataHolder, StreamCallback, ClassLoaderReference)
      */
     public CustomObjectInputStream(final StreamCallback callback, final ClassLoaderReference classLoaderReference)
@@ -96,6 +106,9 @@ public class CustomObjectInputStream extends ObjectInputStream {
     }
 
     /**
+	 * @param callback
+	 * @param classLoader
+	 * @throws java.io.IOException
      * @deprecated As of 1.4.5 use {@link #CustomObjectInputStream(StreamCallback, ClassLoaderReference)}
      */
     @Deprecated
@@ -106,6 +119,7 @@ public class CustomObjectInputStream extends ObjectInputStream {
 
     /**
      * Allows the CustomObjectInputStream (which is expensive to create) to be reused.
+	 * @param callback
      */
     public void pushCallback(final StreamCallback callback) {
         callbacks.push(callback);

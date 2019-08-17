@@ -39,6 +39,8 @@ public class DomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param rootElement
+	 * @param nameCoder
      * @since 1.4
      */
     public DomReader(final Element rootElement, final NameCoder nameCoder) {
@@ -47,6 +49,8 @@ public class DomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param nameCoder
      * @since 1.4
      */
     public DomReader(final Document document, final NameCoder nameCoder) {
@@ -54,6 +58,8 @@ public class DomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param rootElement
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link DomReader#DomReader(Element, NameCoder)} instead.
      */
@@ -63,6 +69,8 @@ public class DomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link DomReader#DomReader(Document, NameCoder)} instead.
      */

@@ -27,10 +27,12 @@ import java.lang.annotation.Target;
 public @interface XStreamImplicit {
     /**
      * Element name of the implicit collection.
+	 * @return 
      */
     String itemFieldName() default "";
     /**
      * Field name of map entries that are used as key for the element in the implicit map.
+	 * @return 
      * @since 1.4
      */
     String keyFieldName() default "";

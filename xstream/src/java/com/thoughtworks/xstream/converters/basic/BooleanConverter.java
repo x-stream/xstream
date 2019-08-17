@@ -38,6 +38,9 @@ public class BooleanConverter extends AbstractSingleValueConverter {
     }
 
     /**
+	 * @param type
+	 * @param value
+	 * @return 
      * @deprecated As of 1.4.8 use {@link #canConvert(Class)}
      */
     @Deprecated

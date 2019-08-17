@@ -23,6 +23,7 @@ import java.util.Map;
  * Behaves similar to java.util.IdentityHashMap, but in JDK1.3 as well. Additionally the implementation keeps track of
  * orphaned IDs by using a WeakReference to store the reference object.
  * </p>
+ * @param <E>
  */
 public class ObjectIdDictionary<E> {
 

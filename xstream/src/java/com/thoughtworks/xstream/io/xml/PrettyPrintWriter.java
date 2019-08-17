@@ -73,6 +73,10 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     private static final char[] CLOSE = "</".toCharArray();
 
     /**
+	 * @param writer
+	 * @param nameCoder
+	 * @param mode
+	 * @param lineIndenter
      * @since 1.4
      */
     public PrettyPrintWriter(final Writer writer, final int mode, final char[] lineIndenter, final NameCoder nameCoder) {
@@ -86,6 +90,10 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param replacer
+	 * @param mode
+	 * @param lineIndenter
      * @since 1.3
      * @deprecated As of 1.4 use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, int, char[], NameCoder)} instead
      */
@@ -96,6 +104,9 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param lineIndenter
+	 * @param mode
      * @since 1.3
      */
     public PrettyPrintWriter(final Writer writer, final int mode, final char[] lineIndenter) {
@@ -107,6 +118,9 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param lineIndenter
+	 * @param mode
      * @since 1.3
      */
     public PrettyPrintWriter(final Writer writer, final int mode, final String lineIndenter) {
@@ -118,6 +132,9 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param nameCoder
+	 * @param mode
      * @since 1.4
      */
     public PrettyPrintWriter(final Writer writer, final int mode, final NameCoder nameCoder) {
@@ -125,6 +142,9 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param replacer
+	 * @param mode
      * @since 1.3
      * @deprecated As of 1.4 use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, int, NameCoder)} instead
      */
@@ -134,6 +154,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param nameCoder
      * @since 1.4
      */
     public PrettyPrintWriter(final Writer writer, final NameCoder nameCoder) {
@@ -141,6 +163,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param replacer
      * @deprecated As of 1.4 use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, NameCoder)} instead.
      */
     @Deprecated
@@ -149,6 +173,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param mode
      * @since 1.3
      */
     public PrettyPrintWriter(final Writer writer, final int mode) {

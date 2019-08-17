@@ -40,6 +40,7 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     /**
+	 * @param pattern
      * @deprecated As of 1.4.9 use {@link ElementIgnoringMapper#addElementsToIgnore(Pattern)}.
      */
     @Deprecated
@@ -54,6 +55,8 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     /**
+	 * @param definedIn
+	 * @param fieldName
      * @deprecated As of 1.4.9 use {@link ElementIgnoringMapper#omitField(Class, String)}.
      */
     @Deprecated

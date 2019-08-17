@@ -163,6 +163,7 @@ public class PathTracker {
 
     /**
      * Current Path in stream.
+	 * @return 
      */
     public Path getPath() {
         if (currentPath == null) {

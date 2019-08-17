@@ -34,6 +34,7 @@ public class XppDriver extends AbstractXppDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     public XppDriver(final NameCoder nameCoder) {
@@ -41,6 +42,7 @@ public class XppDriver extends AbstractXppDriver {
     }
 
     /**
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link XppDriver#XppDriver(NameCoder)} instead.
      */

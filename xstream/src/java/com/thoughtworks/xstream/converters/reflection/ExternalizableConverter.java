@@ -62,6 +62,8 @@ public class ExternalizableConverter implements Converter {
     }
 
     /**
+	 * @param mapper
+	 * @param classLoader
      * @deprecated As of 1.4.5 use {@link #ExternalizableConverter(Mapper, ClassLoaderReference)}
      */
     @Deprecated
@@ -70,6 +72,7 @@ public class ExternalizableConverter implements Converter {
     }
 
     /**
+	 * @param mapper
      * @deprecated As of 1.4 use {@link #ExternalizableConverter(Mapper, ClassLoader)}
      */
     @Deprecated

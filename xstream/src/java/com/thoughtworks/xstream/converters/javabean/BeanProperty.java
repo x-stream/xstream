@@ -42,6 +42,9 @@ public class BeanProperty {
 
     /**
      * Creates a new {@link BeanProperty}that gets the specified property from the specified class.
+	 * @param memberClass
+	 * @param propertyType
+	 * @param propertyName
      */
     public BeanProperty(final Class<?> memberClass, final String propertyName, final Class<?> propertyType) {
         this.memberClass = memberClass;
@@ -51,6 +54,7 @@ public class BeanProperty {
 
     /**
      * Gets the base class that this getter accesses.
+	 * @return 
      */
     public Class<?> getBeanClass() {
         return memberClass;
@@ -58,6 +62,7 @@ public class BeanProperty {
 
     /**
      * Returns the property type
+	 * @return 
      */
     public Class<?> getType() {
         return type;
@@ -65,6 +70,7 @@ public class BeanProperty {
 
     /**
      * Gets the name of the property that this getter extracts.
+	 * @return 
      */
     public String getName() {
         return propertyName;
@@ -72,6 +78,7 @@ public class BeanProperty {
 
     /**
      * Gets whether this property can get get.
+	 * @return 
      */
     public boolean isReadable() {
         return getter != null;
@@ -79,6 +86,7 @@ public class BeanProperty {
 
     /**
      * Gets whether this property can be set.
+	 * @return 
      */
     public boolean isWritable() {
         return setter != null;
@@ -87,6 +95,8 @@ public class BeanProperty {
     /**
      * Gets the value of this property for the specified Object.
      * 
+	 * @param member
+	 * @return 
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
@@ -105,6 +115,9 @@ public class BeanProperty {
     /**
      * Sets the value of this property for the specified Object.
      * 
+	 * @param member
+	 * @param newValue
+	 * @return 
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */

@@ -49,14 +49,17 @@ public class DomDriver extends AbstractXmlDriver {
     }
 
     /**
-     * Construct a DomDriver with a specified encoding. The created DomReader will ignore any encoding attribute of the
-     * XML header though.
+     * Construct a DomDriver with a specified encoding.The created DomReader will ignore any encoding attribute of the
+ XML header though.
+	 * @param encoding
      */
     public DomDriver(final String encoding) {
         this(encoding, new XmlFriendlyNameCoder());
     }
 
     /**
+	 * @param encoding
+	 * @param nameCoder
      * @since 1.4
      */
     public DomDriver(final String encoding, final NameCoder nameCoder) {
@@ -65,6 +68,8 @@ public class DomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param encoding
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link #DomDriver(String, NameCoder)} instead.
      */

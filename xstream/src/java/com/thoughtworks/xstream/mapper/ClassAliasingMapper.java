@@ -74,6 +74,8 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     /**
+	 * @param clazz
+	 * @return 
      * @deprecated As of 1.4.9
      */
     @Deprecated
@@ -82,6 +84,8 @@ public class ClassAliasingMapper extends MapperWrapper {
     }
 
     /**
+	 * @param name
+	 * @return 
      * @deprecated As of 1.4.9
      */
     @Deprecated

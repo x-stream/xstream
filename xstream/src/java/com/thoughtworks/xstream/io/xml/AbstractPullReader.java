@@ -43,6 +43,7 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     protected AbstractPullReader(final NameCoder nameCoder) {
@@ -50,6 +51,7 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
     }
 
     /**
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link AbstractPullReader#AbstractPullReader(NameCoder)} instead
      */
@@ -68,16 +70,19 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
      * The underlying pull parser will most likely return its own event types. These must be mapped to the appropriate
      * events.
      * </p>
+	 * @return 
      */
     protected abstract int pullNextEvent();
 
     /**
      * Pull the name of the current element from the stream.
+	 * @return 
      */
     protected abstract String pullElementName();
 
     /**
      * Pull the contents of the current text node from the stream.
+	 * @return 
      */
     protected abstract String pullText();
 

@@ -18,6 +18,7 @@ import java.util.AbstractList;
  * A persistent list implementation backed on a XmlMap.
  * 
  * @author Guilherme Silveira
+ * @param <V>
  */
 public class XmlArrayList<V> extends AbstractList<V> {
 

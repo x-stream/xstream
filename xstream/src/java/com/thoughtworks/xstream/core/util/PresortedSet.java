@@ -16,6 +16,7 @@ import java.util.SortedSet;
 
 /**
  * @author J&ouml;rg Schaible
+ * @param <E>
  */
 public class PresortedSet<E> implements SortedSet<E> {
     private final List<E> list = new ArrayList<>();

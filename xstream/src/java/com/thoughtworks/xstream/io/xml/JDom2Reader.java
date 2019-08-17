@@ -26,6 +26,7 @@ public class JDom2Reader extends AbstractDocumentReader {
     private Element currentElement;
 
     /**
+	 * @param root
      * @since 1.4.5
      */
     public JDom2Reader(final Element root) {
@@ -33,6 +34,7 @@ public class JDom2Reader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
      * @since 1.4.5
      */
     public JDom2Reader(final Document document) {
@@ -40,6 +42,8 @@ public class JDom2Reader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param root
+	 * @param nameCoder
      * @since 1.4.5
      */
     public JDom2Reader(final Element root, final NameCoder nameCoder) {
@@ -47,6 +51,8 @@ public class JDom2Reader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param nameCoder
      * @since 1.4.5
      */
     public JDom2Reader(final Document document, final NameCoder nameCoder) {

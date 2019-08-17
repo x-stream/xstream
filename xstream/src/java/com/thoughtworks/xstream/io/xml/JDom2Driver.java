@@ -40,6 +40,7 @@ public class JDom2Driver extends AbstractDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4.5
      */
     public JDom2Driver(final NameCoder nameCoder) {

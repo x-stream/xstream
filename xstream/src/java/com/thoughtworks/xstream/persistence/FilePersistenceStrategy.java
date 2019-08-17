@@ -30,6 +30,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  *
  * @author J&ouml;rg Schaible
  * @author Guilherme Silveira
+ * @param <K>
+ * @param <V>
  * @since 1.3.1
  */
 public class FilePersistenceStrategy<K, V> extends AbstractFilePersistenceStrategy<K, V> {

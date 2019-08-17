@@ -27,6 +27,9 @@ import java.io.Writer;
 public class JsonHierarchicalStreamWriter extends JsonWriter {
 
     /**
+	 * @param writer
+	 * @param newLine
+	 * @param lineIndenter
      * @deprecated As of 1.3.1, use JsonWriter instead
      */
     @Deprecated
@@ -35,6 +38,8 @@ public class JsonHierarchicalStreamWriter extends JsonWriter {
     }
 
     /**
+	 * @param writer
+	 * @param lineIndenter
      * @deprecated As of 1.3.1, use JsonWriter instead
      */
     @Deprecated
@@ -43,6 +48,9 @@ public class JsonHierarchicalStreamWriter extends JsonWriter {
     }
 
     /**
+	 * @param writer
+	 * @param newLine
+	 * @param lineIndenter
      * @deprecated As of 1.3.1, use JsonWriter instead
      */
     @Deprecated
@@ -51,6 +59,8 @@ public class JsonHierarchicalStreamWriter extends JsonWriter {
     }
 
     /**
+	 * @param writer
+	 * @param lineIndenter
      * @deprecated As of 1.3.1, use JsonWriter instead
      */
     @Deprecated
@@ -59,6 +69,7 @@ public class JsonHierarchicalStreamWriter extends JsonWriter {
     }
 
     /**
+	 * @param writer
      * @deprecated As of 1.3.1, use JsonWriter instead
      */
     @Deprecated

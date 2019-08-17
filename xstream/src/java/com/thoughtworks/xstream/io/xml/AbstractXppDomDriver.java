@@ -86,6 +86,7 @@ public abstract class AbstractXppDomDriver extends AbstractXmlDriver {
     /**
      * Create the parser of the XPP implementation.
      * 
+	 * @return 
      * @throws XmlPullParserException if the parser cannot be created
      * @since 1.4
      */

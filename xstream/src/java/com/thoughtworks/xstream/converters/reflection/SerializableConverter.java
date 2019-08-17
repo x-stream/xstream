@@ -85,6 +85,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     /**
+	 * @param mapper
+	 * @param classLoader
+	 * @param reflectionProvider
      * @deprecated As of 1.4.5 use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
      */
     @Deprecated
@@ -94,6 +97,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     /**
+	 * @param mapper
+	 * @param reflectionProvider
      * @deprecated As of 1.4 use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
      */
     @Deprecated

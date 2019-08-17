@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.core.util;
  * A placeholder for a <code>null</code> value of a specific type.
  * 
  * @author J&ouml;rg Schaible
+ * @param <T>
  * @since 1.2.2
  */
 public class TypedNull<T> {

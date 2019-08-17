@@ -36,6 +36,9 @@ public class JsonWriter extends AbstractJsonWriter {
     private boolean newLineProposed;
 
     /**
+	 * @param writer
+	 * @param newLine
+	 * @param lineIndenter
      * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
      */
     @Deprecated
@@ -45,6 +48,8 @@ public class JsonWriter extends AbstractJsonWriter {
     }
 
     /**
+	 * @param writer
+	 * @param lineIndenter
      * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
      */
     @Deprecated
@@ -54,6 +59,9 @@ public class JsonWriter extends AbstractJsonWriter {
     }
 
     /**
+	 * @param writer
+	 * @param newLine
+	 * @param lineIndenter
      * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
      */
     @Deprecated
@@ -63,6 +71,8 @@ public class JsonWriter extends AbstractJsonWriter {
     }
 
     /**
+	 * @param writer
+	 * @param lineIndenter
      * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
      */
     @Deprecated
@@ -77,6 +87,10 @@ public class JsonWriter extends AbstractJsonWriter {
     }
 
     /**
+	 * @param writer
+	 * @param mode
+	 * @param lineIndenter
+	 * @param newLine
      * @since 1.3.1
      * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, int, Format) instead}
      */

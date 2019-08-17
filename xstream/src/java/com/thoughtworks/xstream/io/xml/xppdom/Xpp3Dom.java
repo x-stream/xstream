@@ -24,6 +24,7 @@ public class Xpp3Dom extends XppDom {
     private static final long serialVersionUID = 10400L;
 
     /**
+	 * @param name
      * @deprecated As of 1.4, use {@link XppDom} instead
      */
     @Deprecated

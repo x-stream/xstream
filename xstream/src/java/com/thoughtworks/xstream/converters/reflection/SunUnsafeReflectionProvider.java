@@ -46,6 +46,7 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
     }
 
     /**
+	 * @param dic
      * @since 1.4.7
      */
     public SunUnsafeReflectionProvider(final FieldDictionary dic) {

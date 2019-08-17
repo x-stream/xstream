@@ -18,6 +18,7 @@ import java.util.Arrays;
  * 
  * @author J&ouml;rg Schaible
  * @author Joe Walnes
+ * @param <T>
  */
 public class Pool<T> {
 

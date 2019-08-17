@@ -59,6 +59,8 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param qnameMap
+	 * @param nameCoder
      * @since 1.4
      */
     public StaxDriver(final QNameMap qnameMap, final NameCoder nameCoder) {
@@ -67,6 +69,7 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     public StaxDriver(final NameCoder nameCoder) {
@@ -74,6 +77,8 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param qnameMap
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link StaxDriver#StaxDriver(QNameMap, NameCoder)} instead.
      */
@@ -83,6 +88,7 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link StaxDriver#StaxDriver(NameCoder)} instead.
      */
@@ -221,6 +227,7 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param repairing
      * @since 1.2
      */
     public void setRepairingNamespace(final boolean repairing) {
@@ -243,6 +250,7 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @return 
      * @since 1.4
      */
     protected XMLInputFactory createInputFactory() {
@@ -252,6 +260,7 @@ public class StaxDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @return 
      * @since 1.4
      */
     protected XMLOutputFactory createOutputFactory() {

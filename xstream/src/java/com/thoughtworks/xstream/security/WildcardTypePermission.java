@@ -27,6 +27,7 @@ package com.thoughtworks.xstream.security;
 public class WildcardTypePermission extends RegExpTypePermission {
 
     /**
+	 * @param patterns
      * @since 1.4.7
      */
     public WildcardTypePermission(final String... patterns) {

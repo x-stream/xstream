@@ -137,6 +137,7 @@ public class DateConverter extends AbstractSingleValueConverter implements Error
      *
      * @param defaultFormat the default format
      * @param acceptableFormats fallback formats
+	 * @param timeZone
      * @since 1.4
      */
     public DateConverter(final String defaultFormat, final String[] acceptableFormats, final TimeZone timeZone) {

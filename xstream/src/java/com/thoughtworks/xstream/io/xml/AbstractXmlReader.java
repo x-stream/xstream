@@ -31,6 +31,7 @@ public abstract class AbstractXmlReader extends AbstractReader /* implements Xml
     }
 
     /**
+	 * @param replacer
      * @deprecated As of 1.4, use {@link AbstractReader} instead.
      */
     @Deprecated

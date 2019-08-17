@@ -38,6 +38,7 @@ public class RegexPatternConverter implements Converter {
     }
 
     /**
+	 * @param defaultConverter
      * @deprecated As of 1.4.5, use {@link #RegexPatternConverter()} instead
      */
     @Deprecated

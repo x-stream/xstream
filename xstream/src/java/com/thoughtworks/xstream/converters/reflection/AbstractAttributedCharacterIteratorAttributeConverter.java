@@ -28,6 +28,7 @@ import com.thoughtworks.xstream.core.util.Fields;
  * derived types.
  *
  * @author J&ouml;rg Schaible
+ * @param <T>
  * @since 1.2.2
  */
 public class AbstractAttributedCharacterIteratorAttributeConverter<T extends AttributedCharacterIterator.Attribute>

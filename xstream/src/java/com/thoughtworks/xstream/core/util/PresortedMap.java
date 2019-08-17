@@ -16,6 +16,8 @@ import java.util.SortedMap;
 
 /**
  * @author J&ouml;rg Schaible
+ * @param <K>
+ * @param <V>
  */
 public class PresortedMap<K, V> implements SortedMap<K, V> {
 

@@ -26,6 +26,8 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
     }
 
     /**
+	 * @param rootElement
+	 * @param nameCoder
      * @since 1.4
      */
     protected AbstractDocumentReader(final Object rootElement, final NameCoder nameCoder) {
@@ -36,6 +38,8 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
     }
 
     /**
+	 * @param rootElement
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link AbstractDocumentReader#AbstractDocumentReader(Object, NameCoder)} instead.
      */

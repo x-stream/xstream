@@ -43,6 +43,7 @@ public class XppFactory {
      * Build an XPP DOM hierarchy from a String.
      * 
      * @param xml the XML data
+	 * @return 
      * @throws XmlPullParserException if the default parser cannot be created or fails with invalid XML
      * @throws IOException if the data cannot be read
      * @see XppDom#build(XmlPullParser)
@@ -56,6 +57,7 @@ public class XppFactory {
      * Build an XPP DOM hierarchy from a Reader.
      * 
      * @param r the reader
+	 * @return 
      * @throws XmlPullParserException if the default parser cannot be created or fails with invalid XML
      * @throws IOException if the data cannot be read
      * @see XppDom#build(XmlPullParser)
@@ -72,6 +74,7 @@ public class XppFactory {
      * 
      * @param in the input stream
      * @param encoding the encoding of the input stream
+	 * @return 
      * @throws XmlPullParserException if the default parser cannot be created or fails with invalid XML
      * @throws IOException if the data cannot be read
      * @see XppDom#build(XmlPullParser)

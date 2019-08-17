@@ -60,9 +60,11 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
     }
 
     /**
-     * Warning, this object is expensive to create (due to functionality inherited from superclass). Use the static
-     * fetch() method instead, wherever possible.
+     * Warning, this object is expensive to create (due to functionality inherited from superclass).Use the static
+ fetch() method instead, wherever possible.
      *
+	 * @param callback
+	 * @throws java.io.IOException
      * @see #getInstance(com.thoughtworks.xstream.converters.DataHolder,
      *      com.thoughtworks.xstream.core.util.CustomObjectOutputStream.StreamCallback)
      */
@@ -72,6 +74,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
 
     /**
      * Allows the CustomObjectOutputStream (which is expensive to create) to be reused.
+	 * @param callback
      */
     public void pushCallback(final StreamCallback callback) {
         callbacks.push(callback);

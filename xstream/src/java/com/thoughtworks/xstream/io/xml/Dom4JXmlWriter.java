@@ -37,6 +37,8 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param nameCoder
      * @since 1.4
      */
     public Dom4JXmlWriter(final XMLWriter writer, final NameCoder nameCoder) {
@@ -52,6 +54,8 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
     }
 
     /**
+	 * @param writer
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link Dom4JXmlWriter#Dom4JXmlWriter(XMLWriter, NameCoder)} instead.
      */

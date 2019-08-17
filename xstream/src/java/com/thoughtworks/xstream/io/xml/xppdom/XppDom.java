@@ -170,10 +170,11 @@ public class XppDom implements Serializable {
     // ----------------------------------------------------------------------
 
     /**
-     * Build an XPP DOM hierarchy. The {@link java.io.InputStream} or {@link java.io.Reader} used by the parser must
-     * have already been set. The method does not close it after reading the document's end.
+     * Build an XPP DOM hierarchy.The {@link java.io.InputStream} or {@link java.io.Reader} used by the parser must
+ have already been set. The method does not close it after reading the document's end.
      * 
      * @param parser the XPP instance
+	 * @return 
      * @throws XmlPullParserException if the parser turns into an invalid state or reads invalid XML
      * @throws IOException if the data cannot be read
      */

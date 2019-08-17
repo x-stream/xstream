@@ -19,6 +19,8 @@ public interface HierarchicalStreamWriter extends AutoCloseable {
     void startNode(String name);
 
     /**
+	 * @param name
+	 * @param clazz
      * @since upcoming, was originally added to ExtendedHierarchicalStreamWriter.
      */
     void startNode(String name, Class<?> clazz);
@@ -27,6 +29,7 @@ public interface HierarchicalStreamWriter extends AutoCloseable {
 
     /**
      * Write the value (text content) of the current node.
+	 * @param text
      */
     void setValue(String text);
 
@@ -68,6 +71,7 @@ public interface HierarchicalStreamWriter extends AutoCloseable {
      * Implementations of HierarchicalStreamWriter should return 'this', unless they are a decorator, in which case they
      * should delegate to whatever they are wrapping.
      * </p>
+	 * @return 
      */
     HierarchicalStreamWriter underlyingWriter();
 

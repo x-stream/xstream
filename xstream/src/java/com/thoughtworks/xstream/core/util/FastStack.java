@@ -19,6 +19,7 @@ import java.util.Arrays;
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
+ * @param <T>
  */
 public final class FastStack<T> {
 

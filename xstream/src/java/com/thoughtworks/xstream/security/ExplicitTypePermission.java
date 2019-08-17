@@ -23,6 +23,7 @@ public class ExplicitTypePermission implements TypePermission {
     final Set<String> names;
 
     /**
+	 * @param types
      * @since 1.4.7
      */
     public ExplicitTypePermission(final Class<?>... types) {
@@ -39,6 +40,7 @@ public class ExplicitTypePermission implements TypePermission {
     }
 
     /**
+	 * @param names
      * @since 1.4.7
      */
     public ExplicitTypePermission(String... names) {

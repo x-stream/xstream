@@ -125,6 +125,8 @@ public abstract class AbstractAcceptanceTest extends TestCase {
 
     /**
      * Allow derived classes to decide how to turn the object into XML text
+	 * @param root
+	 * @return 
      */
     protected String toXML(final Object root) {
         return xstream.toXML(root);
@@ -132,6 +134,8 @@ public abstract class AbstractAcceptanceTest extends TestCase {
 
     /**
      * Alternative version of assertEquals comparing the XML representation of the two objects.
+	 * @param expected
+	 * @param actual
      */
     protected void assertObjectsEqual(final Object expected, final Object actual) {
         if (expected == null) {

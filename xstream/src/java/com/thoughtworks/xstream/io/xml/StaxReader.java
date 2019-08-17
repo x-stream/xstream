@@ -37,6 +37,9 @@ public class StaxReader extends AbstractPullReader {
     }
 
     /**
+	 * @param qnameMap
+	 * @param replacer
+	 * @param in
      * @since 1.4
      */
     public StaxReader(final QNameMap qnameMap, final XMLStreamReader in, final NameCoder replacer) {
@@ -47,6 +50,9 @@ public class StaxReader extends AbstractPullReader {
     }
 
     /**
+	 * @param qnameMap
+	 * @param replacer
+	 * @param in
      * @since 1.2
      * @deprecated As of 1.4 use {@link StaxReader#StaxReader(QNameMap, XMLStreamReader, NameCoder)} instead.
      */

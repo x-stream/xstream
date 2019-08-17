@@ -24,6 +24,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * A single value converter for a special enum type using its string representation.
  *
  * @author J&ouml;rg Schaible
+ * @param <T>
  * @since 1.4.5
  */
 public class EnumToStringConverter<T extends Enum<T>> extends AbstractSingleValueConverter {

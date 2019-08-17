@@ -76,6 +76,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     }
 
     /**
+	 * @param mapper
+	 * @param classLoader
+	 * @param reflectionProvider
      * @deprecated As of 1.4.5 use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
      */
     @Deprecated
@@ -86,6 +89,8 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     }
 
     /**
+	 * @param mapper
+	 * @param reflectionProvider
      * @deprecated As of 1.4 use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
      */
     @Deprecated

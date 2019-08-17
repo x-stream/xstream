@@ -26,6 +26,7 @@ import com.thoughtworks.xstream.XStream;
  * </p>
  * 
  * @author Guilherme Silveira
+ * @param <V>
  * @deprecated As of 1.3.1, use FilePersistenceStrategy
  */
 @Deprecated

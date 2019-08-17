@@ -212,6 +212,8 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     /**
+	 * @param type
+	 * @return 
      * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     @Deprecated

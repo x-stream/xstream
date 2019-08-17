@@ -27,6 +27,8 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param xppDom
+	 * @param nameCoder
      * @since 1.4
      */
     public XppDomReader(final XppDom xppDom, final NameCoder nameCoder) {
@@ -34,6 +36,8 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param xppDom
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link XppDomReader#XppDomReader(XppDom, NameCoder)} instead.
      */

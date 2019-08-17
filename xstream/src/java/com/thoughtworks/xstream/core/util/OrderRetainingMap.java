@@ -22,6 +22,8 @@ import java.util.Set;
 
 
 /**
+ * @param <K>
+ * @param <V>
  * @deprecated As of 1.4.8 use {@link java.util.LinkedHashMap}
  */
 @Deprecated

@@ -34,6 +34,8 @@ public class SelfStreamingInstanceChecker implements Converter {
     private final ConverterLookup lookup;
 
     /**
+	 * @param lookup
+	 * @param xstream
      * @since 1.4.5
      */
     public SelfStreamingInstanceChecker(final ConverterLookup lookup, final Object xstream) {
@@ -42,6 +44,8 @@ public class SelfStreamingInstanceChecker implements Converter {
     }
 
     /**
+	 * @param defaultConverter
+	 * @param xstream
      * @deprecated As of 1.4.5 use {@link #SelfStreamingInstanceChecker(ConverterLookup, Object)}
      */
     @Deprecated

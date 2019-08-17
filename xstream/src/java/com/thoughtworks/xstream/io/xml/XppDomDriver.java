@@ -31,6 +31,7 @@ public class XppDomDriver extends AbstractXppDomDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     public XppDomDriver(final NameCoder nameCoder) {
@@ -38,6 +39,7 @@ public class XppDomDriver extends AbstractXppDomDriver {
     }
 
     /**
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link XppDomDriver#XppDomDriver(NameCoder)} instead.
      */

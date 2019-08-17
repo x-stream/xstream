@@ -19,12 +19,12 @@ import java.util.Set;
 
 
 /**
- * A persistent map. Its values are actually serialized as xml files.
- * <p>
+ * A persistent map.Its values are actually serialized as xml files.<p>
  * If you need an application-wide synchronized version of this map, try the respective Collections methods.
- * </p>
  * 
  * @author Guilherme Silveira
+ * @param <K>
+ * @param <V>
  */
 public class XmlMap<K, V> extends AbstractMap<K, V> {
 

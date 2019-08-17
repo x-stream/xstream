@@ -82,6 +82,7 @@ public class StaxWriter extends AbstractXmlWriter {
      * @param qnameMap is the mapper of Java class names to QNames
      * @param out the stream to output to
      * @param writeEnclosingDocument a flag to indicate whether or not the start/end document events should be written
+	 * @param namespaceRepairingMode
      * @throws XMLStreamException if the events could not be written to the output
      */
     public StaxWriter(
@@ -96,6 +97,7 @@ public class StaxWriter extends AbstractXmlWriter {
      * @param qnameMap is the mapper of Java class names to QNames
      * @param out the stream to output to
      * @param writeEnclosingDocument a flag to indicate whether or not the start/end document events should be written
+	 * @param namespaceRepairingMode
      * @param replacer the xml-friendly replacer to escape Java names
      * @throws XMLStreamException if the events could not be written to the output
      * @since 1.2
@@ -212,6 +214,7 @@ public class StaxWriter extends AbstractXmlWriter {
 
     /**
      * Is StAX namespace repairing mode on or off?
+	 * @return 
      */
     public boolean isNamespaceRepairingMode() {
         return namespaceRepairingMode;

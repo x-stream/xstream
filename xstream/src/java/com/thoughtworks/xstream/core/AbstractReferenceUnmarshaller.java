@@ -27,6 +27,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  * @author Mauro Talevi
+ * @param <R>
  * @since 1.2
  */
 public abstract class AbstractReferenceUnmarshaller<R> extends TreeUnmarshaller {

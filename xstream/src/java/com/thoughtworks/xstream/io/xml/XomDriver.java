@@ -40,6 +40,7 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param builder
      * @deprecated As of 1.4.9, use {@link #XomDriver()} and overload {@link #createBuilder()} instead
      */
     @Deprecated
@@ -48,6 +49,7 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     public XomDriver(final NameCoder nameCoder) {
@@ -56,6 +58,8 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param builder
+	 * @param nameCoder
      * @since 1.4
      * @deprecated As of 1.4.9, use {@link #XomDriver(NameCoder)} and overload {@link #createBuilder()} instead
      */
@@ -66,6 +70,7 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link #XomDriver(NameCoder)} instead
      */
@@ -75,6 +80,8 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param builder
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link #XomDriver(NameCoder)} and overload {@link #createBuilder()} instead
      */
@@ -84,6 +91,7 @@ public class XomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.9, overload {@link #createBuilder()} instead
      */
     @Deprecated

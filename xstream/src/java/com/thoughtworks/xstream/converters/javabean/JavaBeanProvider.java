@@ -28,6 +28,8 @@ public interface JavaBeanProvider {
 
     /**
      * Returns true if the Bean provider can instantiate the specified class
+	 * @param type
+	 * @return 
      */
     boolean canInstantiate(Class<?> type);
 

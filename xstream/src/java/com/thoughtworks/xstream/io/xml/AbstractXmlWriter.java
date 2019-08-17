@@ -31,6 +31,7 @@ public abstract class AbstractXmlWriter extends AbstractWriter implements XmlFri
     }
 
     /**
+	 * @param replacer
      * @deprecated As of 1.4
      */
     @Deprecated

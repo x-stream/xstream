@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.io.path.Path;
  * A {@link MarshallingContext} that manages references.
  * 
  * @author J&ouml;rg Schaible
+ * @param <K>
  * @since 1.4
  */
 public interface ReferencingMarshallingContext<K> extends MarshallingContext {

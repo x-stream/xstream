@@ -33,6 +33,8 @@ public class XomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param rootElement
+	 * @param nameCoder
      * @since 1.4
      */
     public XomReader(final Element rootElement, final NameCoder nameCoder) {
@@ -40,6 +42,8 @@ public class XomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param nameCoder
      * @since 1.4
      */
     public XomReader(final Document document, final NameCoder nameCoder) {
@@ -47,6 +51,8 @@ public class XomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param rootElement
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link XomReader#XomReader(Element, NameCoder)} instead.
      */
@@ -56,6 +62,8 @@ public class XomReader extends AbstractDocumentReader {
     }
 
     /**
+	 * @param document
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4 use {@link XomReader#XomReader(Element, NameCoder)} instead.
      */

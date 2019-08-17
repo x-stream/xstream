@@ -17,13 +17,14 @@ import java.util.TreeSet;
 
 
 /**
- * List that allows items to be added with a priority that will affect the order in which they are later iterated over.
- * Objects with a high priority will appear before objects with a low priority in the list. If two objects of the same
- * priority are added to the list, the most recently added one will be iterated over first. Implementation uses a
- * TreeSet, which has a guaranteed add time of O(log(n)).
+ * List that allows items to be added with a priority that will affect the order in which they are later iterated over.Objects with a high priority will appear before objects with a low priority in the list.
+ * If two objects of the same
+ priority are added to the list, the most recently added one will be iterated over first. Implementation uses a
+ TreeSet, which has a guaranteed add time of O(log(n)).
  * 
  * @author Joe Walnes
  * @author Guilherme Silveira
+ * @param <E>
  */
 public class PrioritizedList<E> implements Iterable<E> {
 

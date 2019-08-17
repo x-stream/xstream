@@ -39,6 +39,7 @@ public abstract class AbstractXmlDriver extends AbstractDriver {
     /**
      * Creates a AbstractXmlFriendlyDriver with default XmlFriendlyReplacer
      * 
+	 * @param nameCoder
      * @since 1.4
      * @deprecated As of 1.4
      */
@@ -59,6 +60,7 @@ public abstract class AbstractXmlDriver extends AbstractDriver {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4
      */
     @Deprecated

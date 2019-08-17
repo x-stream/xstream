@@ -39,6 +39,7 @@ public class ThrowableConverter implements Converter {
     private final Mapper mapper;
 
     /**
+	 * @param defaultConverter
      * @deprecated As of 1.4.5 use {@link #ThrowableConverter(ConverterLookup)}
      */
     @Deprecated
@@ -49,6 +50,7 @@ public class ThrowableConverter implements Converter {
     }
 
     /**
+	 * @param lookup
      * @since 1.4.5
      * @deprecated As of upcoming use {@link #ThrowableConverter(Mapper, ConverterLookup)}
      */
@@ -60,6 +62,8 @@ public class ThrowableConverter implements Converter {
     }
 
     /**
+	 * @param mapper
+	 * @param lookup
      * @since upcoming
      */
     public ThrowableConverter(final Mapper mapper, final ConverterLookup lookup) {

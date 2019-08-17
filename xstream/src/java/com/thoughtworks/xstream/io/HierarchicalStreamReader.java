@@ -24,13 +24,15 @@ public interface HierarchicalStreamReader extends ErrorReporter, AutoCloseable {
 
     /**
      * Does the node have any more children remaining that have not yet been read?
+	 * @return 
      */
     boolean hasMoreChildren();
 
     /**
-     * Peek the name of the next child. In situation where {@link #hasMoreChildren()} returns true, peek the tag name of
-     * the child.
+     * Peek the name of the next child.In situation where {@link #hasMoreChildren()} returns true, peek the tag name of
+ the child.
      *
+	 * @return 
      * @since upcoming, was originally added in 1.4.2 to ExtendedHierarchicalStreamReader.
      */
     String peekNextChild();
@@ -57,11 +59,13 @@ public interface HierarchicalStreamReader extends ErrorReporter, AutoCloseable {
 
     /**
      * Get the name of the current node.
+	 * @return 
      */
     String getNodeName();
 
     /**
      * Get the value (text content) of the current node.
+	 * @return 
      */
     String getValue();
 
@@ -70,6 +74,8 @@ public interface HierarchicalStreamReader extends ErrorReporter, AutoCloseable {
      * <p>
      * If no such attribute exists, the method returns null.
      * </p>
+	 * @param name
+	 * @return 
      */
     String getAttribute(String name);
 
@@ -79,11 +85,14 @@ public interface HierarchicalStreamReader extends ErrorReporter, AutoCloseable {
      * Note, the behavior of this method is dependent on the underlying parser when calling it with a non-existing
      * index. Typically some kind of RuntimeException is thrown.
      * </p>
+	 * @param index
+	 * @return 
      */
     String getAttribute(int index);
 
     /**
      * Number of attributes in current node.
+	 * @return 
      */
     int getAttributeCount();
 
@@ -93,6 +102,8 @@ public interface HierarchicalStreamReader extends ErrorReporter, AutoCloseable {
      * Note, the behavior of this method is dependent on the underlying parser when calling it with a non-existing
      * index. Typically some kind of RuntimeException is thrown.
      * </p>
+	 * @param index
+	 * @return 
      */
     String getAttributeName(int index);
 
@@ -102,6 +113,7 @@ public interface HierarchicalStreamReader extends ErrorReporter, AutoCloseable {
      * Note, the iterator is only valid as long as the internal state of the underlying parser is still at the start of
      * the current element. The behavior is undefined if the parser moved on.
      * </p>
+	 * @return 
      */
     Iterator<String> getAttributeNames();
 
@@ -143,6 +155,7 @@ public interface HierarchicalStreamReader extends ErrorReporter, AutoCloseable {
      * Implementations of HierarchicalStreamReader should return 'this', unless they are a decorator, in which case they
      * should delegate to whatever they are wrapping.
      * </p>
+	 * @return 
      */
     HierarchicalStreamReader underlyingReader();
 

@@ -48,6 +48,7 @@ public class DynamicProxyConverter implements Converter {
     };
 
     /**
+	 * @param mapper
      * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
      */
     @Deprecated
@@ -68,6 +69,8 @@ public class DynamicProxyConverter implements Converter {
     }
 
     /**
+	 * @param mapper
+	 * @param classLoader
      * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
      */
     @Deprecated

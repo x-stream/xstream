@@ -25,6 +25,9 @@ public class JDom2Writer extends AbstractDocumentWriter<Element, Element> {
     private final JDOMFactory documentFactory;
 
     /**
+	 * @param container
+	 * @param nameCoder
+	 * @param factory
      * @since 1.4.5
      */
     public JDom2Writer(final Element container, final JDOMFactory factory, final NameCoder nameCoder) {
@@ -33,6 +36,8 @@ public class JDom2Writer extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param container
+	 * @param factory
      * @since 1.4.5
      */
     public JDom2Writer(final Element container, final JDOMFactory factory) {
@@ -40,6 +45,8 @@ public class JDom2Writer extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param factory
+	 * @param nameCoder
      * @since 1.4.5
      */
     public JDom2Writer(final JDOMFactory factory, final NameCoder nameCoder) {
@@ -47,6 +54,7 @@ public class JDom2Writer extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param factory
      * @since 1.4.5
      */
     public JDom2Writer(final JDOMFactory factory) {
@@ -54,6 +62,8 @@ public class JDom2Writer extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param container
+	 * @param nameCoder
      * @since 1.4.5
      */
     public JDom2Writer(final Element container, final NameCoder nameCoder) {
@@ -61,6 +71,7 @@ public class JDom2Writer extends AbstractDocumentWriter<Element, Element> {
     }
 
     /**
+	 * @param container
      * @since 1.4.5
      */
     public JDom2Writer(final Element container) {

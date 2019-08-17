@@ -160,6 +160,8 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
+	 * @param name
+	 * @return 
      * @deprecated As of 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     @Deprecated
@@ -168,6 +170,9 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
+	 * @param fieldName
+	 * @param type
+	 * @return 
      * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     @Deprecated
@@ -176,6 +181,8 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
+	 * @param type
+	 * @return 
      * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     @Deprecated
@@ -202,6 +209,9 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
+	 * @param definedIn
+	 * @param fieldName
+	 * @return 
      * @deprecated As of 1.3, use combination of {@link #serializedMember(Class, String)} and
      *             {@link #getConverterFromItemType(String, Class, Class)}
      */
@@ -211,6 +221,9 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
+	 * @param definedIn
+	 * @param alias
+	 * @return 
      * @deprecated As of 1.3, use combination of {@link #realMember(Class, String)} and
      *             {@link #getConverterFromItemType(String, Class, Class)}
      */
@@ -220,6 +233,7 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     @Deprecated

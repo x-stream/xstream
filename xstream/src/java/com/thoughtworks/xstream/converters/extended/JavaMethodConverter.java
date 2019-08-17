@@ -48,6 +48,7 @@ public class JavaMethodConverter implements Converter {
     }
 
     /**
+	 * @param classLoader
      * @deprecated As of 1.4.5 use {@link #JavaMethodConverter(ClassLoaderReference)}
      */
     @Deprecated

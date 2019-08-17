@@ -65,6 +65,7 @@ public class XppReader extends AbstractPullReader {
     }
 
     /**
+	 * @param reader
      * @deprecated As of 1.4, use {@link #XppReader(Reader, XmlPullParser)} instead
      */
     @Deprecated
@@ -73,6 +74,8 @@ public class XppReader extends AbstractPullReader {
     }
 
     /**
+	 * @param reader
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link #XppReader(Reader, XmlPullParser, NameCoder)} instead
      */
@@ -92,6 +95,7 @@ public class XppReader extends AbstractPullReader {
     /**
      * To use another implementation of org.xmlpull.v1.XmlPullParser, override this method.
      * 
+	 * @return 
      * @deprecated As of 1.4, use {@link #XppReader(Reader, XmlPullParser)} instead
      */
     @Deprecated

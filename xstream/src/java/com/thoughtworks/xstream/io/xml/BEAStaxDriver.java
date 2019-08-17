@@ -38,6 +38,8 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
+	 * @param qnameMap
+	 * @param nameCoder
      * @deprecated As of 1.4.6 use {@link #BEAStaxDriver(QNameMap, NameCoder)}
      */
     @Deprecated
@@ -46,6 +48,8 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
+	 * @param qnameMap
+	 * @param nameCoder
      * @since 1.4.6
      * @deprecated As of 1.4.11 use {@link StandardStaxDriver} or {@link WstxDriver} instead.
      */
@@ -55,6 +59,7 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
+	 * @param qnameMap
      * @deprecated As of 1.4.11 use {@link StandardStaxDriver} or {@link WstxDriver} instead.
      */
     @Deprecated
@@ -63,6 +68,7 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
+	 * @param nameCoder
      * @deprecated As of 1.4.6 use {@link #BEAStaxDriver(NameCoder)}
      */
     @Deprecated
@@ -71,6 +77,7 @@ public class BEAStaxDriver extends StaxDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4.6
      * @deprecated As of 1.4.11 use {@link StandardStaxDriver} or {@link WstxDriver} instead.
      */

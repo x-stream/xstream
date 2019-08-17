@@ -40,6 +40,7 @@ public class JDomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param nameCoder
      * @since 1.4
      */
     public JDomDriver(final NameCoder nameCoder) {
@@ -47,6 +48,7 @@ public class JDomDriver extends AbstractXmlDriver {
     }
 
     /**
+	 * @param replacer
      * @since 1.2
      * @deprecated As of 1.4, use {@link JDomDriver#JDomDriver(NameCoder)} instead.
      */

@@ -30,10 +30,12 @@ import java.lang.annotation.Target;
 public @interface XStreamAlias {
     /**
      * The name of the class or field alias.
+	 * @return 
      */
     public String value();
     /**
      * A possible default implementation if the annotated type is an interface.
+	 * @return 
      */
     public Class<?> impl() default Void.class; //Use Void to denote as Null
 }

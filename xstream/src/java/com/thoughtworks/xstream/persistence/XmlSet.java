@@ -19,6 +19,7 @@ import java.util.Iterator;
  * A persistent set implementation.
  * 
  * @author Guilherme Silveira
+ * @param <V>
  */
 public class XmlSet<V> extends AbstractSet<V> {
 

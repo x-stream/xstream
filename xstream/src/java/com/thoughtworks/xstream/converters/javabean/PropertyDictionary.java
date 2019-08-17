@@ -48,6 +48,8 @@ public class PropertyDictionary implements Caching {
     }
 
     /**
+	 * @param type
+	 * @return 
      * @deprecated As of 1.3.1, use {@link #propertiesFor(Class)} instead
      */
     @Deprecated
@@ -67,6 +69,7 @@ public class PropertyDictionary implements Caching {
      *
      * @param cls
      * @param name
+	 * @return 
      * @deprecated As of 1.3.1, use {@link #propertyDescriptor(Class, String)} instead
      */
     @Deprecated
@@ -91,6 +94,7 @@ public class PropertyDictionary implements Caching {
      *
      * @param type
      * @param name
+	 * @return 
      * @throws MissingFieldException if property does not exist
      */
     public PropertyDescriptor propertyDescriptor(final Class<?> type, final String name) {

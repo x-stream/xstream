@@ -18,6 +18,9 @@ package com.thoughtworks.xstream.io;
 public class ExtendedHierarchicalStreamWriterHelper {
 
     /**
+	 * @param writer
+	 * @param clazz
+	 * @param name
      * @deprecated As of 1.4.11, with version 1.5.0 use {@link HierarchicalStreamWriter#startNode(String, Class)}
      *             directly. This helper will be no longer required.
      */

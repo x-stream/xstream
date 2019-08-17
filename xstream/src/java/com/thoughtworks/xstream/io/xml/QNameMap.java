@@ -34,8 +34,10 @@ public class QNameMap {
     private String defaultNamespace = "";
 
     /**
-     * Returns the Java class name that should be used for the given QName. If no explicit mapping has been made then
-     * the localPart of the QName is used which is the normal default in XStream.
+     * Returns the Java class name that should be used for the given QName.If no explicit mapping has been made then
+ the localPart of the QName is used which is the normal default in XStream.
+	 * @param qname
+	 * @return 
      */
     public String getJavaClassName(final QName qname) {
         if (qnameToJava != null) {
@@ -48,8 +50,10 @@ public class QNameMap {
     }
 
     /**
-     * Returns the Java class name that should be used for the given QName. If no explicit mapping has been made then
-     * the localPart of the QName is used which is the normal default in XStream.
+     * Returns the Java class name that should be used for the given QName.If no explicit mapping has been made then
+ the localPart of the QName is used which is the normal default in XStream.
+	 * @param javaClassName
+	 * @return 
      */
     public QName getQName(final String javaClassName) {
         if (javaToQName != null) {
@@ -63,6 +67,8 @@ public class QNameMap {
 
     /**
      * Registers the mapping of the Java class name to the QName
+	 * @param qname
+	 * @param javaClassName
      */
     public synchronized void registerMapping(final QName qname, final String javaClassName) {
         if (javaToQName == null) {
@@ -77,6 +83,8 @@ public class QNameMap {
 
     /**
      * Registers the mapping of the type to the QName
+	 * @param qname
+	 * @param type
      */
     public synchronized void registerMapping(final QName qname, final Class<?> type) {
         registerMapping(qname, type.getName());

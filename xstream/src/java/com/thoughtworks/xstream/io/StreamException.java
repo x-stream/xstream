@@ -25,6 +25,8 @@ public class StreamException extends XStreamException {
     }
 
     /**
+	 * @param message
+	 * @param cause
      * @since 1.4
      */
     public StreamException(String message, Throwable cause) {

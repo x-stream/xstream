@@ -26,6 +26,9 @@ import org.xmlpull.v1.XmlPullParser;
 @Deprecated
 public class Xpp3DomBuilder {
     /**
+	 * @param reader
+	 * @return 
+	 * @throws java.lang.Exception 
      * @deprecated As of 1.4, use {@link XppDom#build(XmlPullParser)} instead
      */
     @Deprecated

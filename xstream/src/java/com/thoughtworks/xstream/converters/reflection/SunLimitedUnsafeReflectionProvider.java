@@ -66,6 +66,7 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
     }
 
     /**
+	 * @param fieldDictionary
      * @since 1.4.7
      */
     public SunLimitedUnsafeReflectionProvider(final FieldDictionary fieldDictionary) {

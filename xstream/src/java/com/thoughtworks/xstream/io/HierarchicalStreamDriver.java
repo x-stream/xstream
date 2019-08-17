@@ -38,6 +38,7 @@ public interface HierarchicalStreamDriver {
      * Create the HierarchicalStreamReader with the stream parser reading from the input stream.
      * 
      * @param in the {@link InputStream} with the data to parse 
+	 * @return  
      * @since 1.1.3 
      */
     HierarchicalStreamReader createReader(InputStream in);

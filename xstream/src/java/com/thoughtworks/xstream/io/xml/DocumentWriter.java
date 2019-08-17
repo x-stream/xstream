@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * A generic interface for all {@link HierarchicalStreamWriter} implementations generating a DOM.
  * 
  * @author J&ouml;rg Schaible
+ * @param <E>
  * @since 1.2.1
  */
 public interface DocumentWriter<E> extends HierarchicalStreamWriter {

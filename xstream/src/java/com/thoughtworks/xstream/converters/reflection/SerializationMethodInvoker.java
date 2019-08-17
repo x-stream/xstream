@@ -33,6 +33,8 @@ public class SerializationMethodInvoker implements Caching {
     /**
      * Resolves an object as native serialization does by calling readResolve(), if available.
      * 
+	 * @param result
+	 * @return 
      * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
@@ -41,6 +43,8 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
+	 * @param object
+	 * @return 
      * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
@@ -49,6 +53,9 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
+	 * @param type
+	 * @param includeBaseClasses
+	 * @return 
      * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
@@ -57,6 +64,9 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
+	 * @param type
+	 * @param stream
+	 * @param object
      * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
@@ -65,6 +75,9 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
+	 * @param type
+	 * @param includeBaseClasses
+	 * @return 
      * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated
@@ -73,6 +86,9 @@ public class SerializationMethodInvoker implements Caching {
     }
 
     /**
+	 * @param type
+	 * @param stream
+	 * @param instance
      * @deprecated As of 1.4.8, moved into internal util package.
      */
     @Deprecated

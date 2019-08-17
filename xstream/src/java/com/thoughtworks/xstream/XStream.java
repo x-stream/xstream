@@ -421,6 +421,9 @@ public class XStream {
      * Constructs an XStream with a special {@link HierarchicalStreamDriver}, {@link ReflectionProvider} and the
      * {@link ClassLoader} to use.
      *
+	 * @param reflectionProvider
+	 * @param classLoader
+	 * @param driver
      * @throws InitializationException in case of an initialization problem
      * @since 1.3
      * @deprecated As of 1.4.5 use {@link #XStream(ReflectionProvider, HierarchicalStreamDriver, ClassLoaderReference)}
@@ -607,6 +610,7 @@ public class XStream {
     }
 
     /**
+	 * @return 
      * @deprecated As of 1.4.8
      */
     @Deprecated
@@ -1113,6 +1117,8 @@ public class XStream {
     /**
      * Serialize an object to a pretty-printed XML String.
      *
+	 * @param obj
+	 * @return 
      * @throws XStreamException if the object cannot be serialized
      */
     public String toXML(final Object obj) {
@@ -1122,9 +1128,11 @@ public class XStream {
     }
 
     /**
-     * Serialize an object to the given Writer as pretty-printed XML. The Writer will be flushed afterwards and in case
-     * of an exception.
+     * Serialize an object to the given Writer as pretty-printed XML.The Writer will be flushed afterwards and in case
+ of an exception.
      *
+	 * @param obj
+	 * @param out
      * @throws XStreamException if the object cannot be serialized
      */
     public void toXML(final Object obj, final Writer out) {
@@ -1138,9 +1146,11 @@ public class XStream {
     }
 
     /**
-     * Serialize an object to the given OutputStream as pretty-printed XML. The OutputStream will be flushed afterwards
-     * and in case of an exception.
+     * Serialize an object to the given OutputStream as pretty-printed XML.The OutputStream will be flushed afterwards
+ and in case of an exception.
      *
+	 * @param obj
+	 * @param out
      * @throws XStreamException if the object cannot be serialized
      */
     public void toXML(final Object obj, final OutputStream out) {
@@ -1156,6 +1166,8 @@ public class XStream {
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
      *
+	 * @param obj
+	 * @param writer
      * @throws XStreamException if the object cannot be serialized
      */
     public void marshal(final Object obj, final HierarchicalStreamWriter writer) {
@@ -1165,8 +1177,10 @@ public class XStream {
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
      *
+	 * @param obj
      * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If not present,
      *            XStream shall create one lazily as needed.
+	 * @param writer
      * @throws XStreamException if the object cannot be serialized
      */
     public void marshal(final Object obj, final HierarchicalStreamWriter writer, final DataHolder dataHolder) {
@@ -1176,6 +1190,9 @@ public class XStream {
     /**
      * Deserialize an object from an XML String.
      *
+	 * @param <T>
+	 * @param xml
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final String xml) {
@@ -1185,6 +1202,9 @@ public class XStream {
     /**
      * Deserialize an object from an XML Reader.
      *
+	 * @param <T>
+	 * @param reader
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final Reader reader) {
@@ -1194,6 +1214,9 @@ public class XStream {
     /**
      * Deserialize an object from an XML InputStream.
      *
+	 * @param <T>
+	 * @param input
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final InputStream input) {
@@ -1201,9 +1224,12 @@ public class XStream {
     }
 
     /**
-     * Deserialize an object from a URL. Depending on the parser implementation, some might take the file path as
-     * SystemId to resolve additional references.
+     * Deserialize an object from a URL.Depending on the parser implementation, some might take the file path as
+ SystemId to resolve additional references.
      *
+	 * @param <T>
+	 * @param url
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
@@ -1212,9 +1238,12 @@ public class XStream {
     }
 
     /**
-     * Deserialize an object from a file. Depending on the parser implementation, some might take the file path as
-     * SystemId to resolve additional references.
+     * Deserialize an object from a file.Depending on the parser implementation, some might take the file path as
+ SystemId to resolve additional references.
      *
+	 * @param <T>
+	 * @param file
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
@@ -1224,9 +1253,13 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML String, populating the fields of the given root object instead of instantiating
-     * a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into
-     * the raw memory area of the existing object. Use with care!
+     * a new one.Note, that this is a special use case! With the ReflectionConverter XStream will write directly into
+ the raw memory area of the existing object.Use with care!
      *
+	 * @param <T>
+	 * @param xml
+	 * @param root
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final String xml, final T root) {
@@ -1235,9 +1268,13 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML Reader, populating the fields of the given root object instead of instantiating
-     * a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into
-     * the raw memory area of the existing object. Use with care!
+     * a new one.Note, that this is a special use case! With the ReflectionConverter XStream will write directly into
+ the raw memory area of the existing object.Use with care!
      *
+	 * @param <T>
+	 * @param xml
+	 * @param root
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final Reader xml, final T root) {
@@ -1246,10 +1283,14 @@ public class XStream {
 
     /**
      * Deserialize an object from a URL, populating the fields of the given root object instead of instantiating a new
-     * one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into the raw
-     * memory area of the existing object. Use with care! Depending on the parser implementation, some might take the
-     * file path as SystemId to resolve additional references.
+     * one.Note, that this is a special use case! With the ReflectionConverter XStream will write directly into the raw
+ memory area of the existing object.Use with care! Depending on the parser implementation, some might take the
+ file path as SystemId to resolve additional references.
      *
+	 * @param <T>
+	 * @param url
+	 * @param root
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
@@ -1259,10 +1300,14 @@ public class XStream {
 
     /**
      * Deserialize an object from a file, populating the fields of the given root object instead of instantiating a new
-     * one. Note, that this is a special use case! With the ReflectionConverter XStream will write directly into the raw
-     * memory area of the existing object. Use with care! Depending on the parser implementation, some might take the
-     * file path as SystemId to resolve additional references.
+     * one.Note, that this is a special use case! With the ReflectionConverter XStream will write directly into the raw
+ memory area of the existing object.Use with care! Depending on the parser implementation, some might take the
+ file path as SystemId to resolve additional references.
      *
+	 * @param <T>
+	 * @param file
+	 * @param root
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      * @since 1.4
      */
@@ -1277,9 +1322,13 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML InputStream, populating the fields of the given root object instead of
-     * instantiating a new one. Note, that this is a special use case! With the ReflectionConverter XStream will write
-     * directly into the raw memory area of the existing object. Use with care!
+     * instantiating a new one.Note, that this is a special use case! With the ReflectionConverter XStream will write
+ directly into the raw memory area of the existing object.Use with care!
      *
+	 * @param <T>
+	 * @param input
+	 * @param root
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T fromXML(final InputStream input, final T root) {
@@ -1289,6 +1338,9 @@ public class XStream {
     /**
      * Deserialize an object from a hierarchical data structure (such as XML).
      *
+	 * @param <T>
+	 * @param reader
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T unmarshal(final HierarchicalStreamReader reader) {
@@ -1297,9 +1349,13 @@ public class XStream {
 
     /**
      * Deserialize an object from a hierarchical data structure (such as XML), populating the fields of the given root
-     * object instead of instantiating a new one. Note, that this is a special use case! With the ReflectionConverter
-     * XStream will write directly into the raw memory area of the existing object. Use with care!
+     * object instead of instantiating a new one.Note, that this is a special use case! With the ReflectionConverter
+ XStream will write directly into the raw memory area of the existing object.Use with care!
      *
+	 * @param <T>
+	 * @param reader
+	 * @param root
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T unmarshal(final HierarchicalStreamReader reader, final T root) {
@@ -1309,11 +1365,14 @@ public class XStream {
     /**
      * Deserialize an object from a hierarchical data structure (such as XML).
      *
+	 * @param <T>
+	 * @param reader
      * @param root If present, the passed in object will have its fields populated, as opposed to XStream creating a new
      *            instance. Note, that this is a special use case! With the ReflectionConverter XStream will write
      *            directly into the raw memory area of the existing object. Use with care!
      * @param dataHolder Extra data you can use to pass to your converters. Use this as you want. If not present,
      *            XStream shall create one lazily as needed.
+	 * @return 
      * @throws XStreamException if the object cannot be deserialized
      */
     public <T> T unmarshal(final HierarchicalStreamReader reader, final T root, final DataHolder dataHolder) {
@@ -1511,9 +1570,10 @@ public class XStream {
     }
 
     /**
-     * Add immutable types. The value of the instances of these types will always be written into the stream even if
-     * they appear multiple times. However, references are still supported at deserialization time.
+     * Add immutable types.The value of the instances of these types will always be written into the stream even if
+ they appear multiple times. However, references are still supported at deserialization time.
      *
+	 * @param type
      * @throws InitializationException if no {@link ImmutableTypesMapper} is available
      * @deprecated As of 1.4.9 use {@link #addImmutableType(Class, boolean)}
      */
@@ -1523,15 +1583,14 @@ public class XStream {
     }
 
     /**
-     * Add immutable types. The value of the instances of these types will always be written into the stream even if
-     * they appear multiple times.
-     * <p>
+     * Add immutable types.The value of the instances of these types will always be written into the stream even if
+ they appear multiple times.<p>
      * Note, while a reference-keeping marshaller will not write references for immutable types into the stream, a
      * reference-keeping unmarshaller can still support such references in the stream for compatibility reasons at the
      * expense of memory consumption. Therefore declare these types only as referenceable if your already persisted
      * streams do contain such references. Otherwise you may waste a lot of memory during deserialization.
-     * </p>
      *
+	 * @param type
      * @param isReferenceable <code>true</code> if support at deserialization time is required for compatibility at the
      *            cost of a higher memory footprint, <code>false</code> otherwise
      * @throws InitializationException if no {@link ImmutableTypesMapper} is available
@@ -1642,10 +1701,11 @@ public class XStream {
     }
 
     /**
-     * Change mode for dealing with duplicate references. Valid values are <code>XPATH_ABSOLUTE_REFERENCES</code>,
-     * <code>XPATH_RELATIVE_REFERENCES</code>, <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>
-     * .
+     * Change mode for dealing with duplicate references.Valid values are <code>XPATH_ABSOLUTE_REFERENCES</code>,
+ 	<code>XPATH_RELATIVE_REFERENCES</code>, <code>XStream.ID_REFERENCES</code> and <code>XStream.NO_REFERENCES</code>
+ .
      *
+	 * @param mode
      * @throws IllegalArgumentException if the mode is not one of the declared types
      * @see #setMarshallingStrategy(MarshallingStrategy)
      * @see #XPATH_ABSOLUTE_REFERENCES
@@ -1813,6 +1873,9 @@ public class XStream {
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
      *
+	 * @param writer
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
@@ -1828,6 +1891,9 @@ public class XStream {
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
      *
+	 * @param writer
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
@@ -1839,6 +1905,10 @@ public class XStream {
     /**
      * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
      *
+	 * @param writer
+	 * @param rootNodeName
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
@@ -1855,6 +1925,9 @@ public class XStream {
      * {@link #createObjectOutputStream(java.io.Writer, String)}.
      * </p>
      *
+	 * @param out
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
@@ -1866,6 +1939,10 @@ public class XStream {
     /**
      * Creates an ObjectOutputStream that serializes a stream of objects to the OutputStream using XStream.
      *
+	 * @param out
+	 * @param rootNodeName
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
@@ -1896,6 +1973,8 @@ public class XStream {
      *
      * @param writer The writer to serialize the objects to.
      * @param rootNodeName The name of the root node enclosing the stream of objects.
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
@@ -1907,6 +1986,11 @@ public class XStream {
     /**
      * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
      *
+	 * @param writer
+	 * @param dataHolder
+	 * @param rootNodeName
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.4.10
@@ -1951,6 +2035,9 @@ public class XStream {
     /**
      * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream.
      *
+	 * @param xmlReader
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.0.3
@@ -1962,6 +2049,9 @@ public class XStream {
     /**
      * Creates an ObjectInputStream that deserializes a stream of objects from an InputStream using XStream.
      *
+	 * @param in
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.3
@@ -1984,6 +2074,9 @@ public class XStream {
      * Object c = out.readObject();
      * </pre>
      *
+	 * @param reader
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.0.3
      */
@@ -1994,6 +2087,10 @@ public class XStream {
     /**
      * Creates an ObjectInputStream that deserializes a stream of objects from a reader using XStream.
      *
+	 * @param reader
+	 * @param dataHolder
+	 * @return 
+	 * @throws java.io.IOException 
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.4.10
@@ -2036,11 +2133,12 @@ public class XStream {
     }
 
     /**
-     * Change the ClassLoader XStream uses to load classes. Creating an XStream instance it will register for all kind
-     * of classes and types of the current JDK, but not for any 3rd party type. To ensure that all other types are
-     * loaded with your class loader, you should call this method as early as possible - or consider to provide the
-     * class loader directly in the constructor.
+     * Change the ClassLoader XStream uses to load classes.Creating an XStream instance it will register for all kind
+ of classes and types of the current JDK, but not for any 3rd party type. To ensure that all other types are
+ loaded with your class loader, you should call this method as early as possible - or consider to provide the
+ class loader directly in the constructor.
      *
+	 * @param classLoader
      * @since 1.1.1
      */
     public void setClassLoader(final ClassLoader classLoader) {
@@ -2050,6 +2148,7 @@ public class XStream {
     /**
      * Retrieve the ClassLoader XStream uses to load classes.
      *
+	 * @return 
      * @since 1.1.1
      */
     public ClassLoader getClassLoader() {
@@ -2068,9 +2167,11 @@ public class XStream {
     }
 
     /**
-     * Prevents a field from being serialized. To omit a field you must always provide the declaring type and not
-     * necessarily the type that is converted.
+     * Prevents a field from being serialized.To omit a field you must always provide the declaring type and not
+ necessarily the type that is converted.
      *
+	 * @param definedIn
+	 * @param fieldName
      * @since 1.1.3
      * @throws InitializationException if no {@link ElementIgnoringMapper} is available
      */
