@@ -144,9 +144,9 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
 
         final Parent parent = new Parent("ze-name", new Child(1));
         final StringWriter stringWriter = new StringWriter();
-        final ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter);
-        os.writeObject(parent);
-        os.close();
+		try (ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter)) {
+			os.writeObject(parent);
+		}
         final String actualXml = stringWriter.getBuffer().toString();
         assertEquals(expectedXml, actualXml);
     }
@@ -217,9 +217,9 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
             + "</root>";
 
         final StringWriter stringWriter = new StringWriter();
-        final ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter, "root");
-        os.writeObject(new RawString("XStream"));
-        os.close();
+		try (ObjectOutputStream os = xstream.createObjectOutputStream(stringWriter, "root")) {
+			os.writeObject(new RawString("XStream"));
+		}
         final String actualXml = stringWriter.getBuffer().toString();
         assertEquals(expectedXml, actualXml);
 

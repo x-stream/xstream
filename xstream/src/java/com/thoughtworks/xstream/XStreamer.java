@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014, 2016, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -106,13 +106,10 @@ public class XStreamer {
      */
     public void toXML(final XStream xstream, final Object obj, final Writer out) throws IOException {
         final XStream outer = new XStream();
-        final ObjectOutputStream oos = outer.createObjectOutputStream(out);
-        try {
+        try (final ObjectOutputStream oos = outer.createObjectOutputStream(out)) {
             oos.writeObject(xstream);
             oos.flush();
             xstream.toXML(obj, out);
-        } finally {
-            oos.close();
         }
     }
 
@@ -270,8 +267,7 @@ public class XStreamer {
             outer.addPermission(permission);
         }
         final HierarchicalStreamReader reader = driver.createReader(xml);
-        final ObjectInputStream configIn = outer.createObjectInputStream(reader);
-        try {
+        try (ObjectInputStream configIn = outer.createObjectInputStream(reader)) {
             final XStream configured = (XStream)configIn.readObject();
             final ObjectInputStream in = configured.createObjectInputStream(reader);
             try {
@@ -281,8 +277,6 @@ public class XStreamer {
             } finally {
                 in.close();
             }
-        } finally {
-            configIn.close();
         }
     }
 

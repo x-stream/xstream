@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2018 XStream Committers.
+ * Copyright (C) 2008, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -93,7 +93,7 @@ public class PersistenceTest extends AbstractAcceptanceTest {
 
         final SampleLists<Object, ?> lists = new SampleLists<>();
         lists.good.add("Guilherme");
-        lists.good.add(new Integer(1970));
+        lists.good.add(Integer.valueOf(1970));
         lists.good.add(new Software("Codehaus", "XStream"));
 
         final String expected = ""
@@ -111,11 +111,8 @@ public class PersistenceTest extends AbstractAcceptanceTest {
         assertEquals(lists.good, serialized.good);
 
         // retrieve value from external file
-        final FileInputStream inputStream = new FileInputStream(new File(dir, "int@2.xml"));
-        try {
+        try (final FileInputStream inputStream = new FileInputStream(new File(dir, "int@2.xml"))) {
             assertEquals(lists.good.get(2), xstream.fromXML(inputStream));
-        } finally {
-            inputStream.close();
         }
     }
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2008, 2014 XStream Committers.
+ * Copyright (C) 2008, 2014, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 18. November 2008 by Joerg Schaible
  */
 package com.thoughtworks.xstream.persistence;
@@ -31,7 +31,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Abstract base class for file based persistence strategies.
- * 
+ *
  * @author Guilherme Silveira
  * @author Joerg Schaible
  * @since 1.3.1
@@ -64,7 +64,7 @@ public abstract class AbstractFilePersistenceStrategy<K, V> implements Persisten
 
     /**
      * Given a filename, the unescape method returns the key which originated it.
-     * 
+     *
      * @param name the filename
      * @return the original key
      */
@@ -72,7 +72,7 @@ public abstract class AbstractFilePersistenceStrategy<K, V> implements Persisten
 
     /**
      * Given a key, the escape method returns the filename which shall be used.
-     * 
+     *
      * @param key the key
      * @return the desired and escaped filename
      */
@@ -156,13 +156,10 @@ public abstract class AbstractFilePersistenceStrategy<K, V> implements Persisten
     private void writeFile(final File file, final Object value) {
         try {
             final FileOutputStream out = new FileOutputStream(file);
-            final Writer writer = encoding != null
+            try (final Writer writer = encoding != null
                 ? new OutputStreamWriter(out, encoding)
-                : new OutputStreamWriter(out);
-            try {
+                : new OutputStreamWriter(out)) {
                 xstream.toXML(value, writer);
-            } finally {
-                writer.close();
             }
         } catch (final IOException e) {
             throw new StreamException(e);
@@ -176,13 +173,12 @@ public abstract class AbstractFilePersistenceStrategy<K, V> implements Persisten
     private V readFile(final File file) {
         try {
             final FileInputStream in = new FileInputStream(file);
-            final Reader reader = encoding != null ? new InputStreamReader(in, encoding) : new InputStreamReader(in);
-            try {
+            try (final Reader reader = encoding != null
+                ? new InputStreamReader(in, encoding)
+                : new InputStreamReader(in)) {
                 @SuppressWarnings("unchecked")
                 final V value = (V)xstream.fromXML(reader);
                 return value;
-            } finally {
-                reader.close();
             }
         } catch (final FileNotFoundException e) {
             // not found... file.exists might generate a sync problem
