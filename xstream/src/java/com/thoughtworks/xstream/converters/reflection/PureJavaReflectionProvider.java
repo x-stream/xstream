@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2016, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -76,9 +76,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             } else {
                 oaex = new ObjectAccessException("Cannot construct type as it does not have a no-args constructor");
             }
-        } catch (final InstantiationException e) {
-            oaex = new ObjectAccessException("Cannot construct type", e);
-        } catch (final IllegalAccessException e) {
+        } catch (final InstantiationException | IllegalAccessException e) {
             oaex = new ObjectAccessException("Cannot construct type", e);
         } catch (final InvocationTargetException e) {
             if (e.getTargetException() instanceof RuntimeException) {

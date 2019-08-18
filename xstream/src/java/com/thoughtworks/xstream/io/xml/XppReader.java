@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -101,11 +101,7 @@ public class XppReader extends AbstractPullReader {
             return (XmlPullParser)Class
                 .forName("org.xmlpull.mxp1.MXParser", true, XmlPullParser.class.getClassLoader())
                 .newInstance();
-        } catch (final InstantiationException e) {
-            exception = e;
-        } catch (final IllegalAccessException e) {
-            exception = e;
-        } catch (final ClassNotFoundException e) {
+        } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             exception = e;
         }
         throw new StreamException("Cannot create Xpp3 parser instance.", exception);
@@ -128,9 +124,7 @@ public class XppReader extends AbstractPullReader {
             default:
                 return OTHER;
             }
-        } catch (final XmlPullParserException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XmlPullParserException | IOException e) {
             throw new StreamException(e);
         }
     }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -66,14 +66,12 @@ public class BeanProvider implements JavaBeanProvider {
         ErrorWritingException ex = null;
         try {
             return type.newInstance();
-        } catch (final InstantiationException e) {
+        } catch (final InstantiationException | ExceptionInInitializerError e) {
             ex = new ConversionException("Cannot construct type", e);
         } catch (final IllegalAccessException e) {
             ex = new ObjectAccessException("Cannot construct type", e);
         } catch (final SecurityException e) {
             ex = new ObjectAccessException("Cannot construct type", e);
-        } catch (final ExceptionInInitializerError e) {
-            ex = new ConversionException("Cannot construct type", e);
         }
         ex.add("construction-type", type.getName());
         throw ex;

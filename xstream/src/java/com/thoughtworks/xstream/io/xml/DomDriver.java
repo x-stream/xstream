@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -108,13 +108,7 @@ public class DomDriver extends AbstractXmlDriver {
             }
             final Document document = documentBuilder.parse(source);
             return new DomReader(document, getNameCoder());
-        } catch (final FactoryConfigurationError e) {
-            throw new StreamException(e);
-        } catch (final ParserConfigurationException e) {
-            throw new StreamException(e);
-        } catch (final SAXException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final FactoryConfigurationError | ParserConfigurationException | SAXException | IOException e) {
             throw new StreamException(e);
         }
     }

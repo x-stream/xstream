@@ -115,9 +115,7 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
             instream = in.openStream();
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(in.toExternalForm(), instream),
                 getNameCoder());
-        } catch (final XMLStreamException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XMLStreamException | IOException e) {
             throw new StreamException(e);
         } finally {
             if (instream != null) {
@@ -137,9 +135,7 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
             instream = new FileInputStream(in);
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(in.toURI().toASCIIString(), instream),
                 getNameCoder());
-        } catch (final XMLStreamException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XMLStreamException | IOException e) {
             throw new StreamException(e);
         } finally {
             if (instream != null) {
