@@ -61,9 +61,7 @@ public class JDomDriver extends AbstractXmlDriver {
             final SAXBuilder builder = createBuilder();
             final Document document = builder.build(reader);
             return new JDomReader(document, getNameCoder());
-        } catch (final IOException e) {
-            throw new StreamException(e);
-        } catch (final JDOMException e) {
+        } catch (final IOException | JDOMException e) {
             throw new StreamException(e);
         }
     }
@@ -74,9 +72,7 @@ public class JDomDriver extends AbstractXmlDriver {
             final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (final IOException e) {
-            throw new StreamException(e);
-        } catch (final JDOMException e) {
+        } catch (final IOException | JDOMException e) {
             throw new StreamException(e);
         }
     }
@@ -87,9 +83,7 @@ public class JDomDriver extends AbstractXmlDriver {
             final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (final IOException e) {
-            throw new StreamException(e);
-        } catch (final JDOMException e) {
+        } catch (final IOException | JDOMException e) {
             throw new StreamException(e);
         }
     }
@@ -100,9 +94,7 @@ public class JDomDriver extends AbstractXmlDriver {
             final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (final IOException e) {
-            throw new StreamException(e);
-        } catch (final JDOMException e) {
+        } catch (final IOException | JDOMException e) {
             throw new StreamException(e);
         }
     }

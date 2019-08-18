@@ -54,9 +54,7 @@ public abstract class AbstractXppDomDriver extends AbstractXmlDriver {
             final XmlPullParser parser = createParser();
             parser.setInput(in);
             return new XppDomReader(XppDom.build(parser), getNameCoder());
-        } catch (final XmlPullParserException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XmlPullParserException | IOException e) {
             throw new StreamException(e);
         }
     }

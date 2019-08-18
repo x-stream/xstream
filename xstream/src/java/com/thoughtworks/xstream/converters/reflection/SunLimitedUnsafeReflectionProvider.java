@@ -45,13 +45,7 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
             final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
             u = (Unsafe)unsafeField.get(null);
-        } catch (final SecurityException e) {
-            ex = e;
-        } catch (final NoSuchFieldException e) {
-            ex = e;
-        } catch (final IllegalArgumentException e) {
-            ex = e;
-        } catch (final IllegalAccessException e) {
+        } catch (final SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
             ex = e;
         }
         exception = ex;
@@ -85,12 +79,10 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
         } else {
             try {
                 return unsafe.allocateInstance(type);
-            } catch (final SecurityException e) {
+            } catch (final SecurityException | IllegalArgumentException e) {
                 ex = new ObjectAccessException("Cannot construct type", e);
             } catch (final InstantiationException e) {
                 ex = new ConversionException("Cannot construct type", e);
-            } catch (final IllegalArgumentException e) {
-                ex = new ObjectAccessException("Cannot construct type", e);
             }
         }
         ex.add("construction-type", type.getName());

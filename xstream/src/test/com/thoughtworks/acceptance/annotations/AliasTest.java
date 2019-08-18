@@ -353,9 +353,7 @@ public class AliasTest extends AbstractAcceptanceTest {
                 final Class<?> realClass = mapper.realClass(str);
                 try {
                     return realClass.newInstance();
-                } catch (final InstantiationException e) {
-                    throw new ConversionException(e);
-                } catch (final IllegalAccessException e) {
+                } catch (final InstantiationException | IllegalAccessException e) {
                     throw new ConversionException(e);
                 }
             }

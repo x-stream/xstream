@@ -87,9 +87,7 @@ public class ActivationDataFlavorConverter implements Converter {
             } else {
                 dataFlavor = new ActivationDataFlavor(type, mimeType, name);
             }
-        } catch (final IllegalArgumentException ex) {
-            throw new ConversionException(ex);
-        } catch (final NullPointerException ex) {
+        } catch (final IllegalArgumentException | NullPointerException ex) {
             throw new ConversionException(ex);
         }
         return dataFlavor;

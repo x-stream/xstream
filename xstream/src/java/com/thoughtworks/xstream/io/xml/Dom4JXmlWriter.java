@@ -109,9 +109,7 @@ public class Dom4JXmlWriter extends AbstractXmlWriter {
                 startElement();
                 writer.endElement("", "", elementStack.pop());
             }
-        } catch (final SAXException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final SAXException | IOException e) {
             throw new StreamException(e);
         }
     }

@@ -47,10 +47,7 @@ public class CachingMapper extends MapperWrapper implements Caching {
         try {
             realClassCache.putIfAbsent(elementName, super.realClass(elementName));
             return (Class<?>)realClassCache.get(elementName);
-        } catch (final ForbiddenClassException e) {
-            realClassCache.putIfAbsent(elementName, e);
-            throw e;
-        } catch (final CannotResolveClassException e) {
+        } catch (final ForbiddenClassException | CannotResolveClassException e) {
             realClassCache.putIfAbsent(elementName, e);
             throw e;
         }

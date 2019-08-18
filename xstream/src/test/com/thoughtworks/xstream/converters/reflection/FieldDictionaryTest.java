@@ -182,9 +182,7 @@ public class FieldDictionaryTest extends TestCase {
                             for(Class<?> cls = type; cls != null; count++, cls = cls.getSuperclass());
                             assertEquals("fieldCount not equal for type " + type.getName(), count-1, fieldCount);
                         }
-                    } catch (final InterruptedException e) {
-                        fail("Exception " + e.getClass());
-                    } catch (final BrokenBarrierException e) {
+                    } catch (final InterruptedException | BrokenBarrierException e) {
                         fail("Exception " + e.getClass());
                     }
                 }

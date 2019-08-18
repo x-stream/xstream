@@ -101,9 +101,7 @@ public class JVM implements Caching {
             final Method allocateInstance = unsafeClass.getDeclaredMethod("allocateInstance", new Class[]{Class.class});
             allocateInstance.setAccessible(true);
             test = allocateInstance.invoke(unsafe, new Object[]{Test.class}) != null;
-        } catch (final Exception e) {
-            test = false;
-        } catch (final Error e) {
+        } catch (final Exception | Error e) {
             test = false;
         }
         canAllocateWithUnsafe = test;
@@ -127,9 +125,7 @@ public class JVM implements Caching {
                         provider.writeField(t, "d", new Double(1), Test.class);
                         provider.writeField(t, "bool", Boolean.TRUE, Test.class);
                         test = true;
-                    } catch (final IncompatibleClassChangeError e) {
-                        cls = null;
-                    } catch (final ObjectAccessException e) {
+                    } catch (final IncompatibleClassChangeError | ObjectAccessException e) {
                         cls = null;
                     }
                     if (cls == null) {
@@ -178,9 +174,7 @@ public class JVM implements Caching {
         try {
             new SimpleDateFormat("X").parse("Z");
             test = true;
-        } catch (final ParseException e) {
-            test = false;
-        } catch (final IllegalArgumentException e) {
+        } catch (final ParseException | IllegalArgumentException e) {
             test = false;
         }
         canParseISO8601TimeZoneInDateFormat = test;
@@ -188,9 +182,7 @@ public class JVM implements Caching {
             @SuppressWarnings("resource")
             final CustomObjectOutputStream stream = new CustomObjectOutputStream(null);
             test = stream != null;
-        } catch (final RuntimeException e) {
-            test = false;
-        } catch (final IOException e) {
+        } catch (final RuntimeException | IOException e) {
             test = false;
         }
         canCreateDerivedObjectOutputStream = test;
@@ -208,8 +200,7 @@ public class JVM implements Caching {
         if (base64Class != null) {
             try {
                 base64 = base64Class.newInstance();
-            } catch (final Exception e) {
-            } catch (final Error e) {
+            } catch (final Exception | Error e) {
             }
         }
         if (base64 == null) {
@@ -361,9 +352,7 @@ public class JVM implements Caching {
             final Class<? extends T> clazz = (Class<? extends T>)Class
                 .forName(name, initialize, JVM.class.getClassLoader());
             return clazz;
-        } catch (final LinkageError e) {
-            return null;
-        } catch (final ClassNotFoundException e) {
+        } catch (final LinkageError | ClassNotFoundException e) {
             return null;
         }
     }

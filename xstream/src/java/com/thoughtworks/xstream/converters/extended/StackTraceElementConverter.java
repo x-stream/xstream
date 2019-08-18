@@ -89,13 +89,7 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
                     return constructor
                         .newInstance(classLoaderName, moduleName, moduleVersion, declaringClass, methodName, fileName,
                             lineNumber);
-                } catch (final NoSuchMethodException e) {
-                    ex = e;
-                } catch (final InstantiationException e) {
-                    ex = e;
-                } catch (final IllegalAccessException e) {
-                    ex = e;
-                } catch (final InvocationTargetException e) {
+                } catch (final NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     ex = e;
                 }
                 if (ex != null) {

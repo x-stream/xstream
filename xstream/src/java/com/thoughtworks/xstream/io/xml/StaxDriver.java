@@ -122,9 +122,7 @@ public class StaxDriver extends AbstractXmlDriver {
             final HierarchicalStreamReader reader = createStaxReader(createParser(new StreamSource(stream, in
                 .toExternalForm())));
             return wrapReader(stream, reader);
-        } catch (final XMLStreamException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XMLStreamException | IOException e) {
             throw new StreamException(e);
         }
     }
@@ -139,9 +137,7 @@ public class StaxDriver extends AbstractXmlDriver {
                 .toURI()
                 .toASCIIString())));
             return wrapReader(stream, reader);
-        } catch (final XMLStreamException e) {
-            throw new StreamException(e);
-        } catch (final FileNotFoundException e) {
+        } catch (final XMLStreamException | FileNotFoundException e) {
             throw new StreamException(e);
         }
     }

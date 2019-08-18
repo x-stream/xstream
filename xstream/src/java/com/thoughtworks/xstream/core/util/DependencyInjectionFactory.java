@@ -251,16 +251,10 @@ public class DependencyInjectionFactory {
             }
 
             return instance;
-        } catch (final InstantiationException e) {
-            th = e;
-        } catch (final IllegalAccessException e) {
+        } catch (final InstantiationException | IllegalAccessException | SecurityException | ExceptionInInitializerError e) {
             th = e;
         } catch (final InvocationTargetException e) {
             th = e.getCause();
-        } catch (final SecurityException e) {
-            th = e;
-        } catch (final ExceptionInInitializerError e) {
-            th = e;
         }
         final ObjectAccessException ex = new ObjectAccessException("Cannot construct type", th);
         ex.add("construction-type", type.getName());
