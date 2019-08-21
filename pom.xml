@@ -917,6 +917,13 @@
           <groupId>org.codehaus.xsite</groupId>
           <artifactId>xsite-maven-plugin</artifactId>
           <version>${version.plugin.codehaus.xsite}</version>
+          <dependencies>
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>1.4.11.1</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -1008,7 +1015,7 @@
     <version.java.target>1.5</version.java.target>
     <version.java.enforced>[1.4,)</version.java.enforced>
 
-    <version.plugin.codehaus.xsite>1.2.1</version.plugin.codehaus.xsite>
+    <version.plugin.codehaus.xsite>1.3</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>2.3.7</version.plugin.felix.bundle>
     <version.plugin.maven.antrun>1.1</version.plugin.maven.antrun>
     <version.plugin.maven.assembly>2.1</version.plugin.maven.assembly>
