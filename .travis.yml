@@ -8,6 +8,7 @@ jdk:
   - openjdk7
 install: true
 script:
+    export SETTINGS="-s .travis.settings.xml";
     if [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ]; then
       mkdir -p xstream/profiles/coveralls;
       mkdir -p xstream-hibernate/profiles/coveralls;
