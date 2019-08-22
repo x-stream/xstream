@@ -4,15 +4,17 @@ jdk:
   - openjdk11
   - openjdk10
   - oraclejdk9
-  - oraclejdk8
+  - openjdk8
   - openjdk7
 install: true
 script:
-    export SETTINGS="-s .travis.settings.xml";
-    if [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ]; then
+    if [ "$TRAVIS_JDK_VERSION" == "oraclejdk9" -o "$TRAVIS_JDK_VERSION" == "openjdk8" ]; then
+      export SETTINGS="-s .travis.settings.xml";
+    fi;
+    if [ "$TRAVIS_JDK_VERSION" == "openjdk8" ]; then
       mkdir -p xstream/profiles/coveralls;
       mkdir -p xstream-hibernate/profiles/coveralls;
-      mvn -V -B -e clean package jacoco:report coveralls:report;
+      mvn -V -B -e clean package jacoco:report coveralls:report $SETTINGS;
     else
       mvn -V -B -e clean package $SETTINGS;
     fi
