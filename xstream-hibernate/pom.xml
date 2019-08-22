@@ -97,12 +97,12 @@
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <classifier>tests</classifier>
-      <type>test-jar</type>
     </dependency>
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
+      <classifier>tests</classifier>
+      <type>test-jar</type>
     </dependency>
     <dependency>
         <groupId>org.hibernate</groupId>
