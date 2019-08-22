@@ -1,14 +1,19 @@
+dist: trusty
 language: java
-sudo: false
+addons:
+  apt:
+    packages:
+      - openjdk-6-jdk
 jdk:
   - openjdk11
   - openjdk10
   - oraclejdk9
   - openjdk8
   - openjdk7
+  - openjdk6
 install: true
 script:
-    if [ "$TRAVIS_JDK_VERSION" == "oraclejdk9" -o "$TRAVIS_JDK_VERSION" == "openjdk8" ]; then
+    if [ "$TRAVIS_JDK_VERSION" == "oraclejdk9" ]; then
       export SETTINGS="-s .travis.settings.xml";
     fi;
     if [ "$TRAVIS_JDK_VERSION" == "openjdk8" ]; then
