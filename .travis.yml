@@ -1,16 +1,12 @@
 dist: trusty
 language: java
-addons:
-  apt:
-    packages:
-      - openjdk-6-jdk
+sudo: false
 jdk:
   - openjdk11
   - openjdk10
   - oraclejdk9
   - openjdk8
   - openjdk7
-  - openjdk6
 install: true
 script:
     if [ "$TRAVIS_JDK_VERSION" == "oraclejdk9" ]; then
