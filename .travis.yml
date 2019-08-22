@@ -6,7 +6,6 @@ jdk:
   - openjdk10
   - openjdk9
   - openjdk8
-  - openjdk7
 install: true
 script:
     if ( `javac -version 2>&1 | grep '1\.8\.0' > /dev/null` ); then
