@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!--
-     Copyright (C) 2015, 2017 XStream committers.
+     Copyright (C) 2019 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
      style license a copy of which has been included with this distribution in
      the LICENSE.txt file.
      
-     Created on 25. October 2015 by Joerg Schaible
+     Created on 12. August 2019 by Joerg Schaible
      -->
   <parent>
     <artifactId>xstream-parent</artifactId>
@@ -21,6 +21,28 @@
   <artifactId>xstream-its</artifactId>
   <name>XStream ITs</name>
   <description>Integration tests for XStream.</description>
+
+  <build>
+    <testResources>
+      <testResource>
+        <directory>src/test-resources</directory>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
@@ -82,28 +104,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <testResources>
-      <testResource>
-        <directory>src/test-resources</directory>
-        <filtering>true</filtering>
-      </testResource>
-    </testResources>
-    <plugins>
-      <plugin>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 
   <properties>
     <version.junit>4.11</version.junit>
