@@ -1,10 +1,11 @@
+dist: xenial
 language: java
 sudo: false
 jdk:
   - openjdk11
   - openjdk10
-  - oraclejdk9
-  - oraclejdk8
+  - openjdk9
+  - openjdk8
   - openjdk7
 install: true
 script:
