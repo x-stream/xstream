@@ -192,6 +192,7 @@
             <configuration>
               <includes>
                 <include>**/AbstractAcceptanceTest.*</include>
+                <include>META-INF/LICENSE</include>
               </includes>
               <archive combine.children="append">
                 <manifestEntries>
