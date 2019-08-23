@@ -79,6 +79,7 @@
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
+                <id>process-xsite</id>
                 <phase>package</phase>
                 <goals>
                   <goal>run</goal>
