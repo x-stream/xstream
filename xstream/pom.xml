@@ -311,7 +311,9 @@
                   <source>1.8</source>
                   <target>1.8</target>
                   <excludes combine.self="override"/>
-                  <testExcludes combine.self="override"/>
+                  <testExcludes combine.self="override">
+                    <exclude>**/*9Test.java</exclude>
+                  </testExcludes>
                 </configuration>
                 <goals>
                   <goal>compile</goal>
