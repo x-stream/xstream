@@ -307,7 +307,7 @@
                   <source>1.8</source>
                   <target>1.8</target>
                   <excludes combine.self="override" />
-                  <textExcludes combine.self="override" />
+                  <testExcludes combine.self="override" />
                 </configuration>
                 <goals>
                   <goal>compile</goal>
