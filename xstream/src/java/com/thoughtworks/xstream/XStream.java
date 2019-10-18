@@ -2198,7 +2198,7 @@ public class XStream {
                     throw new EOFException();
                 }
                 reader.moveDown();
-                final Object result = unmarshal(reader, dataHolder);
+                final Object result = unmarshal(reader, null, dataHolder);
                 reader.moveUp();
                 return result;
             }
