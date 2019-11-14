@@ -944,6 +944,7 @@
             <instructions>
               <_noee>true</_noee>
               <_nouses>true</_nouses>
+              <_noee>true</_noee>
               <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
               <Bundle-License>BSD-3-Clause</Bundle-License>
               <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version><!-- FELIX-3392 -->
