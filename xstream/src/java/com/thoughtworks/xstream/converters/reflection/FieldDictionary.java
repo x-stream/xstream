@@ -14,10 +14,11 @@ package com.thoughtworks.xstream.converters.reflection;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -112,7 +113,7 @@ public class FieldDictionary implements Caching {
     private DictionaryEntry buildCache(final Class<?> type) {
         Class<?> cls = type;
         DictionaryEntry lastDictionaryEntry = null;
-        final LinkedList<Class<?>> superClasses = new LinkedList<>();
+        final List<Class<?>> superClasses = new ArrayList<>();
         while (lastDictionaryEntry == null) {
             if (Object.class.equals(cls) || cls == null) {
                 lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
@@ -120,12 +121,12 @@ public class FieldDictionary implements Caching {
                 lastDictionaryEntry = dictionaryEntries.get(cls);
             }
             if (lastDictionaryEntry == null) {
-                superClasses.addFirst(cls);
+                superClasses.add(cls);
                 cls = cls.getSuperclass();
             }
         }
-        for (final Class<?> element : superClasses) {
-            cls = element;
+        for (int i = superClasses.size() - 1; i >= 0; i--) {
+            cls = superClasses.get(i);
             DictionaryEntry currentDictionaryEntry = dictionaryEntries.get(cls);
             if (currentDictionaryEntry == null) {
                 currentDictionaryEntry = buildDictionaryEntryForClass(cls, lastDictionaryEntry);
