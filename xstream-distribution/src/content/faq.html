@@ -254,8 +254,8 @@
     return this;
   }
 }</pre></div>
-<p>or</p>
-<div class="Source Java"><pre>class ThreadAwareComponent {
+<p>or in case your type implements java.io.Serializable, you have an alternative:</p>
+<div class="Source Java"><pre>class ThreadAwareComponent implements Serializable{
   private transient ThreadLocal component;
   // ...
   private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
