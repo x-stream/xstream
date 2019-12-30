@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2016, 2017, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -88,7 +88,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         final ConversionException exception = new ConversionException(errors.isEmpty()
             ? "No converter specified"
             : "No converter available");
-        exception.add("type", type.getName());
+        exception.add("type", type != null ? type.getName() : "null");
         iterator = errors.entrySet().iterator();
         while (iterator.hasNext()) {
             final Map.Entry entry = (Map.Entry)iterator.next();
