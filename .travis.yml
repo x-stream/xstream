@@ -8,7 +8,7 @@ jdk:
   - openjdk8
 install: true
 script:
-    if ( `javac -version 2>&1 | grep '1\.8\.0' > /dev/null` ); then
+    if [ "$TRAVIS_JDK_VERSION" == "openjdk8" ]; then
       mkdir -p xstream/profiles/coveralls;
       mkdir -p xstream-hibernate/profiles/coveralls;
       mvn -V -B -e clean package jacoco:report coveralls:report;
