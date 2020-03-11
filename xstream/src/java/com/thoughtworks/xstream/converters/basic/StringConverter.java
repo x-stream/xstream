@@ -13,6 +13,8 @@ package com.thoughtworks.xstream.converters.basic;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.thoughtworks.xstream.core.util.WeakCache;
 
@@ -37,7 +39,7 @@ public class StringConverter extends AbstractSingleValueConverter {
      * A Map to store strings as long as needed to map similar strings onto the same instance and conserve memory. The
      * map can be set from the outside during construction, so it can be a LRU map or a weak map, synchronized or not.
      */
-    private final Map<String, String> cache;
+    private final ConcurrentMap<String, String> cache;
     private final int lengthLimit;
 
     /**
@@ -47,7 +49,7 @@ public class StringConverter extends AbstractSingleValueConverter {
      * @param lengthLimit maximum string length of a cached string, -1 to cache all, 0 to turn off the cache
      * @since 1.4.2
      */
-    public StringConverter(final Map<String, String> map, final int lengthLimit) {
+    public StringConverter(final ConcurrentMap<String, String> map , final int lengthLimit) {
         cache = map;
         this.lengthLimit = lengthLimit;
     }
@@ -57,7 +59,7 @@ public class StringConverter extends AbstractSingleValueConverter {
      * 
      * @param map the map to use for the instances to reuse (may be null to not cache at all)
      */
-    public StringConverter(final Map<String, String> map) {
+    public StringConverter(final ConcurrentMap<String, String> map) {
         this(map, LENGTH_LIMIT);
     }
 
@@ -68,7 +70,7 @@ public class StringConverter extends AbstractSingleValueConverter {
      * @since 1.4.2
      */
     public StringConverter(final int lengthLimit) {
-        this(Collections.synchronizedMap(new WeakCache<String, String>()), lengthLimit);
+        this(new ConcurrentHashMap<String, String>(), lengthLimit);
     }
 
     /**
@@ -86,16 +88,8 @@ public class StringConverter extends AbstractSingleValueConverter {
     @Override
     public Object fromString(final String str) {
         if (cache != null && str != null && (lengthLimit < 0 || str.length() <= lengthLimit)) {
-            String s = cache.get(str);
-
-            if (s == null) {
-                // fill cache
-                cache.put(str, str);
-
-                s = str;
-            }
-
-            return s;
+            final String s = cache.putIfAbsent(str, str);
+            return s == null ? str : s;
         } else {
             return str;
         }
