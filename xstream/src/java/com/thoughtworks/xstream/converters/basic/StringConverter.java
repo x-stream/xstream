@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2014, 2015, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014, 2015, 2018 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,7 +37,8 @@ public class StringConverter extends AbstractSingleValueConverter {
 
     /**
      * A Map to store strings as long as needed to map similar strings onto the same instance and conserve memory. The
-     * map can be set from the outside during construction, so it can be a LRU map or a weak map, synchronized or not.
+     * map can be set from the outside during construction.
+     * Use ConcurrentMap to reduce unneeded contention.
      */
     private final ConcurrentMap<String, String> cache;
     private final int lengthLimit;
