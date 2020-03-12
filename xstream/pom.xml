@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -237,9 +237,9 @@
       </properties>
     </profile>
     <profile>
-      <id>jdk9-ge</id>
+      <id>jdk8-ge</id>
       <activation>
-        <jdk>[9,)</jdk>
+        <jdk>[1.8,)</jdk>
       </activation>
       <build>
         <plugins>
@@ -250,31 +250,7 @@
               <compilerArgs>
                 <arg>-XDignore.symbol.file</arg>
               </compilerArgs>
-              <excludes>
-                <exclude>**/Lambda**</exclude>
-                <exclude>**/time/**</exclude>
-                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
-              </excludes>
-              <testExcludes>
-                <exclude>**/Lambda**</exclude>
-                <exclude>**/*18TypesTest.java</exclude>
-              </testExcludes>
             </configuration>
-            <executions>
-              <execution>
-                <id>compile-jdk18</id>
-                <configuration>
-                  <source>1.8</source>
-                  <target>1.8</target>
-                  <excludes combine.self="override"/>
-                  <testExcludes combine.self="override"/>
-                </configuration>
-                <goals>
-                  <goal>compile</goal>
-                  <goal>testCompile</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>
@@ -290,81 +266,15 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <compilerArgs>
-                <arg>-XDignore.symbol.file</arg>
-              </compilerArgs>
-              <excludes>
-                <exclude>**/Lambda**</exclude>
-                <exclude>**/time/**</exclude>
-                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
-              </excludes>
               <testExcludes>
-                <exclude>**/Lambda**</exclude>
                 <exclude>**/*9Test.java</exclude>
-                <exclude>**/*18TypesTest.java</exclude>
               </testExcludes>
             </configuration>
-            <executions>
-              <execution>
-                <id>compile-jdk18</id>
-                <configuration>
-                  <source>1.8</source>
-                  <target>1.8</target>
-                  <excludes combine.self="override"/>
-                  <testExcludes combine.self="override">
-                    <exclude>**/*9Test.java</exclude>
-                  </testExcludes>
-                </configuration>
-                <goals>
-                  <goal>compile</goal>
-                  <goal>testCompile</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
-              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>jdk17</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerArgs>
-                <arg>-XDignore.symbol.file</arg>
-              </compilerArgs>
-              <excludes>
-                <exclude>**/Lambda**</exclude>
-                <exclude>**/time/**</exclude>
-                <exclude>**/ISO8601JavaTimeConverter.java</exclude>
-                <exclude>**/Base64JavaUtilCodec.java</exclude>
-              </excludes>
-              <testExcludes>
-                <exclude>**/Lambda**</exclude>
-                <exclude>**/Base64JavaUtilCodecTest.java</exclude>
-                <exclude>**/*9Test.java</exclude>
-                <exclude>**/*18TypesTest.java</exclude>
-              </testExcludes>
-            </configuration>
-          </plugin>
-          <plugin><!-- required for Maven Central -->
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <source>1.7</source>
               <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
             </configuration>
           </plugin>
