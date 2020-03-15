@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
+import com.thoughtworks.xstream.core.JVM;
 
 
 public class XmlFriendlyTest extends AbstractAcceptanceTest {
@@ -189,30 +190,61 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     }
 
     public void testDecimalFormatSymbols() {
-        final String xml = ""
-            + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
-            + "  <java.text.DecimalFormatSymbols>\n"
-            + "    <default>\n"
-            + "      <decimalSeparator>,</decimalSeparator>\n"
-            + "      <digit>#</digit>\n"
-            + "      <exponential>E</exponential>\n"
-            + "      <groupingSeparator>.</groupingSeparator>\n"
-            + "      <minusSign>-</minusSign>\n"
-            + "      <monetarySeparator>,</monetarySeparator>\n"
-            + "      <patternSeparator>;</patternSeparator>\n"
-            + "      <perMill>\u2030</perMill>\n"
-            + "      <percent>%</percent>\n"
-            + "      <serialVersionOnStream>3</serialVersionOnStream>\n"
-            + "      <zeroDigit>0</zeroDigit>\n"
-            + "      <NaN>NaN</NaN>\n"
-            + "      <currencySymbol>\u20ac</currencySymbol>\n"
-            + "      <exponentialSeparator>E</exponentialSeparator>\n"
-            + "      <infinity>\u221e</infinity>\n"
-            + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
-            + "      <locale>de_DE</locale>\n"
-            + "    </default>\n"
-            + "  </java.text.DecimalFormatSymbols>\n"
-            + "</java.text.DecimalFormatSymbols>";
+        final String xml;
+        if (!JVM.isVersion(13)) {
+            xml = ""
+                + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+                + "  <java.text.DecimalFormatSymbols>\n"
+                + "    <default>\n"
+                + "      <decimalSeparator>,</decimalSeparator>\n"
+                + "      <digit>#</digit>\n"
+                + "      <exponential>E</exponential>\n"
+                + "      <groupingSeparator>.</groupingSeparator>\n"
+                + "      <minusSign>-</minusSign>\n"
+                + "      <monetarySeparator>,</monetarySeparator>\n"
+                + "      <patternSeparator>;</patternSeparator>\n"
+                + "      <perMill>\u2030</perMill>\n"
+                + "      <percent>%</percent>\n"
+                + "      <serialVersionOnStream>3</serialVersionOnStream>\n"
+                + "      <zeroDigit>0</zeroDigit>\n"
+                + "      <NaN>NaN</NaN>\n"
+                + "      <currencySymbol>\u20ac</currencySymbol>\n"
+                + "      <exponentialSeparator>E</exponentialSeparator>\n"
+                + "      <infinity>\u221e</infinity>\n"
+                + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
+                + "      <locale>de_DE</locale>\n"
+                + "    </default>\n"
+                + "  </java.text.DecimalFormatSymbols>\n"
+                + "</java.text.DecimalFormatSymbols>";
+        } else {
+            xml = ""
+                + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+                + "  <java.text.DecimalFormatSymbols>\n"
+                + "    <default>\n"
+                + "      <decimalSeparator>,</decimalSeparator>\n"
+                + "      <digit>#</digit>\n"
+                + "      <exponential>E</exponential>\n"
+                + "      <groupingSeparator>.</groupingSeparator>\n"
+                + "      <minusSign>-</minusSign>\n"
+                + "      <monetarySeparator>,</monetarySeparator>\n"
+                + "      <patternSeparator>;</patternSeparator>\n"
+                + "      <perMill>\u2030</perMill>\n"
+                + "      <percent>%</percent>\n"
+                + "      <serialVersionOnStream>4</serialVersionOnStream>\n"
+                + "      <zeroDigit>0</zeroDigit>\n"
+                + "      <NaN>NaN</NaN>\n"
+                + "      <currencySymbol>\u20ac</currencySymbol>\n"
+                + "      <exponentialSeparator>E</exponentialSeparator>\n"
+                + "      <infinity>\u221e</infinity>\n"
+                + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
+                + "      <locale>de_DE</locale>\n"
+                + "      <minusSignText>-</minusSignText>\n"
+                + "      <perMillText>\u2030</perMillText>\n"
+                + "      <percentText>%</percentText>\n"
+                + "    </default>\n"
+                + "  </java.text.DecimalFormatSymbols>\n"
+                + "</java.text.DecimalFormatSymbols>";
+        }
         final DecimalFormatSymbols format = new DecimalFormatSymbols(Locale.GERMANY);
         format.setNaN("NaN");
         assertEquals("EUR", format.getInternationalCurrencySymbol());
