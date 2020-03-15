@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -37,14 +37,34 @@
 
   <profiles>
     <profile>
-      <id>jdk9-ge</id>
+      <id>jdk12-ge</id>
       <activation>
-        <jdk>[9,)</jdk>
+        <jdk>[12,)</jdk>
+      </activation>
+      <properties>
+        <version.java.5>1.7</version.java.5>
+        <version.java.6>1.7</version.java.6>
+        <version.java.source>1.7</version.java.source>
+        <version.java.target>1.7</version.java.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>jdk9-ge-jdk12</id>
+      <activation>
+        <jdk>[9,12)</jdk>
       </activation>
       <properties>
         <version.java.5>1.6</version.java.5>
         <version.java.source>1.6</version.java.source>
         <version.java.target>1.6</version.java.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>jdk9-ge</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <properties>
         <version.plugin.maven.enforcer>3.0.0-M1</version.plugin.maven.enforcer>
       </properties>
     </profile>
@@ -1079,6 +1099,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <version.java.5>1.5</version.java.5>
+    <version.java.6>1.6</version.java.6>
     <version.java.source>1.5</version.java.source>
     <version.java.target>1.5</version.java.target>
     <version.java.enforced>[1.4,)</version.java.enforced>

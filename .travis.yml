@@ -2,6 +2,7 @@ dist: trusty
 language: java
 sudo: false
 jdk:
+  - openjdk12
   - openjdk11
   - openjdk10
   - oraclejdk9
