@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 18. April 2006 by Mauro Talevi
  */
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.objects.StandardObject;
-import com.thoughtworks.xstream.core.JVM;
-
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+
+import com.thoughtworks.acceptance.objects.StandardObject;
+import com.thoughtworks.xstream.core.JVM;
 
 
 public class XmlFriendlyTest extends AbstractAcceptanceTest {
@@ -30,13 +30,13 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     public void testSupportsFieldsWithDollarChar() {
         xstream.alias("dollar", WithDollarCharField.class);
 
-        WithDollarCharField in = new WithDollarCharField();
+        final WithDollarCharField in = new WithDollarCharField();
         in.$field = "a";
         in.field$ = "b";
         in.fi$eld = "c";
         in.fi$$eld = "d";
 
-        String expected = ""
+        final String expected = ""
             + "<dollar>\n"
             + "  <_-field>a</_-field>\n"
             + "  <field_->b</field_->\n"
@@ -55,12 +55,12 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     public void testSupportsFieldsWithUnderscoreChar() {
         xstream.alias("underscore", WithUnderscoreCharField.class);
 
-        WithUnderscoreCharField in = new WithUnderscoreCharField();
+        final WithUnderscoreCharField in = new WithUnderscoreCharField();
         in._field = "a";
         in.field_ = "b";
         in.fi_eld = "c";
 
-        String expected = ""
+        final String expected = ""
             + "<underscore>\n"
             + "  <__field>a</__field>\n"
             + "  <field__>b</field__>\n"
@@ -78,12 +78,12 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     public void testSupportsFieldsWithDoubleUnderscoreChar() {
         xstream.alias("underscore", WithDoubleUnderscoreCharField.class);
 
-        WithDoubleUnderscoreCharField in = new WithDoubleUnderscoreCharField();
+        final WithDoubleUnderscoreCharField in = new WithDoubleUnderscoreCharField();
         in.__field = "a";
         in.field__ = "b";
         in.fi__eld = "c";
 
-        String expected = ""
+        final String expected = ""
             + "<underscore>\n"
             + "  <____field>a</____field>\n"
             + "  <field____>b</field____>\n"
@@ -103,14 +103,14 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     public void testSupportsFieldsWithDollarAndUnderScoreChar() {
         xstream.alias("dollar", WithDollarAndUnderscoreCharField.class);
 
-        WithDollarAndUnderscoreCharField in = new WithDollarAndUnderscoreCharField();
+        final WithDollarAndUnderscoreCharField in = new WithDollarAndUnderscoreCharField();
         in.$_$field = "a";
         in.field$_$ = "b";
         in.fi_$_eld = "c";
         in.fi_$$_eld = "d";
         in.fi$__$eld = "e";
 
-        String expected = ""
+        final String expected = ""
             + "<dollar>\n"
             + "  <_-___-field>a</_-___-field>\n"
             + "  <field_-___->b</field_-___->\n"
@@ -126,16 +126,16 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
         String _µ;
         String ¢¥€£äöüß;
     }
-    
+
     public void testSupportsFieldsWithUnusualChars() {
         xstream.alias("unusual", WithUnusualCharacters.class);
 
-        WithUnusualCharacters in = new WithUnusualCharacters();
+        final WithUnusualCharacters in = new WithUnusualCharacters();
         in.µ_ = "a";
         in._µ = "b";
         in.¢¥€£äöüß = "c";
 
-        String expected = ""
+        final String expected = ""
             + "<unusual>\n"
             + "  <_.00b5__>a</_.00b5__>\n"
             + "  <___.00b5>b</___.00b5>\n"
@@ -146,9 +146,9 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
 
     public static class __ {
         public static class A_B extends StandardObject {
-            private int x;
+            private final int x;
 
-            public A_B(int x) {
+            public A_B(final int x) {
                 this.x = x;
             }
 
@@ -163,8 +163,8 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     }
 
     public void testSlashRSlashSlashSlashN() {
-        String before = "\r\\\n";
-        String xml = xstream.toXML(before);
+        final String before = "\r\\\n";
+        final String xml = xstream.toXML(before);
         assertEquals(before, xstream.fromXML(xml));
     }
 
@@ -190,7 +190,8 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
     public void testDecimalFormatSymbols() {
         final String xml;
         if (!JVM.is14()) {
-            xml = "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+            xml = ""
+                + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
                 + "    <default>\n"
                 + "      <decimalSeparator>,</decimalSeparator>\n"
@@ -212,7 +213,8 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
         } else if (!JVM.is16()) {
-            xml = "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+            xml = ""
+                + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
                 + "    <default>\n"
                 + "      <decimalSeparator>,</decimalSeparator>\n"
@@ -234,8 +236,9 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
-        } else {
-            xml = "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+        } else if (!JVM.isVersion(13)) {
+            xml = ""
+                + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
                 + "    <default>\n"
                 + "      <decimalSeparator>,</decimalSeparator>\n"
@@ -255,6 +258,34 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "      <infinity>\u221e</infinity>\n"
                 + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
                 + "      <locale>de_DE</locale>\n"
+                + "    </default>\n"
+                + "  </java.text.DecimalFormatSymbols>\n"
+                + "</java.text.DecimalFormatSymbols>";
+        } else {
+            xml = ""
+                + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+                + "  <java.text.DecimalFormatSymbols>\n"
+                + "    <default>\n"
+                + "      <decimalSeparator>,</decimalSeparator>\n"
+                + "      <digit>#</digit>\n"
+                + "      <exponential>E</exponential>\n"
+                + "      <groupingSeparator>.</groupingSeparator>\n"
+                + "      <minusSign>-</minusSign>\n"
+                + "      <monetarySeparator>,</monetarySeparator>\n"
+                + "      <patternSeparator>;</patternSeparator>\n"
+                + "      <perMill>\u2030</perMill>\n"
+                + "      <percent>%</percent>\n"
+                + "      <serialVersionOnStream>4</serialVersionOnStream>\n"
+                + "      <zeroDigit>0</zeroDigit>\n"
+                + "      <NaN>NaN</NaN>\n"
+                + "      <currencySymbol>\u20ac</currencySymbol>\n"
+                + "      <exponentialSeparator>E</exponentialSeparator>\n"
+                + "      <infinity>\u221e</infinity>\n"
+                + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
+                + "      <locale>de_DE</locale>\n"
+                + "      <minusSignText>-</minusSignText>\n"
+                + "      <perMillText>\u2030</perMillText>\n"
+                + "      <percentText>%</percentText>\n"
                 + "    </default>\n"
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
