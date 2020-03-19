@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2016, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2016, 2018, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,7 +26,22 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
-import com.thoughtworks.xstream.io.xml.*;
+import com.thoughtworks.xstream.io.xml.BEAStaxDriver;
+import com.thoughtworks.xstream.io.xml.Dom4JDriver;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.JDom2Driver;
+import com.thoughtworks.xstream.io.xml.JDomDriver;
+import com.thoughtworks.xstream.io.xml.KXml2DomDriver;
+import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.SimpleStaxDriver;
+import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.WstxDriver;
+import com.thoughtworks.xstream.io.xml.XomDriver;
+import com.thoughtworks.xstream.io.xml.Xpp3DomDriver;
+import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.io.xml.XppDomDriver;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 
 import junit.framework.Assert;
 import junit.framework.Test;
