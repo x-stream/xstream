@@ -123,9 +123,8 @@ public class Base64Encoder implements StringCodec {
 
     @Override
     public byte[] decode(final String input) {
-        try {
+        try (final StringReader in = new StringReader(input)) {
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            final StringReader in = new StringReader(input);
             for (int i = 0; i < input.length(); i += 4) {
                 final int a[] = {mapCharToInt(in), mapCharToInt(in), mapCharToInt(in), mapCharToInt(in)};
                 final int oneBigNumber = (a[0] & 0x3f) << 18 | (a[1] & 0x3f) << 12 | (a[2] & 0x3f) << 6 | a[3] & 0x3f;
