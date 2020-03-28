@@ -1,22 +1,23 @@
 /*
- * Copyright (C) 2017 XStream Committers.
+ * Copyright (C) 2017, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 13. August 2017 Joerg Schaible
+ * Created on 29. March 2020 by Joerg Schaible, renamed from com.thoughtworks.xstream.core.Base64JavaUtilCodecTest
  */
-package com.thoughtworks.xstream.core.util;
+package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
+import com.thoughtworks.xstream.core.Base64Codec;
 import com.thoughtworks.xstream.core.StringCodec;
 
 
-public class Base64JavaUtilCodecTest extends AbstractAcceptanceTest {
+public class Base64CodecTest extends AbstractAcceptanceTest {
 
-    private StringCodec encoder = new Base64JavaUtilCodec();
+    private StringCodec encoder = new Base64Codec();
 
     public void testEncodesEntireByteArrayAsString() {
         final byte input[] = "hello world".getBytes();

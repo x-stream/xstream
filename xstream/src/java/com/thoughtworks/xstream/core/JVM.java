@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.converters.reflection.FieldDictionary;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.core.util.Base64Encoder;
+import com.thoughtworks.xstream.core.util.Base64JavaUtilCodec;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 import com.thoughtworks.xstream.core.util.PresortedMap;
@@ -58,7 +58,8 @@ public class JVM implements Caching {
     private static final float DEFAULT_JAVA_VERSION = 1.7f;
     private static final boolean reverseFieldOrder = false;
     private static final Class<? extends ReflectionProvider> reflectionProviderType;
-    private static final StringCodec base64Codec;
+    @Deprecated
+    private static final StringCodec base64Codec = new Base64JavaUtilCodec();
 
     static class Test {
         @SuppressWarnings("unused")
@@ -90,7 +91,7 @@ public class JVM implements Caching {
         exception.fillInStackTrace();
         final StackTraceElement[] stackTrace = exception.getStackTrace();
         isUnnamedModule = !stackTrace[0].toString().contains("xstream@"); // Java 9: getModule() == null
-    
+
         boolean test = true;
         Object unsafe = null;
         try {
@@ -198,24 +199,6 @@ public class JVM implements Caching {
         isAWTAvailable = loadClassForName("java.awt.Color", false) != null;
         isSwingAvailable = loadClassForName("javax.swing.LookAndFeel", false) != null;
         isSQLAvailable = loadClassForName("java.sql.Date") != null;
-
-        StringCodec base64 = null;
-        Class<? extends StringCodec> base64Class = loadClassForName(
-            "com.thoughtworks.xstream.core.util.Base64JavaUtilCodec");
-        if (base64Class == null) {
-            base64Class = loadClassForName("com.thoughtworks.xstream.core.util.Base64JAXBCodec");
-        }
-        if (base64Class != null) {
-            try {
-                base64 = base64Class.newInstance();
-            } catch (final Exception e) {
-            } catch (final Error e) {
-            }
-        }
-        if (base64 == null) {
-            base64 = new Base64Encoder();
-        }
-        base64Codec = base64;
     }
 
     /**
@@ -443,10 +426,14 @@ public class JVM implements Caching {
     /**
      * Get an available Base64 implementation. Prefers java.util.Base64 over DataTypeConverter from JAXB over XStream's
      * own implementation.
+     * <p>
+     * Since XStream 1.5 requires Java 8 as minimum it can always use the Base84 implementation of the Java runtime.
      *
      * @return a Base64 codec implementation
      * @since 1.4.11
+     * @deprecated As of upcoming, no longer required
      */
+    @Deprecated
     public static StringCodec getBase64Codec() {
         return base64Codec;
     }
@@ -527,7 +514,7 @@ public class JVM implements Caching {
 
     /**
      * Checks for running in the unnamed module for Java 9 or greater.
-     * 
+     *
      * @return true for Java 8 or later or when XStream is running as part of the unnamed module in Java 9 or higher
      * @since upcoming
      */
@@ -641,7 +628,6 @@ public class JVM implements Caching {
         System.out.println("Java Beans EventHandler present: " + (loadClassForName("java.beans.EventHandler") != null));
         System.out.println("Standard StAX XMLInputFactory: " + staxInputFactory);
         System.out.println("Standard StAX XMLOutputFactory: " + staxOutputFactory);
-        System.out.println("Standard Base64 Codec: " + getBase64Codec().getClass().toString());
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());

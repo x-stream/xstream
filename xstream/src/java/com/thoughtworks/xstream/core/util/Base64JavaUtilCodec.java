@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017, 2018 XStream Committers.
+ * Copyright (C) 2017, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,7 +12,7 @@ package com.thoughtworks.xstream.core.util;
 
 import java.util.Base64;
 
-import com.thoughtworks.xstream.core.StringCodec;
+import com.thoughtworks.xstream.core.Base64Codec;
 
 
 /**
@@ -20,10 +20,10 @@ import com.thoughtworks.xstream.core.StringCodec;
  *
  * @author J&ouml;rg Schaible
  * @since 1.4.11
+ * @deprecated As of upcoming use {@link Base64Codec}
  */
-public class Base64JavaUtilCodec implements StringCodec {
-    final private Base64.Decoder decoder;
-    final private Base64.Encoder encoder;
+@Deprecated
+public class Base64JavaUtilCodec extends Base64Codec {
 
     /**
      * Constructs a Base64JavaUtilCodec.
@@ -32,9 +32,11 @@ public class Base64JavaUtilCodec implements StringCodec {
      * </p>
      *
      * @since 1.4.11
+     * @deprecated As of upcoming use {@link Base64Codec#Base64Codec()}
      */
+    @Deprecated
     public Base64JavaUtilCodec() {
-        this(Base64.getEncoder(), Base64.getMimeDecoder());
+        super();
     }
 
     /**
@@ -43,19 +45,11 @@ public class Base64JavaUtilCodec implements StringCodec {
      * @param encoder the encoder instance
      * @param decoder the decoder instance
      * @since 1.4.11
+     * @deprecated As of upcoming use
+     *             {@link Base64Codec#Base64Codec(java.util.Base64.Encoder, java.util.Base64.Decoder)}
      */
+    @Deprecated
     public Base64JavaUtilCodec(final Base64.Encoder encoder, final Base64.Decoder decoder) {
-        this.encoder = encoder;
-        this.decoder = decoder;
-    }
-
-    @Override
-    public byte[] decode(final String base64) {
-        return decoder.decode(base64);
-    }
-
-    @Override
-    public String encode(final byte[] data) {
-        return encoder.encodeToString(data);
+        super(encoder, decoder);
     }
 }

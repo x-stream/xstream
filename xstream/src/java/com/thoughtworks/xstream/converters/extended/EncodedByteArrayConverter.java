@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2014, 2015, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2014, 2015, 2017, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.basic.ByteConverter;
-import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.Base64Codec;
 import com.thoughtworks.xstream.core.StringCodec;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -33,14 +33,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class EncodedByteArrayConverter implements Converter, SingleValueConverter {
 
+    private static final StringCodec defaultCodec = new Base64Codec();
     private static final ByteConverter byteConverter = new ByteConverter();
     private final StringCodec codec;
 
     /**
-     * Constructs an EncodedByteArrayConverter. Initializes the converter with a Base64 codec.
+     * Constructs an EncodedByteArrayConverter. Initializes the converter with a {@link Base64Codec} instance.
      */
     public EncodedByteArrayConverter() {
-        this(JVM.getBase64Codec());
+        this(defaultCodec);
     }
 
     /**

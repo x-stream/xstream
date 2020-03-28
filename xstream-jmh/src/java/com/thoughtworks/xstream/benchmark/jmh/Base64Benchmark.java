@@ -39,6 +39,7 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
  *
  * @author J&ouml;rg Schaible
  * @since 1.4.11
+ * @deprecated As of upcoming
  */
 @BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
@@ -47,6 +48,7 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
 @State(Scope.Benchmark)
 @Threads(4)
 @Warmup(iterations = 5)
+@Deprecated
 public class Base64Benchmark {
 
     /**
