@@ -210,8 +210,8 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
     }
 
     private static void assertArrayEquals(final Object[] expected, final Object[] actual) {
-        final StringBuffer expectedJoined = new StringBuffer();
-        final StringBuffer actualJoined = new StringBuffer();
+        final StringBuffer expectedJoined = new StringBuffer(expected.length * 19);
+        final StringBuffer actualJoined = new StringBuffer(actual.length * 19);
         for (final Object element : expected) {
             expectedJoined.append(element).append('\n');
         }

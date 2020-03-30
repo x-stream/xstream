@@ -117,7 +117,8 @@ public abstract class ErrorWritingException extends XStreamException implements 
 
     @Override
     public String getMessage() {
-        final StringBuilder result = new StringBuilder();
+        final int length = SEPARATOR.length() + (stuff.keySet().size() * 20);
+        final StringBuilder result = new StringBuilder(super.getMessage() != null ? super.getMessage().length() + length : length);
         if (super.getMessage() != null) {
             result.append(super.getMessage());
         }

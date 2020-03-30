@@ -88,7 +88,7 @@ public class TokenTest extends TestCase {
     }
 
     public void testUsesIdForStringsWithMoreThen64KBytes() throws IOException {
-        final StringBuffer builder = new StringBuffer();
+        final StringBuffer builder = new StringBuffer(40000);
         for (int i = 0; i++ < 8000;) {
             builder.append("\u0391\u03b8\u03ae\u03bd\u03b1"); // Athens
         }
