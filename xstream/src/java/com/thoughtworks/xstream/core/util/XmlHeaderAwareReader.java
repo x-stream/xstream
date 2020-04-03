@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2007, 2008, 2010, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -65,7 +65,7 @@ public final class XmlHeaderAwareReader extends Reader {
 
     private Map getHeader(final PushbackInputStream[] in) throws IOException {
         final Map header = new HashMap();
-        header.put(KEY_ENCODING, "utf-8");
+        header.put(KEY_ENCODING, "UTF-8");
         header.put(KEY_VERSION, "1.0");
 
         int state = STATE_BOM;
