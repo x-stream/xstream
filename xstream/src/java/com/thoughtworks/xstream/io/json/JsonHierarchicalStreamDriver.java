@@ -16,14 +16,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import com.thoughtworks.xstream.io.AbstractDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
@@ -82,12 +81,8 @@ public class JsonHierarchicalStreamDriver extends AbstractDriver {
 
     @Override
     public HierarchicalStreamWriter createWriter(final OutputStream out) {
-        try {
-            // JSON spec requires UTF-8
-            return createWriter(new OutputStreamWriter(out, "UTF-8"));
-        } catch (final UnsupportedEncodingException e) {
-            throw new StreamException(e);
-        }
+         // JSON spec requires UTF-8
+         return createWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
     }
 
 }

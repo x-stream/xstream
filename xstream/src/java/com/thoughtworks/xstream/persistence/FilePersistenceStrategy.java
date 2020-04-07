@@ -54,7 +54,7 @@ public class FilePersistenceStrategy<K, V> extends AbstractFilePersistenceStrate
      * @since 1.3.1
      */
     public FilePersistenceStrategy(final File baseDirectory, final XStream xstream) {
-        this(baseDirectory, xstream, "utf-8", "<>?:/\\\"|*%");
+        this(baseDirectory, xstream, "UTF-8", "<>?:/\\\"|*%");
     }
 
     /**

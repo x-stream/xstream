@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.io.binary;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import com.thoughtworks.xstream.io.StreamException;
 
@@ -134,7 +135,7 @@ public abstract class Token {
     }
 
     protected void writeString(final DataOutput out, final String string) throws IOException {
-        final byte[] bytes = string.length() > MAX_UTF8_LENGTH / 4 ? string.getBytes("utf-8") : new byte[0];
+        final byte[] bytes = string.length() > MAX_UTF8_LENGTH / 4 ? string.getBytes(StandardCharsets.UTF_8) : new byte[0];
         final int length = bytes.length;
         if (length <= MAX_UTF8_LENGTH) {
             out.writeUTF(string);
@@ -168,7 +169,7 @@ public abstract class Token {
         final int size = in.readInt();
         final byte[] bytes = new byte[size];
         in.readFully(bytes);
-        return new String(bytes, "utf-8");
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     public static class Formatter {
