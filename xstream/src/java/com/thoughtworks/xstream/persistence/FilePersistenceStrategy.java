@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2008, 2014, 2015, 2016, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -54,7 +54,7 @@ public class FilePersistenceStrategy<K, V> extends AbstractFilePersistenceStrate
      * @since 1.3.1
      */
     public FilePersistenceStrategy(final File baseDirectory, final XStream xstream) {
-        this(baseDirectory, xstream, "utf-8", "<>?:/\\\"|*%");
+        this(baseDirectory, xstream, "UTF-8", "<>?:/\\\"|*%");
     }
 
     /**
