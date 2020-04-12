@@ -275,7 +275,7 @@
   <modules>
     <module>xstream</module>
     <module>xstream-hibernate</module>
-    <module>xstream-its</module>
+    <!--module>xstream-its</module--><!-- requires installed repo -->
     <module>xstream-jmh</module>
     <module>xstream-benchmark</module>
     <module>xstream-distribution</module>
