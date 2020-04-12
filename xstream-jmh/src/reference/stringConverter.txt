@@ -1,7 +1,8 @@
 Benchmark                                                Mode  Cnt         Score         Error  Units
-StringConverterBenchmark.intern                          avgt   16  12576002.757 ±  850369.771  ns/op
-StringConverterBenchmark.limitedConcurrentMap            avgt   16  10411028.373 ±   76602.128  ns/op
-StringConverterBenchmark.limitedSynchronizedWeakCache    avgt   16  10948390.386 ±   84458.276  ns/op
-StringConverterBenchmark.nonCaching                      avgt   16   9422597.717 ±   39021.126  ns/op
-StringConverterBenchmark.unlimitedConcurrentMap          avgt   16  10666492.267 ±  285717.245  ns/op
-StringConverterBenchmark.unlimitedSynchronizedWeakCache  avgt   16  11917404.787 ± 1224543.882  ns/op
+StringConverterBenchmark.intern                          avgt   16  13663938.758 ± 1206782.402  ns/op
+StringConverterBenchmark.limitedConcurrentMap            avgt   16  10737987.949 ±  329586.351  ns/op
+StringConverterBenchmark.limitedSynchronizedWeakCache    avgt   16  11290817.742 ±   45611.082  ns/op
+StringConverterBenchmark.nonCaching                      avgt   16  10337910.943 ±  704603.064  ns/op
+StringConverterBenchmark.unlimitedConcurrentMap          avgt   16  11169290.354 ±  283057.815  ns/op
+StringConverterBenchmark.unlimitedSynchronizedWeakCache  avgt   16  11046207.731 ±   61995.367  ns/op
+
