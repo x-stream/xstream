@@ -104,7 +104,7 @@
         <jdk>[1.6,)</jdk>
       </activation>
       <modules>
-        <module>xstream-its</module>
+        <!--module>xstream-its</module--><!-- requires installed repo -->
         <module>xstream-jmh</module>
         <module>xstream-distribution</module>
       </modules>
