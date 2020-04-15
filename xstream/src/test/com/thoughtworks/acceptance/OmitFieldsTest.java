@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -57,8 +57,8 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.neverIgnore = "c";
 
         final String expectedXml = "" //
-            + "<thing>\n" 
-            + "  <neverIgnore>c</neverIgnore>\n" 
+            + "<thing>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
             + "</thing>";
 
         xstream.alias("thing", Thing.class);
@@ -146,7 +146,10 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.myCheese = "d";
 
         final String expectedXml = "" //
-                + "<thing>\n" + "  <stuff>a</stuff>\n" + "  <cheese>b</cheese>\n" + "</thing>";
+            + "<thing>\n"
+            + "  <stuff>a</stuff>\n"
+            + "  <cheese>b</cheese>\n"
+            + "</thing>";
 
         class OmitFieldsWithMyPrefixMapper extends MapperWrapper {
             public OmitFieldsWithMyPrefixMapper(final Mapper wrapped) {
@@ -172,7 +175,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         final String actualXml = xstream.toXML(in);
         assertEquals(expectedXml, actualXml);
 
-        final AnotherThing out =xstream.fromXML(actualXml);
+        final AnotherThing out = xstream.fromXML(actualXml);
         assertEquals("a", out.stuff);
         assertEquals("b", out.cheese);
         assertEquals(null, out.myStuff);
@@ -336,9 +339,32 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
             final String message = e.getMessage();
-            assertTrue(message, e.getMessage().substring(0, message.indexOf('\n')).endsWith(DerivedThing.class.getName()
-                + ".unknown"));
+            assertTrue(message, e
+                .getMessage()
+                .substring(0, message.indexOf('\n'))
+                .endsWith(DerivedThing.class.getName() + ".unknown"));
         }
+    }
+
+    public void testIgnoreAllUnknownElements() {
+        final String actualXml = ""
+            + "<thing>\n"
+            + "  <foobar>f</foobar>\n"
+            + "  <nested>\n"
+            + "    <inner>i</inner>\n"
+            + "  </nested>\n"
+            + "  <sometimesIgnore>a</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "  <derived>d</derived>\n"
+            + "</thing>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.ignoreUnknownElements();
+
+        final Thing out = xstream.fromXML(actualXml);
+        assertEquals(null, out.alwaysIgnore);
+        assertEquals("a", out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
     }
 
     public void testIgnoreNonExistingElementsMatchingTypeAlias() {
@@ -346,7 +372,9 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         xstream.ignoreUnknownElements("string");
         final Thing thing = new Thing();
         final String provided = "" //
-                + "<thing>\n" + "  <string>string 1</string>\n" + "</thing>";
+            + "<thing>\n"
+            + "  <string>string 1</string>\n"
+            + "</thing>";
         final String expected = "<thing/>";
         assertWithAsymmetricalXml(thing, provided, expected);
     }
@@ -355,7 +383,10 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         xstream.alias("thing", Thing.class);
         xstream.ignoreUnknownElements("int");
         final Thing thing = new Thing();
-        final String provided = "" + "<thing>\n" + "  <int>invalid</int>\n" + "</thing>";
+        final String provided = "" //
+            + "<thing>\n"
+            + "  <int>invalid</int>\n"
+            + "</thing>";
         final String expected = "<thing/>";
         assertWithAsymmetricalXml(thing, provided, expected);
     }
