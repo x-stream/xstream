@@ -413,7 +413,7 @@ public class XStreamTest extends TestCase {
         		"<rootname>" +System.lineSeparator()+ 
         		"  <int>1</int>" +System.lineSeparator()+ 
         		"</rootname>" +System.lineSeparator()+ 
-        		"", out.toString());
+        		"", out.toString("UTF-8"));
     }
     
     public void testObjectOutputStreamXSLSimpleSmokeTest2() throws IOException, TransformerConfigurationException, InterruptedException {
@@ -437,7 +437,7 @@ public class XStreamTest extends TestCase {
         		"<rootname>" +System.lineSeparator()+ 
         		"  <int>1</int>" +System.lineSeparator()+  
         		"</rootname>" +System.lineSeparator()+ 
-        		"", out.toString());
+        		"", out.toString("UTF-8"));
     }
     
     public void testObjectOutputStreamXSLGenerateINI() throws IOException, TransformerConfigurationException, InterruptedException {
