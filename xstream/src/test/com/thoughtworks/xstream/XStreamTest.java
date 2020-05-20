@@ -11,14 +11,20 @@
  */
 package com.thoughtworks.xstream;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.stream.StreamSource;
 
 import org.dom4j.Element;
 
@@ -33,6 +39,7 @@ import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -41,6 +48,7 @@ import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.xml.AbstractDocumentReader;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 
@@ -389,6 +397,68 @@ public class XStreamTest extends TestCase {
         } catch (final StreamException e) {
             // ok
         }
+    }
+    
+    public void testObjectOutputStreamXSLSimpleSmokeTest() throws IOException, TransformerConfigurationException, InterruptedException {
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+        InputStream xslt= XStreamTest.class.getResourceAsStream("identity.xsl");
+        DataHolder newDataHolder = xstream.newDataHolder();
+		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,Charset.defaultCharset(),"rootname",new StreamSource(xslt),newDataHolder);
+        oout.writeObject(new Integer(1));
+        oout.flush();
+        oout.close();
+        Assert.assertEquals(
+        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n" + 
+        		"<rootname>\r\n" + 
+        		"  <int>1</int>\r\n" + 
+        		"</rootname>\r\n" + 
+        		"", out.toString());
+    }
+    
+    public void testObjectOutputStreamXSLSimpleSmokeTest2() throws IOException, TransformerConfigurationException, InterruptedException {
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+    	StringReader strs=new StringReader("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + 
+        		"<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\r\n" + 
+        		"<xsl:output method=\"xml\" indent=\"yes\" standalone=\"yes\" />\r\n" + 
+        		"<xsl:template match=\"@*|node()\">\r\n" + 
+        		"   <xsl:copy>\r\n" + 
+        		"      <xsl:apply-templates select=\"@*|node()\"/>\r\n" + 
+        		"   </xsl:copy>\r\n" + 
+        		"</xsl:template>\r\n" + 
+        		"</xsl:stylesheet>");
+        DataHolder newDataHolder = xstream.newDataHolder();
+		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,Charset.defaultCharset(),"rootname",new StreamSource(strs),newDataHolder);
+        oout.writeObject(new Integer(1));
+        oout.flush();
+        oout.close();
+        Assert.assertEquals(
+        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n" + 
+        		"<rootname>\r\n" + 
+        		"  <int>1</int>\r\n" + 
+        		"</rootname>\r\n" + 
+        		"", out.toString());
+    }
+    
+    public void testObjectOutputStreamXSLGenerateINI() throws IOException, TransformerConfigurationException, InterruptedException {
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+    	StringReader strs=new StringReader("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + 
+        		"<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\r\n" + 
+        		"<xsl:output method=\"text\" indent=\"yes\" standalone=\"yes\" />\r\n" + 
+        		"<xsl:template match=\"@*|node()\">\r\n" + 
+        		"   <xsl:text>found=</xsl:text>\r\n" + 
+        		"		<xsl:value-of select=\"//int\"/>\r\n" + 
+        		"		<xsl:text>\r\n" + 
+        		"</xsl:text>\r\n" + 
+        		"</xsl:template>\r\n" + 
+        		"</xsl:stylesheet>");
+        DataHolder newDataHolder = xstream.newDataHolder();
+		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,Charset.defaultCharset(),"rootname",new StreamSource(strs),newDataHolder);
+        oout.writeObject(new Integer(1));
+        oout.flush();
+        oout.close();
+        Assert.assertEquals(
+        		"found=1\r\n" + 
+        		"", out.toString());
     }
 
     public void testUnmarshalsFromFile() throws IOException {

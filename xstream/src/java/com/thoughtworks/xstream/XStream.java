@@ -20,9 +20,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectInputValidation;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -67,6 +71,14 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import com.sun.media.jfxmedia.logging.Logger;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -146,6 +158,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StatefulWriter;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.mapper.AnnotationMapper;
 import com.thoughtworks.xstream.mapper.ArrayMapper;
 import com.thoughtworks.xstream.mapper.AttributeAliasingMapper;
@@ -1906,6 +1919,44 @@ public class XStream {
 
     /**
      * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
+     * @throws TransformerConfigurationException 
+     * @throws IOException 
+     * @throws UnsupportedEncodingException 
+     *
+     * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
+     * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
+     * @since 1.4.10
+     */
+    public ObjectOutputStream createObjectOutputStream(final OutputStream out, Charset encoding, final String rootNodeName,
+            final StreamSource stylesheet, final DataHolder dataHolder) throws TransformerConfigurationException, UnsupportedEncodingException, IOException {
+    	final PipedOutputStream pipedoutput= new PipedOutputStream();
+    	final PipedInputStream pipedinput= new PipedInputStream(pipedoutput);
+    	TransformerFactory instance= TransformerFactory.newInstance();
+    	Transformer transformer= instance.newTransformer(stylesheet);
+    	Thread thread= new Thread(() -> {
+    		try {
+				transformer.transform(new StreamSource(pipedinput), new StreamResult(out));
+			} catch (TransformerException e) {
+			} finally {
+				try(OutputStream o=out) {
+					out.flush();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+    	});
+    	thread.setName("XStream Output XSL Converter");
+    	CloseListener cl=new CloseListener(thread);
+    	thread.start();
+		return createObjectOutputStream(new PrettyPrintWriter(new OutputStreamWriter(pipedoutput,encoding)),rootNodeName,dataHolder,cl);
+    }
+    
+    public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName,
+            final DataHolder dataHolder) throws IOException {
+    	return createObjectOutputStream(writer,rootNodeName,dataHolder,(CloseListener)null);
+    }
+    /**
+     * Creates an ObjectOutputStream that serializes a stream of objects to the writer using XStream.
      *
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
@@ -1913,7 +1964,7 @@ public class XStream {
      */
     @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName,
-            final DataHolder dataHolder)
+            final DataHolder dataHolder, final CloseListener cl)
             throws IOException {
         final StatefulWriter statefulWriter = new StatefulWriter(writer);
         statefulWriter.startNode(rootNodeName, null);
@@ -1940,10 +1991,11 @@ public class XStream {
 
             @Override
             public void close() {
-                if (statefulWriter.state() != StatefulWriter.STATE_CLOSED) {
+            	 if (statefulWriter.state() != StatefulWriter.STATE_CLOSED) {
                     statefulWriter.endNode();
                     statefulWriter.close();
-                }
+            	 }
+            	 if(cl!=null)cl.close();
             }
         });
     }
