@@ -22,6 +22,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.stream.StreamSource;
@@ -403,39 +404,39 @@ public class XStreamTest extends TestCase {
     	ByteArrayOutputStream out = new ByteArrayOutputStream();
         InputStream xslt= XStreamTest.class.getResourceAsStream("identity.xsl");
         DataHolder newDataHolder = xstream.newDataHolder();
-		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,Charset.defaultCharset(),"rootname",new StreamSource(xslt),newDataHolder);
+		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,StandardCharsets.UTF_8,"rootname",new StreamSource(xslt),newDataHolder);
         oout.writeObject(new Integer(1));
         oout.flush();
         oout.close();
         Assert.assertEquals(
-        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n" + 
-        		"<rootname>\r\n" + 
-        		"  <int>1</int>\r\n" + 
-        		"</rootname>\r\n" + 
+        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +System.lineSeparator()+ 
+        		"<rootname>" +System.lineSeparator()+ 
+        		"  <int>1</int>" +System.lineSeparator()+ 
+        		"</rootname>" +System.lineSeparator()+ 
         		"", out.toString());
     }
     
     public void testObjectOutputStreamXSLSimpleSmokeTest2() throws IOException, TransformerConfigurationException, InterruptedException {
     	ByteArrayOutputStream out = new ByteArrayOutputStream();
-    	StringReader strs=new StringReader("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + 
-        		"<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\r\n" + 
-        		"<xsl:output method=\"xml\" indent=\"yes\" standalone=\"yes\" />\r\n" + 
-        		"<xsl:template match=\"@*|node()\">\r\n" + 
-        		"   <xsl:copy>\r\n" + 
-        		"      <xsl:apply-templates select=\"@*|node()\"/>\r\n" + 
-        		"   </xsl:copy>\r\n" + 
-        		"</xsl:template>\r\n" + 
+    	StringReader strs=new StringReader("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +System.lineSeparator()+ 
+        		"<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">" +System.lineSeparator()+ 
+        		"<xsl:output method=\"xml\" indent=\"yes\" standalone=\"yes\" />" +System.lineSeparator()+ 
+        		"<xsl:template match=\"@*|node()\">" +System.lineSeparator()+ 
+        		"   <xsl:copy>" +System.lineSeparator()+ 
+        		"      <xsl:apply-templates select=\"@*|node()\"/>" +System.lineSeparator()+ 
+        		"   </xsl:copy>" +System.lineSeparator()+ 
+        		"</xsl:template>" +System.lineSeparator()+ 
         		"</xsl:stylesheet>");
         DataHolder newDataHolder = xstream.newDataHolder();
-		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,Charset.defaultCharset(),"rootname",new StreamSource(strs),newDataHolder);
+		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,StandardCharsets.UTF_8,"rootname",new StreamSource(strs),newDataHolder);
         oout.writeObject(new Integer(1));
         oout.flush();
         oout.close();
         Assert.assertEquals(
-        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n" + 
-        		"<rootname>\r\n" + 
-        		"  <int>1</int>\r\n" + 
-        		"</rootname>\r\n" + 
+        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +System.lineSeparator()+ 
+        		"<rootname>" +System.lineSeparator()+ 
+        		"  <int>1</int>" +System.lineSeparator()+  
+        		"</rootname>" +System.lineSeparator()+ 
         		"", out.toString());
     }
     
@@ -452,12 +453,12 @@ public class XStreamTest extends TestCase {
         		"</xsl:template>\r\n" + 
         		"</xsl:stylesheet>");
         DataHolder newDataHolder = xstream.newDataHolder();
-		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,Charset.defaultCharset(),"rootname",new StreamSource(strs),newDataHolder);
+		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,StandardCharsets.UTF_8,"rootname",new StreamSource(strs),newDataHolder);
         oout.writeObject(new Integer(1));
         oout.flush();
         oout.close();
         Assert.assertEquals(
-        		"found=1\r\n" + 
+        		"found=1" +System.lineSeparator()+ 
         		"", out.toString());
     }
 
