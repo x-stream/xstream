@@ -409,11 +409,10 @@ public class XStreamTest extends TestCase {
         oout.flush();
         oout.close();
         Assert.assertEquals(
-        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +System.lineSeparator()+ 
+        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"+ 
         		"<rootname>" +System.lineSeparator()+ 
         		"  <int>1</int>" +System.lineSeparator()+ 
-        		"</rootname>" +System.lineSeparator()+ 
-        		"", out.toString("UTF-8"));
+        		"</rootname>", out.toString("UTF-8"));
     }
     
     public void testObjectOutputStreamXSLSimpleSmokeTest2() throws IOException, TransformerConfigurationException, InterruptedException {
@@ -421,11 +420,7 @@ public class XStreamTest extends TestCase {
     	StringReader strs=new StringReader("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +System.lineSeparator()+ 
         		"<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">" +System.lineSeparator()+ 
         		"<xsl:output method=\"xml\" indent=\"yes\" standalone=\"yes\" />" +System.lineSeparator()+ 
-        		"<xsl:template match=\"@*|node()\">" +System.lineSeparator()+ 
-        		"   <xsl:copy>" +System.lineSeparator()+ 
-        		"      <xsl:apply-templates select=\"@*|node()\"/>" +System.lineSeparator()+ 
-        		"   </xsl:copy>" +System.lineSeparator()+ 
-        		"</xsl:template>" +System.lineSeparator()+ 
+        		"<xsl:template match=\"@*|node()\"><xsl:copy><xsl:apply-templates select=\"@*|node()\"/></xsl:copy></xsl:template>" +System.lineSeparator()+ 
         		"</xsl:stylesheet>");
         DataHolder newDataHolder = xstream.newDataHolder();
 		final ObjectOutputStream oout = xstream.createObjectOutputStream(out,StandardCharsets.UTF_8,"rootname",new StreamSource(strs),newDataHolder);
@@ -433,11 +428,10 @@ public class XStreamTest extends TestCase {
         oout.flush();
         oout.close();
         Assert.assertEquals(
-        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +System.lineSeparator()+ 
+        		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + 
         		"<rootname>" +System.lineSeparator()+ 
         		"  <int>1</int>" +System.lineSeparator()+  
-        		"</rootname>" +System.lineSeparator()+ 
-        		"", out.toString("UTF-8"));
+        		"</rootname>", out.toString("UTF-8"));
     }
     
     public void testObjectOutputStreamXSLGenerateINI() throws IOException, TransformerConfigurationException, InterruptedException {

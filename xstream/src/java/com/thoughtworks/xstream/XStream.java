@@ -71,6 +71,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -1932,6 +1933,7 @@ public class XStream {
     	final PipedInputStream pipedinput= new PipedInputStream(pipedoutput);
     	TransformerFactory instance= TransformerFactory.newInstance();
     	Transformer transformer= instance.newTransformer(stylesheet);
+    	transformer.setOutputProperty(OutputKeys.INDENT, "no");
     	Thread thread= new Thread(() -> {
     		try {
 				transformer.transform(new StreamSource(pipedinput), new StreamResult(out));
