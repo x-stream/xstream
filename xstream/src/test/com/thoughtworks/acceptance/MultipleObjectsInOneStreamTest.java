@@ -123,6 +123,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         oos.writeInt(123);
         oos.writeObject("hello");
         oos.writeObject(new Software("tw", "xs"));
+        oos.writeObject(null);
         oos.close();
 
         final String expectedXml = ""
@@ -133,6 +134,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             + "    <vendor>tw</vendor>\n"
             + "    <name>xs</name>\n"
             + "  </software>\n"
+            + "  <null/>\n"
             + "</object-stream>";
 
         assertEquals(expectedXml, writer.toString());
@@ -141,6 +143,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         assertEquals(123, ois.readInt());
         assertEquals("hello", ois.readObject());
         assertEquals(new Software("tw", "xs"), ois.readObject());
+        assertNull(ois.readObject());
 
         try {
             ois.readObject(); // As far as I can see this is the only clue the
