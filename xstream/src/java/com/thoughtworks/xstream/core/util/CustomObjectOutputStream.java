@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -34,8 +34,7 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
         try {
             CustomObjectOutputStream result = (CustomObjectOutputStream)whereFrom.get(DATA_HOLDER_KEY);
             if (result == null) {
-                result = new CustomObjectOutputStream(callback);
-                whereFrom.put(DATA_HOLDER_KEY, result);
+                result = new CustomObjectOutputStream(whereFrom, callback);
             } else {
                 result.pushCallback(callback);
             }
@@ -66,8 +65,12 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
      * @see #getInstance(com.thoughtworks.xstream.converters.DataHolder,
      *      com.thoughtworks.xstream.core.util.CustomObjectOutputStream.StreamCallback)
      */
-    public CustomObjectOutputStream(final StreamCallback callback) throws IOException, SecurityException {
+    public CustomObjectOutputStream(final DataHolder dataHolder, final StreamCallback callback)
+            throws IOException, SecurityException {
         callbacks.push(callback);
+        if (dataHolder != null) {
+            dataHolder.put(DATA_HOLDER_KEY, this);
+        }
     }
 
     /**

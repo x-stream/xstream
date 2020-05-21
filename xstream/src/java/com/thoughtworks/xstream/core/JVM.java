@@ -187,7 +187,7 @@ public class JVM implements Caching {
         canParseISO8601TimeZoneInDateFormat = test;
         try {
             @SuppressWarnings("resource")
-            final CustomObjectOutputStream stream = new CustomObjectOutputStream(null);
+            final CustomObjectOutputStream stream = new CustomObjectOutputStream(null, null);
             test = stream != null;
         } catch (final RuntimeException e) {
             test = false;

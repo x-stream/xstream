@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -1915,12 +1915,13 @@ public class XStream {
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName,
             final DataHolder dataHolder)
             throws IOException {
+        final DataHolder context = dataHolder != null ? dataHolder : new MapBackedDataHolder();
         final StatefulWriter statefulWriter = new StatefulWriter(writer);
         statefulWriter.startNode(rootNodeName, null);
-        return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
+        return new CustomObjectOutputStream(context, new CustomObjectOutputStream.StreamCallback() {
             @Override
             public void writeToStream(final Object object) {
-                marshal(object, statefulWriter, dataHolder);
+                marshal(object, statefulWriter, context);
             }
 
             @Override
