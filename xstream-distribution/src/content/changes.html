@@ -51,6 +51,7 @@
 		<li>GHPR:#145: FileName parameter of StackTraceElement can be used for other source code units than file,
 		converter handles this.</li>
 		<li>GHI:#4: Cannot add suppressed exception to unmarshalled Throwable.</li>
+		<li>TraxSource supports the creation of an ObjectOutputStream to transform the output of XStream on-the-fly.</li>
 		<li>StackTraceElementConverter keeps now information about the source code unit for native methods if
 		available.</li>
 		<li>StackTraceElementConverter keeps for Java 9 or higher information about the class loader and module name
@@ -72,7 +73,11 @@
 		<li>Merge functionality of ExtendedHierarchicalStreamWriter into HierarchicalStreamWriter.</li>
 		<li>HierarchicalStreamReader and HierarchicalStreamWriter extend AutoCloseable instead of Closeable now.</li>
 		<li>Added c.t.x.io.xml.SimpleStaxDriver.</li>
-		<li>Added c.t.x.io.HierarchicalStreamReader.getLevel()</li>
+		<li>Added c.t.x.io.HierarchicalStreamReader.getLevel().</li>
+		<li>Added c.t.x.io.xml.SaxWriter#OOS_SUPPLIER_PROPERTY</li>
+		<li>Added c.t.x.io.xml.SaxWriter#SOURCE_OBJECT_QUEUE_PROPERTY.</li>
+		<li>Deprecated c.t.x.io.xml.SaxWriter#SOURCE_OBJECT_LIST_PROPERTY.</li>
+		<li>Added c.t.x.io.xml.TraxSource#createObjectOutputStream</li>
 		<li>Deprecated obsolete method c.t.x.XStream.setupDefaultSecurity.</li>
 		<li>Added c.t.x.converters.extended.ThrowableConverter.ThrowableConverter(Mapper, ConverterLookup).</li>
 		<li>Deprecated c.t.x.converters.extended.ThrowableConverter.ThrowableConverter(ConverterLookup).</li>

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -28,6 +30,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import com.megginson.sax.DataWriter;
+import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.acceptance.someobjects.Y;
 import com.thoughtworks.xstream.XStream;
@@ -37,6 +40,7 @@ import junit.framework.TestCase;
 
 /*
  * @author Laurent Bihanic
+ * @author Joerg Schaible
  */
 public class SaxWriterTest extends TestCase {
 
@@ -66,6 +70,7 @@ public class SaxWriterTest extends TestCase {
         xstream = new XStream();
         xstream.alias("x", X.class);
         xstream.alias("y", Y.class);
+        xstream.alias("software", Software.class);
 
         testInput = new X();
         testInput.anInt = 9;
@@ -73,8 +78,9 @@ public class SaxWriterTest extends TestCase {
         testInput.innerObj = new Y();
         testInput.innerObj.yField = "ooo";
 
-        identityStylesheet = TransformerFactory.newInstance().newTemplates(new StreamSource(new StringReader(
-            IDENTITY_STYLESHEET)));
+        identityStylesheet = TransformerFactory
+            .newInstance()
+            .newTemplates(new StreamSource(new StringReader(IDENTITY_STYLESHEET)));
     }
 
     public void testMarshalsObjectToSAX() {
@@ -114,15 +120,15 @@ public class SaxWriterTest extends TestCase {
 
             writer.setContentHandler(outputter);
 
-            xstream.marshal(new Integer(1), writer);
-            xstream.marshal(new Integer(2), writer);
-            xstream.marshal(new Integer(3), writer);
+            xstream.marshal(Integer.valueOf(1), writer);
+            xstream.marshal(Integer.valueOf(2), writer);
+            xstream.marshal(Integer.valueOf(3), writer);
         }
 
         assertEquals(expected, buffer.toString());
     }
 
-    public void testMarshalsObjectToTrAX() throws Exception {
+    public void testMarshalsObjectToTrAX() throws TransformerException {
         final String expected = ""
             + "<x><aStr>zzz</aStr><anInt>9</anInt>"
             + "<innerObj><yField>ooo</yField></innerObj>"
@@ -138,6 +144,37 @@ public class SaxWriterTest extends TestCase {
 
         transformer.transform(traxSource, new StreamResult(buffer));
 
+        assertEquals(expected, buffer.toString());
+    }
+
+    public void testTransformedObjectOutputStream() throws IOException {
+        final String expected = "" //
+            + "<root>" //
+            + "<int>42</int>" //
+            + "<string>hello</string>" //
+            + "<software>" //
+            + "<vendor>tw</vendor>" //
+            + "<name>xs</name>"//
+            + "</software>" //
+            + "<null/>" //
+            + "</root>";
+
+        final TraxSource traxSource = new TraxSource();
+        traxSource.setXStream(xstream);
+
+        final Writer buffer = new StringWriter();
+        ObjectOutputStream oos = null;
+        try {
+            oos = traxSource.createObjectOutputStream(identityStylesheet, buffer, "root");
+            oos.writeInt(42);
+            oos.writeObject("hello");
+            oos.writeObject(new Software("tw", "xs"));
+            oos.writeObject(null);
+        } finally {
+            if (oos != null) {
+                oos.close();
+            }
+        }
         assertEquals(expected, buffer.toString());
     }
 
@@ -206,7 +243,7 @@ public class SaxWriterTest extends TestCase {
 
             fail("Empty source list not rejected");
         } catch (final Exception expectedException) {
-            if (expectedException.getMessage().endsWith("shall not be an empty list")) {
+            if (expectedException.getMessage().contains("shall not be an empty")) {
                 // Good!
             } else {
                 throw expectedException;

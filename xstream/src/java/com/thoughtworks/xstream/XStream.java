@@ -1187,6 +1187,7 @@ public class XStream {
      *
      * @throws XStreamException if the object cannot be deserialized
      */
+    @SuppressWarnings("resource")
     public <T> T fromXML(final Reader reader) {
         return unmarshal(hierarchicalStreamDriver.createReader(reader), null);
     }
@@ -1196,6 +1197,7 @@ public class XStream {
      *
      * @throws XStreamException if the object cannot be deserialized
      */
+    @SuppressWarnings("resource")
     public <T> T fromXML(final InputStream input) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), null);
     }
@@ -1240,6 +1242,7 @@ public class XStream {
      *
      * @throws XStreamException if the object cannot be deserialized
      */
+    @SuppressWarnings("resource")
     public <T> T fromXML(final Reader xml, final T root) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
     }
@@ -1254,7 +1257,9 @@ public class XStream {
      * @since 1.4
      */
     public <T> T fromXML(final URL url, final T root) {
-        return unmarshal(hierarchicalStreamDriver.createReader(url), root);
+        try (HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(url)) {
+            return unmarshal(reader, root);
+        }
     }
 
     /**
@@ -1267,11 +1272,8 @@ public class XStream {
      * @since 1.4
      */
     public <T> T fromXML(final File file, final T root) {
-        final HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file);
-        try {
+        try(final HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file)) {
             return unmarshal(reader, root);
-        } finally {
-            reader.close();
         }
     }
 
@@ -1282,6 +1284,7 @@ public class XStream {
      *
      * @throws XStreamException if the object cannot be deserialized
      */
+    @SuppressWarnings("resource")
     public <T> T fromXML(final InputStream input, final T root) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), root);
     }
@@ -1817,6 +1820,7 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
+    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final Writer writer) throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), "object-stream");
     }
@@ -1843,6 +1847,7 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
+    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final Writer writer, final String rootNodeName)
             throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), rootNodeName);
@@ -1859,6 +1864,7 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
      */
+    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final OutputStream out) throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), "object-stream");
     }
@@ -1870,6 +1876,7 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
      */
+    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final OutputStream out, final String rootNodeName)
             throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), rootNodeName);
@@ -1956,6 +1963,7 @@ public class XStream {
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.0.3
      */
+    @SuppressWarnings("resource")
     public ObjectInputStream createObjectInputStream(final Reader xmlReader) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(xmlReader));
     }
@@ -1967,6 +1975,7 @@ public class XStream {
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.3
      */
+    @SuppressWarnings("resource")
     public ObjectInputStream createObjectInputStream(final InputStream in) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(in));
     }
