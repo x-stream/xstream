@@ -102,7 +102,7 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
     private synchronized long getFieldOffset(Field f) {
         Long l = (Long)fieldOffsetCache.get(f);
         if (l == null) {
-            l = new Long(unsafe.objectFieldOffset(f));
+            l = Long.valueOf(unsafe.objectFieldOffset(f));
             fieldOffsetCache.put(f, l);
         }
 

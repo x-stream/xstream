@@ -51,6 +51,6 @@ public class SerializableFive extends SerializableOne {
     }
 
     public int hashCode() {
-        return super.hashCode() + two + new Boolean(three).hashCode() + five.toString().hashCode();
+        return super.hashCode() + two + Boolean.valueOf(three).hashCode() + five.toString().hashCode();
     }
 }

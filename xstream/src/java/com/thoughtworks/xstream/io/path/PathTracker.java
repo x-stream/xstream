@@ -85,7 +85,7 @@ public class PathTracker {
         if (indexMap.containsKey(name)) {
             indexMap.put(name, new Integer(((Integer) indexMap.get(name)).intValue() + 1));
         } else {
-            indexMap.put(name, new Integer(1));
+            indexMap.put(name, Integer.valueOf(1));
         }
         pointer++;
         currentPath = null;

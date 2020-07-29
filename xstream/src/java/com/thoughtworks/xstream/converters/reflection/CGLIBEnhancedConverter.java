@@ -283,7 +283,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 }
             }
             if (idxNoOp >= 0) {
-                Integer idx = new Integer(idxNoOp);
+                Integer idx = Integer.valueOf(idxNoOp);
                 for (final Iterator iter = methods.iterator(); iter.hasNext();) {
                     callbackIndexMap.put(iter.next(), idx);
                 }
@@ -306,7 +306,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 } else if (type == short.class) {
                     arguments[i] = new Short((short)0);
                 } else if (type == int.class) {
-                    arguments[i] = new Integer(0);
+                    arguments[i] = Integer.valueOf(0);
                 } else if (type == long.class) {
                     arguments[i] = new Long(0);
                 } else if (type == float.class) {
@@ -464,7 +464,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
 
         public ReverseEngineeringInvocationHandler(int index, Map indexMap) {
             this.indexMap = indexMap;
-            this.index = new Integer(index);
+            this.index = Integer.valueOf(index);
         }
 
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

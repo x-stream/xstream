@@ -33,7 +33,7 @@ public class XmlArrayList extends AbstractList {
 	public Object set(int index, Object element) {
 		rangeCheck(index);
 		Object value = get(index);
-		map.put(new Integer(index), element);
+		map.put(Integer.valueOf(index), element);
 		return value;
 	}
 
@@ -45,9 +45,9 @@ public class XmlArrayList extends AbstractList {
 		}
 		int to = index != size ? index - 1 : index;
 		for (int i = size; i > to; i--) {
-			map.put(new Integer(i + 1), map.get(new Integer(i)));
+			map.put(new Integer(i + 1), map.get(Integer.valueOf(i)));
 		}
-		map.put(new Integer(index), element);
+		map.put(Integer.valueOf(index), element);
 	}
 
 	private void rangeCheck(int index) {
@@ -60,15 +60,15 @@ public class XmlArrayList extends AbstractList {
 
 	public Object get(int index) {
 		rangeCheck(index);
-		return map.get(new Integer(index));
+		return map.get(Integer.valueOf(index));
 	}
 
 	public Object remove(int index) {
 		int size = size();
 		rangeCheck(index);
-		Object value = map.get(new Integer(index));
+		Object value = map.get(Integer.valueOf(index));
 		for (int i = index; i < size - 1; i++) {
-			map.put(new Integer(i), map.get(new Integer(i + 1)));
+			map.put(Integer.valueOf(i), map.get(new Integer(i + 1)));
 		}
 		map.remove(new Integer(size - 1));
 		return value;

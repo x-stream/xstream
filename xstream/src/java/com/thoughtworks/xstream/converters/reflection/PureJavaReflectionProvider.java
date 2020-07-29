@@ -64,7 +64,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
             for (int i = 0; i < constructors.length; i++) {
                 final Constructor constructor = constructors[i];
                 if (constructor.getParameterTypes().length == 0) {
-                    if (!constructor.isAccessible()) {
+                    if (!constructor.canAccess(null)) {
                         constructor.setAccessible(true);
                     }
                     return constructor.newInstance(new Object[0]);

@@ -48,7 +48,7 @@ public class StackTraceElementFactory {
         setField(result, "declaringClass", declaringClass);
         setField(result, "methodName", methodName);
         setField(result, "fileName", fileName);
-        setField(result, "lineNumber", new Integer(lineNumber));
+        setField(result, "lineNumber", Integer.valueOf(lineNumber));
         return result;
     }
 

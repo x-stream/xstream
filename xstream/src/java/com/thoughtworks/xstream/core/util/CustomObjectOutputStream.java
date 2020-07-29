@@ -96,23 +96,23 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
     }
 
     public void writeInt(int val) throws IOException {
-        peekCallback().writeToStream(new Integer(val));
+        peekCallback().writeToStream(Integer.valueOf(val));
     }
 
     public void writeChar(int val) throws IOException {
-        peekCallback().writeToStream(new Character((char)val));
+        peekCallback().writeToStream(Character.valueOf((char)val));
     }
 
     public void writeDouble(double val) throws IOException {
-        peekCallback().writeToStream(new Double(val));
+        peekCallback().writeToStream(Double.valueOf(val));
     }
 
     public void writeFloat(float val) throws IOException {
-        peekCallback().writeToStream(new Float(val));
+        peekCallback().writeToStream(Float.valueOf(val));
     }
 
     public void writeLong(long val) throws IOException {
-        peekCallback().writeToStream(new Long(val));
+        peekCallback().writeToStream(Long.valueOf(val));
     }
 
     public void writeShort(int val) throws IOException {
@@ -177,27 +177,27 @@ public class CustomObjectOutputStream extends ObjectOutputStream {
         }
 
         public void put(String name, byte val) {
-            put(name, new Byte(val));
+            put(name, Byte.valueOf(val));
         }
 
         public void put(String name, char val) {
-            put(name, new Character(val));
+            put(name, Character.valueOf(val));
         }
 
         public void put(String name, double val) {
-            put(name, new Double(val));
+            put(name, Double.valueOf(val));
         }
 
         public void put(String name, float val) {
-            put(name, new Float(val));
+            put(name, Float.valueOf(val));
         }
 
         public void put(String name, int val) {
-            put(name, new Integer(val));
+            put(name, Integer.valueOf(val));
         }
 
         public void put(String name, long val) {
-            put(name, new Long(val));
+            put(name, Long.valueOf(val));
         }
 
         public void put(String name, short val) {

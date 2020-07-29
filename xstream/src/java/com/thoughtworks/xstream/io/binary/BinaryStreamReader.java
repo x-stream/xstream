@@ -205,11 +205,11 @@ public class BinaryStreamReader implements ExtendedHierarchicalStreamReader {
         private Map map = new HashMap();
 
         public void put(long id, String value) {
-            map.put(new Long(id), value);
+            map.put(Long.valueOf(id), value);
         }
 
         public String get(long id) {
-            String result = (String) map.get(new Long(id));
+            String result = (String) map.get(Long.valueOf(id));
             if (result == null) {
                 throw new StreamException("Unknown ID : " + id);
             } else {

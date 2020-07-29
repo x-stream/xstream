@@ -28,7 +28,7 @@ public class ShortConverter extends AbstractSingleValueConverter {
     	if(value < Short.MIN_VALUE || value > 0xFFFF) {
     		throw new NumberFormatException("For input string: \"" + str + '"');
     	}
-        return new Short((short)value);
+        return Short.valueOf((short)value);
     }
 
 }

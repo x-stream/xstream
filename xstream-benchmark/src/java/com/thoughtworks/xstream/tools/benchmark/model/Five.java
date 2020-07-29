@@ -38,6 +38,6 @@ public class Five extends One {
     }
 
     public int hashCode() {
-        return super.hashCode() + two + new Boolean(three).hashCode() + five.toString().hashCode();
+        return super.hashCode() + two + Boolean.valueOf(three).hashCode() + five.toString().hashCode();
     }
 }
