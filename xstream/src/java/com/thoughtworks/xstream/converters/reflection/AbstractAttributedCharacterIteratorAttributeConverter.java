@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2007, 2013, 2014, 2015, 2016, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,6 +17,7 @@ import java.lang.reflect.Modifier;
 import java.text.AttributedCharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
@@ -34,26 +35,8 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
     extends AbstractSingleValueConverter {
 
     private static final Map<String, Map<String, ? extends AttributedCharacterIterator.Attribute>> instanceMaps =
-            new HashMap<>();
-    private static final Method getName;
-
-    static {
-        Method method = null;
-        try {
-            method = AttributedCharacterIterator.Attribute.class.getDeclaredMethod("getName", (Class[])null);
-            if (!method.isAccessible()) {
-                method.setAccessible(true);
-            }
-        } catch (final SecurityException e) {
-            // ignore for now
-        } catch (final NoSuchMethodException e) {
-            // ignore for now
-        }
-        getName = method;
-    }
-
+            new ConcurrentHashMap<>();
     private final Class<? extends T> type;
-    private transient Map<String, T> attributeMap;
 
     public AbstractAttributedCharacterIteratorAttributeConverter(final Class<? extends T> type) {
         super();
@@ -63,12 +46,11 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
                 + AttributedCharacterIterator.Attribute.class.getName());
         }
         this.type = type;
-        readResolve();
     }
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type == this.type && !attributeMap.isEmpty();
+        return type == this.type && !getAttributeMap().isEmpty();
     }
 
     @Override
@@ -80,12 +62,10 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
 
     private String getName(final AttributedCharacterIterator.Attribute attribute) {
         Exception ex = null;
-        if (getName != null) {
+        if (Reflections.getName != null) {
             try {
-                return (String)getName.invoke(attribute);
-            } catch (final IllegalAccessException e) {
-                ex = e;
-            } catch (final InvocationTargetException e) {
+                return (String)Reflections.getName.invoke(attribute);
+            } catch (final IllegalAccessException | InvocationTargetException e) {
                 ex = e;
             }
         }
@@ -101,8 +81,9 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
 
     @Override
     public Object fromString(final String str) {
-        if (attributeMap.containsKey(str)) {
-            return attributeMap.get(str);
+        T attr = getAttributeMap().get(str);
+        if (attr != null) {
+            return attr;
         }
         final ConversionException exception = new ConversionException("Cannot find attribute");
         exception.add("attribute-type", type.getName());
@@ -110,50 +91,64 @@ public class AbstractAttributedCharacterIteratorAttributeConverter<T extends Att
         throw exception;
     }
 
-    private Object readResolve() {
+    private Map<String, T> getAttributeMap() {
         @SuppressWarnings("unchecked")
-        final Map<String, T> typedMap = (Map<String, T>)instanceMaps.get(type.getName());
-        attributeMap = typedMap;
-        if (attributeMap == null) {
-            attributeMap = new HashMap<>();
-            final Field instanceMap = Fields.locate(type, Map.class, true);
-            if (instanceMap != null) {
-                try {
-                    @SuppressWarnings("unchecked")
-                    final Map<String, T> map = (Map<String, T>)Fields.read(instanceMap, null);
-                    if (map != null) {
-                        boolean valid = true;
-                        for (final Map.Entry<String, T> entry : map.entrySet()) {
-                            valid = entry.getKey().getClass() == String.class && entry.getValue().getClass() == type;
-                        }
-                        if (valid) {
-                            attributeMap.putAll(map);
-                        }
-                    }
-                } catch (final ObjectAccessException e) {
-                }
-            }
-            if (attributeMap.isEmpty()) {
-                try {
-                    final Field[] fields = type.getDeclaredFields();
-                    for (final Field field : fields) {
-                        if (field.getType() == type == Modifier.isStatic(field.getModifiers())) {
-                            @SuppressWarnings("unchecked")
-                            final T attribute = (T)Fields.read(field, null);
-                            attributeMap.put(toString(attribute), attribute);
-                        }
-                    }
-                } catch (final SecurityException e) {
-                    attributeMap.clear();
-                } catch (final ObjectAccessException e) {
-                    attributeMap.clear();
-                } catch (final NoClassDefFoundError e) {
-                    attributeMap.clear();
-                }
-            }
-            instanceMaps.put(type.getName(), attributeMap);
-        }
-        return this;
+        final Map<String, T> map = (Map<String, T>)instanceMaps
+            .computeIfAbsent(type.getName(), t -> buildAttributeMap(type));
+        return map;
     }
 
+    private Map<String, T> buildAttributeMap(Class<? extends T> type) {
+        final Map<String, T> attributeMap = new HashMap<>();
+        final Field instanceMap = Fields.locate(type, Map.class, true);
+        if (instanceMap != null) {
+            try {
+                @SuppressWarnings("unchecked")
+                final Map<String, T> map = (Map<String, T>)Fields.read(instanceMap, null);
+                if (map != null) {
+                    boolean valid = true;
+                    for (final Map.Entry<String, T> entry : map.entrySet()) {
+                        valid = entry.getKey().getClass() == String.class && entry.getValue().getClass() == type;
+                    }
+                    if (valid) {
+                        attributeMap.putAll(map);
+                    }
+                }
+            } catch (final ObjectAccessException e) {
+            }
+        }
+        if (attributeMap.isEmpty()) {
+            try {
+                final Field[] fields = type.getDeclaredFields();
+                for (final Field field : fields) {
+                    if (field.getType() == type == Modifier.isStatic(field.getModifiers())) {
+                        @SuppressWarnings("unchecked")
+                        final T attribute = (T)Fields.read(field, null);
+                        attributeMap.put(toString(attribute), attribute);
+                    }
+                }
+            } catch (final SecurityException | ObjectAccessException | NoClassDefFoundError e) {
+                attributeMap.clear();
+            }
+        }
+        return attributeMap;
+    }
+
+    private static class Reflections {
+
+        private static final Method getName;
+
+        static {
+            Method method = null;
+            try {
+                method = AttributedCharacterIterator.Attribute.class.getDeclaredMethod("getName", (Class[])null);
+                if (!method.isAccessible()) {
+                    method.setAccessible(true);
+                }
+            } catch (final SecurityException | NoSuchMethodException e) {
+                // ignore for now
+            }
+            getName = method;
+        }
+    }
 }

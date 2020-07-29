@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 23. February 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.collections;
@@ -35,13 +35,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * permissions for SecurityManager.checkPackageAccess, SecurityManager.checkMemberAccess(this, EnumSet.MEMBER) and
  * ReflectPermission("suppressAccessChecks").
  * </p>
- * 
+ *
  * @author Joe Walnes
  * @author Kevin Ring
  */
 public class PropertiesConverter implements Converter {
 
-    private final static Field defaultsField = Fields.locate(Properties.class, Properties.class, false);
     private final boolean sort;
 
     public PropertiesConverter() {
@@ -67,8 +66,8 @@ public class PropertiesConverter implements Converter {
             writer.addAttribute("value", entry.getValue().toString());
             writer.endNode();
         }
-        if (defaultsField != null) {
-            final Properties defaults = (Properties)Fields.read(defaultsField, properties);
+        if (Reflections.defaultsField != null) {
+            final Properties defaults = (Properties)Fields.read(Reflections.defaultsField, properties);
             if (defaults != null) {
                 writer.startNode("defaults");
                 marshal(defaults, writer, context);
@@ -101,4 +100,7 @@ public class PropertiesConverter implements Converter {
         }
     }
 
+    private static class Reflections {
+        private final static Field defaultsField = Fields.locate(Properties.class, Properties.class, false);
+    }
 }
