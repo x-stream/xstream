@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007, 2008, 2014, 2015 XStream Committers.
+ * Copyright (C) 2007, 2008, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -50,7 +50,7 @@ public class XmlArrayList<V> extends AbstractList<V> {
         for (int i = size; i > to; i--) {
             map.put(Integer.valueOf(i + 1), map.get(Integer.valueOf(i)));
         }
-        map.put(new Integer(index), element);
+        map.put(Integer.valueOf(index), element);
     }
 
     private void rangeCheck(final int index) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,7 +42,7 @@ public class CharConverter implements Converter, SingleValueConverter {
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final String nullAttribute = reader.getAttribute("null");
         if (nullAttribute != null && nullAttribute.equals("true")) {
-            return new Character('\0');
+            return Character.valueOf('\0');
         } else {
             return fromString(reader.getValue());
         }
