@@ -87,7 +87,7 @@ public class ExtendedTarget implements Target {
             if (method.equals(EQUALS)) {
                 return new Boolean(args[0] instanceof Runnable);
             } else if (method.getName().equals("hashCode")) {
-                return new Integer(System.identityHashCode(proxy));
+                return Integer.valueOf(System.identityHashCode(proxy));
             } else if (method.getName().equals("toString")) {
                 return "Proxy" + System.identityHashCode(proxy);
             } else if (method.getName().equals("getClass")) {

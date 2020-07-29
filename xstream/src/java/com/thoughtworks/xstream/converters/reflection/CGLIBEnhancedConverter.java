@@ -156,7 +156,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         }
         try {
             final Field field = type.getDeclaredField("serialVersionUID");
-            if (!field.isAccessible()) {
+            if (!(java.lang.reflect.Modifier.isStatic(field.getModifiers()) ? field.canAccess(null) : field.canAccess(source))) {
                 field.setAccessible(true);
             }
             final long serialVersionUID = field.getLong(null);
@@ -186,7 +186,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             for (int i = 0; true; ++i) {
                 try {
                     final Field field = type.getDeclaredField(CALLBACK_MARKER + i);
-                    if (!field.isAccessible()) {
+                    if (!(java.lang.reflect.Modifier.isStatic(field.getModifiers()) ? field.canAccess(null) : field.canAccess(source))) {
                         field.setAccessible(true);
                     }
                     fields.add(field);
@@ -246,7 +246,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             }
             for (final Iterator<Method> iter = methods.iterator(); iter.hasNext();) {
                 final Method method = iter.next();
-                if (!method.isAccessible()) {
+                if (!(java.lang.reflect.Modifier.isStatic(method.getModifiers()) ? method.canAccess(null) : method.canAccess(source))) {
                     method.setAccessible(true);
                 }
                 if (Factory.class.isAssignableFrom(method.getDeclaringClass())
@@ -301,19 +301,19 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             final Class<?> type = parameterTypes[i];
             if (type.isPrimitive()) {
                 if (type == byte.class) {
-                    arguments[i] = new Byte((byte)0);
+                    arguments[i] = Byte.valueOf((byte)0);
                 } else if (type == short.class) {
-                    arguments[i] = new Short((short)0);
+                    arguments[i] = Short.valueOf((short)0);
                 } else if (type == int.class) {
-                    arguments[i] = new Integer(0);
+                    arguments[i] = Integer.valueOf(0);
                 } else if (type == long.class) {
-                    arguments[i] = new Long(0);
+                    arguments[i] = Long.valueOf(0);
                 } else if (type == float.class) {
-                    arguments[i] = new Float(0);
+                    arguments[i] = Float.valueOf(0);
                 } else if (type == double.class) {
-                    arguments[i] = new Double(0);
+                    arguments[i] = Double.valueOf(0);
                 } else if (type == char.class) {
-                    arguments[i] = new Character('\0');
+                    arguments[i] = Character.valueOf('\0');
                 } else {
                     arguments[i] = Boolean.FALSE;
                 }

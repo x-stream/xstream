@@ -42,7 +42,7 @@ public class CharConverter implements Converter, SingleValueConverter {
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final String nullAttribute = reader.getAttribute("null");
         if (nullAttribute != null && nullAttribute.equals("true")) {
-            return new Character('\0');
+            return Character.valueOf('\0');
         } else {
             return fromString(reader.getValue());
         }

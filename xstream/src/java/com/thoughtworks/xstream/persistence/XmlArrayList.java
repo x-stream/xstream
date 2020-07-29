@@ -50,7 +50,7 @@ public class XmlArrayList<V> extends AbstractList<V> {
         for (int i = size; i > to; i--) {
             map.put(Integer.valueOf(i + 1), map.get(Integer.valueOf(i)));
         }
-        map.put(new Integer(index), element);
+        map.put(Integer.valueOf(index), element);
     }
 
     private void rangeCheck(final int index) {

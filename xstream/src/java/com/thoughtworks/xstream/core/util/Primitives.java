@@ -32,8 +32,8 @@ public final class Primitives {
             {Integer.TYPE, Integer.class}, {Long.TYPE, Long.class}, {Float.TYPE, Float.class},
             {Double.TYPE, Double.class}, {Boolean.TYPE, Boolean.class}, {Void.TYPE, Void.class},};
         final Character[] representingChars = {
-            new Character('B'), new Character('C'), new Character('S'), new Character('I'), new Character('J'),
-            new Character('F'), new Character('D'), new Character('Z'), null};
+            Character.valueOf('B'), Character.valueOf('C'), Character.valueOf('S'), Character.valueOf('I'), Character.valueOf('J'),
+            Character.valueOf('F'), Character.valueOf('D'), Character.valueOf('Z'), null};
         for (int i = 0; i < boxing.length; i++) {
             final Class<?> primitiveType = boxing[i][0];
             final Class<?> boxedType = boxing[i][1];
