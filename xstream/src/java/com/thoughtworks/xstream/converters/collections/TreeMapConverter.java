@@ -49,7 +49,6 @@ public class TreeMapConverter extends MapConverter {
 
     @SuppressWarnings("rawtypes")
     private final static Comparator NULL_MARKER = new NullComparator();
-    private final static Field comparatorField = Fields.locate(TreeMap.class, Comparator.class, false);
 
     public TreeMapConverter(final Mapper mapper) {
         super(mapper, TreeMap.class);
@@ -75,7 +74,7 @@ public class TreeMapConverter extends MapConverter {
 
     @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        TreeMap<Object, Object> result = comparatorField != null ? new TreeMap<>() : null;
+        TreeMap<Object, Object> result = Reflections.comparatorField != null ? new TreeMap<>() : null;
         @SuppressWarnings("unchecked")
         final Comparator<Object> comparator = (Comparator<Object>)unmarshalComparator(reader, context, result);
         if (result == null) {
@@ -125,19 +124,23 @@ public class TreeMapConverter extends MapConverter {
         final TreeMap<Object, Object> typedResult = (TreeMap<Object, Object>)result;
         try {
             if (JVM.hasOptimizedTreeMapPutAll()) {
-                if (comparator != null && comparatorField != null) {
-                    comparatorField.set(result, comparator);
+                if (comparator != null && Reflections.comparatorField != null) {
+                    Reflections.comparatorField.set(result, comparator);
                 }
                 typedResult.putAll(sortedMap); // internal optimization will not call comparator
-            } else if (comparatorField != null) {
-                comparatorField.set(result, sortedMap.comparator());
+            } else if (Reflections.comparatorField != null) {
+                Reflections.comparatorField.set(result, sortedMap.comparator());
                 typedResult.putAll(sortedMap); // "sort" by index
-                comparatorField.set(result, comparator);
+                Reflections.comparatorField.set(result, comparator);
             } else {
                 typedResult.putAll(sortedMap); // will use comparator for already sorted map
             }
         } catch (final IllegalAccessException e) {
             throw new ObjectAccessException("Cannot set comparator of TreeMap", e);
         }
+    }
+
+    private static class Reflections {
+        private final static Field comparatorField = Fields.locate(TreeMap.class, Comparator.class, false);
     }
 }
