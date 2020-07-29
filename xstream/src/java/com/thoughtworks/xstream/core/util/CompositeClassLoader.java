@@ -53,13 +53,13 @@ public class CompositeClassLoader extends ClassLoader {
     static {
         // see http://www.cs.duke.edu/csed/java/jdk1.7/technotes/guides/lang/cl-mt.html
         try {
-            final Method m = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
-            if (!m.isAccessible()) {
-                m.setAccessible(true);
-            }
-            m.invoke(null);
+            ClassLoader.registerAsParallelCapable();
         } catch (final Exception e) {
             // ignore errors, JVM will synchronize class for Java 7 or higher
+            //Should write that there was an issue before proceeding.
+            System.err.println("Warning: Failed to register as a Parallel ClassLoader: " + e.getMessage());
+            System.err.println("This may negatively impact performance");
+            System.err.println("Falling back to synchronized classloading");
         }
     }
 
