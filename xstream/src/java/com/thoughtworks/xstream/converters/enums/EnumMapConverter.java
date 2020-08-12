@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -37,18 +37,16 @@ import java.lang.reflect.Field;
  */
 public class EnumMapConverter extends MapConverter {
 
-    private final static Field typeField = Fields.locate(EnumMap.class, Class.class, false);
-
     public EnumMapConverter(Mapper mapper) {
         super(mapper);
     }
 
     public boolean canConvert(Class type) {
-        return typeField != null && type == EnumMap.class;
+        return type == EnumMap.class && Reflections.typeField != null;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        Class type = (Class) Fields.read(typeField, source);
+        Class type = (Class) Fields.read(Reflections.typeField, source);
         String attributeName = mapper().aliasForSystemAttribute("enum-type");
         if (attributeName != null) {
             writer.addAttribute(attributeName, mapper().serializedClass(type));
@@ -66,5 +64,9 @@ public class EnumMapConverter extends MapConverter {
         EnumMap map = new EnumMap(type);
         populateMap(reader, context, map);
         return map;
+    }
+
+    private static class Reflections {
+        private final static Field typeField = Fields.locate(EnumMap.class, Class.class, false);
     }
 }
