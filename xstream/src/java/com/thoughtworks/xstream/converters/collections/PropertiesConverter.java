@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,7 +44,6 @@ import java.util.TreeMap;
  */
 public class PropertiesConverter implements Converter {
 
-    private final static Field defaultsField = Fields.locate(Properties.class, Properties.class, false);
     private final boolean sort;
 
     public PropertiesConverter() {
@@ -69,8 +68,8 @@ public class PropertiesConverter implements Converter {
             writer.addAttribute("value", entry.getValue().toString());
             writer.endNode();
         }
-        if (defaultsField != null) {
-            Properties defaults = (Properties)Fields.read(defaultsField, properties);
+        if (Reflections.defaultsField != null) {
+            Properties defaults = (Properties)Fields.read(Reflections.defaultsField, properties);
             if (defaults != null) {
                 writer.startNode("defaults");
                 marshal(defaults, writer, context);
@@ -102,4 +101,7 @@ public class PropertiesConverter implements Converter {
         }
     }
 
+    private static class Reflections {
+        private final static Field defaultsField = Fields.locate(Properties.class, Properties.class, false);
+    }
 }

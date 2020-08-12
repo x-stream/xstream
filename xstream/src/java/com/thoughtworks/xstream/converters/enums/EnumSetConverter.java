@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,7 +39,6 @@ import java.util.Iterator;
  */
 public class EnumSetConverter implements Converter {
 
-    private final static Field typeField = Fields.locate(EnumSet.class, Class.class, false);
     private final Mapper mapper;
 
     public EnumSetConverter(Mapper mapper) {
@@ -47,12 +46,12 @@ public class EnumSetConverter implements Converter {
     }
 
     public boolean canConvert(Class type) {
-        return typeField != null && type != null && EnumSet.class.isAssignableFrom(type);
+        return type != null && EnumSet.class.isAssignableFrom(type) && Reflections.typeField != null;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         EnumSet set = (EnumSet) source;
-        Class enumTypeForSet = (Class) Fields.read(typeField, set);
+        Class enumTypeForSet = (Class) Fields.read(Reflections.typeField, set);
         String attributeName = mapper.aliasForSystemAttribute("enum-type");
         if (attributeName != null) {
             writer.addAttribute(attributeName, mapper.serializedClass(enumTypeForSet));
@@ -93,4 +92,7 @@ public class EnumSetConverter implements Converter {
         return set;
     }
 
+    private static class Reflections {
+        private final static Field typeField = Fields.locate(EnumSet.class, Class.class, false);
+    }
 }

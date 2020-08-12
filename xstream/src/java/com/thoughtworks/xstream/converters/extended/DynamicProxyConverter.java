@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,12 +39,6 @@ public class DynamicProxyConverter implements Converter {
 
     private ClassLoaderReference classLoaderReference;
     private Mapper mapper;
-    private static final Field HANDLER = Fields.locate(Proxy.class, InvocationHandler.class, false);
-    private static final InvocationHandler DUMMY = new InvocationHandler() {
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            return null;
-        }
-    };
 
     /**
      * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
@@ -121,16 +115,26 @@ public class DynamicProxyConverter implements Converter {
         Class[] interfacesAsArray = new Class[interfaces.size()];
         interfaces.toArray(interfacesAsArray);
         Object proxy = null;
-        if (HANDLER != null) { // we will not be able to resolve references to the proxy
-            proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, DUMMY);
+        if (Reflections.HANDLER != null) { // we will not be able to resolve references to the proxy
+            proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, Reflections.DUMMY);
         }
         handler = (InvocationHandler) context.convertAnother(proxy, handlerType);
         reader.moveUp();
-        if (HANDLER != null) {
-            Fields.write(HANDLER, proxy, handler);
+        if (Reflections.HANDLER != null) {
+            Fields.write(Reflections.HANDLER, proxy, handler);
         } else {
             proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, handler);
         }
         return proxy;
+    }
+
+    private static class Reflections {
+
+        private static final Field HANDLER = Fields.locate(Proxy.class, InvocationHandler.class, false);
+        private static final InvocationHandler DUMMY = new InvocationHandler() {
+            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+                return null;
+            }
+        };
     }
 }
