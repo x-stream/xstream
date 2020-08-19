@@ -35,6 +35,7 @@
 	<h2>Major changes</h2>
 
 	<ul>
+		<li>Support for Record types (contributed by Julia Boes and Chris Hegarty, both of Oracle).</li>
 		<li>Usage of Java generic types. Most code bases will still compile without change.</li>
 		<li>Support for fail-safe deserialization unless the parser is not directly involved (I/O or syntax error) as
 		combination of new method getLevel() of HierarchicalStreamReader and GHPR:#91.</li>
@@ -81,6 +82,7 @@
 		<li>Deprecated c.t.x.io.xml.SaxWriter#SOURCE_OBJECT_LIST_PROPERTY.</li>
 		<li>Added c.t.x.io.xml.TraxSource#createObjectOutputStream</li>
 		<li>Deprecated obsolete method c.t.x.XStream.setupDefaultSecurity.</li>
+		<li>Added c.t.x.converters.extended.RecordConverter.</li>
 		<li>Added c.t.x.converters.extended.ThrowableConverter.ThrowableConverter(Mapper, ConverterLookup).</li>
 		<li>Deprecated c.t.x.converters.extended.ThrowableConverter.ThrowableConverter(ConverterLookup).</li>
 		<li>Added c.t.x.core.util.Base64Codec.</li>
