@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2016, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2016, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.Fields;
 
@@ -30,17 +32,20 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+
 /**
- * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects
- * that can be constructed are limited.
+ * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects that
+ * can be constructed are limited.
  * <p>
- * Can newInstance: classes with public visibility, outer classes, static inner classes, classes with default constructors
- * and any class that implements java.io.Serializable.
+ * Can newInstance: classes with public visibility, outer classes, static inner classes, classes with default
+ * constructors and any class that implements java.io.Serializable.
  * </p>
  * <p>
- * Cannot newInstance: classes without public visibility, non-static inner classes, classes without default constructors.
- * Note that any code in the constructor of a class will be executed when the ObjectFactory instantiates the object.
+ * Cannot newInstance: classes without public visibility, non-static inner classes, classes without default
+ * constructors. Note that any code in the constructor of a class will be executed when the ObjectFactory instantiates
+ * the object.
  * </p>
+ *
  * @author Joe Walnes
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
@@ -58,46 +63,50 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     public Object newInstance(Class type) {
-        ObjectAccessException oaex = null;
-        try {
-            Constructor[] constructors = type.getDeclaredConstructors();
-            for (int i = 0; i < constructors.length; i++) {
-                final Constructor constructor = constructors[i];
-                if (constructor.getParameterTypes().length == 0) {
-                    if (!constructor.isAccessible()) {
-                        constructor.setAccessible(true);
+        ErrorWritingException ex = null;
+        if (type == void.class || type == Void.class) {
+            ex = new ConversionException("Security alert: Marshalling rejected");
+        } else {
+            try {
+                Constructor[] constructors = type.getDeclaredConstructors();
+                for (int i = 0; i < constructors.length; i++) {
+                    final Constructor constructor = constructors[i];
+                    if (constructor.getParameterTypes().length == 0) {
+                        if (!constructor.isAccessible()) {
+                            constructor.setAccessible(true);
+                        }
+                        return constructor.newInstance(new Object[0]);
                     }
-                    return constructor.newInstance(new Object[0]);
+                }
+                if (Serializable.class.isAssignableFrom(type)) {
+                    return instantiateUsingSerialization(type);
+                } else {
+                    ex = new ObjectAccessException("Cannot construct type as it does not have a no-args constructor");
+                }
+            } catch (InstantiationException e) {
+                ex = new ObjectAccessException("Cannot construct type", e);
+            } catch (IllegalAccessException e) {
+                ex = new ObjectAccessException("Cannot construct type", e);
+            } catch (InvocationTargetException e) {
+                if (e.getTargetException() instanceof RuntimeException) {
+                    throw (RuntimeException)e.getTargetException();
+                } else if (e.getTargetException() instanceof Error) {
+                    throw (Error)e.getTargetException();
+                } else {
+                    ex = new ObjectAccessException("Constructor for type threw an exception", e.getTargetException());
                 }
             }
-            if (Serializable.class.isAssignableFrom(type)) {
-                return instantiateUsingSerialization(type);
-            } else {
-                oaex = new ObjectAccessException("Cannot construct type as it does not have a no-args constructor");
-            }
-        } catch (InstantiationException e) {
-            oaex = new ObjectAccessException("Cannot construct type", e);
-        } catch (IllegalAccessException e) {
-            oaex = new ObjectAccessException("Cannot construct type", e);
-        } catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof RuntimeException) {
-                throw (RuntimeException)e.getTargetException();
-            } else if (e.getTargetException() instanceof Error) {
-                throw (Error)e.getTargetException();
-            } else {
-                oaex = new ObjectAccessException("Constructor for type threw an exception", e.getTargetException());
-            }
         }
-        oaex.add("construction-type", type.getName());
-        throw oaex;
+        ex.add("construction-type", type.getName());
+        throw ex;
     }
 
     private Object instantiateUsingSerialization(final Class type) {
         ObjectAccessException oaex = null;
         try {
             synchronized (serializedDataCache) {
-                byte[] data = (byte[]) serializedDataCache.get(type);
-                if (data ==  null) {
+                byte[] data = (byte[])serializedDataCache.get(type);
+                if (data == null) {
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     DataOutputStream stream = new DataOutputStream(bytes);
                     stream.writeShort(ObjectStreamConstants.STREAM_MAGIC);
@@ -106,17 +115,16 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                     stream.writeByte(ObjectStreamConstants.TC_CLASSDESC);
                     stream.writeUTF(type.getName());
                     stream.writeLong(ObjectStreamClass.lookup(type).getSerialVersionUID());
-                    stream.writeByte(2);  // classDescFlags (2 = Serializable)
+                    stream.writeByte(2); // classDescFlags (2 = Serializable)
                     stream.writeShort(0); // field count
                     stream.writeByte(ObjectStreamConstants.TC_ENDBLOCKDATA);
                     stream.writeByte(ObjectStreamConstants.TC_NULL);
                     data = bytes.toByteArray();
                     serializedDataCache.put(type, data);
                 }
-                
+
                 ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data)) {
-                    protected Class resolveClass(ObjectStreamClass desc)
-                        throws IOException, ClassNotFoundException {
+                    protected Class resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
                         return Class.forName(desc.getName(), false, type.getClassLoader());
                     }
                 };
@@ -133,7 +141,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public void visitSerializableFields(Object object, ReflectionProvider.Visitor visitor) {
         for (Iterator iterator = fieldDictionary.fieldsFor(object.getClass()); iterator.hasNext();) {
-            Field field = (Field) iterator.next();
+            Field field = (Field)iterator.next();
             if (!fieldModifiersSupported(field)) {
                 continue;
             }
@@ -174,7 +182,9 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                 }
             } else {
                 throw new ObjectAccessException("Invalid final field "
-                        + field.getDeclaringClass().getName() + "." + field.getName());
+                    + field.getDeclaringClass().getName()
+                    + "."
+                    + field.getName());
             }
         }
     }
@@ -184,7 +194,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     public Field getFieldOrNull(Class definedIn, String fieldName) {
-        return fieldDictionary.fieldOrNull(definedIn, fieldName,  null);
+        return fieldDictionary.fieldOrNull(definedIn, fieldName, null);
     }
 
     public void setFieldDictionary(FieldDictionary dictionary) {

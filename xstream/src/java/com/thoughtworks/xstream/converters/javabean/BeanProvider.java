@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2016, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,8 +42,7 @@ public class BeanProvider implements JavaBeanProvider {
     }
 
     /**
-     * Construct a BeanProvider with a comparator to sort the bean properties by name in the
-     * dictionary.
+     * Construct a BeanProvider with a comparator to sort the bean properties by name in the dictionary.
      * 
      * @param propertyNameComparator the comparator
      */
@@ -63,16 +62,20 @@ public class BeanProvider implements JavaBeanProvider {
 
     public Object newInstance(Class type) {
         ErrorWritingException ex = null;
-        try {
-            return type.newInstance();
-        } catch (InstantiationException e) {
-            ex = new ConversionException("Cannot construct type", e);
-        } catch (IllegalAccessException e) {
-            ex = new ObjectAccessException("Cannot construct type", e);
-        } catch (SecurityException e) {
-            ex = new ObjectAccessException("Cannot construct type", e);
-        } catch (ExceptionInInitializerError e) {
-            ex = new ConversionException("Cannot construct type", e);
+        if (type == void.class || type == Void.class) {
+            ex = new ConversionException("Security alert: Marshalling rejected");
+        } else {
+            try {
+                return type.newInstance();
+            } catch (InstantiationException e) {
+                ex = new ConversionException("Cannot construct type", e);
+            } catch (IllegalAccessException e) {
+                ex = new ObjectAccessException("Cannot construct type", e);
+            } catch (SecurityException e) {
+                ex = new ObjectAccessException("Cannot construct type", e);
+            } catch (ExceptionInInitializerError e) {
+                ex = new ConversionException("Cannot construct type", e);
+            }
         }
         ex.add("construction-type", type.getName());
         throw ex;
@@ -80,7 +83,7 @@ public class BeanProvider implements JavaBeanProvider {
 
     public void visitSerializableProperties(Object object, JavaBeanProvider.Visitor visitor) {
         PropertyDescriptor[] propertyDescriptors = getSerializableProperties(object);
-        for (int i = 0; i < propertyDescriptors.length; i++ ) {
+        for (int i = 0; i < propertyDescriptors.length; i++) {
             ErrorWritingException ex = null;
             PropertyDescriptor property = propertyDescriptors[i];
             try {
@@ -136,7 +139,7 @@ public class BeanProvider implements JavaBeanProvider {
      */
     public boolean canInstantiate(Class type) {
         try {
-            return type != null &&  newInstance(type) != null;
+            return type != null && newInstance(type) != null;
         } catch (final ErrorWritingException e) {
             return false;
         }
@@ -149,9 +152,9 @@ public class BeanProvider implements JavaBeanProvider {
      * @deprecated As of 1.4.6 use {@link #newInstance(Class)} or {@link #canInstantiate(Class)} directly.
      */
     protected Constructor getDefaultConstrutor(Class type) {
-        
+
         Constructor[] constructors = type.getConstructors();
-        for (int i = 0; i < constructors.length; i++ ) {
+        for (int i = 0; i < constructors.length; i++) {
             Constructor c = constructors[i];
             if (c.getParameterTypes().length == 0 && Modifier.isPublic(c.getModifiers()))
                 return c;
@@ -186,6 +189,5 @@ public class BeanProvider implements JavaBeanProvider {
     /**
      * @deprecated As of 1.4 use {@link JavaBeanProvider.Visitor}
      */
-    public interface Visitor extends JavaBeanProvider.Visitor {
-    }
+    public interface Visitor extends JavaBeanProvider.Visitor {}
 }
