@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,6 +36,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.Collection;
@@ -65,10 +66,8 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.converters.DataHolder;
-import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.basic.BigDecimalConverter;
 import com.thoughtworks.xstream.converters.basic.BigIntegerConverter;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
@@ -355,6 +354,8 @@ public class XStream {
 
     private static final String ANNOTATION_MAPPER_TYPE = "com.thoughtworks.xstream.mapper.AnnotationMapper";
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
+    private static final Pattern LAZY_ITERATORS = Pattern.compile(".*\\$LazyIterator");
+    private static final Pattern JAVAX_CRYPTO = Pattern.compile("javax\\.crypto\\..*");
 
     /**
      * Constructs a default XStream.
@@ -697,6 +698,9 @@ public class XStream {
         }
         
         addPermission(AnyTypePermission.ANY);
+        denyTypes(new String[]{"java.beans.EventHandler"});
+        denyTypesByRegExp(new Pattern[] {LAZY_ITERATORS, JAVAX_CRYPTO});
+        allowTypeHierarchy(Exception.class);
         securityInitialized = false;
     }
 
@@ -962,7 +966,6 @@ public class XStream {
         registerConverter(
             new SerializableConverter(mapper, reflectionProvider, classLoaderReference), PRIORITY_LOW);
         registerConverter(new ExternalizableConverter(mapper, classLoaderReference), PRIORITY_LOW);
-        registerConverter(new InternalBlackList(), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
         registerConverter(new IntConverter(), PRIORITY_NORMAL);
@@ -1482,7 +1485,8 @@ public class XStream {
         try {
             if (!securityInitialized && !securityWarningGiven) {
                 securityWarningGiven = true;
-                System.err.println("Security framework of XStream not initialized, XStream is probably vulnerable.");
+                System.err
+                    .println("Security framework of XStream not explicitly initialized, using predefined black list on your own risk.");
             }
             return marshallingStrategy.unmarshal(
                 root, reader, dataHolder, converterLookup, mapper);
@@ -2360,7 +2364,7 @@ public class XStream {
      */
     public void addPermission(TypePermission permission) {
         if (securityMapper != null) {
-            securityInitialized = true;
+            securityInitialized |= permission.equals(NoTypePermission.NONE) || permission.equals(AnyTypePermission.ANY);
             securityMapper.addPermission(permission);
         }
     }
@@ -2537,27 +2541,6 @@ public class XStream {
          */
         public InitializationException(String message) {
             super(message);
-        }
-    }
-
-    private class InternalBlackList implements Converter {
-
-        public boolean canConvert(final Class type) {
-            return (type == void.class || type == Void.class)
-                || (!securityInitialized
-                    && type != null
-                    && (type.getName().equals("java.beans.EventHandler")
-                        || type.getName().endsWith("$LazyIterator")
-                        || type.getName().startsWith("javax.crypto.")));
-        }
-
-        public void marshal(final Object source, final HierarchicalStreamWriter writer,
-                final MarshallingContext context) {
-            throw new ConversionException("Security alert. Marshalling rejected.");
-        }
-
-        public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-            throw new ConversionException("Security alert. Unmarshalling rejected.");
         }
     }
 }
