@@ -1,7 +1,6 @@
 Benchmark                                         Mode  Cnt         Score         Error  Units
-NameCoderBenchmark.cachedEscapedUnderscoreCoding  avgt   25   4480942.037 ±   94769.534  ns/op
-NameCoderBenchmark.dollarCoding                   avgt   25   4870885.206 ±  239071.914  ns/op
-NameCoderBenchmark.escapedUnderscoreCoding        avgt   25   6830675.047 ±  561602.217  ns/op
-NameCoderBenchmark.noCoding                       avgt   25   4027747.407 ±   81041.633  ns/op
-NameCoderBenchmark.xmlFriendlyCoding              avgt   25   5123001.969 ±  142038.952  ns/op
-
+NameCoderBenchmark.cachedEscapedUnderscoreCoding  avgt   25   4486384.078 ±   76466.208  ns/op
+NameCoderBenchmark.dollarCoding                   avgt   25   5006636.275 ±  393688.573  ns/op
+NameCoderBenchmark.escapedUnderscoreCoding        avgt   25   6714770.410 ±  140953.970  ns/op
+NameCoderBenchmark.noCoding                       avgt   25   4068459.179 ±  187522.480  ns/op
+NameCoderBenchmark.xmlFriendlyCoding              avgt   25   5017414.939 ±  233268.851  ns/op
