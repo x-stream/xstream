@@ -669,7 +669,7 @@
       </dependency>
       <dependency>
         <groupId>org.ops4j.pax.exam</groupId>
-        <artifactId>pax-exam-link-mvn</artifactId><!-- Preferred link because it does not require an mvn url handler implicitely. -->
+        <artifactId>pax-exam-link-mvn</artifactId><!-- Preferred link because it does not require an mvn url handler implicitly. -->
         <version>${version.org.ops4j.pax.exam}</version>
         <scope>test</scope>
       </dependency>
