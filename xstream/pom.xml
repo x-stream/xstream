@@ -204,6 +204,26 @@
 
   <profiles>
     <profile>
+      <id>jdk14</id>
+      <activation>
+        <jdk>14</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalJOptions>
+                <additionalJOption>--add-modules=jdk.unsupported</additionalJOption>
+              </additionalJOptions>
+              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>jdk11-ge</id>
       <activation>
         <jdk>[11,)</jdk>
@@ -269,13 +289,6 @@
               <testExcludes>
                 <exclude>**/*9Test.java</exclude>
               </testExcludes>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
             </configuration>
           </plugin>
         </plugins>

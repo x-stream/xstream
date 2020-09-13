@@ -22,6 +22,20 @@
 
   <profiles>
     <profile>
+      <id>jdk14</id>
+      <activation>
+        <jdk>14</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>jdk11-ge</id>
       <activation>
         <jdk>[11,)</jdk>
@@ -62,20 +76,6 @@
                 <arg>-Jjava.xml.ws.annotation</arg>
               </compilerArgs>
             </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>jdk18</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
           </plugin>
         </plugins>
       </build>
