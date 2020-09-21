@@ -73,7 +73,7 @@ public class CollectionConverter extends AbstractCollectionConverter {
 
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        final Collection<?> collection = (Collection<?>)source;
+        final Collection<?> collection = new ArrayList((Collection<?>)source);
         for (final Object item : collection) {
             writeCompleteItem(item, context, writer);
         }
