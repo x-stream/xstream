@@ -642,7 +642,7 @@ public class XStream {
         }
 
         addPermission(AnyTypePermission.ANY);
-        denyTypes(new String[]{"java.beans.EventHandler", "javax.imageio.ImageIO$ContainsFilter"});
+        denyTypes(new String[]{"java.beans.EventHandler", "java.lang.ProcessBuilder", "javax.imageio.ImageIO$ContainsFilter"});
         denyTypesByRegExp(new Pattern[]{LAZY_ITERATORS, JAVAX_CRYPTO});
         allowTypeHierarchy(Exception.class);
         securityInitialized = false;

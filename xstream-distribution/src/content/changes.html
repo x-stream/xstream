@@ -36,6 +36,14 @@
 	originally for Struts' XStream Plugin, an arbitrary execution of commands when unmarshalling for XStream instances
 	with uninitialized security framework.</p>
 
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The types java.lang.ProcessBuilder and javax.imageio.ImageIO$ContainsFilter are now part of the default
+		blacklist and the deserialization of XML containing one of the two types will fail. You will must enable these
+		types by	explicit configuration, if you need them.</li>
+	</ul>
+
 	<h1 id="1.4.13">1.4.13</h1>
 
 	<p>Released September 6, 2020.</p>
