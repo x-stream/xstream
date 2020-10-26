@@ -1,19 +1,14 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (C) 2005 Joe Walnes.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015, 2016, 2017 XStream Committers.
+ * All rights reserved.
  *
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License v. 2.0, which is available at
- * http://www.eclipse.org/legal/epl-2.0.
+ * The software in this package is published under the terms of the BSD
+ * style license a copy of which has been included with this distribution in
+ * the LICENSE.txt file.
  *
- * This Source Code may also be made available under the following Secondary
- * Licenses when the conditions for such availability set forth in the
- * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
- * version 2 with the GNU Classpath Exception, which is available at
- * https://www.gnu.org/software/classpath/license.html.
- *
- * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * Created on 12. April 2005 by Joe Walnes
  */
-
 package com.thoughtworks.xstream.converters.javabean;
 
 import java.beans.BeanInfo;
