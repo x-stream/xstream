@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2013, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -82,11 +82,7 @@ public class StandardStaxDriver extends StaxDriver {
             } else {
                 throw new StreamException("Java runtime has no standard XMLInputFactory implementation.", exception);
             }
-        } catch (final InstantiationException e) {
-            exception = e;
-        } catch (final IllegalAccessException e) {
-            exception = e;
-        } catch (final ClassNotFoundException e) {
+        } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             exception = e;
         }
         throw new StreamException("Cannot create standard XMLInputFactory instance of Java runtime.", exception);
@@ -102,11 +98,7 @@ public class StandardStaxDriver extends StaxDriver {
             } else {
                 throw new StreamException("Java runtime has no standard XMLOutputFactory implementation.", exception);
             }
-        } catch (final InstantiationException e) {
-            exception = e;
-        } catch (final IllegalAccessException e) {
-            exception = e;
-        } catch (final ClassNotFoundException e) {
+        } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             exception = e;
         }
         throw new StreamException("Cannot create standard XMLOutputFactory instance of Java runtime.", exception);

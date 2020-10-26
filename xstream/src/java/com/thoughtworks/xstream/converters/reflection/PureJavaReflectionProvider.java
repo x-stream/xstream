@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2016, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
 import com.thoughtworks.xstream.core.util.Fields;
 
 
@@ -61,36 +63,38 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     @Override
     public Object newInstance(final Class<?> type) {
-        ObjectAccessException oaex = null;
-        try {
-            for (final Constructor<?> constructor : type.getDeclaredConstructors()) {
-                if (constructor.getParameterTypes().length == 0) {
-                    if (!constructor.canAccess(null)) {
-                        constructor.setAccessible(true);
+        ErrorWritingException ex = null;
+        if (type == void.class || type == Void.class) {
+            ex = new ConversionException("Security alert: Marshalling rejected");
+        } else {
+            try {
+                for (final Constructor<?> constructor : type.getDeclaredConstructors()) {
+                    if (constructor.getParameterTypes().length == 0) {
+                        if (!constructor.isAccessible()) {
+                            constructor.setAccessible(true);
+                        }
+                        return constructor.newInstance(new Object[0]);
                     }
-                    return constructor.newInstance(new Object[0]);
+                }
+                if (Serializable.class.isAssignableFrom(type)) {
+                    return instantiateUsingSerialization(type);
+                } else {
+                    ex = new ObjectAccessException("Cannot construct type as it does not have a no-args constructor");
+                }
+            } catch (final InstantiationException | IllegalAccessException e) {
+                ex = new ObjectAccessException("Cannot construct type", e);
+            } catch (final InvocationTargetException e) {
+                if (e.getTargetException() instanceof RuntimeException) {
+                    throw (RuntimeException)e.getTargetException();
+                } else if (e.getTargetException() instanceof Error) {
+                    throw (Error)e.getTargetException();
+                } else {
+                    ex = new ObjectAccessException("Constructor for type threw an exception", e.getTargetException());
                 }
             }
-            if (Serializable.class.isAssignableFrom(type)) {
-                return instantiateUsingSerialization(type);
-            } else {
-                oaex = new ObjectAccessException("Cannot construct type as it does not have a no-args constructor");
-            }
-        } catch (final InstantiationException e) {
-            oaex = new ObjectAccessException("Cannot construct type", e);
-        } catch (final IllegalAccessException e) {
-            oaex = new ObjectAccessException("Cannot construct type", e);
-        } catch (final InvocationTargetException e) {
-            if (e.getTargetException() instanceof RuntimeException) {
-                throw (RuntimeException)e.getTargetException();
-            } else if (e.getTargetException() instanceof Error) {
-                throw (Error)e.getTargetException();
-            } else {
-                oaex = new ObjectAccessException("Constructor for type threw an exception", e.getTargetException());
-            }
         }
-        oaex.add("construction-type", type.getName());
-        throw oaex;
+        ex.add("construction-type", type.getName());
+        throw ex;
     }
 
     private Object instantiateUsingSerialization(final Class<?> type) {

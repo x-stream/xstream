@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 XStream Committers.
+ * Copyright (C) 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -87,9 +87,7 @@ public class ActivationDataFlavorConverter implements Converter {
             } else {
                 dataFlavor = new ActivationDataFlavor(type, mimeType, name);
             }
-        } catch (final IllegalArgumentException ex) {
-            throw new ConversionException(ex);
-        } catch (final NullPointerException ex) {
+        } catch (final IllegalArgumentException | NullPointerException ex) {
             throw new ConversionException(ex);
         }
         return dataFlavor;

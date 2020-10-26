@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013, 2014, 2015, 2016, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -195,16 +195,12 @@ public class ExternalizableConverter implements Converter {
             return serializationMembers.callReadResolve(externalizable);
         } catch (final NoSuchMethodException e) {
             throw new ConversionException("Missing default constructor of type", e);
-        } catch (final InvocationTargetException e) {
-            throw new ConversionException("Cannot construct type", e);
-        } catch (final InstantiationException e) {
+        } catch (final InvocationTargetException | InstantiationException | ClassNotFoundException e) {
             throw new ConversionException("Cannot construct type", e);
         } catch (final IllegalAccessException e) {
             throw new ObjectAccessException("Cannot construct type", e);
         } catch (final IOException e) {
             throw new StreamException("Cannot externalize " + type.getClass(), e);
-        } catch (final ClassNotFoundException e) {
-            throw new ConversionException("Cannot construct type", e);
         }
     }
 

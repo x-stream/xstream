@@ -97,6 +97,33 @@
 		<li>No support for Hibernate 3 collections.</li>
 	</ul>
 
+	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
+
+	<p>Not yet released.</p>
+
+	<p class="highlight">This maintenance release addresses the security vulnerability CVE-2017-9805 reported
+	originally for Struts' XStream Plugin, an arbitrary execution of commands when unmarshalling for XStream instances
+	with uninitialized security framework.</p>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The types java.lang.ProcessBuilder and javax.imageio.ImageIO$ContainsFilter are now part of the default
+		blacklist and the deserialization of XML containing one of the two types will fail. You will must enable these
+		types by	explicit configuration, if you need them.</li>
+	</ul>
+
+	<h1 id="1.4.13">1.4.13</h1>
+
+	<p>Released September 6, 2020.</p>
+
+	<h2>Major changes</h2>
+
+	<ul>
+		<li>GHPR:#216, GHPR:#218: Defer reflective access to Java core modules.</li>
+		<li>GHI:#207: New predefined blacklist avoids vulnerability due to improper setup of the security framework.</li>
+	</ul>
+
 	<h1 id="1.4.12">1.4.12</h1>
 
 	<p>Released April 12, 2020.</p>

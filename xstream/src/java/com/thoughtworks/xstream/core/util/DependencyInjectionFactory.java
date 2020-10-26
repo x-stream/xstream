@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (c) 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -251,16 +251,10 @@ public class DependencyInjectionFactory {
             }
 
             return instance;
-        } catch (final InstantiationException e) {
-            th = e;
-        } catch (final IllegalAccessException e) {
+        } catch (final InstantiationException | IllegalAccessException | SecurityException | ExceptionInInitializerError e) {
             th = e;
         } catch (final InvocationTargetException e) {
             th = e.getCause();
-        } catch (final SecurityException e) {
-            th = e;
-        } catch (final ExceptionInInitializerError e) {
-            th = e;
         }
         final ObjectAccessException ex = new ObjectAccessException("Cannot construct type", th);
         ex.add("construction-type", type.getName());

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -122,9 +122,7 @@ public class StaxDriver extends AbstractXmlDriver {
             final HierarchicalStreamReader reader = createStaxReader(createParser(new StreamSource(stream, in
                 .toExternalForm())));
             return wrapReader(stream, reader);
-        } catch (final XMLStreamException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XMLStreamException | IOException e) {
             throw new StreamException(e);
         }
     }
@@ -139,9 +137,7 @@ public class StaxDriver extends AbstractXmlDriver {
                 .toURI()
                 .toASCIIString())));
             return wrapReader(stream, reader);
-        } catch (final XMLStreamException e) {
-            throw new StreamException(e);
-        } catch (final FileNotFoundException e) {
+        } catch (final XMLStreamException | FileNotFoundException e) {
             throw new StreamException(e);
         }
     }

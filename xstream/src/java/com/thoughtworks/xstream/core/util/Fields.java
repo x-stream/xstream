@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2016, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2016, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,11 +39,10 @@ public class Fields {
             if (field != null && !field.isAccessible()) {
                 field.setAccessible(true);
             }
-        } catch (final SecurityException e) {
+        } catch (final SecurityException | NoClassDefFoundError e) {
             // active SecurityManager
-        } catch (final NoClassDefFoundError e) {
-            // restricted type in GAE
         }
+		// restricted type in GAE
         return field;
     }
 
@@ -54,11 +53,7 @@ public class Fields {
                 result.setAccessible(true);
             }
             return result;
-        } catch (final SecurityException e) {
-            throw wrap("Cannot access field", type, name, e);
-        } catch (final NoSuchFieldException e) {
-            throw wrap("Cannot access field", type, name, e);
-        } catch (final NoClassDefFoundError e) {
+        } catch (final SecurityException | NoSuchFieldException | NoClassDefFoundError e) {
             throw wrap("Cannot access field", type, name, e);
         }
     }
@@ -66,13 +61,7 @@ public class Fields {
     public static void write(final Field field, final Object instance, final Object value) {
         try {
             field.set(instance, value);
-        } catch (final SecurityException e) {
-            throw wrap("Cannot write field", field.getType(), field.getName(), e);
-        } catch (final IllegalArgumentException e) {
-            throw wrap("Cannot write field", field.getType(), field.getName(), e);
-        } catch (final IllegalAccessException e) {
-            throw wrap("Cannot write field", field.getType(), field.getName(), e);
-        } catch (final NoClassDefFoundError e) {
+        } catch (final SecurityException | IllegalArgumentException | IllegalAccessException | NoClassDefFoundError e) {
             throw wrap("Cannot write field", field.getType(), field.getName(), e);
         }
     }
@@ -80,13 +69,7 @@ public class Fields {
     public static Object read(final Field field, final Object instance) {
         try {
             return field.get(instance);
-        } catch (final SecurityException e) {
-            throw wrap("Cannot read field", field.getType(), field.getName(), e);
-        } catch (final IllegalArgumentException e) {
-            throw wrap("Cannot read field", field.getType(), field.getName(), e);
-        } catch (final IllegalAccessException e) {
-            throw wrap("Cannot read field", field.getType(), field.getName(), e);
-        } catch (final NoClassDefFoundError e) {
+        } catch (final SecurityException | IllegalArgumentException | IllegalAccessException | NoClassDefFoundError e) {
             throw wrap("Cannot read field", field.getType(), field.getName(), e);
         }
     }

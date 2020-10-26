@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2016, 2017, 2020 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible, factored out from SunUnsafeReflectionProvider
@@ -45,13 +45,7 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
             final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
             u = (Unsafe)unsafeField.get(null);
-        } catch (final SecurityException e) {
-            ex = e;
-        } catch (final NoSuchFieldException e) {
-            ex = e;
-        } catch (final IllegalArgumentException e) {
-            ex = e;
-        } catch (final IllegalAccessException e) {
+        } catch (final SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
             ex = e;
         }
         exception = ex;
@@ -81,16 +75,14 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
         }
         ErrorWritingException ex = null;
         if (type == void.class || type == Void.class) {
-            ex = new ConversionException("Type void cannot have an instance");
+            ex = new ConversionException("Security alert: Marshalling rejected");
         } else {
             try {
                 return unsafe.allocateInstance(type);
-            } catch (final SecurityException e) {
+            } catch (final SecurityException | IllegalArgumentException e) {
                 ex = new ObjectAccessException("Cannot construct type", e);
             } catch (final InstantiationException e) {
                 ex = new ConversionException("Cannot construct type", e);
-            } catch (final IllegalArgumentException e) {
-                ex = new ObjectAccessException("Cannot construct type", e);
             }
         }
         ex.add("construction-type", type.getName());

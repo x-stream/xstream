@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014, 2015, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014, 2015, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 25. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.converters.extended;
@@ -32,20 +32,13 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Converts a dynamic proxy to XML, storing the implemented interfaces and handler.
- * 
+ *
  * @author Joe Walnes
  */
 public class DynamicProxyConverter implements Converter {
 
     private final ClassLoaderReference classLoaderReference;
     private final Mapper mapper;
-    private static final Field HANDLER = Fields.locate(Proxy.class, InvocationHandler.class, false);
-    private static final InvocationHandler DUMMY = new InvocationHandler() {
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-            return null;
-        }
-    };
 
     /**
      * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
@@ -57,7 +50,7 @@ public class DynamicProxyConverter implements Converter {
 
     /**
      * Construct a DynamicProxyConverter.
-     * 
+     *
      * @param mapper the Mapper chain
      * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
      * @since 1.4.5
@@ -127,16 +120,27 @@ public class DynamicProxyConverter implements Converter {
         final Class<?>[] interfacesAsArray = new Class[interfaces.size()];
         interfaces.toArray(interfacesAsArray);
         Object proxy = null;
-        if (HANDLER != null) { // we will not be able to resolve references to the proxy
-            proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, DUMMY);
+        if (Reflections.HANDLER != null) { // we will not be able to resolve references to the proxy
+            proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, Reflections.DUMMY);
         }
         handler = (InvocationHandler)context.convertAnother(proxy, handlerType);
         reader.moveUp();
-        if (HANDLER != null) {
-            Fields.write(HANDLER, proxy, handler);
+        if (Reflections.HANDLER != null) {
+            Fields.write(Reflections.HANDLER, proxy, handler);
         } else {
             proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, handler);
         }
         return proxy;
+    }
+
+    private static class Reflections {
+
+        private static final Field HANDLER = Fields.locate(Proxy.class, InvocationHandler.class, false);
+        private static final InvocationHandler DUMMY = new InvocationHandler() {
+            @Override
+            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+                return null;
+            }
+        };
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2012, 2014, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2012, 2014, 2016, 2017, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -269,19 +269,13 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
     public void testPathOfNonDefaultFileSystem() throws IOException {
         final Map<String, String> env = new HashMap<>();
         env.put("create", "true");
-        final URI uri = URI.create("jar:"
-            + Paths.get("target/lib/proxytoys-0.2.1.jar").toAbsolutePath().toUri().toString());
+        final URI uri = URI
+            .create("jar:" + Paths.get("target/lib/proxytoys-0.2.1.jar").toAbsolutePath().toUri().toString());
 
-        FileSystem zipfs = null;
-        try {
-            zipfs = FileSystems.newFileSystem(uri, env);
+        try (final FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
             final String entry = "/com/thoughtworks/proxy/kit/SimpleReference.class";
             final Path path = zipfs.getPath(entry);
             assertBothWays(path, "<path>" + uri.toString() + "!" + entry + "</path>");
-        } finally {
-            if (zipfs != null) {
-                zipfs.close();
-            }
         }
     }
 

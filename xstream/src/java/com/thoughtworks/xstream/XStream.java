@@ -595,9 +595,7 @@ public class XStream {
             final Class<?> type = Class.forName(className, false, classLoaderReference.getReference());
             final Constructor<?> constructor = type.getConstructor(constructorParamTypes);
             return (Mapper)constructor.newInstance(constructorParamValues);
-        } catch (final Exception e) {
-            throw new InitializationException("Could not instantiate mapper : " + className, e);
-        } catch (final LinkageError e) {
+        } catch (final Exception | LinkageError e) {
             throw new InitializationException("Could not instantiate mapper : " + className, e);
         }
     }
@@ -1009,9 +1007,7 @@ public class XStream {
             } else if (instance instanceof SingleValueConverter) {
                 registerConverter((SingleValueConverter)instance, priority);
             }
-        } catch (final Exception e) {
-            throw new InitializationException("Could not instantiate converter : " + className, e);
-        } catch (final LinkageError e) {
+        } catch (final Exception | LinkageError e) {
             throw new InitializationException("Could not instantiate converter : " + className, e);
         }
     }

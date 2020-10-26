@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -89,13 +89,7 @@ public class StackTraceElementConverter extends AbstractSingleValueConverter {
                     return constructor
                         .newInstance(classLoaderName, moduleName, moduleVersion, declaringClass, methodName, fileName,
                             lineNumber);
-                } catch (final NoSuchMethodException e) {
-                    ex = e;
-                } catch (final InstantiationException e) {
-                    ex = e;
-                } catch (final IllegalAccessException e) {
-                    ex = e;
-                } catch (final InvocationTargetException e) {
+                } catch (final NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     ex = e;
                 }
                 if (ex != null) {

@@ -196,7 +196,7 @@
     <profile>
       <id>xstream-release</id>
       <properties>
-        <version.java.enforced>[1.8,1.9)</version.java.enforced>
+        <version.java.enforced>[14,15)</version.java.enforced>
       </properties>
       <build>
         <plugins>
@@ -669,7 +669,7 @@
       </dependency>
       <dependency>
         <groupId>org.ops4j.pax.exam</groupId>
-        <artifactId>pax-exam-link-mvn</artifactId><!-- Preferred link because it does not require an mvn url handler implicitely. -->
+        <artifactId>pax-exam-link-mvn</artifactId><!-- Preferred link because it does not require an mvn url handler implicitly. -->
         <version>${version.org.ops4j.pax.exam}</version>
         <scope>test</scope>
       </dependency>
@@ -792,7 +792,7 @@
           <configuration>
             <detectJavaApiLink>false</detectJavaApiLink>
             <doclint>${javadoc.doclint}</doclint>
-            <source>${version.java.source}</source>
+            <release>${javadoc.java.release}</release>
             <links>
               <link>${javadoc.link.javase}</link>
             </links>
@@ -1076,7 +1076,7 @@
     <version.plugin.maven.gpg>1.6</version.plugin.maven.gpg>
     <version.plugin.maven.install>3.0.0-M1</version.plugin.maven.install>
     <version.plugin.maven.jar>3.1.1</version.plugin.maven.jar>
-    <version.plugin.maven.javadoc>3.1.0</version.plugin.maven.javadoc>
+    <version.plugin.maven.javadoc>3.2.0</version.plugin.maven.javadoc>
     <version.plugin.maven.jxr>3.0.0</version.plugin.maven.jxr>
     <version.plugin.maven.release>2.5.3</version.plugin.maven.release>
     <version.plugin.maven.resources>3.1.0</version.plugin.maven.resources>
@@ -1123,7 +1123,8 @@
     <version.xpp3>1.1.4c</version.xpp3>
 
     <jar.module.name>${project.artifactId}</jar.module.name>
-    <javadoc.link.javase>http://docs.oracle.com/javase/8/docs/api/</javadoc.link.javase>
+    <javadoc.java.release>14</javadoc.java.release>
+    <javadoc.link.javase>https://docs.oracle.com/en/java/javase/14/docs/api/</javadoc.link.javase>
     <surefire.illegal.access>permit</surefire.illegal.access>
 
     <argLine>${surefire.argline}</argLine>
