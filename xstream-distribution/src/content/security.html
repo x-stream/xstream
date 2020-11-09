@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2014, 2015, 2017, 2019 XStream committers.
+ Copyright (C) 2014, 2015, 2017, 2019, 2020 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -30,7 +30,8 @@
 	<p>The provided XML data is used by XStream to unmarshal Java objects.  This data can be manipulated by injecting
 	the XML representation of other objects, that were not present at marshalling time.  An attacker could take
 	advantage of this to execute arbitrary code or shell commands in the context of the server running the XStream
-	process.  A concrete case is described in <a href="CVE-2013-7285.html">CVE-2013-7285</a>.</p>
+	process.  A concrete case is described in <a href="CVE-2013-7285.html">CVE-2013-7285</a> and
+	<a href="CVE-2020-26217.html">CVE-2020-26217</a>.</p>
  
 	<p>Note that the XML data can be manipulated on different levels.  For example, manipulating values on existing
  	objects (such as a price value), or breaking the format and causing the XML parser to fail.  The latter case will
@@ -66,7 +67,7 @@
  	exploits is very high.</p>
 
 	<p class="hightlight">Therefore creates a black list for special classes only a scenario for a false security,
-    because no-one can assure, that no other scenario arise. A better approach is white listing i.e. the allowed class
+    because no-one can assure, that no other scenario arise. A better approach is a whitelist i.e. the allowed class
     types are setup explicitly. This will be the default for XStream 1.5.x.</p>
    	
 	<p>Starting with XStream 1.4.7, an instance of the EventHandler is no longer handled by default.  You have to
@@ -79,7 +80,7 @@
  	XStream acts here like a script, and the scenario above can be created with any script that is executed within a
  	Java runtime (e.g. using its JavaScript interpreter) if someone is able to manipulate it externally.  The key
  	message for application developers is that deserializing arbitrary user-supplied content is a dangerous proposition
- 	in all cases. The best approach to prevent such an attach is a <a href="#example">white list</a>, i.e. the
+	in all cases. The best approach to prevent such an attach is a <a href="#example">whitelist</a>, i.e. the
  	deserialization mechanism should only allow explicit types.</p>
     
     <h2 id="explicit">Explicit Security</h2>
@@ -87,18 +88,20 @@
 	<p>Starting with XStream 1.4.7, it is possible to define <a href="#framework">permissions</a> for types, to check
 	the type of an object that should be unmarshalled.  Those permissions can be used to allow or deny types explicitly
 	With these permissions it is at least not possible to inject unexpected types into an object graph.  The security
-	framework supports the setup of a black or white listing scenario.  Any application should use this feature to
+	framework supports the setup of a blacklist or whitelist scenario.  Any application should use this feature to
 	limit the danger of arbitrary command execution if it deserializes data from an external source.</p>
  	
 	<p>XStream itself sets up a black list by default, i.e. it blocks all currently known critical classes of the Java
 	runtime. Main reason for the black list is compatibility, because otherwise newer versions of XStream 1.4.x can no
 	longer be used as drop-in replacement.  Unfortunately this provides a false sense of security.  Every XStream
-	client should therefore switch to a white listing on its own as soon as possible. XStream itself will use white
-	listing as default starting with 1.5.x and only clients that have also changed their setup will be able to use this
-	newer version again as drop-in replacement.</p>
+	client should therefore switch to a whitelist on its own as soon as possible. XStream itself will use a whitelist
+	as default starting with 1.5.x and only clients that have also changed their setup will be able to use this newer
+	version again as drop-in replacement. You can use
+	<a href="javadoc/com/thoughtworks/xstream/XStream.html#setupDefaultSecurity-com.thoughtworks.xstream.XStream-">XStream.setupDefaultSecurity()</a>
+	to install the default whitelist of 1.5.x already with 1.4.10 or higher.</p>
          
-	<p class=highlight>Note: If a white listed type contains itself other members that are handled by XStream, you
-	will have to white list those member's types also.</p>
+	<p class=highlight>Note: If a type on a whitelist contains itself other members that are handled by XStream, you
+	will have to add those member's types to the whitelist also.</p>
          
 	<p>Separate to the XStream security framework, it has always been possible to overwrite the setupConverter method
 	of XStream to register only the required converters.</p>
@@ -165,98 +168,87 @@ XStream.denyTypeHierary(Class);</pre></div>
 	    <th>Permission</th>
 	    <th>Description</th>
 	    <th>Example</th>
-	    <th width="50%">Default</th>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/AnyTypePermission.html">AnyTypePermission</a></td>
-	    <td>Allow any type.  You may use the ANY instance directly. A registration of this permission will wipe any
-	    prior one.</td>
-	    <td>&nbsp;</td>
-	    <td>yes</td>
+	    <td><b>Start a blacklist</b> and allow any type.  A registration of this permission will wipe any prior one.
+	    You may use the ANY instance directly.  Note, that it is now in the responsibility of the developer to deny any
+	    type that might be used for arbitrary code execution as described in the CVEs above.</td>
+	    <td>addPermission(<i>AnyTypePermission.ANY</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ArrayTypePermission.html">ArrayTypePermission</a></td>
 	    <td>Allow any array type.  You may use the ARRAYS instance directly.</td>
-	    <td>&nbsp;</td>
-	    <td>no</td>
+	    <td>addPermission(<i>ArrayTypePermission.ARRAYS</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/CGLIBProxyTypePermission.html">CGLIBProxyTypePermission</a></td>
 	    <td>Allow any CGLIB proxy type.  You may use the PROXIES instance directly.</td>
-	    <td>&nbsp;</td>
-	    <td>no</td>
+	    <td>addPermission(<i>CGLIBProxyTypePermission.PROXIES</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ExplicitTypePermission.html">ExplicitTypePermission</a></td>
 	    <td>Allow types explicitly by name.</td>
-	    <td>&nbsp;</td>
-	    <td>&ndash;</td>
+	    <td>allowTypes(new String[] {"<i>java.io.File</i>", "<i>java.lang.ProcessBuilder</i>"});<br/>
+	    allowTypes(new Class[] {<i>java.io.File.class</i>, <i>java.lang.ProcessBuilder.class</i>});</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/InterfaceTypePermission.html">InterfaceTypePermission</a></td>
 	    <td>Allow any interface type.  You may use the INTERFACES instance directly.</td>
-	    <td>&nbsp;</td>
-	    <td>no</td>
+	    <td>addPermission(<i>InterfaceTypePermission.INTERFACES</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NoPermission.html">NoPermission</a></td>
-	    <td>Invert any other permission.  Instances of this type are used by XStream in the deny methods.</td>
-	    <td>&nbsp;</td>
-	    <td>no</td>
+	    <td>Invert any other permission.  Instances of this type are used by XStream in the deny methods wrapping a permission.</td>
+	    <td>denyPermission(<i>permissionInstance</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NoTypePermission.html">NoTypePermission</a></td>
-	    <td>Allow no type.  You may use the NONE instance directly. A registration of this permission will wipe any
-	    prior one.</td>
-	    <td>&nbsp;</td>
-	    <td>&ndash;</td>
+	    <td><b>Start a whitelist</b> and allow no type.  A registration of this permission will wipe any prior one.
+	    You may use the NONE instance directly.</td>
+	    <td>addPermission(<i>NoTypePermission.NONE</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NullPermission.html">NullPermission</a></td>
 	    <td>Allow null as type.  You may use the NULL instance directly.</td>
-	    <td>&nbsp;</td>
-	    <td>no</td>
+	    <td>addPermission(<i>NullPermission.NULL</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/PrimitiveTypePermission.html">PrimitiveTypePermission</a></td>
 	    <td>Allow any primitive type and its boxed counterpart (excluding void).  You may use the PRIMITIVES instance
 	    directly.</td>
-	    <td>&nbsp;</td>
-	    <td>no</td>
+	    <td>addPermission(<i>PrimitiveTypePermission.PRIMITIVES</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ProxyTypePermission.html">ProxyTypePermission</a></td>
 	    <td>Allow any Java proxy type.  You may use the PROXIES instance directly.</td>
-	    <td>&nbsp;</td>
-	    <td>no</td>
+	    <td>addPermission(<i>ProxyTypePermission.PROXIES</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/RegExpTypePermission.html">RegExpTypePermission</a></td>
 	    <td>Allow any type that matches with its name a regular expression.</td>
-	    <td class="example">.*\\.core\\..*<br/>[^$]+</td>
-	    <td>&ndash;</td>
+	    <td class="example">allowTypeByRegExp(new String[]{"<i>.*\\.core\\..*</i>", "<i>[^$]+</i>"});<br/>
+	    allowTypeByRegExp(new Pattern[]{Pattern.compile("<i>.*\\.core\\..*</i>"), Pattern.compile("<i>[^$]+</i>")});</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/TypeHierarchyPermission.html">TypeHierarchyPermission</a></td>
 	    <td>Allow types of a hierarchy.</td>
-	    <td>&nbsp;</td>
-	    <td>&ndash;</td>
+	    <td>allowTypeHierarchy(<i>java.lang.Throwable.class</i>);</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/WildcardTypePermission.html">WildcardTypePermission</a></td>
 	    <td>Allow any type that matches with its name a wildcard expression.</td>
-	    <td class="example">java.lang.*<br/>java.util.**</td>
-	    <td>&ndash;</td>
+	    <td>allowTypeByWildcard(new String[]{"<i>java.lang.*</i>", "<i>java.util.**"</i>});</td>
 	</tr>
     </table>
 
-    <h2 id="example">Example Code White Listing</h2>
+    <h2 id="example">Example Code Whitelist</h2>
 
 	<p>XStream uses the AnyTypePermission by default, i.e. any type is accepted.  You have to clear out this default
 	and register your own permissions to activate the security framework (the Blog type is from the
 	<a href="alias-tutorial.html">Alias Tutorial</a>):</p>
 <div class="Source Java"><pre>XStream xstream = new XStream();
-// clear out existing permissions and set own ones
+// clear out existing permissions and start a whitelist
 xstream.addPermission(NoTypePermission.NONE);
 // allow some basics
 xstream.addPermission(NullPermission.NULL);
