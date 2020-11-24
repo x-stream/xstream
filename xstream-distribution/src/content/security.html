@@ -33,7 +33,7 @@
 	process.  A concrete case is described in <a href="CVE-2013-7285.html">CVE-2013-7285</a> and
 	<a href="CVE-2020-26217.html">CVE-2020-26217</a>.</p>
  
-	<p>Note that the XML data can be manipulated on different levels.  For example, manipulating values on existing
+	<p>Note, that the XML data can be manipulated on different levels.  For example, manipulating values on existing
  	objects (such as a price value), or breaking the format and causing the XML parser to fail.  The latter case will
  	raise an exception, but the former case must be handled by validity checks in any application which processes
     user-supplied XML.  A worst case scenario is the injection of arbitrary code or shell commands, as noted above.
@@ -66,9 +66,9 @@
  	well-known and commonly used Java libraries libraries such as ASM, CGLIB, or Groovy, the possibility for more
  	exploits is very high.</p>
 
-	<p class="hightlight">Therefore creates a black list for special classes only a scenario for a false security,
-    because no-one can assure, that no other scenario arise. A better approach is a whitelist i.e. the allowed class
-    types are setup explicitly. This will be the default for XStream 1.5.x.</p>
+	<p class="hightlight">A blacklist for special classes only creates therefore a scenario for a false security,
+    because no-one can assure, that no other scenario arise. A better approach is the usage of a whitelist i.e. the
+    allowed class types are setup explicitly. This will be the default for XStream 1.5.x (see below).</p>
    	
 	<p>Starting with XStream 1.4.7, an instance of the EventHandler is no longer handled by default.  You have to
  	explicitly register a ReflectionConverter for the EventHandler type, if your application has the requirement to
@@ -91,8 +91,8 @@
 	framework supports the setup of a blacklist or whitelist scenario.  Any application should use this feature to
 	limit the danger of arbitrary command execution if it deserializes data from an external source.</p>
  	
-	<p>XStream itself sets up a black list by default, i.e. it blocks all currently known critical classes of the Java
-	runtime. Main reason for the black list is compatibility, because otherwise newer versions of XStream 1.4.x can no
+	<p>XStream itself sets up a blacklist by default, i.e. it blocks all currently known critical classes of the Java
+	runtime. Main reason for the blacklist is compatibility, because otherwise newer versions of XStream 1.4.x can no
 	longer be used as drop-in replacement.  Unfortunately this provides a false sense of security.  Every XStream
 	client should therefore switch to a whitelist on its own as soon as possible. XStream itself will use a whitelist
 	as default starting with 1.5.x and only clients that have also changed their setup will be able to use this newer
@@ -121,7 +121,9 @@
 	<p>Noted above, it might be possible that other combinations are found with the Java runtime itself, or other
 	commonly-used Java libraries that allow a similar vulnerability like the known case using the Java Beans
 	EventHandler.  To prevent such a possibility at all, XStream version 1.4.7 and above contains a security framework,
-	allowing application developers to define which types are allowed to be unmarshalled with XStream.</p>
+	allowing application developers to define which types are allowed to be unmarshalled with XStream.  Use
+	<a href="javadoc/com/thoughtworks/xstream/XStream.html#setupDefaultSecurity-com.thoughtworks.xstream.XStream-">XStream.setupDefaultSecurity()</a>
+	to install the default whitelist of 1.5.x already with 1.4.10 or higher.</p></p>
          
 	<p>The core interface is <a href="javadoc/com/thoughtworks/xstream/security/TypePermission.html">TypePermission</a>.
 	The <a href="javadoc/com/thoughtworks/xstream/mapper/SecurityMapper.html">SecurityMapper</a> will evaluate a list
