@@ -121,6 +121,22 @@
 		You will have to enable these types by explicit configuration, if you need them.</li>
 	</ul>
 
+	<h2>Delivery</h2>
+
+	<p>Any XStream release can run with a minimal Java runtime environment of Java 1.4 as long as this environment will
+	process only requested classes of the jar file.  Until version 1.4.14 XStream was delivered also as special Java 7
+	version for Android, because Dalvik scans all classes and fails at classes requiring a higher runtime version.  However, this
+	special version will not work in a normal Java 8 environment or higher and was never meant do so.</p>
+
+	<p>Unfortunately, this version has to be build always after the standard version due to the build sequence.  The
+	latest version in Maven Central however is always the one that has been deployed last independently from the time
+	of publishing.  This creates an annoyance now in GitHub for any project using the Dependabot service which creates
+	automated pull requests with updates to the latest XStream version, because it injects now the special Java 7
+	version that probably breaks these projects.</p>
+
+	<p>Users who still require a special version for Java 7 will have to build this artifact now on their own.  Users
+	for even older Java environments had always to do so anyway.</p>
+	
 	<h1 id="1.4.14">1.4.14</h1>
 
 	<p>Released November 16, 2020.</p>
