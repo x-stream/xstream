@@ -102,11 +102,23 @@
 
 	<p>Not yet released.</p>
 
+	<p class="highlight">This maintenance release addresses the security vulnerability
+	<a href="CVE-2020-26258.html">CVE-2020-26258</a>, when unmarshalling for XStream instances with uninitialized security
+	framework in a Java runtime below Java 15.</p>
+
 	<h2>Minor changes</h2>
 
 	<ul>
 		<li>GHI:#226: XmlFriendlyNameCoder does not accept '9' as valid character in an XML name.</li>
 		<li>GHPR:#228: DefaultMapper should handle IllegalArgumentException thrown by Class.forName().</li>
+	</ul>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The type jdk.nashorn.internal.objects.NativeString id now part of the default blacklist and the
+		deserialization of XML containing one of the two types will fail. You will must enable these types by
+		explicit configuration, if you need them.</li>
 	</ul>
 
 	<h1 id="1.4.14">1.4.14</h1>
@@ -122,7 +134,7 @@
 	<ul>
 		<li>The types java.lang.ProcessBuilder and javax.imageio.ImageIO$ContainsFilter are now part of the default
 		blacklist and the deserialization of XML containing one of the two types will fail. You will must enable these
-		types by	explicit configuration, if you need them.</li>
+		types by explicit configuration, if you need them.</li>
 	</ul>
 
 	<h1 id="1.4.13">1.4.13</h1>
