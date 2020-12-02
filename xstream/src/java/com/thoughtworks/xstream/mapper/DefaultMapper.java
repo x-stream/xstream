@@ -79,7 +79,7 @@ public class DefaultMapper implements Mapper {
                 initialize = elementName.charAt(0) == '[';
             }
             return Class.forName(elementName, initialize, classLoader);
-        } catch (final ClassNotFoundException e) {
+        } catch (final ClassNotFoundException | IllegalArgumentException e) {
             throw new CannotResolveClassException(elementName);
         }
     }
