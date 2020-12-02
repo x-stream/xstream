@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -279,7 +279,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
         final BitSet XML_NAME_CHARS_4TH = new BitSet(0xFFFFF);
         XML_NAME_CHARS_4TH.set('-');
         XML_NAME_CHARS_4TH.set('.');
-        XML_NAME_CHARS_4TH.set('0', '9');
+        XML_NAME_CHARS_4TH.set('0', '9' + 1);
         XML_NAME_CHARS_4TH.set(0xB7);
 
         final BitSet XML_NAME_CHARS_5TH = (BitSet)XML_NAME_CHARS_4TH.clone();
@@ -406,8 +406,8 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
         XML_NAME_CHARS_4TH.set(0x30FC, 0x30FE + 1);
 
         XML_NAME_CHARS_5TH.or(XML_NAME_START_CHARS_5TH);
-        XML_NAME_CHARS_5TH.set(0x300, 0x36F);
-        XML_NAME_CHARS_5TH.set(0x203F, 0x2040);
+        XML_NAME_CHARS_5TH.set(0x300, 0x36F + 1);
+        XML_NAME_CHARS_5TH.set(0x203F, 0x2040 + 1);
 
         XML_NAME_START_CHARS = (BitSet)XML_NAME_START_CHARS_4TH.clone();
         XML_NAME_START_CHARS.and(XML_NAME_START_CHARS_5TH);
@@ -493,9 +493,9 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
             // First, fast (common) case: nothing to escape
             int i = 0;
 
-            for (; i < length; i++ ) {
-                char c = name.charAt(i);
-                if (c == '$' || c == '_' || c <= 27 || c >= 127) {
+            for (; i < length; i++) {
+                final char c = name.charAt(i);
+                if (c < 'A' || (c > 'Z' && c < 'a') || c > 'Z') {
                     break;
                 }
             }

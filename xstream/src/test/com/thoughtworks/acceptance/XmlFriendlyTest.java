@@ -187,6 +187,11 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
         assertBothWays("\"", "<string>&quot;</string>");
     }
 
+    public void testsDigitsOnly() {
+        xstream.alias("0123456789", String.class);
+        assertBothWays("", "<_.0030123456789></_.0030123456789>");
+    }
+
     public void testDecimalFormatSymbols() {
         final String xml;
         if (!JVM.is14()) {
