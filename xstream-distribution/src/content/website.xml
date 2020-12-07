@@ -45,6 +45,7 @@
     </section>
     <section>
         <name>Vulnerabilities</name>
+        <page>CVE-2020-26259.html</page>
         <page>CVE-2020-26258.html</page>
         <page>CVE-2020-26217.html</page>
         <page>CVE-2017-7957.html</page>

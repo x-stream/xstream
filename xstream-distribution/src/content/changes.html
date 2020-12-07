@@ -32,9 +32,9 @@
 
 	<p>Not yet released.</p>
 
-	<p class="highlight">This maintenance release addresses the security vulnerability
-	<a href="CVE-2020-26258.html">CVE-2020-26258</a>, when unmarshalling for XStream instances with uninitialized security
-	framework in a Java runtime below Java 15.</p>
+	<p class="highlight">This maintenance release addresses the security vulnerabilities
+	<a href="CVE-2020-26258.html">CVE-2020-26258</a> and <a href="CVE-2020-26259.html">CVE-2020-26259</a>, when
+	unmarshalling for XStream instances with uninitialized security framework.</p>
 	<h2>Minor changes</h2>
 
 	<ul>
@@ -44,9 +44,9 @@
 	<h2>Stream compatibility</h2>
 
 	<ul>
-		<li>The type jdk.nashorn.internal.objects.NativeString id now part of the default blacklist and the
-		deserialization of XML containing one of the two types will fail. You will must enable these types by
-		explicit configuration, if you need them.</li>
+		<li>The type jdk.nashorn.internal.objects.NativeString and the internal JAX-WS type ReadAllStream.FileStream
+		are now	part of the default blacklist and the deserialization of XML containing one of the two types will fail.
+		You will have to enable these types by explicit configuration, if you need them.</li>
 	</ul>
 
 	<h2>Delivery</h2>
@@ -77,8 +77,8 @@
 
 	<ul>
 		<li>The types java.lang.ProcessBuilder and javax.imageio.ImageIO$ContainsFilter are now part of the default
-		blacklist and the deserialization of XML containing one of the two types will fail. You will must enable these
-		types by explicit configuration, if you need them.</li>
+		blacklist and the deserialization of XML containing one of the two types will fail. You will have to enable
+		these types by explicit configuration, if you need them.</li>
 	</ul>
 
 	<h1 id="1.4.13">1.4.13</h1>

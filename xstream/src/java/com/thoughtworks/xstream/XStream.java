@@ -337,6 +337,7 @@ public class XStream {
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
     private static final Pattern LAZY_ITERATORS = Pattern.compile(".*\\$LazyIterator");
     private static final Pattern JAVAX_CRYPTO = Pattern.compile("javax\\.crypto\\..*");
+    private static final Pattern JAXWS_FILE_STREAM = Pattern.compile(".*\\.ReadAllStream\\$FileStream");
 
     /**
      * Constructs a default XStream.
@@ -646,8 +647,8 @@ public class XStream {
             "java.beans.EventHandler", //
             "java.lang.ProcessBuilder", //
             "javax.imageio.ImageIO$ContainsFilter", //
-            "jdk.nashorn.internal.objects.NativeString"});
-        denyTypesByRegExp(new Pattern[]{LAZY_ITERATORS, JAVAX_CRYPTO});
+            "jdk.nashorn.internal.objects.NativeString" });
+        denyTypesByRegExp(new Pattern[]{LAZY_ITERATORS, JAVAX_CRYPTO, JAXWS_FILE_STREAM});
         allowTypeHierarchy(Exception.class);
         securityInitialized = false;
     }
