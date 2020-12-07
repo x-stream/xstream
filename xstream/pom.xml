@@ -137,6 +137,54 @@
       <artifactId>commons-lang3</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>jaxws-rt</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.xml.ws</groupId>
+          <artifactId>jaxws-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.istack</groupId>
+          <artifactId>istack-commons-runtime</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.messaging.saaj</groupId>
+          <artifactId>saaj-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.stream.buffer</groupId>
+          <artifactId>streambuffer</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.ws</groupId>
+          <artifactId>policy</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.org.apache.xml.internal</groupId>
+          <artifactId>resolver</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.glassfish.gmbal</groupId>
+          <artifactId>gmbal-api-only</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jvnet</groupId>
+          <artifactId>mimepull</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jvnet.staxex</groupId>
+          <artifactId>stax-ex</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 
   <build>

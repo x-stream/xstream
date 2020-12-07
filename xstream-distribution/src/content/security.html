@@ -29,9 +29,10 @@
  
 	<p>The provided XML data is used by XStream to unmarshal Java objects.  This data can be manipulated by injecting
 	the XML representation of other objects, that were not present at marshalling time.  An attacker could take
-	advantage of this to access private data, execute arbitrary code or shell commands in the context of the server
-	running the XStream process.  Concrete cases are described in <a href="CVE-2013-7285.html">CVE-2013-7285</a>,
-	<a href="CVE-2020-26217.html">CVE-2020-26217</a>, and <a href="CVE-2020-26258.html">CVE-2020-26258</a>.</p>
+	advantage of this to access private data, delete local files, execute arbitrary code or shell commands in the
+	context of the server running the XStream process.  Concrete cases are described in
+	<a href="CVE-2013-7285.html">CVE-2013-7285</a>, <a href="CVE-2020-26217.html">CVE-2020-26217</a>,
+	<a href="CVE-2020-26258.html">CVE-2020-26258</a>, and <a href="CVE-2020-26259.html">CVE-2020-26259</a>.</p>
  
 	<p>Note that the XML data can be manipulated on different levels.  For example, manipulating values on existing
 	objects (such as a price value), or breaking the format and causing the XML parser to fail.  The latter case will
