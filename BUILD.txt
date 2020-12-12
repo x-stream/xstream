@@ -9,7 +9,7 @@ mvn clean install
 Before deploying:
 
 copy settings-template.xml to ~/.m2/settings.xml adding your Sonatype OSSRH
-username and passwords.
+username and passwords and also your GPG key and password.
 
 To deploy (optionally adding sources and javadoc jars):
 mvn deploy
