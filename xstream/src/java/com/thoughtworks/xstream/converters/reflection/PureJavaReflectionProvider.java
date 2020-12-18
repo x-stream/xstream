@@ -22,10 +22,11 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ErrorWritingException;
@@ -49,7 +50,8 @@ import com.thoughtworks.xstream.core.util.Fields;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private transient Map<Class<?>, byte[]> serializedDataCache;
+    private transient ConcurrentMap<Class<?>, ObjectStreamClass> objectStreamClassCache;
+    private transient ConcurrentMap<Class<?>, byte[]> serializedDataCache;
     protected FieldDictionary fieldDictionary;
 
     public PureJavaReflectionProvider() {
@@ -100,37 +102,46 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     private Object instantiateUsingSerialization(final Class<?> type) {
         ObjectAccessException oaex = null;
         try {
-            synchronized (serializedDataCache) {
-                byte[] data = serializedDataCache.get(type);
-                if (data == null) {
-                    final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    final DataOutputStream stream = new DataOutputStream(bytes);
+            if (Reflections.newInstance != null) {
+                final ObjectStreamClass osClass = objectStreamClassCache
+                    .computeIfAbsent(type, t -> ObjectStreamClass.lookup(type));
+                return Reflections.newInstance.invoke(osClass);
+            }
+            final byte[] data = serializedDataCache.computeIfAbsent(type, t -> {
+                final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                final DataOutputStream stream = new DataOutputStream(bytes);
+                try {
                     stream.writeShort(ObjectStreamConstants.STREAM_MAGIC);
                     stream.writeShort(ObjectStreamConstants.STREAM_VERSION);
                     stream.writeByte(ObjectStreamConstants.TC_OBJECT);
                     stream.writeByte(ObjectStreamConstants.TC_CLASSDESC);
-                    stream.writeUTF(type.getName());
-                    stream.writeLong(ObjectStreamClass.lookup(type).getSerialVersionUID());
+                    stream.writeUTF(t.getName());
+                    stream.writeLong(ObjectStreamClass.lookup(t).getSerialVersionUID());
                     stream.writeByte(2); // classDescFlags (2 = Serializable)
                     stream.writeShort(0); // field count
                     stream.writeByte(ObjectStreamConstants.TC_ENDBLOCKDATA);
                     stream.writeByte(ObjectStreamConstants.TC_NULL);
-                    data = bytes.toByteArray();
-                    serializedDataCache.put(type, data);
+                } catch (final IOException e) {
+                    throw new ObjectAccessException("Cannot prepare data to create type by JDK serialization", e);
                 }
+                return bytes.toByteArray();
+            });
 
-                final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data)) {
-                    @Override
-                    protected Class<?> resolveClass(final ObjectStreamClass desc) throws ClassNotFoundException {
-                        return Class.forName(desc.getName(), false, type.getClassLoader());
-                    }
-                };
-                return in.readObject();
-            }
+            final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data)) {
+                @Override
+                protected Class<?> resolveClass(final ObjectStreamClass desc) throws ClassNotFoundException {
+                    return Class.forName(desc.getName(), false, type.getClassLoader());
+                }
+            };
+            return in.readObject();
+        } catch (final ObjectAccessException e) {
+            oaex = e;
         } catch (final IOException e) {
             oaex = new ObjectAccessException("Cannot create type by JDK serialization", e);
         } catch (final ClassNotFoundException e) {
             oaex = new ObjectAccessException("Cannot find class", e);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            oaex = new ObjectAccessException("Cannot create type by JDK object stream data", e);
         }
         oaex.add("construction-type", type.getName());
         throw oaex;
@@ -204,6 +215,21 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     protected void init() {
-        serializedDataCache = new HashMap<>();
+        objectStreamClassCache = new ConcurrentHashMap<>();
+        serializedDataCache = new ConcurrentHashMap<>();
+    }
+
+    private static class Reflections {
+        private final static Method newInstance;
+        static {
+            Method method = null;
+            try {
+                method = ObjectStreamClass.class.getDeclaredMethod("newInstance");
+                method.setAccessible(true);
+            } catch (final NoSuchMethodException | SecurityException e) {
+                // not available
+            }
+            newInstance = method;
+        }
     }
 }
