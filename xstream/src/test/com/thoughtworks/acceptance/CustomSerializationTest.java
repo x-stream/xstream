@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,6 +20,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
+
+import com.thoughtworks.acceptance.objects.Hardware;
+import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.acceptance.objects.StandardObject;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+
 
 public class CustomSerializationTest extends AbstractAcceptanceTest {
 
@@ -199,6 +206,59 @@ public class CustomSerializationTest extends AbstractAcceptanceTest {
                 + "</child2>";
 
         assertBothWays(child, expectedXml);
+    }
+
+    static class Pair {
+        protected Object first;
+        protected Object second;
+
+        protected Pair() {
+        }
+
+        public Pair(final Object first, final Object second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
+
+    static class SerializablePair extends Pair implements Serializable {
+        private static final long serialVersionUID = 20201214L;
+
+        public SerializablePair(final Object first, final Object second) {
+            super(first, second);
+        }
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
+            out.writeObject(first);
+            out.writeObject(second);
+        }
+
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+            first = in.readObject();
+            second = in.readObject();
+        }
+    }
+
+    public void testCustomSerializationWithoutDefaultReadAndWriteObject() {
+        xstream = new XStream(new PureJavaReflectionProvider());
+        setupSecurity(xstream);
+        xstream.alias("pair", Pair.class);
+        xstream.alias("serpair", SerializablePair.class);
+
+        final String expectedXml = ""
+            + "<serpair serialization=\"custom\">\n"
+            + "  <unserializable-parents>\n"
+            + "    <first class=\"int\">42</first>\n"
+            + "    <second class=\"string\">fourty-two</second>\n"
+            + "  </unserializable-parents>\n"
+            + "  <serpair>\n"
+            + "    <int>42</int>\n"
+            + "    <string>fourty-two</string>\n"
+            + "  </serpair>\n"
+            + "</serpair>";
+
+        final Pair pair = (Pair)new SerializablePair(new Integer(42), "fourty-two");
+        assertBothWays(pair, expectedXml.replace('\'', '"'));
     }
 
     static class MyDate extends java.util.Date {

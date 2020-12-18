@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2016, 2018, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2016, 2018, 2020, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,10 +27,15 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.ErrorWritingException;
+import com.thoughtworks.xstream.core.util.Fields;
 
 
 /**
@@ -50,6 +55,7 @@ import java.util.WeakHashMap;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
+    private transient Map objectStreamClassCache;
     private transient Map serializedDataCache;
     protected FieldDictionary fieldDictionary;
 
@@ -104,8 +110,19 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     private Object instantiateUsingSerialization(final Class type) {
         ObjectAccessException oaex = null;
         try {
+            if (Reflections.newInstance != null) {
+                synchronized (objectStreamClassCache) {
+                    ObjectStreamClass osClass = (ObjectStreamClass)objectStreamClassCache.get(type);
+                    if (osClass == null) {
+                        osClass = ObjectStreamClass.lookup(type);
+                        objectStreamClassCache.put(type, osClass);
+                    }
+                    return Reflections.newInstance.invoke(osClass, new Object[0]);
+                }
+            }
+            byte[] data;
             synchronized (serializedDataCache) {
-                byte[] data = (byte[])serializedDataCache.get(type);
+                data = (byte[])serializedDataCache.get(type);
                 if (data == null) {
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     DataOutputStream stream = new DataOutputStream(bytes);
@@ -122,18 +139,25 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
                     data = bytes.toByteArray();
                     serializedDataCache.put(type, data);
                 }
-
-                ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data)) {
-                    protected Class resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
-                        return Class.forName(desc.getName(), false, type.getClassLoader());
-                    }
-                };
-                return in.readObject();
             }
-        } catch (IOException e) {
+            final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data)) {
+                protected Class resolveClass(final ObjectStreamClass desc) throws ClassNotFoundException {
+                    return Class.forName(desc.getName(), false, type.getClassLoader());
+                }
+            };
+            return in.readObject();
+        } catch (final ObjectAccessException e) {
+            oaex = e;
+        } catch (final IOException e) {
             oaex = new ObjectAccessException("Cannot create type by JDK serialization", e);
         } catch (ClassNotFoundException e) {
             oaex = new ObjectAccessException("Cannot find class", e);
+        } catch (IllegalAccessException e) {
+            oaex = new ObjectAccessException("Cannot create type by JDK object stream data", e);
+        } catch (IllegalArgumentException e) {
+            oaex = new ObjectAccessException("Cannot create type by JDK object stream data", e);
+        } catch (InvocationTargetException e) {
+            oaex = new ObjectAccessException("Cannot create type by JDK object stream data", e);
         }
         oaex.add("construction-type", type.getName());
         throw oaex;
@@ -207,6 +231,23 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     protected void init() {
+        objectStreamClassCache = new WeakHashMap();
         serializedDataCache = new WeakHashMap();
+    }
+
+    private static class Reflections {
+        private final static Method newInstance;
+        static {
+            Method method = null;
+            try {
+                method = ObjectStreamClass.class.getDeclaredMethod("newInstance", new Class[0]);
+                method.setAccessible(true);
+            } catch (final NoSuchMethodException e) {
+                // not available
+            } catch (final SecurityException e) {
+                // not available
+            }
+            newInstance = method;
+        }
     }
 }
