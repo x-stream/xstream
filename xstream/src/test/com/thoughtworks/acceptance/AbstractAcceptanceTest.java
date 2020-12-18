@@ -14,6 +14,12 @@ package com.thoughtworks.acceptance;
 import java.lang.reflect.Array;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -125,6 +131,58 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         return resultRoot;
     }
     
+    protected static void serialize(final Object object, final OutputStream outputStream) {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(outputStream);
+            out.writeObject(object);
+            out.close();
+        } catch (final NotSerializableException e) {
+            fail("Serialization of object of type "
+                + object.getClass().getName()
+                + " failed because of reference to type "
+                + e.getMessage(), e);
+        } catch (final IOException e) {
+            fail("Serialization of object of type " + object.getClass().getName() + " failed", e);
+        }
+    }
+
+    protected static Object deserialize(final InputStream inputStream) {
+        try {
+            ObjectInputStream out = new ObjectInputStream(inputStream);
+            final Object t = out.readObject();
+            out.close();
+            return t;
+        } catch (final ClassNotFoundException e) {
+            fail("Cannot find class " + e.getMessage() + " during deserialization", e);
+            throw new AssertionFailedError(); // never reached
+        } catch (final IOException e) {
+            fail("Deserialization failed reading the InputStream", e);
+            throw new AssertionFailedError(); // never reached
+        }
+    }
+
+    protected Object assertJavaSerialization(final Object in) {
+        byte[] data;
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            serialize(in, os);
+            data = os.toByteArray();
+            os.close();
+        } catch (final IOException e) {
+            fail("Serialization failed closing the OutputStream", e);
+            throw new AssertionFailedError(); // never reached
+        }
+        try {
+            InputStream is = new ByteArrayInputStream(data);
+            Object t = deserialize(is);
+            is.close();
+            return t;
+        } catch (final IOException e) {
+            fail("Deserialization failed closing the InputStream", e);
+            throw new AssertionFailedError(); // never reached
+        }
+    }
+
     /**
      * Allow derived classes to decide how to turn the object into XML text
      */
@@ -216,5 +274,11 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         transformer
             .transform(new StreamSource(new StringReader(xml)), new StreamResult(writer));
         return writer.toString();
+    }
+
+    protected static void fail(final String message, final Throwable cause) {
+        final AssertionFailedError err = new AssertionFailedError(message);
+        err.initCause(cause);
+        throw err;
     }
 }
