@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2016, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2016, 2018, 2019, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,6 +29,8 @@ import com.thoughtworks.xstream.io.xml.JDom2Driver;
 import com.thoughtworks.xstream.io.xml.JDomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2DomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.MXParserDomDriver;
+import com.thoughtworks.xstream.io.xml.MXParserDriver;
 import com.thoughtworks.xstream.io.xml.SimpleStaxDriver;
 import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
@@ -66,6 +68,8 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new SimpleStaxDriver());
         addDriverTest(new WstxDriver());
         addDriverTest(new XomDriver());
+        addDriverTest(new MXParserDomDriver());
+        addDriverTest(new MXParserDriver());
         addDriverTest(new Xpp3DomDriver());
         addDriverTest(new Xpp3Driver());
         addDriverTest(new XppDomDriver());
@@ -82,14 +86,14 @@ public class DriverEndToEndTestSuite extends TestSuite {
             @Override
             public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
                 if (reader.peekNextChild() == null) {
-                    return new ArrayList<Object>();
+                    return new ArrayList<>();
                 }
                 return super.unmarshal(reader, context);
             }
 
         });
 
-        final SampleLists<String, Boolean> in = new SampleLists<String, Boolean>();
+        final SampleLists<String, Boolean> in = new SampleLists<>();
         in.good.add("one");
         in.good.add("two");
         in.good.add("three");
