@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2015, 2016, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,7 +16,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.copy.HierarchicalStreamCopier;
 import com.thoughtworks.xstream.io.xml.AbstractXMLReaderTest;
-import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.io.xml.MXParserDriver;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
@@ -34,7 +34,7 @@ public class BinaryStreamTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
         // Transmogrify XML input into binary format.
         HierarchicalStreamReader xmlReader = 
-                new Xpp3Driver().createReader(new StringReader(xml));
+                new MXParserDriver().createReader(new StringReader(xml));
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         HierarchicalStreamWriter binaryWriter = new BinaryStreamWriter(buffer);

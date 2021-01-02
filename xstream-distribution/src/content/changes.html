@@ -38,12 +38,25 @@
 
 	<p>Not yet released.</p>
 
+	<h2>Major changes</h2>
+
+	<ul>
+		<li>Switch from Xpp3 as default parser to MXParser, a fork of Xpp3.</li>
+	</ul>
+
 	<h2>Minor changes</h2>
 
 	<ul>
 		<li>GHI:#238: Fix possibility to process references on enum types at deserialization.</li>
 		<li>GHI:#237: Fix optimization in XmlFriendlyNameCoder.</li>
 	</ul>
+
+	<h2>Dependencies</h2>
+	
+	<p>The default parser of XStream has changed from the Xpp3Parser in artifact xpp3:xpp3_min to MXParser, a fork of
+	Xpp3 in the artifact io.github.x-stream:mxparser.  The Xpp3 is unmaintained for a long time, bugs have been fixed
+	reported more than a decade ago, improvements by other forks have been incorporated and some endless loops have
+	been fixed, that could have been utilized as DoS attack.</p>
 
 	<h1 id="1.4.15">1.4.15</h1>
 

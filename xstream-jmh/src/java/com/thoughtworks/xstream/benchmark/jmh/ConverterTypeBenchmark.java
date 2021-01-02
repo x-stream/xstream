@@ -1,12 +1,12 @@
 /*
- * Copyright (C) 2015, 2017 XStream Committers.
+ * Copyright (C) 2015, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 20.11.2015 by Joerg Schaible
+ * Created on 20 November 2015 by Joerg Schaible
  */
 package com.thoughtworks.xstream.benchmark.jmh;
 
@@ -37,7 +37,7 @@ import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+import com.thoughtworks.xstream.io.xml.MXParserDriver;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
 import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
@@ -230,7 +230,7 @@ public class ConverterTypeBenchmark {
      */
     @Setup(Level.Trial)
     public void setUp(final BenchmarkParams params) {
-        xstream = new XStream(new Xpp3Driver());
+        xstream = new XStream(new MXParserDriver());
         xstream.addPermission(NoTypePermission.NONE);
         xstream.addPermission(ArrayTypePermission.ARRAYS);
         xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,8 +22,8 @@ import com.thoughtworks.xstream.core.ReferenceByIdUnmarshaller;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ReaderWrapper;
+import com.thoughtworks.xstream.io.xml.MXParserDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.testutil.CallLog;
@@ -216,7 +216,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             + "  <string>bottom</string>\n"
             + "</object-stream>";
 
-        final LevelTrackingReader reader = new LevelTrackingReader(new Xpp3Driver().createReader(new StringReader(xml)));
+        final LevelTrackingReader reader = new LevelTrackingReader(new MXParserDriver().createReader(new StringReader(xml)));
         final ObjectInputStream ois = xstream.createObjectInputStream(reader);
         final int level = reader.getLevel();
         assertEquals("top", ois.readObject());

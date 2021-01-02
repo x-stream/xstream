@@ -69,8 +69,8 @@
     </dependency>
 
     <dependency>
-      <groupId>xmlpull</groupId>
-      <artifactId>xmlpull</artifactId>
+      <groupId>io.github.x-stream</groupId>
+      <artifactId>mxparser</artifactId>
     </dependency>
 
     <dependency>
@@ -90,6 +90,7 @@
     <dependency>
       <groupId>xpp3</groupId>
       <artifactId>xpp3_min</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <dependency>

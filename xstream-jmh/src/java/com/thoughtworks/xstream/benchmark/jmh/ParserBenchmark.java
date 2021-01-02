@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2017 XStream Committers.
+ * Copyright (C) 2015, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,6 +44,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.JDom2Driver;
 import com.thoughtworks.xstream.io.xml.JDomDriver;
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.MXParserDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.StandardStaxDriver;
 import com.thoughtworks.xstream.io.xml.WstxDriver;
@@ -76,6 +77,12 @@ public class ParserBenchmark {
      * @since 1.4.9
      */
     public enum DriverFactory {
+        /**
+         * Factory for the {@link MXParserDriver}.
+         *
+         * @since upcoming
+         */
+        MXParser(new MXParserDriver()), //
         /**
          * Factory for the {@link Xpp3Driver}.
          *

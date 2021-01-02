@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
-     Copyright (C) 2015, 2017, 2020 XStream committers.
+     Copyright (C) 2015, 2017, 2020, 2021 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -175,13 +175,13 @@
     </dependency>
     <!-- parser -->
     <dependency>
-      <groupId>xpp3</groupId>
-      <artifactId>xpp3_min</artifactId>
+      <groupId>io.github.x-stream</groupId>
+      <artifactId>mxparser</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>xmlpull</groupId>
-      <artifactId>xmlpull</artifactId>
+      <groupId>xpp3</groupId>
+      <artifactId>xpp3_min</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
