@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,6 @@
  */
 package com.thoughtworks.xstream.converters.enums;
 
-enum SimpleEnum {
+public enum SimpleEnum {
     RED, GREEN, BLUE;
 }
