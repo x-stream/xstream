@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2015, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -66,8 +66,8 @@ public class ImmutableTypesMapper extends MapperWrapper {
     }
 
     public boolean isReferenceable(final Class type) {
-        if (unreferenceableTypes.contains(type)) {
-            return false;
+        if (immutableTypes.contains(type)) {
+            return !unreferenceableTypes.contains(type);
         } else {
             return super.isReferenceable(type);
         }
