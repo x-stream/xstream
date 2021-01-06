@@ -57,12 +57,6 @@
     </dependency>
 
     <dependency>
-      <groupId>stax</groupId>
-      <artifactId>stax-api</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
       <groupId>xom</groupId>
       <artifactId>xom</artifactId>
       <optional>true</optional>
