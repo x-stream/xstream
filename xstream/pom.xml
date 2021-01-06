@@ -45,16 +45,12 @@
     </dependency>
 
     <dependency>
-      <groupId>org.codehaus.woodstox</groupId>
-      <artifactId>wstx-asl</artifactId>
+      <groupId>com.fasterxml.woodstox</groupId>
+      <artifactId>woodstox-core</artifactId>
       <optional>true</optional>
     </dependency>
 
     <dependency>
-<<<<<<< HEAD
-      <groupId>com.fasterxml.woodstox</groupId>
-      <artifactId>woodstox-core</artifactId>
-=======
       <groupId>stax</groupId>
       <artifactId>stax</artifactId>
       <optional>true</optional>
@@ -63,7 +59,6 @@
     <dependency>
       <groupId>stax</groupId>
       <artifactId>stax-api</artifactId>
->>>>>>> ffe0c09e... Put Woodstox before BEA onto classpath.
       <optional>true</optional>
     </dependency>
 
