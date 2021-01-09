@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,7 @@ import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamer;
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.security.TypePermission;
 
 
@@ -86,6 +87,27 @@ public class XStreamerTest extends AbstractAcceptanceTest {
         xstream.alias("software", OpenSourceSoftware.class);
         final String xml = new XStreamer().toXML(xstream, oos);
         assertEquals(oos, new XStreamer().fromXML(xml));
+    }
+
+    public void testCanSerializeSelfContainedAndUsePermissions() throws ClassNotFoundException, ObjectStreamException {
+        final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
+        xstream.alias("software", OpenSourceSoftware.class);
+        final String xml = new XStreamer().toXML(xstream, oos);
+        assertEquals(oos, new XStreamer().fromXML(xml, XStreamer.getDefaultPermissions()));
+    }
+
+    public void testCanSerializeSelfContainedAndUseNewDriver() throws ClassNotFoundException, ObjectStreamException {
+        final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
+        xstream.alias("software", OpenSourceSoftware.class);
+        final String xml = new XStreamer().toXML(xstream, oos);
+        assertEquals(oos, new XStreamer().fromXML(new StaxDriver(), xml));
+    }
+
+    public void testCanSerializeSelfContainedUsePermissionAndNewDriver() throws ClassNotFoundException, ObjectStreamException {
+        final OpenSourceSoftware oos = new OpenSourceSoftware("Walnes", "XStream", "BSD");
+        xstream.alias("software", OpenSourceSoftware.class);
+        final String xml = new XStreamer().toXML(xstream, oos);
+        assertEquals(oos, new XStreamer().fromXML(new StaxDriver(), xml, XStreamer.getDefaultPermissions()));
     }
 
     private String normalizedXStreamXML(final String xml) throws TransformerException {
