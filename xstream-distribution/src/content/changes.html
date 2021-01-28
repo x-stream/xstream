@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -39,7 +39,6 @@
 		<li>Support for fail-safe deserialization unless the parser is not directly involved (I/O or syntax error) as
 		combination of new method getLevel() of HierarchicalStreamReader and GHPR:#91.</li>
 		<li>GHI:#120: Add <em>Automatic-Module-Name</em> entry to XStream's manifests.</li>
-		<li>GHPR:#216: Defer reflective access to Java core modules.</li>
 	</ul>
 
 	<h2>Minor changes</h2>
@@ -52,6 +51,7 @@
 		<li>GHPR:#145: FileName parameter of StackTraceElement can be used for other source code units than file,
 		converter handles this.</li>
 		<li>GHI:#4: Cannot add suppressed exception to unmarshalled Throwable.</li>
+		<li>GHI:#233: Support serializable types with non-serializable parent with PureJavaReflectionConverter..</li>
 		<li>TraxSource supports the creation of an ObjectOutputStream to transform the output of XStream on-the-fly.</li>
 		<li>StackTraceElementConverter keeps now information about the source code unit for native methods if
 		available.</li>
@@ -59,6 +59,7 @@
 		and its version.</li>
 		<li>The file name of unmarshalled StackTraceElement instances is no longer set to <em>Unknown Source</em> or
 		<em>Native Method</em>.</li>
+		<li>Optimized lookup for a defined implicit collection, array or map.</li>
 		<li>No need for reflection in StackTraceElementFactory anymore since Java 5.</li>
 		<li>StaxReader did not propagate close for Reader and InputStream.</li>
 		<li>Add SimpleStaxDriver without namespace support as possible alternative to default driver.</li>
@@ -96,6 +97,89 @@
 		<li>ThrowableConverter uses by default now format of SerializableConverter, but can still read old format of
 		1.4.x version.</li>
 		<li>No support for Hibernate 3 collections.</li>
+	</ul>
+
+<!--
+	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
+
+	<p>Not yet released.</p>
+-->
+
+	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
+
+	<p>Not yet released.</p>
+
+	<h2>Minor changes</h2>
+
+	<ul>
+		<li>GHI:#238: Fix possibility to process references on enum types at deserialization.</li>
+		<li>GHI:#237: Fix optimization in XmlFriendlyNameCoder.</li>
+	</ul>
+
+	<h1 id="1.4.15">1.4.15</h1>
+
+	<p>Released December 13, 2020.</p>
+
+	<p class="highlight">This maintenance release addresses the security vulnerabilities
+	<a href="CVE-2020-26258.html">CVE-2020-26258</a> and <a href="CVE-2020-26259.html">CVE-2020-26259</a>, when
+	unmarshalling for XStream instances with uninitialized security framework.</p>
+
+	<h2>Minor changes</h2>
+
+	<ul>
+		<li>GHI:#226: XmlFriendlyNameCoder does not accept '9' as valid character in an XML name.</li>
+		<li>GHPR:#228: DefaultMapper should handle IllegalArgumentException thrown by Class.forName().</li>
+	</ul>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The type jdk.nashorn.internal.objects.NativeString and the internal JAX-WS type ReadAllStream.FileStream
+		are now	part of the default blacklist and the deserialization of XML containing one of the two types will fail.
+		You will have to enable these types by explicit configuration, if you need them.</li>
+	</ul>
+
+	<h2>Delivery</h2>
+
+	<p>Any XStream release can run with a minimal Java runtime environment of Java 1.4 as long as this environment will
+	process only requested classes of the jar file.  Until version 1.4.14 XStream was delivered also as special Java 7
+	version for Android, because Dalvik scans all classes and fails at classes requiring a higher runtime version.  However, this
+	special version will not work in a normal Java 8 environment or higher and was never meant do so.</p>
+
+	<p>Unfortunately, this version has to be build always after the standard version due to the build sequence.  The
+	latest version in Maven Central however is always the one that has been deployed last independently from the time
+	of publishing.  This creates an annoyance now in GitHub for any project using the Dependabot service which creates
+	automated pull requests with updates to the latest XStream version, because it injects now the special Java 7
+	version that probably breaks these projects.</p>
+
+	<p>Users who still require a special version for Java 7 will have to build this artifact now on their own.  Users
+	for even older Java environments had always to do so anyway.</p>
+	
+	<h1 id="1.4.14">1.4.14</h1>
+
+	<p>Released November 16, 2020.</p>
+
+	<p class="highlight">This maintenance release addresses the security vulnerability
+	<a href="CVE-2020-26217.html">CVE-2020-26217</a>, reported originally as CVE-2017-9805 for Struts' XStream Plugin,
+	an arbitrary execution of commands when unmarshalling for XStream instances with uninitialized security framework.</p>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The types java.lang.ProcessBuilder and javax.imageio.ImageIO$ContainsFilter are now part of the default
+		blacklist and the deserialization of XML containing one of the two types will fail. You will have to enable
+		these types by explicit configuration, if you need them.</li>
+	</ul>
+
+	<h1 id="1.4.13">1.4.13</h1>
+
+	<p>Released September 6, 2020.</p>
+
+	<h2>Major changes</h2>
+
+	<ul>
+		<li>GHPR:#216, GHPR:#218: Defer reflective access to Java core modules.</li>
+		<li>GHI:#207: New predefined blacklist avoids vulnerability due to improper setup of the security framework.</li>
 	</ul>
 
 	<h1 id="1.4.12">1.4.12</h1>

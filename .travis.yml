@@ -2,6 +2,8 @@ dist: xenial
 language: java
 sudo: false
 jdk:
+  - openjdk15
+  - openjdk14
   - openjdk13
   - openjdk12
   - openjdk11

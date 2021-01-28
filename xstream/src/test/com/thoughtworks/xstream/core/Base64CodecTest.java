@@ -11,13 +11,11 @@
 package com.thoughtworks.xstream.core;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
-import com.thoughtworks.xstream.core.Base64Codec;
-import com.thoughtworks.xstream.core.StringCodec;
 
 
 public class Base64CodecTest extends AbstractAcceptanceTest {
 
-    private StringCodec encoder = new Base64Codec();
+    private final StringCodec encoder = new Base64Codec();
 
     public void testEncodesEntireByteArrayAsString() {
         final byte input[] = "hello world".getBytes();

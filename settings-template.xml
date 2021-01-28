@@ -20,6 +20,13 @@
       <id>ossrh-staging</id>
       <username>your-sonatype.org-id</username>
       <password>your-sonatype.org-pwd</password>
-    </server>      
+    </server>
+    <server>
+      <id>${gpg.keyname}</id>
+      <password>your-gpg-key-pwd</password>
+    </server>
   </servers>
+  <properties>
+    <gpg.keyname>your-gpg-keyname</gpg.keyname>
+  </properties>
 </settings>

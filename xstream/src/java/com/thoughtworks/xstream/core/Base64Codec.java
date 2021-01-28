@@ -12,8 +12,6 @@ package com.thoughtworks.xstream.core;
 
 import java.util.Base64;
 
-import com.thoughtworks.xstream.core.StringCodec;
-
 
 /**
  * Base64 codec implementation based on java.util.Base64.

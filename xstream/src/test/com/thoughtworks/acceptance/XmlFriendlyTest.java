@@ -189,6 +189,11 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
         assertBothWays("\"", "<string>&quot;</string>");
     }
 
+    public void testsDigitsOnly() {
+        xstream.alias("0123456789", String.class);
+        assertBothWays("", "<_.0030123456789></_.0030123456789>");
+    }
+
     public void testDecimalFormatSymbols() {
         final String xml;
         if (!JVM.isVersion(13)) {
@@ -216,7 +221,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
-        } else {
+        } else if (!JVM.isVersion(15)) {
             xml = ""
                 + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
@@ -231,6 +236,36 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "      <perMill>\u2030</perMill>\n"
                 + "      <percent>%</percent>\n"
                 + "      <serialVersionOnStream>4</serialVersionOnStream>\n"
+                + "      <zeroDigit>0</zeroDigit>\n"
+                + "      <NaN>NaN</NaN>\n"
+                + "      <currencySymbol>\u20ac</currencySymbol>\n"
+                + "      <exponentialSeparator>E</exponentialSeparator>\n"
+                + "      <infinity>\u221e</infinity>\n"
+                + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
+                + "      <locale>de_DE</locale>\n"
+                + "      <minusSignText>-</minusSignText>\n"
+                + "      <perMillText>\u2030</perMillText>\n"
+                + "      <percentText>%</percentText>\n"
+                + "    </default>\n"
+                + "  </java.text.DecimalFormatSymbols>\n"
+                + "</java.text.DecimalFormatSymbols>";
+        } else {
+            xml = ""
+                + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+                + "  <java.text.DecimalFormatSymbols>\n"
+                + "    <default>\n"
+                + "      <decimalSeparator>,</decimalSeparator>\n"
+                + "      <digit>#</digit>\n"
+                + "      <exponential>E</exponential>\n"
+                + "      <groupingSeparator>.</groupingSeparator>\n"
+                + "      <hashCode>0</hashCode>\n"
+                + "      <minusSign>-</minusSign>\n"
+                + "      <monetaryGroupingSeparator>.</monetaryGroupingSeparator>\n"
+                + "      <monetarySeparator>,</monetarySeparator>\n"
+                + "      <patternSeparator>;</patternSeparator>\n"
+                + "      <perMill>\u2030</perMill>\n"
+                + "      <percent>%</percent>\n"
+                + "      <serialVersionOnStream>5</serialVersionOnStream>\n"
                 + "      <zeroDigit>0</zeroDigit>\n"
                 + "      <NaN>NaN</NaN>\n"
                 + "      <currencySymbol>\u20ac</currencySymbol>\n"

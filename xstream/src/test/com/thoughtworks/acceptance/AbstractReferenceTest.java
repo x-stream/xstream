@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014, 2015, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014, 2015, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,6 +25,8 @@ import java.util.List;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.WithNamedList;
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.enums.SimpleEnum;
 import com.thoughtworks.xstream.core.AbstractReferenceMarshaller;
 
 
@@ -546,9 +548,59 @@ public abstract class AbstractReferenceTest extends AbstractAcceptanceTest {
 
         final Thing t0 = result.get(0);
         final Thing t1 = result.get(1);
-        result.get(2);
+        final Thing t2 = result.get(2);
 
-        assertEquals(t0, t1);
         assertSame(t0, t1);
+        assertNotSame(t0, t2);
+        assertEquals(t0, t2);
+    }
+
+    private static class ThingConverter extends AbstractSingleValueConverter {
+
+        @Override
+        public boolean canConvert(final Class<?> type) {
+            return type == Thing.class;
+        }
+
+        @Override
+        public Object fromString(final String str) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String toString(final Object obj) {
+            return ((Thing)obj).field;
+        }
+    }
+
+    public void testImmutableEnumInstancesCanBeDereferenced() {
+
+        final Thing green = new Thing("GREEN");
+        final List<Thing> list = new ArrayList<>();
+        list.add(green);
+        list.add(green);
+
+        xstream.allowTypes(SimpleEnum.class);
+        xstream.alias("simple", Thing.class);
+        xstream.registerConverter(new ThingConverter());
+        final String xml = xstream.toXML(list);
+
+        xstream.alias("simple", SimpleEnum.class);
+
+        try {
+            xstream.fromXML(xml);
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(SimpleEnum.class.getName(), e.get("referenced-type"));
+        }
+
+        xstream.addImmutableType(SimpleEnum.class, true);
+
+        final List<SimpleEnum> result = xstream.fromXML(xml);
+
+        final SimpleEnum se0 = result.get(0);
+        final SimpleEnum se1 = result.get(1);
+
+        assertSame(se0, se1);
     }
 }

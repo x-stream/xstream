@@ -196,7 +196,7 @@
     <profile>
       <id>xstream-release</id>
       <properties>
-        <version.java.enforced>[1.8,1.9)</version.java.enforced>
+        <version.java.enforced>[14,15)</version.java.enforced>
       </properties>
       <build>
         <plugins>
@@ -547,6 +547,11 @@
         <artifactId>jakarta.xml.bind-api</artifactId>
         <version>${version.jakarta.xml.bind.api}</version>
       </dependency>
+      <dependency>
+        <groupId>com.sun.xml.ws</groupId>
+        <artifactId>jaxws-rt</artifactId>
+        <version>${version.javax.xml.ws.jaxws.rt}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.hibernate</groupId>
@@ -669,7 +674,7 @@
       </dependency>
       <dependency>
         <groupId>org.ops4j.pax.exam</groupId>
-        <artifactId>pax-exam-link-mvn</artifactId><!-- Preferred link because it does not require an mvn url handler implicitely. -->
+        <artifactId>pax-exam-link-mvn</artifactId><!-- Preferred link because it does not require an mvn url handler implicitly. -->
         <version>${version.org.ops4j.pax.exam}</version>
         <scope>test</scope>
       </dependency>
@@ -748,6 +753,10 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
           <version>${version.plugin.maven.gpg}</version>
+          <configuration>
+            <keyname>${gpg.keyname}</keyname>
+            <passphraseServerId>${gpg.keyname}</passphraseServerId>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -792,7 +801,7 @@
           <configuration>
             <detectJavaApiLink>false</detectJavaApiLink>
             <doclint>${javadoc.doclint}</doclint>
-            <source>${version.java.source}</source>
+            <release>${javadoc.java.release}</release>
             <links>
               <link>${javadoc.link.javase}</link>
             </links>
@@ -1050,8 +1059,8 @@
 
   <scm>
     <url>http://github.com/x-stream/xstream</url>
-    <developerConnection>scm:git:https://github.com/x-stream/xstream.git</developerConnection>
-    <connection>scm:git:https://github.com/x-stream/xstream.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/x-stream/xstream.git</developerConnection>
+    <connection>scm:git:ssh://git@github.com/x-stream/xstream.git</connection>
     <tag>HEAD</tag>
   </scm>
   
@@ -1076,7 +1085,7 @@
     <version.plugin.maven.gpg>1.6</version.plugin.maven.gpg>
     <version.plugin.maven.install>3.0.0-M1</version.plugin.maven.install>
     <version.plugin.maven.jar>3.1.1</version.plugin.maven.jar>
-    <version.plugin.maven.javadoc>3.1.0</version.plugin.maven.javadoc>
+    <version.plugin.maven.javadoc>3.2.0</version.plugin.maven.javadoc>
     <version.plugin.maven.jxr>3.0.0</version.plugin.maven.jxr>
     <version.plugin.maven.release>2.5.3</version.plugin.maven.release>
     <version.plugin.maven.resources>3.1.0</version.plugin.maven.resources>
@@ -1100,6 +1109,8 @@
     <version.jakarta.xml.bind.api>2.3.2</version.jakarta.xml.bind.api>
     <version.javaassist>3.12.1.GA</version.javaassist>
     <version.javax.inject>2.4.0</version.javax.inject>
+    <version.javax.xml.bind.api>2.3.1</version.javax.xml.bind.api>
+    <version.javax.xml.ws.jaxws.rt>2.2</version.javax.xml.ws.jaxws.rt><!-- Java 5 -->
     <version.jmock>1.0.1</version.jmock>
     <version.joda-time>2.10.1</version.joda-time>
     <version.junit>3.8.1</version.junit>
@@ -1123,7 +1134,8 @@
     <version.xpp3>1.1.4c</version.xpp3>
 
     <jar.module.name>${project.artifactId}</jar.module.name>
-    <javadoc.link.javase>http://docs.oracle.com/javase/8/docs/api/</javadoc.link.javase>
+    <javadoc.java.release>14</javadoc.java.release>
+    <javadoc.link.javase>https://docs.oracle.com/en/java/javase/14/docs/api/</javadoc.link.javase>
     <surefire.illegal.access>permit</surefire.illegal.access>
 
     <argLine>${surefire.argline}</argLine>

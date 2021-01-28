@@ -75,7 +75,7 @@ public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvid
         }
         ErrorWritingException ex = null;
         if (type == void.class || type == Void.class) {
-            ex = new ConversionException("Type void cannot have an instance");
+            ex = new ConversionException("Security alert: Marshalling rejected");
         } else {
             try {
                 return unsafe.allocateInstance(type);
