@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2020, Oracle and/or its affiliates.
- * Copyright (C) 2020 XStream committers.
+ * Copyright (C) 2021 XStream committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +25,9 @@ import static java.lang.invoke.MethodType.methodType;
 
 /**
  * Converts a Record.
+ *
+ * @author <a href="mailto:julia.boes@oracle.com">Julia Boes</a>
+ * @author <a href="mailto:chris.hegarty@oracle.com">Chris Hegarty</a>
  */
 public final class RecordConverter implements Converter {
     private static final MethodHandle MH_IS_RECORD;
