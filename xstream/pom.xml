@@ -382,13 +382,6 @@
               </testExcludes>
             </configuration>
           </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
-            </configuration>
-          </plugin>
         </plugins>
       </build>
     </profile>
