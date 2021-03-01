@@ -15,7 +15,7 @@ script:
     if [ "$TRAVIS_JDK_VERSION" == "openjdk8" ]; then
       mkdir -p xstream/profiles/coveralls;
       mkdir -p xstream-hibernate/profiles/coveralls;
-      mvn -V -B -e clean package jacoco:report coveralls:report;
+      mvn -V -B -e clean package -DTRAVIS_JOB_ID=$TRAVIS_JOB_ID jacoco:report coveralls:report;
     else
       mvn -V -B -e clean package;
     fi

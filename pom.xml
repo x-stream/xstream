@@ -254,6 +254,9 @@
           <plugin>
             <groupId>org.eluder.coveralls</groupId>
             <artifactId>coveralls-maven-plugin</artifactId>
+            <configuration>
+              <serviceJobId>${env.TRAVIS_JOB_ID}</serviceJobId>
+            </configuration>
           </plugin>
           <plugin>
             <groupId>org.jacoco</groupId>
@@ -967,6 +970,9 @@
           <groupId>org.eluder.coveralls</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
           <version>${version.plugin.eluder.coveralls}</version>
+          <configuration>
+            <serviceJobId>${env.TRAVIS_JOB_ID}</serviceJobId>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
