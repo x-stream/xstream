@@ -109,6 +109,23 @@
 
 	<p>Not yet released.</p>
 
+	<p class="highlight">This maintenance release addresses following security vulnerabilities, when unmarshalling
+	with an XStream instances using an uninitialized security framework.</p>
+
+	<ul>
+		<li><a href="CVE-2021-21341.html">CVE-2021-21341</a></li>
+		<li><a href="CVE-2021-21342.html">CVE-2021-21342</a></li>
+		<li><a href="CVE-2021-21343.html">CVE-2021-21343</a></li>
+		<li><a href="CVE-2021-21344.html">CVE-2021-21344</a></li>
+		<li><a href="CVE-2021-21345.html">CVE-2021-21345</a></li>
+		<li><a href="CVE-2021-21346.html">CVE-2021-21346</a></li>
+		<li><a href="CVE-2021-21347.html">CVE-2021-21347</a></li>
+		<li><a href="CVE-2021-21348.html">CVE-2021-21348</a></li>
+		<li><a href="CVE-2021-21349.html">CVE-2021-21349</a></li>
+		<li><a href="CVE-2021-21350.html">CVE-2021-21350</a></li>
+		<li><a href="CVE-2021-21351.html">CVE-2021-21351</a></li>
+	</ul>
+
 	<h2>Major changes</h2>
 
 	<ul>
@@ -120,6 +137,21 @@
 	<ul>
 		<li>GHI:#238: Fix possibility to process references on enum types at deserialization.</li>
 		<li>GHI:#237: Fix optimization in XmlFriendlyNameCoder.</li>
+	</ul>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The type hierarchies for java.io.InputStream, java.nio.channels.Channel, javax.activation.DataSource and
+		javax.sql.rowsel.BaseRowSet are now blacklisted as well as the individual types
+		com.sun.corba.se.impl.activation.ServerTableEntry, 
+		com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator,
+		sun.awt.datatransfer.DataTransferer$IndexOrderComparator, and sun.swing.SwingLazyValue.  Additionally the
+		internal type Accessor$GetterSetterReflection of JAXB, the internal types MethodGetter$PrivilegedGetter and
+		ServiceFinder$ServiceNameIterator of JAX-WS, all inner classes of javafx.collections.ObservableList and an
+		internal ClassLoader used in a private BCEL copy are now part of the default blacklist and the deserialization
+		of XML containing one of the two types will fail.  You will have to enable these types by explicit
+		configuration, if you need them.</li>
 	</ul>
 
 	<h2>Dependencies</h2>
@@ -135,7 +167,7 @@
 
 	<p class="highlight">This maintenance release addresses the security vulnerabilities
 	<a href="CVE-2020-26258.html">CVE-2020-26258</a> and <a href="CVE-2020-26259.html">CVE-2020-26259</a>, when
-	unmarshalling for XStream instances with uninitialized security framework.</p>
+	unmarshalling with XStream instances using an uninitialized security framework.</p>
 
 	<h2>Minor changes</h2>
 
@@ -174,7 +206,8 @@
 
 	<p class="highlight">This maintenance release addresses the security vulnerability
 	<a href="CVE-2020-26217.html">CVE-2020-26217</a>, reported originally as CVE-2017-9805 for Struts' XStream Plugin,
-	an arbitrary execution of commands when unmarshalling for XStream instances with uninitialized security framework.</p>
+	an arbitrary execution of commands when unmarshalling with XStream instances using an uninitialized security
+	framework.</p>
 
 	<h2>Stream compatibility</h2>
 
@@ -225,7 +258,7 @@
 	<p>Released October 23, 2018.</p>
 
 	<p class="highlight">This maintenance release addresses again the security vulnerability <a href="CVE-2013-7285.html">
-	    CVE-2013-7285</a>, an arbitrary execution of commands when unmarshalling for XStream instances with
+	    CVE-2013-7285</a>, an arbitrary execution of commands when unmarshalling with XStream instances using an
 	    uninitialized security framework. Only 1.4.10 uninitialized security framework was affected.</p>
 
 	<h2>Minor changes</h2>
