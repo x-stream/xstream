@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2014, 2015, 2017, 2019, 2020 XStream committers.
+ Copyright (C) 2014, 2015, 2017, 2019, 2020, 2021 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -30,16 +30,125 @@
 	<p>The provided XML data is used by XStream to unmarshal Java objects.  This data can be manipulated by injecting
 	the XML representation of other objects, that were not present at marshalling time.  An attacker could take
 	advantage of this to access private data, delete local files, execute arbitrary code or shell commands in the
-	context of the server running the XStream process.  Concrete cases are described in
-	<a href="CVE-2013-7285.html">CVE-2013-7285</a>, <a href="CVE-2020-26217.html">CVE-2020-26217</a>,
-	<a href="CVE-2020-26258.html">CVE-2020-26258</a>, and <a href="CVE-2020-26259.html">CVE-2020-26259</a>.</p>
+	context of the server running the XStream process or cause a denial of service by crashing the application or
+	manage to enter an endless loop consuming 100% of CPU cycles.</p>
  
 	<p>Note, that the XML data can be manipulated on different levels.  For example, manipulating values on existing
  	objects (such as a price value), accessing private data, or breaking the format and causing the XML parser to fail.
  	The latter case will raise an exception, but the former case must be handled by validity checks in any application
- 	which processes user-supplied XML.  A worst case scenario is the injection of arbitrary code or shell commands, as noted above.
-    Even worse, <a href="CVE-2017-7957.html">CVE-2017-7957</a> describes a case to crash the Java Virtual Machine
-    causing a Denial of Service.</p>
+ 	which processes user-supplied XML.</p>
+
+    <h2 id="CVEs">Documented Vulnerabilities</h2>
+
+    <p>Over the years, several of these attacks have been reported and documented in the Common Vulnerability and
+    Exposure (CVE) system managed by the <a href="http://www.mitre.org/">Mitre Corporation</a>. Following a list of the
+    reported vulnerabilities:</p>
+    
+    <table summary="Table of reported vulnerabilities daocumented as CVE">
+      <tr>
+        <th>CVE</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <th>2021</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21341.html">CVE-2021-21341</a></th>
+        <td>XStream can cause a Denial of Service.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21342.html">CVE-2021-21342</a></th>
+        <td>A Server-Side Forgery Request can be activated unmarshalling with XStream to access data streams from an
+        arbitrary URL referencing a resource in an intranet or the local host.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21343.html">CVE-2021-21343</a></th>
+        <td>XStream is vulnerable to an Arbitrary File Deletion on the local host when unmarshalling as long as the
+        executing process has sufficient rights.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21344.html">CVE-2021-21344</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21345.html">CVE-2021-21345</a></th>
+        <td>XStream is vulnerable to a Remote Command Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21346.html">CVE-2021-21346</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21347.html">CVE-2021-21347</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21348.html">CVE-2021-21348</a></th>
+        <td>XStream is vulnerable to an attack using Regular Expression for a Denial of Service (ReDos).</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21349.html">CVE-2021-21349</a></th>
+        <td>A Server-Side Forgery Request can be activated unmarshalling with XStream to access data streams from an
+        arbitrary URL referencing a resource in an intranet or the local host.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21350.html">CVE-2021-21350</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-21351.html">CVE-2021-21351</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th>2020</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2020-26217.html">CVE-2020-26217</a></th>
+        <td>XStream can be used for Remote Code Execution.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2020-26258.html">CVE-2020-26258</a></th>
+        <td>A Server-Side Forgery Request can be activated unmarshalling with XStream to access data streams from an
+        arbitrary URL referencing a resource in an intranet or the local host.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2020-26259.html">CVE-2020-26259</a></th>
+        <td>XStream is vulnerable to an Arbitrary File Deletion on the local host when unmarshalling as long as the
+        executing process has sufficient rights.</td>
+      </tr>
+      <tr>
+        <th>2017</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2017-7957.html">CVE-2017-7957</a></th>
+        <td>XStream can cause a Denial of Service when unmarshalling void.</td>
+      </tr>
+      <tr>
+        <th>2016</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2016-3674.html">CVE-2016-3674</a></th>
+        <td>XML External Entity (XXE) Vulnerability in XStream.</td>
+      </tr>
+      <tr>
+        <th>2013</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2013-7285.html">CVE-2013-7285</a></th>
+        <td>XStream can be used for Remote Code Execution.</td>
+      </tr>
+    </table>
+    
+    <p>See <a href="#workaround">workarounds</a> for the different versions covering all the CVEs listed here.</p>
+
+	<p class="hightlight">This list will contain only vulnerabilities, that can be created using the Java runtime with
+	XStream.  Vulnerabilities introduced by using additional 3rd party libraries and classes are beyond XStream's
+	responsibility for a provided default blacklist.</p>
      
     <h2 id="external">External Security</h2>
 
@@ -54,36 +163,27 @@
     <h2 id="implicit">Implicit Security</h2>
 	
 	<p>As explained above, it is possible to inject other object instances if an attacker is able to define the data
-	used to deserialize the Java objects.  E.g. a known exploit can be created with the help of the Java runtime
-	library using the Java Bean <a href="http://docs.oracle.com/javase/7/docs/api/java/beans/EventHandler.html">EventHandler</a>
-	as described in <a href="CVE-2013-7285.html">CVE-2013-7285</a>.  This scenario can be used perfectly to
-	replace/inject a dynamic proxy with such an EventHandler at any location	in the XML where its parent expects an
-	object of such an interface's type or a simple object instance (any list	element will suffice).  The usage of a
-	ProcessBuilder as an embedded element, coupled with the redirection of any call to the ProcessBuilder's
-	<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ProcessBuilder.html#start()">start()</a> method allows
-	an attacker to call shell commands.  Knowing how to define such an attack is the only prerequisite.</p>
+	used to deserialize the Java objects, see the different CVEs.  Knowing how to define such an attack is the only
+	prerequisite.</p>
          
- 	<p>More scenarios have been identified for types that are already delivered with the Java runtime.  Looking at 
- 	well-known and commonly used Java libraries libraries such as ASM, CGLIB, or Groovy, the possibility for more
- 	exploits is very high.  A class like InvokerTransformer of Apache Commons Collections has a high potential for
- 	attacks.</p>
+ 	<p>All those scenarios were based on types that are delivered with the Java runtime at some version.  Looking at 
+ 	other well-known and commonly used Java libraries libraries such as ASM, CGLIB, or Groovy, you will have to assume
+ 	other scenarios for exploits as well.  A class like InvokerTransformer of Apache Commons Collections has a high
+ 	potential for attacks.   By default XStream 1.4 works with a blacklist, but it 	tries to protect you only for types
+ 	contained in the Java runtime.  However, if your application combines XStream with other libraries it is your job
+ 	to protect your customers from other potential types.</p>
+         
+	<p>Note: This vulnerability is not even a special problem of XStream.  XML being deserialized by XStream acts here
+	like a script, and the scenario above can be created with any script that is executed within a Java runtime (e.g.
+	using its JavaScript interpreter) if someone is able to manipulate it externally.  The key message for application
+	developers is that deserializing arbitrary user-supplied content is a dangerous proposition in all cases. The best
+	approach to prevent such an attach is a <a href="#example">whitelist</a>, i.e. the deserialization mechanism should
+	only allow explicit types. See also the advice for vulnerabilities using
+	<a href="https://docs.oracle.com/javase/10/core/serialization-filtering1.htm">Java Serialization</a>.</p>
 
 	<p class="hightlight">A blacklist for special classes only creates therefore a scenario for a false security,
-    because no-one can assure, that no other scenario arise. A better approach is the usage of a whitelist i.e. the
-    allowed class types are setup explicitly. This will be the default for XStream 1.5.x (see below).</p>
-   	
-	<p>Starting with XStream 1.4.7, an instance of the EventHandler is no longer handled by default.  You have to
- 	explicitly register a ReflectionConverter for the EventHandler type, if your application has the requirement to
- 	persist such an object.  Starting with XStream 1.4.10 the list of revoked types is enhanced by all types of the
- 	java.crypto package and any inner class named LazyIterator.  On top you still have to take special care regarding
- 	the location of the persisted data, and how your application can ensure its integrity.</p>
-         
-	<p class=highlight>Note: This vulnerability is not even a special problem of XStream.  XML being deserialized by
- 	XStream acts here like a script, and the scenario above can be created with any script that is executed within a
- 	Java runtime (e.g. using its JavaScript interpreter) if someone is able to manipulate it externally.  The key
- 	message for application developers is that deserializing arbitrary user-supplied content is a dangerous proposition
-	in all cases. The best approach to prevent such an attach is a <a href="#example">whitelist</a>, i.e. the
- 	deserialization mechanism should only allow explicit types.</p>
+    because no-one can assure, that no other vulnerability is found.  A better approach is the usage of a whitelist
+    i.e. the allowed class types are setup explicitly. This will be the default for XStream 1.5.x (see below).</p>
     
     <h2 id="explicit">Explicit Security</h2>
      
@@ -94,16 +194,15 @@
 	limit the danger of arbitrary command execution if it deserializes data from an external source.</p>
  	
 	<p>XStream itself sets up a blacklist by default, i.e. it blocks all currently known critical classes of the Java
-	runtime. Main reason for the blacklist is compatibility, because otherwise newer versions of XStream 1.4.x can no
-	longer be used as drop-in replacement.  Unfortunately this provides a false sense of security.  Every XStream
-	client should therefore switch to a whitelist on its own as soon as possible. XStream itself will use a whitelist
-	as default starting with 1.5.x and only clients that have also changed their setup will be able to use this newer
-	version again as drop-in replacement. You can use
+	runtime.  Main reason for the blacklist is compatibility, because otherwise newer versions of XStream 1.4.x can no
+	longer be used as drop-in replacement.  However, every XStream client should therefore switch to a whitelist on its
+	own as soon as possible.  XStream itself will use a whitelist as default starting with 1.5.x and only clients that
+	have also changed their setup will be able to use this newer version again as drop-in replacement. You can use
 	<a href="javadoc/com/thoughtworks/xstream/XStream.html#setupDefaultSecurity-com.thoughtworks.xstream.XStream-">XStream.setupDefaultSecurity()</a>
 	to install the default whitelist of 1.5.x already with 1.4.10 or higher.</p>
          
-	<p class=highlight>Note: If a type on a whitelist contains itself other members that are handled by XStream, you
-	will have to add those member's types to the whitelist also.</p>
+	<p class=highlight>Note:  If a type on a whitelist contains itself other members that are handled by XStream, you
+	will have to add those member's types to the whitelist also.  There is no automatism for indirect references.</p>
          
 	<p>Separate to the XStream security framework, it has always been possible to overwrite the setupConverter method
 	of XStream to register only the required converters.</p>
@@ -115,7 +214,7 @@
 
 	<p>XML itself supports input validation using a schema and a validating parser.  With XStream, you can use e.g. a
 	DOM parser for validation, but it will take some effort to ensure that the XML read and written by XStream matches
-	the schema in first place, because XStream uses additionally own attributes. Typically you will have to write some
+	the schema in first place, because XStream uses additionally own attributes.  Typically you will have to write some
 	custom converters, but it can be worth the effort depending on the use case.</p>
 
     <h1 id="framework">Security Framework</h1>
@@ -248,7 +347,7 @@ XStream.denyTypeHierary(Class);</pre></div>
 
     <h2 id="example">Example Code Whitelist</h2>
 
-	<p>XStream uses the AnyTypePermission by default, i.e. any type is accepted.  You have to clear out this default
+    <p>XStream uses the AnyTypePermission by default, i.e. any type is accepted.  You have to clear out this default
 	and register your own permissions to activate the security framework (the Blog type is from the
 	<a href="alias-tutorial.html">Alias Tutorial</a>):</p>
 <div class="Source Java"><pre>XStream xstream = new XStream();
@@ -264,6 +363,60 @@ xstream.allowTypesByWildcard(new String[] {
 });
 </pre></div>
 
-  <p>You may have a further look at XStream's acceptance tests, the security framework is enabled there in general.</p>
+    <p>You may have a further look at XStream's acceptance tests, the security framework is enabled there in general.</p>
+         
+    <h2 id="workaround">Workarounds for older XStream versions</h2>
+
+    <p>As recommended, use XStream's security framework to implement a whitelist for the allowed types. This is
+    possible since XStream 1.4.7:</p>
+<div class="Source Java"><pre>XStream xstream= new XStream();
+XStream.setupDefaultSecurity(xstream);
+// add your allowed types, type hierarchies or packages here
+</pre></div>
+    <p>Users of XStream 1.4.14 who insist to use XStream default blacklist - despite that clear recommendation - can
+    add these lines to XStream's setup code:</p>
+<div class="Source Java"><pre>xstream.denyTypes(new String[]{ "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", "sun.swing.SwingLazyValue", "com.sun.corba.se.impl.activation.ServerTableEntry", "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator" });
+xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader" });
+xstream.denyTypeHierarchy(java.io.InputStream.class );
+xstream.denyTypeHierarchy(java.nio.channels.Channel.class );
+xstream.denyTypeHierarchy(javax.activation.DataSource.class );
+xstream.denyTypeHierarchy(javax.sql.rowset.BaseRowSet.class );
+</pre></div>
+    <p>Users of XStream 1.4.13 should <strong>additionally</strong> add these two lines to the lines from above:</p>
+<div class="Source Java"><pre>xstream.denyTypes(new String[]{ "javax.imageio.ImageIO$ContainsFilter" });
+xstream.denyTypes(new Class[]{ java.lang.ProcessBuilder.class });
+</pre></div>
+    <p>Users of XStream 1.4.12 to 1.4.7 who want to use XStream with a blacklist will have to setup such a list from
+    scratch:</p>
+<div class="Source Java"><pre>xstream.denyTypes(new String[]{ "javax.imageio.ImageIO$ContainsFilter", "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", "com.sun.corba.se.impl.activation.ServerTableEntry", "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator" });
+xstream.denyTypes(new Class[]{ java.lang.ProcessBuilder.class, java.beans.EventHandler.class, java.lang.ProcessBuilder.class, java.lang.Void.class, void.class });
+xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader", ".*\\$GetterSetterReflection", ".*\\$LazyIterator", ".*\\$PrivilegedGetter" });
+xstream.denyTypeHierarchy(java.io.InputStream.class);
+xstream.denyTypeHierarchy(java.nio.channels.Channel.class);
+xstream.denyTypeHierarchy(javax.activation.DataSource.class);
+xstream.denyTypeHierarchy(javax.sql.rowset.BaseRowSet.class);
+</pre></div>
+	<p>Users of XStream 1.4.6 or below can register an own converter to prevent the unmarshalling of the currently
+	know critical types of the Java runtime. It is in fact an updated version of the workaround for CVE-2013-7285:</p>
+<div class="Source Java"><pre>xstream.registerConverter(new Converter() {
+  public boolean canConvert(Class type) {
+    return type != null
+      &amp;&amp; (type == java.beans.EventHandler.class || type == java.lang.ProcessBuilder.class || type == java.lang.Void.class || void.class
+        || type.getName().equals("javax.imageio.ImageIO$ContainsFilter") || type.getName().equals("sun.awt.datatransfer.DataTransferer$IndexOrderComparator") || type.getName().equals("com.sun.corba.se.impl.activation.ServerTableEntry") || type.getName().equals("com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator")
+        || type.getName().matches("javafx\\.collections\\.ObservableList\\$.*") || type.getName().matches(".*\\$ServiceNameIterator")  || type.getName().matches(".*\\$GetterSetterReflection") || type.getName().matches(".*\\$LazyIterator") || type.getName().matches(".*\\.bcel\\..*\\.util\\.ClassLoader")
+        || java.io.InputStream.class.isAssignableFrom(type) || java.nio.channels.Channel.isAssignableFrom(type) || javax.activation.DataSource.isAssignableFrom(type) ||javax.sql.rowset.BaseRowSet.isAssignableFrom(type)
+        || Proxy.isProxy(type));
+  }
+
+  public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+    throw new ConversionException("Unsupported type due to security reasons.");
+  }
+
+  public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    throw new ConversionException("Unsupported type due to security reasons.");
+  }
+}, XStream.PRIORITY_VERY_HIGH);
+</pre></div>
+
   </body>
  </html>

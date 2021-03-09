@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,7 +36,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.Collection;
@@ -335,9 +334,14 @@ public class XStream {
 
     private static final String ANNOTATION_MAPPER_TYPE = "com.thoughtworks.xstream.mapper.AnnotationMapper";
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
+    private static final Pattern GETTER_SETTER_REFLECTION = Pattern.compile(".*\\$GetterSetterReflection");
+    private static final Pattern PRIVILEGED_GETTER = Pattern.compile(".*\\$PrivilegedGetter");
     private static final Pattern LAZY_ITERATORS = Pattern.compile(".*\\$LazyIterator");
+    private static final Pattern JAXWS_ITERATORS = Pattern.compile(".*\\$ServiceNameIterator");
+    private static final Pattern JAVAFX_OBSERVABLE_LIST__ = Pattern.compile(
+        "javafx\\.collections\\.ObservableList\\$.*");
     private static final Pattern JAVAX_CRYPTO = Pattern.compile("javax\\.crypto\\..*");
-    private static final Pattern JAXWS_FILE_STREAM = Pattern.compile(".*\\.ReadAllStream\\$FileStream");
+    private static final Pattern BCEL_CL = Pattern.compile(".*\\.bcel\\..*\\.util\\.ClassLoader");
 
     /**
      * Constructs a default XStream.
@@ -622,19 +626,19 @@ public class XStream {
         elementIgnoringMapper = (ElementIgnoringMapper)this.mapper.lookupMapperOfType(ElementIgnoringMapper.class);
         fieldAliasingMapper = (FieldAliasingMapper)this.mapper.lookupMapperOfType(FieldAliasingMapper.class);
         attributeMapper = (AttributeMapper)this.mapper.lookupMapperOfType(AttributeMapper.class);
-        attributeAliasingMapper = (AttributeAliasingMapper)this.mapper
-            .lookupMapperOfType(AttributeAliasingMapper.class);
-        systemAttributeAliasingMapper = (SystemAttributeAliasingMapper)this.mapper
-            .lookupMapperOfType(SystemAttributeAliasingMapper.class);
-        implicitCollectionMapper = (ImplicitCollectionMapper)this.mapper
-            .lookupMapperOfType(ImplicitCollectionMapper.class);
-        defaultImplementationsMapper = (DefaultImplementationsMapper)this.mapper
-            .lookupMapperOfType(DefaultImplementationsMapper.class);
+        attributeAliasingMapper = (AttributeAliasingMapper)this.mapper.lookupMapperOfType(
+            AttributeAliasingMapper.class);
+        systemAttributeAliasingMapper = (SystemAttributeAliasingMapper)this.mapper.lookupMapperOfType(
+            SystemAttributeAliasingMapper.class);
+        implicitCollectionMapper = (ImplicitCollectionMapper)this.mapper.lookupMapperOfType(
+            ImplicitCollectionMapper.class);
+        defaultImplementationsMapper = (DefaultImplementationsMapper)this.mapper.lookupMapperOfType(
+            DefaultImplementationsMapper.class);
         immutableTypesMapper = (ImmutableTypesMapper)this.mapper.lookupMapperOfType(ImmutableTypesMapper.class);
         localConversionMapper = (LocalConversionMapper)this.mapper.lookupMapperOfType(LocalConversionMapper.class);
         securityMapper = (SecurityMapper)this.mapper.lookupMapperOfType(SecurityMapper.class);
-        annotationConfiguration = (AnnotationConfiguration)this.mapper
-            .lookupMapperOfType(AnnotationConfiguration.class);
+        annotationConfiguration = (AnnotationConfiguration)this.mapper.lookupMapperOfType(
+            AnnotationConfiguration.class);
     }
 
     protected void setupSecurity() {
@@ -647,10 +651,27 @@ public class XStream {
             "java.beans.EventHandler", //
             "java.lang.ProcessBuilder", //
             "javax.imageio.ImageIO$ContainsFilter", //
-            "jdk.nashorn.internal.objects.NativeString" });
-        denyTypesByRegExp(new Pattern[]{LAZY_ITERATORS, JAVAX_CRYPTO, JAXWS_FILE_STREAM});
+            "jdk.nashorn.internal.objects.NativeString", //
+            "com.sun.corba.se.impl.activation.ServerTableEntry", //
+            "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator", //
+            "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", //
+            "sun.swing.SwingLazyValue"});
+        denyTypesByRegExp(new Pattern[]{
+            LAZY_ITERATORS, GETTER_SETTER_REFLECTION, PRIVILEGED_GETTER, JAVAX_CRYPTO, JAXWS_ITERATORS,
+            JAVAFX_OBSERVABLE_LIST__, BCEL_CL});
+        denyTypeHierarchy(InputStream.class);
+        denyTypeHierarchyDynamically("java.nio.channels.Channel");
+        denyTypeHierarchyDynamically("javax.activation.DataSource");
+        denyTypeHierarchyDynamically("javax.sql.rowset.BaseRowSet");
         allowTypeHierarchy(Exception.class);
         securityInitialized = false;
+    }
+
+    private void denyTypeHierarchyDynamically(String className) {
+        Class type = JVM.loadClassForName(className);
+        if (type != null) {
+            denyTypeHierarchy(type);
+        }
     }
 
     /**
@@ -1402,9 +1423,8 @@ public class XStream {
         try {
             if (!securityInitialized && !securityWarningGiven) {
                 securityWarningGiven = true;
-                System.err
-                    .println(
-                        "Security framework of XStream not explicitly initialized, using predefined black list on your own risk.");
+                System.err.println(
+                    "Security framework of XStream not explicitly initialized, using predefined black list on your own risk.");
             }
             return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
 
