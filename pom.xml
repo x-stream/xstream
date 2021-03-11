@@ -1151,7 +1151,7 @@
     <version.commons.lang>2.4</version.commons.lang>
     <version.dom4j>1.6.1</version.dom4j>
     <version.hsqldb>2.2.8</version.hsqldb>
-    <version.io.github.x-stream.mxparser>1.2.0</version.io.github.x-stream.mxparser>
+    <version.io.github.x-stream.mxparser>1.2.1</version.io.github.x-stream.mxparser>
     <version.javaassist>3.12.1.GA</version.javaassist>
     <version.javax.activation>1.1.1</version.javax.activation>
     <version.javax.annotation.api>1.3.2</version.javax.annotation.api>
