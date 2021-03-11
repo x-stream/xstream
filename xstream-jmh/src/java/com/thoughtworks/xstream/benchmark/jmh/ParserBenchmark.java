@@ -80,7 +80,7 @@ public class ParserBenchmark {
         /**
          * Factory for the {@link MXParserDriver}.
          *
-         * @since upcoming
+         * @since 1.4.16
          */
         MXParser(new MXParserDriver()), //
         /**
