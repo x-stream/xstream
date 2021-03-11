@@ -22,14 +22,14 @@ import io.github.xstream.mxparser.MXParser;
  * A {@link HierarchicalStreamDriver} using the MXParser fork.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.16
  */
 public class MXParserDriver extends AbstractXppDriver {
 
     /**
      * Construct an MXParserDriver.
      *
-     * @since upcoming
+     * @since 1.4.16
      */
     public MXParserDriver() {
         super(new XmlFriendlyNameCoder());
@@ -39,7 +39,7 @@ public class MXParserDriver extends AbstractXppDriver {
      * Construct an Xpp3Driver.
      *
      * @param nameCoder the replacer for XML friendly names
-     * @since upcoming
+     * @since 1.4.16
      */
     public MXParserDriver(final NameCoder nameCoder) {
         super(nameCoder);

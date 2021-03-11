@@ -22,14 +22,14 @@ import io.github.xstream.mxparser.MXParser;
  * A {@link HierarchicalStreamDriver} for XPP DOM using the MXParser fork.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.16
  */
 public class MXParserDomDriver extends AbstractXppDomDriver {
 
     /**
      * Construct an MXParserDomDriver.
      *
-     * @since upcoming
+     * @since 1.4.16
      */
     public MXParserDomDriver() {
         super(new XmlFriendlyNameCoder());
