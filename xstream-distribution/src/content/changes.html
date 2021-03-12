@@ -142,16 +142,24 @@
 	<h2>Stream compatibility</h2>
 
 	<ul>
-		<li>The type hierarchies for java.io.InputStream, java.nio.channels.Channel, javax.activation.DataSource and
-		javax.sql.rowsel.BaseRowSet are now blacklisted as well as the individual types
-		com.sun.corba.se.impl.activation.ServerTableEntry, 
-		com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator,
-		sun.awt.datatransfer.DataTransferer$IndexOrderComparator, and sun.swing.SwingLazyValue.  Additionally the
-		internal type Accessor$GetterSetterReflection of JAXB, the internal types MethodGetter$PrivilegedGetter and
-		ServiceFinder$ServiceNameIterator of JAX-WS, all inner classes of javafx.collections.ObservableList and an
-		internal ClassLoader used in a private BCEL copy are now part of the default blacklist and the deserialization
+		<li>The following types are now blacklisted by default and the deserialization
 		of XML containing one of the two types will fail.  You will have to enable these types by explicit
-		configuration, if you need them.</li>
+		configuration, if you need them:<br>
+			<ul>
+				<li>the type hierarchies for java.io.InputStream, java.nio.channels.Channel,
+				javax.activation.DataSource and javax.sql.rowsel.BaseRowSet</li>
+				<li>the individual types com.sun.corba.se.impl.activation.ServerTableEntry,
+				com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator,
+				sun.awt.datatransfer.DataTransferer$IndexOrderComparator, and sun.swing.SwingLazyValue</li>
+				<li>the individual types com.sun.corba.se.impl.activation.ServerTableEntry,
+				com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator,
+				sun.awt.datatransfer.DataTransferer$IndexOrderComparator, and sun.swing.SwingLazyValue</li>
+				<li>the internal type Accessor$GetterSetterReflection of JAXB, the internal types
+				MethodGetter$PrivilegedGetter and ServiceFinder$ServiceNameIterator of JAX-WS</li>
+				<li>all inner classes of javafx.collections.ObservableList</li>
+				<li>an internal ClassLoader used in a private copy of BCEL within the Java runtime</li>
+			</ul>
+		</li>
 	</ul>
 
 	<h2>Dependencies</h2>
