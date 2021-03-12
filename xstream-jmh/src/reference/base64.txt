@@ -1,31 +1,31 @@
-Benchmark                      (codec)  (data)  (operation)  Mode  Cnt         Score        Error  Units
-Base64Benchmark.run    xstreamInternal   small       encode  avgt   16       370.353 ±      26.364  ns/op
-Base64Benchmark.run    xstreamInternal   small       decode  avgt   16       387.549 ±       2.753  ns/op
-Base64Benchmark.run    xstreamInternal  medium       encode  avgt   16     75746.500 ±     388.028  ns/op
-Base64Benchmark.run    xstreamInternal  medium       decode  avgt   16     69507.593 ±    4615.284  ns/op
-Base64Benchmark.run    xstreamInternal     big       encode  avgt   16  21809550.623 ±  287457.190  ns/op
-Base64Benchmark.run    xstreamInternal     big       decode  avgt   16  22860405.161 ±  116129.778  ns/op
-Base64Benchmark.run  dataTypeConverter   small       encode  avgt   16       113.739 ±       6.015  ns/op
-Base64Benchmark.run  dataTypeConverter   small       decode  avgt   16       146.704 ±       7.826  ns/op
-Base64Benchmark.run  dataTypeConverter  medium       encode  avgt   16     27994.835 ±     250.706  ns/op
-Base64Benchmark.run  dataTypeConverter  medium       decode  avgt   16     31775.991 ±     997.564  ns/op
-Base64Benchmark.run  dataTypeConverter     big       encode  avgt   16  11212057.101 ±  316407.971  ns/op
-Base64Benchmark.run  dataTypeConverter     big       decode  avgt   16   7831267.697 ±   26381.875  ns/op
-Base64Benchmark.run           javaUtil   small       encode  avgt   16       119.151 ±       0.623  ns/op
-Base64Benchmark.run           javaUtil   small       decode  avgt   16       222.355 ±      10.904  ns/op
-Base64Benchmark.run           javaUtil  medium       encode  avgt   16     19877.310 ±    1172.332  ns/op
-Base64Benchmark.run           javaUtil  medium       decode  avgt   16     32920.559 ±     274.879  ns/op
-Base64Benchmark.run           javaUtil     big       encode  avgt   16   9205883.279 ±  269329.433  ns/op
-Base64Benchmark.run           javaUtil     big       decode  avgt   16   8964062.065 ±  394932.790  ns/op
-Base64Benchmark.run       commonsCodec   small       encode  avgt   16      3416.205 ±       3.382  ns/op
-Base64Benchmark.run       commonsCodec   small       decode  avgt   16      3514.384 ±      11.939  ns/op
-Base64Benchmark.run       commonsCodec  medium       encode  avgt   16     78348.010 ±    2924.398  ns/op
-Base64Benchmark.run       commonsCodec  medium       decode  avgt   16     74262.708 ±    3031.596  ns/op
-Base64Benchmark.run       commonsCodec     big       encode  avgt   16  22347368.903 ±  178585.361  ns/op
-Base64Benchmark.run       commonsCodec     big       decode  avgt   16  23798441.056 ±  195917.888  ns/op
-Base64Benchmark.run            migBase   small       encode  avgt   16       113.382 ±       5.283  ns/op
-Base64Benchmark.run            migBase   small       decode  avgt   16       171.957 ±       1.520  ns/op
-Base64Benchmark.run            migBase  medium       encode  avgt   16     25132.013 ±     313.813  ns/op
-Base64Benchmark.run            migBase  medium       decode  avgt   16     34109.501 ±     834.604  ns/op
-Base64Benchmark.run            migBase     big       encode  avgt   16  10762327.746 ±   32072.333  ns/op
-Base64Benchmark.run            migBase     big       decode  avgt   16   8194853.894 ±   34107.972  ns/op
+Benchmark                     (codec)  (data)  (driverFactory)  (operation)  Mode  Cnt         Score         Error  Units
+Base64Benchmark.run   xstreamInternal   small              N/A       encode  avgt   16       422.691 ±       0.805  ns/op
+Base64Benchmark.run   xstreamInternal   small              N/A       decode  avgt   16       401.744 ±      41.549  ns/op
+Base64Benchmark.run   xstreamInternal  medium              N/A       encode  avgt   16     87980.151 ±    1758.463  ns/op
+Base64Benchmark.run   xstreamInternal  medium              N/A       decode  avgt   16     90334.626 ±     272.486  ns/op
+Base64Benchmark.run   xstreamInternal     big              N/A       encode  avgt   16  26829622.608 ±  219338.574  ns/op
+Base64Benchmark.run   xstreamInternal     big              N/A       decode  avgt   16  25760733.427 ±  892724.693  ns/op
+Base64Benchmark.run dataTypeConverter   small              N/A       encode  avgt   16       116.452 ±       4.685  ns/op
+Base64Benchmark.run dataTypeConverter   small              N/A       decode  avgt   16       156.041 ±       0.232  ns/op
+Base64Benchmark.run dataTypeConverter  medium              N/A       encode  avgt   16     22025.833 ±     871.377  ns/op
+Base64Benchmark.run dataTypeConverter  medium              N/A       decode  avgt   16     29199.416 ±    1366.584  ns/op
+Base64Benchmark.run dataTypeConverter     big              N/A       encode  avgt   16  10173025.627 ±   14375.190  ns/op
+Base64Benchmark.run dataTypeConverter     big              N/A       decode  avgt   16   7645745.427 ±  378490.086  ns/op
+Base64Benchmark.run          javaUtil   small              N/A       encode  avgt   16       113.013 ±      10.478  ns/op
+Base64Benchmark.run          javaUtil   small              N/A       decode  avgt   16        83.877 ±       0.298  ns/op
+Base64Benchmark.run          javaUtil  medium              N/A       encode  avgt   16     14425.936 ±      39.693  ns/op
+Base64Benchmark.run          javaUtil  medium              N/A       decode  avgt   16     13846.668 ±     779.799  ns/op
+Base64Benchmark.run          javaUtil     big              N/A       encode  avgt   16   6149989.342 ±  199233.302  ns/op
+Base64Benchmark.run          javaUtil     big              N/A       decode  avgt   16   5342302.204 ±   18186.258  ns/op
+Base64Benchmark.run      commonsCodec   small              N/A       encode  avgt   16      6390.608 ±      72.975  ns/op
+Base64Benchmark.run      commonsCodec   small              N/A       decode  avgt   16      6385.171 ±      89.129  ns/op
+Base64Benchmark.run      commonsCodec  medium              N/A       encode  avgt   16     68085.447 ±     138.335  ns/op
+Base64Benchmark.run      commonsCodec  medium              N/A       decode  avgt   16     68183.900 ±    6315.687  ns/op
+Base64Benchmark.run      commonsCodec     big              N/A       encode  avgt   16  29120324.467 ±  745830.065  ns/op
+Base64Benchmark.run      commonsCodec     big              N/A       decode  avgt   16  22775668.935 ±  627458.817  ns/op
+Base64Benchmark.run           migBase   small              N/A       encode  avgt   16       107.834 ±       0.218  ns/op
+Base64Benchmark.run           migBase   small              N/A       decode  avgt   16       110.671 ±       5.789  ns/op
+Base64Benchmark.run           migBase  medium              N/A       encode  avgt   16     19048.637 ±    1321.623  ns/op
+Base64Benchmark.run           migBase  medium              N/A       decode  avgt   16     22464.136 ±      30.464  ns/op
+Base64Benchmark.run           migBase     big              N/A       encode  avgt   16  10101223.925 ±  193350.342  ns/op
+Base64Benchmark.run           migBase     big              N/A       decode  avgt   16   6967471.163 ±  405344.659  ns/op
