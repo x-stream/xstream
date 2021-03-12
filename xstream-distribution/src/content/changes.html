@@ -38,8 +38,8 @@
 
 	<p>Not yet released.</p>
 
-	<p class="highlight">This maintenance release addresses following security vulnerabilities, when unmarshalling
-	with an XStream instances using an uninitialized security framework.</p>
+	<p class="highlight">This maintenance release switches XStream's default parser and addresses following security
+	vulnerabilities, when unmarshalling with an XStream instances using an uninitialized security framework.</p>
 
 	<ul>
 		<li><a href="CVE-2021-21341.html">CVE-2021-21341</a></li>
@@ -89,6 +89,14 @@
 	Xpp3 in the artifact io.github.x-stream:mxparser.  The Xpp3 is unmaintained for a long time, bugs have been fixed
 	reported more than a decade ago, improvements by other forks have been incorporated and some endless loops have
 	been fixed, that could have been utilized as DoS attack.</p>
+
+	<p>XStream has therefore new default dependencies.  If you have used XStream with the default driver (i.e. Xpp3),
+	you can still exchange the XStream library for a drop-in replacement, but you will also have to remove the Xpp3 and
+	add the MXParser library instead.</p>
+
+	<p>For build time you will have to add the Xpp3 library to your dependencies, if you made explicitly use of the
+	Xpp3 driver.	If you did explicitly use a different driver than Xpp3 and had therefore excluded the Xpp3
+	dependency, you might have to exclude now the new MXParser dependency instead to minimize your dependency list.</p>
 
 	<h1 id="1.4.15">1.4.15</h1>
 
