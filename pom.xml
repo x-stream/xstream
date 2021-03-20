@@ -254,13 +254,6 @@
           <plugin>
             <groupId>org.eluder.coveralls</groupId>
             <artifactId>coveralls-maven-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${version.jakarta.xml.bind.api}</version>
-              </dependency>
-            </dependencies>
           </plugin>
           <plugin>
             <groupId>org.jacoco</groupId>
@@ -978,6 +971,13 @@
           <groupId>org.eluder.coveralls</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
           <version>${version.plugin.eluder.coveralls}</version>
+          <dependencies>
+            <dependency>
+              <groupId>jakarta.xml.bind</groupId>
+              <artifactId>jakarta.xml.bind-api</artifactId>
+              <version>${version.jakarta.xml.bind.api}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>

@@ -290,17 +290,6 @@
               </dependency>
             </dependencies>
           </plugin>
-          <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${version.jakarta.xml.bind.api}</version>
-              </dependency>
-            </dependencies>
-          </plugin>
         </plugins>
       </build>
       <properties>
