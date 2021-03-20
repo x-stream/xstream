@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2019, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2019, 2020, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -249,7 +249,7 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "  </java.text.DecimalFormatSymbols>\n"
                 + "</java.text.DecimalFormatSymbols>";
-        } else {
+        } else if (!JVM.isVersion(16)) {
             xml = ""
                 + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
                 + "  <java.text.DecimalFormatSymbols>\n"
@@ -259,6 +259,35 @@ public class XmlFriendlyTest extends AbstractAcceptanceTest {
                 + "      <exponential>E</exponential>\n"
                 + "      <groupingSeparator>.</groupingSeparator>\n"
                 + "      <hashCode>0</hashCode>\n"
+                + "      <minusSign>-</minusSign>\n"
+                + "      <monetaryGroupingSeparator>.</monetaryGroupingSeparator>\n"
+                + "      <monetarySeparator>,</monetarySeparator>\n"
+                + "      <patternSeparator>;</patternSeparator>\n"
+                + "      <perMill>\u2030</perMill>\n"
+                + "      <percent>%</percent>\n"
+                + "      <serialVersionOnStream>5</serialVersionOnStream>\n"
+                + "      <zeroDigit>0</zeroDigit>\n"
+                + "      <NaN>NaN</NaN>\n"
+                + "      <currencySymbol>\u20ac</currencySymbol>\n"
+                + "      <exponentialSeparator>E</exponentialSeparator>\n"
+                + "      <infinity>\u221e</infinity>\n"
+                + "      <intlCurrencySymbol>EUR</intlCurrencySymbol>\n"
+                + "      <locale>de_DE</locale>\n"
+                + "      <minusSignText>-</minusSignText>\n"
+                + "      <perMillText>\u2030</perMillText>\n"
+                + "      <percentText>%</percentText>\n"
+                + "    </default>\n"
+                + "  </java.text.DecimalFormatSymbols>\n"
+                + "</java.text.DecimalFormatSymbols>";
+        } else {
+            xml = ""
+                + "<java.text.DecimalFormatSymbols serialization=\"custom\">\n"
+                + "  <java.text.DecimalFormatSymbols>\n"
+                + "    <default>\n"
+                + "      <decimalSeparator>,</decimalSeparator>\n"
+                + "      <digit>#</digit>\n"
+                + "      <exponential>E</exponential>\n"
+                + "      <groupingSeparator>.</groupingSeparator>\n"
                 + "      <minusSign>-</minusSign>\n"
                 + "      <monetaryGroupingSeparator>.</monetaryGroupingSeparator>\n"
                 + "      <monetarySeparator>,</monetarySeparator>\n"
