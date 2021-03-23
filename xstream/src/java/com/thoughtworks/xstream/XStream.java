@@ -1091,10 +1091,6 @@ public class XStream {
             addImmutableTypeDynamically("java.time.temporal.IsoFields$Unit", false);
             addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);
         }
-
-        if (JVM.isVersion(14)) {
-            addImmutableTypeDynamically("java.lang.Record", false);
-        }
     }
 
     private void addImmutableTypeDynamically(final String className, final boolean isReferenceable) {
