@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 XStream Committers.
+ * Copyright (C) 2019, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,7 +12,7 @@ package com.thoughtworks.xstream.core.util;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.naming.NameCoder;
-import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.thoughtworks.xstream.io.xml.MXParserDriver;
 
 
 /**
@@ -26,9 +26,9 @@ import com.thoughtworks.xstream.io.xml.XppDriver;
  */
 public final class DefaultDriver {
     public static HierarchicalStreamDriver create() {
-        return new XppDriver();
+        return new MXParserDriver();
     }
     public static HierarchicalStreamDriver create(NameCoder coder) {
-        return new XppDriver(coder);
+        return new MXParserDriver(coder);
     }
 }
