@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -55,7 +55,7 @@ public class JVM implements Caching {
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
-    private static final float DEFAULT_JAVA_VERSION = 1.7f;
+    private static final float DEFAULT_JAVA_VERSION = 1.8f;
     private static final boolean reverseFieldOrder = false;
     private static final Class<? extends ReflectionProvider> reflectionProviderType;
     @Deprecated
@@ -207,7 +207,7 @@ public class JVM implements Caching {
      */
     private static final float getMajorJavaVersion() {
         try {
-            return isAndroid() ? 1.7f : Float.parseFloat(System.getProperty("java.specification.version"));
+            return isAndroid() ? 8f : Float.parseFloat(System.getProperty("java.specification.version"));
         } catch (final NumberFormatException e) {
             // Some JVMs may not conform to the x.y.z java.version format
             return DEFAULT_JAVA_VERSION;
@@ -215,7 +215,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of 1.4.4, minimal JDK version is 1.4 already
+     * @deprecated As of 1.4.4, minimal JDK version is 1.8 already
      */
     @Deprecated
     public static boolean is14() {
@@ -223,7 +223,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of 1.4.4, minimal JDK version will be 1.7 for next major release
+     * @deprecated As of 1.4.4, minimal JDK version is 1.8 already
      */
     @Deprecated
     public static boolean is15() {
@@ -231,7 +231,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of 1.4.4, minimal JDK version will be 1.7 for next major release
+     * @deprecated As of 1.4.4, minimal JDK version is 1.8 already
      */
     @Deprecated
     public static boolean is16() {
@@ -240,7 +240,7 @@ public class JVM implements Caching {
 
     /**
      * @since 1.4
-     * @deprecated As of 1.4.10, minimal JDK version will be 1.7 for next major release
+     * @deprecated As of 1.4.10, minimal JDK version is 1.8 already
      */
     @Deprecated
     public static boolean is17() {
@@ -333,8 +333,8 @@ public class JVM implements Caching {
     public static <T> Class<? extends T> loadClassForName(final String name, final boolean initialize) {
         try {
             @SuppressWarnings("unchecked")
-            final Class<? extends T> clazz = (Class<? extends T>)Class
-                .forName(name, initialize, JVM.class.getClassLoader());
+            final Class<? extends T> clazz = (Class<? extends T>)Class.forName(name, initialize, JVM.class
+                .getClassLoader());
             return clazz;
         } catch (final LinkageError | ClassNotFoundException e) {
             return null;
@@ -623,7 +623,7 @@ public class JVM implements Caching {
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());
         System.out.println("Can create derive ObjectOutputStream: " + canCreateDerivedObjectOutputStream());
         System.out.println("Reverse field order detected for JDK: " + reverseJDK);
-        System.out
-            .println("Reverse field order detected (only if JVM class itself has been compiled): " + reverseLocal);
+        System.out.println("Reverse field order detected (only if JVM class itself has been compiled): "
+            + reverseLocal);
     }
 }
