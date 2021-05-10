@@ -336,11 +336,13 @@ public class XStream {
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
     private static final Pattern GETTER_SETTER_REFLECTION = Pattern.compile(".*\\$GetterSetterReflection");
     private static final Pattern PRIVILEGED_GETTER = Pattern.compile(".*\\$PrivilegedGetter");
+    private static final Pattern LAZY_ENUMERATORS = Pattern.compile(".*\\.Lazy(?:Search)?Enumeration.*");
     private static final Pattern LAZY_ITERATORS = Pattern.compile(".*\\$LazyIterator");
     private static final Pattern JAXWS_ITERATORS = Pattern.compile(".*\\$ServiceNameIterator");
     private static final Pattern JAVAFX_OBSERVABLE_LIST__ = Pattern.compile(
         "javafx\\.collections\\.ObservableList\\$.*");
     private static final Pattern JAVAX_CRYPTO = Pattern.compile("javax\\.crypto\\..*");
+    private static final Pattern JAVA_RMI = Pattern.compile("(?:java|sun)\\.rmi\\..*");
     private static final Pattern BCEL_CL = Pattern.compile(".*\\.bcel\\..*\\.util\\.ClassLoader");
 
     /**
@@ -657,8 +659,8 @@ public class XStream {
             "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", //
             "sun.swing.SwingLazyValue"});
         denyTypesByRegExp(new Pattern[]{
-            LAZY_ITERATORS, GETTER_SETTER_REFLECTION, PRIVILEGED_GETTER, JAVAX_CRYPTO, JAXWS_ITERATORS,
-            JAVAFX_OBSERVABLE_LIST__, BCEL_CL});
+            LAZY_ITERATORS, LAZY_ENUMERATORS, GETTER_SETTER_REFLECTION, PRIVILEGED_GETTER, JAVA_RMI, JAVAX_CRYPTO,
+            JAXWS_ITERATORS, JAVAFX_OBSERVABLE_LIST__, BCEL_CL});
         denyTypeHierarchy(InputStream.class);
         denyTypeHierarchyDynamically("java.nio.channels.Channel");
         denyTypeHierarchyDynamically("javax.activation.DataSource");

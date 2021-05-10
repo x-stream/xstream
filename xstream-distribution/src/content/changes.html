@@ -28,11 +28,26 @@
 		filter for the appropriate milestone.
 	</p>
 
-<!--
 	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
 
 	<p>Not yet released.</p>
--->
+
+	<p class="highlight">This maintenance release addresses the security vulnerability
+	<a href="CVE-2020-26258.html">CVE-2021-29505</a>, when unmarshalling with XStream instances using an uninitialized
+	security framework.</p>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The following types are now blacklisted by default and the deserialization
+		of XML containing one of the two types will fail.  You will have to enable these types by explicit
+		configuration, if you need them:<br>
+			<ul>
+				<li>any type in the java.rmi.* and sun.rmi.* package hierarchies</li>
+				<li>the individual type com.sun.jndi.toolkit.dir.LazySearchEnumerationImpl</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1 id="1.4.16">1.4.16</h1>
 

@@ -44,10 +44,19 @@
     Exposure (CVE) system managed by the <a href="http://www.mitre.org/">Mitre Corporation</a>. Following a list of the
     reported vulnerabilities for the different versions:</p>
     
-    <table summary="Table of reported vulnerabilities daocumented as CVE">
+    <table summary="Table of reported vulnerabilities documented as CVE">
       <tr>
         <th>CVE</th>
         <th>Description</th>
+      </tr>
+      <tr>
+        <th>Version 1.4.16</th>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-29505.html">CVE-2021-29505</a></th>
+        <td>XStream is vulnerable to a Remote Command Execution attack.</td>
       </tr>
       <tr>
         <th>Version 1.4.15</th>
@@ -378,8 +387,11 @@ xstream.allowTypesByWildcard(new String[] {
 XStream.setupDefaultSecurity(xstream);
 // add your allowed types, type hierarchies or packages here
 </pre></div>
-    <p>Users of XStream 1.4.14 who insist to use XStream default blacklist - despite that clear recommendation - can
+    <p>Users of XStream 1.4.16 who insist to use XStream default blacklist - despite that clear recommendation - can
     add these lines to XStream's setup code:</p>
+<div class="Source Java"><pre>xstream.denyTypesByRegExp(new String[]{ ".*\\.Lazy(?:Search)?Enumeration.*", "(?:java|sun)\\.rmi\\..*" });
+</pre></div>
+    <p>Users of XStream 1.4.15 should <strong>additionally</strong> add these lines to the lines from above:</p>
 <div class="Source Java"><pre>xstream.denyTypes(new String[]{ "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", "sun.swing.SwingLazyValue", "com.sun.corba.se.impl.activation.ServerTableEntry", "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator" });
 xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader" });
 xstream.denyTypeHierarchy(java.io.InputStream.class );
@@ -387,7 +399,7 @@ xstream.denyTypeHierarchy(java.nio.channels.Channel.class );
 xstream.denyTypeHierarchy(javax.activation.DataSource.class );
 xstream.denyTypeHierarchy(javax.sql.rowset.BaseRowSet.class );
 </pre></div>
-    <p>Users of XStream 1.4.13 should <strong>additionally</strong> add these two lines to the lines from above:</p>
+    <p>Users of XStream 1.4.14 and 1.4.13 should <strong>additionally</strong> add these two lines to the lines from above:</p>
 <div class="Source Java"><pre>xstream.denyTypes(new String[]{ "javax.imageio.ImageIO$ContainsFilter" });
 xstream.denyTypes(new Class[]{ java.lang.ProcessBuilder.class });
 </pre></div>
