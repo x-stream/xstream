@@ -821,9 +821,9 @@ public class XStream {
 
         alias("enum-set", EnumSet.class);
         alias("enum-map", EnumMap.class);
-        alias("empty-list", Collections.EMPTY_LIST.getClass());
-        alias("empty-map", Collections.EMPTY_MAP.getClass());
-        alias("empty-set", Collections.EMPTY_SET.getClass());
+        alias("empty-list", Collections.emptyList().getClass());
+        alias("empty-map", Collections.emptyMap().getClass());
+        alias("empty-set", Collections.emptySet().getClass());
         alias("singleton-list", Collections.singletonList(this).getClass());
         alias("singleton-map", Collections.singletonMap(this, null).getClass());
         alias("singleton-set", Collections.singleton(this).getClass());
