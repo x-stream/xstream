@@ -1128,7 +1128,7 @@
     <version.plugin.maven.deploy>2.3</version.plugin.maven.deploy>
     <version.plugin.maven.enforcer>1.4</version.plugin.maven.enforcer>
     <version.plugin.maven.failsafe>2.22.0</version.plugin.maven.failsafe>
-    <version.plugin.maven.gpg>1.6</version.plugin.maven.gpg>
+    <version.plugin.maven.gpg>3.0.1</version.plugin.maven.gpg>
     <version.plugin.maven.install>2.2</version.plugin.maven.install>
     <version.plugin.maven.jar>2.2</version.plugin.maven.jar>
     <version.plugin.maven.javadoc>2.10</version.plugin.maven.javadoc>
