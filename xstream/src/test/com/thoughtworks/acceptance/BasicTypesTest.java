@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2013, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2013, 2018, 2019, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,46 +19,46 @@ import java.util.UUID;
 public class BasicTypesTest extends AbstractAcceptanceTest {
 
     public void testPrimitiveNumbers() {
-        assertBothWays(new Integer(99), "<int>99</int>");
-        assertBothWays(new Integer(-99), "<int>-99</int>");
-        assertBothWays(new Integer(0), "<int>0</int>");
-        assertBothWays(new Float(-123.45f), "<float>-123.45</float>");
-        assertBothWays(new Double(-1234567890.12345), "<double>-1.23456789012345E9</double>");
-        assertBothWays(new Long(123456789123456L), "<long>123456789123456</long>");
-        assertBothWays(new Short((short)123), "<short>123</short>");
+        assertBothWays(Integer.valueOf(99), "<int>99</int>");
+        assertBothWays(Integer.valueOf(-99), "<int>-99</int>");
+        assertBothWays(Integer.valueOf(0), "<int>0</int>");
+        assertBothWays(Float.valueOf(-123.45f), "<float>-123.45</float>");
+        assertBothWays(Double.valueOf(-1234567890.12345), "<double>-1.23456789012345E9</double>");
+        assertBothWays(Long.valueOf(123456789123456L), "<long>123456789123456</long>");
+        assertBothWays(Short.valueOf((short)123), "<short>123</short>");
     }
 
     public void testDifferentBaseIntegers() {
-        assertEquals(new Integer(255), xstream.fromXML("<int>0xFF</int>"));
-        assertEquals(new Integer(255), xstream.fromXML("<int>#FF</int>"));
-        assertEquals(new Integer(8), xstream.fromXML("<int>010</int>"));
-        assertEquals(new Long(01777777773427777777773L), xstream.fromXML("<long>01777777773427777777773</long>"));
+        assertEquals(Integer.valueOf(255), xstream.fromXML("<int>0xFF</int>"));
+        assertEquals(Integer.valueOf(255), xstream.fromXML("<int>#FF</int>"));
+        assertEquals(Integer.valueOf(8), xstream.fromXML("<int>010</int>"));
+        assertEquals(Long.valueOf(01777777773427777777773L), xstream.fromXML("<long>01777777773427777777773</long>"));
     }
 
     public void testNegativeIntegersInHex() {
-        assertEquals(new Byte((byte)-1), xstream.fromXML("<byte>0xFF</byte>"));
-        assertEquals(new Short((short)-1), xstream.fromXML("<short>0xFFFF</short>"));
-        assertEquals(new Integer(-1), xstream.fromXML("<int>0xFFFFFFFF</int>"));
-        assertEquals(new Long(-1), xstream.fromXML("<long>0xFFFFFFFFFFFFFFFF</long>"));
+        assertEquals(Byte.valueOf((byte)-1), xstream.fromXML("<byte>0xFF</byte>"));
+        assertEquals(Short.valueOf((short)-1), xstream.fromXML("<short>0xFFFF</short>"));
+        assertEquals(Integer.valueOf(-1), xstream.fromXML("<int>0xFFFFFFFF</int>"));
+        assertEquals(Long.valueOf(-1), xstream.fromXML("<long>0xFFFFFFFFFFFFFFFF</long>"));
     }
 
     public void testNegativeIntegersInOctal() {
-        assertEquals(new Byte((byte)-1), xstream.fromXML("<byte>0377</byte>"));
-        assertEquals(new Short((short)-1), xstream.fromXML("<short>0177777</short>"));
-        assertEquals(new Integer(-1), xstream.fromXML("<int>037777777777</int>"));
-        assertEquals(new Long(-1), xstream.fromXML("<long>01777777777777777777777</long>"));
+        assertEquals(Byte.valueOf((byte)-1), xstream.fromXML("<byte>0377</byte>"));
+        assertEquals(Short.valueOf((short)-1), xstream.fromXML("<short>0177777</short>"));
+        assertEquals(Integer.valueOf(-1), xstream.fromXML("<int>037777777777</int>"));
+        assertEquals(Long.valueOf(-1), xstream.fromXML("<long>01777777777777777777777</long>"));
     }
 
     public void testOtherPrimitives() {
-        assertBothWays(new Character('z'), "<char>z</char>");
+        assertBothWays(Character.valueOf('z'), "<char>z</char>");
         assertBothWays(Boolean.TRUE, "<boolean>true</boolean>");
         assertBothWays(Boolean.FALSE, "<boolean>false</boolean>");
-        assertBothWays(new Byte((byte)44), "<byte>44</byte>");
+        assertBothWays(Byte.valueOf((byte)44), "<byte>44</byte>");
     }
 
     public void testNullCharacter() {
-        assertEquals(new Character('\0'), xstream.fromXML("<char null=\"true\"/>")); // pre XStream 1.3
-        assertBothWays(new Character('\0'), "<char></char>");
+        assertEquals(Character.valueOf('\0'), xstream.fromXML("<char null=\"true\"/>")); // pre XStream 1.3
+        assertBothWays(Character.valueOf('\0'), "<char></char>");
     }
 
     public void testStrings() {

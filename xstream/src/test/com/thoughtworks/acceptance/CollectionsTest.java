@@ -74,7 +74,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     public void testListsCanContainBasicObjects() {
         final SampleLists<Object, ?> lists = new SampleLists<>();
         lists.good.add("hello");
-        lists.good.add(new Integer(3));
+        lists.good.add(Integer.valueOf(3));
         lists.good.add(Boolean.TRUE);
 
         xstream.alias("lists", SampleLists.class);
@@ -296,7 +296,7 @@ public class CollectionsTest extends AbstractAcceptanceTest {
     }
 
     public void testListFromArrayAsList() {
-        final List<String> list = Arrays.asList(new String[]{"hi", "bye"});
+        final List<String> list = Arrays.asList("hi", "bye");
 
         assertBothWays(list, ""//
             + "<java.util.Arrays_-ArrayList>\n"
