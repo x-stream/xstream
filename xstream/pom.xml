@@ -429,7 +429,7 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
               <testExcludes>
-                <exclude>**/*9Test.java</exclude>
+                <exclude>**/*09Test.java</exclude>
                 <exclude>**/Record**</exclude>
               </testExcludes>
             </configuration>

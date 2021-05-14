@@ -1,12 +1,12 @@
 /*
- * Copyright (C) 2019 XStream Committers.
+ * Copyright (C) 2019, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 04. May 2019 by Joerg Schaible
+ * Created on 05. May 2019 by Joerg Schaible, renamed from StackTraceElementConverter9Test
  */
 package com.thoughtworks.xstream.converters.extended;
 
@@ -16,7 +16,7 @@ import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 /**
  * @author J&ouml;rg Schaible
  */
-public class StackTraceElementConverter9Test extends AbstractAcceptanceTest {
+public class StackTraceElementConverter09Test extends AbstractAcceptanceTest {
 
     private final StackTraceElementConverter.StackTraceElementFactory factory =
             new StackTraceElementConverter.StackTraceElementFactory();
