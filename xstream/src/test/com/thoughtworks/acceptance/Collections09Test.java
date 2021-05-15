@@ -12,6 +12,8 @@ package com.thoughtworks.acceptance;
 
 import java.util.List;
 
+import com.thoughtworks.xstream.core.JVM;
+
 
 public class Collections09Test extends AbstractAcceptanceTest {
 
@@ -20,8 +22,8 @@ public class Collections09Test extends AbstractAcceptanceTest {
 
         final List<String> list = List.of("hi", "bye");
 
-        assertBothWays(list, ""//
-            + "<java.util.ImmutableCollections_-List12 resolves-to=\"java.util.CollSer\" serialization=\"custom\">\n"
+        assertBothWays(list, String.format(""//
+            + "<java.util.ImmutableCollections_-List%1$d resolves-to=\"java.util.CollSer\" serialization=\"custom\">\n"
             + "  <java.util.CollSer>\n"
             + "    <default>\n"
             + "      <tag>1</tag>\n"
@@ -30,6 +32,6 @@ public class Collections09Test extends AbstractAcceptanceTest {
             + "    <string>hi</string>\n"
             + "    <string>bye</string>\n"
             + "  </java.util.CollSer>\n"
-            + "</java.util.ImmutableCollections_-List12>");
+            + "</java.util.ImmutableCollections_-List%1$d>", JVM.isVersion(11) ? 12 : 2));
     }
 }
