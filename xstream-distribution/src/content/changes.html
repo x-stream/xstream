@@ -101,11 +101,24 @@
 		<li>No support for Hibernate 3 collections.</li>
 	</ul>
 
-<!--
 	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
 
 	<p>Not yet released.</p>
--->
+
+	<h2>Stream compatibility</h2>
+
+	<p class="highlight">Starting with version 1.14.12 nine years ago, XStream contains a
+	<a href="security.html#framework">Security Framework</a> to implement a black- or whitelist for the allowed types
+	at deserialization time.  Until version 1.4.17, XStream kept a default blacklist in order to deny all types of the
+	Java runtime, which are used for all kinds of <a href="security.html#CVEs">security attacks</a>, in order to
+	guarantee optimal runtime compatibility for existing users.  However, this approach has failed.  The last months
+	have shown, that the Java runtime alone contains dozens of types that can be used for an attack, not even looking
+	at the 3rd party libraries on a classpath.  The new version of XStream uses therefore now by default a whitelist,
+	which is recommended since nine years.  It also has been complaining on the console for a long time about an
+	uninitialized security framework the first time it was run.  Anyone who has followed the advice and initialized the
+	security framework for their own scenario can easily update to the new version without any problem. Everyone else
+	will have to do a proper initialization now, otherwise the new version will fail with certainty at deserialization
+	time.</p>
 
 	<h1 id="1.4.17">1.4.17</h1>
 

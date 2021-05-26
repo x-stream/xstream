@@ -752,14 +752,14 @@ public class XStream {
     /**
      * Setup the security framework of a XStream instance.
      * <p>
-     * This method was a pure helper method for XStream 1.4.x. It initializes an XStream instance with a white list of
-     * well-known and simply types of the Java runtime as it is done in XStream 1.5.x by default. This method will do
-     * nothing.
+     * This method was a pure helper method for XStream 1.4.10 to 1.4.17.  It initialized an XStream instance with a
+     * whitelist of well-known and simply types of the Java runtime as it is done in XStream 1.4.18 by default.  This
+     * method will do therefore nothing in XStream 1.4.18 or higher.
      * </p>
      *
      * @param xstream
      * @since 1.4.10
-     * @deprecated As of upcoming, since it is superfluous in XStream 1.5.x
+     * @deprecated As of 1.4.18
      */
     @Deprecated
     public static void setupDefaultSecurity(final XStream xstream) {
