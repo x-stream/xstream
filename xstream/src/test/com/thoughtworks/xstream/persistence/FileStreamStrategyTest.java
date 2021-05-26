@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2007, 2008, 2009, 2017 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -59,7 +59,6 @@ public class FileStreamStrategyTest extends TestCase {
 
     private XStream createXStream() {
         XStream xstream = new XStream(new DomDriver());
-        XStream.setupDefaultSecurity(xstream);
         return xstream;
     }
 

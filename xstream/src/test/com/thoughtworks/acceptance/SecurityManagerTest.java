@@ -205,7 +205,6 @@ public class SecurityManagerTest extends TestCase {
     }
 
     private void assertBothWays() {
-        XStream.setupDefaultSecurity(xstream);
         xstream.allowTypesByWildcard(new String[] {"com.thoughtworks.acceptance.objects.*"});
         xstream.alias("software", Software.class);
 

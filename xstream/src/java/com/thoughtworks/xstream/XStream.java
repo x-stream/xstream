@@ -317,9 +317,6 @@ public class XStream {
     private SecurityMapper securityMapper;
     private AnnotationConfiguration annotationConfiguration;
 
-    private transient boolean securityInitialized;
-    private transient boolean securityWarningGiven;
-
     public static final int NO_REFERENCES = 1001;
     public static final int ID_REFERENCES = 1002;
     public static final int XPATH_RELATIVE_REFERENCES = 1003;
@@ -334,16 +331,6 @@ public class XStream {
 
     private static final String ANNOTATION_MAPPER_TYPE = "com.thoughtworks.xstream.mapper.AnnotationMapper";
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
-    private static final Pattern GETTER_SETTER_REFLECTION = Pattern.compile(".*\\$GetterSetterReflection");
-    private static final Pattern PRIVILEGED_GETTER = Pattern.compile(".*\\$PrivilegedGetter");
-    private static final Pattern LAZY_ENUMERATORS = Pattern.compile(".*\\.Lazy(?:Search)?Enumeration.*");
-    private static final Pattern LAZY_ITERATORS = Pattern.compile(".*\\$LazyIterator");
-    private static final Pattern JAXWS_ITERATORS = Pattern.compile(".*\\$ServiceNameIterator");
-    private static final Pattern JAVAFX_OBSERVABLE_LIST__ = Pattern.compile(
-        "javafx\\.collections\\.ObservableList\\$.*");
-    private static final Pattern JAVAX_CRYPTO = Pattern.compile("javax\\.crypto\\..*");
-    private static final Pattern JAVA_RMI = Pattern.compile("(?:java|sun)\\.rmi\\..*");
-    private static final Pattern BCEL_CL = Pattern.compile(".*\\.bcel\\..*\\.util\\.ClassLoader");
 
     /**
      * Constructs a default XStream.
@@ -648,25 +635,86 @@ public class XStream {
             return;
         }
 
-        addPermission(AnyTypePermission.ANY);
-        denyTypes(new String[]{
-            "java.beans.EventHandler", //
-            "java.lang.ProcessBuilder", //
-            "javax.imageio.ImageIO$ContainsFilter", //
-            "jdk.nashorn.internal.objects.NativeString", //
-            "com.sun.corba.se.impl.activation.ServerTableEntry", //
-            "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator", //
-            "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", //
-            "sun.swing.SwingLazyValue"});
-        denyTypesByRegExp(new Pattern[]{
-            LAZY_ITERATORS, LAZY_ENUMERATORS, GETTER_SETTER_REFLECTION, PRIVILEGED_GETTER, JAVA_RMI, JAVAX_CRYPTO,
-            JAXWS_ITERATORS, JAVAFX_OBSERVABLE_LIST__, BCEL_CL});
-        denyTypeHierarchy(InputStream.class);
-        denyTypeHierarchyDynamically("java.nio.channels.Channel");
-        denyTypeHierarchyDynamically("javax.activation.DataSource");
-        denyTypeHierarchyDynamically("javax.sql.rowset.BaseRowSet");
-        allowTypeHierarchy(Exception.class);
-        securityInitialized = false;
+        addPermission(NoTypePermission.NONE);
+        addPermission(NullPermission.NULL);
+        addPermission(PrimitiveTypePermission.PRIMITIVES);
+        addPermission(ArrayTypePermission.ARRAYS);
+        addPermission(InterfaceTypePermission.INTERFACES);
+        allowTypeHierarchy(Calendar.class);
+        allowTypeHierarchy(Collection.class);
+        allowTypeHierarchy(Map.class);
+        allowTypeHierarchy(Map.Entry.class);
+        allowTypeHierarchy(Member.class);
+        allowTypeHierarchy(Number.class);
+        allowTypeHierarchy(Throwable.class);
+        allowTypeHierarchy(TimeZone.class);
+
+        Class type = JVM.loadClassForName("java.lang.Enum");
+        if (type != null) {
+            allowTypeHierarchy(type);
+        }
+        type = JVM.loadClassForName("java.nio.file.Path");
+        if (type != null) {
+            allowTypeHierarchy(type);
+        }
+
+        final Set types = new HashSet();
+        types.add(BitSet.class);
+        types.add(Charset.class);
+        types.add(Class.class);
+        types.add(Currency.class);
+        types.add(Date.class);
+        types.add(DecimalFormatSymbols.class);
+        types.add(File.class);
+        types.add(Locale.class);
+        types.add(Object.class);
+        types.add(Pattern.class);
+        types.add(StackTraceElement.class);
+        types.add(String.class);
+        types.add(StringBuffer.class);
+        types.add(JVM.loadClassForName("java.lang.StringBuilder"));
+        types.add(URL.class);
+        types.add(URI.class);
+        types.add(JVM.loadClassForName("java.util.UUID"));
+        if (JVM.isSQLAvailable()) {
+            types.add(JVM.loadClassForName("java.sql.Timestamp"));
+            types.add(JVM.loadClassForName("java.sql.Time"));
+            types.add(JVM.loadClassForName("java.sql.Date"));
+        }
+        if (JVM.isVersion(8)) {
+            allowTypeHierarchy(JVM.loadClassForName("java.time.Clock"));
+            types.add(JVM.loadClassForName("java.time.Duration"));
+            types.add(JVM.loadClassForName("java.time.Instant"));
+            types.add(JVM.loadClassForName("java.time.LocalDate"));
+            types.add(JVM.loadClassForName("java.time.LocalDateTime"));
+            types.add(JVM.loadClassForName("java.time.LocalTime"));
+            types.add(JVM.loadClassForName("java.time.MonthDay"));
+            types.add(JVM.loadClassForName("java.time.OffsetDateTime"));
+            types.add(JVM.loadClassForName("java.time.OffsetTime"));
+            types.add(JVM.loadClassForName("java.time.Period"));
+            types.add(JVM.loadClassForName("java.time.Ser"));
+            types.add(JVM.loadClassForName("java.time.Year"));
+            types.add(JVM.loadClassForName("java.time.YearMonth"));
+            types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
+            allowTypeHierarchy(JVM.loadClassForName("java.time.ZoneId"));
+            types.add(JVM.loadClassForName("java.time.chrono.HijrahDate"));
+            types.add(JVM.loadClassForName("java.time.chrono.JapaneseDate"));
+            types.add(JVM.loadClassForName("java.time.chrono.JapaneseEra"));
+            types.add(JVM.loadClassForName("java.time.chrono.MinguoDate"));
+            types.add(JVM.loadClassForName("java.time.chrono.ThaiBuddhistDate"));
+            types.add(JVM.loadClassForName("java.time.chrono.Ser"));
+            allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
+            types.add(JVM.loadClassForName("java.time.temporal.ValueRange"));
+            types.add(JVM.loadClassForName("java.time.temporal.WeekFields"));
+        }
+        types.remove(null);
+
+        final Iterator iter = types.iterator();
+        final Class[] classes = new Class[types.size()];
+        for (int i = 0; i < classes.length; ++i) {
+            classes[i] = (Class)iter.next();
+        }
+        allowTypes(classes);
     }
 
     private void denyTypeHierarchyDynamically(String className) {
@@ -679,99 +727,16 @@ public class XStream {
     /**
      * Setup the security framework of a XStream instance.
      * <p>
-     * This method is a pure helper method for XStream 1.4.x. It initializes an XStream instance with a white list of
-     * well-known and simply types of the Java runtime as it is done in XStream 1.5.x by default. This method will do
-     * therefore nothing in XStream 1.5.
+     * This method was a pure helper method for XStream 1.4.10 to 1.4.17.  It initialized an XStream instance with a
+     * whitelist of well-known and simply types of the Java runtime as it is done in XStream 1.4.18 by default.  This
+     * method will do therefore nothing in XStream 1.4.18 or higher.
      * </p>
      * 
      * @param xstream
      * @since 1.4.10
+     * @deprecated As of 1.4.18
      */
     public static void setupDefaultSecurity(final XStream xstream) {
-        if (!xstream.securityInitialized) {
-            xstream.addPermission(NoTypePermission.NONE);
-            xstream.addPermission(NullPermission.NULL);
-            xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
-            xstream.addPermission(ArrayTypePermission.ARRAYS);
-            xstream.addPermission(InterfaceTypePermission.INTERFACES);
-            xstream.allowTypeHierarchy(Calendar.class);
-            xstream.allowTypeHierarchy(Collection.class);
-            xstream.allowTypeHierarchy(Map.class);
-            xstream.allowTypeHierarchy(Map.Entry.class);
-            xstream.allowTypeHierarchy(Member.class);
-            xstream.allowTypeHierarchy(Number.class);
-            xstream.allowTypeHierarchy(Throwable.class);
-            xstream.allowTypeHierarchy(TimeZone.class);
-
-            Class type = JVM.loadClassForName("java.lang.Enum");
-            if (type != null) {
-                xstream.allowTypeHierarchy(type);
-            }
-            type = JVM.loadClassForName("java.nio.file.Path");
-            if (type != null) {
-                xstream.allowTypeHierarchy(type);
-            }
-
-            final Set types = new HashSet();
-            types.add(BitSet.class);
-            types.add(Charset.class);
-            types.add(Class.class);
-            types.add(Currency.class);
-            types.add(Date.class);
-            types.add(DecimalFormatSymbols.class);
-            types.add(File.class);
-            types.add(Locale.class);
-            types.add(Object.class);
-            types.add(Pattern.class);
-            types.add(StackTraceElement.class);
-            types.add(String.class);
-            types.add(StringBuffer.class);
-            types.add(JVM.loadClassForName("java.lang.StringBuilder"));
-            types.add(URL.class);
-            types.add(URI.class);
-            types.add(JVM.loadClassForName("java.util.UUID"));
-            if (JVM.isSQLAvailable()) {
-                types.add(JVM.loadClassForName("java.sql.Timestamp"));
-                types.add(JVM.loadClassForName("java.sql.Time"));
-                types.add(JVM.loadClassForName("java.sql.Date"));
-            }
-            if (JVM.isVersion(8)) {
-                xstream.allowTypeHierarchy(JVM.loadClassForName("java.time.Clock"));
-                types.add(JVM.loadClassForName("java.time.Duration"));
-                types.add(JVM.loadClassForName("java.time.Instant"));
-                types.add(JVM.loadClassForName("java.time.LocalDate"));
-                types.add(JVM.loadClassForName("java.time.LocalDateTime"));
-                types.add(JVM.loadClassForName("java.time.LocalTime"));
-                types.add(JVM.loadClassForName("java.time.MonthDay"));
-                types.add(JVM.loadClassForName("java.time.OffsetDateTime"));
-                types.add(JVM.loadClassForName("java.time.OffsetTime"));
-                types.add(JVM.loadClassForName("java.time.Period"));
-                types.add(JVM.loadClassForName("java.time.Ser"));
-                types.add(JVM.loadClassForName("java.time.Year"));
-                types.add(JVM.loadClassForName("java.time.YearMonth"));
-                types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
-                xstream.allowTypeHierarchy(JVM.loadClassForName("java.time.ZoneId"));
-                types.add(JVM.loadClassForName("java.time.chrono.HijrahDate"));
-                types.add(JVM.loadClassForName("java.time.chrono.JapaneseDate"));
-                types.add(JVM.loadClassForName("java.time.chrono.JapaneseEra"));
-                types.add(JVM.loadClassForName("java.time.chrono.MinguoDate"));
-                types.add(JVM.loadClassForName("java.time.chrono.ThaiBuddhistDate"));
-                types.add(JVM.loadClassForName("java.time.chrono.Ser"));
-                xstream.allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
-                types.add(JVM.loadClassForName("java.time.temporal.ValueRange"));
-                types.add(JVM.loadClassForName("java.time.temporal.WeekFields"));
-            }
-            types.remove(null);
-
-            final Iterator iter = types.iterator();
-            final Class[] classes = new Class[types.size()];
-            for (int i = 0; i < classes.length; ++i) {
-                classes[i] = (Class)iter.next();
-            }
-            xstream.allowTypes(classes);
-        } else {
-            throw new IllegalArgumentException("Security framework of XStream instance already initialized");
-        }
     }
 
     protected void setupAliases() {
@@ -1423,13 +1388,7 @@ public class XStream {
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root, DataHolder dataHolder) {
         try {
-            if (!securityInitialized && !securityWarningGiven) {
-                securityWarningGiven = true;
-                System.err.println(
-                    "Security framework of XStream not explicitly initialized, using predefined black list on your own risk.");
-            }
             return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
-
         } catch (ConversionException e) {
             Package pkg = getClass().getPackage();
             String version = pkg != null ? pkg.getImplementationVersion() : null;
@@ -2257,7 +2216,6 @@ public class XStream {
      */
     public void addPermission(TypePermission permission) {
         if (securityMapper != null) {
-            securityInitialized |= permission.equals(NoTypePermission.NONE) || permission.equals(AnyTypePermission.ANY);
             securityMapper.addPermission(permission);
         }
     }
@@ -2410,11 +2368,6 @@ public class XStream {
      */
     public void denyTypesByWildcard(String[] patterns) {
         denyPermission(new WildcardTypePermission(patterns));
-    }
-
-    private Object readResolve() {
-        securityWarningGiven = true;
-        return this;
     }
 
     /**

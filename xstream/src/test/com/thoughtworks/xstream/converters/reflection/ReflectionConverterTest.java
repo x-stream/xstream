@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -73,7 +73,6 @@ public class ReflectionConverterTest extends TestCase {
 
     private XStream createXStream() {
         XStream xstream = new XStream(new XppDriver());
-        XStream.setupDefaultSecurity(xstream);
         return xstream;
     }
 

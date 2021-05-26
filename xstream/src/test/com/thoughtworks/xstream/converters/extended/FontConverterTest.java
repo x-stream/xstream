@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,7 +44,6 @@ public class FontConverterTest extends TestCase {
         super.setUp();
         // fonts should be serializable also with pure Java
         xstream = new XStream(new PureJavaReflectionProvider());
-        XStream.setupDefaultSecurity(xstream);
         xstream.allowTypes(new Class[] {Font.class, TextAttribute.class, TransformAttribute.class, AffineTransform.class});
         in = new Font("Arial", Font.BOLD, 20);
     }

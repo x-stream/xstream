@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2017 XStream Committers.
+ * Copyright (C) 2007, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,7 +27,6 @@ public class XStream12AnnotationCompatibilityTest extends AbstractAcceptanceTest
     protected void setUp() throws Exception {
         super.setUp();
         xstream = new XStream();
-        XStream.setupDefaultSecurity(xstream);
         xstream.allowTypes(new Class[]{
             FieldConverterTest.TaskWithAnnotations.class, ImplicitCollectionTest.ImplicitRootOne.class});
         xstream.registerConverter(new AnnotationReflectionConverter(xstream.getMapper(), xstream

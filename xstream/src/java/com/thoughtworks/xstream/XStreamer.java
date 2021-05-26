@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016, 2017, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -107,7 +107,6 @@ public class XStreamer {
     public void toXML(final XStream xstream, final Object obj, final Writer out)
             throws IOException {
         final XStream outer = new XStream();
-        XStream.setupDefaultSecurity(outer);
         final ObjectOutputStream oos = outer.createObjectOutputStream(out);
         try {
             oos.writeObject(xstream);
@@ -268,7 +267,6 @@ public class XStreamer {
     public Object fromXML(final HierarchicalStreamDriver driver, final Reader xml, final TypePermission[] permissions)
             throws IOException, ClassNotFoundException {
         final XStream outer = new XStream(driver);
-        XStream.setupDefaultSecurity(outer);
         for(int i = 0; i < permissions.length; ++i) {
             outer.addPermission(permissions[i]);
         }

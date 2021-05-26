@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2014, 2017 XStream Committers.
+ * Copyright (C) 2007, 2014, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,7 +29,6 @@ public class SerializableConverterTest extends TestCase {
 
     private XStream createXStream() {
         XStream xstream = new XStream();
-        XStream.setupDefaultSecurity(xstream);
         xstream.allowTypesByWildcard(new String[] {getClass().getName()+"$*"});
         return xstream;
     }

@@ -102,7 +102,6 @@ public class DriverEndToEndTestSuite extends TestSuite {
 
     private void testObject(final HierarchicalStreamDriver driver) {
         final XStream xstream = new XStream(driver);
-        xstream.setupDefaultSecurity(xstream);
         xstream.allowTypes(new Class[] { SampleLists.class });
         xstream.registerConverter(new CollectionConverter(xstream.getMapper()) {
 

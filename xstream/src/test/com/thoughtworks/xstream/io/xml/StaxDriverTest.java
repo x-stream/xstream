@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -51,7 +51,6 @@ public class StaxDriverTest extends AbstractAcceptanceTest {
         System.setProperty(XMLOutputFactory.class.getName(), XMLOutputFactoryBase.class.getName());
         final MyStaxDriver driver = new MyStaxDriver();
         xstream = new XStream(driver);
-        XStream.setupDefaultSecurity(xstream);
         assertBothWays("Hi", "<?xml version='1.0' encoding='utf-8'?><string>Hi</string>");
         assertTrue(driver.createStaxReaderCalled);
         assertTrue(driver.createStaxWriterCalled);

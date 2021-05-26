@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2016, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -100,7 +100,6 @@ public class EncodingTestSuite extends TestSuite {
             + "</test>";
 
         final XStream xstream = new XStream(driver);
-        XStream.setupDefaultSecurity(xstream);
         xstream.allowTypesByWildcard(new String[] {getClass().getName()+"$*"});
         xstream.alias("test", TestObject.class);
         final TestObject obj = new TestObject();
