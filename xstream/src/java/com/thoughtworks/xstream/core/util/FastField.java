@@ -13,12 +13,20 @@ package com.thoughtworks.xstream.core.util;
 public final class FastField {
     private final String name;
     private final String declaringClass;
+    private final boolean isAttribute;
 
     public FastField(final String definedIn, final String name) {
         this.name = name;
         declaringClass = definedIn;
+        this.isAttribute = false;
     }
 
+    public FastField(final String definedIn, final String alias, boolean isAttribute) {
+        this.name = alias;
+        declaringClass = definedIn;
+        this.isAttribute = isAttribute;
+    }
+    
     public FastField(final Class<?> definedIn, final String name) {
         this(definedIn == null ? null : definedIn.getName(), name);
     }
@@ -31,33 +39,45 @@ public final class FastField {
         return declaringClass;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (obj instanceof FastField) {
-            final FastField field = (FastField)obj;
-            if (declaringClass == null && field.declaringClass != null
-                    || declaringClass != null && field.declaringClass == null) {
-                return false;
-            }
-            return name.equals(field.getName())
-                    && (declaringClass == null || declaringClass.equals(field.getDeclaringClass()));
-        }
-        return false;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FastField other = (FastField) obj;
+		if (declaringClass == null) {
+			if (other.declaringClass != null)
+				return false;
+		}
+		else if (!declaringClass.equals(other.declaringClass))
+			return false;
+		if (isAttribute != other.isAttribute)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		}
+		else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 
     @Override
-    public int hashCode() {
-        return name.hashCode() ^ (declaringClass == null ? 0 : declaringClass.hashCode());
-    }
-
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((declaringClass == null) ? 0 : declaringClass.hashCode());
+		result = prime * result + (isAttribute ? 1231 : 1237);
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+    
     @Override
     public String toString() {
-        return (declaringClass == null ? "" : declaringClass + ".") + name;
+        return (declaringClass == null ? "" : declaringClass + ".") + name + " " + isAttribute ;
     }
+
 }

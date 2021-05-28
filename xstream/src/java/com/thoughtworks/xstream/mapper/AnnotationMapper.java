@@ -118,6 +118,14 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         }
         return super.realMember(type, serialized);
     }
+    
+    public String realMember(final Class<?> type, final String serialized, boolean attrOrNot) {
+        if (!locked) {
+            processAnnotation(type);
+        }
+        return super.realMember(type, serialized, attrOrNot);
+    }
+    
 
     @Override
     public String serializedClass(final Class<?> type) {
@@ -343,7 +351,13 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             if (fieldAliasingMapper == null) {
                 throw new InitializationException("No " + FieldAliasingMapper.class.getName() + " available");
             }
-            fieldAliasingMapper.addFieldAlias(aliasAnnotation.value(), field.getDeclaringClass(), field.getName());
+            
+            boolean isAttr = false;
+            if(field.getAnnotation(XStreamAsAttribute.class)!=null) {
+            	isAttr = true;
+            }
+            
+            fieldAliasingMapper.addFieldAlias(aliasAnnotation.value(), isAttr, field.getDeclaringClass(), field.getName());
         }
     }
 
