@@ -63,6 +63,11 @@ public class DefaultImplementationsMapper extends MapperWrapper {
     }
 
     @Override
+    public String serializedClass(Object item) {
+        return serializedClass(item.getClass());
+    }
+
+    @Override
     public Class<?> defaultImplementationOf(final Class<?> type) {
         if (typeToImpl.containsKey(type)) {
             return typeToImpl.get(type);

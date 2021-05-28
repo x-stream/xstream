@@ -52,6 +52,11 @@ public class CGLIBMapper extends MapperWrapper {
     }
 
     @Override
+    public String serializedClass(Object item) {
+        return serializedClass(item.getClass());
+    }
+
+    @Override
     public Class<?> realClass(final String elementName) {
         return elementName.equals(alias) ? Marker.class : super.realClass(elementName);
     }
