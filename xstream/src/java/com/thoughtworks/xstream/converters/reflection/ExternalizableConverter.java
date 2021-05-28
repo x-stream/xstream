@@ -149,7 +149,7 @@ public class ExternalizableConverter implements Converter {
         final Constructor<?> defaultConstructor;
         try {
             defaultConstructor = type.getDeclaredConstructor();
-            if (!defaultConstructor.isAccessible()) {
+            if (!defaultConstructor.canAccess(null)) {
                 defaultConstructor.setAccessible(true);
             }
             final Externalizable externalizable = (Externalizable)defaultConstructor.newInstance();

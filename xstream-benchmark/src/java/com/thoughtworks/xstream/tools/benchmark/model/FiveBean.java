@@ -63,6 +63,6 @@ public class FiveBean extends OneBean {
     }
 
     public int hashCode() {
-        return super.hashCode() + two + new Boolean(three).hashCode() + five.toString().hashCode();
+        return super.hashCode() + two + Boolean.valueOf(three).hashCode() + five.toString().hashCode();
     }
 }

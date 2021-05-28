@@ -156,7 +156,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         }
         try {
             final Field field = type.getDeclaredField("serialVersionUID");
-            if (!field.isAccessible()) {
+            if (!(java.lang.reflect.Modifier.isStatic(field.getModifiers()) ? field.canAccess(null) : field.canAccess(source))) {
                 field.setAccessible(true);
             }
             final long serialVersionUID = field.getLong(null);
@@ -186,7 +186,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             for (int i = 0; true; ++i) {
                 try {
                     final Field field = type.getDeclaredField(CALLBACK_MARKER + i);
-                    if (!field.isAccessible()) {
+                    if (!(java.lang.reflect.Modifier.isStatic(field.getModifiers()) ? field.canAccess(null) : field.canAccess(source))) {
                         field.setAccessible(true);
                     }
                     fields.add(field);
@@ -246,7 +246,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             }
             for (final Iterator<Method> iter = methods.iterator(); iter.hasNext();) {
                 final Method method = iter.next();
-                if (!method.isAccessible()) {
+                if (!(java.lang.reflect.Modifier.isStatic(method.getModifiers()) ? method.canAccess(null) : method.canAccess(source))) {
                     method.setAccessible(true);
                 }
                 if (Factory.class.isAssignableFrom(method.getDeclaringClass())
