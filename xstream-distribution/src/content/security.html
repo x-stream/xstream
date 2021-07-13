@@ -50,8 +50,69 @@
         <th>Description</th>
       </tr>
       <tr>
-        <th>Version 1.4.16</th>
+        <th>Version 1.4.17</th>
         <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39139.html">CVE-2021-39139</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39140.html">CVE-2021-39140</a></th>
+        <td>XStream can cause a Denial of Service.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39141.html">CVE-2021-39141</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39144.html">CVE-2021-39144</a></th>
+        <td>XStream is vulnerable to a Remote Command Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39145.html">CVE-2021-39145</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39146.html">CVE-2021-39146</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39147.html">CVE-2021-39147</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39148.html">CVE-2021-39148</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39149.html">CVE-2021-39149</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39150.html">CVE-2021-39150</a></th>
+        <td>A Server-Side Forgery Request can be activated unmarshalling with XStream to access data streams from an
+        arbitrary URL referencing a resource in an intranet or the local host.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39151.html">CVE-2021-39151</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39152.html">CVE-2021-39152</a></th>
+        <td>A Server-Side Forgery Request can be activated unmarshalling with XStream to access data streams from an
+        arbitrary URL referencing a resource in an intranet or the local host.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39153.html">CVE-2021-39153</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-39154.html">CVE-2021-39154</a></th>
+        <td>XStream is vulnerable to an Arbitrary Code Execution attack.</td>
+      </tr>
+      <tr>
+        <th>Version 1.4.16</th>
         <td></td>
       </tr>
       <tr>
@@ -60,7 +121,6 @@
       </tr>
       <tr>
         <th>Version 1.4.15</th>
-        <td></td>
         <td></td>
       </tr>
       <tr>
@@ -383,37 +443,44 @@ xstream.allowTypesByWildcard(new String[] {
     <h2 id="workaround">Workarounds for older XStream versions</h2>
 
     <p>As recommended, use XStream's security framework to implement a whitelist for the allowed types. This is
-    possible since XStream 1.4.7 and the default since XStream 1.4.18:</p>
-<div class="Source Java"><pre>XStream xstream= new XStream();
-XStream.setupDefaultSecurity(xstream);
-// add your allowed types, type hierarchies or packages here
-</pre></div>
-    <p>Users of XStream 1.4.16 who insist to use XStream default blacklist - despite that clear recommendation - can
+    possible since XStream 1.4.7 and it is the default since XStream 1.4.18.</p>
+
+    <p>Users of XStream 1.4.17 who insist to use XStream default blacklist - despite that clear recommendation - can
     add these lines to XStream's setup code:</p>
+<div class="Source Java"><pre>xstream.denyTypesByWildcard(new String[]{ "sun.reflect.**", "sun.tracing.**", "com.sun.corba.**" });
+xstream.denyTypesByRegExp(new String[]{ ".*\\.ws\\.client\\.sei\\..*", ".*\\$ProxyLazyValue", "com\\.sun\\.jndi\\..*Enumerat(?:ion|tor),.*\\$URLData" });
+</pre></div>
+
+    <p>Users of XStream 1.4.16 should add these lines and <strong>additionally</strong> the lines for version 1.4.17:</p>
 <div class="Source Java"><pre>xstream.denyTypesByRegExp(new String[]{ ".*\\.Lazy(?:Search)?Enumeration.*", "(?:java|sun)\\.rmi\\..*" });
 </pre></div>
-    <p>Users of XStream 1.4.15 should <strong>additionally</strong> add these lines to the lines from above:</p>
-<div class="Source Java"><pre>xstream.denyTypes(new String[]{ "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", "sun.swing.SwingLazyValue", "com.sun.corba.se.impl.activation.ServerTableEntry", "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator" });
-xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader" });
+
+    <p>Users of XStream 1.4.15 should add these lines and <strong>additionally</strong> the lines for version 1.4.16 and 1.4.17:</p>
+<div class="Source Java"><pre>xstream.denyTypes(new String[]{ "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator" });
+xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "(javax|sun.swing)\\..*LazyValue", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader" });
 xstream.denyTypeHierarchy(java.io.InputStream.class );
 xstream.denyTypeHierarchy(java.nio.channels.Channel.class );
 xstream.denyTypeHierarchy(javax.activation.DataSource.class );
 xstream.denyTypeHierarchy(javax.sql.rowset.BaseRowSet.class );
 </pre></div>
-    <p>Users of XStream 1.4.14 and 1.4.13 should <strong>additionally</strong> add these two lines to the lines from above:</p>
+
+    <p>Users of XStream 1.4.13 and 1.4.14 should add these lines and <strong>additionally</strong> the lines for version 1.4.15 to 1.4.17:</p></p>
 <div class="Source Java"><pre>xstream.denyTypes(new String[]{ "javax.imageio.ImageIO$ContainsFilter" });
 xstream.denyTypes(new Class[]{ java.lang.ProcessBuilder.class });
 </pre></div>
-    <p>Users of XStream 1.4.12 to 1.4.7 who want to use XStream with a blacklist will have to setup such a list from
+
+    <p>Users of XStream 1.4.7 to 1.4.12 who want to use XStream with a blacklist will have to setup such a list from
     scratch:</p>
-<div class="Source Java"><pre>xstream.denyTypes(new String[]{ "javax.imageio.ImageIO$ContainsFilter", "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", "com.sun.corba.se.impl.activation.ServerTableEntry", "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator" });
+<div class="Source Java"><pre>xstream.denyTypes(new String[]{ "javax.imageio.ImageIO$ContainsFilter", "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator" });
 xstream.denyTypes(new Class[]{ java.lang.ProcessBuilder.class, java.beans.EventHandler.class, java.lang.ProcessBuilder.class, java.lang.Void.class, void.class });
-xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader", ".*\\$GetterSetterReflection", ".*\\$LazyIterator", ".*\\$PrivilegedGetter" });
+xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader", ".*\\$GetterSetterReflection", ".*\\$LazyIterator", ".*\\$PrivilegedGetter",  ".*\\.ws\\.client\\.sei\\..*", ".*\\$ProxyLazyValue", "com\\.sun\\.jndi\\..*Enumerat(?:ion|tor)", ".*\\$URLData" });
+xstream.denyTypesByWildcard(new String[]{ "sun.reflect.**", "sun.tracing.**", "com.sun.corba.**" });
 xstream.denyTypeHierarchy(java.io.InputStream.class);
 xstream.denyTypeHierarchy(java.nio.channels.Channel.class);
 xstream.denyTypeHierarchy(javax.activation.DataSource.class);
 xstream.denyTypeHierarchy(javax.sql.rowset.BaseRowSet.class);
 </pre></div>
+
 	<p>Users of XStream 1.4.6 or below can register an own converter to prevent the unmarshalling of the currently
 	know critical types of the Java runtime. It is in fact an updated version of the workaround for CVE-2013-7285:</p>
 <div class="Source Java"><pre>xstream.registerConverter(new Converter() {
@@ -421,7 +488,8 @@ xstream.denyTypeHierarchy(javax.sql.rowset.BaseRowSet.class);
     return type != null
       &amp;&amp; (type == java.beans.EventHandler.class || type == java.lang.ProcessBuilder.class || type == java.lang.Void.class || void.class
         || type.getName().equals("javax.imageio.ImageIO$ContainsFilter") || type.getName().equals("sun.awt.datatransfer.DataTransferer$IndexOrderComparator") || type.getName().equals("com.sun.corba.se.impl.activation.ServerTableEntry") || type.getName().equals("com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator")
-        || type.getName().matches("javafx\\.collections\\.ObservableList\\$.*") || type.getName().matches(".*\\$ServiceNameIterator")  || type.getName().matches(".*\\$GetterSetterReflection") || type.getName().matches(".*\\$LazyIterator") || type.getName().matches(".*\\.bcel\\..*\\.util\\.ClassLoader")
+        || type.getName().matches("javafx\\.collections\\.ObservableList\\$.*") || type.getName().matches(".*\\$ServiceNameIterator")  || type.getName().matches(".*\\$GetterSetterReflection") || type.getName().matches(".*\\$LazyIterator") || type.getName().matches(".*\\$ProxyLazyValue") || type.getName().matches(".*\\.bcel\\..*\\.util\\.ClassLoader") || type.getName().matches(".*\\.ws\\.client\\.sei\\..*") || type.getName().matches("com\\.sun\\.jndi\\..*Enumerat(?:ion|tor)") || type.getName().matches(".*\\$URLData")
+        || type.getName().startsWith("sun.reflect.") || type.getName().startsWith("sun.tracing.") || type.getName().startsWith("com.sun.corba.")
         || java.io.InputStream.class.isAssignableFrom(type) || java.nio.channels.Channel.isAssignableFrom(type) || javax.activation.DataSource.isAssignableFrom(type) ||javax.sql.rowset.BaseRowSet.isAssignableFrom(type)
         || Proxy.isProxy(type));
   }
