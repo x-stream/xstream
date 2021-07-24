@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,6 +19,8 @@ import java.io.ObjectInputValidation;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
 import com.thoughtworks.xstream.testutil.CallLog;
 
 
@@ -252,6 +254,71 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
+    public static class UnserializableBase {
+        protected UnserializableBase() {
+            log.actual("UnserializableBase.UnserializableBase()");
+        }
+    }
+
+    public static class ChildUnserializableBase extends UnserializableBase implements Serializable {
+
+        private static final long serialVersionUID = 202107L;
+
+        public ChildUnserializableBase(final String s) {
+            log.actual("ChildUnserializableBase.ChildUnserializableBase(String)");
+        }
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
+            log.actual("ChildUnserializableBase.writeObject() start");
+            out.defaultWriteObject();
+            log.actual("ChildUnserializableBase.writeObject() end");
+        }
+
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("ChildUnserializableBase.readObject() start");
+            in.defaultReadObject();
+            log.actual("ChildUnserializableBase.readObject() end");
+        }
+    }
+
+    public static class ChildUnserializableBaseRR extends ChildUnserializableBase {
+        private static final long serialVersionUID = 202107L;
+
+        private ChildUnserializableBaseRR() {
+            super("");
+            log.actual("ChildUnserializableBaseRR.ChildUnserializableBaseRR()");
+        }
+
+        public ChildUnserializableBaseRR(final String s) {
+            super(s);
+            log.actual("ChildUnserializableBaseRR.ChildUnserializableBaseRR(String)");
+        }
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
+            log.actual("ChildUnserializableBaseRR.writeObject() start");
+            out.defaultWriteObject();
+            out.writeInt(42);
+            log.actual("ChildUnserializableBaseRR.writeObject() end");
+        }
+
+        private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+            log.actual("ChildUnserializableBaseRR.readObject() start");
+            in.defaultReadObject();
+            in.readInt();
+            log.actual("ChildUnserializableBaseRR.readObject() end");
+        }
+
+        Object writeReplace() {
+            log.actual("ChildUnserializableBaseRR.writeReplace()");
+            return this;
+        }
+
+        Object readResolve() {
+            log.actual("ChildUnserializableBaseRR.readResolve()");
+            return this;
+        }
+    }
+
     // --- Convenience wrappers around Java Object Serialization
 
     private byte[] javaSerialize(final Object object) throws IOException {
@@ -358,6 +425,39 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
+    public void testJavaSerializationUnserializableBase() throws IOException {
+        final Serializable object = new ChildUnserializableBase("");
+        log.reset();
+
+        // expectations
+        log.expect("ChildUnserializableBase.writeObject() start");
+        log.expect("ChildUnserializableBase.writeObject() end");
+
+        // execute
+        javaSerialize(object);
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaSerializationUnserializableBaseRR() throws IOException {
+        final Serializable object = new ChildUnserializableBaseRR("");
+        log.reset();
+
+        // expectations
+        log.expect("ChildUnserializableBaseRR.writeReplace()");
+        log.expect("ChildUnserializableBase.writeObject() start");
+        log.expect("ChildUnserializableBase.writeObject() end");
+        log.expect("ChildUnserializableBaseRR.writeObject() start");
+        log.expect("ChildUnserializableBaseRR.writeObject() end");
+
+        // execute
+        javaSerialize(object);
+
+        // verify
+        log.verify();
+    }
+
     public void testXStreamSerializationOwnPrivateRR() {
         // expectations
         log.expect("PrivateChildOwnRR.writeReplace()");
@@ -442,6 +542,39 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
         // execute
         xstream.toXML(new PackageChildInheritedRR());
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamSerializationUnserializableBase() {
+        final Serializable object = new ChildUnserializableBase("");
+        log.reset();
+
+        // expectations
+        log.expect("ChildUnserializableBase.writeObject() start");
+        log.expect("ChildUnserializableBase.writeObject() end");
+
+        // execute
+        xstream.toXML(object);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamSerializationUnserializableBaseRR() {
+        final Serializable object = new ChildUnserializableBaseRR("");
+        log.reset();
+
+        // expectations
+        log.expect("ChildUnserializableBaseRR.writeReplace()");
+        log.expect("ChildUnserializableBase.writeObject() start");
+        log.expect("ChildUnserializableBase.writeObject() end");
+        log.expect("ChildUnserializableBaseRR.writeObject() start");
+        log.expect("ChildUnserializableBaseRR.writeObject() end");
+
+        // execute
+        xstream.toXML(object);
 
         // verify
         log.verify();
@@ -560,6 +693,43 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
+    public void testJavaDeserializationUnserializableBase() throws IOException, ClassNotFoundException {
+        // setup
+        final byte[] data = javaSerialize(new ChildUnserializableBase(""));
+        log.reset();
+
+        // expectations
+        log.expect("UnserializableBase.UnserializableBase()");
+        log.expect("ChildUnserializableBase.readObject() start");
+        log.expect("ChildUnserializableBase.readObject() end");
+
+        // execute
+        javaDeserialize(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testJavaDeserializationUnserializableBaseRR() throws IOException, ClassNotFoundException {
+        // setup
+        final byte[] data = javaSerialize(new ChildUnserializableBaseRR(""));
+        log.reset();
+
+        // expectations
+        log.expect("UnserializableBase.UnserializableBase()");
+        log.expect("ChildUnserializableBase.readObject() start");
+        log.expect("ChildUnserializableBase.readObject() end");
+        log.expect("ChildUnserializableBaseRR.readObject() start");
+        log.expect("ChildUnserializableBaseRR.readObject() end");
+        log.expect("ChildUnserializableBaseRR.readResolve()");
+
+        // execute
+        javaDeserialize(data);
+
+        // verify
+        log.verify();
+    }
+
     public void testXStreamDeserializationOwnPrivateRR() {
         // setup
         final String data = xstream.toXML(new PrivateChildOwnRR());
@@ -665,6 +835,103 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PackageChildInheritedRR.readObject() start");
         log.expect("PackageChildInheritedRR.readObject() end");
         log.expect("PackageBase.readResolve()");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationUnserializableBaseUnsafe() {
+        // Use Java deserialization for Serializables with unserializable parent, but no readResolve
+
+        // setup
+        final String data = xstream.toXML(new ChildUnserializableBase(""));
+        log.reset();
+
+        // expectations
+        // log.expect("UnserializableBase.UnserializableBase()"); // XStream cannot call ctor of parent only
+        log.expect("ChildUnserializableBase.readObject() start");
+        log.expect("ChildUnserializableBase.readObject() end");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationUnserializableBasePure() {
+        // Use Java deserialization for Serializables with unserializable parent, but no readResolve
+
+        // setup
+        xstream.registerConverter(new SerializableConverter(xstream.getMapper(), new PureJavaReflectionProvider(),
+            xstream.getClassLoaderReference()) {
+            @Override
+            public boolean canConvert(final Class<?> type) {
+                return type == ChildUnserializableBase.class;
+            }
+        });
+        final String data = xstream.toXML(new ChildUnserializableBase(""));
+        log.reset();
+
+        // expectations
+        log.expect("UnserializableBase.UnserializableBase()");
+        log.expect("ChildUnserializableBase.readObject() start"); // XStream runs readObject twice
+        log.expect("ChildUnserializableBase.readObject() end"); // XStream runs readObject twice
+        log.expect("ChildUnserializableBase.readObject() start");
+        log.expect("ChildUnserializableBase.readObject() end");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationUnserializableBaseRRUnsafe() {
+        // setup
+        final String data = xstream.toXML(new ChildUnserializableBaseRR(""));
+        log.reset();
+
+        // expectations
+        // log.expect("UnserializableBase.UnserializableBase()"); // XStream cannot call ctor of parent only
+        log.expect("ChildUnserializableBase.readObject() start");
+        log.expect("ChildUnserializableBase.readObject() end");
+        log.expect("ChildUnserializableBaseRR.readObject() start");
+        log.expect("ChildUnserializableBaseRR.readObject() end");
+        log.expect("ChildUnserializableBaseRR.readResolve()");
+
+        // execute
+        xstream.fromXML(data);
+
+        // verify
+        log.verify();
+    }
+
+    public void testXStreamDeserializationUnserializableBaseRRPure() {
+        // setup
+        xstream.registerConverter(new SerializableConverter(xstream.getMapper(), new PureJavaReflectionProvider(),
+            xstream.getClassLoaderReference()) {
+            @Override
+            public boolean canConvert(final Class<?> type) {
+                return type == ChildUnserializableBaseRR.class;
+            }
+        });
+        final String data = xstream.toXML(new ChildUnserializableBaseRR(""));
+        log.reset();
+
+        // expectations
+        log.expect("UnserializableBase.UnserializableBase()");
+        log.expect("ChildUnserializableBase.ChildUnserializableBase(String)"); // XStream cannot call ctor of parent
+                                                                               // only
+        log.expect("ChildUnserializableBaseRR.ChildUnserializableBaseRR()"); // XStream cannot call ctor of parent only
+        log.expect("ChildUnserializableBase.readObject() start");
+        log.expect("ChildUnserializableBase.readObject() end");
+        log.expect("ChildUnserializableBaseRR.readObject() start");
+        log.expect("ChildUnserializableBaseRR.readObject() end");
+        log.expect("ChildUnserializableBaseRR.readResolve()");
 
         // execute
         xstream.fromXML(data);
