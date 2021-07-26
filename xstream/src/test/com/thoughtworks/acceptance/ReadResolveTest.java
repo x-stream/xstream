@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,6 +19,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import com.thoughtworks.acceptance.objects.StatusEnum;
+import com.thoughtworks.xstream.converters.ConversionException;
 
 
 /**
@@ -83,5 +84,25 @@ public class ReadResolveTest extends AbstractAcceptanceTest {
 
         xstream.alias("toNull", ResolveToNull.class);
         assertNull(xstream.fromXML("<toNull><name>test</name></toNull>"));
+    }
+
+    public void testOutOfMemoryInReadObject() {
+        final String xml = ""
+                + "<java.util.PriorityQueue serialization='custom'>\n"
+                + "  <unserializable-parents/>\n"
+                + "  <java.util.PriorityQueue>\n"
+                + "    <default>\n"
+                + "      <size>2147483647</size>\n"
+                + "    </default>\n"
+                + "    <int>2</int>\n"
+                + "  </java.util.PriorityQueue>\n"
+                + "</java.util.PriorityQueue>";
+
+        try {
+            xstream.fromXML(xml);
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            // OK
+        }
     }
 }
