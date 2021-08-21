@@ -855,8 +855,6 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
 
         // expectations
         log.expect("UnserializableBase.UnserializableBase()");
-        log.expect("ChildUnserializableBase.readObject() start"); // XStream runs readObject twice
-        log.expect("ChildUnserializableBase.readObject() end"); // XStream runs readObject twice
         log.expect("ChildUnserializableBase.readObject() start");
         log.expect("ChildUnserializableBase.readObject() end");
 
