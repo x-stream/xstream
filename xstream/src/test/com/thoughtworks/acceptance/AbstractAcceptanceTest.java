@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
@@ -129,27 +128,33 @@ public abstract class AbstractAcceptanceTest extends TestCase {
         return resultRoot;
     }
 
-    protected static void serialize(final Object object, final OutputStream outputStream) {
-        try (ObjectOutputStream out = new ObjectOutputStream(outputStream)) {
-            out.writeObject(object);
-        } catch (final NotSerializableException e) {
-            fail("Serialization of object of type "
-                + object.getClass().getName()
-                + " failed because of reference to type "
-                + e.getMessage(), e);
+    protected static <T> byte[] serialize(final T object) {
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            try (ObjectOutputStream out = new ObjectOutputStream(os)) {
+                out.writeObject(object);
+                return os.toByteArray();
+            } catch (final NotSerializableException e) {
+                fail("Serialization of object of type "
+                    + object.getClass().getName()
+                    + " failed because of reference to type "
+                    + e.getMessage(), e);
+            }
         } catch (final IOException e) {
             fail("Serialization of object of type " + object.getClass().getName() + " failed", e);
         }
+        return null;
     }
 
-    protected static <T> T deserialize(final InputStream inputStream) {
-        try (ObjectInputStream out = new ObjectInputStream(inputStream)) {
-            @SuppressWarnings("unchecked")
-            final T t = (T)out.readObject();
-            return t;
-        } catch (final ClassNotFoundException e) {
-            fail("Cannot find class " + e.getMessage() + " during deserialization", e);
-            throw new AssertionFailedError(); // never reached
+    protected static <T> T deserialize(final byte[] data) {
+        try (InputStream is = new ByteArrayInputStream(data)) {
+            try (ObjectInputStream out = new ObjectInputStream(is)) {
+                @SuppressWarnings("unchecked")
+                final T t = (T)out.readObject();
+                return t;
+            } catch (final ClassNotFoundException e) {
+                fail("Cannot find class " + e.getMessage() + " during deserialization", e);
+                throw new AssertionFailedError(); // never reached
+            }
         } catch (final IOException e) {
             fail("Deserialization failed reading the InputStream", e);
             throw new AssertionFailedError(); // never reached
@@ -157,20 +162,8 @@ public abstract class AbstractAcceptanceTest extends TestCase {
     }
 
     protected <T> T assertJavaSerialization(final T in) {
-        byte[] data;
-        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-            serialize(in, os);
-            data = os.toByteArray();
-        } catch (final IOException e) {
-            fail("Serialization failed closing the OutputStream", e);
-            throw new AssertionFailedError(); // never reached
-        }
-        try (InputStream is = new ByteArrayInputStream(data)) {
-            return deserialize(is);
-        } catch (final IOException e) {
-            fail("Deserialization failed closing the InputStream", e);
-            throw new AssertionFailedError(); // never reached
-        }
+        byte[] data = serialize(in);
+        return deserialize(data);
     }
 
     /**
@@ -248,27 +241,26 @@ public abstract class AbstractAcceptanceTest extends TestCase {
             sort.append('"');
         }
 
-        final String stylesheet = String
-            .format(""
-                + "<?xml version=\"1.0\"?>\n"
-                + "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n"
-                + "<xsl:template match=\"%1$s\">\n"
-                + "   <xsl:copy>\n"
-                + "           <xsl:apply-templates select=\"%2$s\">\n"
-                + "                   <xsl:sort%3$s/>\n"
-                + "           </xsl:apply-templates>\n"
-                + "   </xsl:copy>\n"
-                + "</xsl:template>\n"
-                + "<xsl:template match=\"@*|node()\">\n"
-                + "   <xsl:copy>\n"
-                + "           <xsl:apply-templates select=\"@*|node()\"/>\n"
-                + "   </xsl:copy>\n"
-                + "</xsl:template>\n"
-                + "</xsl:stylesheet>", match, templateSelect, sort);
+        final String stylesheet = String.format(""
+            + "<?xml version=\"1.0\"?>\n"
+            + "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n"
+            + "<xsl:template match=\"%1$s\">\n"
+            + "   <xsl:copy>\n"
+            + "           <xsl:apply-templates select=\"%2$s\">\n"
+            + "                   <xsl:sort%3$s/>\n"
+            + "           </xsl:apply-templates>\n"
+            + "   </xsl:copy>\n"
+            + "</xsl:template>\n"
+            + "<xsl:template match=\"@*|node()\">\n"
+            + "   <xsl:copy>\n"
+            + "           <xsl:apply-templates select=\"@*|node()\"/>\n"
+            + "   </xsl:copy>\n"
+            + "</xsl:template>\n"
+            + "</xsl:stylesheet>", match, templateSelect, sort);
 
         final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        final Transformer transformer = transformerFactory
-            .newTransformer(new StreamSource(new StringReader(stylesheet)));
+        final Transformer transformer = transformerFactory.newTransformer(new StreamSource(new StringReader(
+            stylesheet)));
         final StringWriter writer = new StringWriter();
         transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(writer));
         return writer.toString();

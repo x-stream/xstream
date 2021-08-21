@@ -11,8 +11,6 @@
  */
 package com.thoughtworks.acceptance;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectInputValidation;
@@ -319,24 +317,9 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    // --- Convenience wrappers around Java Object Serialization
-
-    private byte[] javaSerialize(final Object object) throws IOException {
-        final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        final ObjectOutputStream objectOutputStream = new ObjectOutputStream(bytes);
-        objectOutputStream.writeObject(object);
-        objectOutputStream.close();
-        return bytes.toByteArray();
-    }
-
-    private Object javaDeserialize(final byte[] data) throws IOException, ClassNotFoundException {
-        final ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(data));
-        return objectInputStream.readObject();
-    }
-
     // --- Tests
 
-    public void testJavaSerializationOwnPrivateRR() throws IOException {
+    public void testJavaSerializationOwnPrivateRR() {
         // expectations
         log.expect("PrivateChildOwnRR.writeReplace()");
         log.expect("PrivateBase.writeObject() start");
@@ -345,13 +328,13 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PrivateChildOwnRR.writeObject() end");
 
         // execute
-        javaSerialize(new PrivateChildOwnRR());
+        serialize(new PrivateChildOwnRR());
 
         // verify
         log.verify();
     }
 
-    public void testJavaSerializationNoRR() throws IOException {
+    public void testJavaSerializationNoRR() {
         // expectations
         log.expect("PrivateBase.writeObject() start");
         log.expect("PrivateBase.writeObject() end");
@@ -359,13 +342,13 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PrivateChildNoRR.writeObject() end");
 
         // execute
-        javaSerialize(new PrivateChildNoRR());
+        serialize(new PrivateChildNoRR());
 
         // verify
         log.verify();
     }
 
-    public void testJavaSerializationOwnProtectedRR() throws IOException {
+    public void testJavaSerializationOwnProtectedRR() {
         // expectations
         log.expect("ProtectedChildOwnRR.writeReplace()");
         log.expect("ProtectedBase.writeObject() start");
@@ -374,13 +357,13 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("ProtectedChildOwnRR.writeObject() end");
 
         // execute
-        javaSerialize(new ProtectedChildOwnRR());
+        serialize(new ProtectedChildOwnRR());
 
         // verify
         log.verify();
     }
 
-    public void testJavaSerializationInheritedRR() throws IOException {
+    public void testJavaSerializationInheritedRR() {
         // expectations
         log.expect("ProtectedBase.writeReplace()");
         log.expect("ProtectedBase.writeObject() start");
@@ -389,13 +372,13 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("ProtectedChildInheritedRR.writeObject() end");
 
         // execute
-        javaSerialize(new ProtectedChildInheritedRR());
+        serialize(new ProtectedChildInheritedRR());
 
         // verify
         log.verify();
     }
 
-    public void testJavaSerializationOwnPackageRR() throws IOException {
+    public void testJavaSerializationOwnPackageRR() {
         // expectations
         log.expect("PackageChildOwnRR.writeReplace()");
         log.expect("PackageBase.writeObject() start");
@@ -404,13 +387,13 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PackageChildOwnRR.writeObject() end");
 
         // execute
-        javaSerialize(new PackageChildOwnRR());
+        serialize(new PackageChildOwnRR());
 
         // verify
         log.verify();
     }
 
-    public void testJavaSerializationInheritedPackageRR() throws IOException {
+    public void testJavaSerializationInheritedPackageRR() {
         // expectations
         log.expect("PackageBase.writeReplace()");
         log.expect("PackageBase.writeObject() start");
@@ -419,13 +402,13 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PackageChildInheritedRR.writeObject() end");
 
         // execute
-        javaSerialize(new PackageChildInheritedRR());
+        serialize(new PackageChildInheritedRR());
 
         // verify
         log.verify();
     }
 
-    public void testJavaSerializationUnserializableBase() throws IOException {
+    public void testJavaSerializationUnserializableBase() {
         final Serializable object = new ChildUnserializableBase("");
         log.reset();
 
@@ -434,13 +417,13 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("ChildUnserializableBase.writeObject() end");
 
         // execute
-        javaSerialize(object);
+        serialize(object);
 
         // verify
         log.verify();
     }
 
-    public void testJavaSerializationUnserializableBaseRR() throws IOException {
+    public void testJavaSerializationUnserializableBaseRR() {
         final Serializable object = new ChildUnserializableBaseRR("");
         log.reset();
 
@@ -452,7 +435,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("ChildUnserializableBaseRR.writeObject() end");
 
         // execute
-        javaSerialize(object);
+        serialize(object);
 
         // verify
         log.verify();
@@ -580,9 +563,9 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.verify();
     }
 
-    public void testJavaDeserializationOwnPrivateRR() throws IOException, ClassNotFoundException {
+    public void testJavaDeserializationOwnPrivateRR() {
         // setup
-        final byte[] data = javaSerialize(new PrivateChildOwnRR());
+        final byte[] data = serialize(new PrivateChildOwnRR());
         log.reset();
 
         // expectations
@@ -593,15 +576,15 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PrivateChildOwnRR.readResolve()");
 
         // execute
-        javaDeserialize(data);
+        deserialize(data);
 
         // verify
         log.verify();
     }
 
-    public void testJavaDeserializationNoRR() throws IOException, ClassNotFoundException {
+    public void testJavaDeserializationNoRR() {
         // setup
-        final byte[] data = javaSerialize(new PrivateChildNoRR());
+        final byte[] data = serialize(new PrivateChildNoRR());
         log.reset();
 
         // expectations
@@ -611,15 +594,15 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PrivateChildNoRR.readObject() end");
 
         // execute
-        javaDeserialize(data);
+        deserialize(data);
 
         // verify
         log.verify();
     }
 
-    public void testJavaDeserializationOwnProtectedRR() throws IOException, ClassNotFoundException {
+    public void testJavaDeserializationOwnProtectedRR() {
         // setup
-        final byte[] data = javaSerialize(new ProtectedChildOwnRR());
+        final byte[] data = serialize(new ProtectedChildOwnRR());
         log.reset();
 
         // expectations
@@ -630,15 +613,15 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("ProtectedChildOwnRR.readResolve()");
 
         // execute
-        javaDeserialize(data);
+        deserialize(data);
 
         // verify
         log.verify();
     }
 
-    public void testJavaDeserializationInheritedRR() throws IOException, ClassNotFoundException {
+    public void testJavaDeserializationInheritedRR() {
         // setup
-        final byte[] data = javaSerialize(new ProtectedChildInheritedRR());
+        final byte[] data = serialize(new ProtectedChildInheritedRR());
         log.reset();
 
         // expectations
@@ -649,15 +632,15 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("ProtectedBase.readResolve()");
 
         // execute
-        javaDeserialize(data);
+        deserialize(data);
 
         // verify
         log.verify();
     }
 
-    public void testJavaDeserializationOwnPackageRR() throws IOException, ClassNotFoundException {
+    public void testJavaDeserializationOwnPackageRR() {
         // setup
-        final byte[] data = javaSerialize(new PackageChildOwnRR());
+        final byte[] data = serialize(new PackageChildOwnRR());
         log.reset();
 
         // expectations
@@ -668,15 +651,15 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PackageChildOwnRR.readResolve()");
 
         // execute
-        javaDeserialize(data);
+        deserialize(data);
 
         // verify
         log.verify();
     }
 
-    public void testJavaDeserializationInheritedPackageRR() throws IOException, ClassNotFoundException {
+    public void testJavaDeserializationInheritedPackageRR() {
         // setup
-        final byte[] data = javaSerialize(new PackageChildInheritedRR());
+        final byte[] data = serialize(new PackageChildInheritedRR());
         log.reset();
 
         // expectations
@@ -687,15 +670,15 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("PackageBase.readResolve()");
 
         // execute
-        javaDeserialize(data);
+        deserialize(data);
 
         // verify
         log.verify();
     }
 
-    public void testJavaDeserializationUnserializableBase() throws IOException, ClassNotFoundException {
+    public void testJavaDeserializationUnserializableBase() {
         // setup
-        final byte[] data = javaSerialize(new ChildUnserializableBase(""));
+        final byte[] data = serialize(new ChildUnserializableBase(""));
         log.reset();
 
         // expectations
@@ -704,15 +687,15 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("ChildUnserializableBase.readObject() end");
 
         // execute
-        javaDeserialize(data);
+        deserialize(data);
 
         // verify
         log.verify();
     }
 
-    public void testJavaDeserializationUnserializableBaseRR() throws IOException, ClassNotFoundException {
+    public void testJavaDeserializationUnserializableBaseRR() {
         // setup
-        final byte[] data = javaSerialize(new ChildUnserializableBaseRR(""));
+        final byte[] data = serialize(new ChildUnserializableBaseRR(""));
         log.reset();
 
         // expectations
@@ -724,7 +707,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("ChildUnserializableBaseRR.readResolve()");
 
         // execute
-        javaDeserialize(data);
+        deserialize(data);
 
         // verify
         log.verify();
@@ -1040,8 +1023,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testJavaSerializationValidatesObjectIsCalledInPriorityOrder()
-            throws IOException, ClassNotFoundException {
+    public void testJavaSerializationValidatesObjectIsCalledInPriorityOrder() {
         // expect
         log.expect("readResolve()");
         log.expect("validateObject() high priority");
@@ -1050,7 +1032,7 @@ public class SerializationCallbackOrderTest extends AbstractAcceptanceTest {
         log.expect("validateObject() low priority");
 
         // execute
-        javaDeserialize(javaSerialize(new SomethingThatValidates()));
+        deserialize(serialize(new SomethingThatValidates()));
 
         // verify
         log.verify();
