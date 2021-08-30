@@ -422,8 +422,8 @@ XStream.denyTypeHierary(Class);</pre></div>
 
     <h2 id="example">Example Code Whitelist</h2>
 
-    <p>XStream uses the AnyTypePermission by default, i.e. any type is accepted.  You have to clear out this default
-	and register your own permissions to activate the security framework (the Blog type is from the
+    <p>XStream uses now the NoTypePermission by default with an internal whitelist.  You can clear out this default
+	and/or register your own permissions to adjust the security framework (the Blog type is from the
 	<a href="alias-tutorial.html">Alias Tutorial</a>):</p>
 <div class="Source Java"><pre>XStream xstream = new XStream();
 // clear out existing permissions and start a whitelist
@@ -448,7 +448,7 @@ xstream.allowTypesByWildcard(new String[] {
     <p>Users of XStream 1.4.17 who insist to use XStream default blacklist - despite that clear recommendation - can
     add these lines to XStream's setup code:</p>
 <div class="Source Java"><pre>xstream.denyTypesByWildcard(new String[]{ "sun.reflect.**", "sun.tracing.**", "com.sun.corba.**" });
-xstream.denyTypesByRegExp(new String[]{ ".*\\.ws\\.client\\.sei\\..*", ".*\\$ProxyLazyValue", "com\\.sun\\.jndi\\..*Enumerat(?:ion|tor),.*\\$URLData" });
+xstream.denyTypesByRegExp(new String[]{ ".*\\.ws\\.client\\.sei\\..*", ".*\\$ProxyLazyValue", "com\\.sun\\.jndi\\..*Enumerat(?:ion|tor)", ".*\\$URLData", ".*\\.xsltc\\.trax\\.TemplatesImpl" });
 </pre></div>
 
     <p>Users of XStream 1.4.16 should add these lines and <strong>additionally</strong> the lines for version 1.4.17:</p>
@@ -473,7 +473,7 @@ xstream.denyTypes(new Class[]{ java.lang.ProcessBuilder.class });
     scratch:</p>
 <div class="Source Java"><pre>xstream.denyTypes(new String[]{ "javax.imageio.ImageIO$ContainsFilter", "sun.awt.datatransfer.DataTransferer$IndexOrderComparator", "com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator" });
 xstream.denyTypes(new Class[]{ java.lang.ProcessBuilder.class, java.beans.EventHandler.class, java.lang.ProcessBuilder.class, java.lang.Void.class, void.class });
-xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader", ".*\\$GetterSetterReflection", ".*\\$LazyIterator", ".*\\$PrivilegedGetter",  ".*\\.ws\\.client\\.sei\\..*", ".*\\$ProxyLazyValue", "com\\.sun\\.jndi\\..*Enumerat(?:ion|tor)", ".*\\$URLData" });
+".*\\.xsltc\\.trax\\.TemplatesImpl"xstream.denyTypesByRegExp(new String[]{ ".*\\$ServiceNameIterator", "javafx\\.collections\\.ObservableList\\$.*", ".*\\.bcel\\..*\\.util\\.ClassLoader", ".*\\$GetterSetterReflection", ".*\\$LazyIterator", ".*\\$PrivilegedGetter",  ".*\\.ws\\.client\\.sei\\..*", ".*\\$ProxyLazyValue", "com\\.sun\\.jndi\\..*Enumerat(?:ion|tor)", ".*\\$URLData", ".*\\.xsltc\\.trax\\.TemplatesImpl" });
 xstream.denyTypesByWildcard(new String[]{ "sun.reflect.**", "sun.tracing.**", "com.sun.corba.**" });
 xstream.denyTypeHierarchy(java.io.InputStream.class);
 xstream.denyTypeHierarchy(java.nio.channels.Channel.class);
@@ -488,7 +488,8 @@ xstream.denyTypeHierarchy(javax.sql.rowset.BaseRowSet.class);
     return type != null
       &amp;&amp; (type == java.beans.EventHandler.class || type == java.lang.ProcessBuilder.class || type == java.lang.Void.class || void.class
         || type.getName().equals("javax.imageio.ImageIO$ContainsFilter") || type.getName().equals("sun.awt.datatransfer.DataTransferer$IndexOrderComparator") || type.getName().equals("com.sun.corba.se.impl.activation.ServerTableEntry") || type.getName().equals("com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator")
-        || type.getName().matches("javafx\\.collections\\.ObservableList\\$.*") || type.getName().matches(".*\\$ServiceNameIterator")  || type.getName().matches(".*\\$GetterSetterReflection") || type.getName().matches(".*\\$LazyIterator") || type.getName().matches(".*\\$ProxyLazyValue") || type.getName().matches(".*\\.bcel\\..*\\.util\\.ClassLoader") || type.getName().matches(".*\\.ws\\.client\\.sei\\..*") || type.getName().matches("com\\.sun\\.jndi\\..*Enumerat(?:ion|tor)") || type.getName().matches(".*\\$URLData")
+        || type.getName().matches("javafx\\.collections\\.ObservableList\\$.*") || type.getName().matches(".*\\$ServiceNameIterator")  || type.getName().matches(".*\\$GetterSetterReflection") || type.getName().matches(".*\\$LazyIterator") || type.getName().matches(".*\\$ProxyLazyValue") || type.getName().matches(".*\\.bcel\\..*\\.util\\.ClassLoader") || type.getName().matches(".*\\.ws\\.client\\.sei\\..*") || type.getName().matches("com\\.sun\\.jndi\\..*Enumerat(?:ion|tor)")
+        || type.getName().endsWith(".$URLData") || type.getName().endsWith(".xsltc.trax.TemplatesImpl")
         || type.getName().startsWith("sun.reflect.") || type.getName().startsWith("sun.tracing.") || type.getName().startsWith("com.sun.corba.")
         || java.io.InputStream.class.isAssignableFrom(type) || java.nio.channels.Channel.isAssignableFrom(type) || javax.activation.DataSource.isAssignableFrom(type) ||javax.sql.rowset.BaseRowSet.isAssignableFrom(type)
         || Proxy.isProxy(type));
