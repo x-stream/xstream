@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -335,10 +335,9 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
             xstream.fromXML(actualXml.replaceAll("foobar", "unknown"));
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
-            String message = e.getMessage();
-            assertTrue(message,
-                e.getMessage().substring(0, message.indexOf('\n')).endsWith(
-                    DerivedThing.class.getName() + ".unknown"));
+            final String message = e.getMessage();
+            assertTrue(message, e.getMessage().substring(0, message.indexOf('\n')).endsWith(DerivedThing.class.getName()
+                + ".unknown"));
         }
     }
     
@@ -402,5 +401,124 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("b", out.getHidden());
         assertEquals("c", out.neverIgnore);
         assertNull(out.sometimesIgnore);
+    }
+
+    public static class Member {
+        public String name;
+    }
+
+    public static class Parent {
+        public Member member;
+    }
+
+    public static class Child extends Parent {
+        public Member member;
+
+        public void setHidden(final Member member) {
+            super.member = member;
+        }
+
+        public Member getHidden() {
+            return super.member;
+        }
+    }
+
+    public void testIgnoredHiddenElementsAreNotReferenced() {
+        final Member member = new Member();
+        member.name = "junit";
+        final Child child = new Child();
+        child.setHidden(child.member = member);
+
+        xstream.alias("child", Child.class);
+        xstream.omitField(Child.class, "member");
+
+        final String expectedXml = ""
+            + "<child>\n"
+            + "  <member>\n"
+            + "    <name>junit</name>\n"
+            + "  </member>\n"
+            + "</child>";
+
+        final String actualXml = xstream.toXML(child);
+        assertEquals(expectedXml, actualXml);
+
+        final Child out = (Child)xstream.fromXML(expectedXml);
+        assertNull(out.member);
+        assertEquals("junit", out.getHidden().name);
+    }
+
+    public static class Wrapper {
+        public Member member;
+        public Parent parent;
+    }
+
+    public void testIgnoredElementsAreNotReferenced() {
+        final Member member = new Member();
+        member.name = "junit";
+        final Parent parent = new Parent();
+        final Wrapper wrapper = new Wrapper();
+        parent.member = wrapper.member = member;
+        wrapper.parent = parent;
+
+        xstream.alias("wrapper", Wrapper.class);
+        xstream.omitField(Wrapper.class, "member");
+
+        final String expectedXml = ""
+            + "<wrapper>\n"
+            + "  <parent>\n"
+            + "    <member>\n"
+            + "      <name>junit</name>\n"
+            + "    </member>\n"
+            + "  </parent>\n"
+            + "</wrapper>";
+
+        final String actualXml = xstream.toXML(wrapper);
+        assertEquals(expectedXml, actualXml);
+
+        final Wrapper out = (Wrapper)xstream.fromXML(expectedXml);
+        assertNull(out.member);
+        assertEquals("junit", out.parent.member.name);
+    }
+
+    public void testReferencedElementsCanBeOmitted() {
+        final Member member = new Member();
+        member.name = "junit";
+        final Wrapper wrapper = new Wrapper();
+        wrapper.member = member;
+
+        xstream.alias("wrapper", Wrapper.class);
+        xstream.omitField(Wrapper.class, "member2");
+
+        final String expectedXml = ""
+            + "<wrapper>\n"
+            + "  <member>\n"
+            + "    <name>junit</name>\n"
+            + "  </member>\n"
+            + "  <member2 reference=\"../member\"/>\n"
+            + "</wrapper>";
+
+        final Wrapper out = (Wrapper)xstream.fromXML(expectedXml);
+        assertEquals("junit", out.member.name);
+    }
+
+    public void testReferencedElementsCanBeIgnored() {
+        final Member member = new Member();
+        member.name = "junit";
+        final Wrapper wrapper = new Wrapper();
+        wrapper.member = member;
+
+        xstream.alias("wrapper", Wrapper.class);
+        xstream.ignoreUnknownElements();
+
+        final String expectedXml = ""
+            + "<wrapper>\n"
+            + "  <member>\n"
+            + "    <name>junit</name>\n"
+            + "  </member>\n"
+            + "  <member2 reference=\"../member\"/>\n"
+            + "</wrapper>";
+
+        final Wrapper out = (Wrapper)xstream.fromXML(expectedXml);
+        assertEquals("junit", out.member.name);
     }
 }
