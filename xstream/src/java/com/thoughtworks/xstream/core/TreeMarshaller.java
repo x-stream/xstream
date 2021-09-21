@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 
@@ -85,8 +86,7 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     public Object get(Object key) {
-        lazilyCreateDataHolder();
-        return dataHolder.get(key);
+        return dataHolder != null ? dataHolder.get(key) : null;
     }
 
     public void put(Object key, Object value) {
@@ -95,8 +95,7 @@ public class TreeMarshaller implements MarshallingContext {
     }
 
     public Iterator keys() {
-        lazilyCreateDataHolder();
-        return dataHolder.keys();
+        return dataHolder != null ? dataHolder.keys() : Collections.EMPTY_MAP.keySet().iterator();
     }
 
     private void lazilyCreateDataHolder() {

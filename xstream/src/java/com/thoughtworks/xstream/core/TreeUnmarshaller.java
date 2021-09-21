@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.core;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -108,8 +109,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     }
 
     public Object get(Object key) {
-        lazilyCreateDataHolder();
-        return dataHolder.get(key);
+        return dataHolder != null ? dataHolder.get(key) : null;
     }
 
     public void put(Object key, Object value) {
@@ -118,8 +118,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     }
 
     public Iterator keys() {
-        lazilyCreateDataHolder();
-        return dataHolder.keys();
+        return dataHolder != null ? dataHolder.keys() : Collections.EMPTY_MAP.keySet().iterator();
     }
 
     private void lazilyCreateDataHolder() {
