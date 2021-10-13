@@ -424,8 +424,8 @@ XStream.denyTypeHierary(Class);</pre></div>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/RegExpTypePermission.html">RegExpTypePermission</a></td>
 	    <td>Allow any type that matches with its name a regular expression.</td>
-	    <td class="example">allowTypeByRegExp(new String[]{"<i>.*\\.core\\..*</i>", "<i>[^$]+</i>"});<br/>
-	    allowTypeByRegExp(new Pattern[]{Pattern.compile("<i>.*\\.core\\..*</i>"), Pattern.compile("<i>[^$]+</i>")});</td>
+	    <td class="example">allowTypesByRegExp(new String[]{"<i>.*\\.core\\..*</i>", "<i>[^$]+</i>"});<br/>
+	    allowTypesByRegExp(new Pattern[]{Pattern.compile("<i>.*\\.core\\..*</i>"), Pattern.compile("<i>[^$]+</i>")});</td>
 	    <td>&ndash;</td>
 	</tr>
 	<tr>
@@ -439,7 +439,7 @@ XStream.denyTypeHierary(Class);</pre></div>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/WildcardTypePermission.html">WildcardTypePermission</a></td>
 	    <td>Allow any type that matches with its name a wildcard expression.</td>
-	    <td>allowTypeByWildcard(new String[]{"<i>java.lang.*</i>", "<i>java.util.**"</i>});</td>
+	    <td>allowTypesByWildcard(new String[]{"<i>java.lang.*</i>", "<i>java.util.**"</i>});</td>
 	    <td>&ndash;</td>
 	</tr>
     </table>
