@@ -969,7 +969,7 @@
                 <Bundle-Name>${project.name} Sources</Bundle-Name>
                 <Bundle-SymbolicName>${project.artifactId}.sources</Bundle-SymbolicName>
                 <Bundle-Vendor>${project.organization.name} Sources</Bundle-Vendor>
-                <Bundle-Version>${project.info.osgiVersion} Sources</Bundle-Version>
+                <Bundle-Version>${project.info.osgiVersion}</Bundle-Version>
                 <Bundle-License>BSD-3-Clause</Bundle-License>
                 <Eclipse-SourceBundle>${project.artifactId};version=${project.info.osgiVersion}</Eclipse-SourceBundle>
                 <X-Compile-Source>${version.java.source}</X-Compile-Source>
