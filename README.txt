@@ -10,7 +10,7 @@
 
 All binary artifacts are bundled in the -bin archive.  It includes
 the XStream jars and any other library used at build time, or
-optional runtime extras.  Xpp3 is recommend for use as it will
+optional runtime extras.  MXParser is recommend for use as it will
 greatly improve the performance of XStream.
 
 --[ Documentation ]------------------------------------------
