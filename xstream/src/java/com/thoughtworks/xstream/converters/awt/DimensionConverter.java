@@ -31,9 +31,11 @@ public class DimensionConverter implements Converter {
 	public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
 		reader.moveDown();
 		final int width = Integer.parseInt(reader.getValue());
+		reader.moveUp();
 
 		reader.moveDown();
 		final int height = Integer.parseInt(reader.getValue());
+		reader.moveUp();
 
 		return new Dimension(width, height);
 	}

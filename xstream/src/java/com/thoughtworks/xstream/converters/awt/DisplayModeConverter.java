@@ -40,15 +40,19 @@ public class DisplayModeConverter implements Converter {
 	public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
 		reader.moveDown();
 		final int width = Integer.parseInt(reader.getValue());
+		reader.moveUp();
 
 		reader.moveDown();
 		final int height = Integer.parseInt(reader.getValue());
+		reader.moveUp();
 
 		reader.moveDown();
 		final int bitDepth = Integer.parseInt(reader.getValue());
+		reader.moveUp();
 
 		reader.moveDown();
 		final int refreshRate = Integer.parseInt(reader.getValue());
+		reader.moveUp();
 
 		return new DisplayMode(width, height, bitDepth, refreshRate);
 	}
