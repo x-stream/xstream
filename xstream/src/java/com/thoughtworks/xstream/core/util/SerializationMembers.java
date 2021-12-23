@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014, 2015, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014, 2015, 2016, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -150,6 +150,9 @@ public class SerializationMembers implements Caching {
         } catch (final IllegalAccessException e) {
             ex = new ObjectAccessException("Cannot access method", e);
         } catch (final InvocationTargetException e) {
+            Throwable cause = e.getTargetException();
+            if (cause instanceof ConversionException)
+                    throw (ConversionException)cause;
             ex = new ConversionException("Failed calling method", e.getTargetException());
         }
         if (ex != null) {
