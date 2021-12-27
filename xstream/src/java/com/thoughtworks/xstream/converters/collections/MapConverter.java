@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.SecurityUtils;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -119,7 +120,9 @@ public class MapConverter extends AbstractCollectionConverter {
 
         @SuppressWarnings("unchecked")
         final Map<Object, Object> targetMap = (Map<Object, Object>)target;
+        final long now = System.currentTimeMillis();
         targetMap.put(key, value);
+        SecurityUtils.checkForCollectionDoSAttack(context, now);
     }
 
     @Override

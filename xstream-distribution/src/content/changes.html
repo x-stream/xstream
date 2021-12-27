@@ -112,6 +112,20 @@
 
 	<p>Not yet released.</p>
 
+	<p class="highlight">This maintenance release addresses the security vulnerability
+	<a href="CVE-2021-43859.html">CVE-2021-43859</a>, when unmarshalling highly recursive collections or maps causing a
+	Denial of Service.</p>
+
+	<h2>API changes</h2>
+
+	<ul>
+		<li>Added c.t.x.XStream.COLLECTION_UPDATE_LIMIT and c.t.x.XStream.COLLECTION_UPDATE_SECONDS.</li>
+		<li>Added c.t.x.XStream.setCollectionUpdateLimit(int).</li>
+		<li>Added c.t.x.core.SecurityUtils.</li>
+		<li>Added c.t.x.security.AbstractSecurityException and c.t.x.security.InputManipulationException.</li>
+		<li>c.t.x.security.InputManipulationException derives now from c.t.x.security.AbstractSecurityException.</li>
+	</ul>
+
 	<h1 id="1.4.18">1.4.18</h1>
 
 	<p>Released August 22, 2021.</p>
