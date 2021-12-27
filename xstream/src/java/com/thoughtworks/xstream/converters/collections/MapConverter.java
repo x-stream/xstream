@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.collections;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.SecurityUtils;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -104,7 +105,10 @@ public class MapConverter extends AbstractCollectionConverter {
         Map map, Map target) {
         final Object key = readCompleteItem(reader, context, map);
         final Object value = readCompleteItem(reader, context, map);
+
+        long now = System.currentTimeMillis();
         target.put(key, value);
+        SecurityUtils.checkForCollectionDoSAttack(context, now);
     }
 
     protected Object createCollection(Class type) {

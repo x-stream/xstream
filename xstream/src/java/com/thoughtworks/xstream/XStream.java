@@ -151,6 +151,7 @@ import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
+import com.thoughtworks.xstream.security.InputManipulationException;
 import com.thoughtworks.xstream.security.ExplicitTypePermission;
 import com.thoughtworks.xstream.security.InterfaceTypePermission;
 import com.thoughtworks.xstream.security.NoPermission;
@@ -295,6 +296,8 @@ public class XStream {
 
     // CAUTION: The sequence of the fields is intentional for an optimal XML output of a
     // self-serialization!
+    private int collectionUpdateLimit = 20;
+
     private ReflectionProvider reflectionProvider;
     private HierarchicalStreamDriver hierarchicalStreamDriver;
     private ClassLoaderReference classLoaderReference;
@@ -328,6 +331,9 @@ public class XStream {
     public static final int PRIORITY_NORMAL = 0;
     public static final int PRIORITY_LOW = -10;
     public static final int PRIORITY_VERY_LOW = -20;
+
+    public static final String COLLECTION_UPDATE_LIMIT = "XStreamCollectionUpdateLimit";
+    public static final String COLLECTION_UPDATE_SECONDS = "XStreamCollectionUpdateSeconds";
 
     private static final String ANNOTATION_MAPPER_TYPE = "com.thoughtworks.xstream.mapper.AnnotationMapper";
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
@@ -1183,6 +1189,23 @@ public class XStream {
     }
 
     /**
+     * Set time limit for adding elements to collections or maps.
+     * 
+     * Manipulated content may be used to create recursive hash code calculations or sort operations. An
+     * {@link InputManipulationException} is thrown, it the summed up time to add elements to collections or maps
+     * exceeds the provided limit.
+     * 
+     * Note, that the time to add an individual element is calculated in seconds, not milliseconds. However, attacks
+     * typically use objects with exponential growing calculation times.
+     * 
+     * @param maxSeconds limit in seconds or 0 to disable check
+     * @since upcoming
+     */
+    public void setCollectionUpdateLimit(int maxSeconds) {
+        collectionUpdateLimit = maxSeconds;
+    }
+
+    /**
      * Serialize an object to a pretty-printed XML String.
      *
      * @throws XStreamException if the object cannot be serialized
@@ -1388,6 +1411,13 @@ public class XStream {
      */
     public Object unmarshal(HierarchicalStreamReader reader, Object root, DataHolder dataHolder) {
         try {
+            if (collectionUpdateLimit >= 0) {
+                if (dataHolder == null) {
+                    dataHolder = new MapBackedDataHolder();
+                }
+                dataHolder.put(COLLECTION_UPDATE_LIMIT, new Integer(collectionUpdateLimit));
+                dataHolder.put(COLLECTION_UPDATE_SECONDS, new Integer(0));
+            }
             return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
         } catch (ConversionException e) {
             Package pkg = getClass().getPackage();
@@ -2053,15 +2083,23 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.4.10
      */
-    public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader, final DataHolder dataHolder)
+    public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader, DataHolder dataHolder)
             throws IOException {
+        if (collectionUpdateLimit >= 0) {
+            if (dataHolder == null) {
+                dataHolder = new MapBackedDataHolder();
+            }
+            dataHolder.put(COLLECTION_UPDATE_LIMIT, new Integer(collectionUpdateLimit));
+            dataHolder.put(COLLECTION_UPDATE_SECONDS, new Integer(0));
+        }
+        final DataHolder dh = dataHolder;
         return new CustomObjectInputStream(new CustomObjectInputStream.StreamCallback() {
             public Object readFromStream() throws EOFException {
                 if (!reader.hasMoreChildren()) {
                     throw new EOFException();
                 }
                 reader.moveDown();
-                final Object result = unmarshal(reader, null, dataHolder);
+                final Object result = unmarshal(reader, null, dh);
                 reader.moveUp();
                 return result;
             }
