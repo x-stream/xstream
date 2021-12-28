@@ -339,6 +339,9 @@ XStream.denyTypeHierary(Class);</pre></div>
 	<p>XStream provides some TypePermission implementations to allow any or no type at all, to allow primitive types
 	and their counterpart, null, array types, implementations match the name of the type by regular or wildcard
 	expression and one to invert a permission.</p>
+         
+	<p class="highlight">Note:  The examples below are <strong>examples</strong>.  Some will or might enable types that
+	are target of a security issue from above and are highlighted as dangerous.</p>
 	
 	<table class="examplesTable" summary="Overview over all type permissions delivered with XStream">
 	<!-- .................................................................................................. -->
@@ -353,25 +356,25 @@ XStream.denyTypeHierary(Class);</pre></div>
 	    <td><b>Start a blacklist</b> and allow any type.  A registration of this permission will wipe any prior one.
 	    You may use the ANY instance directly.  Note, that it is now in the responsibility of the developer to deny any
 	    type that might be used for arbitrary code execution as described in the CVEs above.</td>
-	    <td>addPermission(<i>AnyTypePermission.ANY</i>);</td>
+	    <td class="example danger">addPermission(<i>AnyTypePermission.ANY</i>);</td>
 	    <td>no</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ArrayTypePermission.html">ArrayTypePermission</a></td>
 	    <td>Allow any array type.  You may use the ARRAYS instance directly.</td>
-	    <td>addPermission(<i>ArrayTypePermission.ARRAYS</i>);</td>
+	    <td class="example">addPermission(<i>ArrayTypePermission.ARRAYS</i>);</td>
 	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/CGLIBProxyTypePermission.html">CGLIBProxyTypePermission</a></td>
 	    <td>Allow any CGLIB proxy type.  You may use the PROXIES instance directly.</td>
-	    <td>addPermission(<i>CGLIBProxyTypePermission.PROXIES</i>);</td>
+	    <td class="example danger">addPermission(<i>CGLIBProxyTypePermission.PROXIES</i>);</td>
 	    <td>no</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ExplicitTypePermission.html">ExplicitTypePermission</a></td>
 	    <td>Allow types explicitly by name.</td>
-	    <td>allowTypes(new String[] {"<i>java.io.File</i>", "<i>java.lang.ProcessBuilder</i>"});<br/>
+	    <td class="example danger">allowTypes(new String[] {"<i>java.io.File</i>", "<i>java.lang.ProcessBuilder</i>"});<br/>
 	    allowTypes(new Class[] {<i>java.io.File.class</i>, <i>java.lang.ProcessBuilder.class</i>});</td>
 	    <td>java.io.File, java.nio.charset.Charset, java.util.BitSet, java.lang.Class, java.lang.Object,
 	    java.lang.StackTraceElement, java.lang.String, java.lang.StringBuffer, java.lang.StringBuilder, java.net.URI,
@@ -386,52 +389,52 @@ XStream.denyTypeHierary(Class);</pre></div>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/InterfaceTypePermission.html">InterfaceTypePermission</a></td>
 	    <td>Allow any interface type.  You may use the INTERFACES instance directly.</td>
-	    <td>addPermission(<i>InterfaceTypePermission.INTERFACES</i>);</td>
+	    <td class="example">addPermission(<i>InterfaceTypePermission.INTERFACES</i>);</td>
 	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NoPermission.html">NoPermission</a></td>
 	    <td>Invert any other permission.  Instances of this type are used by XStream in the deny methods wrapping a permission.</td>
-	    <td>denyPermission(<i>permissionInstance</i>);</td>
+	    <td class="example">denyPermission(<i>permissionInstance</i>);</td>
 	    <td>no</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NoTypePermission.html">NoTypePermission</a></td>
 	    <td><b>Start a whitelist</b> and allow no type.  A registration of this permission will wipe any prior one.
 	    You may use the NONE instance directly.</td>
-	    <td>addPermission(<i>NoTypePermission.NONE</i>);</td>
+	    <td class="example">addPermission(<i>NoTypePermission.NONE</i>);</td>
 	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/NullPermission.html">NullPermission</a></td>
 	    <td>Allow null as type.  You may use the NULL instance directly.</td>
-	    <td>addPermission(<i>NullPermission.NULL</i>);</td>
+	    <td class="example">addPermission(<i>NullPermission.NULL</i>);</td>
 	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/PrimitiveTypePermission.html">PrimitiveTypePermission</a></td>
 	    <td>Allow any primitive type and its boxed counterpart (excluding void).  You may use the PRIMITIVES instance
 	    directly.</td>
-	    <td>addPermission(<i>PrimitiveTypePermission.PRIMITIVES</i>);</td>
+	    <td class="example">addPermission(<i>PrimitiveTypePermission.PRIMITIVES</i>);</td>
 	    <td>yes</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ProxyTypePermission.html">ProxyTypePermission</a></td>
 	    <td>Allow any Java proxy type.  You may use the PROXIES instance directly.</td>
-	    <td>addPermission(<i>ProxyTypePermission.PROXIES</i>);</td>
+	    <td class="example">addPermission(<i>ProxyTypePermission.PROXIES</i>);</td>
 	    <td>no</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/RegExpTypePermission.html">RegExpTypePermission</a></td>
 	    <td>Allow any type that matches with its name a regular expression.</td>
-	    <td class="example">allowTypesByRegExp(new String[]{"<i>.*\\.core\\..*</i>", "<i>[^$]+</i>"});<br/>
+	    <td class="example danger">allowTypesByRegExp(new String[]{"<i>.*\\.core\\..*</i>", "<i>[^$]+</i>"});<br/>
 	    allowTypesByRegExp(new Pattern[]{Pattern.compile("<i>.*\\.core\\..*</i>"), Pattern.compile("<i>[^$]+</i>")});</td>
 	    <td>&ndash;</td>
 	</tr>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/TypeHierarchyPermission.html">TypeHierarchyPermission</a></td>
 	    <td>Allow types of a hierarchy.</td>
-	    <td>allowTypeHierarchy(<i>java.lang.Throwable.class</i>);</td>
+	    <td class="example">allowTypeHierarchy(<i>java.lang.Throwable.class</i>);</td>
 	    <td>java.lang.Enum, java.lang.Number, java.lang.Throwable, java.lang.reflect.Member, java.nio.file.Path,
 	    java.time.Clock, java.time.ZoneId, java.time.chrono.Chronology, java.util.Calendar, java.util.Collection,
 	    java.util.Map, java.util.Map.Entry, java.util.TimeZone</td>
@@ -439,7 +442,7 @@ XStream.denyTypeHierary(Class);</pre></div>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/WildcardTypePermission.html">WildcardTypePermission</a></td>
 	    <td>Allow any type that matches with its name a wildcard expression.</td>
-	    <td>allowTypesByWildcard(new String[]{"<i>java.lang.*</i>", "<i>java.util.**"</i>});</td>
+	    <td class="example danger">allowTypesByWildcard(new String[]{"<i>java.lang.*</i>", "<i>java.util.**"</i>});</td>
 	    <td>&ndash;</td>
 	</tr>
     </table>

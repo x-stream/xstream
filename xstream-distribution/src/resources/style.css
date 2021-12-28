@@ -246,13 +246,18 @@ ul, ol {
     padding: 0px;
     border: 0px;
     font-size: inherit;
-    line-spacing: 100%;
+    line-height: 100%;
 }
 
 .highlight {
     background-color: #e0f0e0;
     border: 1px dotted #060;
     padding: 5px;
+}
+
+.danger {
+	color: red;
+    font-weight: bold;
 }
 
 /* The following are for images, but can also apply to div's containing images. */
