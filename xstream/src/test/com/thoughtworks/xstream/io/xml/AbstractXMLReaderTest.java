@@ -155,6 +155,12 @@ public abstract class AbstractXMLReaderTest extends AbstractReaderTest {
         assertEquals("hello\u0004-\u0096world", xmlReader.getValue());
         xmlReader.close();
     }
-    
+
+    public void testArbitraryProcessingInstructionIsIgnored() throws Exception {
+        final HierarchicalStreamReader reader = createReader("<?ignore -->? > ignore ?><string>XStream</string>");
+        assertEquals("XStream", reader.getValue());
+        reader.close();
+    }
+
     // inherits tests from superclass
 }
