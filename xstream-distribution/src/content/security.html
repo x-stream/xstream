@@ -374,8 +374,8 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/ExplicitTypePermission.html">ExplicitTypePermission</a></td>
 	    <td>Allow types explicitly by name.</td>
-	    <td class="example danger">allowTypes(new String[] {"<i>java.io.File</i>", "<i>java.lang.ProcessBuilder</i>"});<br/>
-	    allowTypes(new Class[] {<i>java.io.File.class</i>, <i>java.lang.ProcessBuilder.class</i>});</td>
+	    <td class="example danger">allowTypes("<i>java.io.File</i>", "<i>java.lang.ProcessBuilder</i>");<br/>
+	    allowTypes(<i>java.io.File.class</i>, <i>java.lang.ProcessBuilder.class</i>);</td>
 	    <td>java.io.File, java.nio.charset.Charset, java.util.BitSet, java.lang.Class, java.lang.Object,
 	    java.lang.StackTraceElement, java.lang.String, java.lang.StringBuffer, java.lang.StringBuilder, java.net.URI,
 	    java.net.URL, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.text.DecimalFormatSymbols,
@@ -427,8 +427,8 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/RegExpTypePermission.html">RegExpTypePermission</a></td>
 	    <td>Allow any type that matches with its name a regular expression.</td>
-	    <td class="example danger">allowTypesByRegExp(new String[]{"<i>.*\\.core\\..*</i>", "<i>[^$]+</i>"});<br/>
-	    allowTypesByRegExp(new Pattern[]{Pattern.compile("<i>.*\\.core\\..*</i>"), Pattern.compile("<i>[^$]+</i>")});</td>
+	    <td class="example danger">allowTypesByRegExp("<i>.*\\.core\\..*</i>", "<i>[^$]+</i>");<br/>
+	    allowTypesByRegExp(Pattern.compile("<i>.*\\.core\\..*</i>"), Pattern.compile("<i>[^$]+</i>"));</td>
 	    <td>&ndash;</td>
 	</tr>
 	<tr>
@@ -442,7 +442,7 @@ XStream.denyTypeHierary(Class&lt;?&gt;);</pre></div>
 	<tr>
 	    <td><a href="javadoc/com/thoughtworks/xstream/security/WildcardTypePermission.html">WildcardTypePermission</a></td>
 	    <td>Allow any type that matches with its name a wildcard expression.</td>
-	    <td class="example danger">allowTypesByWildcard(new String[]{"<i>java.lang.*</i>", "<i>java.util.**"</i>});</td>
+	    <td class="example danger">allowTypesByWildcard("<i>java.lang.*</i>", "<i>java.util.**"</i>);</td>
 	    <td>&ndash;</td>
 	</tr>
     </table>
