@@ -24,9 +24,18 @@
 
   <profiles>
     <profile>
-      <id>jdk9-ge</id>
+      <id>jdk17-ge</id>
       <activation>
-        <jdk>[9,)</jdk>
+        <jdk>[17,)</jdk>
+      </activation>
+      <properties>
+        <surefire.argline>--add-opens java.base/java.lang=ALL-UNNAMED</surefire.argline>
+      </properties>
+    </profile>
+    <profile>
+      <id>jdk9-ge-jdk16</id>
+      <activation>
+        <jdk>[9,17)</jdk>
       </activation>
       <properties>
         <surefire.argline>--illegal-access=${surefire.illegal.access}</surefire.argline>
