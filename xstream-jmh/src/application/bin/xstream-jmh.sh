@@ -41,6 +41,15 @@ for i in lib/*.jar; do
 	APP_CP=$APP_CP:$i
 done
 
+# * Open modules for parsers using Java 17 or higher
+# *************
+JAVA_VERSION=`$JAVA_BIN -cp $APP_CP com.thoughtworks.xstream.core.JVM | grep "java.specification.version" | cut -d ' ' -f 2`
+if [[ $JAVA_VERSION -ge 17 ]]; then
+	JAVA_OPTS="$JAVA_OPTS --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED"
+	JAVA_OPTS="$JAVA_OPTS --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED"
+	JAVA_OPTS="$JAVA_OPTS --add-opens java.xml/com.sun.xml.internal.stream=ALL-UNNAMED"
+fi
+
 # * Set options
 # *************
 JAVA_OPTS="$JAVA_OPTS -Xmx2048m -Xss4m"
