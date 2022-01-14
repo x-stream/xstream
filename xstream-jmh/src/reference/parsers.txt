@@ -1,40 +1,51 @@
+# JMH version: 1.21
+# VM version: JDK 11.0.13, OpenJDK 64-Bit Server VM, 11.0.13+8
+# VM invoker: /opt/openjdk-bin-11.0.13_p8/bin/java
+# VM options: -Xmx2048m -Xss4m
+# Warmup: 5 iterations, 10 s each
+# Measurement: 15 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: com.thoughtworks.xstream.benchmark.jmh.ParserBenchmark
+
 Benchmark                           (driverFactory)  Mode  Cnt         Score         Error  Units
-ParserBenchmark.parseBigText               MXParser  avgt   15   2131602.489 ±   25703.664  ns/op
-ParserBenchmark.parseBigText                   Xpp3  avgt   15   2084284.951 ±   14376.744  ns/op
-ParserBenchmark.parseBigText                  kXML2  avgt   15   3561706.234 ±   28443.949  ns/op
-ParserBenchmark.parseBigText                JDKStax  avgt   15   8450930.541 ±  114260.574  ns/op
-ParserBenchmark.parseBigText               Woodstox  avgt   15   1959085.951 ±    4958.052  ns/op
-ParserBenchmark.parseBigText                BEAStax  avgt   15   3182516.188 ±   38272.584  ns/op
-ParserBenchmark.parseBigText                    DOM  avgt   15  10568442.558 ±  153957.726  ns/op
-ParserBenchmark.parseBigText                  DOM4J  avgt   15   8543670.534 ±   35374.800  ns/op
-ParserBenchmark.parseBigText                   JDom  avgt   15   6379300.940 ±   39285.532  ns/op
-ParserBenchmark.parseBigText                  JDom2  avgt   15   5929805.928 ±  118564.329  ns/op
-ParserBenchmark.parseBigText                    Xom  avgt   15   7968868.873 ±   26730.256  ns/op
-ParserBenchmark.parseBigText                 Binary  avgt   15   1065228.134 ±    5642.331  ns/op
-ParserBenchmark.parseBigText               Jettison  avgt   15   3682704.689 ±   56568.770  ns/op
-ParserBenchmark.parseManyChildren          MXParser  avgt   15    814691.675 ±    3495.652  ns/op
-ParserBenchmark.parseManyChildren              Xpp3  avgt   15    754593.348 ±   16963.908  ns/op
-ParserBenchmark.parseManyChildren             kXML2  avgt   15    855787.083 ±    2364.443  ns/op
-ParserBenchmark.parseManyChildren           JDKStax  avgt   15    885917.070 ±   27740.420  ns/op
-ParserBenchmark.parseManyChildren          Woodstox  avgt   15    630843.461 ±   16713.507  ns/op
-ParserBenchmark.parseManyChildren           BEAStax  avgt   15    667706.032 ±   11089.959  ns/op
-ParserBenchmark.parseManyChildren               DOM  avgt   15  59894584.643 ±  305491.167  ns/op
-ParserBenchmark.parseManyChildren             DOM4J  avgt   15  79125701.566 ± 1579465.065  ns/op
-ParserBenchmark.parseManyChildren              JDom  avgt   15   6887733.303 ±  102619.220  ns/op
-ParserBenchmark.parseManyChildren             JDom2  avgt   15   9876176.832 ±   48837.176  ns/op
-ParserBenchmark.parseManyChildren               Xom  avgt   15  34141742.595 ±  475598.891  ns/op
-ParserBenchmark.parseManyChildren            Binary  avgt   15    405493.660 ±    4239.044  ns/op
-ParserBenchmark.parseManyChildren          Jettison  avgt   15    601803.834 ±    2160.122  ns/op
-ParserBenchmark.parseNestedElements        MXParser  avgt   15  13287597.794 ±  343543.709  ns/op
-ParserBenchmark.parseNestedElements            Xpp3  avgt   15  13056389.184 ±  132562.496  ns/op
-ParserBenchmark.parseNestedElements           kXML2  avgt   15  36819091.742 ±  300358.967  ns/op
-ParserBenchmark.parseNestedElements         JDKStax  avgt   15    868883.676 ±   15697.149  ns/op
-ParserBenchmark.parseNestedElements        Woodstox  avgt   15    835465.393 ±   19498.030  ns/op
-ParserBenchmark.parseNestedElements         BEAStax  avgt   15    603986.803 ±    2529.449  ns/op
-ParserBenchmark.parseNestedElements             DOM  avgt   15   5382390.375 ±   82043.169  ns/op
-ParserBenchmark.parseNestedElements           DOM4J  avgt   15   5372787.809 ±  127206.586  ns/op
-ParserBenchmark.parseNestedElements            JDom  avgt   15  13598531.633 ±   96889.652  ns/op
-ParserBenchmark.parseNestedElements           JDom2  avgt   15  12503949.903 ±  502488.951  ns/op
-ParserBenchmark.parseNestedElements             Xom  avgt   15   5425911.128 ±   23777.824  ns/op
-ParserBenchmark.parseNestedElements          Binary  avgt   15    284620.649 ±    1734.011  ns/op
-ParserBenchmark.parseNestedElements        Jettison  avgt   15    678187.271 ±   19300.714  ns/op
+ParserBenchmark.parseBigText               MXParser          N/A  avgt   15   2090782.658 ±   35357.342  ns/op
+ParserBenchmark.parseBigText                   Xpp3          N/A  avgt   15   2112720.726 ±   16553.078  ns/op
+ParserBenchmark.parseBigText                  kXML2          N/A  avgt   15   3524809.724 ±   19870.806  ns/op
+ParserBenchmark.parseBigText                JDKStax          N/A  avgt   15   8377577.926 ±  106615.592  ns/op
+ParserBenchmark.parseBigText               Woodstox          N/A  avgt   15   2048393.986 ±   17640.070  ns/op
+ParserBenchmark.parseBigText                BEAStax          N/A  avgt   15   3229409.245 ±   10436.313  ns/op
+ParserBenchmark.parseBigText                    DOM          N/A  avgt   15  10553104.053 ±  149802.579  ns/op
+ParserBenchmark.parseBigText                  DOM4J          N/A  avgt   15   8344385.552 ±   43187.879  ns/op
+ParserBenchmark.parseBigText                   JDom          N/A  avgt   15   6347929.561 ±   15207.545  ns/op
+ParserBenchmark.parseBigText                  JDom2          N/A  avgt   15   5843003.401 ±   81856.524  ns/op
+ParserBenchmark.parseBigText                    Xom          N/A  avgt   15   7986743.807 ±   76081.180  ns/op
+ParserBenchmark.parseBigText                 Binary          N/A  avgt   15   1111084.176 ±   25347.556  ns/op
+ParserBenchmark.parseBigText               Jettison          N/A  avgt   15   3617569.912 ±   52394.798  ns/op
+ParserBenchmark.parseManyChildren          MXParser          N/A  avgt   15    687905.727 ±     736.978  ns/op
+ParserBenchmark.parseManyChildren              Xpp3          N/A  avgt   15    701583.341 ±    8292.747  ns/op
+ParserBenchmark.parseManyChildren             kXML2          N/A  avgt   15    902275.516 ±   13722.210  ns/op
+ParserBenchmark.parseManyChildren           JDKStax          N/A  avgt   15    700802.493 ±    1296.971  ns/op
+ParserBenchmark.parseManyChildren          Woodstox          N/A  avgt   15    592419.675 ±     676.287  ns/op
+ParserBenchmark.parseManyChildren           BEAStax          N/A  avgt   15    713536.588 ±    9727.196  ns/op
+ParserBenchmark.parseManyChildren               DOM          N/A  avgt   15  58632015.971 ±  434065.687  ns/op
+ParserBenchmark.parseManyChildren             DOM4J          N/A  avgt   15  78757514.580 ±  102828.225  ns/op
+ParserBenchmark.parseManyChildren              JDom          N/A  avgt   15   7102275.757 ±  107146.438  ns/op
+ParserBenchmark.parseManyChildren             JDom2          N/A  avgt   15   9827411.961 ±   41027.737  ns/op
+ParserBenchmark.parseManyChildren               Xom          N/A  avgt   15  33930673.083 ±   35947.337  ns/op
+ParserBenchmark.parseManyChildren            Binary          N/A  avgt   15    402398.155 ±    6888.370  ns/op
+ParserBenchmark.parseManyChildren          Jettison          N/A  avgt   15    670870.406 ±    3751.317  ns/op
+ParserBenchmark.parseNestedElements        MXParser          N/A  avgt   15  12616894.304 ±   19439.058  ns/op
+ParserBenchmark.parseNestedElements            Xpp3          N/A  avgt   15  13007586.291 ±  205203.155  ns/op
+ParserBenchmark.parseNestedElements           kXML2          N/A  avgt   15  35970087.264 ±   28849.980  ns/op
+ParserBenchmark.parseNestedElements         JDKStax          N/A  avgt   15   1074253.465 ±   11588.851  ns/op
+ParserBenchmark.parseNestedElements        Woodstox          N/A  avgt   15    725660.904 ±   11268.905  ns/op
+ParserBenchmark.parseNestedElements         BEAStax          N/A  avgt   15    648266.777 ±    2120.991  ns/op
+ParserBenchmark.parseNestedElements             DOM          N/A  avgt   15   5321471.291 ±    2935.512  ns/op
+ParserBenchmark.parseNestedElements           DOM4J          N/A  avgt   15   5711026.345 ±  145819.473  ns/op
+ParserBenchmark.parseNestedElements            JDom          N/A  avgt   15  16861677.394 ±  219174.474  ns/op
+ParserBenchmark.parseNestedElements           JDom2          N/A  avgt   15  12085612.224 ±   31108.386  ns/op
+ParserBenchmark.parseNestedElements             Xom          N/A  avgt   15   5788240.908 ±  100434.947  ns/op
+ParserBenchmark.parseNestedElements          Binary          N/A  avgt   15    315810.980 ±    3522.052  ns/op
+ParserBenchmark.parseNestedElements        Jettison          N/A  avgt   15    735876.170 ±     904.031  ns/op

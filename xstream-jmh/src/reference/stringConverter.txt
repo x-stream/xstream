@@ -1,7 +1,18 @@
+# JMH version: 1.21
+# VM version: JDK 11.0.13, OpenJDK 64-Bit Server VM, 11.0.13+8
+# VM invoker: /opt/openjdk-bin-11.0.13_p8/bin/java
+# VM options: -Xmx2048m -Xss4m
+# Warmup: 5 iterations, 10 s each
+# Measurement: 16 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 4 threads, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: com.thoughtworks.xstream.benchmark.jmh.StringConverterBenchmark
+
 Benchmark                                                Mode  Cnt         Score         Error  Units
-StringConverterBenchmark.intern                          avgt   16  14262839.973 ± 1233510.125  ns/op
-StringConverterBenchmark.limitedConcurrentMap            avgt   16  10538757.220 ±   20805.104  ns/op
-StringConverterBenchmark.limitedSynchronizedWeakCache    avgt   16  11298773.753 ±   13335.307  ns/op
-StringConverterBenchmark.nonCaching                      avgt   16   9796296.611 ±  668511.980  ns/op
-StringConverterBenchmark.unlimitedConcurrentMap          avgt   16  11252298.498 ±  215637.373  ns/op
-StringConverterBenchmark.unlimitedSynchronizedWeakCache  avgt   16  11279714.685 ±   22069.538  ns/op
+StringConverterBenchmark.intern                            avgt   16  15280597.717 ± 1118791.550  ns/op
+StringConverterBenchmark.limitedConcurrentMap              avgt   16  10812523.401 ±  713378.073  ns/op
+StringConverterBenchmark.limitedSynchronizedWeakCache      avgt   16  11476639.041 ±  222922.084  ns/op
+StringConverterBenchmark.nonCaching                        avgt   16  11982049.168 ±  977812.020  ns/op
+StringConverterBenchmark.unlimitedConcurrentMap            avgt   16  12196204.773 ± 1159163.270  ns/op
+StringConverterBenchmark.unlimitedSynchronizedWeakCache    avgt   16  11346761.846 ±  220066.395  ns/op

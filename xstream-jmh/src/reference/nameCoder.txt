@@ -1,6 +1,17 @@
+# JMH version: 1.21
+# VM version: JDK 11.0.13, OpenJDK 64-Bit Server VM, 11.0.13+8
+# VM invoker: /opt/openjdk-bin-11.0.13_p8/bin/java
+# VM options: -Xmx2048m -Xss4m
+# Warmup: 5 iterations, 10 s each
+# Measurement: 25 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 4 threads, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: com.thoughtworks.xstream.benchmark.jmh.NameCoderBenchmark
+
 Benchmark                                         Mode  Cnt         Score         Error  Units
-NameCoderBenchmark.cachedEscapedUnderscoreCoding  avgt   25   4339193.305 ±  117708.908  ns/op
-NameCoderBenchmark.dollarCoding                   avgt   25   4570684.356 ±  169447.323  ns/op
-NameCoderBenchmark.escapedUnderscoreCoding        avgt   25   6322642.927 ±  176678.518  ns/op
-NameCoderBenchmark.noCoding                       avgt   25   3917564.563 ±  150151.093  ns/op
-NameCoderBenchmark.xmlFriendlyCoding              avgt   25   5102368.550 ±  129434.626  ns/op
+NameCoderBenchmark.cachedEscapedUnderscoreCoding  avgt   25   4708590.172 ±  218745.678  ns/op
+NameCoderBenchmark.dollarCoding                   avgt   25   4843325.489 ±  291540.806  ns/op
+NameCoderBenchmark.escapedUnderscoreCoding        avgt   25   6496347.261 ±  279498.799  ns/op
+NameCoderBenchmark.noCoding                       avgt   25   4212316.966 ±  243972.124  ns/op
+NameCoderBenchmark.xmlFriendlyCoding              avgt   25   5122809.546 ±  219143.950  ns/op
