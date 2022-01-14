@@ -1,5 +1,5 @@
 @echo off
-@REM Copyright (C) 2015 XStream Committers.
+@REM Copyright (C) 2015, 2022 XStream Committers.
 @REM All rights reserved.
 @REM
 @REM The software in this package is published under the terms of the BSD

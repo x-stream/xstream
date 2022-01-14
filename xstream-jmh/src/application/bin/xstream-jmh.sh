@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2015 XStream Committers.
+# Copyright (C) 2015, 2022 XStream Committers.
 # All rights reserved.
 #
 # The software in this package is published under the terms of the BSD
