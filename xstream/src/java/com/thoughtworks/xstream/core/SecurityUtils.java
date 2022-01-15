@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 XStream Committers.
+ * Copyright (C) 2021, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.security.InputManipulationException;
  * Utility functions for security issues.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.19
  */
 public class SecurityUtils {
 
@@ -32,7 +32,7 @@ public class SecurityUtils {
      *
      * @param context the unmarshalling context
      * @param start the timestamp just before the element was added to the collection or map
-     * @since upcoming
+     * @since 1.4.19
      */
     public static void checkForCollectionDoSAttack(final UnmarshallingContext context, final long start) {
         final int diff = (int)((System.currentTimeMillis() - start) / 1000);
