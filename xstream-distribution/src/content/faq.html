@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2022 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -72,14 +72,15 @@
     starting with R25.1.0. Generally it works for all modern Java runtimes based on OpenJDK.  Android basically supports
     the enhanced mode as well as the Google Application Engine, but the latter's security model limits the types that
     can be handled. Note, that an active SecurityManager might prevent the usage of the enhanced mode also.</p>
-    <p>Since Java 9 it is required to permit the now illegal access.</p>
+    <p>Since Java 9 it is required to permit the now illegal access. For Java 17 see below.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_enhanced_mode_advantage">What are the advantages of using enhanced mode over pure Java mode?</h2>
 
-	<p>Currently it is not possible to recreate every instance of a type using the official Java API only. The enhanced mode uses some undocumented, but wide-spread
-	available functionality to recreate such instances nevertheless. However, in a secured secured environment, older Java run times or a limited Java environment might
-	prevent the usage of the enhanced mode and XStream uses the plain Java API as fallback. This mode has some restrictions though:</p> 
+	<p>Currently it is not possible to recreate every instance of a type using the official Java API only. The enhanced
+	mode uses some undocumented, but wide-spread available functionality to recreate such instances nevertheless.  However,
+	in a secured secured environment, older Java run times or a limited Java environment might prevent the usage of the
+	enhanced mode and XStream uses the plain Java API as fallback. This mode has some restrictions though:</p>
 
     <table summary="Comparison of pure Java and enhanced mode">
       <tr><th>Feature</th><th>Pure Java</th><th>Enhanced Mode</th></tr>
@@ -99,6 +100,14 @@
 
     <p>Yes, this is normal. A big part of XStream is reflection based and there is currently no replacement for the
     complete required functionality. You will have to permit this access currently, otherwise XStream will not work.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_cannot_access_from_unnamed_module">XStream fails since Java 17, because types in modules cannot be accessed from the unnamed module!</h2>
+
+    <p>Again, this is normal.  The reflection stuff is required to get all required information to recreate an instance of
+    a Java type at unmarshalling time. However, since Java 17 it is no longer possible to allow this access with a single
+    runtime option.  You have to open all packages of the individual modules for the unnamed module with the option
+    <i>--add-opens</i>, where XStream requires access, e.g. <i>--add-opens java.base/java.util=ALL-UNNAMED</i></p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_no_module">Why does XStream not even declare an automated module name?</h2>
