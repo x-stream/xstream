@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2017, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017, 2021, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -47,12 +47,27 @@ public class StaxDriverTest extends AbstractAcceptanceTest {
     }
 
     public void testCanOverloadStaxReaderAndWriterInstantiation() {
+        final String staxInput = System.getProperty(XMLInputFactory.class.getName());
+        final String staxOutput = System.getProperty(XMLOutputFactory.class.getName());
         System.setProperty(XMLInputFactory.class.getName(), MXParserFactory.class.getName());
         System.setProperty(XMLOutputFactory.class.getName(), XMLOutputFactoryBase.class.getName());
-        final MyStaxDriver driver = new MyStaxDriver();
-        xstream = new XStream(driver);
-        assertBothWays("Hi", "<?xml version='1.0' encoding='utf-8'?><string>Hi</string>");
-        assertTrue(driver.createStaxReaderCalled);
-        assertTrue(driver.createStaxWriterCalled);
+        try {
+            final MyStaxDriver driver = new MyStaxDriver();
+            xstream = new XStream(driver);
+            assertBothWays("Hi", "<?xml version='1.0' encoding='utf-8'?><string>Hi</string>");
+            assertTrue(driver.createStaxReaderCalled);
+            assertTrue(driver.createStaxWriterCalled);
+        } finally {
+            if (staxInput != null) {
+                System.setProperty(XMLInputFactory.class.getName(), staxInput);
+	    } else {
+                System.clearProperty(XMLInputFactory.class.getName());
+            }
+            if (staxOutput != null) {
+                System.setProperty(XMLOutputFactory.class.getName(), staxOutput);
+	    } else {
+                System.clearProperty(XMLOutputFactory.class.getName());
+            }
+        }
     }
 }
