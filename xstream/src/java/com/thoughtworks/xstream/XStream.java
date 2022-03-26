@@ -1347,7 +1347,12 @@ public class XStream {
      * @since 1.4
      */
     public Object fromXML(URL url, Object root) {
-        return unmarshal(hierarchicalStreamDriver.createReader(url), root);
+        HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(url);
+        try {
+            return unmarshal(reader, root);
+        } finally {
+            reader.close();
+        }
     }
 
     /**
