@@ -92,6 +92,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -154,6 +155,7 @@ import com.thoughtworks.xstream.converters.extended.JavaFieldConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
+import com.thoughtworks.xstream.converters.extended.OptionalConverter;
 import com.thoughtworks.xstream.converters.extended.PathConverter;
 import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
@@ -712,7 +714,7 @@ public class XStream {
         final Set<Class<?>> types = new HashSet<>();
         types.addAll(Arrays.<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
             DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
-            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
+            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class, Optional.class));
         if (JVM.isSQLAvailable()) {
             types.add(JVM.loadClassForName("java.sql.Timestamp"));
             types.add(JVM.loadClassForName("java.sql.Time"));
@@ -801,6 +803,7 @@ public class XStream {
         alias("bit-set", BitSet.class);
         alias("trace", StackTraceElement.class);
         alias("currency", Currency.class);
+        alias("optional", Optional.class);
 
         alias("map", Map.class);
         alias("entry", Map.Entry.class);
@@ -949,6 +952,7 @@ public class XStream {
         registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
         registerConverter(new PathConverter(), PRIORITY_NORMAL);
 
+        registerConverter(new OptionalConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new ArrayConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new CharArrayConverter(), PRIORITY_NORMAL);
         registerConverter(new CollectionConverter(mapper), PRIORITY_NORMAL);
