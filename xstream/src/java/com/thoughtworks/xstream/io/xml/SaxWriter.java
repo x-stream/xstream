@@ -1,22 +1,27 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 14. August 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.function.Supplier;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -32,6 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.StreamException;
 import com.thoughtworks.xstream.io.naming.NameCoder;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 
 /**
@@ -41,7 +47,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * <p>
  * As a custom SAX parser, this class ignores the arguments of the two standard parse methods (
  * {@link #parse(java.lang.String)} and {@link #parse(org.xml.sax.InputSource)}) but relies on a proprietary SAX
- * property {@link #SOURCE_OBJECT_LIST_PROPERTY} to define the list of objects to serialize.
+ * property {@link #SOURCE_OBJECT_QUEUE_PROPERTY} to define the list of objects to serialize.
  * </p>
  * <p>
  * Configuration of this SAX parser is achieved through the standard {@link #setProperty SAX property mechanism}. While
@@ -49,27 +55,52 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * to be propagated through a chain of {@link org.xml.sax.XMLFilter filters} down to the underlying parser object.
  * </p>
  * <p>
- * This mechanism shall be used to configure the {@link #SOURCE_OBJECT_LIST_PROPERTY objects to be serialized} as well
+ * This mechanism shall be used to configure the {@link #SOURCE_OBJECT_QUEUE_PROPERTY objects to be serialized} as well
  * as the {@link #CONFIGURED_XSTREAM_PROPERTY XStream facade}.
  * </p>
- * 
+ *
  * @author Laurent Bihanic
+ * @author Joerg Schaible
  */
 public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
     /**
      * The {@link #setProperty SAX property} to configure the XStream facade to be used for object serialization. If the
      * property is not set, a new XStream facade will be allocated for each parse.
      */
-    public final static String CONFIGURED_XSTREAM_PROPERTY = "http://com.thoughtworks.xstream/sax/property/configured-xstream";
+    public final static String CONFIGURED_XSTREAM_PROPERTY =
+            "http://com.thoughtworks.xstream/sax/property/configured-xstream";
 
     /**
-     * The {@link #setProperty SAX property} to configure the list of Java objects to serialize. Setting this property
+     * The {@link #setProperty SAX property} to configure a list of Java objects to serialize. Setting this property
      * prior invoking one of the parse() methods is mandatory.
-     * 
+     *
+     * @deprecated As of upcoming use {@link #SOURCE_OBJECT_QUEUE_PROPERTY} instead
+     */
+    @Deprecated
+    public final static String SOURCE_OBJECT_LIST_PROPERTY =
+            "http://com.thoughtworks.xstream/sax/property/source-object-list";
+
+    /**
+     * The {@link #setProperty SAX property} to configure a queue of Java objects to serialize. Setting this property
+     * prior invoking one of the parse() methods is mandatory.
+     *
      * @see #parse(java.lang.String)
      * @see #parse(org.xml.sax.InputSource)
      */
-    public final static String SOURCE_OBJECT_LIST_PROPERTY = "http://com.thoughtworks.xstream/sax/property/source-object-list";
+    public final static String SOURCE_OBJECT_QUEUE_PROPERTY =
+            "http://com.thoughtworks.xstream/sax/property/source-object-queue";
+
+    /**
+     * The {@link #setProperty SAX property} to provide a Supplier for a CustomObjectOutputStream used to write objects
+     * to marshal into a BlockingQueue.
+     *
+     * @see #parse(java.lang.String)
+     * @see #parse(org.xml.sax.InputSource)
+     */
+    public final static String OOS_SUPPLIER_PROPERTY =
+            "http://com.thoughtworks.xstream/sax/property/custom-oos-supplier";
+
+    final static Serializable EOS = new Mapper.Null();
 
     // =========================================================================
     // SAX XMLReader interface support
@@ -170,7 +201,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * <p>
      * <strong>Note</strong>: This implementation only supports the two mandatory SAX features.
      * </p>
-     * 
+     *
      * @param name the feature name, which is a fully-qualified URI.
      * @param value the requested state of the feature (true or false).
      * @throws SAXNotRecognizedException when the XMLReader does not recognize the feature name.
@@ -203,7 +234,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * <p>
      * Implementors are free (and encouraged) to invent their own features, using names built on their own URIs.
      * </p>
-     * 
+     *
      * @param name the feature name, which is a fully-qualified URI.
      * @return the current state of the feature (true or false).
      * @throws SAXNotRecognizedException when the XMLReader does not recognize the feature name.
@@ -242,10 +273,11 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * This method is also the standard mechanism for setting extended handlers.
      * </p>
      * <p>
-     * <strong>Note</strong>: This implementation only supports two (proprietary) properties:
-     * {@link #CONFIGURED_XSTREAM_PROPERTY} and {@link #SOURCE_OBJECT_LIST_PROPERTY}.
+     * <strong>Note</strong>: This implementation only supports four (proprietary) properties:
+     * {@link #CONFIGURED_XSTREAM_PROPERTY}, {@link #SOURCE_OBJECT_QUEUE_PROPERTY}. {@link #OOS_SUPPLIER_PROPERTY} and
+     * the legacy {@link #SOURCE_OBJECT_LIST_PROPERTY}.
      * </p>
-     * 
+     *
      * @param name the property name, which is a fully-qualified URI.
      * @param value the requested value for the property.
      * @throws SAXNotRecognizedException when the XMLReader does not recognize the property name.
@@ -254,32 +286,55 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * @see #getProperty
      */
     @Override
-    public void setProperty(final String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
-        if (name.equals(CONFIGURED_XSTREAM_PROPERTY)) {
+    public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
+        switch (name) {
+        case CONFIGURED_XSTREAM_PROPERTY:
             if (!(value instanceof XStream)) {
-                throw new SAXNotSupportedException("Value for property \""
-                    + CONFIGURED_XSTREAM_PROPERTY
-                    + "\" must be a non-null XStream object");
+                throw new SAXNotSupportedException(String
+                    .format("Value for property \"%s\" must be a non-null XStream object",
+                        CONFIGURED_XSTREAM_PROPERTY));
             }
-        } else if (name.equals(SOURCE_OBJECT_LIST_PROPERTY)) {
+            break;
+        case SOURCE_OBJECT_LIST_PROPERTY:
             if (value instanceof List) {
-                final List<?> list = (List<?>)value;
+                value = new LinkedList<>((List<?>)value);
+                properties.put(name, value); // just for backward compatibility
+            } else {
+                throw new SAXNotSupportedException(String
+                    .format("Value for property \"%s\" must be a non-null List object", name));
+            }
+            //$FALL-THROUGH$
+        case SOURCE_OBJECT_QUEUE_PROPERTY:
+            if (value instanceof BlockingQueue) {
+                // OK, take it directly
+            } else if (value instanceof Queue) {
+                final Queue<?> queue = (Queue<?>)value;
 
-                if (list.isEmpty()) {
-                    throw new SAXNotSupportedException("Value for property \""
-                        + SOURCE_OBJECT_LIST_PROPERTY
-                        + "\" shall not be an empty list");
-                } else {
+                if (queue.isEmpty()) {
+                    throw new SAXNotSupportedException(String
+                        .format("Value for property \"%s\" shall not be an empty %s", name, name
+                            .equals(SOURCE_OBJECT_QUEUE_PROPERTY) ? "queue" : "list"));
+                } else if (name.equals(SOURCE_OBJECT_QUEUE_PROPERTY)) {
                     // Perform a copy of the list to prevent the application to
                     // modify its content while the parse is being performed.
-                    value = Collections.unmodifiableList(new ArrayList<>(list));
+                    value = new ArrayDeque<>(queue);
                 }
             } else {
-                throw new SAXNotSupportedException("Value for property \""
-                    + SOURCE_OBJECT_LIST_PROPERTY
-                    + "\" must be a non-null List object");
+                throw new SAXNotSupportedException(String
+                    .format("Value for property \"%s\" must be a non-null Queue object", name));
             }
-        } else {
+            name = SOURCE_OBJECT_QUEUE_PROPERTY;
+            break;
+        case OOS_SUPPLIER_PROPERTY:
+            if (value instanceof Supplier) {
+                // OK
+            } else {
+                throw new SAXNotSupportedException(String
+                    .format("Value for property \"%s\" has to be a supplier for the ObjectOutputStream",
+                        OOS_SUPPLIER_PROPERTY));
+            }
+            break;
+        default:
             throw new SAXNotRecognizedException(name);
         }
         properties.put(name, value);
@@ -301,7 +356,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * <p>
      * Implementors are free (and encouraged) to invent their own properties, using names built on their own URIs.
      * </p>
-     * 
+     *
      * @param name the property name, which is a fully-qualified URI.
      * @return the current value of the property.
      * @throws SAXNotRecognizedException when the XMLReader does not recognize the property name.
@@ -309,9 +364,13 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      */
     @Override
     public Object getProperty(final String name) throws SAXNotRecognizedException {
-        if (name.equals(CONFIGURED_XSTREAM_PROPERTY) || name.equals(SOURCE_OBJECT_LIST_PROPERTY)) {
+        switch (name) {
+        case CONFIGURED_XSTREAM_PROPERTY:
+        case OOS_SUPPLIER_PROPERTY:
+        case SOURCE_OBJECT_QUEUE_PROPERTY:
+        case SOURCE_OBJECT_LIST_PROPERTY:
             return properties.get(name);
-        } else {
+        default:
             throw new SAXNotRecognizedException(name);
         }
     }
@@ -329,7 +388,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * Applications may register a new or different resolver in the middle of a parse, and the SAX parser must begin
      * using the new resolver immediately.
      * </p>
-     * 
+     *
      * @param resolver the entity resolver.
      * @throws NullPointerException if the resolver argument is <code>null</code>.
      * @see #getEntityResolver
@@ -345,7 +404,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Returns the current entity resolver.
-     * 
+     *
      * @return the current entity resolver, or <code>null</code> if none has been registered.
      * @see #setEntityResolver
      */
@@ -364,7 +423,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * Applications may register a new or different handler in the middle of a parse, and the SAX parser must begin
      * using the new handler immediately.
      * </p>
-     * 
+     *
      * @param handler the DTD handler.
      * @throws NullPointerException if the handler argument is <code>null</code>.
      * @see #getDTDHandler
@@ -380,7 +439,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Returns the current DTD handler.
-     * 
+     *
      * @return the current DTD handler, or <code>null</code> if none has been registered.
      * @see #setDTDHandler
      */
@@ -399,7 +458,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * Applications may register a new or different handler in the middle of a parse, and the SAX parser must begin
      * using the new handler immediately.
      * </p>
-     * 
+     *
      * @param handler the content handler.
      * @throws NullPointerException if the handler argument is <code>null</code>.
      * @see #getContentHandler
@@ -415,7 +474,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Returns the current content handler.
-     * 
+     *
      * @return the current content handler, or <code>null</code> if none has been registered.
      * @see #setContentHandler
      */
@@ -435,7 +494,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * Applications may register a new or different handler in the middle of a parse, and the SAX parser must begin
      * using the new handler immediately.
      * </p>
-     * 
+     *
      * @param handler the error handler.
      * @throws NullPointerException if the handler argument is <code>null</code>.
      * @see #getErrorHandler
@@ -451,7 +510,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Returns the current error handler.
-     * 
+     *
      * @return the current error handler, or <code>null</code> if none has been registered.
      * @see #setErrorHandler
      */
@@ -471,11 +530,11 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * equivalent of the following:
      * </p>
      * <blockquote>
-     * 
+     *
      * <pre>
      * parse(new InputSource(systemId));
      * </pre>
-     * 
+     *
      * </blockquote>
      * <p>
      * If the system identifier is a URL, it must be fully resolved by the application before it is passed to the
@@ -483,10 +542,10 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * </p>
      * <p>
      * <strong>Note</strong>: As a custom SAX parser, this class ignores the <code>systemId</code> argument of this
-     * method and relies on the proprietary SAX property {@link #SOURCE_OBJECT_LIST_PROPERTY}) to define the list of
+     * method and relies on the proprietary SAX property {@link #SOURCE_OBJECT_QUEUE_PROPERTY}) to define the list of
      * objects to serialize.
      * </p>
-     * 
+     *
      * @param systemId the system identifier (URI).
      * @throws SAXException Any SAX exception, possibly wrapping another exception.
      * @see #parse(org.xml.sax.InputSource)
@@ -517,10 +576,10 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
      * </p>
      * <p>
      * <strong>Note</strong>: As a custom SAX parser, this class ignores the <code>source</code> argument of this method
-     * and relies on the proprietary SAX property {@link #SOURCE_OBJECT_LIST_PROPERTY}) to define the list of objects to
-     * serialize.
+     * and relies on the proprietary SAX property {@link #SOURCE_OBJECT_QUEUE_PROPERTY}) to define the list of objects
+     * to serialize.
      * </p>
-     * 
+     *
      * @param input The input source for the top-level of the XML document.
      * @throws SAXException Any SAX exception, possibly wrapping another exception.
      * @see org.xml.sax.InputSource
@@ -537,7 +596,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Serializes the Java objects of the configured list into a flow of SAX events.
-     * 
+     *
      * @throws SAXException if the configured object list is invalid or object serialization failed.
      */
     private void parse() throws SAXException {
@@ -546,20 +605,34 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
             xstream = new XStream();
         }
 
-        final List<?> source = (List<?>)properties.get(SOURCE_OBJECT_LIST_PROPERTY);
-        if (source == null || source.isEmpty()) {
-            throw new SAXException("Missing or empty source object list. Setting property \""
-                + SOURCE_OBJECT_LIST_PROPERTY
+        final Queue<?> source = (Queue<?>)properties.get(SOURCE_OBJECT_QUEUE_PROPERTY);
+        if (source == null || source.isEmpty() && !(source instanceof BlockingQueue)) {
+            throw new SAXException("Missing or empty source object queue. Setting property \""
+                + SOURCE_OBJECT_QUEUE_PROPERTY
                 + "\" is mandatory");
         }
 
         try {
-            startDocument(true);
-            for (final Object name : source) {
-                xstream.marshal(name, this);
+            @SuppressWarnings("unchecked")
+            final Supplier<ObjectOutputStream> supplier = (Supplier<ObjectOutputStream>)properties
+                .get(OOS_SUPPLIER_PROPERTY);
+            if (supplier != null) {
+                final ObjectOutputStream oos = supplier.get();
+                for (Object o = null; o != EOS;) {
+                    o = source instanceof BlockingQueue ? ((BlockingQueue<?>)source).take() : source.poll();
+                    if (o != EOS) {
+                        oos.writeObject(o);
+                    }
+                }
+                oos.close();
+            } else {
+                startDocument(true);
+                for (final Object name : source) {
+                    xstream.marshal(name, this);
+                }
+                endDocument(true);
             }
-            endDocument(true);
-        } catch (final StreamException e) {
+        } catch (final IOException | InterruptedException e) {
             if (e.getCause() instanceof SAXException) {
                 throw (SAXException)e.getCause();
             } else {
@@ -642,7 +715,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Fires the SAX startDocument event towards the configured ContentHandler.
-     * 
+     *
      * @param multiObjectMode whether serialization of several object will be merge into a single SAX document.
      * @throws SAXException if thrown by the ContentHandler.
      */
@@ -661,7 +734,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Fires the SAX endDocument event towards the configured ContentHandler.
-     * 
+     *
      * @param multiObjectMode whether serialization of several object will be merge into a single SAX document.
      * @throws SAXException if thrown by the ContentHandler.
      */
@@ -674,7 +747,7 @@ public final class SaxWriter extends AbstractXmlWriter implements XMLReader {
 
     /**
      * Fires any pending SAX startElement event towards the configured ContentHandler.
-     * 
+     *
      * @throws SAXException if thrown by the ContentHandler.
      */
     private void flushStartTag() throws SAXException {

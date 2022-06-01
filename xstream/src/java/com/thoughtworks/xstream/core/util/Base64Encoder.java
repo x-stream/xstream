@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2017, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import com.thoughtworks.xstream.core.Base64Codec;
 import com.thoughtworks.xstream.core.StringCodec;
 
 
@@ -33,7 +34,9 @@ import com.thoughtworks.xstream.core.StringCodec;
  * </p>
  *
  * @author Joe Walnes
+ * @deprecated As of upcoming use {@link Base64Codec}
  */
+@Deprecated
 public class Base64Encoder implements StringCodec {
 
     // Here's how encoding works:

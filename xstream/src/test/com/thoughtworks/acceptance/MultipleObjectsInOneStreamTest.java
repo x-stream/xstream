@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2018, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,6 +31,7 @@ import java.util.zip.InflaterInputStream;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.MarshallingStrategy;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -91,7 +92,9 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             + "</people>", buffer.toString());
 
         // deserialize
-        final HierarchicalStreamReader reader = DefaultDriver.create().createReader(new StringReader(buffer.toString()));
+        final HierarchicalStreamReader reader = DefaultDriver
+            .create()
+            .createReader(new StringReader(buffer.toString()));
 
         assertTrue("should be another object to read (1)", reader.hasMoreChildren());
         reader.moveDown();
@@ -120,6 +123,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         oos.writeInt(123);
         oos.writeObject("hello");
         oos.writeObject(new Software("tw", "xs"));
+        oos.writeObject(null);
         oos.close();
 
         final String expectedXml = ""
@@ -130,6 +134,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             + "    <vendor>tw</vendor>\n"
             + "    <name>xs</name>\n"
             + "  </software>\n"
+            + "  <null/>\n"
             + "</object-stream>";
 
         assertEquals(expectedXml, writer.toString());
@@ -138,6 +143,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         assertEquals(123, ois.readInt());
         assertEquals("hello", ois.readObject());
         assertEquals(new Software("tw", "xs"), ois.readObject());
+        assertNull(ois.readObject());
 
         try {
             ois.readObject(); // As far as I can see this is the only clue the
@@ -166,8 +172,9 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         final byte[] data = baos.toByteArray();
         assertTrue("Too less data: " + data.length, data.length > 2);
 
-        final ObjectInputStream ois = xstream.createObjectInputStream(new InputStreamReader(new InflaterInputStream(
-            new ByteArrayInputStream(data), new Inflater()), "UTF-8"));
+        final ObjectInputStream ois = xstream
+            .createObjectInputStream(new InputStreamReader(new InflaterInputStream(new ByteArrayInputStream(data),
+                new Inflater()), "UTF-8"));
         assertEquals(123, ois.readInt());
         assertEquals("hello", ois.readObject());
         assertEquals(new Software("tw", "xs"), ois.readObject());
@@ -273,6 +280,42 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
 
         // verify
         log.verify();
+    }
+
+    public void testCanFilterProcessedChildren() throws Exception {
+        final String xml = "" //
+            + "<root>\n"
+            + "  <int>5</int>\n"
+            + "  <string>Huey</string>\n"
+            + "  <cheese>gouda</cheese>\n"
+            + "  <string>Dewey</string>\n"
+            + "  <string>Louie</string>\n"
+            + "  <boolean>true</boolean>\n"
+            + "</root>";
+
+        xstream = new XStream(createDriver()) {
+            @Override
+            public <T> T unmarshal(final HierarchicalStreamReader reader, final T root, final DataHolder dataHolder) {
+                return "string".equals(reader.getNodeName()) ? super.unmarshal(reader, root, dataHolder) : null;
+            };
+        };
+        setupSecurity(xstream);
+
+        try (final ObjectInputStream ois = xstream.createObjectInputStream(new StringReader(xml))) {
+            assertNull(ois.readObject());
+            assertEquals("Huey", ois.readObject());
+            assertNull(ois.readObject());
+            assertEquals("Dewey", ois.readObject());
+            assertEquals("Louie", ois.readObject());
+            assertNull(ois.readObject());
+
+            try {
+                ois.readObject();
+                fail("Expected EOFException");
+            } catch (final EOFException expectedException) {
+                // good
+            }
+        }
     }
 
     public void testByDefaultDoesNotPreserveReferencesAcrossDifferentObjectsInStream() throws Exception {

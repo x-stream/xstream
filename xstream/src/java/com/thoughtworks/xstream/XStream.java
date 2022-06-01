@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -36,6 +37,41 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormatSymbols;
+import java.time.Clock;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.MonthDay;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Period;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.chrono.Chronology;
+import java.time.chrono.HijrahChronology;
+import java.time.chrono.HijrahDate;
+import java.time.chrono.HijrahEra;
+import java.time.chrono.IsoChronology;
+import java.time.chrono.JapaneseChronology;
+import java.time.chrono.JapaneseDate;
+import java.time.chrono.JapaneseEra;
+import java.time.chrono.MinguoChronology;
+import java.time.chrono.MinguoDate;
+import java.time.chrono.MinguoEra;
+import java.time.chrono.ThaiBuddhistChronology;
+import java.time.chrono.ThaiBuddhistDate;
+import java.time.chrono.ThaiBuddhistEra;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.ValueRange;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -127,9 +163,32 @@ import com.thoughtworks.xstream.converters.extended.StackTraceElementConverter;
 import com.thoughtworks.xstream.converters.extended.TextAttributeConverter;
 import com.thoughtworks.xstream.converters.extended.ThrowableConverter;
 import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
+import com.thoughtworks.xstream.converters.reflection.LambdaConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
+import com.thoughtworks.xstream.converters.time.ChronologyConverter;
+import com.thoughtworks.xstream.converters.time.DurationConverter;
+import com.thoughtworks.xstream.converters.time.HijrahDateConverter;
+import com.thoughtworks.xstream.converters.time.InstantConverter;
+import com.thoughtworks.xstream.converters.time.JapaneseDateConverter;
+import com.thoughtworks.xstream.converters.time.JapaneseEraConverter;
+import com.thoughtworks.xstream.converters.time.LocalDateConverter;
+import com.thoughtworks.xstream.converters.time.LocalDateTimeConverter;
+import com.thoughtworks.xstream.converters.time.LocalTimeConverter;
+import com.thoughtworks.xstream.converters.time.MinguoDateConverter;
+import com.thoughtworks.xstream.converters.time.MonthDayConverter;
+import com.thoughtworks.xstream.converters.time.OffsetDateTimeConverter;
+import com.thoughtworks.xstream.converters.time.OffsetTimeConverter;
+import com.thoughtworks.xstream.converters.time.PeriodConverter;
+import com.thoughtworks.xstream.converters.time.SystemClockConverter;
+import com.thoughtworks.xstream.converters.time.ThaiBuddhistDateConverter;
+import com.thoughtworks.xstream.converters.time.ValueRangeConverter;
+import com.thoughtworks.xstream.converters.time.WeekFieldsConverter;
+import com.thoughtworks.xstream.converters.time.YearConverter;
+import com.thoughtworks.xstream.converters.time.YearMonthConverter;
+import com.thoughtworks.xstream.converters.time.ZoneIdConverter;
+import com.thoughtworks.xstream.converters.time.ZonedDateTimeConverter;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
@@ -160,6 +219,7 @@ import com.thoughtworks.xstream.mapper.EnumMapper;
 import com.thoughtworks.xstream.mapper.FieldAliasingMapper;
 import com.thoughtworks.xstream.mapper.ImmutableTypesMapper;
 import com.thoughtworks.xstream.mapper.ImplicitCollectionMapper;
+import com.thoughtworks.xstream.mapper.LambdaMapper;
 import com.thoughtworks.xstream.mapper.LocalConversionMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
@@ -577,10 +637,7 @@ public class XStream {
         mapper = new EnumMapper(mapper);
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
-        if (JVM.isVersion(8)) {
-            mapper = buildMapperDynamically("com.thoughtworks.xstream.mapper.LambdaMapper", new Class[]{Mapper.class},
-                new Object[]{mapper});
-        }
+        mapper = new LambdaMapper(mapper);
         mapper = new SecurityMapper(mapper);
         mapper = new AnnotationMapper(mapper, converterRegistry, converterLookup, classLoaderReference,
             reflectionProvider);
@@ -589,18 +646,20 @@ public class XStream {
         return mapper;
     }
 
+  //@formatter:off
+    /*
     private Mapper buildMapperDynamically(final String className, final Class<?>[] constructorParamTypes,
             final Object[] constructorParamValues) {
         try {
             final Class<?> type = Class.forName(className, false, classLoaderReference.getReference());
             final Constructor<?> constructor = type.getConstructor(constructorParamTypes);
             return (Mapper)constructor.newInstance(constructorParamValues);
-        } catch (final Exception e) {
-            throw new InitializationException("Could not instantiate mapper : " + className, e);
-        } catch (final LinkageError e) {
+        } catch (final Exception | LinkageError e) {
             throw new InitializationException("Could not instantiate mapper : " + className, e);
         }
     }
+    */
+    //@formatter:on
 
     protected MapperWrapper wrapMapper(final MapperWrapper next) {
         return next;
@@ -651,43 +710,40 @@ public class XStream {
         allowTypeHierarchy(Path.class);
 
         final Set<Class<?>> types = new HashSet<>();
-        types
-            .addAll(Arrays
-                .<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
-                    DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class,
-                    StackTraceElement.class, String.class, StringBuffer.class, StringBuilder.class, URL.class,
-                    URI.class, UUID.class));
+        types.addAll(Arrays.<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
+            DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
+            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
         if (JVM.isSQLAvailable()) {
             types.add(JVM.loadClassForName("java.sql.Timestamp"));
             types.add(JVM.loadClassForName("java.sql.Time"));
             types.add(JVM.loadClassForName("java.sql.Date"));
         }
-        if (JVM.isVersion(8)) {
-            allowTypeHierarchy(JVM.loadClassForName("java.time.Clock"));
-            types.add(JVM.loadClassForName("java.time.Duration"));
-            types.add(JVM.loadClassForName("java.time.Instant"));
-            types.add(JVM.loadClassForName("java.time.LocalDate"));
-            types.add(JVM.loadClassForName("java.time.LocalDateTime"));
-            types.add(JVM.loadClassForName("java.time.LocalTime"));
-            types.add(JVM.loadClassForName("java.time.MonthDay"));
-            types.add(JVM.loadClassForName("java.time.OffsetDateTime"));
-            types.add(JVM.loadClassForName("java.time.OffsetTime"));
-            types.add(JVM.loadClassForName("java.time.Period"));
-            types.add(JVM.loadClassForName("java.time.Ser"));
-            types.add(JVM.loadClassForName("java.time.Year"));
-            types.add(JVM.loadClassForName("java.time.YearMonth"));
-            types.add(JVM.loadClassForName("java.time.ZonedDateTime"));
-            allowTypeHierarchy(JVM.loadClassForName("java.time.ZoneId"));
-            types.add(JVM.loadClassForName("java.time.chrono.HijrahDate"));
-            types.add(JVM.loadClassForName("java.time.chrono.JapaneseDate"));
-            types.add(JVM.loadClassForName("java.time.chrono.JapaneseEra"));
-            types.add(JVM.loadClassForName("java.time.chrono.MinguoDate"));
-            types.add(JVM.loadClassForName("java.time.chrono.ThaiBuddhistDate"));
-            types.add(JVM.loadClassForName("java.time.chrono.Ser"));
-            allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
-            types.add(JVM.loadClassForName("java.time.temporal.ValueRange"));
-            types.add(JVM.loadClassForName("java.time.temporal.WeekFields"));
-        }
+        
+        allowTypeHierarchy(Clock.class);
+        types.add(Duration.class);
+        types.add(Instant.class);
+        types.add(LocalDate.class);
+        types.add(LocalDateTime.class);
+        types.add(LocalTime.class);
+        types.add(MonthDay.class);
+        types.add(OffsetDateTime.class);
+        types.add(OffsetTime.class);
+        types.add(Period.class);
+        types.add(JVM.loadClassForName("java.time.Ser"));
+        types.add(Year.class);
+        types.add(YearMonth.class);
+        types.add(ZonedDateTime.class);
+        allowTypeHierarchy(ZoneId.class);
+        types.add(HijrahDate.class);
+        types.add(JapaneseDate.class);
+        types.add(JapaneseEra.class);
+        types.add(MinguoDate.class);
+        types.add(ThaiBuddhistDate.class);
+        types.add(JVM.loadClassForName("java.time.chrono.Ser"));
+        allowTypeHierarchy(Chronology.class);
+        types.add(ValueRange.class);
+        types.add(WeekFields.class);
+
         types.remove(null);
         allowTypes(types.toArray(new Class[types.size()]));
     }
@@ -695,14 +751,14 @@ public class XStream {
     /**
      * Setup the security framework of a XStream instance.
      * <p>
-     * This method was a pure helper method for XStream 1.4.x. It initializes an XStream instance with a white list of
-     * well-known and simply types of the Java runtime as it is done in XStream 1.5.x by default. This method will do
-     * nothing.
+     * This method was a pure helper method for XStream 1.4.10 to 1.4.17.  It initialized an XStream instance with a
+     * whitelist of well-known and simply types of the Java runtime as it is done in XStream 1.4.18 by default.  This
+     * method will do therefore nothing in XStream 1.4.18 or higher.
      * </p>
      *
      * @param xstream
      * @since 1.4.10
-     * @deprecated As of upcoming, since it is superfluous in XStream 1.5.x
+     * @deprecated As of 1.4.18
      */
     @Deprecated
     public static void setupDefaultSecurity(final XStream xstream) {
@@ -764,9 +820,9 @@ public class XStream {
 
         alias("enum-set", EnumSet.class);
         alias("enum-map", EnumMap.class);
-        alias("empty-list", Collections.EMPTY_LIST.getClass());
-        alias("empty-map", Collections.EMPTY_MAP.getClass());
-        alias("empty-set", Collections.EMPTY_SET.getClass());
+        alias("empty-list", Collections.emptyList().getClass());
+        alias("empty-map", Collections.emptyMap().getClass());
+        alias("empty-set", Collections.emptySet().getClass());
         alias("singleton-list", Collections.singletonList(this).getClass());
         alias("singleton-map", Collections.singletonMap(this, null).getClass());
         alias("singleton-set", Collections.singleton(this).getClass());
@@ -791,43 +847,42 @@ public class XStream {
             alias("sql-date", JVM.loadClassForName("java.sql.Date"));
         }
 
-        if (JVM.isVersion(8)) {
-            alias("fixed-clock", JVM.loadClassForName("java.time.Clock$FixedClock"));
-            alias("offset-clock", JVM.loadClassForName("java.time.Clock$OffsetClock"));
-            alias("system-clock", JVM.loadClassForName("java.time.Clock$SystemClock"));
-            alias("tick-clock", JVM.loadClassForName("java.time.Clock$TickClock"));
-            alias("day-of-week", JVM.loadClassForName("java.time.DayOfWeek"));
-            alias("duration", JVM.loadClassForName("java.time.Duration"));
-            alias("instant", JVM.loadClassForName("java.time.Instant"));
-            alias("local-date", JVM.loadClassForName("java.time.LocalDate"));
-            alias("local-date-time", JVM.loadClassForName("java.time.LocalDateTime"));
-            alias("local-time", JVM.loadClassForName("java.time.LocalTime"));
-            alias("month", JVM.loadClassForName("java.time.Month"));
-            alias("month-day", JVM.loadClassForName("java.time.MonthDay"));
-            alias("offset-date-time", JVM.loadClassForName("java.time.OffsetDateTime"));
-            alias("offset-time", JVM.loadClassForName("java.time.OffsetTime"));
-            alias("period", JVM.loadClassForName("java.time.Period"));
-            alias("year", JVM.loadClassForName("java.time.Year"));
-            alias("year-month", JVM.loadClassForName("java.time.YearMonth"));
-            alias("zoned-date-time", JVM.loadClassForName("java.time.ZonedDateTime"));
-            aliasType("zone-id", JVM.loadClassForName("java.time.ZoneId"));
-            aliasType("chronology", JVM.loadClassForName("java.time.chrono.Chronology"));
-            alias("hijrah-date", JVM.loadClassForName("java.time.chrono.HijrahDate"));
-            alias("hijrah-era", JVM.loadClassForName("java.time.chrono.HijrahEra"));
-            alias("japanese-date", JVM.loadClassForName("java.time.chrono.JapaneseDate"));
-            alias("japanese-era", JVM.loadClassForName("java.time.chrono.JapaneseEra"));
-            alias("minguo-date", JVM.loadClassForName("java.time.chrono.MinguoDate"));
-            alias("minguo-era", JVM.loadClassForName("java.time.chrono.MinguoEra"));
-            alias("thai-buddhist-date", JVM.loadClassForName("java.time.chrono.ThaiBuddhistDate"));
-            alias("thai-buddhist-era", JVM.loadClassForName("java.time.chrono.ThaiBuddhistEra"));
-            alias("chrono-field", JVM.loadClassForName("java.time.temporal.ChronoField"));
-            alias("chrono-unit", JVM.loadClassForName("java.time.temporal.ChronoUnit"));
-            alias("iso-field", JVM.loadClassForName("java.time.temporal.IsoFields$Field"));
-            alias("iso-unit", JVM.loadClassForName("java.time.temporal.IsoFields$Unit"));
-            alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
-            alias("temporal-value-range", JVM.loadClassForName("java.time.temporal.ValueRange"));
-            alias("week-fields", JVM.loadClassForName("java.time.temporal.WeekFields"));
-        }
+        alias("fixed-clock", JVM.loadClassForName("java.time.Clock$FixedClock"));
+        alias("offset-clock", JVM.loadClassForName("java.time.Clock$OffsetClock"));
+        alias("system-clock", JVM.loadClassForName("java.time.Clock$SystemClock"));
+        alias("tick-clock", JVM.loadClassForName("java.time.Clock$TickClock"));
+        alias("day-of-week", DayOfWeek.class);
+        alias("duration", Duration.class);
+        alias("instant", Instant.class);
+        alias("local-date", LocalDate.class);
+        alias("local-date-time", LocalDateTime.class);
+        alias("local-time", LocalTime.class);
+        alias("month", Month.class);
+        alias("month-day", MonthDay.class);
+        alias("offset-date-time", OffsetDateTime.class);
+        alias("offset-time", OffsetTime.class);
+        alias("period", Period.class);
+        alias("year", Year.class);
+        alias("year-month", YearMonth.class);
+        alias("zoned-date-time", ZonedDateTime.class);
+        aliasType("zone-id", ZoneId.class);
+        aliasType("chronology", Chronology.class);
+        alias("hijrah-date", HijrahDate.class);
+        alias("hijrah-era", HijrahEra.class);
+        alias("japanese-date", JapaneseDate.class);
+        alias("japanese-era", JapaneseEra.class);
+        alias("minguo-date", MinguoDate.class);
+        alias("minguo-era", MinguoEra.class);
+        alias("thai-buddhist-date", ThaiBuddhistDate.class);
+        alias("thai-buddhist-era", ThaiBuddhistEra.class);
+        alias("chrono-field", ChronoField.class);
+        alias("chrono-unit", ChronoUnit.class);
+        alias("iso-field", JVM.loadClassForName("java.time.temporal.IsoFields$Field"));
+        alias("iso-unit", JVM.loadClassForName("java.time.temporal.IsoFields$Unit"));
+        alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
+        alias("temporal-value-range", ValueRange.class);
+        alias("week-fields", WeekFields.class);
+        alias("serialized-lambda", SerializedLambda.class);
 
         aliasType("charset", Charset.class);
         aliasType("path", Path.class);
@@ -839,9 +894,6 @@ public class XStream {
             aliasDynamically("xml-duration", "javax.xml.datatype.Duration");
         }
 
-        if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
-            aliasDynamically("serialized-lambda", "java.lang.invoke.SerializedLambda");
-        }
     }
 
     private void aliasDynamically(final String alias, final String className) {
@@ -881,7 +933,7 @@ public class XStream {
         registerConverter(new StringConverter(), PRIORITY_NORMAL);
         registerConverter(new StringBufferConverter(), PRIORITY_NORMAL);
         registerConverter(new StringBuilderConverter(), PRIORITY_NORMAL);
-        registerConverter(new ThrowableConverter(converterLookup), PRIORITY_NORMAL);
+        registerConverter(new ThrowableConverter(mapper, converterLookup), PRIORITY_NORMAL);
         registerConverter(new StackTraceElementConverter(), PRIORITY_NORMAL);
         registerConverter(new DateConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
@@ -917,56 +969,33 @@ public class XStream {
             registerConverter(new SqlTimeConverter(), PRIORITY_NORMAL);
             registerConverter(new SqlDateConverter(), PRIORITY_NORMAL);
         }
-        if (JVM.isVersion(8)) {
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ChronologyConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.DurationConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.HijrahDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.JapaneseDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.JapaneseEraConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.InstantConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalDateTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.LocalTimeConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.MinguoDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.MonthDayConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetDateTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.OffsetTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.PeriodConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.SystemClockConverter",
-                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ThaiBuddhistDateConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ValueRangeConverter",
-                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.WeekFieldsConverter",
-                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.YearMonthConverter", PRIORITY_NORMAL,
-                null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ZonedDateTimeConverter",
-                PRIORITY_NORMAL, null, null);
-            registerConverterDynamically("com.thoughtworks.xstream.converters.time.ZoneIdConverter", PRIORITY_NORMAL,
-                null, null);
-        }
+        registerConverter(new ChronologyConverter(), PRIORITY_NORMAL);
+        registerConverter(new DurationConverter(), PRIORITY_NORMAL);
+        registerConverter(new HijrahDateConverter(), PRIORITY_NORMAL);
+        registerConverter(new JapaneseDateConverter(), PRIORITY_NORMAL);
+        registerConverter(new JapaneseEraConverter(), PRIORITY_NORMAL);
+        registerConverter(new InstantConverter(), PRIORITY_NORMAL);
+        registerConverter(new LocalDateConverter(), PRIORITY_NORMAL);
+        registerConverter(new LocalDateTimeConverter(), PRIORITY_NORMAL);
+        registerConverter(new LocalTimeConverter(), PRIORITY_NORMAL);
+        registerConverter(new MinguoDateConverter(), PRIORITY_NORMAL);
+        registerConverter(new MonthDayConverter(), PRIORITY_NORMAL);
+        registerConverter(new OffsetDateTimeConverter(), PRIORITY_NORMAL);
+        registerConverter(new OffsetTimeConverter(), PRIORITY_NORMAL);
+        registerConverter(new PeriodConverter(), PRIORITY_NORMAL);
+        registerConverter(new SystemClockConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new ThaiBuddhistDateConverter(), PRIORITY_NORMAL);
+        registerConverter(new ValueRangeConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new WeekFieldsConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new YearConverter(), PRIORITY_NORMAL);
+        registerConverter(new YearMonthConverter(), PRIORITY_NORMAL);
+        registerConverter(new ZonedDateTimeConverter(), PRIORITY_NORMAL);
+        registerConverter(new ZoneIdConverter(), PRIORITY_NORMAL);
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaFieldConverter(classLoaderReference), PRIORITY_NORMAL);
+        registerConverter(new LambdaConverter(mapper, reflectionProvider, classLoaderReference), PRIORITY_NORMAL);
 
         if (JVM.isAWTAvailable()) {
             registerConverter(new FontConverter(mapper), PRIORITY_NORMAL);
@@ -989,10 +1018,9 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
                 PRIORITY_NORMAL, null, null);
         }
-        if (JVM.isVersion(8)) {
-            registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
-                PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class, ClassLoaderReference.class},
-                new Object[]{mapper, reflectionProvider, classLoaderReference});
+        if (JVM.isVersion(14)) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.RecordConverter",
+                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
         }
 
         registerConverter(new SelfStreamingInstanceChecker(converterLookup, this), PRIORITY_NORMAL);
@@ -1009,9 +1037,7 @@ public class XStream {
             } else if (instance instanceof SingleValueConverter) {
                 registerConverter((SingleValueConverter)instance, priority);
             }
-        } catch (final Exception e) {
-            throw new InitializationException("Could not instantiate converter : " + className, e);
-        } catch (final LinkageError e) {
+        } catch (final Exception | LinkageError e) {
             throw new InitializationException("Could not instantiate converter : " + className, e);
         }
     }
@@ -1061,36 +1087,34 @@ public class XStream {
         addImmutableType(Collections.EMPTY_SET.getClass(), false);
         addImmutableType(Collections.EMPTY_MAP.getClass(), false);
 
-        if (JVM.isVersion(8)) {
-            addImmutableTypeDynamically("java.time.Duration", false);
-            addImmutableTypeDynamically("java.time.Instant", false);
-            addImmutableTypeDynamically("java.time.LocalDate", false);
-            addImmutableTypeDynamically("java.time.LocalDateTime", false);
-            addImmutableTypeDynamically("java.time.LocalTime", false);
-            addImmutableTypeDynamically("java.time.MonthDay", false);
-            addImmutableTypeDynamically("java.time.OffsetDateTime", false);
-            addImmutableTypeDynamically("java.time.OffsetTime", false);
-            addImmutableTypeDynamically("java.time.Period", false);
-            addImmutableTypeDynamically("java.time.Year", false);
-            addImmutableTypeDynamically("java.time.YearMonth", false);
-            addImmutableTypeDynamically("java.time.ZonedDateTime", false);
-            addImmutableTypeDynamically("java.time.ZoneId", false);
-            addImmutableTypeDynamically("java.time.ZoneOffset", false);
-            addImmutableTypeDynamically("java.time.ZoneRegion", false);
-            addImmutableTypeDynamically("java.time.chrono.HijrahChronology", false);
-            addImmutableTypeDynamically("java.time.chrono.HijrahDate", false);
-            addImmutableTypeDynamically("java.time.chrono.IsoChronology", false);
-            addImmutableTypeDynamically("java.time.chrono.JapaneseChronology", false);
-            addImmutableTypeDynamically("java.time.chrono.JapaneseDate", false);
-            addImmutableTypeDynamically("java.time.chrono.JapaneseEra", false);
-            addImmutableTypeDynamically("java.time.chrono.MinguoChronology", false);
-            addImmutableTypeDynamically("java.time.chrono.MinguoDate", false);
-            addImmutableTypeDynamically("java.time.chrono.ThaiBuddhistChronology", false);
-            addImmutableTypeDynamically("java.time.chrono.ThaiBuddhistDate", false);
-            addImmutableTypeDynamically("java.time.temporal.IsoFields$Field", false);
-            addImmutableTypeDynamically("java.time.temporal.IsoFields$Unit", false);
-            addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);
-        }
+        addImmutableType(Duration.class, false);
+        addImmutableType(Instant.class, false);
+        addImmutableType(LocalDate.class, false);
+        addImmutableType(LocalDateTime.class, false);
+        addImmutableType(LocalTime.class, false);
+        addImmutableType(MonthDay.class, false);
+        addImmutableType(OffsetDateTime.class, false);
+        addImmutableType(OffsetTime.class, false);
+        addImmutableType(Period.class, false);
+        addImmutableType(Year.class, false);
+        addImmutableType(YearMonth.class, false);
+        addImmutableType(ZonedDateTime.class, false);
+        addImmutableType(ZoneId.class, false);
+        addImmutableType(ZoneOffset.class, false);
+        addImmutableTypeDynamically("java.time.ZoneRegion", false);
+        addImmutableType(HijrahChronology.class, false);
+        addImmutableType(HijrahDate.class, false);
+        addImmutableType(IsoChronology.class, false);
+        addImmutableType(JapaneseChronology.class, false);
+        addImmutableType(JapaneseDate.class, false);
+        addImmutableType(JapaneseEra.class, false);
+        addImmutableType(MinguoChronology.class, false);
+        addImmutableType(MinguoDate.class, false);
+        addImmutableType(ThaiBuddhistChronology.class, false);
+        addImmutableType(ThaiBuddhistDate.class, false);
+        addImmutableTypeDynamically("java.time.temporal.IsoFields$Field", false);
+        addImmutableTypeDynamically("java.time.temporal.IsoFields$Unit", false);
+        addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);
     }
 
     private void addImmutableTypeDynamically(final String className, final boolean isReferenceable) {
@@ -1187,6 +1211,7 @@ public class XStream {
      *
      * @throws XStreamException if the object cannot be deserialized
      */
+    @SuppressWarnings("resource")
     public <T> T fromXML(final Reader reader) {
         return unmarshal(hierarchicalStreamDriver.createReader(reader), null);
     }
@@ -1196,6 +1221,7 @@ public class XStream {
      *
      * @throws XStreamException if the object cannot be deserialized
      */
+    @SuppressWarnings("resource")
     public <T> T fromXML(final InputStream input) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), null);
     }
@@ -1240,6 +1266,7 @@ public class XStream {
      *
      * @throws XStreamException if the object cannot be deserialized
      */
+    @SuppressWarnings("resource")
     public <T> T fromXML(final Reader xml, final T root) {
         return unmarshal(hierarchicalStreamDriver.createReader(xml), root);
     }
@@ -1254,7 +1281,9 @@ public class XStream {
      * @since 1.4
      */
     public <T> T fromXML(final URL url, final T root) {
-        return unmarshal(hierarchicalStreamDriver.createReader(url), root);
+        try (HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(url)) {
+            return unmarshal(reader, root);
+        }
     }
 
     /**
@@ -1267,11 +1296,8 @@ public class XStream {
      * @since 1.4
      */
     public <T> T fromXML(final File file, final T root) {
-        final HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file);
-        try {
+        try (final HierarchicalStreamReader reader = hierarchicalStreamDriver.createReader(file)) {
             return unmarshal(reader, root);
-        } finally {
-            reader.close();
         }
     }
 
@@ -1282,6 +1308,7 @@ public class XStream {
      *
      * @throws XStreamException if the object cannot be deserialized
      */
+    @SuppressWarnings("resource")
     public <T> T fromXML(final InputStream input, final T root) {
         return unmarshal(hierarchicalStreamDriver.createReader(input), root);
     }
@@ -1817,6 +1844,7 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
+    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final Writer writer) throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), "object-stream");
     }
@@ -1843,6 +1871,7 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.0.3
      */
+    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final Writer writer, final String rootNodeName)
             throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(writer), rootNodeName);
@@ -1859,6 +1888,7 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
      */
+    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final OutputStream out) throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), "object-stream");
     }
@@ -1870,6 +1900,7 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.3
      */
+    @SuppressWarnings("resource")
     public ObjectOutputStream createObjectOutputStream(final OutputStream out, final String rootNodeName)
             throws IOException {
         return createObjectOutputStream(hierarchicalStreamDriver.createWriter(out), rootNodeName);
@@ -1915,12 +1946,13 @@ public class XStream {
     public ObjectOutputStream createObjectOutputStream(final HierarchicalStreamWriter writer, final String rootNodeName,
             final DataHolder dataHolder)
             throws IOException {
+        final DataHolder context = dataHolder != null ? dataHolder : new MapBackedDataHolder();
         final StatefulWriter statefulWriter = new StatefulWriter(writer);
         statefulWriter.startNode(rootNodeName, null);
-        return new CustomObjectOutputStream(new CustomObjectOutputStream.StreamCallback() {
+        return new CustomObjectOutputStream(context, new CustomObjectOutputStream.StreamCallback() {
             @Override
             public void writeToStream(final Object object) {
-                marshal(object, statefulWriter, dataHolder);
+                marshal(object, statefulWriter, context);
             }
 
             @Override
@@ -1955,6 +1987,7 @@ public class XStream {
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.0.3
      */
+    @SuppressWarnings("resource")
     public ObjectInputStream createObjectInputStream(final Reader xmlReader) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(xmlReader));
     }
@@ -1966,6 +1999,7 @@ public class XStream {
      * @see #createObjectOutputStream(com.thoughtworks.xstream.io.HierarchicalStreamWriter, String)
      * @since 1.3
      */
+    @SuppressWarnings("resource")
     public ObjectInputStream createObjectInputStream(final InputStream in) throws IOException {
         return createObjectInputStream(hierarchicalStreamDriver.createReader(in));
     }
@@ -2007,7 +2041,7 @@ public class XStream {
                     throw new EOFException();
                 }
                 reader.moveDown();
-                final Object result = unmarshal(reader, dataHolder);
+                final Object result = unmarshal(reader, null, dataHolder);
                 reader.moveUp();
                 return result;
             }

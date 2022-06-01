@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2007, 2011, 2014, 2015 XStream Committers.
+ * Copyright (c) 2006, 2007, 2011, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,12 +28,12 @@ public final class Primitives {
 
     static {
         final Class<?>[][] boxing = new Class[][]{
-            {Byte.TYPE, Byte.class}, {Character.TYPE, Character.class}, {Short.TYPE, Short.class},
-            {Integer.TYPE, Integer.class}, {Long.TYPE, Long.class}, {Float.TYPE, Float.class},
-            {Double.TYPE, Double.class}, {Boolean.TYPE, Boolean.class}, {Void.TYPE, Void.class},};
+            {Byte.TYPE, Byte.class}, {Character.TYPE, Character.class}, {Short.TYPE, Short.class}, //
+            {Integer.TYPE, Integer.class}, {Long.TYPE, Long.class}, {Float.TYPE, Float.class}, //
+            {Double.TYPE, Double.class}, {Boolean.TYPE, Boolean.class}, {Void.TYPE, Void.class}};
         final Character[] representingChars = {
-            new Character('B'), new Character('C'), new Character('S'), new Character('I'), new Character('J'),
-            new Character('F'), new Character('D'), new Character('Z'), null};
+            Character.valueOf('B'), Character.valueOf('C'), Character.valueOf('S'), Character.valueOf('I'), //
+            Character.valueOf('J'), Character.valueOf('F'), Character.valueOf('D'), Character.valueOf('Z'), null};
         for (int i = 0; i < boxing.length; i++) {
             final Class<?> primitiveType = boxing[i][0];
             final Class<?> boxedType = boxing[i][1];

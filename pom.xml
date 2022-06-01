@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -37,15 +37,6 @@
 
   <profiles>
     <profile>
-      <id>jdk18-ge</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
-      </activation>
-      <properties>
-        <javadoc.doclint>-missing</javadoc.doclint>
-      </properties>
-    </profile>
-    <profile>
       <id>java</id>
       <activation>
         <file>
@@ -54,6 +45,44 @@
       </activation>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>include-license</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>add-resource</goal>
+                </goals>
+                <configuration>
+                  <resources>
+                    <resource>
+                      <directory>${project.build.directory}/generated-resources</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-license</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <copy file="../LICENSE.txt" tofile="${project.build.directory}/generated-resources/META-INF/LICENSE" overwrite="false" failonerror="true" />
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
@@ -75,6 +104,36 @@
                       <version>${version.java.enforced}</version>
                     </requireJavaVersion>
                   </rules>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>java-test</id>
+      <activation>
+        <file>
+          <exists>src/test</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-license-for-test</id>
+                <phase>generate-test-resources</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <copy file="../LICENSE.txt" tofile="${project.build.directory}/test-classes/META-INF/LICENSE" overwrite="false" failonerror="true" />
+                  </target>
                 </configuration>
               </execution>
             </executions>
@@ -137,7 +196,7 @@
     <profile>
       <id>xstream-release</id>
       <properties>
-        <version.java.enforced>[1.8,1.9)</version.java.enforced>
+        <version.java.enforced>[16,17)</version.java.enforced>
       </properties>
       <build>
         <plugins>
@@ -216,6 +275,7 @@
   <modules>
     <module>xstream</module>
     <module>xstream-hibernate</module>
+    <!--module>xstream-its</module-->
     <module>xstream-jmh</module>
     <module>xstream-benchmark</module>
     <module>xstream-distribution</module>
@@ -223,7 +283,7 @@
 
   <licenses>
     <license>
-      <name>BSD style</name>
+      <name>BSD-3-Clause</name>
       <url>http://x-stream.github.io/license.html</url>
       <distribution>repo</distribution>
     </license>
@@ -413,8 +473,8 @@
         <version>${version.xom}</version>
         <exclusions>
           <exclusion>
-            <groupId>xerces</groupId>
-            <artifactId>xmlParserAPIs</artifactId>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
           </exclusion>
           <exclusion>
             <groupId>xerces</groupId>
@@ -424,13 +484,14 @@
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
           </exclusion>
-          <exclusion>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-          </exclusion>
         </exclusions>
       </dependency>
 
+      <dependency>
+        <groupId>io.github.x-stream</groupId>
+        <artifactId>mxparser</artifactId>
+        <version>${version.io.github.x-stream.mxparser}</version>
+      </dependency>
       <dependency>
         <groupId>xpp3</groupId>
         <artifactId>xpp3_min</artifactId>
@@ -462,12 +523,12 @@
         <groupId>org.codehaus.jettison</groupId>
         <artifactId>jettison</artifactId>
         <version>${version.org.codehaus.jettison}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>xml-apis</groupId>
-        <artifactId>xml-apis</artifactId>
-        <version>${version.xml-apis}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>stax</groupId>
+                <artifactId>stax-api</artifactId>
+            </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -477,19 +538,24 @@
       </dependency>
 
       <dependency>
-        <groupId>javax.activation</groupId>
-        <artifactId>javax.activation-api</artifactId>
-        <version>${version.javax.activation.api}</version>
+        <groupId>jakarta.activation</groupId>
+        <artifactId>jakarta.activation-api</artifactId>
+        <version>${version.jakarta.activation.api}</version>
       </dependency>
       <dependency>
-        <groupId>javax.annotation</groupId>
-        <artifactId>javax.annotation-api</artifactId>
-        <version>${version.javax.annotation.api}</version>
+        <groupId>jakarta.annotation</groupId>
+        <artifactId>jakarta.annotation-api</artifactId>
+        <version>${version.jakarta.annotation.api}</version>
       </dependency>
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>${version.javax.xml.bind.api}</version>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>${version.jakarta.xml.bind.api}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.ws</groupId>
+        <artifactId>jaxws-rt</artifactId>
+        <version>${version.javax.xml.ws.jaxws.rt}</version>
       </dependency>
 
       <dependency>
@@ -562,6 +628,60 @@
         <scope>test</scope>
       </dependency>
 
+      <!-- Pax Exam Dependencies -->
+      <dependency>
+        <groupId>jakarta.inject</groupId>
+        <artifactId>jakarta.inject-api</artifactId>
+        <version>${version.jakarta.inject.api}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.framework</artifactId>
+        <version>${version.org.apache.felix}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-container-native</artifactId>
+        <version>${version.org.ops4j.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-extender-service</artifactId>
+        <version>${version.org.ops4j.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-inject</artifactId>
+        <version>${version.org.ops4j.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-invoker-junit</artifactId>
+        <version>${version.org.ops4j.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-junit4</artifactId>
+        <version>${version.org.ops4j.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-link-assembly</artifactId>
+        <version>${version.org.ops4j.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-link-mvn</artifactId><!-- Preferred link because it does not require an mvn url handler implicitly. -->
+        <version>${version.org.ops4j.pax.exam}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -630,8 +750,17 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${version.plugin.maven.failsafe}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
           <version>${version.plugin.maven.gpg}</version>
+          <configuration>
+            <keyname>${gpg.keyname}</keyname>
+            <passphraseServerId>${gpg.keyname}</passphraseServerId>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -650,11 +779,10 @@
               </manifest>
               <manifestEntries>
                 <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version>
+                <Bundle-License>BSD-3-Clause</Bundle-License>
+                <Automatic-Module-Name>${jar.module.name}</Automatic-Module-Name>
                 <X-Compile-Source>${version.java.source}</X-Compile-Source>
                 <X-Compile-Target>${version.java.target}</X-Compile-Target>
-                <X-Builder>Maven ${maven.version}</X-Builder>
-                <X-Build-Time>${maven.build.timestamp}</X-Build-Time>
-                <X-Build-Os>${os.name}</X-Build-Os>
               </manifestEntries>
             </archive>
           </configuration>
@@ -674,7 +802,7 @@
           <configuration>
             <detectJavaApiLink>false</detectJavaApiLink>
             <doclint>${javadoc.doclint}</doclint>
-            <source>${version.java.source}</source>
+            <release>${javadoc.java.release}</release>
             <links>
               <link>${javadoc.link.javase}</link>
             </links>
@@ -685,6 +813,7 @@
               </manifest>
               <manifestEntries>
                 <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version>
+                <Bundle-License>BSD-3-Clause</Bundle-License>
               </manifestEntries>
             </archive>
           </configuration>
@@ -741,13 +870,11 @@
                 <Bundle-Name>${project.name} Sources</Bundle-Name>
                 <Bundle-SymbolicName>${project.artifactId}.sources</Bundle-SymbolicName>
                 <Bundle-Vendor>${project.organization.name} Sources</Bundle-Vendor>
-                <Bundle-Version>${project.info.osgiVersion} Sources</Bundle-Version>
+                <Bundle-Version>${project.info.osgiVersion}</Bundle-Version>
+                <Bundle-License>BSD-3-Clause</Bundle-License>
                 <Eclipse-SourceBundle>${project.artifactId};version=${project.info.osgiVersion}</Eclipse-SourceBundle>
                 <X-Compile-Source>${version.java.source}</X-Compile-Source>
                 <X-Compile-Target>${version.java.target}</X-Compile-Target>
-                <X-Builder>Maven ${maven.version}</X-Builder>
-                <X-Build-Time>${maven.build.timestamp}</X-Build-Time>
-                <X-Build-Os>${os.name}</X-Build-Os>
               </manifestEntries>
             </archive>
           </configuration>
@@ -798,6 +925,13 @@
           <groupId>org.codehaus.xsite</groupId>
           <artifactId>xsite-maven-plugin</artifactId>
           <version>${version.plugin.codehaus.xsite}</version>
+          <dependencies>
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>1.4.16</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -806,8 +940,12 @@
           <configuration>
             <manifestLocation>${project.build.directory}/OSGi</manifestLocation>
             <instructions>
+              <_noee>true</_noee>
               <_nouses>true</_nouses>
+              <_removeheaders>Bnd-LastModified,Built-By</_removeheaders>
+              <_reproducible>true</_reproducible>
               <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+              <Bundle-License>BSD-3-Clause</Bundle-License>
               <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version><!-- FELIX-3392 -->
             </instructions>
             <archive>
@@ -829,6 +967,13 @@
           <groupId>org.eluder.coveralls</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
           <version>${version.plugin.eluder.coveralls}</version>
+          <dependencies>
+            <dependency>
+              <groupId>jakarta.xml.bind</groupId>
+              <artifactId>jakarta.xml.bind-api</artifactId>
+              <version>${version.jakarta.xml.bind.api}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
@@ -921,43 +1066,45 @@
 
   <scm>
     <url>http://github.com/x-stream/xstream</url>
-    <developerConnection>scm:git:https://github.com/x-stream/xstream.git</developerConnection>
-    <connection>scm:git:https://github.com/x-stream/xstream.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/x-stream/xstream.git</developerConnection>
+    <connection>scm:git:ssh://git@github.com/x-stream/xstream.git</connection>
     <tag>HEAD</tag>
   </scm>
   
   <properties>
+    <project.build.outputTimestamp>1</project.build.outputTimestamp>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <version.java.source>1.7</version.java.source>
-    <version.java.target>1.7</version.java.target>
-    <version.java.enforced>[1.7,)</version.java.enforced>
+    <version.java.source>1.8</version.java.source>
+    <version.java.target>1.8</version.java.target>
+    <version.java.enforced>[1.8,)</version.java.enforced>
     <version.maven.enforced>[3.3.9,)</version.maven.enforced>
 
     <version.plugin.codehaus.xsite>1.3</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>3.5.1</version.plugin.felix.bundle>
     <version.plugin.maven.antrun>1.8</version.plugin.maven.antrun>
-    <version.plugin.maven.assembly>3.1.0</version.plugin.maven.assembly>
+    <version.plugin.maven.assembly>3.2.0</version.plugin.maven.assembly>
     <version.plugin.maven.clean>3.1.0</version.plugin.maven.clean>
-    <version.plugin.maven.compiler>3.8.0</version.plugin.maven.compiler>
+    <version.plugin.maven.compiler>3.8.1</version.plugin.maven.compiler>
     <version.plugin.maven.dependency>3.1.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>3.0.0-M1</version.plugin.maven.deploy>
     <version.plugin.maven.enforcer>3.0.0-M2</version.plugin.maven.enforcer>
-    <version.plugin.maven.gpg>1.6</version.plugin.maven.gpg>
+    <version.plugin.maven.failsafe>${version.plugin.maven.surefire}</version.plugin.maven.failsafe>
+    <version.plugin.maven.gpg>3.0.1</version.plugin.maven.gpg>
     <version.plugin.maven.install>3.0.0-M1</version.plugin.maven.install>
-    <version.plugin.maven.jar>3.1.1</version.plugin.maven.jar>
-    <version.plugin.maven.javadoc>3.0.1</version.plugin.maven.javadoc>
+    <version.plugin.maven.jar>3.2.0</version.plugin.maven.jar>
+    <version.plugin.maven.javadoc>3.2.0</version.plugin.maven.javadoc>
     <version.plugin.maven.jxr>3.0.0</version.plugin.maven.jxr>
-    <version.plugin.maven.release>2.5.3</version.plugin.maven.release>
+    <version.plugin.maven.release>3.0.0-M4</version.plugin.maven.release>
     <version.plugin.maven.resources>3.1.0</version.plugin.maven.resources>
     <version.plugin.maven.site>3.7.1</version.plugin.maven.site>
-    <version.plugin.maven.source>3.0.1</version.plugin.maven.source>
-    <version.plugin.maven.surefire>3.0.0-M2</version.plugin.maven.surefire>
+    <version.plugin.maven.source>3.2.0</version.plugin.maven.source>
+    <version.plugin.maven.surefire>3.0.0-M3</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>3.0.0</version.plugin.mojo.build-helper>
-    <version.plugin.mojo.flatten>1.0.1</version.plugin.mojo.flatten>
+    <version.plugin.mojo.flatten>1.1.0</version.plugin.mojo.flatten>
     <version.plugin.io.wcm.devops.eclipse>3.1.0</version.plugin.io.wcm.devops.eclipse>
     <version.plugin.eluder.coveralls>4.3.0</version.plugin.eluder.coveralls>
-    <version.plugin.jacoco>0.8.2</version.plugin.jacoco>
+    <version.plugin.jacoco>0.8.6</version.plugin.jacoco>
 
     <version.cglib.nodep>2.2</version.cglib.nodep>
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
@@ -965,15 +1112,20 @@
     <version.commons.codec>1.11</version.commons.codec>
     <version.commons.lang3>3.8.1</version.commons.lang3>
     <version.hsqldb>2.2.8</version.hsqldb>
+    <version.io.github.x-stream.mxparser>1.2.2</version.io.github.x-stream.mxparser>
+    <version.jakarta.activation.api>1.2.1</version.jakarta.activation.api>
+    <version.jakarta.annotation.api>1.3.4</version.jakarta.annotation.api>
+    <version.jakarta.inject.api>1.0</version.jakarta.inject.api>
+    <version.jakarta.xml.bind.api>2.3.2</version.jakarta.xml.bind.api>
     <version.javaassist>3.12.1.GA</version.javaassist>
-    <version.javax.activation.api>1.2.0</version.javax.activation.api>
-    <version.javax.annotation.api>1.3.2</version.javax.annotation.api>
     <version.javax.xml.bind.api>2.3.1</version.javax.xml.bind.api>
+    <version.javax.xml.ws.jaxws.rt>2.2</version.javax.xml.ws.jaxws.rt><!-- Java 5 -->
     <version.jmock>1.0.1</version.jmock>
     <version.joda-time>2.10.1</version.joda-time>
     <version.junit>3.8.1</version.junit>
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
-    <version.org.codehaus.jettison>1.2</version.org.codehaus.jettison>
+    <version.org.apache.felix>6.0.3</version.org.apache.felix>
+    <version.org.codehaus.jettison>1.4.1</version.org.codehaus.jettison>
     <version.com.fasterxml.woodstox.core>5.2.0</version.com.fasterxml.woodstox.core>
     <version.org.dom4j>2.0.2</version.org.dom4j>
     <version.org.hibernate.core>4.2.5.Final</version.org.hibernate.core>
@@ -982,20 +1134,22 @@
     <version.org.jdom2>2.0.6</version.org.jdom2>
     <version.org.json>20180813</version.org.json>
     <version.org.openjdk.jmh>1.21</version.org.openjdk.jmh>
+    <version.org.ops4j.pax.exam>4.13.4</version.org.ops4j.pax.exam>
     <version.org.slf4j>1.6.1</version.org.slf4j>
     <version.stax>1.2.0</version.stax>
-    <version.stax.api>1.0.1</version.stax.api>
     <version.xerces.impl>2.8.1</version.xerces.impl>
-    <version.xml-apis>1.3.04</version.xml-apis>
     <version.xmlpull>1.1.3.1</version.xmlpull>
-    <version.xom>1.2.5</version.xom>
+    <version.xom>1.3.2</version.xom>
     <version.xpp3>1.1.4c</version.xpp3>
 
-    <javadoc.link.javase>http://docs.oracle.com/javase/8/docs/api/</javadoc.link.javase>
+    <jar.module.name>${project.artifactId}</jar.module.name>
+    <javadoc.java.release>16</javadoc.java.release>
+    <javadoc.link.javase>https://docs.oracle.com/en/java/javase/16/docs/api/</javadoc.link.javase>
     <surefire.illegal.access>permit</surefire.illegal.access>
+    <surefire.preview.arg></surefire.preview.arg>
 
     <argLine>${surefire.argline}</argLine>
-    <javadoc.doclint/>
+    <javadoc.doclint>-missing</javadoc.doclint>
     <surefire.argline/>
   </properties>
 </project>

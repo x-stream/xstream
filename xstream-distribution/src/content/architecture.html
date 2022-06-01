@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007 XStream committers.
+ Copyright (C) 2006, 2007, 2021 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -15,15 +15,30 @@
     </head>
     <body>
 
-        <p>The architecture of XStream consists of the four main components:</p>
+        <p>The architecture of XStream consists of the six main components:</p>
 
         <ul>
             <li><b>Converters</b></li>
-            <!--  TODO: Mappers -->
+            <li><b>Mappers</b></li>
             <li><b>Drivers (Writer and Reader)</b></li>
             <li><b>Context</b></li>
+            <li><b>Type Permissions</b></li>
             <li><b>Facade</b></li>
         </ul>
+
+        <!-- ************ -->
+
+        <h1 id="LifeCycle">Life Cycle</h1>
+
+        <p>An XStream instance envisages two phases in its life cycle: Setup and Execution.  A lot of default configuration is
+        already applied when an XStream instance is instantiated, i.e. the instance is directly in setup phase.  Now is
+        the time to apply further configuration.  This phase is not  thread-safe.</p>
+
+        <p>Once an instance is properly configured in can be used in an execution phase, where
+        <a href="graphs.html">Java object graphs</a> are marshalled and unmarshalled.  The execution phase is
+        thread-safe, i.e. is is possible to use an XStream instance concurrently for execution.  However, XStream
+        builds caches during execution based on the configuration.  Therefore, an instance should never be reconfigured
+        during or after execution phase.  The result of any further (un-)marshalling might not be what is expected.</p>
 
         <!-- ************ -->
 
@@ -36,13 +51,28 @@
         <p>XStream comes <a href="converters.html">bundled with many converters</a> for common types, including primitives,
         String, Collections, arrays, null, Date, etc.</p>
 
-        <p>XStream also has a <i>default Converter</i>, that is used when no other Converters match a type. This uses
+        <p>XStream also has a <i>default Converter</i>, that is used when no other Converters match a type.  This uses
         reflection to automatically generate the XML for all the fields in an object.</p>
 
         <p>If an object is composed of other objects, the Converter may delegate to other Converters.</p>
 
         <p class="highlight">To customize the XML for particular object type a new Converter should be implemented.</p>
 
+        <!-- ************ -->
+
+        <h1 id="Mappers">Mappers</h1>
+
+        <p><a href="javadoc/com/thoughtworks/xstream/mapper/Mapper.html">Mapper</a> implementations are the key
+        components to map between names used in XML and names of Java elements and vice versa.  Mappers are organized
+        in a chain, e.g. every time a mapper cannot map a special name it delegates the call to its logical parent.
+        Mappers keep the configuration in XStream and a converter should always use the Mapper (chain) of XStream to
+        map names it has to deal with.</p>
+
+        <p>XStream comes bundled with many mappers to map names of ordinary Java types and elements, of arrays, enums,
+        proxies, outer classes, to handle alias definitions, implicit collections, and ignored elements and even the
+        <a href="security.html#framework">Security Framework</a> is based on a Mapper implementation.</p>
+
+        <p class="highlight">Overwrite XStream's <em>wrapMapper</em> function to add custom mapper implementation.</p>
 
         <!-- ************ -->
 
@@ -119,6 +149,14 @@
         a hash table passed around whilst processing the object graph that can be used as the user sees fit (in a similar
         way that the HttpServletRequest attributes are used in a web-application).</p>
 
+        <!-- ************ -->
+
+        <h1 id="TypePermissions">Type Permissions</h1>
+
+        <p>XStream's  <a href="security.html#framework">Security Framework</a> consists of a Mapper implementation and
+        a lot of <a href="javadoc/com/thoughtworks/xstream/security/TypePermission.html">type permissions</a>.  These
+        implementations are used to deny or allow the deserialization of java types based on their name or type
+        hierarchy.</p>
 
         <!-- ************ -->
 
@@ -130,7 +168,6 @@
 
         <p class="highlight">Remember, the XStream class is just a facade - it can always be bypassed for more advanced
         operations.</p>
-
 
     </body>
 </html>

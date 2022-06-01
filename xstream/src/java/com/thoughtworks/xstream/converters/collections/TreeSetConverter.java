@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015, 2016, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2015, 2016, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,43 +42,6 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public class TreeSetConverter extends CollectionConverter {
     private transient TreeMapConverter treeMapConverter;
-    private final static Field sortedMapField;
-    private final static Object constantValue;
-
-    static {
-        Object value = null;
-        sortedMapField = JVM.hasOptimizedTreeSetAddAll() ? Fields.locate(TreeSet.class, SortedMap.class, false) : null;
-        if (sortedMapField != null) {
-            final TreeSet<String> set = new TreeSet<>();
-            set.add("1");
-            set.add("2");
-
-            Map<String, Object> backingMap = null;
-            try {
-                @SuppressWarnings("unchecked")
-                final Map<String, Object> map = (Map<String, Object>)sortedMapField.get(set);
-                backingMap = map;
-            } catch (final IllegalAccessException e) {
-                // give up;
-            }
-            if (backingMap != null) {
-                final Object[] values = backingMap.values().toArray();
-                if (values[0] == values[1]) {
-                    value = values[0];
-                }
-            }
-        } else {
-            final Field valueField = Fields.locate(TreeSet.class, Object.class, true);
-            if (valueField != null) {
-                try {
-                    value = valueField.get(null);
-                } catch (final IllegalAccessException e) {
-                    // give up;
-                }
-            }
-        }
-        constantValue = value;
-    }
 
     public TreeSetConverter(final Mapper mapper) {
         super(mapper, TreeSet.class);
@@ -100,11 +63,11 @@ public class TreeSetConverter extends CollectionConverter {
         final boolean inFirstElement = unmarshalledComparator instanceof Mapper.Null;
         @SuppressWarnings("unchecked")
         final Comparator<Object> comparator = inFirstElement ? null : (Comparator<Object>)unmarshalledComparator;
-        if (sortedMapField != null) {
+        if (Reflections.sortedMapField != null) {
             final TreeSet<Object> possibleResult = comparator == null ? new TreeSet<>() : new TreeSet<>(comparator);
             Object backingMap = null;
             try {
-                backingMap = sortedMapField.get(possibleResult);
+                backingMap = Reflections.sortedMapField.get(possibleResult);
             } catch (final IllegalAccessException e) {
                 throw new ObjectAccessException("Cannot get backing map of TreeSet", e);
             }
@@ -146,7 +109,10 @@ public class TreeSetConverter extends CollectionConverter {
                     public boolean add(final Object object) {
                         @SuppressWarnings("unchecked")
                         final Map<Object, Object> collectionTarget = (Map<Object, Object>)target;
-                        return collectionTarget.put(object, constantValue != null ? constantValue : object) != null;
+                        return collectionTarget
+                            .put(object, Reflections.constantValue != null
+                                ? Reflections.constantValue
+                                : object) != null;
                     }
 
                     @Override
@@ -164,13 +130,57 @@ public class TreeSetConverter extends CollectionConverter {
             @Override
             protected void putCurrentEntryIntoMap(final HierarchicalStreamReader reader,
                     final UnmarshallingContext context, final Map<?, ?> map, final Map<?, ?> target) {
+                // call readBareItem when deprecated method is removed
                 @SuppressWarnings("deprecation")
-                final Object key = readItem(reader, context, map);  // call readBareItem when deprecated method is removed
+                final Object key = readItem(reader, context, map);
                 @SuppressWarnings("unchecked")
                 final Map<Object, Object> checkedTarget = (Map<Object, Object>)target;
                 checkedTarget.put(key, key);
             }
         };
         return this;
+    }
+
+    private static class Reflections {
+
+        private final static Field sortedMapField;
+        private final static Object constantValue;
+
+        static {
+            Object value = null;
+            sortedMapField = JVM.hasOptimizedTreeSetAddAll()
+                ? Fields.locate(TreeSet.class, SortedMap.class, false)
+                : null;
+            if (sortedMapField != null) {
+                final TreeSet<String> set = new TreeSet<>();
+                set.add("1");
+                set.add("2");
+
+                Map<String, Object> backingMap = null;
+                try {
+                    @SuppressWarnings("unchecked")
+                    final Map<String, Object> map = (Map<String, Object>)sortedMapField.get(set);
+                    backingMap = map;
+                } catch (final IllegalAccessException e) {
+                    // give up;
+                }
+                if (backingMap != null) {
+                    final Object[] values = backingMap.values().toArray();
+                    if (values[0] == values[1]) {
+                        value = values[0];
+                    }
+                }
+            } else {
+                final Field valueField = Fields.locate(TreeSet.class, Object.class, true);
+                if (valueField != null) {
+                    try {
+                        value = valueField.get(null);
+                    } catch (final IllegalAccessException e) {
+                        // give up;
+                    }
+                }
+            }
+            constantValue = value;
+        }
     }
 }

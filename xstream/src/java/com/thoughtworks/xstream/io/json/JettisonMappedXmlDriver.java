@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2007, 2008, 2009, 2010, 2011, 2013, 2014, 2018 XStream Committers.
+ * Copyright (c) 2007, 2008, 2009, 2010, 2011, 2013, 2014, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 30. March 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.io.json;
@@ -36,8 +36,9 @@ import com.thoughtworks.xstream.io.xml.StaxWriter;
 
 
 /**
- * Simple XStream driver wrapping Jettison's Mapped reader and writer. Serializes object from and to JSON.
- * 
+ * Simple XStream driver wrapping Jettison's Mapped reader and writer. Serializes object from and to JSON. Use exactly
+ * Jettison 1.2 or at least 1.4.1. Versions in between are not compatible.
+ *
  * @author Dejan Bosanac
  */
 public class JettisonMappedXmlDriver extends AbstractDriver {
@@ -56,7 +57,10 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
 
     /**
      * Construct a JettisonMappedXmlDriver with configuration.
-     * 
+     * <p>
+     * Note, you should turn off Jettison's root element array wrapper using Jettison 1.4.1 or higher.
+     * </p>
+     *
      * @param config the Jettison configuration
      */
     public JettisonMappedXmlDriver(final Configuration config) {
@@ -70,13 +74,16 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
      * versions. if the driver is setup to ignore the XStream hints for JSON arrays, there is neither support from
      * XStream's side nor are there any tests to ensure this mode.
      * </p>
-     * 
-     * @param config the Jettison configuration
+     *
+     * @param config the Jettison configuration or null for XStream's defaults
      * @param useSerializeAsArray flag to use XStream's hints for collections and arrays
      * @since 1.4
      */
     public JettisonMappedXmlDriver(Configuration config, final boolean useSerializeAsArray) {
-        config = config == null ? new Configuration() : config;
+        if (config == null) {
+            config = new Configuration();
+            config.setRootElementArrayWrapper(false);
+        }
         mof = new MappedXMLOutputFactory(config);
         mif = new MappedXMLInputFactory(config);
         convention = new MappedNamespaceConvention(config);
@@ -108,9 +115,7 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
             instream = in.openStream();
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(in.toExternalForm(), instream),
                 getNameCoder());
-        } catch (final XMLStreamException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XMLStreamException | IOException e) {
             throw new StreamException(e);
         } finally {
             if (instream != null) {
@@ -130,9 +135,7 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
             instream = new FileInputStream(in);
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(in.toURI().toASCIIString(), instream),
                 getNameCoder());
-        } catch (final XMLStreamException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XMLStreamException | IOException e) {
             throw new StreamException(e);
         } finally {
             if (instream != null) {

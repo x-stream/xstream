@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2015 XStream Committers.
+# Copyright (C) 2015, 2022 XStream Committers.
 # All rights reserved.
 #
 # The software in this package is published under the terms of the BSD
@@ -40,6 +40,15 @@ fi
 for i in lib/*.jar; do
 	APP_CP=$APP_CP:$i
 done
+
+# * Open modules for parsers using Java 17 or higher
+# *************
+JAVA_VERSION=`$JAVA_BIN -cp $APP_CP com.thoughtworks.xstream.core.JVM | grep "java.specification.version" | cut -d ' ' -f 2`
+if [[ $JAVA_VERSION -ge 17 ]]; then
+	JAVA_OPTS="$JAVA_OPTS --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED"
+	JAVA_OPTS="$JAVA_OPTS --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED"
+	JAVA_OPTS="$JAVA_OPTS --add-opens java.xml/com.sun.xml.internal.stream=ALL-UNNAMED"
+fi
 
 # * Set options
 # *************

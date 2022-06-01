@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015, 2016, 2017, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -35,7 +35,9 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * @author J&ouml;rg Schaible
  * @see <a href="http://www.iso.org/iso/home/store/catalogue_ics/catalogue_detail_ics.htm?csnumber=40874">ISO 8601</a>
  * @since 1.4.10
+ * @deprecated As of upcoming, no longer required since Java 8, use {@link ISO8601JavaTimeConverter} instead
  */
+@Deprecated
 public class ISO8601JodaTimeConverter extends AbstractSingleValueConverter {
     private static final DateTimeFormatter[] formattersUTC = { //
         ISODateTimeFormat.dateTime(), //

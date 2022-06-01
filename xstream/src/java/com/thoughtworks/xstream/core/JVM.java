@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.converters.reflection.FieldDictionary;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.core.util.Base64Encoder;
+import com.thoughtworks.xstream.core.util.Base64JavaUtilCodec;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 import com.thoughtworks.xstream.core.util.PresortedMap;
@@ -44,6 +44,7 @@ public class JVM implements Caching {
     private static final boolean isAWTAvailable;
     private static final boolean isSwingAvailable;
     private static final boolean isSQLAvailable;
+    private static final boolean isUnnamedModule;
     private static final boolean canAllocateWithUnsafe;
     private static final boolean canWriteWithUnsafe;
     private static final boolean optimizedTreeSetAddAll;
@@ -54,10 +55,11 @@ public class JVM implements Caching {
 
     private static final String vendor = System.getProperty("java.vm.vendor");
     private static final float majorJavaVersion = getMajorJavaVersion();
-    private static final float DEFAULT_JAVA_VERSION = 1.7f;
+    private static final float DEFAULT_JAVA_VERSION = 1.8f;
     private static final boolean reverseFieldOrder = false;
     private static final Class<? extends ReflectionProvider> reflectionProviderType;
-    private static final StringCodec base64Codec;
+    @Deprecated
+    private static final StringCodec base64Codec = new Base64JavaUtilCodec();
 
     static class Test {
         @SuppressWarnings("unused")
@@ -85,6 +87,11 @@ public class JVM implements Caching {
     }
 
     static {
+        final Exception exception = new RuntimeException();
+        exception.fillInStackTrace();
+        final StackTraceElement[] stackTrace = exception.getStackTrace();
+        isUnnamedModule = !stackTrace[0].toString().contains("xstream@"); // Java 9: getModule() == null
+
         boolean test = true;
         Object unsafe = null;
         try {
@@ -95,9 +102,7 @@ public class JVM implements Caching {
             final Method allocateInstance = unsafeClass.getDeclaredMethod("allocateInstance", new Class[]{Class.class});
             allocateInstance.setAccessible(true);
             test = allocateInstance.invoke(unsafe, new Object[]{Test.class}) != null;
-        } catch (final Exception e) {
-            test = false;
-        } catch (final Error e) {
+        } catch (final Exception | Error e) {
             test = false;
         }
         canAllocateWithUnsafe = test;
@@ -112,18 +117,16 @@ public class JVM implements Caching {
                     final Test t = (Test)provider.newInstance(Test.class);
                     try {
                         provider.writeField(t, "o", "object", Test.class);
-                        provider.writeField(t, "c", new Character('c'), Test.class);
-                        provider.writeField(t, "b", new Byte((byte)1), Test.class);
-                        provider.writeField(t, "s", new Short((short)1), Test.class);
-                        provider.writeField(t, "i", new Integer(1), Test.class);
-                        provider.writeField(t, "l", new Long(1), Test.class);
-                        provider.writeField(t, "f", new Float(1), Test.class);
-                        provider.writeField(t, "d", new Double(1), Test.class);
+                        provider.writeField(t, "c", Character.valueOf('c'), Test.class);
+                        provider.writeField(t, "b", Byte.valueOf((byte)1), Test.class);
+                        provider.writeField(t, "s", Short.valueOf((short)1), Test.class);
+                        provider.writeField(t, "i", Integer.valueOf(1), Test.class);
+                        provider.writeField(t, "l", Long.valueOf(1), Test.class);
+                        provider.writeField(t, "f", Float.valueOf(1), Test.class);
+                        provider.writeField(t, "d", Double.valueOf(1), Test.class);
                         provider.writeField(t, "bool", Boolean.TRUE, Test.class);
                         test = true;
-                    } catch (final IncompatibleClassChangeError e) {
-                        cls = null;
-                    } catch (final ObjectAccessException e) {
+                    } catch (final IncompatibleClassChangeError | ObjectAccessException e) {
                         cls = null;
                     }
                     if (cls == null) {
@@ -172,19 +175,15 @@ public class JVM implements Caching {
         try {
             new SimpleDateFormat("X").parse("Z");
             test = true;
-        } catch (final ParseException e) {
-            test = false;
-        } catch (final IllegalArgumentException e) {
+        } catch (final ParseException | IllegalArgumentException e) {
             test = false;
         }
         canParseISO8601TimeZoneInDateFormat = test;
         try {
             @SuppressWarnings("resource")
-            final CustomObjectOutputStream stream = new CustomObjectOutputStream(null);
+            final CustomObjectOutputStream stream = new CustomObjectOutputStream(null, null);
             test = stream != null;
-        } catch (final RuntimeException e) {
-            test = false;
-        } catch (final IOException e) {
+        } catch (final RuntimeException | IOException e) {
             test = false;
         }
         canCreateDerivedObjectOutputStream = test;
@@ -192,24 +191,6 @@ public class JVM implements Caching {
         isAWTAvailable = loadClassForName("java.awt.Color", false) != null;
         isSwingAvailable = loadClassForName("javax.swing.LookAndFeel", false) != null;
         isSQLAvailable = loadClassForName("java.sql.Date") != null;
-
-        StringCodec base64 = null;
-        Class<? extends StringCodec> base64Class = loadClassForName(
-            "com.thoughtworks.xstream.core.util.Base64JavaUtilCodec");
-        if (base64Class == null) {
-            base64Class = loadClassForName("com.thoughtworks.xstream.core.util.Base64JAXBCodec");
-        }
-        if (base64Class != null) {
-            try {
-                base64 = base64Class.newInstance();
-            } catch (final Exception e) {
-            } catch (final Error e) {
-            }
-        }
-        if (base64 == null) {
-            base64 = new Base64Encoder();
-        }
-        base64Codec = base64;
     }
 
     /**
@@ -226,7 +207,7 @@ public class JVM implements Caching {
      */
     private static final float getMajorJavaVersion() {
         try {
-            return isAndroid() ? 1.7f : Float.parseFloat(System.getProperty("java.specification.version"));
+            return isAndroid() ? 8f : Float.parseFloat(System.getProperty("java.specification.version"));
         } catch (final NumberFormatException e) {
             // Some JVMs may not conform to the x.y.z java.version format
             return DEFAULT_JAVA_VERSION;
@@ -234,7 +215,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of 1.4.4, minimal JDK version is 1.4 already
+     * @deprecated As of 1.4.4, minimal JDK version is 1.8 already
      */
     @Deprecated
     public static boolean is14() {
@@ -242,7 +223,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of 1.4.4, minimal JDK version will be 1.7 for next major release
+     * @deprecated As of 1.4.4, minimal JDK version is 1.8 already
      */
     @Deprecated
     public static boolean is15() {
@@ -250,7 +231,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * @deprecated As of 1.4.4, minimal JDK version will be 1.7 for next major release
+     * @deprecated As of 1.4.4, minimal JDK version is 1.8 already
      */
     @Deprecated
     public static boolean is16() {
@@ -259,7 +240,7 @@ public class JVM implements Caching {
 
     /**
      * @since 1.4
-     * @deprecated As of 1.4.10, minimal JDK version will be 1.7 for next major release
+     * @deprecated As of 1.4.10, minimal JDK version is 1.8 already
      */
     @Deprecated
     public static boolean is17() {
@@ -355,9 +336,7 @@ public class JVM implements Caching {
             final Class<? extends T> clazz = (Class<? extends T>)Class.forName(name, initialize, JVM.class
                 .getClassLoader());
             return clazz;
-        } catch (final LinkageError e) {
-            return null;
-        } catch (final ClassNotFoundException e) {
+        } catch (final LinkageError | ClassNotFoundException e) {
             return null;
         }
     }
@@ -437,10 +416,14 @@ public class JVM implements Caching {
     /**
      * Get an available Base64 implementation. Prefers java.util.Base64 over DataTypeConverter from JAXB over XStream's
      * own implementation.
+     * <p>
+     * Since XStream 1.5 requires Java 8 as minimum it can always use the Base84 implementation of the Java runtime.
      *
      * @return a Base64 codec implementation
      * @since 1.4.11
+     * @deprecated As of upcoming, no longer required
      */
+    @Deprecated
     public static StringCodec getBase64Codec() {
         return base64Codec;
     }
@@ -517,6 +500,16 @@ public class JVM implements Caching {
      */
     public static boolean isSQLAvailable() {
         return isSQLAvailable;
+    }
+
+    /**
+     * Checks for running in the unnamed module for Java 9 or greater.
+     *
+     * @return true for Java 8 or later or when XStream is running as part of the unnamed module in Java 9 or higher
+     * @since upcoming
+     */
+    public static boolean isUnnamedModule() {
+        return isUnnamedModule;
     }
 
     /**
@@ -616,6 +609,7 @@ public class JVM implements Caching {
         System.out.println("java.vendor: " + System.getProperty("java.vendor"));
         System.out.println("java.vm.name: " + System.getProperty("java.vm.name"));
         System.out.println("Version: " + majorJavaVersion);
+        System.out.println("XStream in unnamed module: " + isUnnamedModule());
         System.out.println("XStream support for enhanced Mode: " + canUseSunUnsafeReflectionProvider());
         System.out.println("XStream support for reduced Mode: " + canUseSunLimitedUnsafeReflectionProvider());
         System.out.println("Supports AWT: " + isAWTAvailable());
@@ -624,7 +618,6 @@ public class JVM implements Caching {
         System.out.println("Java Beans EventHandler present: " + (loadClassForName("java.beans.EventHandler") != null));
         System.out.println("Standard StAX XMLInputFactory: " + staxInputFactory);
         System.out.println("Standard StAX XMLOutputFactory: " + staxOutputFactory);
-        System.out.println("Standard Base64 Codec: " + getBase64Codec().getClass().toString());
         System.out.println("Optimized TreeSet.addAll: " + hasOptimizedTreeSetAddAll());
         System.out.println("Optimized TreeMap.putAll: " + hasOptimizedTreeMapPutAll());
         System.out.println("Can parse UTC date format: " + canParseUTCDateFormat());

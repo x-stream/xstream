@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2014, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2014, 2017, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -246,6 +246,7 @@ public class XStreamTest extends TestCase {
         xstream.alias("person", Person.class);
 
         final Dom4JDriver driver = new Dom4JDriver();
+        @SuppressWarnings("resource")
         final Person person = (Person)xstream.unmarshal(driver.createReader(new StringReader(xml)));
 
         assertEquals("jason", person.firstName);
@@ -362,14 +363,14 @@ public class XStreamTest extends TestCase {
 
     public void testObjectOutputStreamCloseTwice() throws IOException {
         final ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
-        oout.writeObject(new Integer(1));
+        oout.writeObject(Integer.valueOf(1));
         oout.close();
         oout.close();
     }
 
     public void testObjectOutputStreamCloseAndFlush() throws IOException {
         final ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
-        oout.writeObject(new Integer(1));
+        oout.writeObject(Integer.valueOf(1));
         oout.close();
         try {
             oout.flush();
@@ -381,10 +382,10 @@ public class XStreamTest extends TestCase {
 
     public void testObjectOutputStreamCloseAndWrite() throws IOException {
         final ObjectOutputStream oout = xstream.createObjectOutputStream(new StringWriter());
-        oout.writeObject(new Integer(1));
+        oout.writeObject(Integer.valueOf(1));
         oout.close();
         try {
-            oout.writeObject(new Integer(2));
+            oout.writeObject(Integer.valueOf(2));
             fail("Closing and writing should throw a StreamException");
         } catch (final StreamException e) {
             // ok
@@ -416,9 +417,9 @@ public class XStreamTest extends TestCase {
         final File dir = new File("target/test-data");
         dir.mkdirs();
         final File file = new File(dir, "test.xml");
-        final FileOutputStream fos = new FileOutputStream(file);
-        fos.write(xml.getBytes("UTF-8"));
-        fos.close();
+        try (final FileOutputStream fos = new FileOutputStream(file)) {
+            fos.write(xml.getBytes("UTF-8"));
+        }
         return file;
     }
 }

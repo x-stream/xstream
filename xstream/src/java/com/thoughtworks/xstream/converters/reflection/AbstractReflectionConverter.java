@@ -194,9 +194,15 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 new HashMap<String, Set<Mapper.ImplicitCollectionMapping>>();
         for (final FieldInfo info : fields) {
             if (info.value != null) {
+                final boolean isCollection = info.value instanceof Collection;
+                final boolean isMap = info.value instanceof Map;
+                final boolean isArray = info.value.getClass().isArray();
                 final Field defaultField = defaultFieldDefinition.get(info.fieldName);
-                Mapper.ImplicitCollectionMapping mapping = mapper.getImplicitCollectionDefForFieldName(defaultField
-                    .getDeclaringClass() == info.definedIn ? sourceType : info.definedIn, info.fieldName);
+                Mapper.ImplicitCollectionMapping mapping = isCollection || isMap || isArray
+                    ? mapper.getImplicitCollectionDefForFieldName(defaultField.getDeclaringClass() == info.definedIn
+                        ? sourceType
+                        : info.definedIn, info.fieldName)
+                    : null;
                 if (mapping != null) {
                     Set<Mapper.ImplicitCollectionMapping> mappings = hiddenMappers.get(info.fieldName);
                     if (mappings == null) {
@@ -219,10 +225,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                             refContext.registerImplicit(info.value);
                         }
                     }
-                    final boolean isCollection = info.value instanceof Collection;
-                    final boolean isMap = info.value instanceof Map;
                     final boolean isEntry = isMap && mapping.getKeyFieldName() == null;
-                    final boolean isArray = info.value.getClass().isArray();
                     for (final Iterator<?> iter = isArray
                         ? new ArrayIterator(info.value)
                         : isCollection

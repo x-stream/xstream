@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2018, 2020, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -57,8 +57,8 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.neverIgnore = "c";
 
         final String expectedXml = "" //
-            + "<thing>\n" 
-            + "  <neverIgnore>c</neverIgnore>\n" 
+            + "<thing>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
             + "</thing>";
 
         xstream.alias("thing", Thing.class);
@@ -146,7 +146,10 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         in.myCheese = "d";
 
         final String expectedXml = "" //
-                + "<thing>\n" + "  <stuff>a</stuff>\n" + "  <cheese>b</cheese>\n" + "</thing>";
+            + "<thing>\n"
+            + "  <stuff>a</stuff>\n"
+            + "  <cheese>b</cheese>\n"
+            + "</thing>";
 
         class OmitFieldsWithMyPrefixMapper extends MapperWrapper {
             public OmitFieldsWithMyPrefixMapper(final Mapper wrapped) {
@@ -172,7 +175,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         final String actualXml = xstream.toXML(in);
         assertEquals(expectedXml, actualXml);
 
-        final AnotherThing out =xstream.fromXML(actualXml);
+        final AnotherThing out = xstream.fromXML(actualXml);
         assertEquals("a", out.stuff);
         assertEquals("b", out.cheese);
         assertEquals(null, out.myStuff);
@@ -341,12 +344,35 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         }
     }
 
+    public void testIgnoreAllUnknownElements() {
+        final String actualXml = ""
+            + "<thing>\n"
+            + "  <foobar>f</foobar>\n"
+            + "  <nested>\n"
+            + "    <inner>i</inner>\n"
+            + "  </nested>\n"
+            + "  <sometimesIgnore>a</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "  <derived>d</derived>\n"
+            + "</thing>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.ignoreUnknownElements();
+
+        final Thing out = xstream.fromXML(actualXml);
+        assertEquals(null, out.alwaysIgnore);
+        assertEquals("a", out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+    }
+
     public void testIgnoreNonExistingElementsMatchingTypeAlias() {
         xstream.alias("thing", Thing.class);
         xstream.ignoreUnknownElements("string");
         final Thing thing = new Thing();
         final String provided = "" //
-                + "<thing>\n" + "  <string>string 1</string>\n" + "</thing>";
+            + "<thing>\n"
+            + "  <string>string 1</string>\n"
+            + "</thing>";
         final String expected = "<thing/>";
         assertWithAsymmetricalXml(thing, provided, expected);
     }
@@ -355,7 +381,10 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         xstream.alias("thing", Thing.class);
         xstream.ignoreUnknownElements("int");
         final Thing thing = new Thing();
-        final String provided = "" + "<thing>\n" + "  <int>invalid</int>\n" + "</thing>";
+        final String provided = "" //
+            + "<thing>\n"
+            + "  <int>invalid</int>\n"
+            + "</thing>";
         final String expected = "<thing/>";
         assertWithAsymmetricalXml(thing, provided, expected);
     }
@@ -398,5 +427,125 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("b", out.getHidden());
         assertEquals("c", out.neverIgnore);
         assertNull(out.sometimesIgnore);
+    }
+
+    public static class Member {
+        public String name;
+    }
+
+    public static class Parent {
+        public Member member;
+    }
+
+    public static class Child extends Parent {
+        @SuppressWarnings("hiding")
+        public Member member;
+
+        public void setHidden(final Member member) {
+            super.member = member;
+        }
+
+        public Member getHidden() {
+            return super.member;
+        }
+    }
+
+    public void testIgnoredHiddenElementsAreNotReferenced() {
+        final Member member = new Member();
+        member.name = "junit";
+        final Child child = new Child();
+        child.setHidden(child.member = member);
+
+        xstream.alias("child", Child.class);
+        xstream.omitField(Child.class, "member");
+
+        final String expectedXml = ""
+            + "<child>\n"
+            + "  <member>\n"
+            + "    <name>junit</name>\n"
+            + "  </member>\n"
+            + "</child>";
+
+        final String actualXml = xstream.toXML(child);
+        assertEquals(expectedXml, actualXml);
+
+        final Child out = xstream.fromXML(expectedXml);
+        assertNull(out.member);
+        assertEquals("junit", out.getHidden().name);
+    }
+
+    public static class Wrapper {
+        public Member member;
+        public Parent parent;
+    }
+
+    public void testIgnoredElementsAreNotReferenced() {
+        final Member member = new Member();
+        member.name = "junit";
+        final Parent parent = new Parent();
+        final Wrapper wrapper = new Wrapper();
+        parent.member = wrapper.member = member;
+        wrapper.parent = parent;
+
+        xstream.alias("wrapper", Wrapper.class);
+        xstream.omitField(Wrapper.class, "member");
+
+        final String expectedXml = ""
+            + "<wrapper>\n"
+            + "  <parent>\n"
+            + "    <member>\n"
+            + "      <name>junit</name>\n"
+            + "    </member>\n"
+            + "  </parent>\n"
+            + "</wrapper>";
+
+        final String actualXml = xstream.toXML(wrapper);
+        assertEquals(expectedXml, actualXml);
+
+        final Wrapper out = xstream.fromXML(expectedXml);
+        assertNull(out.member);
+        assertEquals("junit", out.parent.member.name);
+    }
+
+    public void testReferencedElementsCanBeOmitted() {
+        final Member member = new Member();
+        member.name = "junit";
+        final Wrapper wrapper = new Wrapper();
+        wrapper.member = member;
+
+        xstream.alias("wrapper", Wrapper.class);
+        xstream.omitField(Wrapper.class, "member2");
+
+        final String expectedXml = ""
+            + "<wrapper>\n"
+            + "  <member>\n"
+            + "    <name>junit</name>\n"
+            + "  </member>\n"
+            + "  <member2 reference=\"../member\"/>\n"
+            + "</wrapper>";
+
+        final Wrapper out = xstream.fromXML(expectedXml);
+        assertEquals("junit", out.member.name);
+    }
+
+    public void testReferencedElementsCanBeIgnored() {
+        final Member member = new Member();
+        member.name = "junit";
+        final Wrapper wrapper = new Wrapper();
+        wrapper.member = member;
+
+        xstream.alias("wrapper", Wrapper.class);
+        xstream.ignoreUnknownElements();
+
+        final String expectedXml = ""
+            + "<wrapper>\n"
+            + "  <member>\n"
+            + "    <name>junit</name>\n"
+            + "  </member>\n"
+            + "  <member2 reference=\"../member\"/>\n"
+            + "</wrapper>";
+
+        final Wrapper out = xstream.fromXML(expectedXml);
+        assertEquals("junit", out.member.name);
     }
 }

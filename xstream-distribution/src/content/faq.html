@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -254,8 +254,8 @@
     return this;
   }
 }</pre></div>
-<p>or</p>
-<div class="Source Java"><pre>class ThreadAwareComponent {
+<p>or in case your type implements java.io.Serializable, you have an alternative:</p>
+<div class="Source Java"><pre>class ThreadAwareComponent implements Serializable{
   private transient ThreadLocal component;
   // ...
   private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -704,6 +704,13 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 	overload the individual method of the
 	<a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
 	implementation that generated the parser factory.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="XML_XSL">Can I use an XSL style sheet?</h2>
+
+	<p>XStream supports the usage of an XSL style sheet as post-processor for its output with its
+	<a href="javadoc/com/thoughtworks/xstream/io/xml/TraxSource.html">TraxSource</a> type.  It will utilize an XStream
+	instance as direct input to the transformer.</p>
 
     <!-- ****************************************************** -->
     <h1 id="JSON">JSON specifics</h1>

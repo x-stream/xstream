@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2014, 2018 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -54,9 +54,7 @@ public abstract class AbstractXppDomDriver extends AbstractXmlDriver {
             final XmlPullParser parser = createParser();
             parser.setInput(in);
             return new XppDomReader(XppDom.build(parser), getNameCoder());
-        } catch (final XmlPullParserException e) {
-            throw new StreamException(e);
-        } catch (final IOException e) {
+        } catch (final XmlPullParserException | IOException e) {
             throw new StreamException(e);
         }
     }

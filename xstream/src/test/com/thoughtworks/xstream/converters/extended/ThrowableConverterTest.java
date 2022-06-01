@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
@@ -35,7 +37,7 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testIncludesMessage() {
-        final Throwable expected = new Throwable("A MESSAGE");
+        final Throwable expected = new IOException("A MESSAGE");
         final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
         assertThrowableEquals(expected, result);
     }
@@ -48,6 +50,13 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
 
     public void testIncludesCauseAndMessage() {
         final Throwable expected = new Throwable("MESSAGE", new Throwable("CAUSE MESSAGE"));
+        final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
+        assertThrowableEquals(expected, result);
+    }
+
+    public void testIncludesSuppressedExceptions() {
+        final Throwable expected = new Throwable("MESSAGE");
+        expected.addSuppressed(new Throwable("SUPPRESSED MESSAGE"));
         final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
         assertThrowableEquals(expected, result);
     }
@@ -91,7 +100,46 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testSerializesWithNoSelfReferenceForUninitializedCauseInJdk14() {
+    public static class OtherException extends Exception {
+        private static final long serialVersionUID = 201905L;
+        private transient BigDecimal number;
+
+        public OtherException(final String msg, final BigDecimal number) {
+            super(msg);
+            this.number = number;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            return super.equals(o) && o instanceof MyException && number.equals(((MyException)o).number);
+        }
+
+        @Override
+        public int hashCode() {
+            return number.hashCode() | super.hashCode();
+        }
+
+        private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+            in.defaultReadObject();
+            number = new BigDecimal(in.readDouble());
+        }
+
+        private void writeObject(final ObjectOutputStream out) throws IOException {
+            out.defaultWriteObject();
+            out.writeDouble(number.doubleValue());
+        }
+    }
+
+    public void testSupportsSerializationMethods() {
+        try {
+            throw new OtherException("A MESSAGE", new BigDecimal(123.4));
+        } catch (final OtherException exception) {
+            final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(exception));
+            assertThrowableEquals(exception, result);
+        }
+    }
+
+    public void testSerializesWithNoSelfReferenceForUninitializedCauseInPureMode() {
         xstream.setMode(XStream.NO_REFERENCES);
         try {
             throw new RuntimeException("Without cause");
@@ -103,7 +151,7 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
         }
     }
 
-    public void testSerializesWithInitializedCauseInJdk14() {
+    public void testSerializesWithInitializedCauseInPureMode() {
         xstream.setMode(XStream.NO_REFERENCES);
         try {
             throw new RuntimeException("Without cause", null);
@@ -115,6 +163,38 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
         }
     }
 
+    public void testCanUnmarshalFormatOf14() {
+        final String xml = ""
+            + "<java.lang.Throwable>\n"
+            + "  <detailMessage>A MESSAGE</detailMessage>\n"
+            + "  <stackTrace>\n"
+            + "    <trace>com.thoughtworks.xstream.converters.extended.ThrowableConverterTest.testDeserializesThrowable(ThrowableConverterTest.java:26)</trace>\n"
+            + "    <trace>sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</trace>\n"
+            + "    <trace>sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</trace>\n"
+            + "    <trace>sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</trace>\n"
+            + "    <trace>java.lang.reflect.Method.invoke(Method.java:498)</trace>\n"
+            + "    <trace>junit.framework.TestCase.runTest(TestCase.java:154)</trace>\n"
+            + "    <trace>junit.framework.TestCase.runBare(TestCase.java:127)</trace>\n"
+            + "    <trace>junit.framework.TestResult$1.protect(TestResult.java:106)</trace>\n"
+            + "    <trace>junit.framework.TestResult.runProtected(TestResult.java:124)</trace>\n"
+            + "    <trace>junit.framework.TestResult.run(TestResult.java:109)</trace>\n"
+            + "    <trace>junit.framework.TestCase.run(TestCase.java:118)</trace>\n"
+            + "    <trace>junit.framework.TestSuite.runTest(TestSuite.java:208)</trace>\n"
+            + "    <trace>junit.framework.TestSuite.run(TestSuite.java:203)</trace>\n"
+            + "  </stackTrace>\n"
+            + "</java.lang.Throwable>\n";
+        final Throwable result = xstream.<Throwable>fromXML(xml);
+        assertEquals("A MESSAGE", result.getMessage());
+        assertEquals(13, result.getStackTrace().length);
+    }
+
+    public void testCanAddSuppressedExceptionsLater() {
+        final Exception expected = new Exception();
+        final Throwable result = xstream.<Throwable>fromXML(xstream.toXML(expected));
+        assertThrowableEquals(expected, result);
+        result.addSuppressed(new RuntimeException());
+    }
+
     private static void assertThrowableEquals(final Throwable a, final Throwable b) {
         assertBoth(a, b, new MoreAssertions() {
             @Override
@@ -124,6 +204,7 @@ public class ThrowableConverterTest extends AbstractAcceptanceTest {
                 assertEquals(ta.getMessage(), tb.getMessage());
                 assertThrowableEquals(ta.getCause(), tb.getCause());
                 assertArrayEquals(ta.getStackTrace(), tb.getStackTrace());
+                assertArrayEquals(ta.getSuppressed(), tb.getSuppressed());
             }
         });
     }

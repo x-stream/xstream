@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017, 2018 XStream Committers.
+ * Copyright (C) 2017, 2018, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@ package com.thoughtworks.xstream.core.util;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.thoughtworks.xstream.core.Base64Codec;
 import com.thoughtworks.xstream.core.StringCodec;
 
 
@@ -20,7 +21,9 @@ import com.thoughtworks.xstream.core.StringCodec;
  *
  * @author J&ouml;rg Schaible
  * @since 1.4.11
+ * @deprecated As of upcoming use {@link Base64Codec}
  */
+@Deprecated
 public class Base64JAXBCodec implements StringCodec {
 
     @Override

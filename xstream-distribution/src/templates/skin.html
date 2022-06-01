@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2021 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -44,18 +44,20 @@
 
         <div class="SidePanel" id="left">
             <#list sitemap.sections as section>
-                <div class="MenuGroup">
-                    <h1>${section.name}</h1>
-                    <ul>
-                        <#list section.entries as entry>
-                            <#if entry = page>
-                                <li class="currentLink">${entry.title}</li>
-                            <#else>
-                                <li><a href="${entry.href}">${entry.title}</a></li>
-                            </#if>
-                        </#list>
-                    </ul>
-                </div>
+                <#if !section.name?starts_with("!")>
+                    <div class="MenuGroup">
+                        <h1>${section.name}</h1>
+                        <ul>
+                            <#list section.entries as entry>
+                                <#if entry = page>
+                                    <li class="currentLink">${entry.title}</li>
+                                <#else>
+                                    <li><a href="${entry.href}">${entry.title}</a></li>
+                                </#if>
+                            </#list>
+                        </ul>
+                    </div>
+                </#if>
             </#list>
         </div>
 

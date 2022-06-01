@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2018, 2019, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -101,6 +101,18 @@ public class AliasTest extends AbstractAcceptanceTest {
         final String xml = "<software vendor=\"walness\" id=\"xstream\"/>";
 
         assertBothWays(software, xml);
+    }
+
+    public void testOmitAliasesAttributeWithRealName() {
+        xstream.alias("software", Software.class);
+        xstream.useAttributeFor(String.class);
+        xstream.aliasAttribute("id", "name");
+        xstream.aliasAttribute("name", "foo");
+        xstream.omitField(Software.class, "foo");
+
+        final String xml = "<software vendor=\"walness\" name=\"xstream\"/>";
+        assertEquals(new Software("walness", null), xstream.fromXML(xml));
+        assertEquals(new Software("walness", "xstream"), xstream.fromXML(xml.replace("name", "id")));
     }
 
     public void testForReferenceSystemAttribute() {

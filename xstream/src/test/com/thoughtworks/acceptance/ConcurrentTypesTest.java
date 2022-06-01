@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2015, 2017, 2018 XStream Committers.
+ * Copyright (C) 2012, 2015, 2017, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.thoughtworks.xstream.converters.collections.MapConverter;
-import com.thoughtworks.xstream.core.JVM;
 
 
 public class ConcurrentTypesTest extends AbstractAcceptanceTest {
@@ -40,22 +39,20 @@ public class ConcurrentTypesTest extends AbstractAcceptanceTest {
     }
 
     public void testDerivedConcurrentHashMap() {
-        if (JVM.isVersion(8)) {
-            xstream.alias("derived-map", DerivedConcurrentHashMap.class);
-            xstream.registerConverter(new MapConverter(xstream.getMapper(), DerivedConcurrentHashMap.class));
+        xstream.alias("derived-map", DerivedConcurrentHashMap.class);
+        xstream.registerConverter(new MapConverter(xstream.getMapper(), DerivedConcurrentHashMap.class));
 
-            final Map<Object, Object> map = new DerivedConcurrentHashMap();
-            map.put("test", "JUnit");
+        final Map<Object, Object> map = new DerivedConcurrentHashMap();
+        map.put("test", "JUnit");
 
-            final String xml = ""
-                + "<derived-map>\n"
-                + "  <entry>\n"
-                + "    <string>test</string>\n"
-                + "    <string>JUnit</string>\n"
-                + "  </entry>\n"
-                + "</derived-map>";
+        final String xml = ""
+            + "<derived-map>\n"
+            + "  <entry>\n"
+            + "    <string>test</string>\n"
+            + "    <string>JUnit</string>\n"
+            + "  </entry>\n"
+            + "</derived-map>";
 
-            assertBothWays(map, xml);
-        }
+        assertBothWays(map, xml);
     }
 }

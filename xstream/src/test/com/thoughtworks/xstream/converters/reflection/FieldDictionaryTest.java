@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -182,9 +182,7 @@ public class FieldDictionaryTest extends TestCase {
                             for(Class<?> cls = type; cls != null; count++, cls = cls.getSuperclass());
                             assertEquals("fieldCount not equal for type " + type.getName(), count-1, fieldCount);
                         }
-                    } catch (final InterruptedException e) {
-                        fail("Exception " + e.getClass());
-                    } catch (final BrokenBarrierException e) {
+                    } catch (final InterruptedException | BrokenBarrierException e) {
                         fail("Exception " + e.getClass());
                     }
                 }

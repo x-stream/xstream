@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -61,9 +61,7 @@ public class JDomDriver extends AbstractXmlDriver {
             final SAXBuilder builder = createBuilder();
             final Document document = builder.build(reader);
             return new JDomReader(document, getNameCoder());
-        } catch (final IOException e) {
-            throw new StreamException(e);
-        } catch (final JDOMException e) {
+        } catch (final IOException | JDOMException e) {
             throw new StreamException(e);
         }
     }
@@ -74,9 +72,7 @@ public class JDomDriver extends AbstractXmlDriver {
             final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (final IOException e) {
-            throw new StreamException(e);
-        } catch (final JDOMException e) {
+        } catch (final IOException | JDOMException e) {
             throw new StreamException(e);
         }
     }
@@ -87,9 +83,7 @@ public class JDomDriver extends AbstractXmlDriver {
             final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (final IOException e) {
-            throw new StreamException(e);
-        } catch (final JDOMException e) {
+        } catch (final IOException | JDOMException e) {
             throw new StreamException(e);
         }
     }
@@ -100,9 +94,7 @@ public class JDomDriver extends AbstractXmlDriver {
             final SAXBuilder builder = createBuilder();
             final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
-        } catch (final IOException e) {
-            throw new StreamException(e);
-        } catch (final JDOMException e) {
+        } catch (final IOException | JDOMException e) {
             throw new StreamException(e);
         }
     }

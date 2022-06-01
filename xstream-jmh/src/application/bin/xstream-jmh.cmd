@@ -1,5 +1,5 @@
 @echo off
-@REM Copyright (C) 2015 XStream Committers.
+@REM Copyright (C) 2015, 2022 XStream Committers.
 @REM All rights reserved.
 @REM
 @REM The software in this package is published under the terms of the BSD
@@ -44,10 +44,16 @@ set JAVA_BIN=%JAVA_EXE%
 for %%i in (lib\*.jar) do call :APP_CP_append %%i
 call :APP_CP_append "config"
 
+@REM * Open modules for parsers using Java 17 or higher
+@REM *************
+for /F "tokens=2 usebackq" %%j in (`%JAVA_BIN% -cp "%APP_CP%" com.thoughtworks.xstream.core.JVM ^| find "java.specification.version"`) DO SET JAVA_VERSION=%%j
+if %JAVA_VERSION% GEQ 17 set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
+if %JAVA_VERSION% GEQ 17 set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
+if %JAVA_VERSION% GEQ 17 set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.xml.internal.stream=ALL-UNNAMED
+
 @REM * Set options
 @REM *************
 set JAVA_OPTS=%JAVA_OPTS% -Xmx2048m -Xss4m
-
 
 @REM * Main class
 @REM ************

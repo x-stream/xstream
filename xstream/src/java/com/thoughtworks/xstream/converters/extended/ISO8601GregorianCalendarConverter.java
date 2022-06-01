@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2014, 2015, 2016, 2017, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,12 +11,11 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.GregorianCalendar;
 
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
-import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.ISO8601JavaTimeConverter;
 
 
 /**
@@ -35,22 +34,7 @@ public class ISO8601GregorianCalendarConverter extends AbstractSingleValueConver
     private final SingleValueConverter converter;
 
     public ISO8601GregorianCalendarConverter() {
-        SingleValueConverter svConverter = null;
-        final Class<? extends SingleValueConverter> type = JVM.<SingleValueConverter>loadClassForName(JVM.isVersion(8)
-            ? "com.thoughtworks.xstream.core.util.ISO8601JavaTimeConverter"
-            : "com.thoughtworks.xstream.core.util.ISO8601JodaTimeConverter");
-        try {
-            svConverter = type.getDeclaredConstructor().newInstance();
-        } catch (final
-                InstantiationException
-                | IllegalAccessException
-                | IllegalArgumentException
-                | InvocationTargetException
-                | NoSuchMethodException
-                | SecurityException e) {
-            // ignore
-        }
-        converter = svConverter;
+        converter = new ISO8601JavaTimeConverter();
     }
 
     @Override

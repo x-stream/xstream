@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -15,11 +15,12 @@
 </head>
 <body>
 
-	<p>Changes are split into three categories:</p>
+	<p>Changes are split into following categories:</p>
 
 	<ul>
 		<li><b>Major changes</b>: The major new features that all users should know about.</li>
 		<li><b>Minor changes</b>: Any smaller changes, including bugfixes.</li>
+		<li><b>Stream Compatibility</b>: Changes affecting the persisted data.</li>
 		<li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
 	</ul>
 
@@ -35,20 +36,36 @@
 	<h2>Major changes</h2>
 
 	<ul>
+		<li>Support for Record types (contributed by Julia Boes and Chris Hegarty, both of Oracle).</li>
 		<li>Usage of Java generic types. Most code bases will still compile without change.</li>
 		<li>Support for fail-safe deserialization unless the parser is not directly involved (I/O or syntax error) as
 		combination of new method getLevel() of HierarchicalStreamReader and GHPR:#91.</li>
+		<li>GHI:#120: Add <em>Automatic-Module-Name</em> entry to XStream's manifests.</li>
 	</ul>
 
 	<h2>Minor changes</h2>
 
 	<ul>
-		<li>Switch Woodstox parser dependency from org.codehaus.woodstox:wstx-asl to com.fasterxml.woodstox:woodstox-core.</li>
+		<li>Switch Woodstox parser dependency from org.codehaus.woodstox:wstx-asl to
+		com.fasterxml.woodstox:woodstox-core.</li>
 		<li>GHPR:#15, JIRA:XSTR-727, JIRA:XSTR-772: Make use of ConcurrentHashMap.</li>
 		<li>GHI:#134: Possible reuse of instances for Byte, Character, Short, Integer and Long while unmarshalling.</li>
+		<li>GHPR:#145: FileName parameter of StackTraceElement can be used for other source code units than file,
+		converter handles this.</li>
+		<li>GHI:#4: Cannot add suppressed exception to unmarshalled Throwable.</li>
+		<li>TraxSource supports the creation of an ObjectOutputStream to transform the output of XStream on-the-fly.</li>
+		<li>StackTraceElementConverter keeps now information about the source code unit for native methods if
+		available.</li>
+		<li>StackTraceElementConverter keeps for Java 9 or higher information about the class loader and module name
+		and its version.</li>
+		<li>The file name of unmarshalled StackTraceElement instances is no longer set to <em>Unknown Source</em> or
+		<em>Native Method</em>.</li>
+		<li>Optimized lookup for a defined implicit collection, array or map.</li>
 		<li>No need for reflection in StackTraceElementFactory anymore since Java 5.</li>
 		<li>StaxReader did not propagate close for Reader and InputStream.</li>
 		<li>Add SimpleStaxDriver without namespace support as possible alternative to default driver.</li>
+		<li>GHPR:#265: Make build reproducible.</li>
+		<li>GHI:#72: Finally it is possible to use Jettison 1.4.1 or higher.</li>
 	</ul>
 
 	<h2>API changes</h2>
@@ -60,27 +77,260 @@
 		<li>Merge functionality of ExtendedHierarchicalStreamWriter into HierarchicalStreamWriter.</li>
 		<li>HierarchicalStreamReader and HierarchicalStreamWriter extend AutoCloseable instead of Closeable now.</li>
 		<li>Added c.t.x.io.xml.SimpleStaxDriver.</li>
-		<li>Added c.t.x.io.HierarchicalStreamReader.getLevel()</li>
+		<li>Added c.t.x.io.HierarchicalStreamReader.getLevel().</li>
+		<li>Added c.t.x.io.xml.SaxWriter#OOS_SUPPLIER_PROPERTY</li>
+		<li>Added c.t.x.io.xml.SaxWriter#SOURCE_OBJECT_QUEUE_PROPERTY.</li>
+		<li>Deprecated c.t.x.io.xml.SaxWriter#SOURCE_OBJECT_LIST_PROPERTY.</li>
+		<li>Added c.t.x.io.xml.TraxSource#createObjectOutputStream</li>
 		<li>Deprecated obsolete method c.t.x.XStream.setupDefaultSecurity.</li>
+		<li>Added c.t.x.converters.extended.RecordConverter.</li>
+		<li>Added c.t.x.converters.extended.ThrowableConverter.ThrowableConverter(Mapper, ConverterLookup).</li>
+		<li>Deprecated c.t.x.converters.extended.ThrowableConverter.ThrowableConverter(ConverterLookup).</li>
+		<li>Added c.t.x.core.util.Base64Codec.</li>
+		<li>Added c.t.x.core.util.JVM.isUnnamedModule().</li>
+		<li>Deprecated c.t.x.core.util.JVM.getBase64Codec().</li>
 	</ul>
 
 	<h2>Stream compatibility</h2>
 
 	<ul>
 		<li>Drop automatic reference support at deserialization time for immutable types declared in the 1.4.x version
-			series (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection types).</li>
+		series (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection
+		types).</li>
+		<li>ThrowableConverter uses by default now format of SerializableConverter, but can still read old format of
+		1.4.x version.</li>
 		<li>No support for Hibernate 3 collections.</li>
 	</ul>
+
+<!--
+	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
+
+	<p>Not yet released.</p>
+-->
 
 	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
 
 	<p>Not yet released.</p>
+
+	<h1 id="1.4.18">1.4.18</h1>
+
+	<p>Released August 22, 2021.</p>
+
+	<p class="highlight">This maintenance release addresses following security vulnerabilities, when unmarshalling with
+	an XStream instance using the default blacklist of an uninitialized security framework.  XStream is therefore now
+	using a whitelist by default.</p>
+
+	<ul>
+		<li><a href="CVE-2021-39139.html">CVE-2021-39139</a></li>
+		<li><a href="CVE-2021-39140.html">CVE-2021-39140</a></li>
+		<li><a href="CVE-2021-39141.html">CVE-2021-39141</a></li>
+		<li><a href="CVE-2021-39144.html">CVE-2021-39144</a></li>
+		<li><a href="CVE-2021-39145.html">CVE-2021-39145</a></li>
+		<li><a href="CVE-2021-39146.html">CVE-2021-39146</a></li>
+		<li><a href="CVE-2021-39147.html">CVE-2021-39147</a></li>
+		<li><a href="CVE-2021-39148.html">CVE-2021-39148</a></li>
+		<li><a href="CVE-2021-39149.html">CVE-2021-39149</a></li>
+		<li><a href="CVE-2021-39150.html">CVE-2021-39150</a></li>
+		<li><a href="CVE-2021-39151.html">CVE-2021-39151</a></li>
+		<li><a href="CVE-2021-39152.html">CVE-2021-39152</a></li>
+		<li><a href="CVE-2021-39153.html">CVE-2021-39153</a></li>
+		<li><a href="CVE-2021-39154.html">CVE-2021-39154</a></li>
+	</ul>
+
+	<h2>Minor changes</h2>
+
+	<ul>
+		<li>GHI:#233: Support serializable types with non-serializable parent with PureJavaReflectionConverter.</li>
+	</ul>
+
+	<h2>Stream compatibility</h2>
+
+	<p class="highlight">Starting with version 1.14.12 nine years ago, XStream contains a
+	<a href="security.html#framework">Security Framework</a> to implement a black- or whitelist for the allowed types
+	at deserialization time.  Until version 1.4.17, XStream kept a default blacklist in order to deny all types of the
+	Java runtime, which are used for all kinds of <a href="security.html#CVEs">security attacks</a>, in order to
+	guarantee optimal runtime compatibility for existing users.  However, this approach has failed.  The last months
+	have shown, that the Java runtime alone contains dozens of types that can be used for an attack, not even looking
+	at the 3rd party libraries on a classpath.  The new version of XStream uses therefore now by default a whitelist,
+	which is recommended since nine years.  It also has been complaining on the console for a long time about an
+	uninitialized security framework the first time it was run.  Anyone who has followed the advice and initialized the
+	security framework for their own scenario can easily update to the new version without any problem. Everyone else
+	will have to do a proper initialization now, otherwise the new version will fail with certainty at deserialization
+	time.</p>
+
+	<h1 id="1.4.17">1.4.17</h1>
+
+	<p>Released May 13, 2021.</p>
+
+	<p class="highlight">This maintenance release addresses the security vulnerability
+	<a href="CVE-2021-29505.html">CVE-2021-29505</a>, when unmarshalling with XStream instances using an uninitialized
+	security framework.</p>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The following types are now blacklisted by default and the deserialization
+		of XML containing one of the two types will fail.  You will have to enable these types by explicit
+		configuration, if you need them:<br>
+			<ul>
+				<li>any type in the java.rmi.* and sun.rmi.* package hierarchies</li>
+				<li>the individual type com.sun.jndi.toolkit.dir.LazySearchEnumerationImpl</li>
+			</ul>
+		</li>
+	</ul>
+
+	<h1 id="1.4.16">1.4.16</h1>
+
+	<p>Released March 13, 2021.</p>
+
+	<p class="highlight">This maintenance release switches XStream's default parser and addresses following security
+	vulnerabilities, when unmarshalling with an XStream instances using an uninitialized security framework.</p>
+
+	<ul>
+		<li><a href="CVE-2021-21341.html">CVE-2021-21341</a></li>
+		<li><a href="CVE-2021-21342.html">CVE-2021-21342</a></li>
+		<li><a href="CVE-2021-21343.html">CVE-2021-21343</a></li>
+		<li><a href="CVE-2021-21344.html">CVE-2021-21344</a></li>
+		<li><a href="CVE-2021-21345.html">CVE-2021-21345</a></li>
+		<li><a href="CVE-2021-21346.html">CVE-2021-21346</a></li>
+		<li><a href="CVE-2021-21347.html">CVE-2021-21347</a></li>
+		<li><a href="CVE-2021-21348.html">CVE-2021-21348</a></li>
+		<li><a href="CVE-2021-21349.html">CVE-2021-21349</a></li>
+		<li><a href="CVE-2021-21350.html">CVE-2021-21350</a></li>
+		<li><a href="CVE-2021-21351.html">CVE-2021-21351</a></li>
+	</ul>
+
+	<h2>Major changes</h2>
+
+	<ul>
+		<li>Switch from Xpp3 as default parser to MXParser, a fork of Xpp3.</li>
+	</ul>
+
+	<h2>Minor changes</h2>
+
+	<ul>
+		<li>GHI:#238: Fix possibility to process references on enum types at deserialization.</li>
+		<li>GHI:#237: Fix optimization in XmlFriendlyNameCoder.</li>
+	</ul>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The following types are now blacklisted by default and the deserialization
+		of XML containing one of the two types will fail.  You will have to enable these types by explicit
+		configuration, if you need them:<br>
+			<ul>
+				<li>the type hierarchies for java.io.InputStream, java.nio.channels.Channel,
+				javax.activation.DataSource and javax.sql.rowsel.BaseRowSet</li>
+				<li>the individual types com.sun.corba.se.impl.activation.ServerTableEntry,
+				com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator,
+				sun.awt.datatransfer.DataTransferer$IndexOrderComparator, and sun.swing.SwingLazyValue</li>
+				<li>the individual types com.sun.corba.se.impl.activation.ServerTableEntry,
+				com.sun.tools.javac.processing.JavacProcessingEnvironment$NameProcessIterator,
+				sun.awt.datatransfer.DataTransferer$IndexOrderComparator, and sun.swing.SwingLazyValue</li>
+				<li>the internal type Accessor$GetterSetterReflection of JAXB, the internal types
+				MethodGetter$PrivilegedGetter and ServiceFinder$ServiceNameIterator of JAX-WS</li>
+				<li>all inner classes of javafx.collections.ObservableList</li>
+				<li>an internal ClassLoader used in a private copy of BCEL within the Java runtime</li>
+			</ul>
+		</li>
+	</ul>
+
+	<h2>Dependencies</h2>
+	
+	<p>The default parser of XStream has changed from the Xpp3Parser in artifact xpp3:xpp3_min to MXParser, a fork of
+	Xpp3 in the artifact io.github.x-stream:mxparser.  The Xpp3 is unmaintained for a long time, bugs have been fixed
+	reported more than a decade ago, improvements by other forks have been incorporated and some endless loops have
+	been fixed, that could have been utilized as DoS attack.</p>
+
+	<p>XStream has therefore new default dependencies.  If you have used XStream with the default driver (i.e. Xpp3),
+	you can still exchange the XStream library for a drop-in replacement, but you will also have to remove the Xpp3 and
+	add the MXParser library instead.</p>
+
+	<p>For build time you will have to add the Xpp3 library to your dependencies, if you made explicitly use of the
+	Xpp3 driver.	If you did explicitly use a different driver than Xpp3 and had therefore excluded the Xpp3
+	dependency, you might have to exclude now the new MXParser dependency instead to minimize your dependency list.</p>
+
+	<h1 id="1.4.15">1.4.15</h1>
+
+	<p>Released December 13, 2020.</p>
+
+	<p class="highlight">This maintenance release addresses the security vulnerabilities
+	<a href="CVE-2020-26258.html">CVE-2020-26258</a> and <a href="CVE-2020-26259.html">CVE-2020-26259</a>, when
+	unmarshalling with XStream instances using an uninitialized security framework.</p>
+
+	<h2>Minor changes</h2>
+
+	<ul>
+		<li>GHI:#226: XmlFriendlyNameCoder does not accept '9' as valid character in an XML name.</li>
+		<li>GHPR:#228: DefaultMapper should handle IllegalArgumentException thrown by Class.forName().</li>
+	</ul>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The type jdk.nashorn.internal.objects.NativeString and the internal JAX-WS type ReadAllStream.FileStream
+		are now	part of the default blacklist and the deserialization of XML containing one of the two types will fail.
+		You will have to enable these types by explicit configuration, if you need them.</li>
+	</ul>
+
+	<h2>Delivery</h2>
+
+	<p>Any XStream release can run with a minimal Java runtime environment of Java 1.4 as long as this environment will
+	process only requested classes of the jar file.  Until version 1.4.14 XStream was delivered also as special Java 7
+	version for Android, because Dalvik scans all classes and fails at classes requiring a higher runtime version.  However, this
+	special version will not work in a normal Java 8 environment or higher and was never meant do so.</p>
+
+	<p>Unfortunately, this version has to be build always after the standard version due to the build sequence.  The
+	latest version in Maven Central however is always the one that has been deployed last independently from the time
+	of publishing.  This creates an annoyance now in GitHub for any project using the Dependabot service which creates
+	automated pull requests with updates to the latest XStream version, because it injects now the special Java 7
+	version that probably breaks these projects.</p>
+
+	<p>Users who still require a special version for Java 7 will have to build this artifact now on their own.  Users
+	for even older Java environments had always to do so anyway.</p>
+	
+	<h1 id="1.4.14">1.4.14</h1>
+
+	<p>Released November 16, 2020.</p>
+
+	<p class="highlight">This maintenance release addresses the security vulnerability
+	<a href="CVE-2020-26217.html">CVE-2020-26217</a>, reported originally as CVE-2017-9805 for Struts' XStream Plugin,
+	an arbitrary execution of commands when unmarshalling with XStream instances using an uninitialized security
+	framework.</p>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The types java.lang.ProcessBuilder and javax.imageio.ImageIO$ContainsFilter are now part of the default
+		blacklist and the deserialization of XML containing one of the two types will fail. You will have to enable
+		these types by explicit configuration, if you need them.</li>
+	</ul>
+
+	<h1 id="1.4.13">1.4.13</h1>
+
+	<p>Released September 6, 2020.</p>
+
+	<h2>Major changes</h2>
+
+	<ul>
+		<li>GHPR:#216, GHPR:#218: Defer reflective access to Java core modules.</li>
+		<li>GHI:#207: New predefined blacklist avoids vulnerability due to improper setup of the security framework.</li>
+	</ul>
+
+	<h1 id="1.4.12">1.4.12</h1>
+
+	<p>Released April 12, 2020.</p>
 
 	<h2>Minor changes</h2>
 
 	<ul>
 		<li>XmlFriendlyNameCoder supports now XML parsers implementing only 4th edition of XML 1.0 specification.</li>
 		<li>Fix support of CDATA events in StAX.</li>
+		<li>GHI:#171: XStream.createObjectInputStream does not pass the DataHolder.</li>
+		<li>GHI:#151: Use of SPDX license identifier in POM and Manifest.</li>
+		<li>GHI:#152: Declare OSGi import of internal runtime packages as optional.</li>
+		<li>Drop Require-Capability entry in manifest.</li>
 	</ul>
 
 	<h1 id="1.4.11.1">1.4.11.1</h1>
@@ -98,7 +348,7 @@
 	<p>Released October 23, 2018.</p>
 
 	<p class="highlight">This maintenance release addresses again the security vulnerability <a href="CVE-2013-7285.html">
-	    CVE-2013-7285</a>, an arbitrary execution of commands when unmarshalling for XStream instances with
+	    CVE-2013-7285</a>, an arbitrary execution of commands when unmarshalling with XStream instances using an
 	    uninitialized security framework. Only 1.4.10 uninitialized security framework was affected.</p>
 
 	<h2>Minor changes</h2>
@@ -124,6 +374,7 @@
 		<li>Old BEA reference implementation of StAX is outdated, unmaintained and has security issues, therefore
 		XStream's driver has been deprecated.</li>
 		<li>Support for JaCoCo: FieldDictionary ignores synthetic fields starting with <em>$jacoco</em> as name.</li>
+		<li>Add integration test for OSGi (by Wes Wannemacher).</li>
 	</ul>
 
 	<h2>Stream compatibility</h2>

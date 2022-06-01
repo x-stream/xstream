@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2018, 2019 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,25 +26,48 @@ public class StackTraceElementConverterTest extends AbstractAcceptanceTest {
     public void testSerializesStackTraceElement() {
         final StackTraceElement trace = factory.unknownSourceElement("com.blah.SomeClass", "someMethod");
         final String expectedXml = "<trace>com.blah.SomeClass.someMethod(Unknown Source)</trace>";
-        assertBothWays(trace, expectedXml);
+        final StackTraceElement unmarshalled = assertBothWays(trace, expectedXml);
+        assertNull(unmarshalled.getFileName());
+        assertEquals(-1, unmarshalled.getLineNumber());
     }
 
-    public void testIncludesDebugInformation() {
+    public void testWithFileBasedSourceCodeUnitAndLineNumber() {
         final StackTraceElement trace = factory.element("com.blah.SomeClass", "someMethod", "SomeClass.java", 22);
         final String expectedXml = "<trace>com.blah.SomeClass.someMethod(SomeClass.java:22)</trace>";
         assertBothWays(trace, expectedXml);
     }
 
-    public void testIncludesPartialDebugInformation() {
+    public void testWithFileBasedSourceCodeUnitOnly() {
         final StackTraceElement trace = factory.element("com.blah.SomeClass", "someMethod", "SomeClass.java");
         final String expectedXml = "<trace>com.blah.SomeClass.someMethod(SomeClass.java)</trace>";
+        final StackTraceElement unmarshalled = assertBothWays(trace, expectedXml);
+        assertEquals(-1, unmarshalled.getLineNumber());
+    }
+
+    public void testWithArbitraryourceCodeUnitAndLineNumber() {
+        final StackTraceElement trace = factory
+            .element("com.blah.SomeClass", "someMethod", "jar:file:/tmp/x-1.0.jar!/com/blah/SomeClass.groovy", 22);
+        final String expectedXml =
+                "<trace>com.blah.SomeClass.someMethod(jar:file:/tmp/x-1.0.jar!/com/blah/SomeClass.groovy:22)</trace>";
         assertBothWays(trace, expectedXml);
     }
 
-    public void testIncludesNativeMethods() {
+    public void testNativeMethodsWithoutSourceCodeUnit() {
         final StackTraceElement trace = factory.nativeMethodElement("com.blah.SomeClass", "someMethod");
         final String expectedXml = "<trace>com.blah.SomeClass.someMethod(Native Method)</trace>";
         assertBothWays(trace, expectedXml);
+        final StackTraceElement unmarshalled = assertBothWays(trace, expectedXml);
+        assertNull(unmarshalled.getFileName());
+        assertEquals(-2, unmarshalled.getLineNumber());
+    }
+
+    public void testNativeMethodsWithSourceCodeUnit() {
+        final StackTraceElement trace = factory.element("com.blah.SomeClass", "someMethod", "SomeClass.java", -2);
+        final String expectedXml = "<trace>com.blah.SomeClass.someMethod(SomeClass.java:-2)</trace>";
+        assertBothWays(trace, expectedXml);
+        final StackTraceElement unmarshalled = assertBothWays(trace, expectedXml);
+        assertEquals("SomeClass.java", unmarshalled.getFileName());
+        assertEquals(-2, unmarshalled.getLineNumber());
     }
 
     public void testSupportsInnerClasses() {

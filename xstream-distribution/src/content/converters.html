@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2019 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -174,13 +174,17 @@
                 <td>java.lang.Throwable<br/>java.lang.Exception<br/>java.lang.RuntimeException<br/>java.lang.Error<br/>...and all subclasses
                 of these.</td>
                 <td class="example">
-                    &lt;java.io.IOException&gt;<br/>
-                    &nbsp;&nbsp;&lt;detailMessage&gt;No file&lt;/detailMessage&gt;<br/>
-                    &nbsp;&nbsp;&lt;stack-trace&gt;<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;trace&gt;com.x.Foo.stuff(Foo.java:22)&lt;/trace&gt;<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;trace&gt;com.x.Foo.blah(Foo.java:31)&lt;/trace&gt;<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;trace&gt;com.x.Foo.main(Foo.java:43)&lt;/trace&gt;<br/>
-                    &nbsp;&nbsp;&lt;/stack-trace&gt;<br/>
+                    &lt;java.io.IOException&nbsp;serialization=&quot;custom&quot;&gt;<br/>
+                    &nbsp;&lt;java.lang.Throwable&gt;<br/>
+                    &nbsp;&nbsp;&lt;default&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&lt;detailMessage&gt;No file&lt;/detailMessage&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&lt;stack-trace&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;trace&gt;com.x.Foo.stuff(Foo.java:22)&lt;/trace&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;trace&gt;com.x.Foo.blah(Foo.java:31)&lt;/trace&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;trace&gt;com.x.Foo.main(Foo.java:43)&lt;/trace&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&lt;/stack-trace&gt;<br/>
+                    &nbsp;&nbsp;&lt;/default&gt;<br/>
+                    &nbsp;&lt;/java.lang.Throwable&gt;<br/>
                     &lt;/java.io.IOException&gt;
                 </td>
                 <td>This is only available with Java 1.4 or greater. It retains the full stack trace, including that of any
