@@ -1096,7 +1096,7 @@
     <version.plugin.maven.javadoc>3.2.0</version.plugin.maven.javadoc>
     <version.plugin.maven.jxr>3.0.0</version.plugin.maven.jxr>
     <version.plugin.maven.release>3.0.0-M4</version.plugin.maven.release>
-    <version.plugin.maven.resources>3.1.0</version.plugin.maven.resources>
+    <version.plugin.maven.resources>3.2.0</version.plugin.maven.resources>
     <version.plugin.maven.site>3.7.1</version.plugin.maven.site>
     <version.plugin.maven.source>3.2.0</version.plugin.maven.source>
     <version.plugin.maven.surefire>3.0.0-M3</version.plugin.maven.surefire>
@@ -1110,7 +1110,7 @@
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
     <version.com.megginson.sax.xml-writer>0.2</version.com.megginson.sax.xml-writer>
     <version.commons.codec>1.11</version.commons.codec>
-    <version.commons.lang3>3.8.1</version.commons.lang3>
+    <version.commons.lang3>3.12.0</version.commons.lang3>
     <version.hsqldb>2.2.8</version.hsqldb>
     <version.io.github.x-stream.mxparser>1.2.2</version.io.github.x-stream.mxparser>
     <version.jakarta.activation.api>1.2.1</version.jakarta.activation.api>
