@@ -1104,7 +1104,7 @@
     <version.plugin.mojo.flatten>1.1.0</version.plugin.mojo.flatten>
     <version.plugin.io.wcm.devops.eclipse>3.1.0</version.plugin.io.wcm.devops.eclipse>
     <version.plugin.eluder.coveralls>4.3.0</version.plugin.eluder.coveralls>
-    <version.plugin.jacoco>0.8.6</version.plugin.jacoco>
+    <version.plugin.jacoco>0.8.8</version.plugin.jacoco>
 
     <version.cglib.nodep>3.3.0</version.cglib.nodep>
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
