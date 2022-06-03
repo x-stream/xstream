@@ -1098,7 +1098,7 @@
     <version.plugin.maven.release>3.0.0-M4</version.plugin.maven.release>
     <version.plugin.maven.resources>3.2.0</version.plugin.maven.resources>
     <version.plugin.maven.site>3.12.0</version.plugin.maven.site>
-    <version.plugin.maven.source>3.2.0</version.plugin.maven.source>
+    <version.plugin.maven.source>3.2.1</version.plugin.maven.source>
     <version.plugin.maven.surefire>3.0.0-M6</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>3.0.0</version.plugin.mojo.build-helper>
     <version.plugin.mojo.flatten>1.1.0</version.plugin.mojo.flatten>
