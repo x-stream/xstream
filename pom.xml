@@ -1084,7 +1084,7 @@
     <version.plugin.felix.bundle>5.1.6</version.plugin.felix.bundle>
     <version.plugin.maven.antrun>3.1.0</version.plugin.maven.antrun>
     <version.plugin.maven.assembly>3.2.0</version.plugin.maven.assembly>
-    <version.plugin.maven.clean>3.1.0</version.plugin.maven.clean>
+    <version.plugin.maven.clean>3.2.0</version.plugin.maven.clean>
     <version.plugin.maven.compiler>3.10.1</version.plugin.maven.compiler>
     <version.plugin.maven.dependency>3.1.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>3.0.0-M1</version.plugin.maven.deploy>
@@ -1100,7 +1100,7 @@
     <version.plugin.maven.site>3.12.0</version.plugin.maven.site>
     <version.plugin.maven.source>3.2.1</version.plugin.maven.source>
     <version.plugin.maven.surefire>3.0.0-M6</version.plugin.maven.surefire>
-    <version.plugin.mojo.build-helper>3.0.0</version.plugin.mojo.build-helper>
+    <version.plugin.mojo.build-helper>3.3.0</version.plugin.mojo.build-helper>
     <version.plugin.mojo.flatten>1.2.7</version.plugin.mojo.flatten>
     <version.plugin.io.wcm.devops.eclipse>3.1.0</version.plugin.io.wcm.devops.eclipse>
     <version.plugin.eluder.coveralls>4.3.0</version.plugin.eluder.coveralls>
