@@ -1089,13 +1089,13 @@
     <version.plugin.maven.dependency>3.1.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>3.0.0-M1</version.plugin.maven.deploy>
     <version.plugin.maven.enforcer>3.0.0-M2</version.plugin.maven.enforcer>
-    <version.plugin.maven.failsafe>3.0.0-M6</version.plugin.maven.failsafe>
+    <version.plugin.maven.failsafe>3.0.0-M7</version.plugin.maven.failsafe>
     <version.plugin.maven.gpg>3.0.1</version.plugin.maven.gpg>
     <version.plugin.maven.install>3.0.0-M1</version.plugin.maven.install>
     <version.plugin.maven.jar>3.2.0</version.plugin.maven.jar>
     <version.plugin.maven.javadoc>3.4.0</version.plugin.maven.javadoc>
     <version.plugin.maven.jxr>3.2.0</version.plugin.maven.jxr>
-    <version.plugin.maven.release>3.0.0-M4</version.plugin.maven.release>
+    <version.plugin.maven.release>3.0.0-M6</version.plugin.maven.release>
     <version.plugin.maven.resources>3.2.0</version.plugin.maven.resources>
     <version.plugin.maven.site>3.12.0</version.plugin.maven.site>
     <version.plugin.maven.source>3.2.1</version.plugin.maven.source>
