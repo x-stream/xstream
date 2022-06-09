@@ -1089,7 +1089,7 @@
     <version.plugin.maven.dependency>3.1.1</version.plugin.maven.dependency>
     <version.plugin.maven.deploy>3.0.0-M1</version.plugin.maven.deploy>
     <version.plugin.maven.enforcer>3.0.0-M2</version.plugin.maven.enforcer>
-    <version.plugin.maven.failsafe>3.0.0-M6</version.plugin.maven.failsafe>
+    <version.plugin.maven.failsafe>3.0.0-M7</version.plugin.maven.failsafe>
     <version.plugin.maven.gpg>3.0.1</version.plugin.maven.gpg>
     <version.plugin.maven.install>3.0.0-M1</version.plugin.maven.install>
     <version.plugin.maven.jar>3.2.0</version.plugin.maven.jar>
@@ -1121,7 +1121,7 @@
     <version.javax.xml.bind.api>2.3.1</version.javax.xml.bind.api>
     <version.javax.xml.ws.jaxws.rt>2.2</version.javax.xml.ws.jaxws.rt><!-- Java 5 -->
     <version.jmock>1.0.1</version.jmock>
-    <version.joda-time>2.10.1</version.joda-time>
+    <version.joda-time>2.10.14</version.joda-time>
     <version.junit>3.8.1</version.junit>
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
     <version.org.apache.felix>6.0.3</version.org.apache.felix>
