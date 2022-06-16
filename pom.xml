@@ -1120,14 +1120,14 @@
     <version.javaassist>3.12.1.GA</version.javaassist>
     <version.javax.xml.bind.api>2.3.1</version.javax.xml.bind.api>
     <version.javax.xml.ws.jaxws.rt>2.2</version.javax.xml.ws.jaxws.rt><!-- Java 5 -->
-    <version.jmock>1.0.1</version.jmock>
+    <version.jmock>1.1.0</version.jmock>
     <version.joda-time>2.10.14</version.joda-time>
     <version.junit>3.8.1</version.junit>
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
     <version.org.apache.felix>6.0.3</version.org.apache.felix>
     <version.org.codehaus.jettison>1.4.1</version.org.codehaus.jettison>
     <version.com.fasterxml.woodstox.core>6.2.8</version.com.fasterxml.woodstox.core>
-    <version.org.dom4j>2.0.2</version.org.dom4j>
+    <version.org.dom4j>2.1.3</version.org.dom4j>
     <version.org.hibernate.core>4.2.5.Final</version.org.hibernate.core>
     <version.org.hibernate.envers>${version.org.hibernate.core}</version.org.hibernate.envers>
     <version.org.jdom>1.1.3</version.org.jdom>
