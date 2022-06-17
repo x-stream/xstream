@@ -1109,7 +1109,7 @@
     <version.cglib.nodep>3.3.0</version.cglib.nodep>
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
     <version.com.megginson.sax.xml-writer>0.2</version.com.megginson.sax.xml-writer>
-    <version.commons.codec>1.11</version.commons.codec>
+    <version.commons.codec>1.15</version.commons.codec>
     <version.commons.lang3>3.12.0</version.commons.lang3>
     <version.hsqldb>2.6.1</version.hsqldb>
     <version.io.github.x-stream.mxparser>1.2.2</version.io.github.x-stream.mxparser>
@@ -1119,7 +1119,7 @@
     <version.jakarta.xml.bind.api>2.3.2</version.jakarta.xml.bind.api>
     <version.javaassist>3.12.1.GA</version.javaassist>
     <version.javax.xml.bind.api>2.3.1</version.javax.xml.bind.api>
-    <version.javax.xml.ws.jaxws.rt>2.2</version.javax.xml.ws.jaxws.rt><!-- Java 5 -->
+    <version.javax.xml.ws.jaxws.rt>3.0.2</version.javax.xml.ws.jaxws.rt><!-- Java 5 -->
     <version.jmock>1.1.0</version.jmock>
     <version.joda-time>2.10.14</version.joda-time>
     <version.junit>3.8.1</version.junit>
