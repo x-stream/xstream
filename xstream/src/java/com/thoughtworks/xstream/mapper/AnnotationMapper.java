@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -289,8 +289,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             final XStreamConverters convertersAnnotation = type.getAnnotation(XStreamConverters.class);
             final XStreamConverter converterAnnotation = type.getAnnotation(XStreamConverter.class);
             final List<XStreamConverter> annotations = convertersAnnotation != null
-                ? new ArrayList<XStreamConverter>(Arrays.asList(convertersAnnotation.value()))
-                : new ArrayList<XStreamConverter>();
+                ? new ArrayList<>(Arrays.asList(convertersAnnotation.value()))
+                : new ArrayList<>();
             if (converterAnnotation != null) {
                 annotations.add(converterAnnotation);
             }

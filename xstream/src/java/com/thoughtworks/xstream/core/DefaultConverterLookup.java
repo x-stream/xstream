@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, 2005, 2006 Joe Walnes.
+ * Copyright (C) 2004, 2005, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2019 XStream Committers.
  * All rights reserved.
  *
@@ -37,7 +37,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     private Map<String, Converter> serializationMap = null;
 
     public DefaultConverterLookup() {
-        this(new HashMap<String, Converter>());
+        this(new HashMap<>());
     }
 
     /**
@@ -107,7 +107,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     }
 
     private Object readResolve() {
-        typeToConverterMap = serializationMap == null ? new HashMap<String, Converter>() : serializationMap;
+        typeToConverterMap = serializationMap == null ? new HashMap<>() : serializationMap;
         serializationMap = null;
         return this;
     }

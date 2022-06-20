@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, 2005 Joe Walnes.
+ * Copyright (C) 2004, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2009, 2011, 2012, 2014 XStream Committers.
  * All rights reserved.
  *
@@ -51,7 +51,7 @@ public class ThreadSafeSimpleDateFormat {
             final int maxPoolSize, final boolean lenient) {
         formatString = format;
         this.timeZone = timeZone;
-        pool = new Pool<DateFormat>(initialPoolSize, maxPoolSize, new Pool.Factory<DateFormat>() {
+        pool = new Pool<>(initialPoolSize, maxPoolSize, new Pool.Factory<DateFormat>() {
             @Override
             public SimpleDateFormat newInstance() {
                 final SimpleDateFormat dateFormat = new SimpleDateFormat(formatString, locale);

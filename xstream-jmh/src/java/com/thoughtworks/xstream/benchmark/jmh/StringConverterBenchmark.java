@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2017, 2021 XStream Committers.
+ * Copyright (C) 2015, 2017, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,7 +39,6 @@ import com.thoughtworks.xstream.core.util.WeakCache;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import com.thoughtworks.xstream.io.xml.MXParserDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
 import com.thoughtworks.xstream.security.NoTypePermission;
 
@@ -171,7 +170,7 @@ public class StringConverterBenchmark {
          * @since 1.4.9
          */
         public ConcurrentHashMapStringConverter(final int lengthLimit) {
-            this(new ConcurrentHashMap<String, String>(), lengthLimit);
+            this(new ConcurrentHashMap<>(), lengthLimit);
         }
 
         @Override

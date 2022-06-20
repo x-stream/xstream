@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011, 2015 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -85,9 +85,9 @@ public class ExtendedTarget implements Target {
 
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (method.equals(EQUALS)) {
-                return new Boolean(args[0] instanceof Runnable);
+                return Boolean.valueOf(args[0] instanceof Runnable);
             } else if (method.getName().equals("hashCode")) {
-                return new Integer(System.identityHashCode(proxy));
+                return Integer.valueOf(System.identityHashCode(proxy));
             } else if (method.getName().equals("toString")) {
                 return "Proxy" + System.identityHashCode(proxy);
             } else if (method.getName().equals("getClass")) {

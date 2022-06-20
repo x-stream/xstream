@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2008, 2014, 2016 XStream Committers.
+ * Copyright (c) 2007, 2008, 2014, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,7 +42,7 @@ public class ThreadSafePropertyEditor {
             throw new IllegalArgumentException(type.getName() + " is not a " + PropertyEditor.class.getName());
         }
         editorType = type;
-        pool = new Pool<PropertyEditor>(initialPoolSize, maxPoolSize, new Pool.Factory<PropertyEditor>() {
+        pool = new Pool<>(initialPoolSize, maxPoolSize, new Pool.Factory<PropertyEditor>() {
             @Override
             public PropertyEditor newInstance() {
                 ErrorWritingException ex = null;
