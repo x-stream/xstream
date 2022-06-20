@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -191,7 +191,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         };
 
         final Map<String, Set<Mapper.ImplicitCollectionMapping>> hiddenMappers =
-                new HashMap<String, Set<Mapper.ImplicitCollectionMapping>>();
+                new HashMap<>();
         for (final FieldInfo info : fields) {
             if (info.value != null) {
                 final boolean isCollection = info.value instanceof Collection;

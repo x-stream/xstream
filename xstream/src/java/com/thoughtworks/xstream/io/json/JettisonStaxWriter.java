@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2009, 2010, 2011, 2014, 2018 XStream Committers.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2014, 2018, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -38,7 +38,7 @@ import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 public class JettisonStaxWriter extends StaxWriter {
 
     private final MappedNamespaceConvention convention;
-    private final Deque<String> stack = new ArrayDeque<String>();
+    private final Deque<String> stack = new ArrayDeque<>();
 
     /**
      * @since 1.4

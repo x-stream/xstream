@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2014 XStream Committers.
+ * Copyright (C) 2007, 2014, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,7 +26,7 @@ public class NativeFieldKeySorter implements FieldKeySorter {
 
     @Override
     public Map<FieldKey, Field> sort(final Class<?> type, final Map<FieldKey, Field> keyedByFieldKey) {
-        final Map<FieldKey, Field> map = new TreeMap<FieldKey, Field>(new Comparator<FieldKey>() {
+        final Map<FieldKey, Field> map = new TreeMap<>(new Comparator<FieldKey>() {
 
             @Override
             public int compare(final FieldKey fieldKey1, final FieldKey fieldKey2) {
