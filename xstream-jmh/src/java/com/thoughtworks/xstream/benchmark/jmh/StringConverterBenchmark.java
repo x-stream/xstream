@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2017, 2022 XStream Committers.
+ * Copyright (C) 2015, 2017, 2021, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD

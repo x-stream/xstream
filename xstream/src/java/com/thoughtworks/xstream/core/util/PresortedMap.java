@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2010, 2014, 2022 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2014, 2015, 2022 XStream Committers.
  * All rights reserved.
  *
  * Created on 12.10.2010 by Joerg Schaible, extracted from TreeMapConverter.
