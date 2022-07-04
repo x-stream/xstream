@@ -23,9 +23,9 @@ public class Five extends One {
     private int two;
     private boolean three;
     private char four;
-    private StringBuffer five;
+    private CharSequence five;
 
-    public Five(String one, int two, boolean three, char four, StringBuffer five) {
+    public Five(String one, int two, boolean three, char four, CharSequence five) {
         super(one);
         this.two = two;
         this.three = three;

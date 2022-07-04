@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2015 XStream Committers.
+ * Copyright (C) 2009, 2011, 2015, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -41,7 +41,7 @@ public class JavaBeanTarget implements Target {
         five.setTwo(2);
         five.setThree(true);
         five.setFour('4');
-        five.setFive(new StringBuffer("5"));
+        five.setFive(new StringBuilder("5"));
         list.add(five);
     }
     
