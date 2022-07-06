@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, 2005, 2006 Joe Walnes.
+ * Copyright (C) 2004, 2005, 2006, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
+import javax.xml.XMLConstants;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -102,6 +103,9 @@ public class DomDriver extends AbstractXmlDriver {
                     }
                 }
             }
+            //https://rules.sonarsource.com/java/RSPEC-2755
+            documentBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            documentBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             if (encoding != null) {
                 source.setEncoding(encoding);

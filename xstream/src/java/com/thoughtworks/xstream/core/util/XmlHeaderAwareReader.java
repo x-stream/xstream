@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2010, 2014, 2015, 2020 XStream Committers.
+ * Copyright (C) 2007, 2008, 2010, 2014, 2015, 2020, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -74,8 +74,8 @@ public final class XmlHeaderAwareReader extends Reader {
         int i = 0;
         char ch = 0;
         char valueEnd = 0;
-        final StringBuffer name = new StringBuffer();
-        final StringBuffer value = new StringBuffer();
+        final StringBuilder name = new StringBuilder();
+        final StringBuilder value = new StringBuilder();
         boolean escape = false;
         while (i != -1 && (i = in[0].read()) != -1) {
             out.write(i);

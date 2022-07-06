@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, 2006 Joe Walnes.
+ * Copyright (C) 2005, 2006, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2009, 2010, 2011, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
@@ -183,7 +183,7 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
         // lets only use a string buffer when we get 2 strings
         // to avoid copying strings
         String last = null;
-        StringBuffer buffer = null;
+        StringBuilder buffer = null;
 
         mark();
         Event event = readEvent();
@@ -195,7 +195,7 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
                         last = text;
                     } else {
                         if (buffer == null) {
-                            buffer = new StringBuffer(last);
+                            buffer = new StringBuilder(last);
                         }
                         buffer.append(text);
                     }

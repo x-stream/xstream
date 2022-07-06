@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, 2005, 2006 Joe Walnes.
+ * Copyright (C) 2004, 2005, 2006, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015, 2020 XStream Committers.
  * All rights reserved.
  *
@@ -130,7 +130,7 @@ public class PathTracker {
         final Integer integer = indexMapStack[idx].get(pathStack[idx]);
         final int index = integer.intValue();
         if (index > 1) {
-            final StringBuffer chunk = new StringBuffer(pathStack[idx].length() + 6);
+            final StringBuilder chunk = new StringBuilder(pathStack[idx].length() + 6);
             chunk.append(pathStack[idx]).append('[').append(index).append(']');
             name = chunk.toString();
         } else {

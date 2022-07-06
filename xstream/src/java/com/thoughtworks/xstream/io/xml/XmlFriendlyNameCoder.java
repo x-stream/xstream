@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Joe Walnes.
+ * Copyright (C) 2006, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2019, 2020, 2021 XStream Committers.
  * All rights reserved.
  *
@@ -497,7 +497,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
             }
 
             // Otherwise full processing
-            final StringBuffer result = new StringBuffer(length + 8);
+            final StringBuilder result = new StringBuilder(length + 8);
 
             // We know first N chars are safe
             if (i > 0) {
@@ -555,7 +555,7 @@ public class XmlFriendlyNameCoder implements NameCoder, Cloneable {
             }
 
             // Otherwise full processing
-            final StringBuffer result = new StringBuffer(length + 8);
+            final StringBuilder result = new StringBuilder(length + 8);
 
             // We know first N chars are safe
             if (i > 0) {
